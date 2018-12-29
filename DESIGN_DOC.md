@@ -19,7 +19,7 @@ Similar tracking sites for movies/television/anime:
 ## TODO
 
 - [ ] Users
-  - [ ] Authentication with Devise
+  - [x] Authentication with Devise
   - [ ] 2FA (via devise-two-factor probably)
   - [ ] Username
   - [ ] Display Name

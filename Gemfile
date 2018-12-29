@@ -34,6 +34,8 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
   gem 'rubocop', '~> 0.61', require: false
+
+  gem 'database_cleaner', '~> 1.7'
 end
 
 group :development do
