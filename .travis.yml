@@ -1,0 +1,27 @@
+notifications:
+  email: false
+language: ruby
+sudo: false
+addons:
+  postgresql: '9.6'
+  chrome: stable
+env:
+  - TRAVIS_NODE_VERSION="9" CI=true RAILS_ENV=test
+cache:
+  bundler: true
+  yarn: true
+install:
+  - bundle install
+  - nvm install 9
+  - nvm use 9
+  - yarn install --frozen-lockfile
+  - yarn list
+before_script:
+  - cp config/database.yml.travis config/database.yml
+  - psql -c 'create database travis_ci_test;' -U postgres
+script:
+  - bundle exec rubocop
+  - bundle exec rake db:migrate --trace
+  - bundle exec rake test
+  - bundle exec rake test:system
+
