@@ -1,6 +1,8 @@
 notifications:
   email: false
 language: ruby
+rvm:
+  - 2.6
 sudo: false
 addons:
   postgresql: '9.6'
