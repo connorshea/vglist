@@ -1,0 +1,24 @@
+version: 1
+update_configs:
+  - package_manager: "ruby:bundler"
+    directory: "/"
+    update_schedule: "daily"
+    target_branch: "master"
+    version_requirement_updates: "auto"
+    default_assignees:
+      - "connorshea"
+    automerged_updates:
+      - match:
+          dependency_group: "development"
+          kind: "semver:minor"
+      - match:
+          dependency_group: "runtime"
+          kind: "semver:minor"
+
+  - package_manager: "javascript"
+    directory: "/"
+    update_schedule: "weekly"
+    target_branch: "master"
+    version_requirement_updates: "auto"
+    default_assignees:
+      - "connorshea"
