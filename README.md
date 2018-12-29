@@ -8,7 +8,9 @@ Pre-requisites:
 - Ruby 2.5 or 2.6
 - Postgres 10.x
 
-- Clone the repository
+Follow these instructions:
+
+- Clone the repository with git
 - If you're on Ruby 2.5, `gem install bundler` (on Ruby 2.6, bundler is included already!)
 - `bundle install`
 - `yarn install`
