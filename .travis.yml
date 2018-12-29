@@ -17,7 +17,6 @@ install:
   - nvm install 9
   - nvm use 9
   - yarn install --frozen-lockfile
-  - yarn list
 before_script:
   - cp config/database.yml.travis config/database.yml
   - psql -c 'create database travis_ci_test;' -U postgres
