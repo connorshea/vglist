@@ -10,6 +10,22 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header class="site-header">
+      <ul class="header-items-left">
+        <li>
+          <%= link_to("Home", root_path) %>
+        </li>
+      </ul>
+
+      <ul class="header-items-right">
+        <%= render 'devise/menu/sign_up_items' %>
+        <%= render 'devise/menu/sign_in_items' %>
+      </ul>
+    </header>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <div class="wrapper">
+      <%= yield %>
+    </div>
   </body>
 </html>
