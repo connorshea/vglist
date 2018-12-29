@@ -24,8 +24,14 @@
         <%= render 'devise/menu/sign_in_items' %>
       </ul>
     </header>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    
+    <% unless notice.nil? %>
+      <div class="alert alert-info"><%= notice %></div>
+    <% end %>
+    <% unless alert.nil? %>
+      <div class="alert alert-danger"><%= alert %></div>
+    <% end %>
+
     <div class="wrapper">
       <%= yield %>
     </div>
