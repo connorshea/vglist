@@ -12,7 +12,7 @@
   </head>
 
   <body>
-    <header class="site-header">
+    <header class="site-header d-flex justify-content-between">
       <ul class="header-items-left">
         <li>
           <%= link_to("Home", root_path) %>
@@ -32,7 +32,7 @@
       <div class="alert alert-danger"><%= alert %></div>
     <% end %>
 
-    <div class="wrapper">
+    <div class="container mt-4">
       <%= yield %>
     </div>
   </body>
