@@ -1,24 +1,11 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a Rails application for tracking your video game library.
 
-Things you may want to cover:
+## Getting set up
 
-* Ruby version
+TODO
 
-* System dependencies
+## Design Document
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+See [DESIGN_DOC.md](DESIGN_DOC.md) for the general design plan for this project.
