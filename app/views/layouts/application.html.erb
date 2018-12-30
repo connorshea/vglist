@@ -29,6 +29,9 @@
       </ul>
 
       <ul class="header-items-right">
+        <% if user_signed_in? %>
+          <%= link_to(current_user.username, user_path(current_user.id)) %>
+        <% end %>
         <%= render 'devise/menu/sign_up_items' %>
         <%= render 'devise/menu/sign_in_items' %>
       </ul>
