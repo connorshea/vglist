@@ -55,6 +55,8 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   # Better error pages.
   gem 'better_errors', '~> 2.5'
+  # For generating fake seeding data.
+  gem 'faker', '~> 1.9'
 end
 
 group :test do
