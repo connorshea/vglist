@@ -3,7 +3,11 @@
 one:
   name: MyText
   description: MyText
+  game: MyText
+  platform: MyText
 
 two:
   name: MyText
   description: MyText
+  game: MyText
+  platform: MyText
