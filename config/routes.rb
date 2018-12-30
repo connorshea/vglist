@@ -5,4 +5,8 @@ Rails.application.routes.draw do
   get 'home/index'
 
   root 'home#index'
+
+  resources :games
+
+  resources :releases, only: [:index, :show]
 end
