@@ -1,1 +1,16 @@
 inherit_from: .rubocop_todo.yml
+
+Style/Lambda:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false

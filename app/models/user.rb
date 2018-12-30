@@ -18,7 +18,7 @@ class User < ApplicationRecord
     # Based on https://stackoverflow.com/a/12019115/7143763
     format: /(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])/,
     uniqueness: {
-      message: ->(object, data) do
+      message: ->(_object, data) do
         "#{data[:value]} is taken already!"
       end
     }

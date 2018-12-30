@@ -74,10 +74,6 @@ Lint/UnusedBlockArgument:
     - 'config/initializers/content_security_policy.rb'
 
 # Offense count: 1
-Metrics/AbcSize:
-  Enabled: false
-
-# Offense count: 1
 # Configuration parameters: CountComments, ExcludedMethods.
 # ExcludedMethods: refine
 Metrics/BlockLength:
@@ -98,10 +94,6 @@ Style/BlockComments:
 # Configuration parameters: AutoCorrect, EnforcedStyle.
 # SupportedStyles: nested, compact
 Style/ClassAndModuleChildren:
-  Enabled: false
-
-# Offense count: 16
-Style/Documentation:
   Enabled: false
 
 # Offense count: 1
@@ -159,22 +151,9 @@ Style/StderrPuts:
   Exclude:
     - 'bin/yarn'
 
-# Offense count: 125
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Enabled: false
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: MinSize.
 # SupportedStyles: percent, brackets
 Style/SymbolArray:
   EnforcedStyle: brackets
-
-# Offense count: 65
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
-Metrics/LineLength:
-  Enabled: false
