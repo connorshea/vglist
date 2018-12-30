@@ -37,9 +37,19 @@ puts "Creating Games..."
 # Create 50 random Games.
 50.times do
   Game.create!(
-    name: Faker::Game.name,
+    name: Faker::Game.unique.name,
     description: Faker::Lorem.sentence
   )
 end
 
-puts "Created #{User.count} users and #{Game.count} games."
+puts "Creating Platforms..."
+
+# Create 20 Platforms.
+20.times do
+  Platform.create!(
+    name: Faker::Game.unique.platform,
+    description: Faker::Lorem.sentence
+  )
+end
+
+puts "Created #{User.count} users, #{Game.count} games, and #{Platform.count} platforms."

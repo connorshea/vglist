@@ -1,0 +1,11 @@
+<% content_for :title, "Platforms" %>
+
+<h1>Platforms</h1>
+
+<ul>
+  <% @platforms.each do |platform| %>
+    <li><%= link_to(platform.name, platform_path(platform.id)) %></li>
+  <% end %>
+</ul>
+
+<%= paginate @platforms %>

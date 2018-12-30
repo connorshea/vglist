@@ -79,4 +79,28 @@ en:
         'Pokémon Ultra Moon',
         "Pokémon: Let's Go Pikachu!",
         "Pokémon: Let's Go Eevee!"
-        ]
+      ]
+      platform: [
+        'Xbox',
+        'Xbox 360',
+        'Xbox One',
+        'PlayStation',
+        'PlayStation 2',
+        'PlayStation 3',
+        'PlayStation 4',
+        'GameBoy',
+        'GameBoy Color',
+        'GameBoy Advanced',
+        'Nintendo DS',
+        'Nintendo 3DS',
+        'Nintendo Entertainment System',
+        'Super Nintendo Entertainment System',
+        'Nintendo 64',
+        'GameCube',
+        'Wii',
+        'Wii U',
+        'Nintendo Switch',
+        'Windows',
+        'macOS',
+        'Linux'
+      ]
