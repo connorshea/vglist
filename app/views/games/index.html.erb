@@ -2,6 +2,8 @@
 
 <h1>Games</h1>
 
-<% @games.each do |game| %>
-  <li><%= link_to(game.name, game_path(game.id)) %></li>
-<% end %>
+<ul>
+  <% @games.each do |game| %>
+    <li><%= link_to(game.name, game_path(game.id)) %></li>
+  <% end %>
+</ul>

@@ -2,6 +2,8 @@
 
 <h1>Releases</h1>
 
-<% @releases.each do |release| %>
-  <li><%= link_to(release.name, release_path(release.id)) %></li>
-<% end %>
+<ul>
+  <% @releases.each do |release| %>
+    <li><%= link_to(release.name, release_path(release.id)) %></li>
+  <% end %>
+</ul>
