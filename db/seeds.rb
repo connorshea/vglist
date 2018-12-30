@@ -52,4 +52,20 @@ puts "Creating Platforms..."
   )
 end
 
-puts "Created #{User.count} users, #{Game.count} games, and #{Platform.count} platforms."
+puts "Creating Releases..."
+
+25.times do
+  game_id = rand(1..Game.count)
+  game = Game.find(game_id)
+  platform_id = rand(1..Platform.count)
+  platform = Platform.find(platform_id)
+
+  Release.create!(
+    name: "#{game.name} for #{platform.name}",
+    description: Faker::Lorem.sentence,
+    game: game,
+    platform: platform
+  )
+end
+
+puts "Created #{User.count} users, #{Game.count} games, #{Platform.count} platforms, and #{Release.count} releases."
