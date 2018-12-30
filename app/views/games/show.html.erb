@@ -3,7 +3,7 @@
 <h1><%= @game.name %></h1>
 <h3><%= @game.description %></h3>
 
-<% unless @game.releases.blank? %>
+<% if !@game.releases.blank? %>
   Releases:
 
   <ul>
@@ -11,4 +11,6 @@
       <li><%= link_to(release.name, release_path(release.id)) %></li>
     <% end %>
   </ul>
+<% else %>
+  This game doesn't have any releases yet.
 <% end %>
