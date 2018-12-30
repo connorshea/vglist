@@ -1,33 +1,82 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
   hello: "Hello world"
+  # Faker data for seeding video game titles.
+  faker:
+    game:
+      name: [
+        'Half-Life',
+        'Half-Life: Opposing Force',
+        'Half-Life: Blue Shift',
+        'Half-Life 2',
+        'Half-Life 2: Episode One',
+        'Half-Life 2: Episode Two',
+        'Portal',
+        'Portal 2',
+        'Team Fortress Classic',
+        'Team Fortress 2',
+        'Super Mario Bros.',
+        'Super Mario Bros. 2',
+        'Super Mario Bros. 3',
+        'Super Mario World',
+        'Super Mario Sunshine',
+        'Super Mario Galaxy',
+        'Super Mario Galaxy 2',
+        'Super Mario Odyssey',
+        'Civilization III',
+        'Civilization IV',
+        'Civilization V',
+        'Civilization VI',
+        'The Legend of Zelda',
+        'The Legend of Zelda: Ocarina of Time',
+        "The Legend of Zelda: Majora's Mask",
+        'The Legend of Zelda: Twilight Princess',
+        'The Legend of Zelda: Skyward Sword',
+        'The Legend of Zelda: Breath of the Wild',
+        'Pong',
+        'Pac-Man',
+        'Starcraft',
+        'Starcraft II',
+        'Overwatch',
+        'Hearthstone',
+        'Halo: Combat Evolved',
+        'Halo 2',
+        'Halo 3',
+        'Halo 3: ODST',
+        'Halo: Reach',
+        'Halo 4',
+        'Halo 5: Guardians',
+        'Wii Sports',
+        'Wii Sports Resort',
+        'Wii Play',
+        'Wii Music',
+        'Pokémon Red',
+        'Pokémon Blue',
+        'Pokémon Yellow',
+        'Pokémon Gold',
+        'Pokémon Silver',
+        'Pokémon Crystal',
+        'Pokémon Ruby',
+        'Pokémon Sapphire',
+        'Pokémon FireRed',
+        'Pokémon LeafGreen',
+        'Pokémon Emerald',
+        'Pokémon Diamond',
+        'Pokémon Pearl',
+        'Pokémon Platinum',
+        'Pokémon HeartGold',
+        'Pokémon SoulSilver',
+        'Pokémon Black',
+        'Pokémon White',
+        'Pokémon Black 2',
+        'Pokémon White 2',
+        'Pokémon X',
+        'Pokémon Y',
+        'Pokémon Omega Ruby',
+        'Pokémon Alpha Sapphire',
+        'Pokémon Sun',
+        'Pokémon Moon',
+        'Pokémon Ultra Sun',
+        'Pokémon Ultra Moon',
+        "Pokémon: Let's Go Pikachu!",
+        "Pokémon: Let's Go Eevee!"
+        ]
