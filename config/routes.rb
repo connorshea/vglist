@@ -11,4 +11,6 @@ Rails.application.routes.draw do
   resources :releases, only: [:index, :show]
 
   resources :users, only: [:index, :show]
+
+  resources :platforms, only: [:index, :show]
 end
