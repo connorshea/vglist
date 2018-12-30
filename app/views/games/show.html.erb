@@ -1,3 +1,14 @@
 <% content_for :title, @game.name %>
 
 <h1><%= @game.name %></h1>
+<h3><%= @game.description %></h3>
+
+<% unless @game.releases.blank? %>
+  Releases:
+
+  <ul>
+    <% @game.releases.each do |release| %>
+      <li><%= link_to(release.name, release_path(release.id)) %></li>
+    <% end %>
+  </ul>
+<% end %>

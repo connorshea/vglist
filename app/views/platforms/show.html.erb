@@ -2,3 +2,14 @@
 
 <h1><%= @platform.name %></h1>
 <h2><%= @platform.description %></h2>
+
+<% if !@platform.releases.blank? %>
+  Releases:
+  <ul>
+    <% @platform.releases.each do |release| %>
+      <li><%= link_to(release.name, release_path(release.id)) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  This platform doesn't have any releases yet.
+<% end%>
