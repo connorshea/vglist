@@ -17,3 +17,6 @@ Style/Documentation:
 
 Layout/EmptyLineAfterMagicComment:
   Enabled: false
+
+Layout/AlignHash:
+  Enabled: false
