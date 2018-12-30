@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GameTracker</title>
+    <title><%= (yield(:title) + " | " unless yield(:title).blank?).to_s + "GameTracker" %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
