@@ -7,3 +7,5 @@
     <li><%= link_to(game.name, game_path(game.id)) %></li>
   <% end %>
 </ul>
+
+<%= paginate @games %>

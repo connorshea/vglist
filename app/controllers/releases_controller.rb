@@ -1,6 +1,6 @@
 class ReleasesController < ApplicationController
   def index
-    @releases = Release.all
+    @releases = Release.order(:id).page params[:page]
   end
 
   def show
