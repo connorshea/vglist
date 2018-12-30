@@ -7,3 +7,5 @@
     <li><%= link_to(user.username, user_path(user.id)) %></li>
   <% end %>
 </ul>
+
+<%= paginate @users %>
