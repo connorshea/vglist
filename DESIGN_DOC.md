@@ -21,7 +21,7 @@ Similar tracking sites for movies/television/anime:
 - [ ] Users
   - [x] Authentication with Devise
   - [ ] 2FA (via devise-two-factor probably)
-  - [ ] Username
+  - [x] Username
   - [ ] Display Name
   - [ ] Avatar
   - [ ] External account links (Discord, Steam, Epic Games, Xbox Live, PSN, etc.)
@@ -54,11 +54,16 @@ Similar tracking sites for movies/television/anime:
   - [ ] External Links (Steam page, Discord store page, Discord server, PCGamingWiki, SteamDB, etc.)
   - [ ] Relationships with other games (sequels, prequels, spinoffs, DLC, Special Editions, GOTY/Complete Editions, Remakes, Deluxe Editions, "sibling"(?) titles (e.g. Pokemon Red and Blue), etc?)
   - [ ] Official Website
+    - Note there can be more than one, e.g. for multiple languages.
   - [ ] Genre
     - I don't look forward to figuring out how to manage genres, but it seems kind of necessary.
   - [ ] Average Score
     - Maybe also Median or a more detailed bar graph of the scores?
   - [ ] Number of users who own the game / have completed it / plan to play it
+- [ ] Companies
+  - Companies can both develop and publish games.
+  - [ ] Developers
+  - [ ] Publishers
 - [ ] Games (In Library): A game in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
   - [ ] Score/Rating
   - [ ] Time played (hours)
