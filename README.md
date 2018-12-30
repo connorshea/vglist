@@ -18,7 +18,9 @@ Follow these instructions:
 - `bundle exec db:migrate`
 - `bundle exec rails s` to start the server
 - Visit http://localhost:3000 in your browser and you should see the base application.
-- Create a user with the "Sign up" page and then check the logs in your command line to get the confirmation link.
+- Run `bundle exec rake db:seed` to seed the database with fake data (this will destroy any existing data in the database, so be careful)
+  - This will create a user with the email `admin@example.com` and the password `password`, which you can use for testing purposes.
+  - Alternatively, create your own user with the "Sign up" page and then check the logs in your command line to get the confirmation link.
 
 ## Design Document
 
