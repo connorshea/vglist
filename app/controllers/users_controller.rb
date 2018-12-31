@@ -7,6 +7,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     # TODO: Paginate this?
-    @owned_releases = @user.releases
+    @purchased_releases = @user.releases
   end
 end
