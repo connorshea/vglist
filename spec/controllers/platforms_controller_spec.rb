@@ -11,7 +11,8 @@ RSpec.describe PlatformsController, type: :controller do
 
   describe "GET #show" do
     it "returns http success" do
-      get :show
+      @platform = create(:platform)
+      get :show, params: { id: @platform.id }
       expect(response).to have_http_status(:success)
     end
   end

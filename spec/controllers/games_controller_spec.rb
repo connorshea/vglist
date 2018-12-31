@@ -11,9 +11,10 @@ RSpec.describe GamesController, type: :controller do
 
   describe "GET #show" do
     it "returns http success" do
-      get :show
+      @game1 = create(:game)
+      get :show, params: { id: @game1.id }
       expect(response).to have_http_status(:success)
     end
   end
-  
+
 end

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-
   describe "GET #index" do
     it "returns http success" do
       get :index
@@ -11,7 +10,8 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #show" do
     it "returns http success" do
-      get :show
+      @user = create(:user)
+      get :show, params: { id: @user.id }
       expect(response).to have_http_status(:success)
     end
   end
