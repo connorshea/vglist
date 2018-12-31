@@ -11,7 +11,8 @@ RSpec.describe ReleasesController, type: :controller do
 
   describe "GET #show" do
     it "returns http success" do
-      get :show
+      @release = create(:release)
+      get :show, params: { id: @release.id }
       expect(response).to have_http_status(:success)
     end
   end
