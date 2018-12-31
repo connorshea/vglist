@@ -1,2 +1,5 @@
-<h1>Games#edit</h1>
-<p>Find me in app/views/games/edit.html.erb</p>
+<% content_for :title, "Edit #{@game.name}" %>
+
+<h1>Edit <%= @game.name %></h1>
+
+<%= render 'form' %>
