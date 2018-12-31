@@ -11,7 +11,7 @@ class GamesController < ApplicationController
 
   def new
     @game = Game.new
- end
+  end
 
   def edit
     @game = Game.find(params[:id])
@@ -28,7 +28,7 @@ class GamesController < ApplicationController
 
   def update
     @game = Game.find(params[:id])
-	
+
     if @game.update_attributes(game_params)
       redirect_to @game, notice: "#{@game.name} was successfully updated."
     else
@@ -43,7 +43,7 @@ class GamesController < ApplicationController
   end
 
   private
-  
+
   def game_params
     params.require(:game).permit(:name, :description)
   end
