@@ -2,14 +2,23 @@
 
 <h1><%= @user.username %></h1>
 
-<% if !@purchased_releases.blank? %>
-  Owned games:
+<% if !@user.bio.blank? %>
+  <p><%= @user.bio %></p>
+<% else %>
+  <p>
+    <%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
+  <p>
+<% end %>
 
+<h3>Library</h3>
+<% if !@purchased_releases.blank? %>
   <ul>
     <% @purchased_releases.each do |release| %>
       <li><%= link_to(release.name, release_path(release.id)) %></li>
     <% end %>
   </ul>
 <% else %>
-  This user doesn't own any games.
+  <p>
+    <%= @user == current_user ? "You haven't added any games to your library yet." : "This user hasn't added any games to their library yet." %>
+  </p>
 <% end %>
