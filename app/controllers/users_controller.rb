@@ -5,5 +5,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+
+    # TODO: Paginate this?
+    @owned_releases = @user.releases
   end
 end

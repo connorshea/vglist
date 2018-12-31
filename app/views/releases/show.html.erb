@@ -11,3 +11,15 @@
     Platform: <%= link_to(@release.platform.name, platform_path(@release.platform.id)) %>
   </li>
 </ul>
+
+<% if !@owners.blank? %>
+  Owners:
+
+  <ul>
+    <% @owners.each do |user| %>
+      <li><%= link_to(user.username, user_path(user.id)) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  No one owns this release yet!
+<% end %>

@@ -5,5 +5,8 @@ class ReleasesController < ApplicationController
 
   def show
     @release = Release.find(params[:id])
+
+    # TODO: Limit this.
+    @owners = @release.purchasers
   end
 end

@@ -20,8 +20,8 @@ User.create!(
 # Confirm the admin's email.
 User.find(1).confirm
 
-# Create 50 more random users.
-50.times do
+# Create 30 more random users.
+30.times do
   User.create!(
     email: Faker::Internet.unique.email,
     # Usernames must be between (inclusive) 4 and 20 characters.
@@ -54,6 +54,7 @@ end
 
 puts "Creating Releases..."
 
+# Create 25 Releases.
 25.times do
   game_id = rand(1..Game.count)
   game = Game.find(game_id)
@@ -68,4 +69,35 @@ puts "Creating Releases..."
   )
 end
 
-puts "Created #{User.count} users, #{Game.count} games, #{Platform.count} platforms, and #{Release.count} releases."
+puts "Creating Release Purchases..."
+
+# Create 10 unique release purchases for the admin user.
+admin = User.find(1)
+(1..Release.count).to_a.sample(10).each do |release_id|
+  release = Release.find(release_id)
+
+  ReleasePurchase.create!(
+    release: release,
+    user: admin
+  )
+end
+
+# Add 3 releases to each user's libraries.
+(1..User.count).each do |index|
+  # Skip for admin.
+  next if index == 1
+
+  user = User.find(index)
+
+  # Choose 3 unique random release IDs and add each to the user's library.
+  (1..Release.count).to_a.sample(3).each do |release_id|
+    release = Release.find(release_id)
+
+    ReleasePurchase.create!(
+      release: release,
+      user: user
+    )
+  end
+end
+
+puts "Created #{User.count} users, #{Game.count} games, #{Platform.count} platforms, #{Release.count} releases, and #{ReleasePurchase.count} release purchases."

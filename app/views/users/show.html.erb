@@ -1,3 +1,15 @@
 <% content_for :title, @user.username %>
 
 <h1><%= @user.username %></h1>
+
+<% if !@owned_releases.blank? %>
+  Owned games:
+
+  <ul>
+    <% @owned_releases.each do |release| %>
+      <li><%= link_to(release.name, release_path(release.id)) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  This user doesn't own any games.
+<% end %>
