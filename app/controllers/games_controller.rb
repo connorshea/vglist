@@ -20,7 +20,7 @@ class GamesController < ApplicationController
   def create
     @game = Game.new(game_params)
     if @game.save
-      redirect_to @game, notice: "#{game.name} was successfully created."
+      redirect_to @game, notice: "#{@game.name} was successfully created."
     else
       render "new", error: "Could not save game."
     end
