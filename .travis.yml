@@ -23,5 +23,6 @@ before_script:
 script:
   - bundle exec rubocop
   - bundle exec rake db:migrate --trace
+  - bundle exec rake factory_bot:lint
   - bundle exec rake spec
 
