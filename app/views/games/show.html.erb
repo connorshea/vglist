@@ -3,6 +3,11 @@
 <h1><%= @game.name %></h1>
 <h3><%= @game.description %></h3>
 
+<% if user_signed_in? %>
+  <%= link_to("Edit", edit_game_path(@game.id)) %>
+  <%= link_to("Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }) %>
+<% end %>
+
 <% if !@game.releases.blank? %>
   Releases:
 
