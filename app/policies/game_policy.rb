@@ -6,6 +6,14 @@ class GamePolicy < ApplicationPolicy
     @game = game
   end
 
+  def index?
+    true
+  end
+
+  def show?
+    true
+  end
+
   def create?
     user.present?
   end

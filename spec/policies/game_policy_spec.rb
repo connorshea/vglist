@@ -1,27 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe GamePolicy do
-  let(:user) { User.new }
+  subject { described_class.new(user, game) }
 
-  subject { described_class }
+  describe 'A normal user' do
+    let(:user) { create(:user) }
+    let(:game) { create(:game) }
 
-  permissions ".scope" do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it do
+      is_expected.to permit_actions(
+        [:index, :show, :create, :new, :edit, :update, :destroy]
+      )
+    end
   end
 
-  permissions :show? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+  describe 'A user that is not logged in' do
+    let(:user) { nil }
+    let(:game) { create(:game) }
 
-  permissions :create? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
-
-  permissions :update? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
-
-  permissions :destroy? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it { is_expected.to permit_actions([:index, :show]) }
+    it { is_expected.not_to permit_actions([:create, :new, :edit, :update, :destroy]) }
   end
 end

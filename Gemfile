@@ -62,6 +62,9 @@ group :development, :test do
 
   # For better display of rspec test suite progress
   gem 'fuubar', '~> 2.3.2'
+
+  # Pundit matchers for simplifying policy testing.
+  gem 'pundit-matchers', '~> 1.6.0'
 end
 
 group :development do
