@@ -48,6 +48,12 @@ group :development, :test do
   # Factory Bot for creating factories.
   gem "factory_bot_rails", "~> 4.11"
 
+  # Code coverage
+  gem 'simplecov', '~> 0.16', require: false
+
+  # Shoulda-matchers for writing better tests on models.
+  gem 'shoulda-matchers', '4.0.0.rc1'
+
   # For generating fake seeding data.
   gem 'faker', '~> 1.9'
 end
@@ -69,7 +75,6 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper'
-  gem 'simplecov', '~> 0.16', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
