@@ -56,6 +56,9 @@ group :development, :test do
 
   # For generating fake seeding data.
   gem 'faker', '~> 1.9'
+
+  # For better display of rspec test suite progress
+  gem 'fuubar', '~> 2.3.2'
 end
 
 group :development do
