@@ -15,15 +15,11 @@ class User < ApplicationRecord
     length: { minimum: 4, maximum: 20 },
     # Allow letters, numbers, disallow _ and . at the start or end,
     # disallow _ or . next to each other or themselves.
-    # Based on https://stackoverflow.com/a/12019115/7143763
-    format: /(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])/,
-    uniqueness: {
-      message: ->(_object, data) do
-        "#{data[:value]} is taken already!"
-      end
-    }
+    # Based on https://stackoverflow.com/a/51937085/7143763
+    format: /\A(?=.{4,20}\z)[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*\z/,
+    uniqueness: true
 
+  # Bio can be blank.
   validates :bio,
-    presence: true,
     length: { maximum: 1000 }
 end
