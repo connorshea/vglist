@@ -35,7 +35,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     authorize @game
 
-    if @game.update_attributes(game_params)
+    if @game.update(game_params)
       redirect_to @game, notice: "#{@game.name} was successfully updated."
     else
       render :edit
