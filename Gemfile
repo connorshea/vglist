@@ -43,7 +43,7 @@ group :development, :test do
   gem 'rubocop', '~> 0.62', require: false
 
   # rubocop-rspec for linting rspec files
-  gem 'rubocop-rspec', '~> 1.30'
+  gem 'rubocop-rspec', '~> 1.31'
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 1.7'
