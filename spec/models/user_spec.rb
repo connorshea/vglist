@@ -1,16 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  subject { FactoryBot.create(:user) }
+  subject(:user) { FactoryBot.create(:user) }
 
   describe "Validations" do
     it "is valid with valid attributes" do
-      expect(subject).to be_valid
+      expect(user).to be_valid
     end
 
     # Validate length of username.
     it do
-      should validate_length_of(:username)
+      expect(user).to validate_length_of(:username)
         .is_at_least(4).is_at_most(20)
         .on(:create)
     end
@@ -32,7 +32,7 @@ RSpec.describe User, type: :model do
 
     # Validate uniqueness of email and username
     it do
-      should validate_uniqueness_of(:email)
+      expect(user).to validate_uniqueness_of(:email)
         .ignoring_case_sensitivity
         .with_message("has already been taken")
         .on(:create)

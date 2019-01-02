@@ -7,13 +7,13 @@ RSpec.describe ReleasePolicy do
     let(:user) { create(:user) }
     let(:release) { create(:release) }
 
-    it { is_expected.to permit_actions([:index, :show]) }
+    it { should permit_actions([:index, :show]) }
   end
 
   describe 'A user that is not logged in' do
     let(:user) { nil }
     let(:release) { create(:release) }
 
-    it { is_expected.to permit_actions([:index, :show]) }
+    it { should permit_actions([:index, :show]) }
   end
 end

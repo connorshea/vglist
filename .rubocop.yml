@@ -1236,6 +1236,7 @@ RSpec/HooksBeforeExamples:
 
 RSpec/ImplicitExpect:
   Enabled: true
+  EnforcedStyle: 'should'
 
 RSpec/ImplicitSubject:
   Enabled: true

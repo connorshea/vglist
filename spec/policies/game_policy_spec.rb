@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe GamePolicy do
-  subject { described_class.new(user, game) }
+  subject(:game_policy) { described_class.new(user, game) }
 
   describe 'A logged-in user' do
     let(:user) { create(:user) }
     let(:game) { create(:game) }
 
     it do
-      is_expected.to permit_actions(
+      expect(game_policy).to permit_actions(
         [:index, :show, :create, :new, :edit, :update, :destroy]
       )
     end
@@ -18,7 +18,7 @@ RSpec.describe GamePolicy do
     let(:user) { nil }
     let(:game) { create(:game) }
 
-    it { is_expected.to permit_actions([:index, :show]) }
-    it { is_expected.not_to permit_actions([:create, :new, :edit, :update, :destroy]) }
+    it { should permit_actions([:index, :show]) }
+    it { should_not permit_actions([:create, :new, :edit, :update, :destroy]) }
   end
 end

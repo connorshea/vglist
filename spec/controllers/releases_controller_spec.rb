@@ -10,9 +10,10 @@ RSpec.describe ReleasesController, type: :controller do
   end
 
   describe "GET #show" do
+    let(:release) { create(:release) }
+
     it "returns http success" do
-      @release = create(:release)
-      get :show, params: { id: @release.id }
+      get :show, params: { id: release.id }
       expect(response).to have_http_status(:success)
     end
   end
