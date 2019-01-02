@@ -10,10 +10,8 @@
 
   <div class="form-group">
     <%= f.label :username %><br />
-    <%= f.text_field :username, class: "form-control", pattern: "(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])", minlength: 4, maxlength: 20 %>
-    <% if @minimum_password_length %>
-      <small class="form-text text-muted">(4 characters minimum, 20 maximum)</small>
-    <% end %>
+    <%= f.text_field :username, class: "form-control", minlength: 4, maxlength: 20 %>
+    <small class="form-text text-muted">(4 characters minimum, 20 maximum)</small>
   </div>
 
   <div class="form-group">

@@ -59,6 +59,9 @@ RSpec.configure do |config|
 
   # Add FactoryBot support to Rspec tests.
   config.include FactoryBot::Syntax::Methods
+
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
 end
 
 # Configure shoulda-matchers to work with rspec and all of rails.
