@@ -6,11 +6,10 @@ class ApplicationController < ActionController::Base
   # In devise-related pages, permit a username parameter.
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  # TODO: Enable this once devise is fixed.
   # Make sure pundit is implemented on everything, except index pages since
   # those should be accessible without an authorization.
-  # after_action :verify_authorized, except: :index
-  # after_action :verify_policy_scoped, only: :index
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 
   protected
 

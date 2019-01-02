@@ -6,26 +6,31 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
+    skip_authorization
     super
   end
 
   # POST /resource
   def create
+    skip_authorization
     super
   end
 
   # GET /resource/edit
   def edit
+    skip_authorization
     super
   end
 
   # PUT /resource
   def update
+    skip_authorization
     super
   end
 
   # DELETE /resource
   def destroy
+    skip_authorization
     super
   end
 
@@ -35,6 +40,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # cancel oauth signing in/up in the middle of the process,
   # removing all OAuth session data.
   def cancel
+    skip_authorization
     super
   end
 
