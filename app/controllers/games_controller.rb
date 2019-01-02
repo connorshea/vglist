@@ -3,22 +3,27 @@ class GamesController < ApplicationController
 
   def index
     @games = Game.order(:id).page params[:page]
+    skip_policy_scope
   end
 
   def show
     @game = Game.find(params[:id])
+    skip_authorization
   end
 
   def new
     @game = Game.new
+    authorize @game
   end
 
   def edit
     @game = Game.find(params[:id])
+    authorize @game
   end
 
   def create
     @game = Game.new(game_params)
+    authorize @game
     if @game.save
       redirect_to @game, notice: "#{@game.name} was successfully created."
     else
@@ -28,6 +33,7 @@ class GamesController < ApplicationController
 
   def update
     @game = Game.find(params[:id])
+    authorize @game
 
     if @game.update_attributes(game_params)
       redirect_to @game, notice: "#{@game.name} was successfully updated."
@@ -38,6 +44,7 @@ class GamesController < ApplicationController
 
   def destroy
     @game = Game.find(params[:id])
+    authorize @game
     @game.destroy
     redirect_to games_url, notice: "Game was successfully deleted."
   end

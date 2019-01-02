@@ -26,11 +26,14 @@ gem 'devise', '~> 4.5'
 # Use Bootstrap as our CSS framework.
 gem 'bootstrap', '~> 4.2.1'
 
-# Use kaminari for pagination
+# Use kaminari for pagination.
 gem 'kaminari', '~> 1.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
+
+# Use Pundit for access control.
+gem 'pundit', '~> 2.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -59,6 +62,9 @@ group :development, :test do
 
   # For better display of rspec test suite progress
   gem 'fuubar', '~> 2.3.2'
+
+  # Pundit matchers for simplifying policy testing.
+  gem 'pundit-matchers', '~> 1.6.0'
 end
 
 group :development do
