@@ -3,14 +3,15 @@ notifications:
 language: ruby
 rvm:
   - 2.6
+services:
+  - postgresql
 addons:
-  postgresql: '9.6'
   chrome: stable
 env:
   - TRAVIS_NODE_VERSION="9" CI=true RAILS_ENV=test
 cache:
-  bundler: true
-  yarn: true
+  - bundler
+  - yarn
 install:
   - bundle install
   - nvm install 9
