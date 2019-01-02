@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe GamePolicy do
   subject { described_class.new(user, game) }
 
-  describe 'A normal user' do
+  describe 'A logged-in user' do
     let(:user) { create(:user) }
     let(:game) { create(:game) }
 
