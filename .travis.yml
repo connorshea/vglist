@@ -10,8 +10,10 @@ addons:
 env:
   - TRAVIS_NODE_VERSION="9" CI=true RAILS_ENV=test
 cache:
-  - bundler
-  - yarn
+  bundler: true
+  directories:
+    - /home/travis/.rvm/
+    - node_modules
 install:
   - bundle install
   - nvm install 9
