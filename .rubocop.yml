@@ -645,9 +645,6 @@ Rails/FindBy:
 Rails/FindEach:
   Enabled: true
 
-Rails/HasAndBelongsToMany:
-  Enabled: true
-
 # TODO: Enable this.
 Rails/HasManyOrHasOneDependent:
   Enabled: false

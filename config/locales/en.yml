@@ -104,3 +104,26 @@ en:
         'macOS',
         'Linux'
       ]
+      genre: [
+        'First-person shooter',
+        'Puzzle',
+        'Platformer',
+        'Action',
+        'Adventure',
+        'Strategy',
+        'Role-playing game',
+        'Sports',
+        'Simulation',
+        'Fighting',
+        'Massively multiplayer online',
+        'Stealth',
+        'Survival',
+        'Rhythm',
+        'Survival horror',
+        'Text adventure',
+        'Visual novel',
+        'Real-time strategy',
+        'Multiplayer online battle arena',
+        'Tower defense',
+        'Trivia'
+      ]

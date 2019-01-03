@@ -8,6 +8,10 @@ module GameProperties
       def platform
         fetch('game.platform')
       end
+
+      def genre
+        fetch('game.genre')
+      end
     end
   end
 end
