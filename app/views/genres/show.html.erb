@@ -1,21 +1,25 @@
 <% content_for :title, @genre.name %>
 
 <h1><%= @genre.name %></h1>
-<h3><%= @genre.description %></h3>
+<h3>
+  <%= @genre.description.blank? ? "This genre doesn't have a description yet." : @genre.description %>
+</h3>
 
 <% if user_signed_in? %>
-  <%= link_to("Edit", edit_genre_path(@genre.id)) %>
-  <%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }) %>
+  <ul>
+    <li><%= link_to("Edit", edit_genre_path(@genre.id)) %>
+    <li><%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }) %>
+  </ul>
 <% end %>
 
 <% if !@genre.games.blank? %>
-  Games:
+  <p>Games:
 
   <ul>
     <% @genre.games.each do |game| %>
-      <li><%= link_to(game.name, game_path(game.id)) %></li>
+      <li><%= link_to(game.name, game_path(game.id)) %>
     <% end %>
   </ul>
 <% else %>
-  This genre doesn't have any games yet.
+  <p>This genre doesn't have any games yet.
 <% end %>
