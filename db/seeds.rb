@@ -84,8 +84,9 @@ end
 
 # Add 3 releases to each user's libraries.
 (1..User.count).each do |index|
-  # Skip for admin.
-  next if index == 1
+  # Skip for admin and skip occasionally to allow the database to be seeded
+  # with users that have empty libraries.
+  next if index == 1 || rand(3) == 1
 
   user = User.find(index)
 
@@ -100,4 +101,20 @@ end
   end
 end
 
-puts "Created #{User.count} users, #{Game.count} games, #{Platform.count} platforms, #{Release.count} releases, and #{ReleasePurchase.count} release purchases."
+puts "Creating Genres..."
+
+20.times do
+  Genre.create!(
+    name: Faker::Game.unique.genre,
+    description: Faker::Lorem.sentence
+  )
+end
+
+puts
+puts "Created:"
+puts "- #{User.count} users"
+puts "- #{Game.count} games"
+puts "- #{Platform.count} platforms"
+puts "- #{Release.count} releases"
+puts "- #{ReleasePurchase.count} release purchases"
+puts "- #{Genre.count} genres"
