@@ -1,7 +1,5 @@
-class Game < ApplicationRecord
-  has_many :releases
-  has_many :platforms, through: :releases
-  has_and_belongs_to_many :genres
+class Genre < ApplicationRecord
+  has_and_belongs_to_many :games
 
   validates :name,
     presence: true,
