@@ -1,0 +1,21 @@
+<% content_for :title, @genre.name %>
+
+<h1><%= @genre.name %></h1>
+<h3><%= @genre.description %></h3>
+
+<% if user_signed_in? %>
+  <%= link_to("Edit", edit_genre_path(@genre.id)) %>
+  <%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }) %>
+<% end %>
+
+<% if !@genre.games.blank? %>
+  Games:
+
+  <ul>
+    <% @genre.games.each do |game| %>
+      <li><%= link_to(game.name, game_path(game.id)) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  This genre doesn't have any games yet.
+<% end %>

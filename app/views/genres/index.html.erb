@@ -1,0 +1,15 @@
+<% content_for :title, "Genres" %>
+
+<h1>Games</h1>
+
+<% if user_signed_in? %>
+  <p><%= link_to("Create a new genre", new_genre_path) %></p>
+<% end %>
+
+<ul>
+  <% @genres.each do |genre| %>
+    <li><%= link_to(genre.name, genre_path(genre.id)) %></li>
+  <% end %>
+</ul>
+
+<%= paginate @genres %>
