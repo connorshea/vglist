@@ -17,11 +17,11 @@
 //   <app></app>
 // </div>
 
+import TurbolinksFixer from './turbolinks-fixer';
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
 import Library from './components/library.vue';
 
-Vue.use(TurbolinksAdapter);
+Vue.use(TurbolinksFixer)
 
 document.addEventListener('turbolinks:load', () => {
   let gameLibrary = document.getElementById("game-library")
