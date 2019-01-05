@@ -2,9 +2,16 @@
   "name": "game-tracker",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "3.5"
+    "@rails/webpacker": "3.5",
+    "activestorage": "^5.2.2",
+    "rails-ujs": "^5.2.2",
+    "turbolinks": "^5.2.0",
+    "vue": "^2.5.21",
+    "vue-loader": "14.2.2",
+    "vue-template-compiler": "^2.5.21",
+    "webpack": "^3.12.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "3.1.14"
+    "webpack-dev-server": "^2.11"
   }
 }
