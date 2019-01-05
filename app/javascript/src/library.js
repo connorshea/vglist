@@ -24,8 +24,11 @@ import Library from './components/library.vue';
 Vue.use(TurbolinksAdapter);
 
 document.addEventListener('turbolinks:load', () => {
-  const library = new Vue({
-    el: '#game-library',
-    components: { Library }
-  })
-})
+  let gameLibrary = document.getElementById("game-library")
+  if (gameLibrary != null) {
+    const library = new Vue({
+      el: '#game-library',
+      components: { Library }
+    })
+  }
+});
