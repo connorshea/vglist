@@ -19,16 +19,13 @@
 
 import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
-import App from '../app.vue';
+import Library from './components/library.vue';
 
 Vue.use(TurbolinksAdapter);
 
 document.addEventListener('turbolinks:load', () => {
-  const app = new Vue({
-    el: '#hello',
-    data: { 
-      message: "Can you say hello?"
-    },
-    components: { App }
+  const library = new Vue({
+    el: '#game-library',
+    components: { Library }
   })
 })

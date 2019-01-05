@@ -9,10 +9,9 @@
 import Rails from 'rails-ujs';
 import Turbolinks from 'turbolinks'
 import * as ActiveStorage from 'activestorage';
-import '../src/hello.js';
-
-console.log('Hello World from Webpacker')
 
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
+
+import '../src/library.js';

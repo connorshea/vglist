@@ -12,11 +12,12 @@
 
 <h3>Library</h3>
 <% if !@purchased_releases.blank? %>
-  <ul>
-    <% @purchased_releases.each do |release| %>
-      <li><%= link_to(release.name, release_path(release.id)) %></li>
-    <% end %>
-  </ul>
+  <div id="game-library">
+    <library
+      v-bind:purchased-releases="<%= @purchased_releases.to_json(except: [:created_at, :updated_at]) %>"
+    >
+    </library>
+  </div>
 <% else %>
   <p>
     <%= @user == current_user ? "You haven't added any games to your library yet." : "This user hasn't added any games to their library yet." %>
