@@ -9,7 +9,6 @@
     "vue": "^2.5.21",
     "vue-loader": "14.2.2",
     "vue-template-compiler": "^2.5.21",
-    "vue-turbolinks": "^2.0.3",
     "webpack": "^3.12.0"
   },
   "devDependencies": {
