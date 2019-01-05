@@ -6,8 +6,13 @@
 //
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
+import Rails from 'rails-ujs';
+import Turbolinks from 'turbolinks'
+import * as ActiveStorage from 'activestorage';
 import '../src/hello.js';
 
 console.log('Hello World from Webpacker')
-const Rails = require('rails-ujs');
+
 Rails.start();
+Turbolinks.start();
+ActiveStorage.start();

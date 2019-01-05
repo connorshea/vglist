@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",
+    "activestorage": "^5.2.2",
     "rails-ujs": "^5.2.2",
     "turbolinks": "^5.2.0",
     "vue": "^2.5.21",
