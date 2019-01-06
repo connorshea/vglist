@@ -1,0 +1,14 @@
+<% content_for :title, @company.name %>
+
+<h1><%= @company.name %></h1>
+<h3>
+  <%= @company.description.blank? ? "This company doesn't have a description yet." : @company.description %>
+</h3>
+
+<% if user_signed_in? %>
+  <ul>
+    <li><%= link_to("Edit", edit_company_path(@company.id)) %>
+    <li><%= link_to("Delete", company_path(@company.id), method: :delete, data: { confirm: "You sure?" }) %>
+  </ul>
+<% end %>
+
