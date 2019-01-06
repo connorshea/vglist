@@ -12,6 +12,10 @@ module GameProperties
       def genre
         fetch('game.genre')
       end
+
+      def company
+        fetch('game.company')
+      end
     end
   end
 end

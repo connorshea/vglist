@@ -127,3 +127,30 @@ en:
         'Tower defense',
         'Trivia'
       ]
+      company: [
+        'Valve',
+        'Nintendo',
+        'Sega',
+        'Supergiant Games',
+        'BioWare',
+        'Ubisoft',
+        'Activision Blizzard',
+        'Electronic Arts',
+        'DICE',
+        'Bethesda',
+        'Machine Games',
+        'id Software',
+        'Square Enix',
+        'Telltale Games',
+        'Double Fine',
+        'Atlus',
+        'Platinum Games',
+        'Bohemia Interactive',
+        'CD Projekt Red',
+        'Criterion Games',
+        'Crytek',
+        'Monolith Soft',
+        'Naughty Dog',
+        'Obsidian Entertainment',
+        'Rare'
+      ]

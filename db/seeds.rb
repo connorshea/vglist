@@ -111,6 +111,15 @@ puts "Creating Genres..."
   )
 end
 
+puts "Creating Companies..."
+
+20.times do
+  Company.create!(
+    name: Faker::Game.unique.company,
+    description: Faker::Lorem.sentence
+  )
+end
+
 puts
 puts "Created:"
 puts "- #{User.count} users"
@@ -119,3 +128,4 @@ puts "- #{Platform.count} platforms"
 puts "- #{Release.count} releases"
 puts "- #{ReleasePurchase.count} release purchases"
 puts "- #{Genre.count} genres"
+puts "- #{Company.count} companies"
