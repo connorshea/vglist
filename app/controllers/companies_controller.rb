@@ -8,6 +8,9 @@ class CompaniesController < ApplicationController
 
   def show
     @company = Company.find(params[:id])
+
+    @published_releases = ReleasePublisher.all.where(company: @company.id)
+    @developed_releases = ReleaseDeveloper.all.where(company: @company.id)
     skip_authorization
   end
 

@@ -12,3 +12,26 @@
   </ul>
 <% end %>
 
+<% if !@published_releases.blank? %>
+  <p>Published:
+
+  <ul>
+    <% @published_releases.each do |published_release| %>
+      <li><%= link_to(published_release.release.name, release_path(published_release.release.id)) %>
+    <% end %>
+  </ul>
+<% else %>
+  <p>This company hasn't published any releases yet.
+<% end %>
+
+<% if !@developed_releases.blank? %>
+  <p>Developed:
+
+  <ul>
+    <% @developed_releases.each do |developed_release| %>
+      <li><%= link_to(developed_release.release.name, release_path(developed_release.release.id)) %>
+    <% end %>
+  </ul>
+<% else %>
+  <p>This company hasn't developed any releases yet.
+<% end %>
