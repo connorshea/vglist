@@ -10,5 +10,8 @@ class ReleasesController < ApplicationController
 
     # TODO: Limit this.
     @owners = @release.purchasers
+
+    @publishers = ReleasePublisher.all.where(release: @release.id)
+    @developers = ReleaseDeveloper.all.where(release: @release.id)
   end
 end

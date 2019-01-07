@@ -10,10 +10,24 @@
   <li>
     Platform: <%= link_to(@release.platform.name, platform_path(@release.platform.id)) %>
   </li>
+  <li>Publisher(s):
+    <ul>
+      <% @publishers.each do |publisher| %>
+        <li><%= link_to(publisher.company.name, company_path(publisher.company.id)) %>
+      <% end %>
+    </ul>
+  </li>
+  <li>Developer(s):
+    <ul>
+      <% @developers.each do |developer| %>
+        <li><%= link_to(developer.company.name, company_path(developer.company.id)) %>
+      <% end %>
+    </ul>
+  </li>
 </ul>
 
 <% if !@owners.blank? %>
-  Owners:
+  <p>Owners:
 
   <ul>
     <% @owners.each do |user| %>
@@ -21,5 +35,6 @@
     <% end %>
   </ul>
 <% else %>
-  No one owns this release yet!
+  <p>No one owns this release yet!
 <% end %>
+

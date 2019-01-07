@@ -1,0 +1,15 @@
+<% content_for :title, "Companies" %>
+
+<h1>Companies</h1>
+
+<% if user_signed_in? %>
+  <p><%= link_to("Create a new company", new_company_path) %></p>
+<% end %>
+
+<ul>
+  <% @companies.each do |company| %>
+    <li><%= link_to(company.name, company_path(company.id)) %></li>
+  <% end %>
+</ul>
+
+<%= paginate @companies %>

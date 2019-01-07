@@ -28,7 +28,27 @@ User.find(1).confirm
     username: Faker::Internet.unique.username(4..20),
 
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
-    password: Faker::Internet.password(8, 20)
+    password: Faker::Internet.password(8, 20),
+    bio: Faker::Lorem.sentence
+  )
+end
+
+puts "Creating Genres..."
+
+# Create 20 unique genres.
+20.times do
+  Genre.create!(
+    name: Faker::Game.unique.genre,
+    description: Faker::Lorem.sentence
+  )
+end
+
+puts "Creating Companies..."
+
+20.times do
+  Company.create!(
+    name: Faker::Game.unique.company,
+    description: Faker::Lorem.sentence
   )
 end
 
@@ -36,9 +56,16 @@ puts "Creating Games..."
 
 # Create 50 random Games.
 50.times do
+  genres = []
+  rand(0..3).times.each do
+    genres << Genre.find(rand(1..Genre.count))
+  end
+  genres.uniq!
+
   Game.create!(
     name: Faker::Game.unique.name,
-    description: Faker::Lorem.sentence
+    description: Faker::Lorem.sentence,
+    genres: genres
   )
 end
 
@@ -101,21 +128,33 @@ end
   end
 end
 
-puts "Creating Genres..."
+puts "Creating Release Developers..."
 
-# Create 20 unique genres.
 20.times do
-  Genre.create!(
-    name: Faker::Game.unique.genre,
-    description: Faker::Lorem.sentence
+  release = Release.find(rand(1..Release.count))
+  developer = Company.find(rand(1..Company.count))
+
+  ReleaseDeveloper.create!(
+    release: release,
+    company: developer
+  )
+end
+
+puts "Creating Release Publishers..."
+
+20.times do
+  release = Release.find(rand(1..Release.count))
+  publisher = Company.find(rand(1..Company.count))
+
+  ReleasePublisher.create!(
+    release: release,
+    company: publisher
   )
 end
 
 puts
 puts "Created:"
-puts "- #{User.count} users"
-puts "- #{Game.count} games"
-puts "- #{Platform.count} platforms"
-puts "- #{Release.count} releases"
-puts "- #{ReleasePurchase.count} release purchases"
-puts "- #{Genre.count} genres"
+
+[User, Genre, Company, Game, Platform, Release, ReleasePurchase, ReleaseDeveloper, ReleasePublisher].each do |class_name|
+  puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
+end
