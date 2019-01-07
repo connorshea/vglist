@@ -28,7 +28,8 @@ User.find(1).confirm
     username: Faker::Internet.unique.username(4..20),
 
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
-    password: Faker::Internet.password(8, 20)
+    password: Faker::Internet.password(8, 20),
+    bio: Faker::Lorem.sentence
   )
 end
 
@@ -55,9 +56,16 @@ puts "Creating Games..."
 
 # Create 50 random Games.
 50.times do
+  genres = []
+  rand(0..3).times.each do
+    genres << Genre.find(rand(1..Genre.count))
+  end
+  genres.uniq!
+
   Game.create!(
     name: Faker::Game.unique.name,
-    description: Faker::Lorem.sentence
+    description: Faker::Lorem.sentence,
+    genres: genres
   )
 end
 
@@ -120,9 +128,33 @@ end
   end
 end
 
+puts "Creating Release Developers..."
+
+20.times do
+  release = Release.find(rand(1..Release.count))
+  developer = Company.find(rand(1..Company.count))
+
+  ReleaseDeveloper.create!(
+    release: release,
+    company: developer
+  )
+end
+
+puts "Creating Release Publishers..."
+
+20.times do
+  release = Release.find(rand(1..Release.count))
+  publisher = Company.find(rand(1..Company.count))
+
+  ReleasePublisher.create!(
+    release: release,
+    company: publisher
+  )
+end
+
 puts
 puts "Created:"
 
-[User, Genre, Company, Game, Platform, Release, ReleasePurchase].each do |class_name|
+[User, Genre, Company, Game, Platform, Release, ReleasePurchase, ReleaseDeveloper, ReleasePublisher].each do |class_name|
   puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
 end
