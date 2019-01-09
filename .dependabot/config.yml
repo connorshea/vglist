@@ -9,11 +9,11 @@ update_configs:
       - "connorshea"
     automerged_updates:
       - match:
-          dependency_group: "development"
-          kind: "semver:minor"
+          dependency_type: "development"
+          update_type: "semver:minor"
       - match:
-          dependency_group: "runtime"
-          kind: "semver:minor"
+          dependency_type: "runtime"
+          update_type: "semver:minor"
 
   - package_manager: "javascript"
     directory: "/"
