@@ -12,7 +12,7 @@ update_configs:
           dependency_type: "development"
           update_type: "semver:minor"
       - match:
-          dependency_type: "runtime"
+          dependency_type: "production"
           update_type: "semver:minor"
 
   - package_manager: "javascript"
