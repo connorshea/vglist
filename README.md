@@ -1,4 +1,4 @@
-# README
+# Continue From Checkpoint
 
 This is a Rails application for tracking your video game library.
 

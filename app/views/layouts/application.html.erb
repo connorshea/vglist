@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><%= (yield(:title) + " | " unless yield(:title).blank?).to_s + "GameTracker" %></title>
+    <title><%= (yield(:title) + " | " unless yield(:title).blank?).to_s + "Continue From Checkpoint" %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -14,7 +14,7 @@
   <body>
     <header class="site-header d-flex justify-content-between">
       <ul class="header-items-left">
-        <li><%= link_to("GameTracker", root_path) %>
+        <li><%= link_to("Continue From Checkpoint", root_path) %>
         <li><%= link_to("Games", games_path) %>
         <li><%= link_to("Releases", releases_path) %>
         <li><%= link_to("Users", users_path) %>
