@@ -1,5 +1,5 @@
 {
-  "name": "game-tracker",
+  "name": "continue-from-checkpoint",
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",
