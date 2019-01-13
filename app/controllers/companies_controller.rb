@@ -55,7 +55,7 @@ class CompaniesController < ApplicationController
     @company = Company.find(params[:id])
     authorize @company
     @company.destroy
-    redirect_to companys_url, notice: "Company was successfully deleted."
+    redirect_to companies_url, notice: "Company was successfully deleted."
   end
 
   private
