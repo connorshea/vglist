@@ -12,8 +12,10 @@ RSpec.describe User, type: :model do
     it do
       expect(user).to validate_length_of(:username)
         .is_at_least(4).is_at_most(20)
-        .on(:create)
     end
+
+    # Usernames should be unique.
+    it { should validate_uniqueness_of(:username) }
 
     # Make sure a bunch of normal usernames work fine
     it { should allow_value("janedoe").for(:username) }
@@ -30,18 +32,26 @@ RSpec.describe User, type: :model do
     it { should_not allow_value("period.").for(:username) }
     it { should_not allow_value(".period").for(:username) }
 
-    # Validate uniqueness of email and username
+    # Validate uniqueness of email
     it do
       expect(user).to validate_uniqueness_of(:email)
         .ignoring_case_sensitivity
         .with_message("has already been taken")
-        .on(:create)
     end
 
-    it { should validate_uniqueness_of(:username).on(:create) }
-
     # Validate bio length limit
-    it { should validate_length_of(:bio).is_at_most(1000).on(:create) }
+    it { should validate_length_of(:bio).is_at_most(1000) }
+
+    it 'has a role with possible values of member, moderator, and admin' do
+      expect(user).to define_enum_for(:role)
+        .with_values([:member, :moderator, :admin])
+    end
+
+    it 'has a default role of member' do
+      expect(user.role).to eql("member")
+    end
+
+    it { should validate_presence_of(:role) }
   end
 
   describe "Associations" do

@@ -1,3 +1,4 @@
+# Defines defaults for all policies.
 class ApplicationPolicy
   attr_reader :user, :record
 

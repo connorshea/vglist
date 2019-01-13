@@ -14,7 +14,8 @@ puts "Creating Users..."
 User.create!(
   email: "admin@example.com",
   username: "admin",
-  password: "password"
+  password: "password",
+  role: :admin
 )
 
 # Confirm the admin's email.
