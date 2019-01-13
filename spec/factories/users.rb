@@ -6,7 +6,7 @@ FactoryBot.define do
     bio { "My name is John Doe and I love video games." }
   end
 
-  factory :moderator do
+  factory :moderator, class: 'User' do
     sequence(:email) { |n| "moderator#{n}@example.com" }
     password { "password" }
     sequence(:username) { |n| "moderator#{n}" }
@@ -14,7 +14,7 @@ FactoryBot.define do
     role { :moderator }
   end
 
-  factory :admin do
+  factory :admin, class: 'User' do
     sequence(:email) { |n| "admin#{n}@example.com" }
     password { "password" }
     sequence(:username) { |n| "admin#{n}" }
