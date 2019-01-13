@@ -68,6 +68,9 @@ group :development, :test do
 
   # Pundit matchers for simplifying policy testing.
   gem 'pundit-matchers', '~> 1.6.0'
+
+  # Bullet catches N+1 queries.
+  gem 'bullet', '~> 5.9'
 end
 
 group :development do
