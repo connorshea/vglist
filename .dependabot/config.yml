@@ -27,10 +27,15 @@ update_configs:
     version_requirement_updates: "auto"
     default_assignees:
       - "connorshea"
-    # Allow all direct and indirect dependencies to be updated.
+    # Allow all direct dependencies to be updated, only allow indirect
+    # dependencies to update when there's a security release.
     allowed_updates:
       - match:
-          update_type: "all"
+          update_type: all
+          dependency_type: direct
+      - match:
+          update_type: security
+          dependency_type: indirect
     # Disallow updates past 3.x for webpack and 2.x for webpack-dev-server.
     # Webpacker 3.x only supports webpack 3.x.
     ignored_updates:
