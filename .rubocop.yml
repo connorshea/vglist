@@ -1227,6 +1227,7 @@ RSpec/Focus:
 
 RSpec/HookArgument:
   Enabled: true
+  EnforcedStyle: each
 
 RSpec/HooksBeforeExamples:
   Enabled: true
