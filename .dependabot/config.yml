@@ -7,6 +7,7 @@ update_configs:
     version_requirement_updates: "auto"
     default_assignees:
       - "connorshea"
+    # Automerge minor-level updates automatically (if tests pass).
     automerged_updates:
       - match:
           dependency_type: "development"
@@ -14,6 +15,10 @@ update_configs:
       - match:
           dependency_type: "production"
           update_type: "semver:minor"
+    # Allow all direct and indirect dependencies to be updated.
+    allowed_updates:
+      - match:
+          update_type: "all"
 
   - package_manager: "javascript"
     directory: "/"
@@ -22,3 +27,16 @@ update_configs:
     version_requirement_updates: "auto"
     default_assignees:
       - "connorshea"
+    # Allow all direct and indirect dependencies to be updated.
+    allowed_updates:
+      - match:
+          update_type: "all"
+    # Disallow updates past 3.x for webpack and 2.x for webpack-dev-server.
+    # Webpacker 3.x only supports webpack 3.x.
+    ignored_updates:
+      - match:
+          dependency_name: "webpack"
+          version_requirement: "3.x"
+      - match:
+          dependency_name: "webpack-dev-server"
+          version_requirement: "2.x"
