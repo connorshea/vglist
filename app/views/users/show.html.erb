@@ -2,12 +2,16 @@
 
 <h1><%= @user.username %></h1>
 
+<% if @user.admin? %>
+  <p><span class="badge badge-primary">Admin</span>
+<% elsif @user.moderator? %>
+  <p><span class="badge badge-primary">Moderator</span>
+<% end %>
+
 <% if !@user.bio.blank? %>
-  <p><%= @user.bio %></p>
+  <p><%= @user.bio %>
 <% else %>
-  <p>
-    <%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
-  <p>
+  <p><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
 <% end %>
 
 <h3>Library</h3>
@@ -19,7 +23,5 @@
     </library>
   </div>
 <% else %>
-  <p>
-    <%= @user == current_user ? "You haven't added any games to your library yet." : "This user hasn't added any games to their library yet." %>
-  </p>
+  <p><%= @user == current_user ? "You haven't added any games to your library yet." : "This user hasn't added any games to their library yet." %>
 <% end %>
