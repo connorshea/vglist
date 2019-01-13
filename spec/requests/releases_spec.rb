@@ -1,21 +1,19 @@
 require 'rails_helper'
 
-RSpec.describe PlatformsController, type: :controller do
-
-  describe "GET #index" do
+RSpec.describe "Releases", type: :request do
+  describe "GET releases_path" do
     it "returns http success" do
-      get :index
+      get releases_path
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #show" do
-    let(:platform) { create(:platform) }
-
+  describe "GET release_path" do
+    let(:release) { create(:release) }
+    
     it "returns http success" do
-      get :show, params: { id: platform.id }
+      get release_path(id: release.id)
       expect(response).to have_http_status(:success)
     end
   end
-
 end
