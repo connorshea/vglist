@@ -8,7 +8,7 @@ RSpec.describe ReleasePurchase, type: :model do
       expect(release_purchase).to be_valid
     end
 
-    it { should validate_length_of(:comment).is_at_most(500).on(:create) }
+    it { should validate_length_of(:comment).is_at_most(500) }
   end
 
   describe "Associations" do

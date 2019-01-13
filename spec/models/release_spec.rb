@@ -8,10 +8,10 @@ RSpec.describe Release, type: :model do
       expect(release).to be_valid
     end
 
-    it { should validate_presence_of(:name).on(:create) }
+    it { should validate_presence_of(:name) }
 
-    it { should validate_length_of(:name).is_at_most(120).on(:create) }
-    it { should validate_length_of(:description).is_at_most(1000).on(:create) }
+    it { should validate_length_of(:name).is_at_most(120) }
+    it { should validate_length_of(:description).is_at_most(1000) }
   end
 
   describe "Associations" do

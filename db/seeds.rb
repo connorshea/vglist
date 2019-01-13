@@ -14,7 +14,8 @@ puts "Creating Users..."
 User.create!(
   email: "admin@example.com",
   username: "admin",
-  password: "password"
+  password: "password",
+  role: :admin
 )
 
 # Confirm the admin's email.
@@ -26,10 +27,22 @@ User.find(1).confirm
     email: Faker::Internet.unique.email,
     # Usernames must be between (inclusive) 4 and 20 characters.
     username: Faker::Internet.unique.username(4..20),
-
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(8, 20),
     bio: Faker::Lorem.sentence
+  )
+end
+
+# Create 5 moderators.
+5.times do
+  User.create!(
+    email: Faker::Internet.unique.email,
+    # Usernames must be between (inclusive) 4 and 20 characters.
+    username: Faker::Internet.unique.username(4..20),
+    # Passwords can be up to 128 characters, but we'll just do up to 20 here.
+    password: Faker::Internet.password(8, 20),
+    bio: Faker::Lorem.sentence,
+    role: :moderator
   )
 end
 
