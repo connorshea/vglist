@@ -14,7 +14,7 @@
   <p><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
 <% end %>
 
-<h3>Library</h3>
+<h3 class="title is-3">Library</h3>
 <% if !@purchased_releases.blank? %>
   <div id="game-library">
     <library
