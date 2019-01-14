@@ -63,6 +63,7 @@ RSpec.configure do |config|
   # Add Devise helpers to controller and view tests.
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :request
 
   # Raise an error on N+1 queries.
   if Bullet.enable?

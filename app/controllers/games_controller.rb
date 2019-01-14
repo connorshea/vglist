@@ -25,9 +25,10 @@ class GamesController < ApplicationController
     @game = Game.new(game_params)
     authorize @game
     if @game.save
-      redirect_to @game, notice: "#{@game.name} was successfully created."
+      redirect_to @game, info: "#{@game.name} was successfully created."
     else
-      render "new", error: "Could not save game."
+      flash[:danger] = "Unable to create game."
+      render :new
     end
   end
 
@@ -36,8 +37,9 @@ class GamesController < ApplicationController
     authorize @game
 
     if @game.update(game_params)
-      redirect_to @game, notice: "#{@game.name} was successfully updated."
+      redirect_to @game, info: "#{@game.name} was successfully updated."
     else
+      flash[:danger] = "Unable to update game."
       render :edit
     end
   end
@@ -46,7 +48,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     authorize @game
     @game.destroy
-    redirect_to games_url, notice: "Game was successfully deleted."
+    redirect_to games_url, info: "Game was successfully deleted."
   end
 
   private

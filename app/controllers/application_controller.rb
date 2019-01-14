@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
   after_action :verify_policy_scoped, only: :index
   # rubocop:enable Rails/LexicallyScopedActionFilter
 
+  add_flash_types :info, :danger
+
   protected
 
   # Add username as an accepted key during sign up.
