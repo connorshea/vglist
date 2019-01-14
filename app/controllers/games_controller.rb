@@ -39,7 +39,7 @@ class GamesController < ApplicationController
     if @game.update(game_params)
       redirect_to @game, success: "#{@game.name} was successfully updated."
     else
-      flash[:error] = "Unable to update game."
+      flash.now[:error] = "Unable to update game."
       render :edit
     end
   end
