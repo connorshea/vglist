@@ -23,9 +23,6 @@ gem 'jbuilder', '~> 2.5'
 # Use devise for Users and authentication.
 gem 'devise', '~> 4.5'
 
-# Use Bootstrap as our CSS framework.
-gem 'bootstrap', '~> 4.2.1'
-
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.1'
 
