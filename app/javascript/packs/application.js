@@ -9,6 +9,7 @@ import Turbolinks from 'turbolinks'
 import * as ActiveStorage from 'activestorage';
 import '../src/application.scss';
 import '../src/library.js';
+import '../src/bulma.js';
 
 Rails.start();
 Turbolinks.start();

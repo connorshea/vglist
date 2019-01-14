@@ -1,9 +1,9 @@
 <% content_for :title, @genre.name %>
 
-<h1><%= @genre.name %></h1>
-<h3>
+<h1 class="title"><%= @genre.name %></h1>
+<h2 class="subtitle">
   <%= @genre.description.blank? ? "This genre doesn't have a description yet." : @genre.description %>
-</h3>
+</h2>
 
 <% if user_signed_in? %>
   <ul>

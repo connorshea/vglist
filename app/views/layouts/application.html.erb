@@ -12,32 +12,43 @@
   </head>
 
   <body>
-    <header class="site-header d-flex justify-content-between">
-      <ul class="header-items-left">
-        <li><%= link_to("Continue From Checkpoint", root_path) %>
-        <li><%= link_to("Games", games_path) %>
-        <li><%= link_to("Releases", releases_path) %>
-        <li><%= link_to("Users", users_path) %>
-        <li><%= link_to("Platforms", platforms_path) %>
-        <li><%= link_to("Genres", genres_path) %>
-        <li><%= link_to("Companies", companies_path) %>
-      </ul>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <%= link_to("Continue From Checkpoint", root_path, class: "navbar-item") %>
+        <%# Hamburger menu for mobile %>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
 
-      <ul class="header-items-right">
-        <% if user_signed_in? %>
-          <%= link_to(current_user.username, user_path(current_user.id)) %>
-        <% end %>
-        <%= render 'devise/menu/sign_up_items' %>
-        <%= render 'devise/menu/sign_in_items' %>
-      </ul>
-    </header>
+      <div class="navbar-menu" id="navMenu">
+        <div class="navbar-start">
+          <%= link_to("Games", games_path, class: "navbar-item") %>
+          <%= link_to("Releases", releases_path, class: "navbar-item") %>
+          <%= link_to("Users", users_path, class: "navbar-item") %>
+          <%= link_to("Platforms", platforms_path, class: "navbar-item") %>
+          <%= link_to("Genres", genres_path, class: "navbar-item") %>
+          <%= link_to("Companies", companies_path, class: "navbar-item") %>
+        </div>
+
+        <div class="navbar-end">
+          <% if user_signed_in? %>
+            <%= link_to(current_user.username, user_path(current_user.id), class: "navbar-item") %>
+          <% end %>
+          <%= render 'devise/menu/sign_up_items' %>
+          <%= render 'devise/menu/sign_in_items' %>
+        </div>
+      </div>
+    </nav>
 
     <%# Rails flash messages %>
     <% flash.each do |type, message| -%>
       <div class="alert <%= flash_class(type) %>"><%= message %></div>
     <% end %>
 
-    <div class="container mt-4">
+    <div class="content">
       <%= yield %>
     </div>
   </body>

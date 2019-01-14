@@ -1,9 +1,9 @@
 <% content_for :title, @game.name %>
 
-<h1><%= @game.name %></h1>
-<h3>
+<h1 class="title"><%= @game.name %></h1>
+<h2 class="subtitle">
   <%= @game.description.blank? ? "This game doesn't have a description yet." : @game.description %>
-</h3>
+</h2>
 
 <% if user_signed_in? %>
   <ul>

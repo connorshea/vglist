@@ -1,9 +1,5 @@
 <% if user_signed_in? %>
-  <li>
-    <%= link_to("Settings", edit_user_registration_path) %>
-  </li>
+  <%= link_to("Settings", edit_user_registration_path, class: "navbar-item") %>
 <% else %>
-  <li>
-    <%= link_to('Sign up', new_user_registration_path)  %>
-  </li>
+  <%= link_to('Sign up', new_user_registration_path, class: "navbar-item")  %>
 <% end %>

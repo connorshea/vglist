@@ -1,9 +1,9 @@
 <% content_for :title, @company.name %>
 
-<h1><%= @company.name %></h1>
-<h3>
+<h1 class="title"><%= @company.name %></h1>
+<h2 class="subtitle">
   <%= @company.description.blank? ? "This company doesn't have a description yet." : @company.description %>
-</h3>
+</h2>
 
 <% if user_signed_in? %>
   <ul>
