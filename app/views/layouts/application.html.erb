@@ -45,7 +45,7 @@
 
     <%# Rails flash messages %>
     <% flash.each do |type, message| -%>
-      <div class="alert <%= flash_class(type) %>"><%= message %></div>
+      <div class="notification <%= flash_class(type) %>"><%= message %></div>
     <% end %>
 
     <div class="container is-fluid">
