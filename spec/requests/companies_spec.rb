@@ -10,7 +10,7 @@ RSpec.describe "Companies", type: :request do
 
   describe "GET company_path" do
     let(:company) { create(:company) }
-    
+
     it "returns http success" do
       get company_path(id: company.id)
       expect(response).to have_http_status(:success)

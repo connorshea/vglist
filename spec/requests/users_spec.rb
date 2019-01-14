@@ -10,7 +10,7 @@ RSpec.describe "Users", type: :request do
 
   describe "GET release_path" do
     let(:user) { create(:user) }
-    
+
     it "returns http success" do
       get user_path(id: user.id)
       expect(response).to have_http_status(:success)

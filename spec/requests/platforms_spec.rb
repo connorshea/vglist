@@ -10,7 +10,7 @@ RSpec.describe "Platforms", type: :request do
 
   describe "GET platform_path" do
     let(:platform) { create(:platform) }
-    
+
     it "returns http success" do
       get platform_path(id: platform.id)
       expect(response).to have_http_status(:success)
