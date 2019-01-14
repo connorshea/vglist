@@ -6,10 +6,10 @@
 </h2>
 
 <% if user_signed_in? %>
-  <ul>
-    <li><%= link_to("Edit", edit_company_path(@company.id)) %>
-    <li><%= link_to("Delete", company_path(@company.id), method: :delete, data: { confirm: "You sure?" }) %>
-  </ul>
+  <div class="field is-grouped">
+    <p class="control"><%= link_to("Edit", edit_company_path(@company.id), class: "button") %>
+    <p class="control"><%= link_to("Delete", company_path(@company.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+  </div>
 <% end %>
 
 <% if !@published_releases.blank? %>
