@@ -6,10 +6,10 @@
 </h2>
 
 <% if user_signed_in? %>
-  <ul>
-    <li><%= link_to("Edit", edit_genre_path(@genre.id)) %>
-    <li><%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }) %>
-  </ul>
+  <div class="field is-grouped">
+    <p class="control"><%= link_to("Edit", edit_genre_path(@genre.id), class: "button") %>
+    <p class="control"><%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+  </div>
 <% end %>
 
 <% if !@genre.games.blank? %>
