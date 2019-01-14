@@ -48,8 +48,10 @@
       <div class="alert <%= flash_class(type) %>"><%= message %></div>
     <% end %>
 
-    <div class="content">
-      <%= yield %>
+    <div class="container is-fluid">
+      <div class="content">
+        <%= yield %>
+      </div>
     </div>
   </body>
 </html>
