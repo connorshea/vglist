@@ -1,20 +1,19 @@
 require 'rails_helper'
 
-RSpec.describe UsersController, type: :controller do
-  describe "GET #index" do
+RSpec.describe "Users", type: :request do
+  describe "GET users_path" do
     it "returns http success" do
-      get :index
+      get users_path
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #show" do
+  describe "GET release_path" do
     let(:user) { create(:user) }
 
     it "returns http success" do
-      get :show, params: { id: user.id }
+      get user_path(id: user.id)
       expect(response).to have_http_status(:success)
     end
   end
-
 end

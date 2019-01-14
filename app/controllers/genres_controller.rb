@@ -23,9 +23,10 @@ class GenresController < ApplicationController
     @genre = Genre.new(genre_params)
     authorize @genre
     if @genre.save
-      redirect_to @genre, notice: "#{@genre.name} was successfully created."
+      redirect_to @genre, success: "#{@genre.name} was successfully created."
     else
-      render "new", error: "Could not save genre."
+      flash.now[:error] = "Unable to save genre."
+      render :new
     end
   end
 
@@ -34,8 +35,9 @@ class GenresController < ApplicationController
     authorize @genre
 
     if @genre.update(genre_params)
-      redirect_to @genre, notice: "#{@genre.name} was successfully updated."
+      redirect_to @genre, success: "#{@genre.name} was successfully updated."
     else
+      flash.now[:error] = "Unable to update genre."
       render :edit
     end
   end
@@ -44,7 +46,7 @@ class GenresController < ApplicationController
     @genre = Genre.find(params[:id])
     authorize @genre
     @genre.destroy
-    redirect_to genres_url, notice: "Genre was successfully deleted."
+    redirect_to genres_url, success: "Genre was successfully deleted."
   end
 
   private

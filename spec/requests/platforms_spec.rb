@@ -1,18 +1,18 @@
 require 'rails_helper'
 
-RSpec.describe GenresController, type: :controller do
-  describe "GET #index" do
+RSpec.describe "Platforms", type: :request do
+  describe "GET platforms_path" do
     it "returns http success" do
-      get :index
+      get platforms_path
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #show" do
-    let(:genre) { create(:genre) }
+  describe "GET platform_path" do
+    let(:platform) { create(:platform) }
 
     it "returns http success" do
-      get :show, params: { id: genre.id }
+      get platform_path(id: platform.id)
       expect(response).to have_http_status(:success)
     end
   end

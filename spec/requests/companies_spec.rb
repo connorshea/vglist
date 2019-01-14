@@ -1,21 +1,19 @@
 require 'rails_helper'
 
-RSpec.describe ReleasesController, type: :controller do
-
-  describe "GET #index" do
+RSpec.describe "Companies", type: :request do
+  describe "GET companies_path" do
     it "returns http success" do
-      get :index
+      get companies_path
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #show" do
-    let(:release) { create(:release) }
+  describe "GET company_path" do
+    let(:company) { create(:company) }
 
     it "returns http success" do
-      get :show, params: { id: release.id }
+      get company_path(id: company.id)
       expect(response).to have_http_status(:success)
     end
   end
-
 end

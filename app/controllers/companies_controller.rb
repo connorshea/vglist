@@ -34,9 +34,10 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
     authorize @company
     if @company.save
-      redirect_to @company, notice: "#{@company.name} was successfully created."
+      redirect_to @company, success: "#{@company.name} was successfully created."
     else
-      render "new", error: "Could not save company."
+      flash.now[:error] = "Unable to create company."
+      render :new
     end
   end
 
@@ -45,8 +46,9 @@ class CompaniesController < ApplicationController
     authorize @company
 
     if @company.update(company_params)
-      redirect_to @company, notice: "#{@company.name} was successfully updated."
+      redirect_to @company, success: "#{@company.name} was successfully updated."
     else
+      flash.now[:error] = "Unable to update company."
       render :edit
     end
   end
@@ -55,7 +57,7 @@ class CompaniesController < ApplicationController
     @company = Company.find(params[:id])
     authorize @company
     @company.destroy
-    redirect_to companies_url, notice: "Company was successfully deleted."
+    redirect_to companies_url, success: "Company was successfully deleted."
   end
 
   private

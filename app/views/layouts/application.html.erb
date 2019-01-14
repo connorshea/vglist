@@ -31,12 +31,10 @@
         <%= render 'devise/menu/sign_in_items' %>
       </ul>
     </header>
-    
-    <% unless notice.nil? %>
-      <div class="alert alert-info"><%= notice %></div>
-    <% end %>
-    <% unless alert.nil? %>
-      <div class="alert alert-danger"><%= alert %></div>
+
+    <%# Rails flash messages %>
+    <% flash.each do |type, message| -%>
+      <div class="alert <%= flash_class(type) %>"><%= message %></div>
     <% end %>
 
     <div class="container mt-4">
