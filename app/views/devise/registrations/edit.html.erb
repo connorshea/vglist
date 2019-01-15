@@ -19,7 +19,7 @@
     <div class="control">
       <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
       <% if @minimum_password_length %>
-        <small class="form-text text-muted">(<%= @minimum_password_length %> characters minimum, leave blank if you don't want to change it)</small>
+        <p class="help">(<%= @minimum_password_length %> characters minimum, leave blank if you don't want to change it)</p>
       <% end %>
     </div>
   </div>
@@ -35,7 +35,7 @@
     <%= f.label :current_password, class: "label" %>
     <div class="control">
       <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
-      <small class="form-text text-muted">(we need your current password to confirm your changes)</small>
+      <p class="help">(we need your current password to confirm your changes)</p>
     </div>
   </div>
 

@@ -14,7 +14,7 @@
     <%= f.label :username, class: "label" %>
     <div class="control">
       <%= f.text_field :username, class: "input", minlength: 4, maxlength: 20 %>
-      <small class="form-text text-muted">(4 characters minimum, 20 maximum)</small>
+      <p class="help">(4 characters minimum, 20 maximum)</p>
     </div>
   </div>
 
@@ -23,7 +23,7 @@
     <div class="control">
       <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
       <% if @minimum_password_length %>
-        <small class="form-text text-muted">(<%= @minimum_password_length %> characters minimum)</small>
+        <p class="help">(<%= @minimum_password_length %> characters minimum)</p>
       <% end %>
     </div>
   </div>
