@@ -28,5 +28,13 @@ module GameTracker
     # the framework and any gems in your application.
 
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
+
+    # Customize what the rails generate command creates.
+    config.generators do |generate|
+      # Disable helper generation
+      generate.helper false
+      # Disable CSS and JavaScript generation
+      generate.assets false
+    end
   end
 end
