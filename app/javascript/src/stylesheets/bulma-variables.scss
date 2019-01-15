@@ -12,3 +12,7 @@ $navbar-item-hover-background-color: transparent;
 // Remove shadows from inputs.
 $input-shadow: none;
 $input-focus-box-shadow-size: 0;
+
+// Fix Bulma's usage of css variables causing postcss to spam warnings.
+// https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
+$variable-columns: false;
