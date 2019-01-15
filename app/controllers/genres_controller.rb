@@ -2,6 +2,10 @@ class GenresController < ApplicationController
   def index
     @genres = Genre.order(:id).page params[:page]
     skip_policy_scope
+    respond_to do |format|
+      format.html
+      format.json { render json: @genres }
+    end
   end
 
   def show

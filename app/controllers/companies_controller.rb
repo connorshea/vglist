@@ -4,6 +4,10 @@ class CompaniesController < ApplicationController
   def index
     @companies = Company.order(:id).page params[:page]
     skip_policy_scope
+    respond_to do |format|
+      format.html
+      format.json { render json: @companies }
+    end
   end
 
   def show

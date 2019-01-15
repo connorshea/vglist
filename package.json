@@ -10,6 +10,7 @@
     "turbolinks": "^5.2.0",
     "vue": "^2.5.22",
     "vue-loader": "14.2.2",
+    "vue-select": "^2.5.1",
     "vue-template-compiler": "^2.5.22",
     "webpack": "^3.12.0"
   },
