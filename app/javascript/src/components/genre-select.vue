@@ -1,5 +1,6 @@
 <template>
   <v-select
+    multiple
     :options="options"
     @search="onSearch"
     label="name"
@@ -25,9 +26,13 @@ export default {
     }
   },
   methods: {
+    /*
+     * @param {search}  String   Current search text
+     * @param {loading} Function Toggle loading class
+     */
     onSearch(search, loading) {
       loading(true);
-      console.log(this);
+      // TODO: Debounce this to prevent requests on every key press.
       fetch(this.genresPath)
         .then((response) => {
           return response.json();
