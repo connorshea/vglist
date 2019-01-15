@@ -1,9 +1,5 @@
-/* eslint no-console: 0 */
-import TurbolinksAdapter from './turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
 import Library from './components/library.vue';
-
-Vue.use(TurbolinksAdapter)
 
 document.addEventListener('turbolinks:load', () => {
   let gameLibrary = document.getElementById("game-library")
