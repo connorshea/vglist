@@ -1,7 +1,7 @@
 <% content_for :title, @platform.name %>
 
-<h1><%= @platform.name %></h1>
-<h2><%= @platform.description %></h2>
+<h1 class="title"><%= @platform.name %></h1>
+<h2 class="subtitle"><%= @platform.description %></h2>
 
 <% if !@platform.releases.blank? %>
   Releases:

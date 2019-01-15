@@ -1,15 +1,19 @@
 <%= form_for @genre do |f| %>
-  <div class="form-group">
-    <%= f.label :name, "Genre name" %>
-    <%= f.text_field :name, autocomplete: "off", class: "form-control" %>
+  <div class="field">
+    <%= f.label :name, "Genre name", class: "label" %>
+    <div class="control">
+      <%= f.text_field :name, autocomplete: "off", class: "input" %>
+    </div>
   </div>
 
-  <div class="form-group">
-    <%= f.label :description, "Description" %>
-    <%= f.text_area :description, class: "form-control" %>
+  <div class="field">
+    <%= f.label :description, "Description", class: "label" %>
+    <div class="control">
+      <%= f.text_area :description, class: "textarea" %>
+    </div>
   </div>
 
-  <div class="form-group">
-    <%= f.submit "Submit", class: "btn btn-primary" %>
+  <div class="field">
+    <%= f.submit "Submit", class: "button is-primary" %>
   </div>
 <% end %>
