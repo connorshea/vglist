@@ -1,25 +1,31 @@
-<h2>Sign in</h2>
+<h1 class="title">Sign in</h1>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="form-group">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+  <div class="field">
+    <%= f.label :email, class: "label" %>
+    <div class="control">
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
+    </div>
   </div>
 
-  <div class="form-group">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password", class: "form-control" %>
+  <div class="field">
+    <%= f.label :password, class: "label" %>
+    <div class="control">
+      <%= f.password_field :password, autocomplete: "current-password", class: "input" %>
+    </div>
   </div>
 
   <% if devise_mapping.rememberable? -%>
-    <div class="form-group form-check">
-      <%= f.check_box :remember_me, class: 'form-check-input' %>
-      <%= f.label :remember_me, class: 'form-check-label' %>
+    <div class="field">
+      <%= f.label :remember_me, class: 'checkbox' do %>
+        <%= f.check_box :remember_me %>
+        Remember me
+      <% end %>
     </div>
   <% end -%>
 
-  <div class="form-group">
-    <%= f.submit "Sign in", class: "btn btn-primary" %>
+  <div class="field">
+    <%= f.submit "Sign in", class: "button is-primary" %>
   </div>
 <% end %>
 

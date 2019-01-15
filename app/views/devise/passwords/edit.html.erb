@@ -1,24 +1,28 @@
-<h2>Change your password</h2>
+<h1 class="title">Change your password</h1>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
   <%= f.hidden_field :reset_password_token %>
 
-  <div class="form-group">
-    <%= f.label :password, "New password" %><br />
+  <div class="field">
+    <%= f.label :password, "New password", class: "label" %>
     <% if @minimum_password_length %>
       <small class="form-text text-muted">(<%= @minimum_password_length %> characters minimum)</small>
     <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "form-control" %>
+    <div class="control">
+      <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "input" %>
+    </div>
   </div>
 
-  <div class="form-group">
-    <%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+  <div class="field">
+    <%= f.label :password_confirmation, "Confirm new password" %>
+    <div class="control">
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: "input" %>
+    </div>
   </div>
 
-  <div class="form-group">
-    <%= f.submit "Change my password", class: "btn btn-primary" %>
+  <div class="field">
+    <%= f.submit "Change my password", class: "button is-primary" %>
   </div>
 <% end %>
 
