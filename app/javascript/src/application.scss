@@ -1,3 +1,7 @@
 @import './stylesheets/bulma-variables.scss';
 @import '~bulma/bulma.sass';
 @import './stylesheets/padding-and-margins.scss';
+
+nav.navbar {
+  border-bottom: 1px solid $grey-light;
+}
