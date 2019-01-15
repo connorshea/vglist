@@ -1,6 +1,14 @@
-$navbar-item-hover-background-color: transparent;
+// Change the primary color to something less ugly.
+$primary: hsl(204, 86%, 53%);
 
+// Remove the radius and modify padding on notifications so they can be used
+// for Rails flashes.
 $notification-radius: 0;
 $notification-padding: 1.0rem 2.5rem 1.0rem 1.5rem;
+
+// Remove hover background color from navbar items.
+$navbar-item-hover-background-color: transparent;
+
+// Remove shadows from inputs.
 $input-shadow: none;
-$primary: hsl(204, 86%, 53%);
+$input-focus-box-shadow-size: 0;
