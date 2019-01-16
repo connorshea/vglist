@@ -1,15 +1,21 @@
 <%= form_for @game do |f| %>
   <div class="field">
     <%= f.label :name, "Game title", class: "label" %>
-    <div class="control">
-      <%= f.text_field :name, autocomplete: "off", class: "input" %>
+    <div class="control" id="game-title-text-field">
+      <text-field
+        :form-class='"game"'
+        :attribute='"name"'
+      ></text-field>
     </div>
   </div>
 
   <div class="field">
     <%= f.label :description, "Description", class: "label" %>
-    <div class="control">
-      <%= f.text_area :description, class: "textarea" %>
+    <div class="control" id="game-description-text-area">
+      <text-area
+        :form-class='"game"'
+        :attribute='"description"'
+      ></text-area>
     </div>
   </div>
 
