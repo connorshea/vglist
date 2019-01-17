@@ -1,11 +1,18 @@
 <template>
-  <input
-    autocomplete="off"
-    class="input"
-    type="text"
-    v-bind:name="textFieldName"
-    v-bind:id="textFieldId"
-  >
+  <div class="field">
+    <label class="label" v-bind:for="textFieldId">{{ label }}</label>
+    <div class="control">
+      <input
+        autocomplete="off"
+        class="input"
+        type="text"
+        v-bind:name="textFieldName"
+        v-bind:id="textFieldId"
+        v-bind:value="name"
+        v-on:input="$emit('input', $event.target.value)"
+      >
+    </div>
+  </div>
 </template>
 
 <script>
@@ -19,6 +26,19 @@ export default {
     attribute: {
       type: String,
       required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      name: this.value
     }
   },
   computed: {

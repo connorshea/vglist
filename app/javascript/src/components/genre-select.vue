@@ -1,16 +1,23 @@
 <template>
-  <v-select
-    multiple
-    :options="options"
-    @search="onSearch"
-    label="name"
-  ></v-select>
+  <div class="field">
+    <label class="label">{{ label }}</label>
+    <div class="control">
+      <v-select
+        multiple
+        :options="options"
+        @search="onSearch"
+        label="name"
+        v-bind:value="genres"
+      ></v-select>
+    </div>
+  </div>
 </template>
 
 <script>
 import vSelect from 'vue-select'
 
 export default {
+  name: 'genre-select',
   components: {
     vSelect
   },
@@ -18,11 +25,20 @@ export default {
     genresPath: {
       type: String,
       required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: Array,
+      required: true
     }
   },
   data: function() {
     return {
-      options: []
+      options: [],
+      genres: this.value
     }
   },
   methods: {
@@ -45,4 +61,3 @@ export default {
   }
 }
 </script>
-

@@ -1,9 +1,16 @@
 <template>
-  <textarea
-    class="textarea"
-    v-bind:name="textAreaName"
-    v-bind:id="textAreaId"
-  ></textarea>
+  <div class="field">
+    <label class="label" v-bind:for="textAreaId">{{ label }}</label>
+    <div class="control">
+      <textarea
+        class="textarea"
+        v-bind:name="textAreaName"
+        v-bind:id="textAreaId"
+        v-bind:value="description"
+        v-on:input="$emit('input', $event.target.value)"
+      ></textarea>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -17,6 +24,19 @@ export default {
     attribute: {
       type: String,
       required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      description: this.value
     }
   },
   computed: {

@@ -2,4 +2,11 @@
 
 <h1 class="title">Create a new game</h1>
 
-<%= render 'form' %>
+<%= form_for @game do |f| %>
+  <div id='game-form'>
+    <game-form
+      :submitPath="<%= games_path.to_json %>"
+    ></game-form>
+  </div>
+<% end %>
+

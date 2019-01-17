@@ -1,34 +1,10 @@
 <%= form_for @game do |f| %>
-  <div class="field">
-    <%= f.label :name, "Game title", class: "label" %>
-    <div class="control" id="game-title-text-field">
-      <text-field
-        :form-class='"game"'
-        :attribute='"name"'
-      ></text-field>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= f.label :description, "Description", class: "label" %>
-    <div class="control" id="game-description-text-area">
-      <text-area
-        :form-class='"game"'
-        :attribute='"description"'
-      ></text-area>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= f.label :description, "Genre", class: "label" %>
-    <div id="genre-select">
-      <genre-select
-        v-bind:genres-path="<%= genres_path(format: :json).to_json %>"
-      ></genre-select>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= f.submit "Submit", class: "button is-primary" %>
+  <div id='game-form'>
+    <game-form
+      :submitPath="<%= games_path.to_json %>"
+      :name="<%= @game.name.to_json %>"
+      :description="<%= @game.description.to_json %>"
+      :genres="<%= @game.genres.to_json %>"
+    ></game-form>
   </div>
 <% end %>

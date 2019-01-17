@@ -2,4 +2,13 @@
 
 <h1 class="title">Edit <%= @game.name %></h1>
 
-<%= render 'form' %>
+<%= form_for @game do |f| %>
+  <div id='game-form'>
+    <game-form
+      :submitPath="<%= games_path.to_json %>"
+      :name="<%= @game.name.to_json %>"
+      :description="<%= @game.description.to_json %>"
+      :genres="<%= @game.genres.to_json %>"
+    ></game-form>
+  </div>
+<% end %>
