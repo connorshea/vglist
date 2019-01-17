@@ -22,10 +22,6 @@ export default {
     vSelect
   },
   props: {
-    genresPath: {
-      type: String,
-      required: true
-    },
     label: {
       type: String,
       required: true
@@ -38,7 +34,8 @@ export default {
   data: function() {
     return {
       options: [],
-      genres: this.value
+      genres: this.value,
+      genresPath: '/genres.json',
     }
   },
   methods: {

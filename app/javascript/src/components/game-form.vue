@@ -1,22 +1,21 @@
 <template>
   <div>
     <text-field
-      :form-class='"game"'
-      :attribute='"name"'
-      :label='"Game title"'
+      :form-class="formData.class"
+      :attribute="formData.name.attribute"
+      :label="formData.name.label"
       v-model="game.name"
     ></text-field>
 
     <text-area
-      :form-class='"game"'
-      :attribute='"description"'
-      :label='"Description"'
+      :form-class="formData.class"
+      :attribute="formData.description.attribute"
+      :label="formData.description.label"
       v-model="game.description"
     ></text-area>
 
     <genre-select
-      :genres-path="genresPath"
-      :label='"Genres"'
+      :label="formData.genres.label"
       v-model="game.genres"
     ></genre-select>
 
@@ -57,22 +56,43 @@ export default {
       default: function() {
         return []
       }
+    },
+    submitPath: {
+      type: String,
+      required: true
+    },
+    create: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
     return {
-      genresPath: '/genres.json',
       game: {
         name: this.name,
         description: this.description,
         genres: this.genres
+      },
+      formData: {
+        class: 'game',
+        name: {
+          label: 'Game title',
+          attribute: 'name'
+        },
+        description: {
+          label: 'Description',
+          attribute: 'description'
+        },
+        genres: {
+          label: 'Genres'
+        }
       }
     }
   },
   methods: {
     onSubmit() {
-      fetch('/games', {
-        method: 'post',
+      fetch(this.submitPath, {
+        method: this.create ? 'POST' : 'PUT',
         body: JSON.stringify(this.game),
         headers: {
           'Content-Type': 'application/json',
@@ -80,9 +100,14 @@ export default {
         },
         credentials: 'same-origin'
       }).then(function(response) {
-        return response.json();
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response;
       }).then(function(data) {
-        console.log(data);
+        Turbolinks.visit(data.url);
+      }).catch(function(error) {
+        console.log(error);
       });
     }
   }

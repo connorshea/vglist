@@ -8,7 +8,7 @@
         type="text"
         v-bind:name="textFieldName"
         v-bind:id="textFieldId"
-        v-bind:value="name"
+        v-bind:value="dataValue"
         v-on:input="$emit('input', $event.target.value)"
       >
     </div>
@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      name: this.value
+      dataValue: this.value
     }
   },
   computed: {

@@ -6,7 +6,7 @@
         class="textarea"
         v-bind:name="textAreaName"
         v-bind:id="textAreaId"
-        v-bind:value="description"
+        v-bind:value="dataValue"
         v-on:input="$emit('input', $event.target.value)"
       ></textarea>
     </div>
@@ -36,7 +36,7 @@ export default {
   },
   data() {
     return {
-      description: this.value
+      dataValue: this.value
     }
   },
   computed: {
