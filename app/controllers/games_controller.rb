@@ -27,14 +27,12 @@ class GamesController < ApplicationController
     respond_to do |format|
       if @game.save
         format.html { redirect_to @game, success: "#{@game.name} was successfully created." }
-        format.js { render json: @game, status: :created, location: @game }
         format.json { render json: @game, status: :created, location: @game }
       else
         format.html do
           flash.now[:error] = "Unable to create game."
           render :new
         end
-        format.js { render json: @game.errors, status: :unprocessable_entity }
         format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end
@@ -47,7 +45,6 @@ class GamesController < ApplicationController
     respond_to do |format|
       if @game.update(game_params)
         format.html { render html: @game, success: "#{@game.name} was successfully updated." }
-        format.js { render json: @game, status: :success, location: @game }
         format.json { render json: @game, status: :success, location: @game }
       else
         format.html do
