@@ -5,6 +5,7 @@ AllCops:
   DisabledByDefault: true
   Exclude:
     - "bin/*"
+    - "db/schema.rb"
 
 #################### Bundler ###############################
 
@@ -804,7 +805,7 @@ Style/CommentedKeyword:
   Enabled: true
 
 Style/ConditionalAssignment:
-  Enabled: true
+  Enabled: false
 
 Style/DefWithParentheses:
   Enabled: true

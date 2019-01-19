@@ -19,7 +19,9 @@ Rails.application.routes.draw do
 
   resources :platforms, only: [:index, :show]
 
-  resources :genres
+  resources :genres do
+    get :search, on: :collection
+  end
 
   resources :companies
 end
