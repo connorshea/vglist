@@ -2,7 +2,7 @@
 
 <h1 class="title">Genres</h1>
 
-<% if user_signed_in? %>
+<% if policy(@genre).create? %>
   <p><%= link_to("Create a new genre", new_genre_path) %></p>
 <% end %>
 

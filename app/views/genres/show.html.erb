@@ -5,7 +5,7 @@
   <%= @genre.description.blank? ? "This genre doesn't have a description yet." : @genre.description %>
 </h2>
 
-<% if user_signed_in? %>
+<% if policy(@genre).update? || policy(@genre).destroy? %>
   <div class="field is-grouped">
     <p class="control"><%= link_to("Edit", edit_genre_path(@genre.id), class: "button") %>
     <p class="control"><%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
