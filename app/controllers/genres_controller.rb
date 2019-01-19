@@ -53,6 +53,20 @@ class GenresController < ApplicationController
     redirect_to genres_url, success: "Genre was successfully deleted."
   end
 
+  def search
+    if params[:query].present?
+      @genres = Genre.search(params[:query]).page(params[:page])
+    else
+      @genres = Genre.none.page(params[:page])
+    end
+
+    authorize @genres
+
+    respond_to do |format|
+      format.json { render json: @genres }
+    end
+  end
+
   private
 
   def genre_params

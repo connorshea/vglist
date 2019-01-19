@@ -35,7 +35,7 @@ export default {
     return {
       options: [],
       genres: this.value,
-      genresPath: '/genres.json',
+      genresSearchPath: `${window.location.origin}/genres/search.json`,
     }
   },
   methods: {
@@ -45,9 +45,15 @@ export default {
      */
     onSearch(search, loading) {
       loading(true);
+      let searchUrl = new URL(this.genresSearchPath);
+      searchUrl.searchParams.append('query', search);
       // TODO: Debounce this to prevent requests on every key press.
-      fetch(this.genresPath)
-        .then((response) => {
+      // TODO: Add error handling.
+      fetch(searchUrl, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((response) => {
           return response.json();
         })
         .then((genres) => {

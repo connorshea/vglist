@@ -26,6 +26,10 @@ class GenrePolicy < ApplicationPolicy
     user.present?
   end
 
+  def search?
+    user.present?
+  end
+
   class Scope < Scope
     def resolve
       scope.all
