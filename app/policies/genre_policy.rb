@@ -15,15 +15,15 @@ class GenrePolicy < ApplicationPolicy
   end
 
   def create?
-    user.moderator? || user.admin?
+    user && (user.moderator? || user.admin?)
   end
 
   def update?
-    user.moderator? || user.admin?
+    user && (user.moderator? || user.admin?)
   end
 
   def destroy?
-    user.moderator? || user.admin?
+    user && (user.moderator? || user.admin?)
   end
 
   def search?

@@ -5,10 +5,14 @@
   <%= @game.description.blank? ? "This game doesn't have a description yet." : @game.description %>
 </h2>
 
-<% if user_signed_in? %>
+<% if policy(@game).update? || policy(@game).destroy? %>
   <div class="field is-grouped">
-    <p class="control"><%= link_to("Edit", edit_game_path(@game.id), class: "button") %>
-    <p class="control"><%= link_to("Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% if policy(@game).update? %>
+      <p class="control"><%= link_to("Edit", edit_game_path(@game.id), class: "button") %>
+    <% end %>
+    <% if policy(@game).destroy? %>
+      <p class="control"><%= link_to("Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% end %>
   </div>
 <% end %>
 

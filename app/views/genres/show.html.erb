@@ -7,8 +7,12 @@
 
 <% if policy(@genre).update? || policy(@genre).destroy? %>
   <div class="field is-grouped">
-    <p class="control"><%= link_to("Edit", edit_genre_path(@genre.id), class: "button") %>
-    <p class="control"><%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% if policy(@genre).update? %>
+      <p class="control"><%= link_to("Edit", edit_genre_path(@genre.id), class: "button") %>
+    <% end %>
+    <% if policy(@genre).destroy? %>
+      <p class="control"><%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% end %>
   </div>
 <% end %>
 
