@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - "bin/*"
     - "db/schema.rb"
+    - "node_modules/**/*"
 
 #################### Bundler ###############################
 
@@ -295,6 +296,9 @@ Lint/EnsureReturn:
   Enabled: true
 
 Lint/ErbNewArguments:
+  Enabled: true
+
+Lint/FlipFlop:
   Enabled: true
 
 Lint/FloatOutOfRange:
@@ -850,9 +854,6 @@ Style/EvalWithLocation:
   Enabled: true
 
 Style/EvenOdd:
-  Enabled: true
-
-Style/FlipFlop:
   Enabled: true
 
 Style/For:
