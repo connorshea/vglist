@@ -19,12 +19,11 @@
       v-model="game.genres"
     ></genre-select>
 
-    <input
+    <button
       class="button is-primary"
-      type="submit"
       value="Submit"
       @click.prevent="onSubmit"
-    >
+    >Submit</button>
   </div>
 </template>
 
@@ -91,9 +90,14 @@ export default {
   },
   methods: {
     onSubmit() {
+      let genre_ids = Array.from(this.game.genres, genre => genre.id);
       fetch(this.submitPath, {
         method: this.create ? 'POST' : 'PUT',
-        body: JSON.stringify(this.game),
+        body: JSON.stringify({ game: {
+          name: this.game.name,
+          description: this.game.description,
+          genre_ids: genre_ids
+        }}),
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': Rails.csrfToken()
