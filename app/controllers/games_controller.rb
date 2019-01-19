@@ -24,11 +24,17 @@ class GamesController < ApplicationController
   def create
     @game = Game.new(game_params)
     authorize @game
-    if @game.save
-      redirect_to @game, success: "#{@game.name} was successfully created."
-    else
-      flash.now[:error] = "Unable to create game."
-      render :new
+    respond_to do |format|
+      if @game.save
+        format.html { redirect_to @game, success: "#{@game.name} was successfully created." }
+        format.json { render json: @game, status: :created, location: @game }
+      else
+        format.html do
+          flash.now[:error] = "Unable to create game."
+          render :new
+        end
+        format.json { render json: @game.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -36,11 +42,17 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     authorize @game
 
-    if @game.update(game_params)
-      redirect_to @game, success: "#{@game.name} was successfully updated."
-    else
-      flash.now[:error] = "Unable to update game."
-      render :edit
+    respond_to do |format|
+      if @game.update(game_params)
+        format.html { render html: @game, success: "#{@game.name} was successfully updated." }
+        format.json { render json: @game, status: :success, location: @game }
+      else
+        format.html do
+          flash.now[:error] = "Unable to update game."
+          render :edit
+        end
+        format.json { render json: @game.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -54,6 +66,10 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(:name, :description)
+    params.require(:game).permit(
+      :name,
+      :description,
+      genre_ids: []
+    )
   end
 end

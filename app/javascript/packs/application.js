@@ -8,8 +8,13 @@ import Rails from 'rails-ujs';
 import Turbolinks from 'turbolinks'
 import * as ActiveStorage from 'activestorage';
 import '../src/application.scss';
+import TurbolinksAdapter from '../src/turbolinks-adapter';
+import Vue from 'vue/dist/vue.esm';
 import '../src/library.js';
+import '../src/form.js';
 import '../src/bulma.js';
+
+Vue.use(TurbolinksAdapter);
 
 Rails.start();
 Turbolinks.start();

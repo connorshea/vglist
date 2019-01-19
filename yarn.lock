@@ -6847,6 +6847,11 @@ vue-loader@14.2.2:
     vue-style-loader "^4.0.1"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-select@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-2.5.1.tgz#9886e7123150a52dc8dbfe3202d0387268835aaa"
+  integrity sha512-Hs+arh7+0gLJoYiM3r9V/5CRn5XsAT8tVkouTkpDAWb923KFgraWrKDLSqz3ROedZUkuVIwkFuYq8+baHUf+bg==
+
 vue-style-loader@^4.0.1:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"

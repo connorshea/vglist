@@ -2,4 +2,12 @@
 
 <h1 class="title">Edit <%= @game.name %></h1>
 
-<%= render 'form' %>
+<div id='game-form'>
+  <game-form
+    :submit-path="<%= game_path(@game.id).to_json %>"
+    :create="false"
+    :name="<%= @game.name.to_json %>"
+    :description="<%= @game.description.to_json %>"
+    :genres="<%= @game.genres.to_json %>"
+  ></game-form>
+</div>
