@@ -15,24 +15,18 @@ class GenrePolicy < ApplicationPolicy
   end
 
   def create?
-    user.present?
+    user && (user.moderator? || user.admin?)
   end
 
   def update?
-    user.present?
+    user && (user.moderator? || user.admin?)
   end
 
   def destroy?
-    user.present?
+    user && (user.moderator? || user.admin?)
   end
 
   def search?
     user.present?
-  end
-
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
   end
 end
