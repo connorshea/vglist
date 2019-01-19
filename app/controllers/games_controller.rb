@@ -51,7 +51,6 @@ class GamesController < ApplicationController
           flash.now[:error] = "Unable to update game."
           render :edit
         end
-        format.js { render json: @game.errors, status: :unprocessable_entity }
         format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end
