@@ -8,7 +8,7 @@ RSpec.describe "Games", type: :feature do
     it "with no user" do
       visit(games_path)
       expect(page).to have_link(href: game_path(game))
-      expect(page).not_to have_link(href: new_game_path)
+      expect(page).to have_no_link(href: new_game_path)
     end
 
     it "with user" do
@@ -27,7 +27,7 @@ RSpec.describe "Games", type: :feature do
     it "with no user" do
       visit(game_path(game))
       expect(page).to have_content(game.name)
-      expect(page).not_to have_link(href: edit_game_path(game))
+      expect(page).to have_no_link(href: edit_game_path(game))
     end
 
     it "with user" do
@@ -71,6 +71,23 @@ RSpec.describe "Games", type: :feature do
       click_button 'Submit'
 
       expect(page).to have_current_path(game_path(game))
+    end
+  end
+
+  describe "delete game" do
+    let!(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+
+    it "accepts valid game data" do
+      sign_in(user)
+      visit(game_path(game))
+
+      accept_alert do
+        click_link 'Delete'
+      end
+
+      expect(page).to have_current_path(games_path)
+      expect(page).to have_no_content(game.name)
     end
   end
 end
