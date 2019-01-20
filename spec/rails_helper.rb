@@ -5,6 +5,8 @@ require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'capybara/rails'
+require 'selenium/webdriver'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -64,6 +66,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :feature
 
   # Raise an error on N+1 queries.
   if Bullet.enable?
@@ -79,3 +82,37 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+# Capybara configuration
+Capybara.server = :puma, { Silent: true }
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app,
+    browser: :chrome,
+    driver_opts: {
+      log_path: 'tmp/chrome.log'
+    })
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w[headless] }
+  )
+
+  Capybara::Selenium::Driver.new app,
+    browser: :chrome,
+    desired_capabilities: capabilities,
+    driver_opts: {
+      log_path: 'tmp/chrome.log'
+    }
+end
+
+# Show Chrome running the test suite when RSPEC_FEATURE_DEBUG is set.
+if ENV['RSPEC_FEATURE_DEBUG']
+  Capybara.default_driver = :chrome
+else
+  Capybara.default_driver = :headless_chrome
+end
+
+# Use headless_chrome for any feature tests marked with js: true
+Capybara.javascript_driver = :headless_chrome

@@ -1085,7 +1085,7 @@ Style/SymbolLiteral:
   Enabled: true
 
 Style/SymbolProc:
-  Enabled: true
+  Enabled: false
 
 Style/TernaryParentheses:
   Enabled: true
@@ -1279,6 +1279,7 @@ RSpec/MultipleDescribes:
 
 RSpec/MultipleExpectations:
   Enabled: true
+  Max: 3
 
 RSpec/MultipleSubjects:
   Enabled: true
