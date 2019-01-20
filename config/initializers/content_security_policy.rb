@@ -10,7 +10,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.img_src :self, :https, :data
   policy.object_src :none
   # Allow unsafe_eval in development for Vue.js DevTools.
-  if Rails.env.development?
+  if !Rails.env.production?
     policy.script_src :self, :https, :unsafe_eval
     policy.style_src :self, :https, :unsafe_inline
   else
