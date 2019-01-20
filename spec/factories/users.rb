@@ -16,6 +16,10 @@ FactoryBot.define do
     sequence(:username) { |n| "moderator#{n}" }
     bio { "I am a moderator." }
     role { :moderator }
+
+    factory :confirmed_moderator do
+      after(:create) { |user| user.confirm }
+    end
   end
 
   factory :admin, class: 'User' do
@@ -24,5 +28,9 @@ FactoryBot.define do
     sequence(:username) { |n| "admin#{n}" }
     bio { "I am an admin." }
     role { :admin }
+
+    factory :confirmed_admin do
+      after(:create) { |user| user.confirm }
+    end
   end
 end
