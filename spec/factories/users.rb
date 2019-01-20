@@ -4,6 +4,10 @@ FactoryBot.define do
     password { "password" }
     sequence(:username) { |n| "johndoe#{n}" }
     bio { "My name is John Doe and I love video games." }
+
+    factory :confirmed_user do
+      after(:create) { |user| user.confirm }
+    end
   end
 
   factory :moderator, class: 'User' do
