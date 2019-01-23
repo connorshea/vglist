@@ -83,6 +83,8 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   # Better error pages.
   gem 'better_errors', '~> 2.5'
+  # For more useful BetterError error pages.
+  gem 'binding_of_caller', '~> 0.8'
   # Open screenshots when they're taken with capybara.
   gem 'launchy', '~> 2.4'
 end
