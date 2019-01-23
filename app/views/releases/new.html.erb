@@ -2,4 +2,9 @@
 
 <h1 class="title">Create a new release</h1>
 
-<%= render 'form' %>
+<div id='release-form'>
+  <release-form
+    :submit-path="<%= releases_path.to_json %>"
+    :create="true"
+  ></release-form>
+</div>

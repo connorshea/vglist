@@ -2,4 +2,16 @@
 
 <h1 class="title">Edit <%= @release.name %></h1>
 
-<%= render 'form' %>
+<div id='release-form'>
+  <release-form
+    :submit-path="<%= release_path(@release.id).to_json %>"
+    :create="false"
+    :name="<%= @release.name.to_json %>"
+    :description="<%= @release.description.to_json %>"
+    :game="<%= @release.game.to_json %>"
+    :platform="<%= @release.platform.to_json %>"
+    :developers="<%= @release.developers.to_json %>"
+    :publishers="<%= @release.publishers.to_json %>"
+  ></release-form>
+</div>
+

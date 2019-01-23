@@ -32,11 +32,18 @@ class ReleasesController < ApplicationController
   def create
     @release = Release.new(release_params)
     authorize @release
-    if @release.save
-      redirect_to @release, success: "#{@release.name} was successfully created."
-    else
-      flash.now[:error] = "Unable to save release."
-      render :new
+
+    respond_to do |format|
+      if @release.save
+        format.html { redirect_to @release, success: "#{@release.name} was successfully created." }
+        format.json { render json: @release, status: :created, location: @release }
+      else
+        format.html do
+          flash.now[:error] = "Unable to create release."
+          render :new
+        end
+        format.json { render json: @release.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -44,11 +51,17 @@ class ReleasesController < ApplicationController
     @release = Release.find(params[:id])
     authorize @release
 
-    if @release.update(release_params)
-      redirect_to @release, success: "#{@release.name} was successfully updated."
-    else
-      flash.now[:error] = "Unable to update release."
-      render :edit
+    respond_to do |format|
+      if @release.update(release_params)
+        format.html { render html: @release, success: "#{@release.name} was successfully updated." }
+        format.json { render json: @release, status: :success, location: @release }
+      else
+        format.html do
+          flash.now[:error] = "Unable to update release."
+          render :edit
+        end
+        format.json { render json: @release.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -62,6 +75,15 @@ class ReleasesController < ApplicationController
   private
 
   def release_params
-    params.require(:release).permit(:name, :description)
+    params.require(:release).permit(
+      :name,
+      :description,
+      :game,
+      :platform,
+      {
+        publisher_ids: [],
+        developer_ids: []
+      }
+    )
   end
 end

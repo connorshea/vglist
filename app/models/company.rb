@@ -1,4 +1,6 @@
 class Company < ApplicationRecord
+  include PgSearch
+
   has_many :developed_releases, through: :release_developer, source: :release
   has_many :published_releases, through: :release_publisher, source: :release
 
@@ -8,4 +10,10 @@ class Company < ApplicationRecord
 
   validates :description,
     length: { maximum: 1000 }
+
+  pg_search_scope :search,
+    against: [:name],
+    using: {
+      tsearch: { prefix: true }
+    }
 end

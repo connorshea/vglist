@@ -63,6 +63,20 @@ class GamesController < ApplicationController
     redirect_to games_url, success: "Game was successfully deleted."
   end
 
+  def search
+    if params[:query].present?
+      @games = Game.search(params[:query]).page(params[:page])
+    else
+      @games = Game.none.page(params[:page])
+    end
+
+    authorize @games
+
+    respond_to do |format|
+      format.json { render json: @games }
+    end
+  end
+
   private
 
   def game_params

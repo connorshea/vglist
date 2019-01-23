@@ -11,17 +11,23 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-  resources :games
+  resources :games do
+    get :search, on: :collection
+  end
 
   resources :releases
 
   resources :users, only: [:index, :show]
 
-  resources :platforms
+  resources :platforms do
+    get :search, on: :collection
+  end
 
   resources :genres do
     get :search, on: :collection
   end
 
-  resources :companies
+  resources :companies do
+    get :search, on: :collection
+  end
 end
