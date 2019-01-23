@@ -2,6 +2,10 @@
 
 <h1 class="title">Platforms</h1>
 
+<% if policy(@platforms).create? %>
+  <p><%= link_to("Create a new platform", new_platform_path) %></p>
+<% end %>
+
 <ul>
   <% @platforms.each do |platform| %>
     <li><%= link_to(platform.name, platform_path(platform.id)) %></li>
