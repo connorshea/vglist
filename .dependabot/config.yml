@@ -36,12 +36,12 @@ update_configs:
       - match:
           update_type: security
           dependency_type: indirect
-    # Disallow updates past 3.x for webpack and 2.x for webpack-dev-server.
-    # Webpacker 3.x only supports webpack 3.x.
+    # Disallow updates past 4.x for webpack and 3.x for webpack-dev-server.
+    # Webpacker 4.x only supports webpack 4.x.
     ignored_updates:
       - match:
           dependency_name: "webpack"
-          version_requirement: "3.x"
+          version_requirement: "4.x"
       - match:
           dependency_name: "webpack-dev-server"
-          version_requirement: "2.x"
+          version_requirement: "3.x"
