@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   resources :games
 
-  resources :releases, only: [:index, :show]
+  resources :releases
 
   resources :users, only: [:index, :show]
 
