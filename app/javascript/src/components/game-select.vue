@@ -6,7 +6,7 @@
         :options="options"
         @search="onSearch"
         label="name"
-        v-bind:value="games"
+        v-bind:value="game"
       ></v-select>
     </div>
   </div>
@@ -33,7 +33,7 @@ export default {
   data: function() {
     return {
       options: [],
-      games: this.value,
+      game: this.value,
       gamesSearchPath: `${window.location.origin}/games/search.json`,
     }
   },

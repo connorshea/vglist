@@ -78,12 +78,10 @@ class ReleasesController < ApplicationController
     params.require(:release).permit(
       :name,
       :description,
-      :game,
-      :platform,
-      {
-        publisher_ids: [],
-        developer_ids: []
-      }
+      :game_id,
+      :platform_id,
+      publisher_ids: [],
+      developer_ids: []
     )
   end
 end

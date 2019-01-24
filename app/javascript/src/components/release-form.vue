@@ -155,8 +155,8 @@ export default {
         body: JSON.stringify({ release: {
           name: this.release.name,
           description: this.release.description,
-          game: game_id,
-          platform: platform_id,
+          game_id: game_id,
+          platform_id: platform_id,
           developer_ids: developer_ids,
           publisher_ids: publisher_ids
         }}),

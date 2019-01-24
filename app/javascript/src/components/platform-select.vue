@@ -6,7 +6,7 @@
         :options="options"
         @search="onSearch"
         label="name"
-        v-bind:value="platforms"
+        v-bind:value="platform"
       ></v-select>
     </div>
   </div>
@@ -33,7 +33,7 @@ export default {
   data: function() {
     return {
       options: [],
-      platforms: this.value,
+      platform: this.value,
       platformsSearchPath: `${window.location.origin}/platforms/search.json`,
     }
   },
