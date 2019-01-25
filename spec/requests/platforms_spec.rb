@@ -17,6 +17,43 @@ RSpec.describe "Platforms", type: :request do
     end
   end
 
+  describe "POST platforms_path" do
+    let(:user) { create(:confirmed_moderator) }
+    let(:attributes) { attributes_for(:platform) }
+
+    it "creates a new platform" do
+      sign_in(user)
+      expect {
+        post platforms_path, params: { platform: attributes }
+      }.to change{ Platform.count }.by(1)
+    end
+  end
+
+  describe "PUT platform_path" do
+    let(:user) { create(:confirmed_moderator) }
+    let!(:platform) { create(:platform) }
+    let(:platform_attributes) { attributes_for(:platform) }
+
+    it "updates platform description" do
+      sign_in(user)
+      platform_attributes[:description] = "Description goes here"
+      put platform_path(id: platform.id), params: { platform: platform_attributes }
+      expect(platform.reload.description).to eql("Description goes here")
+    end
+  end
+
+  describe "DELETE platform_path" do
+    let(:user) { create(:confirmed_moderator) }
+    let!(:platform) { create(:platform) }
+
+    it "deletes a platform" do
+      sign_in(user)
+      expect {
+        delete platform_path(id: platform.id)
+      }.to change{ Platform.count }.by(-1)
+    end
+  end
+
   describe "GET search_platforms_path" do
     let(:user) { create(:confirmed_user) }
     let(:platform) { create(:platform) }

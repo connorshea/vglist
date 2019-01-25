@@ -17,6 +17,43 @@ RSpec.describe "Genres", type: :request do
     end
   end
 
+  describe "POST genres_path" do
+    let(:user) { create(:confirmed_moderator) }
+    let(:attributes) { attributes_for(:genre) }
+
+    it "creates a new genre" do
+      sign_in(user)
+      expect {
+        post genres_path, params: { genre: attributes }
+      }.to change{ Genre.count }.by(1)
+    end
+  end
+
+  describe "PUT genre_path" do
+    let(:user) { create(:confirmed_moderator) }
+    let!(:genre) { create(:genre) }
+    let(:genre_attributes) { attributes_for(:genre) }
+
+    it "updates genre description" do
+      sign_in(user)
+      genre_attributes[:description] = "Description goes here"
+      put genre_path(id: genre.id), params: { genre: genre_attributes }
+      expect(genre.reload.description).to eql("Description goes here")
+    end
+  end
+
+  describe "DELETE genre_path" do
+    let(:user) { create(:confirmed_moderator) }
+    let!(:genre) { create(:genre) }
+
+    it "deletes a genre" do
+      sign_in(user)
+      expect {
+        delete genre_path(id: genre.id)
+      }.to change{ Genre.count }.by(-1)
+    end
+  end
+
   describe "GET search_genres_path" do
     let(:user) { create(:confirmed_user) }
     let(:genre) { create(:genre) }

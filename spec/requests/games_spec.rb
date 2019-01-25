@@ -21,10 +21,36 @@ RSpec.describe "Games", type: :request do
     let(:user) { create(:confirmed_user) }
     let(:attributes) { attributes_for(:game) }
 
-    it "returns http found" do
+    it "creates a new game" do
       sign_in(user)
-      post games_path, params: { game: attributes }
-      expect(response).to have_http_status(:found)
+      expect {
+        post games_path, params: { game: attributes }
+      }.to change{ Game.count }.by(1)
+    end
+  end
+
+  describe "PUT game_path" do
+    let(:user) { create(:confirmed_user) }
+    let!(:game) { create(:game) }
+    let(:game_attributes) { attributes_for(:game) }
+
+    it "updates game description" do
+      sign_in(user)
+      game_attributes[:description] = "Description goes here"
+      put game_path(id: game.id), params: { game: game_attributes }
+      expect(game.reload.description).to eql("Description goes here")
+    end
+  end
+
+  describe "DELETE game_path" do
+    let(:user) { create(:confirmed_user) }
+    let!(:game) { create(:game) }
+
+    it "deletes a game" do
+      sign_in(user)
+      expect {
+        delete game_path(id: game.id)
+      }.to change{ Game.count }.by(-1)
     end
   end
 

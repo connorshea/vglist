@@ -17,6 +17,43 @@ RSpec.describe "Companies", type: :request do
     end
   end
 
+  describe "POST companies_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:attributes) { attributes_for(:company) }
+
+    it "creates a new company" do
+      sign_in(user)
+      expect {
+        post companies_path, params: { company: attributes }
+      }.to change{ Company.count }.by(1)
+    end
+  end
+
+  describe "PUT company_path" do
+    let(:user) { create(:confirmed_user) }
+    let!(:company) { create(:company) }
+    let(:company_attributes) { attributes_for(:company) }
+
+    it "updates company description" do
+      sign_in(user)
+      company_attributes[:description] = "Description goes here"
+      put company_path(id: company.id), params: { company: company_attributes }
+      expect(company.reload.description).to eql("Description goes here")
+    end
+  end
+
+  describe "DELETE company_path" do
+    let(:user) { create(:confirmed_user) }
+    let!(:company) { create(:company) }
+
+    it "deletes a company" do
+      sign_in(user)
+      expect {
+        delete company_path(id: company.id)
+      }.to change{ Company.count }.by(-1)
+    end
+  end
+
   describe "GET search_companies_path" do
     let(:user) { create(:confirmed_user) }
     let(:company) { create(:company) }
