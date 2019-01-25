@@ -64,6 +64,20 @@ class CompaniesController < ApplicationController
     redirect_to companies_url, success: "Company was successfully deleted."
   end
 
+  def search
+    if params[:query].present?
+      @companies = Company.search(params[:query]).page(params[:page])
+    else
+      @companies = Company.none.page(params[:page])
+    end
+
+    authorize @companies
+
+    respond_to do |format|
+      format.json { render json: @companies }
+    end
+  end
+
   private
 
   def company_params

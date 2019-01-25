@@ -3,6 +3,17 @@
 <h1 class="title"><%= @release.name %></h1>
 <h2 class="subtitle"><%= @release.description %></h2>
 
+<% if policy(@release).update? || policy(@release).destroy? %>
+  <div class="field is-grouped">
+    <% if policy(@release).update? %>
+      <p class="control"><%= link_to("Edit", edit_release_path(@release.id), class: "button") %>
+    <% end %>
+    <% if policy(@release).destroy? %>
+      <p class="control"><%= link_to("Delete", release_path(@release.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% end %>
+  </div>
+<% end %>
+
 <ul>
   <li>
     Game: <%= link_to(@release.game.name, game_path(@release.game.id)) %>

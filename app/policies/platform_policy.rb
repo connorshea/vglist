@@ -25,4 +25,8 @@ class PlatformPolicy < ApplicationPolicy
   def destroy?
     user && (user.moderator? || user.admin?)
   end
+
+  def search?
+    user.present?
+  end
 end

@@ -7,9 +7,9 @@ RSpec.describe PlatformPolicy do
     let(:user) { create(:user) }
     let(:platform) { create(:platform) }
 
-    it "let's a normal user list and show platforms" do
+    it "let's a normal user list, show, and search platforms" do
       expect(platform_policy).to permit_actions(
-        [:index, :show]
+        [:index, :show, :search]
       )
     end
 
@@ -26,7 +26,7 @@ RSpec.describe PlatformPolicy do
 
     it "let's a moderator do everything" do
       expect(platform_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy]
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe PlatformPolicy do
 
     it "let's an admin do everything" do
       expect(platform_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy]
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
   end
@@ -47,6 +47,6 @@ RSpec.describe PlatformPolicy do
     let(:platform) { create(:platform) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:create, :new, :edit, :update, :destroy]) }
+    it { should_not permit_actions([:create, :new, :edit, :update, :destroy, :search]) }
   end
 end

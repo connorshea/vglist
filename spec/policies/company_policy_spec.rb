@@ -7,9 +7,31 @@ RSpec.describe CompanyPolicy do
     let(:user) { create(:user) }
     let(:company) { create(:company) }
 
-    it do
+    it "let's a user do everything" do
       expect(company_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy]
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
+      )
+    end
+  end
+
+  describe 'A moderator' do
+    let(:user) { create(:moderator) }
+    let(:company) { create(:company) }
+
+    it "let's a moderator do everything" do
+      expect(company_policy).to permit_actions(
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
+      )
+    end
+  end
+
+  describe 'An admin' do
+    let(:user) { create(:admin) }
+    let(:company) { create(:company) }
+
+    it "let's an admin do everything" do
+      expect(company_policy).to permit_actions(
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
   end
@@ -19,6 +41,6 @@ RSpec.describe CompanyPolicy do
     let(:company) { create(:company) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:create, :new, :edit, :update, :destroy]) }
+    it { should_not permit_actions([:create, :new, :edit, :update, :destroy, :search]) }
   end
 end

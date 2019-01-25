@@ -16,4 +16,27 @@ RSpec.describe "Genres", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "GET search_genres_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:genre) { create(:genre) }
+
+    it "returns the given genre" do
+      sign_in(user)
+      get search_genres_path(query: genre.name, format: :json)
+      expect(JSON.parse(response.body).first.to_json).to eq(genre.to_json)
+    end
+
+    it "returns no genre" do
+      sign_in(user)
+      get search_genres_path(query: SecureRandom.alphanumeric(8), format: :json)
+      expect(response.body).to eq("[]")
+    end
+
+    it "returns no genre when no query is given" do
+      sign_in(user)
+      get search_genres_path(format: :json)
+      expect(response.body).to eq("[]")
+    end
+  end
 end

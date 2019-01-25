@@ -49,6 +49,20 @@ class PlatformsController < ApplicationController
     redirect_to platforms_url, success: "Platform was successfully deleted."
   end
 
+  def search
+    if params[:query].present?
+      @platforms = Platform.search(params[:query]).page(params[:page])
+    else
+      @platforms = Platform.none.page(params[:page])
+    end
+
+    authorize @platforms
+
+    respond_to do |format|
+      format.json { render json: @platforms }
+    end
+  end
+
   private
 
   def platform_params
