@@ -7,6 +7,7 @@
         @search="onSearch"
         label="name"
         v-bind:value="platform"
+        v-on:input="$emit('input', $event)"
       ></v-select>
     </div>
   </div>
