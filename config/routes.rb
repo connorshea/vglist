@@ -17,7 +17,11 @@ Rails.application.routes.draw do
 
   resources :releases
 
-  resources :users, only: [:index, :show]
+  resources :users do
+    get :index, on: :collection
+    get :show, on: :member
+    post :update_role, on: :member
+  end
 
   resources :platforms do
     get :search, on: :collection
