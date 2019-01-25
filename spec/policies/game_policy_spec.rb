@@ -9,7 +9,29 @@ RSpec.describe GamePolicy do
 
     it do
       expect(game_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy]
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
+      )
+    end
+  end
+
+  describe 'A moderator user' do
+    let(:user) { create(:moderator) }
+    let(:game) { create(:game) }
+
+    it "let's a moderator do everything" do
+      expect(game_policy).to permit_actions(
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
+      )
+    end
+  end
+
+  describe 'An admin user' do
+    let(:user) { create(:admin) }
+    let(:game) { create(:game) }
+
+    it "let's an admin do everything" do
+      expect(game_policy).to permit_actions(
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
   end
@@ -19,6 +41,6 @@ RSpec.describe GamePolicy do
     let(:game) { create(:game) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:create, :new, :edit, :update, :destroy]) }
+    it { should_not permit_actions([:create, :new, :edit, :update, :destroy, :search]) }
   end
 end
