@@ -29,7 +29,7 @@ Similar tracking sites for movies/television/anime:
   - [ ] Users have a profile
 - [ ] Profiles
   - [ ] Profiles can be Public or Private (only visible to Friends/Yourself? Username, Display Name, and Avatar will always be visible.)
-  - [ ] Bio (a longer-form description of the user)
+  - [x] Bio (a longer-form description of the user)
   - [ ] Game Library with scores, completion status, time played, etc.
     - Should there be more granular access options, e.g. hiding time played?
     - Should the user that owns the profile be able to choose what's visible by default in their profile's Library list?
@@ -43,28 +43,28 @@ Similar tracking sites for movies/television/anime:
     - Should also support importing from other platforms, but I don't know how many even have APIs for this.
   - [ ] Score (like AniList's multi-score-system system? e.g. have 1/10, 1.0/10, 10/100, and thumbs-up/thumbs-down)
 - [ ] Games (General): Games are an entity with a name, platforms, developers, publishers, a cover image, release dates, etc.
-  - [ ] Name
-  - [ ] Platform(s) (Windows, macOS, Linux, Nintendo Switch, Xbox 360, etc.)
+  - [x] Name
+  - [x] Platform(s) (Windows, macOS, Linux, Nintendo Switch, Xbox 360, etc.)
     - Should games have separate entries for each platform (e.g. Team Fortress 2 on Windows is very different from Team Fortress 2 on Xbox 360)?
     - Should this differentiate between, e.g. Steam vs. Discord vs. Epic, etc?
-  - [ ] Developer (can have more than one)
-  - [ ] Publisher (can have more than one?)
+  - [x] Developer (can have more than one)
+  - [x] Publisher (can have more than one?)
   - [ ] Cover image
   - [ ] Release date(s) (note that a game can have more than one release date due to platform differences or due to regional differences)
   - [ ] External Links (Steam page, Discord store page, Discord server, PCGamingWiki, SteamDB, etc.)
   - [ ] Relationships with other games (sequels, prequels, spinoffs, DLC, Special Editions, GOTY/Complete Editions, Remakes, Deluxe Editions, "sibling"(?) titles (e.g. Pokemon Red and Blue), etc?)
   - [ ] Official Website
     - Note there can be more than one, e.g. for multiple languages.
-  - [ ] Genre
+  - [x] Genre
     - I don't look forward to figuring out how to manage genres, but it seems kind of necessary.
   - [ ] Average Score
     - Maybe also Median or a more detailed bar graph of the scores?
   - [ ] Number of users who own the game / have completed it / plan to play it
-- [ ] Companies
+- [x] Companies
   - Companies can both develop and publish games.
-  - [ ] Developers
-  - [ ] Publishers
-- [ ] Games (In Library): A game in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
+  - [x] Developers
+  - [x] Publishers
+- [ ] Release Purchase: A release in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
   - [ ] Score/Rating
   - [ ] Time played (hours)
   - [ ] Platform
