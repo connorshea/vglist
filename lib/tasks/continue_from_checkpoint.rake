@@ -1,4 +1,4 @@
-task :stats => "continue_from_checkpoint:stats"
+task stats: "continue_from_checkpoint:stats"
 
 # TODO: Remove this when Rails 6 comes out, as this is added to the stats
 # directories there.
