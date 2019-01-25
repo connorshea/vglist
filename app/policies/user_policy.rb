@@ -15,6 +15,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update_role?
-    current_user && current_user.admin?
+    current_user&.admin?
   end
 end

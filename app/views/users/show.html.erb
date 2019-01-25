@@ -17,13 +17,13 @@
 <% if policy(@user).update_role? && @user != current_user %>
   <div class="field is-grouped">
     <% unless @user.role == "member" %>
-      <p class="control"><%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post" } %>
+      <p class="control"><%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post" }, class: "button" %>
     <% end %>
     <% unless @user.role == "moderator" %>
-      <p class="control"><%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post" } %>
+      <p class="control"><%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post" }, class: "button" %>
     <% end %>
     <% unless @user.role == "admin" %>
-      <p class="control"><%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post" } %>
+      <p class="control"><%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post" }, class: "button" %>
     <% end %>
   </div>
 <% end %>
