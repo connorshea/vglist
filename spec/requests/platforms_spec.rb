@@ -25,7 +25,7 @@ RSpec.describe "Platforms", type: :request do
       sign_in(user)
       expect {
         post platforms_path, params: { platform: attributes }
-      }.to change{ Platform.count }.by(1)
+      }.to change(Platform, :count).by(1)
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe "Platforms", type: :request do
       sign_in(user)
       expect {
         delete platform_path(id: platform.id)
-      }.to change{ Platform.count }.by(-1)
+      }.to change(Platform, :count).by(-1)
     end
   end
 

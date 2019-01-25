@@ -25,7 +25,7 @@ RSpec.describe "Games", type: :request do
       sign_in(user)
       expect {
         post games_path, params: { game: attributes }
-      }.to change{ Game.count }.by(1)
+      }.to change(Game, :count).by(1)
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe "Games", type: :request do
       sign_in(user)
       expect {
         delete game_path(id: game.id)
-      }.to change{ Game.count }.by(-1)
+      }.to change(Game, :count).by(-1)
     end
   end
 

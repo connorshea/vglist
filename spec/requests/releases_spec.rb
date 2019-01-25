@@ -38,7 +38,7 @@ RSpec.describe "Releases", type: :request do
       sign_in(user)
       expect {
         delete release_path(id: release.id)
-      }.to change{ Release.count }.by(-1)
+      }.to change(Release, :count).by(-1)
     end
   end
 end

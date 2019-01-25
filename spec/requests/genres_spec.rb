@@ -25,7 +25,7 @@ RSpec.describe "Genres", type: :request do
       sign_in(user)
       expect {
         post genres_path, params: { genre: attributes }
-      }.to change{ Genre.count }.by(1)
+      }.to change(Genre, :count).by(1)
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe "Genres", type: :request do
       sign_in(user)
       expect {
         delete genre_path(id: genre.id)
-      }.to change{ Genre.count }.by(-1)
+      }.to change(Genre, :count).by(-1)
     end
   end
 

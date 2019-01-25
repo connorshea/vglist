@@ -25,7 +25,7 @@ RSpec.describe "Companies", type: :request do
       sign_in(user)
       expect {
         post companies_path, params: { company: attributes }
-      }.to change{ Company.count }.by(1)
+      }.to change(Company, :count).by(1)
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe "Companies", type: :request do
       sign_in(user)
       expect {
         delete company_path(id: company.id)
-      }.to change{ Company.count }.by(-1)
+      }.to change(Company, :count).by(-1)
     end
   end
 
