@@ -32,5 +32,11 @@ RSpec.describe "Genres", type: :request do
       get search_genres_path(query: SecureRandom.alphanumeric(8), format: :json)
       expect(response.body).to eq("[]")
     end
+
+    it "returns no genre when no query is given" do
+      sign_in(user)
+      get search_genres_path(format: :json)
+      expect(response.body).to eq("[]")
+    end
   end
 end

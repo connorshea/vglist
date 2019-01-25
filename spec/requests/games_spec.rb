@@ -43,5 +43,11 @@ RSpec.describe "Games", type: :request do
       get search_games_path(query: SecureRandom.alphanumeric(8), format: :json)
       expect(response.body).to eq("[]")
     end
+
+    it "returns no game when no query is given" do
+      sign_in(user)
+      get search_games_path(format: :json)
+      expect(response.body).to eq("[]")
+    end
   end
 end
