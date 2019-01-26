@@ -21,4 +21,8 @@ class UserPolicy < ApplicationPolicy
   def update_role?
     current_user&.admin?
   end
+
+  def add_release_to_library?
+    current_user && @user == current_user
+  end
 end
