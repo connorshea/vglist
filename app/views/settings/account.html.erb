@@ -1,4 +1,8 @@
-<h1 class="title">Edit <%= current_user.username %></h1>
+<% content_for :title, "Account Settings" %>
+
+<h1 class="title">Account Settings</h1>
+
+<%= render 'nav' %>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
@@ -15,7 +19,7 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :password, class: "label" %>
+    <%= f.label :password, 'New password', class: "label" %>
     <div class="control">
       <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
       <% if @minimum_password_length %>
@@ -25,7 +29,7 @@
   </div>
 
   <div class="field">
-    <%= f.label :password_confirmation, class: "label" %>
+    <%= f.label :password_confirmation, 'New password confirmation', class: "label" %>
     <div class="control">
       <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
     </div>

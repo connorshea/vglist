@@ -19,7 +19,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # GET /resource/edit
   def edit
     skip_authorization
-    super
+    redirect_to settings_account_path
   end
 
   # PUT /resource

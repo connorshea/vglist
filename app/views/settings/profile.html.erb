@@ -1,0 +1,18 @@
+<% content_for :title, "Profile Settings" %>
+
+<h1 class="title">Profile Settings</h1>
+
+<%= render 'nav' %>
+
+<%= form_for @user do |f| %>
+  <div class="field">
+    <%= f.label :bio, "Bio", class: "label" %>
+    <div class="control">
+      <%= f.text_area :bio, class: "textarea" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.submit "Submit", class: "button is-primary" %>
+  </div>
+<% end %>

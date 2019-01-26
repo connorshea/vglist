@@ -14,6 +14,10 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+  def update?
+    current_user && @user = @current_user
+  end
+
   def update_role?
     current_user&.admin?
   end
