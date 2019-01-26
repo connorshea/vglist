@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.1.26
+### Added
+- Add action for adding a release to your library. ([#93])
+- Add action for removing a release from your library. ([#98])
+- Add some tests for functionality that was previously untested.
+
+## v2019.1.25
+### Added
+- Add Settings pages and a form for updating your user bio. ([#90])
+
 ## v2019.1.24
 ### Added
 - Add create/update/destroy for releases, meaning you can now modify everything about releases from the web interface. ([#82])
@@ -80,3 +90,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#81]: https://github.com/connorshea/ContinueFromCheckpoint/pull/81
 [#82]: https://github.com/connorshea/ContinueFromCheckpoint/pull/82
 [#85]: https://github.com/connorshea/ContinueFromCheckpoint/pull/85
+[#90]: https://github.com/connorshea/ContinueFromCheckpoint/pull/90
+[#93]: https://github.com/connorshea/ContinueFromCheckpoint/pull/93
+[#98]: https://github.com/connorshea/ContinueFromCheckpoint/pull/98
