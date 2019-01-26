@@ -25,4 +25,8 @@ class UserPolicy < ApplicationPolicy
   def add_release_to_library?
     current_user && @user == current_user
   end
+
+  def remove_release_from_library?
+    current_user && @user == current_user
+  end
 end

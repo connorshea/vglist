@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PlatformPolicy do
+RSpec.describe PlatformPolicy, type: :policy do
   subject(:platform_policy) { described_class.new(user, platform) }
 
   describe 'A logged-in user' do
