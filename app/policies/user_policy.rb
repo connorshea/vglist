@@ -15,7 +15,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    current_user && @user == @current_user
+    current_user && user == current_user
   end
 
   def update_role?
@@ -23,10 +23,10 @@ class UserPolicy < ApplicationPolicy
   end
 
   def add_release_to_library?
-    current_user && @user == current_user
+    current_user && user == current_user
   end
 
   def remove_release_from_library?
-    current_user && @user == current_user
+    current_user && user == current_user
   end
 end
