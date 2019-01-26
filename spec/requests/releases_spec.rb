@@ -65,5 +65,15 @@ RSpec.describe "Releases", type: :request do
           params: { id: release.id }
       }.to change(user_with_release.release_purchases.all, :count).by(-1)
     end
+
+    it "doesn't remove a release from the user's library if none exist" do
+      sign_in(user)
+      delete remove_release_from_library_release_path(release.id),
+        params: { id: release.id }
+      expect(response).to redirect_to(release_url(release))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Unable to remove release from your library.")
+    end
   end
 end

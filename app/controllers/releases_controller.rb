@@ -97,10 +97,8 @@ class ReleasesController < ApplicationController
     @release_purchase = @user.release_purchases.find_by(release_id: @release.id)
     authorize @user
 
-    @release_purchase.destroy
-
     respond_to do |format|
-      if @release_purchase.destroyed?
+      if @release_purchase&.destroy
         format.html { redirect_to @user, success: "#{@release.name} was successfully removed from your library." }
       else
         format.html do
