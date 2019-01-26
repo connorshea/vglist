@@ -15,7 +15,9 @@ Rails.application.routes.draw do
     get :search, on: :collection
   end
 
-  resources :releases
+  resources :releases do
+    post :add_release_to_library, on: :member
+  end
 
   resources :users do
     get :index, on: :collection

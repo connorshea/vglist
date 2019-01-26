@@ -72,6 +72,25 @@ class ReleasesController < ApplicationController
     redirect_to releases_url, success: "Release was successfully deleted."
   end
 
+  def add_release_to_library
+    @release = Release.find(params[:id])
+    @user = current_user
+    authorize @user
+
+    @release_purchase = ReleasePurchase.new(release_purchase_params)
+
+    respond_to do |format|
+      if @release_purchase.save
+        format.html { redirect_to @user, success: "#{@release.name} was successfully added to your library." }
+      else
+        format.html do
+          flash[:error] = "Unable to add release to your library."
+          redirect_to release_url(@release)
+        end
+      end
+    end
+  end
+
   private
 
   def release_params
@@ -82,6 +101,13 @@ class ReleasesController < ApplicationController
       :platform_id,
       publisher_ids: [],
       developer_ids: []
+    )
+  end
+
+  def release_purchase_params
+    params.require(:release_purchase).permit(
+      :user_id,
+      :release_id
     )
   end
 end

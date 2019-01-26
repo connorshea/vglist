@@ -11,6 +11,11 @@
     <% if policy(@release).destroy? %>
       <p class="control"><%= link_to("Delete", release_path(@release.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
     <% end %>
+
+    <% if policy(current_user).add_release_to_library? %>
+      <p class="control">
+        <%= button_to "Add to library", add_release_to_library_release_path(@release.id), method: :post, params: { release_purchase: { user_id: current_user.id, release_id: @release.id } }, class: "button" %>
+    <% end %>
   </div>
 <% end %>
 
