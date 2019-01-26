@@ -37,18 +37,16 @@ RSpec.describe "Users", type: :request do
 
     it "moderator cannot make another user a moderator" do
       sign_in(moderator)
-      expect {
-        post update_role_user_path(id: user.id, role: "moderator")
-      }.to raise_error(Pundit::NotAuthorizedError)
+      post update_role_user_path(id: user.id, role: "moderator")
+      expect(response).to redirect_to(root_path)
       expect(user.reload.role).to eql('member')
       expect(user.reload.role).not_to eql('moderator')
     end
 
     it "user cannot make another user a moderator" do
       sign_in(another_user)
-      expect {
-        post update_role_user_path(id: user.id, role: "moderator")
-      }.to raise_error(Pundit::NotAuthorizedError)
+      post update_role_user_path(id: user.id, role: "moderator")
+      expect(response).to redirect_to(root_path)
       expect(user.reload.role).to eql('member')
       expect(user.reload.role).not_to eql('moderator')
     end

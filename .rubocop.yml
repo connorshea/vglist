@@ -704,6 +704,7 @@ Rails/RelativeDateConstant:
 
 Rails/RequestReferer:
   Enabled: true
+  EnforcedStyle: referrer
 
 Rails/ReversibleMigration:
   Enabled: true
