@@ -466,7 +466,7 @@ Metrics/BlockNesting:
   Enabled: true
 
 Metrics/ClassLength:
-  Enabled: true
+  Enabled: false
 
 Metrics/ParameterLists:
   Enabled: true

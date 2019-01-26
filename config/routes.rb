@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :releases do
     post :add_release_to_library, on: :member
+    delete :remove_release_from_library, on: :member
   end
 
   resources :users do

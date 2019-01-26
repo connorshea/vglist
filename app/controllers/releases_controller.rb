@@ -91,6 +91,26 @@ class ReleasesController < ApplicationController
     end
   end
 
+  def remove_release_from_library
+    @user = current_user
+    @release = Release.find(params[:id])
+    @release_purchase = @user.release_purchases.find_by(release_id: @release.id)
+    authorize @user
+
+    @release_purchase.destroy
+
+    respond_to do |format|
+      if @release_purchase.destroyed?
+        format.html { redirect_to @user, success: "#{@release.name} was successfully removed from your library." }
+      else
+        format.html do
+          flash[:error] = "Unable to remove release from your library."
+          redirect_to release_url(@release)
+        end
+      end
+    end
+  end
+
   private
 
   def release_params
