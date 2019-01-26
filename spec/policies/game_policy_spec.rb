@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe GamePolicy do
+RSpec.describe GamePolicy, type: :policy do
   subject(:game_policy) { described_class.new(user, game) }
 
   describe 'A logged-in user' do

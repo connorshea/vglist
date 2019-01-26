@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ReleasePolicy do
+RSpec.describe ReleasePolicy, type: :policy do
   subject(:release_policy) { described_class.new(user, release) }
 
   describe 'A logged-in user' do

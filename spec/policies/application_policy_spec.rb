@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ApplicationPolicy do
+RSpec.describe ApplicationPolicy, type: :policy do
   subject(:application_policy) { described_class.new(user, record) }
 
   describe 'A logged-in user' do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe NilClassPolicy do
+RSpec.describe NilClassPolicy, type: :policy do
   subject(:nil_class_policy) { described_class.new(user, nil) }
 
   describe 'A logged-in user' do

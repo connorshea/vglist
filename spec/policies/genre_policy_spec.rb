@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe GenrePolicy do
+RSpec.describe GenrePolicy, type: :policy do
   subject(:genre_policy) { described_class.new(user, genre) }
 
   describe 'A logged-in user' do

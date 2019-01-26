@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CompanyPolicy do
+RSpec.describe CompanyPolicy, type: :policy do
   subject(:company_policy) { described_class.new(user, company) }
 
   describe 'A logged-in user' do

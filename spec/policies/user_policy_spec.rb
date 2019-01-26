@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe UserPolicy do
-  subject { described_class.new(current_user, user) }
+RSpec.describe UserPolicy, type: :policy do
+  subject(:user_policy) { described_class.new(current_user, user) }
 
   describe 'A logged-in user' do
     let(:current_user) { create(:user) }
