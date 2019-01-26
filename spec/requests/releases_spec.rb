@@ -41,4 +41,29 @@ RSpec.describe "Releases", type: :request do
       }.to change(Release, :count).by(-1)
     end
   end
+
+  describe "POST add_release_to_library_release_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:release) { create(:release) }
+    let(:user_with_release) { create(:confirmed_user) }
+    let(:release_purchase) { create(:release_purchase, user: user_with_release, release: release) }
+
+    it "adds a release to the user's library" do
+      sign_in(user)
+      expect {
+        post add_release_to_library_release_path(release.id),
+          params: { release_purchase: { user_id: user.id, release_id: release.id } }
+      }.to change(user.release_purchases.all, :count).by(1)
+    end
+
+    it "removes a release from the user's library" do
+      sign_in(user_with_release)
+      # Load the release purchase.
+      release_purchase
+      expect {
+        delete remove_release_from_library_release_path(release.id),
+          params: { id: release.id }
+      }.to change(user_with_release.release_purchases.all, :count).by(-1)
+    end
+  end
 end
