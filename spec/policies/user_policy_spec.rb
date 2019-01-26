@@ -8,7 +8,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:update_role]) }
+    it { should_not permit_actions([:update_role, :update]) }
   end
 
   describe 'A user that is not logged in' do
@@ -16,7 +16,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:update_role]) }
+    it { should_not permit_actions([:update_role, :update]) }
   end
 
   describe 'A user that is an moderator' do
@@ -24,7 +24,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:update_role]) }
+    it { should_not permit_actions([:update_role, :update]) }
   end
 
   describe 'A user that is an admin' do
@@ -32,5 +32,14 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show, :update_role]) }
+    it { should_not permit_actions([:update]) }
+  end
+
+  describe 'A user editing/looking at their own profile' do
+    let(:current_user) { create(:user) }
+    let(:user) { current_user }
+
+    it { should permit_actions([:index, :show, :update]) }
+    it { should_not permit_actions([:update_role]) }
   end
 end
