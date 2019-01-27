@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "User Password", type: :request do
-  describe "GET new_user_session_path" do
+  describe "GET new_user_password_path" do
     it 'returns http success' do
-      get new_user_session_path
+      get new_user_password_path
       expect(response).to have_http_status(:success)
     end
   end
