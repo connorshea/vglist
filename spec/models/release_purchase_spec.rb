@@ -9,6 +9,7 @@ RSpec.describe ReleasePurchase, type: :model do
     end
 
     it { should validate_length_of(:comment).is_at_most(500) }
+    it { should validate_uniqueness_of(:release_id).scoped_to(:user_id) }
   end
 
   describe "Associations" do

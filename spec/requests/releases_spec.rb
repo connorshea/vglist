@@ -87,6 +87,23 @@ RSpec.describe "Releases", type: :request do
       }.to change(user.release_purchases.all, :count).by(1)
     end
 
+    it "doesn't add a duplicate release to the user's library" do
+      sign_in(user_with_release)
+      release_purchase
+      post add_release_to_library_release_path(release.id),
+        params: { release_purchase: { user_id: user_with_release.id, release_id: release.id } }
+      expect(response).to redirect_to(release_url(release))
+      follow_redirect!
+      expect(response.body).to include("Unable to add release to your library.")
+    end
+  end
+
+  describe "DELETE remove_release_from_library_release_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:release) { create(:release) }
+    let(:user_with_release) { create(:confirmed_user) }
+    let(:release_purchase) { create(:release_purchase, user: user_with_release, release: release) }
+
     it "removes a release from the user's library" do
       sign_in(user_with_release)
       # Load the release purchase.
