@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add action for adding a release to your library. ([#93])
 - Add action for removing a release from your library. ([#98])
-- Add some tests for functionality that was previously untested.
+- Add some tests for functionality that was previously untested. ([#99])
 
 ## v2019.1.25
 ### Added
@@ -93,3 +93,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#90]: https://github.com/connorshea/ContinueFromCheckpoint/pull/90
 [#93]: https://github.com/connorshea/ContinueFromCheckpoint/pull/93
 [#98]: https://github.com/connorshea/ContinueFromCheckpoint/pull/98
+[#99]: https://github.com/connorshea/ContinueFromCheckpoint/pull/99

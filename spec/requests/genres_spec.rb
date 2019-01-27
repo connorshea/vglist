@@ -19,13 +19,21 @@ RSpec.describe "Genres", type: :request do
 
   describe "POST genres_path" do
     let(:user) { create(:confirmed_moderator) }
-    let(:attributes) { attributes_for(:genre) }
+    let(:genre_attributes) { attributes_for(:genre) }
 
     it "creates a new genre" do
       sign_in(user)
       expect {
-        post genres_path, params: { genre: attributes }
+        post genres_path, params: { genre: genre_attributes }
       }.to change(Genre, :count).by(1)
+    end
+
+    it "fails to create a new genre" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      genre_attributes[:name] = long_name
+      post genres_path, params: { genre: genre_attributes }
+      expect(response.body).to include('Unable to save genre.')
     end
   end
 
@@ -39,6 +47,14 @@ RSpec.describe "Genres", type: :request do
       genre_attributes[:description] = "Description goes here"
       put genre_path(id: genre.id), params: { genre: genre_attributes }
       expect(genre.reload.description).to eql("Description goes here")
+    end
+
+    it "fails to update genre" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      genre_attributes[:name] = long_name
+      put genre_path(id: genre.id), params: { genre: genre_attributes }
+      expect(response.body).to include('Unable to update genre.')
     end
   end
 

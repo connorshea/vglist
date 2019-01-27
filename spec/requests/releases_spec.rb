@@ -17,6 +17,29 @@ RSpec.describe "Releases", type: :request do
     end
   end
 
+  describe "GET new_release_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      sign_in(user)
+
+      get new_release_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET edit_release_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:release) { create(:release) }
+
+    it "returns http success" do
+      sign_in(user)
+
+      get edit_release_path(release.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "PUT release_path" do
     let(:user) { create(:confirmed_user) }
     let!(:release) { create(:release) }
@@ -27,6 +50,14 @@ RSpec.describe "Releases", type: :request do
       release_attributes[:description] = "Description goes here"
       put release_path(id: release.id), params: { release: release_attributes }
       expect(release.reload.description).to eql("Description goes here")
+    end
+
+    it "does not update release description" do
+      sign_in(user)
+      long_description = Faker::Lorem.characters(1200)
+      release_attributes[:description] = long_description
+      put release_path(id: release.id), params: { release: release_attributes }
+      expect(release.reload.description).not_to eql(long_description)
     end
   end
 

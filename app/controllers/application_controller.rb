@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
   after_action :verify_policy_scoped, only: :index
   # rubocop:enable Rails/LexicallyScopedActionFilter
 
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   add_flash_types :success, :error
 
   protected
@@ -20,5 +22,12 @@ class ApplicationController < ActionController::Base
   # Add username as an accepted key during sign up.
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
+  end
+
+  private
+
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    redirect_to(request.referrer || root_path)
   end
 end

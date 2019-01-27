@@ -472,7 +472,7 @@ Metrics/ParameterLists:
   Enabled: true
 
 Metrics/PerceivedComplexity:
-  Enabled: true
+  Enabled: false
 
 #################### Naming ##############################
 
@@ -704,6 +704,7 @@ Rails/RelativeDateConstant:
 
 Rails/RequestReferer:
   Enabled: true
+  EnforcedStyle: referrer
 
 Rails/ReversibleMigration:
   Enabled: true
@@ -775,7 +776,7 @@ Style/BeginBlock:
 Style/BlockDelimiters:
   Enabled: true
   Exclude:
-    - 'spec/requests/*_spec.rb'
+    - 'spec/requests/**/*_spec.rb'
 
 Style/BracesAroundHashParameters:
   Enabled: true

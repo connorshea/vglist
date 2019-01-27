@@ -7,10 +7,10 @@ class SettingsPolicy < ApplicationPolicy
   end
 
   def profile?
-    current_user && @user == @current_user
+    current_user && user == current_user
   end
 
   def account?
-    current_user && @user == @current_user
+    current_user && user == current_user
   end
 end

@@ -19,13 +19,21 @@ RSpec.describe "Games", type: :request do
 
   describe "POST games_path" do
     let(:user) { create(:confirmed_user) }
-    let(:attributes) { attributes_for(:game) }
+    let(:game_attributes) { attributes_for(:game) }
 
     it "creates a new game" do
       sign_in(user)
       expect {
-        post games_path, params: { game: attributes }
+        post games_path, params: { game: game_attributes }
       }.to change(Game, :count).by(1)
+    end
+
+    it "fails to create a new game" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      game_attributes[:name] = long_name
+      post games_path, params: { game: game_attributes }
+      expect(response.body).to include('Unable to create game.')
     end
   end
 
@@ -39,6 +47,14 @@ RSpec.describe "Games", type: :request do
       game_attributes[:description] = "Description goes here"
       put game_path(id: game.id), params: { game: game_attributes }
       expect(game.reload.description).to eql("Description goes here")
+    end
+
+    it "fails to update game" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      game_attributes[:name] = long_name
+      put game_path(id: game.id), params: { game: game_attributes }
+      expect(response.body).to include('Unable to update game.')
     end
   end
 
