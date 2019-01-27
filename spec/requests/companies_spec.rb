@@ -19,13 +19,21 @@ RSpec.describe "Companies", type: :request do
 
   describe "POST companies_path" do
     let(:user) { create(:confirmed_user) }
-    let(:attributes) { attributes_for(:company) }
+    let(:company_attributes) { attributes_for(:company) }
 
     it "creates a new company" do
       sign_in(user)
       expect {
-        post companies_path, params: { company: attributes }
+        post companies_path, params: { company: company_attributes }
       }.to change(Company, :count).by(1)
+    end
+
+    it "fails to create a new company" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      company_attributes[:name] = long_name
+      post companies_path, params: { company: company_attributes }
+      expect(response.body).to include('Unable to create company.')
     end
   end
 
@@ -39,6 +47,14 @@ RSpec.describe "Companies", type: :request do
       company_attributes[:description] = "Description goes here"
       put company_path(id: company.id), params: { company: company_attributes }
       expect(company.reload.description).to eql("Description goes here")
+    end
+
+    it "fails to update company" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      company_attributes[:name] = long_name
+      put company_path(id: company.id), params: { company: company_attributes }
+      expect(response.body).to include('Unable to update company.')
     end
   end
 
