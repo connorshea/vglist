@@ -24,6 +24,16 @@ RSpec.describe "User Password", type: :request do
     end
   end
 
+  describe "POST user_password_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it 'returns a successful response' do
+      post user_password_path, params: { user: { email: user.email } }
+      follow_redirect!
+      expect(response.body).to include('If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes.')
+    end
+  end
+
   describe "PUT user_password_path" do
     let(:user) { create(:confirmed_user) }
 
