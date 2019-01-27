@@ -3,7 +3,8 @@ class Game < ApplicationRecord
 
   has_many :releases
   has_many :platforms, through: :releases
-  has_and_belongs_to_many :genres
+  has_many :game_genres
+  has_many :genres, through: :game_genres, source: :genre
 
   validates :name,
     presence: true,

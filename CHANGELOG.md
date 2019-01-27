@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - Ensure that users can't have more than one copy of the same release in their library. ([#101])
+- Ensure that releases can't have more than one of the same genre. ([#102])
 
 ## v2019.1.26
 ### Added
@@ -103,3 +104,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#99]: https://github.com/connorshea/ContinueFromCheckpoint/pull/99
 [#100]: https://github.com/connorshea/ContinueFromCheckpoint/pull/100
 [#101]: https://github.com/connorshea/ContinueFromCheckpoint/pull/101
+[#102]: https://github.com/connorshea/ContinueFromCheckpoint/pull/102

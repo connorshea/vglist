@@ -1,7 +1,8 @@
 class Genre < ApplicationRecord
   include PgSearch
 
-  has_and_belongs_to_many :games
+  has_many :game_genres
+  has_many :games, through: :game_genres, source: :game
 
   validates :name,
     presence: true,
