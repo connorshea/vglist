@@ -4,6 +4,18 @@
 
 nav.navbar {
   border-bottom: 1px solid $grey-light;
+  // Background gradient for the navbar
+  background: rgb(5,53,137);
+  background: linear-gradient(45deg, #053589 0%, #5178bc 100%);
+  // Subtle box-shadow for nav bar.
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.4);
+  padding: 0 20px;
+
+  // Override burger icon color when hovered.
+  // There doesn't seem to be a Bulma variable for this.
+  .navbar-burger:hover {
+    color: #fff;
+  }
 }
 
 .v-select {

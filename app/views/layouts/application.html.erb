@@ -48,8 +48,10 @@
       <div class="notification <%= flash_class(type) %>"><%= message %></div>
     <% end %>
 
-    <div class="container is-fluid mt-20">
-      <%= yield %>
+    <div class="section">
+      <div class="container is-fluid">
+        <%= yield %>
+      </div>
     </div>
   </body>
 </html>
