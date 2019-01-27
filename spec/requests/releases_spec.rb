@@ -17,6 +17,29 @@ RSpec.describe "Releases", type: :request do
     end
   end
 
+  describe "GET new_release_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      sign_in(user)
+
+      get new_release_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET edit_release_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:release) { create(:release) }
+
+    it "returns http success" do
+      sign_in(user)
+
+      get edit_release_path(release.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "PUT release_path" do
     let(:user) { create(:confirmed_user) }
     let!(:release) { create(:release) }
