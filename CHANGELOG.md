@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.1.27
+### Added
+- Improved design and added dropdowns. ([#100])
+
+### Fixed
+- Ensure that users can't have more than one copy of the same release in their library. ([#101])
+
 ## v2019.1.26
 ### Added
 - Add action for adding a release to your library. ([#93])
@@ -94,3 +101,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#93]: https://github.com/connorshea/ContinueFromCheckpoint/pull/93
 [#98]: https://github.com/connorshea/ContinueFromCheckpoint/pull/98
 [#99]: https://github.com/connorshea/ContinueFromCheckpoint/pull/99
+[#100]: https://github.com/connorshea/ContinueFromCheckpoint/pull/100
+[#101]: https://github.com/connorshea/ContinueFromCheckpoint/pull/101
