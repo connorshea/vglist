@@ -776,7 +776,7 @@ Style/BeginBlock:
 Style/BlockDelimiters:
   Enabled: true
   Exclude:
-    - 'spec/requests/*_spec.rb'
+    - 'spec/requests/**/*_spec.rb'
 
 Style/BracesAroundHashParameters:
   Enabled: true

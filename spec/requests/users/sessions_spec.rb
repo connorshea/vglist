@@ -22,7 +22,7 @@ RSpec.describe "User Session", type: :request do
   describe "DELETE destroy_user_session_path" do
     let(:user) { create(:confirmed_user) }
 
-    it 'creates a user' do
+    it 'signs the user out' do
       sign_in(user)
 
       delete destroy_user_session_path

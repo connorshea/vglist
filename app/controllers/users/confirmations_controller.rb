@@ -15,7 +15,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
 
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
-    skip_policy_scope
+    skip_authorization
     super
   end
 
