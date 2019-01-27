@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_27_225315) do
+ActiveRecord::Schema.define(version: 2019_01_27_232524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,18 +22,21 @@ ActiveRecord::Schema.define(version: 2019_01_27_225315) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "game_genres", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id", "genre_id"], name: "index_game_genres_on_game_id_and_genre_id", unique: true
+    t.index ["game_id"], name: "index_game_genres_on_game_id"
+    t.index ["genre_id"], name: "index_game_genres_on_genre_id"
+  end
+
   create_table "games", force: :cascade do |t|
     t.text "name", default: "", null: false
     t.text "description", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "games_genres", id: false, force: :cascade do |t|
-    t.integer "game_id"
-    t.integer "genre_id"
-    t.index ["game_id"], name: "index_games_genres_on_game_id"
-    t.index ["genre_id"], name: "index_games_genres_on_genre_id"
   end
 
   create_table "genres", force: :cascade do |t|
@@ -125,6 +128,8 @@ ActiveRecord::Schema.define(version: 2019_01_27_225315) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "game_genres", "games", on_delete: :cascade
+  add_foreign_key "game_genres", "genres", on_delete: :cascade
   add_foreign_key "release_developers", "companies", on_delete: :cascade
   add_foreign_key "release_developers", "releases", on_delete: :cascade
   add_foreign_key "release_publishers", "companies", on_delete: :cascade

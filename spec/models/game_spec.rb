@@ -17,6 +17,6 @@ RSpec.describe Game, type: :model do
   describe "Associations" do
     it { should have_many(:releases) }
     it { should have_many(:platforms) }
-    it { should have_and_belong_to_many(:genres) }
+    it { should have_many(:game_genres) }
   end
 end
