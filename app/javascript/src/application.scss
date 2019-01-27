@@ -3,9 +3,72 @@
 @import './stylesheets/padding-and-margins.scss';
 
 nav.navbar {
-  border-bottom: 1px solid $grey-light;
+  // Background gradient for the navbar
+  background: rgb(5,53,137);
+  background: linear-gradient(45deg, #053589 0%, #5178bc 100%);
+  // Subtle box-shadow for nav bar.
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.4);
+  padding: 0 20px;
+
+  // Override burger icon color when hovered.
+  // There doesn't seem to be a Bulma variable for this.
+  .navbar-burger:hover {
+    color: #fff;
+  }
+
+  // Show underlines on-hover on desktop.
+  @include from($desktop) {
+    .navbar-item:not(.has-dropdown) {
+      // This prevents the navbar items from moving up and down when hovered.
+      border-bottom: 2px solid transparent;
+      transition: border-bottom 200ms;
+
+      &:hover {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .navbar-dropdown .navbar-item {
+      transition: border-bottom none;
+      transition: background-color 200ms;
+      border-bottom: 0;
+
+      &:hover {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  .navbar-dropdown {
+    font-size: 1rem;
+  }
 }
 
 .v-select {
   display: block;
+}
+
+// Customization for bulma dropdowns.
+// Based on https://github.com/jgthms/bulma/pull/2142
+// Don't apply these styles to vue-select dropdowns.
+.dropdown:not(.v-select) {
+  button::after {
+    @extend %arrow;
+    border-color: $dropdown-content-arrow;
+    right: 0.75rem;
+    z-index: 4;
+  }
+
+  &.is-active {
+    button::after {
+      @extend %arrow;
+      border-color: $dropdown-content-arrow;
+      transform: rotate(135deg);
+      top: 1.4em;
+    }
+  }
+}
+
+.dropdown-trigger button {
+  padding-right: 2rem;
 }

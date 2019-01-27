@@ -1,0 +1,45 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <%= link_to("Continue From Checkpoint", root_path, class: "navbar-item has-text-weight-semibold") %>
+    <%# Hamburger menu for mobile %>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div class="navbar-menu is-shadowless" id="navMenu">
+    <div class="navbar-start">
+      <%= link_to("Games", games_path, class: "navbar-item") %>
+      <%= link_to("Releases", releases_path, class: "navbar-item") %>
+      <%= link_to("Users", users_path, class: "navbar-item") %>
+      <%= link_to("Platforms", platforms_path, class: "navbar-item") %>
+      <%= link_to("Genres", genres_path, class: "navbar-item") %>
+      <%= link_to("Companies", companies_path, class: "navbar-item") %>
+    </div>
+
+    <%# This is a bit screwy because we hide the dropdown items on mobile
+        and replace them with normal items so stuff doesn't look as weird. %>
+    <div class="navbar-end">
+      <% if user_signed_in? %>
+        <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
+          <a class="navbar-link"><%= current_user.username %></a>
+
+          <div class="navbar-dropdown is-right">
+            <%= link_to("Profile", user_path(current_user.id), class: "navbar-item") %>
+            <%= link_to("Settings", settings_path, class: "navbar-item") %>
+            <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item") %>
+          </div>
+        </div>
+
+        <%= link_to(current_user.username, user_path(current_user.id), class: "navbar-item is-hidden-desktop") %>
+        <%= link_to("Settings", settings_path, class: "navbar-item is-hidden-desktop") %>
+        <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item is-hidden-desktop") %>
+      <% else %>
+        <%= link_to('Sign up', new_user_registration_path, class: "navbar-item")  %>
+        <%= link_to('Sign in', new_user_session_path, class: "navbar-item") %>
+      <% end %>
+    </div>
+  </div>
+</nav>

@@ -24,4 +24,12 @@ class NilClassPolicy < ApplicationPolicy
   def destroy?
     false
   end
+
+  def method_missing(_method)
+    false
+  end
+
+  def respond_to_missing?(_method)
+    true
+  end
 end
