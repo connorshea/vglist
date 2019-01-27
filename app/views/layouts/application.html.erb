@@ -12,36 +12,7 @@
   </head>
 
   <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <%= link_to("Continue From Checkpoint", root_path, class: "navbar-item has-text-weight-semibold") %>
-        <%# Hamburger menu for mobile %>
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-
-      <div class="navbar-menu is-shadowless" id="navMenu">
-        <div class="navbar-start">
-          <%= link_to("Games", games_path, class: "navbar-item") %>
-          <%= link_to("Releases", releases_path, class: "navbar-item") %>
-          <%= link_to("Users", users_path, class: "navbar-item") %>
-          <%= link_to("Platforms", platforms_path, class: "navbar-item") %>
-          <%= link_to("Genres", genres_path, class: "navbar-item") %>
-          <%= link_to("Companies", companies_path, class: "navbar-item") %>
-        </div>
-
-        <div class="navbar-end">
-          <% if user_signed_in? %>
-            <%= link_to(current_user.username, user_path(current_user.id), class: "navbar-item") %>
-          <% end %>
-          <%= render 'devise/menu/sign_up_items' %>
-          <%= render 'devise/menu/sign_in_items' %>
-        </div>
-      </div>
-    </nav>
+    <%= render 'shared/navbar' %>
 
     <%# Rails flash messages %>
     <% flash.each do |type, message| -%>
