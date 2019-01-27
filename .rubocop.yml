@@ -911,7 +911,7 @@ Style/MethodDefParentheses:
   Enabled: true
 
 Style/MethodMissingSuper:
-  Enabled: true
+  Enabled: false
 
 Style/MinMax:
   Enabled: true

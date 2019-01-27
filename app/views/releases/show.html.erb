@@ -14,7 +14,7 @@
   <% end %>
 
   <% if policy(@release).update? || policy(@release).destroy? %>
-    <div class="dropdown is-right">
+    <div id="actions-dropdown" class="dropdown is-right">
       <div class="dropdown-trigger">
         <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>Actions</span>
@@ -26,7 +26,7 @@
             <%= link_to("Edit", edit_release_path(@release.id), class: "dropdown-item") %>
           <% end %>
           <% if policy(@release).destroy? %>
-            <%= link_to("Delete", release_path(@release.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item is-danger") %>
+            <%= link_to "Delete", release_path(@release.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item is-danger" %>
           <% end %>
         </div>
       </div>

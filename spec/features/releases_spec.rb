@@ -45,6 +45,7 @@ RSpec.describe "Releases", type: :feature do
 
       visit(release_path(release))
       expect(page).to have_content(release.name)
+      find('#actions-dropdown').click
       expect(page).to have_link(href: edit_release_path(release))
     end
 
@@ -53,6 +54,7 @@ RSpec.describe "Releases", type: :feature do
 
       visit(release_path(release))
       expect(page).to have_content(release.name)
+      find('#actions-dropdown').click
       expect(page).to have_link(href: edit_release_path(release))
     end
   end
@@ -66,6 +68,7 @@ RSpec.describe "Releases", type: :feature do
       sign_in(user)
       visit(release_path(release))
 
+      find('#actions-dropdown').click
       accept_alert do
         click_link 'Delete'
       end
@@ -78,6 +81,7 @@ RSpec.describe "Releases", type: :feature do
       sign_in(moderator)
       visit(release_path(release))
 
+      find('#actions-dropdown').click
       accept_alert do
         click_link 'Delete'
       end
