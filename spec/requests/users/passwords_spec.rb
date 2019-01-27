@@ -8,6 +8,22 @@ RSpec.describe "User Password", type: :request do
     end
   end
 
+  describe "GET edit_user_password_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it 'returns http success' do
+      password_token = user.send_reset_password_instructions
+      get edit_user_password_path, params: { reset_password_token: password_token }
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'fails without a valid token' do
+      get edit_user_password_path
+      follow_redirect!
+      expect(response.body).to include("You can&#39;t access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided.")
+    end
+  end
+
   describe "PUT user_password_path" do
     let(:user) { create(:confirmed_user) }
 
