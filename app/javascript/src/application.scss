@@ -47,3 +47,28 @@ nav.navbar {
 .v-select {
   display: block;
 }
+
+// Customization for bulma dropdowns.
+// Based on https://github.com/jgthms/bulma/pull/2142
+// Don't apply these styles to vue-select dropdowns.
+.dropdown:not(.v-select) {
+  button::after {
+    @extend %arrow;
+    border-color: $dropdown-content-arrow;
+    right: 0.75rem;
+    z-index: 4;
+  }
+
+  &.is-active {
+    button::after {
+      @extend %arrow;
+      border-color: $dropdown-content-arrow;
+      transform: rotate(135deg);
+      top: 1.4em;
+    }
+  }
+}
+
+.dropdown-trigger button {
+  padding-right: 2rem;
+}

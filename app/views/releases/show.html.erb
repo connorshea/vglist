@@ -3,22 +3,36 @@
 <h1 class="title"><%= @release.name %></h1>
 <h2 class="subtitle"><%= @release.description %></h2>
 
-<% if policy(@release).update? || policy(@release).destroy? %>
-  <div class="field is-grouped">
-    <% if policy(@release).update? %>
-      <p class="control"><%= link_to("Edit", edit_release_path(@release.id), class: "button") %>
-    <% end %>
-    <% if policy(@release).destroy? %>
-      <p class="control"><%= link_to("Delete", release_path(@release.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
-    <% end %>
+<div class="field is-grouped">
+  <% if policy(current_user).add_release_to_library? || policy(current_user).remove_release_from_library? %>
     <% if policy(current_user).add_release_to_library? && !release_in_user_library?(@release) %>
-      <p class="control"><%= button_to "Add to library", add_release_to_library_release_path(@release.id), method: :post, params: { release_purchase: { user_id: current_user.id, release_id: @release.id } }, class: "button" %>
+      <%= button_to "Add to library", add_release_to_library_release_path(@release.id), method: :post, params: { release_purchase: { user_id: current_user.id, release_id: @release.id } }, class: "button" %>
     <% end %>
     <% if policy(current_user).remove_release_from_library? && release_in_user_library?(@release) %>
-      <p class="control"><%= button_to "Remove from library", remove_release_from_library_release_path(@release.id), method: :delete, params: { id: @release.id }, class: "button is-danger" %>
+      <%= button_to "Remove from library", remove_release_from_library_release_path(@release.id), method: :delete, params: { id: @release.id }, class: "button is-danger" %>
     <% end %>
-  </div>
-<% end %>
+  <% end %>
+
+  <% if policy(@release).update? || policy(@release).destroy? %>
+    <div class="dropdown is-right">
+      <div class="dropdown-trigger">
+        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span>Actions</span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <% if policy(@release).update? %>
+            <%= link_to("Edit", edit_release_path(@release.id), class: "dropdown-item") %>
+          <% end %>
+          <% if policy(@release).destroy? %>
+            <%= link_to("Delete", release_path(@release.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item is-danger") %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
 
 <ul>
   <li>
