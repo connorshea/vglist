@@ -472,7 +472,7 @@ Metrics/ParameterLists:
   Enabled: true
 
 Metrics/PerceivedComplexity:
-  Enabled: true
+  Enabled: false
 
 #################### Naming ##############################
 

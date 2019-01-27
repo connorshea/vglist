@@ -28,6 +28,14 @@ RSpec.describe "Releases", type: :request do
       put release_path(id: release.id), params: { release: release_attributes }
       expect(release.reload.description).to eql("Description goes here")
     end
+
+    it "does not update release description" do
+      sign_in(user)
+      long_description = Faker::Lorem.characters(1200)
+      release_attributes[:description] = long_description
+      put release_path(id: release.id), params: { release: release_attributes }
+      expect(release.reload.description).not_to eql(long_description)
+    end
   end
 
   describe "DELETE release_path" do

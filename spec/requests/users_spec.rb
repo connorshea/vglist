@@ -35,6 +35,19 @@ RSpec.describe "Users", type: :request do
       expect(user.reload.role).to eql('admin')
     end
 
+    it "makes the moderator a member" do
+      sign_in(admin)
+      post update_role_user_path(id: moderator.id, role: "member")
+      expect(moderator.reload.role).to eql('member')
+    end
+
+    it "doesn't accept an invalid role" do
+      sign_in(admin)
+      post update_role_user_path(id: user.id, role: "dipstick")
+      follow_redirect!
+      expect(response.body).to include('Invalid role.')
+    end
+
     it "moderator cannot make another user a moderator" do
       sign_in(moderator)
       post update_role_user_path(id: user.id, role: "moderator")

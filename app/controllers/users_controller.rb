@@ -34,6 +34,11 @@ class UsersController < ApplicationController
 
     authorize @user
 
+    unless [:member, :moderator, :admin].include? role
+      flash[:error] = "Invalid role."
+      redirect_to(user_path(@user.id)) && return
+    end
+
     if role == :member
       @user.role = :member
     elsif role == :moderator
@@ -42,12 +47,7 @@ class UsersController < ApplicationController
       @user.role = :admin
     end
 
-    if @user.save
-      redirect_to @user, success: "#{@user.username} was given the role #{params[:role]}."
-    else
-      flash.now[:error] = "Unable to save user."
-      render :new
-    end
+    redirect_to @user, success: "#{@user.username} was given the role #{params[:role]}." if @user.save
   end
 
   def user_params
