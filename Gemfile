@@ -40,6 +40,8 @@ gem "pg_search", "~> 2.1"
 # TODO: Swap this out for image_processing and libvips in Rails 6.
 gem 'mini_magick', '~> 4.9'
 
+gem 'active_storage_validations', '~> 0.5'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

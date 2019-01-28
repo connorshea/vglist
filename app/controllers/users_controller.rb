@@ -21,8 +21,8 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, success: "#{@user.username} was successfully updated." }
       else
         format.html do
-          flash.now[:error] = "Unable to update user."
-          render :edit
+          flash[:error] = "Unable to update user."
+          redirect_to settings_path
         end
       end
     end

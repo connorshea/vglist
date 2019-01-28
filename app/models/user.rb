@@ -36,4 +36,9 @@ class User < ApplicationRecord
   # Every user must have a role.
   validates :role,
     presence: true
+
+  validates :avatar,
+    attached: false,
+    content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    size: { less_than: 3.megabytes }
 end
