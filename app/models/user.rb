@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :release_purchases
   has_many :releases, through: :release_purchases
 
+  has_one_attached :avatar
+
   # Users have roles that can be used to define what actions they're allowed
   # to perform. Default should be 'member'.
   enum role: {

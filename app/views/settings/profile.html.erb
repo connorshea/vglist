@@ -6,6 +6,17 @@
 
 <%= form_for @user do |f| %>
   <div class="field">
+    <%= f.label :avatar %>
+    <%= f.file_field :avatar %>
+  </div>
+
+  <div class="field">
+    <%= f.submit "Update Avatar", class: "button is-primary" %>
+  </div>
+<% end %>
+
+<%= form_for @user do |f| %>
+  <div class="field">
     <%= f.label :bio, "Bio", class: "label" %>
     <div class="control">
       <%= f.text_area :bio, class: "textarea" %>
