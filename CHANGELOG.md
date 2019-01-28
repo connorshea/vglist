@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2019.1.27
 ### Added
 - Improved design and added dropdowns. ([#100])
+- Add ActiveStorage, user avatars, and user avatar uploading. ([#104])
 
 ### Fixed
 - Ensure that users can't have more than one copy of the same release in their library. ([#101])
@@ -105,3 +106,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#100]: https://github.com/connorshea/ContinueFromCheckpoint/pull/100
 [#101]: https://github.com/connorshea/ContinueFromCheckpoint/pull/101
 [#102]: https://github.com/connorshea/ContinueFromCheckpoint/pull/102
+[#104]: https://github.com/connorshea/ContinueFromCheckpoint/pull/104
