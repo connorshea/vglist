@@ -8,7 +8,7 @@ RSpec.describe "Settings", type: :feature do
       sign_in(user)
 
       visit(settings_path)
-      within("#edit_user_#{user.id}") do
+      within(".bio-form") do
         fill_in('user[bio]', with: 'New bio!')
       end
       click_button 'Submit'

@@ -1,5 +1,6 @@
 <% content_for :title, @user.username %>
 
+<%= user_avatar(@user.id, 150) %>
 <h1 class="title"><%= @user.username %></h1>
 
 <% if @user.admin? %>
