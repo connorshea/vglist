@@ -4,7 +4,7 @@
 
 <%= render 'nav' %>
 
-<%= form_for @user do |f| %>
+<%= form_for @user, html: { class: "avatar-form" } do |f| %>
   <div class="field">
     <%= f.label :avatar %>
     <%= f.file_field :avatar %>
@@ -15,7 +15,7 @@
   </div>
 <% end %>
 
-<%= form_for @user do |f| %>
+<%= form_for @user, html: { class: "bio-form" } do |f| %>
   <div class="field">
     <%= f.label :bio, "Bio", class: "label" %>
     <div class="control">
