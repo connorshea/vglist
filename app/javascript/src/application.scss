@@ -42,6 +42,12 @@ nav.navbar {
   .navbar-dropdown {
     font-size: 1rem;
   }
+
+  .navbar-item img {
+    max-height: 1.75rem;
+    max-width: 1.75rem;
+    object-fit: scale-down;
+  }
 }
 
 .v-select {
