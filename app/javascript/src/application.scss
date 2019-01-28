@@ -44,9 +44,10 @@ nav.navbar {
   }
 
   .navbar-item img {
-    max-height: 1.75rem;
-    max-width: 1.75rem;
+    max-height: 1.8rem;
+    max-width: 1.8rem;
     object-fit: scale-down;
+    border: 1px solid #fff;
   }
 }
 
