@@ -7,6 +7,7 @@ This is a Rails application for tracking your video game library.
 Pre-requisites:
 - Ruby 2.5 or 2.6
 - Postgres 10.x
+- ImageMagick (for images, like avatars or game covers)
 
 Follow these instructions:
 

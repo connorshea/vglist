@@ -24,7 +24,10 @@
     <div class="navbar-end">
       <% if user_signed_in? %>
         <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
-          <a class="navbar-link"><%= current_user.username %></a>
+          <a class="navbar-link">
+            <%= user_avatar(current_user.id, 80) %>
+            <span class='pl-10'><%= current_user.username %></span>
+          </a>
 
           <div class="navbar-dropdown is-right">
             <%= link_to("Profile", user_path(current_user.id), class: "navbar-item") %>

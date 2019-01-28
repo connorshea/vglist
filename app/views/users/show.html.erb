@@ -1,11 +1,6 @@
 <% content_for :title, @user.username %>
 
-<% if @user.avatar.attached? %>
-  <%= image_tag @user.avatar, height: '150px', width: '150px' %>
-<% else %>
-  No avatar!
-<% end %>
-
+<%= user_avatar(@user.id, 150) %>
 <h1 class="title"><%= @user.username %></h1>
 
 <% if @user.admin? %>
