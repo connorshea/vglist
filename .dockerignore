@@ -1,0 +1,7 @@
+.git
+node_modules
+tmp
+storage
+log
+public/packs
+public/packs-test
