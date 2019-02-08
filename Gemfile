@@ -22,7 +22,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 
 # Use devise for Users and authentication.
-gem 'devise', '~> 4.5'
+gem 'devise', '~> 4.6'
 
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.1'
