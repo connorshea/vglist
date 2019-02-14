@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.13
+### Added
+- Add Game Engines. ([#135])
+
 ## v2019.1.27
 ### Added
 - Improved design and added dropdowns. ([#100])
@@ -107,3 +111,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#101]: https://github.com/connorshea/ContinueFromCheckpoint/pull/101
 [#102]: https://github.com/connorshea/ContinueFromCheckpoint/pull/102
 [#104]: https://github.com/connorshea/ContinueFromCheckpoint/pull/104
+[#135]: https://github.com/connorshea/ContinueFromCheckpoint/pull/135
