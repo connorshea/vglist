@@ -55,7 +55,7 @@ class EnginesController < ApplicationController
     @engine = Engine.find(params[:id])
     authorize @engine
     @engine.destroy
-    
+
     respond_to do |format|
       format.html { redirect_to engines_url, notice: 'Engine was successfully destroyed.' }
       format.json { head :no_content }
@@ -63,7 +63,7 @@ class EnginesController < ApplicationController
   end
 
   private
-  
+
   def engine_params
     params.require(:engine).permit(:name)
   end
