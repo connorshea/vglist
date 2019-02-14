@@ -18,5 +18,6 @@ RSpec.describe Game, type: :model do
     it { should have_many(:releases) }
     it { should have_many(:platforms) }
     it { should have_many(:game_genres) }
+    it { should have_many(:game_engines) }
   end
 end
