@@ -29,7 +29,15 @@
   <% end %>
 
   <p class="infobox-header has-text-weight-semibold">Engine(s)
-  <%# Engines listing goes here. %>
+  <% if !@game.engines.blank? %>
+    <ul>
+      <% @game.engines.each do |engine| %>
+        <li><%= link_to(engine.name, engine_path(engine.id)) %>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Unknown
+  <% end %>
 
   <p class="infobox-header has-text-weight-semibold">External links
 </div>
