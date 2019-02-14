@@ -9,7 +9,7 @@ RSpec.describe EnginePolicy, type: :policy do
 
     it 'permits everything' do
       expect(engine_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy]
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
   end
@@ -26,7 +26,7 @@ RSpec.describe EnginePolicy, type: :policy do
 
     it "doesn't allow anything else" do
       expect(engine_policy).not_to permit_actions(
-        [:create, :new, :edit, :update, :destroy]
+        [:create, :new, :edit, :update, :destroy, :search]
       )
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe EnginePolicy, type: :policy do
 
     it "let's a moderator do everything" do
       expect(engine_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy]
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
   end
@@ -48,7 +48,7 @@ RSpec.describe EnginePolicy, type: :policy do
 
     it "let's an admin do everything" do
       expect(engine_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy]
+        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
   end

@@ -62,6 +62,20 @@ class EnginesController < ApplicationController
     end
   end
 
+  def search
+    if params[:query].present?
+      @engines = Engine.search(params[:query]).page(params[:page])
+    else
+      @engines = Engine.none.page(params[:page])
+    end
+
+    authorize @engines
+
+    respond_to do |format|
+      format.json { render json: @engines }
+    end
+  end
+
   private
 
   def engine_params

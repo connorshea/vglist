@@ -51,4 +51,27 @@ RSpec.describe "Engines", type: :request do
       }.to change(Engine, :count).by(-1)
     end
   end
+
+  describe "GET search_engines_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:engine) { create(:engine) }
+
+    it "returns the given engine" do
+      sign_in(user)
+      get search_engines_path(query: engine.name, format: :json)
+      expect(JSON.parse(response.body).first.to_json).to eq(engine.to_json)
+    end
+
+    it "returns no engine" do
+      sign_in(user)
+      get search_engines_path(query: SecureRandom.alphanumeric(8), format: :json)
+      expect(response.body).to eq("[]")
+    end
+
+    it "returns no engine when no query is given" do
+      sign_in(user)
+      get search_engines_path(format: :json)
+      expect(response.body).to eq("[]")
+    end
+  end
 end
