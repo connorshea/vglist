@@ -8,3 +8,15 @@
     <p class="control"><%= link_to("Delete", engine_path(@engine.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
   </div>
 <% end %>
+
+<% if !@engine.games.blank? %>
+  <p>Games:
+
+  <ul>
+    <% @engine.games.each do |game| %>
+      <li><%= link_to(game.name, game_path(game.id)) %>
+    <% end %>
+  </ul>
+<% else %>
+  <p>This engine doesn't have any games yet.
+<% end %>
