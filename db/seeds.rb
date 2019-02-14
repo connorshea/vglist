@@ -65,6 +65,12 @@ puts "Creating Companies..."
   )
 end
 
+puts "Creating Engines..."
+
+10.times do
+  Engine.create!(name: Faker::Game.unique.engine)
+end
+
 puts "Creating Games..."
 
 # Create 50 random Games.
@@ -75,10 +81,17 @@ puts "Creating Games..."
   end
   genres.uniq!
 
+  engines = []
+  rand(0..3).times.each do
+    engines << Engine.find(rand(1..Engine.count))
+  end
+  engines.uniq!
+
   Game.create!(
     name: Faker::Game.unique.name,
     description: Faker::Lorem.sentence,
-    genres: genres
+    genres: genres,
+    engines: engines
   )
 end
 
@@ -168,6 +181,7 @@ end
 puts
 puts "Created:"
 
-[User, Genre, Company, Game, Platform, Release, ReleasePurchase, ReleaseDeveloper, ReleasePublisher].each do |class_name|
+# Don't forget to also update faker.rb when you add new Faker data, idiot.
+[User, Genre, Company, Engine, Game, Platform, Release, ReleasePurchase, ReleaseDeveloper, ReleasePublisher].each do |class_name|
   puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
 end

@@ -1,0 +1,15 @@
+<% content_for :title, "Engines" %>
+
+<h1 class="title">Engines</h1>
+
+<% if policy(@engines).create? %>
+  <p><%= link_to("Create a new engine", new_engine_path) %></p>
+<% end %>
+
+<ul>
+  <% @engines.each do |engine| %>
+    <li><%= link_to(engine.name, engine_path(engine.id)) %></li>
+  <% end %>
+</ul>
+
+<%= paginate @engines %>

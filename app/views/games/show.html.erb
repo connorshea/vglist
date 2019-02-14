@@ -16,16 +16,31 @@
   </div>
 <% end %>
 
-<% if !@game.genres.blank? %>
-  <p>Genres:
-  <ul>
-    <% @game.genres.each do |genre| %>
-      <li><%= link_to(genre.name, genre_path(genre.id)) %>
-    <% end %>
-  </ul>
-<% else %>
-  <p>This game doesn't have any genres yet.
-<% end %>
+<div class="box infobox">
+  <p class="infobox-header has-text-weight-semibold">Genre(s)
+  <% if !@game.genres.blank? %>
+    <ul>
+      <% @game.genres.each do |genre| %>
+        <li><%= link_to(genre.name, genre_path(genre.id)) %>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>This game doesn't have any genres yet.
+  <% end %>
+
+  <p class="infobox-header has-text-weight-semibold">Engine(s)
+  <% if !@game.engines.blank? %>
+    <ul>
+      <% @game.engines.each do |engine| %>
+        <li><%= link_to(engine.name, engine_path(engine.id)) %>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Unknown
+  <% end %>
+
+  <%# <p class="infobox-header has-text-weight-semibold">External links %>
+</div>
 
 <% if !@game.releases.blank? %>
   <p>Releases:

@@ -19,6 +19,11 @@
       v-model="game.genres"
     ></genre-select>
 
+    <engine-select
+      :label="formData.engines.label"
+      v-model="game.engines"
+    ></engine-select>
+
     <button
       class="button is-primary"
       value="Submit"
@@ -31,12 +36,13 @@
 import TextArea from './text-area.vue';
 import TextField from './text-field.vue';
 import GenreSelect from './genre-select.vue';
+import EngineSelect from './engine-select.vue';
 import Rails from 'rails-ujs';
 
 export default {
   name: 'game-form',
   components: {
-    TextArea, TextField, GenreSelect
+    TextArea, TextField, GenreSelect, EngineSelect
   },
   props: {
     name: {
@@ -50,6 +56,13 @@ export default {
       default: ''
     },
     genres: {
+      type: Array,
+      required: false,
+      default: function() {
+        return []
+      }
+    },
+    engines: {
       type: Array,
       required: false,
       default: function() {
@@ -70,7 +83,8 @@ export default {
       game: {
         name: this.name,
         description: this.description,
-        genres: this.genres
+        genres: this.genres,
+        engines: this.engines
       },
       formData: {
         class: 'game',
@@ -84,6 +98,9 @@ export default {
         },
         genres: {
           label: 'Genres'
+        },
+        engines: {
+          label: 'Engines'
         }
       }
     }
@@ -91,12 +108,14 @@ export default {
   methods: {
     onSubmit() {
       let genre_ids = Array.from(this.game.genres, genre => genre.id);
+      let engine_ids = Array.from(this.game.engines, engine => engine.id);
       fetch(this.submitPath, {
         method: this.create ? 'POST' : 'PUT',
         body: JSON.stringify({ game: {
           name: this.game.name,
           description: this.game.description,
-          genre_ids: genre_ids
+          genre_ids: genre_ids,
+          engine_ids: engine_ids
         }}),
         headers: {
           'Content-Type': 'application/json',

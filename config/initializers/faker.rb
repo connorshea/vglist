@@ -16,6 +16,10 @@ module GameProperties
       def company
         fetch('game.company')
       end
+
+      def engine
+        fetch('game.engine')
+      end
     end
   end
 end

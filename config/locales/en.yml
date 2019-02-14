@@ -1,6 +1,6 @@
 en:
-  hello: "Hello world"
   # Faker data for seeding video game titles.
+  # Don't forget to also update faker.rb when you add new Faker data, idiot.
   faker:
     game:
       name: [
@@ -153,4 +153,20 @@ en:
         'Naughty Dog',
         'Obsidian Entertainment',
         'Rare'
+      ]
+      engine: [
+        'GoldSrc',
+        'Source',
+        'Source 2',
+        'Unity',
+        'Unreal Engine 4',
+        'Frostbite',
+        'Id Tech 4',
+        'Id Tech 5',
+        'Id Tech 6',
+        'Id Tech 7',
+        'Godot',
+        'XNA',
+        'FNA',
+        'CryEngine'
       ]

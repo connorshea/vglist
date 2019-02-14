@@ -30,6 +30,10 @@ Rails.application.routes.draw do
     get :search, on: :collection
   end
 
+  resources :engines do
+    get :search, on: :collection
+  end
+
   resources :genres do
     get :search, on: :collection
   end

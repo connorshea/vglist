@@ -5,6 +5,8 @@ class Game < ApplicationRecord
   has_many :platforms, through: :releases
   has_many :game_genres
   has_many :genres, through: :game_genres, source: :genre
+  has_many :game_engines
+  has_many :engines, through: :game_engines, source: :engine
 
   validates :name,
     presence: true,
