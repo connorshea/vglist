@@ -1,0 +1,12 @@
+<%= form_for @engine do |f| %>
+  <div class="field">
+    <%= f.label :name, "Engine name", class: "label" %>
+    <div class="control">
+      <%= f.text_field :name, autocomplete: "off", class: "input" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.submit "Submit", class: "button is-primary" %>
+  </div>
+<% end %>
