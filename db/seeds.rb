@@ -81,10 +81,17 @@ puts "Creating Games..."
   end
   genres.uniq!
 
+  engines = []
+  rand(0..3).times.each do
+    engines << Engine.find(rand(1..Engine.count))
+  end
+  engines.uniq!
+
   Game.create!(
     name: Faker::Game.unique.name,
     description: Faker::Lorem.sentence,
-    genres: genres
+    genres: genres,
+    engines: engines
   )
 end
 
