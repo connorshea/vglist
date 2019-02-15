@@ -16,18 +16,3 @@ services:
       DATABASE_PASSWORD: 'productionpassword'
     depends_on:
       - db
-  #     - webpacker
-  # webpacker:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.prod
-  #   env_file:
-  #     - '.env.docker.prod'
-  #   command: ./bin/webpack-dev-server
-  #   volumes:
-  #     - .:/continuefromcheckpoint:delegated
-  #     - /continuefromcheckpoint/node_modules/
-  #   ports:
-  #     - '3035:3035'
-  #   environment:
-  #     RAILS_ENV: production

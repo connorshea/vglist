@@ -36,6 +36,7 @@ RUN yarn install --frozen-lockfile
 # Copy the rest of the files. We do this last to speed up regeneration of the Docker image.
 COPY . /$APP_ROOT
 
+# Pre-compile webpack packs.
 RUN bundle exec rails assets:precompile
 
 # Start the main process.
