@@ -15,13 +15,13 @@ services:
       - "3000:3000"
     depends_on:
       - db
-      # - webpacker
-  # webpacker:
-  #   build: .
-  #   env_file:
-  #     - '.env.docker'
-  #   command: ./bin/webpack-dev-server
-  #   volumes:
-  #     - .:/continuefromcheckpoint
-  #   ports:
-  #     - '3035:3035'
+      - webpacker
+  webpacker:
+    build: .
+    env_file:
+      - '.env.docker'
+    command: ./bin/webpack-dev-server
+    volumes:
+      - .:/continuefromcheckpoint
+    ports:
+      - '3035:3035'
