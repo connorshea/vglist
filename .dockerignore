@@ -5,3 +5,4 @@ storage
 log
 public/packs
 public/packs-test
+config/master.key

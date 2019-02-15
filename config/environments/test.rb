@@ -51,4 +51,7 @@ Rails.application.configure do
     Bullet.bullet_logger = true
     Bullet.raise = true
   end
+
+  # Faker gem configuration
+  Faker::Config.locale = 'en'
 end

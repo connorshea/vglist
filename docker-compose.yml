@@ -5,22 +5,29 @@ services:
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
   web:
-    build: .
-    env_file:
-      - '.env.docker'
+    build:
+      context: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
       - "3000:3000"
+    environment:
+      CONTINUE-FROM-CHECKPOINT_DATABASE_HOST: db
+      DATABASE_URL: postgres://postgres@db
+      DATABASE_PASSWORD: 'productionpassword'
     depends_on:
       - db
-      - webpacker
-  webpacker:
-    build: .
-    env_file:
-      - '.env.docker'
-    command: ./bin/webpack-dev-server
-    volumes:
-      - .:/continuefromcheckpoint:delegated
-      - /continuefromcheckpoint/node_modules/
-    ports:
-      - '3035:3035'
+  #     - webpacker
+  # webpacker:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.prod
+  #   env_file:
+  #     - '.env.docker.prod'
+  #   command: ./bin/webpack-dev-server
+  #   volumes:
+  #     - .:/continuefromcheckpoint:delegated
+  #     - /continuefromcheckpoint/node_modules/
+  #   ports:
+  #     - '3035:3035'
+  #   environment:
+  #     RAILS_ENV: production
