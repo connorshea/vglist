@@ -9,6 +9,8 @@ ENV RACK_ENV production
 ENV NODE_ENV production
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true
+# TODO: Fix this, it'll bite you in the ass if you don't fix it before
+# deploying to production.
 # Stupid workaround for https://github.com/rails/rails/issues/32947
 # Maybe move SECRET_KEY_BASE to be included in credentials.yml.enc?
 ENV SECRET_KEY_BASE=dumb
