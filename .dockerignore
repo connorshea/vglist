@@ -6,3 +6,7 @@ log
 public/packs
 public/packs-test
 config/master.key
+coverage
+yarn-debug.log
+.yarn-integrity
+.DS_Store
