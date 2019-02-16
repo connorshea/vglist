@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.2.15
+### Added
+- Add Covers for Games. ([#145])
+
 ### Changed
 - Change the `Dockerfile` base image Debian to Alpine Linux. ([#144])
 
@@ -122,3 +125,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#135]: https://github.com/connorshea/ContinueFromCheckpoint/pull/135
 [#138]: https://github.com/connorshea/ContinueFromCheckpoint/pull/138
 [#144]: https://github.com/connorshea/ContinueFromCheckpoint/pull/144
+[#145]: https://github.com/connorshea/ContinueFromCheckpoint/pull/145

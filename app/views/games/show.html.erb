@@ -6,7 +6,7 @@
 </h2>
 
 <% if @game.cover.attached? %>
-  <%= image_tag @game.cover %>
+  <%= image_tag @game.cover.variant(resize: "300x500>") %>
 <% else %>
   No cover.
 <% end %>
