@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.15
+### Changed
+- Change the `Dockerfile` base image Debian to Alpine Linux. ([#144])
+
 ## v2019.2.14
 ### Added
 - Add a `Dockerfile` for running the application in production mode. This is a super important step toward actually deploying the thing to production. ([#138])
@@ -117,3 +121,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#104]: https://github.com/connorshea/ContinueFromCheckpoint/pull/104
 [#135]: https://github.com/connorshea/ContinueFromCheckpoint/pull/135
 [#138]: https://github.com/connorshea/ContinueFromCheckpoint/pull/138
+[#144]: https://github.com/connorshea/ContinueFromCheckpoint/pull/144
