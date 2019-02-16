@@ -1,12 +1,12 @@
 <% content_for :title, @game.name %>
 
-
-<% if @game.cover.attached? %>
-  <%= image_tag @game.cover.variant(resize: "300x500>") %>
-<% else %>
-  No cover.
-  <%# TODO: Add a placeholder cover here. %>
-<% end %>
+<div class="game-cover">
+  <% if @game.cover.attached? %>
+    <%= image_tag @game.cover.variant(resize: "300x500>") %>
+  <% else %>
+    <%= image_tag 'no-cover.png', height: "800px", width: "560px" %>
+  <% end %>
+</div>
 
 <h1 class="title"><%= @game.name %></h1>
 <h2 class="subtitle">

@@ -95,3 +95,14 @@ nav.navbar {
   text-align: center;
   font-weight: bold;
 }
+
+.game-cover {
+  height: auto;
+  max-height: 360px;
+  width: 240px;
+
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+}

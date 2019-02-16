@@ -14,7 +14,7 @@ module ApplicationHelper
     if user.avatar.attached?
       image_tag user.avatar.variant(resize: "#{size}x#{size}")
     else
-      image_tag 'default_avatar.png', height: "#{size}px", width: "#{size}px"
+      image_tag 'default-avatar.png', height: "#{size}px", width: "#{size}px"
     end
   end
 end
