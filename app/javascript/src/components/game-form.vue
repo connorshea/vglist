@@ -121,7 +121,9 @@ export default {
       submittableData.append('game[description]', this.game.description);
       submittableData.append('game[genre_ids]', genre_ids);
       submittableData.append('game[engine_ids]', engine_ids);
-      submittableData.append('game[cover]', this.game.cover, this.game.cover.name);
+      if (this.game.cover) {
+        submittableData.append('game[cover]', this.game.cover, this.game.cover.name);
+      }
 
       fetch(this.submitPath, {
         method: this.create ? 'POST' : 'PUT',
