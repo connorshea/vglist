@@ -96,6 +96,19 @@ nav.navbar {
   font-weight: bold;
 }
 
+.game-hero-area {
+  display: flex;
+  flex-flow: column wrap;
+
+  @include from($desktop) {
+    flex-flow: row nowrap;
+
+    .text-block {
+      padding-left: 15px;
+    }
+  }
+}
+
 .game-cover {
   height: auto;
   max-height: 360px;
