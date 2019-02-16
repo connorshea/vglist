@@ -1,28 +1,47 @@
 <template>
-  <label class="file-select">
-    <!-- We can't use a normal button element here, as it would become the target of the label. -->
-    <div class="select-button">
-      <!-- Display the filename if a file has been selected. -->
-      <span v-if="value">Selected File: {{value.name}}</span>
-      <span v-else>Select File</span>
+  <div class="field">
+    <label class="label">{{ label }}</label>
+    <label class="file-select">
+      <!-- We can't use a normal button element here, as it would become the target of the label. -->
+      <div class="button">
+        <!-- Display the filename if a file has been selected. -->
+        <span v-if="value">Selected File: {{ value.name }}</span>
+        <span v-else>Select File</span>
+      </div>
+      <!-- We hide this file input. -->
+      <input type="file" @change="handleFileChange"/>
+    </label>
+    <div class="game-cover pt-5">
+      <img v-if="image" :src="image"/>
     </div>
-    <!-- We hide this file input. -->
-    <input type="file" @change="handleFileChange"/>
-  </label>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
-    value: File
+    value: File,
+    label: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      image: null
+    }
   },
   methods: {
     handleFileChange(e) {
-      console.log(e);
-      console.log(e.target);
-      console.log(e.target.files);
+      let file = e.target.files[0];
+      var reader = new FileReader();
+      reader.onloadend = () => {
+        this.image = reader.result;
+      }
+      reader.readAsDataURL(file);
+
       // Whenever the file changes, emit the 'input' event with the file data.
-      this.$emit('input', e.target.files[0])
+      this.$emit('input', file)
     }
   }
 }

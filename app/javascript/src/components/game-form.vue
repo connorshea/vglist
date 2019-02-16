@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div>
-      <file-select v-model="game.cover"></file-select>
-      <p v-if="game.cover">{{game.cover.name}}</p>
-    </div>
+    <file-select
+      :label="formData.cover.label"
+      v-model="game.cover"
+    ></file-select>
 
     <text-field
       :form-class="formData.class"
@@ -95,6 +95,9 @@ export default {
       },
       formData: {
         class: 'game',
+        cover: {
+          label: 'Cover'
+        },
         name: {
           label: 'Game title',
           attribute: 'name'
