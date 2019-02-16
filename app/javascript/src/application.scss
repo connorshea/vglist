@@ -79,3 +79,43 @@ nav.navbar {
 .dropdown-trigger button {
   padding-right: 2rem;
 }
+
+.file-select > input[type="file"] {
+  display: none;
+}
+
+.file-select > .select-button {
+  padding: 1rem;
+
+  color: white;
+  background-color: #2EA169;
+
+  border-radius: .3rem;
+
+  text-align: center;
+  font-weight: bold;
+}
+
+.game-hero-area {
+  display: flex;
+  flex-flow: column wrap;
+
+  @include from($desktop) {
+    flex-flow: row nowrap;
+
+    .text-block {
+      padding-left: 15px;
+    }
+  }
+}
+
+.game-cover {
+  height: auto;
+  max-height: 360px;
+  width: 240px;
+
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+}

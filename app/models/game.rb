@@ -8,12 +8,19 @@ class Game < ApplicationRecord
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
+  has_one_attached :cover
+
   validates :name,
     presence: true,
     length: { maximum: 120 }
 
   validates :description,
     length: { maximum: 1000 }
+
+  validates :cover,
+    attached: false,
+    content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    size: { less_than: 4.megabytes }
 
   pg_search_scope :search,
     against: [:name],
