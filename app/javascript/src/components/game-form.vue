@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div>
+      <file-select v-model="game.cover"></file-select>
+      <p v-if="game.cover">{{game.cover.name}}</p>
+    </div>
+
     <text-field
       :form-class="formData.class"
       :attribute="formData.name.attribute"
@@ -37,12 +42,13 @@ import TextArea from './text-area.vue';
 import TextField from './text-field.vue';
 import GenreSelect from './genre-select.vue';
 import EngineSelect from './engine-select.vue';
+import FileSelect from './file-select.vue';
 import Rails from 'rails-ujs';
 
 export default {
   name: 'game-form',
   components: {
-    TextArea, TextField, GenreSelect, EngineSelect
+    TextArea, TextField, GenreSelect, EngineSelect, FileSelect
   },
   props: {
     name: {
@@ -84,7 +90,8 @@ export default {
         name: this.name,
         description: this.description,
         genres: this.genres,
-        engines: this.engines
+        engines: this.engines,
+        cover: this.cover
       },
       formData: {
         class: 'game',
@@ -109,16 +116,17 @@ export default {
     onSubmit() {
       let genre_ids = Array.from(this.game.genres, genre => genre.id);
       let engine_ids = Array.from(this.game.engines, engine => engine.id);
+      let submittableData = new FormData();
+      submittableData.append('game[name]', this.game.name);
+      submittableData.append('game[description]', this.game.description);
+      submittableData.append('game[genre_ids]', genre_ids);
+      submittableData.append('game[engine_ids]', engine_ids);
+      submittableData.append('game[cover]', this.game.cover, this.game.cover.name);
+
       fetch(this.submitPath, {
         method: this.create ? 'POST' : 'PUT',
-        body: JSON.stringify({ game: {
-          name: this.game.name,
-          description: this.game.description,
-          genre_ids: genre_ids,
-          engine_ids: engine_ids
-        }}),
+        body: submittableData,
         headers: {
-          'Content-Type': 'application/json',
           'X-CSRF-Token': Rails.csrfToken()
         },
         credentials: 'same-origin'

@@ -5,6 +5,12 @@
   <%= @game.description.blank? ? "This game doesn't have a description yet." : @game.description %>
 </h2>
 
+<% if @game.cover.attached? %>
+  <%= image_tag @game.cover %>
+<% else %>
+  No cover.
+<% end %>
+
 <% if policy(@game).update? || policy(@game).destroy? %>
   <div class="field is-grouped">
     <% if policy(@game).update? %>

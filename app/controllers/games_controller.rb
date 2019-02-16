@@ -83,6 +83,7 @@ class GamesController < ApplicationController
     params.require(:game).permit(
       :name,
       :description,
+      :cover,
       genre_ids: [],
       engine_ids: []
     )

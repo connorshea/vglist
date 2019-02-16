@@ -79,3 +79,19 @@ nav.navbar {
 .dropdown-trigger button {
   padding-right: 2rem;
 }
+
+.file-select > input[type="file"] {
+  display: none;
+}
+
+.file-select > .select-button {
+  padding: 1rem;
+
+  color: white;
+  background-color: #2EA169;
+
+  border-radius: .3rem;
+
+  text-align: center;
+  font-weight: bold;
+}
