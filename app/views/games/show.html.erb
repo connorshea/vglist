@@ -1,15 +1,17 @@
 <% content_for :title, @game.name %>
 
-<h1 class="title"><%= @game.name %></h1>
-<h2 class="subtitle">
-  <%= @game.description.blank? ? "This game doesn't have a description yet." : @game.description %>
-</h2>
 
 <% if @game.cover.attached? %>
   <%= image_tag @game.cover.variant(resize: "300x500>") %>
 <% else %>
   No cover.
+  <%# TODO: Add a placeholder cover here. %>
 <% end %>
+
+<h1 class="title"><%= @game.name %></h1>
+<h2 class="subtitle">
+  <%= @game.description.blank? ? "This game doesn't have a description yet." : @game.description %>
+</h2>
 
 <% if policy(@game).update? || policy(@game).destroy? %>
   <div class="field is-grouped">
