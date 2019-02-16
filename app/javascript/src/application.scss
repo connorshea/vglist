@@ -121,9 +121,13 @@ nav.navbar {
 }
 
 .game-card-list {
-  display: flex;
-  flex-flow: row wrap;
-  margin: -10px;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+  @include from($desktop) {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
 }
 
 .game-card {
@@ -134,8 +138,6 @@ nav.navbar {
   height: 200px;
   position: relative;
   overflow: hidden;
-  flex: 1 1 500px;
-  margin: 10px;
 
   .card-container {
     padding: 0;
@@ -151,6 +153,8 @@ nav.navbar {
   .game-cover {
     height: 100%;
     width: 140px;
+    max-width: 140px;
+    min-width: 140px;
 
     img {
       height: 100%;

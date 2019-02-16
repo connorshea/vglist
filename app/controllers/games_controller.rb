@@ -2,7 +2,9 @@ class GamesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
   def index
-    @games = Game.order(:id).page params[:page]
+    @games = Game.order(:id)
+                 .includes(:cover_attachment)
+                 .page params[:page]
     skip_policy_scope
   end
 
