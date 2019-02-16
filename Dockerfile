@@ -22,7 +22,8 @@ RUN apk add --no-cache --update build-base \
                                 nodejs \
                                 yarn \
                                 bash \
-                                tzdata
+                                tzdata \
+                                imagemagick
 
 RUN mkdir /$APP_ROOT
 WORKDIR /$APP_ROOT
