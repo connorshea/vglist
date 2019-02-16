@@ -119,3 +119,43 @@ nav.navbar {
     max-width: 100%;
   }
 }
+
+.game-card-list {
+  display: flex;
+  flex-flow: row wrap;
+  margin: -10px;
+}
+
+.game-card {
+  background-color: #fff;
+  box-shadow: 0 2px 3px rgba(#000, 0.1), 0 0 0 1px rgba(#000, 0.1);
+  color: hsl(0, 0%, 21%);
+  width: auto;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 500px;
+  margin: 10px;
+
+  .card-container {
+    padding: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    height: 100%;
+  }
+
+  .card-content {
+    padding: 15px;
+  }
+
+  .game-cover {
+    height: 100%;
+    width: 140px;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+}

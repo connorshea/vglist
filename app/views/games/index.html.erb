@@ -6,10 +6,23 @@
   <p><%= link_to("Create a new game", new_game_path) %></p>
 <% end %>
 
-<ul>
+<div class="game-card-list mt-20">
   <% @games.each do |game| %>
-    <li><%= link_to(game.name, game_path(game.id)) %></li>
+    <div class="game-card">
+      <%= link_to(game_path(game.id), class: 'card-container') do %>
+        <figure class="game-cover">
+          <% if game.cover.attached? %>
+            <%= image_tag game.cover.variant(resize: "300x500>") %>
+          <% else %>
+            <%= image_tag 'no-cover.png' %>
+          <% end %>
+        </figure>
+        <div class="card-content">
+          <p class="title is-4"><%= game.name %></p>
+        </div>
+      <% end %>
+    </div>
   <% end %>
-</ul>
+</div>
 
 <%= paginate @games %>
