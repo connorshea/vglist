@@ -1,6 +1,6 @@
 # Dockerfile for running the application in a production environment.
 # Can be run locally for testing that matches production very closely.
-FROM ruby:2.6.1
+FROM ruby:2.6.1-alpine3.9
 
 ENV APP_ROOT continuefromcheckpoint
 ENV BUNDLER_VERSION 2.0.1
@@ -15,16 +15,15 @@ ENV RAILS_LOG_TO_STDOUT true
 # Maybe move SECRET_KEY_BASE to be included in credentials.yml.enc?
 ENV SECRET_KEY_BASE=dumb
 
-RUN apt-get update -qq
+RUN apk add --no-cache --update build-base \
+                                linux-headers \
+                                git \
+                                postgresql-dev \
+                                nodejs \
+                                yarn \
+                                bash \
+                                tzdata
 
-# Install Yarn and Node 10
-# https://github.com/nodesource/distributions/blob/d2071b9ddda150371c59db9a40a19b02666358b2/README.md#installation-instructions
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -y nodejs
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
-RUN apt-get update -qq && apt-get install -y postgresql-client yarn
 RUN mkdir /$APP_ROOT
 WORKDIR /$APP_ROOT
 COPY Gemfile /$APP_ROOT/Gemfile
