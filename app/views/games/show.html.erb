@@ -29,15 +29,40 @@
 <% end %>
 
 <div class="box infobox">
-  <p class="infobox-header has-text-weight-semibold">Genre(s)
-  <% if !@game.genres.blank? %>
+  <% unless @game.developers.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Developer(s)
+    <ul>
+      <% @game.developers.each do |developer| %>
+        <li><%= link_to(developer.name, company_path(developer.id)) %>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% unless @game.publishers.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Publisher(s)
+    <ul>
+      <% @game.publishers.each do |publisher| %>
+        <li><%= link_to(publisher.name, company_path(publisher.id)) %>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% unless @game.platforms.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Platform(s)
+    <ul>
+      <% @game.platforms.each do |platform| %>
+        <li><%= link_to(platform.name, platform_path(platform.id)) %>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% unless @game.genres.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Genre(s)
     <ul>
       <% @game.genres.each do |genre| %>
         <li><%= link_to(genre.name, genre_path(genre.id)) %>
       <% end %>
     </ul>
-  <% else %>
-    <p>This game doesn't have any genres yet.
   <% end %>
 
   <p class="infobox-header has-text-weight-semibold">Engine(s)
@@ -49,24 +74,6 @@
     </ul>
   <% else %>
     <p>Unknown
-  <% end %>
-
-  <% unless @game.developers.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Developer(s)
-    <ul>
-      <% @game.developers.distinct.each do |developer| %>
-        <li><%= link_to(developer.name, company_path(developer.id)) %>
-      <% end %>
-    </ul>
-  <% end %>
-
-  <% unless @game.publishers.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Publisher(s)
-    <ul>
-      <% @game.publishers.distinct.each do |publisher| %>
-        <li><%= link_to(publisher.name, company_path(publisher.id)) %>
-      <% end %>
-    </ul>
   <% end %>
 
   <%# <p class="infobox-header has-text-weight-semibold">External links %>
