@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.16
+### Added
+- Add game cards with a much better design for the `games#index`. ([#148])
+- Display developers and publishers from releases on game pages. ([#148])
+
 ## v2019.2.15
 ### Added
 - Add Covers for Games. ([#145])
@@ -126,3 +131,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#138]: https://github.com/connorshea/ContinueFromCheckpoint/pull/138
 [#144]: https://github.com/connorshea/ContinueFromCheckpoint/pull/144
 [#145]: https://github.com/connorshea/ContinueFromCheckpoint/pull/145
+[#148]: https://github.com/connorshea/ContinueFromCheckpoint/pull/148
