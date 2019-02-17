@@ -19,7 +19,8 @@
         </figure>
         <div class="card-content">
           <p class="title is-4"><%= game.name %></p>
-          <p class="subtitle is-6"><%= game.platforms.map(&:name).join(', ') %></p>
+          <p class="subtitle is-6"><%= game.platforms.limit(5).map(&:name).join(', ') %></p>
+          <p class="subtitle is-6"><%= game.developers.distinct.limit(5).map(&:name).join(', ') %></p>
         </div>
       <% end %>
     </div>

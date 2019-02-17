@@ -4,7 +4,6 @@ class GamesController < ApplicationController
   def index
     @games = Game.order(:id)
                  .includes(
-                   :platforms,
                    cover_attachment: [:blob]
                  ).page params[:page]
     skip_policy_scope
