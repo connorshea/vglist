@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_14_053320) do
+ActiveRecord::Schema.define(version: 2019_02_17_221900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,15 @@ ActiveRecord::Schema.define(version: 2019_02_14_053320) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "game_developers", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_game_developers_on_company_id"
+    t.index ["game_id"], name: "index_game_developers_on_game_id"
+  end
+
   create_table "game_engines", force: :cascade do |t|
     t.bigint "game_id", null: false
     t.bigint "engine_id", null: false
@@ -67,6 +76,26 @@ ActiveRecord::Schema.define(version: 2019_02_14_053320) do
     t.index ["game_id", "genre_id"], name: "index_game_genres_on_game_id_and_genre_id", unique: true
     t.index ["game_id"], name: "index_game_genres_on_game_id"
     t.index ["genre_id"], name: "index_game_genres_on_genre_id"
+  end
+
+  create_table "game_publishers", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_game_publishers_on_company_id"
+    t.index ["game_id"], name: "index_game_publishers_on_game_id"
+  end
+
+  create_table "game_purchases", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "user_id", null: false
+    t.text "comment", default: "", null: false
+    t.date "purchase_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_game_purchases_on_game_id"
+    t.index ["user_id"], name: "index_game_purchases_on_user_id"
   end
 
   create_table "games", force: :cascade do |t|
@@ -99,47 +128,6 @@ ActiveRecord::Schema.define(version: 2019_02_14_053320) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "release_developers", force: :cascade do |t|
-    t.bigint "release_id", null: false
-    t.bigint "company_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["company_id"], name: "index_release_developers_on_company_id"
-    t.index ["release_id"], name: "index_release_developers_on_release_id"
-  end
-
-  create_table "release_publishers", force: :cascade do |t|
-    t.bigint "release_id", null: false
-    t.bigint "company_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["company_id"], name: "index_release_publishers_on_company_id"
-    t.index ["release_id"], name: "index_release_publishers_on_release_id"
-  end
-
-  create_table "release_purchases", force: :cascade do |t|
-    t.bigint "release_id", null: false
-    t.bigint "user_id", null: false
-    t.text "comment", default: "", null: false
-    t.date "purchase_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["release_id", "user_id"], name: "index_release_purchases_on_release_id_and_user_id", unique: true
-    t.index ["release_id"], name: "index_release_purchases_on_release_id"
-    t.index ["user_id"], name: "index_release_purchases_on_user_id"
-  end
-
-  create_table "releases", force: :cascade do |t|
-    t.text "name"
-    t.text "description"
-    t.bigint "platform_id", null: false
-    t.bigint "game_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["game_id"], name: "index_releases_on_game_id"
-    t.index ["platform_id"], name: "index_releases_on_platform_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -166,16 +154,14 @@ ActiveRecord::Schema.define(version: 2019_02_14_053320) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "game_developers", "companies", on_delete: :cascade
+  add_foreign_key "game_developers", "games", on_delete: :cascade
   add_foreign_key "game_engines", "engines", on_delete: :cascade
   add_foreign_key "game_engines", "games", on_delete: :cascade
   add_foreign_key "game_genres", "games", on_delete: :cascade
   add_foreign_key "game_genres", "genres", on_delete: :cascade
-  add_foreign_key "release_developers", "companies", on_delete: :cascade
-  add_foreign_key "release_developers", "releases", on_delete: :cascade
-  add_foreign_key "release_publishers", "companies", on_delete: :cascade
-  add_foreign_key "release_publishers", "releases", on_delete: :cascade
-  add_foreign_key "release_purchases", "releases", on_delete: :cascade
-  add_foreign_key "release_purchases", "users", on_delete: :cascade
-  add_foreign_key "releases", "games", on_delete: :cascade
-  add_foreign_key "releases", "platforms", on_delete: :cascade
+  add_foreign_key "game_publishers", "companies", on_delete: :cascade
+  add_foreign_key "game_publishers", "games", on_delete: :cascade
+  add_foreign_key "game_purchases", "games", on_delete: :cascade
+  add_foreign_key "game_purchases", "users", on_delete: :cascade
 end
