@@ -7,7 +7,7 @@ class CreateGamePurchases < ActiveRecord::Migration[5.2]
       t.date :purchase_date, null: true
       t.timestamps
     end
-    
+
     add_foreign_key :game_purchases, :games, on_delete: :cascade
     add_foreign_key :game_purchases, :users, on_delete: :cascade
   end

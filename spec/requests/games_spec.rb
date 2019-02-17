@@ -93,7 +93,6 @@ RSpec.describe "Games", type: :request do
     end
   end
 
-
   describe "POST add_game_to_library_game_path" do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
