@@ -11,6 +11,16 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])
     skip_authorization
+
+    # TODO: Limit this.
+    @owners = @game.purchasers
+
+    @publishers = GamePublisher.all
+                               .where(game: @game.id)
+                               .includes(:company)
+    @developers = GameDeveloper.all
+                               .where(game: @game.id)
+                               .includes(:company)
   end
 
   def new
@@ -79,6 +89,43 @@ class GamesController < ApplicationController
     end
   end
 
+  def add_game_to_library
+    @game = Game.find(params[:id])
+    @user = current_user
+    authorize @user
+
+    @game_purchase = GamePurchase.new(game_purchase_params)
+
+    respond_to do |format|
+      if @game_purchase.save
+        format.html { redirect_to @user, success: "#{@game.name} was successfully added to your library." }
+      else
+        format.html do
+          flash[:error] = "Unable to add game to your library."
+          redirect_to game_url(@game)
+        end
+      end
+    end
+  end
+
+  def remove_game_from_library
+    @user = current_user
+    @game = Game.find(params[:id])
+    @game_purchase = @user.game_purchases.find_by(game_id: @game.id)
+    authorize @user
+
+    respond_to do |format|
+      if @game_purchase&.destroy
+        format.html { redirect_to @user, success: "#{@game.name} was successfully removed from your library." }
+      else
+        format.html do
+          flash[:error] = "Unable to remove game from your library."
+          redirect_to game_url(@game)
+        end
+      end
+    end
+  end
+
   private
 
   def game_params
@@ -88,6 +135,13 @@ class GamesController < ApplicationController
       :cover,
       genre_ids: [],
       engine_ids: []
+    )
+  end
+
+  def game_purchase_params
+    params.require(:game_purchase).permit(
+      :user_id,
+      :game_id
     )
   end
 end

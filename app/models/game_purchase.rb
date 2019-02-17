@@ -1,10 +1,10 @@
-class ReleasePurchase < ApplicationRecord
-  belongs_to :release
+class GamePurchase < ApplicationRecord
+  belongs_to :game
   belongs_to :user
 
   validates :comment,
     length: { maximum: 500 }
 
-  validates :release_id,
+  validates :game_id,
     uniqueness: { scope: :user_id }
 end

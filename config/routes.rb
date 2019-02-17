@@ -13,11 +13,8 @@ Rails.application.routes.draw do
 
   resources :games do
     get :search, on: :collection
-  end
-
-  resources :releases do
-    post :add_release_to_library, on: :member
-    delete :remove_release_from_library, on: :member
+    post :add_game_to_library, on: :member
+    delete :remove_game_from_library, on: :member
   end
 
   resources :users do

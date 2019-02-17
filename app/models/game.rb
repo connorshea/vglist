@@ -1,12 +1,18 @@
 class Game < ApplicationRecord
   include PgSearch
 
-  has_many :releases
-  has_many :platforms, through: :releases
-  has_many :developers, through: :releases
-  has_many :publishers, through: :releases
+  has_many :game_purchases
+  has_many :purchasers, through: :game_purchases, source: :user
+
+  has_many :game_developers
+  has_many :developers, through: :game_developers, source: :company
+
+  has_many :game_publishers
+  has_many :publishers, through: :game_publishers, source: :company
+
   has_many :game_genres
   has_many :genres, through: :game_genres, source: :genre
+
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
