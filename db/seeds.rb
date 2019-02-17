@@ -8,6 +8,7 @@ def avatar_fetcher
 end
 
 def cover_fetcher
+  # TODO: Make the dimensions more random.
   URI.open("#{Faker::LoremPixel.image('560x800', false)}/")
 end
 
