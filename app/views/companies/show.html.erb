@@ -12,26 +12,26 @@
   </div>
 <% end %>
 
-<% if !@published_releases.blank? %>
+<% if !@published_games.blank? %>
   <p>Published:
 
   <ul>
-    <% @published_releases.each do |published_release| %>
-      <li><%= link_to(published_release.release.name, release_path(published_release.release.id)) %>
+    <% @published_games.each do |published_game| %>
+      <li><%= link_to(published_game.game.name, game_path(published_game.game.id)) %>
     <% end %>
   </ul>
 <% else %>
-  <p>This company hasn't published any releases yet.
+  <p>This company hasn't published any games yet.
 <% end %>
 
-<% if !@developed_releases.blank? %>
+<% if !@developed_games.blank? %>
   <p>Developed:
 
   <ul>
-    <% @developed_releases.each do |developed_release| %>
-      <li><%= link_to(developed_release.release.name, release_path(developed_release.release.id)) %>
+    <% @developed_games.each do |developed_game| %>
+      <li><%= link_to(developed_game.game.name, game_path(developed_game.game.id)) %>
     <% end %>
   </ul>
 <% else %>
-  <p>This company hasn't developed any releases yet.
+  <p>This company hasn't developed any games yet.
 <% end %>

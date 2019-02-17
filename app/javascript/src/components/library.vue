@@ -1,22 +1,22 @@
 <template>
   <ul>
-    <release-in-library
-      v-for="release in purchasedReleases"
-      v-bind:key="release.id"
-      v-bind:release="release"
-    ></release-in-library>
+    <game-in-library
+      v-for="game in purchasedGames"
+      v-bind:key="game.id"
+      v-bind:game="game"
+    ></game-in-library>
   </ul>
 </template>
 
 <script>
-import ReleaseInLibrary from './release-in-library.vue';
+import GameInLibrary from './game-in-library.vue';
 
 export default {
   components: {
-    ReleaseInLibrary
+    GameInLibrary
   },
   props: {
-    purchasedReleases: {
+    purchasedGames: {
       type: Array,
       required: true
     }
