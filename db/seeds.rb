@@ -4,11 +4,11 @@ require 'database_cleaner'
 require 'open-uri'
 
 def avatar_fetcher
-  open(Faker::Avatar.image)
+  URI.open(Faker::Avatar.image)
 end
 
 def cover_fetcher
-  open("#{Faker::LoremPixel.image("560x800", false)}/")
+  URI.open("#{Faker::LoremPixel.image('560x800', false)}/")
 end
 
 puts "Cleaning out database..."
@@ -38,16 +38,16 @@ User.find(1).confirm
     username: Faker::Internet.unique.username(4..20),
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(8, 20),
-    bio: Faker::Lorem.sentence,
+    bio: Faker::Lorem.sentence
   )
 
   # Only attach an avatar for some of the users.
-  if (rand(0..2) > 1)
-    user.avatar.attach({
-      io: avatar_fetcher,
-      filename: "#{n}_faker_avatar.jpg"
-    })
-  end
+  next unless rand(0..2) > 1
+
+  user.avatar.attach(
+    io: avatar_fetcher,
+    filename: "#{n}_faker_avatar.jpg"
+  )
 end
 
 # Create 5 moderators.
@@ -111,13 +111,13 @@ puts "Creating Games..."
     engines: engines
   )
 
+  next unless rand(0..4) != 0
+
   # Add a cover for most games.
-  if (rand(0..4) != 0)
-    game.cover.attach({
-      io: cover_fetcher,
-      filename: "#{n}_faker_cover.jpg"
-    })
-  end
+  game.cover.attach(
+    io: cover_fetcher,
+    filename: "#{n}_faker_cover.jpg"
+  )
 end
 
 puts "Creating Platforms..."
