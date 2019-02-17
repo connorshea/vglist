@@ -1,6 +1,16 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 require 'database_cleaner'
+require 'open-uri'
+
+def avatar_fetcher
+  URI.open(Faker::Avatar.image)
+end
+
+def cover_fetcher
+  # TODO: Make the dimensions more random.
+  URI.open("#{Faker::LoremPixel.image('560x800', false)}/")
+end
 
 puts "Cleaning out database..."
 
@@ -22,14 +32,22 @@ User.create!(
 User.find(1).confirm
 
 # Create 30 more random users.
-30.times do
-  User.create!(
+30.times do |n|
+  user = User.create!(
     email: Faker::Internet.unique.email,
     # Usernames must be between (inclusive) 4 and 20 characters.
     username: Faker::Internet.unique.username(4..20),
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(8, 20),
     bio: Faker::Lorem.sentence
+  )
+
+  # Only attach an avatar for some of the users.
+  next unless rand(0..2) > 1
+
+  user.avatar.attach(
+    io: avatar_fetcher,
+    filename: "#{n}_faker_avatar.jpg"
   )
 end
 
@@ -74,7 +92,7 @@ end
 puts "Creating Games..."
 
 # Create 50 random Games.
-50.times do
+50.times do |n|
   genres = []
   rand(0..3).times.each do
     genres << Genre.find(rand(1..Genre.count))
@@ -87,11 +105,19 @@ puts "Creating Games..."
   end
   engines.uniq!
 
-  Game.create!(
+  game = Game.create!(
     name: Faker::Game.unique.name,
     description: Faker::Lorem.sentence,
     genres: genres,
     engines: engines
+  )
+
+  next unless rand(0..4) != 0
+
+  # Add a cover for most games.
+  game.cover.attach(
+    io: cover_fetcher,
+    filename: "#{n}_faker_cover.jpg"
   )
 end
 
