@@ -10,6 +10,9 @@ class Game < ApplicationRecord
   has_many :game_publishers
   has_many :publishers, through: :game_publishers, source: :company
 
+  has_many :game_platforms
+  has_many :platforms, through: :game_platforms, source: :platform
+
   has_many :game_genres
   has_many :genres, through: :game_genres, source: :genre
 

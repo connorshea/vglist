@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_17_221900) do
+ActiveRecord::Schema.define(version: 2019_02_17_232558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,16 @@ ActiveRecord::Schema.define(version: 2019_02_17_221900) do
     t.index ["game_id", "genre_id"], name: "index_game_genres_on_game_id_and_genre_id", unique: true
     t.index ["game_id"], name: "index_game_genres_on_game_id"
     t.index ["genre_id"], name: "index_game_genres_on_genre_id"
+  end
+
+  create_table "game_platforms", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "platform_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id", "platform_id"], name: "index_game_platforms_on_game_id_and_platform_id", unique: true
+    t.index ["game_id"], name: "index_game_platforms_on_game_id"
+    t.index ["platform_id"], name: "index_game_platforms_on_platform_id"
   end
 
   create_table "game_publishers", force: :cascade do |t|
@@ -160,6 +170,8 @@ ActiveRecord::Schema.define(version: 2019_02_17_221900) do
   add_foreign_key "game_engines", "games", on_delete: :cascade
   add_foreign_key "game_genres", "games", on_delete: :cascade
   add_foreign_key "game_genres", "genres", on_delete: :cascade
+  add_foreign_key "game_platforms", "games", on_delete: :cascade
+  add_foreign_key "game_platforms", "platforms", on_delete: :cascade
   add_foreign_key "game_publishers", "companies", on_delete: :cascade
   add_foreign_key "game_publishers", "games", on_delete: :cascade
   add_foreign_key "game_purchases", "games", on_delete: :cascade

@@ -1,7 +1,8 @@
 class Platform < ApplicationRecord
   include PgSearch
 
-  has_many :games
+  has_many :game_platforms
+  has_many :games, through: :game_platforms, source: :game
 
   validates :name,
     presence: true,
