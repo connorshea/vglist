@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.17
+### Changed
+- Remove releases and simplify the site so Games are used for everything. ([#153])
+
 ## v2019.2.16
 ### Added
 - Add game cards with a much better design for the `games#index`. ([#148])
@@ -134,3 +138,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#145]: https://github.com/connorshea/ContinueFromCheckpoint/pull/145
 [#148]: https://github.com/connorshea/ContinueFromCheckpoint/pull/148
 [#150]: https://github.com/connorshea/ContinueFromCheckpoint/pull/150
+[#153]: https://github.com/connorshea/ContinueFromCheckpoint/pull/153
