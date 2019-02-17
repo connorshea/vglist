@@ -14,13 +14,13 @@
   </div>
 <% end %>
 
-<% if !@platform.releases.blank? %>
-  Releases:
+<% if !@platform.games.blank? %>
+  Games:
   <ul>
-    <% @platform.releases.each do |release| %>
-      <li><%= link_to(release.name, release_path(release.id)) %></li>
+    <% @platform.games.each do |game| %>
+      <li><%= link_to(game.name, gamee_path(game.id)) %></li>
     <% end %>
   </ul>
 <% else %>
-  This platform doesn't have any releases yet.
+  This platform doesn't have any games yet.
 <% end%>

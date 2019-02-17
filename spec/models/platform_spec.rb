@@ -15,7 +15,6 @@ RSpec.describe Platform, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:releases) }
     it { should have_many(:games) }
   end
 end

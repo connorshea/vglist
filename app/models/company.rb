@@ -1,11 +1,11 @@
 class Company < ApplicationRecord
   include PgSearch
 
-  has_many :release_developers
-  has_many :developed_releases, through: :release_developers, source: :release
+  has_many :game_developers
+  has_many :developed_games, through: :game_developers, source: :game
 
-  has_many :release_publishers
-  has_many :published_releases, through: :release_publishers, source: :release
+  has_many :game_publishers
+  has_many :published_games, through: :game_publishers, source: :game
 
   validates :name,
     presence: true,

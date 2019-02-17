@@ -1,7 +1,7 @@
 FactoryBot.define do
-  factory :release_purchase do
+  factory :game_purchase do
     comment { "I own this game" }
-    release
+    game
     user
   end
 end

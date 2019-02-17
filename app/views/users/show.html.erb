@@ -30,10 +30,10 @@
 <% end %>
 
 <h3 class="title is-3">Library</h3>
-<% if !@purchased_releases.blank? %>
+<% if !@purchased_games.blank? %>
   <div id="game-library">
     <library
-      v-bind:purchased-releases="<%= @purchased_releases.to_json(except: [:created_at, :updated_at]) %>"
+      v-bind:purchased-games="<%= @purchased_games.to_json(except: [:created_at, :updated_at]) %>"
     >
     </library>
   </div>

@@ -13,13 +13,13 @@ class CompaniesController < ApplicationController
   def show
     @company = Company.find(params[:id])
 
-    @published_releases = ReleasePublisher.all
+    @published_games = GamePublisher.all
                                           .where(company: @company.id)
-                                          .includes(:release)
+                                          .includes(:game)
 
-    @developed_releases = ReleaseDeveloper.all
+    @developed_games = GameDeveloper.all
                                           .where(company: @company.id)
-                                          .includes(:release)
+                                          .includes(:game)
 
     skip_authorization
   end

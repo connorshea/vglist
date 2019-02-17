@@ -72,14 +72,3 @@
   <%# <p class="infobox-header has-text-weight-semibold">External links %>
 </div>
 
-<% if !@game.releases.blank? %>
-  <p>Releases:
-
-  <ul>
-    <% @game.releases.each do |release| %>
-      <li><%= link_to(release.name, release_path(release.id)) %>
-    <% end %>
-  </ul>
-<% else %>
-  <p>This game doesn't have any releases yet.
-<% end %>
