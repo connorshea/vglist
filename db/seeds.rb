@@ -187,10 +187,22 @@ puts "Creating Game Publishers..."
   )
 end
 
+puts "Creating Game Platforms..."
+
+20.times do
+  game = Game.find(rand(1..Game.count))
+  platform = Platform.find(rand(1..Platform.count))
+
+  GamePlatform.create!(
+    game: game,
+    platform: platform
+  )
+end
+
 puts
 puts "Created:"
 
 # Don't forget to also update faker.rb when you add new Faker data, idiot.
-[User, Genre, Company, Engine, Game, Platform, GamePurchase, GameDeveloper, GamePublisher].each do |class_name|
+[User, Genre, Company, Engine, Game, Platform, GamePurchase, GameDeveloper, GamePublisher, GamePlatform].each do |class_name|
   puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
 end
