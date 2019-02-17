@@ -1,6 +1,11 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 require 'database_cleaner'
+require 'open-uri'
+
+def image_fetcher
+  open(Faker::Avatar.image)
+end
 
 puts "Cleaning out database..."
 
@@ -22,15 +27,23 @@ User.create!(
 User.find(1).confirm
 
 # Create 30 more random users.
-30.times do
-  User.create!(
+30.times do |n|
+  user = User.create!(
     email: Faker::Internet.unique.email,
     # Usernames must be between (inclusive) 4 and 20 characters.
     username: Faker::Internet.unique.username(4..20),
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(8, 20),
-    bio: Faker::Lorem.sentence
+    bio: Faker::Lorem.sentence,
   )
+
+  # Only attach an avatar for some of the users.
+  if (rand(0..2) > 1)
+    user.avatar.attach({
+      io: image_fetcher,
+      filename: "#{n}_faker_avatar.jpg"
+    })
+  end
 end
 
 # Create 5 moderators.
