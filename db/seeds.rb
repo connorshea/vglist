@@ -3,8 +3,12 @@
 require 'database_cleaner'
 require 'open-uri'
 
-def image_fetcher
+def avatar_fetcher
   open(Faker::Avatar.image)
+end
+
+def cover_fetcher
+  open("#{Faker::LoremPixel.image("560x800", false)}/")
 end
 
 puts "Cleaning out database..."
@@ -40,7 +44,7 @@ User.find(1).confirm
   # Only attach an avatar for some of the users.
   if (rand(0..2) > 1)
     user.avatar.attach({
-      io: image_fetcher,
+      io: avatar_fetcher,
       filename: "#{n}_faker_avatar.jpg"
     })
   end
@@ -87,7 +91,7 @@ end
 puts "Creating Games..."
 
 # Create 50 random Games.
-50.times do
+50.times do |n|
   genres = []
   rand(0..3).times.each do
     genres << Genre.find(rand(1..Genre.count))
@@ -100,12 +104,20 @@ puts "Creating Games..."
   end
   engines.uniq!
 
-  Game.create!(
+  game = Game.create!(
     name: Faker::Game.unique.name,
     description: Faker::Lorem.sentence,
     genres: genres,
     engines: engines
   )
+
+  # Add a cover for most games.
+  if (rand(0..4) != 0)
+    game.cover.attach({
+      io: cover_fetcher,
+      filename: "#{n}_faker_cover.jpg"
+    })
+  end
 end
 
 puts "Creating Platforms..."
