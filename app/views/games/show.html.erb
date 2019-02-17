@@ -51,6 +51,24 @@
     <p>Unknown
   <% end %>
 
+  <% unless @game.developers.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Developer(s)
+    <ul>
+      <% @game.developers.distinct.each do |developer| %>
+        <li><%= link_to(developer.name, company_path(developer.id)) %>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% unless @game.publishers.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Publisher(s)
+    <ul>
+      <% @game.publishers.distinct.each do |publisher| %>
+        <li><%= link_to(publisher.name, company_path(publisher.id)) %>
+      <% end %>
+    </ul>
+  <% end %>
+
   <%# <p class="infobox-header has-text-weight-semibold">External links %>
 </div>
 

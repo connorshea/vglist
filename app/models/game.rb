@@ -3,6 +3,8 @@ class Game < ApplicationRecord
 
   has_many :releases
   has_many :platforms, through: :releases
+  has_many :developers, through: :releases
+  has_many :publishers, through: :releases
   has_many :game_genres
   has_many :genres, through: :game_genres, source: :genre
   has_many :game_engines
