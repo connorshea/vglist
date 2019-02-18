@@ -127,6 +127,10 @@ export default {
       type: String,
       required: true
     },
+    railsDirectUploadsPath: {
+      type: String,
+      required: true
+    },
     create: {
       type: Boolean,
       required: true
@@ -181,7 +185,7 @@ export default {
       this.uploadFile(file);
     },
     uploadFile(file) {
-      const url = "/rails/active_storage/direct_uploads";
+      const url = this.railsDirectUploadsPath;
       const upload = new DirectUpload(file, url);
 
       upload.create((error, blob) => {
