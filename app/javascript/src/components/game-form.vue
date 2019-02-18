@@ -3,6 +3,7 @@
     <file-select
       :label="formData.cover.label"
       v-model="game.cover"
+      @input="onChange"
     ></file-select>
 
     <text-field
@@ -62,6 +63,7 @@ import PublisherSelect from './publisher-select.vue';
 import PlatformSelect from './platform-select.vue';
 import FileSelect from './file-select.vue';
 import Rails from 'rails-ujs';
+import { DirectUpload } from 'activestorage';
 
 export default {
   name: 'game-form',
@@ -140,7 +142,8 @@ export default {
         developers: this.developers,
         publishers: this.publishers,
         platforms: this.platforms,
-        cover: this.cover
+        cover: this.cover,
+        coverBlob: this.coverBlob
       },
       formData: {
         class: 'game',
@@ -174,6 +177,22 @@ export default {
     }
   },
   methods: {
+    onChange(file) {
+      this.uploadFile(file);
+    },
+    uploadFile(file) {
+      const url = "/rails/active_storage/direct_uploads";
+      const upload = new DirectUpload(file, url);
+
+      upload.create((error, blob) => {
+        if (error) {
+          // TODO: Handle this error.
+          console.log(error);
+        } else {
+          this.game.coverBlob = blob.signed_id;
+        }
+      })
+    },
     onSubmit() {
       let genre_ids = Array.from(this.game.genres, genre => genre.id);
       let engine_ids = Array.from(this.game.engines, engine => engine.id);
@@ -181,22 +200,25 @@ export default {
       let publisher_ids = Array.from(this.game.publishers, publisher => publisher.id);
       let platform_ids = Array.from(this.game.platforms, platform => platform.id);
 
-      let submittableData = new FormData();
-      submittableData.append('game[name]', this.game.name);
-      submittableData.append('game[description]', this.game.description);
-      submittableData.append('game[genre_ids]', genre_ids);
-      submittableData.append('game[engine_ids]', engine_ids);
-      submittableData.append('game[developer_ids]', developer_ids);
-      submittableData.append('game[publisher_ids]', publisher_ids);
-      submittableData.append('game[platform_ids]', platform_ids);
-      if (this.game.cover) {
-        submittableData.append('game[cover]', this.game.cover, this.game.cover.name);
+      let submittableData = { game: {
+        name: this.game.name,
+        description: this.game.description,
+        genre_ids: genre_ids,
+        engine_ids: engine_ids,
+        developer_ids: developer_ids,
+        publisher_ids: publisher_ids,
+        platform_ids: platform_ids
+      }};
+
+      if (this.game.coverBlob) {
+        submittableData['game']['cover'] = this.game.coverBlob;
       }
 
       fetch(this.submitPath, {
         method: this.create ? 'POST' : 'PUT',
-        body: submittableData,
+        body: JSON.stringify(submittableData),
         headers: {
+          'Content-Type': 'application/json',
           'X-CSRF-Token': Rails.csrfToken()
         },
         credentials: 'same-origin'
