@@ -17,16 +17,36 @@
   </div>
 </div>
 
-<% if policy(@game).update? || policy(@game).destroy? %>
-  <div class="field is-grouped">
-    <% if policy(@game).update? %>
-      <p class="control"><%= link_to("Edit", edit_game_path(@game.id), class: "button") %>
+<div class="field is-grouped">
+  <% if policy(current_user).add_game_to_library? || policy(current_user).remove_game_from_library? %>
+    <% if policy(current_user).add_game_to_library? && !game_in_user_library?(@game) %>
+      <%= button_to "Add to library", add_game_to_library_game_path(@game.id), method: :post, params: { game_purchase: { user_id: current_user.id, game_id: @game.id } }, class: "button" %>
     <% end %>
-    <% if policy(@game).destroy? %>
-      <p class="control"><%= link_to("Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% if policy(current_user).remove_game_from_library? && game_in_user_library?(@game) %>
+      <%= button_to "Remove from library", remove_game_from_library_game_path(@game.id), method: :delete, params: { id: @game.id }, class: "button is-danger" %>
     <% end %>
-  </div>
-<% end %>
+  <% end %>
+
+  <% if policy(@game).update? || policy(@game).destroy? %>
+    <div id="actions-dropdown" class="dropdown is-right">
+      <div class="dropdown-trigger">
+        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span>Actions</span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <% if policy(@game).update? %>
+            <%= link_to("Edit", edit_game_path(@game.id), class: "dropdown-item") %>
+          <% end %>
+          <% if policy(@game).destroy? %>
+            <%= link_to "Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item is-danger" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
 
 <div class="box infobox">
   <% unless @game.developers.blank? %>

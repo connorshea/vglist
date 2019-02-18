@@ -23,6 +23,7 @@ RSpec.describe "Games", type: :feature do
   describe "game page" do
     let!(:game) { create(:game) }
     let(:user) { create(:confirmed_user) }
+    let(:moderator) { create(:confirmed_moderator) }
 
     it "with no user" do
       visit(game_path(game))
@@ -35,6 +36,16 @@ RSpec.describe "Games", type: :feature do
 
       visit(game_path(game))
       expect(page).to have_content(game.name)
+      find('#actions-dropdown').click
+      expect(page).to have_link(href: edit_game_path(game))
+    end
+
+    it "with moderator" do
+      sign_in(moderator)
+
+      visit(game_path(game))
+      expect(page).to have_content(game.name)
+      find('#actions-dropdown').click
       expect(page).to have_link(href: edit_game_path(game))
     end
   end
@@ -76,12 +87,27 @@ RSpec.describe "Games", type: :feature do
 
   describe "delete game" do
     let!(:game) { create(:game) }
+    let(:moderator) { create(:confirmed_moderator) }
     let(:user) { create(:confirmed_user) }
 
-    it "accepts valid game data" do
+    it "lets user delete it" do
       sign_in(user)
       visit(game_path(game))
 
+      find('#actions-dropdown').click
+      accept_alert do
+        click_link 'Delete'
+      end
+
+      expect(page).to have_current_path(games_path)
+      expect(page).to have_no_content(game.name)
+    end
+
+    it "lets moderator delete it" do
+      sign_in(moderator)
+      visit(game_path(game))
+
+      find('#actions-dropdown').click
       accept_alert do
         click_link 'Delete'
       end
