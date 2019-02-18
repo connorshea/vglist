@@ -39,6 +39,11 @@
       v-model="game.publishers"
     ></publisher-select>
 
+    <platform-select
+      :label="formData.platforms.label"
+      v-model="game.platforms"
+    ></platform-select>
+
     <button
       class="button is-primary"
       value="Submit"
@@ -54,6 +59,7 @@ import GenreSelect from './genre-select.vue';
 import EngineSelect from './engine-select.vue';
 import DeveloperSelect from './developer-select.vue';
 import PublisherSelect from './publisher-select.vue';
+import PlatformSelect from './platform-select.vue';
 import FileSelect from './file-select.vue';
 import Rails from 'rails-ujs';
 
@@ -66,6 +72,7 @@ export default {
     EngineSelect,
     DeveloperSelect,
     PublisherSelect,
+    PlatformSelect,
     FileSelect
   },
   props: {
@@ -107,6 +114,13 @@ export default {
         return []
       }
     },
+    platforms: {
+      type: Array,
+      required: false,
+      default: function() {
+        return []
+      }
+    },
     submitPath: {
       type: String,
       required: true
@@ -125,6 +139,7 @@ export default {
         engines: this.engines,
         developers: this.developers,
         publishers: this.publishers,
+        platforms: this.platforms,
         cover: this.cover
       },
       formData: {
@@ -151,6 +166,9 @@ export default {
         },
         publishers: {
           label: 'Publishers'
+        },
+        platforms: {
+          label: 'Platforms'
         }
       }
     }
@@ -159,9 +177,9 @@ export default {
     onSubmit() {
       let genre_ids = Array.from(this.game.genres, genre => genre.id);
       let engine_ids = Array.from(this.game.engines, engine => engine.id);
-      let developer_ids = Array.from(this.game.developers, genre => developer.id);
+      let developer_ids = Array.from(this.game.developers, developer => developer.id);
       let publisher_ids = Array.from(this.game.publishers, publisher => publisher.id);
-      // TODO: Add platform_ids
+      let platform_ids = Array.from(this.game.platforms, platform => platform.id);
 
       let submittableData = new FormData();
       submittableData.append('game[name]', this.game.name);
@@ -170,6 +188,7 @@ export default {
       submittableData.append('game[engine_ids]', engine_ids);
       submittableData.append('game[developer_ids]', developer_ids);
       submittableData.append('game[publisher_ids]', publisher_ids);
+      submittableData.append('game[platform_ids]', platform_ids);
       if (this.game.cover) {
         submittableData.append('game[cover]', this.game.cover, this.game.cover.name);
       }

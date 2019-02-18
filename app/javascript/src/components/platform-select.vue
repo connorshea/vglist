@@ -3,11 +3,11 @@
     <label class="label">{{ label }}</label>
     <div class="control">
       <v-select
+        multiple
         :options="options"
         @search="onSearch"
         label="name"
-        v-bind:value="platform"
-        v-on:input="$emit('input', $event)"
+        v-bind:value="platforms"
       ></v-select>
     </div>
   </div>
@@ -27,14 +27,14 @@ export default {
       required: true
     },
     value: {
-      type: Object,
+      type: Array,
       required: true
     }
   },
   data: function() {
     return {
       options: [],
-      platform: this.value,
+      platforms: this.value,
       platformsSearchPath: `${window.location.origin}/platforms/search.json`,
     }
   },

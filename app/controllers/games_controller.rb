@@ -134,7 +134,10 @@ class GamesController < ApplicationController
       :description,
       :cover,
       genre_ids: [],
-      engine_ids: []
+      engine_ids: [],
+      developer_ids: [],
+      publisher_ids: [],
+      platform_ids: []
     )
   end
 
