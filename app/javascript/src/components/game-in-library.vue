@@ -1,23 +1,23 @@
 <template>
   <li>
-    <a v-bind:href="releaseLink">
-      {{ release.name }}
+    <a v-bind:href="gameLink">
+      {{ game.name }}
     </a>
   </li>
 </template>
 
 <script>
 export default {
-  name: 'release-in-library',
+  name: 'game-in-library',
   props: {
-    release: {
+    game: {
       type: Object,
       required: true
     }
   },
   computed: {
-    releaseLink() {
-      return `/releases/${this.release.id}`;
+    gameLink() {
+      return `/games/${this.game.id}`;
     }
   }
 }

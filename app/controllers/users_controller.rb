@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     skip_authorization
 
     # TODO: Paginate this?
-    @purchased_releases = @user.releases
+    @purchased_games = @user.games
   end
 
   def update

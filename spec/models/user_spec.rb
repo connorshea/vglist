@@ -55,7 +55,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:release_purchases) }
-    it { should have_many(:releases) }
+    it { should have_many(:game_purchases) }
+    it { should have_many(:games) }
   end
 end

@@ -5,10 +5,14 @@
 <div id='game-form'>
   <game-form
     :submit-path="<%= game_path(@game.id).to_json %>"
+    :rails-direct-uploads-path="<%= rails_direct_uploads_path.to_json %>"
     :create="false"
     :name="<%= @game.name.to_json %>"
     :description="<%= @game.description.to_json %>"
     :genres="<%= @game.genres.to_json %>"
     :engines="<%= @game.engines.to_json %>"
+    :developers="<%= @game.developers.to_json %>"
+    :publishers="<%= @game.publishers.to_json %>"
+    :platforms="<%= @game.platforms.to_json %>"
   ></game-form>
 </div>

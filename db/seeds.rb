@@ -131,37 +131,20 @@ puts "Creating Platforms..."
   )
 end
 
-puts "Creating Releases..."
+puts "Creating Game Purchases..."
 
-# Create 25 Releases.
-25.times do
-  game_id = rand(1..Game.count)
-  game = Game.find(game_id)
-  platform_id = rand(1..Platform.count)
-  platform = Platform.find(platform_id)
-
-  Release.create!(
-    name: "#{game.name} for #{platform.name}",
-    description: Faker::Lorem.sentence,
-    game: game,
-    platform: platform
-  )
-end
-
-puts "Creating Release Purchases..."
-
-# Create 10 unique release purchases for the admin user.
+# Create 10 unique game purchases for the admin user.
 admin = User.find(1)
-(1..Release.count).to_a.sample(10).each do |release_id|
-  release = Release.find(release_id)
+(1..Game.count).to_a.sample(10).each do |game_id|
+  game = Game.find(game_id)
 
-  ReleasePurchase.create!(
-    release: release,
+  GamePurchase.create!(
+    game: game,
     user: admin
   )
 end
 
-# Add 3 releases to each user's libraries.
+# Add 3 game to each user's libraries.
 (1..User.count).each do |index|
   # Skip for admin and skip occasionally to allow the database to be seeded
   # with users that have empty libraries.
@@ -169,38 +152,50 @@ end
 
   user = User.find(index)
 
-  # Choose 3 unique random release IDs and add each to the user's library.
-  (1..Release.count).to_a.sample(3).each do |release_id|
-    release = Release.find(release_id)
+  # Choose 3 unique random game IDs and add each to the user's library.
+  (1..Game.count).to_a.sample(3).each do |game_id|
+    game = Game.find(game_id)
 
-    ReleasePurchase.create!(
-      release: release,
+    GamePurchase.create!(
+      game: game,
       user: user
     )
   end
 end
 
-puts "Creating Release Developers..."
+puts "Creating Game Developers..."
 
 20.times do
-  release = Release.find(rand(1..Release.count))
+  game = Game.find(rand(1..Game.count))
   developer = Company.find(rand(1..Company.count))
 
-  ReleaseDeveloper.create!(
-    release: release,
+  GameDeveloper.create!(
+    game: game,
     company: developer
   )
 end
 
-puts "Creating Release Publishers..."
+puts "Creating Game Publishers..."
 
 20.times do
-  release = Release.find(rand(1..Release.count))
+  game = Game.find(rand(1..Game.count))
   publisher = Company.find(rand(1..Company.count))
 
-  ReleasePublisher.create!(
-    release: release,
+  GamePublisher.create!(
+    game: game,
     company: publisher
+  )
+end
+
+puts "Creating Game Platforms..."
+
+20.times do
+  game = Game.find(rand(1..Game.count))
+  platform = Platform.find(rand(1..Platform.count))
+
+  GamePlatform.create!(
+    game: game,
+    platform: platform
   )
 end
 
@@ -208,6 +203,6 @@ puts
 puts "Created:"
 
 # Don't forget to also update faker.rb when you add new Faker data, idiot.
-[User, Genre, Company, Engine, Game, Platform, Release, ReleasePurchase, ReleaseDeveloper, ReleasePublisher].each do |class_name|
+[User, Genre, Company, Engine, Game, Platform, GamePurchase, GameDeveloper, GamePublisher, GamePlatform].each do |class_name|
   puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
 end

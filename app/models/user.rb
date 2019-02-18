@@ -5,8 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable
 
-  has_many :release_purchases
-  has_many :releases, through: :release_purchases
+  has_many :game_purchases
+  has_many :games, through: :game_purchases
 
   has_one_attached :avatar
 

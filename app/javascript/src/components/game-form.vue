@@ -3,6 +3,7 @@
     <file-select
       :label="formData.cover.label"
       v-model="game.cover"
+      @input="onChange"
     ></file-select>
 
     <text-field
@@ -29,6 +30,21 @@
       v-model="game.engines"
     ></engine-select>
 
+    <developer-select
+      :label="formData.developers.label"
+      v-model="game.developers"
+    ></developer-select>
+
+    <publisher-select
+      :label="formData.publishers.label"
+      v-model="game.publishers"
+    ></publisher-select>
+
+    <platform-select
+      :label="formData.platforms.label"
+      v-model="game.platforms"
+    ></platform-select>
+
     <button
       class="button is-primary"
       value="Submit"
@@ -42,13 +58,24 @@ import TextArea from './text-area.vue';
 import TextField from './text-field.vue';
 import GenreSelect from './genre-select.vue';
 import EngineSelect from './engine-select.vue';
+import DeveloperSelect from './developer-select.vue';
+import PublisherSelect from './publisher-select.vue';
+import PlatformSelect from './platform-select.vue';
 import FileSelect from './file-select.vue';
 import Rails from 'rails-ujs';
+import { DirectUpload } from 'activestorage';
 
 export default {
   name: 'game-form',
   components: {
-    TextArea, TextField, GenreSelect, EngineSelect, FileSelect
+    TextArea,
+    TextField,
+    GenreSelect,
+    EngineSelect,
+    DeveloperSelect,
+    PublisherSelect,
+    PlatformSelect,
+    FileSelect
   },
   props: {
     name: {
@@ -75,7 +102,32 @@ export default {
         return []
       }
     },
+    developers: {
+      type: Array,
+      required: false,
+      default: function() {
+        return []
+      }
+    },
+    publishers: {
+      type: Array,
+      required: false,
+      default: function() {
+        return []
+      }
+    },
+    platforms: {
+      type: Array,
+      required: false,
+      default: function() {
+        return []
+      }
+    },
     submitPath: {
+      type: String,
+      required: true
+    },
+    railsDirectUploadsPath: {
       type: String,
       required: true
     },
@@ -91,7 +143,11 @@ export default {
         description: this.description,
         genres: this.genres,
         engines: this.engines,
-        cover: this.cover
+        developers: this.developers,
+        publishers: this.publishers,
+        platforms: this.platforms,
+        cover: this.cover,
+        coverBlob: this.coverBlob
       },
       formData: {
         class: 'game',
@@ -111,27 +167,62 @@ export default {
         },
         engines: {
           label: 'Engines'
+        },
+        developers: {
+          label: 'Developers'
+        },
+        publishers: {
+          label: 'Publishers'
+        },
+        platforms: {
+          label: 'Platforms'
         }
       }
     }
   },
   methods: {
+    onChange(file) {
+      this.uploadFile(file);
+    },
+    uploadFile(file) {
+      const url = this.railsDirectUploadsPath;
+      const upload = new DirectUpload(file, url);
+
+      upload.create((error, blob) => {
+        if (error) {
+          // TODO: Handle this error.
+          console.log(error);
+        } else {
+          this.game.coverBlob = blob.signed_id;
+        }
+      })
+    },
     onSubmit() {
       let genre_ids = Array.from(this.game.genres, genre => genre.id);
       let engine_ids = Array.from(this.game.engines, engine => engine.id);
-      let submittableData = new FormData();
-      submittableData.append('game[name]', this.game.name);
-      submittableData.append('game[description]', this.game.description);
-      submittableData.append('game[genre_ids]', genre_ids);
-      submittableData.append('game[engine_ids]', engine_ids);
-      if (this.game.cover) {
-        submittableData.append('game[cover]', this.game.cover, this.game.cover.name);
+      let developer_ids = Array.from(this.game.developers, developer => developer.id);
+      let publisher_ids = Array.from(this.game.publishers, publisher => publisher.id);
+      let platform_ids = Array.from(this.game.platforms, platform => platform.id);
+
+      let submittableData = { game: {
+        name: this.game.name,
+        description: this.game.description,
+        genre_ids: genre_ids,
+        engine_ids: engine_ids,
+        developer_ids: developer_ids,
+        publisher_ids: publisher_ids,
+        platform_ids: platform_ids
+      }};
+
+      if (this.game.coverBlob) {
+        submittableData['game']['cover'] = this.game.coverBlob;
       }
 
       fetch(this.submitPath, {
         method: this.create ? 'POST' : 'PUT',
-        body: submittableData,
+        body: JSON.stringify(submittableData),
         headers: {
+          'Content-Type': 'application/json',
           'X-CSRF-Token': Rails.csrfToken()
         },
         credentials: 'same-origin'

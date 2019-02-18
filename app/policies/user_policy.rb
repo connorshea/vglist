@@ -22,11 +22,11 @@ class UserPolicy < ApplicationPolicy
     current_user&.admin?
   end
 
-  def add_release_to_library?
+  def add_game_to_library?
     current_user && user == current_user
   end
 
-  def remove_release_from_library?
+  def remove_game_from_library?
     current_user && user == current_user
   end
 end

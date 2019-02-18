@@ -92,4 +92,56 @@ RSpec.describe "Games", type: :request do
       expect(response.body).to eq("[]")
     end
   end
+
+  describe "POST add_game_to_library_game_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game) { create(:game) }
+    let(:user_with_game) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user_with_game, game: game) }
+
+    it "adds a game to the user's library" do
+      sign_in(user)
+      expect {
+        post add_game_to_library_game_path(game.id),
+          params: { game_purchase: { user_id: user.id, game_id: game.id } }
+      }.to change(user.game_purchases.all, :count).by(1)
+    end
+
+    it "doesn't add a duplicate game to the user's library" do
+      sign_in(user_with_game)
+      game_purchase
+      post add_game_to_library_game_path(game.id),
+        params: { game_purchase: { user_id: user_with_game.id, game_id: game.id } }
+      expect(response).to redirect_to(game_url(game))
+      follow_redirect!
+      expect(response.body).to include("Unable to add game to your library.")
+    end
+  end
+
+  describe "DELETE remove_game_from_library_game_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game) { create(:game) }
+    let(:user_with_game) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user_with_game, game: game) }
+
+    it "removes a game from the user's library" do
+      sign_in(user_with_game)
+      # Load the game purchase.
+      game_purchase
+      expect {
+        delete remove_game_from_library_game_path(game.id),
+          params: { id: game.id }
+      }.to change(user_with_game.game_purchases.all, :count).by(-1)
+    end
+
+    it "doesn't remove a game from the user's library if none exist" do
+      sign_in(user)
+      delete remove_game_from_library_game_path(game.id),
+        params: { id: game.id }
+      expect(response).to redirect_to(game_url(game))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Unable to remove game from your library.")
+    end
+  end
 end
