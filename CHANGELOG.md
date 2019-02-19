@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.18
+### Added
+- Create a generic multi-select Vue component and replace the existing selector components with it. ([#157])
+
 ## v2019.2.17
 ### Changed
 - Remove releases and simplify the site so Games are used for everything. ([#153])
@@ -139,3 +143,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#148]: https://github.com/connorshea/ContinueFromCheckpoint/pull/148
 [#150]: https://github.com/connorshea/ContinueFromCheckpoint/pull/150
 [#153]: https://github.com/connorshea/ContinueFromCheckpoint/pull/153
+[#157]: https://github.com/connorshea/ContinueFromCheckpoint/pull/157
