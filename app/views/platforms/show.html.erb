@@ -18,7 +18,7 @@
   Games:
   <ul>
     <% @platform.games.each do |game| %>
-      <li><%= link_to(game.name, gamee_path(game.id)) %></li>
+      <li><%= link_to(game.name, game_path(game.id)) %></li>
     <% end %>
   </ul>
 <% else %>
