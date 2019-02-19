@@ -23,7 +23,7 @@ puts "Creating Users..."
 # Create an account for admin usage.
 User.create!(
   email: "admin@example.com",
-  username: "admin",
+  username: "connor",
   password: "password",
   role: :admin
 )

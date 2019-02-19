@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2019.2.18
 ### Added
 - Create a generic multi-select Vue component and replace the existing selector components with it. ([#157])
+- Add the `friendly_id` gem and have user URLs use the actual username (e.g. a user named 'spiderman' will have the URL `/users/spiderman`). ([#158])
 
 ## v2019.2.17
 ### Changed
@@ -144,3 +145,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#150]: https://github.com/connorshea/ContinueFromCheckpoint/pull/150
 [#153]: https://github.com/connorshea/ContinueFromCheckpoint/pull/153
 [#157]: https://github.com/connorshea/ContinueFromCheckpoint/pull/157
+[#158]: https://github.com/connorshea/ContinueFromCheckpoint/pull/158

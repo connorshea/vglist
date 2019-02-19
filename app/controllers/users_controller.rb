@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.friendly.find(params[:id])
     skip_authorization
 
     # TODO: Paginate this?
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
+    @user = User.friendly.find(params[:id])
     authorize @user
 
     respond_to do |format|
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   end
 
   def update_role
-    @user = User.find(params[:id])
+    @user = User.friendly.find(params[:id])
     role = params[:role].to_sym
 
     authorize @user
