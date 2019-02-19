@@ -20,30 +20,35 @@
       v-model="game.description"
     ></text-area>
 
-    <genre-select
+    <multi-select
       :label="formData.genres.label"
       v-model="game.genres"
-    ></genre-select>
+      :search-path-identifier="'genres'"
+    ></multi-select>
 
-    <engine-select
+    <multi-select
       :label="formData.engines.label"
       v-model="game.engines"
-    ></engine-select>
+      :search-path-identifier="'engines'"
+    ></multi-select>
 
-    <developer-select
+    <multi-select
       :label="formData.developers.label"
       v-model="game.developers"
-    ></developer-select>
-
-    <publisher-select
+      :search-path-identifier="'companies'"
+    ></multi-select>
+    
+    <multi-select
       :label="formData.publishers.label"
       v-model="game.publishers"
-    ></publisher-select>
+      :search-path-identifier="'companies'"
+    ></multi-select>
 
-    <platform-select
+    <multi-select
       :label="formData.platforms.label"
       v-model="game.platforms"
-    ></platform-select>
+      :search-path-identifier="'platforms'"
+    ></multi-select>
 
     <button
       class="button is-primary"
@@ -56,11 +61,7 @@
 <script>
 import TextArea from './text-area.vue';
 import TextField from './text-field.vue';
-import GenreSelect from './genre-select.vue';
-import EngineSelect from './engine-select.vue';
-import DeveloperSelect from './developer-select.vue';
-import PublisherSelect from './publisher-select.vue';
-import PlatformSelect from './platform-select.vue';
+import MultiSelect from './multi-select.vue';
 import FileSelect from './file-select.vue';
 import Rails from 'rails-ujs';
 import { DirectUpload } from 'activestorage';
@@ -70,11 +71,7 @@ export default {
   components: {
     TextArea,
     TextField,
-    GenreSelect,
-    EngineSelect,
-    DeveloperSelect,
-    PublisherSelect,
-    PlatformSelect,
+    MultiSelect,
     FileSelect
   },
   props: {
