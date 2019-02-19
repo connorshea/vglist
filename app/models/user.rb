@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  extend FriendlyId
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -9,6 +11,8 @@ class User < ApplicationRecord
   has_many :games, through: :game_purchases
 
   has_one_attached :avatar
+
+  friendly_id :username, use: [:slugged, :finders]
 
   # Users have roles that can be used to define what actions they're allowed
   # to perform. Default should be 'member'.
@@ -27,6 +31,10 @@ class User < ApplicationRecord
     # disallow _ or . next to each other or themselves.
     # Based on https://stackoverflow.com/a/51937085/7143763
     format: /\A(?=.{4,20}\z)[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*\z/,
+    uniqueness: true
+
+  validates :slug,
+    presence: true,
     uniqueness: true
 
   # Bio can be blank.
