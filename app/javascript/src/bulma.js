@@ -54,4 +54,14 @@ document.addEventListener('turbolinks:load', () => {
   function getAll(selector) {
     return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
   }
+
+  // Close notifications when the delete button is clicked within a notification.
+  let closeNotificationButtons = Array.prototype.slice.call(document.querySelectorAll('.notification > .delete'), 0);
+
+  closeNotificationButtons.forEach(el => {
+    el.addEventListener('click', (event) => {
+      let notification = event.target.closest('.notification');
+      notification.parentNode.removeChild(notification);
+    })
+  });
 });

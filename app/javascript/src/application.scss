@@ -163,3 +163,11 @@ nav.navbar {
     }
   }
 }
+
+// Reset the positioning of the delete element within the
+// notification container.
+.notification > .delete {
+  position: relative;
+  right: auto;
+  top: auto;
+}
