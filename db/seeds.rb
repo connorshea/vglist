@@ -110,6 +110,16 @@ puts "Creating Series..."
   )
 end
 
+puts "Creating Platforms..."
+
+# Create 20 Platforms.
+20.times do
+  Platform.create!(
+    name: Faker::Game.unique.platform,
+    description: Faker::Lorem.sentence
+  )
+end
+
 puts "Creating Games..."
 
 # Create 50 random Games.
@@ -126,30 +136,31 @@ puts "Creating Games..."
   end
   engines.uniq!
 
+  # Generate one or two random platforms for release dates.
+  platforms = [rand(1..Platform.count), rand(1..Platform.count)]
+  platforms.uniq!
+  # Create a hash where the keys are platform IDs and the values are dates.
+  release_dates = {}
+  platforms.each do |platform|
+    release_dates[platform] = Faker::Date.between(10.years.ago, 1.year.from_now)
+  end
+
   game = Game.create!(
     name: Faker::Game.unique.name,
     description: Faker::Lorem.sentence,
     genres: genres,
     engines: engines,
-    series: Series.find(rand(1..Series.count))
+    series: Series.find(rand(1..Series.count)),
+    release_dates: release_dates
   )
 
+  # Skip covers for some games.
   next unless rand(0..4) != 0
 
-  # Add a cover for most games.
+  # Add a cover.
   game.cover.attach(
     io: cover_fetcher,
     filename: "#{n}_faker_cover.jpg"
-  )
-end
-
-puts "Creating Platforms..."
-
-# Create 20 Platforms.
-20.times do
-  Platform.create!(
-    name: Faker::Game.unique.platform,
-    description: Faker::Lorem.sentence
   )
 end
 
@@ -235,6 +246,6 @@ puts
 puts "Created:"
 
 # Don't forget to also update faker.rb when you add new Faker data, idiot.
-[User, Genre, Company, Engine, Series, Game, Platform, GamePurchase, GameDeveloper, GamePublisher, GamePlatform].each do |class_name|
+[User, Genre, Company, Engine, Series, Platform, Game, GamePurchase, GameDeveloper, GamePublisher, GamePlatform].each do |class_name|
   puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
 end

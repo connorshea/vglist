@@ -1,6 +1,9 @@
 class Game < ApplicationRecord
   include PgSearch
 
+  # Update the earliest release date before validating.
+  before_validation :update_earliest_release_date, if: :release_dates?
+
   has_many :game_purchases
   has_many :purchasers, through: :game_purchases, source: :user
 
@@ -35,6 +38,11 @@ class Game < ApplicationRecord
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 4.megabytes }
 
+  # Search scope specific to games.
+  # Only require earliest_release_date if release_dates has data.
+  validates :earliest_release_date,
+    presence: { if: :release_dates? }
+
   validates :wikidata_id,
     uniqueness: true,
     allow_nil: true,
@@ -56,10 +64,16 @@ class Game < ApplicationRecord
   # Include games in global search.
   multisearchable against: [:name]
 
-  # Search scope specific to games.
   pg_search_scope :search,
     against: [:name],
     using: {
       tsearch: { prefix: true }
     }
+
+  private
+
+  # Get the earliest release date from the release_dates attribute.
+  def update_earliest_release_date
+    self.earliest_release_date = release_dates.values.min
+  end
 end

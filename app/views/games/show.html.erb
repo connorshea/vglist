@@ -104,6 +104,17 @@
     </ul>
   <% end %>
 
+  <% unless @game.release_dates.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Release Date(s)
+    <ul>
+      <% @game.release_dates.each do |release_date| %>
+        <li>
+          <%= Platform.find(release_date[0]).name %>
+          <%= release_date[1].to_date.to_formatted_s(:long) %>
+      <% end %>
+    </ul>
+  <% end %>
+
   <% unless @game.wikidata_id.blank? && @game.pcgamingwiki_id.blank? %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
