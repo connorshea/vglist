@@ -1,0 +1,9 @@
+test:
+  adapter: postgresql
+  database: ci_test
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  host: postgres
+  username: runner
+  password: ""

@@ -1,0 +1,44 @@
+image: "registry.gitlab.com/connorshea/continuefromcheckpoint:latest"
+
+services:
+  - postgres:10.1
+
+variables:
+  BUNDLE_PATH: vendor/bundle
+  DB_HOST: postgres
+  POSTGRES_DB: ci_test
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: ""
+  RAILS_ENV: test
+  RACK_ENV: test
+  NODE_ENV: test
+  CI: 'true'
+  BUNDLER_VERSION: '2.0.1'
+
+# Cache gems and node_modules in between builds
+cache:
+  key: '$BUNDLER_VERSION'
+  paths:
+    - vendor/bundle
+    - node_modules
+
+before_script:
+  - ruby -v
+  - gem install bundler:$BUNDLER_VERSION
+  - bundle install -j $(nproc)
+  - yarn install --frozen-lockfile
+  - cp config/database.yml.ci config/database.yml
+  - bundle exec rails db:create
+  - bundle exec rails db:migrate --trace
+
+rubocop:
+  script:
+    - bundle exec rubocop
+
+factory_bot_lint:
+  script:
+    - bundle exec rake factory_bot:lint
+
+rspec:
+  script:
+    - bundle exec rspec
