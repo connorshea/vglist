@@ -45,6 +45,17 @@ RSpec.describe Game, type: :model do
         'Invalid#Name'
       ).for(:pcgamingwiki_id)
     end
+
+    it { should have_db_column(:earliest_release_date).of_type(:date) }
+    it { should have_db_column(:release_dates).of_type(:jsonb) }
+
+    # We don't test the case where it is validated because we use a
+    # before_validation callback which fixes the lack of an earliest_release_date
+    # before we can check that the game is valid. So shoulda-matchers can't confirm
+    # that the validation ever even fails.
+    it "does not validate presence of earliest release date when there are no release dates" do
+      expect(game).not_to validate_presence_of(:earliest_release_date)
+    end
   end
 
   describe "Associations" do
