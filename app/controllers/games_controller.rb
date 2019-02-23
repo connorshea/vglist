@@ -145,7 +145,8 @@ class GamesController < ApplicationController
       engine_ids: [],
       developer_ids: [],
       publisher_ids: [],
-      platform_ids: []
+      platform_ids: [],
+      release_dates: []
     )
   end
 

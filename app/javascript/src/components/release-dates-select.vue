@@ -1,12 +1,13 @@
 <template>
   <div class="field">
     <label class="label">{{ label }}</label>
-    <div class="field" v-for="(releaseDate,i) in value" :key="releaseDate.id">
+    <div class="field" v-for="(date, platform, index) in value" :key="index">
+      value: {{ value }}, platform: {{ platform }}, date: {{ date }}, index: {{ index }}
       <single-select
-        v-model="value[i].key"
+        v-model="platform"
         :search-path-identifier="'platforms'"
       ></single-select>
-      <input type="date" class="input" v-model="value[i].value">
+      <input type="date" class="input" v-model="value[platform]">
     </div>
   </div>
 </template>
@@ -27,7 +28,7 @@ export default {
       required: true
     },
     value: {
-      type: Array,
+      type: Object,
       required: true
     }
   },
