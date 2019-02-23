@@ -1359,6 +1359,3 @@ FactoryBot/AttributeDefinedStatically:
 
 FactoryBot/CreateList:
   Enabled: true
-
-Rails/HttpStatus:
-  Enabled: true
