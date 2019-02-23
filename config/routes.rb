@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     get :search, on: :collection
     post :add_game_to_library, on: :member
     delete :remove_game_from_library, on: :member
+    delete :remove_cover, on: :member
   end
 
   resources :users do

@@ -144,4 +144,19 @@ RSpec.describe "Games", type: :request do
       expect(response.body).to include("Unable to remove game from your library.")
     end
   end
+
+  describe "DELETE remove_cover_game_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game_with_cover) { create(:game_with_cover) }
+
+    it "removes the cover from a game" do
+      sign_in(user)
+      delete remove_cover_game_path(game_with_cover.id),
+        params: { id: game_with_cover.id }
+      expect(response).to redirect_to(game_url(game_with_cover))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Cover successfully removed from #{game_with_cover.name}.")
+    end
+  end
 end
