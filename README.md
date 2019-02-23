@@ -36,6 +36,13 @@ If you want to use Docker to test the application locally in production mode, yo
 
 Docker isn't currently used for development, you can just run the application "natively" as described in the previous section.
 
+### GitLab CI
+To update the Docker container used by GitLab CI:
+
+- Log into the GitLab CI Docker registry with `docker login registry.gitlab.com`.
+- Build the container with `docker build -f Dockerfile.ci -t registry.gitlab.com/connorshea/continuefromcheckpoint .`
+- Then use `docker push registry.gitlab.com/connorshea/continuefromcheckpoint` to push the container to the GitLab Container Registry.
+
 ## Design Document
 
 See [DESIGN_DOC.md](DESIGN_DOC.md) for the general design plan for this project.
