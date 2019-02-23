@@ -40,6 +40,47 @@ RSpec.describe "Engines", type: :request do
     end
   end
 
+  describe "POST engines_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:engine_attributes) { attributes_for(:engine) }
+
+    it "creates a new engine" do
+      sign_in(user)
+      expect {
+        post engines_path, params: { engine: engine_attributes }
+      }.to change(Engine, :count).by(1)
+    end
+
+    it "fails to create a new engine" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      engine_attributes[:name] = long_name
+      post engines_path, params: { engine: engine_attributes }
+      expect(response.body).to include('Unable to create engine.')
+    end
+  end
+
+  describe "PUT engine_path" do
+    let(:user) { create(:confirmed_user) }
+    let!(:engine) { create(:engine) }
+    let(:engine_attributes) { attributes_for(:engine) }
+
+    it "updates engine name" do
+      sign_in(user)
+      engine_attributes[:name] = "Name goes here"
+      put engine_path(id: engine.id), params: { engine: engine_attributes }
+      expect(engine.reload.name).to eql("Name goes here")
+    end
+
+    it "fails to update engine" do
+      sign_in(user)
+      long_name = Faker::Lorem.characters(125)
+      engine_attributes[:name] = long_name
+      put engine_path(id: engine.id), params: { engine: engine_attributes }
+      expect(response.body).to include('Unable to update engine.')
+    end
+  end
+
   describe "DELETE engine_path" do
     let(:user) { create(:confirmed_user) }
     let!(:engine) { create(:engine) }
