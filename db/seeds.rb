@@ -140,9 +140,12 @@ puts "Creating Games..."
   platforms = [rand(1..Platform.count), rand(1..Platform.count)]
   platforms.uniq!
   # Create a hash where the keys are platform IDs and the values are dates.
-  release_dates = {}
+  release_dates = []
   platforms.each do |platform|
-    release_dates[platform] = Faker::Date.between(10.years.ago, 1.year.from_now)
+    release_date_hash = {}
+    release_date_hash['platform_id'] = platform
+    release_date_hash['release_date'] = Faker::Date.between(10.years.ago, 1.year.from_now)
+    release_dates << release_date_hash
   end
 
   game = Game.create!(

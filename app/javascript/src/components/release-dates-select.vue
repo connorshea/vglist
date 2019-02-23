@@ -1,13 +1,16 @@
 <template>
   <div class="field">
     <label class="label">{{ label }}</label>
-    <div class="field" v-for="(date, platform, index) in value" :key="index">
-      value: {{ value }}, platform: {{ platform }}, date: {{ date }}, index: {{ index }}
+    <div class="field" v-for="(platform, index) in platforms" :key="platform['id']">
+      <!-- <p>platform: {{ platform }}, index: {{ index }}</p>
+
+      <p>{{ platforms[index] }}</p>
+      {{ releaseDates[index]['release_date'] }} -->
       <single-select
-        v-model="platform"
+        v-model="platforms[index]"
         :search-path-identifier="'platforms'"
       ></single-select>
-      <input type="date" class="input" v-model="value[platform]">
+      <input type="date" class="input" v-model="releaseDates[index]['release_date']">
     </div>
   </div>
 </template>
@@ -28,7 +31,7 @@ export default {
       required: true
     },
     value: {
-      type: Object,
+      type: Array,
       required: true
     }
   },
@@ -42,7 +45,31 @@ export default {
     }
   },
   methods: {
-    
+    asyncGetPlatform: async function(platformId) {
+      let platform = await this.getPlatform(platformId);
+      return platform;
+    },
+    getPlatform: (platformId) => {
+      return fetch(`${window.location.origin}/platforms/${platformId}.json`, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((response) => {
+        return response.json();
+      })
+      .then((platform) => {
+        return platform;
+      });
+    }
+  },
+  created() {
+    this.platforms = [];
+    let platformIds = this.releaseDates.map(x => x['platform_id']);
+    platformIds.forEach((platformId) => {
+      this.asyncGetPlatform(platformId).then((data) => {
+        this.platforms.push(data);
+      })
+    });
   }
 }
 </script>
