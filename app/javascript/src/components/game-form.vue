@@ -76,7 +76,7 @@
     <release-dates-select
       :label="formData.releaseDates.label"
       v-model="game.releaseDates"
-      :platforms="game.platforms"
+      :platforms.sync="game.platforms"
     ></release-dates-select>
 
     <button
@@ -277,7 +277,8 @@ export default {
         engine_ids: engine_ids,
         developer_ids: developer_ids,
         publisher_ids: publisher_ids,
-        platform_ids: platform_ids
+        platform_ids: platform_ids,
+        release_dates: this.game.releaseDates
       }};
 
       if (this.game.series) {

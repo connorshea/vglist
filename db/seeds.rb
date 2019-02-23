@@ -136,24 +136,35 @@ puts "Creating Games..."
   end
   engines.uniq!
 
-  # Generate one or two random platforms for release dates.
-  platforms = [rand(1..Platform.count), rand(1..Platform.count)]
-  platforms.uniq!
-  # Create a hash where the keys are platform IDs and the values are dates.
-  release_dates = []
-  platforms.each do |platform|
-    release_date_hash = {}
-    release_date_hash['platform_id'] = platform
-    release_date_hash['release_date'] = Faker::Date.between(10.years.ago, 1.year.from_now)
-    release_dates << release_date_hash
-  end
-
   game = Game.create!(
     name: Faker::Game.unique.name,
     description: Faker::Lorem.sentence,
     genres: genres,
-    engines: engines,
-    series: Series.find(rand(1..Series.count)),
+    engines: engines
+  )
+
+  # Generate up to random platforms to have the game available on.
+  platforms = []
+  rand(0..2).times do
+    platforms << Platform.find(rand(1..Platform.count))
+  end
+  platforms.uniq!
+
+  # Create a hash where the keys are platform IDs and the values are dates.
+  release_dates = []
+  platforms.each do |platform|
+    GamePlatform.create!(
+      game: game,
+      platform: platform
+    )
+
+    release_date_hash = {}
+    release_date_hash['platform_id'] = platform.id
+    release_date_hash['release_date'] = Faker::Date.between(10.years.ago, 1.year.from_now)
+    release_dates << release_date_hash
+  end
+
+  game.update!(
     release_dates: release_dates
   )
 
@@ -230,18 +241,6 @@ puts "Creating Game Publishers..."
   GamePublisher.find_or_create_by!(
     game: game,
     company: publisher
-  )
-end
-
-puts "Creating Game Platforms..."
-
-20.times do
-  game = Game.find(rand(1..Game.count))
-  platform = Platform.find(rand(1..Platform.count))
-
-  GamePlatform.find_or_create_by!(
-    game: game,
-    platform: platform
   )
 end
 
