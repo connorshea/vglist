@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     get :index, on: :collection
     get :show, on: :member
     post :update_role, on: :member
+    delete :remove_avatar, on: :member
   end
 
   resources :platforms do
