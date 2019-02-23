@@ -74,6 +74,6 @@ class Game < ApplicationRecord
 
   # Get the earliest release date from the release_dates attribute.
   def update_earliest_release_date
-    self.earliest_release_date = release_dates.map{ |x| x['release_date'] }.min
+    self.earliest_release_date = release_dates.map { |x| x['release_date'] }.min
   end
 end

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- TODO: Remove this. -->
     <div class="box">
       <p v-for="(item, k) in game" :key="k">
         <strong>{{ k }}:</strong> {{ item }}

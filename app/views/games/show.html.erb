@@ -111,6 +111,7 @@
         <li>
           <span class="has-text-weight-semibold"><%= Platform.find(release_date['platform_id']).name %></span>:
           <span><%= release_date['release_date'].to_date.to_formatted_s(:long) %></span>
+        </li>
       <% end %>
     </ul>
   <% end %>

@@ -15,9 +15,12 @@ FactoryBot.define do
 
     trait :release_dates do
       release_dates do
-        {
-          "1": Faker::Date.between(20.years.ago, 1.year.from_now)
-        }
+        [
+          {
+            platform_id: "1",
+            release_date: Faker::Date.between(20.years.ago, 1.year.from_now)
+          }
+        ]
       end
     end
 
