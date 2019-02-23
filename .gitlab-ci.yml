@@ -42,3 +42,4 @@ factory_bot_lint:
 rspec:
   script:
     - bundle exec rspec
+  coverage: '/\(\d+.\d+\%\) covered/'
