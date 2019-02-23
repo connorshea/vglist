@@ -30,7 +30,10 @@ class EnginesController < ApplicationController
         format.html { redirect_to @engine, notice: 'Engine was successfully created.' }
         format.json { render :show, status: :created, location: @engine }
       else
-        format.html { render :new }
+        format.html do
+          flash.now[:error] = "Unable to create engine."
+          render :new
+        end
         format.json { render json: @engine.errors, status: :unprocessable_entity }
       end
     end
@@ -45,7 +48,10 @@ class EnginesController < ApplicationController
         format.html { redirect_to @engine, notice: 'Engine was successfully updated.' }
         format.json { render :show, status: :ok, location: @engine }
       else
-        format.html { render :edit }
+        format.html do
+          flash.now[:error] = "Unable to update engine."
+          render :edit
+        end
         format.json { render json: @engine.errors, status: :unprocessable_entity }
       end
     end
