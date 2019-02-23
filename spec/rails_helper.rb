@@ -108,6 +108,7 @@ Capybara.register_driver :headless_chrome do |app|
     }
 end
 
+# Disable sandboxing in CI as the sandbox is wonky inside Docker containers.
 Capybara.register_driver :ci_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: { args: %w[headless no-sandbox] }
