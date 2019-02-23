@@ -15,10 +15,22 @@ RSpec.describe Game, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:platforms) }
-    it { should have_many(:game_genres) }
-    it { should have_many(:game_engines) }
     it { should have_many(:game_purchases) }
-    it { should have_many(:purchasers) }
+    it { should have_many(:purchasers).through(:game_purchases).source(:user) }
+
+    it { should have_many(:game_developers) }
+    it { should have_many(:developers).through(:game_developers).source(:company) }
+
+    it { should have_many(:game_publishers) }
+    it { should have_many(:publishers).through(:game_publishers).source(:company) }
+
+    it { should have_many(:game_platforms) }
+    it { should have_many(:platforms).through(:game_platforms).source(:platform) }
+
+    it { should have_many(:game_genres) }
+    it { should have_many(:genres).through(:game_genres).source(:genre) }
+
+    it { should have_many(:game_engines) }
+    it { should have_many(:engines).through(:game_engines).source(:engine) }
   end
 end
