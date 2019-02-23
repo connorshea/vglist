@@ -3,9 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.23
+### Added
+- Add the ability to remove covers from games. ([#168])
+- Add the ability to remove avatars from users. ([#169])
+
 ## v2019.2.22
 ### Changed
-- Switched CI from Travis to GitLab CI. ([#163])
+- Switch CI from Travis to GitLab CI. ([#163])
 
 ## v2019.2.18
 ### Added
@@ -151,3 +156,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#157]: https://github.com/connorshea/ContinueFromCheckpoint/pull/157
 [#158]: https://github.com/connorshea/ContinueFromCheckpoint/pull/158
 [#163]: https://github.com/connorshea/ContinueFromCheckpoint/pull/163
+[#168]: https://github.com/connorshea/ContinueFromCheckpoint/pull/168
+[#169]: https://github.com/connorshea/ContinueFromCheckpoint/pull/169

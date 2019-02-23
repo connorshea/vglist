@@ -7,6 +7,12 @@ FactoryBot.define do
 
     factory :confirmed_user do
       after(:create) { |user| user.confirm }
+
+      factory :confirmed_user_with_avatar do
+        after(:build) do |user|
+          user.avatar.attach(io: File.open(Rails.root.join('spec', 'factories', 'images', 'avatar.jpg')), filename: 'avatar.jpg', content_type: 'image/jpg')
+        end
+      end
     end
   end
 

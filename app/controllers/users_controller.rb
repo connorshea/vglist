@@ -50,6 +50,19 @@ class UsersController < ApplicationController
     redirect_to @user, success: "#{@user.username} was given the role #{params[:role]}." if @user.save
   end
 
+  def remove_avatar
+    @user = User.friendly.find(params[:id])
+    authorize @user
+
+    @user.avatar.purge
+
+    respond_to do |format|
+      format.html { redirect_to @user, success: "Avatar successfully removed." }
+    end
+  end
+
+  private
+
   def user_params
     params.require(:user).permit(
       :bio,

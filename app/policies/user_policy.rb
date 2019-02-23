@@ -29,4 +29,8 @@ class UserPolicy < ApplicationPolicy
   def remove_game_from_library?
     current_user && user == current_user
   end
+
+  def remove_avatar?
+    current_user && user == current_user
+  end
 end

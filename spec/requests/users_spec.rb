@@ -64,4 +64,18 @@ RSpec.describe "Users", type: :request do
       expect(user.reload.role).not_to eql('moderator')
     end
   end
+
+  describe "DELETE remove_avatar_user_path" do
+    let(:user) { create(:confirmed_user_with_avatar) }
+
+    it "removes the avatar from the current user" do
+      sign_in(user)
+      delete remove_avatar_user_path(user.id),
+        params: { id: user.id }
+      expect(response).to redirect_to(user_url(user))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Avatar successfully removed.")
+    end
+  end
 end
