@@ -126,6 +126,17 @@ class GamesController < ApplicationController
     end
   end
 
+  def remove_cover
+    @game = Game.find(params[:id])
+    authorize @game
+
+    @game.cover.purge
+
+    respond_to do |format|
+      format.html { redirect_to @game, success: "Cover successfully removed from #{@game.name}." }
+    end
+  end
+
   private
 
   def game_params

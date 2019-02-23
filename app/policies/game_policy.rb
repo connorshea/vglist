@@ -29,4 +29,8 @@ class GamePolicy < ApplicationPolicy
   def search?
     user.present?
   end
+
+  def remove_cover?
+    user.present?
+  end
 end
