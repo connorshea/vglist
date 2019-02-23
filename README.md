@@ -1,5 +1,8 @@
 # Continue From Checkpoint
 
+[![pipeline status](https://gitlab.com/connorshea/ContinueFromCheckpoint/badges/master/pipeline.svg)](https://gitlab.com/connorshea/ContinueFromCheckpoint/commits/master)
+[![coverage report](https://gitlab.com/connorshea/ContinueFromCheckpoint/badges/master/coverage.svg?job=rspec)](https://gitlab.com/connorshea/ContinueFromCheckpoint/commits/master)
+
 This is a Rails application for tracking your video game library.
 
 ## Getting set up
