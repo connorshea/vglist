@@ -18,8 +18,11 @@ class UserPolicy < ApplicationPolicy
     current_user && user == current_user
   end
 
+  # Rules for updating roles:
+  # - The user updating the role must be an admin.
+  # - The user can't update their own role.
   def update_role?
-    current_user&.admin?
+    current_user&.admin? && user != current_user
   end
 
   def add_game_to_library?

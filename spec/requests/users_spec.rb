@@ -63,10 +63,27 @@ RSpec.describe "Users", type: :request do
       expect(user.reload.role).to eql('member')
       expect(user.reload.role).not_to eql('moderator')
     end
+
+    it "user cannot make themselves a moderator" do
+      sign_in(user)
+      post update_role_user_path(id: user.id, role: "moderator")
+      expect(response).to redirect_to(root_path)
+      expect(user.reload.role).to eql('member')
+      expect(user.reload.role).not_to eql('moderator')
+    end
+
+    it "admin cannot make themselves a moderator" do
+      sign_in(admin)
+      post update_role_user_path(id: admin.id, role: "moderator")
+      expect(response).to redirect_to(root_path)
+      expect(admin.reload.role).to eql('admin')
+      expect(admin.reload.role).not_to eql('moderator')
+    end
   end
 
   describe "DELETE remove_avatar_user_path" do
     let(:user) { create(:confirmed_user_with_avatar) }
+    let(:another_user) { create(:confirmed_user) }
 
     it "removes the avatar from the current user" do
       sign_in(user)
@@ -76,6 +93,14 @@ RSpec.describe "Users", type: :request do
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
       expect(response.body).to include("Avatar successfully removed.")
+    end
+
+    it "doesn't let a user remove the avatar from a different user" do
+      sign_in(another_user)
+      delete remove_avatar_user_path(user.id),
+        params: { id: user.id }
+      expect(response).to redirect_to(root_path)
+      expect(user.reload.avatar).to be_attached
     end
   end
 end
