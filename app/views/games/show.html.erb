@@ -109,8 +109,8 @@
     <ul>
       <% @game.release_dates.each do |release_date| %>
         <li>
-          <%= Platform.find(release_date['platform_id']).name %>
-          <%= release_date['release_date'].to_date.to_formatted_s(:long) %>
+          <span class="has-text-weight-semibold"><%= Platform.find(release_date['platform_id']).name %></span>:
+          <span><%= release_date['release_date'].to_date.to_formatted_s(:long) %></span>
       <% end %>
     </ul>
   <% end %>
