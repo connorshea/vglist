@@ -15,8 +15,17 @@ class GamesController < ApplicationController
     # TODO: Limit this.
     @owners = @game.purchasers
 
-    @publishers = @game.publishers
-    @developers = @game.developers
+    @publishers = GamePublisher.all
+                               .where(game: @game.id)
+                               .includes(:company)
+    @developers = GameDeveloper.all
+                               .where(game: @game.id)
+                               .includes(:company)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @game }
+    end
   end
 
   def new
