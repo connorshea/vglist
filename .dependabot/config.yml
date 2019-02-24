@@ -45,3 +45,12 @@ update_configs:
       - match:
           dependency_name: "webpack-dev-server"
           version_requirement: "3.x"
+
+  # Checks for Dockerfile updates weekly.
+  # Dependabot will automatically detect any files with "Dockerfile" in the name.
+  - package_manager: "docker"
+    directory: "/"
+    update_schedule: "weekly"
+    target_branch: "master"
+    default_assignees:
+      - "connorshea"
