@@ -86,7 +86,7 @@ class Game < ApplicationRecord
       platform_ids = self.platforms.map { |x| x[:id] }
 
       if platform_ids.to_set != release_date_platform_ids.to_set
-        errors.add(:platforms, "must match platforms represented in release dates")
+        errors.add(:release_dates, "must correspond to platforms")
       end
     end
   end
