@@ -1,6 +1,7 @@
 <template>
   <div class="field">
     <label class="label">{{ label }}</label>
+    <p v-if="platforms.length == 0">Add some platforms to add release dates.</p>
     <div class="field is-horizontal" v-for="(platform, index) in platforms" :key="platform['id']">
       <div class="field-label is-normal">
         <label class="label">{{ platform.name }}</label>
