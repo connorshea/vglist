@@ -26,6 +26,8 @@ class Game < ApplicationRecord
 
   has_one_attached :cover
 
+  validate :release_dates_platforms_should_match_platforms, on: [:create, :update]
+
   validates :name,
     presence: true,
     length: { maximum: 120 }
@@ -75,5 +77,17 @@ class Game < ApplicationRecord
   # Get the earliest release date from the release_dates attribute.
   def update_earliest_release_date
     self.earliest_release_date = release_dates.map { |x| x['release_date'] }.min
+  end
+
+  # Make sure each platform has a corresponding release date.
+  def release_dates_platforms_should_match_platforms
+    if platforms.present?
+      release_date_platform_ids = self.release_dates.map { |x| x['platform_id'] }
+      platform_ids = self.platforms.map { |x| x[:id] }
+
+      if platform_ids.to_set != release_date_platform_ids.to_set
+        errors.add(:platforms, "must match platforms represented in release dates")
+      end
+    end
   end
 end

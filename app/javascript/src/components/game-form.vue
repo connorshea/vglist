@@ -1,10 +1,20 @@
 <template>
   <div>
     <!-- TODO: Remove this. -->
-    <div class="box">
+    <!-- <div class="box">
       <p v-for="(item, k) in game" :key="k">
         <strong>{{ k }}:</strong> {{ item }}
       </p>
+    </div> -->
+
+    <!-- Display errors if there are any -->
+    <div class="notification is-danger" v-if="errors.length > 0">
+      <p>Errors:</p>
+      <ul>
+        <li v-for="error in errors" :key="error">
+          {{ error }}
+        </li>
+      </ul>
     </div>
     
     <!-- Display errors if there are any. -->
