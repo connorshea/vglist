@@ -2,4 +2,4 @@
 
 <h1 class="title">Edit <%= @genre.name %></h1>
 
-<%= render 'form' %>
+<%= render 'form', cancel_path: genre_path(@genre.id) %>
