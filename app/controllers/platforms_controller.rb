@@ -10,6 +10,7 @@ class PlatformsController < ApplicationController
 
     @games = @platform.games
                       .with_attached_cover
+                      .page params[:page]
 
     respond_to do |format|
       format.html

@@ -12,6 +12,7 @@ class EnginesController < ApplicationController
 
     @games = @engine.games
                     .with_attached_cover
+                    .page params[:page]
   end
 
   def new

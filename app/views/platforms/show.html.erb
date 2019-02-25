@@ -22,6 +22,8 @@
       <%= render 'shared/game_card', game: game %>
     <% end %>
   </div>
+
+  <%= paginate @games %>
 <% else %>
   This platform doesn't have any games yet.
 <% end%>

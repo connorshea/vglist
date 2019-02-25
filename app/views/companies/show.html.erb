@@ -20,6 +20,8 @@
       <%= render 'shared/game_card', game: game %>
     <% end %>
   </div>
+
+  <%= paginate @published_games %>
 <% else %>
   <p>This company hasn't published any games yet.
 <% end %>
@@ -32,6 +34,8 @@
       <%= render 'shared/game_card', game: game %>
     <% end %>
   </div>
+
+  <%= paginate @developed_games %>
 <% else %>
   <p>This company hasn't developed any games yet.
 <% end %>
