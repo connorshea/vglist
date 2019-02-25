@@ -45,7 +45,7 @@ class GamesController < ApplicationController
           flash.now[:error] = "Unable to create game."
           render :new
         end
-        format.json { render json: @game.errors, status: :unprocessable_entity }
+        format.json { render json: @game.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
@@ -57,13 +57,13 @@ class GamesController < ApplicationController
     respond_to do |format|
       if @game.update(game_params)
         format.html { render html: @game, success: "#{@game.name} was successfully updated." }
-        format.json { render json: @game, status: :success, location: @game }
+        format.json { render json: @game, status: :ok, location: @game }
       else
         format.html do
           flash.now[:error] = "Unable to update game."
           render :edit
         end
-        format.json { render json: @game.errors, status: :unprocessable_entity }
+        format.json { render json: @game.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end

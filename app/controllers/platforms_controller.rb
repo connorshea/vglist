@@ -7,6 +7,11 @@ class PlatformsController < ApplicationController
   def show
     @platform = Platform.find(params[:id])
     skip_authorization
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @platform }
+    end
   end
 
   def new

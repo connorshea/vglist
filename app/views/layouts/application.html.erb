@@ -16,7 +16,7 @@
 
     <%# Rails flash messages %>
     <% flash.each do |type, message| -%>
-      <div class="notification <%= flash_class(type) %> level">
+      <div class="flash-notification notification <%= flash_class(type) %> level">
         <p class="level-item level-left"><%= message %></p>
         <button class="delete level-item level-right"></button>
       </div>
