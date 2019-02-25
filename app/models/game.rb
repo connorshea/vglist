@@ -26,7 +26,8 @@ class Game < ApplicationRecord
 
   has_one_attached :cover
 
-  validate :release_dates_platforms_should_match_platforms
+  validate :release_dates_platforms_should_match_platforms,
+    if: -> (game) { game.release_dates.present? || game.platforms.present? }
 
   validates :name,
     presence: true,
@@ -81,13 +82,11 @@ class Game < ApplicationRecord
 
   # Make sure each platform has a corresponding release date.
   def release_dates_platforms_should_match_platforms
-    if platforms.present?
-      release_date_platform_ids = self.release_dates.map { |x| x['platform_id'] }
-      platform_ids = self.platforms.map { |x| x[:id] }
+    release_date_platform_ids = release_dates.map { |x| x['platform_id'] }.to_set
+    platform_ids = platforms.map { |x| x[:id] }.to_set
 
-      if platform_ids.to_set != release_date_platform_ids.to_set
-        errors.add(:release_dates, "must correspond to platforms")
-      end
-    end
+    puts "release_date_platform_ids: #{release_date_platform_ids}, platform_ids: #{platform_ids}"
+
+    errors.add(:release_dates, "must correspond to platforms") if platform_ids != release_date_platform_ids
   end
 end

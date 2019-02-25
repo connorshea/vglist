@@ -6,16 +6,6 @@
         <strong>{{ k }}:</strong> {{ item }}
       </p>
     </div>
-
-    <!-- Display errors if there are any. -->
-    <div class="notification errors-notification is-danger" v-if="errors.length > 0">
-      <p>{{ errors.length > 1 ? 'Errors' : 'An error'}} prevented this game from being saved:</p>
-      <ul>
-        <li v-for="error in errors" :key="error">
-          {{ error }}
-        </li>
-      </ul>
-    </div>
     
     <!-- Display errors if there are any. -->
     <div class="notification errors-notification is-danger" v-if="errors.length > 0">
@@ -193,11 +183,7 @@ export default {
     },
     successPath: {
       type: String,
-<<<<<<< HEAD
       required: false
-=======
-      required: true
->>>>>>> Add a cancel button to the games and derive the success redirect path from a property.
     },
     cancelPath: {
       type: String,
