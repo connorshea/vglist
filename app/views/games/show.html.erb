@@ -53,7 +53,7 @@
 
 <div class="box infobox">
   <% unless @game.developers.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Developer(s)
+    <p class="infobox-header has-text-weight-semibold"><%= "Developer".pluralize(@game.developers.count) %>
     <ul>
       <% @game.developers.each do |developer| %>
         <li><%= link_to(developer.name, company_path(developer.id)) %>
@@ -62,7 +62,7 @@
   <% end %>
 
   <% unless @game.publishers.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Publisher(s)
+    <p class="infobox-header has-text-weight-semibold"><%= "Publisher".pluralize(@game.publishers.count) %>
     <ul>
       <% @game.publishers.each do |publisher| %>
         <li><%= link_to(publisher.name, company_path(publisher.id)) %>
@@ -71,7 +71,7 @@
   <% end %>
 
   <% unless @game.platforms.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Platform(s)
+    <p class="infobox-header has-text-weight-semibold"><%= "Platform".pluralize(@game.platforms.count) %>
     <ul>
       <% @game.platforms.each do |platform| %>
         <li><%= link_to(platform.name, platform_path(platform.id)) %>
@@ -80,7 +80,7 @@
   <% end %>
 
   <% unless @game.genres.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Genre(s)
+    <p class="infobox-header has-text-weight-semibold"><%= "Genre".pluralize(@game.genres.count) %>
     <ul>
       <% @game.genres.each do |genre| %>
         <li><%= link_to(genre.name, genre_path(genre.id)) %>
@@ -88,15 +88,13 @@
     </ul>
   <% end %>
 
-  <p class="infobox-header has-text-weight-semibold">Engine(s)
-  <% if !@game.engines.blank? %>
+  <% unless @game.engines.blank? %>
+    <p class="infobox-header has-text-weight-semibold"><%= "Engine".pluralize(@game.engines.count) %>
     <ul>
       <% @game.engines.each do |engine| %>
         <li><%= link_to(engine.name, engine_path(engine.id)) %>
       <% end %>
     </ul>
-  <% else %>
-    <p>Unknown
   <% end %>
 
   <%# <p class="infobox-header has-text-weight-semibold">External links %>
