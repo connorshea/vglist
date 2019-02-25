@@ -1,0 +1,16 @@
+<div class="game-card">
+  <%= link_to(game_path(game.id), class: 'card-container') do %>
+    <figure class="game-cover">
+      <% if game.cover.attached? %>
+        <%= image_tag game.cover.variant(resize: "300x500>") %>
+      <% else %>
+        <%= image_tag 'no-cover.png' %>
+      <% end %>
+    </figure>
+    <div class="card-content">
+      <p class="title is-4"><%= game.name %></p>
+      <p class="subtitle is-6"><%= game.platforms.limit(5).map(&:name).join(', ') %></p>
+      <p class="subtitle is-6"><%= game.developers.distinct.limit(5).map(&:name).join(', ') %></p>
+    </div>
+  <% end %>
+</div>
