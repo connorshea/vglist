@@ -8,6 +8,10 @@ class PlatformsController < ApplicationController
     @platform = Platform.find(params[:id])
     skip_authorization
 
+    @games = @platform.games
+                      .with_attached_cover
+                      .page params[:page]
+
     respond_to do |format|
       format.html
       format.json { render json: @platform }

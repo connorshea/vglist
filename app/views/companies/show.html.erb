@@ -15,11 +15,13 @@
 <% if !@published_games.blank? %>
   <p>Published:
 
-  <ul>
-    <% @published_games.each do |published_game| %>
-      <li><%= link_to(published_game.game.name, game_path(published_game.game.id)) %>
+  <div class="game-card-list mt-20">
+    <% @published_games.each do |game| %>
+      <%= render 'shared/game_card', game: game %>
     <% end %>
-  </ul>
+  </div>
+
+  <%= paginate @published_games %>
 <% else %>
   <p>This company hasn't published any games yet.
 <% end %>
@@ -27,11 +29,13 @@
 <% if !@developed_games.blank? %>
   <p>Developed:
 
-  <ul>
-    <% @developed_games.each do |developed_game| %>
-      <li><%= link_to(developed_game.game.name, game_path(developed_game.game.id)) %>
+  <div class="game-card-list mt-20">
+    <% @developed_games.each do |game| %>
+      <%= render 'shared/game_card', game: game %>
     <% end %>
-  </ul>
+  </div>
+
+  <%= paginate @developed_games %>
 <% else %>
   <p>This company hasn't developed any games yet.
 <% end %>

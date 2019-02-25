@@ -11,6 +11,9 @@ class GenresController < ApplicationController
   def show
     @genre = Genre.find(params[:id])
     skip_authorization
+    @games = @genre.games
+                   .with_attached_cover
+                   .page params[:page]
   end
 
   def new

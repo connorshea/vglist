@@ -15,12 +15,8 @@ class GamesController < ApplicationController
     # TODO: Limit this.
     @owners = @game.purchasers
 
-    @publishers = GamePublisher.all
-                               .where(game: @game.id)
-                               .includes(:company)
-    @developers = GameDeveloper.all
-                               .where(game: @game.id)
-                               .includes(:company)
+    @publishers = @game.publishers
+    @developers = @game.developers
   end
 
   def new
