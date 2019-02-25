@@ -193,7 +193,11 @@ export default {
     },
     successPath: {
       type: String,
+<<<<<<< HEAD
       required: false
+=======
+      required: true
+>>>>>>> Add a cancel button to the games and derive the success redirect path from a property.
     },
     cancelPath: {
       type: String,
