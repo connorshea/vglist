@@ -16,14 +16,14 @@
   </div>
 <% end %>
 
-<% if !@genre.games.blank? %>
+<% if !@games.blank? %>
   <p>Games:
 
-  <ul>
-    <% @genre.games.each do |game| %>
-      <li><%= link_to(game.name, game_path(game.id)) %>
+  <div class="game-card-list mt-20">
+    <% @games.each do |game| %>
+      <%= render 'shared/game_card', game: game %>
     <% end %>
-  </ul>
+  </div>
 <% else %>
   <p>This genre doesn't have any games yet.
 <% end %>

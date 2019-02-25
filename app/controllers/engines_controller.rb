@@ -9,6 +9,9 @@ class EnginesController < ApplicationController
   def show
     @engine = Engine.find(params[:id])
     skip_authorization
+
+    @games = @engine.games
+                    .with_attached_cover
   end
 
   def new
