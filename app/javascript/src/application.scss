@@ -164,10 +164,24 @@ nav.navbar {
   }
 }
 
-// Reset the positioning of the delete element within the
-// notification container.
-.notification > .delete {
-  position: relative;
-  right: auto;
-  top: auto;
+// Remove the radius and modify padding on notifications so they can be used
+// for Rails flashes.
+.notification.flash-notification {
+  border-radius: 0;
+  padding: 1.0rem 2.5rem 1.0rem 1.5rem;
+
+  // Reset the positioning of the delete element within the
+  // notification container.
+  > .delete {
+    position: relative;
+    right: auto;
+    top: auto;
+  }
+}
+
+.notification.errors-notification {
+  li {
+    list-style: initial;
+    margin-left: 20px;
+  }
 }

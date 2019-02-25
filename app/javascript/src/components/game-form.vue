@@ -1,5 +1,15 @@
 <template>
   <div>
+    <!-- Display errors if there are any. -->
+    <div class="notification errors-notification is-danger" v-if="errors.length > 0">
+      <p>{{ errors.length > 1 ? 'Errors' : 'An error'}} prevented this game from being saved:</p>
+      <ul>
+        <li v-for="error in errors" :key="error">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+
     <file-select
       :label="formData.cover.label"
       v-model="game.cover"
@@ -10,6 +20,7 @@
       :form-class="formData.class"
       :attribute="formData.name.attribute"
       :label="formData.name.label"
+      :required="true"
       v-model="game.name"
     ></text-field>
 
@@ -55,6 +66,11 @@
       value="Submit"
       @click.prevent="onSubmit"
     >Submit</button>
+
+    <a
+      class="button"
+      :href="cancelPath"
+    >Cancel</a>
   </div>
 </template>
 
@@ -128,6 +144,14 @@ export default {
       type: String,
       required: true
     },
+    successPath: {
+      type: String,
+      required: false
+    },
+    cancelPath: {
+      type: String,
+      required: true
+    },
     create: {
       type: Boolean,
       required: true
@@ -135,6 +159,7 @@ export default {
   },
   data() {
     return {
+      errors: [],
       game: {
         name: this.name,
         description: this.description,
@@ -220,18 +245,26 @@ export default {
         body: JSON.stringify(submittableData),
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken()
+          'X-CSRF-Token': Rails.csrfToken(),
+          'Accept': 'application/json'
         },
         credentials: 'same-origin'
-      }).then(function(response) {
-        if (!response.ok) {
-          throw Error(response.statusText);
+      }).then((response) => {
+        // https://stackoverflow.com/questions/50041257/how-can-i-pass-json-body-of-fetch-response-to-throw-error-with-then
+        return response.json().then((json) => {
+          if (response.ok) {
+            return Promise.resolve(json);
+          }
+          return Promise.reject(json);
+        });
+      }).then((game) => {
+        if (this.create) {
+          Turbolinks.visit(`${window.location.origin}/games/${game.id}`);
+        } else {
+          Turbolinks.visit(this.successPath);
         }
-        return response;
-      }).then(function(data) {
-        Turbolinks.visit(data.url);
-      }).catch(function(error) {
-        console.log(error);
+      }).catch((errors) => {
+        this.errors = errors;
       });
     }
   }

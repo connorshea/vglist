@@ -6,6 +6,7 @@
         autocomplete="off"
         class="input"
         type="text"
+        :required="required"
         v-bind:name="textFieldName"
         v-bind:id="textFieldId"
         v-bind:value="dataValue"
@@ -34,6 +35,11 @@ export default {
     value: {
       type: String,
       required: true
+    },
+    required: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
