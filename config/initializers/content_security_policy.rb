@@ -30,3 +30,14 @@ Rails.application.config.content_security_policy_nonce_generator = ->(_request) 
 # For further information see the following documentation:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only
 # Rails.application.config.content_security_policy_report_only = true
+
+# Workaround for https://github.com/rails/rails/issues/35137
+module ActionDispatch
+  class ContentSecurityPolicy
+    private
+
+    def nonce_directive?(directive)
+      %w[script-src].include?(directive)
+    end
+  end
+end
