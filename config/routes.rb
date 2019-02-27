@@ -40,6 +40,10 @@ Rails.application.routes.draw do
   resources :companies do
     get :search, on: :collection
   end
+  
+  resources :series do
+    get :search, on: :collection
+  end
 
   namespace :settings do
     get :profile, as: '/', path: '/'

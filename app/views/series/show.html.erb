@@ -1,0 +1,27 @@
+<% content_for :title, @series.name %>
+
+<h1 class="title"><%= @series.name %></h1>
+<h2 class="subtitle">
+  <%= @series.description.blank? ? "This series doesn't have a description yet." : @series.description %>
+</h2>
+
+<% if user_signed_in? %>
+  <div class="field is-grouped">
+    <p class="control"><%= link_to("Edit", edit_series_path(@series.id), class: "button") %>
+    <p class="control"><%= link_to("Delete", series_path(@series.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+  </div>
+<% end %>
+
+<% if !@games.blank? %>
+  <p>Games:
+
+  <div class="game-card-list mt-20">
+    <% @games.each do |game| %>
+      <%= render 'shared/game_card', game: game %>
+    <% end %>
+  </div>
+
+  <%= paginate @games %>
+<% else %>
+  <p>This series doesn't have any games yet.
+<% end %>

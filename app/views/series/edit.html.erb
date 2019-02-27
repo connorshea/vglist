@@ -1,0 +1,5 @@
+<% content_for :title, "Edit #{@series.name}" %>
+
+<h1 class="title">Edit <%= @series.name %></h1>
+
+<%= render 'form', cancel_path: series_path(@series.id) %>

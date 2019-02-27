@@ -35,6 +35,8 @@ module GameTracker
       generate.helper false
       # Disable CSS and JavaScript generation
       generate.assets false
+      # Disable controller spec generation
+      generate.controller_specs false
     end
   end
 end
