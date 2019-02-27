@@ -1,6 +1,9 @@
 class Series < ApplicationRecord
   include PgSearch
 
+  has_many :game_series
+  has_many :games, through: :game_series, source: :game
+
   validates :name,
     presence: true,
     length: { maximum: 120 }

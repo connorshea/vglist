@@ -19,6 +19,9 @@ class Game < ApplicationRecord
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
+  has_many :game_series
+  has_many :series, through: :game_series, source: :series
+
   has_one_attached :cover
 
   validates :name,

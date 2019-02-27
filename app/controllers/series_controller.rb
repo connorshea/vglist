@@ -34,7 +34,7 @@ class SeriesController < ApplicationController
     if @series.save
       redirect_to @series, success: "#{@series.name} was successfully created."
     else
-      flash.now[:error] = "Unable to save series."
+      flash.now[:error] = "Unable to create series."
       render :new
     end
   end

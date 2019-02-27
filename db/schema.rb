@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_27_035618) do
+ActiveRecord::Schema.define(version: 2019_02_27_042156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +119,15 @@ ActiveRecord::Schema.define(version: 2019_02_27_035618) do
     t.index ["user_id"], name: "index_game_purchases_on_user_id"
   end
 
+  create_table "game_series", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "series_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_game_series_on_game_id"
+    t.index ["series_id"], name: "index_game_series_on_series_id"
+  end
+
   create_table "games", force: :cascade do |t|
     t.text "name", default: "", null: false
     t.text "description", default: "", null: false
@@ -195,4 +204,6 @@ ActiveRecord::Schema.define(version: 2019_02_27_035618) do
   add_foreign_key "game_publishers", "games", on_delete: :cascade
   add_foreign_key "game_purchases", "games", on_delete: :cascade
   add_foreign_key "game_purchases", "users", on_delete: :cascade
+  add_foreign_key "game_series", "games", on_delete: :cascade
+  add_foreign_key "game_series", "series", on_delete: :cascade
 end

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Series", type: :request do
-  describe "GET series_path" do
+  describe "GET series_index_path" do
     it "returns http success" do
-      get series_path
+      get series_index_path
       expect(response).to have_http_status(:success)
     end
   end
@@ -17,14 +17,14 @@ RSpec.describe "Series", type: :request do
     end
   end
 
-  describe "POST series_path" do
+  describe "POST series_index_path" do
     let(:user) { create(:confirmed_user) }
     let(:series_attributes) { attributes_for(:series) }
 
     it "creates a new series" do
       sign_in(user)
       expect {
-        post series_path, params: { series: series_attributes }
+        post series_index_path, params: { series: series_attributes }
       }.to change(Series, :count).by(1)
     end
 
@@ -32,7 +32,7 @@ RSpec.describe "Series", type: :request do
       sign_in(user)
       long_name = Faker::Lorem.characters(125)
       series_attributes[:name] = long_name
-      post series_path, params: { series: series_attributes }
+      post series_index_path, params: { series: series_attributes }
       expect(response.body).to include('Unable to create series.')
     end
   end
@@ -70,25 +70,25 @@ RSpec.describe "Series", type: :request do
     end
   end
 
-  describe "GET search_series_path" do
+  describe "GET search_series_index_path" do
     let(:user) { create(:confirmed_user) }
     let(:series) { create(:series) }
 
     it "returns the given series" do
       sign_in(user)
-      get search_series_path(query: series.name, format: :json)
+      get search_series_index_path(query: series.name, format: :json)
       expect(JSON.parse(response.body).first.to_json).to eq(series.to_json)
     end
 
     it "returns no series" do
       sign_in(user)
-      get search_series_path(query: SecureRandom.alphanumeric(8), format: :json)
+      get search_series_index_path(query: SecureRandom.alphanumeric(8), format: :json)
       expect(response.body).to eq("[]")
     end
 
     it "returns no series when no query is given" do
       sign_in(user)
-      get search_series_path(format: :json)
+      get search_series_index_path(format: :json)
       expect(response.body).to eq("[]")
     end
   end
