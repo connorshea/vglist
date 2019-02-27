@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="field">
     <label v-if="label" class="label">{{ label }}</label>
     <div class="control">
       <v-select
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import vSelect from 'vue-select'
+import vSelect from 'vue-select';
 
 export default {
   name: 'single-select',
