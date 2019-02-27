@@ -21,6 +21,10 @@ if defined?(Faker)
         def engine
           fetch('game.engine')
         end
+
+        def series
+          fetch('game.series')
+        end
       end
     end
   end

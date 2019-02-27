@@ -32,5 +32,8 @@ RSpec.describe Game, type: :model do
 
     it { should have_many(:game_engines) }
     it { should have_many(:engines).through(:game_engines).source(:engine) }
+
+    it { should have_one(:game_series) }
+    it { should have_one(:series).through(:game_series).source(:series) }
   end
 end

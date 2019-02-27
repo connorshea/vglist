@@ -170,3 +170,29 @@ en:
         'FNA',
         'CryEngine'
       ]
+      series: [
+        'Half-Life',
+        'Portal',
+        'Doom',
+        'Wolfenstein',
+        'Team Fortress',
+        'Mario Kart',
+        'The Legend of Zelda',
+        'Serious Sam',
+        'Quake',
+        'Metroid Prime',
+        'Final Fantasy',
+        'Kingdom Hearts',
+        'Red Dead Redemption',
+        'Grand Theft Auto',
+        'Wing Commander',
+        'Pokémon',
+        'Super Smash Bros.',
+        'Tetris',
+        'Call of Duty',
+        'Battlefield',
+        'Fallout',
+        "Assassin's Creed",
+        'Mass Effect',
+        'Dragon Age'
+      ]

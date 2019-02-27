@@ -8,7 +8,7 @@ RSpec.describe GameSeries, type: :model do
       expect(game_series).to be_valid
     end
 
-    it { should validate_uniqueness_of(:game_id).scoped_to(:series_id) }
+    it { should validate_uniqueness_of(:game_id) }
   end
 
   describe "Associations" do

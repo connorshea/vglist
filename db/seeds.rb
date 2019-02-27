@@ -131,6 +131,15 @@ puts "Creating Platforms..."
   )
 end
 
+puts "Creating Series..."
+
+# Create 20 Series.
+20.times do
+  Series.create!(
+    name: Faker::Game.unique.series
+  )
+end
+
 puts "Creating Game Purchases..."
 
 # Create 10 unique game purchases for the admin user.
@@ -199,10 +208,22 @@ puts "Creating Game Platforms..."
   )
 end
 
+puts "Creating Game Series..."
+
+20.times do
+  game = Game.find(rand(1..Game.count))
+  series = Series.find(rand(1..Series.count))
+
+  GameSeries.create!(
+    game: game,
+    series: series
+  )
+end
+
 puts
 puts "Created:"
 
 # Don't forget to also update faker.rb when you add new Faker data, idiot.
-[User, Genre, Company, Engine, Game, Platform, GamePurchase, GameDeveloper, GamePublisher, GamePlatform].each do |class_name|
+[User, Genre, Company, Engine, Game, Platform, Series, GamePurchase, GameDeveloper, GamePublisher, GamePlatform, GameSeries].each do |class_name|
   puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
 end
