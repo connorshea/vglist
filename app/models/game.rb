@@ -19,8 +19,7 @@ class Game < ApplicationRecord
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
-  has_one :game_series
-  has_one :series, through: :game_series, source: :series
+  belongs_to :series, optional: true
 
   has_one_attached :cover
 

@@ -1,8 +1,7 @@
 class Series < ApplicationRecord
   include PgSearch
 
-  has_many :game_series
-  has_many :games, through: :game_series, source: :game
+  has_many :games
 
   validates :name,
     presence: true,

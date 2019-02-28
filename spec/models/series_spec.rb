@@ -14,7 +14,6 @@ RSpec.describe Series, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:game_series) }
     it { should have_many(:games) }
   end
 end

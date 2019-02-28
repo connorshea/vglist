@@ -248,7 +248,7 @@ export default {
       let submittableData = { game: {
         name: this.game.name,
         description: this.game.description,
-        series: this.game.series.id,
+        series_id: this.game.series.id,
         genre_ids: genre_ids,
         engine_ids: engine_ids,
         developer_ids: developer_ids,

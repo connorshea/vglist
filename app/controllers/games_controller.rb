@@ -140,7 +140,7 @@ class GamesController < ApplicationController
       :name,
       :description,
       :cover,
-      :series,
+      :series_id,
       genre_ids: [],
       engine_ids: [],
       developer_ids: [],

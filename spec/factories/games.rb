@@ -9,6 +9,11 @@ FactoryBot.define do
       end
     end
 
+    trait :with_series do
+      series
+    end
+
     factory :game_with_cover, traits: [:with_cover]
+    factory :game_with_series, traits: [:with_series]
   end
 end
