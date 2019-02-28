@@ -1,0 +1,15 @@
+<% content_for :title, "Series" %>
+
+<h1 class="title">Series</h1>
+
+<% if user_signed_in? %>
+  <p><%= link_to("Create a new series", new_series_path) %></p>
+<% end %>
+
+<ul>
+  <% @series.each do |series| %>
+    <li><%= link_to(series.name, series_path(series.id)) %></li>
+  <% end %>
+</ul>
+
+<%= paginate @series %>

@@ -74,6 +74,24 @@ RSpec.configure do |config|
     config.before(:each) { Bullet.start_request }
     config.after(:each) { Bullet.end_request }
   end
+
+  # Prints JavaScript errors to the console if there are any.
+  if ENV['RSPEC_FEATURE_DEBUG']
+    config.after(:each, type: :feature, js: true) do
+      errors = page.driver.browser.manage.logs.get(:browser)
+      if errors.present?
+        aggregate_failures 'javascript errrors' do
+          errors.each do |error|
+            expect(error.level).not_to eq('SEVERE'), error.message
+            next unless error.level == 'WARNING'
+
+            STDERR.puts 'WARN: javascript warning'
+            STDERR.puts error.message
+          end
+        end
+      end
+    end
+  end
 end
 
 # Configure shoulda-matchers to work with rspec and all of rails.

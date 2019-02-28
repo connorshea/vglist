@@ -79,6 +79,13 @@
     </ul>
   <% end %>
 
+  <% unless @game.series.blank? %>
+    <p class="infobox-header has-text-weight-semibold">Series
+    <ul>
+      <li><%= link_to(@game.series.name, series_path(@game.series.id)) %>
+    </ul>
+  <% end %>
+
   <% unless @game.genres.blank? %>
     <p class="infobox-header has-text-weight-semibold"><%= "Genre".pluralize(@game.genres.count) %>
     <ul>

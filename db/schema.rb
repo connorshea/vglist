@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_19_035507) do
+ActiveRecord::Schema.define(version: 2019_02_28_051000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,6 +124,8 @@ ActiveRecord::Schema.define(version: 2019_02_19_035507) do
     t.text "description", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "series_id"
+    t.index ["series_id"], name: "index_games_on_series_id"
   end
 
   create_table "genres", force: :cascade do |t|
@@ -145,6 +147,12 @@ ActiveRecord::Schema.define(version: 2019_02_19_035507) do
   create_table "platforms", force: :cascade do |t|
     t.text "name", null: false
     t.text "description", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "series", force: :cascade do |t|
+    t.text "name", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

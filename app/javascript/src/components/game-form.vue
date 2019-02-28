@@ -61,6 +61,12 @@
       :search-path-identifier="'platforms'"
     ></multi-select>
 
+    <single-select
+      :label="formData.series.label"
+      v-model="game.series"
+      :search-path-identifier="'series'"
+    ></single-select>
+
     <button
       class="button is-primary"
       value="Submit"
@@ -77,6 +83,7 @@
 <script>
 import TextArea from './text-area.vue';
 import TextField from './text-field.vue';
+import SingleSelect from './single-select.vue';
 import MultiSelect from './multi-select.vue';
 import FileSelect from './file-select.vue';
 import Rails from 'rails-ujs';
@@ -87,6 +94,7 @@ export default {
   components: {
     TextArea,
     TextField,
+    SingleSelect,
     MultiSelect,
     FileSelect
   },
@@ -136,6 +144,13 @@ export default {
         return []
       }
     },
+    series: {
+      type: Object,
+      required: false,
+      default: function() {
+        return { name: '' }
+      }
+    },
     submitPath: {
       type: String,
       required: true
@@ -168,6 +183,7 @@ export default {
         developers: this.developers,
         publishers: this.publishers,
         platforms: this.platforms,
+        series: this.series,
         cover: this.cover,
         coverBlob: this.coverBlob
       },
@@ -198,6 +214,9 @@ export default {
         },
         platforms: {
           label: 'Platforms'
+        },
+        series: {
+          label: 'Series'
         }
       }
     }
@@ -235,6 +254,10 @@ export default {
         publisher_ids: publisher_ids,
         platform_ids: platform_ids
       }};
+
+      if (this.game.series) {
+        submittableData['game']['series_id'] = this.game.series.id;
+      }
 
       if (this.game.coverBlob) {
         submittableData['game']['cover'] = this.game.coverBlob;
