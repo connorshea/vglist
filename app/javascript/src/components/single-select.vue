@@ -7,6 +7,7 @@
         @search="onSearch"
         label="name"
         v-bind:value="value"
+        v-on:input="$emit('input', $event)"
       ></v-select>
     </div>
   </div>
@@ -27,7 +28,7 @@ export default {
     },
     value: {
       type: Object,
-      required: true
+      required: false
     },
     searchPathIdentifier: {
       type: String,

@@ -148,7 +148,7 @@ export default {
       type: Object,
       required: false,
       default: function() {
-        return {}
+        return { name: '' }
       }
     },
     submitPath: {
@@ -248,13 +248,16 @@ export default {
       let submittableData = { game: {
         name: this.game.name,
         description: this.game.description,
-        series_id: this.game.series.id,
         genre_ids: genre_ids,
         engine_ids: engine_ids,
         developer_ids: developer_ids,
         publisher_ids: publisher_ids,
         platform_ids: platform_ids
       }};
+
+      if (this.game.series) {
+        submittableData['game']['series_id'] = this.game.series.id;
+      }
 
       if (this.game.coverBlob) {
         submittableData['game']['cover'] = this.game.coverBlob;
