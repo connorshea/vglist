@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.27
+### Added
+- Add Game Series. ([#182])
+
 ## v2019.2.24
 ### Added
 - Add proper error handling to the game form. ([#172])
@@ -165,3 +169,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#169]: https://github.com/connorshea/ContinueFromCheckpoint/pull/169
 [#172]: https://github.com/connorshea/ContinueFromCheckpoint/pull/172
 [#173]: https://github.com/connorshea/ContinueFromCheckpoint/pull/173
+[#182]: https://github.com/connorshea/ContinueFromCheckpoint/pull/182
