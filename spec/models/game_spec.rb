@@ -33,6 +33,6 @@ RSpec.describe Game, type: :model do
     it { should have_many(:game_engines) }
     it { should have_many(:engines).through(:game_engines).source(:engine) }
 
-    it { should belong_to(:series).optional(true) }
+    it { should belong_to(:series).optional }
   end
 end
