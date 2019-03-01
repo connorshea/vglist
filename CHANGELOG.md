@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.2.28
+### Added
+- Add scores to game purchases. ([#186])
+
 ## v2019.2.27
 ### Added
 - Add Game Series. ([#182])
@@ -170,3 +174,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#172]: https://github.com/connorshea/ContinueFromCheckpoint/pull/172
 [#173]: https://github.com/connorshea/ContinueFromCheckpoint/pull/173
 [#182]: https://github.com/connorshea/ContinueFromCheckpoint/pull/182
+[#186]: https://github.com/connorshea/ContinueFromCheckpoint/pull/186

@@ -7,4 +7,12 @@ class GamePurchase < ApplicationRecord
 
   validates :game_id,
     uniqueness: { scope: :user_id }
+
+  validates :score,
+    numericality: {
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 100,
+      only_integer: true,
+      allow_nil: true
+    }
 end
