@@ -150,7 +150,9 @@ admin = User.find(1)
 
   GamePurchase.create!(
     game: game,
-    user: admin
+    user: admin,
+    score: rand(0..100),
+    comment: Faker::Lorem.sentence
   )
 end
 
@@ -168,7 +170,9 @@ end
 
     GamePurchase.create!(
       game: game,
-      user: user
+      user: user,
+      score: rand(0..100),
+      comment: Faker::Lorem.sentence
     )
   end
 end

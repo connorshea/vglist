@@ -10,6 +10,13 @@ RSpec.describe GamePurchase, type: :model do
 
     it { should validate_length_of(:comment).is_at_most(500) }
     it { should validate_uniqueness_of(:game_id).scoped_to(:user_id) }
+    it 'validates the score' do
+      expect(game_purchase).to validate_numericality_of(:score)
+        .only_integer
+        .allow_nil
+        .is_greater_than_or_equal_to(0)
+        .is_less_than_or_equal_to(100)
+    end
   end
 
   describe "Associations" do
