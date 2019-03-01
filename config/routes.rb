@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     delete :remove_cover, on: :member
   end
 
+  resources :game_purchases, except: [:new, :edit]
+
   resources :users do
     get :index, on: :collection
     get :show, on: :member

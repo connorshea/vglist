@@ -1,9 +1,9 @@
 <template>
   <a v-bind:href="gameLink">
     <div class="columns game-library-row">
-      <div class="column game-name">{{ game.name }}</div>
-      <div class="column game-score">{{ game.score }}</div>
-      <div class="column game-comment">{{ game.comment }}</div>
+      <div class="column game-name">{{ gameInLibrary.game.name }}</div>
+      <div class="column game-score">{{ gameInLibrary.score }}</div>
+      <div class="column game-comment">{{ gameInLibrary.comment }}</div>
     </div>
   </a>
 </template>
@@ -12,14 +12,14 @@
 export default {
   name: 'game-in-library',
   props: {
-    game: {
+    gameInLibrary: {
       type: Object,
       required: true
     }
   },
   computed: {
     gameLink() {
-      return `/games/${this.game.game_id}`;
+      return `/games/${this.gameInLibrary.game.id}`;
     }
   }
 }

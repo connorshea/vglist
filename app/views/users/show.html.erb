@@ -30,13 +30,8 @@
 <% end %>
 
 <h3 class="title is-3">Library</h3>
-<% if !@purchased_games.blank? %>
-  <div id="game-library">
-    <library
-      v-bind:purchased-games="<%= @purchased_games.to_json(except: [:created_at, :updated_at]) %>"
-    >
-    </library>
-  </div>
-<% else %>
-  <p><%= @user == current_user ? "You haven't added any games to your library yet." : "This user hasn't added any games to their library yet." %>
-<% end %>
+<div id="game-library">
+  <library
+    v-bind:game-purchases-url="<%= game_purchases_path(user_id: @user.id, format: :json).to_json %>"
+  ></library>
+</div>

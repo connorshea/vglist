@@ -7,9 +7,6 @@ class UsersController < ApplicationController
   def show
     @user = User.friendly.find(params[:id])
     skip_authorization
-
-    # TODO: Paginate this?
-    @purchased_games = @user.game_purchases
   end
 
   def update
