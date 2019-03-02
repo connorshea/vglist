@@ -3,13 +3,25 @@
 require 'database_cleaner'
 require 'open-uri'
 
+# Fetches an avatar image from Faker, or uses an image from the test suite
+# if in CI, to avoid external HTTP requests.
 def avatar_fetcher
-  URI.open(Faker::Avatar.image)
+  if ENV['CI']
+    File.open('./spec/factories/images/avatar.jpg')
+  else
+    URI.open(Faker::Avatar.image)
+  end
 end
 
+# Fetches a cover image from LoremPixel, or uses an image from the test suite
+# if in CI, to avoid external HTTP requests.
 def cover_fetcher
-  # TODO: Make the dimensions more random.
-  URI.open("#{Faker::LoremPixel.image('560x800', false)}/")
+  if ENV['CI']
+    File.open('./spec/factories/images/crysis.jpg')
+  else
+    # TODO: Make the dimensions more random.
+    URI.open("#{Faker::LoremPixel.image('560x800', false)}/")
+  end
 end
 
 puts "Cleaning out database..."
