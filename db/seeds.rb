@@ -160,7 +160,7 @@ admin = User.find(1)
 (1..Game.count).to_a.sample(10).each do |game_id|
   game = Game.find(game_id)
 
-  GamePurchase.create!(
+  GamePurchase.find_or_create_by!(
     game: game,
     user: admin,
     score: rand(0..100),
@@ -180,7 +180,7 @@ end
   (1..Game.count).to_a.sample(3).each do |game_id|
     game = Game.find(game_id)
 
-    GamePurchase.create!(
+    GamePurchase.find_or_create_by!(
       game: game,
       user: user,
       score: rand(0..100),
@@ -195,7 +195,7 @@ puts "Creating Game Developers..."
   game = Game.find(rand(1..Game.count))
   developer = Company.find(rand(1..Company.count))
 
-  GameDeveloper.create!(
+  GameDeveloper.find_or_create_by!(
     game: game,
     company: developer
   )
@@ -207,7 +207,7 @@ puts "Creating Game Publishers..."
   game = Game.find(rand(1..Game.count))
   publisher = Company.find(rand(1..Company.count))
 
-  GamePublisher.create!(
+  GamePublisher.find_or_create_by!(
     game: game,
     company: publisher
   )
@@ -219,7 +219,7 @@ puts "Creating Game Platforms..."
   game = Game.find(rand(1..Game.count))
   platform = Platform.find(rand(1..Platform.count))
 
-  GamePlatform.create!(
+  GamePlatform.find_or_create_by!(
     game: game,
     platform: platform
   )
