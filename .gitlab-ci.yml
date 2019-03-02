@@ -43,3 +43,7 @@ rspec:
   script:
     - bundle exec rspec
   coverage: '/\(\d+.\d+\%\) covered/'
+
+db:seed:
+  script:
+    - bundle exec rails db:seed
