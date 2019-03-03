@@ -46,6 +46,9 @@ gem 'active_storage_validations', '~> 0.6'
 # Generate URL slugs for models, e.g. '/users/spiderman'.
 gem 'friendly_id', '~> 5.2.5'
 
+# Use SPARQL for querying Wikidata in imports.
+gem 'sparql', '~> 3.0.2', require: false
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
