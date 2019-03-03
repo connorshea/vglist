@@ -26,19 +26,20 @@ namespace :wikidata_import do
 
     developers = []
 
+    wikidata_ids.select! { |id| id.start_with?('Q') }
+
     (wikidata_ids.length / 45).floor.times do |index|
       puts "index: #{index}"
       start_from = index * 45
+      # puts wikidata_ids[start_from..start_from+45].inspect
       wikidata_labels = WikidataHelper.get_labels(
         ids: wikidata_ids[start_from..start_from+45],
         languages: 'en'
       )
       wikidata_labels.each do |id, wikidata_label|
+        name = wikidata_label.dig('labels', 'en', 'value')
         # Skip items with no labels or no English label.
-        next unless wikidata_label.key?('labels')
-        next unless wikidata_label['labels'].key?('en')
-        name = wikidata_label['labels']['en']['value']
-        wikidata_item = { wikidata_id: id, name: name }
+        wikidata_item = { wikidata_id: id, name: name } unless name.nil?
 
         developers << wikidata_item
       end
