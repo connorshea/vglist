@@ -49,6 +49,9 @@ gem 'friendly_id', '~> 5.2.5'
 # Use SPARQL for querying Wikidata in imports.
 gem 'sparql', '~> 3.0.2', require: false
 
+# Use Addressable for use with the Wikidata API.
+gem 'addressable', '~> 2.6.0', require: false
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

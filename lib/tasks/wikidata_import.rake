@@ -1,5 +1,6 @@
 namespace :wikidata_import do
   require 'sparql/client'
+  require 'wikidata_helper'
 
   desc "Import game developers from Wikidata"
   task :developers do
@@ -20,14 +21,30 @@ namespace :wikidata_import do
       wikidata_url = row[:item].to_s
       wikidata_id = wikidata_url.gsub('http://www.wikidata.org/entity/', '')
 
-      # puts "#{wikidata_id}: #{row[:count].to_s}"
-
       wikidata_ids << wikidata_id
     end
 
-    puts wikidata_ids.inspect
+    developers = []
 
+    (wikidata_ids.length / 45).floor.times do |index|
+      puts "index: #{index}"
+      start_from = index * 45
+      wikidata_labels = WikidataHelper.get_labels(
+        ids: wikidata_ids[start_from..start_from+45],
+        languages: 'en'
+      )
+      wikidata_labels.each do |id, wikidata_label|
+        # Skip items with no labels or no English label.
+        next unless wikidata_label.key?('labels')
+        next unless wikidata_label['labels'].key?('en')
+        name = wikidata_label['labels']['en']['value']
+        wikidata_item = { wikidata_id: id, name: name }
 
+        developers << wikidata_item
+      end
+    end
+
+    puts developers.inspect
   end
 
   # Returns data for game developers sorted by number of games developed.

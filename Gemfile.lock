@@ -318,6 +318,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_storage_validations (~> 0.6)
+  addressable (~> 2.6.0)
   better_errors (~> 2.5)
   binding_of_caller (~> 0.8)
   bootsnap (>= 1.1.0)
