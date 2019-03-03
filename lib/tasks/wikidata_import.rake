@@ -46,20 +46,35 @@ namespace :wikidata_import do
     end
 
     puts developers.inspect
+
+    # TODO: Do the same thing as above but with publishers then put them
+    # together as a companies array and make sure the wikidata IDs are unique.
   end
 
   # Returns data for game developers sorted by number of games developed.
   # Query based off the query used for https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games/Statistics/Platform
   # The first row is the total count of games with no developers.
   def developers_query
+    return query('P178')
+  end
+
+  def publishers_query
+    return query('P123')
+  end
+
+  # Returns data for game properties sorted by associations, e.g. number of
+  # games developed in the case of developers.
+  # Query based off the query used for https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games/Statistics/Platform
+  # The first row is the total count of games with no associations of this type.
+  def query(property)
     sparql = <<-SPARQL
       SELECT ?item (COUNT(?game) as ?count) WHERE {
         ?game wdt:P31 wd:Q7889. # Instance of video game
-        OPTIONAL { ?game wdt:P178 ?item. }
+        OPTIONAL { ?game wdt:#{property} ?item. }
       } GROUP BY ?item
       ORDER BY DESC(?count)
     SPARQL
-  
+
     return sparql
   end
 end
