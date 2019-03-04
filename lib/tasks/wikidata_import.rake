@@ -54,6 +54,24 @@ namespace :wikidata_import do
     puts "Found #{genres.length} genres."
   end
 
+  desc "Import game series from Wikidata"
+  task :series do
+    puts "Importing game series' from Wikidata..."
+
+    endpoint = "https://query.wikidata.org/sparql"
+    client = SPARQL::Client.new(endpoint, :method => :get)
+
+    rows = []
+    rows.concat(client.query(series_query))
+
+    wikidata_ids = []
+
+    puts "Importing up to #{rows.length} series'."
+    series = wikidata_item_filter(rows: rows, count_limit: 1)
+    series.uniq! { |series| series&.dig(:wikidata_id) }
+    puts "Found #{series.length} series'."
+  end
+
   def wikidata_item_filter(rows:, count_limit: 0)
     wikidata_ids = []
 
@@ -111,6 +129,11 @@ namespace :wikidata_import do
   # Returns Wikidata items representing game genres.
   def genres_query
     return query('P136')
+  end
+
+  # Returns Wikidata items representing game series.
+  def series_query
+    return query('P179')
   end
 
   # Returns data for game properties sorted by associations, e.g. number of
