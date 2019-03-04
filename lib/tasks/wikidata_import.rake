@@ -2,18 +2,19 @@ namespace :wikidata_import do
   require 'sparql/client'
   require 'wikidata_helper'
 
-  desc "Import game developers from Wikidata"
-  task :developers do
-    puts "Importing game developers from Wikidata..."
+  desc "Import game developers and publishers from Wikidata"
+  task :companies do
+    puts "Importing game developers and publishers from Wikidata..."
 
     endpoint = "https://query.wikidata.org/sparql"
     client = SPARQL::Client.new(endpoint, :method => :get)
 
     rows = []
     rows.concat(client.query(developers_query))
+    rows.concat(client.query(publishers_query))
     wikidata_ids = []
 
-    puts "Importing #{rows.length} developers."
+    puts "Importing #{rows.length} companies."
     rows.each do |row|
       row = row.to_h
       # Skip if the Wikidata item ID is nil (as is the case with the first row).
@@ -24,12 +25,11 @@ namespace :wikidata_import do
       wikidata_ids << wikidata_id
     end
 
-    developers = []
+    companies = []
 
     wikidata_ids.select! { |id| id.start_with?('Q') }
 
     (wikidata_ids.length / 45).floor.times do |index|
-      puts "index: #{index}"
       start_from = index * 45
       # puts wikidata_ids[start_from..start_from+45].inspect
       wikidata_labels = WikidataHelper.get_labels(
@@ -41,14 +41,13 @@ namespace :wikidata_import do
         # Skip items with no labels or no English label.
         wikidata_item = { wikidata_id: id, name: name } unless name.nil?
 
-        developers << wikidata_item
+        companies << wikidata_item
       end
     end
 
-    puts developers.inspect
+    companies.uniq! { |company| company&.dig(:wikidata_id) }
 
-    # TODO: Do the same thing as above but with publishers then put them
-    # together as a companies array and make sure the wikidata IDs are unique.
+    puts "Found #{companies.length} companies."
   end
 
   # Returns data for game developers sorted by number of games developed.
