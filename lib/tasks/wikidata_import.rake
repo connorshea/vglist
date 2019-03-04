@@ -10,7 +10,6 @@ namespace :wikidata_import do
     rows = []
     rows.concat(client.query(developers_query))
     rows.concat(client.query(publishers_query))
-    wikidata_ids = []
 
     puts "Importing up to #{rows.length} companies."
     companies = wikidata_item_filter(rows: rows)
@@ -25,8 +24,6 @@ namespace :wikidata_import do
 
     rows = []
     rows.concat(client.query(platforms_query))
-
-    wikidata_ids = []
 
     puts "Importing up to #{rows.length} platforms."
     platforms = wikidata_item_filter(rows: rows, count_limit: 80)
@@ -55,8 +52,6 @@ namespace :wikidata_import do
 
     rows = []
     rows.concat(client.query(series_query))
-
-    wikidata_ids = []
 
     puts "Importing up to #{rows.length} series'."
     series = wikidata_item_filter(rows: rows, count_limit: 1)
