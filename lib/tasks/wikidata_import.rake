@@ -5,7 +5,7 @@ namespace :wikidata_import do
   desc "Import game developers and publishers from Wikidata"
   task :companies do
     puts "Importing game developers and publishers from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
     rows = []
     rows.concat(client.query(developers_query))
@@ -20,7 +20,7 @@ namespace :wikidata_import do
   desc "Import game platforms from Wikidata"
   task :platforms do
     puts "Importing game platforms from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
     rows = []
     rows.concat(client.query(platforms_query))
@@ -34,7 +34,7 @@ namespace :wikidata_import do
   desc "Import game genres from Wikidata"
   task :genres do
     puts "Importing game genres from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
     rows = []
     rows.concat(client.query(genres_query))
@@ -48,14 +48,14 @@ namespace :wikidata_import do
   desc "Import game series from Wikidata"
   task :series do
     puts "Importing game series' from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
     rows = []
     rows.concat(client.query(series_query))
 
     puts "Importing up to #{rows.length} series'."
     series = wikidata_item_filter(rows: rows, count_limit: 1)
-    series.uniq! { |series| series&.dig(:wikidata_id) }
+    series.uniq! { |s| s&.dig(:wikidata_id) }
     puts "Found #{series.length} series'."
   end
 
@@ -68,6 +68,7 @@ namespace :wikidata_import do
       next unless row.key?(:item)
       # Skip if it's used in less than count_limit Wikidata items.
       next if row[:count].to_i < count_limit
+
       wikidata_url = row[:item].to_s
 
       wikidata_ids << wikidata_url.gsub('http://www.wikidata.org/entity/', '')
@@ -80,7 +81,7 @@ namespace :wikidata_import do
     (wikidata_ids.length / 48).floor.times do |index|
       start_from = index * 48
       wikidata_labels = WikidataHelper.get_labels(
-        ids: wikidata_ids[start_from..start_from+48],
+        ids: wikidata_ids[start_from..start_from + 48],
         languages: 'en'
       )
       wikidata_labels.each do |id, wikidata_label|
@@ -100,27 +101,27 @@ namespace :wikidata_import do
 
   # Returns Wikidata items representing game developers.
   def developers_query
-    return query('P178')
+    query('P178')
   end
 
   # Returns Wikidata items representing game publishers.
   def publishers_query
-    return query('P123')
+    query('P123')
   end
 
   # Returns Wikidata items representing game platforms.
   def platforms_query
-    return query('P400')
+    query('P400')
   end
 
   # Returns Wikidata items representing game genres.
   def genres_query
-    return query('P136')
+    query('P136')
   end
 
   # Returns Wikidata items representing game series.
   def series_query
-    return query('P179')
+    query('P179')
   end
 
   # Returns data for game properties sorted by associations, e.g. number of

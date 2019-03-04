@@ -26,32 +26,32 @@ class WikidataHelper
       :property
     ]
     query_options_string = query_options.join(',')
-    
+
     template = Addressable::Template.new("https://www.wikidata.org/w/api.php{?#{query_options_string}}")
-    template = template.expand({
-      'action': action,
-      'format': 'json',
-      'ids': ids,
-      'languages': languages,
-      'props': props,
-      'entity': entity,
-      'property': property
-    })
+    template = template.expand(
+      {
+        'action': action,
+        'format': 'json',
+        'ids': ids,
+        'languages': languages,
+        'props': props,
+        'entity': entity,
+        'property': property
+      }
+    )
 
     puts template if ENV['DEBUG']
     api_uri = URI.parse(template.to_s)
 
     puts api_uri if ENV['DEBUG']
 
-    response = JSON.load(open(api_uri))
+    response = JSON.parse(URI.open(api_uri))
 
-    if response['success'] && action == 'wbgetentities'
-      return response['entities']
-    elsif action == 'wbgetclaims'
-      return response['claims']
-    else
-      return nil
-    end
+    return response['entities'] if response['success'] && action == 'wbgetentities'
+
+    return response['claims'] if action == 'wbgetclaims'
+
+    return nil
   end
 
   def self.get_all_entities(ids:)
@@ -85,7 +85,7 @@ class WikidataHelper
 
   #
   # Get aliases for a set of Wikidata items.
-  # 
+  #
   # @param [Array<String>] ids Wikidata item IDs.
   #
   # @return [Hash] Hash of aliases.
@@ -109,13 +109,8 @@ class WikidataHelper
   # @return [Hash] Hash of labels in the listed languages.
   #
   def self.get_labels(ids:, languages: nil)
-    if ids.is_a?(Array)
-      ids = ids.join('|')
-    end
-
-    if languages.is_a?(Array)
-      languages = languages.join('|')
-    end
+    ids = ids.join('|') if ids.is_a?(Array)
+    languages = languages.join('|') if languages.is_a?(Array)
 
     response = api(
       action: 'wbgetentities',
