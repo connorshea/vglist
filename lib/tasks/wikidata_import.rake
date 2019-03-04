@@ -5,9 +5,7 @@ namespace :wikidata_import do
   desc "Import game developers and publishers from Wikidata"
   task :companies do
     puts "Importing game developers and publishers from Wikidata..."
-
-    endpoint = "https://query.wikidata.org/sparql"
-    client = SPARQL::Client.new(endpoint, :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
 
     rows = []
     rows.concat(client.query(developers_query))
@@ -23,9 +21,7 @@ namespace :wikidata_import do
   desc "Import game platforms from Wikidata"
   task :platforms do
     puts "Importing game platforms from Wikidata..."
-
-    endpoint = "https://query.wikidata.org/sparql"
-    client = SPARQL::Client.new(endpoint, :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
 
     rows = []
     rows.concat(client.query(platforms_query))
@@ -41,9 +37,7 @@ namespace :wikidata_import do
   desc "Import game genres from Wikidata"
   task :genres do
     puts "Importing game genres from Wikidata..."
-
-    endpoint = "https://query.wikidata.org/sparql"
-    client = SPARQL::Client.new(endpoint, :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
 
     rows = []
     rows.concat(client.query(genres_query))
@@ -57,9 +51,7 @@ namespace :wikidata_import do
   desc "Import game series from Wikidata"
   task :series do
     puts "Importing game series' from Wikidata..."
-
-    endpoint = "https://query.wikidata.org/sparql"
-    client = SPARQL::Client.new(endpoint, :method => :get)
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", :method => :get)
 
     rows = []
     rows.concat(client.query(series_query))
