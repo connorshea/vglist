@@ -14,26 +14,68 @@ namespace :wikidata_import do
     rows.concat(client.query(publishers_query))
     wikidata_ids = []
 
-    puts "Importing #{rows.length} companies."
+    puts "Importing up to #{rows.length} companies."
+    companies = wikidata_item_filter(rows: rows)
+    companies.uniq! { |company| company&.dig(:wikidata_id) }
+    puts "Found #{companies.length} companies."
+  end
+
+  desc "Import game platforms from Wikidata"
+  task :platforms do
+    puts "Importing game platforms from Wikidata..."
+
+    endpoint = "https://query.wikidata.org/sparql"
+    client = SPARQL::Client.new(endpoint, :method => :get)
+
+    rows = []
+    rows.concat(client.query(platforms_query))
+
+    wikidata_ids = []
+
+    puts "Importing up to #{rows.length} platforms."
+    platforms = wikidata_item_filter(rows: rows, count_limit: 80)
+    platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
+    puts "Found #{platforms.length} platforms."
+  end
+
+  desc "Import game genres from Wikidata"
+  task :genres do
+    puts "Importing game genres from Wikidata..."
+
+    endpoint = "https://query.wikidata.org/sparql"
+    client = SPARQL::Client.new(endpoint, :method => :get)
+
+    rows = []
+    rows.concat(client.query(genres_query))
+
+    puts "Importing up to #{rows.length} genres."
+    genres = wikidata_item_filter(rows: rows, count_limit: 50)
+    genres.uniq! { |genre| genre&.dig(:wikidata_id) }
+    puts "Found #{genres.length} genres."
+  end
+
+  def wikidata_item_filter(rows:, count_limit: 0)
+    wikidata_ids = []
+
     rows.each do |row|
       row = row.to_h
-      # Skip if the Wikidata item ID is nil (as is the case with the first row).
+      # Skip if the Wikidata item ID is nil.
       next unless row.key?(:item)
+      # Skip if it's used in less than count_limit Wikidata items.
+      next if row[:count].to_i < count_limit
       wikidata_url = row[:item].to_s
-      wikidata_id = wikidata_url.gsub('http://www.wikidata.org/entity/', '')
 
-      wikidata_ids << wikidata_id
+      wikidata_ids << wikidata_url.gsub('http://www.wikidata.org/entity/', '')
     end
 
-    companies = []
-
+    items = []
+    # Filter invalid data.
     wikidata_ids.select! { |id| id.start_with?('Q') }
 
-    (wikidata_ids.length / 45).floor.times do |index|
-      start_from = index * 45
-      # puts wikidata_ids[start_from..start_from+45].inspect
+    (wikidata_ids.length / 48).floor.times do |index|
+      start_from = index * 48
       wikidata_labels = WikidataHelper.get_labels(
-        ids: wikidata_ids[start_from..start_from+45],
+        ids: wikidata_ids[start_from..start_from+48],
         languages: 'en'
       )
       wikidata_labels.each do |id, wikidata_label|
@@ -41,24 +83,34 @@ namespace :wikidata_import do
         # Skip items with no labels or no English label.
         wikidata_item = { wikidata_id: id, name: name } unless name.nil?
 
-        companies << wikidata_item
+        items << wikidata_item if wikidata_item
       end
     end
 
-    companies.uniq! { |company| company&.dig(:wikidata_id) }
+    item_names = items.map { |item| item&.dig(:name) } if ENV["DEBUG"]
+    puts item_names.inspect if ENV["DEBUG"]
 
-    puts "Found #{companies.length} companies."
+    return items
   end
 
-  # Returns data for game developers sorted by number of games developed.
-  # Query based off the query used for https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games/Statistics/Platform
-  # The first row is the total count of games with no developers.
+  # Returns Wikidata items representing game developers.
   def developers_query
     return query('P178')
   end
 
+  # Returns Wikidata items representing game publishers.
   def publishers_query
     return query('P123')
+  end
+
+  # Returns Wikidata items representing game platforms.
+  def platforms_query
+    return query('P400')
+  end
+
+  # Returns Wikidata items representing game genres.
+  def genres_query
+    return query('P136')
   end
 
   # Returns data for game properties sorted by associations, e.g. number of
