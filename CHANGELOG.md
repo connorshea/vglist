@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.4
+### Added
+- Add Rake tasks to import companies, engines, genres, platforms, and series' from Wikidata. ([#198])
+- Add Wikidata IDs for companies, engines, games, genres, platforms, and series. ([#199])
+
 ## v2019.2.28
 ### Added
 - Add scores to game purchases. ([#186])
@@ -175,3 +180,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#173]: https://github.com/connorshea/ContinueFromCheckpoint/pull/173
 [#182]: https://github.com/connorshea/ContinueFromCheckpoint/pull/182
 [#186]: https://github.com/connorshea/ContinueFromCheckpoint/pull/186
+[#198]: https://github.com/connorshea/ContinueFromCheckpoint/pull/198
+[#199]: https://github.com/connorshea/ContinueFromCheckpoint/pull/199

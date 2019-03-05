@@ -470,7 +470,7 @@ Metrics/ClassLength:
   Enabled: false
 
 Metrics/ParameterLists:
-  Enabled: true
+  Enabled: false
 
 Metrics/PerceivedComplexity:
   Enabled: false
@@ -678,6 +678,7 @@ Rails/Output:
   Enabled: true
   Exclude:
     - "db/seeds.rb"
+    - "lib/wikidata_helper.rb"
 
 Rails/OutputSafety:
   Enabled: true
@@ -780,7 +781,7 @@ Style/BlockDelimiters:
     - 'spec/requests/**/*_spec.rb'
 
 Style/BracesAroundHashParameters:
-  Enabled: true
+  Enabled: false
 
 Style/CaseEquality:
   Enabled: true
@@ -987,7 +988,7 @@ Style/NumericLiterals:
     - "db/migrate/*.rb"
 
 Style/NumericPredicate:
-  Enabled: true
+  Enabled: false
 
 Style/OneLineConditional:
   Enabled: true
@@ -1041,7 +1042,7 @@ Style/RedundantParentheses:
   Enabled: true
 
 Style/RedundantReturn:
-  Enabled: true
+  Enabled: false
 
 Style/RedundantSelf:
   Enabled: true
