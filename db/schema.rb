@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_01_023926) do
+ActiveRecord::Schema.define(version: 2019_03_05_022847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,12 +41,14 @@ ActiveRecord::Schema.define(version: 2019_03_01_023926) do
     t.text "description", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "wikidata_id"
   end
 
   create_table "engines", force: :cascade do |t|
     t.text "name", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "wikidata_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -126,6 +128,7 @@ ActiveRecord::Schema.define(version: 2019_03_01_023926) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "series_id"
+    t.bigint "wikidata_id"
     t.index ["series_id"], name: "index_games_on_series_id"
   end
 
@@ -134,6 +137,7 @@ ActiveRecord::Schema.define(version: 2019_03_01_023926) do
     t.text "description", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "wikidata_id"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -150,12 +154,14 @@ ActiveRecord::Schema.define(version: 2019_03_01_023926) do
     t.text "description", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "wikidata_id"
   end
 
   create_table "series", force: :cascade do |t|
     t.text "name", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "wikidata_id"
   end
 
   create_table "users", force: :cascade do |t|
