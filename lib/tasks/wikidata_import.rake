@@ -91,6 +91,28 @@ namespace :wikidata_import do
     puts "There are now #{Series.count} series in the database."
   end
 
+  desc "Import game engines from Wikidata"
+  task engines: :environment do
+    puts "Importing game engines from Wikidata..."
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+
+    rows = []
+    rows.concat(client.query(engines_query))
+
+    puts "Importing up to #{rows.length} engines."
+    engines = wikidata_item_filter(rows: rows, count_limit: 1)
+    engines.uniq! { |engine| engine&.dig(:wikidata_id) }
+    puts "Found #{engines.length} engines."
+
+    engines.each do |engine|
+      Engine.create!(
+        name: engine[:name]
+      )
+    end
+
+    puts "There are now #{Engine.count} engines in the database."
+  end
+
   def wikidata_item_filter(rows:, count_limit: 0)
     wikidata_ids = []
 
@@ -132,28 +154,39 @@ namespace :wikidata_import do
   end
 
   # Returns Wikidata items representing game developers.
+  # https://www.wikidata.org/wiki/Property:P178
   def developers_query
     query('P178')
   end
 
   # Returns Wikidata items representing game publishers.
+  # https://www.wikidata.org/wiki/Property:P123
   def publishers_query
     query('P123')
   end
 
   # Returns Wikidata items representing game platforms.
+  # https://www.wikidata.org/wiki/Property:P400
   def platforms_query
     query('P400')
   end
 
   # Returns Wikidata items representing game genres.
+  # https://www.wikidata.org/wiki/Property:P136
   def genres_query
     query('P136')
   end
 
   # Returns Wikidata items representing game series.
+  # https://www.wikidata.org/wiki/Property:P179
   def series_query
     query('P179')
+  end
+
+  # Returns Wikidata items representing game engines.
+  # https://www.wikidata.org/wiki/Property:P408
+  def engines_query
+    query('P408')
   end
 
   # Returns data for game properties sorted by associations, e.g. number of
