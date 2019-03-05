@@ -11,5 +11,13 @@ RSpec.describe Engine, type: :model do
     it { should validate_presence_of(:name) }
 
     it { should validate_length_of(:name).is_at_most(120) }
+
+    it { should validate_uniqueness_of(:wikidata_id) }
+    it 'validates numericality' do
+      expect(engine).to validate_numericality_of(:wikidata_id)
+        .only_integer
+        .allow_nil
+        .is_greater_than(0)
+    end
   end
 end

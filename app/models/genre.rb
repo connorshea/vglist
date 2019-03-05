@@ -11,6 +11,15 @@ class Genre < ApplicationRecord
   validates :description,
     length: { maximum: 1000 }
 
+  validates :wikidata_id,
+    uniqueness: true,
+    allow_nil: true,
+    numericality: {
+      only_integer: true,
+      allow_nil: true,
+      greater_than: 0
+    }
+
   pg_search_scope :search,
     against: [:name],
     using: {
