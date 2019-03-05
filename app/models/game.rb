@@ -35,6 +35,14 @@ class Game < ApplicationRecord
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 4.megabytes }
 
+  validates :wikidata_id,
+    uniqueness: true,
+    numericality: {
+      only_integer: true,
+      allow_nil: true,
+      greater_than: 0
+    }
+
   pg_search_scope :search,
     against: [:name],
     using: {
