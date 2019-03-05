@@ -4,6 +4,11 @@ namespace :wikidata_import do
 
   desc "Import game developers and publishers from Wikidata"
   task companies: :environment do
+    # Abort if there are already records in the database.
+    # In the future we may want to be able to re-import from Wikidata,
+    # but for now we can just fail for any attempted imports after the first run.
+    abort("You can't import companies if there are already companies in the database.") if Company.count > 0
+
     puts "Importing game developers and publishers from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -28,6 +33,11 @@ namespace :wikidata_import do
 
   desc "Import game platforms from Wikidata"
   task platforms: :environment do
+    # Abort if there are already records in the database.
+    # In the future we may want to be able to re-import from Wikidata,
+    # but for now we can just fail for any attempted imports after the first run.
+    abort("You can't import platforms if there are already platforms in the database.") if Platform.count > 0
+
     puts "Importing game platforms from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -51,6 +61,11 @@ namespace :wikidata_import do
 
   desc "Import game genres from Wikidata"
   task genres: :environment do
+    # Abort if there are already records in the database.
+    # In the future we may want to be able to re-import from Wikidata,
+    # but for now we can just fail for any attempted imports after the first run.
+    abort("You can't import genres if there are already genres in the database.") if Genre.count > 0
+
     puts "Importing game genres from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -74,6 +89,11 @@ namespace :wikidata_import do
 
   desc "Import game series from Wikidata"
   task series: :environment do
+    # Abort if there are already records in the database.
+    # In the future we may want to be able to re-import from Wikidata,
+    # but for now we can just fail for any attempted imports after the first run.
+    abort("You can't import series if there are already series in the database.") if Series.count > 0
+
     puts "Importing game series' from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -97,6 +117,11 @@ namespace :wikidata_import do
 
   desc "Import game engines from Wikidata"
   task engines: :environment do
+    # Abort if there are already records in the database.
+    # In the future we may want to be able to re-import from Wikidata,
+    # but for now we can just fail for any attempted imports after the first run.
+    abort("You can't import engines if there are already engines in the database.") if Engine.count > 0
+
     puts "Importing game engines from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 

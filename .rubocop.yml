@@ -988,7 +988,7 @@ Style/NumericLiterals:
     - "db/migrate/*.rb"
 
 Style/NumericPredicate:
-  Enabled: true
+  Enabled: false
 
 Style/OneLineConditional:
   Enabled: true
