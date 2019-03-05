@@ -7,7 +7,7 @@ namespace :wikidata_import do
     # Abort if there are already records in the database.
     # In the future we may want to be able to re-import from Wikidata,
     # but for now we can just fail for any attempted imports after the first run.
-    # abort("You can't import games if there are already games in the database.") if Game.count > 0
+    abort("You can't import games if there are already games in the database.") if Game.count > 0
 
     puts "Importing games from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
