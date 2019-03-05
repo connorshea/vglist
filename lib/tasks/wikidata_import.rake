@@ -18,7 +18,8 @@ namespace :wikidata_import do
 
     companies.each do |company|
       Company.create!(
-        name: company[:name]
+        name: company[:name],
+        wikidata_id: company[:wikidata_id].gsub('Q', '')
       )
     end
 
@@ -40,7 +41,8 @@ namespace :wikidata_import do
 
     platforms.each do |platform|
       Platform.create!(
-        name: platform[:name]
+        name: platform[:name],
+        wikidata_id: platform[:wikidata_id].gsub('Q', '')
       )
     end
 
@@ -62,7 +64,8 @@ namespace :wikidata_import do
 
     genres.each do |genre|
       Genre.create!(
-        name: genre[:name]
+        name: genre[:name],
+        wikidata_id: genre[:wikidata_id].gsub('Q', '')
       )
     end
 
@@ -84,7 +87,8 @@ namespace :wikidata_import do
 
     series.each do |s|
       Series.create!(
-        name: s[:name]
+        name: s[:name],
+        wikidata_id: s[:wikidata_id].gsub('Q', '')
       )
     end
 
@@ -106,7 +110,8 @@ namespace :wikidata_import do
 
     engines.each do |engine|
       Engine.create!(
-        name: engine[:name]
+        name: engine[:name],
+        wikidata_id: engine[:wikidata_id].gsub('Q', '')
       )
     end
 
