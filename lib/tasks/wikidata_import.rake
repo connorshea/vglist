@@ -3,7 +3,7 @@ namespace :wikidata_import do
   require 'wikidata_helper'
 
   desc "Import game developers and publishers from Wikidata"
-  task :companies do
+  task companies: :environment do
     puts "Importing game developers and publishers from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -15,10 +15,18 @@ namespace :wikidata_import do
     companies = wikidata_item_filter(rows: rows)
     companies.uniq! { |company| company&.dig(:wikidata_id) }
     puts "Found #{companies.length} companies."
+
+    companies.each do |company|
+      Company.create!(
+        name: company[:name]
+      )
+    end
+
+    puts "There are now #{Company.count} companies in the database."
   end
 
   desc "Import game platforms from Wikidata"
-  task :platforms do
+  task platforms: :environment do
     puts "Importing game platforms from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -29,10 +37,18 @@ namespace :wikidata_import do
     platforms = wikidata_item_filter(rows: rows, count_limit: 80)
     platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
     puts "Found #{platforms.length} platforms."
+
+    platforms.each do |platform|
+      Platform.create!(
+        name: platform[:name]
+      )
+    end
+
+    puts "There are now #{Platform.count} platforms in the database."
   end
 
   desc "Import game genres from Wikidata"
-  task :genres do
+  task genres: :environment do
     puts "Importing game genres from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -43,10 +59,18 @@ namespace :wikidata_import do
     genres = wikidata_item_filter(rows: rows, count_limit: 50)
     genres.uniq! { |genre| genre&.dig(:wikidata_id) }
     puts "Found #{genres.length} genres."
+
+    genres.each do |genre|
+      Genre.create!(
+        name: genre[:name]
+      )
+    end
+
+    puts "There are now #{Genre.count} genres in the database."
   end
 
   desc "Import game series from Wikidata"
-  task :series do
+  task series: :environment do
     puts "Importing game series' from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
@@ -57,6 +81,14 @@ namespace :wikidata_import do
     series = wikidata_item_filter(rows: rows, count_limit: 1)
     series.uniq! { |s| s&.dig(:wikidata_id) }
     puts "Found #{series.length} series'."
+
+    series.each do |s|
+      Series.create!(
+        name: s[:name]
+      )
+    end
+
+    puts "There are now #{Series.count} series in the database."
   end
 
   def wikidata_item_filter(rows:, count_limit: 0)
