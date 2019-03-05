@@ -39,10 +39,10 @@ namespace :wikidata_import do
 
       puts wikidata_label.inspect
 
-      name = wikidata_label.dig(wikidata_id, 'labels', 'en', 'value')
-      next if name.nil?
+      label = wikidata_label.dig(wikidata_id, 'labels', 'en', 'value')
+      next if label.nil?
 
-      game_hash = { wikidata_id: wikidata_id.delete('Q'), name: name }
+      game_hash = { wikidata_id: wikidata_id.delete('Q'), name: label }
 
       # Create attributes for each property.
       properties.keys.each do |key|
@@ -73,6 +73,7 @@ namespace :wikidata_import do
       keys = []
       game_hash.keys.each do |key|
         next if key == :name || key == :wikidata_id || game_hash[key].nil? || game_hash[key] == []
+
         keys << key
       end
 
@@ -148,10 +149,11 @@ namespace :wikidata_import do
 
       if keys.include?(:series)
         puts 'Adding series.'
-        puts "game_hash[:series]: #{game_hash[:series].inspect}"
 
         series = Series.find_by(wikidata_id: game_hash[:series].first)
         puts series.inspect
+        next if series.nil?
+
         Game.update(
           game.id,
           { series_id: series.id }
