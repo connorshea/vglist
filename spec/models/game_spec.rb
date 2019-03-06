@@ -12,6 +12,39 @@ RSpec.describe Game, type: :model do
 
     it { should validate_length_of(:name).is_at_most(120) }
     it { should validate_length_of(:description).is_at_most(1000) }
+
+    it { should validate_uniqueness_of(:wikidata_id) }
+    it 'validates numericality' do
+      expect(game).to validate_numericality_of(:wikidata_id)
+        .only_integer
+        .allow_nil
+        .is_greater_than(0)
+    end
+
+    it { should validate_uniqueness_of(:pcgamingwiki_id) }
+    it { should validate_length_of(:pcgamingwiki_id).is_at_most(300) }
+
+    it 'allows valid PCGamingWiki IDs' do
+      expect(game).to allow_values(
+        'Battlefront',
+        'Battlefront_II',
+        'Battlefront_II_(2018)',
+        'Star_Wars:_Knights_of_the_Old_Republic_II_-_The_Sith_Lords',
+        '.hack//G.U._Last_Recode'
+      ).for(:pcgamingwiki_id)
+    end
+
+    it 'disallows invalid PCGamingWiki IDs' do
+      expect(game).not_to allow_values(
+        'Invalid[Name',
+        'Invalid]Name',
+        'Invalid\Name',
+        'Invalid Name',
+        'Invalid<Name',
+        'Invalid>Name',
+        'Invalid#Name'
+      ).for(:pcgamingwiki_id)
+    end
   end
 
   describe "Associations" do

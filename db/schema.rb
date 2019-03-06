@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_05_022847) do
+ActiveRecord::Schema.define(version: 2019_03_06_015104) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 2019_03_05_022847) do
     t.datetime "updated_at", null: false
     t.bigint "series_id"
     t.bigint "wikidata_id"
+    t.text "pcgamingwiki_id"
     t.index ["series_id"], name: "index_games_on_series_id"
   end
 

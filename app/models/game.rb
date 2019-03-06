@@ -44,6 +44,15 @@ class Game < ApplicationRecord
       greater_than: 0
     }
 
+  validates :pcgamingwiki_id,
+    uniqueness: true,
+    allow_nil: true,
+    # Validate the format with a simple regex that checks to make sure there
+    # aren't any illegal characters (e.g. <, >, [, ], #, |, etc.)
+    format: /\A[^<>\[\]#\s\\|]+\z/,
+    # Allow up to 300 characters just in case there's some game with an incredibly long name.
+    length: { maximum: 300 }
+
   pg_search_scope :search,
     against: [:name],
     using: {
