@@ -967,7 +967,7 @@ Style/NestedTernaryOperator:
   Enabled: true
 
 Style/Next:
-  Enabled: true
+  Enabled: false
 
 Style/NilComparison:
   Enabled: true
