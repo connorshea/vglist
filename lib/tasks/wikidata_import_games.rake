@@ -37,8 +37,6 @@ namespace :wikidata_import do
         languages: 'en'
       )
 
-      puts wikidata_label.inspect
-
       label = wikidata_label.dig(wikidata_id, 'labels', 'en', 'value')
       next if label.nil?
 
@@ -61,14 +59,10 @@ namespace :wikidata_import do
         game_hash[name].uniq!
       end
 
-      puts game_hash.inspect
-
       game = Game.create!(
         name: game_hash[:name],
         wikidata_id: game_hash[:wikidata_id]
       )
-
-      puts game.inspect
 
       keys = []
       game_hash.keys.each do |key|
@@ -81,7 +75,7 @@ namespace :wikidata_import do
         puts 'Adding developers.'
         game_hash[:developers].each do |developer_id|
           company = Company.find_by(wikidata_id: developer_id)
-          puts company.inspect
+          puts company.inspect if ENV['DEBUG']
           next if company.nil?
 
           GameDeveloper.create!(
@@ -95,7 +89,7 @@ namespace :wikidata_import do
         puts 'Adding publishers.'
         game_hash[:publishers].each do |publisher_id|
           company = Company.find_by(wikidata_id: publisher_id)
-          puts company.inspect
+          puts company.inspect if ENV['DEBUG']
           next if company.nil?
 
           GamePublisher.create!(
@@ -109,7 +103,7 @@ namespace :wikidata_import do
         puts 'Adding platforms.'
         game_hash[:platforms].each do |platform_id|
           platform = Platform.find_by(wikidata_id: platform_id)
-          puts platform.inspect
+          puts platform.inspect if ENV['DEBUG']
           next if platform.nil?
 
           GamePlatform.create!(
@@ -123,7 +117,7 @@ namespace :wikidata_import do
         puts 'Adding engines.'
         game_hash[:engines].each do |engine_id|
           engine = Engine.find_by(wikidata_id: engine_id)
-          puts engine.inspect
+          puts engine.inspect if ENV['DEBUG']
           next if engine.nil?
 
           GameEngine.create!(
@@ -137,7 +131,7 @@ namespace :wikidata_import do
         puts 'Adding genres.'
         game_hash[:genres].each do |genre_id|
           genre = Genre.find_by(wikidata_id: genre_id)
-          puts genre.inspect
+          puts genre.inspect if ENV['DEBUG']
           next if genre.nil?
 
           GameGenre.create!(
@@ -151,7 +145,7 @@ namespace :wikidata_import do
         puts 'Adding series.'
 
         series = Series.find_by(wikidata_id: game_hash[:series].first)
-        puts series.inspect
+        puts series.inspect if ENV['DEBUG']
         next if series.nil?
 
         Game.update(
