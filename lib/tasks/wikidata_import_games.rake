@@ -162,7 +162,7 @@ namespace :wikidata_import do
     sparql = <<-SPARQL
       SELECT ?item WHERE {
         ?item wdt:P31 wd:Q7889. # Instances of video games.
-      } LIMIT 500
+      }
     SPARQL
 
     return sparql
