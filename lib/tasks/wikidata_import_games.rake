@@ -59,10 +59,16 @@ namespace :wikidata_import do
         game_hash[name].uniq!
       end
 
-      game = Game.create!(
+      pcgamingwiki_id = wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value')
+
+      hash = {
         name: game_hash[:name],
         wikidata_id: game_hash[:wikidata_id]
-      )
+      }
+
+      hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
+
+      game = Game.create!(hash)
 
       keys = []
       game_hash.keys.each do |key|

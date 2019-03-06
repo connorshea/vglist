@@ -18,19 +18,27 @@ RSpec.describe User, type: :model do
     it { should validate_uniqueness_of(:username) }
 
     # Make sure a bunch of normal usernames work fine
-    it { should allow_value("janedoe").for(:username) }
-    it { should allow_value("john_doe").for(:username) }
-    it { should allow_value("jane.doe").for(:username) }
-    it { should allow_value("janedoe400").for(:username) }
-    it { should allow_value("JohnDoe").for(:username) }
+    it 'allows valid usernames' do
+      expect(user).to allow_values(
+        "janedoe",
+        "john_doe",
+        "jane.doe",
+        "janedoe400",
+        "JohnDoe"
+      ).for(:username)
+    end
 
     # Disallow weird uses of underscores and periods
-    it { should_not allow_value("double__underscore").for(:username) }
-    it { should_not allow_value("_underscore").for(:username) }
-    it { should_not allow_value("underscore_").for(:username) }
-    it { should_not allow_value("double..period").for(:username) }
-    it { should_not allow_value("period.").for(:username) }
-    it { should_not allow_value(".period").for(:username) }
+    it 'disallows invalid usernames' do
+      expect(user).not_to allow_values(
+        "double__underscore",
+        "_underscore",
+        "underscore_",
+        "double..period",
+        "period.",
+        ".period"
+      ).for(:username)
+    end
 
     # Validate uniqueness of email
     it do

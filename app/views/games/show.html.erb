@@ -104,13 +104,16 @@
     </ul>
   <% end %>
 
-  <% unless @game.wikidata_id.blank? %>
+  <% unless @game.wikidata_id.blank? && @game.pcgamingwiki_id.blank? %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
-      <li><%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{@game.wikidata_id}"%>
+      <% unless @game.wikidata_id.blank? %>
+        <li><%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{@game.wikidata_id}" %>
+      <% end %>
+      <% unless @game.pcgamingwiki_id.blank? %>
+        <li><%= link_to 'PCGamingWiki', "https://pcgamingwiki.com/wiki/#{@game.pcgamingwiki_id}" %>
+      <% end %>
     </ul>
   <% end %>
-
-  <%# <p class="infobox-header has-text-weight-semibold">External links %>
 </div>
 
