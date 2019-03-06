@@ -104,6 +104,13 @@
     </ul>
   <% end %>
 
+  <% unless @game.wikidata_id.blank? %>
+    <p class="infobox-header has-text-weight-semibold">External links
+    <ul>
+      <li><%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{@game.wikidata_id}"%>
+    </ul>
+  <% end %>
+
   <%# <p class="infobox-header has-text-weight-semibold">External links %>
 </div>
 
