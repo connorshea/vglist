@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.5
+### Added
+- Add a Rake task to import games from Wikidata. ([#200])
+
 ## v2019.3.4
 ### Added
 - Add Rake tasks to import companies, engines, genres, platforms, and series' from Wikidata. ([#198])
@@ -182,3 +186,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#186]: https://github.com/connorshea/ContinueFromCheckpoint/pull/186
 [#198]: https://github.com/connorshea/ContinueFromCheckpoint/pull/198
 [#199]: https://github.com/connorshea/ContinueFromCheckpoint/pull/199
+[#200]: https://github.com/connorshea/ContinueFromCheckpoint/pull/200
