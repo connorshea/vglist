@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2019.3.5
 ### Added
 - Add a Rake task to import games from Wikidata. ([#200])
+- Add PCGamingWiki IDs to games and import them with the Wikidata Importer. ([#202])
 
 ## v2019.3.4
 ### Added
@@ -187,3 +188,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#198]: https://github.com/connorshea/ContinueFromCheckpoint/pull/198
 [#199]: https://github.com/connorshea/ContinueFromCheckpoint/pull/199
 [#200]: https://github.com/connorshea/ContinueFromCheckpoint/pull/200
+[#202]: https://github.com/connorshea/ContinueFromCheckpoint/pull/202
