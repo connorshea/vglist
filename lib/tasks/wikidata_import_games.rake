@@ -1,4 +1,4 @@
-namespace :wikidata_import do
+namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'
 
