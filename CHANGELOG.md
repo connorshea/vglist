@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.7
+### Added
+- Add a Rake task to import game covers from PCGamingWiki. ([#206])
+
 ## v2019.3.5
 ### Added
 - Add a Rake task to import games from Wikidata. ([#200])
@@ -189,3 +193,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#199]: https://github.com/connorshea/ContinueFromCheckpoint/pull/199
 [#200]: https://github.com/connorshea/ContinueFromCheckpoint/pull/200
 [#202]: https://github.com/connorshea/ContinueFromCheckpoint/pull/202
+[#206]: https://github.com/connorshea/ContinueFromCheckpoint/pull/206
