@@ -53,6 +53,10 @@ class Game < ApplicationRecord
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 
+  # Include games in global search.
+  multisearchable against: [:name]
+
+  # Search scope specific to games.
   pg_search_scope :search,
     against: [:name],
     using: {

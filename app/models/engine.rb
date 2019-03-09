@@ -17,6 +17,10 @@ class Engine < ApplicationRecord
       greater_than: 0
     }
 
+  # Include engines in global search.
+  multisearchable against: [:name]
+
+  # Search scope specific to engines.
   pg_search_scope :search,
     against: [:name],
     using: {

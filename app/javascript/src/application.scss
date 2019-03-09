@@ -18,7 +18,8 @@ nav.navbar {
 
   // Show underlines on-hover on desktop.
   @include from($desktop) {
-    .navbar-item:not(.has-dropdown) {
+    // Don't apply the borders to items with dropdowns or fields (the search bar).
+    .navbar-item:not(.has-dropdown), .navbar-item:not(.field) {
       // This prevents the navbar items from moving up and down when hovered.
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;

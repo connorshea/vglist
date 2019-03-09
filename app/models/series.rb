@@ -16,6 +16,10 @@ class Series < ApplicationRecord
       greater_than: 0
     }
 
+  # Include series in global search.
+  multisearchable against: [:name]
+
+  # Search scope specific to series.
   pg_search_scope :search,
     against: [:name],
     using: {
