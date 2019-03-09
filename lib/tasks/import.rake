@@ -11,6 +11,9 @@ namespace 'import:pcgamingwiki' do
 
     puts "Found #{games.count} games with a PCGamingWiki ID and no cover."
 
+    cover_not_found_count = 0
+    cover_added_count = 0
+
     games.each do |game|
       puts
       puts "Adding cover for #{game[:name]}."
@@ -36,15 +39,21 @@ namespace 'import:pcgamingwiki' do
       json = JSON.parse(res.body)
 
       json = json.dig('query', 'results')
-      puts "Not finding any covers, skipping." if json.nil? || json.blank?
-      next if json.nil? || json.blank?
+      if json.nil? || json.blank?
+        puts "Not finding any covers, skipping."
+        cover_not_found_count += 1
+        next
+      end
 
       # We don't know the key for the game name, so we just use the first key in the hash (generally there's only one key so this should be fine)
       cover_url = json.dig(json.keys.first, 'printouts', 'Cover').first
 
-      puts "Not finding any covers, skipping." if cover_url.nil?
-      # Exit early if the game has no cover.
-      next if cover_url.nil?
+      if cover_url.nil?
+        puts "Not finding any covers, skipping."
+        cover_not_found_count += 1
+        # Exit early if the game has no cover.
+        next
+      end
 
       # The cover URL is returned from the API like //pcgamingwiki.com/images/whatever.png,
       # so we need to turn it into a valid URL.
@@ -55,11 +64,13 @@ namespace 'import:pcgamingwiki' do
       # Copy the image data to a file with ActiveStorage.
       game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
 
+      cover_added_count += 1
       puts "Cover added to #{game[:name]}."
     end
 
     games_with_covers = Game.joins(:cover_attachment)
     puts
     puts "Done. #{games_with_covers.count} games now have covers."
+    puts "#{cover_added_count} covers added and #{cover_not_found_count} covers not found."
   end
 end
