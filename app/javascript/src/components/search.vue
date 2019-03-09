@@ -11,9 +11,9 @@
 
     <div class="navbar-dropdown">
       <a
-        v-for="result in this.searchResults"
+        v-for="result in this.betterSearchResults"
         :key="result.id"
-        :href="'/games/' + result.searchable_id"
+        :href="result.url"
         class="navbar-item">
           {{ result.content }}
       </a>
@@ -47,6 +47,21 @@ export default {
     // Determine if the dropdown is active so we can display it when it is.
     dropdownActive: function () {
       return this.searchResults.length > 0;
+    },
+    betterSearchResults: function() {
+      let plurals = {
+        'Company': 'companies',
+        'Engine': 'engines',
+        'Game': 'games',
+        'Genre': 'genres',
+        'Platform': 'platforms',
+        'Series': 'series'
+      }
+
+      return this.searchResults.map(function(result) {
+        result.url = `/${plurals[result.searchable_type]}/${result.searchable_id}`;
+        return result;
+      });
     }
   }
 }
