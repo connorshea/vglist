@@ -29,13 +29,21 @@ nav.navbar {
       }
     }
 
-    .navbar-dropdown .navbar-item {
-      transition: border-bottom none;
-      transition: background-color 200ms;
-      border-bottom: 0;
-
-      &:hover {
+    .navbar-dropdown {
+      .navbar-item {
+        transition: border-bottom 0ms;
+        transition: background-color 200ms;
+        transition: color 0ms;
         border-bottom: 0;
+        color: #333;
+
+        &:hover {
+          border-bottom: 0;
+        }
+      }
+
+      a.navbar-item:hover {
+        color: #fff;
       }
     }
   }
@@ -49,6 +57,11 @@ nav.navbar {
     max-width: 1.8rem;
     object-fit: scale-down;
     border: 1px solid #fff;
+  }
+
+  .navbar-dropdown-header {
+    font-size: 0.8rem;
+    font-weight: 700;
   }
 }
 

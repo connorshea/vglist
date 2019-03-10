@@ -15,7 +15,7 @@
       </p>
       <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
         <hr v-if="index > 0" class="navbar-divider">
-        <p class="navbar-item">
+        <p class="navbar-item navbar-dropdown-header">
           {{ capitalizedPlurals[type] }}
         </p>
         <a
