@@ -17,6 +17,14 @@
             @input="selectGamePurchase"
           ></single-select>
 
+          <number-field
+            :form-class="formData.class"
+            :attribute="formData.score.attribute"
+            :label="formData.score.label"
+            :required="false"
+            v-model="gamePurchase.score"
+          ></number-field>
+
           <text-field
             :form-class="formData.class"
             :attribute="formData.comment.attribute"
@@ -45,6 +53,7 @@
 
 <script>
 import TextField from './text-field.vue';
+import NumberField from './number-field.vue';
 import SingleSelect from './single-select.vue';
 import Rails from 'rails-ujs';
 
@@ -52,6 +61,7 @@ export default {
   name: 'game-modal',
   components: {
     TextField,
+    NumberField,
     SingleSelect
   },
   props: {
@@ -60,8 +70,9 @@ export default {
       required: false
     },
     score: {
-      type: Number,
-      required: false
+      type: [Number, String],
+      required: false,
+      default: ''
     },
     comment: {
       type: String,
@@ -102,6 +113,10 @@ export default {
           label: 'Comments',
           attribute: 'comment'
         },
+        score: {
+          label: 'Score',
+          attribute: 'score'
+        },
         game: {
           label: 'Game'
         }
@@ -122,7 +137,7 @@ export default {
       if (this.gamePurchase.comment) {
         submittableData['game_purchase']['comment'] = this.gamePurchase.comment;
       }
-      if (this.gamePurchase.score) {
+      if (this.gamePurchase.score != '') {
         submittableData['game_purchase']['score'] = this.gamePurchase.score;
       }
 
@@ -137,12 +152,10 @@ export default {
         credentials: 'same-origin'
       }).then((response) => {
         if (response.ok) {
-          console.log(response);
+          this.$emit('create');
+          this.$emit('closeAndRefresh');
         }
       })
-
-      this.$emit('create');
-      this.$emit('closeAndRefresh');
     },
     selectGamePurchase() {
       this.gamePurchaseSelected = true;
