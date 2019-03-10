@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2019.3.10
 ### Added
 - Add global search to the navbar. Can be used to search for games, companies, genres, engines, series', and platforms. ([#210])
+- Add proper game library management to the user page, including adding, editing, and removing games. ([#213])
 
 ## v2019.3.9
 ### Added
@@ -204,3 +205,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#206]: https://github.com/connorshea/ContinueFromCheckpoint/pull/206
 [#207]: https://github.com/connorshea/ContinueFromCheckpoint/pull/207
 [#210]: https://github.com/connorshea/ContinueFromCheckpoint/pull/210
+[#213]: https://github.com/connorshea/ContinueFromCheckpoint/pull/213

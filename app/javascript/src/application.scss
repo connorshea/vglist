@@ -110,7 +110,7 @@ nav.navbar {
   font-weight: bold;
 }
 
-.game-hero-area {
+.hero-area {
   display: flex;
   flex-flow: column wrap;
 
@@ -121,16 +121,18 @@ nav.navbar {
       padding-left: 15px;
     }
   }
-}
 
-.game-cover {
-  height: auto;
-  max-height: 360px;
-  width: 240px;
+  .hero-image {
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+  }
 
-  img {
+  .game-cover {
     height: auto;
-    max-width: 100%;
+    max-height: 360px;
+    width: 240px;
   }
 }
 
@@ -198,4 +200,12 @@ nav.navbar {
     list-style: initial;
     margin-left: 20px;
   }
+}
+
+.modal-card-body-allow-overflow {
+  overflow: initial;
+}
+
+.modal-card-allow-overflow {
+  overflow: initial;
 }
