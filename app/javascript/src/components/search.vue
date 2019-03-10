@@ -30,7 +30,15 @@ export default {
     return {
       searchUrl: '/search.json',
       query: '',
-      searchResults: []
+      searchResults: [],
+      plurals: {
+        'Company': 'companies',
+        'Engine': 'engines',
+        'Game': 'games',
+        'Genre': 'genres',
+        'Platform': 'platforms',
+        'Series': 'series'
+      }
     }
   },
   methods: {
@@ -53,17 +61,8 @@ export default {
       return this.query.length > 1;
     },
     betterSearchResults: function() {
-      let plurals = {
-        'Company': 'companies',
-        'Engine': 'engines',
-        'Game': 'games',
-        'Genre': 'genres',
-        'Platform': 'platforms',
-        'Series': 'series'
-      }
-
-      return this.searchResults.map(function(result) {
-        result.url = `/${plurals[result.searchable_type]}/${result.searchable_id}`;
+      return this.searchResults.map((result) => {
+        result.url = `/${this.plurals[result.searchable_type]}/${result.searchable_id}`;
         return result;
       });
     }
