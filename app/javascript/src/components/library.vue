@@ -21,7 +21,7 @@
       v-if="isEditable"
       @click="activateModal({})"
       class="button mt-10">
-      Add a game to your library.
+      Add a game to your library
     </button>
 
     <game-modal
