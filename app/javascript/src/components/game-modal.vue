@@ -54,9 +54,9 @@
 </template>
 
 <script>
-import TextField from './text-field.vue';
-import NumberField from './number-field.vue';
-import SingleSelect from './single-select.vue';
+import TextField from './fields/text-field.vue';
+import NumberField from './fields/number-field.vue';
+import SingleSelect from './fields/single-select.vue';
 import Rails from 'rails-ujs';
 
 export default {

@@ -81,11 +81,11 @@
 </template>
 
 <script>
-import TextArea from './text-area.vue';
-import TextField from './text-field.vue';
-import SingleSelect from './single-select.vue';
-import MultiSelect from './multi-select.vue';
-import FileSelect from './file-select.vue';
+import TextArea from './fields/text-area.vue';
+import TextField from './fields/text-field.vue';
+import SingleSelect from './fields/single-select.vue';
+import MultiSelect from './fields/multi-select.vue';
+import FileSelect from './fields/file-select.vue';
 import Rails from 'rails-ujs';
 import { DirectUpload } from 'activestorage';
 
