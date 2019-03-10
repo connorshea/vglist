@@ -9,7 +9,10 @@
         placeholder="Search">
     </p>
 
-    <div class="navbar-dropdown">
+    <div v-if="dropdownActive" class="navbar-dropdown">
+      <p class="navbar-item" v-if="this.searchResults.length == 0">
+        No results.
+      </p>
       <a
         v-for="result in this.betterSearchResults"
         :key="result.id"
@@ -32,7 +35,8 @@ export default {
   },
   methods: {
     onSearch() {
-      if (this.query.length > 2) {
+      // TODO: Debounce/throttle the search requests.
+      if (this.query.length > 1) {
         fetch(`${this.searchUrl}?query=${this.query}`)
           .then((response) => {
             return response.json();
@@ -46,7 +50,7 @@ export default {
   computed: {
     // Determine if the dropdown is active so we can display it when it is.
     dropdownActive: function () {
-      return this.searchResults.length > 0;
+      return this.query.length > 1;
     },
     betterSearchResults: function() {
       let plurals = {
