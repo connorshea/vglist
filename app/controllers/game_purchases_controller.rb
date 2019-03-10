@@ -48,7 +48,7 @@ class GamePurchasesController < ApplicationController
     params.require(:game_purchase).permit(
       :user_id,
       :game_id,
-      :comment,
+      :comments,
       :score
     )
   end

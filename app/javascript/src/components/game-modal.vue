@@ -27,12 +27,13 @@
 
           <text-field
             :form-class="formData.class"
-            :attribute="formData.comment.attribute"
-            :label="formData.comment.label"
+            :attribute="formData.comments.attribute"
+            :label="formData.comments.label"
             :required="false"
-            v-model="gamePurchase.comment"
+            v-model="gamePurchase.comments"
           ></text-field>
         </div>
+
         <div v-else>
           <single-select
             :label="formData.game.label"
@@ -42,6 +43,7 @@
             @input="selectGamePurchase"
           ></single-select>
         </div>
+
       </section>
       <footer class="modal-card-foot">
         <button @click="onSave" class="button is-success">Save changes</button>
@@ -74,7 +76,7 @@ export default {
       required: false,
       default: ''
     },
-    comment: {
+    comments: {
       type: String,
       required: false,
       default: ''
@@ -102,16 +104,16 @@ export default {
   data() {
     return {
       gamePurchase: {
-        comment: this.comment,
+        comments: this.comments,
         score: this.score,
         game: this.game,
         userId: this.userId
       },
       formData: {
         class: 'game_purchase',
-        comment: {
+        comments: {
           label: 'Comments',
-          attribute: 'comment'
+          attribute: 'comments'
         },
         score: {
           label: 'Score',
@@ -134,8 +136,8 @@ export default {
         user_id: this.gamePurchase.userId
       }};
 
-      if (this.gamePurchase.comment) {
-        submittableData['game_purchase']['comment'] = this.gamePurchase.comment;
+      if (this.gamePurchase.comments) {
+        submittableData['game_purchase']['comments'] = this.gamePurchase.comments;
       }
       if (this.gamePurchase.score != '') {
         submittableData['game_purchase']['score'] = this.gamePurchase.score;
