@@ -41,5 +41,6 @@
   <library
     v-bind:game-purchases-url="<%= game_purchases_path(user_id: @user.id, format: :json).to_json %>"
     v-bind:is-editable="<%= policy(@user).add_game_to_library? ? true : false %>"
+    v-bind:user-id="<%= @user.id %>"
   ></library>
 </div>

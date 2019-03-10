@@ -25,10 +25,14 @@
     </button>
 
     <game-modal
-      v-if="isEditable"
+      v-if="isModalActive"
       :isActive="isModalActive"
-      :gamePurchase="currentGame"
+      :create="doesGamePurchaseExist"
+      :userId="userId"
+      v-bind="currentGame"
       v-on:close="deactivateModal"
+      v-on:closeAndRefresh="closeAndRefresh"
+      v-on:create="refreshLibrary"
     ></game-modal>
   </div>
 </template>
@@ -51,13 +55,18 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    userId: {
+      type: Number,
+      required: true
     }
   },
   data: function() {
     return {
       purchasedGames: [],
       isModalActive: false,
-      currentGame: {}
+      currentGame: {},
+      doesGamePurchaseExist: false
     }
   },
   created: function() {
@@ -94,9 +103,11 @@ export default {
       });
     },
     activateModal(game = {}) {
+      if (!this.isEditable) { return; }
       let html = document.querySelector('html');
       html.classList.add('is-clipped');
 
+      this.doesGamePurchaseExist = Object.entries(game).length > 0 ? false : true;
       this.currentGame = game;
       this.isModalActive = true;
     },
@@ -105,6 +116,13 @@ export default {
       html.classList.remove('is-clipped');
 
       this.isModalActive = false;
+    },
+    closeAndRefresh() {
+      this.deactivateModal();
+      // Give it some time for the change to persist on the backend.
+      setTimeout(() => {
+        this.refreshLibrary();
+      }, 750);
     }
   },
   computed: {
