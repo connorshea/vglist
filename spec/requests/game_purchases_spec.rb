@@ -20,7 +20,7 @@ RSpec.describe "GamePurchases", type: :request do
   describe "POST game_purchases_path" do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
-    let(:game_purchase_attributes) { attributes_for(:game_purchase_with_comment_and_score, user: user) }
+    let(:game_purchase_attributes) { attributes_for(:game_purchase_with_comments_and_score, user: user) }
 
     it "creates a new game_purchase" do
       sign_in(user)

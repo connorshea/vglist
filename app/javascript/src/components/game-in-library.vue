@@ -6,7 +6,7 @@
       </a>
     </div>
     <div class="column game-score">{{ gameInLibrary.score }}</div>
-    <div class="column game-comment">{{ gameInLibrary.comment }}</div>
+    <div class="column game-comments">{{ gameInLibrary.comments }}</div>
     <div v-if="isEditable" class="column game-actions">
       <a @click="onEdit">Edit</a>
       <a @click="onDelete">Remove</a>

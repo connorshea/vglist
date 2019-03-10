@@ -2,7 +2,7 @@ class GamePurchase < ApplicationRecord
   belongs_to :game
   belongs_to :user
 
-  validates :comment,
+  validates :comments,
     length: { maximum: 500 }
 
   validates :game_id,

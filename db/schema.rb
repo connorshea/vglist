@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_06_015104) do
+ActiveRecord::Schema.define(version: 2019_03_10_233016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 2019_03_06_015104) do
   create_table "game_purchases", force: :cascade do |t|
     t.bigint "game_id", null: false
     t.bigint "user_id", null: false
-    t.text "comment", default: "", null: false
+    t.text "comments", default: "", null: false
     t.date "purchase_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
