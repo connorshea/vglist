@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.10
+### Added
+- Add global search to the navbar. Can be used to search for games, companies, genres, engines, series', and platforms. ([#210])
+
+## v2019.3.9
+### Added
+- Add request and policy tests for game purchases. ([#207])
+
 ## v2019.3.7
 ### Added
 - Add a Rake task to import game covers from PCGamingWiki. ([#206])
@@ -194,3 +202,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#200]: https://github.com/connorshea/ContinueFromCheckpoint/pull/200
 [#202]: https://github.com/connorshea/ContinueFromCheckpoint/pull/202
 [#206]: https://github.com/connorshea/ContinueFromCheckpoint/pull/206
+[#207]: https://github.com/connorshea/ContinueFromCheckpoint/pull/207
+[#210]: https://github.com/connorshea/ContinueFromCheckpoint/pull/210
