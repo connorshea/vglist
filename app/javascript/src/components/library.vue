@@ -12,22 +12,35 @@
       :gameInLibrary="gameInLibrary"
       :isEditable="isEditable"
       v-on:delete="refreshLibrary"
+      v-on:edit="activateModal"
     ></game-in-library>
 
     <p v-if="libraryEmpty">This library is empty.</p>
 
-    <button v-if="isEditable" class="button mt-10">
+    <button
+      v-if="isEditable"
+      @click="activateModal({})"
+      class="button mt-10">
       Add a game to your library.
     </button>
+
+    <game-modal
+      v-if="isEditable"
+      :isActive="isModalActive"
+      :gamePurchase="currentGame"
+      v-on:close="deactivateModal"
+    ></game-modal>
   </div>
 </template>
 
 <script>
 import GameInLibrary from './game-in-library.vue';
+import GameModal from './game-modal.vue';
 
 export default {
   components: {
-    GameInLibrary
+    GameInLibrary,
+    GameModal
   },
   props: {
     gamePurchasesUrl: {
@@ -42,7 +55,9 @@ export default {
   },
   data: function() {
     return {
-      purchasedGames: []
+      purchasedGames: [],
+      isModalActive: false,
+      currentGame: {}
     }
   },
   created: function() {
@@ -77,6 +92,19 @@ export default {
       }).then((purchasedGames) => {
         this.purchasedGames = purchasedGames;
       });
+    },
+    activateModal(game = {}) {
+      let html = document.querySelector('html');
+      html.classList.add('is-clipped');
+
+      this.currentGame = game;
+      this.isModalActive = true;
+    },
+    deactivateModal() {
+      let html = document.querySelector('html');
+      html.classList.remove('is-clipped');
+
+      this.isModalActive = false;
     }
   },
   computed: {

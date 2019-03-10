@@ -8,6 +8,7 @@
     <div class="column game-score">{{ gameInLibrary.score }}</div>
     <div class="column game-comment">{{ gameInLibrary.comment }}</div>
     <div v-if="isEditable" class="column game-actions">
+      <a @click="onEdit">Edit</a>
       <a @click="onDelete">Remove</a>
     </div>
   </div>
@@ -29,6 +30,9 @@ export default {
     }
   },
   methods: {
+    onEdit() {
+      this.$emit('edit', this.gameInLibrary);
+    },
     onDelete() {
       // Post a delete request to the game purchase endpoint to delete the game.
       fetch(this.gameInLibrary.url, {
