@@ -10,16 +10,22 @@
     </p>
 
     <div v-if="dropdownActive" class="navbar-dropdown">
-      <p class="navbar-item" v-if="this.searchResults.length == 0">
+      <p class="navbar-item" v-if="hasSearchResults">
         No results.
       </p>
-      <a
-        v-for="result in this.betterSearchResults"
-        :key="result.id"
-        :href="result.url"
-        class="navbar-item">
-          {{ result.content }}
-      </a>
+      <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
+        <hr v-if="index > 0" class="navbar-divider">
+        <p class="navbar-item">
+          {{ capitalizedPlurals[type] }}
+        </p>
+        <a
+          v-for="result in betterSearchResults[type]"
+          :key="result.id"
+          :href="result.url"
+          class="navbar-item">
+            {{ result.content }}
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -30,14 +36,14 @@ export default {
     return {
       searchUrl: '/search.json',
       query: '',
-      searchResults: [],
+      searchResults: {},
       plurals: {
-        'Company': 'companies',
-        'Engine': 'engines',
         'Game': 'games',
-        'Genre': 'genres',
+        'Series': 'series',
+        'Company': 'companies',
         'Platform': 'platforms',
-        'Series': 'series'
+        'Engine': 'engines',
+        'Genre': 'genres'
       }
     }
   },
@@ -57,16 +63,37 @@ export default {
   },
   computed: {
     // Determine if the dropdown is active so we can display it when it is.
-    dropdownActive: function () {
+    dropdownActive: function() {
       return this.query.length > 1;
     },
-    betterSearchResults: function() {
-      return this.searchResults.map((result) => {
-        result.url = `/${this.plurals[result.searchable_type]}/${result.searchable_id}`;
-        return result;
+    hasSearchResults: function() {
+      return Object.values(this.searchResults).flat().length === 0;
+    },
+    // Do a stupid hack to capitalize the first letter of each plural value,
+    // e.g. "Games", "Companies", etc.
+    capitalizedPlurals: function() {
+      let capitalizedPluralEntries = Object.entries(this.plurals).map(type => {
+        type[1] = type[1].charAt(0).toUpperCase() + type[1].slice(1);
+        return type;
       });
+
+      return Object.fromEntries(capitalizedPluralEntries);
+    },
+    betterSearchResults: function() {
+      let betterSearchResults = this.searchResults;
+      Object.keys(betterSearchResults).forEach(key => {
+        if (betterSearchResults[key].length == 0) {
+          delete betterSearchResults[key];
+          return true;
+        }
+        betterSearchResults[key].map(result => {
+          result.url = `/${this.plurals[result.searchable_type]}/${result.searchable_id}`;
+          return result;
+        });
+      });
+
+      return betterSearchResults;
     }
   }
 }
 </script>
-
