@@ -1,0 +1,99 @@
+<template>
+  <div class="navbar-item has-dropdown field mt-10" v-bind:class="{ 'is-active': dropdownActive }">
+    <p class="control">
+      <input
+        v-model="query"
+        @input="onSearch"
+        class="input"
+        type="search"
+        placeholder="Search">
+    </p>
+
+    <div v-if="dropdownActive" class="navbar-dropdown">
+      <p class="navbar-item" v-if="hasSearchResults">
+        No results.
+      </p>
+      <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
+        <hr v-if="index > 0" class="navbar-divider">
+        <p class="navbar-item navbar-dropdown-header">
+          {{ capitalizedPlurals[type] }}
+        </p>
+        <a
+          v-for="result in betterSearchResults[type]"
+          :key="result.id"
+          :href="result.url"
+          class="navbar-item">
+            {{ result.content }}
+        </a>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data: function() {
+    return {
+      searchUrl: '/search.json',
+      query: '',
+      searchResults: {},
+      plurals: {
+        'Game': 'games',
+        'Series': 'series',
+        'Company': 'companies',
+        'Platform': 'platforms',
+        'Engine': 'engines',
+        'Genre': 'genres'
+      }
+    }
+  },
+  methods: {
+    onSearch() {
+      // TODO: Debounce/throttle the search requests.
+      if (this.query.length > 1) {
+        fetch(`${this.searchUrl}?query=${this.query}`)
+          .then((response) => {
+            return response.json();
+          })
+          .then((searchResults) => {
+            this.searchResults = searchResults;
+          });
+      }
+    }
+  },
+  computed: {
+    // Determine if the dropdown is active so we can display it when it is.
+    dropdownActive: function() {
+      return this.query.length > 1;
+    },
+    hasSearchResults: function() {
+      return Object.values(this.searchResults).flat().length === 0;
+    },
+    // Do a stupid hack to capitalize the first letter of each plural value,
+    // e.g. "Games", "Companies", etc.
+    capitalizedPlurals: function() {
+      let capitalizedPluralEntries = Object.entries(this.plurals).map(type => {
+        type[1] = type[1].charAt(0).toUpperCase() + type[1].slice(1);
+        return type;
+      });
+
+      return Object.fromEntries(capitalizedPluralEntries);
+    },
+    betterSearchResults: function() {
+      let betterSearchResults = this.searchResults;
+      Object.keys(betterSearchResults).forEach(key => {
+        if (betterSearchResults[key].length == 0) {
+          delete betterSearchResults[key];
+          return true;
+        }
+        betterSearchResults[key].map(result => {
+          result.url = `/${this.plurals[result.searchable_type]}/${result.searchable_id}`;
+          return result;
+        });
+      });
+
+      return betterSearchResults;
+    }
+  }
+}
+</script>

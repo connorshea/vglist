@@ -18,7 +18,8 @@ nav.navbar {
 
   // Show underlines on-hover on desktop.
   @include from($desktop) {
-    .navbar-item:not(.has-dropdown) {
+    // Don't apply the borders to items with dropdowns or fields (the search bar).
+    .navbar-item:not(.has-dropdown), .navbar-item:not(.field) {
       // This prevents the navbar items from moving up and down when hovered.
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;
@@ -28,13 +29,21 @@ nav.navbar {
       }
     }
 
-    .navbar-dropdown .navbar-item {
-      transition: border-bottom none;
-      transition: background-color 200ms;
-      border-bottom: 0;
-
-      &:hover {
+    .navbar-dropdown {
+      .navbar-item {
+        transition: border-bottom 0ms;
+        transition: background-color 200ms;
+        transition: color 0ms;
         border-bottom: 0;
+        color: #333;
+
+        &:hover {
+          border-bottom: 0;
+        }
+      }
+
+      a.navbar-item:hover {
+        color: #fff;
       }
     }
   }
@@ -48,6 +57,11 @@ nav.navbar {
     max-width: 1.8rem;
     object-fit: scale-down;
     border: 1px solid #fff;
+  }
+
+  .navbar-dropdown-header {
+    font-size: 0.8rem;
+    font-weight: 700;
   }
 }
 

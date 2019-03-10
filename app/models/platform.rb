@@ -20,6 +20,10 @@ class Platform < ApplicationRecord
       greater_than: 0
     }
 
+  # Include platforms in global search.
+  multisearchable against: [:name]
+
+  # Search scope specific to platforms.
   pg_search_scope :search,
     against: [:name],
     using: {

@@ -47,6 +47,10 @@ Rails.application.routes.draw do
     get :search, on: :collection
   end
 
+  namespace :search do
+    get :index, as: '/', path: '/'
+  end
+
   namespace :settings do
     get :profile, as: '/', path: '/'
     get :account

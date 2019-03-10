@@ -10,7 +10,9 @@
   </div>
 
   <div class="navbar-menu is-shadowless" id="navMenu">
-    <div class="navbar-start">
+    <div id="navbar-with-search" class="navbar-start">
+      <search></search>
+
       <%= link_to("Games", games_path, class: "navbar-item") %>
       <%= link_to("Users", users_path, class: "navbar-item") %>
       <%= link_to("Platforms", platforms_path, class: "navbar-item") %>

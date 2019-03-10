@@ -23,6 +23,10 @@ class Company < ApplicationRecord
       greater_than: 0
     }
 
+  # Include companies in global search.
+  multisearchable against: [:name]
+
+  # Search scope specific to companies.
   pg_search_scope :search,
     against: [:name],
     using: {
