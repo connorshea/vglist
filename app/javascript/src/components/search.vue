@@ -10,7 +10,7 @@
     </p>
 
     <div v-if="dropdownActive" class="navbar-dropdown">
-      <p class="navbar-item" v-if="hasSearchResults">
+      <p class="navbar-item" v-if="!hasSearchResults">
         No results.
       </p>
       <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
@@ -67,7 +67,7 @@ export default {
       return this.query.length > 1;
     },
     hasSearchResults: function() {
-      return Object.values(this.searchResults).flat().length === 0;
+      return Object.values(this.searchResults).flat().length != 0;
     },
     // Do a stupid hack to capitalize the first letter of each plural value,
     // e.g. "Games", "Companies", etc.

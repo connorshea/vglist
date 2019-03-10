@@ -1,5 +1,5 @@
 <template>
-  <a v-bind:href="gameLink">
+  <a v-bind:href="gameInLibrary.game_url">
     <div class="columns game-library-row">
       <div class="column game-name">{{ gameInLibrary.game.name }}</div>
       <div class="column game-score">{{ gameInLibrary.score }}</div>
@@ -15,11 +15,6 @@ export default {
     gameInLibrary: {
       type: Object,
       required: true
-    }
-  },
-  computed: {
-    gameLink() {
-      return `/games/${this.gameInLibrary.game.id}`;
     }
   }
 }
