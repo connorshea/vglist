@@ -41,10 +41,10 @@ update_configs:
     ignored_updates:
       - match:
           dependency_name: "webpack"
-          version_requirement: "4.x"
+          version_requirement: "5.x"
       - match:
           dependency_name: "webpack-dev-server"
-          version_requirement: "3.x"
+          version_requirement: "4.x"
 
   # Checks for Dockerfile updates weekly.
   # Dependabot will automatically detect any files with "Dockerfile" in the name.
