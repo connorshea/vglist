@@ -34,21 +34,23 @@ export default {
       this.$emit('edit', this.gameInLibrary);
     },
     onDelete() {
-      // Post a delete request to the game purchase endpoint to delete the game.
-      fetch(this.gameInLibrary.url, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-Token': Rails.csrfToken(),
-          'Accept': 'application/json'
-        },
-        credentials: 'same-origin'
-      }).then((response) => {
-        if (response.ok) {
-          // Emit a delete event to force the parent library component to
-          // refresh.
-          this.$emit('delete');
-        }
-      })
+      if (window.confirm(`Remove ${this.gameInLibrary.game.name} from your library?`)) {
+        // Post a delete request to the game purchase endpoint to delete the game.
+        fetch(this.gameInLibrary.url, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': Rails.csrfToken(),
+            'Accept': 'application/json'
+          },
+          credentials: 'same-origin'
+        }).then((response) => {
+          if (response.ok) {
+            // Emit a delete event to force the parent library component to
+            // refresh.
+            this.$emit('delete');
+          }
+        })
+      }
     }
   }
 }
