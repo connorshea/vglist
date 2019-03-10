@@ -1,19 +1,26 @@
 <% content_for :title, @user.username %>
 
-<%= user_avatar(@user.id, 150) %>
-<h1 class="title"><%= @user.username %></h1>
+<div class="hero-area">
+  <div class="hero-image user-avatar">
+    <%= user_avatar(@user.id, 150) %>
+  </div>
 
-<% if @user.admin? %>
-  <p><span class="tag is-primary has-text-weight-semibold">Admin</span>
-<% elsif @user.moderator? %>
-  <p><span class="tag is-primary has-text-weight-semibold">Moderator</span>
-<% end %>
+  <div class="text-block">
+    <h1 class="title"><%= @user.username %></h1>
 
-<% if !@user.bio.blank? %>
-  <p><%= @user.bio %>
-<% else %>
-  <p><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
-<% end %>
+    <% if !@user.bio.blank? %>
+      <h2 class="subtitle"><%= @user.bio %>
+    <% else %>
+      <h2 class="subtitle"><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
+    <% end %>
+
+    <% if @user.admin? %>
+      <p><span class="tag is-primary has-text-weight-semibold">Admin</span>
+    <% elsif @user.moderator? %>
+      <p><span class="tag is-primary has-text-weight-semibold">Moderator</span>
+    <% end %>
+  </div>
+</div>
 
 <% if policy(@user).update_role? && @user != current_user %>
   <div class="field is-grouped">
