@@ -1,13 +1,22 @@
 <template>
   <div class="modal" :class="{ 'is-active': isActive } ">
     <div @click="onClose" class="modal-background"></div>
-    <div class="modal-card">
+    <div class="modal-card modal-card-allow-overflow">
       <header class="modal-card-head">
         <p class="modal-card-title">{{ modalTitle }}</p>
         <button @click="onClose" class="delete" aria-label="close"></button>
       </header>
-      <section class="modal-card-body">
+      <section class="modal-card-body modal-card-body-allow-overflow">
         <div v-if="gamePurchaseSelected">
+          <single-select
+            :label="formData.game.label"
+            v-model="gamePurchase.game"
+            :search-path-identifier="'games'"
+            :max-height="'150px'"
+            :disabled="true"
+            @input="selectGamePurchase"
+          ></single-select>
+
           <text-field
             :form-class="formData.class"
             :attribute="formData.comment.attribute"
@@ -21,6 +30,7 @@
             :label="formData.game.label"
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
+            :max-height="'150px'"
             @input="selectGamePurchase"
           ></single-select>
         </div>
