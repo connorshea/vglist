@@ -17,6 +17,12 @@
             @input="selectGamePurchase"
           ></single-select>
 
+          <static-single-select
+            :label="formData.completionStatus.label"
+            v-model="gamePurchase.completionStatus"
+            :options="formattedCompletionStatuses"
+          ></static-single-select>
+
           <number-field
             :form-class="formData.class"
             :attribute="formData.rating.attribute"
@@ -57,6 +63,7 @@
 import TextField from './fields/text-field.vue';
 import NumberField from './fields/number-field.vue';
 import SingleSelect from './fields/single-select.vue';
+import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from 'rails-ujs';
 
 export default {
@@ -64,7 +71,8 @@ export default {
   components: {
     TextField,
     NumberField,
-    SingleSelect
+    SingleSelect,
+    StaticSingleSelect
   },
   props: {
     id: {
@@ -77,7 +85,7 @@ export default {
       default: ''
     },
     completionStatus: {
-      type: String,
+      type: Object,
       required: false
     },
     comments: {
@@ -128,6 +136,9 @@ export default {
           label: 'Rating',
           attribute: 'rating'
         },
+        completionStatus: {
+          label: 'Completion Status'
+        },
         game: {
           label: 'Game'
         }
@@ -152,7 +163,7 @@ export default {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
       }
       if (this.gamePurchase.completionStatus !== '') {
-        submittableData['game_purchase']['completion_status'] = this.gamePurchase.completionStatus;
+        submittableData['game_purchase']['completion_status'] = this.gamePurchase.completionStatus.value;
       }
 
       fetch(this.gamePurchasesSubmitUrl, {
@@ -181,6 +192,11 @@ export default {
     },
     modalTitle: function() {
       return this.gamePurchase.game.name !== undefined ? this.gamePurchase.game.name : 'Add a game to your library';
+    },
+    formattedCompletionStatuses: function() {
+      return Object.entries(this.completionStatuses).map(status => {
+        return { label: status[1], value: status[0] };
+      });
     }
   }
 }

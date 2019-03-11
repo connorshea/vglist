@@ -19,7 +19,7 @@ RSpec.describe GamePurchase, type: :model do
     end
 
     it 'validates the completion status enum' do
-      should define_enum_for(:completion_status)
+      expect(game_purchase).to define_enum_for(:completion_status)
         .with_values(
           [
             :unplayed,
