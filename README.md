@@ -8,14 +8,16 @@ This is a Rails application for tracking your video game library.
 ## Getting set up
 
 Pre-requisites:
-- Ruby 2.5 or 2.6
-- Postgres 10.x
+- Ruby 2.6
+- Postgres 11.x
+- A recent version of Node.js
+- Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
 
 Follow these instructions:
 
 - Clone the repository with git
-- If you're on Ruby 2.5, `gem install bundler` (on Ruby 2.6, bundler is included already!)
+- To get Bundler 2.0.1, `gem install bundler:2.0.1`
 - `bundle install`
 - `yarn install`
 - `bundle exec rails db:create`
