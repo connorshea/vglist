@@ -164,6 +164,7 @@ admin = User.find(1)
     game: game,
     user: admin,
     rating: rand(0..100),
+    completion_status: rand(0..5),
     comments: Faker::Lorem.sentence
   )
 end
@@ -184,6 +185,7 @@ end
       game: game,
       user: user,
       rating: rand(0..100),
+      completion_status: rand(0..5),
       comments: Faker::Lorem.sentence
     )
   end

@@ -17,6 +17,21 @@ RSpec.describe GamePurchase, type: :model do
         .is_greater_than_or_equal_to(0)
         .is_less_than_or_equal_to(100)
     end
+
+    it 'validates the completion status enum' do
+      expect(game_purchase).to define_enum_for(:completion_status)
+        .with_values(
+          [
+            :unplayed,
+            :in_progress,
+            :dropped,
+            :completed,
+            :fully_completed,
+            :not_applicable
+          ]
+        )
+        .backed_by_column_of_type(:integer)
+    end
   end
 
   describe "Associations" do

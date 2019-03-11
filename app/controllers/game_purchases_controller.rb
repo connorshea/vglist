@@ -49,7 +49,8 @@ class GamePurchasesController < ApplicationController
       :user_id,
       :game_id,
       :comments,
-      :rating
+      :rating,
+      :completion_status
     )
   end
 end

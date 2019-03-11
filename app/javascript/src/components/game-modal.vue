@@ -17,6 +17,12 @@
             @input="selectGamePurchase"
           ></single-select>
 
+          <static-single-select
+            :label="formData.completionStatus.label"
+            v-model="gamePurchase.completion_status"
+            :options="formattedCompletionStatuses"
+          ></static-single-select>
+
           <number-field
             :form-class="formData.class"
             :attribute="formData.rating.attribute"
@@ -57,6 +63,7 @@
 import TextField from './fields/text-field.vue';
 import NumberField from './fields/number-field.vue';
 import SingleSelect from './fields/single-select.vue';
+import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from 'rails-ujs';
 
 export default {
@@ -64,7 +71,8 @@ export default {
   components: {
     TextField,
     NumberField,
-    SingleSelect
+    SingleSelect,
+    StaticSingleSelect
   },
   props: {
     id: {
@@ -75,6 +83,10 @@ export default {
       type: [Number, String],
       required: false,
       default: ''
+    },
+    completion_status: {
+      type: Object,
+      required: false
     },
     comments: {
       type: String,
@@ -107,7 +119,8 @@ export default {
         comments: this.comments,
         rating: this.rating,
         game: this.game,
-        userId: this.userId
+        userId: this.userId,
+        completion_status: this.completion_status
       },
       formData: {
         class: 'game_purchase',
@@ -119,11 +132,22 @@ export default {
           label: 'Rating',
           attribute: 'rating'
         },
+        completionStatus: {
+          label: 'Completion Status'
+        },
         game: {
           label: 'Game'
         }
       },
-      gamePurchaseSelected: !this.create
+      gamePurchaseSelected: !this.create,
+      completionStatuses: {
+        'unplayed': 'Unplayed',
+        'in_progress': 'In Progress',
+        'dropped': 'Dropped',
+        'completed': 'Completed',
+        'fully_completed': '100% Completed',
+        'not_applicable': 'N/A'
+      }
     }
   },
   methods: {
@@ -139,8 +163,11 @@ export default {
       if (this.gamePurchase.comments) {
         submittableData['game_purchase']['comments'] = this.gamePurchase.comments;
       }
-      if (this.gamePurchase.rating != '') {
+      if (this.gamePurchase.rating !== '') {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
+      }
+      if (this.gamePurchase.completionStatus !== '') {
+        submittableData['game_purchase']['completion_status'] = this.gamePurchase.completion_status.value;
       }
 
       fetch(this.gamePurchasesSubmitUrl, {
@@ -169,6 +196,11 @@ export default {
     },
     modalTitle: function() {
       return this.gamePurchase.game.name !== undefined ? this.gamePurchase.game.name : 'Add a game to your library';
+    },
+    formattedCompletionStatuses: function() {
+      return Object.entries(this.completionStatuses).map(status => {
+        return { label: status[1], value: status[0] };
+      });
     }
   }
 }
