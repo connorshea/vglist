@@ -103,6 +103,8 @@ group :development do
   gem 'binding_of_caller', '~> 0.8'
   # Open screenshots when they're taken with capybara.
   gem 'launchy', '~> 2.4'
+  # Generate a graph of the app structure.
+  gem 'rails-erd', '~> 1.5'
 end
 
 group :test do
