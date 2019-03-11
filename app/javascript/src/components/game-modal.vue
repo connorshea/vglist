@@ -19,7 +19,7 @@
 
           <static-single-select
             :label="formData.completionStatus.label"
-            v-model="gamePurchase.completionStatus"
+            v-model="gamePurchase.completion_status"
             :options="formattedCompletionStatuses"
           ></static-single-select>
 
@@ -84,7 +84,7 @@ export default {
       required: false,
       default: ''
     },
-    completionStatus: {
+    completion_status: {
       type: Object,
       required: false
     },
@@ -124,7 +124,7 @@ export default {
         rating: this.rating,
         game: this.game,
         userId: this.userId,
-        completionStatus: this.completionStatus
+        completion_status: this.completion_status
       },
       formData: {
         class: 'game_purchase',
@@ -163,7 +163,7 @@ export default {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
       }
       if (this.gamePurchase.completionStatus !== '') {
-        submittableData['game_purchase']['completion_status'] = this.gamePurchase.completionStatus.value;
+        submittableData['game_purchase']['completion_status'] = this.gamePurchase.completion_status.value;
       }
 
       fetch(this.gamePurchasesSubmitUrl, {

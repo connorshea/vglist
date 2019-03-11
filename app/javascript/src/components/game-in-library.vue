@@ -7,7 +7,7 @@
     </div>
     <div class="column game-rating">{{ gameInLibrary.rating }}</div>
     <div class="column game-completion-status">
-      {{ completionStatuses[gameInLibrary.completion_status] }}
+      {{ gameInLibrary.completion_status.label }}
     </div>
     <div class="column game-comments">{{ gameInLibrary.comments }}</div>
     <div v-if="isEditable" class="column game-actions">
