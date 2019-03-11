@@ -2,7 +2,7 @@
   <div class="game-library">
     <div v-if="!libraryEmpty" class="columns game-library-header game-library-row">
       <div class="column game-name">Game</div>
-      <div class="column game-score">Score</div>
+      <div class="column game-rating">Rating</div>
       <div class="column game-comments">Comments</div>
       <div v-if="isEditable" class="column game-actions">Actions</div>
     </div>

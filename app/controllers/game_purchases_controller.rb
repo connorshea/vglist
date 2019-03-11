@@ -49,7 +49,7 @@ class GamePurchasesController < ApplicationController
       :user_id,
       :game_id,
       :comments,
-      :score
+      :rating
     )
   end
 end

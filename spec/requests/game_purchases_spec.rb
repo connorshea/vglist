@@ -20,7 +20,7 @@ RSpec.describe "GamePurchases", type: :request do
   describe "POST game_purchases_path" do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
-    let(:game_purchase_attributes) { attributes_for(:game_purchase_with_comments_and_score, user: user) }
+    let(:game_purchase_attributes) { attributes_for(:game_purchase_with_comments_and_rating, user: user) }
 
     it "creates a new game_purchase" do
       sign_in(user)
@@ -37,11 +37,11 @@ RSpec.describe "GamePurchases", type: :request do
     let!(:game_purchase) { create(:game_purchase, user: user) }
     let(:game_purchase_attributes) { attributes_for(:game_purchase) }
 
-    it "updates game purchase score" do
+    it "updates game purchase rating" do
       sign_in(user)
-      game_purchase_attributes[:score] = 50
+      game_purchase_attributes[:rating] = 50
       put game_purchase_path(id: game_purchase.id, format: :json), params: { game_purchase: game_purchase_attributes }
-      expect(game_purchase.reload.score).to be(50)
+      expect(game_purchase.reload.rating).to be(50)
     end
   end
 

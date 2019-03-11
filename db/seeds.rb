@@ -163,7 +163,7 @@ admin = User.find(1)
   GamePurchase.find_or_create_by!(
     game: game,
     user: admin,
-    score: rand(0..100),
+    rating: rand(0..100),
     comments: Faker::Lorem.sentence
   )
 end
@@ -183,7 +183,7 @@ end
     GamePurchase.find_or_create_by!(
       game: game,
       user: user,
-      score: rand(0..100),
+      rating: rand(0..100),
       comments: Faker::Lorem.sentence
     )
   end
