@@ -23,14 +23,14 @@ Similar tracking sites for movies/television/anime:
   - [ ] 2FA (via devise-two-factor probably)
   - [x] Username
   - [ ] Display Name
-  - [ ] Avatar
+  - [x] Avatar
   - [ ] External account links (Discord, Steam, Epic Games, Xbox Live, PSN, etc.)
-  - [ ] Users have a Game Library which contains Games
-  - [ ] Users have a profile
+  - [x] Users have a Game Library which contains Games
+  - [x] Users have a profile
 - [ ] Profiles
   - [ ] Profiles can be Public or Private (only visible to Friends/Yourself? Username, Display Name, and Avatar will always be visible.)
   - [x] Bio (a longer-form description of the user)
-  - [ ] Game Library with scores, completion status, time played, etc.
+  - [x] Game Library with scores, completion status, time played, etc.
     - Should there be more granular access options, e.g. hiding time played?
     - Should the user that owns the profile be able to choose what's visible by default in their profile's Library list?
 - [ ] Friends (or followers/following?)
@@ -41,7 +41,7 @@ Similar tracking sites for movies/television/anime:
     - Should be able to sync with Steam after you've imported your games.
     - How to handle duplication, e.g. if I add my games and _then_ use the Steam importer?
     - Should also support importing from other platforms, but I don't know how many even have APIs for this.
-  - [ ] Score (like AniList's multi-score-system system? e.g. have 1/10, 1.0/10, 10/100, and thumbs-up/thumbs-down)
+  - [x] Score (like AniList's multi-score-system system? e.g. have 1/10, 1.0/10, 10/100, and thumbs-up/thumbs-down)
 - [ ] Games (General): Games are an entity with a name, platforms, developers, publishers, a cover image, release dates, etc.
   - [x] Name
   - [x] Platform(s) (Windows, macOS, Linux, Nintendo Switch, Xbox 360, etc.)
@@ -49,13 +49,14 @@ Similar tracking sites for movies/television/anime:
     - Should this differentiate between, e.g. Steam vs. Discord vs. Epic, etc?
   - [x] Developer (can have more than one)
   - [x] Publisher (can have more than one?)
-  - [ ] Cover image
+  - [x] Cover image
   - [ ] Release date(s) (note that a game can have more than one release date due to platform differences or due to regional differences)
-  - [ ] External Links (Steam page, Discord store page, Discord server, PCGamingWiki, SteamDB, etc.)
+  - [x] External Links (Steam page, Discord store page, Discord server, PCGamingWiki, SteamDB, etc.)
   - [ ] Relationships with other games (sequels, prequels, spinoffs, DLC, Special Editions, GOTY/Complete Editions, Remakes, Deluxe Editions, "sibling"(?) titles (e.g. Pokemon Red and Blue), etc?)
+  - [x] Series
   - [ ] Official Website
     - Note there can be more than one, e.g. for multiple languages.
-  - [x] Genre
+  - [x] Genres
     - I don't look forward to figuring out how to manage genres, but it seems kind of necessary.
   - [ ] Average Score
     - Maybe also Median or a more detailed bar graph of the scores?
@@ -64,8 +65,8 @@ Similar tracking sites for movies/television/anime:
   - Companies can both develop and publish games.
   - [x] Developers
   - [x] Publishers
-- [ ] Release Purchase: A release in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
-  - [ ] Score/Rating
+- [ ] Game Purchase: A game in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
+  - [x] Score/Rating
   - [ ] Time played (hours)
   - [ ] Platform
   - [ ] Owned
@@ -79,18 +80,18 @@ Similar tracking sites for movies/television/anime:
      - Also worth noting that you can rent or borrow games, so you may not own them but _have_ completed them.
      - Maybe also have Completed*, which is "Essentially Completed" for games where you didn't _quite_ complete it, but you feel you're finished with it?
   - [ ] Start Date / Completion Date
-  - [ ] Notes (any notes you want to add about the game, essentially a mini review)
+  - [x] Comments (any notes you want to add about the game, essentially a mini review)
   - [ ] Replayed (A counter for the number of times you've replayed a game)
   - [ ] Favorite (you can favorite games in your library, which is tracked separately from your Score)
   - [ ] Physical/Digital
     - I'm really not sure how to handle this, theoretically you can own a game for Switch digitally as well as physically.
 - [ ] Exporter (export your games list, probably as JSON, _maybe_ as a CSV?)
-- [ ] Build the initial system for importing game information from another source (build the game database from the GiantBomb Wiki? Wikipedia/Wikidata? PCGamingWiki? A combination of these? Somewhere else?)
+- [x] Build the initial system for importing game information from another source (build the game database from the GiantBomb Wiki? Wikipedia/Wikidata? PCGamingWiki? A combination of these? Somewhere else?)
 - [ ] API?
 - [ ] Game creation / modification
   - AniList has a concept of "moderators" that can update information on anime, e.g. adding missing genres or tags, changing the release date when it's delayed, etc.
   - We'll need some way for the user to create a game when a new one comes out.
-  - Uploading cover art is another sticking point, since we'll need to host those images (not easy on Heroku).
+  - Uploading cover art is another sticking point, since we'll need to host those images.
 
 Some decisions that need to be made:
 
