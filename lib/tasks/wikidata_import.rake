@@ -21,14 +21,17 @@ namespace 'import:wikidata' do
     companies.uniq! { |company| company&.dig(:wikidata_id) }
     puts "Found #{companies.length} companies."
 
-    companies.each do |company|
-      Company.create!(
-        name: company[:name],
-        wikidata_id: company[:wikidata_id].delete('Q')
-      )
+    PgSearch.disable_multisearch do
+      companies.each do |company|
+        Company.create!(
+          name: company[:name],
+          wikidata_id: company[:wikidata_id].delete('Q')
+        )
+      end
     end
 
     puts "There are now #{Company.count} companies in the database."
+    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Companies]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game platforms from Wikidata"
@@ -49,14 +52,17 @@ namespace 'import:wikidata' do
     platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
     puts "Found #{platforms.length} platforms."
 
-    platforms.each do |platform|
-      Platform.create!(
-        name: platform[:name],
-        wikidata_id: platform[:wikidata_id].delete('Q')
-      )
+    PgSearch.disable_multisearch do
+      platforms.each do |platform|
+        Platform.create!(
+          name: platform[:name],
+          wikidata_id: platform[:wikidata_id].delete('Q')
+        )
+      end
     end
 
     puts "There are now #{Platform.count} platforms in the database."
+    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Platforms]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game genres from Wikidata"
@@ -77,14 +83,17 @@ namespace 'import:wikidata' do
     genres.uniq! { |genre| genre&.dig(:wikidata_id) }
     puts "Found #{genres.length} genres."
 
-    genres.each do |genre|
-      Genre.create!(
-        name: genre[:name],
-        wikidata_id: genre[:wikidata_id].delete('Q')
-      )
+    PgSearch.disable_multisearch do
+      genres.each do |genre|
+        Genre.create!(
+          name: genre[:name],
+          wikidata_id: genre[:wikidata_id].delete('Q')
+        )
+      end
     end
 
     puts "There are now #{Genre.count} genres in the database."
+    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Genres]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game series from Wikidata"
@@ -105,14 +114,17 @@ namespace 'import:wikidata' do
     series.uniq! { |s| s&.dig(:wikidata_id) }
     puts "Found #{series.length} series'."
 
-    series.each do |s|
-      Series.create!(
-        name: s[:name],
-        wikidata_id: s[:wikidata_id].delete('Q')
-      )
+    PgSearch.disable_multisearch do
+      series.each do |s|
+        Series.create!(
+          name: s[:name],
+          wikidata_id: s[:wikidata_id].delete('Q')
+        )
+      end
     end
 
     puts "There are now #{Series.count} series in the database."
+    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Series]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game engines from Wikidata"
@@ -133,14 +145,17 @@ namespace 'import:wikidata' do
     engines.uniq! { |engine| engine&.dig(:wikidata_id) }
     puts "Found #{engines.length} engines."
 
-    engines.each do |engine|
-      Engine.create!(
-        name: engine[:name],
-        wikidata_id: engine[:wikidata_id].delete('Q')
-      )
+    PgSearch.disable_multisearch do
+      engines.each do |engine|
+        Engine.create!(
+          name: engine[:name],
+          wikidata_id: engine[:wikidata_id].delete('Q')
+        )
+      end
     end
 
     puts "There are now #{Engine.count} engines in the database."
+    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Engines]' to have pg_search rebuild its multisearch index."
   end
 
   def wikidata_item_filter(rows:, count_limit: 0)
