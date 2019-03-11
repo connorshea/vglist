@@ -58,7 +58,7 @@ Similar tracking sites for movies/television/anime:
     - Note there can be more than one, e.g. for multiple languages.
   - [x] Genres
     - I don't look forward to figuring out how to manage genres, but it seems kind of necessary.
-  - [ ] Average Score
+  - [ ] Average Rating
     - Maybe also Median or a more detailed bar graph of the scores?
   - [ ] Number of users who own the game / have completed it / plan to play it
 - [x] Companies
@@ -66,7 +66,7 @@ Similar tracking sites for movies/television/anime:
   - [x] Developers
   - [x] Publishers
 - [ ] Game Purchase: A game in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
-  - [x] Score/Rating
+  - [x] Rating
   - [ ] Time played (hours)
   - [ ] Platform
   - [ ] Owned

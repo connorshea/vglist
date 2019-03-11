@@ -19,10 +19,10 @@
 
           <number-field
             :form-class="formData.class"
-            :attribute="formData.score.attribute"
-            :label="formData.score.label"
+            :attribute="formData.rating.attribute"
+            :label="formData.rating.label"
             :required="false"
-            v-model="gamePurchase.score"
+            v-model="gamePurchase.rating"
           ></number-field>
 
           <text-field
@@ -71,7 +71,7 @@ export default {
       type: Number,
       required: false
     },
-    score: {
+    rating: {
       type: [Number, String],
       required: false,
       default: ''
@@ -105,7 +105,7 @@ export default {
     return {
       gamePurchase: {
         comments: this.comments,
-        score: this.score,
+        rating: this.rating,
         game: this.game,
         userId: this.userId
       },
@@ -115,9 +115,9 @@ export default {
           label: 'Comments',
           attribute: 'comments'
         },
-        score: {
-          label: 'Score',
-          attribute: 'score'
+        rating: {
+          label: 'Rating',
+          attribute: 'rating'
         },
         game: {
           label: 'Game'
@@ -139,8 +139,8 @@ export default {
       if (this.gamePurchase.comments) {
         submittableData['game_purchase']['comments'] = this.gamePurchase.comments;
       }
-      if (this.gamePurchase.score != '') {
-        submittableData['game_purchase']['score'] = this.gamePurchase.score;
+      if (this.gamePurchase.rating != '') {
+        submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
       }
 
       fetch(this.gamePurchasesSubmitUrl, {

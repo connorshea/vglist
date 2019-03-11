@@ -7,13 +7,13 @@ FactoryBot.define do
       comments { "I own this game" }
     end
 
-    trait :with_score do
-      score { rand(0..100) }
+    trait :with_rating do
+      rating { rand(0..100) }
     end
 
-    factory :game_purchase_with_comments_and_score,
-      traits: [:with_comments, :with_score]
+    factory :game_purchase_with_comments_and_rating,
+      traits: [:with_comments, :with_rating]
     factory :game_purchase_with_comments, traits: [:with_comments]
-    factory :game_purchase_with_score, traits: [:with_score]
+    factory :game_purchase_with_rating, traits: [:with_rating]
   end
 end
