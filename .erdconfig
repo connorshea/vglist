@@ -1,0 +1,11 @@
+exclude:
+  - ActiveRecord::InternalMetadata
+  - ActiveRecord::SchemaMigration
+attributes:
+  - content
+  - foreign_key
+  - primary_key
+  - inheritance
+filename: app-visualization
+filetype: svg
+title: Continue From Checkpoint domain model
