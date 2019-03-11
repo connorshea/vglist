@@ -12,7 +12,6 @@
       :key="gameInLibrary.id"
       :gameInLibrary="gameInLibrary"
       :isEditable="isEditable"
-      :completionStatuses="completionStatuses"
       v-on:delete="refreshLibrary"
       v-on:edit="activateModal"
     ></game-in-library>
@@ -31,7 +30,6 @@
       :isActive="isModalActive"
       :create="doesGamePurchaseExist"
       :userId="userId"
-      :completionStatuses="completionStatuses"
       v-bind="currentGame"
       v-on:close="deactivateModal"
       v-on:closeAndRefresh="closeAndRefresh"
@@ -69,15 +67,7 @@ export default {
       purchasedGames: [],
       isModalActive: false,
       currentGame: {},
-      doesGamePurchaseExist: false,
-      completionStatuses: {
-        'unplayed': 'Unplayed',
-        'in_progress': 'In Progress',
-        'dropped': 'Dropped',
-        'completed': 'Completed',
-        'fully_completed': '100% Completed',
-        'not_applicable': 'N/A'
-      }
+      doesGamePurchaseExist: false
     }
   },
   created: function() {

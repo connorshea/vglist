@@ -111,10 +111,6 @@ export default {
     create: {
       type: Boolean,
       required: true
-    },
-    completionStatuses: {
-      type: Object,
-      required: true
     }
   },
   data() {
@@ -143,7 +139,15 @@ export default {
           label: 'Game'
         }
       },
-      gamePurchaseSelected: !this.create
+      gamePurchaseSelected: !this.create,
+      completionStatuses: {
+        'unplayed': 'Unplayed',
+        'in_progress': 'In Progress',
+        'dropped': 'Dropped',
+        'completed': 'Completed',
+        'fully_completed': '100% Completed',
+        'not_applicable': 'N/A'
+      }
     }
   },
   methods: {

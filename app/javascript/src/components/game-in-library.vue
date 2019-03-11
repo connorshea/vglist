@@ -30,10 +30,6 @@ export default {
     isEditable: {
       type: Boolean,
       required: true
-    },
-    completionStatuses: {
-      type: Object,
-      required: true
     }
   },
   methods: {
