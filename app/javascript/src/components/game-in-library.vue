@@ -6,6 +6,9 @@
       </a>
     </div>
     <div class="column game-rating">{{ gameInLibrary.rating }}</div>
+    <div class="column game-completion-status">
+      {{ completionStatuses[gameInLibrary.completion_status] }}
+    </div>
     <div class="column game-comments">{{ gameInLibrary.comments }}</div>
     <div v-if="isEditable" class="column game-actions">
       <a @click="onEdit">Edit</a>
@@ -26,6 +29,10 @@ export default {
     },
     isEditable: {
       type: Boolean,
+      required: true
+    },
+    completionStatuses: {
+      type: Object,
       required: true
     }
   },

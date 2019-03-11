@@ -76,6 +76,10 @@ export default {
       required: false,
       default: ''
     },
+    completionStatus: {
+      type: String,
+      required: false
+    },
     comments: {
       type: String,
       required: false,
@@ -99,6 +103,10 @@ export default {
     create: {
       type: Boolean,
       required: true
+    },
+    completionStatuses: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -107,7 +115,8 @@ export default {
         comments: this.comments,
         rating: this.rating,
         game: this.game,
-        userId: this.userId
+        userId: this.userId,
+        completionStatus: this.completionStatus
       },
       formData: {
         class: 'game_purchase',
@@ -139,8 +148,11 @@ export default {
       if (this.gamePurchase.comments) {
         submittableData['game_purchase']['comments'] = this.gamePurchase.comments;
       }
-      if (this.gamePurchase.rating != '') {
+      if (this.gamePurchase.rating !== '') {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
+      }
+      if (this.gamePurchase.completionStatus !== '') {
+        submittableData['game_purchase']['completion_status'] = this.gamePurchase.completionStatus;
       }
 
       fetch(this.gamePurchasesSubmitUrl, {

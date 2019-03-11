@@ -3,6 +3,7 @@
     <div v-if="!libraryEmpty" class="columns game-library-header game-library-row">
       <div class="column game-name">Game</div>
       <div class="column game-rating">Rating</div>
+      <div class="column game-completion-status">Completion Status</div>
       <div class="column game-comments">Comments</div>
       <div v-if="isEditable" class="column game-actions">Actions</div>
     </div>
@@ -11,6 +12,7 @@
       :key="gameInLibrary.id"
       :gameInLibrary="gameInLibrary"
       :isEditable="isEditable"
+      :completionStatuses="completionStatuses"
       v-on:delete="refreshLibrary"
       v-on:edit="activateModal"
     ></game-in-library>
@@ -29,6 +31,7 @@
       :isActive="isModalActive"
       :create="doesGamePurchaseExist"
       :userId="userId"
+      :completionStatuses="completionStatuses"
       v-bind="currentGame"
       v-on:close="deactivateModal"
       v-on:closeAndRefresh="closeAndRefresh"
@@ -66,7 +69,15 @@ export default {
       purchasedGames: [],
       isModalActive: false,
       currentGame: {},
-      doesGamePurchaseExist: false
+      doesGamePurchaseExist: false,
+      completionStatuses: {
+        'unplayed': 'Unplayed',
+        'in_progress': 'In Progress',
+        'dropped': 'Dropped',
+        'completed': 'Completed',
+        'fully_completed': '100% Completed',
+        'not_applicable': 'N/A'
+      }
     }
   },
   created: function() {
