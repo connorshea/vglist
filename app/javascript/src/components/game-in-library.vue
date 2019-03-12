@@ -9,6 +9,9 @@
     <div class="column game-completion-status">
       {{ gameInLibrary.completion_status.label }}
     </div>
+    <div class="column game-start-and-completion-dates">
+      {{ formattedStartAndCompletionDates }}
+    </div>
     <div class="column game-comments">{{ gameInLibrary.comments }}</div>
     <div v-if="isEditable" class="column game-actions">
       <a @click="onEdit">Edit</a>
@@ -54,6 +57,34 @@ export default {
           }
         })
       }
+    }
+  },
+  computed: {
+    // 
+    // Return values depend on which values are available, they should match what the backend sends.
+    // No start or completion date: ''
+    // Completion date but no start date: '??? – March 20, 2019'
+    // Start date but no completion date: 'March 10, 2019 – ???'
+    // Start and completion date: 'March 10, 2019 – March 20, 2019'
+    formattedStartAndCompletionDates: function() {
+      let options = { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' };
+      let returnString = '';
+      let startDateString = this.gameInLibrary.start_date;
+      let completionDateString = this.gameInLibrary.completion_date;
+
+      if (startDateString !== null && completionDateString !== null) {
+        let startDate = new Date(startDateString);
+        let completionDate = new Date(completionDateString);
+        returnString = `${startDate.toLocaleDateString('en-US', options)} – ${completionDate.toLocaleDateString('en-US', options)}`;
+      } else if (startDateString !== null) {
+        let startDate = new Date(startDateString);
+        returnString = `${startDate.toLocaleDateString('en-US', options)} – ???`;
+      } else if (completionDateString !== null) {
+        let completionDate = new Date(completionDateString);
+        returnString = `??? – ${completionDate.toLocaleDateString('en-US', options)}`;
+      }
+
+      return returnString;
     }
   }
 }

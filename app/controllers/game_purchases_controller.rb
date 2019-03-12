@@ -50,7 +50,9 @@ class GamePurchasesController < ApplicationController
       :game_id,
       :comments,
       :rating,
-      :completion_status
+      :completion_status,
+      :start_date,
+      :completion_date
     )
   end
 end
