@@ -38,6 +38,22 @@
             :required="false"
             v-model="gamePurchase.comments"
           ></text-field>
+
+          <date-field
+            :form-class="formData.class"
+            :attribute="formData.startDate.attribute"
+            :label="formData.startDate.label"
+            :required="false"
+            v-model="gamePurchase.start_date"
+          ></date-field>
+
+          <date-field
+            :form-class="formData.class"
+            :attribute="formData.completionDate.attribute"
+            :label="formData.completionDate.label"
+            :required="false"
+            v-model="gamePurchase.completion_date"
+          ></date-field>
         </div>
 
         <div v-else>
@@ -62,6 +78,7 @@
 <script>
 import TextField from './fields/text-field.vue';
 import NumberField from './fields/number-field.vue';
+import DateField from './fields/date-field.vue';
 import SingleSelect from './fields/single-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from 'rails-ujs';
@@ -71,6 +88,7 @@ export default {
   components: {
     TextField,
     NumberField,
+    DateField,
     SingleSelect,
     StaticSingleSelect
   },
@@ -86,6 +104,14 @@ export default {
     },
     completion_status: {
       type: Object,
+      required: false
+    },
+    start_date: {
+      type: String,
+      required: false
+    },
+    completion_date: {
+      type: String,
       required: false
     },
     comments: {
@@ -120,7 +146,9 @@ export default {
         rating: this.rating,
         game: this.game,
         userId: this.userId,
-        completion_status: this.completion_status
+        completion_status: this.completion_status,
+        start_date: this.start_date,
+        completion_date: this.completion_date
       },
       formData: {
         class: 'game_purchase',
@@ -134,6 +162,14 @@ export default {
         },
         completionStatus: {
           label: 'Completion Status'
+        },
+        startDate: {
+          label: 'Start Date',
+          attribute: 'start_date'
+        },
+        completionDate: {
+          label: 'Completion Date',
+          attribute: 'completion_date'
         },
         game: {
           label: 'Game'
@@ -166,8 +202,14 @@ export default {
       if (this.gamePurchase.rating !== '') {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
       }
-      if (this.gamePurchase.completionStatus !== '') {
+      if (this.gamePurchase.completion_status !== '') {
         submittableData['game_purchase']['completion_status'] = this.gamePurchase.completion_status.value;
+      }
+      if (this.gamePurchase.start_date !== '' && this.gamePurchase.start_date !== null) {
+        submittableData['game_purchase']['start_date'] = this.gamePurchase.start_date;
+      }
+      if (this.gamePurchase.completion_date !== '' && this.gamePurchase.completion_date !== null) {
+        submittableData['game_purchase']['completion_date'] = this.gamePurchase.completion_date;
       }
 
       fetch(this.gamePurchasesSubmitUrl, {
