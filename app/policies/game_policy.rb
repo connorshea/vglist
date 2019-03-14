@@ -33,4 +33,12 @@ class GamePolicy < ApplicationPolicy
   def remove_cover?
     user.present?
   end
+
+  def favorite?
+    user.present?
+  end
+
+  def unfavorite?
+    user.present?
+  end
 end

@@ -133,6 +133,36 @@ class GamesController < ApplicationController
     end
   end
 
+  def favorite
+    @game = Game.find(params[:id])
+    authorize @game
+
+    @user = current_user
+    @favorite = Favorite.new(favoritable: @game, user: @user)
+
+    respond_to do |format|
+      if @favorite.save
+        format.json { head :ok }
+      else
+        format.json { render json: { errors: @game.errors.full_messages } }
+      end
+    end
+  end
+
+  def unfavorite
+    @game = Game.find(params[:id])
+    authorize @game
+
+    @user = current_user
+    favorite = @user.favorites.games.find_by(favoritable_id: @game.id)
+
+    favorite.destroy
+
+    respond_to do |format|
+      format.json { head :ok }
+    end
+  end
+
   private
 
   def game_params
