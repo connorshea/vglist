@@ -65,5 +65,6 @@ RSpec.describe User, type: :model do
   describe "Associations" do
     it { should have_many(:game_purchases) }
     it { should have_many(:games) }
+    it { should have_many(:favorites).inverse_of(:user) }
   end
 end

@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     post :add_game_to_library, on: :member
     delete :remove_game_from_library, on: :member
     delete :remove_cover, on: :member
+    post :favorite, on: :member
+    delete :unfavorite, on: :member
   end
 
   resources :game_purchases, except: [:new, :edit]

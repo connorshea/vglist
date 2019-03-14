@@ -23,9 +23,9 @@ RSpec.describe "Games", type: :request do
 
     it "creates a new game" do
       sign_in(user)
-      expect {
+      expect do
         post games_path, params: { game: game_attributes }
-      }.to change(Game, :count).by(1)
+      end.to change(Game, :count).by(1)
     end
 
     it "fails to create a new game" do
@@ -64,9 +64,9 @@ RSpec.describe "Games", type: :request do
 
     it "deletes a game" do
       sign_in(user)
-      expect {
+      expect do
         delete game_path(id: game.id)
-      }.to change(Game, :count).by(-1)
+      end.to change(Game, :count).by(-1)
     end
   end
 
@@ -101,10 +101,10 @@ RSpec.describe "Games", type: :request do
 
     it "adds a game to the user's library" do
       sign_in(user)
-      expect {
+      expect do
         post add_game_to_library_game_path(game.id),
           params: { game_purchase: { user_id: user.id, game_id: game.id } }
-      }.to change(user.game_purchases.all, :count).by(1)
+      end.to change(user.game_purchases.all, :count).by(1)
     end
 
     it "doesn't add a duplicate game to the user's library" do
@@ -128,10 +128,10 @@ RSpec.describe "Games", type: :request do
       sign_in(user_with_game)
       # Load the game purchase.
       game_purchase
-      expect {
+      expect do
         delete remove_game_from_library_game_path(game.id),
           params: { id: game.id }
-      }.to change(user_with_game.game_purchases.all, :count).by(-1)
+      end.to change(user_with_game.game_purchases.all, :count).by(-1)
     end
 
     it "doesn't remove a game from the user's library if none exist" do
@@ -157,6 +157,34 @@ RSpec.describe "Games", type: :request do
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
       expect(response.body).to include("Cover successfully removed from #{game_with_cover.name}.")
+    end
+  end
+
+  describe "POST favorite_game_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game) { create(:game) }
+
+    it "favorites a game successfully" do
+      sign_in(user)
+      expect do
+        post favorite_game_path(game.id, format: :json),
+          params: { id: game.id }
+      end.to change(user.favorites, :count).by(1)
+    end
+  end
+
+  describe "DELETE favorite_game_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game) { create(:game) }
+
+    it 'decreases the favorite count by 1' do
+      create(:favorite, user: user, favoritable: game)
+
+      sign_in(user)
+      expect do
+        delete unfavorite_game_path(game.id, format: :json),
+          params: { id: game.id }
+      end.to change(user.favorites, :count).by(-1)
     end
   end
 end

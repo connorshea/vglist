@@ -10,6 +10,9 @@ class User < ApplicationRecord
   has_many :game_purchases
   has_many :games, through: :game_purchases
 
+  # Users have favorites of various types.
+  has_many :favorites, inverse_of: :user
+
   has_one_attached :avatar
 
   friendly_id :username, use: [:slugged, :finders]

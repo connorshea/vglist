@@ -19,6 +19,8 @@ class Game < ApplicationRecord
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
+  has_many :favorites, as: :favoritable
+
   belongs_to :series, optional: true
 
   has_one_attached :cover

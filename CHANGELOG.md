@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.13
+### Added
+- Add favoriting games. ([#226])
+
 ## v2019.3.11
 ### Added
 - Add start and completion dates to game purchases. ([#223])
@@ -213,3 +217,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#213]: https://github.com/connorshea/ContinueFromCheckpoint/pull/213
 [#219]: https://github.com/connorshea/ContinueFromCheckpoint/pull/219
 [#223]: https://github.com/connorshea/ContinueFromCheckpoint/pull/223
+[#226]: https://github.com/connorshea/ContinueFromCheckpoint/pull/226

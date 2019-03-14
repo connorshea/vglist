@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_12_024943) do
+ActiveRecord::Schema.define(version: 2019_03_14_030442) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,19 @@ ActiveRecord::Schema.define(version: 2019_03_12_024943) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.string "favoritable_type"
+    t.bigint "favoritable_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["favoritable_id", "favoritable_type"], name: "index_favorites_on_favoritable_id_and_favoritable_type", unique: true
+    t.index ["favoritable_id"], name: "index_favorites_on_favoritable_id"
+    t.index ["favoritable_type", "favoritable_id"], name: "index_favorites_on_favoritable_type_and_favoritable_id"
+    t.index ["favoritable_type"], name: "index_favorites_on_favoritable_type"
+    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -133,6 +146,8 @@ ActiveRecord::Schema.define(version: 2019_03_12_024943) do
     t.bigint "series_id"
     t.bigint "wikidata_id"
     t.text "pcgamingwiki_id"
+    t.jsonb "release_dates"
+    t.date "earliest_release_date"
     t.index ["series_id"], name: "index_games_on_series_id"
   end
 

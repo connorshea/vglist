@@ -18,6 +18,12 @@
 </div>
 
 <div class="field is-grouped">
+
+  <% if policy(@game).favorite? || policy(@game).unfavorite? %>
+    <%= button_to 'Favorite', favorite_game_path(@game.id, format: :json), method: :post, class: "button js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }", remote: :true, data: { toggle_partner: 'favorite-off' } %>
+    <%= button_to 'Unfavorite', unfavorite_game_path(@game.id, format: :json), method: :delete, class: "button js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }", remote: :true, data: { toggle_partner: 'favorite-on' } %>
+  <% end %>
+
   <% if policy(current_user).add_game_to_library? || policy(current_user).remove_game_from_library? %>
     <% if policy(current_user).add_game_to_library? && !game_in_user_library?(@game) %>
       <%= button_to "Add to library", add_game_to_library_game_path(@game.id), method: :post, params: { game_purchase: { user_id: current_user.id, game_id: @game.id } }, class: "button" %>

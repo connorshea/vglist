@@ -6,4 +6,10 @@ module GamesHelper
 
     false
   end
+
+  def game_in_user_favorites?(game)
+    return true if current_user.favorites.games.find_by(favoritable_id: game.id).present?
+
+    false
+  end
 end

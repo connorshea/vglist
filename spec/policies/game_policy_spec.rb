@@ -7,7 +7,7 @@ RSpec.describe GamePolicy, type: :policy do
     let(:user) { create(:user) }
     let(:game) { create(:game) }
 
-    it do
+    it 'can do everything' do
       expect(game_policy).to permit_actions(
         [
           :index,
@@ -18,7 +18,9 @@ RSpec.describe GamePolicy, type: :policy do
           :update,
           :destroy,
           :search,
-          :remove_cover
+          :remove_cover,
+          :favorite,
+          :unfavorite
         ]
       )
     end
@@ -28,7 +30,7 @@ RSpec.describe GamePolicy, type: :policy do
     let(:user) { create(:moderator) }
     let(:game) { create(:game) }
 
-    it "let's a moderator do everything" do
+    it "can do everything" do
       expect(game_policy).to permit_actions(
         [
           :index,
@@ -39,7 +41,9 @@ RSpec.describe GamePolicy, type: :policy do
           :update,
           :destroy,
           :search,
-          :remove_cover
+          :remove_cover,
+          :favorite,
+          :unfavorite
         ]
       )
     end
@@ -49,7 +53,7 @@ RSpec.describe GamePolicy, type: :policy do
     let(:user) { create(:admin) }
     let(:game) { create(:game) }
 
-    it "let's an admin do everything" do
+    it "can do everything" do
       expect(game_policy).to permit_actions(
         [
           :index,
@@ -60,7 +64,9 @@ RSpec.describe GamePolicy, type: :policy do
           :update,
           :destroy,
           :search,
-          :remove_cover
+          :remove_cover,
+          :favorite,
+          :unfavorite
         ]
       )
     end
@@ -72,7 +78,7 @@ RSpec.describe GamePolicy, type: :policy do
 
     it { should permit_actions([:index, :show]) }
 
-    it "doesn't let an anonymous user do most things" do
+    it "can't do most things" do
       expect(game_policy).not_to permit_actions(
         [
           :create,
@@ -81,7 +87,9 @@ RSpec.describe GamePolicy, type: :policy do
           :update,
           :destroy,
           :search,
-          :remove_cover
+          :remove_cover,
+          :favorite,
+          :unfavorite
         ]
       )
     end

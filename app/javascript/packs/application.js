@@ -13,6 +13,7 @@ import Vue from 'vue/dist/vue.esm';
 import '../src/library.js';
 import '../src/form.js';
 import '../src/search.js';
+import '../src/toggleable-buttons.js';
 import '../src/bulma.js';
 
 Vue.use(TurbolinksAdapter);
