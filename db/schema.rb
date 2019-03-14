@@ -133,9 +133,9 @@ ActiveRecord::Schema.define(version: 2019_03_12_024943) do
     t.bigint "series_id"
     t.bigint "wikidata_id"
     t.text "pcgamingwiki_id"
-    t.index ["series_id"], name: "index_games_on_series_id"
     t.jsonb "release_dates"
     t.date "earliest_release_date"
+    t.index ["series_id"], name: "index_games_on_series_id"
   end
 
   create_table "genres", force: :cascade do |t|
