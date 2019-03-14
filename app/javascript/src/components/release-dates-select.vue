@@ -19,7 +19,7 @@
 
 <script>
 import vSelect from 'vue-select';
-import SingleSelect from './single-select.vue';
+import SingleSelect from './fields/single-select.vue';
 
 export default {
   name: 'release-dates-select',
