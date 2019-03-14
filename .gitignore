@@ -33,3 +33,4 @@ yarn-debug.log*
 coverage/
 
 .DS_Store
+spec/examples.txt
