@@ -44,3 +44,15 @@
     v-bind:user-id="<%= @user.id %>"
   ></library>
 </div>
+
+<h3 class="title is-3 mt-15">Favorites</h3>
+
+<% if @user.favorites.games.length > 0 %>
+  <ul>
+    <% @user.favorites.games.each do |favorite| %>
+      <li><%= link_to Game.find(favorite.favoritable_id).name, game_path(favorite.favoritable_id) %>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No favorited games.
+<% end %>
