@@ -24,4 +24,10 @@ class GamePurchase < ApplicationRecord
       only_integer: true,
       allow_nil: true
     }
+
+  validates :hours_played,
+    numericality: {
+      greater_than_or_equal_to: 0,
+      allow_nil: true
+    }
 end

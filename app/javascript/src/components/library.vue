@@ -3,6 +3,7 @@
     <div v-if="!libraryEmpty" class="columns game-library-header game-library-row">
       <div class="column game-name">Game</div>
       <div class="column game-rating">Rating</div>
+      <div class="column game-hours-played">Hours Played</div>
       <div class="column game-completion-status">Completion Status</div>
       <div class="column game-start-and-completion-dates">Start/Completion Dates</div>
       <div class="column game-comments">Comments</div>
