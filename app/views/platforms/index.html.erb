@@ -3,7 +3,7 @@
 <h1 class="title">Platforms</h1>
 
 <% if policy(@platforms).create? %>
-  <p><%= link_to("Create a new platform", new_platform_path) %></p>
+  <p><%= link_to("Create a new platform", new_platform_path, class: 'button') %></p>
 <% end %>
 
 <ul>

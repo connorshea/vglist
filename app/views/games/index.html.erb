@@ -3,7 +3,7 @@
 <h1 class="title">Games</h1>
 
 <% if policy(@games).create? %>
-  <p><%= link_to("Create a new game", new_game_path) %></p>
+  <p><%= link_to("Create a new game", new_game_path, class: 'button') %></p>
 <% end %>
 
 <div class="game-card-list mt-20">

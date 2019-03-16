@@ -3,7 +3,7 @@
 <h1 class="title">Companies</h1>
 
 <% if user_signed_in? %>
-  <p><%= link_to("Create a new company", new_company_path) %></p>
+  <p><%= link_to("Create a new company", new_company_path, class: 'button') %></p>
 <% end %>
 
 <ul>
