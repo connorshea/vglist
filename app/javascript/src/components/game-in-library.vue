@@ -6,6 +6,9 @@
       </a>
     </div>
     <div class="column game-rating">{{ gameInLibrary.rating }}</div>
+    <div class="column game-hours-played">
+      {{ formattedHoursPlayed }}
+    </div>
     <div class="column game-completion-status">
       {{ gameInLibrary.completion_status.label }}
     </div>
@@ -85,6 +88,15 @@ export default {
       }
 
       return returnString;
+    },
+    formattedHoursPlayed: function() {
+      let hoursPlayed = this.gameInLibrary.hours_played;
+
+      // Return nothing if hoursPlayed is null.
+      if (hoursPlayed === null) { return; }
+
+      // Return "x hours" for time played.
+      return `${Math.floor(hoursPlayed)} hours`;
     }
   }
 }

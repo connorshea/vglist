@@ -52,7 +52,8 @@ class GamePurchasesController < ApplicationController
       :rating,
       :completion_status,
       :start_date,
-      :completion_date
+      :completion_date,
+      :hours_played
     )
   end
 end

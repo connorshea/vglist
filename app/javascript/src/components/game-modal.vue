@@ -31,6 +31,14 @@
             v-model="gamePurchase.rating"
           ></number-field>
 
+          <number-field
+            :form-class="formData.class"
+            :attribute="formData.hoursPlayed.attribute"
+            :label="formData.hoursPlayed.label"
+            :required="false"
+            v-model="gamePurchase.hours_played"
+          ></number-field>
+
           <text-field
             :form-class="formData.class"
             :attribute="formData.comments.attribute"
@@ -102,6 +110,11 @@ export default {
       required: false,
       default: ''
     },
+    hours_played: {
+      type: [Number, String],
+      required: false,
+      default: ''
+    },
     completion_status: {
       type: Object,
       required: false
@@ -160,6 +173,10 @@ export default {
           label: 'Rating',
           attribute: 'rating'
         },
+        hoursPlayed: {
+          label: 'Hours Played',
+          attribute: 'hours_played'
+        },
         completionStatus: {
           label: 'Completion Status'
         },
@@ -201,6 +218,9 @@ export default {
       }
       if (this.gamePurchase.rating !== '') {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
+      }
+      if (this.gamePurchase.hours_played !== '') {
+        submittableData['game_purchase']['hours_played'] = this.gamePurchase.hours_played;
       }
       if (this.gamePurchase.completion_status !== '') {
         submittableData['game_purchase']['completion_status'] = this.gamePurchase.completion_status.value;

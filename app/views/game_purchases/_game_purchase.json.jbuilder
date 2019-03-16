@@ -1,6 +1,7 @@
 json.extract! game_purchase,
   :id,
   :rating,
+  :hours_played,
   :purchase_date,
   :comments,
   :start_date,
