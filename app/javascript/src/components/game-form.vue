@@ -67,6 +67,13 @@
       :search-path-identifier="'series'"
     ></single-select>
 
+    <number-field
+      :form-class="formData.class"
+      :attribute="formData.steamAppId.attribute"
+      :label="formData.steamAppId.label"
+      v-model="game.steam_app_id"
+    ></number-field>
+
     <button
       class="button is-primary"
       value="Submit"
@@ -84,6 +91,7 @@
 import TextArea from './fields/text-area.vue';
 import TextField from './fields/text-field.vue';
 import SingleSelect from './fields/single-select.vue';
+import NumberField from './fields/number-field';
 import MultiSelect from './fields/multi-select.vue';
 import FileSelect from './fields/file-select.vue';
 import Rails from 'rails-ujs';
@@ -94,6 +102,7 @@ export default {
   components: {
     TextArea,
     TextField,
+    NumberField,
     SingleSelect,
     MultiSelect,
     FileSelect
@@ -151,6 +160,10 @@ export default {
         return { name: '' }
       }
     },
+    steam_app_id: {
+      type: Number,
+      required: false
+    },
     submitPath: {
       type: String,
       required: true
@@ -184,6 +197,7 @@ export default {
         publishers: this.publishers,
         platforms: this.platforms,
         series: this.series,
+        steam_app_id: this.steam_app_id,
         cover: this.cover,
         coverBlob: this.coverBlob
       },
@@ -217,6 +231,10 @@ export default {
         },
         series: {
           label: 'Series'
+        },
+        steamAppId: {
+          label: 'Steam Application ID',
+          attribute: 'steam_app_id'
         }
       }
     }
@@ -252,7 +270,8 @@ export default {
         engine_ids: engine_ids,
         developer_ids: developer_ids,
         publisher_ids: publisher_ids,
-        platform_ids: platform_ids
+        platform_ids: platform_ids,
+        steam_app_id: this.game.steam_app_id
       }};
 
       if (this.game.series) {
