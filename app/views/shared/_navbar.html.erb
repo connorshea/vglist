@@ -37,6 +37,7 @@
             <%= link_to("Settings", settings_path, class: "navbar-item") %>
             <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item") %>
             <hr class="navbar-divider">
+            <%= link_to("About", about_path, class: "navbar-item") %>
             <%= link_to("GitHub", 'https://github.com/connorshea/ContinueFromCheckpoint', class: "navbar-item") %>
           </div>
         </div>
@@ -44,6 +45,7 @@
         <%= link_to(current_user.username, user_path(current_user.id), class: "navbar-item is-hidden-desktop") %>
         <%= link_to("Settings", settings_path, class: "navbar-item is-hidden-desktop") %>
         <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item is-hidden-desktop") %>
+        <%= link_to("About", about_path, class: "navbar-item is-hidden-desktop") %>
         <%= link_to("GitHub", 'https://github.com/connorshea/ContinueFromCheckpoint', class: "navbar-item is-hidden-desktop") %>
       <% else %>
         <%= link_to('Sign up', new_user_registration_path, class: "navbar-item")  %>
