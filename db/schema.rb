@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_16_174824) do
+ActiveRecord::Schema.define(version: 2019_03_17_225558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,7 +148,9 @@ ActiveRecord::Schema.define(version: 2019_03_16_174824) do
     t.text "pcgamingwiki_id"
     t.jsonb "release_dates"
     t.date "earliest_release_date"
+    t.integer "steam_app_id"
     t.index ["series_id"], name: "index_games_on_series_id"
+    t.index ["steam_app_id"], name: "index_games_on_steam_app_id", unique: true
   end
 
   create_table "genres", force: :cascade do |t|
