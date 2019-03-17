@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.17
+### Changed
+- Allow the search bar to use the arrow keys for navigating between results. ([#238])
+
 ## v2019.3.16
 ### Added
 - Add hours played to game purchases. ([#227])
@@ -223,3 +227,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#223]: https://github.com/connorshea/ContinueFromCheckpoint/pull/223
 [#226]: https://github.com/connorshea/ContinueFromCheckpoint/pull/226
 [#227]: https://github.com/connorshea/ContinueFromCheckpoint/pull/227
+[#238]: https://github.com/connorshea/ContinueFromCheckpoint/pull/238
