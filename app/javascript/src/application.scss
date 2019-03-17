@@ -43,6 +43,11 @@ nav.navbar {
       }
 
       a.navbar-item:hover {
+        background-color: #eeeded;
+      }
+
+      a.navbar-item.is-active {
+        background-color: #5178bc;
         color: #fff;
       }
     }
@@ -67,6 +72,12 @@ nav.navbar {
 
 .v-select {
   display: block;
+}
+
+.navbar-search-dropdown {
+  max-height: 400px;
+  height: auto;
+  overflow: scroll;
 }
 
 // Customization for bulma dropdowns.

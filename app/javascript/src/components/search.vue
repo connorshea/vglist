@@ -4,12 +4,15 @@
       <input
         v-model="query"
         @input="onSearch"
+        @keyup.up.prevent="onUpArrow"
+        @keyup.down.prevent="onDownArrow"
+        @keyup.enter.prevent="onEnter"
         class="input"
         type="search"
         placeholder="Search">
     </p>
 
-    <div v-if="dropdownActive" class="navbar-dropdown">
+    <div v-if="dropdownActive" class="navbar-search-dropdown navbar-dropdown">
       <p class="navbar-item" v-if="!hasSearchResults">
         No results.
       </p>
@@ -22,7 +25,9 @@
           v-for="result in betterSearchResults[type]"
           :key="result.id"
           :href="result.url"
-          class="navbar-item">
+          class="navbar-item"
+          :class="{ 'is-active': activeSearchResult !== -1 && flattenedSearchResults[activeSearchResult].searchable_id === result.searchable_id }"
+        >
             {{ result.content }}
         </a>
       </div>
@@ -44,7 +49,8 @@ export default {
         'Platform': 'platforms',
         'Engine': 'engines',
         'Genre': 'genres'
-      }
+      },
+      activeSearchResult: -1
     }
   },
   methods: {
@@ -57,7 +63,36 @@ export default {
           })
           .then((searchResults) => {
             this.searchResults = searchResults;
+            this.activeSearchResult = -1;
           });
+      }
+    },
+    onUpArrow() {
+      if (this.activeSearchResult >= 0) {
+        this.activeSearchResult = this.activeSearchResult - 1;
+        this.scrollToActiveItem();
+      }
+    },
+    onDownArrow() {
+      if (this.activeSearchResult < this.flattenedSearchResults.length - 1) {
+        this.activeSearchResult = this.activeSearchResult + 1;
+        this.scrollToActiveItem();
+      }
+    },
+    // On enter, have turbolinks navigate to the active item's linked page.
+    onEnter() {
+      let activeItem = document.querySelector('.navbar-search-dropdown .navbar-item.is-active');
+      if (activeItem !== null) {
+        Turbolinks.visit(activeItem.href);
+      }
+    },
+    scrollToActiveItem() {
+      // Select the current active item and the searchDropdown.
+      let activeItem = document.querySelector('.navbar-search-dropdown .navbar-item.is-active');
+      let searchDropdown = document.querySelector('.navbar-search-dropdown');
+      // If the activeItem exists, scroll to it as the user moves through the dropdown options.
+      if (activeItem !== null) {
+        searchDropdown.scrollTop = activeItem.offsetTop - searchDropdown.offsetTop;
       }
     }
   },
@@ -93,6 +128,9 @@ export default {
       });
 
       return betterSearchResults;
+    },
+    flattenedSearchResults: function() {
+      return Object.values(this.searchResults).flat();
     }
   }
 }
