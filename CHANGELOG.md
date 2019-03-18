@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2019.3.17
 ### Changed
 - Allow the search bar to use the arrow keys for navigating between results. ([#238])
+- Add Steam Application IDs to games. ([#239])
+- Add a `rake import:full` task for running all the import tasks sequentially. ([#239])
 
 ## v2019.3.16
 ### Added
@@ -228,3 +230,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#226]: https://github.com/connorshea/ContinueFromCheckpoint/pull/226
 [#227]: https://github.com/connorshea/ContinueFromCheckpoint/pull/227
 [#238]: https://github.com/connorshea/ContinueFromCheckpoint/pull/238
+[#239]: https://github.com/connorshea/ContinueFromCheckpoint/pull/239
