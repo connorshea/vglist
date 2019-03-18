@@ -354,6 +354,7 @@ DEPENDENCIES
   rspec-rails (~> 3.8)
   rubocop (~> 0.65)
   rubocop-rspec (~> 1.32)
+  ruby-progressbar (~> 1.10)
   selenium-webdriver
   shoulda-matchers (= 4.0.1)
   simplecov (~> 0.16)

@@ -14,7 +14,7 @@ RSpec.describe Game, type: :model do
     it { should validate_length_of(:description).is_at_most(1000) }
 
     it { should validate_uniqueness_of(:wikidata_id) }
-    it 'validates numericality' do
+    it 'validates numericality of wikidata_id' do
       expect(game).to validate_numericality_of(:wikidata_id)
         .only_integer
         .allow_nil
@@ -44,6 +44,14 @@ RSpec.describe Game, type: :model do
         'Invalid>Name',
         'Invalid#Name'
       ).for(:pcgamingwiki_id)
+    end
+
+    it { should validate_uniqueness_of(:steam_app_id) }
+    it 'validates numericality of steam_app_id' do
+      expect(game).to validate_numericality_of(:steam_app_id)
+        .only_integer
+        .allow_nil
+        .is_greater_than(0)
     end
   end
 

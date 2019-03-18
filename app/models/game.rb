@@ -55,6 +55,15 @@ class Game < ApplicationRecord
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 
+  validates :steam_app_id,
+    uniqueness: true,
+    allow_nil: true,
+    numericality: {
+      only_integer: true,
+      allow_nil: true,
+      greater_than: 0
+    }
+
   # Include games in global search.
   multisearchable against: [:name]
 

@@ -119,6 +119,9 @@
       <% unless @game.pcgamingwiki_id.blank? %>
         <li><%= link_to 'PCGamingWiki', "https://pcgamingwiki.com/wiki/#{@game.pcgamingwiki_id}" %>
       <% end %>
+      <% unless @game.steam_app_id.blank? %>
+        <li><%= link_to 'Steam', "https://store.steampowered.com/app/#{@game.steam_app_id}" %>
+      <% end %>
     </ul>
   <% end %>
 </div>

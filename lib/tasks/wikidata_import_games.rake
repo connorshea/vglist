@@ -24,8 +24,14 @@ namespace 'import:wikidata' do
       engines: 'P408'
     }
 
+    progress_bar = ProgressBar.create(
+      total: rows.length,
+      format: formatting
+    )
+
     PgSearch.disable_multisearch do
       rows.each do |row|
+        progress_bar.increment
         url = row.to_h[:item].to_s
         wikidata_id = url.gsub('http://www.wikidata.org/entity/', '')
 
@@ -61,6 +67,7 @@ namespace 'import:wikidata' do
         end
 
         pcgamingwiki_id = wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value')
+        steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
 
         hash = {
           name: game_hash[:name],
@@ -68,6 +75,7 @@ namespace 'import:wikidata' do
         }
 
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
+        hash[:steam_app_id] = steam_app_id unless steam_app_id.nil?
 
         game = Game.create!(hash)
 
@@ -79,7 +87,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:developers)
-          puts 'Adding developers.'
+          puts 'Adding developers.' if ENV['DEBUG']
           game_hash[:developers].each do |developer_id|
             company = Company.find_by(wikidata_id: developer_id)
             puts company.inspect if ENV['DEBUG']
@@ -93,7 +101,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:publishers)
-          puts 'Adding publishers.'
+          puts 'Adding publishers.' if ENV['DEBUG']
           game_hash[:publishers].each do |publisher_id|
             company = Company.find_by(wikidata_id: publisher_id)
             puts company.inspect if ENV['DEBUG']
@@ -107,7 +115,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:platforms)
-          puts 'Adding platforms.'
+          puts 'Adding platforms.' if ENV['DEBUG']
           game_hash[:platforms].each do |platform_id|
             platform = Platform.find_by(wikidata_id: platform_id)
             puts platform.inspect if ENV['DEBUG']
@@ -121,7 +129,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:engines)
-          puts 'Adding engines.'
+          puts 'Adding engines.' if ENV['DEBUG']
           game_hash[:engines].each do |engine_id|
             engine = Engine.find_by(wikidata_id: engine_id)
             puts engine.inspect if ENV['DEBUG']
@@ -135,7 +143,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:genres)
-          puts 'Adding genres.'
+          puts 'Adding genres.' if ENV['DEBUG']
           game_hash[:genres].each do |genre_id|
             genre = Genre.find_by(wikidata_id: genre_id)
             puts genre.inspect if ENV['DEBUG']
@@ -149,7 +157,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:series)
-          puts 'Adding series.'
+          puts 'Adding series.' if ENV['DEBUG']
 
           series = Series.find_by(wikidata_id: game_hash[:series].first)
           puts series.inspect if ENV['DEBUG']
@@ -167,6 +175,7 @@ namespace 'import:wikidata' do
     puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Games]' to have pg_search rebuild its multisearch index."
   end
 
+  # The SPARQL query for getting all video games on Wikidata.
   def games_query
     sparql = <<-SPARQL
       SELECT ?item WHERE {
@@ -175,5 +184,10 @@ namespace 'import:wikidata' do
     SPARQL
 
     return sparql
+  end
+
+  # Return the formatting to use for the progress bar.
+  def formatting
+    return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end
