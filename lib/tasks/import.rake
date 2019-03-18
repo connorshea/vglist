@@ -25,6 +25,9 @@ namespace :import do
       puts '-------------------------'
       puts
     end
+
+    puts "Import completed!"
+    puts "Run 'bundle exec rake rebuild:multisearch:all' to rebuild all the multisearch indices, or nothing will show up in your search results!"
   end
 
   desc "Attach covers to games, only applies to games that have a PCGamingWiki ID and don't already have a cover."
