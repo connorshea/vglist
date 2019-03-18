@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add Steam Application IDs to games. ([#239])
 - Add a `rake import:full` task for running all the import tasks sequentially. ([#239])
-- Add Wikidata IDs to various forms. ([#240])
+- Add Wikidata IDs to various forms. ([#241])
 
 ### Changed
 - Allow the search bar to use the arrow keys for navigating between results. ([#238])
@@ -234,4 +234,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#227]: https://github.com/connorshea/ContinueFromCheckpoint/pull/227
 [#238]: https://github.com/connorshea/ContinueFromCheckpoint/pull/238
 [#239]: https://github.com/connorshea/ContinueFromCheckpoint/pull/239
-[#240]: https://github.com/connorshea/ContinueFromCheckpoint/pull/240
+[#241]: https://github.com/connorshea/ContinueFromCheckpoint/pull/241
