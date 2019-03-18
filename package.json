@@ -8,10 +8,10 @@
     "rails-ujs": "^5.2.2",
     "resolve-url-loader": "^3.0.1",
     "turbolinks": "^5.2.0",
-    "vue": "^2.6.8",
+    "vue": "^2.6.9",
     "vue-loader": "^15.7",
     "vue-select": "^2.6.0",
-    "vue-template-compiler": "^2.6.8",
+    "vue-template-compiler": "^2.6.9",
     "webpack": "^4.29"
   },
   "devDependencies": {
