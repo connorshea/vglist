@@ -81,6 +81,13 @@
       v-model="game.steam_app_id"
     ></number-field>
 
+    <text-field
+      :form-class="formData.class"
+      :attribute="formData.pcgamingwikiId.attribute"
+      :label="formData.pcgamingwikiId.label"
+      v-model="game.pcgamingwiki_id"
+    ></text-field>
+
     <button
       class="button is-primary"
       value="Submit"
@@ -175,6 +182,10 @@ export default {
       type: Number,
       required: false
     },
+    pcgamingwiki_id: {
+      type: String,
+      required: false
+    },
     submitPath: {
       type: String,
       required: true
@@ -210,6 +221,7 @@ export default {
         series: this.series,
         steam_app_id: this.steam_app_id,
         wikidata_id: this.wikidata_id,
+        pcgamingwiki_id: this.pcgamingwiki_id,
         cover: this.cover,
         coverBlob: this.coverBlob
       },
@@ -251,6 +263,10 @@ export default {
         wikidataId: {
           label: 'Wikidata ID',
           attribute: 'wikidata_id'
+        },
+        pcgamingwikiId: {
+          label: 'PCGamingWiki ID',
+          attribute: 'pcgamingwiki_id'
         }
       }
     }
@@ -288,7 +304,8 @@ export default {
         publisher_ids: publisher_ids,
         platform_ids: platform_ids,
         steam_app_id: this.game.steam_app_id,
-        wikidata_id: this.game.wikidata_id
+        wikidata_id: this.game.wikidata_id,
+        pcgamingwiki_id: this.game.pcgamingwiki_id
       }};
 
       if (this.game.series) {
