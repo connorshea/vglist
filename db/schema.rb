@@ -146,8 +146,6 @@ ActiveRecord::Schema.define(version: 2019_03_17_225558) do
     t.bigint "series_id"
     t.bigint "wikidata_id"
     t.text "pcgamingwiki_id"
-    t.jsonb "release_dates"
-    t.date "earliest_release_date"
     t.integer "steam_app_id"
     t.index ["series_id"], name: "index_games_on_series_id"
     t.index ["steam_app_id"], name: "index_games_on_steam_app_id", unique: true

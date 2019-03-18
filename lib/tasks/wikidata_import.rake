@@ -1,6 +1,7 @@
 namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'
+  require 'ruby-progressbar'
 
   desc "Import game developers and publishers from Wikidata"
   task companies: :environment do
@@ -17,9 +18,21 @@ namespace 'import:wikidata' do
     rows.concat(client.query(publishers_query))
 
     puts "Importing up to #{rows.length} companies."
-    companies = wikidata_item_filter(rows: rows)
+    puts "Processing..."
+    progress_bar_for_filter = ProgressBar.create(
+      total: nil,
+      format: '%c/%C |%b>%i| %e'
+    )
+    companies = wikidata_item_filter(rows: rows, progress_bar: progress_bar_for_filter)
     companies.uniq! { |company| company&.dig(:wikidata_id) }
+    puts
     puts "Found #{companies.length} companies."
+    puts "Importing..."
+
+    progress_bar_for_import = ProgressBar.create(
+      total: companies.length,
+      format: '%c/%C |%b>%i| %e'
+    )
 
     PgSearch.disable_multisearch do
       companies.each do |company|
@@ -27,6 +40,7 @@ namespace 'import:wikidata' do
           name: company[:name],
           wikidata_id: company[:wikidata_id].delete('Q')
         )
+        progress_bar_for_import.increment
       end
     end
 
@@ -48,9 +62,21 @@ namespace 'import:wikidata' do
     rows.concat(client.query(platforms_query))
 
     puts "Importing up to #{rows.length} platforms."
-    platforms = wikidata_item_filter(rows: rows, count_limit: 80)
+    puts "Processing..."
+    progress_bar_for_filter = ProgressBar.create(
+      total: nil,
+      format: '%c/%C |%b>%i| %e'
+    )
+    platforms = wikidata_item_filter(rows: rows, count_limit: 80, progress_bar: progress_bar_for_filter)
     platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
+    puts
     puts "Found #{platforms.length} platforms."
+    puts "Importing..."
+
+    progress_bar_for_import = ProgressBar.create(
+      total: platforms.length,
+      format: '%c/%C |%b>%i| %e'
+    )
 
     PgSearch.disable_multisearch do
       platforms.each do |platform|
@@ -58,6 +84,7 @@ namespace 'import:wikidata' do
           name: platform[:name],
           wikidata_id: platform[:wikidata_id].delete('Q')
         )
+        progress_bar_for_import.increment
       end
     end
 
@@ -79,9 +106,22 @@ namespace 'import:wikidata' do
     rows.concat(client.query(genres_query))
 
     puts "Importing up to #{rows.length} genres."
-    genres = wikidata_item_filter(rows: rows, count_limit: 50)
+    puts "Processing..."
+    progress_bar_for_filter = ProgressBar.create(
+      total: nil,
+      format: '%c/%C |%b>%i| %e'
+    )
+    genres = wikidata_item_filter(rows: rows, count_limit: 50, progress_bar: progress_bar_for_filter)
     genres.uniq! { |genre| genre&.dig(:wikidata_id) }
+    progress_bar_for_filter.finish unless progress_bar_for_filter.finished?
+    puts
     puts "Found #{genres.length} genres."
+    puts "Importing..."
+
+    progress_bar_for_import = ProgressBar.create(
+      total: genres.length,
+      format: '%c/%C |%b>%i| %e'
+    )
 
     PgSearch.disable_multisearch do
       genres.each do |genre|
@@ -89,6 +129,7 @@ namespace 'import:wikidata' do
           name: genre[:name],
           wikidata_id: genre[:wikidata_id].delete('Q')
         )
+        progress_bar_for_import.increment
       end
     end
 
@@ -110,9 +151,21 @@ namespace 'import:wikidata' do
     rows.concat(client.query(series_query))
 
     puts "Importing up to #{rows.length} series'."
-    series = wikidata_item_filter(rows: rows, count_limit: 1)
+    puts "Processing..."
+    progress_bar_for_filter = ProgressBar.create(
+      total: nil,
+      format: '%c/%C |%b>%i| %e'
+    )
+    series = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     series.uniq! { |s| s&.dig(:wikidata_id) }
+    puts
     puts "Found #{series.length} series'."
+    puts "Importing..."
+
+    progress_bar_for_import = ProgressBar.create(
+      total: series.length,
+      format: '%c/%C |%b>%i| %e'
+    )
 
     PgSearch.disable_multisearch do
       series.each do |s|
@@ -120,6 +173,7 @@ namespace 'import:wikidata' do
           name: s[:name],
           wikidata_id: s[:wikidata_id].delete('Q')
         )
+        progress_bar_for_import.increment
       end
     end
 
@@ -141,9 +195,21 @@ namespace 'import:wikidata' do
     rows.concat(client.query(engines_query))
 
     puts "Importing up to #{rows.length} engines."
-    engines = wikidata_item_filter(rows: rows, count_limit: 1)
+    puts "Processing..."
+    progress_bar_for_filter = ProgressBar.create(
+      total: nil,
+      format: '%c/%C |%b>%i| %e'
+    )
+    engines = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     engines.uniq! { |engine| engine&.dig(:wikidata_id) }
+    puts
     puts "Found #{engines.length} engines."
+    puts "Importing..."
+
+    progress_bar_for_import = ProgressBar.create(
+      total: engines.length,
+      format: '%c/%C |%b>%i| %e'
+    )
 
     PgSearch.disable_multisearch do
       engines.each do |engine|
@@ -151,6 +217,7 @@ namespace 'import:wikidata' do
           name: engine[:name],
           wikidata_id: engine[:wikidata_id].delete('Q')
         )
+        progress_bar_for_import.increment
       end
     end
 
@@ -158,7 +225,7 @@ namespace 'import:wikidata' do
     puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Engines]' to have pg_search rebuild its multisearch index."
   end
 
-  def wikidata_item_filter(rows:, count_limit: 0)
+  def wikidata_item_filter(rows:, count_limit: 0, progress_bar:)
     wikidata_ids = []
 
     rows.each do |row|
@@ -172,6 +239,8 @@ namespace 'import:wikidata' do
 
       wikidata_ids << wikidata_url.gsub('http://www.wikidata.org/entity/', '')
     end
+
+    progress_bar.total = wikidata_ids.length
 
     items = []
     # Filter invalid data.
@@ -187,8 +256,14 @@ namespace 'import:wikidata' do
         name = wikidata_label.dig('labels', 'en', 'value')
         # Skip items with no labels or no English label.
         wikidata_item = { wikidata_id: id, name: name } unless name.nil?
-
         items << wikidata_item if wikidata_item
+      end
+      # Add to the progress bar once every iteration.
+      # Mark it as finished if it would otherwise overflow.
+      if progress_bar.progress + 49 >= progress_bar.total
+        progress_bar.finish
+      else
+        progress_bar.progress += 49
       end
     end
 
