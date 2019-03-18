@@ -26,7 +26,7 @@ namespace 'import:wikidata' do
 
     progress_bar = ProgressBar.create(
       total: rows.length,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
 
     PgSearch.disable_multisearch do
@@ -175,6 +175,7 @@ namespace 'import:wikidata' do
     puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Games]' to have pg_search rebuild its multisearch index."
   end
 
+  # The SPARQL query for getting all video games on Wikidata.
   def games_query
     sparql = <<-SPARQL
       SELECT ?item WHERE {
@@ -183,5 +184,10 @@ namespace 'import:wikidata' do
     SPARQL
 
     return sparql
+  end
+
+  # Return the formatting to use for the progress bar.
+  def formatting
+    return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end

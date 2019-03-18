@@ -21,7 +21,7 @@ namespace 'import:wikidata' do
     puts "Processing..."
     progress_bar_for_filter = ProgressBar.create(
       total: nil,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
     companies = wikidata_item_filter(rows: rows, progress_bar: progress_bar_for_filter)
     companies.uniq! { |company| company&.dig(:wikidata_id) }
@@ -31,7 +31,7 @@ namespace 'import:wikidata' do
 
     progress_bar_for_import = ProgressBar.create(
       total: companies.length,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
 
     PgSearch.disable_multisearch do
@@ -65,7 +65,7 @@ namespace 'import:wikidata' do
     puts "Processing..."
     progress_bar_for_filter = ProgressBar.create(
       total: nil,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
     platforms = wikidata_item_filter(rows: rows, count_limit: 80, progress_bar: progress_bar_for_filter)
     platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
@@ -75,7 +75,7 @@ namespace 'import:wikidata' do
 
     progress_bar_for_import = ProgressBar.create(
       total: platforms.length,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
 
     PgSearch.disable_multisearch do
@@ -109,7 +109,7 @@ namespace 'import:wikidata' do
     puts "Processing..."
     progress_bar_for_filter = ProgressBar.create(
       total: nil,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
     genres = wikidata_item_filter(rows: rows, count_limit: 50, progress_bar: progress_bar_for_filter)
     genres.uniq! { |genre| genre&.dig(:wikidata_id) }
@@ -120,7 +120,7 @@ namespace 'import:wikidata' do
 
     progress_bar_for_import = ProgressBar.create(
       total: genres.length,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
 
     PgSearch.disable_multisearch do
@@ -154,7 +154,7 @@ namespace 'import:wikidata' do
     puts "Processing..."
     progress_bar_for_filter = ProgressBar.create(
       total: nil,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
     series = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     series.uniq! { |s| s&.dig(:wikidata_id) }
@@ -164,7 +164,7 @@ namespace 'import:wikidata' do
 
     progress_bar_for_import = ProgressBar.create(
       total: series.length,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
 
     PgSearch.disable_multisearch do
@@ -198,7 +198,7 @@ namespace 'import:wikidata' do
     puts "Processing..."
     progress_bar_for_filter = ProgressBar.create(
       total: nil,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
     engines = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     engines.uniq! { |engine| engine&.dig(:wikidata_id) }
@@ -208,7 +208,7 @@ namespace 'import:wikidata' do
 
     progress_bar_for_import = ProgressBar.create(
       total: engines.length,
-      format: '%c/%C |%b>%i| %e'
+      format: formatting
     )
 
     PgSearch.disable_multisearch do
@@ -323,5 +323,10 @@ namespace 'import:wikidata' do
     SPARQL
 
     return sparql
+  end
+
+  # Return the formatting to use for the progress bar.
+  def formatting
+    return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end
