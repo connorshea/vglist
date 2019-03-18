@@ -89,6 +89,9 @@ class EnginesController < ApplicationController
   private
 
   def engine_params
-    params.require(:engine).permit(:name)
+    params.require(:engine).permit(
+      :name,
+      :wikidata_id
+    )
   end
 end
