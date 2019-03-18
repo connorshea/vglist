@@ -67,22 +67,22 @@ Similar tracking sites for movies/television/anime:
   - [x] Publishers
 - [ ] Game Purchase: A game in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
   - [x] Rating
-  - [ ] Time played (hours)
+  - [x] Time played (hours)
   - [ ] Platform
   - [ ] Owned
     - Boolean? This is complicated by the fact that you can own a game on multiple platforms.
     - What about previously-owned?
-  - [ ] Completion Status
+  - [x] Completion Status
      - Unplayed, In-Progress, Dropped, Completed
      - Should there be a status like `Completed (100%)`? I can see that being useful, but it also feels unnecessarily complicated.
      - Some games can't be completed (e.g. Overwatch, Counter-Strike, etc.), should that have a specific status?
      - What about games that are in development, like Early Access games?
      - Also worth noting that you can rent or borrow games, so you may not own them but _have_ completed them.
      - Maybe also have Completed*, which is "Essentially Completed" for games where you didn't _quite_ complete it, but you feel you're finished with it?
-  - [ ] Start Date / Completion Date
+  - [x] Start Date / Completion Date
   - [x] Comments (any notes you want to add about the game, essentially a mini review)
   - [ ] Replayed (A counter for the number of times you've replayed a game)
-  - [ ] Favorite (you can favorite games in your library, which is tracked separately from your Score)
+  - [x] Favorite (you can favorite games in your library, which is tracked separately from your Score)
   - [ ] Physical/Digital
     - I'm really not sure how to handle this, theoretically you can own a game for Switch digitally as well as physically.
 - [ ] Exporter (export your games list, probably as JSON, _maybe_ as a CSV?)
