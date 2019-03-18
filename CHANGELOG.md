@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.3.17
-### Changed
-- Allow the search bar to use the arrow keys for navigating between results. ([#238])
+### Added
 - Add Steam Application IDs to games. ([#239])
 - Add a `rake import:full` task for running all the import tasks sequentially. ([#239])
+- Add Wikidata IDs to various forms. ([#240])
+
+### Changed
+- Allow the search bar to use the arrow keys for navigating between results. ([#238])
 
 ## v2019.3.16
 ### Added
@@ -231,3 +234,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#227]: https://github.com/connorshea/ContinueFromCheckpoint/pull/227
 [#238]: https://github.com/connorshea/ContinueFromCheckpoint/pull/238
 [#239]: https://github.com/connorshea/ContinueFromCheckpoint/pull/239
+[#240]: https://github.com/connorshea/ContinueFromCheckpoint/pull/240

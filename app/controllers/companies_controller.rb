@@ -81,6 +81,10 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company).permit(:name, :description)
+    params.require(:company).permit(
+      :name,
+      :description,
+      :wikidata_id
+    )
   end
 end

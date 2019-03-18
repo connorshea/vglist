@@ -7,6 +7,13 @@
   </div>
 
   <div class="field">
+    <%= f.label :wikidata_id, "Wikidata ID", class: "label" %>
+    <div class="control">
+      <%= f.number_field :wikidata_id, class: "input" %>
+    </div>
+  </div>
+
+  <div class="field">
     <%= f.submit "Submit", class: "button is-primary" %>
     <%= link_to("Cancel", cancel_path, class: "button") %>
   </div>

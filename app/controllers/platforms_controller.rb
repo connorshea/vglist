@@ -75,6 +75,10 @@ class PlatformsController < ApplicationController
   private
 
   def platform_params
-    params.require(:platform).permit(:name, :description)
+    params.require(:platform).permit(
+      :name,
+      :description,
+      :wikidata_id
+    )
   end
 end

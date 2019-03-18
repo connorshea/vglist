@@ -69,6 +69,13 @@
 
     <number-field
       :form-class="formData.class"
+      :attribute="formData.wikidataId.attribute"
+      :label="formData.wikidataId.label"
+      v-model="game.wikidata_id"
+    ></number-field>
+
+    <number-field
+      :form-class="formData.class"
       :attribute="formData.steamAppId.attribute"
       :label="formData.steamAppId.label"
       v-model="game.steam_app_id"
@@ -164,6 +171,10 @@ export default {
       type: Number,
       required: false
     },
+    wikidata_id: {
+      type: Number,
+      required: false
+    },
     submitPath: {
       type: String,
       required: true
@@ -198,6 +209,7 @@ export default {
         platforms: this.platforms,
         series: this.series,
         steam_app_id: this.steam_app_id,
+        wikidata_id: this.wikidata_id,
         cover: this.cover,
         coverBlob: this.coverBlob
       },
@@ -235,6 +247,10 @@ export default {
         steamAppId: {
           label: 'Steam Application ID',
           attribute: 'steam_app_id'
+        },
+        wikidataId: {
+          label: 'Wikidata ID',
+          attribute: 'wikidata_id'
         }
       }
     }
@@ -271,7 +287,8 @@ export default {
         developer_ids: developer_ids,
         publisher_ids: publisher_ids,
         platform_ids: platform_ids,
-        steam_app_id: this.game.steam_app_id
+        steam_app_id: this.game.steam_app_id,
+        wikidata_id: this.game.wikidata_id
       }};
 
       if (this.game.series) {
