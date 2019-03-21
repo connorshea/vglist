@@ -1,7 +1,7 @@
 image: "registry.gitlab.com/connorshea/continuefromcheckpoint:latest"
 
 services:
-  - postgres:10.1
+  - postgres:11
 
 variables:
   BUNDLE_PATH: vendor/bundle
