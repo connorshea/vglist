@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.22
+### Changed
+- Improve the design of the settings page. ([#258])
+- Enable trigram search to make the search more flexible. ([#265])
+- Split `seeds.rb` into multiple files and Rake tasks. ([#267])
+
 ## v2019.3.17
 ### Added
 - Add Steam Application IDs to games. ([#239])
@@ -235,3 +241,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#238]: https://github.com/connorshea/ContinueFromCheckpoint/pull/238
 [#239]: https://github.com/connorshea/ContinueFromCheckpoint/pull/239
 [#241]: https://github.com/connorshea/ContinueFromCheckpoint/pull/241
+[#258]: https://github.com/connorshea/ContinueFromCheckpoint/pull/258
+[#265]: https://github.com/connorshea/ContinueFromCheckpoint/pull/265
+[#267]: https://github.com/connorshea/ContinueFromCheckpoint/pull/267
