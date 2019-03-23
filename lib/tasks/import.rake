@@ -86,7 +86,7 @@ namespace :import do
 
       # The cover URL is returned from the API like //pcgamingwiki.com/images/whatever.png,
       # so we need to turn it into a valid URL.
-      cover_url = "https:#{cover_url}"
+      cover_url = "https:#{cover_url}" unless cover_url.start_with?('https:')
 
       cover_blob = URI.open(cover_url)
 
