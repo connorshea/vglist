@@ -1,7 +1,10 @@
 FactoryBot.define do
   factory :game do
     name { "Half-Life 2" }
-    description { "A 2004 first-person shooter video game created by Valve." }
+
+    trait :description do
+      description { "A 2004 first-person shooter video game created by Valve." }
+    end
 
     trait :cover do
       after(:build) do |game|
@@ -18,7 +21,6 @@ FactoryBot.define do
     end
 
     factory :game_with_cover, traits: [:cover]
-    factory :game_with_series, traits: [:series]
-    factory :game_with_everything, traits: [:cover, :series, :wikidata_id]
+    factory :game_with_everything, traits: [:description, :cover, :series, :wikidata_id]
   end
 end
