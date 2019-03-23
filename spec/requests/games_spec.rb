@@ -10,9 +10,15 @@ RSpec.describe "Games", type: :request do
 
   describe "GET game_path" do
     let(:game) { create(:game) }
+    let(:game_with_everything) { create(:game_with_everything) }
 
     it "returns http success" do
       get game_path(id: game.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for a game with everything" do
+      get game_path(id: game_with_everything.id)
       expect(response).to have_http_status(:success)
     end
   end

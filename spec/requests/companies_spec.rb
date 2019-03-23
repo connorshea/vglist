@@ -10,9 +10,15 @@ RSpec.describe "Companies", type: :request do
 
   describe "GET company_path" do
     let(:company) { create(:company) }
+    let(:company_with_everything) { create(:company_with_everything) }
 
     it "returns http success" do
       get company_path(id: company.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for company that has everything" do
+      get company_path(id: company_with_everything.id)
       expect(response).to have_http_status(:success)
     end
   end
@@ -23,9 +29,9 @@ RSpec.describe "Companies", type: :request do
 
     it "creates a new company" do
       sign_in(user)
-      expect {
+      expect do
         post companies_path, params: { company: company_attributes }
-      }.to change(Company, :count).by(1)
+      end.to change(Company, :count).by(1)
     end
 
     it "fails to create a new company" do
@@ -64,9 +70,9 @@ RSpec.describe "Companies", type: :request do
 
     it "deletes a company" do
       sign_in(user)
-      expect {
+      expect do
         delete company_path(id: company.id)
-      }.to change(Company, :count).by(-1)
+      end.to change(Company, :count).by(-1)
     end
   end
 

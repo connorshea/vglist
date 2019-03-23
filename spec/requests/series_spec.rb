@@ -10,9 +10,15 @@ RSpec.describe "Series", type: :request do
 
   describe "GET series_path" do
     let(:series) { create(:series) }
+    let(:series_with_everything) { create(:series_with_everything) }
 
     it "returns http success" do
       get series_path(id: series.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for series that has everything" do
+      get series_path(id: series_with_everything.id)
       expect(response).to have_http_status(:success)
     end
   end
@@ -23,9 +29,9 @@ RSpec.describe "Series", type: :request do
 
     it "creates a new series" do
       sign_in(user)
-      expect {
+      expect do
         post series_index_path, params: { series: series_attributes }
-      }.to change(Series, :count).by(1)
+      end.to change(Series, :count).by(1)
     end
 
     it "fails to create a new series" do
@@ -64,9 +70,9 @@ RSpec.describe "Series", type: :request do
 
     it "deletes a series" do
       sign_in(user)
-      expect {
+      expect do
         delete series_path(id: series.id)
-      }.to change(Series, :count).by(-1)
+      end.to change(Series, :count).by(-1)
     end
   end
 
