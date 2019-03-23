@@ -678,6 +678,7 @@ Rails/Output:
   Enabled: true
   Exclude:
     - "db/seeds.rb"
+    - "db/seeds/*.rb"
     - "lib/wikidata_helper.rb"
 
 Rails/OutputSafety:
