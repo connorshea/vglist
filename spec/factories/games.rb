@@ -16,11 +16,52 @@ FactoryBot.define do
       series
     end
 
+    trait :developer do
+      after(:create) { |game| create(:game_developer, game: game) }
+    end
+
+    trait :publisher do
+      after(:create) { |game| create(:game_publisher, game: game) }
+    end
+
+    trait :engine do
+      after(:create) { |game| create(:game_engine, game: game) }
+    end
+
+    trait :platform do
+      after(:create) { |game| create(:game_platform, game: game) }
+    end
+
+    trait :genre do
+      after(:create) { |game| create(:game_genre, game: game) }
+    end
+
     trait :wikidata_id do
       wikidata_id { Faker::Number.number(6) }
     end
 
+    trait :steam_app_id do
+      steam_app_id { Faker::Number.number(5) }
+    end
+
+    trait :pcgamingwiki_id do
+      pcgamingwiki_id { Faker::Lorem.words(3).join('_') }
+    end
+
     factory :game_with_cover, traits: [:cover]
-    factory :game_with_everything, traits: [:description, :cover, :series, :wikidata_id]
+    factory :game_with_everything,
+      traits: [
+        :description,
+        :cover,
+        :series,
+        :developer,
+        :publisher,
+        :engine,
+        :platform,
+        :genre,
+        :wikidata_id,
+        :steam_app_id,
+        :pcgamingwiki_id
+      ]
   end
 end
