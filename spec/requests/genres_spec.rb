@@ -10,9 +10,15 @@ RSpec.describe "Genres", type: :request do
 
   describe "GET genre_path" do
     let(:genre) { create(:genre) }
+    let(:genre_with_everything) { create(:genre_with_everything) }
 
     it "returns http success" do
       get genre_path(id: genre.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for genre that has everything" do
+      get genre_path(id: genre_with_everything.id)
       expect(response).to have_http_status(:success)
     end
   end
@@ -23,9 +29,9 @@ RSpec.describe "Genres", type: :request do
 
     it "creates a new genre" do
       sign_in(user)
-      expect {
+      expect do
         post genres_path, params: { genre: genre_attributes }
-      }.to change(Genre, :count).by(1)
+      end.to change(Genre, :count).by(1)
     end
 
     it "fails to create a new genre" do
@@ -64,9 +70,9 @@ RSpec.describe "Genres", type: :request do
 
     it "deletes a genre" do
       sign_in(user)
-      expect {
+      expect do
         delete genre_path(id: genre.id)
-      }.to change(Genre, :count).by(-1)
+      end.to change(Genre, :count).by(-1)
     end
   end
 

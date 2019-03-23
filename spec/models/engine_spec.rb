@@ -20,4 +20,9 @@ RSpec.describe Engine, type: :model do
         .is_greater_than(0)
     end
   end
+
+  describe "Associations" do
+    it { should have_many(:game_engines) }
+    it { should have_many(:games).through(:game_engines).source(:game) }
+  end
 end

@@ -8,6 +8,28 @@ RSpec.describe "GamePurchases", type: :request do
     end
   end
 
+  describe "GET game_purchases_path specifying a user id" do
+    let!(:user) { create(:user) }
+    let!(:game_purchase) { create(:game_purchase, user: user) }
+    let(:user2) { create(:user) }
+
+    it "returns http success" do
+      get game_purchases_path(format: :json, user_id: user.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns the game purchase associated with the user" do
+      get game_purchases_path(format: :json, user_id: user.id)
+      expect(JSON.parse(response.body).first['id']).to eq(game_purchase.id)
+    end
+
+    it "doesn't include any other game purchases" do
+      create(:game_purchase, user: user2)
+      get game_purchases_path(format: :json, user_id: user.id)
+      expect(JSON.parse(response.body).length).to eq(1)
+    end
+  end
+
   describe "GET game_purchase_path" do
     let(:game_purchase) { create(:game_purchase) }
 

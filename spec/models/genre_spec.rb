@@ -24,5 +24,6 @@ RSpec.describe Genre, type: :model do
 
   describe "Associations" do
     it { should have_many(:game_genres) }
+    it { should have_many(:games).through(:game_genres).source(:game) }
   end
 end

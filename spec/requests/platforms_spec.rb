@@ -10,9 +10,15 @@ RSpec.describe "Platforms", type: :request do
 
   describe "GET platform_path" do
     let(:platform) { create(:platform) }
+    let(:platform_with_everything) { create(:platform_with_everything) }
 
     it "returns http success" do
       get platform_path(id: platform.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for platform that has everything" do
+      get platform_path(id: platform_with_everything.id)
       expect(response).to have_http_status(:success)
     end
   end
@@ -23,9 +29,9 @@ RSpec.describe "Platforms", type: :request do
 
     it "creates a new platform" do
       sign_in(user)
-      expect {
+      expect do
         post platforms_path, params: { platform: attributes }
-      }.to change(Platform, :count).by(1)
+      end.to change(Platform, :count).by(1)
     end
 
     it "fails to create a new platform" do
@@ -64,9 +70,9 @@ RSpec.describe "Platforms", type: :request do
 
     it "deletes a platform" do
       sign_in(user)
-      expect {
+      expect do
         delete platform_path(id: platform.id)
-      }.to change(Platform, :count).by(-1)
+      end.to change(Platform, :count).by(-1)
     end
   end
 

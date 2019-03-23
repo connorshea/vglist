@@ -10,9 +10,15 @@ RSpec.describe "Engines", type: :request do
 
   describe "GET engine_path" do
     let(:engine) { create(:engine) }
+    let(:engine_with_everything) { create(:engine_with_everything) }
 
     it "returns http success" do
       get engine_path(id: engine.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for engine that has everything" do
+      get engine_path(id: engine_with_everything.id)
       expect(response).to have_http_status(:success)
     end
   end
@@ -46,9 +52,9 @@ RSpec.describe "Engines", type: :request do
 
     it "creates a new engine" do
       sign_in(user)
-      expect {
+      expect do
         post engines_path, params: { engine: engine_attributes }
-      }.to change(Engine, :count).by(1)
+      end.to change(Engine, :count).by(1)
     end
 
     it "fails to create a new engine" do
@@ -87,9 +93,9 @@ RSpec.describe "Engines", type: :request do
 
     it "deletes an engine" do
       sign_in(user)
-      expect {
+      expect do
         delete engine_path(id: engine.id)
-      }.to change(Engine, :count).by(-1)
+      end.to change(Engine, :count).by(-1)
     end
   end
 
