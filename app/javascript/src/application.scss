@@ -226,3 +226,9 @@ nav.navbar {
   color: #333;
   opacity: 0.5;
 }
+
+// Limit width of infobox.
+.infobox {
+  max-width: 400px;
+  width: 100%;
+}
