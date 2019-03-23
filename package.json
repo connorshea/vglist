@@ -1,5 +1,5 @@
 {
-  "name": "continue-from-checkpoint",
+  "name": "vglist",
   "private": true,
   "dependencies": {
     "@rails/webpacker": "4.0.2",

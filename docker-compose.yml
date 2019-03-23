@@ -11,7 +11,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      CONTINUE-FROM-CHECKPOINT_DATABASE_HOST: db
+      VGLIST_DATABASE_HOST: db
       DATABASE_URL: postgres://postgres@db
       DATABASE_PASSWORD: 'productionpassword'
     depends_on:

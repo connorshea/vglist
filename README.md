@@ -1,7 +1,7 @@
-# Continue From Checkpoint
+# VideoGameList (VGList)
 
-[![pipeline status](https://gitlab.com/connorshea/ContinueFromCheckpoint/badges/master/pipeline.svg)](https://gitlab.com/connorshea/ContinueFromCheckpoint/commits/master)
-[![coverage report](https://gitlab.com/connorshea/ContinueFromCheckpoint/badges/master/coverage.svg?job=rspec)](https://gitlab.com/connorshea/ContinueFromCheckpoint/commits/master)
+[![pipeline status](https://gitlab.com/connorshea/videogamelist/badges/master/pipeline.svg)](https://gitlab.com/connorshea/videogamelist/commits/master)
+[![coverage report](https://gitlab.com/connorshea/videogamelist/badges/master/coverage.svg?job=rspec)](https://gitlab.com/connorshea/videogamelist/commits/master)
 
 This is a Rails application for tracking your video game library.
 
@@ -45,8 +45,8 @@ Docker isn't currently used for development, you can just run the application "n
 To update the Docker container used by GitLab CI:
 
 - Log into the GitLab CI Docker registry with `docker login registry.gitlab.com`.
-- Build the container with `docker build -f Dockerfile.ci -t registry.gitlab.com/connorshea/continuefromcheckpoint .`
-- Then use `docker push registry.gitlab.com/connorshea/continuefromcheckpoint` to push the container to the GitLab Container Registry.
+- Build the container with `docker build -f Dockerfile.ci -t registry.gitlab.com/connorshea/videogamelist .`
+- Then use `docker push registry.gitlab.com/connorshea/videogamelist` to push the container to the GitLab Container Registry.
 
 ## Design Document
 
