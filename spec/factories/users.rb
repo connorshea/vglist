@@ -15,6 +15,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_game_purchase do
+      after(:create) do |user|
+        create :game_purchase, user: user
+      end
+    end
+
     trait :moderator do
       role { :moderator }
     end
@@ -33,5 +39,7 @@ FactoryBot.define do
     factory :admin,                           traits: [:admin]
     factory :confirmed_admin,                 traits: [:confirmed, :admin]
     factory :confirmed_admin_with_avatar,     traits: [:confirmed, :admin, :with_avatar]
+
+    factory :user_with_game_purchase,         traits: [:with_game_purchase]
   end
 end

@@ -17,6 +17,15 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET user_path with game purchases" do
+    let(:user) { create(:user_with_game_purchase) }
+
+    it "returns http success" do
+      get user_path(id: user.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST update_role_user_path" do
     let(:admin) { create(:confirmed_admin) }
     let(:moderator) { create(:confirmed_moderator) }
