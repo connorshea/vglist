@@ -21,4 +21,11 @@ RSpec.describe Company, type: :model do
         .is_greater_than(0)
     end
   end
+
+  describe "Associations" do
+    it { should have_many(:game_developers) }
+    it { should have_many(:developed_games).through(:game_developers).source(:game) }
+    it { should have_many(:game_publishers) }
+    it { should have_many(:published_games).through(:game_publishers).source(:game) }
+  end
 end
