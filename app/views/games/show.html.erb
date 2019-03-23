@@ -1,7 +1,7 @@
 <% content_for :title, @game.name %>
 
 <div class="hero-area">
-  <div class="hero-image game-cover">
+  <div class="hero-image game-cover mb-5">
     <% if @game.cover.attached? %>
       <%= image_tag @game.cover.variant(resize: "300x500>") %>
     <% else %>
