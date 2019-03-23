@@ -1,53 +1,60 @@
 <% content_for :title, "Account Settings" %>
 
-<h1 class="title">Account Settings</h1>
-
-<%= render 'nav' %>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages" %>
-
-  <div class="field">
-    <%= f.label :email, class: "label" %>
-    <div class="control">
-      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
+<div class="columns">
+  <div class="column is-2-desktop">
+    <div class="box">
+      <%= render 'nav' %>
     </div>
   </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently awaiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+  <div class="column">
+    <h1 class="title">Account Settings</h1>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= render "devise/shared/error_messages" %>
 
-  <div class="field">
-    <%= f.label :password, 'New password', class: "label" %>
-    <div class="control">
-      <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
-      <% if @minimum_password_length %>
-        <p class="help">(<%= @minimum_password_length %> characters minimum, leave blank if you don't want to change it)</p>
+      <div class="field">
+        <%= f.label :email, class: "label" %>
+        <div class="control">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
+        </div>
+      </div>
+
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div>Currently awaiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
-    </div>
+
+      <div class="field">
+        <%= f.label :password, 'New password', class: "label" %>
+        <div class="control">
+          <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
+          <% if @minimum_password_length %>
+            <p class="help">(<%= @minimum_password_length %> characters minimum, leave blank if you don't want to change it)</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, 'New password confirmation', class: "label" %>
+        <div class="control">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.label :current_password, class: "label" %>
+        <div class="control">
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
+          <p class="help">(we need your current password to confirm your changes)</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.submit "Update", class: "button is-primary" %>
+      </div>
+    <% end %>
+
+    <h2 class="subtitle is-3 mt-25 mb-10">Delete account</h2>
+
+    <p><%= button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure? This can't be undone." }, method: :delete, class: 'button is-danger' %></p>
   </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation, 'New password confirmation', class: "label" %>
-    <div class="control">
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password, class: "label" %>
-    <div class="control">
-      <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
-      <p class="help">(we need your current password to confirm your changes)</p>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= f.submit "Update", class: "button is-primary" %>
-  </div>
-<% end %>
-
-<h2 class="subtitle is-3 mt-25 mb-10">Delete account</h2>
-
-<p><%= button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure? This can't be undone." }, method: :delete, class: 'button is-danger' %></p>
+</div>
