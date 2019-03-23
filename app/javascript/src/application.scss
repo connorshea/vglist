@@ -220,3 +220,9 @@ nav.navbar {
 .modal-card-allow-overflow {
   overflow: initial;
 }
+
+// Make input placeholder text darker by default.
+.input::placeholder {
+  color: #333;
+  opacity: 0.5;
+}
