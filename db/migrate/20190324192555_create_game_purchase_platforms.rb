@@ -13,6 +13,7 @@ class CreateGamePurchasePlatforms < ActiveRecord::Migration[5.2]
       on_delete: :cascade
 
     add_index :game_purchase_platforms, [:game_purchase_id, :platform_id],
-      unique: true, name: :index_game_purchase_platforms_on_game_purchase_and_platform
+      unique: true,
+      name: :index_game_purchase_platforms_on_game_purchase_and_platform
   end
 end
