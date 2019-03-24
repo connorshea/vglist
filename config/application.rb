@@ -38,5 +38,10 @@ module VideoGameList
       # Disable controller spec generation
       generate.controller_specs false
     end
+
+    # Add spec to the directories that 'rails notes' checks.
+    config.annotations.register_directories("spec")
+    # Add .vue files to the file extensions picked up by 'rails notes'.
+    config.annotations.register_extensions("vue") { |annotation| %r{//\s*(#{annotation}):?\s*(.*)$} }
   end
 end
