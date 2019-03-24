@@ -15,4 +15,8 @@ RSpec.describe GameEngine, type: :model do
     it { should belong_to(:game) }
     it { should belong_to(:engine) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index([:game_id, :engine_id]).unique }
+  end
 end

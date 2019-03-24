@@ -15,4 +15,8 @@ RSpec.describe GamePlatform, type: :model do
     it { should belong_to(:game) }
     it { should belong_to(:platform) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index([:game_id, :platform_id]).unique }
+  end
 end

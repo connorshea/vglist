@@ -15,4 +15,8 @@ RSpec.describe GameGenre, type: :model do
     it { should belong_to(:game) }
     it { should belong_to(:genre) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index([:game_id, :genre_id]).unique }
+  end
 end

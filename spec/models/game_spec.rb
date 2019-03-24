@@ -76,4 +76,8 @@ RSpec.describe Game, type: :model do
 
     it { should belong_to(:series).optional }
   end
+
+  describe "Indexes" do
+    it { should have_db_index(:steam_app_id).unique }
+  end
 end

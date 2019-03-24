@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.24
+### Added
+- Add platforms to game purchases. ([#271])
+
+## v2019.3.23
+### Changed
+- Improve test coverage for cases where the tests didn't check for associations (e.g. a game with a platform). ([#268])
+- Rename the project to VideoGameList aka VGList. ([#269])
+
 ## v2019.3.22
 ### Changed
 - Improve the design of the settings page. ([#258])
@@ -244,3 +253,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#258]: https://github.com/connorshea/VideoGameList/pull/258
 [#265]: https://github.com/connorshea/VideoGameList/pull/265
 [#267]: https://github.com/connorshea/VideoGameList/pull/267
+[#268]: https://github.com/connorshea/VideoGameList/pull/268
+[#269]: https://github.com/connorshea/VideoGameList/pull/269
+[#271]: https://github.com/connorshea/VideoGameList/pull/271

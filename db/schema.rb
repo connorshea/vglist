@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_23_034752) do
+ActiveRecord::Schema.define(version: 2019_03_24_192555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -124,6 +124,16 @@ ActiveRecord::Schema.define(version: 2019_03_23_034752) do
     t.index ["game_id"], name: "index_game_publishers_on_game_id"
   end
 
+  create_table "game_purchase_platforms", force: :cascade do |t|
+    t.bigint "game_purchase_id", null: false
+    t.bigint "platform_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_purchase_id", "platform_id"], name: "index_game_purchase_platforms_on_game_purchase_and_platform", unique: true
+    t.index ["game_purchase_id"], name: "index_game_purchase_platforms_on_game_purchase_id"
+    t.index ["platform_id"], name: "index_game_purchase_platforms_on_platform_id"
+  end
+
   create_table "game_purchases", force: :cascade do |t|
     t.bigint "game_id", null: false
     t.bigint "user_id", null: false
@@ -222,6 +232,8 @@ ActiveRecord::Schema.define(version: 2019_03_23_034752) do
   add_foreign_key "game_platforms", "platforms", on_delete: :cascade
   add_foreign_key "game_publishers", "companies", on_delete: :cascade
   add_foreign_key "game_publishers", "games", on_delete: :cascade
+  add_foreign_key "game_purchase_platforms", "game_purchases", on_delete: :cascade
+  add_foreign_key "game_purchase_platforms", "platforms", on_delete: :cascade
   add_foreign_key "game_purchases", "games", on_delete: :cascade
   add_foreign_key "game_purchases", "users", on_delete: :cascade
 end

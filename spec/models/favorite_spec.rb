@@ -19,4 +19,10 @@ RSpec.describe Favorite, type: :model do
     it { should belong_to(:user).inverse_of(:favorites) }
     it { should belong_to(:favoritable) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index(:favoritable_id) }
+    it { should have_db_index(:favoritable_type) }
+    it { should have_db_index([:favoritable_id, :favoritable_type]).unique }
+  end
 end

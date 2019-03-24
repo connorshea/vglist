@@ -6,6 +6,7 @@
       <div class="column game-hours-played">Hours Played</div>
       <div class="column game-completion-status">Completion Status</div>
       <div class="column game-start-and-completion-dates">Start/Completion Dates</div>
+      <div class="column game-platforms">Platforms</div>
       <div class="column game-comments">Comments</div>
       <div v-if="isEditable" class="column game-actions">Actions</div>
     </div>
