@@ -15,6 +15,11 @@
     <div class="column game-start-and-completion-dates">
       {{ formattedStartAndCompletionDates }}
     </div>
+    <div class="column game-start-and-completion-dates">
+      <p v-for="platform in gameInLibrary.platforms" :key="platform.id">
+        {{ platform.name }}
+      </p>
+    </div>
     <div class="column game-comments">{{ gameInLibrary.comments }}</div>
     <div v-if="isEditable" class="column game-actions">
       <a @click="onEdit">Edit</a>
