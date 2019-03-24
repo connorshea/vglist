@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add platforms to game purchases. ([#271])
 
+### Fixed
+- Fix a bug that prevented more than one person from favoriting the same game. ([#272])
+
 ## v2019.3.23
 ### Changed
 - Improve test coverage for cases where the tests didn't check for associations (e.g. a game with a platform). ([#268])
@@ -256,3 +259,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#268]: https://github.com/connorshea/VideoGameList/pull/268
 [#269]: https://github.com/connorshea/VideoGameList/pull/269
 [#271]: https://github.com/connorshea/VideoGameList/pull/271
+[#272]: https://github.com/connorshea/VideoGameList/pull/272

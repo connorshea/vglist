@@ -23,6 +23,6 @@ RSpec.describe Favorite, type: :model do
   describe "Indexes" do
     it { should have_db_index(:favoritable_id) }
     it { should have_db_index(:favoritable_type) }
-    it { should have_db_index([:favoritable_id, :favoritable_type]).unique }
+    it { should have_db_index([:favoritable_id, :favoritable_type, :user_id]).unique }
   end
 end
