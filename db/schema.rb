@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_24_220242) do
+ActiveRecord::Schema.define(version: 2019_03_24_222637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2019_03_24_220242) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
+    t.index ["wikidata_id"], name: "index_companies_on_wikidata_id", unique: true
   end
 
   create_table "engines", force: :cascade do |t|
@@ -50,6 +51,7 @@ ActiveRecord::Schema.define(version: 2019_03_24_220242) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
+    t.index ["wikidata_id"], name: "index_engines_on_wikidata_id", unique: true
   end
 
   create_table "favorites", force: :cascade do |t|
@@ -160,6 +162,7 @@ ActiveRecord::Schema.define(version: 2019_03_24_220242) do
     t.integer "steam_app_id"
     t.index ["series_id"], name: "index_games_on_series_id"
     t.index ["steam_app_id"], name: "index_games_on_steam_app_id", unique: true
+    t.index ["wikidata_id"], name: "index_games_on_wikidata_id", unique: true
   end
 
   create_table "genres", force: :cascade do |t|
@@ -168,6 +171,7 @@ ActiveRecord::Schema.define(version: 2019_03_24_220242) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
+    t.index ["wikidata_id"], name: "index_genres_on_wikidata_id", unique: true
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -185,6 +189,7 @@ ActiveRecord::Schema.define(version: 2019_03_24_220242) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
+    t.index ["wikidata_id"], name: "index_platforms_on_wikidata_id", unique: true
   end
 
   create_table "series", force: :cascade do |t|
@@ -192,6 +197,7 @@ ActiveRecord::Schema.define(version: 2019_03_24_220242) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
+    t.index ["wikidata_id"], name: "index_series_on_wikidata_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|

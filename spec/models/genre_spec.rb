@@ -26,4 +26,8 @@ RSpec.describe Genre, type: :model do
     it { should have_many(:game_genres) }
     it { should have_many(:games).through(:game_genres).source(:game) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index(:wikidata_id).unique }
+  end
 end

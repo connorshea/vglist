@@ -24,4 +24,8 @@ RSpec.describe Series, type: :model do
   describe "Associations" do
     it { should have_many(:games) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index(:wikidata_id).unique }
+  end
 end
