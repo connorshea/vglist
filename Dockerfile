@@ -2,7 +2,7 @@
 # Can be run locally for testing that matches production very closely.
 FROM ruby:2.6.2-alpine3.9
 
-ENV APP_ROOT continuefromcheckpoint
+ENV APP_ROOT videogamelist
 ENV BUNDLER_VERSION 2.0.1
 ENV RAILS_ENV production
 ENV RACK_ENV production

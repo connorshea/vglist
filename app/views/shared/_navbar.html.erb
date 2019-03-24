@@ -1,6 +1,6 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <%= link_to("Continue From Checkpoint", root_path, class: "navbar-item has-text-weight-semibold") %>
+    <%= link_to("VideoGameList", root_path, class: "navbar-item has-text-weight-semibold") %>
     <%# Hamburger menu for mobile %>
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
       <span aria-hidden="true"></span>
@@ -38,7 +38,7 @@
             <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item") %>
             <hr class="navbar-divider">
             <%= link_to("About", about_path, class: "navbar-item") %>
-            <%= link_to("GitHub", 'https://github.com/connorshea/ContinueFromCheckpoint', class: "navbar-item") %>
+            <%= link_to("GitHub", 'https://github.com/connorshea/VideoGameList', class: "navbar-item") %>
           </div>
         </div>
 
@@ -46,7 +46,7 @@
         <%= link_to("Settings", settings_path, class: "navbar-item is-hidden-desktop") %>
         <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item is-hidden-desktop") %>
         <%= link_to("About", about_path, class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("GitHub", 'https://github.com/connorshea/ContinueFromCheckpoint', class: "navbar-item is-hidden-desktop") %>
+        <%= link_to("GitHub", 'https://github.com/connorshea/VideoGameList', class: "navbar-item is-hidden-desktop") %>
       <% else %>
         <%= link_to('Sign up', new_user_registration_path, class: "navbar-item")  %>
         <%= link_to('Sign in', new_user_session_path, class: "navbar-item") %>

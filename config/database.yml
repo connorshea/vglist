@@ -24,7 +24,7 @@ default: &default
 
 development:
   <<: *default
-  database: continue-from-checkpoint_development
+  database: vglist_development
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -38,7 +38,7 @@ development:
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
   # domain sockets, so uncomment these lines.
-  host: <%= ENV['CONTINUE-FROM-CHECKPOINT_DATABASE_HOST'] || 'localhost' %> 
+  host: <%= ENV['VGLIST_DATABASE_HOST'] || 'localhost' %> 
 
   # The TCP port the server listens on. Defaults to 5432.
   # If your server runs on a different port number, change accordingly.
@@ -58,7 +58,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: continue-from-checkpoint_test
+  database: vglist_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -81,6 +81,6 @@ test:
 #
 production:
   <<: *default
-  database: continue-from-checkpoint_production
-  username: continue-from-checkpoint
-  password: <%= ENV['CONTINUE-FROM-CHECKPOINT_DATABASE_PASSWORD'] %>
+  database: vglist_production
+  username: vglist
+  password: <%= ENV['VGLIST_DATABASE_PASSWORD'] %>

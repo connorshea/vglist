@@ -55,7 +55,7 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "continue-from-checkpoint_#{Rails.env}"
+  # config.active_job.queue_name_prefix = "vglist_#{Rails.env}"
 
   config.action_mailer.perform_caching = false
 
@@ -63,8 +63,8 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # TODO: Change this when deploying to Heroku.
-  config.action_mailer.default_url_options = { host: 'continuefromcheckpoint.herokuapp.com', port: 3000 }
+  # TODO: Change this when deploying.
+  config.action_mailer.default_url_options = { host: 'vglist.herokuapp.com', port: 3000 }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
