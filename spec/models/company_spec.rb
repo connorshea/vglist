@@ -28,4 +28,8 @@ RSpec.describe Company, type: :model do
     it { should have_many(:game_publishers) }
     it { should have_many(:published_games).through(:game_publishers).source(:game) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index(:wikidata_id).unique }
+  end
 end

@@ -28,4 +28,8 @@ RSpec.describe Platform, type: :model do
     it { should have_many(:game_purchase_platforms) }
     it { should have_many(:game_purchases).through(:game_purchase_platforms).source(:game_purchase) }
   end
+
+  describe "Indexes" do
+    it { should have_db_index(:wikidata_id).unique }
+  end
 end
