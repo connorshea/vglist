@@ -27,8 +27,12 @@ FactoryBot.define do
       hours_played { Faker::Number.decimal(3, 1) }
     end
 
+    trait :platforms do
+      after(:create) { |game_purchase| create(:game_purchase_platform, game_purchase: game_purchase) }
+    end
+
     factory :game_purchase_with_comments_and_rating, traits: [:comments, :rating]
     factory :game_purchase_with_everything,
-      traits: [:comments, :rating, :completion_status, :start_date, :completion_date, :hours_played]
+      traits: [:comments, :rating, :completion_status, :start_date, :completion_date, :hours_played, :platforms]
   end
 end
