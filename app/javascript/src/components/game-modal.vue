@@ -222,7 +222,7 @@ export default {
       if (this.gamePurchase.hours_played !== '') {
         submittableData['game_purchase']['hours_played'] = this.gamePurchase.hours_played;
       }
-      if (this.gamePurchase.completion_status !== '') {
+      if (this.gamePurchase.completion_status !== '' && typeof this.gamePurchase.completion_status !== 'undefined') {
         submittableData['game_purchase']['completion_status'] = this.gamePurchase.completion_status.value;
       }
       if (this.gamePurchase.start_date !== '' && this.gamePurchase.start_date !== null) {
