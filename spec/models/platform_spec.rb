@@ -25,5 +25,7 @@ RSpec.describe Platform, type: :model do
   describe "Associations" do
     it { should have_many(:game_platforms) }
     it { should have_many(:games).through(:game_platforms).source(:game) }
+    it { should have_many(:game_purchase_platforms) }
+    it { should have_many(:game_purchases).through(:game_purchase_platforms).source(:game_purchase) }
   end
 end

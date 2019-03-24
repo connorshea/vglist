@@ -4,8 +4,8 @@ class Platform < ApplicationRecord
   has_many :game_platforms
   has_many :games, through: :game_platforms, source: :game
 
-  has_many :game_platform_purchases
-  has_many :users, through: :game_platform_purchases, source: :user
+  has_many :game_purchase_platforms
+  has_many :game_purchases, through: :game_purchase_platforms, source: :game_purchase
 
   validates :name,
     presence: true,

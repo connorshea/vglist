@@ -43,5 +43,7 @@ RSpec.describe GamePurchase, type: :model do
   describe "Associations" do
     it { should belong_to(:game) }
     it { should belong_to(:user) }
+    it { should have_many(:game_purchase_platforms) }
+    it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
   end
 end
