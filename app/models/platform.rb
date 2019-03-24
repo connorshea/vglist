@@ -4,6 +4,9 @@ class Platform < ApplicationRecord
   has_many :game_platforms
   has_many :games, through: :game_platforms, source: :game
 
+  has_many :game_platform_purchases
+  has_many :users, through: :game_platform_purchases, source: :user
+
   validates :name,
     presence: true,
     length: { maximum: 120 }

@@ -2,6 +2,9 @@ class GamePurchase < ApplicationRecord
   belongs_to :game
   belongs_to :user
 
+  has_many :game_purchase_platforms
+  has_many :platforms, through: :game_purchase_platforms, source: :platform
+
   enum completion_status: {
     unplayed: 0,
     in_progress: 1,
