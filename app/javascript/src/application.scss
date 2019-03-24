@@ -213,11 +213,12 @@ nav.navbar {
   }
 }
 
-.modal-card-body-allow-overflow {
-  overflow: initial;
+.modal-card {
+  max-height: calc(100vh - 120px);
+  overflow: scroll;
 }
 
-.modal-card-allow-overflow {
+.modal-card-body-allow-overflow {
   overflow: initial;
 }
 

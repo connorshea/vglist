@@ -1,7 +1,7 @@
 <template>
   <div class="modal" :class="{ 'is-active': isActive } ">
     <div @click="onClose" class="modal-background"></div>
-    <div class="modal-card modal-card-allow-overflow">
+    <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">{{ modalTitle }}</p>
         <button @click="onClose" class="delete" aria-label="close"></button>
@@ -62,6 +62,12 @@
             :required="false"
             v-model="gamePurchase.completion_date"
           ></date-field>
+
+          <multi-select
+            :label="formData.platforms.label"
+            v-model="gamePurchase.platforms"
+            :search-path-identifier="'platforms'"
+          ></multi-select>
         </div>
 
         <div v-else>
@@ -88,6 +94,7 @@ import TextField from './fields/text-field.vue';
 import NumberField from './fields/number-field.vue';
 import DateField from './fields/date-field.vue';
 import SingleSelect from './fields/single-select.vue';
+import MultiSelect from './fields/multi-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from 'rails-ujs';
 
@@ -98,6 +105,7 @@ export default {
     NumberField,
     DateField,
     SingleSelect,
+    MultiSelect,
     StaticSingleSelect
   },
   props: {
@@ -132,6 +140,13 @@ export default {
       required: false,
       default: ''
     },
+    platforms: {
+      type: Array,
+      required: false,
+      default: function() {
+        return []
+      }
+    },
     game: {
       type: Object,
       required: false,
@@ -161,7 +176,8 @@ export default {
         userId: this.userId,
         completion_status: this.completion_status,
         start_date: this.start_date,
-        completion_date: this.completion_date
+        completion_date: this.completion_date,
+        platforms: this.platforms
       },
       formData: {
         class: 'game_purchase',
@@ -187,6 +203,9 @@ export default {
         completionDate: {
           label: 'Completion Date',
           attribute: 'completion_date'
+        },
+        platforms: {
+          label: 'Platforms'
         },
         game: {
           label: 'Game'
@@ -230,6 +249,9 @@ export default {
       }
       if (this.gamePurchase.completion_date !== '' && this.gamePurchase.completion_date !== null) {
         submittableData['game_purchase']['completion_date'] = this.gamePurchase.completion_date;
+      }
+      if (this.gamePurchase.platforms !== []) {
+        submittableData['game_purchase']['platform_ids'] = Array.from(this.gamePurchase.platforms, platform => platform.id);
       }
 
       fetch(this.gamePurchasesSubmitUrl, {
