@@ -1,8 +1,10 @@
 .git
-node_modules
-tmp
-storage
-log
+node_modules/*
+tmp/*
+storage/*
+log/*
+spec/*
+vendor/*
 public/packs
 public/packs-test
 config/master.key
@@ -10,3 +12,5 @@ coverage
 yarn-debug.log
 .yarn-integrity
 .DS_Store
+prod.env
+app-visualization.svg

@@ -9,11 +9,6 @@ ENV RACK_ENV production
 ENV NODE_ENV production
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true
-# TODO: Fix this, it'll bite you in the ass if you don't fix it before
-# deploying to production.
-# Stupid workaround for https://github.com/rails/rails/issues/32947
-# Maybe move SECRET_KEY_BASE to be included in credentials.yml.enc?
-ENV SECRET_KEY_BASE=dumb
 
 RUN apk add --no-cache --update build-base \
                                 linux-headers \
@@ -37,11 +32,14 @@ COPY package.json /$APP_ROOT/package.json
 COPY yarn.lock /$APP_ROOT/yarn.lock
 RUN yarn install --frozen-lockfile
 
-# Copy the rest of the files. We do this last to speed up regeneration of the Docker image.
+# Copy the rest of the files.
+# We do this last to speed up regeneration of the Docker image.
 COPY . /$APP_ROOT
 
 # Pre-compile webpack packs.
-RUN bundle exec rails assets:precompile
+# Pass a SECRET_KEY_BASE environment variable for just this command,
+# works around this issue: https://github.com/rails/rails/issues/32947
+RUN SECRET_KEY_BASE='bin/rake secret' bin/rails assets:precompile
 
 # Start the main process.
 CMD ["rails", "server", "-b", "0.0.0.0"]

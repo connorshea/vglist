@@ -4,6 +4,13 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+###############################################################
+###############################################################
+####### NOTE: If you're updating this file you may   ##########
+#######       also want to update the .dockerignore. ##########
+###############################################################
+###############################################################
+
 # Ignore bundler config.
 /.bundle
 
@@ -34,3 +41,4 @@ coverage/
 
 .DS_Store
 spec/examples.txt
+prod.env

@@ -7,12 +7,13 @@ services:
   web:
     build:
       context: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
       - "3000:3000"
+    # The prod.env file will need DATABASE_URL, DATABASE_PASSWORD,
+    # and SECRET_KEY_BASE.
+    env_file:
+      - prod.env
     environment:
       VGLIST_DATABASE_HOST: db
-      DATABASE_URL: postgres://postgres@db
-      DATABASE_PASSWORD: 'productionpassword'
     depends_on:
       - db

@@ -35,6 +35,12 @@ Follow these instructions:
 If you want to use Docker to test the application locally in production mode, you can do so by following these instructions:
 
 - Make sure you have Docker and Docker Compose installed, as well as Postgres.
+- Create a file called `prod.env` that passes environment variables into your container. It'll look something like this:
+```env
+SECRET_KEY_BASE=dumb
+DATABASE_URL=postgres://postgres@db
+DATABASE_PASSWORD=productionpassword
+```
 - Run `docker-compose up --build`.
 - In another terminal window, run `docker-compose exec web bundle exec rails db:create` and then `docker-compose exec web bundle exec rails db:migrate`.
 - You may also want to run `docker-compose exec --env DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true DATABASE_CLEANER_ALLOW_PRODUCTION=true web bundle exec rails db:seed` to get some data in the database (the environment variables are necessary because the remote database and production environment trip database_cleaner's safeguards). Note: **NEVER RUN THIS COMMAND IN PRODUCTION FOR REAL**
