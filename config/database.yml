@@ -84,6 +84,5 @@ production:
   database: vglist_production
   username: vglist
   password: <%= ENV['VGLIST_DATABASE_PASSWORD'] %>
-  url: <%= ENV['VGLIST_DATABASE_URL'] %>
   host: <%= ENV['VGLIST_DATABASE_HOST'] %>
   port: <%= ENV['VGLIST_DATABASE_PORT'] %>
