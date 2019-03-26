@@ -20,7 +20,7 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV['DATABASE_URL'] %>
+  url: <%= ENV['VGLIST_DATABASE_URL'] %>
 
 development:
   <<: *default
@@ -33,7 +33,7 @@ development:
   username: postgres
 
   # The password associated with the postgres role (username).
-  password: <%= ENV['DATABASE_PASSWORD'] || 'developmentpassword' %>
+  password: <%= ENV['VGLIST_DATABASE_PASSWORD'] || 'developmentpassword' %>
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -84,3 +84,6 @@ production:
   database: vglist_production
   username: vglist
   password: <%= ENV['VGLIST_DATABASE_PASSWORD'] %>
+  url: <%= ENV['VGLIST_DATABASE_URL'] %>
+  host: <%= ENV['VGLIST_DATABASE_HOST'] %>
+  port: <%= ENV['VGLIST_DATABASE_PORT'] %>
