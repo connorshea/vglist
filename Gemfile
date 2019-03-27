@@ -34,7 +34,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'pundit', '~> 2.0'
 
 # Postgres Search
-gem "pg_search", "~> 2.1"
+gem 'pg_search', '~> 2.1'
 
 # Image transformation
 # TODO: Swap this out for image_processing and libvips in Rails 6.
@@ -51,6 +51,9 @@ gem 'sparql', '~> 3.0.2', require: false
 
 # Use Addressable for use with the Wikidata API.
 gem 'addressable', '~> 2.6.0', require: false
+
+# Use the AWS SDK S3 gem for DigitalOcean Spaces - which are S3-compatible.
+gem 'aws-sdk-s3', '~> 1.35', require: false
 
 # A CLI progress bar for use with the import rake tasks.
 gem 'ruby-progressbar', '~> 1.10', require: false
@@ -72,7 +75,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
 
   # Factory Bot for creating factories.
-  gem "factory_bot_rails", "~> 5.0"
+  gem 'factory_bot_rails', '~> 5.0'
 
   # Code coverage
   gem 'simplecov', '~> 0.16', require: false
