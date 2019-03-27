@@ -6,14 +6,15 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-# TODO: Enable this for production.
-# Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
-# amazon:
-#   service: S3
-#   access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
-#   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
-#   region: us-east-1
-#   bucket: your_own_bucket
+# Use DigitalOcean Spaces (which is S3-compatible) for ActiveStorage in production.
+# Use rails credentials:edit to set the AWS secrets (as digitalocean:access_key_id|secret_access_key)
+amazon:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:digitalocean, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:digitalocean, :secret_access_key) %>
+  region: sfo2
+  bucket: vglist
+  endpoint: 'sfo2.digitaloceanspaces.com'
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
