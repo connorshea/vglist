@@ -20,6 +20,9 @@
 !/log/.keep
 !/tmp/.keep
 
+/shared/*
+!/shared/.keep
+
 # Ignore uploaded files in development
 /storage/*
 !/storage/.keep
