@@ -14,7 +14,7 @@ amazon:
   secret_access_key: <%= Rails.application.credentials.dig(:digitalocean, :secret_access_key) %>
   region: sfo2
   bucket: vglist
-  endpoint: 'sfo2.digitaloceanspaces.com'
+  endpoint: 'https://sfo2.digitaloceanspaces.com'
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
