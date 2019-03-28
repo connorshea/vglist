@@ -60,7 +60,7 @@ GEM
     aws-sdk-kms (1.16.0)
       aws-sdk-core (~> 3, >= 3.48.2)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.35.0)
+    aws-sdk-s3 (1.36.0)
       aws-sdk-core (~> 3, >= 3.48.2)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.0)
@@ -341,7 +341,7 @@ PLATFORMS
 DEPENDENCIES
   active_storage_validations (~> 0.6)
   addressable (~> 2.6.0)
-  aws-sdk-s3 (~> 1.35)
+  aws-sdk-s3 (~> 1.36)
   better_errors (~> 2.5)
   binding_of_caller (~> 0.8)
   bootsnap (>= 1.1.0)
