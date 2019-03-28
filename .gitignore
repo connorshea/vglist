@@ -45,3 +45,5 @@ coverage/
 .DS_Store
 spec/examples.txt
 prod.env
+
+sbin/
