@@ -9,14 +9,11 @@ Rails.application.config.content_security_policy do |policy|
   policy.font_src :self, :https, :data
   policy.img_src :self, :https, :data
   policy.object_src :none
-  # Allow unsafe_eval in development for Vue.js DevTools.
-  if !Rails.env.production?
-    policy.script_src :self, :https, :unsafe_eval
-    policy.style_src :self, :https, :unsafe_inline
-  else
-    policy.script_src :self, :https
-    policy.style_src :self, :https
-  end
+  # TODO: Disable unsafe_eval in production.
+  # Maybe with this? https://github.com/rails/webpacker/issues/1520#issuecomment-399112369
+  policy.script_src :self, :https, :unsafe_eval
+  # Allow unsafe_inline because vue-select uses inline styles I guess?
+  policy.style_src :self, :https, :unsafe_inline
 
   # Allow Webpacker to connect in development
   policy.connect_src :self, :https, 'http://localhost:3035', 'ws://localhost:3035' if Rails.env.development?
