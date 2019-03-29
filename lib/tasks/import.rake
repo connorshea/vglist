@@ -32,6 +32,8 @@ namespace :import do
 
   desc "Attach covers to games, only applies to games that have a PCGamingWiki ID and don't already have a cover."
   task 'pcgamingwiki:covers': :environment do
+    require 'ruby-progressbar'
+
     puts "This task will attach covers to any games which have PCGamingWiki IDs and no cover."
 
     games = Game.includes(:cover_attachment)
