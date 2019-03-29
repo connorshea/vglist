@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.28
+### Added
+- First proper deployment to [the live website!](https://vglist.co) Involved setting up a server on DigitalOcean, a database, configuring SSL certs, setting up email, and getting the Rails app to behave properly in production.
+
+### Changed
+- Allow the games import script to import games incrementally. ([#285])
+
 ## v2019.3.24
 ### Added
 - Add platforms to game purchases. ([#271])
@@ -260,3 +267,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#269]: https://github.com/connorshea/VideoGameList/pull/269
 [#271]: https://github.com/connorshea/VideoGameList/pull/271
 [#272]: https://github.com/connorshea/VideoGameList/pull/272
+[#285]: https://github.com/connorshea/VideoGameList/pull/285
