@@ -87,7 +87,7 @@ namespace 'import:wikidata' do
         begin
           game = Game.create!(hash)
         rescue ActiveRecord::RecordInvalid => e
-          puts "Record Invalid: {e}"
+          puts "Record Invalid: #{e}"
           next
         end
 
