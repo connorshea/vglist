@@ -43,9 +43,14 @@ namespace :import do
     cover_not_found_count = 0
     cover_added_count = 0
 
+    progress_bar = ProgressBar.create(
+      total: games.count,
+      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    )
+
     games.each do |game|
-      puts
-      puts "Adding cover for #{game[:name]}."
+      progress_bar.log ""
+      progress_bar.log "Adding cover for #{game[:name]}."
       api_url = "https://pcgamingwiki.com/w/api.php?action=askargs&conditions=#{game[:pcgamingwiki_id].gsub('&', '%26')}&printouts=Cover&format=json"
 
       begin
@@ -69,8 +74,9 @@ namespace :import do
 
       json = json.dig('query', 'results')
       if json.nil? || json.blank?
-        puts "Not finding any covers, skipping."
+        progress_bar.log "Not finding any covers, skipping."
         cover_not_found_count += 1
+        progress_bar.increment
         next
       end
 
@@ -78,8 +84,9 @@ namespace :import do
       cover_url = json.dig(json.keys.first, 'printouts', 'Cover').first
 
       if cover_url.nil?
-        puts "Not finding any covers, skipping."
+        progress_bar.log "Not finding any covers, skipping."
         cover_not_found_count += 1
+        progress_bar.increment
         # Exit early if the game has no cover.
         next
       end
@@ -94,8 +101,11 @@ namespace :import do
       game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
 
       cover_added_count += 1
-      puts "Cover added to #{game[:name]}."
+      progress_bar.increment
+      progress_bar.log "Cover added to #{game[:name]}."
     end
+
+    progress_bar.finish unless progress_bar.finished?
 
     games_with_covers = Game.joins(:cover_attachment)
     puts
