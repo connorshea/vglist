@@ -190,11 +190,12 @@ namespace 'import:wikidata' do
     puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Games]' to have pg_search rebuild its multisearch index."
   end
 
-  # The SPARQL query for getting all video games on Wikidata.
+  # The SPARQL query for getting all video games with English labels on Wikidata.
   def games_query
     sparql = <<-SPARQL
       SELECT ?item WHERE {
-        ?item wdt:P31 wd:Q7889. # Instances of video games.
+        ?item wdt:P31 wd:Q7889; # Instances of video games.
+              rdfs:label ?label filter(lang(?label) = "en"). # with a label
       }
     SPARQL
 
