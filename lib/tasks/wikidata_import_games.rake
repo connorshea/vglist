@@ -84,7 +84,12 @@ namespace 'import:wikidata' do
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
         hash[:steam_app_id] = steam_app_id unless steam_app_id.nil?
 
-        game = Game.create!(hash)
+        begin
+          game = Game.create!(hash)
+        rescue ActiveRecord::RecordInvalid => e
+          puts "Record Invalid: {e}"
+          next
+        end
 
         keys = []
         game_hash.keys.each do |key|
