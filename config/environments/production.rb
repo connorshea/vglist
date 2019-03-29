@@ -68,7 +68,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'vglist.co' }
 
   config.action_mailer.default_options = {
-    from: "noreply@vglist.co"
+    from: "VideoGameList <noreply@vglist.co>"
   }
 
   # Send email from AWS SES.
