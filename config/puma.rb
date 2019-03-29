@@ -10,17 +10,20 @@ threads threads_count, threads_count
 app_dir = File.expand_path("../..", __FILE__)
 shared_dir = "#{app_dir}/shared"
 
+if ENV.fetch("RAILS_ENV") == 'production'
+  # Set up socket location
+  bind "unix://#{shared_dir}/sockets/puma.sock"
+
+  # Set master PID and state locations
+  pidfile "#{shared_dir}/pids/puma.pid"
+  state_path "#{shared_dir}/pids/puma.state"
+
+  activate_control_app
+end
+
 # Specifies the `environment` that Puma will run in.
 #
 environment ENV.fetch("RAILS_ENV") { "production" }
-
-# Set up socket location
-bind "unix://#{shared_dir}/sockets/puma.sock"
-
-# Set master PID and state locations
-pidfile "#{shared_dir}/pids/puma.pid"
-state_path "#{shared_dir}/pids/puma.state"
-activate_control_app
 
 on_worker_boot do
   require "active_record"
