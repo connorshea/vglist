@@ -4,16 +4,23 @@ namespace 'import:wikidata' do
 
   desc "Import games from Wikidata"
   task games: :environment do
-    # Abort if there are already records in the database.
-    # In the future we may want to be able to re-import from Wikidata,
-    # but for now we can just fail for any attempted imports after the first run.
-    abort("You can't import games if there are already games in the database.") if Game.count > 0
-
     puts "Importing games from Wikidata..."
     client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
 
     rows = []
     rows.concat(client.query(games_query))
+
+    # Get every game in the database that has a Wikidata ID.
+    games = Game.where.not(wikidata_id: nil)
+
+    existing_wikidata_ids = games.map { |game| game[:wikidata_id] }
+
+    # Filter to wikidata items that don't already exist in the database.
+    rows = rows.reject do |row|
+      url = row.to_h[:item].to_s
+      wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '')
+      existing_wikidata_ids.include?(wikidata_id.to_i)
+    end
 
     properties = {
       developers: 'P178',
