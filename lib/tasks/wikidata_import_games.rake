@@ -52,7 +52,10 @@ namespace 'import:wikidata' do
         )
 
         label = wikidata_label.dig(wikidata_id, 'labels', 'en', 'value')
-        next if label.nil?
+        if label.nil?
+          puts "No label. Skipping."
+          next
+        end
 
         game_hash = { wikidata_id: wikidata_id.delete('Q'), name: label }
 
