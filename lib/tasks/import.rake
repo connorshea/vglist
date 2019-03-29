@@ -50,6 +50,9 @@ namespace :import do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     games.each do |game|
       progress_bar.log ""
       progress_bar.log "Adding cover for #{game[:name]}."
