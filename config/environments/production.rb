@@ -65,7 +65,11 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
 
-  config.action_mailer.default_url_options = { host: 'vglist.co', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'vglist.co' }
+
+  config.action_mailer.default_options = {
+    from: "noreply@vglist.co"
+  }
 
   # Send email from AWS SES.
   config.action_mailer.smtp_settings = {
