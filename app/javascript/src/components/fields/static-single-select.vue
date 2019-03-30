@@ -1,12 +1,13 @@
 <template>
   <div class="field">
-    <label v-if="label" class="label">{{ label }}</label>
+    <label v-if="label" :for="inputId" class="label">{{ label }}</label>
     <div class="control">
       <v-select
         :options="options"
         :maxHeight="maxHeight"
         :disabled="disabled"
         label="label"
+        :inputId="inputId"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
       ></v-select>
@@ -46,6 +47,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    }
+  },
+  computed: {
+    inputId() {
+      return this.label.toLowerCase().replace(/ /g,'_');
     }
   }
 }
