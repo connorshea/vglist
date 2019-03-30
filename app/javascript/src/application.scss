@@ -139,6 +139,14 @@ nav.navbar {
       width: 100%;
       max-width: 100%;
     }
+
+    &.hero-image-150 {
+      img {
+        height: 150px;
+        width: auto;
+        max-width: 100%;
+      }
+    }
   }
 
   .game-cover {
