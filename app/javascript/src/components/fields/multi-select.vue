@@ -1,11 +1,12 @@
 <template>
   <div class="field">
-    <label class="label">{{ label }}</label>
+    <label class="label" :for="inputId">{{ label }}</label>
     <div class="control">
       <v-select
         multiple
         :options="options"
         @search="onSearch"
+        :inputId="inputId"
         label="name"
         @change="onChange"
         v-bind:value="value"
@@ -67,6 +68,11 @@ export default {
     },
     onChange(selectedItems) {
       this.$emit('input', selectedItems)
+    }
+  },
+  computed: {
+    inputId() {
+      return this.label.toLowerCase().replace(/ /g,'_');
     }
   }
 }

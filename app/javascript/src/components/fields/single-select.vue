@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label v-if="label" class="label">{{ label }}</label>
+    <label v-if="label" :for="inputId" class="label">{{ label }}</label>
     <div class="control">
       <v-select
         :options="options"
@@ -8,6 +8,7 @@
         :disabled="disabled"
         @search="onSearch"
         label="name"
+        :inputId="inputId"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
       ></v-select>
@@ -77,6 +78,11 @@ export default {
           this.options = items;
           loading(false);
         });
+    }
+  },
+  computed: {
+    inputId() {
+      return this.label.toLowerCase().replace(/ /g,'_');
     }
   }
 }
