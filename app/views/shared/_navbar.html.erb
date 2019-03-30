@@ -48,6 +48,7 @@
         <%= link_to("About", about_path, class: "navbar-item is-hidden-desktop") %>
         <%= link_to("GitHub", 'https://github.com/connorshea/VideoGameList', class: "navbar-item is-hidden-desktop") %>
       <% else %>
+        <%= link_to("About", about_path, class: "navbar-item") %>
         <%= link_to('Sign up', new_user_registration_path, class: "navbar-item")  %>
         <%= link_to('Sign in', new_user_session_path, class: "navbar-item") %>
       <% end %>
