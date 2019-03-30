@@ -12,7 +12,7 @@ module ApplicationHelper
   def user_avatar(user_id, size)
     user = User.find(user_id)
     if user.avatar.attached?
-      image_tag user.avatar.variant(resize: "#{size}x#{size}")
+      image_tag user.avatar.variant(resize: "#{size}x#{size}"), height: "#{size}px", width: "#{size}px"
     else
       image_tag 'default-avatar.png', height: "#{size}px", width: "#{size}px"
     end
