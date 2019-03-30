@@ -59,3 +59,13 @@
 
 <%= render 'infobox', game: @game %>
 
+<h3>Owners</h3>
+<% if @owners.count.positive? %>
+  <ul>
+    <% @owners.each do |owner| %>
+      <li><%= link_to(owner.username, user_path(owner)) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No one has this game in their library yet.</p>
+<% end %>
