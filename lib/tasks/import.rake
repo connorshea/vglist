@@ -100,7 +100,13 @@ namespace :import do
       # so we need to turn it into a valid URL.
       cover_url = "https:#{cover_url}" unless cover_url.start_with?('https:')
 
-      cover_blob = URI.open(cover_url)
+      # Catch the error if the PCGamingWiki cover image doesn't actually exist.
+      begin
+        cover_blob = URI.open(cover_url)
+      rescue OpenURI::HTTPError => e
+        puts "Error: #{e}"
+        next
+      end
 
       # Copy the image data to a file with ActiveStorage.
       game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
