@@ -7,6 +7,7 @@
         :options="options"
         @search="onSearch"
         label="name"
+        @change="onChange"
         v-bind:value="value"
       ></v-select>
     </div>
@@ -63,6 +64,9 @@ export default {
           this.options = items;
           loading(false);
         });
+    },
+    onChange(selectedItems) {
+      this.$emit('input', selectedItems)
     }
   }
 }
