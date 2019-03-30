@@ -57,72 +57,15 @@
   <% end %>
 </div>
 
-<div class="box infobox">
-  <% unless @game.developers.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Developer".pluralize(@game.developers.count) %>
-    <ul>
-      <% @game.developers.each do |developer| %>
-        <li><%= link_to(developer.name, company_path(developer.id)) %>
-      <% end %>
-    </ul>
-  <% end %>
+<%= render 'infobox', game: @game %>
 
-  <% unless @game.publishers.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Publisher".pluralize(@game.publishers.count) %>
-    <ul>
-      <% @game.publishers.each do |publisher| %>
-        <li><%= link_to(publisher.name, company_path(publisher.id)) %>
-      <% end %>
-    </ul>
-  <% end %>
-
-  <% unless @game.platforms.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Platform".pluralize(@game.platforms.count) %>
-    <ul>
-      <% @game.platforms.each do |platform| %>
-        <li><%= link_to(platform.name, platform_path(platform.id)) %>
-      <% end %>
-    </ul>
-  <% end %>
-
-  <% unless @game.series.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Series
-    <ul>
-      <li><%= link_to(@game.series.name, series_path(@game.series.id)) %>
-    </ul>
-  <% end %>
-
-  <% unless @game.genres.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Genre".pluralize(@game.genres.count) %>
-    <ul>
-      <% @game.genres.each do |genre| %>
-        <li><%= link_to(genre.name, genre_path(genre.id)) %>
-      <% end %>
-    </ul>
-  <% end %>
-
-  <% unless @game.engines.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Engine".pluralize(@game.engines.count) %>
-    <ul>
-      <% @game.engines.each do |engine| %>
-        <li><%= link_to(engine.name, engine_path(engine.id)) %>
-      <% end %>
-    </ul>
-  <% end %>
-
-  <% unless @game.wikidata_id.blank? && @game.pcgamingwiki_id.blank? %>
-    <p class="infobox-header has-text-weight-semibold">External links
-    <ul>
-      <% unless @game.wikidata_id.blank? %>
-        <li><%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{@game.wikidata_id}" %>
-      <% end %>
-      <% unless @game.pcgamingwiki_id.blank? %>
-        <li><%= link_to 'PCGamingWiki', "https://pcgamingwiki.com/wiki/#{@game.pcgamingwiki_id}" %>
-      <% end %>
-      <% unless @game.steam_app_id.blank? %>
-        <li><%= link_to 'Steam', "https://store.steampowered.com/app/#{@game.steam_app_id}" %>
-      <% end %>
-    </ul>
-  <% end %>
-</div>
-
+<h3>Owners</h3>
+<% if @owners.count.positive? %>
+  <ul>
+    <% @owners.each do |owner| %>
+      <li><%= link_to(owner.username, user_path(owner)) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No one has this game in their library yet.</p>
+<% end %>
