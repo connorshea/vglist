@@ -6,12 +6,12 @@ RSpec.describe SettingsPolicy, type: :policy do
   describe 'A logged-in user' do
     let(:current_user) { create(:user) }
 
-    it { should permit_actions([:profile, :account]) }
+    it { should permit_actions([:profile, :account, :connections]) }
   end
 
   describe 'An anonymous user' do
     let(:current_user) { nil }
 
-    it { should_not permit_actions([:profile, :account]) }
+    it { should_not permit_actions([:profile, :account, :connections]) }
   end
 end

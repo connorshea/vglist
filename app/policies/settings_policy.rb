@@ -13,4 +13,8 @@ class SettingsPolicy < ApplicationPolicy
   def account?
     current_user && user == current_user
   end
+
+  def connections?
+    current_user && user == current_user
+  end
 end

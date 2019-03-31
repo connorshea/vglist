@@ -66,5 +66,6 @@ RSpec.describe User, type: :model do
     it { should have_many(:game_purchases) }
     it { should have_many(:games).through(:game_purchases) }
     it { should have_many(:favorites).inverse_of(:user) }
+    it { should have_one(:external_account).dependent(:destroy) }
   end
 end

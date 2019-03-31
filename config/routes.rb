@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     confirmations: 'users/confirmations',
     passwords: 'users/passwords',
     registrations: 'users/registrations',
-    sessions: 'users/sessions'
+    sessions: 'users/sessions',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
   get 'home/index'
@@ -27,6 +28,8 @@ Rails.application.routes.draw do
     get :show, on: :member
     post :update_role, on: :member
     delete :remove_avatar, on: :member
+    post :steam_import, on: :member
+    delete :disconnect_steam, on: :member
   end
 
   resources :platforms do
@@ -56,6 +59,7 @@ Rails.application.routes.draw do
   namespace :settings do
     get :profile, as: '/', path: '/'
     get :account
+    get :connections
   end
 
   get '/about', to: 'static_pages#about'

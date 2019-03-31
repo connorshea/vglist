@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_25_014306) do
+ActiveRecord::Schema.define(version: 2019_03_31_222038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -51,6 +51,18 @@ ActiveRecord::Schema.define(version: 2019_03_25_014306) do
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
     t.index ["wikidata_id"], name: "index_engines_on_wikidata_id", unique: true
+  end
+
+  create_table "external_accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "account_type", null: false
+    t.bigint "steam_id"
+    t.text "steam_profile_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["steam_id"], name: "index_external_accounts_on_steam_id", unique: true
+    t.index ["user_id", "account_type"], name: "index_external_accounts_on_user_id_and_account_type", unique: true
+    t.index ["user_id"], name: "index_external_accounts_on_user_id"
   end
 
   create_table "favorites", force: :cascade do |t|

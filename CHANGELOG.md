@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.3.31
+### Added
+- Add Steam account login and the ability to import games from a user's Steam library. ([#297])
+
 ## v2019.3.30
 ### Changed
 - Debounce search results so there are fewer requests sent to the backend. ([#295])
@@ -283,3 +287,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#291]: https://github.com/connorshea/VideoGameList/pull/291
 [#292]: https://github.com/connorshea/VideoGameList/pull/292
 [#295]: https://github.com/connorshea/VideoGameList/pull/295
+[#297]: https://github.com/connorshea/VideoGameList/pull/297

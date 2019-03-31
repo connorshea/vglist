@@ -6,12 +6,17 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable
+  devise :omniauthable, omniauth_providers: %i[steam]
 
   has_many :game_purchases
   has_many :games, through: :game_purchases
 
   # Users have favorites of various types.
   has_many :favorites, inverse_of: :user
+
+  # External accounts, e.g. Steam. Can be changed to a has_many association if
+  # other external account types are added later.
+  has_one :external_account, dependent: :destroy
 
   has_one_attached :avatar
 
