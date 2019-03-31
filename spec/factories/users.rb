@@ -21,6 +21,12 @@ FactoryBot.define do
       end
     end
 
+    trait :external_account do
+      after(:create) do |user|
+        create :external_account, user: user
+      end
+    end
+
     trait :moderator do
       role { :moderator }
     end
@@ -42,5 +48,6 @@ FactoryBot.define do
 
     factory :user_with_avatar,                traits: [:avatar]
     factory :user_with_game_purchase,         traits: [:game_purchase]
+    factory :user_with_external_account,      traits: [:confirmed, :external_account]
   end
 end
