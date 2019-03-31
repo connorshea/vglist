@@ -33,7 +33,7 @@ RSpec.describe "Settings", type: :request do
 
   describe "GET settings_connections_path" do
     let(:user) { create(:confirmed_user) }
-    let(:user_with_external_account) { create(:user_with_external_account) }
+    let(:user_with_external_account) { create(:user, :confirmed, :external_account) }
 
     it "returns http success" do
       sign_in(user)

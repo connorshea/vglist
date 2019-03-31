@@ -118,7 +118,7 @@ RSpec.describe "Users", type: :request do
 
   describe "DELETE disconnect_steam_user_path" do
     let(:user) { create(:confirmed_user) }
-    let(:user_with_external_account) { create(:user_with_external_account) }
+    let(:user_with_external_account) { create(:user, :confirmed, :external_account) }
 
     it "removes the Steam account from the current user" do
       sign_in(user_with_external_account)

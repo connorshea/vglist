@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe UsersHelper, type: :helper do
   describe 'link Steam account from Omniauth data' do
     let(:user) { create(:confirmed_user) }
-    let(:user_with_external_account) { create(:user_with_external_account) }
+    let(:user_with_external_account) { create(:user, :confirmed, :external_account) }
 
     it 'creates an external account' do
       # Create an omniauth object with only the absolutely necessary attributes.
