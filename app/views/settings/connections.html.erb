@@ -10,11 +10,15 @@
   <div class="column">
     <h1 class="title">Connections</h1>
 
-    <% if @steam_account.nil? %>
-      <%= button_to "Connect your Steam account", user_steam_omniauth_authorize_path, class: 'button' %>
-    <% else %>
-      <p>Your <%= link_to "Steam profile", @steam_account.steam_profile_url %> is connected to this VGList account.</p>
-      <%= link_to "Import Games from Steam", steam_import_user_path(id: @user.id), method: :post, class: 'button' %>
-    <% end %>
+    <div class="field">
+      <% if @steam_account.nil? %>
+        <p>No Steam account connected.
+        <p><%= button_to "Connect your Steam account", user_steam_omniauth_authorize_path, class: 'button mt-10' %>
+      <% else %>
+        <p>Steam account: <%= link_to @steam_username, @steam_account.steam_profile_url %></p>
+        <%= link_to "Import games from Steam", steam_import_user_path(id: @user.id), method: :post, class: 'button mt-10' %>
+        <%= button_to "Disconnect Steam account", disconnect_steam_user_path(id: @user.id), data: { confirm: "Are you sure you want to disconnect your Steam account?" }, method: :delete, class: 'button is-danger mt-10' %>
+      <% end %>
+    </div>
   </div>
 </div>

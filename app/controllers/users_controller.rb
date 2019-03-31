@@ -98,6 +98,27 @@ class UsersController < ApplicationController
     end
   end
 
+  def disconnect_steam
+    @user = User.friendly.find(params[:id])
+    authorize @user
+
+    @steam_account = ExternalAccount.find_by(user_id: @user.id, account_type: :steam)
+
+    respond_to do |format|
+      if @steam_account.destroy
+        format.html do
+          flash[:success] = "Disconnected Steam account."
+          redirect_to settings_connections_path
+        end
+      else
+        format.html do
+          flash[:error] = "Steam account couldn't be disconnected."
+          redirect_to settings_connections_path
+        end
+      end
+    end
+  end
+
   private
 
   def user_params

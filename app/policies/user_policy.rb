@@ -44,4 +44,8 @@ class UserPolicy < ApplicationPolicy
   def steam_import?
     current_user && user == current_user
   end
+
+  def disconnect_steam?
+    current_user && user == current_user
+  end
 end

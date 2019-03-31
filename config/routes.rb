@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     post :update_role, on: :member
     delete :remove_avatar, on: :member
     post :steam_import, on: :member
+    delete :disconnect_steam, on: :member
   end
 
   resources :platforms do
