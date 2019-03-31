@@ -115,4 +115,29 @@ RSpec.describe "Users", type: :request do
       expect(user.reload.avatar).to be_attached
     end
   end
+
+  describe "DELETE disconnect_steam_user_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:user_with_external_account) { create(:user_with_external_account) }
+
+    it "removes the Steam account from the current user" do
+      sign_in(user_with_external_account)
+      delete disconnect_steam_user_path(user_with_external_account.id),
+        params: { id: user_with_external_account.id }
+      expect(response).to redirect_to(settings_connections_path)
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Successfully disconnected Steam account.")
+    end
+
+    it "does not remove the Steam account from the current user if they have no Steam account connected" do
+      sign_in(user)
+      delete disconnect_steam_user_path(user.id),
+        params: { id: user.id }
+      expect(response).to redirect_to(settings_connections_path)
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Unable to disconnect Steam account.")
+    end
+  end
 end
