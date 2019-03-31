@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.3.30
+### Changed
+- Debounce search results so there are fewer requests sent to the backend. ([#295])
+
 ### Fixed
 - Fix adding a game to your own library and add a feature test to make sure it can't break again. ([#291], [#292])
 
@@ -279,3 +282,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#285]: https://github.com/connorshea/VideoGameList/pull/285
 [#291]: https://github.com/connorshea/VideoGameList/pull/291
 [#292]: https://github.com/connorshea/VideoGameList/pull/292
+[#295]: https://github.com/connorshea/VideoGameList/pull/295
