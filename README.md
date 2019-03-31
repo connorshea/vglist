@@ -30,6 +30,9 @@ Follow these instructions:
 - In a separate terminal window, run `ruby ./bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.
   - You don't _have_ to do this for the site to work, but things will take a lot longer to load as webpack has to compile stuff from within the same process as Rails.
 
+Extras:
+- If you want to test the Steam import functionality, you'll need to [generate a Steam Web API Key](https://steamcommunity.com/dev/registerkey) and set it as an environment variable, `STEAM_WEB_API_KEY`.
+
 ### Running in production locally with Docker
 
 If you want to use Docker to test the application locally in production mode, you can do so by following these instructions:
