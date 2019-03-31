@@ -6,9 +6,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     # Custom method to link an existing account with a Steam account
     omniauth_response = request.env["omniauth.auth"]
-    @user = current_user.link_account_from_omniauth(omniauth_response)
+    helpers.link_steam_account_from_omniauth(current_user, omniauth_response)
 
-    if @user
+    if ExternalAccount.find_by(user_id: current_user.id, account_type: :steam)
       flash[:success] = "Successfully connected Steam account #{omniauth_response[:extra][:raw_info][:personaname]}."
     else
       flash[:error] = "Failed to connect your Steam account."

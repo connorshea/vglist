@@ -15,5 +15,7 @@ class SettingsController < ApplicationController
   def connections
     @user = current_user
     authorize @user, policy_class: SettingsPolicy
+
+    @steam_account = ExternalAccount.find_by(user_id: current_user.id, account_type: :steam)
   end
 end

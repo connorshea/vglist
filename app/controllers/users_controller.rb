@@ -59,9 +59,14 @@ class UsersController < ApplicationController
   end
 
   def steam_import
-    authorize User.friendly.find(params[:id])
+    @user = User.friendly.find(params[:id])
+    authorize @user
 
-    json = JSON.parse(URI.open("https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&steamid=#{current_user.uid}&include_appinfo=1&include_played_free_games=1").read)
+    steam_account = ExternalAccount.find_by(user_id: @user.id, account_type: :steam)
+    raise if steam_account.nil?
+
+    steam_api_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&steamid=#{steam_account[:steam_id]}&include_appinfo=1&include_played_free_games=1"
+    json = JSON.parse(URI.open(steam_api_url).read)
 
     steam_games = json.dig('response', 'games')
     unmatched_games = []
@@ -79,7 +84,7 @@ class UsersController < ApplicationController
       # Find by game id and user id, add hours played if it gets created.
       GamePurchase.create_with(hours_played: hours_played).find_or_create_by(
         game_id: game.id,
-        user_id: current_user[:id]
+        user_id: @user.id
       )
 
       matched_games_count += 1

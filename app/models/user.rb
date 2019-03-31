@@ -57,10 +57,4 @@ class User < ApplicationRecord
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 3.megabytes }
-
-  def link_account_from_omniauth(auth)
-    self.provider = auth.provider
-    self.uid = auth.uid
-    save
-  end
 end

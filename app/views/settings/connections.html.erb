@@ -8,11 +8,12 @@
   </div>
 
   <div class="column">
-    <h1 class="title">Connections Settings</h1>
+    <h1 class="title">Connections</h1>
 
-    <% if @user.uid.nil? %>
+    <% if @steam_account.nil? %>
       <%= button_to "Connect your Steam account", user_steam_omniauth_authorize_path, class: 'button' %>
     <% else %>
+      <p>Your <%= link_to "Steam profile", @steam_account.steam_profile_url %> is connected to this VGList account.</p>
       <%= link_to "Import Games from Steam", steam_import_user_path(id: @user.id), method: :post, class: 'button' %>
     <% end %>
   </div>
