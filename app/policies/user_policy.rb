@@ -38,6 +38,10 @@ class UserPolicy < ApplicationPolicy
   end
 
   def steam?
-    current_user
+    current_user && user == current_user
+  end
+
+  def steam_import?
+    current_user && user == current_user
   end
 end

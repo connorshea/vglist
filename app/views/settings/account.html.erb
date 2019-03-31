@@ -53,11 +53,11 @@
       </div>
     <% end %>
 
-    <%= @user.inspect %>
-
-    <%= button_to "Connect your Steam account", user_steam_omniauth_authorize_path, class: 'button' %>
-    
-    <%= link_to "Get steam data", settings_steam_api_test_path(format: :json), class: 'button' %>
+    <% if @user.uid.nil? %>
+      <%= button_to "Connect your Steam account", user_steam_omniauth_authorize_path, class: 'button' %>
+    <% else %>
+      <%= link_to "Import Games from Steam", steam_import_user_path(id: @user.id, format: :json), method: :post, remote: true, class: 'button' %>
+    <% end %>
 
     <h2 class="subtitle is-3 mt-25 mb-10">Delete account</h2>
 

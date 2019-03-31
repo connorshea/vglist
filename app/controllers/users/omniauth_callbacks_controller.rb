@@ -9,7 +9,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = current_user.link_account_from_omniauth(omniauth_response)
 
     if @user
-      puts omniauth_response.inspect
       flash[:success] = "Successfully connected Steam account #{omniauth_response[:extra][:raw_info][:personaname]}."
     else
       flash[:error] = "Failed to connect your Steam account."
@@ -19,7 +18,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    puts 'epic fail'
     skip_authorization
     redirect_to settings_account_path
   end
