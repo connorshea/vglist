@@ -23,6 +23,34 @@ RSpec.describe "Platforms", type: :request do
     end
   end
 
+  describe "GET new_platform_path" do
+    let(:user) { create(:confirmed_admin) }
+
+    it "returns http success" do
+      sign_in(user)
+      get new_platform_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET edit_platform_path" do
+    let(:user) { create(:confirmed_admin) }
+    let(:platform) { create(:platform) }
+    let(:platform_with_everything) { create(:platform_with_everything) }
+
+    it "returns http success" do
+      sign_in(user)
+      get edit_platform_path(id: platform.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for platform that has everything" do
+      sign_in(user)
+      get edit_platform_path(id: platform_with_everything.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST platforms_path" do
     let(:user) { create(:confirmed_moderator) }
     let(:attributes) { attributes_for(:platform) }

@@ -23,6 +23,34 @@ RSpec.describe "Series", type: :request do
     end
   end
 
+  describe "GET new_series_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      sign_in(user)
+      get new_series_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET edit_series_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:series) { create(:series) }
+    let(:series_with_everything) { create(:series_with_everything) }
+
+    it "returns http success" do
+      sign_in(user)
+      get edit_series_path(id: series.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for series that has everything" do
+      sign_in(user)
+      get edit_series_path(id: series_with_everything.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST series_index_path" do
     let(:user) { create(:confirmed_user) }
     let(:series_attributes) { attributes_for(:series) }

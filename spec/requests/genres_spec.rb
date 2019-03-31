@@ -23,6 +23,34 @@ RSpec.describe "Genres", type: :request do
     end
   end
 
+  describe "GET new_genre_path" do
+    let(:user) { create(:confirmed_admin) }
+
+    it "returns http success" do
+      sign_in(user)
+      get new_genre_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET edit_genre_path" do
+    let(:user) { create(:confirmed_admin) }
+    let(:genre) { create(:genre) }
+    let(:genre_with_everything) { create(:genre_with_everything) }
+
+    it "returns http success" do
+      sign_in(user)
+      get edit_genre_path(id: genre.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for genre that has everything" do
+      sign_in(user)
+      get edit_genre_path(id: genre_with_everything.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST genres_path" do
     let(:user) { create(:confirmed_moderator) }
     let(:genre_attributes) { attributes_for(:genre) }
