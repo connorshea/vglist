@@ -22,4 +22,14 @@ RSpec.describe NilClassPolicy, type: :policy do
       )
     end
   end
+
+  describe "An action that doesn't exist" do
+    let(:user) { create(:user) }
+
+    it "is disallowed" do
+      expect(nil_class_policy).not_to permit_actions(
+        [:not_a_real_action]
+      )
+    end
+  end
 end
