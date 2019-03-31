@@ -154,12 +154,14 @@ class GamesController < ApplicationController
     authorize @game
 
     @user = current_user
-    favorite = @user.favorites.games.find_by(favoritable_id: @game.id)
-
-    favorite.destroy
+    @favorite = @user.favorites.games.find_by(favoritable_id: @game.id)
 
     respond_to do |format|
-      format.json { head :ok }
+      if @favorite&.destroy
+        format.json { head :ok }
+      else
+        format.json { render json: { errors: @game.errors.full_messages } }
+      end
     end
   end
 
