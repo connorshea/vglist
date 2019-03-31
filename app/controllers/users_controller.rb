@@ -65,6 +65,7 @@ class UsersController < ApplicationController
 
     steam_games = json.dig('response', 'games')
     unmatched_games = []
+    matched_games_count = 0
 
     steam_games&.each do |steam_game|
       game = Game.find_by(steam_app_id: steam_game['appid'])
@@ -80,10 +81,15 @@ class UsersController < ApplicationController
         game_id: game.id,
         user_id: current_user[:id]
       )
+
+      matched_games_count += 1
     end
 
     respond_to do |format|
-      format.json { render json: unmatched_games.to_json }
+      format.html do
+        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games.count} games weren't found in the VGList database."
+        redirect_to settings_account_path
+      end
     end
   end
 
