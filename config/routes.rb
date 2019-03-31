@@ -58,7 +58,7 @@ Rails.application.routes.draw do
   namespace :settings do
     get :profile, as: '/', path: '/'
     get :account
-    get :steam_api_test
+    get :connections
   end
 
   get '/about', to: 'static_pages#about'

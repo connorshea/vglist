@@ -14,11 +14,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       flash[:error] = "Failed to connect your Steam account."
     end
 
-    redirect_to settings_account_path
+    redirect_to settings_connections_path
   end
 
   def failure
     skip_authorization
-    redirect_to settings_account_path
+    redirect_to settings_connections_path
   end
 end
