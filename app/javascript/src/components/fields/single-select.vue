@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     inputId() {
-      return this.label.toLowerCase().replace(/ /g,'_');
+      return _.snakeCase(this.label);
     }
   }
 }
