@@ -61,11 +61,10 @@ export default {
      * @param {search}  String   Current search text
      * @param {loading} Function Toggle loading class
      */
-    onSearch(search, loading) {
+    onSearch: _.debounce(function(search, loading) {
       loading(true);
       let searchUrl = new URL(this.searchPath);
       searchUrl.searchParams.append('query', search);
-      // TODO: Debounce this to prevent requests on every key press.
       // TODO: Add error handling.
       fetch(searchUrl, {
         headers: {
@@ -78,7 +77,7 @@ export default {
           this.options = items;
           loading(false);
         });
-    }
+    }, 250)
   },
   computed: {
     inputId() {

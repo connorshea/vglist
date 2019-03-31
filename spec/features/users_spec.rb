@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Users", type: :feature do
 
   describe "User page" do
-    let(:game) { create(:game) }
+    let!(:game) { create(:game) }
     let(:user) { create(:confirmed_user) }
     let(:platform) { create(:platform) }
 
@@ -12,8 +12,8 @@ RSpec.describe "Users", type: :feature do
       visit(user_path(user))
 
       click_button('Add a game to your library')
-      # Select the first item in the dropdown by pressing Enter.
-      fill_in('Game', with: game.name).send_keys(:enter)
+      fill_in('Game', with: game.name)
+      click_active_dropdown_option
       click_button 'Save changes'
 
       # Make capybara wait until the modal disappears
@@ -26,13 +26,15 @@ RSpec.describe "Users", type: :feature do
       visit(user_path(user))
 
       click_button('Add a game to your library')
-      # Select the first item in the dropdown by pressing Enter.
-      fill_in('Game', with: game.name).send_keys(:enter)
-      fill_in('Completion Status', with: 'Unplayed').send_keys(:enter)
+      fill_in('Game', with: game.name)
+      click_active_dropdown_option
+      fill_in('Completion Status', with: 'Unplayed')
+      click_active_dropdown_option
       fill_in('Rating', with: '50')
       fill_in('Hours Played', with: '10')
       fill_in('Comments', with: 'Lorem ipsum dolor.')
-      fill_in('Platforms', with: platform.name).send_keys(:enter)
+      fill_in('Platforms', with: platform.name)
+      click_active_dropdown_option
       click_button 'Save changes'
 
       # Make capybara wait until the modal disappears

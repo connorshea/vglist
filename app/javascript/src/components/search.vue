@@ -54,8 +54,9 @@ export default {
     }
   },
   methods: {
-    onSearch() {
-      // TODO: Debounce/throttle the search requests.
+    // Debounce the search for 400ms before showing results, to prevent
+    // searching from sending a ton of requests.
+    onSearch: _.debounce(function(e) {
       if (this.query.length > 1) {
         fetch(`${this.searchUrl}?query=${this.query}`)
           .then((response) => {
@@ -66,7 +67,7 @@ export default {
             this.activeSearchResult = -1;
           });
       }
-    },
+    }, 400),
     onUpArrow() {
       if (this.activeSearchResult >= 0) {
         this.activeSearchResult = this.activeSearchResult - 1;
