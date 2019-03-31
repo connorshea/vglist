@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     confirmations: 'users/confirmations',
     passwords: 'users/passwords',
     registrations: 'users/registrations',
-    sessions: 'users/sessions'
+    sessions: 'users/sessions',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
   get 'home/index'
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
   namespace :settings do
     get :profile, as: '/', path: '/'
     get :account
+    get :steam_api_test
   end
 
   get '/about', to: 'static_pages#about'

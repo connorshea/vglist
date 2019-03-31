@@ -53,6 +53,12 @@
       </div>
     <% end %>
 
+    <%= @user.inspect %>
+
+    <%= button_to "Connect your Steam account", user_steam_omniauth_authorize_path, class: 'button' %>
+    
+    <%= link_to "Get steam data", settings_steam_api_test_path(format: :json), class: 'button' %>
+
     <h2 class="subtitle is-3 mt-25 mb-10">Delete account</h2>
 
     <p><%= button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure? This can't be undone." }, method: :delete, class: 'button is-danger' %></p>

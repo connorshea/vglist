@@ -36,4 +36,8 @@ class UserPolicy < ApplicationPolicy
   def remove_avatar?
     current_user && user == current_user
   end
+
+  def steam?
+    current_user
+  end
 end
