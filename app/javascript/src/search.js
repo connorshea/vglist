@@ -1,4 +1,4 @@
-import Vue from 'vue/dist/vue.esm';
+import Vue from 'vue';
 import Search from './components/search.vue';
 
 document.addEventListener('turbolinks:load', () => {
@@ -6,7 +6,7 @@ document.addEventListener('turbolinks:load', () => {
   if (navbarWithSearch !== null) {
     const searchVue = new Vue({
       el: '#navbar-with-search',
-      components: { Search }
+      render: h => h(Search)
     })
   }
 });

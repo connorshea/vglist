@@ -1,4 +1,4 @@
-import Vue from 'vue/dist/vue.esm';
+import Vue from 'vue';
 import GenreSelect from './components/genre-select.vue';
 
 document.addEventListener('turbolinks:load', () => {
@@ -6,7 +6,7 @@ document.addEventListener('turbolinks:load', () => {
   if (genreSelect !== null) {
     const genreSelect = new Vue({
       el: '#genre-select',
-      components: { GenreSelect }
+      render: h => h(GenreSelect)
     })
   }
 });

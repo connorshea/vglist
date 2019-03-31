@@ -9,7 +9,7 @@ import Turbolinks from 'turbolinks'
 import * as ActiveStorage from 'activestorage';
 import '../src/application.scss';
 import TurbolinksAdapter from '../src/turbolinks-adapter';
-import Vue from 'vue/dist/vue.esm';
+import Vue from 'vue';
 import 'lodash';
 import '../src/library.js';
 import '../src/form.js';

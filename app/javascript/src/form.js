@@ -1,4 +1,4 @@
-import Vue from 'vue/dist/vue.esm';
+import Vue from 'vue';
 import GameForm from './components/game-form.vue';
 
 document.addEventListener('turbolinks:load', () => {
@@ -6,7 +6,7 @@ document.addEventListener('turbolinks:load', () => {
   if (gameFormElement !== null) {
     const gameFormVue = new Vue({
       el: '#game-form',
-      components: { GameForm }
+      render: h => h(GameForm)
     })
   }
 });
