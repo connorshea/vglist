@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
@@ -217,7 +218,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2018.12.30
 ### Added
 - Add create/update/delete for Games. ([#11])
-
 
 [#11]: https://github.com/connorshea/VideoGameList/pull/11
 [#19]: https://github.com/connorshea/VideoGameList/pull/19

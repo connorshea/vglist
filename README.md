@@ -7,30 +7,32 @@ This is a Rails application for tracking your video game library.
 
 ## Getting set up
 
-Pre-requisites:
+### Prerequisites
+
 - Ruby 2.6
 - Postgres 11.x
 - A recent version of Node.js
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
 
-Follow these instructions:
+### Setup instructions
 
-- Clone the repository with git
-- To get Bundler 2.0.1, `gem install bundler:2.0.1`
-- `bundle install`
-- `yarn install`
-- `bundle exec rails db:create`
-- `bundle exec rails db:migrate`
-- Run `bundle exec rake db:seed` to seed the database with fake data (this will destroy any existing data in the database, so be careful)
-  - This will create a user with the email `admin@example.com` and the password `password`, which you can use for testing purposes.
-  - Alternatively, create your own user with the "Sign up" page and then check the logs in your command line to get the confirmation link.
-- `bundle exec rails s` to start the server
-- Visit http://localhost:3000 in your browser and you should see the base application.
-- In a separate terminal window, run `ruby ./bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.
-  - You don't _have_ to do this for the site to work, but things will take a lot longer to load as webpack has to compile stuff from within the same process as Rails.
+1. Clone the repository with git
+1. To get Bundler 2.0.1, `gem install bundler:2.0.1`
+1. `bundle install`
+1. `yarn install`
+1. `bundle exec rails db:create`
+1. `bundle exec rails db:migrate`
+1. Run `bundle exec rake db:seed` to seed the database with fake data (this will destroy any existing data in the database, so be careful)
+   - This will create a user with the email `admin@example.com` and the password `password`, which you can use for testing purposes.
+   - Alternatively, create your own user with the "Sign up" page and then check the logs in your command line to get the confirmation link.
+1. `bundle exec rails s` to start the server
+1. Visit <http://localhost:3000> in your browser and you should see the base application.
+1. In a separate terminal window, run `ruby ./bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.
+   - You don't _have_ to do this for the site to work, but things will take a lot longer to load as webpack has to compile stuff from within the same process as Rails.
 
-Extras:
+#### Extras
+
 - If you want to test the Steam import functionality, you'll need to [generate a Steam Web API Key](https://steamcommunity.com/dev/registerkey) and set it as an environment variable, `STEAM_WEB_API_KEY`.
 
 ### Running in production locally with Docker
@@ -39,11 +41,13 @@ If you want to use Docker to test the application locally in production mode, yo
 
 - Make sure you have Docker and Docker Compose installed, as well as Postgres.
 - Create a file called `prod.env` that passes environment variables into your container. It'll look something like this:
+
 ```env
 SECRET_KEY_BASE=dumb
 DATABASE_URL=postgres://postgres@db
 DATABASE_PASSWORD=productionpassword
 ```
+
 - Run `docker-compose up --build`.
 - In another terminal window, run `docker-compose exec web bundle exec rails db:create` and then `docker-compose exec web bundle exec rails db:migrate`.
 - You may also want to run `docker-compose exec --env DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true DATABASE_CLEANER_ALLOW_PRODUCTION=true web bundle exec rails db:seed` to get some data in the database (the environment variables are necessary because the remote database and production environment trip database_cleaner's safeguards). Note: **NEVER RUN THIS COMMAND IN PRODUCTION FOR REAL**
@@ -51,6 +55,7 @@ DATABASE_PASSWORD=productionpassword
 Docker isn't currently used for development, you can just run the application "natively" as described in the previous section.
 
 ### GitLab CI
+
 To update the Docker container used by GitLab CI:
 
 - Log into the GitLab CI Docker registry with `docker login registry.gitlab.com`.
