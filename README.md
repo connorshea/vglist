@@ -7,7 +7,7 @@ This is a Rails application for tracking your video game library.
 
 ## Getting set up
 
-Pre-requisites:
+### Prerequisites
 
 - Ruby 2.6
 - Postgres 11.x
@@ -15,23 +15,23 @@ Pre-requisites:
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
 
-Follow these instructions:
+### Setup instructions
 
-- Clone the repository with git
-- To get Bundler 2.0.1, `gem install bundler:2.0.1`
-- `bundle install`
-- `yarn install`
-- `bundle exec rails db:create`
-- `bundle exec rails db:migrate`
-- Run `bundle exec rake db:seed` to seed the database with fake data (this will destroy any existing data in the database, so be careful)
-  - This will create a user with the email `admin@example.com` and the password `password`, which you can use for testing purposes.
-  - Alternatively, create your own user with the "Sign up" page and then check the logs in your command line to get the confirmation link.
-- `bundle exec rails s` to start the server
-- Visit <http://localhost:3000> in your browser and you should see the base application.
-- In a separate terminal window, run `ruby ./bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.
-  - You don't _have_ to do this for the site to work, but things will take a lot longer to load as webpack has to compile stuff from within the same process as Rails.
+1. Clone the repository with git
+1. To get Bundler 2.0.1, `gem install bundler:2.0.1`
+1. `bundle install`
+1. `yarn install`
+1. `bundle exec rails db:create`
+1. `bundle exec rails db:migrate`
+1. Run `bundle exec rake db:seed` to seed the database with fake data (this will destroy any existing data in the database, so be careful)
+   - This will create a user with the email `admin@example.com` and the password `password`, which you can use for testing purposes.
+   - Alternatively, create your own user with the "Sign up" page and then check the logs in your command line to get the confirmation link.
+1. `bundle exec rails s` to start the server
+1. Visit <http://localhost:3000> in your browser and you should see the base application.
+1. In a separate terminal window, run `ruby ./bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.
+   - You don't _have_ to do this for the site to work, but things will take a lot longer to load as webpack has to compile stuff from within the same process as Rails.
 
-Extras:
+#### Extras
 
 - If you want to test the Steam import functionality, you'll need to [generate a Steam Web API Key](https://steamcommunity.com/dev/registerkey) and set it as an environment variable, `STEAM_WEB_API_KEY`.
 
