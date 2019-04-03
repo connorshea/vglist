@@ -73,12 +73,12 @@ Similar tracking sites for movies/television/anime:
     - Boolean? This is complicated by the fact that you can own a game on multiple platforms.
     - What about previously-owned?
   - [x] Completion Status
-     - Unplayed, In-Progress, Dropped, Completed
-     - Should there be a status like `Completed (100%)`? I can see that being useful, but it also feels unnecessarily complicated.
-     - Some games can't be completed (e.g. Overwatch, Counter-Strike, etc.), should that have a specific status?
-     - What about games that are in development, like Early Access games?
-     - Also worth noting that you can rent or borrow games, so you may not own them but _have_ completed them.
-     - Maybe also have Completed*, which is "Essentially Completed" for games where you didn't _quite_ complete it, but you feel you're finished with it?
+    - Unplayed, In-Progress, Dropped, Completed
+    - Should there be a status like `Completed (100%)`? I can see that being useful, but it also feels unnecessarily complicated.
+    - Some games can't be completed (e.g. Overwatch, Counter-Strike, etc.), should that have a specific status?
+    - What about games that are in development, like Early Access games?
+    - Also worth noting that you can rent or borrow games, so you may not own them but _have_ completed them.
+    - Maybe also have Completed*, which is "Essentially Completed" for games where you didn't _quite_ complete it, but you feel you're finished with it?
   - [x] Start Date / Completion Date
   - [x] Comments (any notes you want to add about the game, essentially a mini review)
   - [ ] Replayed (A counter for the number of times you've replayed a game)
@@ -99,4 +99,4 @@ Some decisions that need to be made:
 - Should there be an API? If so, should it be a REST API or use GraphQL?
 - Should games have separate entries for each platform (e.g. Team Fortress 2 on Windows is very different from Team Fortress 2 on Xbox 360)?
 - Should this differentiate between, e.g. Steam vs. Discord vs. Epic, etc?
-- How to handle completion statuses, especially for games that are multiplayer with no real "win state", e.g. Counter-Strike or Overwatch. 
+- How to handle completion statuses, especially for games that are multiplayer with no real "win state", e.g. Counter-Strike or Overwatch.
