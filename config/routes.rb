@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     delete :remove_avatar, on: :member
     post :steam_import, on: :member
     delete :disconnect_steam, on: :member
+    delete :reset_game_library, on: :member
   end
 
   resources :platforms do

@@ -53,8 +53,14 @@
       </div>
     <% end %>
 
+    <h2 class="subtitle is-3 mt-25 mb-10">Reset game library</h2>
+
+    <p>This will remove every game from your library, along with scores, hours played, completion status, etc. <span class="has-text-weight-semibold">This is permanent and cannot be undone.</span></p>
+
+    <p><%= button_to "Reset my game library", reset_game_library_user_path(resource_name), data: { confirm: "Are you sure you want to reset your game library? This can't be undone." }, method: :delete, class: 'button is-danger mt-5' %></p>
+
     <h2 class="subtitle is-3 mt-25 mb-10">Delete account</h2>
 
-    <p><%= button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure? This can't be undone." }, method: :delete, class: 'button is-danger' %></p>
+    <p><%= button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure you want to delete your account? This can't be undone." }, method: :delete, class: 'button is-danger' %></p>
   </div>
 </div>

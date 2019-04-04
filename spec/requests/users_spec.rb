@@ -140,4 +140,39 @@ RSpec.describe "Users", type: :request do
       expect(response.body).to include("Unable to disconnect Steam account.")
     end
   end
+
+  describe "DELETE reset_game_library_user_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:user_with_game_purchase) { create(:user_with_game_purchase, :confirmed) }
+
+    it "removes game purchases from the current user" do
+      sign_in(user_with_game_purchase)
+      delete reset_game_library_user_path(user_with_game_purchase.id),
+        params: { id: user_with_game_purchase.id }
+      expect(response).to redirect_to(user_path(user_with_game_purchase))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Successfully reset game library.")
+    end
+
+    it "removes all game purchases from the current user" do
+      sign_in(user_with_game_purchase)
+      expect do
+        delete reset_game_library_user_path(user_with_game_purchase.id),
+          params: { id: user_with_game_purchase.id }
+      end.to change(GamePurchase, :count).by(-1)
+
+      expect(GamePurchase.find_by(user_id: user_with_game_purchase.id)).to be(nil)
+    end
+
+    it "removes game purchases from the current user even if they don't have any game purchases" do
+      sign_in(user)
+      delete reset_game_library_user_path(user.id),
+        params: { id: user.id }
+      expect(response).to redirect_to(user_path(user))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("Successfully reset game library.")
+    end
+  end
 end

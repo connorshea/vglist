@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.4.3
+### Added
+- Add a button to the settings that allows a user to reset their game library. ([#309])
+
 ## v2019.3.31
 ### Added
 - Add Steam account login and the ability to import games from a user's Steam library. ([#297])
@@ -288,3 +292,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#292]: https://github.com/connorshea/VideoGameList/pull/292
 [#295]: https://github.com/connorshea/VideoGameList/pull/295
 [#297]: https://github.com/connorshea/VideoGameList/pull/297
+[#309]: https://github.com/connorshea/VideoGameList/pull/309
