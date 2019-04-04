@@ -119,6 +119,27 @@ class UsersController < ApplicationController
     end
   end
 
+  def reset_game_library
+    @user = User.friendly.find(params[:id])
+    authorize @user
+
+    @game_purchases = GamePurchase.where(user_id: @user.id)
+
+    respond_to do |format|
+      if @game_purchases.destroy_all
+        format.html do
+          flash[:success] = "Successfully reset game library."
+          redirect_to user_path(@user)
+        end
+      else
+        format.html do
+          flash[:error] = "Unable to delete all the games in your library."
+          redirect_to settings_account_path
+        end
+      end
+    end
+  end
+
   private
 
   def user_params
