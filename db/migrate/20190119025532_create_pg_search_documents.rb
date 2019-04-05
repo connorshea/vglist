@@ -1,3 +1,5 @@
+# Auto-generated migration.
+# rubocop:disable all
 class CreatePgSearchDocuments < ActiveRecord::Migration[5.2]
   def self.up
     say_with_time("Creating table for pg_search multisearch") do

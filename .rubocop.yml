@@ -545,9 +545,6 @@ Performance/FlatMap:
 Performance/InefficientHashSearch:
   Enabled: true
 
-Performance/LstripRstrip:
-  Enabled: true
-
 Performance/RangeInclude:
   Enabled: true
 
@@ -560,16 +557,10 @@ Performance/RedundantMatch:
 Performance/RedundantMerge:
   Enabled: true
 
-Performance/RedundantSortBy:
-  Enabled: true
-
 Performance/RegexpMatch:
   Enabled: true
 
 Performance/ReverseEach:
-  Enabled: true
-
-Performance/Sample:
   Enabled: true
 
 Performance/Size:
@@ -579,9 +570,6 @@ Performance/StringReplacement:
   Enabled: true
 
 Performance/UnfreezeString:
-  Enabled: true
-
-Performance/UnneededSort:
   Enabled: true
 
 Performance/UriDefaultParser:
@@ -695,6 +683,10 @@ Rails/Present:
 
 Rails/ReadWriteAttribute:
   Enabled: true
+
+# Borked for now. Enable later.
+Rails/RedundantAllowNil:
+  Enabled: false
 
 Rails/RedundantReceiverInWithOptions:
   Enabled: true
@@ -1045,6 +1037,9 @@ Style/RedundantParentheses:
 Style/RedundantReturn:
   Enabled: false
 
+Style/RedundantSortBy:
+  Enabled: true
+
 Style/RedundantSelf:
   Enabled: true
 
@@ -1058,6 +1053,9 @@ Style/RescueStandardError:
   Enabled: true
 
 Style/SafeNavigation:
+  Enabled: true
+
+Style/Sample:
   Enabled: true
 
 Style/SelfAssignment:
@@ -1082,6 +1080,9 @@ Style/StderrPuts:
   Enabled: true
 
 Style/StringLiteralsInInterpolation:
+  Enabled: true
+
+Style/Strip:
   Enabled: true
 
 Style/StructInheritance:
@@ -1136,6 +1137,9 @@ Style/UnneededInterpolation:
   Enabled: true
 
 Style/UnneededPercentQ:
+  Enabled: true
+
+Style/UnneededSort:
   Enabled: true
 
 Style/UnpackFirst:
