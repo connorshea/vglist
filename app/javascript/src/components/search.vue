@@ -1,5 +1,8 @@
 <template>
-  <div class="navbar-item has-dropdown field mt-10" v-bind:class="{ 'is-active': dropdownActive }">
+  <div
+    class="navbar-item has-dropdown field mt-10"
+    v-bind:class="{ 'is-active': dropdownActive }"
+  >
     <p class="control">
       <input
         v-model="query"
@@ -9,15 +12,19 @@
         @keyup.enter.prevent="onEnter"
         class="input"
         type="search"
-        placeholder="Search">
+        placeholder="Search"
+      />
     </p>
 
     <div v-if="dropdownActive" class="navbar-search-dropdown navbar-dropdown">
       <p class="navbar-item" v-if="!hasSearchResults">
         No results.
       </p>
-      <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
-        <hr v-if="index > 0" class="navbar-divider">
+      <div
+        v-for="(type, index) in Object.keys(betterSearchResults)"
+        :key="type"
+      >
+        <hr v-if="index > 0" class="navbar-divider" />
         <p class="navbar-item navbar-dropdown-header">
           {{ capitalizedPlurals[type] }}
         </p>
@@ -26,9 +33,14 @@
           :key="result.id"
           :href="result.url"
           class="navbar-item"
-          :class="{ 'is-active': activeSearchResult !== -1 && flattenedSearchResults[activeSearchResult].searchable_id === result.searchable_id }"
+          :class="{
+            'is-active':
+              activeSearchResult !== -1 &&
+              flattenedSearchResults[activeSearchResult].searchable_id ===
+                result.searchable_id
+          }"
         >
-            {{ result.content }}
+          {{ result.content }}
         </a>
       </div>
     </div>
@@ -43,15 +55,15 @@ export default {
       query: '',
       searchResults: {},
       plurals: {
-        'Game': 'games',
-        'Series': 'series',
-        'Company': 'companies',
-        'Platform': 'platforms',
-        'Engine': 'engines',
-        'Genre': 'genres'
+        Game: 'games',
+        Series: 'series',
+        Company: 'companies',
+        Platform: 'platforms',
+        Engine: 'engines',
+        Genre: 'genres'
       },
       activeSearchResult: -1
-    }
+    };
   },
   methods: {
     // Debounce the search for 400ms before showing results, to prevent
@@ -59,10 +71,10 @@ export default {
     onSearch: _.debounce(function(e) {
       if (this.query.length > 1) {
         fetch(`${this.searchUrl}?query=${this.query}`)
-          .then((response) => {
+          .then(response => {
             return response.json();
           })
-          .then((searchResults) => {
+          .then(searchResults => {
             this.searchResults = searchResults;
             this.activeSearchResult = -1;
           });
@@ -82,18 +94,23 @@ export default {
     },
     // On enter, have turbolinks navigate to the active item's linked page.
     onEnter() {
-      let activeItem = document.querySelector('.navbar-search-dropdown .navbar-item.is-active');
+      let activeItem = document.querySelector(
+        '.navbar-search-dropdown .navbar-item.is-active'
+      );
       if (activeItem !== null) {
         Turbolinks.visit(activeItem.href);
       }
     },
     scrollToActiveItem() {
       // Select the current active item and the searchDropdown.
-      let activeItem = document.querySelector('.navbar-search-dropdown .navbar-item.is-active');
+      let activeItem = document.querySelector(
+        '.navbar-search-dropdown .navbar-item.is-active'
+      );
       let searchDropdown = document.querySelector('.navbar-search-dropdown');
       // If the activeItem exists, scroll to it as the user moves through the dropdown options.
       if (activeItem !== null) {
-        searchDropdown.scrollTop = activeItem.offsetTop - searchDropdown.offsetTop;
+        searchDropdown.scrollTop =
+          activeItem.offsetTop - searchDropdown.offsetTop;
       }
     }
   },
@@ -123,7 +140,9 @@ export default {
           return true;
         }
         betterSearchResults[key].map(result => {
-          result.url = `/${this.plurals[result.searchable_type]}/${result.searchable_id}`;
+          result.url = `/${this.plurals[result.searchable_type]}/${
+            result.searchable_id
+          }`;
           return result;
         });
       });
@@ -134,5 +153,5 @@ export default {
       return Object.values(this.searchResults).flat();
     }
   }
-}
+};
 </script>

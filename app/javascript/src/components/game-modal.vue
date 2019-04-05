@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" :class="{ 'is-active': isActive } ">
+  <div class="modal" :class="{ 'is-active': isActive }">
     <div @click="onClose" class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
@@ -79,7 +79,6 @@
             @input="selectGamePurchase"
           ></single-select>
         </div>
-
       </section>
       <footer class="modal-card-foot">
         <button @click="onSave" class="button is-success">Save changes</button>
@@ -144,14 +143,14 @@ export default {
       type: Array,
       required: false,
       default: function() {
-        return []
+        return [];
       }
     },
     game: {
       type: Object,
       required: false,
       default: function() {
-        return {}
+        return {};
       }
     },
     userId: {
@@ -213,45 +212,69 @@ export default {
       },
       gamePurchaseSelected: !this.create,
       completionStatuses: {
-        'unplayed': 'Unplayed',
-        'in_progress': 'In Progress',
-        'dropped': 'Dropped',
-        'completed': 'Completed',
-        'fully_completed': '100% Completed',
-        'not_applicable': 'N/A'
+        unplayed: 'Unplayed',
+        in_progress: 'In Progress',
+        dropped: 'Dropped',
+        completed: 'Completed',
+        fully_completed: '100% Completed',
+        not_applicable: 'N/A'
       }
-    }
+    };
   },
   methods: {
     onClose() {
       this.$emit('close');
     },
     onSave() {
-      let submittableData = { game_purchase: {
-        game_id: this.gamePurchase.game.id,
-        user_id: this.gamePurchase.userId
-      }};
+      let submittableData = {
+        game_purchase: {
+          game_id: this.gamePurchase.game.id,
+          user_id: this.gamePurchase.userId
+        }
+      };
 
       if (this.gamePurchase.comments) {
-        submittableData['game_purchase']['comments'] = this.gamePurchase.comments;
+        submittableData['game_purchase'][
+          'comments'
+        ] = this.gamePurchase.comments;
       }
       if (this.gamePurchase.rating !== '') {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
       }
       if (this.gamePurchase.hours_played !== '') {
-        submittableData['game_purchase']['hours_played'] = this.gamePurchase.hours_played;
+        submittableData['game_purchase'][
+          'hours_played'
+        ] = this.gamePurchase.hours_played;
       }
-      if (this.gamePurchase.completion_status !== '' && typeof this.gamePurchase.completion_status !== 'undefined') {
-        submittableData['game_purchase']['completion_status'] = this.gamePurchase.completion_status.value;
+      if (
+        this.gamePurchase.completion_status !== '' &&
+        typeof this.gamePurchase.completion_status !== 'undefined'
+      ) {
+        submittableData['game_purchase'][
+          'completion_status'
+        ] = this.gamePurchase.completion_status.value;
       }
-      if (this.gamePurchase.start_date !== '' && this.gamePurchase.start_date !== null) {
-        submittableData['game_purchase']['start_date'] = this.gamePurchase.start_date;
+      if (
+        this.gamePurchase.start_date !== '' &&
+        this.gamePurchase.start_date !== null
+      ) {
+        submittableData['game_purchase'][
+          'start_date'
+        ] = this.gamePurchase.start_date;
       }
-      if (this.gamePurchase.completion_date !== '' && this.gamePurchase.completion_date !== null) {
-        submittableData['game_purchase']['completion_date'] = this.gamePurchase.completion_date;
+      if (
+        this.gamePurchase.completion_date !== '' &&
+        this.gamePurchase.completion_date !== null
+      ) {
+        submittableData['game_purchase'][
+          'completion_date'
+        ] = this.gamePurchase.completion_date;
       }
       if (this.gamePurchase.platforms !== []) {
-        submittableData['game_purchase']['platform_ids'] = Array.from(this.gamePurchase.platforms, platform => platform.id);
+        submittableData['game_purchase']['platform_ids'] = Array.from(
+          this.gamePurchase.platforms,
+          platform => platform.id
+        );
       }
 
       fetch(this.gamePurchasesSubmitUrl, {
@@ -260,15 +283,15 @@ export default {
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': Rails.csrfToken(),
-          'Accept': 'application/json'
+          Accept: 'application/json'
         },
         credentials: 'same-origin'
-      }).then((response) => {
+      }).then(response => {
         if (response.ok) {
           this.$emit('create');
           this.$emit('closeAndRefresh');
         }
-      })
+      });
     },
     selectGamePurchase() {
       this.gamePurchaseSelected = true;
@@ -279,7 +302,9 @@ export default {
       return this.create ? '/game_purchases' : `/game_purchases/${this.id}`;
     },
     modalTitle: function() {
-      return this.gamePurchase.game.name !== undefined ? this.gamePurchase.game.name : 'Add a game to your library';
+      return this.gamePurchase.game.name !== undefined
+        ? this.gamePurchase.game.name
+        : 'Add a game to your library';
     },
     formattedCompletionStatuses: function() {
       return Object.entries(this.completionStatuses).map(status => {
@@ -287,5 +312,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

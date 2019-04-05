@@ -54,5 +54,5 @@ export default {
       return _.snakeCase(this.label);
     }
   }
-}
+};
 </script>

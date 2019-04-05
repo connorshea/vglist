@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       dataValue: this.value
-    }
+    };
   },
   computed: {
     textAreaName: function() {
@@ -47,6 +47,5 @@ export default {
       return `${this.formClass}_${this.attribute}`;
     }
   }
-}
+};
 </script>
-

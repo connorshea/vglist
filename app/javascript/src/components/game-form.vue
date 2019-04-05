@@ -1,8 +1,14 @@
 <template>
   <div>
     <!-- Display errors if there are any. -->
-    <div class="notification errors-notification is-danger" v-if="errors.length > 0">
-      <p>{{ errors.length > 1 ? 'Errors' : 'An error'}} prevented this game from being saved:</p>
+    <div
+      class="notification errors-notification is-danger"
+      v-if="errors.length > 0"
+    >
+      <p>
+        {{ errors.length > 1 ? 'Errors' : 'An error' }} prevented this game from
+        being saved:
+      </p>
       <ul>
         <li v-for="error in errors" :key="error">
           {{ error }}
@@ -48,7 +54,7 @@
       v-model="game.developers"
       :search-path-identifier="'companies'"
     ></multi-select>
-    
+
     <multi-select
       :label="formData.publishers.label"
       v-model="game.publishers"
@@ -88,16 +94,11 @@
       v-model="game.pcgamingwiki_id"
     ></text-field>
 
-    <button
-      class="button is-primary"
-      value="Submit"
-      @click.prevent="onSubmit"
-    >Submit</button>
+    <button class="button is-primary" value="Submit" @click.prevent="onSubmit">
+      Submit
+    </button>
 
-    <a
-      class="button"
-      :href="cancelPath"
-    >Cancel</a>
+    <a class="button" :href="cancelPath">Cancel</a>
   </div>
 </template>
 
@@ -136,42 +137,42 @@ export default {
       type: Array,
       required: false,
       default: function() {
-        return []
+        return [];
       }
     },
     engines: {
       type: Array,
       required: false,
       default: function() {
-        return []
+        return [];
       }
     },
     developers: {
       type: Array,
       required: false,
       default: function() {
-        return []
+        return [];
       }
     },
     publishers: {
       type: Array,
       required: false,
       default: function() {
-        return []
+        return [];
       }
     },
     platforms: {
       type: Array,
       required: false,
       default: function() {
-        return []
+        return [];
       }
     },
     series: {
       type: Object,
       required: false,
       default: function() {
-        return { name: '' }
+        return { name: '' };
       }
     },
     steam_app_id: {
@@ -269,7 +270,7 @@ export default {
           attribute: 'pcgamingwiki_id'
         }
       }
-    }
+    };
   },
   methods: {
     onChange(file) {
@@ -286,27 +287,38 @@ export default {
         } else {
           this.game.coverBlob = blob.signed_id;
         }
-      })
+      });
     },
     onSubmit() {
       let genre_ids = Array.from(this.game.genres, genre => genre.id);
       let engine_ids = Array.from(this.game.engines, engine => engine.id);
-      let developer_ids = Array.from(this.game.developers, developer => developer.id);
-      let publisher_ids = Array.from(this.game.publishers, publisher => publisher.id);
-      let platform_ids = Array.from(this.game.platforms, platform => platform.id);
+      let developer_ids = Array.from(
+        this.game.developers,
+        developer => developer.id
+      );
+      let publisher_ids = Array.from(
+        this.game.publishers,
+        publisher => publisher.id
+      );
+      let platform_ids = Array.from(
+        this.game.platforms,
+        platform => platform.id
+      );
 
-      let submittableData = { game: {
-        name: this.game.name,
-        description: this.game.description,
-        genre_ids: genre_ids,
-        engine_ids: engine_ids,
-        developer_ids: developer_ids,
-        publisher_ids: publisher_ids,
-        platform_ids: platform_ids,
-        steam_app_id: this.game.steam_app_id,
-        wikidata_id: this.game.wikidata_id,
-        pcgamingwiki_id: this.game.pcgamingwiki_id
-      }};
+      let submittableData = {
+        game: {
+          name: this.game.name,
+          description: this.game.description,
+          genre_ids: genre_ids,
+          engine_ids: engine_ids,
+          developer_ids: developer_ids,
+          publisher_ids: publisher_ids,
+          platform_ids: platform_ids,
+          steam_app_id: this.game.steam_app_id,
+          wikidata_id: this.game.wikidata_id,
+          pcgamingwiki_id: this.game.pcgamingwiki_id
+        }
+      };
 
       if (this.game.series) {
         submittableData['game']['series_id'] = this.game.series.id;
@@ -322,27 +334,30 @@ export default {
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': Rails.csrfToken(),
-          'Accept': 'application/json'
+          Accept: 'application/json'
         },
         credentials: 'same-origin'
-      }).then((response) => {
-        // https://stackoverflow.com/questions/50041257/how-can-i-pass-json-body-of-fetch-response-to-throw-error-with-then
-        return response.json().then((json) => {
-          if (response.ok) {
-            return Promise.resolve(json);
+      })
+        .then(response => {
+          // https://stackoverflow.com/questions/50041257/how-can-i-pass-json-body-of-fetch-response-to-throw-error-with-then
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(game => {
+          if (this.create) {
+            Turbolinks.visit(`${window.location.origin}/games/${game.id}`);
+          } else {
+            Turbolinks.visit(this.successPath);
           }
-          return Promise.reject(json);
+        })
+        .catch(errors => {
+          this.errors = errors;
         });
-      }).then((game) => {
-        if (this.create) {
-          Turbolinks.visit(`${window.location.origin}/games/${game.id}`);
-        } else {
-          Turbolinks.visit(this.successPath);
-        }
-      }).catch((errors) => {
-        this.errors = errors;
-      });
     }
   }
-}
+};
 </script>

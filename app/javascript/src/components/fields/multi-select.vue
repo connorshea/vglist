@@ -40,8 +40,10 @@ export default {
   data: function() {
     return {
       options: [],
-      searchPath: `${window.location.origin}/${this.searchPathIdentifier}/search.json`,
-    }
+      searchPath: `${window.location.origin}/${
+        this.searchPathIdentifier
+      }/search.json`
+    };
   },
   methods: {
     /*
@@ -55,18 +57,19 @@ export default {
       // TODO: Add error handling.
       fetch(searchUrl, {
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         }
-      }).then((response) => {
+      })
+        .then(response => {
           return response.json();
         })
-        .then((items) => {
+        .then(items => {
           this.options = items;
           loading(false);
         });
     }, 250),
     onChange(selectedItems) {
-      this.$emit('input', selectedItems)
+      this.$emit('input', selectedItems);
     }
   },
   computed: {
@@ -74,5 +77,5 @@ export default {
       return _.snakeCase(this.label);
     }
   }
-}
+};
 </script>
