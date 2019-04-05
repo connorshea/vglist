@@ -68,6 +68,8 @@ group :development, :test do
   # Rubocop for linting
   gem 'rubocop', '~> 0.67', require: false
 
+  gem 'rubocop-performance', '~> 1.0'
+
   # rubocop-rspec for linting rspec files
   gem 'rubocop-rspec', '~> 1.32'
 
