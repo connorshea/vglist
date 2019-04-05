@@ -5,7 +5,7 @@
 // that code so it'll be compiled.
 
 import Rails from 'rails-ujs';
-import Turbolinks from 'turbolinks'
+import Turbolinks from 'turbolinks';
 import * as ActiveStorage from 'activestorage';
 import '../src/application.scss';
 import TurbolinksAdapter from '../src/turbolinks-adapter';

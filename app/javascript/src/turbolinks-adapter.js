@@ -29,13 +29,13 @@ plugin = {
     ref = plugin.instances;
     for (i = 0, len = ref.length; i < len; i++) {
       instance = ref[i];
-      if (typeof keep_if === "function" ? keep_if(instance) : void 0) {
+      if (typeof keep_if === 'function' ? keep_if(instance) : void 0) {
         result.push(instance);
       } else {
         instance.$destroy();
       }
     }
-    return plugin.instances = result;
+    return (plugin.instances = result);
   },
   Mixin: {
     beforeMount: function() {
@@ -44,13 +44,13 @@ plugin = {
       // We don't care about sub-instances, just the root
       if (this === this.$root) {
         plugin.instances.push(this);
-        return this.$originalEl = this.$el.outerHTML;
+        return (this.$originalEl = this.$el.outerHTML);
       }
     },
     destroyed: function() {
       if (this === this.$root) {
         // We only need to revert the html for the root component.
-        return this.$el.outerHTML = this.$originalEl;
+        return (this.$el.outerHTML = this.$originalEl);
       }
     }
   },
@@ -60,4 +60,4 @@ plugin = {
   }
 };
 
-export default plugin
+export default plugin;

@@ -11,7 +11,7 @@
         v-bind:id="dateFieldId"
         v-bind:value="dataValue"
         v-on:input="$emit('input', $event.target.value)"
-      >
+      />
     </div>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       dataValue: this.value
-    }
+    };
   },
   computed: {
     dateFieldName: function() {
@@ -55,6 +55,5 @@ export default {
       return `${this.formClass}_${this.attribute}`;
     }
   }
-}
+};
 </script>
-

@@ -48,34 +48,43 @@ export default {
       this.$emit('edit', this.gameInLibrary);
     },
     onDelete() {
-      if (window.confirm(`Remove ${this.gameInLibrary.game.name} from your library?`)) {
+      if (
+        window.confirm(
+          `Remove ${this.gameInLibrary.game.name} from your library?`
+        )
+      ) {
         // Post a delete request to the game purchase endpoint to delete the game.
         fetch(this.gameInLibrary.url, {
           method: 'DELETE',
           headers: {
             'X-CSRF-Token': Rails.csrfToken(),
-            'Accept': 'application/json'
+            Accept: 'application/json'
           },
           credentials: 'same-origin'
-        }).then((response) => {
+        }).then(response => {
           if (response.ok) {
             // Emit a delete event to force the parent library component to
             // refresh.
             this.$emit('delete');
           }
-        })
+        });
       }
     }
   },
   computed: {
-    // 
+    //
     // Return values depend on which values are available, they should match what the backend sends.
     // No start or completion date: ''
     // Completion date but no start date: '??? – March 20, 2019'
     // Start date but no completion date: 'March 10, 2019 – ???'
     // Start and completion date: 'March 10, 2019 – March 20, 2019'
     formattedStartAndCompletionDates: function() {
-      let options = { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' };
+      let options = {
+        timeZone: 'UTC',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
       let returnString = '';
       let startDateString = this.gameInLibrary.start_date;
       let completionDateString = this.gameInLibrary.completion_date;
@@ -83,13 +92,22 @@ export default {
       if (startDateString !== null && completionDateString !== null) {
         let startDate = new Date(startDateString);
         let completionDate = new Date(completionDateString);
-        returnString = `${startDate.toLocaleDateString('en-US', options)} – ${completionDate.toLocaleDateString('en-US', options)}`;
+        returnString = `${startDate.toLocaleDateString(
+          'en-US',
+          options
+        )} – ${completionDate.toLocaleDateString('en-US', options)}`;
       } else if (startDateString !== null) {
         let startDate = new Date(startDateString);
-        returnString = `${startDate.toLocaleDateString('en-US', options)} – ???`;
+        returnString = `${startDate.toLocaleDateString(
+          'en-US',
+          options
+        )} – ???`;
       } else if (completionDateString !== null) {
         let completionDate = new Date(completionDateString);
-        returnString = `??? – ${completionDate.toLocaleDateString('en-US', options)}`;
+        returnString = `??? – ${completionDate.toLocaleDateString(
+          'en-US',
+          options
+        )}`;
       }
 
       return returnString;
@@ -98,12 +116,13 @@ export default {
       let hoursPlayed = this.gameInLibrary.hours_played;
 
       // Return nothing if hoursPlayed is null.
-      if (hoursPlayed === null) { return; }
+      if (hoursPlayed === null) {
+        return;
+      }
 
       // Return "x hours" for time played.
       return `${Math.floor(hoursPlayed)} hours`;
     }
   }
-}
+};
 </script>
-

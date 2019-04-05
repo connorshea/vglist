@@ -1,11 +1,16 @@
 <template>
   <div class="game-library">
-    <div v-if="!libraryEmpty" class="columns game-library-header game-library-row">
+    <div
+      v-if="!libraryEmpty"
+      class="columns game-library-header game-library-row"
+    >
       <div class="column game-name">Game</div>
       <div class="column game-rating">Rating</div>
       <div class="column game-hours-played">Hours Played</div>
       <div class="column game-completion-status">Completion Status</div>
-      <div class="column game-start-and-completion-dates">Start/Completion Dates</div>
+      <div class="column game-start-and-completion-dates">
+        Start/Completion Dates
+      </div>
       <div class="column game-platforms">Platforms</div>
       <div class="column game-comments">Comments</div>
       <div v-if="isEditable" class="column game-actions">Actions</div>
@@ -21,10 +26,7 @@
 
     <p v-if="libraryEmpty">This library is empty.</p>
 
-    <button
-      v-if="isEditable"
-      @click="activateModal({})"
-      class="button mt-10">
+    <button v-if="isEditable" @click="activateModal({})" class="button mt-10">
       Add a game to your library
     </button>
 
@@ -71,47 +73,54 @@ export default {
       isModalActive: false,
       currentGame: {},
       doesGamePurchaseExist: false
-    }
+    };
   },
   created: function() {
     fetch(this.gamePurchasesUrl, {
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       }
-    }).then((response) => {
-      return response.json().then((json) => {
-        if (response.ok) {
-          return Promise.resolve(json);
-        }
-        return Promise.reject(json);
-      });
-    }).then((purchasedGames) => {
-      this.purchasedGames = purchasedGames;
-    });
-  },
-  methods: {
-    refreshLibrary() {
-      fetch(this.gamePurchasesUrl, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then((response) => {
-        return response.json().then((json) => {
+    })
+      .then(response => {
+        return response.json().then(json => {
           if (response.ok) {
             return Promise.resolve(json);
           }
           return Promise.reject(json);
         });
-      }).then((purchasedGames) => {
+      })
+      .then(purchasedGames => {
         this.purchasedGames = purchasedGames;
       });
+  },
+  methods: {
+    refreshLibrary() {
+      fetch(this.gamePurchasesUrl, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(purchasedGames => {
+          this.purchasedGames = purchasedGames;
+        });
     },
     activateModal(game = {}) {
-      if (!this.isEditable) { return; }
+      if (!this.isEditable) {
+        return;
+      }
       let html = document.querySelector('html');
       html.classList.add('is-clipped');
 
-      this.doesGamePurchaseExist = Object.entries(game).length > 0 ? false : true;
+      this.doesGamePurchaseExist =
+        Object.entries(game).length > 0 ? false : true;
       this.currentGame = game;
       this.isModalActive = true;
     },
@@ -134,6 +143,5 @@ export default {
       return this.purchasedGames.length === 0;
     }
   }
-}
+};
 </script>
-

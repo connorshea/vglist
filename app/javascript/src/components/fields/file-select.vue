@@ -9,10 +9,10 @@
         <span v-else>Select File</span>
       </div>
       <!-- We hide this file input. -->
-      <input type="file" @change="handleFileChange"/>
+      <input type="file" @change="handleFileChange" />
     </label>
     <div class="game-cover pt-5">
-      <img v-if="image" :src="image"/>
+      <img v-if="image" :src="image" />
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       image: null
-    }
+    };
   },
   methods: {
     handleFileChange(e) {
@@ -37,12 +37,12 @@ export default {
       var reader = new FileReader();
       reader.onloadend = () => {
         this.image = reader.result;
-      }
+      };
       reader.readAsDataURL(file);
 
       // Whenever the file changes, emit the 'input' event with the file data.
-      this.$emit('input', file)
+      this.$emit('input', file);
     }
   }
-}
+};
 </script>
