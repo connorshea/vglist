@@ -684,6 +684,10 @@ Rails/Present:
 Rails/ReadWriteAttribute:
   Enabled: true
 
+# Borked for now. Enable later.
+Rails/RedundantAllowNil:
+  Enabled: false
+
 Rails/RedundantReceiverInWithOptions:
   Enabled: true
 
