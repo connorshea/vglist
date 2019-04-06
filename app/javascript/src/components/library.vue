@@ -1,35 +1,12 @@
 <template>
   <div class="game-library">
-    <vue-good-table
-      :columns="columns"
-      :rows="rows"
-      :sort-options="{
-        enabled: true,
-        initialSortBy: { field: 'rating', type: 'desc' }
-      }"
-    >
-      <div slot="table-actions">
-        <button
-          v-if="isEditable"
-          @click="activateModal({})"
-          class="button mr-5"
-        >Add a game to your library</button>
-      </div>
-      <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'after'">Actions</span>
-        <span v-else-if="props.column.field == 'game.name'">
-          <a :href="props.row.game_url">{{ props.row.game.name }}</a>
-        </span>
-        <span v-else-if="props.column.field == 'platforms'">
-          <span v-for="platform in props.row.platforms" :key="platform.id">{{ platform.name }}</span>
-        </span>
-        <span v-else>{{ props.formattedRow[props.column.field] }}</span>
-      </template>
-      <div slot="emptystate" class="vgt-center-align">
-        <span v-if="isLoading">Loading...</span>
-        <span v-else class="vgt-text-disabled">This library is empty.</span>
-      </div>
-    </vue-good-table>
+    <library-table
+      :rows="games"
+      :isEditable="isEditable"
+      :gamePurchasesUrl="gamePurchasesUrl"
+      :isLoading="isLoading"
+      @loaded="libraryLoaded"
+    ></library-table>
 
     <game-modal
       v-if="isModalActive"
@@ -45,30 +22,27 @@
 </template>
 
 <script>
-import GameInLibrary from './game-in-library.vue';
+import LibraryTable from './library-table.vue';
 import GameModal from './game-modal.vue';
-import { VueGoodTable } from 'vue-good-table';
-import 'vue-good-table/dist/vue-good-table.css';
 
 export default {
   components: {
-    GameInLibrary,
-    GameModal,
-    VueGoodTable
+    LibraryTable,
+    GameModal
   },
   props: {
     gamePurchasesUrl: {
       type: String,
       required: true
     },
+    userId: {
+      type: Number,
+      required: true
+    },
     isEditable: {
       type: Boolean,
       required: false,
       default: false
-    },
-    userId: {
-      type: Number,
-      required: true
     }
   },
   data: function() {
@@ -76,64 +50,12 @@ export default {
       isModalActive: false,
       currentGame: {},
       doesGamePurchaseExist: false,
-      isLoading: true,
-      columns: [
-        {
-          label: 'Name',
-          field: 'game.name',
-          type: 'text'
-        },
-        {
-          label: 'Rating',
-          field: 'rating',
-          type: 'number'
-        },
-        {
-          label: 'Hours Played',
-          field: 'hours_played',
-          type: 'decimal'
-        },
-        {
-          label: 'Completion Status',
-          field: 'completion_status.label',
-          type: 'text'
-        },
-        {
-          label: 'Start Date',
-          field: 'start_date',
-          type: 'date',
-          dateInputFormat: 'YYYY-MM-DD',
-          dateOutputFormat: 'MMMM D, YYYY'
-        },
-        {
-          label: 'Completion Date',
-          field: 'completion_date',
-          type: 'date',
-          dateInputFormat: 'YYYY-MM-DD',
-          dateOutputFormat: 'MMMM D, YYYY'
-        },
-        {
-          label: 'Platforms',
-          field: 'platforms',
-          type: 'text'
-        },
-        {
-          label: 'Comments',
-          field: 'comments',
-          type: 'text'
-        }
-      ],
-      rows: []
+      games: [],
+      isLoading: true
     };
   },
   created: function() {
     this.loadGames();
-    if (this.isEditable) {
-      this.columns.push({
-        label: 'Actions',
-        field: 'after'
-      });
-    }
   },
   methods: {
     loadGames() {
@@ -151,7 +73,7 @@ export default {
           });
         })
         .then(purchasedGames => {
-          this.rows = purchasedGames;
+          this.games = purchasedGames;
           this.isLoading = false;
         });
     },
@@ -182,6 +104,9 @@ export default {
       setTimeout(() => {
         this.refreshLibrary();
       }, 750);
+    },
+    libraryLoaded() {
+      this.isLoading = false;
     }
   }
 };
