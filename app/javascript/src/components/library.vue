@@ -1,29 +1,34 @@
 <template>
   <div class="game-library">
-    <!-- <game-in-library
-      v-for="gameInLibrary in purchasedGames"
-      :key="gameInLibrary.id"
-      :gameInLibrary="gameInLibrary"
-      :isEditable="isEditable"
-      v-on:delete="refreshLibrary"
-      v-on:edit="activateModal"
-    ></game-in-library>-->
-
-    <vue-good-table :columns="columns" :rows="rows">
+    <vue-good-table
+      :columns="columns"
+      :rows="rows"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: { field: 'rating', type: 'desc' }
+      }"
+    >
       <div slot="table-actions">
         <button
           v-if="isEditable"
           @click="activateModal({})"
-          class="button mt-10"
+          class="button mr-5"
         >Add a game to your library</button>
       </div>
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'platforms'">
+        <span v-if="props.column.field == 'after'">Actions</span>
+        <span v-else-if="props.column.field == 'game.name'">
+          <a :href="props.row.game_url">{{ props.row.game.name }}</a>
+        </span>
+        <span v-else-if="props.column.field == 'platforms'">
           <span v-for="platform in props.row.platforms" :key="platform.id">{{ platform.name }}</span>
         </span>
-        <span v-else>{{props.formattedRow[props.column.field]}}</span>
+        <span v-else>{{ props.formattedRow[props.column.field] }}</span>
       </template>
-      <div slot="emptystate" class="vgt-center-align vgt-text-disabled">This library is empty.</div>
+      <div slot="emptystate" class="vgt-center-align">
+        <span v-if="isLoading">Loading...</span>
+        <span v-else class="vgt-text-disabled">This library is empty.</span>
+      </div>
     </vue-good-table>
 
     <game-modal
@@ -68,14 +73,15 @@ export default {
   },
   data: function() {
     return {
-      purchasedGames: [],
       isModalActive: false,
       currentGame: {},
       doesGamePurchaseExist: false,
+      isLoading: true,
       columns: [
         {
           label: 'Name',
-          field: 'game.name'
+          field: 'game.name',
+          type: 'text'
         },
         {
           label: 'Rating',
@@ -89,7 +95,8 @@ export default {
         },
         {
           label: 'Completion Status',
-          field: 'completion_status.label'
+          field: 'completion_status.label',
+          type: 'text'
         },
         {
           label: 'Start Date',
@@ -107,36 +114,29 @@ export default {
         },
         {
           label: 'Platforms',
-          field: 'platforms'
+          field: 'platforms',
+          type: 'text'
         },
         {
           label: 'Comments',
-          field: 'comments'
+          field: 'comments',
+          type: 'text'
         }
       ],
       rows: []
     };
   },
   created: function() {
-    fetch(this.gamePurchasesUrl, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        return response.json().then(json => {
-          if (response.ok) {
-            return Promise.resolve(json);
-          }
-          return Promise.reject(json);
-        });
-      })
-      .then(purchasedGames => {
-        this.rows = purchasedGames;
+    this.loadGames();
+    if (this.isEditable) {
+      this.columns.push({
+        label: 'Actions',
+        field: 'after'
       });
+    }
   },
   methods: {
-    refreshLibrary() {
+    loadGames() {
       fetch(this.gamePurchasesUrl, {
         headers: {
           'Content-Type': 'application/json'
@@ -152,7 +152,11 @@ export default {
         })
         .then(purchasedGames => {
           this.rows = purchasedGames;
+          this.isLoading = false;
         });
+    },
+    refreshLibrary() {
+      this.loadGames();
     },
     activateModal(game = {}) {
       if (!this.isEditable) {
@@ -178,11 +182,6 @@ export default {
       setTimeout(() => {
         this.refreshLibrary();
       }, 750);
-    }
-  },
-  computed: {
-    libraryEmpty: function() {
-      return this.rows.length === 0;
     }
   }
 };
