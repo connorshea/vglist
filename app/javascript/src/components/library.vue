@@ -6,6 +6,9 @@
       :gamePurchasesUrl="gamePurchasesUrl"
       :isLoading="isLoading"
       @loaded="libraryLoaded"
+      @edit="activateModal"
+      @delete="refreshLibrary"
+      @addGame="activateModal({})"
     ></library-table>
 
     <game-modal

@@ -7,12 +7,8 @@
         initialSortBy: { field: 'rating', type: 'desc' }
       }"
   >
-    <div slot="table-actions">
-      <button
-        v-if="isEditable"
-        @click="activateModal({})"
-        class="button mr-5"
-      >Add a game to your library</button>
+    <div slot="table-actions" v-if="isEditable">
+      <button v-if="isEditable" @click="addGame()" class="button mr-5">Add a game to your library</button>
     </div>
     <template slot="table-row" slot-scope="props">
       <span v-if="props.column.field == 'after'">
@@ -23,7 +19,7 @@
         <a :href="props.row.game_url">{{ props.row.game.name }}</a>
       </span>
       <span v-else-if="props.column.field == 'platforms'">
-        <span v-for="platform in props.row.platforms" :key="platform.id">{{ platform.name }}</span>
+        <p v-for="platform in props.row.platforms" :key="platform.id">{{ platform.name }}</p>
       </span>
       <span v-else>{{ props.formattedRow[props.column.field] }}</span>
     </template>
@@ -67,7 +63,8 @@ export default {
     if (this.isEditable) {
       this.columns.push({
         label: 'Actions',
-        field: 'after'
+        field: 'after',
+        width: '120px'
       });
     }
   },
@@ -128,7 +125,7 @@ export default {
     onDelete(row) {
       if (window.confirm(`Remove ${row.game.name} from your library?`)) {
         // Post a delete request to the game purchase endpoint to delete the game.
-        fetch(row.game.url, {
+        fetch(row.url, {
           method: 'DELETE',
           headers: {
             'X-CSRF-Token': Rails.csrfToken(),
@@ -162,6 +159,9 @@ export default {
           this.games = purchasedGames;
           this.$emit('loaded');
         });
+    },
+    addGame() {
+      this.$emit('addGame');
     }
   }
 };
