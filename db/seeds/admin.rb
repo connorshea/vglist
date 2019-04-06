@@ -1,11 +1,12 @@
 puts "Creating admin..."
 
 # Create an account for admin usage.
-User.create!(
-  email: "admin@example.com",
-  username: "connor",
+User.create_with(
   password: "password",
   role: :admin
+).find_or_create_by!(
+  email: "admin@example.com",
+  username: "connor"
 )
 
 admin = User.find_by(email: "admin@example.com")
@@ -29,6 +30,7 @@ puts "Creating Game Purchases for admin..."
     completion_status: rand(0..5),
     start_date: Faker::Date.between(1.month.ago, 1.day.ago),
     completion_date: Faker::Date.between(1.month.ago, 1.day.ago),
-    comments: Faker::Lorem.sentence
+    comments: Faker::Lorem.sentence,
+    hours_played: rand(0.100)
   )
 end
