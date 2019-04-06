@@ -1,34 +1,30 @@
 <template>
   <div class="game-library">
-    <div
-      v-if="!libraryEmpty"
-      class="columns game-library-header game-library-row"
-    >
-      <div class="column game-name">Game</div>
-      <div class="column game-rating">Rating</div>
-      <div class="column game-hours-played">Hours Played</div>
-      <div class="column game-completion-status">Completion Status</div>
-      <div class="column game-start-and-completion-dates">
-        Start/Completion Dates
-      </div>
-      <div class="column game-platforms">Platforms</div>
-      <div class="column game-comments">Comments</div>
-      <div v-if="isEditable" class="column game-actions">Actions</div>
-    </div>
-    <game-in-library
+    <!-- <game-in-library
       v-for="gameInLibrary in purchasedGames"
       :key="gameInLibrary.id"
       :gameInLibrary="gameInLibrary"
       :isEditable="isEditable"
       v-on:delete="refreshLibrary"
       v-on:edit="activateModal"
-    ></game-in-library>
+    ></game-in-library>-->
 
-    <p v-if="libraryEmpty">This library is empty.</p>
-
-    <button v-if="isEditable" @click="activateModal({})" class="button mt-10">
-      Add a game to your library
-    </button>
+    <vue-good-table :columns="columns" :rows="rows">
+      <div slot="table-actions">
+        <button
+          v-if="isEditable"
+          @click="activateModal({})"
+          class="button mt-10"
+        >Add a game to your library</button>
+      </div>
+      <template slot="table-row" slot-scope="props">
+        <span v-if="props.column.field == 'platforms'">
+          <span v-for="platform in props.row.platforms" :key="platform.id">{{ platform.name }}</span>
+        </span>
+        <span v-else>{{props.formattedRow[props.column.field]}}</span>
+      </template>
+      <div slot="emptystate" class="vgt-center-align vgt-text-disabled">This library is empty.</div>
+    </vue-good-table>
 
     <game-modal
       v-if="isModalActive"
@@ -46,11 +42,14 @@
 <script>
 import GameInLibrary from './game-in-library.vue';
 import GameModal from './game-modal.vue';
+import { VueGoodTable } from 'vue-good-table';
+import 'vue-good-table/dist/vue-good-table.css';
 
 export default {
   components: {
     GameInLibrary,
-    GameModal
+    GameModal,
+    VueGoodTable
   },
   props: {
     gamePurchasesUrl: {
@@ -72,7 +71,50 @@ export default {
       purchasedGames: [],
       isModalActive: false,
       currentGame: {},
-      doesGamePurchaseExist: false
+      doesGamePurchaseExist: false,
+      columns: [
+        {
+          label: 'Name',
+          field: 'game.name'
+        },
+        {
+          label: 'Rating',
+          field: 'rating',
+          type: 'number'
+        },
+        {
+          label: 'Hours Played',
+          field: 'hours_played',
+          type: 'decimal'
+        },
+        {
+          label: 'Completion Status',
+          field: 'completion_status.label'
+        },
+        {
+          label: 'Start Date',
+          field: 'start_date',
+          type: 'date',
+          dateInputFormat: 'YYYY-MM-DD',
+          dateOutputFormat: 'MMMM D, YYYY'
+        },
+        {
+          label: 'Completion Date',
+          field: 'completion_date',
+          type: 'date',
+          dateInputFormat: 'YYYY-MM-DD',
+          dateOutputFormat: 'MMMM D, YYYY'
+        },
+        {
+          label: 'Platforms',
+          field: 'platforms'
+        },
+        {
+          label: 'Comments',
+          field: 'comments'
+        }
+      ],
+      rows: []
     };
   },
   created: function() {
@@ -90,7 +132,7 @@ export default {
         });
       })
       .then(purchasedGames => {
-        this.purchasedGames = purchasedGames;
+        this.rows = purchasedGames;
       });
   },
   methods: {
@@ -109,7 +151,7 @@ export default {
           });
         })
         .then(purchasedGames => {
-          this.purchasedGames = purchasedGames;
+          this.rows = purchasedGames;
         });
     },
     activateModal(game = {}) {
@@ -140,7 +182,7 @@ export default {
   },
   computed: {
     libraryEmpty: function() {
-      return this.purchasedGames.length === 0;
+      return this.rows.length === 0;
     }
   }
 };
