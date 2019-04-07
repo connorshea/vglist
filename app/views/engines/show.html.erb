@@ -9,6 +9,10 @@
   </div>
 <% end %>
 
+<% unless @engine.wikidata_id.blank? %>
+  <%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{@engine.wikidata_id}" %>
+<% end %>
+
 <% if !@games.blank? %>
   <div class="game-card-list mt-20">
     <% @games.each do |game| %>

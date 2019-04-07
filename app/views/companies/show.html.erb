@@ -12,22 +12,12 @@
   </div>
 <% end %>
 
-<% if !@published_games.blank? %>
-  <p>Published:
-
-  <div class="game-card-list mt-20">
-    <% @published_games.each do |game| %>
-      <%= render 'shared/game_card', game: game %>
-    <% end %>
-  </div>
-
-  <%= paginate @published_games, param_name: :publisher_page %>
-<% else %>
-  <p>This company hasn't published any games yet.
+<% unless @company.wikidata_id.blank? %>
+  <%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{@company.wikidata_id}" %>
 <% end %>
 
 <% if !@developed_games.blank? %>
-  <p>Developed:
+  <h2 class="subtitle is-4 mt-40">Developed</h2>
 
   <div class="game-card-list mt-20">
     <% @developed_games.each do |game| %>
@@ -38,4 +28,18 @@
   <%= paginate @developed_games, param_name: :developer_page %>
 <% else %>
   <p>This company hasn't developed any games yet.
+<% end %>
+
+<% if !@published_games.blank? %>
+  <h2 class="subtitle is-4 mt-40">Published</h2>
+
+  <div class="game-card-list mt-20">
+    <% @published_games.each do |game| %>
+      <%= render 'shared/game_card', game: game %>
+    <% end %>
+  </div>
+
+  <%= paginate @published_games, param_name: :publisher_page %>
+<% else %>
+  <p>This company hasn't published any games yet.
 <% end %>
