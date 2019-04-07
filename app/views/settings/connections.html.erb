@@ -12,10 +12,18 @@
 
     <div class="field">
       <% if @steam_account.nil? %>
-        <p>No Steam account connected.
-        <p><%= button_to "Connect your Steam account",
-          user_steam_omniauth_authorize_path,
-          class: 'button mt-10' %>
+        <%= form_with url: connect_steam_user_path(id: @user.id), local: true do |f| %>
+          <div class="field">
+            <%= f.label :steam_username, class: "label" %>
+            <div class="control">
+              <%= f.text_field :steam_username, autocomplete: "off", class: "input" %>
+            </div>
+          </div>
+
+          <div class="field">
+            <%= f.submit "Connect your Steam account", class: 'button is-primary' %>
+          </div>
+        <% end %>
       <% else %>
         <div class="notification is-info">
           <p>In order to import your games from Steam, <strong>your Steam profile and "Game details" need to be public</strong>.

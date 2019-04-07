@@ -107,6 +107,40 @@ class UsersController < ApplicationController
     end
   end
 
+  def connect_steam
+    @user = User.friendly.find(params[:id])
+    authorize @user
+
+    steam_api_url = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{params[:steam_username]}"
+    json = JSON.parse(URI.open(steam_api_url).read)
+
+    steam_id = json.dig("response", "steamid")
+
+    # If one already exists, don't create it.
+    # If not, create it and pass in the steam_id and steam_profile_url.
+    @steam_account = ExternalAccount.create_with(
+      steam_id: steam_id,
+      steam_profile_url: "https://steamcommunity.com/id/#{params[:steam_username]}/"
+    ).find_or_create_by!(
+      user_id: @user.id,
+      account_type: :steam
+    )
+
+    respond_to do |format|
+      if @steam_account.save
+        format.html do
+          flash[:success] = "Steam account successfully connected."
+          redirect_to settings_connections_path
+        end
+      else
+        format.html do
+          flash[:error] = "Unable to find a Steam account with that username."
+          redirect_to settings_connections_path
+        end
+      end
+    end
+  end
+
   def disconnect_steam
     @user = User.friendly.find(params[:id])
     authorize @user

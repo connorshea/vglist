@@ -45,6 +45,10 @@ class UserPolicy < ApplicationPolicy
     user_is_current_user
   end
 
+  def connect_steam?
+    user_is_current_user
+  end
+
   def disconnect_steam?
     user_is_current_user
   end
