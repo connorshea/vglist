@@ -9,9 +9,11 @@
   </div>
 <% end %>
 
-<% if !@games.blank? %>
-  <p>Games:
+<% unless @series.wikidata_id.blank? %>
+  <%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{@series.wikidata_id}" %>
+<% end %>
 
+<% if !@games.blank? %>
   <div class="game-card-list mt-20">
     <% @games.each do |game| %>
       <%= render 'shared/game_card', game: game %>
