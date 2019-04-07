@@ -69,6 +69,9 @@ class UsersController < ApplicationController
     json = JSON.parse(URI.open(steam_api_url).read)
 
     steam_games = json.dig('response', 'games')
+
+    # Ignore games without logo URLs, this filters out most DLC, which we don't want to import.
+    steam_games.reject! { |game| game['img_logo_url'] == "" }
     unmatched_games = []
     matched_games_count = 0
 
