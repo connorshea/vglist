@@ -2,10 +2,24 @@
 
 <h1 class="title">Users</h1>
 
-<ul>
+<div class="user-card-list mt-20">
   <% @users.each do |user| %>
-    <li><%= link_to(user.username, user_path(user.slug)) %></li>
+    <div class="user-card custom-card">
+      <%= link_to(user_path(user.slug), class: 'card-container') do %>
+        <figure class="user-avatar">
+          <%= user_avatar(user.id, 80) %>
+        </figure>
+        <div class="card-content">
+          <p class="title is-4 mb-5"><%= user.username %></p>
+          <% if user.admin? %>
+            <p><span class="tag is-primary has-text-weight-semibold">Admin</span>
+          <% elsif user.moderator? %>
+            <p><span class="tag is-primary has-text-weight-semibold">Moderator</span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   <% end %>
-</ul>
+</div>
 
 <%= paginate @users %>
