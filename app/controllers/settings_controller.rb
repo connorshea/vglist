@@ -17,7 +17,7 @@ class SettingsController < ApplicationController
     authorize @user, policy_class: SettingsPolicy
 
     @steam_account = ExternalAccount.find_by(user_id: current_user.id, account_type: :steam)
-
+    @unmatched_games = params[:unmatched_games]
     return if @steam_account.nil?
 
     regex = %r{https://steamcommunity\.com/id/(.*)/}

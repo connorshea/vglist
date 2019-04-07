@@ -34,5 +34,12 @@
           class: 'button is-danger mt-10' %>
       <% end %>
     </div>
+
+    <% if @unmatched_games %>
+      <p>Unable to import the following games:
+      <% @unmatched_games.each do |game| %>
+        <p><%= game %></p>
+      <% end %>
+    <% end %>
   </div>
 </div>
