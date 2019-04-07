@@ -13,20 +13,27 @@
     <%= form_for @user, html: { class: "avatar-form" } do |f| %>
       <div class="field">
         <%= f.label :avatar %>
-        <%= f.file_field :avatar %>
+        <div class="control">
+          <%= f.file_field :avatar %>
+        </div>
       </div>
 
       <div class="field">
-        <%= f.submit "Update Avatar", class: "button is-primary" %>
+        <%= f.submit "Update avatar", class: "button is-primary" %>
         <% if @user.avatar.attached? && policy(@user).remove_avatar? %>
-          <%= link_to "Remove avatar", remove_avatar_user_path(@user.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger" %>
+          <%= link_to "Remove avatar",
+            remove_avatar_user_path(@user.id),
+            method: :delete,
+            data: { confirm: "You sure?" },
+            class: "button is-danger" %>
         <% end %>
       </div>
     <% end %>
 
+    <h2 class="subtitle is-3 mt-25 mb-10">Bio</h2>
+
     <%= form_for @user, html: { class: "bio-form" } do |f| %>
       <div class="field">
-        <%= f.label :bio, "Bio", class: "label" %>
         <div class="control">
           <%= f.text_area :bio, class: "textarea" %>
         </div>
