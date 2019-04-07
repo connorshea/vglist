@@ -51,7 +51,7 @@
     </ul>
   <% end %>
 
-  <% unless game.wikidata_id.blank? && game.pcgamingwiki_id.blank? %>
+  <% unless game.wikidata_id.blank? && game.pcgamingwiki_id.blank? && game.steam_app_id.blank? %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
       <% unless game.wikidata_id.blank? %>
