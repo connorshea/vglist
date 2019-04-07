@@ -157,7 +157,8 @@ nav.navbar {
   }
 }
 
-.game-card-list {
+.game-card-list,
+.user-card-list {
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -167,14 +168,37 @@ nav.navbar {
   }
 }
 
-.game-card {
+.custom-card {
   background-color: #fff;
   box-shadow: 0 2px 3px rgba(#000, 0.1), 0 0 0 1px rgba(#000, 0.1);
   color: hsl(0, 0%, 21%);
   width: auto;
-  height: 200px;
   position: relative;
   overflow: hidden;
+
+  &.game-card {
+    height: 200px;
+  }
+
+  &.user-card {
+    height: 80px;
+
+    .card-content {
+      overflow: hidden;
+    }
+
+    .title {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: normal;
+    }
+
+    img {
+      width: 80px;
+      min-width: 80px;
+      height: 80px;
+    }
+  }
 
   .card-container {
     padding: 0;
