@@ -18,8 +18,8 @@
           class: 'button mt-10' %>
       <% else %>
         <div class="notification is-info">
-          <p>In order to import your games from Steam, <strong>your Steam profile needs to be public</strong>.
-          You can set your profile to public in <%= link_to 'your Steam privacy settings', "https://steamcommunity.com/my/edit/settings" %>.
+          <p>In order to import your games from Steam, <strong>your Steam profile and "Game details" need to be public</strong>.
+          You can set your profile and game library to public in <%= link_to 'your Steam privacy settings', "https://steamcommunity.com/my/edit/settings" %>.
           Once you've imported your games, you can set your profile back to private if you'd like.
         </div>
         <p>Steam account: <%= link_to @steam_username, @steam_account.steam_profile_url %></p>
