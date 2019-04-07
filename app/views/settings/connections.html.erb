@@ -36,10 +36,14 @@
     </div>
 
     <% if @unmatched_games %>
-      <p>Unable to import the following games:
-      <% @unmatched_games.each do |game| %>
-        <p><%= game %></p>
-      <% end %>
+      <div class="content">
+        <p>Unable to find the following games in the database<%= @unmatched_games.count == 50 ? " (only displaying the first 50 games)" : "" %>:
+        <ul>
+          <% @unmatched_games.each do |game| %>
+            <li><%= game['name'] %> (<%= link_to 'Create', new_game_path(name: game['name'], steam_app_id: game['steam_id']) %>)</li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
   </div>
 </div>

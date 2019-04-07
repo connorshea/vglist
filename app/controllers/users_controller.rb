@@ -93,10 +93,16 @@ class UsersController < ApplicationController
       matched_games_count += 1
     end
 
+    unmatched_games_count = unmatched_games.count
+
+    # Limit the results to a max of 50 games to avoid returning a URL that's too long for Puma to handle.
+    unmatched_games = unmatched_games[0...50]
+    unmatched_games.map! { |game| { name: game['name'], steam_id: game['appid'] } }
+
     respond_to do |format|
       format.html do
-        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games.count} games weren't found in the VGList database."
-        redirect_to settings_connections_path(unmatched_games: unmatched_games[0..50].map { |game| game['name'] })
+        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games_count} games weren't found in the VGList database."
+        redirect_to settings_connections_path(unmatched_games: unmatched_games)
       end
     end
   end

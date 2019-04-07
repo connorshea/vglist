@@ -22,6 +22,10 @@ class GamesController < ApplicationController
   def new
     @game = Game.new
     authorize @game
+
+    # Allow the name and Steam App ID to be passed from the URL params, for prefilling the form.
+    @name = params[:name]
+    @steam_app_id = params[:steam_app_id]
   end
 
   def edit
