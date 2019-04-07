@@ -1,34 +1,15 @@
 <template>
   <div class="game-library">
-    <div
-      v-if="!libraryEmpty"
-      class="columns game-library-header game-library-row"
-    >
-      <div class="column game-name">Game</div>
-      <div class="column game-rating">Rating</div>
-      <div class="column game-hours-played">Hours Played</div>
-      <div class="column game-completion-status">Completion Status</div>
-      <div class="column game-start-and-completion-dates">
-        Start/Completion Dates
-      </div>
-      <div class="column game-platforms">Platforms</div>
-      <div class="column game-comments">Comments</div>
-      <div v-if="isEditable" class="column game-actions">Actions</div>
-    </div>
-    <game-in-library
-      v-for="gameInLibrary in purchasedGames"
-      :key="gameInLibrary.id"
-      :gameInLibrary="gameInLibrary"
+    <library-table
+      :rows="games"
       :isEditable="isEditable"
-      v-on:delete="refreshLibrary"
-      v-on:edit="activateModal"
-    ></game-in-library>
-
-    <p v-if="libraryEmpty">This library is empty.</p>
-
-    <button v-if="isEditable" @click="activateModal({})" class="button mt-10">
-      Add a game to your library
-    </button>
+      :gamePurchasesUrl="gamePurchasesUrl"
+      :isLoading="isLoading"
+      @loaded="libraryLoaded"
+      @edit="activateModal"
+      @delete="refreshLibrary"
+      @addGame="activateModal({})"
+    ></library-table>
 
     <game-modal
       v-if="isModalActive"
@@ -44,12 +25,12 @@
 </template>
 
 <script>
-import GameInLibrary from './game-in-library.vue';
+import LibraryTable from './library-table.vue';
 import GameModal from './game-modal.vue';
 
 export default {
   components: {
-    GameInLibrary,
+    LibraryTable,
     GameModal
   },
   props: {
@@ -57,44 +38,30 @@ export default {
       type: String,
       required: true
     },
+    userId: {
+      type: Number,
+      required: true
+    },
     isEditable: {
       type: Boolean,
       required: false,
       default: false
-    },
-    userId: {
-      type: Number,
-      required: true
     }
   },
   data: function() {
     return {
-      purchasedGames: [],
       isModalActive: false,
       currentGame: {},
-      doesGamePurchaseExist: false
+      doesGamePurchaseExist: false,
+      games: [],
+      isLoading: true
     };
   },
   created: function() {
-    fetch(this.gamePurchasesUrl, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        return response.json().then(json => {
-          if (response.ok) {
-            return Promise.resolve(json);
-          }
-          return Promise.reject(json);
-        });
-      })
-      .then(purchasedGames => {
-        this.purchasedGames = purchasedGames;
-      });
+    this.loadGames();
   },
   methods: {
-    refreshLibrary() {
+    loadGames() {
       fetch(this.gamePurchasesUrl, {
         headers: {
           'Content-Type': 'application/json'
@@ -109,8 +76,12 @@ export default {
           });
         })
         .then(purchasedGames => {
-          this.purchasedGames = purchasedGames;
+          this.games = purchasedGames;
+          this.isLoading = false;
         });
+    },
+    refreshLibrary() {
+      this.loadGames();
     },
     activateModal(game = {}) {
       if (!this.isEditable) {
@@ -136,11 +107,9 @@ export default {
       setTimeout(() => {
         this.refreshLibrary();
       }, 750);
-    }
-  },
-  computed: {
-    libraryEmpty: function() {
-      return this.purchasedGames.length === 0;
+    },
+    libraryLoaded() {
+      this.isLoading = false;
     }
   }
 };
