@@ -8,7 +8,7 @@ namespace :deploy do
     # Install dependencies with Bundler.
     puts
     puts "Installing Ruby dependencies..."
-    system('bundle install --jobs=4 --without "test development"')
+    system('bundle install --jobs=4 --retry=3 --without "test development"')
     # Install dependencies with yarn.
     puts
     puts "Installing JavaScript dependencies..."
