@@ -70,6 +70,17 @@ class UsersController < ApplicationController
 
     steam_games = json.dig('response', 'games')
 
+    # If no games are returned, return an error message.
+    if steam_games.nil?
+      respond_to do |format|
+        format.html do
+          flash[:error] = "Unable to find any games in your Steam library. Are you sure it's public and that you've connected the correct account?"
+          redirect_to settings_connections_path
+          return
+        end
+      end
+    end
+
     # Ignore games without logo URLs, this filters out most DLC, which we don't want to import.
     steam_games.reject! { |game| game['img_logo_url'] == "" }
     unmatched_games = []
