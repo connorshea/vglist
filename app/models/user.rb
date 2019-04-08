@@ -6,7 +6,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable
-  devise :omniauthable, omniauth_providers: %i[steam]
 
   has_many :game_purchases
   has_many :games, through: :game_purchases

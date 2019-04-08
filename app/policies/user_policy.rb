@@ -37,11 +37,11 @@ class UserPolicy < ApplicationPolicy
     user_is_current_user
   end
 
-  def steam?
+  def steam_import?
     user_is_current_user
   end
 
-  def steam_import?
+  def connect_steam?
     user_is_current_user
   end
 

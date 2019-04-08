@@ -4,8 +4,7 @@ Rails.application.routes.draw do
     confirmations: 'users/confirmations',
     passwords: 'users/passwords',
     registrations: 'users/registrations',
-    sessions: 'users/sessions',
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    sessions: 'users/sessions'
   }
 
   get 'home/index'
@@ -28,8 +27,9 @@ Rails.application.routes.draw do
     get :show, on: :member
     post :update_role, on: :member
     delete :remove_avatar, on: :member
-    post :steam_import, on: :member
+    post :connect_steam, on: :member
     delete :disconnect_steam, on: :member
+    post :steam_import, on: :member
     delete :reset_game_library, on: :member
   end
 

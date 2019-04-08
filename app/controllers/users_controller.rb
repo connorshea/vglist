@@ -69,6 +69,20 @@ class UsersController < ApplicationController
     json = JSON.parse(URI.open(steam_api_url).read)
 
     steam_games = json.dig('response', 'games')
+
+    # If no games are returned, return an error message.
+    if steam_games.nil?
+      respond_to do |format|
+        format.html do
+          flash[:error] = "Unable to find any games in your Steam library. Are you sure it's public and that you've connected the correct account?"
+          redirect_to settings_connections_path
+          return
+        end
+      end
+    end
+
+    # Ignore games without logo URLs, this filters out most DLC, which we don't want to import.
+    steam_games.reject! { |game| game['img_logo_url'] == "" }
     unmatched_games = []
     matched_games_count = 0
 
@@ -90,10 +104,53 @@ class UsersController < ApplicationController
       matched_games_count += 1
     end
 
+    unmatched_games_count = unmatched_games.count
+
+    # Limit the results to a max of 50 games to avoid returning a URL that's too long for Puma to handle.
+    unmatched_games = unmatched_games[0...50]
+    unmatched_games.map! { |game| { name: game['name'], steam_id: game['appid'] } }
+
     respond_to do |format|
       format.html do
-        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games.count} games weren't found in the VGList database."
-        redirect_to settings_connections_path
+        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games_count} games weren't found in the VGList database."
+        redirect_to settings_connections_path(unmatched_games: unmatched_games)
+      end
+    end
+  end
+
+  def connect_steam
+    @user = User.friendly.find(params[:id])
+    authorize @user
+
+    # Resolve the numerical Steam ID based on the provided username.
+    steam_api_url = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{params[:steam_username]}"
+    json = JSON.parse(URI.open(steam_api_url).read)
+
+    steam_id = json.dig("response", "steamid")
+
+    unless steam_id.nil?
+      # If one already exists, don't create it.
+      # If not, create it and pass in the steam_id and steam_profile_url.
+      @steam_account = ExternalAccount.create_with(
+        steam_id: steam_id,
+        steam_profile_url: "https://steamcommunity.com/id/#{params[:steam_username]}/"
+      ).find_or_create_by!(
+        user_id: @user.id,
+        account_type: :steam
+      )
+    end
+
+    respond_to do |format|
+      if @steam_account&.save
+        format.html do
+          flash[:success] = "Steam account successfully connected."
+          redirect_to settings_connections_path
+        end
+      else
+        format.html do
+          flash[:error] = "Unable to find a Steam account with that username."
+          redirect_to settings_connections_path
+        end
       end
     end
   end

@@ -3,11 +3,23 @@
 <h1 class="title">Create a new game</h1>
 
 <div id='game-form'>
-  <game-form
-    :submit-path="<%= games_url.to_json %>"
-    :rails-direct-uploads-path="<%= rails_direct_uploads_url.to_json %>"
-    :cancel-path="<%= games_url.to_json %>"
-    :create="true"
-  ></game-form>
+  <% if @steam_app_id %>
+    <game-form
+      :submit-path="<%= games_url.to_json %>"
+      :rails-direct-uploads-path="<%= rails_direct_uploads_url.to_json %>"
+      :cancel-path="<%= games_url.to_json %>"
+      :create="true"
+      :name="<%= @name.to_json %>"
+      :steam_app_id="<%= @steam_app_id.to_i %>"
+    ></game-form>
+  <% else %>
+    <game-form
+      :submit-path="<%= games_url.to_json %>"
+      :rails-direct-uploads-path="<%= rails_direct_uploads_url.to_json %>"
+      :cancel-path="<%= games_url.to_json %>"
+      :create="true"
+      :name="<%= @name.to_json %>"
+    ></game-form>
+  <% end %>
 </div>
 
