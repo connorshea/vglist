@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.4.7
+### Changed
+- Update Steam importer. Now just takes the user's Steam username, no login. Also displays the games that weren't imported because they couldn't be matched to a game in the site database. ([#318])
+- Clean up the `README.md` instructions and the development database config (thanks @PanisSupraOmnia!). ([#304])
+
+## v2019.4.6
+### Added
+- Upgrade the game library to use vue-good-table, which provides a better design as well as sorting and other features. ([#315])
+
+### Changed
+- Render users as cards on the users index. ([#317])
+
+## v2019.4.4
+### Added
+- Add Prettier for JavaScript, SCSS, and Vue file formatting. ([#312])
+
 ## v2019.4.3
 ### Added
 - Add a button to the settings that allows a user to reset their game library. ([#309])
@@ -292,4 +308,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#292]: https://github.com/connorshea/VideoGameList/pull/292
 [#295]: https://github.com/connorshea/VideoGameList/pull/295
 [#297]: https://github.com/connorshea/VideoGameList/pull/297
+[#304]: https://github.com/connorshea/VideoGameList/pull/304
 [#309]: https://github.com/connorshea/VideoGameList/pull/309
+[#312]: https://github.com/connorshea/VideoGameList/pull/312
+[#315]: https://github.com/connorshea/VideoGameList/pull/315
+[#317]: https://github.com/connorshea/VideoGameList/pull/317
+[#318]: https://github.com/connorshea/VideoGameList/pull/318
