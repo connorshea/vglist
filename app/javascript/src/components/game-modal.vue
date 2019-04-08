@@ -175,6 +175,7 @@ export default {
         userId: this.userId,
         completion_status: this.completion_status,
         start_date: this.start_date,
+        hours_played: parseFloat(this.hours_played),
         completion_date: this.completion_date,
         platforms: this.platforms
       },
