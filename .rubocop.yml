@@ -653,7 +653,7 @@ Rails/InverseOf:
   Enabled: true
 
 Rails/LexicallyScopedActionFilter:
-  Enabled: true
+  Enabled: false
 
 Rails/LinkToBlank:
   Enabled: true

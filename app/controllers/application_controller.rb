@@ -5,13 +5,13 @@ class ApplicationController < ActionController::Base
 
   # In devise-related pages, permit a username parameter.
   before_action :configure_permitted_parameters, if: :devise_controller?
+  # Send context with error messages to Sentry.
+  before_action :set_raven_context
 
-  # rubocop:disable Rails/LexicallyScopedActionFilter
   # Make sure pundit is implemented on everything, except index pages since
   # those should be accessible without an authorization.
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
-  # rubocop:enable Rails/LexicallyScopedActionFilter
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -29,5 +29,11 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:alert] = "You are not authorized to perform this action."
     redirect_to(request.referrer || root_path)
+  end
+
+  # Send user ID, params, and request URL to Sentry on-error.
+  def set_raven_context
+    Raven.user_context(id: session[:current_user_id])
+    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
   end
 end
