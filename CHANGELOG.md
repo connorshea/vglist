@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - Fixed user avatar aspect ratios, now they're always squares no matter what's uploaded. ([#338])
 
+## v2019.4.8
+### Changed
+- Add Sentry for error tracking. ([#333])
+
 ## v2019.4.7
 ### Changed
 - Update Steam importer. Now just takes the user's Steam username, no login. Also displays the games that weren't imported because they couldn't be matched to a game in the site database. ([#318])
@@ -318,4 +322,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#315]: https://github.com/connorshea/VideoGameList/pull/315
 [#317]: https://github.com/connorshea/VideoGameList/pull/317
 [#318]: https://github.com/connorshea/VideoGameList/pull/318
+[#333]: https://github.com/connorshea/VideoGameList/pull/333
 [#338]: https://github.com/connorshea/VideoGameList/pull/338
