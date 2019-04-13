@@ -46,8 +46,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
-    archive-zip (0.12.0)
-      io-like (~> 0.3.0)
     arel (9.0.0)
     ast (2.4.0)
     aws-eventstream (1.0.2)
@@ -92,9 +90,6 @@ GEM
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
     choice (0.2.0)
-    chromedriver-helper (2.1.1)
-      archive-zip (~> 0.10)
-      nokogiri (~> 1.8)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
@@ -134,7 +129,6 @@ GEM
       concurrent-ruby (~> 1.0)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
-    io-like (0.3.0)
     jaro_winkler (1.5.2)
     jbuilder (2.8.0)
       activesupport (>= 4.2.0)
@@ -178,6 +172,7 @@ GEM
     multipart-post (2.0.0)
     net-http-persistent (3.0.0)
       connection_pool (~> 2.2)
+    net_http_ssl_fix (0.0.10)
     nio4r (2.3.1)
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
@@ -332,6 +327,11 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
+    webdrivers (3.7.2)
+      net_http_ssl_fix
+      nokogiri (~> 1.6)
+      rubyzip (~> 1.0)
+      selenium-webdriver (~> 3.0)
     webpacker (4.0.2)
       activesupport (>= 4.2)
       rack-proxy (>= 0.6.1)
@@ -355,7 +355,6 @@ DEPENDENCIES
   bullet (~> 5.9)
   byebug
   capybara (>= 2.15)
-  chromedriver-helper
   database_cleaner (~> 1.7)
   devise (~> 4.6)
   factory_bot_rails (~> 5.0)
@@ -388,6 +387,7 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   web-console (>= 3.3.0)
+  webdrivers
   webpacker (~> 4.0.2)
 
 RUBY VERSION
