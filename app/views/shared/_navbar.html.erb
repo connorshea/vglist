@@ -38,6 +38,7 @@
             <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item") %>
             <hr class="navbar-divider">
             <%= link_to("About", about_path, class: "navbar-item") %>
+            <%= link_to("Changelog", 'https://github.com/connorshea/VideoGameList/blob/master/CHANGELOG.md', class: "navbar-item") %>
             <%= link_to("GitHub", 'https://github.com/connorshea/VideoGameList', class: "navbar-item") %>
             <%= link_to("Discord", 'https://discord.gg/Ma8Ztcc', class: "navbar-item") %>
           </div>
@@ -47,6 +48,7 @@
         <%= link_to("Settings", settings_path, class: "navbar-item is-hidden-desktop") %>
         <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item is-hidden-desktop") %>
         <%= link_to("About", about_path, class: "navbar-item is-hidden-desktop") %>
+        <%= link_to("Changelog", 'https://github.com/connorshea/VideoGameList/blob/master/CHANGELOG.md', class: "navbar-item is-hidden-desktop") %>
         <%= link_to("GitHub", 'https://github.com/connorshea/VideoGameList', class: "navbar-item is-hidden-desktop") %>
         <%= link_to("Discord", 'https://discord.gg/Ma8Ztcc', class: "navbar-item is-hidden-desktop") %>
       <% else %>
