@@ -12,7 +12,18 @@ module ApplicationHelper
   def user_avatar(user_id, size)
     user = User.find(user_id)
     if user.avatar.attached?
-      image_tag user.avatar.variant(resize: "#{size}x#{size}"), height: "#{size}px", width: "#{size}px"
+      # Resize the image, center it, and then crop it to a square.
+      # This prevents users from having images that aren't either
+      # too wide or too tall.
+      image_tag user.avatar.variant(
+        combine_options: {
+          resize: "#{size}x#{size}^",
+          gravity: 'Center',
+          crop: "#{size}x#{size}+0+0"
+        }
+      ),
+      height: "#{size}px",
+      width: "#{size}px"
     else
       image_tag 'default-avatar.png', height: "#{size}px", width: "#{size}px"
     end
