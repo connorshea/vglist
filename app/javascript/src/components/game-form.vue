@@ -1,26 +1,17 @@
 <template>
   <div>
     <!-- Display errors if there are any. -->
-    <div
-      class="notification errors-notification is-danger"
-      v-if="errors.length > 0"
-    >
+    <div class="notification errors-notification is-danger" v-if="errors.length > 0">
       <p>
         {{ errors.length > 1 ? 'Errors' : 'An error' }} prevented this game from
         being saved:
       </p>
       <ul>
-        <li v-for="error in errors" :key="error">
-          {{ error }}
-        </li>
+        <li v-for="error in errors" :key="error">{{ error }}</li>
       </ul>
     </div>
 
-    <file-select
-      :label="formData.cover.label"
-      v-model="game.cover"
-      @input="onChange"
-    ></file-select>
+    <file-select :label="formData.cover.label" v-model="game.cover" @input="onChange"></file-select>
 
     <text-field
       :form-class="formData.class"
@@ -94,9 +85,7 @@
       v-model="game.pcgamingwiki_id"
     ></text-field>
 
-    <button class="button is-primary" value="Submit" @click.prevent="onSubmit">
-      Submit
-    </button>
+    <button class="button is-primary" value="Submit" @click.prevent="onSubmit">Submit</button>
 
     <a class="button" :href="cancelPath">Cancel</a>
   </div>

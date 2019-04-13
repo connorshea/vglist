@@ -2,11 +2,7 @@
 
 <div class="hero-area">
   <div class="hero-image game-cover mb-5">
-    <% if @game.cover.attached? %>
-      <%= image_tag @game.cover.variant(resize: "300x500>") %>
-    <% else %>
-      <%= image_tag 'no-cover.png', height: "800px", width: "560px" %>
-    <% end %>
+    <%= game_cover(@game, 300, 500) %>
   </div>
 
   <div class="text-block">

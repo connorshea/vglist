@@ -28,4 +28,17 @@ module ApplicationHelper
       image_tag 'default-avatar.png', height: "#{size}px", width: "#{size}px"
     end
   end
+
+  # A helper for displaying game covers.
+  def game_cover(game, width, height)
+    if game.cover.attached?
+      image_tag game.cover.variant(
+        resize: "#{width}x#{height}>"
+      ),
+      width: "#{width}px",
+      height: "#{height}px"
+    else
+      image_tag 'no-cover.png', width: "#{width}px", height: "#{height}px"
+    end
+  end
 end
