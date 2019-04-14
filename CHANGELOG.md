@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.4.13
+### Added
+- Add OpenGraph meta tags so game covers, user avatars, the site name, etc. show up in embeds (e.g. on Discord or Facebook). ([#342])
+- Add a link to this Changelog in the header dropdown. ([#343])
+
 ### Fixed
-- Fixed user avatar aspect ratios, now they're always squares no matter what's uploaded. ([#338])
+- Fix user avatar aspect ratios, now they're always squares no matter what's uploaded. ([#338])
+- Replace chromedriver-helper with webdrivers gem. ([#340])
 
 ## v2019.4.8
 ### Changed
@@ -324,3 +329,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#318]: https://github.com/connorshea/VideoGameList/pull/318
 [#333]: https://github.com/connorshea/VideoGameList/pull/333
 [#338]: https://github.com/connorshea/VideoGameList/pull/338
+[#340]: https://github.com/connorshea/VideoGameList/pull/340
+[#342]: https://github.com/connorshea/VideoGameList/pull/342
+[#343]: https://github.com/connorshea/VideoGameList/pull/343
