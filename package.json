@@ -22,5 +22,6 @@
   },
   "scripts": {
     "prettier": "prettier --write './app/javascript/**/*.{js,vue,scss}'"
-  }
+  },
+  "browserslist": "> 0.5%"
 }
