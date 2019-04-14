@@ -267,3 +267,10 @@ nav.navbar {
   max-width: 400px;
   width: 100%;
 }
+
+.stats-card {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  padding: 15px;
+}
