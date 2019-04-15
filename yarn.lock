@@ -7028,10 +7028,10 @@ vue-loader@^15.7:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-select@^2.6.4:
-  version "2.6.4"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-2.6.4.tgz#cb82ea3417a4b0f68101f53528ba1c0b04de5308"
-  integrity sha512-OZIzzGlYwro2QcgAmcn2c4LQDPrYIT3+iaf4WciKPIeFFjgzRti6FC5Qjr2XEPqd85wqtsifuYyxsyb/JoJ4CQ==
+vue-select@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.0.0.tgz#05ffc8825dea96c64f539c502df502a31a82ddf9"
+  integrity sha512-obvi/sRAF4oiXqF+faGdTyftFJUKnO5KeJQ3e4KzQ/8Uw/AOGdNO9WmivD6jD2MN7AhLFtH87bMzn8koOdzLWg==
 
 vue-style-loader@^4.1.0:
   version "4.1.2"
