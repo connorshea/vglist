@@ -23,6 +23,12 @@ puts "Creating Game Purchases for admin..."
 (1..Game.count).to_a.sample(10).each do |game_id|
   game = Game.find(game_id)
 
+  platforms = []
+  rand(0..3).times.each do
+    platforms << Platform.find(rand(1..Platform.count))
+  end
+  platforms.uniq!
+
   GamePurchase.find_or_create_by!(
     game: game,
     user: admin,
@@ -31,6 +37,7 @@ puts "Creating Game Purchases for admin..."
     start_date: Faker::Date.between(1.month.ago, 1.day.ago),
     completion_date: Faker::Date.between(1.month.ago, 1.day.ago),
     comments: Faker::Lorem.sentence,
-    hours_played: rand(0.100)
+    hours_played: rand(0.100),
+    platforms: platforms
   )
 end
