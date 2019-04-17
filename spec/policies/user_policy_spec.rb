@@ -8,7 +8,18 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:update_role, :update, :remove_avatar, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
+    expect(user_policy).not_to permit_actions(
+      [
+        :update_role,
+        :update,
+        :remove_avatar,
+        :steam_import,
+        :connect_steam,
+        :disconnect_steam,
+        :reset_game_library
+      ]
+    )
+
   end
 
   describe 'A user that is not logged in' do
@@ -16,7 +27,17 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:update_role, :update, :remove_avatar, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
+    expect(user_policy).not_to permit_actions(
+      [
+        :update_role,
+        :update,
+        :remove_avatar,
+        :steam_import,
+        :connect_steam,
+        :disconnect_steam,
+        :reset_game_library
+      ]
+    )
   end
 
   describe 'A user that is an moderator' do
@@ -24,7 +45,16 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show, :remove_avatar]) }
-    it { should_not permit_actions([:update_role, :update, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
+    expect(user_policy).not_to permit_actions(
+      [
+        :update_role,
+        :update,
+        :steam_import,
+        :connect_steam,
+        :disconnect_steam,
+        :reset_game_library
+      ]
+    )
   end
 
   describe 'A user that is an admin' do
@@ -32,14 +62,33 @@ RSpec.describe UserPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it { should permit_actions([:index, :show, :update_role, :remove_avatar]) }
-    it { should_not permit_actions([:update, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
+    expect(user_policy).not_to permit_actions(
+      [
+        :update,
+        :steam_import,
+        :connect_steam,
+        :disconnect_steam,
+        :reset_game_library
+      ]
+    )
   end
 
   describe 'A user editing/looking at their own profile' do
     let(:current_user) { create(:user) }
     let(:user) { current_user }
 
-    it { should permit_actions([:index, :show, :update, :remove_avatar, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
+    expect(user_policy).not_to permit_actions(
+      [
+        :index,
+        :show,
+        :update,
+        :remove_avatar,
+        :steam_import,
+        :connect_steam,
+        :disconnect_steam,
+        :reset_game_library
+      ]
+    )
     it { should_not permit_actions([:update_role]) }
   end
 end
