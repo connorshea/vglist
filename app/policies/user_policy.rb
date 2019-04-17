@@ -34,7 +34,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def remove_avatar?
-    user_is_current_user
+    user_is_current_user || current_user&.admin? || current_user&.moderator?
   end
 
   def steam_import?

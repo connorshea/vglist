@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.4.13
 ### Added
+- Let moderators and admins remove other users' avatars. ([#355])
+
+## v2019.4.13
+### Added
 - Add OpenGraph meta tags so game covers, user avatars, the site name, etc. show up in embeds (e.g. on Discord or Facebook). ([#342])
 - Add a link to this Changelog in the header dropdown. ([#343])
 
@@ -332,3 +336,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#340]: https://github.com/connorshea/VideoGameList/pull/340
 [#342]: https://github.com/connorshea/VideoGameList/pull/342
 [#343]: https://github.com/connorshea/VideoGameList/pull/343
+[#355]: https://github.com/connorshea/VideoGameList/pull/355

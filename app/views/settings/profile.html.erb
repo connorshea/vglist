@@ -24,7 +24,7 @@
           <%= link_to "Remove avatar",
             remove_avatar_user_path(@user.id),
             method: :delete,
-            data: { confirm: "You sure?" },
+            data: { confirm: "Are you sure you want to remove your avatar?" },
             class: "button is-danger" %>
         <% end %>
       </div>
