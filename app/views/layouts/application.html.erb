@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><%= (yield(:title) + " | " unless yield(:title).blank?).to_s + "VideoGameList" %></title>
-    <meta name="description" content="<%= yield(:description).blank? ? "VideoGameList (VGList) helps you track your entire video game library across every store and platform." : yield(:description)%>">
+    <title><%= meta_title(yield(:title)) %></title>
+    <meta name="description" content="<%= meta_description(yield(:description)) %>">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="VideoGameList (VGList)" />
-    <meta property="og:title" content="<%= (yield(:title) + " | " unless yield(:title).blank?).to_s + "VideoGameList" %>">
-    <meta property="og:description" content="<%= yield(:description).blank? ? "VideoGameList (VGList) helps you track your entire video game library across every store and platform." : yield(:description)%>">
+    <meta property="og:title" content="<%= meta_title(yield(:title)) %>">
+    <meta property="og:description" content="<%= meta_description(yield(:description)) %>">
     <meta property="og:url" content="<%= request.original_url %>">
     <% unless yield(:opengraph_image).blank? %>
       <meta property="og:image" content="<%= yield(:opengraph_image) %>">

@@ -41,4 +41,12 @@ module ApplicationHelper
       image_tag 'no-cover.png', width: "#{width}px", height: "#{height}px"
     end
   end
+
+  def meta_title(title)
+    return (title + " | " if title.present?).to_s + "VideoGameList"
+  end
+
+  def meta_description(description)
+    return description.presence || "VideoGameList (VGList) helps you track your entire video game library across every store and platform."
+  end
 end
