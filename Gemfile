@@ -41,7 +41,7 @@ gem 'pg_search', '~> 2.1'
 gem 'mini_magick', '~> 4.9'
 
 # Validations for ActiveStorage.
-gem 'active_storage_validations', '~> 0.6'
+gem 'active_storage_validations', '~> 0.7'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
 gem 'friendly_id', '~> 5.2.5'
