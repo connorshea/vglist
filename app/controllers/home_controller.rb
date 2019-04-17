@@ -8,7 +8,8 @@ class HomeController < ApplicationController
         platforms: Platform.count,
         series: Series.count,
         engines: Engine.count,
-        companies: Company.count
+        companies: Company.count,
+        genres: Genre.count
       }
     end
   end
