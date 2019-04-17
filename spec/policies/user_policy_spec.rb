@@ -23,16 +23,16 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { create(:moderator) }
     let(:user) { create(:user) }
 
-    it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:update_role, :update, :remove_avatar, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
+    it { should permit_actions([:index, :show, :remove_avatar]) }
+    it { should_not permit_actions([:update_role, :update, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
   end
 
   describe 'A user that is an admin' do
     let(:current_user) { create(:admin) }
     let(:user) { create(:user) }
 
-    it { should permit_actions([:index, :show, :update_role]) }
-    it { should_not permit_actions([:update, :remove_avatar, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
+    it { should permit_actions([:index, :show, :update_role, :remove_avatar]) }
+    it { should_not permit_actions([:update, :steam_import, :connect_steam, :disconnect_steam, :reset_game_library]) }
   end
 
   describe 'A user editing/looking at their own profile' do
