@@ -84,7 +84,8 @@ export default {
         {
           label: 'Hours Played',
           field: 'hours_played',
-          type: 'decimal'
+          type: 'decimal',
+          formatFn: this.formatHoursPlayed
         },
         {
           label: 'Completion Status',
@@ -162,6 +163,30 @@ export default {
     },
     addGame() {
       this.$emit('addGame');
+    },
+    formatHoursPlayed(value) {
+      if (parseFloat(value) === 0) {
+        return;
+      }
+
+      // Split the float between the whole number and the decimals.
+      let splitValue = value.split('.');
+      let formattedValue = '';
+      let hours = parseInt(splitValue[0]);
+      // This assumes the float has only one digit after the decimal point.
+      // It will break if that changes.
+      let minutes = Math.floor((splitValue[1] / 10) * 60);
+
+      // Render 1h if there are 0 minutes, 1m if there are 0 hours, or 1h1m if there are both.
+      if (minutes === 0) {
+        formattedValue = `${hours}h`;
+      } else if (hours === 0) {
+        formattedValue = `${minutes}m`;
+      } else {
+        formattedValue = `${hours}h${minutes}m`;
+      }
+
+      return formattedValue;
     }
   }
 };
