@@ -19,7 +19,9 @@
         <a :href="props.row.game_url">{{ props.row.game.name }}</a>
       </span>
       <span v-else-if="props.column.field == 'platforms'">
-        <p v-for="platform in props.row.platforms" :key="platform.id">{{ platform.name }}</p>
+        <p v-for="platform in props.row.platforms" :key="platform.id">
+          <a :href="`/platforms/${platform.id}`">{{ platform.name }}</a>
+        </p>
       </span>
       <span v-else>{{ props.formattedRow[props.column.field] }}</span>
     </template>
