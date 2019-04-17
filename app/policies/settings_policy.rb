@@ -7,14 +7,20 @@ class SettingsPolicy < ApplicationPolicy
   end
 
   def profile?
-    current_user && user == current_user
+    user_is_current_user?
   end
 
   def account?
-    current_user && user == current_user
+    user_is_current_user?
   end
 
   def connections?
+    user_is_current_user?
+  end
+
+  private
+
+  def user_is_current_user?
     current_user && user == current_user
   end
 end

@@ -15,14 +15,20 @@ class GamePurchasePolicy < ApplicationPolicy
   end
 
   def create?
-    user && game_purchase.user_id == user.id
+    game_purchase_belongs_to_user?
   end
 
   def update?
-    user && game_purchase.user_id == user.id
+    game_purchase_belongs_to_user?
   end
 
   def destroy?
+    game_purchase_belongs_to_user?
+  end
+
+  private
+
+  def game_purchase_belongs_to_user?
     user && game_purchase.user_id == user.id
   end
 end

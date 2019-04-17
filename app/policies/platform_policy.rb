@@ -15,18 +15,24 @@ class PlatformPolicy < ApplicationPolicy
   end
 
   def create?
-    user && (user.moderator? || user.admin?)
+    user_is_moderator_or_admin?
   end
 
   def update?
-    user && (user.moderator? || user.admin?)
+    user_is_moderator_or_admin?
   end
 
   def destroy?
-    user && (user.moderator? || user.admin?)
+    user_is_moderator_or_admin?
   end
 
   def search?
     user.present?
+  end
+
+  private
+
+  def user_is_moderator_or_admin?
+    user && (user.moderator? || user.admin?)
   end
 end

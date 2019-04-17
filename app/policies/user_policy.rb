@@ -15,7 +15,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    user_is_current_user
+    user_is_current_user?
   end
 
   # Rules for updating roles:
@@ -26,36 +26,36 @@ class UserPolicy < ApplicationPolicy
   end
 
   def add_game_to_library?
-    user_is_current_user
+    user_is_current_user?
   end
 
   def remove_game_from_library?
-    user_is_current_user
+    user_is_current_user?
   end
 
   def remove_avatar?
-    user_is_current_user || current_user&.admin? || current_user&.moderator?
+    user_is_current_user? || current_user&.admin? || current_user&.moderator?
   end
 
   def steam_import?
-    user_is_current_user
+    user_is_current_user?
   end
 
   def connect_steam?
-    user_is_current_user
+    user_is_current_user?
   end
 
   def disconnect_steam?
-    user_is_current_user
+    user_is_current_user?
   end
 
   def reset_game_library?
-    user_is_current_user
+    user_is_current_user?
   end
 
   private
 
-  def user_is_current_user
+  def user_is_current_user?
     current_user && user == current_user
   end
 end
