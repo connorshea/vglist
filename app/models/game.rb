@@ -21,6 +21,19 @@ class Game < ApplicationRecord
 
   has_many :favorites, as: :favoritable
 
+  scope :newest, -> { order("created_at desc") }
+  scope :oldest, -> { order("created_at asc") }
+  scope :recently_updated, -> { order("updated_at desc") }
+  scope :least_recently_updated, -> { order("updated_at asc") }
+  # Have to include the check for NULL because otherwise games that haven't been favorited won't be included.
+  # Also filter down to only favorites on games.
+  scope :popular, -> {
+    left_joins(:favorites)
+      .where("favorites.favoritable_type = 'Game' OR favorites.favoritable_type IS NULL")
+      .group(:id)
+      .order('count(favorites.favoritable_id) desc')
+  }
+
   belongs_to :series, optional: true
 
   has_one_attached :cover
