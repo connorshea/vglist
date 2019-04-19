@@ -3,9 +3,31 @@
 
 <h1 class="title">Games</h1>
 
-<% if policy(@games).create? %>
-  <p><%= link_to("Create a new game", new_game_path, class: 'button') %></p>
-<% end %>
+<div class="field is-grouped">
+  <% if policy(@games).create? %>
+    <%= link_to("Create a new game", new_game_path, class: 'button mr-5') %>
+  <% end %>
+
+  <div class="dropdown is-right">
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+        <span>
+          <%= params[:order_by].nil? ? "Sort" : "Sort by #{params[:order_by].titleize.downcase}" %>
+        </span>
+      </button>
+    </div>
+    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+      <div class="dropdown-content">
+        <%= sort_dropdown_link(nil, 'Default') %>
+        <%= sort_dropdown_link(:newest, 'Newest') %>
+        <%= sort_dropdown_link(:oldest, 'Oldest') %>
+        <%= sort_dropdown_link(:recently_updated, 'Recently updated') %>
+        <%= sort_dropdown_link(:least_recently_updated, 'Least recently updated') %>
+        <%= sort_dropdown_link(:most_popular, 'Most popular') %>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="game-card-list mt-20">
   <% @games.each do |game| %>

@@ -81,4 +81,45 @@ RSpec.describe Game, type: :model do
     it { should have_db_index(:wikidata_id).unique }
     it { should have_db_index(:steam_app_id).unique }
   end
+
+  describe 'Scopes' do
+    context 'with two games' do
+      let(:game1) { create(:game, created_at: 4.hours.ago) }
+      let(:game2) { create(:game, created_at: 1.hour.ago) }
+
+      it "newest scope returns newest games first" do
+        expect(Game.newest).to eq([game2, game1])
+      end
+
+      it "oldest scope returns oldest games first" do
+        expect(Game.oldest).to eq([game1, game2])
+      end
+    end
+
+    context 'with two games that have differing update times' do
+      let(:game1) { create(:game, updated_at: 4.hours.ago) }
+      let(:game2) { create(:game, updated_at: 1.hour.ago) }
+
+      it "recently updated scope returns recently updated games first" do
+        expect(Game.recently_updated).to eq([game2, game1])
+      end
+
+      it "least recently updated scope returns least recently updated games first" do
+        expect(Game.least_recently_updated).to eq([game1, game2])
+      end
+    end
+
+    context 'with two games where one has been favorited' do
+      let(:user) { create(:confirmed_user) }
+      let(:game1) { create(:game) }
+      let(:game2) { create(:game) }
+      let(:favorite) { create(:favorite, user: user, favoritable: game2) }
+      let(:game3) { create(:game) }
+
+      it "the game with the most favorites comes first" do
+        favorite
+        expect(Game.most_popular).to eq([game2, game1, game3])
+      end
+    end
+  end
 end
