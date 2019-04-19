@@ -21,6 +21,10 @@ class Game < ApplicationRecord
 
   has_many :favorites, as: :favoritable
 
+  belongs_to :series, optional: true
+
+  has_one_attached :cover
+
   scope :newest, -> { order("created_at desc") }
   scope :oldest, -> { order("created_at asc") }
   scope :recently_updated, -> { order("updated_at desc") }
@@ -33,10 +37,6 @@ class Game < ApplicationRecord
       .group(:id)
       .order(Arel.sql('count(favorites.favoritable_id) desc'))
   }
-
-  belongs_to :series, optional: true
-
-  has_one_attached :cover
 
   validates :name,
     presence: true,
