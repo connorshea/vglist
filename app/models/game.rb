@@ -31,7 +31,7 @@ class Game < ApplicationRecord
     left_joins(:favorites)
       .where("favorites.favoritable_type = 'Game' OR favorites.favoritable_type IS NULL")
       .group(:id)
-      .order('count(favorites.favoritable_id) desc')
+      .order(Arel.sql('count(favorites.favoritable_id) desc'))
   }
 
   belongs_to :series, optional: true

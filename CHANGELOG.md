@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.4.18
+### Added
+- Add sorting options to the games index. ([#362])
+
 ## v2019.4.16
 ### Added
 - Let moderators and admins remove other users' avatars. ([#355])
@@ -337,3 +341,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#342]: https://github.com/connorshea/VideoGameList/pull/342
 [#343]: https://github.com/connorshea/VideoGameList/pull/343
 [#355]: https://github.com/connorshea/VideoGameList/pull/355
+[#362]: https://github.com/connorshea/VideoGameList/pull/362

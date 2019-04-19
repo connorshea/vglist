@@ -2,8 +2,35 @@ require 'rails_helper'
 
 RSpec.describe "Games", type: :request do
   describe "GET games_path" do
+    let(:games) { create_list(:game, 5) }
+
     it "returns http success" do
       get games_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when ordered by newest" do
+      get games_path(order_by: :newest)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when ordered by oldest" do
+      get games_path(order_by: :oldest)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when ordered by recently updated" do
+      get games_path(order_by: :recently_updated)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when ordered by least recently updated" do
+      get games_path(order_by: :least_recently_updated)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when ordered by most popular" do
+      get games_path(order_by: :most_popular)
       expect(response).to have_http_status(:success)
     end
   end
