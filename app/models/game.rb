@@ -27,7 +27,7 @@ class Game < ApplicationRecord
   scope :least_recently_updated, -> { order("updated_at asc") }
   # Have to include the check for NULL because otherwise games that haven't been favorited won't be included.
   # Also filter down to only favorites on games.
-  scope :popular, -> {
+  scope :most_popular, -> {
     left_joins(:favorites)
       .where("favorites.favoritable_type = 'Game' OR favorites.favoritable_type IS NULL")
       .group(:id)

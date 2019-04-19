@@ -7,6 +7,14 @@
   <p><%= link_to("Create a new game", new_game_path, class: 'button') %></p>
 <% end %>
 
+<ul>
+  <li><%= link_to 'Newest', games_url(order_by: :newest) %>
+  <li><%= link_to 'Oldest', games_url(order_by: :oldest) %>
+  <li><%= link_to 'Recently updated', games_url(order_by: :recently_updated) %>
+  <li><%= link_to 'Least recently updated', games_url(order_by: :least_recently_updated) %>
+  <li><%= link_to 'Most popular', games_url(order_by: :most_popular) %>
+</ul>
+
 <div class="game-card-list mt-20">
   <% @games.each do |game| %>
     <%= render 'shared/game_card', game: game %>

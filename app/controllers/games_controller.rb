@@ -2,9 +2,24 @@ class GamesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
   def index
-    @games = Game.order(:id)
-                 .with_attached_cover
-                 .page params[:page]
+    case params[:order_by]
+    when 'newest'
+      @games = Game.newest
+    when 'oldest'
+      @games = Game.oldest
+    when 'recently_updated'
+      @games = Game.recently_updated
+    when 'least_recently_updated'
+      @games = Game.least_recently_updated
+    when 'most_popular'
+      @games = Game.most_popular
+    else
+      @games = Game.order(:id)
+    end
+
+    @games = @games.with_attached_cover
+                   .page params[:page]
+
     skip_policy_scope
   end
 
