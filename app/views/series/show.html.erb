@@ -3,10 +3,14 @@
 
 <h1 class="title"><%= @series.name %></h1>
 
-<% if user_signed_in? %>
+<% if policy(@series).edit? || policy(@series).destroy? %>
   <div class="field is-grouped">
-    <p class="control"><%= link_to("Edit", edit_series_path(@series.id), class: "button") %>
-    <p class="control"><%= link_to("Delete", series_path(@series.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% if policy(@series).edit? %>
+      <p class="control"><%= link_to("Edit", edit_series_path(@series.id), class: "button") %>
+    <% end %>
+    <% if policy(@series).destroy? %>
+      <p class="control"><%= link_to("Delete", series_path(@series.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% end %>
   </div>
 <% end %>
 
