@@ -19,7 +19,7 @@ class Game < ApplicationRecord
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
-  has_many :favorites, as: :favoritable
+  has_many :favorites, as: :favoritable, dependent: :destroy
 
   belongs_to :series, optional: true
 

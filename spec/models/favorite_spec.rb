@@ -25,4 +25,20 @@ RSpec.describe Favorite, type: :model do
     it { should have_db_index(:favoritable_type) }
     it { should have_db_index([:favoritable_id, :favoritable_type, :user_id]).unique }
   end
+
+  describe 'Destructions' do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:favorite) { create(:favorite, user: user, favoritable: game) }
+
+    it 'Game should not be deleted when favorite is deleted' do
+      favorite
+      expect { favorite.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'User should not be deleted when favorite is deleted' do
+      favorite
+      expect { favorite.destroy }.to change(User, :count).by(0)
+    end
+  end
 end

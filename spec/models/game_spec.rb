@@ -122,4 +122,21 @@ RSpec.describe Game, type: :model do
       end
     end
   end
+
+  describe 'Destructions' do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user, game: game) }
+    let(:favorite) { create(:favorite, user: user, favoritable: game) }
+
+    it 'Game purchase should be deleted when game is deleted' do
+      game_purchase
+      expect { game.destroy }.to change(GamePurchase, :count).by(-1)
+    end
+
+    it 'Favorite should be deleted when game is deleted' do
+      favorite
+      expect { game.destroy }.to change(Favorite, :count).by(-1)
+    end
+  end
 end
