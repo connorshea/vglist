@@ -65,7 +65,22 @@ RSpec.describe User, type: :model do
   describe "Associations" do
     it { should have_many(:game_purchases) }
     it { should have_many(:games).through(:game_purchases) }
-    it { should have_many(:favorites).inverse_of(:user) }
+    it { should have_many(:favorites).inverse_of(:user).dependent(:destroy) }
     it { should have_one(:external_account).dependent(:destroy) }
+  end
+
+  describe 'Destructions' do
+    let(:user_with_favorite) { create(:user_with_favorite) }
+    let(:user_with_game_purchase) { create(:user_with_game_purchase) }
+
+    it 'Favorite should be deleted when owner is deleted' do
+      user_with_favorite
+      expect { user_with_favorite.destroy }.to change(Favorite, :count).by(-1)
+    end
+
+    it 'GamePurchase should be deleted when owner is deleted' do
+      user_with_game_purchase
+      expect { user_with_game_purchase.destroy }.to change(GamePurchase, :count).by(-1)
+    end
   end
 end
