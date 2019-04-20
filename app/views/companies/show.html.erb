@@ -6,10 +6,14 @@
   <%= @company.description.blank? ? "This company doesn't have a description yet." : @company.description %>
 </h2>
 
-<% if user_signed_in? %>
+<% if policy(@company).edit? || policy(@company).destroy? %>
   <div class="field is-grouped">
-    <p class="control"><%= link_to("Edit", edit_company_path(@company.id), class: "button") %>
-    <p class="control"><%= link_to("Delete", company_path(@company.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% if policy(@company).edit? %>
+      <p class="control"><%= link_to("Edit", edit_company_path(@company.id), class: "button") %>
+    <% end %>
+    <% if policy(@company).destroy? %>
+      <p class="control"><%= link_to("Delete", company_path(@company.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+    <% end %>
   </div>
 <% end %>
 
