@@ -68,5 +68,7 @@ RSpec.describe GamePurchase, type: :model do
       game_purchase_with_platform
       expect { game_purchase_with_platform.destroy }.to change(Platform, :count).by(0)
     end
+
+    # TODO: Add a spec for game purchase platforms being deleted when a game purchase is deleted.
   end
 end
