@@ -32,4 +32,14 @@ RSpec.describe ExternalAccount, type: :model do
   describe "Associations" do
     it { should belong_to(:user) }
   end
+
+  describe 'Destructions' do
+    let(:external_account) { create(:external_account) }
+    let(:user_with_external_account) { create(:user, external_account: external_account) }
+
+    it 'User should not be deleted when external account is deleted' do
+      user_with_external_account
+      expect { external_account.destroy }.to change(User, :count).by(0)
+    end
+  end
 end

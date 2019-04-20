@@ -122,4 +122,57 @@ RSpec.describe Game, type: :model do
       end
     end
   end
+
+  describe 'Destructions' do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user, game: game) }
+    let(:favorite) { create(:favorite, user: user, favoritable: game) }
+    let(:game_with_platform) { create(:game, :platform) }
+    let(:game_with_genre) { create(:game, :genre) }
+    let(:game_with_engine) { create(:game, :engine) }
+    let(:game_with_developer) { create(:game, :developer) }
+    let(:game_with_publisher) { create(:game, :publisher) }
+    let(:game_with_series) { create(:game, :series) }
+
+    it 'Game purchase should be deleted when game is deleted' do
+      game_purchase
+      expect { game.destroy }.to change(GamePurchase, :count).by(-1)
+    end
+
+    it 'Favorite should be deleted when game is deleted' do
+      favorite
+      expect { game.destroy }.to change(Favorite, :count).by(-1)
+    end
+
+    it 'GamePlatform should be deleted when game is deleted' do
+      game_with_platform
+      expect { game_with_platform.destroy }.to change(GamePlatform, :count).by(-1)
+    end
+
+    it 'GameGenre should be deleted when game is deleted' do
+      game_with_genre
+      expect { game_with_genre.destroy }.to change(GameGenre, :count).by(-1)
+    end
+
+    it 'GameEngine should be deleted when game is deleted' do
+      game_with_engine
+      expect { game_with_engine.destroy }.to change(GameEngine, :count).by(-1)
+    end
+
+    it 'GameDeveloper should be deleted when game is deleted' do
+      game_with_developer
+      expect { game_with_developer.destroy }.to change(GameDeveloper, :count).by(-1)
+    end
+
+    it 'GamePublisher should be deleted when game is deleted' do
+      game_with_publisher
+      expect { game_with_publisher.destroy }.to change(GamePublisher, :count).by(-1)
+    end
+
+    it 'Series should not be deleted when game is deleted' do
+      game_with_series
+      expect { game_with_series.destroy }.to change(Series, :count).by(0)
+    end
+  end
 end

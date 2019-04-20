@@ -46,4 +46,29 @@ RSpec.describe GamePurchase, type: :model do
     it { should have_many(:game_purchase_platforms) }
     it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
   end
+
+  describe 'Destructions' do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user, game: game) }
+    let(:game_purchase_platform) { create(:game_purchase_platform) }
+    let(:game_purchase_with_platform) { create(:game_purchase_with_platform, game_purchase_platforms: [game_purchase_platform]) }
+
+    it 'User should not be deleted when game purchase is deleted' do
+      game_purchase
+      expect { game_purchase.destroy }.to change(User, :count).by(0)
+    end
+
+    it 'Game should not be deleted when game purchase is deleted' do
+      game_purchase
+      expect { game_purchase.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'Platform should not be deleted when game purchase is deleted' do
+      game_purchase_with_platform
+      expect { game_purchase_with_platform.destroy }.to change(Platform, :count).by(0)
+    end
+
+    # TODO: Add a spec for game purchase platforms being deleted when a game purchase is deleted.
+  end
 end

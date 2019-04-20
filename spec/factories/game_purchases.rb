@@ -32,6 +32,7 @@ FactoryBot.define do
     end
 
     factory :game_purchase_with_comments_and_rating, traits: [:comments, :rating]
+    factory :game_purchase_with_platform, traits: [:platforms]
     factory :game_purchase_with_everything,
       traits: [:comments, :rating, :completion_status, :start_date, :completion_date, :hours_played, :platforms]
   end

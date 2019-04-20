@@ -15,4 +15,20 @@ RSpec.describe GameDeveloper, type: :model do
     it { should belong_to(:game) }
     it { should belong_to(:company) }
   end
+
+  describe 'Destructions' do
+    let(:developer) { create(:company) }
+    let(:game) { create(:game) }
+    let(:game_developer) { create(:game_developer, company: developer, game: game) }
+
+    it 'Game should not be deleted when GameDeveloper is deleted' do
+      game_developer
+      expect { game_developer.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'Company should not be deleted when GameDeveloper is deleted' do
+      game_developer
+      expect { game_developer.destroy }.to change(Company, :count).by(0)
+    end
+  end
 end

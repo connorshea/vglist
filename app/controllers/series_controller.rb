@@ -55,7 +55,7 @@ class SeriesController < ApplicationController
     @series = Series.find(params[:id])
     authorize @series
     @series.destroy
-    redirect_to series_url, success: "Series was successfully deleted."
+    redirect_to series_index_url, success: "Series was successfully deleted."
   end
 
   def search
