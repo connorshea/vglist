@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_20_211124) do
+ActiveRecord::Schema.define(version: 2019_04_20_223028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -240,6 +240,7 @@ ActiveRecord::Schema.define(version: 2019_04_20_211124) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "favorites", "users", on_delete: :cascade
   add_foreign_key "game_developers", "companies", on_delete: :cascade
   add_foreign_key "game_developers", "games", on_delete: :cascade
   add_foreign_key "game_engines", "engines", on_delete: :cascade
