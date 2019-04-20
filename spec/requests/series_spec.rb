@@ -102,6 +102,13 @@ RSpec.describe "Series", type: :request do
         delete series_path(id: series.id)
       end.to change(Series, :count).by(-1)
     end
+
+    it "redirects after deleting a series" do
+      sign_in(user)
+      delete series_path(id: series.id)
+      follow_redirect!
+      expect(response.body).to include('Series was successfully deleted.')
+    end
   end
 
   describe "GET search_series_index_path" do
