@@ -32,4 +32,19 @@ RSpec.describe Platform, type: :model do
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
   end
+
+  describe 'Destructions' do
+    let(:platform) { create(:platform) }
+    let(:game_with_platform) { create(:game, platforms: [platform]) }
+
+    it 'GamePlatform should be deleted when platform is deleted' do
+      game_with_platform
+      expect { platform.destroy }.to change(GamePlatform, :count).by(-1)
+    end
+
+    it 'Game should not be deleted when platform is deleted' do
+      game_with_platform
+      expect { platform.destroy }.to change(Game, :count).by(0)
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_31_164739) do
+ActiveRecord::Schema.define(version: 2019_04_20_211124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -254,4 +254,5 @@ ActiveRecord::Schema.define(version: 2019_03_31_164739) do
   add_foreign_key "game_purchase_platforms", "platforms", on_delete: :cascade
   add_foreign_key "game_purchases", "games", on_delete: :cascade
   add_foreign_key "game_purchases", "users", on_delete: :cascade
+  add_foreign_key "games", "series", on_delete: :nullify
 end

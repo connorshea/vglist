@@ -30,4 +30,19 @@ RSpec.describe Genre, type: :model do
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
   end
+
+  describe 'Destructions' do
+    let(:genre) { create(:genre) }
+    let(:game_with_genre) { create(:game, genres: [genre]) }
+
+    it 'GameGenre should be deleted when genre is deleted' do
+      game_with_genre
+      expect { genre.destroy }.to change(GameGenre, :count).by(-1)
+    end
+
+    it 'Game should not be deleted when genre is deleted' do
+      game_with_genre
+      expect { genre.destroy }.to change(Game, :count).by(0)
+    end
+  end
 end

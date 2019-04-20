@@ -28,4 +28,20 @@ RSpec.describe Series, type: :model do
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
   end
+
+  describe 'Destructions' do
+    let(:series) { create(:series) }
+    let(:game_with_series) { create(:game, series: series) }
+
+    it 'Game should not be deleted when series is deleted' do
+      game_with_series
+      expect { series.destroy }.to change(Game, :count).by(0)
+    end
+
+    it "Game shouldn't have a series_id after series is deleted" do
+      game_with_series
+      series.destroy!
+      expect(game_with_series.reload.series_id).to be(nil)
+    end
+  end
 end

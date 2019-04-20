@@ -133,6 +133,7 @@ RSpec.describe Game, type: :model do
     let(:game_with_engine) { create(:game, :engine) }
     let(:game_with_developer) { create(:game, :developer) }
     let(:game_with_publisher) { create(:game, :publisher) }
+    let(:game_with_series) { create(:game, :series) }
 
     it 'Game purchase should be deleted when game is deleted' do
       game_purchase
@@ -167,6 +168,11 @@ RSpec.describe Game, type: :model do
     it 'GamePublisher should be deleted when game is deleted' do
       game_with_publisher
       expect { game_with_publisher.destroy }.to change(GamePublisher, :count).by(-1)
+    end
+
+    it 'Series should not be deleted when game is deleted' do
+      game_with_series
+      expect { game_with_series.destroy }.to change(Series, :count).by(0)
     end
   end
 end
