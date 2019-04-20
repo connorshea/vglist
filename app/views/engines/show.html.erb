@@ -3,7 +3,7 @@
 
 <h1 class="title"><%= @engine.name %></h1>
 
-<% if policy(@engines).edit? || policy(@engines).destroy? %>
+<% if policy(@engine).edit? || policy(@engine).destroy? %>
   <div class="field is-grouped">
     <p class="control"><%= link_to("Edit", edit_engine_path(@engine.id), class: "button") %>
     <p class="control"><%= link_to("Delete", engine_path(@engine.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
