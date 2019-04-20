@@ -19,4 +19,20 @@ RSpec.describe GameEngine, type: :model do
   describe "Indexes" do
     it { should have_db_index([:game_id, :engine_id]).unique }
   end
+
+  describe 'Destructions' do
+    let(:engine) { create(:engine) }
+    let(:game) { create(:game) }
+    let(:game_engine) { create(:game_engine, engine: engine, game: game) }
+
+    it 'Game should not be deleted when GameEngine is deleted' do
+      game_engine
+      expect { game_engine.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'Engine should not be deleted when GameEngine is deleted' do
+      game_engine
+      expect { game_engine.destroy }.to change(Engine, :count).by(0)
+    end
+  end
 end

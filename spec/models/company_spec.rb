@@ -32,4 +32,30 @@ RSpec.describe Company, type: :model do
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
   end
+
+  describe 'Destructions' do
+    let(:company) { create(:company) }
+    let(:game_with_developer) { create(:game, developers: [company]) }
+    let(:game_with_publisher) { create(:game, publishers: [company]) }
+
+    it 'GameDeveloper should be deleted when company is deleted' do
+      game_with_developer
+      expect { company.destroy }.to change(GameDeveloper, :count).by(-1)
+    end
+
+    it 'Game should not be deleted when developer is deleted' do
+      game_with_developer
+      expect { company.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'GamePublisher should be deleted when company is deleted' do
+      game_with_publisher
+      expect { company.destroy }.to change(GamePublisher, :count).by(-1)
+    end
+
+    it 'Game should not be deleted when publisher is deleted' do
+      game_with_publisher
+      expect { company.destroy }.to change(Game, :count).by(0)
+    end
+  end
 end

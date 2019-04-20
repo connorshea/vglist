@@ -15,4 +15,20 @@ RSpec.describe GamePublisher, type: :model do
     it { should belong_to(:game) }
     it { should belong_to(:company) }
   end
+
+  describe 'Destructions' do
+    let(:publisher) { create(:company) }
+    let(:game) { create(:game) }
+    let(:game_publisher) { create(:game_publisher, company: publisher, game: game) }
+
+    it 'Game should not be deleted when GamePublisher is deleted' do
+      game_publisher
+      expect { game_publisher.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'Company should not be deleted when GamePublisher is deleted' do
+      game_publisher
+      expect { game_publisher.destroy }.to change(Company, :count).by(0)
+    end
+  end
 end

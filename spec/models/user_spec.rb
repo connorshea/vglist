@@ -72,6 +72,7 @@ RSpec.describe User, type: :model do
   describe 'Destructions' do
     let(:user_with_favorite) { create(:user_with_favorite) }
     let(:user_with_game_purchase) { create(:user_with_game_purchase) }
+    let(:user_with_external_account) { create(:user, :external_account) }
 
     it 'Favorite should be deleted when owner is deleted' do
       user_with_favorite
@@ -81,6 +82,11 @@ RSpec.describe User, type: :model do
     it 'GamePurchase should be deleted when owner is deleted' do
       user_with_game_purchase
       expect { user_with_game_purchase.destroy }.to change(GamePurchase, :count).by(-1)
+    end
+
+    it 'ExternalAccount should be deleted when owner is deleted' do
+      user_with_external_account
+      expect { user_with_external_account.destroy }.to change(ExternalAccount, :count).by(-1)
     end
   end
 end
