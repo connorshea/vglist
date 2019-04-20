@@ -27,6 +27,12 @@ FactoryBot.define do
       end
     end
 
+    trait :favorite do
+      after(:create) do |user|
+        create :favorite, user: user
+      end
+    end
+
     trait :moderator do
       role { :moderator }
     end
@@ -48,5 +54,6 @@ FactoryBot.define do
 
     factory :user_with_avatar,                traits: [:avatar]
     factory :user_with_game_purchase,         traits: [:game_purchase]
+    factory :user_with_favorite,              traits: [:favorite]
   end
 end
