@@ -167,7 +167,7 @@ export default {
       this.$emit('addGame');
     },
     formatHoursPlayed(value) {
-      if (parseFloat(value) === 0) {
+      if (value === null || parseFloat(value) === 0) {
         return;
       }
 
