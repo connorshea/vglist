@@ -37,6 +37,11 @@ class Game < ApplicationRecord
       .group(:id)
       .order(Arel.sql('count(favorites.favoritable_id) desc'))
   }
+  scope :most_owners, -> {
+    left_joins(:game_purchases)
+      .group(:id)
+      .order(Arel.sql('count(game_purchases.game_id) desc'))
+  }
 
   validates :name,
     presence: true,

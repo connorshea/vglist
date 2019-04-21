@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.4.21
+### Added
+- Add sorting option for games with the most owners. ([#373])
+
 ## v2019.4.20
 ### Fixed
 - Fix a variety of issues related to improper handling of record deletion. ([#370])
@@ -347,3 +351,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#355]: https://github.com/connorshea/VideoGameList/pull/355
 [#362]: https://github.com/connorshea/VideoGameList/pull/362
 [#370]: https://github.com/connorshea/VideoGameList/pull/370
+[#373]: https://github.com/connorshea/VideoGameList/pull/373

@@ -33,6 +33,11 @@ RSpec.describe "Games", type: :request do
       get games_path(order_by: :most_popular)
       expect(response).to have_http_status(:success)
     end
+
+    it "returns http success when ordered by most owners" do
+      get games_path(order_by: :most_owners)
+      expect(response).to have_http_status(:success)
+    end
   end
 
   describe "GET game_path" do

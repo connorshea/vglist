@@ -109,7 +109,7 @@ RSpec.describe Game, type: :model do
       end
     end
 
-    context 'with two games where one has been favorited' do
+    context 'with three games where one has been favorited' do
       let(:user) { create(:confirmed_user) }
       let(:game1) { create(:game) }
       let(:game2) { create(:game) }
@@ -119,6 +119,21 @@ RSpec.describe Game, type: :model do
       it "the game with the most favorites comes first" do
         favorite
         expect(Game.most_popular).to eq([game2, game1, game3])
+      end
+    end
+
+    context 'with two games where one has an owner' do
+      let(:user) { create(:confirmed_user) }
+      let(:game1) { create(:game) }
+      let(:game2) { create(:game) }
+      let(:game_purchase) { create(:game_purchase, user: user, game: game2) }
+
+      it "the game with the most owners comes first" do
+        # Make sure game1 is created first so that we can make sure the sorting
+        # isn't just the order of ids.
+        game1
+        game_purchase
+        expect(Game.most_owners).to eq([game2, game1])
       end
     end
   end
