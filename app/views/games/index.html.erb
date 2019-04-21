@@ -3,14 +3,14 @@
 
 <h1 class="title">Games</h1>
 
-<div class="field is-grouped">
+<div class="field buttons">
   <% if policy(@games).create? %>
-    <%= link_to("Create a new game", new_game_path, class: 'button mr-5') %>
+    <%= link_to("Create a new game", new_game_path, class: 'button mr-5 is-fullwidth-mobile') %>
   <% end %>
 
-  <div class="dropdown is-right">
-    <div class="dropdown-trigger">
-      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+  <div class="dropdown is-right is-fullwidth-mobile">
+    <div class="dropdown-trigger is-fullwidth-mobile">
+      <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>
           <%= params[:order_by].nil? ? "Sort" : "Sort by #{params[:order_by].titleize.downcase}" %>
         </span>
