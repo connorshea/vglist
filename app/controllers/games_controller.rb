@@ -13,6 +13,8 @@ class GamesController < ApplicationController
       @games = Game.least_recently_updated
     when 'most_popular'
       @games = Game.most_popular
+    when 'most_owners'
+      @games = Game.most_owners
     else
       @games = Game.order(:id)
     end
