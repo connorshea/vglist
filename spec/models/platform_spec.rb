@@ -36,6 +36,8 @@ RSpec.describe Platform, type: :model do
   describe 'Destructions' do
     let(:platform) { create(:platform) }
     let(:game_with_platform) { create(:game, platforms: [platform]) }
+    let(:game_purchase) { create(:game_purchase) }
+    let(:game_purchase_platform) { create(:game_purchase_platform, game_purchase: game_purchase, platform: platform) }
 
     it 'GamePlatform should be deleted when platform is deleted' do
       game_with_platform
@@ -45,6 +47,11 @@ RSpec.describe Platform, type: :model do
     it 'Game should not be deleted when platform is deleted' do
       game_with_platform
       expect { platform.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'Game purchase platform should be deleted when platform is deleted' do
+      game_purchase_platform
+      expect { platform.destroy }.to change(GamePurchasePlatform, :count).by(-1)
     end
   end
 end
