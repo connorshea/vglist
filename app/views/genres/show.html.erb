@@ -7,12 +7,12 @@
 </h2>
 
 <% if policy(@genre).update? || policy(@genre).destroy? %>
-  <div class="field is-grouped">
+  <div class="field buttons">
     <% if policy(@genre).update? %>
-      <p class="control"><%= link_to("Edit", edit_genre_path(@genre.id), class: "button") %>
+      <%= link_to("Edit", edit_genre_path(@genre.id), class: "button is-fullwidth-mobile mr-0-mobile") %>
     <% end %>
     <% if policy(@genre).destroy? %>
-      <p class="control"><%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+      <%= link_to("Delete", genre_path(@genre.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-fullwidth-mobile is-danger") %>
     <% end %>
   </div>
 <% end %>

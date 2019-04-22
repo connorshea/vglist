@@ -4,12 +4,12 @@
 <h1 class="title"><%= @series.name %></h1>
 
 <% if policy(@series).edit? || policy(@series).destroy? %>
-  <div class="field is-grouped">
+  <div class="field buttons">
     <% if policy(@series).edit? %>
-      <p class="control"><%= link_to("Edit", edit_series_path(@series.id), class: "button") %>
+      <%= link_to("Edit", edit_series_path(@series.id), class: "button is-fullwidth-mobile mr-0-mobile") %>
     <% end %>
     <% if policy(@series).destroy? %>
-      <p class="control"><%= link_to("Delete", series_path(@series.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+      <%= link_to("Delete", series_path(@series.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-fullwidth-mobile is-danger") %>
     <% end %>
   </div>
 <% end %>

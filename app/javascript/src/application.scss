@@ -311,3 +311,9 @@ nav.navbar {
     width: 100%;
   }
 }
+
+.is-fullwidth-mobile {
+  @include touch {
+    width: 100%;
+  }
+}
