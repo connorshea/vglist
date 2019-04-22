@@ -100,10 +100,40 @@ nav.navbar {
       top: 1.4em;
     }
   }
+
+  &.is-fullwidth-mobile {
+    @include touch {
+      display: flex;
+      width: 100%;
+    }
+  }
 }
 
-.dropdown-trigger button {
-  padding-right: 2rem;
+.dropdown-trigger {
+  &.is-fullwidth-mobile {
+    @include touch {
+      display: flex;
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+
+  button {
+    padding-right: 2rem;
+
+    &.is-fullwidth-mobile {
+      @include touch {
+        display: flex;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.dropdown-menu.is-fullwidth-mobile {
+  @include touch {
+    width: 100%;
+  }
 }
 
 .file-select > input[type='file'] {
@@ -161,9 +191,9 @@ nav.navbar {
 .user-card-list {
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
-  @include from($desktop) {
+  @include from($tablet) {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
 }
@@ -273,4 +303,25 @@ nav.navbar {
   flex-flow: row wrap;
   justify-content: space-evenly;
   padding: 15px;
+}
+
+.button.is-fullwidth-mobile {
+  @include touch {
+    display: flex;
+    width: 100%;
+  }
+}
+
+.is-fullwidth-mobile {
+  @include touch {
+    width: 100%;
+  }
+}
+
+.level {
+  .level-item {
+    flex-basis: 100px;
+    margin: 0;
+    padding: 5px;
+  }
 }

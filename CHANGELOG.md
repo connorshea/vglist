@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add sorting option for games with the most owners. ([#373])
 
+### Changed
+- Most buttons are now full-width on mobile, so they're easier to press and don't go off the screen. ([#374])
+
 ## v2019.4.20
 ### Fixed
 - Fix a variety of issues related to improper handling of record deletion. ([#370])
@@ -352,3 +355,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#362]: https://github.com/connorshea/VideoGameList/pull/362
 [#370]: https://github.com/connorshea/VideoGameList/pull/370
 [#373]: https://github.com/connorshea/VideoGameList/pull/373
+[#374]: https://github.com/connorshea/VideoGameList/pull/374

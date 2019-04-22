@@ -17,30 +17,29 @@
   </div>
 </div>
 
-<div class="field is-grouped">
-
+<div class="field buttons mt-5">
   <% if policy(@game).favorite? || policy(@game).unfavorite? %>
-    <%= button_to 'Favorite', favorite_game_path(@game.id, format: :json), method: :post, class: "button js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }", remote: :true, data: { toggle_partner: 'favorite-off' } %>
-    <%= button_to 'Unfavorite', unfavorite_game_path(@game.id, format: :json), method: :delete, class: "button js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }", remote: :true, data: { toggle_partner: 'favorite-on' } %>
+    <%= link_to 'Favorite', favorite_game_path(@game.id, format: :json), method: :post, class: "button is-fullwidth-mobile mr-0-mobile js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }", remote: :true, data: { toggle_partner: 'favorite-off' } %>
+    <%= link_to 'Unfavorite', unfavorite_game_path(@game.id, format: :json), method: :delete, class: "button is-fullwidth-mobile mr-0-mobile js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }", remote: :true, data: { toggle_partner: 'favorite-on' } %>
   <% end %>
 
   <% if policy(current_user).add_game_to_library? || policy(current_user).remove_game_from_library? %>
     <% if policy(current_user).add_game_to_library? && !game_in_user_library?(@game) %>
-      <%= button_to "Add to library", add_game_to_library_game_path(@game.id), method: :post, params: { game_purchase: { user_id: current_user.id, game_id: @game.id } }, class: "button" %>
+      <%= button_to "Add to library", add_game_to_library_game_path(@game.id), method: :post, params: { game_purchase: { user_id: current_user.id, game_id: @game.id } }, class: "button is-fullwidth-mobile", form_class: "is-fullwidth-mobile" %>
     <% end %>
     <% if policy(current_user).remove_game_from_library? && game_in_user_library?(@game) %>
-      <%= button_to "Remove from library", remove_game_from_library_game_path(@game.id), method: :delete, params: { id: @game.id }, class: "button is-danger" %>
+      <%= button_to "Remove from library", remove_game_from_library_game_path(@game.id), method: :delete, params: { id: @game.id }, class: "button is-fullwidth-mobile is-danger", form_class: "is-fullwidth-mobile" %>
     <% end %>
   <% end %>
 
   <% if policy(@game).update? || policy(@game).destroy? %>
-    <div id="actions-dropdown" class="dropdown is-right">
-      <div class="dropdown-trigger">
-        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+    <div id="actions-dropdown" class="dropdown is-right is-fullwidth-mobile">
+      <div class="dropdown-trigger is-fullwidth-mobile">
+        <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>Actions</span>
         </button>
       </div>
-      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+      <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">
         <div class="dropdown-content">
           <% if policy(@game).update? %>
             <%= link_to("Edit", edit_game_path(@game.id), class: "dropdown-item") %>

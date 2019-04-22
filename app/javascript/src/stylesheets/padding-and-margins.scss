@@ -44,6 +44,20 @@ $sides: (top, bottom, left, right); // Leave this variable alone
   }
 }
 
+@each $space in $spaceamounts {
+  @each $side in $sides {
+    @include touch {
+      .m#{str-slice($side, 0, 1)}-#{$space}-mobile {
+        margin-#{$side}: #{$space}px !important;
+      }
+
+      .p#{str-slice($side, 0, 1)}-#{$space}-mobile {
+        padding-#{$side}: #{$space}px !important;
+      }
+    }
+  }
+}
+
 .m-auto {
   margin: auto;
 }

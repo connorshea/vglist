@@ -7,12 +7,12 @@
 </h2>
 
 <% if policy(@company).edit? || policy(@company).destroy? %>
-  <div class="field is-grouped">
+  <div class="field buttons">
     <% if policy(@company).edit? %>
-      <p class="control"><%= link_to("Edit", edit_company_path(@company.id), class: "button") %>
+      <%= link_to("Edit", edit_company_path(@company.id), class: "button mr-0-mobile is-fullwidth-mobile") %>
     <% end %>
     <% if policy(@company).destroy? %>
-      <p class="control"><%= link_to("Delete", company_path(@company.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+      <%= link_to("Delete", company_path(@company.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-fullwidth-mobile is-danger") %>
     <% end %>
   </div>
 <% end %>

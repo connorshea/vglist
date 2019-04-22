@@ -5,12 +5,12 @@
 <h2 class="subtitle"><%= @platform.description %></h2>
 
 <% if policy(@platform).update? || policy(@platform).destroy? %>
-  <div class="field is-grouped">
+  <div class="field buttons">
     <% if policy(@platform).update? %>
-      <p class="control"><%= link_to("Edit", edit_platform_path(@platform.id), class: "button") %>
+      <%= link_to("Edit", edit_platform_path(@platform.id), class: "button is-fullwidth-mobile mr-0-mobile") %>
     <% end %>
     <% if policy(@platform).destroy? %>
-      <p class="control"><%= link_to("Delete", platform_path(@platform.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-danger") %>
+      <%= link_to("Delete", platform_path(@platform.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-fullwidth-mobile is-danger") %>
     <% end %>
   </div>
 <% end %>
