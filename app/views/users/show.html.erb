@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<% if policy(@user).update_role? || policy(@user).remove_avatar? %>
+<% if (policy(@user).update_role? || policy(@user).remove_avatar?) && @user != current_user %>
   <div class="dropdown is-fullwidth-mobile mt-10">
     <div class="dropdown-trigger is-fullwidth-mobile">
       <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
