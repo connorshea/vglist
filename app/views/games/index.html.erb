@@ -5,7 +5,7 @@
 
 <div class="field buttons">
   <% if policy(@games).create? %>
-    <%= link_to("Create a new game", new_game_path, class: 'button mr-5 is-fullwidth-mobile') %>
+    <%= link_to("Create a new game", new_game_path, class: 'button mr-0-mobile is-fullwidth-mobile') %>
   <% end %>
 
   <div class="dropdown is-right is-fullwidth-mobile">
@@ -16,7 +16,7 @@
         </span>
       </button>
     </div>
-    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">
       <div class="dropdown-content">
         <%= sort_dropdown_link(nil, 'Default') %>
         <%= sort_dropdown_link(:newest, 'Newest') %>

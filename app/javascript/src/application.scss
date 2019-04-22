@@ -114,6 +114,7 @@ nav.navbar {
     @include touch {
       display: flex;
       width: 100%;
+      margin-right: 0;
     }
   }
 
@@ -126,6 +127,12 @@ nav.navbar {
         width: 100%;
       }
     }
+  }
+}
+
+.dropdown-menu.is-fullwidth-mobile {
+  @include touch {
+    width: 100%;
   }
 }
 
@@ -184,9 +191,9 @@ nav.navbar {
 .user-card-list {
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
-  @include from($desktop) {
+  @include from($tablet) {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
 }
