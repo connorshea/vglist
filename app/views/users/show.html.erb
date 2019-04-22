@@ -71,14 +71,14 @@
   ></library>
 </div>
 
-<h3 class="title is-3 mt-15">Favorites</h3>
+<h3 class="title is-3 mt-25">Favorites</h3>
 
 <% if @user.favorites.games.length > 0 %>
-  <ul>
+  <div class="game-card-list mt-20">
     <% @user.favorites.games.each do |favorite| %>
-      <li><%= link_to Game.find(favorite.favoritable_id).name, game_path(favorite.favoritable_id) %>
+      <%= render 'shared/game_card', game: Game.find(favorite.favoritable_id) %>
     <% end %>
-  </ul>
+  </div>
 <% else %>
   <p>No favorited games.
 <% end %>
