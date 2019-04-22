@@ -46,4 +46,10 @@
       </div>
     </div>
   </nav>
+
+  <div class="game-card-list mt-20">
+    <% @games.each do |game| %>
+      <%= render 'shared/game_card', game: game %>
+    <% end %>
+  </div>
 </div>

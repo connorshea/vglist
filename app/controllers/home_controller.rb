@@ -14,5 +14,9 @@ class HomeController < ApplicationController
         genres: Genre.count
       }
     end
+
+    @games = Game.recently_updated
+                 .with_attached_cover
+                 .limit(18)
   end
 end
