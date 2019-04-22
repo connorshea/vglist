@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  layout "application_no_padding"
+
   def index
     skip_policy_scope
 
