@@ -317,3 +317,11 @@ nav.navbar {
     width: 100%;
   }
 }
+
+.level {
+  .level-item {
+    flex-basis: 100px;
+    margin: 0;
+    padding: 5px;
+  }
+}
