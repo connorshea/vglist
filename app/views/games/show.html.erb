@@ -81,3 +81,22 @@
   <h3 class="title is-5 mb-5 mt-15">Favorites</h3>
   <p>No one has favorited this game yet.</p>
 <% end %>
+
+<% if @games_in_series && @games_in_series.count.positive? %>
+  <div class="card more-from-this-series-card mt-15">
+    <div class="card-content">
+      <h3 class="title is-5 mb-15">More from this series</h3>
+
+      <div class="games">
+        <% @games_in_series.each do |game| %>
+          <%= link_to(game_path(game.id)) do %>
+            <figure class="game-cover">
+              <%= game_cover(game, 300, 500) %>
+              <p><%= game.name %></p>
+            </figure>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

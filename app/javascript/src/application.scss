@@ -327,3 +327,47 @@ nav.navbar {
     padding: 5px;
   }
 }
+
+.more-from-this-series-card {
+  max-width: 500px;
+
+  .games {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+
+    a {
+      display: inline-block;
+      position: relative;
+    }
+  }
+
+  .game-cover {
+    height: 200px;
+    width: 140px;
+    max-width: 140px;
+    min-width: 140px;
+
+    @include touch {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      position: absolute;
+    }
+
+    p {
+      color: #fff;
+      padding: 8px;
+      position: absolute;
+      bottom: 0;
+      background-color: rgba(#333, 0.7);
+      width: 100%;
+    }
+  }
+}
