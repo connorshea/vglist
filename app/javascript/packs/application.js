@@ -11,12 +11,17 @@ import '../src/application.scss';
 import TurbolinksAdapter from '../src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
 import '@babel/polyfill';
+import * as Sentry from '@sentry/browser';
 import 'lodash';
 import '../src/library.js';
 import '../src/form.js';
 import '../src/search.js';
 import '../src/toggleable-buttons.js';
 import '../src/bulma.js';
+
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({ dsn: process.env.SENTRY_DSN_JS });
+}
 
 Vue.use(TurbolinksAdapter);
 
