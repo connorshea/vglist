@@ -35,6 +35,15 @@ class GamesController < ApplicationController
     @favoriters = User.where(id: @game.favorites.limit(10).collect(&:user_id))
     @favoriters_count = @game.favorites.count
 
+    unless @game.series_id.nil?
+      series = Series.find(@game.series_id)
+      @games_in_series = series.games
+                               .where.not(id: @game.id)
+                               .order(Arel.sql('RANDOM()'))
+                               .with_attached_cover
+                               .limit(3)
+    end
+
     @publishers = @game.publishers
     @developers = @game.developers
   end
