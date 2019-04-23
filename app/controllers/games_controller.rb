@@ -11,8 +11,8 @@ class GamesController < ApplicationController
       @games = Game.recently_updated
     when 'least_recently_updated'
       @games = Game.least_recently_updated
-    when 'most_popular'
-      @games = Game.most_popular
+    when 'most_favorites'
+      @games = Game.most_favorites
     when 'most_owners'
       @games = Game.most_owners
     else

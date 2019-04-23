@@ -118,7 +118,7 @@ RSpec.describe Game, type: :model do
 
       it "the game with the most favorites comes first" do
         favorite
-        expect(Game.most_popular).to eq([game2, game1, game3])
+        expect(Game.most_favorites).to eq([game2, game1, game3])
       end
     end
 

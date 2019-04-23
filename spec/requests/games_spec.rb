@@ -29,8 +29,8 @@ RSpec.describe "Games", type: :request do
       expect(response).to have_http_status(:success)
     end
 
-    it "returns http success when ordered by most popular" do
-      get games_path(order_by: :most_popular)
+    it "returns http success when ordered by most favorites" do
+      get games_path(order_by: :most_favorites)
       expect(response).to have_http_status(:success)
     end
 
