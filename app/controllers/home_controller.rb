@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  layout "application_no_padding"
+
   def index
     skip_policy_scope
 
@@ -12,5 +14,9 @@ class HomeController < ApplicationController
         genres: Genre.count
       }
     end
+
+    @games = Game.recently_updated
+                 .with_attached_cover
+                 .limit(18)
   end
 end

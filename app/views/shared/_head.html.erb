@@ -1,0 +1,21 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= meta_title(yield(:title)) %></title>
+  <meta name="description" content="<%= meta_description(yield(:description)) %>">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="VideoGameList (VGList)" />
+  <meta property="og:title" content="<%= meta_title(yield(:title)) %>">
+  <meta property="og:description" content="<%= meta_description(yield(:description)) %>">
+  <meta property="og:url" content="<%= request.original_url %>">
+  <% unless yield(:opengraph_image).blank? %>
+    <meta property="og:image" content="<%= yield(:opengraph_image) %>">
+  <% end %>
+
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', nonce: true, 'data-turbolinks-track': 'reload' %>
+</head>
