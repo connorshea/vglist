@@ -29,8 +29,11 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     skip_authorization
 
-    # TODO: Limit this.
-    @owners = @game.purchasers
+    @owners = @game.purchasers.limit(10)
+    @owners_count = @game.purchasers.count
+
+    @favoriters = User.where(id: @game.favorites.limit(10).collect(&:user_id))
+    @favoriters_count = @game.favorites.count
 
     @publishers = @game.publishers
     @developers = @game.developers

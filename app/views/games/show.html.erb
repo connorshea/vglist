@@ -58,13 +58,26 @@
 
 <%= render 'infobox', game: @game %>
 
-<h3>Owners</h3>
-<% if @owners.count.positive? %>
+<% if @owners_count.positive? %>
+  <h3 class="title is-5 mb-5 mt-15">Owners (<%= @owners_count %>)</h3>
   <ul>
     <% @owners.each do |owner| %>
       <li><%= link_to(owner.username, user_path(owner)) %></li>
     <% end %>
   </ul>
 <% else %>
+  <h3 class="title is-5 mb-5 mt-15">Owners</h3>
   <p>No one has this game in their library yet.</p>
+<% end %>
+
+<% if @favoriters_count.positive? %>
+  <h3 class="title is-5 mb-5 mt-15">Favorites (<%= @favoriters_count %>)</h3>
+  <ul>
+    <% @favoriters.each do |favoriter| %>
+      <li><%= link_to(favoriter.username, user_path(favoriter)) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <h3 class="title is-5 mb-5 mt-15">Favorites</h3>
+  <p>No one has favorited this game yet.</p>
 <% end %>
