@@ -108,6 +108,10 @@ nav.navbar {
       width: 100%;
     }
   }
+
+  .dropdown-item.no-link-highlight a {
+    color: #000;
+  }
 }
 
 .dropdown-trigger {

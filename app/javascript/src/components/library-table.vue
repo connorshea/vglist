@@ -3,17 +3,49 @@
     :columns="columns"
     :rows="rows"
     :sort-options="{
-        enabled: true,
-        initialSortBy: { field: 'rating', type: 'desc' }
-      }"
+      enabled: true,
+      initialSortBy: { field: 'rating', type: 'desc' }
+    }"
+    :search-options="{
+      enabled: false
+    }"
   >
-    <div slot="table-actions" v-if="isEditable">
-      <button v-if="isEditable" @click="addGame()" class="button mr-5">Add a game to your library</button>
+    <div slot="table-actions">
+      <div class="dropdown is-right is-fullwidth-mobile js-no-close-on-click">
+        <div class="dropdown-trigger is-fullwidth-mobile">
+          <button
+            class="button is-fullwidth-mobile"
+            aria-haspopup="true"
+            aria-controls="dropdown-menu"
+          >
+            <span>Display columns</span>
+          </button>
+        </div>
+        <div class="dropdown-menu is-fullwidth-mobile" role="menu">
+          <div class="dropdown-content">
+            <div
+              class="dropdown-item no-link-highlight"
+              v-for="column in columns.filter(column => column.hideable !== false)"
+              :key="column.index"
+            >
+              <a @click.prevent="toggleColumn(column.index, $event)">
+                <input :checked="!column.hidden" type="checkbox">
+                {{ column.label }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        v-if="isEditable"
+        @click="addGame()"
+        class="button is-fullwidth-mobile mr-5 mr-0-mobile"
+      >Add a game to your library</button>
     </div>
     <template slot="table-row" slot-scope="props">
       <span v-if="props.column.field == 'after'">
-        <a @click="onEdit(props.row)">Edit</a>
-        <a @click="onDelete(props.row)">Remove</a>
+        <a class="mr-5" @click="onEdit(props.row)">Edit</a>
+        <a class="has-text-danger" @click="onDelete(props.row)">Remove</a>
       </span>
       <span v-else-if="props.column.field == 'game.name'">
         <a :href="props.row.game_url">{{ props.row.game.name }}</a>
@@ -66,7 +98,9 @@ export default {
       this.columns.push({
         label: 'Actions',
         field: 'after',
-        width: '120px'
+        width: '140px',
+        hideable: false,
+        index: 8
       });
     }
   },
@@ -76,47 +110,63 @@ export default {
         {
           label: 'Name',
           field: 'game.name',
-          type: 'text'
+          type: 'text',
+          hideable: false,
+          index: 0
         },
         {
           label: 'Rating',
           field: 'rating',
-          type: 'number'
+          type: 'number',
+          hidden: false,
+          index: 1
         },
         {
           label: 'Hours Played',
           field: 'hours_played',
           type: 'decimal',
-          formatFn: this.formatHoursPlayed
+          formatFn: this.formatHoursPlayed,
+          hidden: false,
+          index: 2
         },
         {
           label: 'Completion Status',
           field: 'completion_status.label',
-          type: 'text'
+          type: 'text',
+          hidden: false,
+          index: 3
         },
         {
           label: 'Start Date',
           field: 'start_date',
           type: 'date',
           dateInputFormat: 'YYYY-MM-DD',
-          dateOutputFormat: 'MMMM D, YYYY'
+          dateOutputFormat: 'MMMM D, YYYY',
+          hidden: true,
+          index: 4
         },
         {
           label: 'Completion Date',
           field: 'completion_date',
           type: 'date',
           dateInputFormat: 'YYYY-MM-DD',
-          dateOutputFormat: 'MMMM D, YYYY'
+          dateOutputFormat: 'MMMM D, YYYY',
+          hidden: true,
+          index: 5
         },
         {
           label: 'Platforms',
           field: 'platforms',
-          type: 'text'
+          type: 'text',
+          hidden: true,
+          index: 6
         },
         {
           label: 'Comments',
           field: 'comments',
-          type: 'text'
+          type: 'text',
+          hidden: false,
+          index: 7
         }
       ]
     };
@@ -189,6 +239,10 @@ export default {
       }
 
       return formattedValue;
+    },
+    toggleColumn(index, event) {
+      // Set hidden to inverse of what it currently is
+      this.$set(this.columns[index], 'hidden', !this.columns[index].hidden);
     }
   }
 };
