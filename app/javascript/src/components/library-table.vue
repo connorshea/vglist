@@ -13,7 +13,7 @@
     <template slot="table-row" slot-scope="props">
       <span v-if="props.column.field == 'after'">
         <a @click="onEdit(props.row)">Edit</a>
-        <a @click="onDelete(props.row)">Remove</a>
+        <a class="has-text-danger" @click="onDelete(props.row)">Remove</a>
       </span>
       <span v-else-if="props.column.field == 'game.name'">
         <a :href="props.row.game_url">{{ props.row.game.name }}</a>
