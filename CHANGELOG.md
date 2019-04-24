@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.4.23
+### Added
+- Add Sentry for JavaScript error reporting. ([#386])
+- Add dropdown to toggle column visibility in game library table. ([#387])
+
 ## v2019.4.21
 ### Added
 - Add sorting option for games with the most owners. ([#373])
@@ -356,3 +361,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#370]: https://github.com/connorshea/VideoGameList/pull/370
 [#373]: https://github.com/connorshea/VideoGameList/pull/373
 [#374]: https://github.com/connorshea/VideoGameList/pull/374
+[#386]: https://github.com/connorshea/VideoGameList/pull/386
+[#387]: https://github.com/connorshea/VideoGameList/pull/387

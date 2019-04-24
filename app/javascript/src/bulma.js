@@ -28,7 +28,15 @@ document.addEventListener('turbolinks:load', () => {
   if ($dropdowns.length > 0) {
     $dropdowns.forEach(function($el) {
       $el.addEventListener('click', function(event) {
-        $el.classList.toggle('is-active');
+        // If the dropdown has the 'js-no-close-on-click' class,
+        // it shouldn't be toggled when active.
+        if (
+          !$el.classList.contains('js-no-close-on-click') ||
+          ($el.classList.contains('js-no-close-on-click') &&
+            !$el.classList.contains('is-active'))
+        ) {
+          $el.classList.toggle('is-active');
+        }
       });
     });
 
