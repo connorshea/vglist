@@ -98,7 +98,7 @@ group :development, :test do
   gem 'pundit-matchers', '~> 1.6.0'
 
   # Bullet catches N+1 queries.
-  gem 'bullet', '~> 5.9'
+  gem 'bullet', '~> 6.0'
 end
 
 group :development do
