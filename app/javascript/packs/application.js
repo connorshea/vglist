@@ -16,6 +16,7 @@ import 'lodash';
 import '../src/library.js';
 import '../src/form.js';
 import '../src/search.js';
+import '../src/games-filter.js';
 import '../src/toggleable-buttons.js';
 import '../src/bulma.js';
 

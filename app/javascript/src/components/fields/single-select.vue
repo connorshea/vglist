@@ -1,7 +1,7 @@
 <template>
-  <div class="field">
+  <div :class="grandparentClass">
     <label v-if="label" :for="inputId" class="label">{{ label }}</label>
-    <div class="control">
+    <div :class="parentClass">
       <v-select
         :options="options"
         :maxHeight="maxHeight"
@@ -48,6 +48,16 @@ export default {
     searchPathIdentifier: {
       type: String,
       required: true
+    },
+    grandparentClass: {
+      type: String,
+      required: false,
+      default: 'field'
+    },
+    parentClass: {
+      type: String,
+      required: false,
+      default: 'control'
     }
   },
   data: function() {

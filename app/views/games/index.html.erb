@@ -29,19 +29,8 @@
     </div>
   </div>
 
-  <div class="dropdown is-left is-fullwidth-mobile">
-    <div class="dropdown-trigger is-fullwidth-mobile">
-      <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
-        <span>
-          Filter
-        </span>
-      </button>
-    </div>
-    <div class="dropdown-menu is-fullwidth-mobile" id="filter-dropdown-menu" role="menu">
-      <div class="dropdown-content">
-        <%= link_to('Windows', request.params.merge(platform_filter: 1), class: 'dropdown-item') %>
-      </div>
-    </div>
+  <div id="games-filter">
+    <games-filter></games-filter>
   </div>
 </div>
 
