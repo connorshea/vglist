@@ -2,21 +2,25 @@ class GamesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
   def index
+    @games = Game.all
+
+    @games = @games.on_platform(params[:platform_filter]) if params[:platform_filter]
+
     case params[:order_by]
     when 'newest'
-      @games = Game.newest
+      @games = @games.newest
     when 'oldest'
-      @games = Game.oldest
+      @games = @games.oldest
     when 'recently_updated'
-      @games = Game.recently_updated
+      @games = @games.recently_updated
     when 'least_recently_updated'
-      @games = Game.least_recently_updated
+      @games = @games.least_recently_updated
     when 'most_favorites'
-      @games = Game.most_favorites
+      @games = @games.most_favorites
     when 'most_owners'
-      @games = Game.most_owners
+      @games = @games.most_owners
     else
-      @games = Game.order(:id)
+      @games = @games.order(:id)
     end
 
     @games = @games.with_attached_cover
