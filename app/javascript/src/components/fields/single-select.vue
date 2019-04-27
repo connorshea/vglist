@@ -10,6 +10,7 @@
         label="name"
         :inputId="inputId"
         v-bind:value="value"
+        :placeholder="placeholder"
         v-on:input="$emit('input', $event)"
       ></v-select>
     </div>
@@ -58,6 +59,10 @@ export default {
       type: String,
       required: false,
       default: 'control'
+    },
+    placeholder: {
+      type: String,
+      required: false
     }
   },
   data: function() {

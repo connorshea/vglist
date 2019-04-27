@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.4.27
+### Added
+- Add platform filter on games index. ([#391])
+
 ## v2019.4.23
 ### Added
 - Add Sentry for JavaScript error reporting. ([#386])
@@ -363,3 +367,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#374]: https://github.com/connorshea/VideoGameList/pull/374
 [#386]: https://github.com/connorshea/VideoGameList/pull/386
 [#387]: https://github.com/connorshea/VideoGameList/pull/387
+[#391]: https://github.com/connorshea/VideoGameList/pull/391
