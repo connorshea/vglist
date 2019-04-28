@@ -136,6 +136,22 @@ RSpec.describe Game, type: :model do
         expect(Game.most_owners).to eq([game2, game1])
       end
     end
+
+    context 'with three games where two have platforms and one does not' do
+      let(:platform1) { create(:platform) }
+      let(:platform2) { create(:platform) }
+      let(:game1) { create(:game, platforms: [platform1]) }
+      let(:game2) { create(:game, platforms: [platform2]) }
+      let(:game3) { create(:game, platforms: []) }
+
+      it 'filtering by platforms only returns relevant games' do
+        game1
+        game2
+        game3
+        expect(Game.on_platform(platform1.id)).to eq([game1])
+        expect(Game.on_platform(platform2.id)).to eq([game2])
+      end
+    end
   end
 
   describe 'Destructions' do
