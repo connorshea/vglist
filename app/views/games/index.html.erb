@@ -8,7 +8,7 @@
     <%= link_to("Create a new game", new_game_path, class: 'button mr-0-mobile is-fullwidth-mobile') %>
   <% end %>
 
-  <div class="dropdown is-right is-fullwidth-mobile">
+  <div class="dropdown is-left is-fullwidth-mobile mr-10 mr-0-mobile">
     <div class="dropdown-trigger is-fullwidth-mobile">
       <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>
@@ -16,7 +16,7 @@
         </span>
       </button>
     </div>
-    <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">
+    <div class="dropdown-menu is-fullwidth-mobile" id="sort-dropdown-menu" role="menu">
       <div class="dropdown-content">
         <%= sort_dropdown_link(nil, 'Default') %>
         <%= sort_dropdown_link(:newest, 'Newest') %>
@@ -27,6 +27,10 @@
         <%= sort_dropdown_link(:most_owners, 'Most owners') %>
       </div>
     </div>
+  </div>
+
+  <div id="games-filter" class="is-fullwidth-mobile">
+    <games-filter></games-filter>
   </div>
 </div>
 

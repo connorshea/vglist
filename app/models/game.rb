@@ -37,10 +37,15 @@ class Game < ApplicationRecord
       .group(:id)
       .order(Arel.sql('count(favorites.favoritable_id) desc'))
   }
+  # Sort by most owners.
   scope :most_owners, -> {
     left_joins(:game_purchases)
       .group(:id)
       .order(Arel.sql('count(game_purchases.game_id) desc'))
+  }
+  # Find games available on a given platform.
+  scope :on_platform, ->(platform_id) {
+    joins(:game_platforms).where(game_platforms: { platform_id: platform_id })
   }
 
   validates :name,

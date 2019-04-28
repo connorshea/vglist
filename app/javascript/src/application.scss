@@ -114,6 +114,18 @@ nav.navbar {
   }
 }
 
+.games-filter .v-select {
+  width: 300px;
+
+  @include touch {
+    width: 100%;
+  }
+}
+
+.buttons {
+  align-items: initial;
+}
+
 .dropdown-trigger {
   &.is-fullwidth-mobile {
     @include touch {

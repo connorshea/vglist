@@ -2,7 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Games", type: :request do
   describe "GET games_path" do
-    let(:games) { create_list(:game, 5) }
+    # rubocop:disable Rspec/LetSetup
+    let!(:games) { create_list(:game, 5) }
+    # rubocop:enable Rspec/LetSetup
+    let(:platform) { create(:platform) }
+    let(:game_with_platform) { create(:game, platforms: [platform]) }
 
     it "returns http success" do
       get games_path
@@ -36,6 +40,12 @@ RSpec.describe "Games", type: :request do
 
     it "returns http success when ordered by most owners" do
       get games_path(order_by: :most_owners)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when filtered by platform" do
+      game_with_platform
+      get games_path(filter_platform: platform.id)
       expect(response).to have_http_status(:success)
     end
   end
