@@ -14,7 +14,9 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'simplecov'
-SimpleCov.start 'rails'
+SimpleCov.start :rails do
+  add_group "Policies", "app/policies"
+end
 require "pundit/rspec"
 require 'pundit/matchers'
 require 'capybara/rspec'
