@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe "Games", type: :request do
   describe "GET games_path" do
-    # rubocop:disable Rspec/LetSetup
+    # rubocop:disable RSpec/LetSetup
     let!(:games) { create_list(:game, 5) }
-    # rubocop:enable Rspec/LetSetup
+    # rubocop:enable RSpec/LetSetup
     let(:platform) { create(:platform) }
     let(:game_with_platform) { create(:game, platforms: [platform]) }
 
