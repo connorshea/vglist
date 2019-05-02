@@ -52,7 +52,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # TODO: Use memcached for caching things, this doesn't share a cache between processes.
   # Keep the cache in-memory, up to 64 megabytes of cached content.

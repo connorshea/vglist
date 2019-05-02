@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :feature do
-
   describe "User page" do
     let!(:game) { create(:game) }
     let(:user) { create(:confirmed_user) }

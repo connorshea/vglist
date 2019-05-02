@@ -1,3 +1,5 @@
+# Auto-generated migration.
+# rubocop:disable all
 class CreateFriendlyIdSlugs < ActiveRecord::Migration[5.2]
   def change
     create_table :friendly_id_slugs do |t|
