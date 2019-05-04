@@ -10,7 +10,7 @@
       successPath: games_url,
       cancelPath: games_url,
       create: true,
-      name: (@name ? @name : ''),
-      steamAppId: (@steam_app_id ? @steam_app_id : nil)
+      name: @name ? @name : '',
+      steamAppId: @steam_app_id ? @steam_app_id : nil
     }.to_json
   %>"></div>
