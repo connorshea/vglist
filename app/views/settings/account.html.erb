@@ -9,13 +9,13 @@
 
   <div class="column">
     <h1 class="title">Account</h1>
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= form_for(@user, url: registration_path('user'), html: { method: :put }) do |f| %>
       <%= render "devise/shared/error_messages" %>
 
       <div class="field">
         <%= f.label :email, class: "label" %>
         <div class="control">
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
+          <%= f.email_field :email, value: @user.email, autofocus: true, autocomplete: "email", disabled: true, class: "input is-disabled" %>
         </div>
       </div>
 
