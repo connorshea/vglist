@@ -12,7 +12,7 @@ FactoryBot.define do
     end
 
     trait :completion_status do
-      completion_status { rand(0..5) }
+      completion_status { GamePurchase.completion_statuses.values.sample }
     end
 
     trait :start_date do
