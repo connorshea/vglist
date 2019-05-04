@@ -215,6 +215,7 @@ export default {
       completionStatuses: {
         unplayed: 'Unplayed',
         in_progress: 'In Progress',
+        paused: 'Paused',
         dropped: 'Dropped',
         completed: 'Completed',
         fully_completed: '100% Completed',

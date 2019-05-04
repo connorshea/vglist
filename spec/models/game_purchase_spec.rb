@@ -33,7 +33,8 @@ RSpec.describe GamePurchase, type: :model do
             :dropped,
             :completed,
             :fully_completed,
-            :not_applicable
+            :not_applicable,
+            :paused
           ]
         )
         .backed_by_column_of_type(:integer)
