@@ -311,6 +311,8 @@ export default {
 
       if (this.game.series) {
         submittableData['game']['series_id'] = this.game.series.id;
+      } else {
+        submittableData['game']['series_id'] = null;
       }
 
       if (this.game.coverBlob) {
