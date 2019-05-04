@@ -8,19 +8,11 @@ import Vue from 'vue/dist/vue.esm';
       let compName = elem.dataset.vueComponent;
       let comp$ = await import(`./components/${compName}.vue`);
       let comp = comp$.default;
-      let props = Object.assign({}, elem.dataset);
-      Object.entries(props).forEach(([key, prop]) => {
-        if (prop.startsWith('boolean:')) {
-          prop = prop.replace('boolean:', '');
-          props[key] = prop === 'true';
-        } else if (prop.startsWith('integer:')) {
-          prop = prop.replace('integer:', '');
-          props[key] = parseInt(prop);
-        } else {
-          props[key] = prop;
-        }
-      });
-      console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
+      let props = null;
+      if (elem.dataset.vueProps) {
+        props = JSON.parse(elem.dataset.vueProps);
+      }
+      // console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
       let v = new Vue({
         el: elem,
         render: h =>
@@ -31,5 +23,5 @@ import Vue from 'vue/dist/vue.esm';
     });
   };
   document.addEventListener('turbolinks:load', callback);
-  // callback();
+  callback();
 })();
