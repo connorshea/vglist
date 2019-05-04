@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add a 'Paused' status to the Completion Statuses. This is for when you've stopped playing a game, but intend to pick it up again in the future. ([#397])
 
+### Fixed
+- Fix the game form so the series value can actually be removed. ([#398])
+
 ## v2019.4.27
 ### Added
 - Add platform filter on games index. ([#391])
@@ -373,3 +376,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#387]: https://github.com/connorshea/VideoGameList/pull/387
 [#391]: https://github.com/connorshea/VideoGameList/pull/391
 [#397]: https://github.com/connorshea/VideoGameList/pull/397
+[#398]: https://github.com/connorshea/VideoGameList/pull/398
