@@ -8,7 +8,7 @@ import Rails from 'rails-ujs';
 import Turbolinks from 'turbolinks';
 import * as ActiveStorage from 'activestorage';
 import '../src/application.scss';
-import TurbolinksAdapter from '../src/turbolinks-adapter';
+import TurbolinksAdapter from '../src/turbolinks-adapter-better';
 import Vue from 'vue/dist/vue.esm';
 import '@babel/polyfill';
 import * as Sentry from '@sentry/browser';
