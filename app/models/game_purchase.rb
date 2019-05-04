@@ -11,7 +11,8 @@ class GamePurchase < ApplicationRecord
     dropped: 2,
     completed: 3,
     fully_completed: 4,
-    not_applicable: 5
+    not_applicable: 5,
+    paused: 6
   }
 
   validates :comments,

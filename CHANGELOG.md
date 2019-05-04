@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.5.4
+### Added
+- Add a 'Paused' status to the Completion Statuses. This is for when you've stopped playing a game, but intend to pick it up again in the future. ([#397])
+
 ## v2019.4.27
 ### Added
 - Add platform filter on games index. ([#391])
@@ -368,3 +372,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#386]: https://github.com/connorshea/VideoGameList/pull/386
 [#387]: https://github.com/connorshea/VideoGameList/pull/387
 [#391]: https://github.com/connorshea/VideoGameList/pull/391
+[#397]: https://github.com/connorshea/VideoGameList/pull/397

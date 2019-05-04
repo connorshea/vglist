@@ -10,6 +10,7 @@ json.extract! game_purchase,
 humanized_completion_statuses = {
   unplayed: 'Unplayed',
   in_progress: 'In Progress',
+  paused: 'Paused',
   dropped: 'Dropped',
   completed: 'Completed',
   fully_completed: '100% Completed',
