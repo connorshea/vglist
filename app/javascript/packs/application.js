@@ -8,14 +8,12 @@ import Rails from 'rails-ujs';
 import Turbolinks from 'turbolinks';
 import * as ActiveStorage from 'activestorage';
 import '../src/application.scss';
-import TurbolinksAdapter from '../src/turbolinks-adapter-better';
+import TurbolinksAdapter from '../src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
 import '@babel/polyfill';
 import * as Sentry from '@sentry/browser';
 import 'lodash';
 import '../src/vue-loader.js';
-import '../src/form.js';
-import '../src/games-filter.js';
 import '../src/toggleable-buttons.js';
 import '../src/bulma.js';
 

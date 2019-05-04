@@ -164,15 +164,15 @@ export default {
         return { name: '' };
       }
     },
-    steam_app_id: {
+    steamAppId: {
       type: Number,
       required: false
     },
-    wikidata_id: {
+    wikidataId: {
       type: Number,
       required: false
     },
-    pcgamingwiki_id: {
+    pcgamingwikiId: {
       type: String,
       required: false
     },
@@ -209,9 +209,9 @@ export default {
         publishers: this.publishers,
         platforms: this.platforms,
         series: this.series,
-        steam_app_id: this.steam_app_id,
-        wikidata_id: this.wikidata_id,
-        pcgamingwiki_id: this.pcgamingwiki_id,
+        steam_app_id: this.steamAppId,
+        wikidata_id: this.wikidataId,
+        pcgamingwiki_id: this.pcgamingwikiId,
         cover: this.cover,
         coverBlob: this.coverBlob
       },
