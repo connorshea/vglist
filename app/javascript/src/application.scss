@@ -177,6 +177,7 @@ nav.navbar {
     flex-flow: row nowrap;
 
     .text-block {
+      flex: 1 1 100%;
       padding-left: 15px;
     }
   }
