@@ -117,7 +117,8 @@ export default {
   },
   computed: {
     gameModalState: function() {
-      return this.doesGamePurchaseExist ? 'update' : 'create';
+      let currentGameExists = Object.keys(this.currentGame).length > 0;
+      return currentGameExists ? 'update' : 'create';
     }
   }
 };
