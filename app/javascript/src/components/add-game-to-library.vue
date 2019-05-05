@@ -1,31 +1,33 @@
 <template>
-  <div>
+  <div class="is-fullwidth-mobile">
     <button
-      v-if="gamePurchaseExists"
-      class="button is-fullwidth-mobile is-danger"
+      v-if="mutableGamePurchaseExists"
+      @click="removeGameFromLibrary()"
+      class="button is-fullwidth-mobile mr-10 mr-0-mobile is-danger"
     >Remove from library</button>
     <button
       v-else
       @click="loadModal()"
-      class="button is-fullwidth-mobile mr-5 mr-0-mobile"
+      class="button is-fullwidth-mobile mr-10 mr-0-mobile"
     >Add to library</button>
     <!-- TODO: Add an edit button when the game already exists. -->
 
     <game-modal
       v-if="isModalActive"
       :isActive="isModalActive"
-      :create="create"
+      :gameModalState="gameModalState"
       :userId="userId"
       v-bind="currentGame"
       v-on:close="deactivateModal"
       v-on:closeAndRefresh="closeAndRefresh"
-      v-on:create="todoMethod"
+      v-on:create="onCreate"
     ></game-modal>
   </div>
 </template>
 
 <script>
 import GameModal from './game-modal.vue';
+import Rails from 'rails-ujs';
 
 export default {
   name: 'add-game-to-library',
@@ -48,9 +50,12 @@ export default {
   },
   data: function() {
     return {
+      mutableGamePurchaseExists: this.gamePurchaseExists,
       isModalActive: false,
       currentGame: {},
-      create: !this.gamePurchaseExists
+      gameModalState: this.mutableGamePurchaseExists
+        ? 'update'
+        : 'createWithGame'
     };
   },
   methods: {
@@ -88,17 +93,24 @@ export default {
           this.activateModal({ game });
         });
     },
-    todoMethod() {
-      console.log('todo');
+    onCreate() {
+      this.mutableGamePurchaseExists = true;
     },
     removeGameFromLibrary() {
       let removeGameFromLibraryPath = `/games/${
         this.gameId
       }/remove_game_from_library`;
 
-      let params = {
-        id: this.gameId
-      };
+      fetch(removeGameFromLibraryPath, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-Token': Rails.csrfToken(),
+          Accept: 'application/json'
+        },
+        credentials: 'same-origin'
+      }).then(response => {
+        this.mutableGamePurchaseExists = false;
+      });
     }
   }
 };
