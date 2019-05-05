@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="game-form">
     <!-- Display errors if there are any. -->
     <div class="notification errors-notification is-danger" v-if="errors.length > 0">
       <p>
