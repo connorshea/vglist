@@ -150,11 +150,13 @@ class GamesController < ApplicationController
     respond_to do |format|
       if @game_purchase&.destroy
         format.html { redirect_to @user, success: "#{@game.name} was successfully removed from your library." }
+        format.json { render json: :ok }
       else
         format.html do
           flash[:error] = "Unable to remove game from your library."
           redirect_to game_url(@game)
         end
+        format.json { render json: "Unable to remove game from your library.", status: :unprocessable_entity }
       end
     end
   end

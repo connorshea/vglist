@@ -14,7 +14,7 @@
     <game-modal
       v-if="isModalActive"
       :isActive="isModalActive"
-      :create="doesGamePurchaseExist"
+      :create="gameModalState"
       :userId="userId"
       v-bind="currentGame"
       v-on:close="deactivateModal"
@@ -113,6 +113,11 @@ export default {
     },
     libraryLoaded() {
       this.isLoading = false;
+    }
+  },
+  computed: {
+    gameModalState: function() {
+      return this.doesGamePurchaseExist ? 'update' : 'create';
     }
   }
 };
