@@ -9,7 +9,7 @@
 
   <div class="column">
     <h1 class="title">Account</h1>
-    <%= form_for(@user, url: registration_path('user'), html: { method: :put }) do |f| %>
+    <%= form_for(@user, url: registration_path('user'), html: { method: :put, id: 'new-user' }) do |f| %>
       <%= render "devise/shared/error_messages" %>
 
       <div class="field">
