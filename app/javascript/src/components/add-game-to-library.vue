@@ -3,13 +3,13 @@
     <button
       v-if="gamePurchaseExists"
       class="button is-fullwidth-mobile is-danger"
-      value="Remove from library"
-    ></button>
+    >Remove from library</button>
     <button
       v-else
       @click="activateModal()"
       class="button is-fullwidth-mobile mr-5 mr-0-mobile"
     >Add to library</button>
+    <!-- TODO: Add an edit button when the game already exists. -->
 
     <game-modal
       v-if="isModalActive"
