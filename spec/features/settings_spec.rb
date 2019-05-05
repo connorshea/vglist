@@ -31,8 +31,7 @@ RSpec.describe "Settings", type: :feature do
       sign_in(user)
 
       visit(settings_account_path)
-      within('#new_user') do
-        fill_in('user[email]', with: user.email)
+      within('#new-user') do
         fill_in('user[password]', with: 'newpassword')
         fill_in('user[password_confirmation]', with: 'newpassword')
         fill_in('user[current_password]', with: user.password)
