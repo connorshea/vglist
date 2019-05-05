@@ -6,7 +6,7 @@
     >Remove from library</button>
     <button
       v-else
-      @click="activateModal()"
+      @click="loadModal()"
       class="button is-fullwidth-mobile mr-5 mr-0-mobile"
     >Add to library</button>
     <!-- TODO: Add an edit button when the game already exists. -->
@@ -14,7 +14,7 @@
     <game-modal
       v-if="isModalActive"
       :isActive="isModalActive"
-      :create="gamePurchaseExists"
+      :create="create"
       :userId="userId"
       v-bind="currentGame"
       v-on:close="deactivateModal"
@@ -50,7 +50,7 @@ export default {
     return {
       isModalActive: false,
       currentGame: {},
-      games: []
+      create: !this.gamePurchaseExists
     };
   },
   methods: {
@@ -58,8 +58,6 @@ export default {
       let html = document.querySelector('html');
       html.classList.add('is-clipped');
 
-      this.doesGamePurchaseExist =
-        Object.entries(game).length > 0 ? false : true;
       this.currentGame = game;
       this.isModalActive = true;
     },
@@ -71,6 +69,24 @@ export default {
     },
     closeAndRefresh() {
       this.deactivateModal();
+    },
+    loadModal() {
+      fetch(`/games/${this.gameId}.json`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(game => {
+          this.activateModal({ game });
+        });
     },
     todoMethod() {
       console.log('todo');
