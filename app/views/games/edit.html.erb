@@ -2,23 +2,24 @@
 
 <h1 class="title">Edit <%= @game.name %></h1>
 
-<div id='game-form'>
-  <game-form
-    :submit-path="<%= game_url(@game.id).to_json %>"
-    :rails-direct-uploads-path="<%= rails_direct_uploads_url.to_json %>"
-    :success-path="<%= game_url(@game.id).to_json %>"
-    :cancel-path="<%= game_url(@game.id).to_json %>"
-    :create="false"
-    :name="<%= @game.name.to_json %>"
-    :description="<%= @game.description.to_json %>"
-    :genres="<%= @game.genres.to_json %>"
-    :engines="<%= @game.engines.to_json %>"
-    :developers="<%= @game.developers.to_json %>"
-    :publishers="<%= @game.publishers.to_json %>"
-    :platforms="<%= @game.platforms.to_json %>"
-    :series="<%= @game.series.to_json %>"
-    :steam_app_id="<%= @game.steam_app_id.to_json %>"
-    :wikidata_id="<%= @game.wikidata_id.to_json %>"
-    :pcgamingwiki_id="<%= @game.pcgamingwiki_id.to_json %>"
-  ></game-form>
-</div>
+<div data-vue-component="game-form"
+  data-vue-props="<%=
+    {
+      submitPath: game_url(@game.id),
+      railsDirectUploadsPath: rails_direct_uploads_url,
+      successPath: game_url(@game.id),
+      cancelPath: game_url(@game.id),
+      create: false,
+      name: @game.name,
+      description: @game.description,
+      genres: @game.genres,
+      engines: @game.engines,
+      developers: @game.developers,
+      publishers: @game.publishers,
+      platforms: @game.platforms,
+      series: @game.series,
+      steamAppId: @game.steam_app_id,
+      wikidataId: @game.wikidata_id,
+      pcgamingwikiId: @game.pcgamingwiki_id
+    }.to_json
+  %>"></div>

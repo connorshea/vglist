@@ -78,6 +78,9 @@ export default {
         .then(purchasedGames => {
           this.games = purchasedGames;
           this.isLoading = false;
+          // Emit a bulma init event to make sure that the filter dropdown is initialized.
+          let event = new Event('bulma:init');
+          document.body.dispatchEvent(event);
         });
     },
     refreshLibrary() {

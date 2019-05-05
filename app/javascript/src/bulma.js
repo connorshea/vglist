@@ -1,5 +1,5 @@
 // Make bulma's hamburger menu functional with some simple JavaScript.
-document.addEventListener('turbolinks:load', () => {
+let initBulma = () => {
   // Get all "navbar-burger" elements
   const $navbarBurgers = Array.prototype.slice.call(
     document.querySelectorAll('.navbar-burger'),
@@ -80,4 +80,9 @@ document.addEventListener('turbolinks:load', () => {
       notification.parentNode.removeChild(notification);
     });
   });
+};
+
+document.addEventListener('turbolinks:load', initBulma());
+window.addEventListener('load', function() {
+  document.body.addEventListener('bulma:init', initBulma());
 });

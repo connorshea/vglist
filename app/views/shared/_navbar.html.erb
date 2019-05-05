@@ -10,8 +10,13 @@
   </div>
 
   <div class="navbar-menu is-shadowless" id="navMenu">
-    <div id="navbar-with-search" class="navbar-start">
-      <search></search>
+    <div class="navbar-start">
+      <%# Placeholder search input until the Vue component loads. %>
+      <div class="navbar-item has-dropdown field mt-10" data-vue-component="search">
+        <p class="control">
+          <input type="search" placeholder="Search" class="input">
+        </p>
+      </div>
 
       <%= link_to("Games", games_path, class: "navbar-item") %>
       <%= link_to("Users", users_path, class: "navbar-item") %>

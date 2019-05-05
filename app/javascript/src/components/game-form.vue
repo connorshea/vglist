@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="game-form">
     <!-- Display errors if there are any. -->
     <div class="notification errors-notification is-danger" v-if="errors.length > 0">
       <p>
@@ -68,21 +68,21 @@
       :form-class="formData.class"
       :attribute="formData.wikidataId.attribute"
       :label="formData.wikidataId.label"
-      v-model="game.wikidata_id"
+      v-model="game.wikidataId"
     ></number-field>
 
     <number-field
       :form-class="formData.class"
       :attribute="formData.steamAppId.attribute"
       :label="formData.steamAppId.label"
-      v-model="game.steam_app_id"
+      v-model="game.steamAppId"
     ></number-field>
 
     <text-field
       :form-class="formData.class"
       :attribute="formData.pcgamingwikiId.attribute"
       :label="formData.pcgamingwikiId.label"
-      v-model="game.pcgamingwiki_id"
+      v-model="game.pcgamingwikiId"
     ></text-field>
 
     <button class="button is-primary" value="Submit" @click.prevent="onSubmit">Submit</button>
@@ -164,15 +164,15 @@ export default {
         return { name: '' };
       }
     },
-    steam_app_id: {
+    steamAppId: {
       type: Number,
       required: false
     },
-    wikidata_id: {
+    wikidataId: {
       type: Number,
       required: false
     },
-    pcgamingwiki_id: {
+    pcgamingwikiId: {
       type: String,
       required: false
     },
@@ -209,9 +209,9 @@ export default {
         publishers: this.publishers,
         platforms: this.platforms,
         series: this.series,
-        steam_app_id: this.steam_app_id,
-        wikidata_id: this.wikidata_id,
-        pcgamingwiki_id: this.pcgamingwiki_id,
+        steamAppId: this.steamAppId,
+        wikidataId: this.wikidataId,
+        pcgamingwikiId: this.pcgamingwikiId,
         cover: this.cover,
         coverBlob: this.coverBlob
       },
@@ -279,17 +279,17 @@ export default {
       });
     },
     onSubmit() {
-      let genre_ids = Array.from(this.game.genres, genre => genre.id);
-      let engine_ids = Array.from(this.game.engines, engine => engine.id);
-      let developer_ids = Array.from(
+      let genreIds = Array.from(this.game.genres, genre => genre.id);
+      let engineIds = Array.from(this.game.engines, engine => engine.id);
+      let developerIds = Array.from(
         this.game.developers,
         developer => developer.id
       );
-      let publisher_ids = Array.from(
+      let publisherIds = Array.from(
         this.game.publishers,
         publisher => publisher.id
       );
-      let platform_ids = Array.from(
+      let platformIds = Array.from(
         this.game.platforms,
         platform => platform.id
       );
@@ -298,14 +298,14 @@ export default {
         game: {
           name: this.game.name,
           description: this.game.description,
-          genre_ids: genre_ids,
-          engine_ids: engine_ids,
-          developer_ids: developer_ids,
-          publisher_ids: publisher_ids,
-          platform_ids: platform_ids,
-          steam_app_id: this.game.steam_app_id,
-          wikidata_id: this.game.wikidata_id,
-          pcgamingwiki_id: this.game.pcgamingwiki_id
+          genre_ids: genreIds,
+          engine_ids: engineIds,
+          developer_ids: developerIds,
+          publisher_ids: publisherIds,
+          platform_ids: platformIds,
+          steam_app_id: this.game.steamAppId,
+          wikidata_id: this.game.wikidataId,
+          pcgamingwiki_id: this.game.pcgamingwikiId
         }
       };
 
