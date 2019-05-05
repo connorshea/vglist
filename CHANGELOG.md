@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - Fix the game form so the series value can actually be removed. ([#398])
+- Fix Account Settings redirecting to an unstyled page when the form submit failed. ([#399])
+- Fix Vue components 'blinking' and reverting to their initial state when changing pages. ([#400])
 
 ## v2019.4.27
 ### Added
@@ -377,3 +379,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#391]: https://github.com/connorshea/VideoGameList/pull/391
 [#397]: https://github.com/connorshea/VideoGameList/pull/397
 [#398]: https://github.com/connorshea/VideoGameList/pull/398
+[#399]: https://github.com/connorshea/VideoGameList/pull/399
+[#400]: https://github.com/connorshea/VideoGameList/pull/400
