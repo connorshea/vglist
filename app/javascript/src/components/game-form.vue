@@ -85,9 +85,13 @@
       v-model="game.pcgamingwikiId"
     ></text-field>
 
-    <button class="button is-primary" value="Submit" @click.prevent="onSubmit">Submit</button>
+    <button
+      class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile"
+      value="Submit"
+      @click.prevent="onSubmit"
+    >Submit</button>
 
-    <a class="button" :href="cancelPath">Cancel</a>
+    <a class="button is-fullwidth-mobile mt-5-mobile" :href="cancelPath">Cancel</a>
   </div>
 </template>
 

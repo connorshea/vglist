@@ -3,17 +3,17 @@
     <button
       v-if="gamePurchaseExists"
       @click="editGameInLibrary()"
-      class="button is-fullwidth-mobile ml-0 mr-10 mr-0-mobile"
+      class="button is-fullwidth-mobile mr-5 mr-0-mobile"
     >Edit game in library</button>
     <button
       v-if="gamePurchaseExists"
       @click="removeGameFromLibrary()"
-      class="button is-fullwidth-mobile ml-0 mr-10 mr-0-mobile is-danger"
+      class="button is-fullwidth-mobile mr-5 mr-0-mobile is-danger"
     >Remove from library</button>
     <button
       v-if="!gamePurchaseExists"
       @click="addGameToLibrary()"
-      class="button is-fullwidth-mobile mr-10 mr-0-mobile"
+      class="button is-fullwidth-mobile mr-5 mr-0-mobile"
     >Add to library</button>
 
     <game-modal
