@@ -1,17 +1,17 @@
 <template>
   <div class="is-fullwidth-mobile">
     <button
-      v-if="mutableGamePurchaseExists"
+      v-if="gamePurchaseExists"
       @click="editGameInLibrary()"
       class="button is-fullwidth-mobile ml-0 mr-10 mr-0-mobile"
     >Edit game in library</button>
     <button
-      v-if="mutableGamePurchaseExists"
+      v-if="gamePurchaseExists"
       @click="removeGameFromLibrary()"
       class="button is-fullwidth-mobile ml-0 mr-10 mr-0-mobile is-danger"
     >Remove from library</button>
     <button
-      v-if="!mutableGamePurchaseExists"
+      v-if="!gamePurchaseExists"
       @click="addGameToLibrary()"
       class="button is-fullwidth-mobile mr-10 mr-0-mobile"
     >Add to library</button>
@@ -51,28 +51,25 @@ export default {
       type: Boolean,
       required: true
     },
-    gamePurchase: {
-      type: Object,
+    gamePurchaseId: {
+      type: Number,
       required: false
     }
   },
   data: function() {
     return {
-      mutableGamePurchaseExists: this.gamePurchaseExists,
-      mutableGamePurchase: this.gamePurchase || {},
+      mutableGamePurchase: {},
       isModalActive: false,
-      gameModalState: this.mutableGamePurchaseExists
-        ? 'update'
-        : 'createWithGame'
+      gameModalState: this.gamePurchaseExists ? 'update' : 'createWithGame'
     };
   },
   methods: {
-    activateModal(gamePurchase) {
+    activateModal(game = {}) {
       let html = document.querySelector('html');
       html.classList.add('is-clipped');
 
-      if (gamePurchase) {
-        this.mutableGamePurchase = gamePurchase;
+      if (Object.keys(this.mutableGamePurchase).length === 0) {
+        this.mutableGamePurchase = { game: game };
       }
       this.isModalActive = true;
     },
@@ -100,7 +97,7 @@ export default {
           });
         })
         .then(game => {
-          this.activateModal({ game: game });
+          this.activateModal(game);
         });
     },
     editGameInLibrary() {
@@ -120,13 +117,32 @@ export default {
         credentials: 'same-origin'
       }).then(response => {
         if (response.ok) {
-          this.mutableGamePurchaseExists = false;
+          Turbolinks.visit(window.location);
         }
       });
     },
-    onSubmit(gamePurchase) {
-      this.mutableGamePurchaseExists = true;
-      this.mutableGamePurchase = gamePurchase;
+    onSubmit() {
+      Turbolinks.visit(window.location);
+    }
+  },
+  created: function() {
+    if (this.gamePurchaseId) {
+      fetch(`/game_purchases/${this.gamePurchaseId}.json`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(gamePurchase => {
+          this.mutableGamePurchase = gamePurchase;
+        });
     }
   }
 };
