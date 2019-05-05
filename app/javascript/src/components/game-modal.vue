@@ -299,12 +299,19 @@ export default {
           Accept: 'application/json'
         },
         credentials: 'same-origin'
-      }).then(response => {
-        if (response.ok) {
-          this.$emit('create');
+      })
+        .then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(gamePurchase => {
+          this.$emit('create', gamePurchase);
           this.$emit('closeAndRefresh');
-        }
-      });
+        });
     },
     selectGame() {
       this.gameSelected = true;

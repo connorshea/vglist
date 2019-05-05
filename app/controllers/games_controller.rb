@@ -39,6 +39,8 @@ class GamesController < ApplicationController
     @favoriters = User.where(id: @game.favorites.limit(10).collect(&:user_id))
     @favoriters_count = @game.favorites.count
 
+    @game_purchase = current_user.game_purchases.find_by(game_id: @game.id) if current_user
+
     unless @game.series_id.nil?
       series = Series.find(@game.series_id)
       @games_in_series = series.games
@@ -132,11 +134,13 @@ class GamesController < ApplicationController
     respond_to do |format|
       if @game_purchase.save
         format.html { redirect_to @user, success: "#{@game.name} was successfully added to your library." }
+        format.json { render json: @game_purchase }
       else
         format.html do
           flash[:error] = "Unable to add game to your library."
           redirect_to game_url(@game)
         end
+        format.json { render json: @game_purchase.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end

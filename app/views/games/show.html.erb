@@ -28,6 +28,7 @@
       data-vue-props="<%=
         {
           gamePurchaseExists: game_in_user_library?(@game),
+          gamePurchase: @game_purchase,
           userId: current_user.id,
           gameId: @game.id
         }.to_json
