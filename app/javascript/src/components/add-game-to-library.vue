@@ -2,25 +2,29 @@
   <div class="is-fullwidth-mobile">
     <button
       v-if="mutableGamePurchaseExists"
+      @click="editGameInLibrary()"
+      class="button is-fullwidth-mobile ml-0 mr-10 mr-0-mobile"
+    >Edit game in library</button>
+    <button
+      v-if="mutableGamePurchaseExists"
       @click="removeGameFromLibrary()"
-      class="button is-fullwidth-mobile mr-10 mr-0-mobile is-danger"
+      class="button is-fullwidth-mobile ml-0 mr-10 mr-0-mobile is-danger"
     >Remove from library</button>
     <button
-      v-else
-      @click="loadModal()"
+      v-if="!mutableGamePurchaseExists"
+      @click="addGameToLibrary()"
       class="button is-fullwidth-mobile mr-10 mr-0-mobile"
     >Add to library</button>
-    <!-- TODO: Add an edit button when the game already exists. -->
 
     <game-modal
       v-if="isModalActive"
       :isActive="isModalActive"
       :gameModalState="gameModalState"
       :userId="userId"
-      v-bind="currentGame"
+      v-bind="mutableGamePurchase"
       v-on:close="deactivateModal"
       v-on:closeAndRefresh="closeAndRefresh"
-      v-on:create="onCreate"
+      v-on:create="onSubmit"
     ></game-modal>
   </div>
 </template>
@@ -46,24 +50,30 @@ export default {
     gamePurchaseExists: {
       type: Boolean,
       required: true
+    },
+    gamePurchase: {
+      type: Object,
+      required: false
     }
   },
   data: function() {
     return {
       mutableGamePurchaseExists: this.gamePurchaseExists,
+      mutableGamePurchase: this.gamePurchase || {},
       isModalActive: false,
-      currentGame: {},
       gameModalState: this.mutableGamePurchaseExists
         ? 'update'
         : 'createWithGame'
     };
   },
   methods: {
-    activateModal(game = {}) {
+    activateModal(gamePurchase) {
       let html = document.querySelector('html');
       html.classList.add('is-clipped');
 
-      this.currentGame = game;
+      if (gamePurchase) {
+        this.mutableGamePurchase = gamePurchase;
+      }
       this.isModalActive = true;
     },
     deactivateModal() {
@@ -75,7 +85,7 @@ export default {
     closeAndRefresh() {
       this.deactivateModal();
     },
-    loadModal() {
+    addGameToLibrary() {
       fetch(`/games/${this.gameId}.json`, {
         headers: {
           'Content-Type': 'application/json'
@@ -90,11 +100,11 @@ export default {
           });
         })
         .then(game => {
-          this.activateModal({ game });
+          this.activateModal({ game: game });
         });
     },
-    onCreate() {
-      this.mutableGamePurchaseExists = true;
+    editGameInLibrary() {
+      this.activateModal();
     },
     removeGameFromLibrary() {
       let removeGameFromLibraryPath = `/games/${
@@ -109,8 +119,14 @@ export default {
         },
         credentials: 'same-origin'
       }).then(response => {
-        this.mutableGamePurchaseExists = false;
+        if (response.ok) {
+          this.mutableGamePurchaseExists = false;
+        }
       });
+    },
+    onSubmit(gamePurchase) {
+      this.mutableGamePurchaseExists = true;
+      this.mutableGamePurchase = gamePurchase;
     }
   }
 };
