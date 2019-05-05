@@ -11,7 +11,7 @@
     }"
   >
     <div slot="table-actions">
-      <div class="dropdown is-right is-fullwidth-mobile js-no-close-on-click">
+      <div class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile js-no-close-on-click">
         <div class="dropdown-trigger is-fullwidth-mobile">
           <button
             class="button is-fullwidth-mobile"

@@ -14,7 +14,7 @@
     <game-modal
       v-if="isModalActive"
       :isActive="isModalActive"
-      :create="gameModalState"
+      :gameModalState="gameModalState"
       :userId="userId"
       v-bind="currentGame"
       v-on:close="deactivateModal"
