@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div class="field buttons mt-5">
+<div class="field buttons mt-5 mt-20-mobile">
   <% if policy(@game).favorite? || policy(@game).unfavorite? %>
     <%= link_to 'Favorite', favorite_game_path(@game.id, format: :json), method: :post, class: "button is-fullwidth-mobile mr-5 mr-0-mobile js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }", remote: :true, data: { toggle_partner: 'favorite-off' } %>
     <%= link_to 'Unfavorite', unfavorite_game_path(@game.id, format: :json), method: :delete, class: "button is-fullwidth-mobile mr-5 mr-0-mobile js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }", remote: :true, data: { toggle_partner: 'favorite-on' } %>

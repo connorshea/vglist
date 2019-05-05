@@ -182,11 +182,20 @@ nav.navbar {
     }
   }
 
+  @include touch {
+    .text-block {
+      text-align: center;
+    }
+  }
+
   .hero-image {
+    flex: 1 1 150px;
+
     img {
-      height: 100%;
-      width: 100%;
+      max-height: 100%;
       max-width: 100%;
+      object-fit: contain;
+      object-position: top left;
     }
 
     &.hero-image-150 {
@@ -196,9 +205,14 @@ nav.navbar {
         max-width: 100%;
       }
     }
+
+    @include touch {
+      margin: auto;
+    }
   }
 
   .game-cover {
+    flex: 1 1 300px;
     height: auto;
     max-height: 360px;
     width: 240px;
