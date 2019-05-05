@@ -19,21 +19,24 @@
 
 <div class="field buttons mt-5">
   <% if policy(@game).favorite? || policy(@game).unfavorite? %>
-    <%= link_to 'Favorite', favorite_game_path(@game.id, format: :json), method: :post, class: "button is-fullwidth-mobile mr-0-mobile js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }", remote: :true, data: { toggle_partner: 'favorite-off' } %>
-    <%= link_to 'Unfavorite', unfavorite_game_path(@game.id, format: :json), method: :delete, class: "button is-fullwidth-mobile mr-0-mobile js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }", remote: :true, data: { toggle_partner: 'favorite-on' } %>
+    <%= link_to 'Favorite', favorite_game_path(@game.id, format: :json), method: :post, class: "button is-fullwidth-mobile mr-5 mr-0-mobile js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }", remote: :true, data: { toggle_partner: 'favorite-off' } %>
+    <%= link_to 'Unfavorite', unfavorite_game_path(@game.id, format: :json), method: :delete, class: "button is-fullwidth-mobile mr-5 mr-0-mobile js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }", remote: :true, data: { toggle_partner: 'favorite-on' } %>
   <% end %>
 
   <% if policy(current_user).add_game_to_library? || policy(current_user).remove_game_from_library? %>
-    <% if policy(current_user).add_game_to_library? && !game_in_user_library?(@game) %>
-      <%= button_to "Add to library", add_game_to_library_game_path(@game.id), method: :post, params: { game_purchase: { user_id: current_user.id, game_id: @game.id } }, class: "button is-fullwidth-mobile", form_class: "is-fullwidth-mobile" %>
-    <% end %>
-    <% if policy(current_user).remove_game_from_library? && game_in_user_library?(@game) %>
-      <%= button_to "Remove from library", remove_game_from_library_game_path(@game.id), method: :delete, params: { id: @game.id }, class: "button is-fullwidth-mobile is-danger", form_class: "is-fullwidth-mobile" %>
-    <% end %>
+    <div data-vue-component="add-game-to-library"
+      data-vue-props="<%=
+        {
+          gamePurchaseExists: game_in_user_library?(@game),
+          gamePurchaseId: @game_purchase&.id,
+          userId: current_user.id,
+          gameId: @game.id
+        }.to_json
+      %>"></div>
   <% end %>
 
   <% if policy(@game).update? || policy(@game).destroy? %>
-    <div id="actions-dropdown" class="dropdown is-right is-fullwidth-mobile">
+    <div id="actions-dropdown" class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile">
       <div class="dropdown-trigger is-fullwidth-mobile">
         <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>Actions</span>

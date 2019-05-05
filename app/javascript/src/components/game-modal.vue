@@ -7,14 +7,14 @@
         <button @click="onClose" class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body modal-card-body-allow-overflow">
-        <div v-if="gamePurchaseSelected">
+        <div v-if="gameSelected">
           <single-select
             :label="formData.game.label"
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
             :max-height="'150px'"
             :disabled="true"
-            @input="selectGamePurchase"
+            @input="selectGame"
           ></single-select>
 
           <static-single-select
@@ -76,7 +76,7 @@
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
             :max-height="'150px'"
-            @input="selectGamePurchase"
+            @input="selectGame"
           ></single-select>
         </div>
       </section>
@@ -161,9 +161,10 @@ export default {
       type: Boolean,
       required: true
     },
-    create: {
-      type: Boolean,
-      required: true
+    gameModalState: {
+      type: String,
+      required: true,
+      validator: val => ['create', 'update', 'createWithGame'].includes(val)
     }
   },
   data() {
@@ -211,7 +212,7 @@ export default {
           label: 'Game'
         }
       },
-      gamePurchaseSelected: !this.create,
+      gameSelected: this.gameModalState !== 'create',
       completionStatuses: {
         unplayed: 'Unplayed',
         in_progress: 'In Progress',
@@ -279,8 +280,18 @@ export default {
         );
       }
 
+      let method;
+      if (
+        this.gameModalState === 'create' ||
+        this.gameModalState === 'createWithGame'
+      ) {
+        method = 'POST';
+      } else if (this.gameModalState === 'update') {
+        method = 'PUT';
+      }
+
       fetch(this.gamePurchasesSubmitUrl, {
-        method: this.create ? 'POST' : 'PUT',
+        method: method,
         body: JSON.stringify(submittableData),
         headers: {
           'Content-Type': 'application/json',
@@ -288,20 +299,29 @@ export default {
           Accept: 'application/json'
         },
         credentials: 'same-origin'
-      }).then(response => {
-        if (response.ok) {
-          this.$emit('create');
+      })
+        .then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(gamePurchase => {
+          this.$emit('create', gamePurchase);
           this.$emit('closeAndRefresh');
-        }
-      });
+        });
     },
-    selectGamePurchase() {
-      this.gamePurchaseSelected = true;
+    selectGame() {
+      this.gameSelected = true;
     }
   },
   computed: {
     gamePurchasesSubmitUrl: function() {
-      return this.create ? '/game_purchases' : `/game_purchases/${this.id}`;
+      return this.gameModalState === 'update'
+        ? `/game_purchases/${this.id}`
+        : '/game_purchases';
     },
     modalTitle: function() {
       return this.gamePurchase.game.name !== undefined
