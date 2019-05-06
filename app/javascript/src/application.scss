@@ -417,3 +417,10 @@ nav.navbar {
     }
   }
 }
+
+// Hide pagination except Previous/Next on mobile.
+@include touch {
+  .pagination-list {
+    display: none;
+  }
+}
