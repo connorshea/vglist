@@ -13,6 +13,7 @@ class GenresController < ApplicationController
     skip_authorization
     @games = @genre.games
                    .with_attached_cover
+                   .includes(:platforms, :developers)
                    .page params[:page]
   end
 

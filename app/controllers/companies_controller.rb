@@ -15,10 +15,12 @@ class CompaniesController < ApplicationController
 
     @published_games = @company.published_games
                                .with_attached_cover
+                               .includes(:platforms, :developers)
                                .page params[:publisher_page]
 
     @developed_games = @company.developed_games
                                .with_attached_cover
+                               .includes(:platforms, :developers)
                                .page params[:developer_page]
 
     skip_authorization

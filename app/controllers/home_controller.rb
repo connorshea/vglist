@@ -17,6 +17,7 @@ class HomeController < ApplicationController
 
     @games = Game.recently_updated
                  .with_attached_cover
+                 .includes(:platforms, :developers)
                  .limit(18)
   end
 end
