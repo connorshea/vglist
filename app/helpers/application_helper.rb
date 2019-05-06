@@ -49,4 +49,23 @@ module ApplicationHelper
   def meta_description(description)
     return description.presence || "VideoGameList (VGList) helps you track your entire video game library across every store and platform."
   end
+
+  # Takes an array and creates a humanized string out of it.
+  #
+  # @examples
+  #   summarize(['PlayStation 2', 'Xbox 360', 'Wii U', 'Windows'], limit: 2)
+  #     => "PlayStation 2, Xbox 360, and 2 more"
+  #
+  #   summarize(['PlayStation 2', 'Xbox 360', 'Wii U', 'Windows'], limit: 4)
+  #     => "PlayStation 2, Xbox 360, Wii U, Windows"
+  #
+  #   summarize(['PlayStation 2', 'Xbox 360', 'Wii U', 'Windows'], limit: 1)
+  #     => "PlayStation 2 and 3 more"
+  def summarize(array, limit: 3)
+    raise ArgumentError, 'Limit must be a positive integer' unless limit.positive?
+
+    return "#{array.first} and #{(array.length - limit)} more" if limit == 1 && array.length > 1
+    return "#{array[0...limit].join(', ')}, and #{(array.length - limit)} more" if array.length > limit
+    return array.join(', ') if array.length <= limit
+  end
 end

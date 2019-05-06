@@ -10,6 +10,7 @@ class SeriesController < ApplicationController
 
     @games = @series.games
                     .with_attached_cover
+                    .includes(:platforms, :developers)
                     .page params[:page]
 
     respond_to do |format|

@@ -5,8 +5,8 @@
     </figure>
     <div class="card-content">
       <p class="title is-4"><%= game.name %></p>
-      <p class="subtitle is-6"><%= game.platforms.limit(5).map(&:name).join(', ') %></p>
-      <p class="subtitle is-6"><%= game.developers.distinct.limit(5).map(&:name).join(', ') %></p>
+      <p class="subtitle is-6"><%= summarize(game.platforms.pluck(:name)) %></p>
+      <p class="subtitle is-6"><%= summarize(game.developers.pluck(:name), limit: 2) %></p>
     </div>
   <% end %>
 </div>

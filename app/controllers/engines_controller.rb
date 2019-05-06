@@ -12,6 +12,7 @@ class EnginesController < ApplicationController
 
     @games = @engine.games
                     .with_attached_cover
+                    .includes(:platforms, :developers)
                     .page params[:page]
   end
 

@@ -24,6 +24,7 @@ class GamesController < ApplicationController
     end
 
     @games = @games.with_attached_cover
+                   .includes(:platforms, :developers)
                    .page params[:page]
 
     skip_policy_scope
