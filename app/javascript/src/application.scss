@@ -216,6 +216,11 @@ nav.navbar {
     height: auto;
     max-height: 360px;
     width: 240px;
+
+    // On mobile, don't force a flex-basis.
+    @include touch {
+      flex: 1 1 auto;
+    }
   }
 }
 
