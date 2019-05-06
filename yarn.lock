@@ -7051,10 +7051,10 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-good-table@^2.16.3:
-  version "2.16.3"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.16.3.tgz#0367bd601583db5659d9c6a803d315c89898f09a"
-  integrity sha512-1cvS8Cv4MK3YkF3cJzrvlKfnQXZZabQtUth2856a9IQTn7+Xyt+ITTKQ7eBoWgReRadxX94OU1CGBMESDXmZAA==
+vue-good-table@^2.16.4:
+  version "2.16.4"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.16.4.tgz#42b39014e8cfbc09537835b18ffd86b3d8bd9b0e"
+  integrity sha512-sJOSGYGVrgcbbeALPYXfVIKIyGA4cDpRxeVIRRLq2/Z5aRkTC9ER5OOz1oPbV2NtlQkrs2+BmHykPKpUAsH85g==
   dependencies:
     date-fns "2.0.0-alpha.7"
     diacriticless "1.0.1"
