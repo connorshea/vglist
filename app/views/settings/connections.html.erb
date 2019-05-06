@@ -12,6 +12,10 @@
 
     <div class="field">
       <% if @steam_account.nil? %>
+        <div class="notification is-info">
+          <p>If you connect your <%= link_to 'Steam', 'https://store.steampowered.com/' %> account you
+          can import games from your account and kickstart your game library.
+        </div>
         <%= form_with url: connect_steam_user_path(id: @user.id), local: true do |f| %>
           <div class="field">
             <%= f.label :steam_username, class: "label" %>
@@ -30,6 +34,12 @@
           You can set your profile and game library to public in <%= link_to 'your Steam privacy settings', "https://steamcommunity.com/my/edit/settings" %>.
           Once you've imported your games, you can set your profile back to private if you'd like.
         </div>
+        <% if @user.games.count > 0 %>
+          <div class="notification is-warning">
+            <p><strong>Want to import more games?</strong> You can import games as many times as you want. The importer will
+            only add games that aren't already in your library.
+          </div>
+        <% end %>
         <p>Steam account: <%= link_to @steam_username, @steam_account.steam_profile_url %></p>
         <%= link_to "Import games from Steam",
           steam_import_user_path(id: @user.id),

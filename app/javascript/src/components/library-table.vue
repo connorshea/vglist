@@ -59,7 +59,13 @@
     </template>
     <div slot="emptystate" class="vgt-center-align">
       <span v-if="isLoading">Loading...</span>
-      <span v-else class="vgt-text-disabled">This library is empty.</span>
+      <span v-else-if="!isLoading" class="vgt-text-disabled">This library is empty.</span>
+      <span v-if="!isLoading && isEditable" class="vgt-text-disabled">
+        <p>
+          Want to get a headstart?
+          <a href="/settings/connections">Connect your Steam account</a> and import your games to get started.
+        </p>
+      </span>
     </div>
   </vue-good-table>
 </template>
