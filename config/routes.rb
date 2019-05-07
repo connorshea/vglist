@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   resources :users do
     get :index, on: :collection
     get :show, on: :member
+    get :statistics, on: :member
     post :update_role, on: :member
     delete :remove_avatar, on: :member
     post :connect_steam, on: :member
