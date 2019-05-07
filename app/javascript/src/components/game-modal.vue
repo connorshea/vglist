@@ -187,7 +187,7 @@ export default {
           attribute: 'comments'
         },
         rating: {
-          label: 'Rating',
+          label: 'Rating (out of 100)',
           attribute: 'rating'
         },
         hoursPlayed: {
