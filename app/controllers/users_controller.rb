@@ -197,6 +197,50 @@ class UsersController < ApplicationController
     end
   end
 
+  def statistics
+    @user = User.friendly.find(params[:id])
+    authorize @user
+
+    game_purchases = @user.game_purchases
+    @stats = {}
+    total_time_played = game_purchases.sum(:hours_played)
+    games_with_ratings = game_purchases.where.not(rating: nil).count
+    games_with_completion_statuses = game_purchases.where.not(completion_status: nil).count
+
+    # TODO: Figure out what to do about dropped, not_applicable, and paused.
+    # Prevent division by zero.
+    if games_with_completion_statuses.positive?
+      completed_games = game_purchases.where(completion_status: [:completed, :fully_completed]).count
+      @stats[:percent_completed] = (completed_games.to_f / games_with_completion_statuses).round(3) * 100
+    else
+      @stats[:percent_completed] = nil
+    end
+
+    if games_with_completion_statuses.positive?
+      @stats[:completion_statuses] = {}
+      GamePurchase.completion_statuses.each do |key, value|
+        @stats[:completion_statuses][key] = game_purchases.where(completion_status: value).count
+      end
+      @stats[:completion_statuses][:none] = game_purchases.where(completion_status: nil).count
+    else
+      @stats[:completion_statuses] = nil
+    end
+
+    # Prevent division by zero.
+    if games_with_ratings.positive?
+      @stats[:average_rating] = (game_purchases.sum(:rating).to_f / games_with_ratings).round(2)
+    else
+      @stats[:average_rating] = nil
+    end
+
+    # Sum of total hours played, represented as days.
+    @stats[:total_days_played] = (total_time_played / 24).to_f.round(2)
+
+    respond_to do |format|
+      format.json { render json: @stats }
+    end
+  end
+
   private
 
   def user_params

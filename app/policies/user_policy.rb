@@ -53,6 +53,10 @@ class UserPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
+  def statistics?
+    true
+  end
+
   private
 
   def user_is_current_user?
