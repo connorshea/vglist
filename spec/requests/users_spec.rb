@@ -35,6 +35,15 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET statistics_user_path" do
+    let(:user) { create(:user) }
+
+    it "returns http success" do
+      get statistics_user_path(id: user.id, format: :json)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST update_role_user_path" do
     let(:admin) { create(:confirmed_admin) }
     let(:moderator) { create(:confirmed_moderator) }
