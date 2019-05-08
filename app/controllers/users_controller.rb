@@ -211,7 +211,7 @@ class UsersController < ApplicationController
     # Prevent division by zero.
     if games_with_completion_statuses.positive?
       completed_games = game_purchases.where(completion_status: [:completed, :fully_completed]).count
-      @stats[:percent_completed] = (completed_games.to_f / games_with_completion_statuses).round(3) * 100
+      @stats[:percent_completed] = ((completed_games.to_f / games_with_completion_statuses).round(3) * 100).round(1)
     else
       @stats[:percent_completed] = nil
     end
