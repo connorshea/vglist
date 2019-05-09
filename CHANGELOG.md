@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.5.9
+### Added
+- Add library statistics to the user page. ([#411])
+
 ## v2019.5.5
 ### Added
 - The 'Add to library' button on game pages now uses a modal dialog so game details can be filled in from that page. It also allows editing when a game is already in your library. ([#401])
@@ -386,3 +390,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#399]: https://github.com/connorshea/VideoGameList/pull/399
 [#400]: https://github.com/connorshea/VideoGameList/pull/400
 [#401]: https://github.com/connorshea/VideoGameList/pull/401
+[#411]: https://github.com/connorshea/VideoGameList/pull/411
