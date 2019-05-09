@@ -47,7 +47,7 @@ RSpec.describe "Users", type: :request do
       create(:game_purchase, user: user, hours_played: 12)
       get statistics_user_path(id: user.id, format: :json)
       parsed_response = JSON.parse(response.body)
-      # 12 hours played is be half a day.
+      # 12 hours played is half a day.
       expect(parsed_response['total_days_played']).to eq(0.5)
     end
 
@@ -76,7 +76,7 @@ RSpec.describe "Users", type: :request do
       expect(parsed_response['percent_completed']).to eq(100)
     end
 
-    it "returns correct average rating with multiple game purchases 2" do
+    it "returns correct percentage completed with multiple game purchases 2" do
       create(:game_purchase, user: user, completion_status: :dropped)
       create(:game_purchase, user: user, completion_status: :completed)
       get statistics_user_path(id: user.id, format: :json)
@@ -84,7 +84,7 @@ RSpec.describe "Users", type: :request do
       expect(parsed_response['percent_completed']).to eq(50)
     end
 
-    it "returns correct average rating with multiple game purchases 3" do
+    it "returns correct percentage completed with multiple game purchases 3" do
       create(:game_purchase, user: user, completion_status: :not_applicable)
       create(:game_purchase, user: user, completion_status: :completed)
       get statistics_user_path(id: user.id, format: :json)
@@ -92,7 +92,7 @@ RSpec.describe "Users", type: :request do
       expect(parsed_response['percent_completed']).to eq(50)
     end
 
-    it "returns correct average rating with multiple game purchases 4" do
+    it "returns correct percentage completed with multiple game purchases 4" do
       create(:game_purchase, user: user, completion_status: :in_progress)
       create(:game_purchase, user: user, completion_status: :paused)
       get statistics_user_path(id: user.id, format: :json)
@@ -100,13 +100,43 @@ RSpec.describe "Users", type: :request do
       expect(parsed_response['percent_completed']).to eq(0)
     end
 
-    it "returns correct average rating with multiple game purchases 5" do
+    it "returns correct percentage completed with multiple game purchases 5" do
       create(:game_purchase, user: user, completion_status: :unplayed)
       create(:game_purchase, user: user, completion_status: :unplayed)
       create(:game_purchase, user: user, completion_status: :completed)
       get statistics_user_path(id: user.id, format: :json)
       parsed_response = JSON.parse(response.body)
       expect(parsed_response['percent_completed']).to eq(33.3)
+    end
+
+    it "returns nil percentage completed when user has no game purchases" do
+      get statistics_user_path(id: user.id, format: :json)
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['percent_completed']).to eq(nil)
+    end
+
+    it "returns nil completion statuses when user has no game purchases" do
+      get statistics_user_path(id: user.id, format: :json)
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['completion_statuses']).to eq(nil)
+    end
+
+    it "returns nil average rating when user has no game purchases" do
+      get statistics_user_path(id: user.id, format: :json)
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['average_rating']).to eq(nil)
+    end
+
+    it "returns 0 games when user has no game purchases" do
+      get statistics_user_path(id: user.id, format: :json)
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['games_count']).to eq(0)
+    end
+
+    it "returns 0 days played when user has no game purchases" do
+      get statistics_user_path(id: user.id, format: :json)
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['total_days_played']).to eq(0)
     end
   end
 
