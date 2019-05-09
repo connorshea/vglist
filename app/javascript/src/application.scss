@@ -424,3 +424,43 @@ nav.navbar {
     display: none;
   }
 }
+
+.percentage-bar {
+  height: 20px;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+
+  .percentage-bar-portion {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    color: #fff;
+
+    &.color-1 {
+      background-color: #03a9f4;
+    }
+    &.color-2 {
+      background-color: #ff5252;
+    }
+    &.color-3 {
+      background-color: #607d8b;
+    }
+    &.color-4 {
+      background-color: #ff5722;
+    }
+    &.color-5 {
+      background-color: #8bc34a;
+    }
+    &.color-6 {
+      background-color: #3f51b5;
+    }
+    &.color-7 {
+      background-color: #7c4dff;
+    }
+    &.color-8 {
+      background-color: #e91e63;
+    }
+  }
+}

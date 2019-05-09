@@ -62,6 +62,14 @@
   </div>
 <% end %>
 
+<div data-vue-component="user-statistics"
+  data-vue-props="<%=
+    {
+      userId: @user.username
+    }.to_json
+  %>"
+></div>
+
 <h3 class="title is-3 mt-15">Library</h3>
 <div data-vue-component="library"
   data-vue-props="<%=

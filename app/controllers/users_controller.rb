@@ -236,6 +236,8 @@ class UsersController < ApplicationController
     # Sum of total hours played, represented as days.
     @stats[:total_days_played] = (total_time_played / 24).to_f.round(2)
 
+    @stats[:games_count] = game_purchases.count
+
     respond_to do |format|
       format.json { render json: @stats }
     end
