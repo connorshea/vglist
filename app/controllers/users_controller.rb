@@ -221,7 +221,7 @@ class UsersController < ApplicationController
       GamePurchase.completion_statuses.each do |key, value|
         @stats[:completion_statuses][key] = game_purchases.where(completion_status: value).count
       end
-      # @stats[:completion_statuses][:none] = game_purchases.where(completion_status: nil).count
+      @stats[:completion_statuses][:unknown] = game_purchases.where(completion_status: nil).count
     else
       @stats[:completion_statuses] = nil
     end
