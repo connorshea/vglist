@@ -10,6 +10,7 @@ import * as ActiveStorage from 'activestorage';
 import '../src/application.scss';
 import TurbolinksAdapter from '../src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
+import VTooltip from 'v-tooltip';
 import '@babel/polyfill';
 import * as Sentry from '@sentry/browser';
 import 'lodash';
@@ -22,6 +23,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(TurbolinksAdapter);
+Vue.use(VTooltip);
+VTooltip.enabled = window.innerWidth > 768;
 
 Rails.start();
 Turbolinks.start();

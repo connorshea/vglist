@@ -32,6 +32,7 @@
         :key="k"
         :class="['percentage-bar-portion', `color-${i + 1}`]"
         :style="{ 'max-width': ((v / completionStatusesCount) * 100) + '%' }"
+        v-tooltip="{ content: startCase(k) }"
       ></div>
     </div>
   </div>
@@ -53,7 +54,11 @@ export default {
       statistics: null
     };
   },
-  methods: {},
+  methods: {
+    startCase(val) {
+      return _.startCase(val);
+    }
+  },
   created: function() {
     fetch(`/users/${this.userId}/statistics.json`)
       .then(response => {
