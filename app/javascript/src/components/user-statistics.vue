@@ -1,19 +1,23 @@
 <template>
-  <div class="card is-two-thirds column m-auto mt-10" :style="{ 'min-height': '200px' }">
-    <nav v-if="statistics" class="level stats-card pb-0">
+  <div
+    v-if="statisticsDataExists"
+    class="card stats-card is-two-thirds column m-auto mt-10"
+    :style="{ 'min-height': '200px' }"
+  >
+    <nav class="level pb-0">
       <div class="level-item has-text-centered">
         <div>
           <p class="title">{{ statistics.games_count }}</p>
           <p class="heading">Games</p>
         </div>
       </div>
-      <div class="level-item has-text-centered">
+      <div v-if="completionRateExists" class="level-item has-text-centered">
         <div>
           <p class="title">{{ statistics.percent_completed }}%</p>
           <p class="heading">Completed</p>
         </div>
       </div>
-      <div class="level-item has-text-centered">
+      <div v-if="averageRatingExists" class="level-item has-text-centered">
         <div>
           <p class="title">{{ statistics.average_rating }}</p>
           <p class="heading">Average Rating</p>
@@ -26,9 +30,9 @@
         </div>
       </div>
     </nav>
-    <hr v-if="statistics">
-    <div v-if="statistics" class="has-text-centered has-text-weight-bold mb-5">Completion</div>
-    <div v-if="statistics" class="percentage-bar">
+    <hr v-if="completionRateExists">
+    <div v-if="completionRateExists" class="has-text-centered has-text-weight-bold mb-5">Completion</div>
+    <div v-if="completionRateExists" class="percentage-bar">
       <div
         v-for="(v, k, i) in statistics.completion_statuses"
         :key="k"
@@ -81,6 +85,34 @@ export default {
           return accumulator + currentValue;
         });
       }
+    },
+    averageRatingExists: function() {
+      if (this.statistics) {
+        return this.statistics.average_rating !== null;
+      } else {
+        return false;
+      }
+    },
+    completionRateExists: function() {
+      if (this.statistics) {
+        return this.statistics.completion_statuses !== null;
+      } else {
+        return false;
+      }
+    },
+    gamesCountIsPositive: function() {
+      if (this.statistics) {
+        return this.statistics.games_count > 0;
+      } else {
+        return false;
+      }
+    },
+    // Only display the statistics data if there are games with actual data to display.
+    statisticsDataExists: function() {
+      return (
+        (this.averageRatingExists || this.completionRateExists) &&
+        this.gamesCountIsPositive
+      );
     }
   }
 };
