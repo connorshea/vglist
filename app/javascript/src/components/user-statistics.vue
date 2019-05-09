@@ -1,6 +1,6 @@
 <template>
-  <div class="card is-two-thirds column m-auto mt-10">
-    <nav v-if="statistics" class="level stats-card">
+  <div class="card is-two-thirds column m-auto mt-10" :style="{ 'min-height': '200px' }">
+    <nav v-if="statistics" class="level stats-card pb-0">
       <div class="level-item has-text-centered">
         <div>
           <p class="title">{{ statistics.games_count }}</p>
@@ -26,6 +26,8 @@
         </div>
       </div>
     </nav>
+    <hr v-if="statistics">
+    <div v-if="statistics" class="has-text-centered has-text-weight-bold mb-5">Completion</div>
     <div v-if="statistics" class="percentage-bar">
       <div
         v-for="(v, k, i) in statistics.completion_statuses"
@@ -68,7 +70,7 @@ export default {
         });
     }
   },
-  created: function() {
+  beforeMount: function() {
     this.getStatistics();
   },
   computed: {
