@@ -1,25 +1,27 @@
 <template>
   <div
-    v-if="statisticsDataExists"
+    v-if="gamesCountIsPositive"
     class="card stats-card is-two-thirds column m-auto mt-10"
     :style="{ 'min-height': '200px' }"
   >
-    <nav class="level pb-0">
+    <nav class="level is-fullwidth pb-0">
       <div class="level-item has-text-centered">
         <div>
           <p class="title">{{ statistics.games_count }}</p>
           <p class="heading">Games</p>
         </div>
       </div>
-      <div v-if="completionRateExists" class="level-item has-text-centered">
+      <div class="level-item has-text-centered">
         <div>
-          <p class="title">{{ statistics.percent_completed }}%</p>
+          <p v-if="completionRateExists" class="title">{{ statistics.percent_completed }}%</p>
+          <p v-else class="title has-text-grey-light">N/A%</p>
           <p class="heading">Completed</p>
         </div>
       </div>
-      <div v-if="averageRatingExists" class="level-item has-text-centered">
+      <div class="level-item has-text-centered">
         <div>
-          <p class="title">{{ statistics.average_rating }}</p>
+          <p v-if="averageRatingExists" class="title">{{ statistics.average_rating }}</p>
+          <p v-else class="title has-text-grey-light">N/A</p>
           <p class="heading">Average Rating</p>
         </div>
       </div>
@@ -106,13 +108,6 @@ export default {
       } else {
         return false;
       }
-    },
-    // Only display the statistics data if there are games with actual data to display.
-    statisticsDataExists: function() {
-      return (
-        (this.averageRatingExists || this.completionRateExists) &&
-        this.gamesCountIsPositive
-      );
     }
   }
 };
