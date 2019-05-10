@@ -88,7 +88,7 @@ RSpec.describe "Engines", type: :request do
   end
 
   describe "DELETE engine_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let!(:engine) { create(:engine) }
 
     it "deletes an engine" do

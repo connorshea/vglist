@@ -23,10 +23,16 @@ class EnginePolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.present?
+    user_is_moderator_or_admin?
   end
 
   def search?
     user.present?
+  end
+
+  private
+
+  def user_is_moderator_or_admin?
+    user && (user.moderator? || user.admin?)
   end
 end
