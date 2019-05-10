@@ -16,7 +16,7 @@
     "vue-select": "^2.6.4",
     "vue-template-compiler": "^2.6.10",
     "v-tooltip": "^2.0.2",
-    "webpack": "^4.30"
+    "webpack": "^4.31"
   },
   "devDependencies": {
     "prettier": "1.17.0",
