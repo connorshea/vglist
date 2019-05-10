@@ -93,7 +93,7 @@ RSpec.describe "Series", type: :request do
   end
 
   describe "DELETE series_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let!(:series) { create(:series) }
 
     it "deletes a series" do
