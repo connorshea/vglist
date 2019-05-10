@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add library statistics to the user page. ([#411])
 
+### Changed
+- Limit deletion of series' and engines.
+
 ## v2019.5.5
 ### Added
 - The 'Add to library' button on game pages now uses a modal dialog so game details can be filled in from that page. It also allows editing when a game is already in your library. ([#401])
