@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="gamesCountIsPositive"
+    v-if="gamesCountIsPositive && !isLoading"
     class="card stats-card is-two-thirds column m-auto mt-10"
     :style="{ 'min-height': '200px' }"
   >
@@ -8,7 +8,8 @@
       <div class="level-item has-text-centered">
         <div>
           <p class="title">{{ statistics.games_count }}</p>
-          <p class="heading">Games</p>
+          <p v-if="statistics.games_count === 1" class="heading">Game</p>
+          <p v-else class="heading">Games</p>
         </div>
       </div>
       <div class="level-item has-text-centered">
@@ -27,7 +28,8 @@
       </div>
       <div class="level-item has-text-centered">
         <div>
-          <p class="title">{{ statistics.total_days_played }}</p>
+          <p v-if="daysPlayedIsPositive" class="title">{{ statistics.total_days_played }}</p>
+          <p v-else class="title has-text-grey-light">N/A</p>
           <p class="heading">Days Played</p>
         </div>
       </div>
@@ -59,7 +61,8 @@ export default {
   },
   data: function() {
     return {
-      statistics: null
+      statistics: null,
+      isLoading: true
     };
   },
   methods: {
@@ -73,6 +76,7 @@ export default {
         })
         .then(statistics => {
           this.statistics = statistics;
+          this.isLoading = false;
         });
     }
   },
@@ -98,6 +102,13 @@ export default {
     completionRateExists: function() {
       if (this.statistics) {
         return this.statistics.completion_statuses !== null;
+      } else {
+        return false;
+      }
+    },
+    daysPlayedIsPositive: function() {
+      if (this.statistics) {
+        return this.statistics.total_days_played > 0;
       } else {
         return false;
       }
