@@ -265,7 +265,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.6)
     rubocop-performance (1.2.0)
       rubocop (>= 0.68.0)
-    rubocop-rspec (1.32.0)
+    rubocop-rspec (1.33.0)
       rubocop (>= 0.60.0)
     ruby-graphviz (1.2.4)
     ruby-progressbar (1.10.0)
@@ -372,7 +372,7 @@ DEPENDENCIES
   rspec-rails (~> 3.8)
   rubocop (~> 0.68)
   rubocop-performance (~> 1.2)
-  rubocop-rspec (~> 1.32)
+  rubocop-rspec (~> 1.33)
   ruby-progressbar (~> 1.10)
   selenium-webdriver
   sentry-raven (~> 2.9)
