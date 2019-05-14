@@ -115,7 +115,7 @@ group :development do
   # Open screenshots when they're taken with capybara.
   gem 'launchy', '~> 2.4'
   # Generate a graph of the app structure.
-  gem 'rails-erd', '~> 1.5'
+  gem 'rails-erd', '~> 1.6'
 end
 
 group :test do
