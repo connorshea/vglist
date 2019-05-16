@@ -39,13 +39,13 @@
             v-model="gamePurchase.hours_played"
           ></number-field>
 
-          <text-field
+          <text-area
             :form-class="formData.class"
             :attribute="formData.comments.attribute"
             :label="formData.comments.label"
             :required="false"
             v-model="gamePurchase.comments"
-          ></text-field>
+          ></text-area>
 
           <date-field
             :form-class="formData.class"
@@ -90,6 +90,7 @@
 
 <script>
 import TextField from './fields/text-field.vue';
+import TextArea from './fields/text-area.vue';
 import NumberField from './fields/number-field.vue';
 import DateField from './fields/date-field.vue';
 import SingleSelect from './fields/single-select.vue';
@@ -101,6 +102,7 @@ export default {
   name: 'game-modal',
   components: {
     TextField,
+    TextArea,
     NumberField,
     DateField,
     SingleSelect,
