@@ -113,12 +113,21 @@ RSpec.describe Game, type: :model do
       let(:user) { create(:confirmed_user) }
       let(:game1) { create(:game) }
       let(:game2) { create(:game) }
-      let(:favorite) { create(:favorite, user: user, favoritable: game2) }
+      let(:favorite_game) { create(:favorite_game, user: user, game: game2) }
       let(:game3) { create(:game) }
 
       it "the game with the most favorites comes first" do
-        favorite
-        expect(Game.most_favorites).to eq([game2, game1, game3])
+        game1
+        game3
+        favorite_game
+        expect(Game.most_favorites.first).to eq(game2)
+      end
+
+      it "sorting by favorites includes all games" do
+        game1
+        game3
+        favorite_game
+        expect(Game.most_favorites.length).to eq(3)
       end
     end
 
@@ -158,7 +167,7 @@ RSpec.describe Game, type: :model do
     let(:game) { create(:game) }
     let(:user) { create(:confirmed_user) }
     let(:game_purchase) { create(:game_purchase, user: user, game: game) }
-    let(:favorite) { create(:favorite, user: user, favoritable: game) }
+    let(:favorite_game) { create(:favorite_game, user: user, game: game) }
     let(:game_with_platform) { create(:game, :platform) }
     let(:game_with_genre) { create(:game, :genre) }
     let(:game_with_engine) { create(:game, :engine) }
@@ -171,9 +180,9 @@ RSpec.describe Game, type: :model do
       expect { game.destroy }.to change(GamePurchase, :count).by(-1)
     end
 
-    it 'Favorite should be deleted when game is deleted' do
-      favorite
-      expect { game.destroy }.to change(Favorite, :count).by(-1)
+    it 'FavoriteGame should be deleted when game is deleted' do
+      favorite_game
+      expect { game.destroy }.to change(FavoriteGame, :count).by(-1)
     end
 
     it 'GamePlatform should be deleted when game is deleted' do

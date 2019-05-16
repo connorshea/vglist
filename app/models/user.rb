@@ -11,7 +11,7 @@ class User < ApplicationRecord
   has_many :games, through: :game_purchases
 
   # Users have favorites of various types.
-  has_many :favorites, inverse_of: :user, dependent: :destroy
+  has_many :favorite_games, dependent: :destroy
 
   # External accounts, e.g. Steam. Can be changed to a has_many association if
   # other external account types are added later.

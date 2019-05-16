@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_20_225006) do
+ActiveRecord::Schema.define(version: 2019_05_16_232940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -66,17 +66,14 @@ ActiveRecord::Schema.define(version: 2019_04_20_225006) do
     t.index ["user_id"], name: "index_external_accounts_on_user_id"
   end
 
-  create_table "favorites", force: :cascade do |t|
-    t.string "favoritable_type"
-    t.bigint "favoritable_id"
+  create_table "favorite_games", force: :cascade do |t|
+    t.bigint "game_id"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["favoritable_id", "favoritable_type", "user_id"], name: "index_favorites_on_favoritable_id_type_and_user_id", unique: true
-    t.index ["favoritable_id"], name: "index_favorites_on_favoritable_id"
-    t.index ["favoritable_type", "favoritable_id"], name: "index_favorites_on_favoritable_type_and_favoritable_id"
-    t.index ["favoritable_type"], name: "index_favorites_on_favoritable_type"
-    t.index ["user_id"], name: "index_favorites_on_user_id"
+    t.index ["game_id"], name: "index_favorite_games_on_game_id"
+    t.index ["user_id", "game_id"], name: "index_favorite_games_on_user_id_and_game_id", unique: true
+    t.index ["user_id"], name: "index_favorite_games_on_user_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -241,7 +238,8 @@ ActiveRecord::Schema.define(version: 2019_04_20_225006) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "external_accounts", "users", on_delete: :cascade
-  add_foreign_key "favorites", "users", on_delete: :cascade
+  add_foreign_key "favorite_games", "games", on_delete: :cascade
+  add_foreign_key "favorite_games", "users", on_delete: :cascade
   add_foreign_key "game_developers", "companies", on_delete: :cascade
   add_foreign_key "game_developers", "games", on_delete: :cascade
   add_foreign_key "game_engines", "engines", on_delete: :cascade

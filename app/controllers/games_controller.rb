@@ -182,7 +182,7 @@ class GamesController < ApplicationController
     authorize @game
 
     @user = current_user
-    @favorite = Favorite.new(favoritable: @game, user: @user)
+    @favorite = FavoriteGame.new(game: @game, user: @user)
 
     respond_to do |format|
       if @favorite.save
@@ -198,7 +198,7 @@ class GamesController < ApplicationController
     authorize @game
 
     @user = current_user
-    @favorite = @user.favorites.games.find_by(favoritable_id: @game.id)
+    @favorite = @user.favorite_games.find_by(game_id: @game.id)
 
     respond_to do |format|
       if @favorite&.destroy
