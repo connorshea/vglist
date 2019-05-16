@@ -19,7 +19,11 @@ class Game < ApplicationRecord
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
-  has_many :favorites, as: :favoritable, dependent: :destroy
+  has_many :favorites,
+    foreign_key: 'game_id',
+    class_name: 'FavoriteGame',
+    inverse_of: :user,
+    dependent: :destroy
 
   belongs_to :series, optional: true
 
@@ -29,13 +33,11 @@ class Game < ApplicationRecord
   scope :oldest, -> { order("created_at asc") }
   scope :recently_updated, -> { order("updated_at desc") }
   scope :least_recently_updated, -> { order("updated_at asc") }
-  # Have to include the check for NULL because otherwise games that haven't been favorited won't be included.
-  # Also filter down to only favorites on games.
+  # Sort by most favorites.
   scope :most_favorites, -> {
     left_joins(:favorites)
-      .where("favorites.favoritable_type = 'Game' OR favorites.favoritable_type IS NULL")
       .group(:id)
-      .order(Arel.sql('count(favorites.favoritable_id) desc'))
+      .order(Arel.sql('count(favorite_games.game_id) desc'))
   }
   # Sort by most owners.
   scope :most_owners, -> {

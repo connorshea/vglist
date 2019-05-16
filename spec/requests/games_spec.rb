@@ -217,16 +217,16 @@ RSpec.describe "Games", type: :request do
       expect do
         post favorite_game_path(game.id, format: :json),
           params: { id: game.id }
-      end.to change(user.favorites, :count).by(1)
+      end.to change(user.favorite_games, :count).by(1)
     end
 
     it "does not favorite a game that's already been favorited" do
-      create(:favorite, user: user, favoritable: game)
+      create(:favorite_game, user: user, game: game)
       sign_in(user)
       expect do
         post favorite_game_path(game.id, format: :json),
           params: { id: game.id }
-      end.to change(user.favorites, :count).by(0)
+      end.to change(user.favorite_games, :count).by(0)
     end
   end
 
@@ -234,14 +234,14 @@ RSpec.describe "Games", type: :request do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
 
-    it 'decreases the favorite count by 1' do
-      create(:favorite, user: user, favoritable: game)
+    it 'decreases the favorite game count by 1' do
+      create(:favorite_game, user: user, game: game)
 
       sign_in(user)
       expect do
         delete unfavorite_game_path(game.id, format: :json),
           params: { id: game.id }
-      end.to change(user.favorites, :count).by(-1)
+      end.to change(user.favorite_games, :count).by(-1)
     end
 
     it "does not change anything if a game hasn't been favorited" do
@@ -249,7 +249,7 @@ RSpec.describe "Games", type: :request do
       expect do
         delete unfavorite_game_path(game.id, format: :json),
           params: { id: game.id }
-      end.to change(user.favorites, :count).by(0)
+      end.to change(user.favorite_games, :count).by(0)
     end
   end
 end

@@ -87,10 +87,10 @@
 
 <h3 class="title is-3 mt-25">Favorites</h3>
 
-<% if @user.favorites.games.length > 0 %>
+<% if @user.favorite_games.length > 0 %>
   <div class="game-card-list mt-20">
-    <% @user.favorites.games.each do |favorite| %>
-      <%= render 'shared/game_card', game: Game.find(favorite.favoritable_id) %>
+    <% @user.favorite_games.each do |favorite| %>
+      <%= render 'shared/game_card', game: Game.find(favorite.game_id) %>
     <% end %>
   </div>
 <% else %>

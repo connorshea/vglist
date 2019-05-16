@@ -12,7 +12,7 @@ RSpec.describe "Users", type: :request do
     let(:user) { create(:user) }
     let(:user_with_avatar) { create(:user_with_avatar) }
     let(:user_with_game_purchase) { create(:user_with_game_purchase) }
-    let(:user_with_favorite) { create(:user_with_favorite) }
+    let(:user_with_favorite_game) { create(:user_with_favorite_game) }
 
     it "returns http success" do
       get user_path(id: user.id)
@@ -30,7 +30,7 @@ RSpec.describe "Users", type: :request do
     end
 
     it "returns http success for user with favorite" do
-      get user_path(id: user_with_favorite.id)
+      get user_path(id: user_with_favorite_game.id)
       expect(response).to have_http_status(:success)
     end
   end

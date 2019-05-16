@@ -27,9 +27,9 @@ FactoryBot.define do
       end
     end
 
-    trait :favorite do
+    trait :favorite_game do
       after(:create) do |user|
-        create :favorite, user: user
+        create :favorite_game, user: user
       end
     end
 
@@ -54,6 +54,6 @@ FactoryBot.define do
 
     factory :user_with_avatar,                traits: [:avatar]
     factory :user_with_game_purchase,         traits: [:game_purchase]
-    factory :user_with_favorite,              traits: [:favorite]
+    factory :user_with_favorite_game, traits: [:favorite_game]
   end
 end
