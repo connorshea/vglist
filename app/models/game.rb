@@ -89,6 +89,13 @@ class Game < ApplicationRecord
       greater_than: 0
     }
 
+  validates :mobygames_id,
+    uniqueness: true,
+    allow_nil: true,
+    format: %r{\A[a-z-_0-9]+/?[a-z-_0-9]+\z},
+    # Allow up to 300 characters just in case there's some game with an incredibly long name.
+    length: { maximum: 300 }
+
   # Include games in global search.
   multisearchable against: [:name]
 
