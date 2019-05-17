@@ -6,7 +6,7 @@ module GamesHelper
   end
 
   def game_in_user_favorites?(game)
-    return current_user.favorite_games.find_by(game: game.id).present?
+    return current_user.favorite_games.find_by(game_id: game.id).present?
   end
 
   def sort_dropdown_link(sort, humanized_name)
