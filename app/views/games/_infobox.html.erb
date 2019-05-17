@@ -51,7 +51,7 @@
     </ul>
   <% end %>
 
-  <% unless game.wikidata_id.blank? && game.pcgamingwiki_id.blank? && game.steam_app_id.blank? %>
+  <% unless game.wikidata_id.blank? && game.pcgamingwiki_id.blank? && game.steam_app_id.blank? && game.mobygames_id.blank? %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
       <% unless game.wikidata_id.blank? %>
@@ -62,6 +62,9 @@
       <% end %>
       <% unless game.steam_app_id.blank? %>
         <li><%= link_to 'Steam', "https://store.steampowered.com/app/#{game.steam_app_id}" %>
+      <% end %>
+      <% unless game.mobygames_id.blank? %>
+        <li><%= link_to 'MobyGames', "https://www.mobygames.com/game/#{game.mobygames_id}" %>
       <% end %>
     </ul>
   <% end %>

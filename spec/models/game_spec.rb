@@ -21,7 +21,7 @@ RSpec.describe Game, type: :model do
         .is_greater_than(0)
     end
 
-    it { should validate_uniqueness_of(:pcgamingwiki_id) }
+    it { should validate_uniqueness_of(:pcgamingwiki_id).allow_nil }
     it { should validate_length_of(:pcgamingwiki_id).is_at_most(300) }
 
     it 'allows valid PCGamingWiki IDs' do
@@ -46,12 +46,34 @@ RSpec.describe Game, type: :model do
       ).for(:pcgamingwiki_id)
     end
 
-    it { should validate_uniqueness_of(:steam_app_id) }
+    it { should validate_uniqueness_of(:steam_app_id).allow_nil }
     it 'validates numericality of steam_app_id' do
       expect(game).to validate_numericality_of(:steam_app_id)
         .only_integer
         .allow_nil
         .is_greater_than(0)
+    end
+
+    it { should validate_uniqueness_of(:mobygames_id).allow_nil }
+    it { should validate_length_of(:mobygames_id).is_at_most(300) }
+
+    it 'allows valid MobyGames IDs' do
+      expect(game).to allow_values(
+        'star-wars-battlefront-ii',
+        'star-wars-battlefront-ii_',
+        'borderlands-2',
+        'star-wars-knights-of-the-old-republic-ii-the-sith-lords',
+        'windows/disciples-ii-dark-prophecy',
+        'ps3/game-name'
+      ).for(:mobygames_id)
+    end
+
+    it 'disallows invalid MobyGames IDs' do
+      expect(game).not_to allow_values(
+        'CapitalLetters',
+        'Game with spaces in name',
+        'PS3/game'
+      ).for(:mobygames_id)
     end
   end
 

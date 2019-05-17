@@ -78,6 +78,7 @@ namespace 'import:wikidata' do
 
         pcgamingwiki_id = wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value')
         steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
+        mobygames_id = wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value')
 
         hash = {
           name: game_hash[:name],
@@ -86,6 +87,7 @@ namespace 'import:wikidata' do
 
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
         hash[:steam_app_id] = steam_app_id unless steam_app_id.nil?
+        hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
 
         begin
           game = Game.create!(hash)

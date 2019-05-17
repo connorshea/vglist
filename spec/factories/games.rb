@@ -48,6 +48,10 @@ FactoryBot.define do
       pcgamingwiki_id { Faker::Lorem.words(3).join('_') }
     end
 
+    trait :mobygames_id do
+      mobygames_id { Faker::Lorem.words(3).join('-') }
+    end
+
     factory :game_with_cover, traits: [:cover]
     factory :game_with_everything,
       traits: [
@@ -61,7 +65,8 @@ FactoryBot.define do
         :genre,
         :wikidata_id,
         :steam_app_id,
-        :pcgamingwiki_id
+        :pcgamingwiki_id,
+        :mobygames_id
       ]
   end
 end

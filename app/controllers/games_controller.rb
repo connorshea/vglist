@@ -219,6 +219,7 @@ class GamesController < ApplicationController
       :wikidata_id,
       :pcgamingwiki_id,
       :steam_app_id,
+      :mobygames_id,
       :series_id,
       genre_ids: [],
       engine_ids: [],

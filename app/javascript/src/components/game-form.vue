@@ -85,6 +85,13 @@
       v-model="game.pcgamingwikiId"
     ></text-field>
 
+    <text-field
+      :form-class="formData.class"
+      :attribute="formData.mobygamesId.attribute"
+      :label="formData.mobygamesId.label"
+      v-model="game.mobygamesId"
+    ></text-field>
+
     <button
       class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile"
       value="Submit"
@@ -180,6 +187,10 @@ export default {
       type: String,
       required: false
     },
+    mobygamesId: {
+      type: String,
+      required: false
+    },
     submitPath: {
       type: String,
       required: true
@@ -216,6 +227,7 @@ export default {
         steamAppId: this.steamAppId,
         wikidataId: this.wikidataId,
         pcgamingwikiId: this.pcgamingwikiId,
+        mobygamesId: this.mobygamesId,
         cover: this.cover,
         coverBlob: this.coverBlob
       },
@@ -261,6 +273,10 @@ export default {
         pcgamingwikiId: {
           label: 'PCGamingWiki ID',
           attribute: 'pcgamingwiki_id'
+        },
+        mobygamesId: {
+          label: 'MobyGames ID',
+          attribute: 'mobygames_id'
         }
       }
     };
@@ -309,7 +325,8 @@ export default {
           platform_ids: platformIds,
           steam_app_id: this.game.steamAppId,
           wikidata_id: this.game.wikidataId,
-          pcgamingwiki_id: this.game.pcgamingwikiId
+          pcgamingwiki_id: this.game.pcgamingwikiId,
+          mobygames_id: this.game.mobygamesId
         }
       };
 

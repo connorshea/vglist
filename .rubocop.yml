@@ -109,7 +109,7 @@ Style/MethodMissingSuper:
 Style/Next:
   Enabled: true
   Exclude:
-    - "lib/tasks/wikidata_import_games.rake"
+    - "lib/tasks/import/wikidata_import_games.rake"
 
 Style/NumericLiterals:
   Enabled: true
