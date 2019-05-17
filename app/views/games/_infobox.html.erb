@@ -51,7 +51,7 @@
     </ul>
   <% end %>
 
-  <% unless game.wikidata_id.blank? && game.pcgamingwiki_id.blank? && game.steam_app_id.blank? && game.mobygames_id.blank? %>
+  <% unless [game.wikidata_id, game.pcgamingwiki_id, game.steam_app_id, game.mobygames_id].all?(&:blank?) %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
       <% unless game.wikidata_id.blank? %>
