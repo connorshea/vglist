@@ -1,8 +1,63 @@
 namespace :import do
+  require 'sparql/client'
+  require 'wikidata_helper'
+  require 'ruby-progressbar'
+
+  desc "Import PCGamingWiki IDs from Wikidata"
+  task pcgamingwiki: :environment do
+    puts "Importing PCGamingWiki IDs from Wikidata..."
+    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+
+    rows = []
+    rows.concat(client.query(pcgamingwiki_query))
+
+    games = rows.map do |row|
+      {
+        wikidata_id: row.to_h[:item].to_s.gsub('http://www.wikidata.org/entity/Q', ''),
+        pcgamingwiki_id: row.to_h[:pcgamingwikiId]
+      }
+    end
+
+    games.uniq! { |e| e[:wikidata_id] }
+
+    puts "Found #{games.count} games on Wikidata with a PCGamingWiki ID."
+
+    pcgamingwiki_added_count = 0
+
+    progress_bar = ProgressBar.create(
+      total: games.count,
+      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    )
+
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
+    games.each_with_index do |game, _index|
+      game_record = Game.where(wikidata_id: game[:wikidata_id], pcgamingwiki_id: nil).first
+
+      unless game_record
+        progress_bar.increment
+        next
+      end
+
+      progress_bar.log "Adding PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}."
+
+      Game.update(game_record.id, { pcgamingwiki_id: game[:pcgamingwiki_id] })
+
+      pcgamingwiki_added_count += 1
+      progress_bar.increment
+    end
+
+    progress_bar.finish unless progress_bar.finished?
+
+    games_with_pcgamingwiki_ids = Game.where.not(pcgamingwiki_id: nil)
+    puts
+    puts "Done. #{games_with_pcgamingwiki_ids.count} games now have PCGamingWiki IDs."
+    puts "#{pcgamingwiki_added_count} PCGamingWiki IDs added."
+  end
+
   desc "Attach covers to games, only applies to games that have a PCGamingWiki ID and don't already have a cover."
   task 'pcgamingwiki:covers': :environment do
-    require 'ruby-progressbar'
-
     puts "This task will attach covers to any games which have PCGamingWiki IDs and no cover."
 
     games = Game.includes(:cover_attachment)
@@ -91,5 +146,17 @@ namespace :import do
     puts
     puts "Done. #{games_with_covers.count} games now have covers."
     puts "#{cover_added_count} covers added and #{cover_not_found_count} covers not found."
+  end
+
+  # SPARQL query for getting all video games with PCGamingWiki IDs on Wikidata.
+  def pcgamingwiki_query
+    sparql = <<-SPARQL
+      SELECT ?item ?pcgamingwikiId WHERE {
+        ?item wdt:P31 wd:Q7889; # Instances of video games
+              wdt:P6337 ?pcgamingwikiId. # Items with a PCGamingWiki ID.
+      }
+    SPARQL
+
+    return sparql
   end
 end
