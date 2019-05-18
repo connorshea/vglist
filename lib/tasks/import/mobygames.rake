@@ -81,6 +81,8 @@ namespace 'import' do
 
     # Keep track of the number of attached covers.
     attached_covers_count = 0
+    no_cover_url_count = 0
+    no_matching_game_count = 0
 
     games.each do |game|
       progress_bar.log ""
@@ -114,6 +116,7 @@ namespace 'import' do
       unless mobygames_games&.length&.positive?
         progress_bar.log "No matching games found for #{game[:name]}."
         progress_bar.increment
+        no_matching_game_count += 1
         next
       end
 
@@ -128,6 +131,7 @@ namespace 'import' do
       if current_game.nil?
         progress_bar.log "No matching game found for #{game[:name]} (mobygames_id: #{game[:mobygames_id]})."
         progress_bar.increment
+        no_matching_game_count += 1
         next
       end
 
@@ -136,6 +140,7 @@ namespace 'import' do
       if cover_url.nil?
         progress_bar.log "No cover image found."
         progress_bar.increment
+        no_cover_url_count += 1
         next
       end
 
@@ -145,6 +150,7 @@ namespace 'import' do
       rescue OpenURI::HTTPError => e
         progress_bar.log "Error: #{e}"
         progress_bar.increment
+        no_cover_url_count += 1
         next
       end
 
@@ -161,6 +167,7 @@ namespace 'import' do
     puts
     puts "Done. #{games_with_covers.count} games now have covers."
     puts "#{attached_covers_count} covers added."
+    puts "#{no_matching_game_count} IDs could find no matching game, #{no_cover_url_count} games had no cover."
   end
 
   # SPARQL query for getting all video games with MobyGames IDs on Wikidata.
