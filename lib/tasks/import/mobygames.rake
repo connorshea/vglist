@@ -98,7 +98,7 @@ namespace 'import' do
         # rubocop:enable Lint/UriEscapeUnescape
       end
 
-      progress_bar.log "API URL: #{api_url}"
+      # progress_bar.log "API URL: #{api_url}"
 
       # Get the JSON response from the MobyGames API.
       req = Net::HTTP::Get.new(api_url)
