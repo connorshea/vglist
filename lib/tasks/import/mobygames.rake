@@ -111,7 +111,7 @@ namespace 'import' do
       mobygames_games = json.dig('games')
 
       # Move on if no games are returned by the search.
-      unless mobygames_games.length.positive?
+      unless mobygames_games&.length&.positive?
         progress_bar.log "No matching games found for #{game[:name]}."
         progress_bar.increment
         next
