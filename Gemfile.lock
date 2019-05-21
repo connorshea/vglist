@@ -117,7 +117,7 @@ GEM
       i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
-    ffi (1.11.0)
+    ffi (1.11.1)
     friendly_id (5.2.5)
       activerecord (>= 4.0.0)
     fuubar (2.3.2)
