@@ -127,7 +127,7 @@ namespace :import do
       # Catch the error if the PCGamingWiki cover image doesn't actually exist.
       begin
         cover_blob = URI.open(cover_url)
-      rescue OpenURI::HTTPError => e
+      rescue OpenURI::HTTPError, URI::InvalidURIError => e
         puts "Error: #{e}"
         next
       end
