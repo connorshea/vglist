@@ -88,7 +88,9 @@
 <% if @games_in_series && @games_in_series.count.positive? %>
   <div class="card more-from-this-series-card mt-15">
     <div class="card-content">
-      <h3 class="title is-5 mb-15">More from this series</h3>
+      <h3 class="title is-5 mb-15">
+        <%= link_to 'More from this series', series_path(@game.series) %>
+      </h3>
 
       <div class="games">
         <% @games_in_series.each do |game| %>
