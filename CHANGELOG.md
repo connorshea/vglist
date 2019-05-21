@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.5.18
+### Added
+- Add a cover importer for importing covers from MobyGames. Added around 7000 new covers with this. ([#438])
+- Fix an issue with user statistics for users that have capital letters in their usernames.
+
+## v2019.5.16
+### Added
+- Add MobyGames IDs to games. ([#436])
+- Add importer for MobyGames IDs from Wikidata. ([#436])
+
 ## v2019.5.9
 ### Added
 - Add library statistics to the user page. ([#411])
@@ -394,3 +404,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#400]: https://github.com/connorshea/VideoGameList/pull/400
 [#401]: https://github.com/connorshea/VideoGameList/pull/401
 [#411]: https://github.com/connorshea/VideoGameList/pull/411
+[#436]: https://github.com/connorshea/VideoGameList/pull/436
+[#438]: https://github.com/connorshea/VideoGameList/pull/438
