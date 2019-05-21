@@ -19,12 +19,17 @@ update_configs:
     allowed_updates:
       - match:
           update_type: "all"
-    # These are updated too often, so we skip them to avoid obnoxious PRs.
+    # These AWS gems are updated too often, so we skip them to avoid obnoxious PRs.
     ignored_updates:
       - match:
           dependency_name: "aws-sdk-core"
       - match:
           dependency_name: "aws-partitions"
+      - match:
+          dependency_name: "aws-sdk-kms"
+      - match:
+          dependency_name: "aws-sdk-s3"
+          
 
   - package_manager: "javascript"
     directory: "/"
