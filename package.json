@@ -13,7 +13,7 @@
     "vue": "^2.6.10",
     "vue-good-table": "^2.16.5",
     "vue-loader": "^15.7",
-    "vue-select": "^2.6.4",
+    "vue-select": "^3.1.0",
     "vue-template-compiler": "^2.6.10",
     "v-tooltip": "^2.0.2",
     "webpack": "^4.32"
