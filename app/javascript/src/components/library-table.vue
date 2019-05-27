@@ -28,7 +28,7 @@
               v-for="column in columns.filter(column => column.hideable !== false)"
               :key="column.index"
             >
-              <a @click.prevent="toggleColumn(column.index, $event)">
+              <a @click="toggleColumn(column.index, $event)">
                 <input :checked="!column.hidden" type="checkbox">
                 {{ column.label }}
               </a>
