@@ -68,10 +68,10 @@ group :development, :test do
   # Rubocop for linting
   gem 'rubocop', '~> 0.71', require: false
 
+  # rubocop extensions
   gem 'rubocop-performance', '~> 1.3'
-
-  # rubocop-rspec for linting rspec files
   gem 'rubocop-rspec', '~> 1.33'
+  gem 'rubocop-rails', '~> 2.0'
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 1.7'
