@@ -5,10 +5,10 @@ module SettingsHelper
   end
 
   def resource
-    resource || User.new
+    @resource || User.new
   end
 
   def devise_mapping
-    devise_mapping || Devise.mappings[:user]
+    @devise_mapping || Devise.mappings[:user]
   end
 end

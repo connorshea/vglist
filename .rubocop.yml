@@ -76,6 +76,11 @@ Rails/RequestReferer:
   Enabled: true
   EnforcedStyle: referrer
 
+Rails/HelperInstanceVariable:
+  Enabled: true
+  Exclude:
+    - 'app/helpers/settings_helper.rb'
+
 #################### Style ###############################
 
 Style/BlockDelimiters:
