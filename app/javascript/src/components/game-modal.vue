@@ -28,6 +28,7 @@
             :attribute="formData.rating.attribute"
             :label="formData.rating.label"
             :required="false"
+            :max="100"
             v-model="gamePurchase.rating"
           ></number-field>
 

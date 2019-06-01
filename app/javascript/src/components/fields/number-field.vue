@@ -13,7 +13,7 @@
         v-bind:id="numberFieldId"
         v-bind:value="dataValue"
         v-on:input="$emit('input', $event.target.value)"
-      />
+      >
     </div>
   </div>
 </template>
@@ -51,8 +51,7 @@ export default {
     },
     max: {
       type: Number,
-      required: false,
-      default: 100
+      required: false
     }
   },
   data() {
