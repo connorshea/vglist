@@ -55,6 +55,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to @user, success: "Avatar successfully removed." }
+      format.json { render json: @user, status: :ok, location: @user }
     end
   end
 
