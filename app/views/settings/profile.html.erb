@@ -10,25 +10,16 @@
   <div class="column">
     <h1 class="title">Profile</h1>
 
-    <%= form_for @user, html: { class: "avatar-form" } do |f| %>
-      <div class="field">
-        <%= f.label :avatar %>
-        <div class="control">
-          <%= f.file_field :avatar %>
-        </div>
-      </div>
-
-      <div class="field">
-        <%= f.submit "Update avatar", class: "button is-primary" %>
-        <% if @user.avatar.attached? && policy(@user).remove_avatar? %>
-          <%= link_to "Remove avatar",
-            remove_avatar_user_path(@user.id),
-            method: :delete,
-            data: { confirm: "Are you sure you want to remove your avatar?" },
-            class: "button is-danger" %>
-        <% end %>
-      </div>
-    <% end %>
+    <div data-vue-component="avatar-input"
+      data-vue-props="<%=
+        {
+          railsDirectUploadsPath: rails_direct_uploads_url,
+          submitPath: user_path(@user.id),
+          deletePath: remove_avatar_user_path(@user.id),
+          avatarPath: @user.avatar.attached? ? rails_blob_path(@user.avatar, disposition: 'attachment') : ''
+        }.to_json
+      %>">
+    </div>
 
     <h2 class="subtitle is-3 mt-25 mb-10">Bio</h2>
 

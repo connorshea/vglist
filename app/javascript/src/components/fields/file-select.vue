@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label class="label">{{ label }}</label>
+    <label v-if="label" class="label">{{ label }}</label>
     <label class="file-select">
       <!-- We can't use a normal button element here, as it would become the target of the label. -->
       <div class="button">
@@ -9,10 +9,10 @@
         <span v-else>Select File</span>
       </div>
       <!-- We hide this file input. -->
-      <input type="file" @change="handleFileChange" />
+      <input type="file" @change="handleFileChange">
     </label>
-    <div class="game-cover pt-5">
-      <img v-if="image" :src="image" />
+    <div :class="['pt-5', fileClass]">
+      <img v-if="image" :src="image">
     </div>
   </div>
 </template>
@@ -23,7 +23,12 @@ export default {
     value: File,
     label: {
       type: String,
-      required: true
+      required: false
+    },
+    fileClass: {
+      type: String,
+      required: false,
+      default: 'game-cover'
     }
   },
   data() {
