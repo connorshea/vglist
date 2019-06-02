@@ -24,6 +24,14 @@
       <% end %>
 
       <div class="field">
+        <%= f.label :current_password, class: "label" %>
+        <div class="control">
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
+          <p class="help">(we need your current password to confirm your changes)</p>
+        </div>
+      </div>
+
+      <div class="field">
         <%= f.label :password, 'New password', class: "label" %>
         <div class="control">
           <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
@@ -37,14 +45,6 @@
         <%= f.label :password_confirmation, 'New password confirmation', class: "label" %>
         <div class="control">
           <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
-        </div>
-      </div>
-
-      <div class="field">
-        <%= f.label :current_password, class: "label" %>
-        <div class="control">
-          <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
-          <p class="help">(we need your current password to confirm your changes)</p>
         </div>
       </div>
 
