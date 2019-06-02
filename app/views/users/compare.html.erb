@@ -1,0 +1,19 @@
+<% content_for :title, "Comparing #{@user1.username} and #{@user2.username}'s game libraries'" %>
+<% if @user1.avatar.attached? %>
+  <%# This technically doesn't give us what we want because it won't be square, but oh well. %>
+  <% content_for :opengraph_image, rails_blob_url(@user1.avatar) %>
+<% else %>
+  <% content_for :opengraph_image, image_url('default-avatar.png') %>
+<% end %>
+
+
+<div data-vue-component="compare-libraries"
+  data-vue-props="<%=
+    {
+      user1: @user1,
+      user2: @user2,
+      user1Library: @user1.game_purchases,
+      user2Library: @user2.game_purchases
+    }.to_json
+  %>">
+</div>

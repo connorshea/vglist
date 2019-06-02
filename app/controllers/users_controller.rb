@@ -246,6 +246,23 @@ class UsersController < ApplicationController
     end
   end
 
+  def compare
+    @user1 = User.friendly.find(params[:user_id])
+    @user2 = User.friendly.find(params[:other_user_id])
+
+    @user1_game_purchases = GamePurchase.where(user_id: @user1.id)
+    @user2_game_purchases = GamePurchase.where(user_id: @user2.id)
+
+    @game_purchases = @user1_game_purchases.or(@user2_game_purchases)
+
+    skip_authorization
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @game_purchases }
+    end
+  end
+
   private
 
   def user_params
