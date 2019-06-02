@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label class="label">{{ label }}</label>
+    <label v-if="label" class="label">{{ label }}</label>
     <label class="file-select">
       <!-- We can't use a normal button element here, as it would become the target of the label. -->
       <div class="button">
@@ -23,7 +23,7 @@ export default {
     value: File,
     label: {
       type: String,
-      required: true
+      required: false
     },
     fileClass: {
       type: String,

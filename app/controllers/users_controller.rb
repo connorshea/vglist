@@ -16,11 +16,13 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, success: "#{@user.username} was successfully updated." }
+        format.json { render json: @user, status: :ok, location: @user }
       else
         format.html do
           flash[:error] = "Unable to update user."
           redirect_to settings_path
         end
+        format.json { render json: @user.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
