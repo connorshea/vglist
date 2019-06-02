@@ -6,14 +6,13 @@
   <% content_for :opengraph_image, image_url('default-avatar.png') %>
 <% end %>
 
-
 <div data-vue-component="compare-libraries"
   data-vue-props="<%=
     {
       user1: @user1,
       user2: @user2,
-      user1Library: @user1.game_purchases,
-      user2Library: @user2.game_purchases
+      user1LibraryUrl: game_purchases_path(user_id: @user1.id, format: :json),
+      user2LibraryUrl: game_purchases_path(user_id: @user2.id, format: :json)
     }.to_json
   %>">
 </div>

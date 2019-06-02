@@ -1,10 +1,20 @@
 <template>
-  <div>
-    <a :href="user1Link">{{ user1.username }}</a>
-    <a :href="user2Link">{{ user2.username }}</a>
+  <div class="columns">
+    <div class="column is-5-desktop">
+      <a :href="user1Link">{{ user1.username }}</a>
+      <div v-for="gamePurchase in user1Library" :key="gamePurchase.id">
+        <a :href="gamePurchase.game_url">{{ gamePurchase.game.name }}</a>
+        {{ gamePurchase.rating }}
+      </div>
+    </div>
 
-    <div v-for="gamePurchase in user1Library" :key="gamePurchase.id">{{ gamePurchase.game_id }}</div>
-    <div v-for="gamePurchase in user2Library" :key="gamePurchase.id">{{ gamePurchase.game_id }}</div>
+    <div class="column is-5-desktop">
+      <a :href="user2Link">{{ user2.username }}</a>
+      <div v-for="gamePurchase in user2Library" :key="gamePurchase.id">
+        <a :href="gamePurchase.game_url">{{ gamePurchase.game.name }}</a>
+        {{ gamePurchase.rating }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,23 +32,59 @@ export default {
       type: Object,
       required: true
     },
-    user1Library: {
-      type: Array,
+    user1LibraryUrl: {
+      type: String,
       required: true
     },
-    user2Library: {
-      type: Array,
+    user2LibraryUrl: {
+      type: String,
       required: true
     }
   },
   data: function() {
     return {
-      test: true
+      user1Library: {},
+      user2Library: {}
     };
   },
+  created: function() {
+    this.loadLibraries();
+  },
   methods: {
-    test2() {
-      console.log('test2');
+    loadLibraries() {
+      fetch(this.user1LibraryUrl, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(purchasedGames => {
+          this.user1Library = purchasedGames;
+        });
+
+      fetch(this.user2LibraryUrl, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          });
+        })
+        .then(purchasedGames => {
+          this.user2Library = purchasedGames;
+        });
     }
   },
   computed: {
