@@ -9,10 +9,10 @@
         <span v-else>Select File</span>
       </div>
       <!-- We hide this file input. -->
-      <input type="file" @change="handleFileChange" />
+      <input type="file" @change="handleFileChange">
     </label>
-    <div class="game-cover pt-5">
-      <img v-if="image" :src="image" />
+    <div :class="['pt-5', fileClass]">
+      <img v-if="image" :src="image">
     </div>
   </div>
 </template>
@@ -24,6 +24,11 @@ export default {
     label: {
       type: String,
       required: true
+    },
+    fileClass: {
+      type: String,
+      required: false,
+      default: 'game-cover'
     }
   },
   data() {
