@@ -132,6 +132,7 @@ export default {
         libraries,
         gamePurchase => gamePurchase.game.id
       );
+      uniqLibraries = _.sortBy(uniqLibraries, 'rating');
 
       return uniqLibraries;
     }
