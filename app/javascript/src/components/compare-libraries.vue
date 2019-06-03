@@ -98,19 +98,21 @@ export default {
         let gamePurchaseInLibrary = this.user1Library.filter(
           gamePurchase => gamePurchase.game.id === gameId
         );
-        if (gamePurchaseInLibrary.length > 0) {
-          if (gamePurchaseInLibrary[0].rating !== null) {
-            return gamePurchaseInLibrary[0].rating;
-          }
+        if (
+          gamePurchaseInLibrary.length > 0 &&
+          gamePurchaseInLibrary[0].rating !== null
+        ) {
+          return gamePurchaseInLibrary[0].rating;
         }
       } else if (userNumber === 2) {
         let gamePurchaseInLibrary = this.user2Library.filter(
-          game => game.game.id === gameId
+          gamePurchase => gamePurchase.game.id === gameId
         );
-        if (gamePurchaseInLibrary.length > 0) {
-          if (gamePurchaseInLibrary[0].rating !== null) {
-            return gamePurchaseInLibrary[0].rating;
-          }
+        if (
+          gamePurchaseInLibrary.length > 0 &&
+          gamePurchaseInLibrary[0].rating !== null
+        ) {
+          return gamePurchaseInLibrary[0].rating;
         }
       }
       return '-';
