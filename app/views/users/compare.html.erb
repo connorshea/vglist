@@ -6,6 +6,8 @@
   <% content_for :opengraph_image, image_url('default-avatar.png') %>
 <% end %>
 
+<h1 class="title"><%= "Comparing #{@user1.username} and #{@user2.username}'s game libraries" %></h1>
+
 <div data-vue-component="compare-libraries"
   data-vue-props="<%=
     {
