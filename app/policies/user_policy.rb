@@ -57,6 +57,10 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+  def compare?
+    true
+  end
+
   private
 
   def user_is_current_user?

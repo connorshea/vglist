@@ -7,7 +7,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { create(:user) }
     let(:user) { create(:user) }
 
-    it { should permit_actions([:index, :show, :statistics]) }
+    it { should permit_actions([:index, :show, :statistics, :compare]) }
     it "does not permit actions" do
       expect(user_policy).not_to permit_actions(
         [
@@ -27,7 +27,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { nil }
     let(:user) { create(:user) }
 
-    it { should permit_actions([:index, :show, :statistics]) }
+    it { should permit_actions([:index, :show, :statistics, :compare]) }
     it "does not permit actions" do
       expect(user_policy).not_to permit_actions(
         [
@@ -47,7 +47,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { create(:moderator) }
     let(:user) { create(:user) }
 
-    it { should permit_actions([:index, :show, :remove_avatar, :statistics]) }
+    it { should permit_actions([:index, :show, :remove_avatar, :statistics, :compare]) }
     it "does not permit actions" do
       expect(user_policy).not_to permit_actions(
         [
@@ -66,7 +66,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { create(:admin) }
     let(:user) { create(:user) }
 
-    it { should permit_actions([:index, :show, :update_role, :remove_avatar, :statistics]) }
+    it { should permit_actions([:index, :show, :update_role, :remove_avatar, :statistics, :compare]) }
     it "does not permit actions" do
       expect(user_policy).not_to permit_actions(
         [
@@ -95,7 +95,8 @@ RSpec.describe UserPolicy, type: :policy do
           :connect_steam,
           :disconnect_steam,
           :reset_game_library,
-          :statistics
+          :statistics,
+          :compare
         ]
       )
     end

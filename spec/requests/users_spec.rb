@@ -140,6 +140,29 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe 'GET compare_users_path' do
+    let(:user) { create(:confirmed_user) }
+    let(:other_user) { create(:confirmed_user) }
+
+    it "returns http success when users have no game purchases" do
+      get compare_users_path(user_id: user.id, other_user_id: other_user.id, format: :json)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when only one user has game purchases" do
+      create(:game_purchase, user: user)
+      get compare_users_path(user_id: user.id, other_user_id: other_user.id, format: :json)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when both users have game purchases" do
+      create(:game_purchase, user: user)
+      create(:game_purchase, user: other_user)
+      get compare_users_path(user_id: user.id, other_user_id: other_user.id, format: :json)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST update_role_user_path" do
     let(:admin) { create(:confirmed_admin) }
     let(:moderator) { create(:confirmed_moderator) }

@@ -250,7 +250,7 @@ class UsersController < ApplicationController
     @user1 = User.friendly.find(params[:user_id])
     @user2 = User.friendly.find(params[:other_user_id])
 
-    skip_authorization
+    authorize @user1
 
     respond_to do |format|
       format.html
