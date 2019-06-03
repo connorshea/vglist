@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="columns column is-8 m-auto mb-0">
-      <div class="column is-8-desktop pb-0"></div>
+    <div class="columns column is-8-desktop m-auto mb-0">
+      <div class="column is-6-desktop pb-0"></div>
       <div class="column is-2-desktop pb-0 has-text-centered">
         <a :href="user1Link">{{ user1.username }}</a>
       </div>
@@ -10,8 +10,8 @@
       </div>
     </div>
     <div v-for="gamePurchase in gamePurchases" :key="gamePurchase.id">
-      <div class="columns column is-8 m-auto mb-0 pb-0">
-        <div class="game-name column is-8-desktop pb-0 has-text-right">
+      <div class="columns column is-8-desktop m-auto mb-0 pb-0">
+        <div class="game-name column is-6-desktop pb-0 has-text-right-desktop">
           <a :href="gamePurchase.game_url">{{ gamePurchase.game.name }}</a>
         </div>
         <div
