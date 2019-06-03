@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div class="columns column is-8 m-auto">
-      <div class="column is-8-desktop"></div>
-      <div class="column is-2-desktop">
+    <div class="columns column is-8 m-auto mb-0">
+      <div class="column is-8-desktop pb-0"></div>
+      <div class="column is-2-desktop pb-0 has-text-centered">
         <a :href="user1Link">{{ user1.username }}</a>
       </div>
-      <div class="column is-2-desktop">
+      <div class="column is-2-desktop pb-0 has-text-centered">
         <a :href="user2Link">{{ user2.username }}</a>
       </div>
     </div>
     <div v-for="gamePurchase in gamePurchases" :key="gamePurchase.id">
-      <div class="columns column is-8 m-auto">
-        <div class="game-name column is-8-desktop">
+      <div class="columns column is-8 m-auto mb-0 pb-0">
+        <div class="game-name column is-8-desktop pb-0 has-text-right">
           <a :href="gamePurchase.game_url">{{ gamePurchase.game.name }}</a>
         </div>
         <div
-          class="user-1-rating column is-2-desktop"
+          class="user-1-rating column is-2-desktop pb-0 has-text-centered"
         >{{ getGameRatingInLibrary(1, gamePurchase.game.id) }}</div>
         <div
-          class="user-2-rating column is-2-desktop"
+          class="user-2-rating column is-2-desktop pb-0 has-text-centered"
         >{{ getGameRatingInLibrary(2, gamePurchase.game.id) }}</div>
       </div>
     </div>
