@@ -49,12 +49,12 @@
 <text text-anchor="start" x="196.4727" y="-376" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text</text>
 </g>
 <!-- m_ActiveStorage::Blob&#45;&gt;m_ActiveStorage::Attachment -->
-<g id="edge7" class="edge">
+<g id="edge11" class="edge">
 <title>m_ActiveStorage::Blob&#45;&gt;m_ActiveStorage::Attachment</title>
 <path fill="none" stroke="#000000" d="M223.778,-366.4661C228.6659,-323.1738 235.171,-265.5565 239.685,-225.5753"/>
 </g>
 <!-- m_ActiveStorage::Blob&#45;&gt;m_ActiveStorage::Blob -->
-<g id="edge11" class="edge">
+<g id="edge37" class="edge">
 <title>m_ActiveStorage::Blob&#45;&gt;m_ActiveStorage::Blob</title>
 <path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M289.1757,-464.6407C305.7932,-461.3542 318,-448.6406 318,-426.5 318,-404.3594 305.7932,-391.6458 289.1757,-388.3593"/>
 </g>
@@ -110,7 +110,7 @@
 <text text-anchor="start" x="882.5615" y="-154" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
 </g>
 <!-- m_Company&#45;&gt;m_GameDeveloper -->
-<g id="edge17" class="edge">
+<g id="edge15" class="edge">
 <title>m_Company&#45;&gt;m_GameDeveloper</title>
 <path fill="none" stroke="#000000" d="M937,-385.8255C937,-340.7013 937,-268.1768 937,-221.9605"/>
 <polygon fill="#000000" stroke="#000000" points="940.1501,-221.8007 937,-212.8007 933.8501,-221.8007 940.1501,-221.8007"/>
@@ -129,7 +129,7 @@
 <text text-anchor="start" x="709.5615" y="-154" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
 </g>
 <!-- m_Company&#45;&gt;m_GamePublisher -->
-<g id="edge19" class="edge">
+<g id="edge17" class="edge">
 <title>m_Company&#45;&gt;m_GamePublisher</title>
 <path fill="none" stroke="#000000" d="M913.3628,-385.704C896.7222,-357.6868 873.4885,-319.9353 851,-288 834.6898,-264.8383 815.1757,-240.0444 798.7659,-219.9171"/>
 <polygon fill="#000000" stroke="#000000" points="801.0131,-217.6895 792.8723,-212.7245 796.1401,-221.6825 801.0131,-217.6895"/>
@@ -168,7 +168,7 @@
 <text text-anchor="start" x="1270.251" y="-402" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) U</text>
 </g>
 <!-- m_Engine&#45;&gt;m_Game -->
-<g id="edge21" class="edge">
+<g id="edge19" class="edge">
 <title>m_Engine&#45;&gt;m_Game</title>
 <path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M1273.0041,-460.6198C1259.5895,-499.1442 1231.5785,-559.5136 1182.5,-583 1150.7284,-598.2042 897.2716,-598.2042 865.5,-583 831.8467,-566.8953 807.9272,-533.5915 791.796,-501.8298"/>
 <polygon fill="#000000" stroke="#000000" points="794.4403,-500.0665 787.6567,-493.3653 788.7807,-502.8342 794.4403,-500.0665"/>
@@ -187,7 +187,7 @@
 <text text-anchor="start" x="1228.5615" y="-154" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
 </g>
 <!-- m_Engine&#45;&gt;m_GameEngine -->
-<g id="edge20" class="edge">
+<g id="edge18" class="edge">
 <title>m_Engine&#45;&gt;m_GameEngine</title>
 <path fill="none" stroke="#000000" d="M1283,-392.277C1283,-347.9294 1283,-270.5611 1283,-222.0655"/>
 <polygon fill="#000000" stroke="#000000" points="1286.1501,-221.7697 1283,-212.7697 1279.8501,-221.7697 1286.1501,-221.7697"/>
@@ -228,29 +228,29 @@
 <text text-anchor="start" x="388.5762" y="-154" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) FK</text>
 </g>
 <!-- m_Game&#45;&gt;m_ActiveStorage::Attachment -->
-<g id="edge8" class="edge">
+<g id="edge12" class="edge">
 <title>m_Game&#45;&gt;m_ActiveStorage::Attachment</title>
 <path fill="none" stroke="#000000" d="M691.7395,-378.2892C643.5363,-348.1864 577.7216,-310.9244 515,-288 436.7354,-259.3948 406.0255,-288.2599 331,-252 317.03,-245.2483 303.4923,-235.6642 291.4505,-225.6389"/>
 </g>
 <!-- m_Game&#45;&gt;m_ActiveStorage::Blob -->
-<g id="edge32" class="edge">
+<g id="edge30" class="edge">
 <title>m_Game&#45;&gt;m_ActiveStorage::Blob</title>
 <path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M691.964,-483.8011C641.5711,-520.0776 570.92,-563.6644 500.5,-583 465.142,-592.7084 368.5746,-598.8277 335.5,-583 294.6138,-563.434 264.2263,-521.957 244.4643,-486.6169"/>
 </g>
 <!-- m_Game&#45;&gt;m_FavoriteGame -->
-<g id="edge22" class="edge">
+<g id="edge20" class="edge">
 <title>m_Game&#45;&gt;m_FavoriteGame</title>
 <path fill="none" stroke="#000000" d="M691.9227,-380.9435C639.1356,-346.8624 566.3137,-298.3392 505,-252 491.291,-241.6391 476.8635,-229.8423 463.7852,-218.7786"/>
 <polygon fill="#000000" stroke="#000000" points="465.566,-216.1577 456.6714,-212.7212 461.4817,-220.9544 465.566,-216.1577"/>
 </g>
 <!-- m_Game&#45;&gt;m_GameDeveloper -->
-<g id="edge24" class="edge">
+<g id="edge22" class="edge">
 <title>m_Game&#45;&gt;m_GameDeveloper</title>
 <path fill="none" stroke="#000000" d="M803.991,-359.7059C818.311,-336.6474 834.9012,-310.8719 851,-288 867.233,-264.9374 886.5325,-240.1524 902.7317,-220.0052"/>
 <polygon fill="#000000" stroke="#000000" points="905.3434,-221.7849 908.5481,-212.8041 900.4424,-217.8262 905.3434,-221.7849"/>
 </g>
 <!-- m_Game&#45;&gt;m_GameEngine -->
-<g id="edge30" class="edge">
+<g id="edge28" class="edge">
 <title>m_Game&#45;&gt;m_GameEngine</title>
 <path fill="none" stroke="#000000" d="M790.1734,-359.9268C804.1526,-333.1624 824.1214,-304.732 851,-288 982.2544,-206.2939 1054.9258,-312.9796 1197,-252 1214.8368,-244.3443 1231.7187,-231.6456 1245.7247,-218.9386"/>
 <polygon fill="#000000" stroke="#000000" points="1247.9462,-221.1738 1252.361,-212.722 1243.6392,-216.576 1247.9462,-221.1738"/>
@@ -269,7 +269,7 @@
 <text text-anchor="start" x="1401.5615" y="-154" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
 </g>
 <!-- m_Game&#45;&gt;m_GameGenre -->
-<g id="edge28" class="edge">
+<g id="edge26" class="edge">
 <title>m_Game&#45;&gt;m_GameGenre</title>
 <path fill="none" stroke="#000000" d="M789.7149,-359.8434C803.6527,-332.8921 823.7156,-304.3399 851,-288 950.1844,-228.6011 1262.9928,-295.7634 1370,-252 1388.1221,-244.5885 1405.1713,-231.8039 1419.2351,-218.9547"/>
 <polygon fill="#000000" stroke="#000000" points="1421.5131,-221.1359 1425.891,-212.6649 1417.1861,-216.557 1421.5131,-221.1359"/>
@@ -288,13 +288,13 @@
 <text text-anchor="start" x="1097.2461" y="-154" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) ∗ FK</text>
 </g>
 <!-- m_Game&#45;&gt;m_GamePlatform -->
-<g id="edge26" class="edge">
+<g id="edge24" class="edge">
 <title>m_Game&#45;&gt;m_GamePlatform</title>
 <path fill="none" stroke="#000000" d="M791.7837,-359.7797C805.864,-333.6545 825.471,-305.7496 851,-288 915.4821,-243.1674 953.4948,-286.5966 1024,-252 1040.9668,-243.6745 1057.3294,-231.223 1071.1447,-218.9237"/>
 <polygon fill="#000000" stroke="#000000" points="1073.6176,-220.9304 1078.1268,-212.5285 1069.3624,-216.2846 1073.6176,-220.9304"/>
 </g>
 <!-- m_Game&#45;&gt;m_GamePublisher -->
-<g id="edge25" class="edge">
+<g id="edge23" class="edge">
 <title>m_Game&#45;&gt;m_GamePublisher</title>
 <path fill="none" stroke="#000000" d="M764,-359.7143C764,-315.9374 764,-259.9752 764,-221.9011"/>
 <polygon fill="#000000" stroke="#000000" points="767.1501,-221.625 764,-212.625 760.8501,-221.625 767.1501,-221.625"/>
@@ -325,7 +325,7 @@
 <text text-anchor="start" x="561.5762" y="-115" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) ∗ FK</text>
 </g>
 <!-- m_Game&#45;&gt;m_GamePurchase -->
-<g id="edge23" class="edge">
+<g id="edge21" class="edge">
 <title>m_Game&#45;&gt;m_GamePurchase</title>
 <path fill="none" stroke="#000000" d="M717.4116,-359.7143C695.824,-328.768 669.9887,-291.7324 647.3165,-259.2312"/>
 <polygon fill="#000000" stroke="#000000" points="649.6613,-257.0866 641.9285,-251.5074 644.4942,-260.6911 649.6613,-257.0866"/>
@@ -346,7 +346,7 @@
 <text text-anchor="start" x="1443.251" y="-396" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) U</text>
 </g>
 <!-- m_Game&#45;&gt;m_Genre -->
-<g id="edge29" class="edge">
+<g id="edge27" class="edge">
 <title>m_Game&#45;&gt;m_Genre</title>
 <path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M787.6567,-493.3653C803.7299,-527.5019 828.8394,-565.4562 865.5,-583 914.6107,-606.5018 1306.3893,-606.5018 1355.5,-583 1398.3743,-562.4826 1425.1709,-513.8179 1440.2038,-476.1585"/>
 <polygon fill="#000000" stroke="#000000" points="1443.307,-476.8646 1443.5948,-467.3335 1437.4262,-474.6049 1443.307,-476.8646"/>
@@ -372,7 +372,7 @@
 <text text-anchor="start" x="1097.251" y="-396" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) U</text>
 </g>
 <!-- m_Game&#45;&gt;m_Platform -->
-<g id="edge27" class="edge">
+<g id="edge25" class="edge">
 <title>m_Game&#45;&gt;m_Platform</title>
 <path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M787.6567,-493.3653C803.7299,-527.5019 828.8394,-565.4562 865.5,-583 894.3651,-596.8133 980.6349,-596.8133 1009.5,-583 1052.3743,-562.4826 1079.1709,-513.8179 1094.2038,-476.1585"/>
 <polygon fill="#000000" stroke="#000000" points="1097.307,-476.8646 1097.5948,-467.3335 1091.4262,-474.6049 1097.307,-476.8646"/>
@@ -391,19 +391,19 @@
 <text text-anchor="start" x="1056.2461" y="-10" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) ∗ FK</text>
 </g>
 <!-- m_GamePurchase&#45;&gt;m_GamePurchasePlatform -->
-<g id="edge35" class="edge">
+<g id="edge33" class="edge">
 <title>m_GamePurchase&#45;&gt;m_GamePurchasePlatform</title>
 <path fill="none" stroke="#000000" d="M663.1707,-113.0253C668.0257,-110.056 672.9847,-107.3448 678,-105 731.6357,-79.9238 886.3311,-57.6087 987.7094,-45.0937"/>
 <polygon fill="#000000" stroke="#000000" points="988.1885,-48.2086 996.7386,-43.9875 987.4223,-41.9554 988.1885,-48.2086"/>
 </g>
 <!-- m_GamePurchase&#45;&gt;m_Platform -->
-<g id="edge36" class="edge">
+<g id="edge34" class="edge">
 <title>m_GamePurchase&#45;&gt;m_Platform</title>
 <path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M663.2467,-244.546C668.0653,-247.3488 672.9972,-249.8696 678,-252 820.2476,-312.5741 892.9582,-205.9533 1024,-288 1056.6724,-308.4565 1078.9218,-346.3475 1092.5909,-377.3323"/>
 <polygon fill="#000000" stroke="#000000" points="1089.7998,-378.8184 1096.2204,-385.8682 1095.5975,-376.3532 1089.7998,-378.8184"/>
 </g>
 <!-- m_Genre&#45;&gt;m_GameGenre -->
-<g id="edge33" class="edge">
+<g id="edge31" class="edge">
 <title>m_Genre&#45;&gt;m_GameGenre</title>
 <path fill="none" stroke="#000000" d="M1456,-385.8255C1456,-340.7013 1456,-268.1768 1456,-221.9605"/>
 <polygon fill="#000000" stroke="#000000" points="1459.1501,-221.8007 1456,-212.8007 1452.8501,-221.8007 1459.1501,-221.8007"/>
@@ -414,13 +414,13 @@
 <path fill="none" stroke="#000000" d="M1494.0503,-385.8255C1537.1147,-339.7912 1606.856,-265.2402 1649.9289,-219.1967"/>
 </g>
 <!-- m_Platform&#45;&gt;m_GamePlatform -->
-<g id="edge34" class="edge">
+<g id="edge32" class="edge">
 <title>m_Platform&#45;&gt;m_GamePlatform</title>
 <path fill="none" stroke="#000000" d="M1110,-385.8255C1110,-340.7013 1110,-268.1768 1110,-221.9605"/>
 <polygon fill="#000000" stroke="#000000" points="1113.1501,-221.8007 1110,-212.8007 1106.8501,-221.8007 1113.1501,-221.8007"/>
 </g>
 <!-- m_Platform&#45;&gt;m_GamePurchasePlatform -->
-<g id="edge37" class="edge">
+<g id="edge35" class="edge">
 <title>m_Platform&#45;&gt;m_GamePurchasePlatform</title>
 <path fill="none" stroke="#000000" d="M1124.0663,-385.8575C1137.5022,-353.6093 1161.0815,-310.3593 1197,-288 1262.6272,-247.1469 1491.2435,-309.421 1543,-252 1586.7419,-203.4708 1585.5708,-154.5598 1543,-105 1519.299,-77.4079 1302.1153,-53.8791 1174.1372,-42.2596"/>
 <polygon fill="#000000" stroke="#000000" points="1174.3273,-39.114 1165.0809,-41.4437 1173.7619,-45.3886 1174.3273,-39.114"/>
@@ -444,7 +444,7 @@
 <text text-anchor="start" x="751.251" y="-611" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) U</text>
 </g>
 <!-- m_Series&#45;&gt;m_Game -->
-<g id="edge31" class="edge">
+<g id="edge29" class="edge">
 <title>m_Series&#45;&gt;m_Game</title>
 <path fill="none" stroke="#000000" d="M764,-601.4554C764,-574.5917 764,-536.1005 764,-502.0579"/>
 <polygon fill="#000000" stroke="#000000" points="767.1501,-502.0496 764,-493.0497 760.8501,-502.0497 767.1501,-502.0496"/>
@@ -500,23 +500,23 @@
 <text text-anchor="start" x="390.2461" y="-298" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text ∗ U</text>
 </g>
 <!-- m_User&#45;&gt;m_ActiveStorage::Attachment -->
-<g id="edge9" class="edge">
+<g id="edge13" class="edge">
 <title>m_User&#45;&gt;m_ActiveStorage::Attachment</title>
 <path fill="none" stroke="#000000" d="M335.8065,-308.6735C315.3189,-279.304 294.5084,-249.4716 277.9874,-225.7884"/>
 </g>
 <!-- m_User&#45;&gt;m_ExternalAccount -->
-<g id="edge15" class="edge">
+<g id="edge10" class="edge">
 <title>m_User&#45;&gt;m_ExternalAccount</title>
 <path fill="none" stroke="#000000" d="M335.8129,-299.2955C331.0662,-295.2157 326.1273,-291.4226 321,-288 259.2945,-246.8098 224.4032,-285.088 158,-252 144.2884,-245.1676 130.9485,-235.6754 119.0268,-225.7784"/>
 </g>
 <!-- m_User&#45;&gt;m_FavoriteGame -->
-<g id="edge14" class="edge">
+<g id="edge9" class="edge">
 <title>m_User&#45;&gt;m_FavoriteGame</title>
 <path fill="none" stroke="#000000" d="M418,-288.3594C418,-264.1924 418,-240.7513 418,-221.7727"/>
 <polygon fill="#000000" stroke="#000000" points="421.1501,-221.5535 418,-212.5535 414.8501,-221.5535 421.1501,-221.5535"/>
 </g>
 <!-- m_User&#45;&gt;m_GamePurchase -->
-<g id="edge12" class="edge">
+<g id="edge7" class="edge">
 <title>m_User&#45;&gt;m_GamePurchase</title>
 <path fill="none" stroke="#000000" d="M500.1935,-308.6735C511.8812,-291.9188 523.674,-275.0135 534.7156,-259.1851"/>
 <polygon fill="#000000" stroke="#000000" points="537.5062,-260.6904 540.0719,-251.5067 532.3392,-257.086 537.5062,-260.6904"/>
