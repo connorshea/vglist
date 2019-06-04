@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     delete :disconnect_steam, on: :member
     post :steam_import, on: :member
     delete :reset_game_library, on: :member
+    get '/compare/:user_id...:other_user_id', as: :compare, action: :compare, on: :collection
   end
 
   resources :platforms do

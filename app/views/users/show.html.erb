@@ -29,6 +29,13 @@
   </div>
 </div>
 
+<% if current_user && @user != current_user %>
+  <%= link_to "Compare with your library",
+    compare_users_path(user_id: current_user.slug, other_user_id: @user.slug),
+    class: 'button is-fullwidth-mobile mr-5 mr-0-mobile mt-10'
+  %>
+<% end %>
+
 <% if (policy(@user).update_role? || policy(@user).remove_avatar?) && @user != current_user %>
   <div class="dropdown is-fullwidth-mobile mt-10">
     <div class="dropdown-trigger is-fullwidth-mobile">

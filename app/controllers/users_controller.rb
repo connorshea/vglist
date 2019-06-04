@@ -246,6 +246,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def compare
+    @user1 = User.friendly.find(params[:user_id])
+    @user2 = User.friendly.find(params[:other_user_id])
+
+    authorize @user1
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @game_purchases }
+    end
+  end
+
   private
 
   def user_params
