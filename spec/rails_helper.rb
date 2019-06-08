@@ -108,32 +108,29 @@ end
 Capybara.server = :puma, { Silent: true }
 
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new app,
-    browser: :chrome,
-    service: Selenium::WebDriver::Service.chrome(args: { log_path: 'tmp/chrome.log' })
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
 end
 
 Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[headless] }
-  )
+  options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+  end
 
   Capybara::Selenium::Driver.new app,
     browser: :chrome,
-    desired_capabilities: capabilities,
-    service: Selenium::WebDriver::Service.chrome(args: { log_path: 'tmp/chrome.log' })
+    options: options
 end
 
 # Disable sandboxing in CI as the sandbox is wonky inside Docker containers.
 Capybara.register_driver :ci_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[headless no-sandbox] }
-  )
+  options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+    opts.args << '--no-sandbox'
+  end
 
   Capybara::Selenium::Driver.new app,
     browser: :chrome,
-    desired_capabilities: capabilities,
-    service: Selenium::WebDriver::Service.chrome(args: { log_path: 'tmp/chrome.log' })
+    options: options
 end
 
 # Show Chrome running the test suite when RSPEC_FEATURE_DEBUG is set.
