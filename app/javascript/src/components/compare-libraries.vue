@@ -10,12 +10,23 @@
       enabled: true
     }"
   >
+    <template slot="table-column" slot-scope="props">
+      <span v-if="props.column.field === 'userOneRating'">
+        <a :href="userUrl(user1.id)">{{ props.column.label }}</a>
+      </span>
+      <span v-else-if="props.column.field === 'userTwoRating'">
+        <a :href="userUrl(user2.id)">{{ props.column.label }}</a>
+      </span>
+      <span v-else>{{ props.column.label }}</span>
+    </template>
+
     <template slot="table-row" slot-scope="props">
       <span v-if="props.column.field == 'game.name'">
         <a :href="gameUrl(props.row.game.id)">{{ props.row.game.name }}</a>
       </span>
       <span v-else>{{ props.formattedRow[props.column.field] }}</span>
     </template>
+
     <div slot="emptystate" class="vgt-center-align">
       <span v-if="isLoading">Loading...</span>
       <span v-else-if="!isLoading" class="vgt-text-disabled">No games to compare.</span>
@@ -154,6 +165,9 @@ export default {
     },
     gameUrl(gameId) {
       return `${window.location.origin}/games/${gameId}`;
+    },
+    userUrl(userId) {
+      return `${window.location.origin}/users/${userId}`;
     },
     getGamePurchases() {
       // Return early if both are null.
