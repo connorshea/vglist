@@ -123,6 +123,8 @@ export default {
       if (this.loadCheck === false) {
         this.loadCheck = true;
         return;
+      } else {
+        this.isLoading = false;
       }
       this.rows = this.getGamePurchases();
     },
