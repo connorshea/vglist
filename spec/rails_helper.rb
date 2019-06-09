@@ -112,25 +112,25 @@ Capybara.register_driver :chrome do |app|
 end
 
 Capybara.register_driver :headless_chrome do |app|
-  options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--headless'
-  end
+  options = ::Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless')
 
   Capybara::Selenium::Driver.new app,
     browser: :chrome,
-    options: options
+    options: options,
+    service: Selenium::WebDriver::Service.chrome(args: { log_path: 'tmp/chrome.log' })
 end
 
 # Disable sandboxing in CI as the sandbox is wonky inside Docker containers.
 Capybara.register_driver :ci_chrome do |app|
-  options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--headless'
-    opts.args << '--no-sandbox'
-  end
+  options = ::Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless')
+  options.add_argument('--no-sandbox')
 
   Capybara::Selenium::Driver.new app,
     browser: :chrome,
-    options: options
+    options: options,
+    service: Selenium::WebDriver::Service.chrome(args: { log_path: 'tmp/chrome.log' })
 end
 
 # Show Chrome running the test suite when RSPEC_FEATURE_DEBUG is set.
