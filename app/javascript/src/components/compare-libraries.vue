@@ -159,18 +159,8 @@ export default {
         return [];
       }
       let metaLibrary = _.concat(this.user1Library, this.user2Library);
-
-      // Get game purchases that exist in both users' libraries.
-      let intersection = _.intersectionBy(
-        this.user1Library,
-        this.user2Library,
-        'game.id'
-      );
-      let intersectingGameIds = intersection.map(gp => gp.game.id);
-      let uniqGameIds = _.uniqBy(metaLibrary, gp => gp.game.id);
-      uniqGameIds = uniqGameIds.map(gp => gp.game.id);
-
       let betterMetaLibrary = [];
+
       metaLibrary.forEach(gamePurchase => {
         let isFirstUser = gamePurchase.user_id === this.user1.id;
 
@@ -201,32 +191,37 @@ export default {
         }
       });
 
-      // Group the table into three groups:
-      // - Games owned by both
-      // - Games only owned by user1
-      // - Games only owned by user2
-      let groupedBetterMetaLibrary = [];
+      return this.groupGameRows(betterMetaLibrary);
+    },
+    /**
+     * Group the table into three groups:
+     *   - Games owned by both users
+     *   - Games only owned by user1
+     *   - Games only owned by user2
+     */
+    groupGameRows(metaLibrary) {
+      let groupedMetaLibrary = [];
 
-      let sharedRows = betterMetaLibrary.filter(gameRow => {
+      let sharedRows = metaLibrary.filter(gameRow => {
         return (
           gameRow.userOneRating !== undefined &&
           gameRow.userTwoRating !== undefined
         );
       });
-      let user1Rows = betterMetaLibrary.filter(gameRow => {
+      let user1Rows = metaLibrary.filter(gameRow => {
         return (
           gameRow.userOneRating !== undefined &&
           gameRow.userTwoRating === undefined
         );
       });
-      let user2Rows = betterMetaLibrary.filter(gameRow => {
+      let user2Rows = metaLibrary.filter(gameRow => {
         return (
           gameRow.userOneRating === undefined &&
           gameRow.userTwoRating !== undefined
         );
       });
 
-      groupedBetterMetaLibrary.push(
+      groupedMetaLibrary.push(
         {
           label: 'Shared',
           mode: 'span',
@@ -244,7 +239,7 @@ export default {
         }
       );
 
-      return groupedBetterMetaLibrary;
+      return groupedMetaLibrary;
     }
   },
   computed: {
