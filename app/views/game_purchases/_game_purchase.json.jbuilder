@@ -5,7 +5,8 @@ json.extract! game_purchase,
   :comments,
   :start_date,
   :completion_date,
-  :platforms
+  :platforms,
+  :user_id
 
 humanized_completion_statuses = {
   unplayed: 'Unplayed',

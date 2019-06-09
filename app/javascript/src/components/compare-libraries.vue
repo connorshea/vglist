@@ -8,11 +8,15 @@
     }"
   >
     <template slot="table-row" slot-scope="props">
-      <span v-if="props.column.field == 'game'">
+      <span v-if="props.column.field == 'game.name'">
         <a :href="gameUrl(props.row.game.id)">{{ props.row.game.name }}</a>
       </span>
       <span v-else>{{ props.formattedRow[props.column.field] }}</span>
     </template>
+    <div slot="emptystate" class="vgt-center-align">
+      <span v-if="isLoading">Loading...</span>
+      <span v-else-if="!isLoading" class="vgt-text-disabled">No games to compare.</span>
+    </div>
   </vue-good-table>
 </template>
 
@@ -51,7 +55,7 @@ export default {
       columns: [
         {
           label: 'Game',
-          field: 'game',
+          field: 'game.name',
           type: 'text'
         },
         {
@@ -66,7 +70,8 @@ export default {
         }
       ],
       rows: [],
-      loadCheck: false
+      loadCheck: false,
+      isLoading: true
     };
   },
   created: function() {
@@ -116,18 +121,22 @@ export default {
         this.loadCheck = true;
         return;
       }
-      let array = [];
+      let rows = [];
 
       let gamePurchases = this.getGamePurchases();
-      console.log(gamePurchases);
       gamePurchases.forEach(gamePurchase => {
-        array.push({
-          game: gamePurchase.game,
-          userOneRating: 0,
-          userTwoRating: 0
-        });
+        let gameRow = { game: gamePurchase.game };
+        if (gamePurchase.user_id === this.user1.id) {
+          gameRow.userOneRating = gamePurchase.rating;
+          gameRow.userTwoRating = null;
+        }
+        if (gamePurchase.user_id === this.user2.id) {
+          gameRow.userOneRating = null;
+          gameRow.userTwoRating = gamePurchase.rating;
+        }
+        rows.push(gameRow);
       });
-      this.rows = array;
+      this.rows = rows;
     },
     getGameRatingInLibrary(userNumber, gameId) {
       if (userNumber === 1) {
@@ -160,14 +169,32 @@ export default {
       if (this.user1Library === null && this.user2Library === null) {
         return [];
       }
-      let libraries = _.concat(this.user1Library, this.user2Library);
-      // Removes duplicate game purchases based on the id of the associated game.
-      let uniqLibraries = _.uniqBy(
-        libraries,
-        gamePurchase => gamePurchase.game.id
+      let metaLibrary = _.concat(this.user1Library, this.user2Library);
+
+      // Get game purchases that exist in both users' libraries.
+      let intersection = _.intersectionBy(
+        this.user1Library,
+        this.user2Library,
+        'game.id'
       );
-      uniqLibraries = _.sortBy(uniqLibraries, 'rating');
-      return uniqLibraries;
+      let intersectingGameIds = intersection.map(gp => gp.game.id);
+
+      let betterMetaLibrary = [];
+      metaLibrary.forEach(gamePurchase => {
+        let isFirstUser = gamePurchase.user_id === this.user1.id;
+        let gameObj = {
+          game: _.mapKeys(gamePurchase.game, (v, k) => _.camelCase(k))
+        };
+        isFirstUser
+          ? (gameObj.userOneRating = gamePurchase.rating)
+          : (gameObj.userTwoRating = gamePurchase.rating);
+        betterMetaLibrary.push(gameObj);
+      });
+
+      // Removes duplicate game purchases based on the id of the associated game.
+      metaLibrary = _.uniqBy(metaLibrary, gamePurchase => gamePurchase.game.id);
+      metaLibrary = _.sortBy(metaLibrary, 'rating');
+      return metaLibrary;
     }
   },
   computed: {
