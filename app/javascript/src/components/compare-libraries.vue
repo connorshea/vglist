@@ -6,6 +6,9 @@
       enabled: true,
       initialSortBy: { field: 'userOneRating', type: 'desc' }
     }"
+    :groupOptions="{
+      enabled: true
+    }"
   >
     <template slot="table-row" slot-scope="props">
       <span v-if="props.column.field == 'game.name'">
@@ -177,15 +180,15 @@ export default {
             .map(gp => gp.game.id)
             .includes(gamePurchase.game.id)
         ) {
-          let gameObj = {
+          let gameRow = {
             game: gamePurchase.game,
             userOneRating: undefined,
             userTwoRating: undefined
           };
           isFirstUser
-            ? (gameObj.userOneRating = gamePurchase.rating)
-            : (gameObj.userTwoRating = gamePurchase.rating);
-          betterMetaLibrary.push(gameObj);
+            ? (gameRow.userOneRating = gamePurchase.rating)
+            : (gameRow.userTwoRating = gamePurchase.rating);
+          betterMetaLibrary.push(gameRow);
         } else {
           // If the game is already represented in the meta library, we need to modify it rather
           // than push a new entry.
@@ -198,7 +201,50 @@ export default {
         }
       });
 
-      return betterMetaLibrary;
+      // Group the table into three groups:
+      // - Games owned by both
+      // - Games only owned by user1
+      // - Games only owned by user2
+      let groupedBetterMetaLibrary = [];
+
+      let sharedRows = betterMetaLibrary.filter(gameRow => {
+        return (
+          gameRow.userOneRating !== undefined &&
+          gameRow.userTwoRating !== undefined
+        );
+      });
+      let user1Rows = betterMetaLibrary.filter(gameRow => {
+        return (
+          gameRow.userOneRating !== undefined &&
+          gameRow.userTwoRating === undefined
+        );
+      });
+      let user2Rows = betterMetaLibrary.filter(gameRow => {
+        return (
+          gameRow.userOneRating === undefined &&
+          gameRow.userTwoRating !== undefined
+        );
+      });
+
+      groupedBetterMetaLibrary.push(
+        {
+          label: 'Shared',
+          mode: 'span',
+          children: sharedRows
+        },
+        {
+          label: `Unique to ${this.user1.username}`,
+          mode: 'span',
+          children: user1Rows
+        },
+        {
+          label: `Unique to ${this.user2.username}`,
+          mode: 'span',
+          children: user2Rows
+        }
+      );
+
+      return groupedBetterMetaLibrary;
     }
   },
   computed: {
