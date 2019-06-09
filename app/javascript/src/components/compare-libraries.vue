@@ -121,22 +121,7 @@ export default {
         this.loadCheck = true;
         return;
       }
-      let rows = [];
-
-      let gamePurchases = this.getGamePurchases();
-      gamePurchases.forEach(gamePurchase => {
-        let gameRow = { game: gamePurchase.game };
-        if (gamePurchase.user_id === this.user1.id) {
-          gameRow.userOneRating = gamePurchase.rating;
-          gameRow.userTwoRating = null;
-        }
-        if (gamePurchase.user_id === this.user2.id) {
-          gameRow.userOneRating = null;
-          gameRow.userTwoRating = gamePurchase.rating;
-        }
-        rows.push(gameRow);
-      });
-      this.rows = rows;
+      this.rows = this.getGamePurchases();
     },
     getGameRatingInLibrary(userNumber, gameId) {
       if (userNumber === 1) {
@@ -166,6 +151,7 @@ export default {
       return `${window.location.origin}/games/${gameId}`;
     },
     getGamePurchases() {
+      // Return early if both are null.
       if (this.user1Library === null && this.user2Library === null) {
         return [];
       }
@@ -178,23 +164,41 @@ export default {
         'game.id'
       );
       let intersectingGameIds = intersection.map(gp => gp.game.id);
+      let uniqGameIds = _.uniqBy(metaLibrary, gp => gp.game.id);
+      uniqGameIds = uniqGameIds.map(gp => gp.game.id);
 
       let betterMetaLibrary = [];
       metaLibrary.forEach(gamePurchase => {
         let isFirstUser = gamePurchase.user_id === this.user1.id;
-        let gameObj = {
-          game: _.mapKeys(gamePurchase.game, (v, k) => _.camelCase(k))
-        };
-        isFirstUser
-          ? (gameObj.userOneRating = gamePurchase.rating)
-          : (gameObj.userTwoRating = gamePurchase.rating);
-        betterMetaLibrary.push(gameObj);
+
+        // If the game isn't represented in the metaLibrary yet, append it to the existing array.
+        if (
+          !betterMetaLibrary
+            .map(gp => gp.game.id)
+            .includes(gamePurchase.game.id)
+        ) {
+          let gameObj = {
+            game: gamePurchase.game,
+            userOneRating: undefined,
+            userTwoRating: undefined
+          };
+          isFirstUser
+            ? (gameObj.userOneRating = gamePurchase.rating)
+            : (gameObj.userTwoRating = gamePurchase.rating);
+          betterMetaLibrary.push(gameObj);
+        } else {
+          // If the game is already represented in the meta library, we need to modify it rather
+          // than push a new entry.
+          let index = betterMetaLibrary.findIndex(
+            gp => gp.game.id === gamePurchase.game.id
+          );
+          isFirstUser
+            ? (betterMetaLibrary[index].userOneRating = gamePurchase.rating)
+            : (betterMetaLibrary[index].userTwoRating = gamePurchase.rating);
+        }
       });
 
-      // Removes duplicate game purchases based on the id of the associated game.
-      metaLibrary = _.uniqBy(metaLibrary, gamePurchase => gamePurchase.game.id);
-      metaLibrary = _.sortBy(metaLibrary, 'rating');
-      return metaLibrary;
+      return betterMetaLibrary;
     }
   },
   computed: {
