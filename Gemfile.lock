@@ -277,7 +277,7 @@ GEM
       rubyzip (~> 1.2, >= 1.2.2)
     sentry-raven (2.9.0)
       faraday (>= 0.7.6, < 1.0)
-    shoulda-matchers (4.0.1)
+    shoulda-matchers (4.1.0)
       activesupport (>= 4.2.0)
     simplecov (0.16.1)
       docile (~> 1.1)
@@ -378,7 +378,7 @@ DEPENDENCIES
   ruby-progressbar (~> 1.10)
   selenium-webdriver (~> 3.142)
   sentry-raven (~> 2.9)
-  shoulda-matchers (= 4.0.1)
+  shoulda-matchers (= 4.1.0)
   simplecov (~> 0.16)
   sparql (~> 3.0.2)
   spring
