@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.6.11
+### Changed
+- Improve design of library comparison page. ([#495])
+
 ## v2019.6.3
 ### Added
 - Add a page for comparing libraries between users. ([#474])
@@ -418,3 +422,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#438]: https://github.com/connorshea/VideoGameList/pull/438
 [#473]: https://github.com/connorshea/VideoGameList/pull/473
 [#474]: https://github.com/connorshea/VideoGameList/pull/474
+[#495]: https://github.com/connorshea/VideoGameList/pull/495
