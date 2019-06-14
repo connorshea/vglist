@@ -4,7 +4,10 @@
     :rows="rows"
     :sort-options="{
       enabled: true,
-      initialSortBy: { field: 'userOneRating', type: 'desc' }
+      initialSortBy: [
+        { field: 'userOneRating', type: 'desc' },
+        { field: 'userTwoRating', type: 'desc' }
+      ]
     }"
     :groupOptions="{
       enabled: true
