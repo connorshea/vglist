@@ -13,7 +13,7 @@
     "sourceMap": true,
     "target": "esNext",
     "allowSyntheticDefaultImports": true,
-    
+
   },
   "exclude": [
     "**/*.spec.ts",

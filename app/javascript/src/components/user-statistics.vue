@@ -88,7 +88,7 @@ export default {
     completionStatusesCount: function() {
       if (this.statistics) {
         let values = Object.values(this.statistics.completion_statuses);
-        return values.reduce((accumulator, currentValue) => {
+        return values.reduce((accumulator: number, currentValue: number) => {
           return accumulator + currentValue;
         });
       }

@@ -83,7 +83,7 @@ export default {
       let searchUrl = new URL(this.searchPath);
       searchUrl.searchParams.append('query', search);
       // TODO: Add error handling.
-      fetch(searchUrl, {
+      fetch(searchUrl.toString(), {
         headers: {
           'Content-Type': 'application/json'
         }
