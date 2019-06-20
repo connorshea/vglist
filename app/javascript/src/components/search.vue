@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="navbar-item has-dropdown field mt-10"
-    v-bind:class="{ 'is-active': dropdownActive }"
-  >
+  <div class="navbar-item has-dropdown field mt-10" v-bind:class="{ 'is-active': dropdownActive }">
     <p class="control">
       <input
         v-model="query"
@@ -13,21 +10,14 @@
         class="input"
         type="search"
         placeholder="Search"
-      />
+      >
     </p>
 
     <div v-if="dropdownActive" class="navbar-search-dropdown navbar-dropdown">
-      <p class="navbar-item" v-if="!hasSearchResults">
-        No results.
-      </p>
-      <div
-        v-for="(type, index) in Object.keys(betterSearchResults)"
-        :key="type"
-      >
-        <hr v-if="index > 0" class="navbar-divider" />
-        <p class="navbar-item navbar-dropdown-header">
-          {{ capitalizedPlurals[type] }}
-        </p>
+      <p class="navbar-item" v-if="!hasSearchResults">No results.</p>
+      <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
+        <hr v-if="index > 0" class="navbar-divider">
+        <p class="navbar-item navbar-dropdown-header">{{ capitalizedPlurals[type] }}</p>
         <a
           v-for="result in betterSearchResults[type]"
           :key="result.id"
@@ -39,15 +29,13 @@
               flattenedSearchResults[activeSearchResult].searchable_id ===
                 result.searchable_id
           }"
-        >
-          {{ result.content }}
-        </a>
+        >{{ result.content }}</a>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data: function() {
     return {
