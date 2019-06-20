@@ -82,7 +82,7 @@ let initBulma = () => {
   });
 };
 
-document.addEventListener('turbolinks:load', initBulma());
+document.addEventListener('turbolinks:load', initBulma);
 window.addEventListener('load', function() {
-  document.body.addEventListener('bulma:init', initBulma());
+  document.body.addEventListener('bulma:init', initBulma);
 });

@@ -11,7 +11,9 @@
         "*": ["node_modules/*", "app/javascript/*"]
     },
     "sourceMap": true,
-    "target": "esNext"
+    "target": "esNext",
+    "allowSyntheticDefaultImports": true,
+    
   },
   "exclude": [
     "**/*.spec.ts",

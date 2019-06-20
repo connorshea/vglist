@@ -36,6 +36,9 @@
 </template>
 
 <script lang="ts">
+import Turbolinks from 'turbolinks';
+import * as _ from 'lodash';
+
 export default {
   data: function() {
     return {
@@ -82,7 +85,7 @@ export default {
     },
     // On enter, have turbolinks navigate to the active item's linked page.
     onEnter() {
-      let activeItem = document.querySelector(
+      let activeItem: HTMLLinkElement = document.querySelector(
         '.navbar-search-dropdown .navbar-item.is-active'
       );
       if (activeItem !== null) {
@@ -91,10 +94,12 @@ export default {
     },
     scrollToActiveItem() {
       // Select the current active item and the searchDropdown.
-      let activeItem = document.querySelector(
+      let activeItem: HTMLElement = document.querySelector(
         '.navbar-search-dropdown .navbar-item.is-active'
       );
-      let searchDropdown = document.querySelector('.navbar-search-dropdown');
+      let searchDropdown: HTMLElement = document.querySelector(
+        '.navbar-search-dropdown'
+      );
       // If the activeItem exists, scroll to it as the user moves through the dropdown options.
       if (activeItem !== null) {
         searchDropdown.scrollTop =
@@ -113,10 +118,12 @@ export default {
     // Do a stupid hack to capitalize the first letter of each plural value,
     // e.g. "Games", "Companies", etc.
     capitalizedPlurals: function() {
-      let capitalizedPluralEntries = Object.entries(this.plurals).map(type => {
-        type[1] = type[1].charAt(0).toUpperCase() + type[1].slice(1);
-        return type;
-      });
+      let capitalizedPluralEntries = Object.entries(this.plurals).map(
+        (type: Array<any>) => {
+          type[1] = type[1].charAt(0).toUpperCase() + type[1].slice(1);
+          return type;
+        }
+      );
 
       return Object.fromEntries(capitalizedPluralEntries);
     },
