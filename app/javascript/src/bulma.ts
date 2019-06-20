@@ -41,12 +41,12 @@ let initBulma = () => {
     });
 
     document.addEventListener('click', function(event) {
-      // If the user is clicking on something other than an element or document, return early.
-      if (event.target !instanceof Element && event.target !instanceof Document) {
+      // If the user is clicking on something other than an element, return early.
+      if (event.target !instanceof Element) {
         return;
       }
       // If user clicks outside the dropdown, close it!
-      if (event.target.closest('.dropdown:not(.is-hoverable)')) {
+      if ((event.target as Element).closest('.dropdown:not(.is-hoverable)')) {
         return;
       }
       closeDropdowns();
