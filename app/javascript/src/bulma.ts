@@ -41,6 +41,10 @@ let initBulma = () => {
     });
 
     document.addEventListener('click', function(event) {
+      // If the user is clicking on something other than an element or document, return early.
+      if (event.target !instanceof Element && event.target !instanceof Document) {
+        return;
+      }
       // If user clicks outside the dropdown, close it!
       if (event.target.closest('.dropdown:not(.is-hoverable)')) {
         return;
@@ -57,8 +61,8 @@ let initBulma = () => {
 
   // Close dropdowns if ESC pressed
   document.addEventListener('keydown', function(event) {
-    var e = event || window.event;
-    if (e.keyCode === 27) {
+    var e = event;
+    if (e.code === 'Escape') {
       closeDropdowns();
     }
   });
