@@ -33,10 +33,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import FileSelect from './fields/file-select.vue';
 import Rails from 'rails-ujs';
 import { DirectUpload } from 'activestorage';
+import Turbolinks from 'turbolinks';
 
 export default {
   name: 'avatar-input',

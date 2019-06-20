@@ -15,9 +15,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
+import * as _ from 'lodash';
 
 export default {
   name: 'multi-select',
@@ -41,9 +42,7 @@ export default {
   data: function() {
     return {
       options: [],
-      searchPath: `${window.location.origin}/${
-        this.searchPathIdentifier
-      }/search.json`
+      searchPath: `${window.location.origin}/${this.searchPathIdentifier}/search.json`
     };
   },
   methods: {
@@ -56,7 +55,7 @@ export default {
       let searchUrl = new URL(this.searchPath);
       searchUrl.searchParams.append('query', search);
       // TODO: Add error handling.
-      fetch(searchUrl, {
+      fetch(searchUrl.toString(), {
         headers: {
           'Content-Type': 'application/json'
         }

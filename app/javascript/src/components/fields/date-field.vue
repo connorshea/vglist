@@ -11,12 +11,12 @@
         v-bind:id="dateFieldId"
         v-bind:value="dataValue"
         v-on:input="$emit('input', $event.target.value)"
-      />
+      >
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'date-field',
   props: {

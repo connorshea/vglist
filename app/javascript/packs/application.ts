@@ -14,7 +14,7 @@ import VTooltip from 'v-tooltip';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import * as Sentry from '@sentry/browser';
-import * as _ from "lodash"
+import * as _ from "lodash";
 import '../src/vue-loader';
 import '../src/toggleable-buttons';
 import '../src/bulma';

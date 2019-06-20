@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import LibraryTable from './library-table.vue';
 import GameModal from './game-modal.vue';
 

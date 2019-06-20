@@ -15,9 +15,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
+import * as _ from 'lodash';
 
 export default {
   name: 'static-single-select',

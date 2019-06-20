@@ -17,9 +17,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
+import * as _ from 'lodash';
 
 export default {
   name: 'single-select',
@@ -69,9 +70,7 @@ export default {
   data: function() {
     return {
       options: [],
-      searchPath: `${window.location.origin}/${
-        this.searchPathIdentifier
-      }/search.json`
+      searchPath: `${window.location.origin}/${this.searchPathIdentifier}/search.json`
     };
   },
   methods: {

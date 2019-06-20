@@ -48,8 +48,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Rails from 'rails-ujs';
+import * as _ from 'lodash';
 
 export default {
   name: 'user-statistics',

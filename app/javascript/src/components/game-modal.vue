@@ -89,7 +89,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TextField from './fields/text-field.vue';
 import TextArea from './fields/text-area.vue';
 import NumberField from './fields/number-field.vue';
@@ -173,15 +173,15 @@ export default {
   data() {
     return {
       gamePurchase: {
-        comments: this.comments,
-        rating: this.rating,
-        game: this.game,
-        userId: this.userId,
-        completion_status: this.completion_status,
-        start_date: this.start_date,
-        hours_played: parseFloat(this.hours_played),
-        completion_date: this.completion_date,
-        platforms: this.platforms
+        comments: this.$props.comments,
+        rating: this.$props.rating,
+        game: this.$props.game,
+        userId: this.$props.userId,
+        completion_status: this.$props.completion_status,
+        start_date: this.$props.start_date,
+        hours_played: parseFloat(this.$props.hours_played),
+        completion_date: this.$props.completion_date,
+        platforms: this.$props.platforms
       },
       formData: {
         class: 'game_purchase',
@@ -215,7 +215,7 @@ export default {
           label: 'Game'
         }
       },
-      gameSelected: this.gameModalState !== 'create',
+      gameSelected: this.$props.gameModalState !== 'create',
       completionStatuses: {
         unplayed: 'Unplayed',
         in_progress: 'In Progress',
@@ -279,7 +279,7 @@ export default {
       if (this.gamePurchase.platforms !== []) {
         submittableData['game_purchase']['platform_ids'] = Array.from(
           this.gamePurchase.platforms,
-          platform => platform.id
+          (platform: { id: String }) => platform.id
         );
       }
 
