@@ -15,7 +15,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import * as Sentry from '@sentry/browser';
 import 'lodash';
-import '../src/vue-loader.js';
+import '../src/vue-loader';
 import '../src/toggleable-buttons.js';
 import '../src/bulma.js';
 
