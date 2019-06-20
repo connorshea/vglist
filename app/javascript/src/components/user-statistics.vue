@@ -48,8 +48,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Rails from 'rails-ujs';
+import * as _ from 'lodash';
 
 export default {
   name: 'user-statistics',
@@ -87,7 +88,7 @@ export default {
     completionStatusesCount: function() {
       if (this.statistics) {
         let values = Object.values(this.statistics.completion_statuses);
-        return values.reduce((accumulator, currentValue) => {
+        return values.reduce((accumulator: number, currentValue: number) => {
           return accumulator + currentValue;
         });
       }

@@ -29,9 +29,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import GameModal from './game-modal.vue';
 import Rails from 'rails-ujs';
+import Turbolinks from 'turbolinks';
 
 export default {
   name: 'add-game-to-library',
@@ -104,9 +105,7 @@ export default {
       this.activateModal();
     },
     removeGameFromLibrary() {
-      let removeGameFromLibraryPath = `/games/${
-        this.gameId
-      }/remove_game_from_library`;
+      let removeGameFromLibraryPath = `/games/${this.gameId}/remove_game_from_library`;
 
       fetch(removeGameFromLibraryPath, {
         method: 'DELETE',

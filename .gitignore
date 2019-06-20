@@ -47,3 +47,4 @@ spec/examples.txt
 prod.env
 
 sbin/
+.vscode/settings.json

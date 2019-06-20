@@ -14,10 +14,10 @@ import VTooltip from 'v-tooltip';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import * as Sentry from '@sentry/browser';
-import 'lodash';
-import '../src/vue-loader.js';
-import '../src/toggleable-buttons.js';
-import '../src/bulma.js';
+import * as _ from "lodash";
+import '../src/vue-loader';
+import '../src/toggleable-buttons';
+import '../src/bulma';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({ dsn: process.env.SENTRY_DSN_JS });

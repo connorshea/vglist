@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="navbar-item has-dropdown field mt-10"
-    v-bind:class="{ 'is-active': dropdownActive }"
-  >
+  <div class="navbar-item has-dropdown field mt-10" v-bind:class="{ 'is-active': dropdownActive }">
     <p class="control">
       <input
         v-model="query"
@@ -13,21 +10,14 @@
         class="input"
         type="search"
         placeholder="Search"
-      />
+      >
     </p>
 
     <div v-if="dropdownActive" class="navbar-search-dropdown navbar-dropdown">
-      <p class="navbar-item" v-if="!hasSearchResults">
-        No results.
-      </p>
-      <div
-        v-for="(type, index) in Object.keys(betterSearchResults)"
-        :key="type"
-      >
-        <hr v-if="index > 0" class="navbar-divider" />
-        <p class="navbar-item navbar-dropdown-header">
-          {{ capitalizedPlurals[type] }}
-        </p>
+      <p class="navbar-item" v-if="!hasSearchResults">No results.</p>
+      <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
+        <hr v-if="index > 0" class="navbar-divider">
+        <p class="navbar-item navbar-dropdown-header">{{ capitalizedPlurals[type] }}</p>
         <a
           v-for="result in betterSearchResults[type]"
           :key="result.id"
@@ -39,15 +29,16 @@
               flattenedSearchResults[activeSearchResult].searchable_id ===
                 result.searchable_id
           }"
-        >
-          {{ result.content }}
-        </a>
+        >{{ result.content }}</a>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Turbolinks from 'turbolinks';
+import * as _ from 'lodash';
+
 export default {
   data: function() {
     return {
@@ -94,7 +85,7 @@ export default {
     },
     // On enter, have turbolinks navigate to the active item's linked page.
     onEnter() {
-      let activeItem = document.querySelector(
+      let activeItem: HTMLLinkElement = document.querySelector(
         '.navbar-search-dropdown .navbar-item.is-active'
       );
       if (activeItem !== null) {
@@ -103,10 +94,12 @@ export default {
     },
     scrollToActiveItem() {
       // Select the current active item and the searchDropdown.
-      let activeItem = document.querySelector(
+      let activeItem: HTMLElement = document.querySelector(
         '.navbar-search-dropdown .navbar-item.is-active'
       );
-      let searchDropdown = document.querySelector('.navbar-search-dropdown');
+      let searchDropdown: HTMLElement = document.querySelector(
+        '.navbar-search-dropdown'
+      );
       // If the activeItem exists, scroll to it as the user moves through the dropdown options.
       if (activeItem !== null) {
         searchDropdown.scrollTop =
@@ -125,10 +118,12 @@ export default {
     // Do a stupid hack to capitalize the first letter of each plural value,
     // e.g. "Games", "Companies", etc.
     capitalizedPlurals: function() {
-      let capitalizedPluralEntries = Object.entries(this.plurals).map(type => {
-        type[1] = type[1].charAt(0).toUpperCase() + type[1].slice(1);
-        return type;
-      });
+      let capitalizedPluralEntries = Object.entries(this.plurals).map(
+        (type: Array<any>) => {
+          type[1] = type[1].charAt(0).toUpperCase() + type[1].slice(1);
+          return type;
+        }
+      );
 
       return Object.fromEntries(capitalizedPluralEntries);
     },

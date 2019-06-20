@@ -102,15 +102,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TextArea from './fields/text-area.vue';
 import TextField from './fields/text-field.vue';
 import SingleSelect from './fields/single-select.vue';
-import NumberField from './fields/number-field';
+import NumberField from './fields/number-field.vue';
 import MultiSelect from './fields/multi-select.vue';
 import FileSelect from './fields/file-select.vue';
 import Rails from 'rails-ujs';
 import { DirectUpload } from 'activestorage';
+import Turbolinks from 'turbolinks';
 
 export default {
   name: 'game-form',
@@ -216,20 +217,20 @@ export default {
     return {
       errors: [],
       game: {
-        name: this.name,
-        description: this.description,
-        genres: this.genres,
-        engines: this.engines,
-        developers: this.developers,
-        publishers: this.publishers,
-        platforms: this.platforms,
-        series: this.series,
-        steamAppId: this.steamAppId,
-        wikidataId: this.wikidataId,
-        pcgamingwikiId: this.pcgamingwikiId,
-        mobygamesId: this.mobygamesId,
-        cover: this.cover,
-        coverBlob: this.coverBlob
+        name: this.$props.name,
+        description: this.$props.description,
+        genres: this.$props.genres,
+        engines: this.$props.engines,
+        developers: this.$props.developers,
+        publishers: this.$props.publishers,
+        platforms: this.$props.platforms,
+        series: this.$props.series,
+        steamAppId: this.$props.steamAppId,
+        wikidataId: this.$props.wikidataId,
+        pcgamingwikiId: this.$props.pcgamingwikiId,
+        mobygamesId: this.$props.mobygamesId,
+        cover: this.$props.cover,
+        coverBlob: this.$props.coverBlob
       },
       formData: {
         class: 'game',
@@ -299,19 +300,25 @@ export default {
       });
     },
     onSubmit() {
-      let genreIds = Array.from(this.game.genres, genre => genre.id);
-      let engineIds = Array.from(this.game.engines, engine => engine.id);
+      let genreIds = Array.from(
+        this.game.genres,
+        (genre: { id: String }) => genre.id
+      );
+      let engineIds = Array.from(
+        this.game.engines,
+        (engine: { id: String }) => engine.id
+      );
       let developerIds = Array.from(
         this.game.developers,
-        developer => developer.id
+        (developer: { id: String }) => developer.id
       );
       let publisherIds = Array.from(
         this.game.publishers,
-        publisher => publisher.id
+        (publisher: { id: String }) => publisher.id
       );
       let platformIds = Array.from(
         this.game.platforms,
-        platform => platform.id
+        (platform: { id: String }) => platform.id
       );
 
       let submittableData = {

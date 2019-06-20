@@ -41,8 +41,12 @@ let initBulma = () => {
     });
 
     document.addEventListener('click', function(event) {
+      // If the user is clicking on something other than an element, return early.
+      if (event.target !instanceof Element) {
+        return;
+      }
       // If user clicks outside the dropdown, close it!
-      if (event.target.closest('.dropdown:not(.is-hoverable)')) {
+      if ((event.target as Element).closest('.dropdown:not(.is-hoverable)')) {
         return;
       }
       closeDropdowns();
@@ -57,8 +61,8 @@ let initBulma = () => {
 
   // Close dropdowns if ESC pressed
   document.addEventListener('keydown', function(event) {
-    var e = event || window.event;
-    if (e.keyCode === 27) {
+    var e = event;
+    if (e.code === 'Escape') {
       closeDropdowns();
     }
   });
@@ -82,7 +86,7 @@ let initBulma = () => {
   });
 };
 
-document.addEventListener('turbolinks:load', initBulma());
+document.addEventListener('turbolinks:load', initBulma);
 window.addEventListener('load', function() {
-  document.body.addEventListener('bulma:init', initBulma());
+  document.body.addEventListener('bulma:init', initBulma);
 });

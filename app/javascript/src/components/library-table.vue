@@ -70,7 +70,7 @@
   </vue-good-table>
 </template>
 
-<script>
+<script lang="ts">
 import Rails from 'rails-ujs';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
@@ -131,7 +131,7 @@ export default {
           label: 'Hours Played',
           field: 'hours_played',
           type: 'decimal',
-          formatFn: this.formatHoursPlayed,
+          formatFn: this.$props.formatHoursPlayed,
           hidden: false,
           index: 2
         },

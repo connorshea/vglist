@@ -37,10 +37,11 @@
   </vue-good-table>
 </template>
 
-<script>
+<script lang="ts">
 import Rails from 'rails-ujs';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
+import * as _ from 'lodash';
 
 export default {
   name: 'compare-libraries',
