@@ -4,14 +4,14 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
         "*": ["node_modules/*", "app/javascript/*"]
     },
     "sourceMap": true,
-    "target": "es5"
+    "target": "esnext"
   },
   "exclude": [
     "**/*.spec.ts",
