@@ -2,7 +2,6 @@
 #   srb rbi todo
 
 # typed: strong
-module ::Anonymous_Delegator_1; end
 module ::Anonymous_Delegator_37; end
 module ::Anonymous_Delegator_38; end
 module ::NilClassPolicy; end
