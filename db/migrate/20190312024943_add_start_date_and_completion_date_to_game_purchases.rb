@@ -1,3 +1,4 @@
+# typed: false
 class AddStartDateAndCompletionDateToGamePurchases < ActiveRecord::Migration[5.2]
   def change
     change_table :game_purchases, bulk: true do |t|

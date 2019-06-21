@@ -1,3 +1,4 @@
+# typed: false
 class GamePurchase < ApplicationRecord
   belongs_to :game
   belongs_to :user

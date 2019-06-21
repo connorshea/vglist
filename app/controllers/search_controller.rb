@@ -1,3 +1,4 @@
+# typed: false
 class SearchController < ApplicationController
   def index
     skip_policy_scope

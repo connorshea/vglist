@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Auto-generated migration.

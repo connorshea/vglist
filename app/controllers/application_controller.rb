@@ -1,3 +1,4 @@
+# typed: false
 class ApplicationController < ActionController::Base
   include Pundit
   # Require a valid CSRF token, throw an exception if there isn't one.

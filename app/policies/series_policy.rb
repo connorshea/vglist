@@ -1,3 +1,4 @@
+# typed: true
 class SeriesPolicy < ApplicationPolicy
   attr_reader :user, :series
 

@@ -1,3 +1,4 @@
+# typed: true
 class GenrePolicy < ApplicationPolicy
   attr_reader :user, :genre
 

@@ -1,3 +1,4 @@
+# typed: false
 puts "Creating Genres..."
 
 # Create 20 unique genres.

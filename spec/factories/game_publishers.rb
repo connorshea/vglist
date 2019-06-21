@@ -1,3 +1,4 @@
+# typed: false
 FactoryBot.define do
   factory :game_publisher do
     game

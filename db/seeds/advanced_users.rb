@@ -1,3 +1,4 @@
+# typed: false
 puts "Creating Advanced Users..."
 
 # Exit early if there are less than 10 games.

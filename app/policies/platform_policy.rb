@@ -1,3 +1,4 @@
+# typed: true
 class PlatformPolicy < ApplicationPolicy
   attr_reader :user, :platform
 

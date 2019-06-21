@@ -1,3 +1,4 @@
+# typed: false
 puts "Creating admin..."
 
 # Create an account for admin usage.

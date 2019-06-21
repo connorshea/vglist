@@ -61,6 +61,8 @@ gem 'ruby-progressbar', '~> 1.10', require: false
 # Use Sentry for error tracking in production.
 gem 'sentry-raven', '~> 2.9'
 
+gem 'sorbet-runtime'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -116,6 +118,8 @@ group :development do
   gem 'launchy', '~> 2.4'
   # Generate a graph of the app structure.
   gem 'rails-erd', '~> 1.6'
+
+  gem 'sorbet', '~> 0.4.4270'
 end
 
 group :test do

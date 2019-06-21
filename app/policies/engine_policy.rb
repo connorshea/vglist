@@ -1,3 +1,4 @@
+# typed: true
 class EnginePolicy < ApplicationPolicy
   attr_reader :user, :engine
 

@@ -1,3 +1,4 @@
+# typed: false
 class ExternalAccount < ApplicationRecord
   belongs_to :user
 
