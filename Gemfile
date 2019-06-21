@@ -62,6 +62,7 @@ gem 'ruby-progressbar', '~> 1.10', require: false
 gem 'sentry-raven', '~> 2.9'
 
 gem 'sorbet-runtime'
+gem "sorbet-rails", "~> 0.1.3"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -132,3 +133,4 @@ end
 
 # # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 # gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
