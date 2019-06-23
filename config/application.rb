@@ -39,8 +39,10 @@ module VideoGameList
       generate.controller_specs false
     end
 
-    Raven.configure do |config|
-      config.dsn = ENV['SENTRY_DSN']
+    if Rails.env.production?
+      Raven.configure do |config|
+        config.dsn = ENV['SENTRY_DSN']
+      end
     end
 
     # Add spec to the directories that 'rails notes' checks.
