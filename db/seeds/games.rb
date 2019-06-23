@@ -26,7 +26,7 @@ puts "Creating Games..."
   engines.uniq!
 
   game = Game.create!(
-    name: Faker::Game.unique.name,
+    name: Faker::Game.unique.title,
     description: Faker::Lorem.sentence,
     genres: genres,
     engines: engines,
