@@ -66,7 +66,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
   # Rubocop for linting
-  gem 'rubocop', '~> 0.71', require: false
+  gem 'rubocop', '~> 0.72', require: false
 
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.4'
