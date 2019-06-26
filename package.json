@@ -9,7 +9,7 @@
     "lodash": "^4.17.11",
     "rails-ujs": "^5.2.3",
     "resolve-url-loader": "^3.1.0",
-    "ts-loader": "^6.0.3",
+    "ts-loader": "^6.0.4",
     "turbolinks": "^5.2.0",
     "typescript": "^3.5.2",
     "v-tooltip": "^2.0.2",
