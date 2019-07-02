@@ -7,7 +7,7 @@ class GamePurchasePolicy < ApplicationPolicy
   sig { returns(T.nilable(GamePurchase)) }
   attr_reader :game_purchase
 
-  sig { params(user: User, game_purchase: GamePurchase).void }
+  sig { params(user: T.nilable(User), game_purchase: T.nilable(GamePurchase)).void }
   def initialize(user, game_purchase)
     @user = user
     @game_purchase = game_purchase
