@@ -1705,35 +1705,37 @@ module ActionView::CollectionCaching
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250252640600(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170055617620(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250258088460(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170059940880(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250324595600(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170112524340(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250326261540(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170113411180(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250333502420(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170114458740(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250344153480(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170124485220(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250344794140(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170124840820(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250345477180(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170125263860(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250346886360(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170126580980(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250352411900(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170129364400(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250353564320(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170130845120(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250353947560(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170132442040(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250354104280(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170133724740(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250354614540(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170134144580(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__3751792416659017754_70250356578240(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170134556860(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2611921020230504549_70170134979300(local_assigns, output_buffer); end
 end
 
 module ActionView::CompiledTemplates
@@ -6743,7 +6745,7 @@ class Bundler::Settings::Mirror
 end
 
 class Bundler::Settings::Mirrors
-  def each(); end
+  def each(&blk); end
 
   def for(uri); end
 
@@ -9779,8 +9781,6 @@ module Enumerable
 
   def each_entry(*_); end
 
-  def each_with_object(_); end
-
   def filter(); end
 
   def grep_v(_); end
@@ -9810,12 +9810,14 @@ class Enumerator
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +(_); end
 
+  def each_with_index(); end
+
 end
 
 class Enumerator::ArithmeticSequence
   def begin(); end
 
-  def each(); end
+  def each(&blk); end
 
   def end(); end
 
@@ -9837,7 +9839,7 @@ end
 
 class Enumerator::Generator
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def each(*_); end
+  def each(*_, &blk); end
 
   def initialize(*_); end
 end
@@ -10408,7 +10410,7 @@ class Etc::Group
   extend ::Enumerable
   def self.[](*_); end
 
-  def self.each(); end
+  def self.each(&blk); end
 
   def self.members(); end
 end
@@ -10460,7 +10462,7 @@ class Etc::Passwd
   extend ::Enumerable
   def self.[](*_); end
 
-  def self.each(); end
+  def self.each(&blk); end
 
   def self.members(); end
 end
@@ -10581,8 +10583,6 @@ module ExternalAccount::GeneratedAssociationMethods
 end
 
 class ExternalAccount
-  def self.account_types(); end
-
   def self.steam(*args); end
 end
 
@@ -13060,8 +13060,6 @@ class GamePurchase
 
   def self.completed(*args); end
 
-  def self.completion_statuses(); end
-
   def self.dropped(*args); end
 
   def self.fully_completed(*args); end
@@ -13134,7 +13132,7 @@ class Gem::AvailableSet
 
   def all_specs(); end
 
-  def each(); end
+  def each(&blk); end
 
   def each_spec(); end
 
@@ -13992,7 +13990,7 @@ end
 
 class Gem::List
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def each(); end
+  def each(&blk); end
 
   def initialize(value=T.unsafe(nil), tail=T.unsafe(nil)); end
 
@@ -14319,7 +14317,7 @@ class Gem::Package::TarReader
   include ::Enumerable
   def close(); end
 
-  def each(); end
+  def each(&blk); end
 
   def each_entry(); end
 
@@ -15352,7 +15350,7 @@ class Gem::Resolver::Molinillo::DependencyGraph
 
   def detach_vertex_named(name); end
 
-  def each(); end
+  def each(&blk); end
 
   def log(); end
 
@@ -15472,7 +15470,7 @@ class Gem::Resolver::Molinillo::DependencyGraph::Log
 
   def detach_vertex_named(graph, name); end
 
-  def each(); end
+  def each(&blk); end
 
   def pop!(graph); end
 
@@ -15777,7 +15775,7 @@ class Gem::Resolver::RequirementList
   include ::Enumerable
   def add(req); end
 
-  def each(); end
+  def each(&blk); end
 
   def empty?(); end
 
@@ -16243,7 +16241,7 @@ class Gem::SourceList
 
   def delete(source); end
 
-  def each(); end
+  def each(&blk); end
 
   def each_source(&b); end
 
@@ -16668,7 +16666,7 @@ class Gem::Specification
 
   def self.dirs=(dirs); end
 
-  def self.each(); end
+  def self.each(&blk); end
 
   def self.each_gemspec(dirs); end
 
@@ -19167,8 +19165,6 @@ module Kaminari
 end
 
 module Kernel
-  def class(); end
-
   def gem(dep, *reqs); end
 
   def itself(); end
@@ -19909,9 +19905,6 @@ end
 
 module Mail::Parsers
   extend ::T::Sig
-end
-
-class Mail::PartsList
 end
 
 class Mail::PhraseList
@@ -22090,6 +22083,16 @@ class NilClass
   extend ::T::Sig
 end
 
+class NilClassPolicy
+  def method_missing(_method); end
+end
+
+class NilClassPolicy::Scope
+end
+
+class NilClassPolicy::Scope
+end
+
 class NoMemoryError
   include ::BetterErrors::ExceptionExtension
 end
@@ -22505,7 +22508,7 @@ class ObjectSpace::WeakMap
 
   def []=(_, _1); end
 
-  def each(); end
+  def each(&blk); end
 
   def each_key(); end
 
@@ -27764,7 +27767,7 @@ class REXML::Elements
 
   def delete_all(xpath); end
 
-  def each(xpath=T.unsafe(nil)); end
+  def each(xpath=T.unsafe(nil), &blk); end
 
   def empty?(); end
 
@@ -28379,7 +28382,7 @@ end
 
 class REXML::SyncEnumerator
   include ::Enumerable
-  def each(); end
+  def each(&blk); end
 
   def initialize(*enums); end
 
@@ -30868,7 +30871,7 @@ class Rack::Lint
 
   def close(); end
 
-  def each(); end
+  def each(&blk); end
 
   def initialize(app); end
 
@@ -30931,7 +30934,7 @@ class Rack::Lint::InputWrapper
   include ::Rack::Lint::Assertion
   def close(*args); end
 
-  def each(*args); end
+  def each(*args, &blk); end
 
   def gets(*args); end
 
@@ -31125,7 +31128,7 @@ end
 
 class Rack::Multipart::Parser::Collector
   include ::Enumerable
-  def each(); end
+  def each(&blk); end
 
   def initialize(tempfile); end
 
@@ -40013,6 +40016,14 @@ class Sorbet
   extend ::T::Sig
 end
 
+module SorbetRails::CustomFinderMethods
+  extend ::T::Sig
+end
+
+module SorbetRails
+  extend ::T::Sig
+end
+
 class SortedSet
   def initialize(*args, &block); end
 end
@@ -41237,7 +41248,7 @@ class ThreadSafe::Util::VolatileTuple
 
   def compare_and_set(i, old_value, new_value); end
 
-  def each(); end
+  def each(&blk); end
 
   def initialize(size); end
 
@@ -42050,8 +42061,6 @@ class User
 
   def self.moderator(*args); end
 
-  def self.roles(); end
-
   def self.with_attached_avatar(*args); end
 end
 
@@ -42490,9 +42499,6 @@ module Zip::NullInputStream
   extend ::T::Sig
 end
 
-class Zip::StreamableStream
-end
-
 module Zip::TraditionalEncryption
   extend ::T::Sig
 end
@@ -42649,7 +42655,7 @@ class Zlib::GzipReader
   include ::Enumerable
   def bytes(); end
 
-  def each(*_); end
+  def each(*_, &blk); end
 
   def each_byte(); end
 

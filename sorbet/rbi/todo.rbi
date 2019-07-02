@@ -2,17 +2,15 @@
 #   srb rbi todo
 
 # typed: strong
+module ::Anonymous_Delegator_1; end
+module ::Anonymous_Delegator_11; end
+module ::Anonymous_Delegator_12; end
+module ::Anonymous_Delegator_13; end
+module ::Anonymous_Delegator_14; end
+module ::Anonymous_Delegator_15; end
+module ::Anonymous_Delegator_20; end
 module ::Anonymous_Delegator_37; end
 module ::Anonymous_Delegator_38; end
-module ::NilClassPolicy; end
-module ActiveRecord::AssociationRelation; end
-module ActiveRecord::Associations::CollectionProxy; end
-module ActiveRecord::ConnectionAdapters::AbstractAdapter::SchemaCreation; end
-module ActiveRecord::ConnectionNotEstablished; end
-module ActiveRecord::IrreversibleMigration; end
-module ActiveRecord::IrreversibleMigration; end
-module ActiveRecord::PendingMigrationError; end
-module ActiveRecord::RecordInvalid; end
 module Addressable::Template; end
 module Anonymous_Module_26::Anonymous_Module_27; end
 module Anonymous_Module_26::Anonymous_Module_28; end
