@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 class Series < ApplicationRecord
   include PgSearch
 

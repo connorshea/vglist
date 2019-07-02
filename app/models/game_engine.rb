@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 class GameEngine < ApplicationRecord
   belongs_to :game
   belongs_to :engine
