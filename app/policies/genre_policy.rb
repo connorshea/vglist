@@ -4,7 +4,7 @@ class GenrePolicy < ApplicationPolicy
 
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(Genre) }
+  sig { returns(T.nilable(Genre)) }
   attr_reader :genre
 
   sig { params(user: User, genre: Genre).void }

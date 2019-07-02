@@ -7,6 +7,7 @@ class PlatformPolicy < ApplicationPolicy
   sig { returns(T.nilable(Platform)) }
   attr_reader :platform
 
+  sig { params(user: User, platform: Platform).void }
   def initialize(user, platform)
     @user = user
     @platform = platform

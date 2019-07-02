@@ -2,8 +2,12 @@
 class CompanyPolicy < ApplicationPolicy
   extend T::Sig
   
-  attr_reader :user, :company
+  sig { returns(T.nilable(User)) }
+  attr_reader :user
+  sig { returns(T.nilable(Company)) }
+  attr_reader :company
 
+  sig { params(user: User, company: Company).void }
   def initialize(user, company)
     @user = user
     @company = company

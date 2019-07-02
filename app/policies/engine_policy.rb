@@ -1,9 +1,13 @@
 # typed: true
 class EnginePolicy < ApplicationPolicy
   extend T::Sig
-  
-  attr_reader :user, :engine
 
+  sig { returns(T.nilable(User)) }
+  attr_reader :user
+  sig { returns(T.nilable(Engine)) }
+  attr_reader :engine
+
+  sig { params(user: User, engine: Engine).void }
   def initialize(user, engine)
     @user = user
     @engine = engine
@@ -29,7 +33,7 @@ class EnginePolicy < ApplicationPolicy
     user.present?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
     user_is_moderator_or_admin?
   end
@@ -41,8 +45,8 @@ class EnginePolicy < ApplicationPolicy
 
   private
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def user_is_moderator_or_admin?
-    user && (user.moderator? || user.admin?)
+    user && (user&.moderator? || user&.admin?)
   end
 end

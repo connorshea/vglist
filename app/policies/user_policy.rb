@@ -5,6 +5,7 @@ class UserPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :current_user, :user
 
+  sig { params(current_user: User, user: User).void }
   def initialize(current_user, user)
     @current_user = current_user
     @user = user

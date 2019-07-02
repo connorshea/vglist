@@ -2,9 +2,12 @@
 class GamePolicy < ApplicationPolicy
   extend T::Sig
 
-  attr_reader :user, :game
+  sig { returns(T.nilable(User)) }
+  attr_reader :user
+  sig { returns(T.nilable(Game)) }
+  attr_reader :game
 
-  sig { params(user: T.untyped, game: T.untyped).void }
+  sig { params(user: User, game: Game).void }
   def initialize(user, game)
     @user = user
     @game = game
