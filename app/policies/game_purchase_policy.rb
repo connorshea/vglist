@@ -1,9 +1,13 @@
 # typed: true
 class GamePurchasePolicy < ApplicationPolicy
   extend T::Sig
-  
-  attr_reader :user, :game_purchase
 
+  sig { returns(T.nilable(User)) }
+  attr_reader :user
+  sig { returns(T.nilable(GamePurchase)) }
+  attr_reader :game_purchase
+
+  sig { params(user: User, game_purchase: GamePurchase).void }
   def initialize(user, game_purchase)
     @user = user
     @game_purchase = game_purchase
@@ -19,25 +23,25 @@ class GamePurchasePolicy < ApplicationPolicy
     true
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def create?
     game_purchase_belongs_to_user?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def update?
     game_purchase_belongs_to_user?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
     game_purchase_belongs_to_user?
   end
 
   private
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def game_purchase_belongs_to_user?
-    user && game_purchase.user_id == user.id
+    user && game_purchase&.user_id == user&.id
   end
 end

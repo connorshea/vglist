@@ -1,9 +1,13 @@
 # typed: true
 class GenrePolicy < ApplicationPolicy
   extend T::Sig
-  
-  attr_reader :user, :genre
 
+  sig { returns(T.nilable(User)) }
+  attr_reader :user
+  sig { returns(T.nilable(Genre)) }
+  attr_reader :genre
+
+  sig { params(user: User, genre: Genre).void }
   def initialize(user, genre)
     @user = user
     @genre = genre
@@ -19,17 +23,17 @@ class GenrePolicy < ApplicationPolicy
     true
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def create?
     user_is_moderator_or_admin?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def update?
     user_is_moderator_or_admin?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
     user_is_moderator_or_admin?
   end
@@ -41,8 +45,8 @@ class GenrePolicy < ApplicationPolicy
 
   private
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def user_is_moderator_or_admin?
-    user && (user.moderator? || user.admin?)
+    user && (user&.moderator? || user&.admin?)
   end
 end
