@@ -1,12 +1,13 @@
 # typed: true
 class SeriesPolicy < ApplicationPolicy
   extend T::Sig
-  
-  sig { returns(User) }
+
+  sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(Series) }
+  sig { returns(T.nilable(Series)) }
   attr_reader :series
 
+  sig { params(user: User, series: Series).void }
   def initialize(user, series)
     @user = user
     @series = series
@@ -32,7 +33,7 @@ class SeriesPolicy < ApplicationPolicy
     user.present?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
     user_is_moderator_or_admin?
   end
@@ -44,8 +45,8 @@ class SeriesPolicy < ApplicationPolicy
 
   private
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def user_is_moderator_or_admin?
-    user && (user.moderator? || user.admin?)
+    user&.moderator? || user&.admin?
   end
 end

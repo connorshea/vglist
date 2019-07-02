@@ -1,7 +1,8 @@
 # typed: true
 class SettingsPolicy < ApplicationPolicy
   extend T::Sig
-  
+
+  sig { returns(T.nilable(User)) }
   attr_reader :current_user, :user
 
   def initialize(current_user, user)

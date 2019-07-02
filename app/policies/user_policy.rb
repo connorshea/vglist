@@ -2,6 +2,7 @@
 class UserPolicy < ApplicationPolicy
   extend T::Sig
 
+  sig { returns(T.nilable(User)) }
   attr_reader :current_user, :user
 
   def initialize(current_user, user)
@@ -27,7 +28,7 @@ class UserPolicy < ApplicationPolicy
   # Rules for updating roles:
   # - The user updating the role must be an admin.
   # - The user can't update their own role.
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def update_role?
     current_user&.admin? && user != current_user
   end
@@ -42,7 +43,7 @@ class UserPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def remove_avatar?
     user_is_current_user? || current_user&.admin? || current_user&.moderator?
   end

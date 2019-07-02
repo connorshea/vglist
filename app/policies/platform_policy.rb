@@ -1,8 +1,11 @@
 # typed: true
 class PlatformPolicy < ApplicationPolicy
   extend T::Sig
-  
-  attr_reader :user, :platform
+
+  sig { returns(T.nilable(User)) }
+  attr_reader :user
+  sig { returns(T.nilable(Platform)) }
+  attr_reader :platform
 
   def initialize(user, platform)
     @user = user
@@ -19,17 +22,17 @@ class PlatformPolicy < ApplicationPolicy
     true
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def create?
     user_is_moderator_or_admin?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def update?
     user_is_moderator_or_admin?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
     user_is_moderator_or_admin?
   end
@@ -41,8 +44,8 @@ class PlatformPolicy < ApplicationPolicy
 
   private
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def user_is_moderator_or_admin?
-    (user && (user.moderator? || user.admin?))
+    user && (user&.moderator? || user&.admin?)
   end
 end
