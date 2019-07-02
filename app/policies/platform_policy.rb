@@ -4,10 +4,10 @@ class PlatformPolicy < ApplicationPolicy
 
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Platform)) }
+  sig { returns(T.nilable(Platform::Relation)) }
   attr_reader :platform
 
-  sig { params(user: T.nilable(User), platform: T.nilable(Platform)).void }
+  sig { params(user: T.nilable(User), platform: T.nilable(Platform::Relation)).void }
   def initialize(user, platform)
     @user = user
     @platform = platform
