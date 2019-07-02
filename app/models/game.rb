@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 class Game < ApplicationRecord
   include PgSearch
 
