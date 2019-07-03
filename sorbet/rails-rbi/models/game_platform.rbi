@@ -2,8 +2,14 @@
 # Please rerun rake rails_rbi:models to regenerate.
 # typed: strong
 
-class GamePlatform::Relation < ActiveRecord::Relation
-  include GamePlatform::NamedScope
+class GamePlatform::ActiveRecord_Relation < ActiveRecord::Relation
+  include GamePlatform::ModelRelationShared
+  extend T::Generic
+  Elem = type_member(fixed: GamePlatform)
+end
+
+class GamePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include GamePlatform::ModelRelationShared
   extend T::Generic
   Elem = type_member(fixed: GamePlatform)
 end
@@ -11,8 +17,13 @@ end
 class GamePlatform < ApplicationRecord
   extend T::Sig
   extend T::Generic
-  extend GamePlatform::NamedScope
+  extend GamePlatform::ModelRelationShared
+  include GamePlatform::InstanceMethods
   Elem = type_template(fixed: GamePlatform)
+end
+
+module GamePlatform::InstanceMethods
+  extend T::Sig
 
   sig { returns(DateTime) }
   def created_at(); end
@@ -20,11 +31,8 @@ class GamePlatform < ApplicationRecord
   sig { params(value: DateTime).void }
   def created_at=(value); end
 
-  sig { returns(Game) }
-  def game(); end
-
-  sig { params(value: Game).void }
-  def game=(value); end
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at?(*args); end
 
   sig { returns(Integer) }
   def game_id(); end
@@ -32,17 +40,17 @@ class GamePlatform < ApplicationRecord
   sig { params(value: Integer).void }
   def game_id=(value); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def game_id?(*args); end
+
   sig { returns(Integer) }
   def id(); end
 
   sig { params(value: Integer).void }
   def id=(value); end
 
-  sig { returns(Platform) }
-  def platform(); end
-
-  sig { params(value: Platform).void }
-  def platform=(value); end
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id?(*args); end
 
   sig { returns(Integer) }
   def platform_id(); end
@@ -50,101 +58,125 @@ class GamePlatform < ApplicationRecord
   sig { params(value: Integer).void }
   def platform_id=(value); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def platform_id?(*args); end
+
   sig { returns(DateTime) }
   def updated_at(); end
 
   sig { params(value: DateTime).void }
   def updated_at=(value); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def updated_at?(*args); end
+
 end
 
-
-module GamePlatform::NamedScope
+class GamePlatform
   extend T::Sig
 
-  sig { returns(GamePlatform::Relation) }
-  def all(); end
+  sig { returns(::Game) }
+  def game(); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def select(*args, block); end
+  sig { params(value: ::Game).void }
+  def game=(value); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def order(*args, block); end
+  sig { returns(::Platform) }
+  def platform(); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def reorder(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def group(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def limit(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def offset(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def joins(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def left_joins(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def left_outer_joins(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def where(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def rewhere(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def preload(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def eager_load(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def includes(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def from(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def lock(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def readonly(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def extending(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def or(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def having(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def create_with(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def distinct(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def references(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def none(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def unscope(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def merge(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::Relation) }
-  def except(*args, block); end
+  sig { params(value: ::Platform).void }
+  def platform=(value); end
 
 end
 
+module GamePlatform::ModelRelationShared
+  extend T::Sig
+
+  sig { returns(GamePlatform::ActiveRecord_Relation) }
+  def all(); end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def select(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def order(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def reorder(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def group(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def limit(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def offset(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def left_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def left_outer_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def where(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def rewhere(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def preload(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def eager_load(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def includes(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def from(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def lock(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def readonly(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def extending(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def or(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def having(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def create_with(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def distinct(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def references(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def none(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def unscope(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def merge(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
+  def except(*args, &block); end
+
+end

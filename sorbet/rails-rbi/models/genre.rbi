@@ -2,8 +2,14 @@
 # Please rerun rake rails_rbi:models to regenerate.
 # typed: strong
 
-class Genre::Relation < ActiveRecord::Relation
-  include Genre::NamedScope
+class Genre::ActiveRecord_Relation < ActiveRecord::Relation
+  include Genre::ModelRelationShared
+  extend T::Generic
+  Elem = type_member(fixed: Genre)
+end
+
+class Genre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Genre::ModelRelationShared
   extend T::Generic
   Elem = type_member(fixed: Genre)
 end
@@ -11,8 +17,13 @@ end
 class Genre < ApplicationRecord
   extend T::Sig
   extend T::Generic
-  extend Genre::NamedScope
+  extend Genre::ModelRelationShared
+  include Genre::InstanceMethods
   Elem = type_template(fixed: Genre)
+end
+
+module Genre::InstanceMethods
+  extend T::Sig
 
   sig { returns(DateTime) }
   def created_at(); end
@@ -20,23 +31,17 @@ class Genre < ApplicationRecord
   sig { params(value: DateTime).void }
   def created_at=(value); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at?(*args); end
+
   sig { returns(String) }
   def description(); end
 
   sig { params(value: String).void }
   def description=(value); end
 
-  sig { returns(GameGenre::Relation) }
-  def game_genres(); end
-
-  sig { params(value: T.any(T::Array[GameGenre], GameGenre::Relation)).void }
-  def game_genres=(value); end
-
-  sig { returns(Game::Relation) }
-  def games(); end
-
-  sig { params(value: T.any(T::Array[Game], Game::Relation)).void }
-  def games=(value); end
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def description?(*args); end
 
   sig { returns(Integer) }
   def id(); end
@@ -44,17 +49,17 @@ class Genre < ApplicationRecord
   sig { params(value: Integer).void }
   def id=(value); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id?(*args); end
+
   sig { returns(String) }
   def name(); end
 
   sig { params(value: String).void }
   def name=(value); end
 
-  sig { returns(T.nilable(PgSearch::Document)) }
-  def pg_search_document(); end
-
-  sig { params(value: T.nilable(PgSearch::Document)).void }
-  def pg_search_document=(value); end
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def name?(*args); end
 
   sig { returns(DateTime) }
   def updated_at(); end
@@ -62,101 +67,131 @@ class Genre < ApplicationRecord
   sig { params(value: DateTime).void }
   def updated_at=(value); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def updated_at?(*args); end
+
   sig { returns(T.nilable(Integer)) }
   def wikidata_id(); end
 
   sig { params(value: T.nilable(Integer)).void }
   def wikidata_id=(value); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def wikidata_id?(*args); end
+
 end
 
-
-module Genre::NamedScope
+class Genre
   extend T::Sig
 
-  sig { returns(Genre::Relation) }
-  def all(); end
+  sig { returns(::GameGenre::ActiveRecord_Associations_CollectionProxy) }
+  def game_genres(); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def select(*args, block); end
+  sig { params(value: T.any(T::Array[::GameGenre], ::GameGenre::ActiveRecord_Associations_CollectionProxy)).void }
+  def game_genres=(value); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def order(*args, block); end
+  sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
+  def games(); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def reorder(*args, block); end
+  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  def games=(value); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def group(*args, block); end
+  sig { returns(T.nilable(::PgSearch::Document)) }
+  def pg_search_document(); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def limit(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def offset(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def joins(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def left_joins(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def left_outer_joins(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def where(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def rewhere(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def preload(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def eager_load(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def includes(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def from(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def lock(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def readonly(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def extending(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def or(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def having(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def create_with(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def distinct(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def references(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def none(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def unscope(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def merge(*args, block); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::Relation) }
-  def except(*args, block); end
+  sig { params(value: T.nilable(::PgSearch::Document)).void }
+  def pg_search_document=(value); end
 
 end
 
+module Genre::ModelRelationShared
+  extend T::Sig
+
+  sig { returns(Genre::ActiveRecord_Relation) }
+  def all(); end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def select(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def order(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def reorder(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def group(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def limit(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def offset(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def left_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def left_outer_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def where(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def rewhere(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def preload(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def eager_load(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def includes(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def from(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def lock(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def readonly(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def extending(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def or(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def having(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def create_with(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def distinct(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def references(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def none(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def unscope(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def merge(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
+  def except(*args, &block); end
+
+end

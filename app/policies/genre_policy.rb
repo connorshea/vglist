@@ -7,7 +7,7 @@ class GenrePolicy < ApplicationPolicy
   sig { returns(T.nilable(Genre)) }
   attr_reader :genre
 
-  sig { params(user: T.nilable(User), genre: T.nilable(Genre)).void }
+  sig { params(user: T.nilable(User), genre: T.nilable(T.any(ActiveRecord::Relation, Genre))).void }
   def initialize(user, genre)
     @user = user
     @genre = genre

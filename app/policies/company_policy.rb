@@ -7,7 +7,7 @@ class CompanyPolicy < ApplicationPolicy
   sig { returns(T.nilable(Company)) }
   attr_reader :company
 
-  sig { params(user: T.nilable(User), company: T.nilable(Company)).void }
+  sig { params(user: T.nilable(User), company: T.nilable(T.any(ActiveRecord::Relation, Company))).void }
   def initialize(user, company)
     @user = user
     @company = company
