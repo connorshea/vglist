@@ -347,7 +347,7 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webdrivers (4.0.1)
+    webdrivers (4.1.0)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (>= 3.0, < 4.0)
@@ -407,7 +407,7 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   web-console (>= 3.3.0)
-  webdrivers (~> 4.0)
+  webdrivers (~> 4.1)
   webpacker (~> 4.0.7)
 
 RUBY VERSION
