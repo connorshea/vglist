@@ -4,7 +4,7 @@ if defined?(Faker)
     class Game < Faker::Base
       class << self
         extend T::Sig
-        
+
         sig { returns(String) }
         def name
           fetch('game.name')

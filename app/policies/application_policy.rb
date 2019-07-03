@@ -2,7 +2,7 @@
 # Defines defaults for all policies.
 class ApplicationPolicy
   extend T::Sig
-  
+
   class Scope
     attr_reader :user, :scope
 
