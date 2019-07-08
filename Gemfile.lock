@@ -170,7 +170,7 @@ GEM
     multipart-post (2.1.1)
     net-http-persistent (3.0.1)
       connection_pool (~> 2.2)
-    nio4r (2.3.1)
+    nio4r (2.4.0)
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
