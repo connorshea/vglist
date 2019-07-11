@@ -6,7 +6,7 @@
     "@sentry/browser": "5.4.3",
     "activestorage": "^5.2.3",
     "bulma": "^0.7.5",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "rails-ujs": "^5.2.3",
     "resolve-url-loader": "^3.1.0",
     "ts-loader": "^6.0.4",
