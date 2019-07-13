@@ -4738,34 +4738,9 @@ class ActiveRecord::Associations::HasOneAssociation < ActiveRecord::Associations
   def transaction_if(value); end
   include ActiveRecord::Associations::ForeignAssociation
 end
-class ActiveRecord::Associations::AssociationScope
-  def add_constraints(scope, owner, chain); end
-  def apply_scope(scope, table, key, value); end
-  def eval_scope(reflection, scope, owner); end
-  def get_chain(reflection, association, tracker); end
-  def initialize(value_transformation); end
-  def join(table, constraint); end
-  def last_chain_scope(scope, reflection, owner); end
-  def next_chain_scope(scope, reflection, next_reflection); end
-  def scope(association); end
-  def self.create(&block); end
-  def self.get_bind_values(owner, chain); end
-  def self.scope(association); end
-  def transform_value(value); end
-  def value_transformation; end
-end
-class ActiveRecord::Associations::AssociationScope::ReflectionProxy < SimpleDelegator
-  def aliased_table; end
-  def all_includes; end
-  def initialize(reflection, aliased_table); end
-end
-class ActiveRecord::Associations::AliasTracker
-  def aliased_table_for(table_name, aliased_name, type_caster); end
-  def aliases; end
-  def initialize(connection, aliases); end
-  def self.create(connection, initial_table, joins); end
-  def self.initial_count_for(connection, name, table_joins); end
-  def truncate(name); end
+class ActiveRecord::Coders::JSON
+  def self.dump(obj); end
+  def self.load(json); end
 end
 class ActiveRecord::Associations::BelongsToAssociation < ActiveRecord::Associations::SingularAssociation
   def decrement_counters; end
@@ -4797,8 +4772,4 @@ class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ActiveRecord
   def replace_keys(record); end
   def stale_state; end
   def target_changed?; end
-end
-class ActiveRecord::Coders::JSON
-  def self.dump(obj); end
-  def self.load(json); end
 end

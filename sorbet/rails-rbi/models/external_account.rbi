@@ -52,6 +52,9 @@ module ExternalAccount::InstanceMethods
   sig { params(args: T.untyped).returns(T::Boolean) }
   def id?(*args); end
 
+  sig { void }
+  def steam!(); end
+
   sig { returns(T::Boolean) }
   def steam?(); end
 

@@ -1,4 +1,4 @@
-# typed: false
+# typed: ignore
 puts "Creating Genres..."
 
 # Create 20 unique genres.

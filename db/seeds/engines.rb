@@ -1,4 +1,4 @@
-# typed: false
+# typed: ignore
 puts "Creating Engines..."
 
 10.times do

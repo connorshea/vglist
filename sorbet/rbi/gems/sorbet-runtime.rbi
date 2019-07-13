@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-runtime/all/sorbet-runtime.rbi
 #
-# sorbet-runtime-0.4.4366
+# sorbet-runtime-0.4.4429
 module T::Configuration
   def self.call_validation_error_handler(signature, opts); end
   def self.call_validation_error_handler=(value); end
@@ -80,7 +80,6 @@ module T::Utils
   def self.signature_for_instance_method(mod, method_name); end
   def self.string_truncate_middle(str, start_len, end_len, ellipsis = nil); end
   def self.unwrap_nilable(type); end
-  def self.validate_sigs; end
   def self.wrap_method_with_call_validation_if_needed(mod, method_sig, original_method); end
 end
 class T::Utils::RuntimeProfiled
@@ -467,11 +466,11 @@ class T::Props::Decorator
   def handle_redaction_option(*args, &blk); end
   def hash_key_custom_type(*args, &blk); end
   def hash_value_subdoc_type(*args, &blk); end
-  def initialize(*args, &blk); end
+  def initialize(klass); end
   def is_nilable?(*args, &blk); end
-  def model_inherited(*args, &blk); end
+  def model_inherited(child); end
   def mutate_prop_backdoor!(*args, &blk); end
-  def plugin(arg0, &blk); end
+  def plugin(mod); end
   def prop_defined(*args, &blk); end
   def prop_get(*args, &blk); end
   def prop_rules(*args, &blk); end

@@ -7,11 +7,11 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.1.3
+# sorbet-rails-0.4.0
 module SorbetRails
 end
 module SorbetRails::CustomFinderMethods
-  def find_n(ids); end
+  def find_n(*ids); end
   def first_n(n); end
   def last_n(n); end
 end

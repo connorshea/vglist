@@ -34,6 +34,9 @@ module GamePurchase::InstanceMethods
   sig { params(args: T.untyped).returns(T::Boolean) }
   def comments?(*args); end
 
+  sig { void }
+  def completed!(); end
+
   sig { returns(T::Boolean) }
   def completed?(); end
 
@@ -64,8 +67,14 @@ module GamePurchase::InstanceMethods
   sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at?(*args); end
 
+  sig { void }
+  def dropped!(); end
+
   sig { returns(T::Boolean) }
   def dropped?(); end
+
+  sig { void }
+  def fully_completed!(); end
 
   sig { returns(T::Boolean) }
   def fully_completed?(); end
@@ -97,11 +106,20 @@ module GamePurchase::InstanceMethods
   sig { params(args: T.untyped).returns(T::Boolean) }
   def id?(*args); end
 
+  sig { void }
+  def in_progress!(); end
+
   sig { returns(T::Boolean) }
   def in_progress?(); end
 
+  sig { void }
+  def not_applicable!(); end
+
   sig { returns(T::Boolean) }
   def not_applicable?(); end
+
+  sig { void }
+  def paused!(); end
 
   sig { returns(T::Boolean) }
   def paused?(); end
@@ -123,6 +141,9 @@ module GamePurchase::InstanceMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def start_date?(*args); end
+
+  sig { void }
+  def unplayed!(); end
 
   sig { returns(T::Boolean) }
   def unplayed?(); end

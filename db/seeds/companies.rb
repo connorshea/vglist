@@ -1,4 +1,4 @@
-# typed: false
+# typed: ignore
 puts "Creating Companies..."
 
 20.times do

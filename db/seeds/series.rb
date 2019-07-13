@@ -1,4 +1,4 @@
-# typed: false
+# typed: ignore
 puts "Creating Series..."
 
 # Create 20 Series.

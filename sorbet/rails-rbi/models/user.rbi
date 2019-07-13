@@ -25,6 +25,9 @@ end
 module User::InstanceMethods
   extend T::Sig
 
+  sig { void }
+  def admin!(); end
+
   sig { returns(T::Boolean) }
   def admin?(); end
 
@@ -136,8 +139,14 @@ module User::InstanceMethods
   sig { params(args: T.untyped).returns(T::Boolean) }
   def last_sign_in_ip?(*args); end
 
+  sig { void }
+  def member!(); end
+
   sig { returns(T::Boolean) }
   def member?(); end
+
+  sig { void }
+  def moderator!(); end
 
   sig { returns(T::Boolean) }
   def moderator?(); end

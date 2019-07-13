@@ -1,4 +1,4 @@
-# typed: false
+# typed: strong
 class GamePurchasePlatform < ApplicationRecord
   belongs_to :game_purchase
   belongs_to :platform
