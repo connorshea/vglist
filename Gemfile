@@ -34,7 +34,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'pundit', '~> 2.0'
 
 # Postgres Search
-gem 'pg_search', '~> 2.2'
+gem 'pg_search', '~> 2.3'
 
 # Image transformation
 # TODO: Swap this out for image_processing and libvips in Rails 6.
