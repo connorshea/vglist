@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class AddRoleToUsers < ActiveRecord::Migration[5.2]
   def change
     # Default to 'member' role for new users.

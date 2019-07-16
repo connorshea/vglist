@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # Auto-generated migration.
 # rubocop:disable all
 class CreateFriendlyIdSlugs < ActiveRecord::Migration[5.2]

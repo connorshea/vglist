@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class CreateGameEngines < ActiveRecord::Migration[5.2]
   def change
     create_table :game_engines do |t|

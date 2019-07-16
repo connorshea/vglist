@@ -7,13 +7,14 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-runtime/all/sorbet-runtime.rbi
 #
-# sorbet-runtime-0.4.4429
+# sorbet-runtime-0.4.4445
 module T::Configuration
   def self.call_validation_error_handler(signature, opts); end
   def self.call_validation_error_handler=(value); end
   def self.call_validation_error_handler_default(signature, opts); end
   def self.default_checked_level=(default_checked_level); end
   def self.enable_checking_for_sigs_marked_checked_tests; end
+  def self.enable_final_checks_for_include_extend; end
   def self.hard_assert_handler(str, extra); end
   def self.hard_assert_handler=(value); end
   def self.hard_assert_handler_default(str, _); end
@@ -23,6 +24,7 @@ module T::Configuration
   def self.log_info_handler(str, extra); end
   def self.log_info_handler=(value); end
   def self.log_info_handler_default(str, extra); end
+  def self.reset_final_checks_for_include_extend; end
   def self.scalar_types; end
   def self.scalar_types=(values); end
   def self.sig_builder_error_handler(error, location); end
@@ -35,6 +37,7 @@ module T::Configuration
   def self.soft_assert_handler=(value); end
   def self.soft_assert_handler_default(str, extra); end
   def self.validate_lambda_given!(value); end
+  def self.without_ruby_warnings; end
 end
 module T::Profile
   def self.reset; end
@@ -70,6 +73,8 @@ class T::Private::DeclState
   def reset!; end
   def self.current; end
   def self.current=(other); end
+  def skip_next_on_method_added; end
+  def skip_next_on_method_added=(arg0); end
 end
 module T::Utils
   def self.arity(method); end
@@ -108,9 +113,14 @@ module T::Private::RuntimeLevels
   def self.enable_checking_in_tests; end
 end
 module T::Private::Methods
+  def self._check_final_ancestors(target, target_ancestors, source_method_names); end
+  def self._included_extended_impl(target, target_ancestors, source); end
   def self._on_method_added(hook_mod, method_name, is_singleton_method: nil); end
+  def self.add_final_method(method_key); end
+  def self.add_module_with_final(mod); end
   def self.build_sig(hook_mod, method_name, original_method, current_declaration, loc); end
-  def self.declare_sig(mod, &blk); end
+  def self.declare_sig(mod, arg, &blk); end
+  def self.final_method?(method_key); end
   def self.finalize_proc(decl); end
   def self.has_sig_block_for_key(key); end
   def self.has_sig_block_for_method(method); end
@@ -119,13 +129,16 @@ module T::Private::Methods
   def self.key_to_method(key); end
   def self.maybe_run_sig_block_for_key(key); end
   def self.maybe_run_sig_block_for_method(method); end
+  def self.method_owner_and_name_to_key(owner, name); end
   def self.method_to_key(method); end
+  def self.module_with_final?(mod); end
   def self.register_forwarder(from_method, to_method, mode: nil, remove_first_param: nil); end
   def self.run_all_sig_blocks; end
   def self.run_builder(declaration_block); end
   def self.run_sig(hook_mod, method_name, original_method, declaration_block); end
   def self.run_sig_block_for_key(key); end
   def self.run_sig_block_for_method(method); end
+  def self.set_final_checks_for_include_extend(enable); end
   def self.sig_error(loc, message); end
   def self.signature_for_key(key); end
   def self.signature_for_method(method); end
@@ -135,6 +148,8 @@ end
 class T::Private::Methods::DeclarationBlock < Struct
   def blk; end
   def blk=(_); end
+  def final; end
+  def final=(_); end
   def loc; end
   def loc=(_); end
   def mod; end
@@ -145,7 +160,7 @@ class T::Private::Methods::DeclarationBlock < Struct
   def self.new(*arg0); end
 end
 module T::Sig
-  def sig(&blk); end
+  def sig(arg = nil, &blk); end
 end
 module T::Sig::WithoutRuntime
 end
@@ -269,8 +284,8 @@ module T::Private::Abstract::Validate
 end
 module T::Generic
   def [](*types); end
-  def type_member(variance = nil, fixed: nil); end
-  def type_template(variance = nil, fixed: nil); end
+  def type_member(variance = nil, fixed: nil, lower: nil, upper: nil); end
+  def type_template(variance = nil, fixed: nil, lower: nil, upper: nil); end
   include Kernel
   include T::Helpers
 end

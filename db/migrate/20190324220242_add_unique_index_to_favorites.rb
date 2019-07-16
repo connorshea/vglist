@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class AddUniqueIndexToFavorites < ActiveRecord::Migration[5.2]
   def change
     add_index :favorites, [:favoritable_id, :favoritable_type, :user_id],

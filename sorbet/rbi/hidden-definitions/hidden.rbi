@@ -1705,27 +1705,33 @@ module ActionView::CollectionCaching
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245405049420(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129543939680(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245406335040(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129547014140(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245477698660(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129553568740(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245493390060(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129589741200(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245494239760(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129591433560(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245499055260(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129598714680(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245501327600(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129599493660(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245502087420(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129601617020(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245502861120(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129606945380(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245507386960(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129609325640(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1659223830599463648_70245516176080(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129609974260(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129630453280(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129630938840(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1917162225794541264_70129632969460(local_assigns, output_buffer); end
 end
 
 module ActionView::CompiledTemplates
@@ -3021,9 +3027,6 @@ module ActiveRecord::AttributeMethods::TimeZoneConversion::ClassMethods
   extend ::T::Sig
 end
 
-class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
-end
-
 module ActiveRecord::AttributeMethods::TimeZoneConversion
   extend ::T::Sig
 end
@@ -3184,9 +3187,6 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   extend ::T::Sig
 end
 
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata
-end
-
 module ActiveRecord::ConnectionAdapters::MySQL
   extend ::T::Sig
 end
@@ -3258,9 +3258,6 @@ class ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
 end
 
 ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::OID = ActiveRecord::ConnectionAdapters::PostgreSQL::OID
-
-class ActiveRecord::ConnectionAdapters::PostgreSQLTypeMetadata
-end
 
 module ActiveRecord::ConnectionAdapters::QueryCache::ConnectionPoolConfiguration
   extend ::T::Sig
@@ -3425,9 +3422,6 @@ end
 
 module ActiveRecord::LegacyYamlAdapter
   extend ::T::Sig
-end
-
-class ActiveRecord::Locking::LockingType
 end
 
 module ActiveRecord::Locking::Optimistic
@@ -4083,13 +4077,7 @@ module ActiveRecord::Type::Internal
   extend ::T::Sig
 end
 
-class ActiveRecord::Type::Serialized
-end
-
 ActiveRecord::Type::String = ActiveModel::Type::String
-
-class ActiveRecord::Type::Time::Value
-end
 
 module ActiveRecord::Type
   extend ::T::Sig
@@ -6444,6 +6432,10 @@ end
 class Bundler::Graph
 end
 
+class Bundler::Index
+  include ::Enumerable
+end
+
 class Bundler::Injector
   def initialize(deps, options=T.unsafe(nil)); end
 
@@ -6497,6 +6489,14 @@ end
 
 module Bundler::Molinillo::Delegates
   extend ::T::Sig
+end
+
+class Bundler::Molinillo::DependencyGraph
+  include ::Enumerable
+end
+
+class Bundler::Molinillo::DependencyGraph::Log
+  extend ::Enumerable
 end
 
 module Bundler::Molinillo::SpecificationProvider
@@ -6795,6 +6795,10 @@ end
 
 module Bundler::SharedHelpers
   extend ::T::Sig
+end
+
+class Bundler::SpecSet
+  include ::Enumerable
 end
 
 class Bundler::UI::RGProxy
@@ -19899,9 +19903,6 @@ end
 
 module Mail::Parsers
   extend ::T::Sig
-end
-
-class Mail::PartsList
 end
 
 class Mail::PhraseList
@@ -42515,9 +42516,6 @@ end
 
 module Zip::NullInputStream
   extend ::T::Sig
-end
-
-class Zip::StreamableStream
 end
 
 module Zip::TraditionalEncryption

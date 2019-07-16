@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class CreateReleasePurchases < ActiveRecord::Migration[5.2]
   def change
     create_table :release_purchases do |t|
