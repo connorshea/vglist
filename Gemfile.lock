@@ -233,7 +233,7 @@ GEM
       rdf (>= 2.2, < 4.0)
     rdf-xsd (3.0.1)
       rdf (~> 3.0)
-    regexp_parser (1.5.1)
+    regexp_parser (1.6.0)
     responders (3.0.0)
       actionpack (>= 5.0)
       railties (>= 5.0)
