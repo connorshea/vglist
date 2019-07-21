@@ -529,36 +529,12 @@ end
 
 module ActiveRecord::Persistence
   mixes_in_class_methods(ActiveRecord::Persistence::ClassMethods)
-end
 
-module ActiveRecord::Persistence::ClassMethods
-  sig { params(klass: Class).returns(Class) }
+  sig { params(klass: Class).returns(T.untyped) }
   def becomes!(klass); end
 
-  sig { params(klass: Class).returns(Class) }
+  sig { params(klass: Class).returns(T.untyped) }
   def becomes(klass); end
-
-  sig do
-    params(
-      attributes: T.nilable(T.any(
-        T::Hash[T.any(Symbol, String), T.untyped],
-        T::Array[T::Hash[T.any(Symbol, String), T.untyped]]
-      )),
-      blk: T.nilable(T.proc.params(arg0: T.untyped).returns(T.untyped))
-    ).returns(T.any(Array, T.self_type))
-  end
-  def create!(attributes = nil, &blk); end
-
-  sig do
-    params(
-      attributes: T.nilable(T.any(
-        T::Hash[T.any(Symbol, String), T.untyped],
-        T::Array[T::Hash[T.any(Symbol, String), T.untyped]]
-      )),
-      blk: T.nilable(T.proc.params(arg0: T.untyped).returns(T.untyped))
-    ).returns(T.any(Array, T.self_type))
-  end
-  def create(attributes = nil, &blk); end
 
   sig do
     params(
@@ -576,27 +552,6 @@ module ActiveRecord::Persistence::ClassMethods
     ).returns(T.self_type)
   end
   def decrement(attribute, by = 1); end
-
-  sig do
-    params(
-      id_or_array: T.any(T.untyped, T::Array[T.untyped])
-    ).returns(T.self_type)
-  end
-  def delete(id_or_array); end
-
-  sig do
-    params(
-      id_or_array: T.any(T.untyped, T::Array[T.untyped])
-    ).returns(T.self_type)
-  end
-  def destroy!(id_or_array); end
-
-  sig do
-    params(
-      id_or_array: T.any(T.untyped, T::Array[T.untyped])
-    ).returns(T.self_type)
-  end
-  def destroy(id_or_array); end
 
   sig { returns(T::Boolean) }
   def destroyed?(); end
@@ -618,43 +573,6 @@ module ActiveRecord::Persistence::ClassMethods
   end
   def increment(attribute, by = 1); end
 
-  sig do
-    params(
-      attributes: T::Array[T::Hash[T.any(Symbol, String), T.untyped]],
-      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)]))
-    ).returns(ActiveRecord::Result)
-  end
-  def insert_all!(attributes, returning: nil); end
-
-  sig do
-    params(
-      attributes: T::Array[T::Hash[T.any(Symbol, String), T.untyped]],
-      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)])),
-      unique_by: T.nilable(T.untyped)
-    ).returns(ActiveRecord::Result)
-  end
-  def insert_all(attributes, returning: nil, unique_by: nil); end
-
-  sig do
-    params(
-      attributes: T::Hash[T.any(Symbol, String), T.untyped],
-      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)])),
-      unique_by: T.nilable(T.untyped)
-    ).returns(ActiveRecord::Result)
-  end
-  def insert!(attributes, returning: nil, unique_by: nil); end
-
-  sig do
-    params(
-      attributes: T::Hash[T.any(Symbol, String), T.untyped],
-      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)])),
-      unique_by: T.nilable(T.untyped)
-    ).returns(ActiveRecord::Result)
-  end
-  def insert(attributes, returning: nil, unique_by: nil); end
-
-  def instantiate(attributes, column_types = {}, &blk); end
-
   sig { returns(T::Boolean) }
   def new_record?(); end
 
@@ -672,7 +590,7 @@ module ActiveRecord::Persistence::ClassMethods
     params(
       args: T.untyped,
       blk: T.proc.void,
-    ).returns(T::Boolean)
+    ).returns(TrueClass)
   end
   def save!(*args, &blk); end
 
@@ -684,10 +602,10 @@ module ActiveRecord::Persistence::ClassMethods
   end
   def save(*args, &blk); end
 
-  sig { params(attribute: T.any(Symbol, String)).returns(T.self_type) }
+  sig { params(attribute: T.any(Symbol, String)).returns(TrueClass) }
   def toggle!(attribute); end
 
-  sig { params(attribute: T.any(Symbol, String)).returns(T::Boolean) }
+  sig { params(attribute: T.any(Symbol, String)).returns(T.self_type) }
   def toggle(attribute); end
 
   sig do
@@ -728,15 +646,108 @@ module ActiveRecord::Persistence::ClassMethods
   sig do
     params(
       attributes: T::Hash[T.any(Symbol, String), T.untyped]
-    ).returns(T::Boolean)
+    ).returns(TrueClass)
   end
   def update!(attributes); end
 
   sig do
     params(
+      attributes: T::Hash[T.any(Symbol, String), T.untyped]
+    ).returns(T::Boolean)
+  end
+  def update(attributes); end
+
+  alias update_attributes update
+  alias update_attributes! update!
+end
+
+module ActiveRecord::Persistence::ClassMethods
+  sig do
+    params(
+      attributes: T.nilable(T.any(
+        T::Hash[T.any(Symbol, String), T.untyped],
+        T::Array[T::Hash[T.any(Symbol, String), T.untyped]]
+      )),
+      blk: T.nilable(T.proc.params(arg0: T.untyped).returns(T.untyped))
+    ).returns(T.untyped)
+  end
+  def create!(attributes = nil, &blk); end
+
+  sig do
+    params(
+      attributes: T.nilable(T.any(
+        T::Hash[T.any(Symbol, String), T.untyped],
+        T::Array[T::Hash[T.any(Symbol, String), T.untyped]]
+      )),
+      blk: T.nilable(T.proc.params(arg0: T.untyped).returns(T.untyped))
+    ).returns(T.untyped)
+  end
+  def create(attributes = nil, &blk); end
+
+  sig do
+    params(
+      id_or_array: T.any(T.untyped, T::Array[T.untyped])
+    ).returns(T.untyped)
+  end
+  def delete(id_or_array); end
+
+  sig do
+    params(
+      id_or_array: T.any(T.untyped, T::Array[T.untyped])
+    ).returns(T.untyped)
+  end
+  def destroy!(id_or_array); end
+
+  sig do
+    params(
+      id_or_array: T.any(T.untyped, T::Array[T.untyped])
+    ).returns(T.untyped)
+  end
+  def destroy(id_or_array); end
+
+  sig do
+    params(
+      attributes: T::Array[T::Hash[T.any(Symbol, String), T.untyped]],
+      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)]))
+    ).returns(ActiveRecord::Result)
+  end
+  def insert_all!(attributes, returning: nil); end
+
+  sig do
+    params(
+      attributes: T::Array[T::Hash[T.any(Symbol, String), T.untyped]],
+      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)])),
+      unique_by: T.nilable(T.untyped)
+    ).returns(ActiveRecord::Result)
+  end
+  def insert_all(attributes, returning: nil, unique_by: nil); end
+
+  sig do
+    params(
+      attributes: T::Hash[T.any(Symbol, String), T.untyped],
+      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)])),
+      unique_by: T.nilable(T.untyped)
+    ).returns(ActiveRecord::Result)
+  end
+  def insert!(attributes, returning: nil, unique_by: nil); end
+
+  sig do
+    params(
+      attributes: T::Hash[T.any(Symbol, String), T.untyped],
+      returning: T.nilable(T.any(FalseClass, T::Array[T.any(Symbol, String)])),
+      unique_by: T.nilable(T.untyped)
+    ).returns(ActiveRecord::Result)
+  end
+  def insert(attributes, returning: nil, unique_by: nil); end
+
+  sig { params(attributes: T.untyped, column_types: T::Hash[T.untyped, T.untyped], blk: T.proc.void).returns(T.untyped) }
+  def instantiate(attributes, column_types = {}, &blk); end
+
+  sig do
+    params(
       id: T.any(T.untyped, T::Array[T.untyped], Symbol),
       attributes: T::Hash[T.any(Symbol, String), T.untyped]
-    ).returns(T.any(Array, T.self_type))
+    ).returns(T.any(T::Array[T.untyped], T.untyped))
   end
   def update(id = :all, attributes); end
 
@@ -757,9 +768,6 @@ module ActiveRecord::Persistence::ClassMethods
     ).returns(ActiveRecord::Result)
   end
   def upsert(attributes, returning: nil, unique_by: nil); end
-
-  alias update_attributes update
-  alias update_attributes! update!
 end
 
 class ActiveRecord::Result; end
@@ -863,7 +871,7 @@ module ActiveRecord
 end
 
 class ActiveRecord::Schema < ActiveRecord::Migration::Current
-  sig {params(info: Hash, blk: T.proc.bind(ActiveRecord::Schema).void).void}
+  sig {params(info: T::Hash[T.untyped, T.untyped], blk: T.proc.bind(ActiveRecord::Schema).void).void}
   def self.define(info = nil, &blk); end
 end
 
@@ -1082,7 +1090,7 @@ class ActiveRecord::Migration::Current < ActiveRecord::Migration
     validate: nil
   ); end
 
-  # Indices 
+  # Indices
 
   sig do
     params(

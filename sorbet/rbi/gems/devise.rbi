@@ -520,12 +520,12 @@ class Devise::FailureApp < ActionController::Metal
   include ActionDispatch::Routing::UrlFor
   include ActionDispatch::Routing::UrlFor
   include ActiveSupport::Benchmarkable
-  include Anonymous_Module_26
+  include Anonymous_Module_25
   include Devise::Controllers::StoreLocation
   include Turbolinks::Controller
   include Turbolinks::Redirection
 end
-module Anonymous_Module_26
+module Anonymous_Module_25
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -537,11 +537,11 @@ module Anonymous_Module_26
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
+  extend Anonymous_Module_26
   extend Anonymous_Module_27
-  extend Anonymous_Module_28
   include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_26
   include Anonymous_Module_27
-  include Anonymous_Module_28
 end
 class Devise::Strategies::Base < Warden::Strategies::Base
   def mapping; end
@@ -764,22 +764,4 @@ end
 module Devise::Controllers::ScopedViews::ClassMethods
   def scoped_views=(value); end
   def scoped_views?; end
-end
-module Devise::Encryptor
-  def self.compare(klass, hashed_password, password); end
-  def self.digest(klass, password); end
-end
-module Devise::Mailers::Helpers
-  def devise_mail(record, action, opts = nil, &block); end
-  def devise_mapping; end
-  def headers_for(action, opts); end
-  def initialize_from_record(record); end
-  def mailer_from(mapping); end
-  def mailer_reply_to(mapping); end
-  def mailer_sender(mapping, sender = nil); end
-  def resource; end
-  def scope_name; end
-  def subject_for(key); end
-  def template_paths; end
-  extend ActiveSupport::Concern
 end

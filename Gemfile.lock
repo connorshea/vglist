@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/chanzuckerberg/sorbet-rails.git
+  revision: 359716a32b8c28a657d579aa2faa1beb542012d1
+  specs:
+    sorbet-rails (0.4.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -284,11 +290,10 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    sorbet (0.4.4445)
-      sorbet-static (= 0.4.4445)
-    sorbet-rails (0.4.0)
-    sorbet-runtime (0.4.4445)
-    sorbet-static (0.4.4445-universal-darwin-14)
+    sorbet (0.4.4485)
+      sorbet-static (= 0.4.4485)
+    sorbet-runtime (0.4.4485)
+    sorbet-static (0.4.4485-universal-darwin-14)
     sparql (3.0.2)
       builder (~> 3.2)
       ebnf (~> 1.1)
@@ -385,7 +390,7 @@ DEPENDENCIES
   shoulda-matchers (= 4.1.0)
   simplecov (~> 0.16)
   sorbet (~> 0.4.4270)
-  sorbet-rails (~> 0.4)
+  sorbet-rails!
   sorbet-runtime
   sparql (~> 3.0.2)
   spring

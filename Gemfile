@@ -62,7 +62,7 @@ gem 'ruby-progressbar', '~> 1.10', require: false
 gem 'sentry-raven', '~> 2.9'
 
 gem 'sorbet-runtime'
-gem "sorbet-rails", '~> 0.4'
+gem "sorbet-rails", git: 'https://github.com/chanzuckerberg/sorbet-rails.git'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -4237,210 +4237,6 @@ class ActiveRecord::TableMetadata
   def resolve_column_aliases(hash); end
   def type(column_name); end
 end
-class ActiveRecord::Schema < ActiveRecord::Migration::Current
-  def define(info, &block); end
-  def migrations_paths; end
-  def self.define(info = nil, &block); end
-end
-class ActiveRecord::ConnectionAdapters::TransactionState
-  def add_child(state); end
-  def commit!; end
-  def committed?; end
-  def completed?; end
-  def finalized?; end
-  def full_commit!; end
-  def full_rollback!; end
-  def fully_committed?; end
-  def fully_completed?; end
-  def fully_rolledback?; end
-  def initialize(state = nil); end
-  def nullify!; end
-  def rollback!; end
-  def rolledback?; end
-  def set_state(state); end
-end
-class ActiveRecord::ConnectionAdapters::NullTransaction
-  def add_record(record); end
-  def closed?; end
-  def initialize; end
-  def joinable?; end
-  def open?; end
-  def state; end
-end
-class ActiveRecord::ConnectionAdapters::Transaction
-  def add_record(record); end
-  def before_commit_records; end
-  def closed?; end
-  def commit_records; end
-  def connection; end
-  def full_rollback?; end
-  def initialize(connection, options, run_commit_callbacks: nil); end
-  def joinable=(arg0); end
-  def joinable?; end
-  def open?; end
-  def records; end
-  def rollback_records; end
-  def savepoint_name; end
-  def state; end
-end
-class ActiveRecord::ConnectionAdapters::SavepointTransaction < ActiveRecord::ConnectionAdapters::Transaction
-  def commit; end
-  def full_rollback?; end
-  def initialize(connection, savepoint_name, parent_transaction, options, *args); end
-  def rollback; end
-end
-class ActiveRecord::ConnectionAdapters::RealTransaction < ActiveRecord::ConnectionAdapters::Transaction
-  def commit; end
-  def initialize(connection, options, *args); end
-  def rollback; end
-end
-class ActiveRecord::ConnectionAdapters::TransactionManager
-  def after_failure_actions(transaction, error); end
-  def begin_transaction(options = nil); end
-  def commit_transaction; end
-  def current_transaction; end
-  def initialize(connection); end
-  def open_transactions; end
-  def rollback_transaction(transaction = nil); end
-  def within_new_transaction(options = nil); end
-end
-class ActiveRecord::Result
-  def [](idx); end
-  def cast_values(type_overrides = nil); end
-  def collect!; end
-  def column_type(name, type_overrides = nil); end
-  def column_types; end
-  def columns; end
-  def each; end
-  def empty?; end
-  def first; end
-  def hash_rows; end
-  def initialize(columns, rows, column_types = nil); end
-  def initialize_copy(other); end
-  def last; end
-  def length; end
-  def map!; end
-  def rows; end
-  def to_ary; end
-  def to_hash; end
-  include Enumerable
-end
-module Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_18
-end
-class ActiveRecord::SchemaMigration < ActiveRecord::Base
-  def self._validators; end
-  def self.all_versions; end
-  def self.attribute_type_decorations; end
-  def self.create_table; end
-  def self.defined_enums; end
-  def self.drop_table; end
-  def self.normalize_migration_number(number); end
-  def self.normalized_versions; end
-  def self.page(num = nil); end
-  def self.primary_key; end
-  def self.table_exists?; end
-  def self.table_name; end
-  def version; end
-  extend Kaminari::ConfigurationMethods::ClassMethods
-  include ActiveRecord::SchemaMigration::GeneratedAssociationMethods
-  include Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_18
-  include Kaminari::ActiveRecordModelExtension
-  include Kaminari::ConfigurationMethods
-end
-module ActiveRecord::SchemaMigration::GeneratedAssociationMethods
-end
-class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relation
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveRecord::SchemaMigration::GeneratedRelationMethods
-end
-module ActiveRecord::SchemaMigration::GeneratedRelationMethods
-end
-class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveRecord::SchemaMigration::GeneratedRelationMethods
-end
-class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveRecord::SchemaMigration::GeneratedRelationMethods
-end
-module Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_19
-end
-class ActiveRecord::InternalMetadata < ActiveRecord::Base
-  def self.[](key); end
-  def self.[]=(key, value); end
-  def self._validators; end
-  def self.attribute_type_decorations; end
-  def self.create_table; end
-  def self.defined_enums; end
-  def self.page(num = nil); end
-  def self.primary_key; end
-  def self.table_exists?; end
-  def self.table_name; end
-  extend Kaminari::ConfigurationMethods::ClassMethods
-  include ActiveRecord::InternalMetadata::GeneratedAssociationMethods
-  include Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_19
-  include Kaminari::ActiveRecordModelExtension
-  include Kaminari::ConfigurationMethods
-end
-module ActiveRecord::InternalMetadata::GeneratedAssociationMethods
-end
-class ActiveRecord::InternalMetadata::ActiveRecord_Relation < ActiveRecord::Relation
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveRecord::InternalMetadata::GeneratedRelationMethods
-end
-module ActiveRecord::InternalMetadata::GeneratedRelationMethods
-end
-class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveRecord::InternalMetadata::GeneratedRelationMethods
-end
-class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveRecord::InternalMetadata::GeneratedRelationMethods
-end
-class ActiveRecord::StatementCache
-  def bind_map; end
-  def execute(params, connection, &block); end
-  def initialize(query_builder, bind_map, klass); end
-  def klass; end
-  def query_builder; end
-  def self.create(connection, block = nil); end
-  def self.partial_query(values); end
-  def self.query(sql); end
-  def self.unsupported_value?(value); end
-end
-class ActiveRecord::StatementCache::Substitute
-end
-class ActiveRecord::StatementCache::Query
-  def initialize(sql); end
-  def sql_for(binds, connection); end
-end
-class ActiveRecord::StatementCache::PartialQuery < ActiveRecord::StatementCache::Query
-  def initialize(values); end
-  def sql_for(binds, connection); end
-end
-class ActiveRecord::StatementCache::Params
-  def bind; end
-end
-class ActiveRecord::StatementCache::BindMap
-  def bind(values); end
-  def initialize(bound_attributes); end
-end
-module ActiveRecord::LegacyYamlAdapter
-  def self.convert(klass, coder); end
-end
-module ActiveRecord::LegacyYamlAdapter::Rails420
-  def self.convert(klass, coder); end
-end
-module ActiveRecord::LegacyYamlAdapter::Rails41
-  def self.convert(klass, coder); end
-end
 module ActiveRecord::ConnectionAdapters::MySQL
 end
 class ActiveRecord::ConnectionAdapters::MySQL::Column < ActiveRecord::ConnectionAdapters::Column
@@ -4526,7 +4322,7 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   def schema_creation; end
   def update_table_definition(table_name, base); end
 end
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_20
+class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_18
   def ==(other); end
   def attributes_for_hash; end
   def eql?(other); end
@@ -4690,6 +4486,109 @@ module ActiveRecord::ConnectionAdapters::MySQL::DatabaseStatements
   def supports_set_server_option?; end
   def with_multi_statements; end
 end
+module Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_19
+end
+class ActiveRecord::SchemaMigration < ActiveRecord::Base
+  def self._validators; end
+  def self.all_versions; end
+  def self.attribute_type_decorations; end
+  def self.create_table; end
+  def self.defined_enums; end
+  def self.drop_table; end
+  def self.normalize_migration_number(number); end
+  def self.normalized_versions; end
+  def self.page(num = nil); end
+  def self.primary_key; end
+  def self.table_exists?; end
+  def self.table_name; end
+  def version; end
+  extend Kaminari::ConfigurationMethods::ClassMethods
+  include ActiveRecord::SchemaMigration::GeneratedAssociationMethods
+  include Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_19
+  include Kaminari::ActiveRecordModelExtension
+  include Kaminari::ConfigurationMethods
+end
+module ActiveRecord::SchemaMigration::GeneratedAssociationMethods
+end
+class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relation
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include ActiveRecord::SchemaMigration::GeneratedRelationMethods
+end
+module ActiveRecord::SchemaMigration::GeneratedRelationMethods
+end
+class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include ActiveRecord::SchemaMigration::GeneratedRelationMethods
+end
+class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include ActiveRecord::SchemaMigration::GeneratedRelationMethods
+end
+class ActiveRecord::ConnectionAdapters::TransactionState
+  def add_child(state); end
+  def commit!; end
+  def committed?; end
+  def completed?; end
+  def finalized?; end
+  def full_commit!; end
+  def full_rollback!; end
+  def fully_committed?; end
+  def fully_completed?; end
+  def fully_rolledback?; end
+  def initialize(state = nil); end
+  def nullify!; end
+  def rollback!; end
+  def rolledback?; end
+  def set_state(state); end
+end
+class ActiveRecord::ConnectionAdapters::NullTransaction
+  def add_record(record); end
+  def closed?; end
+  def initialize; end
+  def joinable?; end
+  def open?; end
+  def state; end
+end
+class ActiveRecord::ConnectionAdapters::Transaction
+  def add_record(record); end
+  def before_commit_records; end
+  def closed?; end
+  def commit_records; end
+  def connection; end
+  def full_rollback?; end
+  def initialize(connection, options, run_commit_callbacks: nil); end
+  def joinable=(arg0); end
+  def joinable?; end
+  def open?; end
+  def records; end
+  def rollback_records; end
+  def savepoint_name; end
+  def state; end
+end
+class ActiveRecord::ConnectionAdapters::SavepointTransaction < ActiveRecord::ConnectionAdapters::Transaction
+  def commit; end
+  def full_rollback?; end
+  def initialize(connection, savepoint_name, parent_transaction, options, *args); end
+  def rollback; end
+end
+class ActiveRecord::ConnectionAdapters::RealTransaction < ActiveRecord::ConnectionAdapters::Transaction
+  def commit; end
+  def initialize(connection, options, *args); end
+  def rollback; end
+end
+class ActiveRecord::ConnectionAdapters::TransactionManager
+  def after_failure_actions(transaction, error); end
+  def begin_transaction(options = nil); end
+  def commit_transaction; end
+  def current_transaction; end
+  def initialize(connection); end
+  def open_transactions; end
+  def rollback_transaction(transaction = nil); end
+  def within_new_transaction(options = nil); end
+end
 module ActiveRecord::Migration::Compatibility
   def self.find(version); end
 end
@@ -4726,50 +4625,4 @@ module ActiveRecord::Migration::Compatibility::V4_2::TableDefinition
   def belongs_to(*arg0, **options); end
   def references(*arg0, **options); end
   def timestamps(**options); end
-end
-class ActiveRecord::Associations::HasOneAssociation < ActiveRecord::Associations::SingularAssociation
-  def _create_record(attributes, raise_error = nil, &block); end
-  def delete(method = nil); end
-  def handle_dependency; end
-  def nullify_owner_attributes(record); end
-  def remove_target!(method); end
-  def replace(record, save = nil); end
-  def set_new_record(record); end
-  def transaction_if(value); end
-  include ActiveRecord::Associations::ForeignAssociation
-end
-class ActiveRecord::Coders::JSON
-  def self.dump(obj); end
-  def self.load(json); end
-end
-class ActiveRecord::Associations::BelongsToAssociation < ActiveRecord::Associations::SingularAssociation
-  def decrement_counters; end
-  def default(&block); end
-  def different_target?(record); end
-  def find_target?; end
-  def foreign_key_present?; end
-  def handle_dependency; end
-  def increment_counters; end
-  def inversed_from(record); end
-  def invertible_for?(record); end
-  def primary_key(record); end
-  def replace(record); end
-  def replace_keys(record); end
-  def require_counter_update?; end
-  def reset; end
-  def stale_state; end
-  def target_changed?; end
-  def target_id; end
-  def update_counters(by); end
-  def update_counters_on_replace(record); end
-  def updated?; end
-end
-class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ActiveRecord::Associations::BelongsToAssociation
-  def different_target?(record); end
-  def inverse_reflection_for(record); end
-  def klass; end
-  def raise_on_type_mismatch!(record); end
-  def replace_keys(record); end
-  def stale_state; end
-  def target_changed?; end
 end
