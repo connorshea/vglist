@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/chanzuckerberg/sorbet-rails.git
-  revision: 359716a32b8c28a657d579aa2faa1beb542012d1
+  revision: 6a0295df4811aaafb45efec917a654a34f51a433
   specs:
     sorbet-rails (0.4.0)
 

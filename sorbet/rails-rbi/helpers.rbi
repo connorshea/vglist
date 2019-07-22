@@ -4,29 +4,36 @@
 
 module ApplicationHelper
   include Kernel
+  include ActionView::Helpers
 end
 
 module GamesHelper
   include Kernel
+  include ActionView::Helpers
 end
 
 module GenresHelper
   include Kernel
+  include ActionView::Helpers
 end
 
 module HomeHelper
   include Kernel
+  include ActionView::Helpers
 end
 
 module PlatformsHelper
   include Kernel
+  include ActionView::Helpers
 end
 
 module SettingsHelper
   include Kernel
+  include ActionView::Helpers
 end
 
 module DeviseHelper
   include Kernel
+  include ActionView::Helpers
 end
 
