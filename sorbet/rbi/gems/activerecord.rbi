@@ -889,6 +889,7 @@ class ActiveRecord::ExplainRegistry
   def queries; end
   def queries=(arg0); end
   def reset; end
+  def self.collect?(*args, &block); end
   extend ActiveSupport::PerThreadRegistry
 end
 class ActiveRecord::ExplainSubscriber
@@ -4589,6 +4590,27 @@ class ActiveRecord::ConnectionAdapters::TransactionManager
   def rollback_transaction(transaction = nil); end
   def within_new_transaction(options = nil); end
 end
+class ActiveRecord::Result
+  def [](idx); end
+  def cast_values(type_overrides = nil); end
+  def collect!; end
+  def column_type(name, type_overrides = nil); end
+  def column_types; end
+  def columns; end
+  def each; end
+  def empty?; end
+  def first; end
+  def hash_rows; end
+  def initialize(columns, rows, column_types = nil); end
+  def initialize_copy(other); end
+  def last; end
+  def length; end
+  def map!; end
+  def rows; end
+  def to_ary; end
+  def to_hash; end
+  include Enumerable
+end
 module ActiveRecord::Migration::Compatibility
   def self.find(version); end
 end
@@ -4625,4 +4647,87 @@ module ActiveRecord::Migration::Compatibility::V4_2::TableDefinition
   def belongs_to(*arg0, **options); end
   def references(*arg0, **options); end
   def timestamps(**options); end
+end
+class ActiveRecord::StatementCache
+  def bind_map; end
+  def execute(params, connection, &block); end
+  def initialize(query_builder, bind_map, klass); end
+  def klass; end
+  def query_builder; end
+  def self.create(connection, block = nil); end
+  def self.partial_query(values); end
+  def self.query(sql); end
+  def self.unsupported_value?(value); end
+end
+class ActiveRecord::StatementCache::Substitute
+end
+class ActiveRecord::StatementCache::Query
+  def initialize(sql); end
+  def sql_for(binds, connection); end
+end
+class ActiveRecord::StatementCache::PartialQuery < ActiveRecord::StatementCache::Query
+  def initialize(values); end
+  def sql_for(binds, connection); end
+end
+class ActiveRecord::StatementCache::Params
+  def bind; end
+end
+class ActiveRecord::StatementCache::BindMap
+  def bind(values); end
+  def initialize(bound_attributes); end
+end
+class ActiveRecord::Associations::HasOneAssociation < ActiveRecord::Associations::SingularAssociation
+  def _create_record(attributes, raise_error = nil, &block); end
+  def delete(method = nil); end
+  def handle_dependency; end
+  def nullify_owner_attributes(record); end
+  def remove_target!(method); end
+  def replace(record, save = nil); end
+  def set_new_record(record); end
+  def transaction_if(value); end
+  include ActiveRecord::Associations::ForeignAssociation
+end
+module ActiveRecord::LegacyYamlAdapter
+  def self.convert(klass, coder); end
+end
+module ActiveRecord::LegacyYamlAdapter::Rails420
+  def self.convert(klass, coder); end
+end
+module ActiveRecord::LegacyYamlAdapter::Rails41
+  def self.convert(klass, coder); end
+end
+class ActiveRecord::Coders::JSON
+  def self.dump(obj); end
+  def self.load(json); end
+end
+class ActiveRecord::Associations::BelongsToAssociation < ActiveRecord::Associations::SingularAssociation
+  def decrement_counters; end
+  def default(&block); end
+  def different_target?(record); end
+  def find_target?; end
+  def foreign_key_present?; end
+  def handle_dependency; end
+  def increment_counters; end
+  def inversed_from(record); end
+  def invertible_for?(record); end
+  def primary_key(record); end
+  def replace(record); end
+  def replace_keys(record); end
+  def require_counter_update?; end
+  def reset; end
+  def stale_state; end
+  def target_changed?; end
+  def target_id; end
+  def update_counters(by); end
+  def update_counters_on_replace(record); end
+  def updated?; end
+end
+class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ActiveRecord::Associations::BelongsToAssociation
+  def different_target?(record); end
+  def inverse_reflection_for(record); end
+  def klass; end
+  def raise_on_type_mismatch!(record); end
+  def replace_keys(record); end
+  def stale_state; end
+  def target_changed?; end
 end

@@ -171,3 +171,62 @@ class ActiveStorage::Attached
   def name; end
   def record; end
 end
+class ActiveStorage::Analyzer::NullAnalyzer < ActiveStorage::Analyzer
+  def metadata; end
+  def self.accept?(blob); end
+end
+class ActiveStorage::LogSubscriber < ActiveSupport::LogSubscriber
+end
+class ActiveStorage::IntegrityError < StandardError
+end
+class ActiveStorage::Service
+  def content_disposition_with(filename:, type: nil); end
+  def delete(key); end
+  def delete_prefixed(prefix); end
+  def download(key); end
+  def download_chunk(key, range); end
+  def exist?(key); end
+  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
+  def instrument(operation, payload = nil, &block); end
+  def self.build(configurator:, service: nil, **service_config); end
+  def self.configure(service_name, configurations); end
+  def self.url_expires_in; end
+  def self.url_expires_in=(val); end
+  def self.url_expires_in?; end
+  def service_name; end
+  def update_metadata(key, **metadata); end
+  def upload(key, io, checksum: nil, **options); end
+  def url(key, expires_in:, disposition:, filename:, content_type:); end
+  def url_expires_in; end
+  def url_expires_in=(val); end
+  def url_expires_in?; end
+  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
+  extend ActiveSupport::Autoload
+end
+class ActiveStorage::Service::Configurator
+  def build(service_name); end
+  def config_for(name); end
+  def configurations; end
+  def initialize(configurations); end
+  def resolve(class_name); end
+  def self.build(service_name, configurations); end
+end
+class ActiveStorage::Service::DiskService < ActiveStorage::Service
+  def current_host; end
+  def delete(key); end
+  def delete_prefixed(prefix); end
+  def download(key); end
+  def download_chunk(key, range); end
+  def ensure_integrity_of(key, checksum); end
+  def exist?(key); end
+  def folder_for(key); end
+  def headers_for_direct_upload(key, content_type:, **arg2); end
+  def initialize(root:); end
+  def make_path_for(key); end
+  def path_for(key); end
+  def root; end
+  def upload(key, io, checksum: nil, **arg3); end
+  def url(key, expires_in:, filename:, disposition:, content_type:); end
+  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
+  def url_helpers; end
+end
