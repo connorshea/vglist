@@ -255,7 +255,7 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.2)
-    rubocop (0.71.0)
+    rubocop (0.73.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
@@ -264,9 +264,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.4.0)
       rubocop (>= 0.71.0)
-    rubocop-rails (2.0.1)
+    rubocop-rails (2.2.1)
       rack (>= 1.1)
-      rubocop (>= 0.70.0)
+      rubocop (>= 0.72.0)
     rubocop-rspec (1.33.0)
       rubocop (>= 0.60.0)
     ruby-graphviz (1.2.4)
@@ -371,9 +371,9 @@ DEPENDENCIES
   rails (~> 5.2.3)
   rails-erd (~> 1.6)
   rspec-rails (~> 3.8)
-  rubocop (~> 0.71)
+  rubocop (~> 0.73)
   rubocop-performance (~> 1.4)
-  rubocop-rails (~> 2.0)
+  rubocop-rails (~> 2.2)
   rubocop-rspec (~> 1.33)
   ruby-progressbar (~> 1.10)
   selenium-webdriver (~> 3.142)
@@ -392,4 +392,4 @@ RUBY VERSION
    ruby 2.6.2p47
 
 BUNDLED WITH
-   2.0.1
+   2.0.2

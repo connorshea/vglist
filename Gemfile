@@ -66,12 +66,12 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
   # Rubocop for linting
-  gem 'rubocop', '~> 0.71', require: false
+  gem 'rubocop', '~> 0.73', require: false
 
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.4'
   gem 'rubocop-rspec', '~> 1.33'
-  gem 'rubocop-rails', '~> 2.0'
+  gem 'rubocop-rails', '~> 2.2'
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 1.7'
