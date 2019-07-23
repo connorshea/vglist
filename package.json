@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "4.0.7",
-    "@sentry/browser": "5.4.3",
+    "@sentry/browser": "5.5.0",
     "activestorage": "^5.2.3",
     "bulma": "^0.7.5",
     "lodash": "^4.17.15",
