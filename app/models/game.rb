@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-  include PgSearch
+  include PgSearch::Model
 
   has_many :game_purchases
   has_many :purchasers, through: :game_purchases, source: :user

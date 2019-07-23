@@ -1,5 +1,5 @@
 class Series < ApplicationRecord
-  include PgSearch
+  include PgSearch::Model
 
   has_many :games
 

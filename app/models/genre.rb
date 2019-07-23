@@ -1,5 +1,5 @@
 class Genre < ApplicationRecord
-  include PgSearch
+  include PgSearch::Model
 
   has_many :game_genres
   has_many :games, through: :game_genres, source: :game

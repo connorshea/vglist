@@ -1,5 +1,5 @@
 class Platform < ApplicationRecord
-  include PgSearch
+  include PgSearch::Model
 
   has_many :game_platforms
   has_many :games, through: :game_platforms, source: :game
