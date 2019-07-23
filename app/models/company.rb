@@ -1,5 +1,5 @@
 class Company < ApplicationRecord
-  include PgSearch
+  include PgSearch::Model
 
   has_many :game_developers
   has_many :developed_games, through: :game_developers, source: :game

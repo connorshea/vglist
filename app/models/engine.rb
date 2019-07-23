@@ -1,5 +1,5 @@
 class Engine < ApplicationRecord
-  include PgSearch
+  include PgSearch::Model
 
   has_many :game_engines
   has_many :games, through: :game_engines, source: :game
