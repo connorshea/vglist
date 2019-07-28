@@ -7,10 +7,12 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-6a0295df4811
+# sorbet-rails-edc5f801575d
 module SorbetRails
 end
 module SorbetRails::CustomFinderMethods
+  def find_by_id!(id); end
+  def find_by_id(id); end
   def find_n(*ids); end
   def first_n(n); end
   def last_n(n); end

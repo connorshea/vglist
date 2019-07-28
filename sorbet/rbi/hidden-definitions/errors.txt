@@ -638,19 +638,18 @@
 # wrong constant name unknown_asset_fallback
 # wrong constant name unknown_asset_fallback=
 # wrong constant name unknown_asset_fallback?
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274165665960
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274166022240
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274168072140
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274168195140
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274168979880
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274170265100
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274170632380
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274170858520
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274178058460
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274179250440
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274198052100
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274200504320
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__886771524530099282_70274201563660
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70105969951460
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106028588240
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106056411300
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106056754640
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106056919100
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106058373980
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106058802440
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106064540020
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106065328960
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106073741500
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106074941280
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___4048001294857459516_70106092749460
 # wrong constant name <static-init>
 # uninitialized constant ActionView::LogSubscriber::BLACK
 # uninitialized constant ActionView::LogSubscriber::BLUE
@@ -2592,8 +2591,6 @@
 # uninitialized constant Date::Infinity::PETABYTE
 # uninitialized constant Date::Infinity::TERABYTE
 # wrong constant name initialize
-# undefined singleton method `_parse$1' for `Date'
-# wrong constant name _parse$1
 # wrong constant name !=
 # wrong constant name ==
 # wrong constant name __getobj__
@@ -3790,8 +3787,6 @@
 # wrong constant name page
 # wrong constant name <static-init>
 # wrong constant name garbage_collect
-# undefined singleton method `report$1' for `GC::Profiler'
-# wrong constant name report$1
 # undefined singleton method `start$1' for `GC'
 # undefined singleton method `stat$2' for `GC'
 # wrong constant name latest_gc_info
@@ -7063,12 +7058,6 @@
 # wrong constant name sqrt
 # wrong constant name from_state
 # wrong constant name initialize
-# undefined singleton method `dump$1' for `JSON'
-# undefined singleton method `generate$1' for `JSON'
-# undefined singleton method `pretty_generate$1' for `JSON'
-# wrong constant name dump$1
-# wrong constant name generate$1
-# wrong constant name pretty_generate$1
 # wrong constant name <Class:Error>
 # wrong constant name <Class:InvalidWeightError>
 # wrong constant name <static-init>
@@ -8577,8 +8566,6 @@
 # undefined method `[]$2' for class `MatchData'
 # wrong constant name []$2
 # wrong constant name named_captures
-# undefined singleton method `log$1' for `Math'
-# wrong constant name log$1
 # wrong constant name <<
 # wrong constant name ===
 # wrong constant name >>
@@ -8864,8 +8851,6 @@
 # uninitialized constant Net::HTTP::Persistent::SSLReuse
 # uninitialized constant Net::HTTP::Persistent::SSLReuse
 # wrong constant name <static-init>
-# undefined singleton method `new$1' for `Net::HTTP'
-# wrong constant name new$1
 # uninitialized constant Net::HTTPAlreadyReported::CODE_CLASS_TO_OBJ
 # uninitialized constant Net::HTTPAlreadyReported::CODE_TO_OBJ
 # wrong constant name <static-init>
@@ -9325,169 +9310,6 @@
 # wrong constant name open_uri
 # wrong constant name redirectable?
 # wrong constant name scan_open_optional_arguments
-# wrong constant name <Class:Acceptables>
-# wrong constant name <Class:AmbiguousArgument>
-# wrong constant name <Class:AmbiguousOption>
-# wrong constant name <Class:Arguable>
-# wrong constant name <Class:CompletingHash>
-# wrong constant name <Class:Completion>
-# wrong constant name <Class:InvalidArgument>
-# wrong constant name <Class:InvalidOption>
-# wrong constant name <Class:List>
-# wrong constant name <Class:MissingArgument>
-# wrong constant name <Class:NeedlessArgument>
-# wrong constant name <Class:OptionMap>
-# wrong constant name <Class:ParseError>
-# wrong constant name <Class:Switch>
-# wrong constant name abort
-# wrong constant name accept
-# wrong constant name add_officious
-# wrong constant name banner
-# wrong constant name banner=
-# wrong constant name base
-# wrong constant name candidate
-# wrong constant name compsys
-# wrong constant name def_head_option
-# wrong constant name def_option
-# wrong constant name def_tail_option
-# wrong constant name default_argv
-# wrong constant name default_argv=
-# wrong constant name define
-# wrong constant name define_head
-# wrong constant name define_tail
-# wrong constant name environment
-# wrong constant name getopts
-# wrong constant name help
-# wrong constant name inc
-# wrong constant name initialize
-# wrong constant name load
-# wrong constant name make_switch
-# wrong constant name new
-# wrong constant name on
-# wrong constant name on_head
-# wrong constant name on_tail
-# wrong constant name order
-# wrong constant name order!
-# wrong constant name parse
-# wrong constant name parse!
-# wrong constant name permute
-# wrong constant name permute!
-# wrong constant name program_name
-# wrong constant name program_name=
-# wrong constant name reject
-# wrong constant name release
-# wrong constant name release=
-# wrong constant name remove
-# wrong constant name separator
-# wrong constant name set_banner
-# wrong constant name set_program_name
-# wrong constant name set_summary_indent
-# wrong constant name set_summary_width
-# wrong constant name summarize
-# wrong constant name summary_indent
-# wrong constant name summary_indent=
-# wrong constant name summary_width
-# wrong constant name summary_width=
-# wrong constant name terminate
-# wrong constant name to_a
-# wrong constant name top
-# wrong constant name ver
-# wrong constant name version
-# wrong constant name version=
-# wrong constant name warn
-# wrong constant name <static-init>
-# wrong constant name <static-init>
-# wrong constant name <static-init>
-# wrong constant name getopts
-# wrong constant name initialize
-# wrong constant name options
-# wrong constant name options=
-# wrong constant name order!
-# wrong constant name parse!
-# wrong constant name permute!
-# wrong constant name <static-init>
-# wrong constant name extend_object
-# uninitialized constant OptionParser::CompletingHash::Elem
-# uninitialized constant OptionParser::CompletingHash::K
-# uninitialized constant OptionParser::CompletingHash::V
-# wrong constant name match
-# wrong constant name <static-init>
-# wrong constant name candidate
-# wrong constant name complete
-# wrong constant name convert
-# wrong constant name <static-init>
-# wrong constant name candidate
-# wrong constant name regexp
-# wrong constant name <static-init>
-# wrong constant name <static-init>
-# wrong constant name accept
-# wrong constant name add_banner
-# wrong constant name append
-# wrong constant name atype
-# wrong constant name complete
-# wrong constant name compsys
-# wrong constant name each_option
-# wrong constant name list
-# wrong constant name long
-# wrong constant name prepend
-# wrong constant name reject
-# wrong constant name search
-# wrong constant name short
-# wrong constant name summarize
-# wrong constant name <static-init>
-# wrong constant name <static-init>
-# wrong constant name <static-init>
-# uninitialized constant OptionParser::OptionMap::Elem
-# uninitialized constant OptionParser::OptionMap::K
-# uninitialized constant OptionParser::OptionMap::V
-# wrong constant name <static-init>
-# wrong constant name args
-# wrong constant name initialize
-# wrong constant name reason
-# wrong constant name reason=
-# wrong constant name recover
-# wrong constant name set_backtrace
-# wrong constant name set_option
-# wrong constant name <static-init>
-# wrong constant name filter_backtrace
-# wrong constant name <Class:NoArgument>
-# wrong constant name <Class:OptionalArgument>
-# wrong constant name <Class:PlacedArgument>
-# wrong constant name <Class:RequiredArgument>
-# wrong constant name add_banner
-# wrong constant name arg
-# wrong constant name block
-# wrong constant name compsys
-# wrong constant name conv
-# wrong constant name desc
-# wrong constant name initialize
-# wrong constant name long
-# wrong constant name match_nonswitch?
-# wrong constant name pattern
-# wrong constant name short
-# wrong constant name summarize
-# wrong constant name switch_name
-# wrong constant name parse
-# wrong constant name <static-init>
-# wrong constant name incompatible_argument_styles
-# wrong constant name parse
-# wrong constant name <static-init>
-# wrong constant name parse
-# wrong constant name <static-init>
-# wrong constant name parse
-# wrong constant name <static-init>
-# wrong constant name <static-init>
-# wrong constant name guess
-# wrong constant name incompatible_argument_styles
-# wrong constant name pattern
-# wrong constant name <static-init>
-# wrong constant name accept
-# wrong constant name getopts
-# wrong constant name inc
-# wrong constant name reject
-# wrong constant name terminate
-# wrong constant name top
-# wrong constant name with
 # uninitialized constant Opus
 # uninitialized constant Opus
 # wrong constant name <Class:ActiveSqlTransaction>
@@ -10733,8 +10555,6 @@
 # wrong constant name symlink?$2
 # wrong constant name sysopen$1
 # wrong constant name write$1
-# undefined singleton method `glob$1' for `Pathname'
-# wrong constant name glob$1
 # uninitialized constant Platform::ACTIONS
 # uninitialized constant Platform::BLACKLISTED_CLASS_METHODS
 # uninitialized constant Platform::CALLBACKS
@@ -15956,8 +15776,6 @@
 # wrong constant name <static-init>
 # wrong constant name main
 # wrong constant name output_file
-# wrong constant name <static-init>
-# wrong constant name <static-init>
 # uninitialized constant SortedSet::InspectKey
 # wrong constant name initialize
 # wrong constant name setup
@@ -16182,8 +16000,6 @@
 # wrong constant name set_encoding$2
 # wrong constant name truncate
 # wrong constant name write$1
-# undefined singleton method `open$1' for `StringIO'
-# wrong constant name open$1
 # wrong constant name <<
 # wrong constant name []
 # wrong constant name beginning_of_line?
@@ -16475,20 +16291,6 @@
 # wrong constant name localtime$1
 # wrong constant name round$1
 # wrong constant name to_s$1
-# undefined singleton method `at$2' for `Time'
-# undefined singleton method `gm$1' for `Time'
-# undefined singleton method `local$1' for `Time'
-# undefined singleton method `mktime$1' for `Time'
-# undefined singleton method `utc$1' for `Time'
-# undefined singleton method `zone_offset$1' for `Time'
-# wrong constant name at$2
-# wrong constant name gm$1
-# wrong constant name local$1
-# wrong constant name mktime$1
-# wrong constant name utc$1
-# wrong constant name zone_offset$1
-# undefined singleton method `catch$1' for `Timeout::Error'
-# wrong constant name catch$1
 # undefined method `enable$2' for class `TracePoint'
 # Did you mean?  enable_config
 # wrong constant name __enable
@@ -16871,7 +16673,6 @@
 # uninitialized constant Users::SessionsController::SUFFIX
 # uninitialized constant Users::SessionsController::URL_OPTIONS
 # uninitialized constant Users::SessionsController::VERSION
-# wrong constant name <static-init>
 # wrong constant name user_deserialize
 # wrong constant name user_serialize
 # wrong constant name login_as

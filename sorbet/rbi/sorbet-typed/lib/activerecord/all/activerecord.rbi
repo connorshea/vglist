@@ -172,12 +172,12 @@ module ActiveRecord::Associations::ClassMethods
       autosave: T.nilable(T::Boolean),
       before_add: T.nilable(T.any(Symbol, String, T.proc.void)),
       before_remove: T.nilable(T.any(Symbol, String, T.proc.void)),
-      blk: T.nilable(T.proc.void),
       class_name: T.nilable(T.any(Symbol, String)),
       extend: T.nilable(T.any(Module, T::Array[Module])),
       foreign_key: T.nilable(T.any(Symbol, String)),
       join_table: T.nilable(T.any(Symbol, String)),
       validate: T.nilable(T::Boolean),
+      blk: T.nilable(T.proc.void)
     ).void
   end
   def has_and_belongs_to_many(
@@ -880,27 +880,30 @@ end
 class ActiveRecord::Migration::Current < ActiveRecord::Migration
   # Tables
 
+  # https://github.com/rails/rails/blob/v5.2.3/activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb#L151-L290
   sig do
     params(
       table_name: T.any(String, Symbol),
       comment: T.untyped,
-      id: T.untyped,
-      primary_key: T.untyped,
+      id: T.any(T::Boolean, Symbol),
+      primary_key: T.any(String, Symbol, T::Array[T.any(String, Symbol)]),
       options: T.untyped,
-      temporary: T.untyped,
-      force: T.untyped,
-      as: T.untyped
+      temporary: T::Boolean,
+      force: T.any(T::Boolean, Symbol),
+      as: T.untyped,
+      blk: T.nilable(T.proc.params(t: ActiveRecord::ConnectionAdapters::TableDefinition).void)
     ).returns(T.untyped)
   end
   def create_table(
     table_name,
     comment: nil,
-    id: nil,
-    primary_key: nil,
+    id: :primary_key,
+    primary_key: :_,
     options: nil,
-    temporary: nil,
-    force: nil,
-    as: nil
+    temporary: false,
+    force: false,
+    as: nil,
+    &blk
   ); end
 
   sig do
