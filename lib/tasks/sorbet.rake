@@ -66,4 +66,15 @@ namespace :sorbet do
       end
     end
   end
+
+  namespace :tc do
+    desc "Run the typechecker as though everything was typed: true (except spec/ files)."
+    task :all do
+      Bundler.with_clean_env do
+        # Blacklist the error for method redefinition since we end up with a
+        # bunch of errors from sorbet-typed.
+        system('bundle exec srb tc --typed=true --ignore spec/ --error-black-list=4010')
+      end
+    end
+  end
 end
