@@ -638,16 +638,17 @@
 # wrong constant name unknown_asset_fallback
 # wrong constant name unknown_asset_fallback=
 # wrong constant name unknown_asset_fallback?
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218210527220
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218290150860
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218292111200
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218293145900
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218293717580
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218300672260
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218312210160
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218314142640
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218314340180
-# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218321459420
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113868394740
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113886849340
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113887971780
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113889514780
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113891850260
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113892658820
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113892758500
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113893343660
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113893922760
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113895382360
+# wrong constant name _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113897592420
 # wrong constant name <static-init>
 # uninitialized constant ActionView::LogSubscriber::BLACK
 # uninitialized constant ActionView::LogSubscriber::BLUE
@@ -960,7 +961,6 @@
 # uninitialized constant ActiveRecord::InternalMetadata::NAME_COMPILABLE_REGEXP
 # uninitialized constant ActiveRecord::InternalMetadata::UNASSIGNABLE_KEYS
 # wrong constant name <static-init>
-# wrong constant name <static-init>
 # wrong constant name []
 # wrong constant name []=
 # wrong constant name create_table
@@ -1184,7 +1184,6 @@
 # wrong constant name reload_blob
 # wrong constant name reload_record
 # wrong constant name <static-init>
-# wrong constant name <static-init>
 # wrong constant name page
 # uninitialized constant ActiveStorage::BaseJob::ALREADY_SUPPORTED_SENTRY_ADAPTERS
 # uninitialized constant ActiveStorage::BaseJob::CALLBACK_FILTER_TYPES
@@ -1262,7 +1261,6 @@
 # wrong constant name representation
 # wrong constant name variable?
 # wrong constant name variant
-# wrong constant name <static-init>
 # wrong constant name <static-init>
 # wrong constant name after_add_for_attachments
 # wrong constant name after_add_for_attachments=
@@ -2848,7 +2846,6 @@
 # wrong constant name unknown_action!
 # wrong constant name <static-init>
 # wrong constant name devise_error_messages!
-# wrong constant name <static-init>
 # wrong constant name class_name
 # wrong constant name class_names
 # wrong constant name corrections
@@ -3329,8 +3326,6 @@
 # wrong constant name user
 # wrong constant name user=
 # wrong constant name <static-init>
-# wrong constant name account_types
-# wrong constant name steam
 # uninitialized constant Faker::DrivingLicence::Letters
 # uninitialized constant Faker::DrivingLicence::Numbers
 # uninitialized constant Faker::DrivingLicence::ULetters
@@ -4435,14 +4430,6 @@
 # wrong constant name before_remove_for_platforms
 # wrong constant name before_remove_for_platforms=
 # wrong constant name before_remove_for_platforms?
-# wrong constant name completed
-# wrong constant name completion_statuses
-# wrong constant name dropped
-# wrong constant name fully_completed
-# wrong constant name in_progress
-# wrong constant name not_applicable
-# wrong constant name paused
-# wrong constant name unplayed
 # uninitialized constant GamePurchasePlatform::ACTIONS
 # uninitialized constant GamePurchasePlatform::BLACKLISTED_CLASS_METHODS
 # uninitialized constant GamePurchasePlatform::CALLBACKS
@@ -9049,6 +9036,14 @@
 # wrong constant name rationalize$1
 # wrong constant name to_d
 # wrong constant name to_i
+# wrong constant name <Class:Scope>
+# wrong constant name create?
+# wrong constant name destroy?
+# wrong constant name index?
+# wrong constant name method_missing
+# wrong constant name show?
+# wrong constant name update?
+# wrong constant name <static-init>
 # wrong constant name args
 # wrong constant name private_call?
 # uninitialized constant Nokogiri::CSS::Parser::Racc_Main_Parsing_Routine
@@ -16573,7 +16568,6 @@
 # wrong constant name reload_avatar_blob
 # wrong constant name reload_external_account
 # wrong constant name <static-init>
-# wrong constant name admin
 # wrong constant name after_add_for_favorite_games
 # wrong constant name after_add_for_favorite_games=
 # wrong constant name after_add_for_favorite_games?
@@ -16613,9 +16607,6 @@
 # wrong constant name devise_modules
 # wrong constant name devise_modules=
 # wrong constant name devise_modules?
-# wrong constant name member
-# wrong constant name moderator
-# wrong constant name roles
 # wrong constant name with_attached_avatar
 # uninitialized constant Users::ConfirmationsController::ACTION_OPTIONS
 # uninitialized constant Users::ConfirmationsController::AUTHENTICITY_TOKEN_LENGTH

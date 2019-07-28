@@ -1153,25 +1153,27 @@ class ActionView::Base
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218210527220(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113868394740(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218290150860(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113886849340(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218292111200(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113887971780(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218293145900(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113889514780(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218293717580(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113891850260(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218300672260(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113892658820(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218312210160(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113892758500(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218314142640(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113893343660(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218314340180(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113893922760(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___3546136619774972643_70218321459420(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113895382360(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113897592420(local_assigns, output_buffer); end
 end
 
 class ActionView::DependencyTracker::ERBTracker
@@ -2012,9 +2014,6 @@ module ActiveRecord::AttributeMethods::PrimaryKey::ClassMethods
   ID_ATTRIBUTE_METHODS = ::T.let(nil, ::T.untyped)
 end
 
-class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
-end
-
 class ActiveRecord::Base
   include ::Bullet::SaveWithBulletSupport
 end
@@ -2079,9 +2078,6 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   CHARSETS_OF_4BYTES_MAXLEN = ::T.let(nil, ::T.untyped)
 end
 
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata
-end
-
 module ActiveRecord::ConnectionAdapters::PostgreSQL::DatabaseStatements
   BYTEA_COLUMN_TYPE_OID = ::T.let(nil, ::T.untyped)
   MONEY_COLUMN_TYPE_OID = ::T.let(nil, ::T.untyped)
@@ -2117,9 +2113,6 @@ class ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
 end
 
 ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::OID = ActiveRecord::ConnectionAdapters::PostgreSQL::OID
-
-class ActiveRecord::ConnectionAdapters::PostgreSQLTypeMetadata
-end
 
 ActiveRecord::ConnectionAdapters::SchemaCreation = ActiveRecord::ConnectionAdapters::AbstractAdapter::SchemaCreation
 
@@ -2171,9 +2164,6 @@ class ActiveRecord::InternalMetadata
   def self.create_table(); end
 
   def self.page(num=T.unsafe(nil)); end
-end
-
-class ActiveRecord::Locking::LockingType
 end
 
 class ActiveRecord::LogSubscriber
@@ -2632,13 +2622,7 @@ ActiveRecord::Type::Helpers = ActiveModel::Type::Helpers
 
 ActiveRecord::Type::Integer = ActiveModel::Type::Integer
 
-class ActiveRecord::Type::Serialized
-end
-
 ActiveRecord::Type::String = ActiveModel::Type::String
-
-class ActiveRecord::Type::Time::Value
-end
 
 module ActiveRecord::VERSION
   MAJOR = ::T.let(nil, ::T.untyped)
@@ -6532,9 +6516,6 @@ module DeviseHelper
   def devise_error_messages!(); end
 end
 
-module DeviseHelper
-end
-
 class DidYouMean::ClassNameChecker
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def class_name(); end
@@ -7380,12 +7361,6 @@ module ExternalAccount::GeneratedAssociationMethods
 end
 
 module ExternalAccount::GeneratedAssociationMethods
-end
-
-class ExternalAccount
-  def self.account_types(); end
-
-  def self.steam(*args); end
 end
 
 class FSEvent
@@ -9640,22 +9615,6 @@ class GamePurchase
   def self.before_remove_for_platforms=(val); end
 
   def self.before_remove_for_platforms?(); end
-
-  def self.completed(*args); end
-
-  def self.completion_statuses(); end
-
-  def self.dropped(*args); end
-
-  def self.fully_completed(*args); end
-
-  def self.in_progress(*args); end
-
-  def self.not_applicable(*args); end
-
-  def self.paused(*args); end
-
-  def self.unplayed(*args); end
 end
 
 class GamePurchasePlatform
@@ -15719,9 +15678,6 @@ end
 class Mail::POP3
 end
 
-class Mail::PartsList
-end
-
 class Mail::PhraseList
   def initialize(string); end
 
@@ -17130,6 +17086,26 @@ class NilClass
   def to_d(); end
 
   def to_i(); end
+end
+
+class NilClassPolicy
+  def create?(); end
+
+  def destroy?(); end
+
+  def index?(); end
+
+  def method_missing(_method); end
+
+  def show?(); end
+
+  def update?(); end
+end
+
+class NilClassPolicy::Scope
+end
+
+class NilClassPolicy::Scope
 end
 
 class NoMemoryError
@@ -33707,8 +33683,6 @@ class User
   extend ::Devise::Models::Confirmable::ClassMethods
   extend ::FriendlyId::FinderMethods
   extend ::FriendlyId::Finders::ClassMethods
-  def self.admin(*args); end
-
   def self.after_add_for_favorite_games(); end
 
   def self.after_add_for_favorite_games=(val); end
@@ -33786,12 +33760,6 @@ class User
   def self.devise_modules=(val); end
 
   def self.devise_modules?(); end
-
-  def self.member(*args); end
-
-  def self.moderator(*args); end
-
-  def self.roles(); end
 
   def self.with_attached_avatar(*args); end
 end
@@ -34137,9 +34105,6 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

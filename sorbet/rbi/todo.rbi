@@ -11,7 +11,6 @@ module ::Anonymous_Delegator_15; end
 module ::Anonymous_Delegator_18; end
 module ::Anonymous_Delegator_37; end
 module ::Anonymous_Delegator_38; end
-module ::NilClassPolicy; end
 module Addressable::Template; end
 module Anonymous_Module_25::Anonymous_Module_26; end
 module Anonymous_Module_25::Anonymous_Module_26; end
