@@ -1,3 +1,4 @@
+# typed: false
 class User < ApplicationRecord
   extend FriendlyId
 

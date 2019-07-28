@@ -1,3 +1,4 @@
+# typed: strict
 puts "Creating Platforms..."
 
 # Create 20 Platforms.

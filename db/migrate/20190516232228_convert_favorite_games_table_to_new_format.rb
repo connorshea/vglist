@@ -1,3 +1,4 @@
+# typed: true
 class ConvertFavoriteGamesTableToNewFormat < ActiveRecord::Migration[5.2]
   # Remove indices and favoritable_type column, rename favoritable_id to game_id, add new indices.
   def change

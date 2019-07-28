@@ -1,3 +1,4 @@
+# typed: false
 class UsersController < ApplicationController
   def index
     @users = User.order(:id).page params[:page]
@@ -69,7 +70,7 @@ class UsersController < ApplicationController
     raise if steam_account.nil?
 
     steam_api_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&steamid=#{steam_account[:steam_id]}&include_appinfo=1&include_played_free_games=1"
-    json = JSON.parse(URI.open(steam_api_url).read)
+    json = JSON.parse(T.must(URI.open(steam_api_url)).read)
 
     steam_games = json.dig('response', 'games')
 
@@ -111,7 +112,7 @@ class UsersController < ApplicationController
 
     # Limit the results to a max of 50 games to avoid returning a URL that's too long for Puma to handle.
     unmatched_games = unmatched_games[0...50]
-    unmatched_games.map! { |game| { name: game['name'], steam_id: game['appid'] } }
+    T.must(unmatched_games).map! { |game| { name: game['name'], steam_id: game['appid'] } }
 
     respond_to do |format|
       format.html do
@@ -127,7 +128,7 @@ class UsersController < ApplicationController
 
     # Resolve the numerical Steam ID based on the provided username.
     steam_api_url = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{params[:steam_username]}"
-    json = JSON.parse(URI.open(steam_api_url).read)
+    json = JSON.parse(T.must(URI.open(steam_api_url)).read)
 
     steam_id = json.dig("response", "steamid")
 

@@ -1,3 +1,4 @@
+# typed: false
 class WikidataHelper
   require "addressable/template"
   require "open-uri"
@@ -45,7 +46,7 @@ class WikidataHelper
 
     puts api_uri if ENV['DEBUG']
 
-    response = JSON.parse(URI.open(api_uri).read)
+    response = JSON.parse(T.must(URI.open(api_uri)).read)
 
     return response['entities'] if response['success'] && action == 'wbgetentities'
 

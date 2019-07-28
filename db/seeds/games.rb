@@ -1,3 +1,4 @@
+# typed: true
 # Fetches a cover image from LoremPixel, or uses an image from the test suite
 # if in CI, to avoid external HTTP requests.
 def cover_fetcher

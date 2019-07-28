@@ -19,7 +19,7 @@ update_configs:
     allowed_updates:
       - match:
           update_type: "all"
-    # These AWS gems are updated too often, so we skip them to avoid obnoxious PRs.
+    # These AWS and Sorbet gems are updated too often, so we skip them to avoid obnoxious PRs.
     ignored_updates:
       - match:
           dependency_name: "aws-sdk-core"
@@ -29,7 +29,10 @@ update_configs:
           dependency_name: "aws-sdk-kms"
       - match:
           dependency_name: "aws-sdk-s3"
-          
+      - match:
+          dependency_name: "sorbet"
+      - match:
+          dependency_name: "sorbet-runtime"
 
   - package_manager: "javascript"
     directory: "/"

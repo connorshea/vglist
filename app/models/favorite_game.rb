@@ -1,3 +1,4 @@
+# typed: strong
 class FavoriteGame < ApplicationRecord
   belongs_to :game
   belongs_to :user

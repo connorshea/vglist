@@ -1,3 +1,4 @@
+# typed: true
 class StaticPagesController < ApplicationController
   def about
     skip_authorization

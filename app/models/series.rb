@@ -1,3 +1,4 @@
+# typed: false
 class Series < ApplicationRecord
   include PgSearch::Model
 

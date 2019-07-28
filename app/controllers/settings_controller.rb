@@ -1,3 +1,4 @@
+# typed: true
 class SettingsController < ApplicationController
   # Profile things
   def profile

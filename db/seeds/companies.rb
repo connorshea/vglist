@@ -1,3 +1,4 @@
+# typed: strict
 puts "Creating Companies..."
 
 20.times do

@@ -1,3 +1,4 @@
+# typed: true
 class HomeController < ApplicationController
   layout "application_no_padding"
 

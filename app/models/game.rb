@@ -1,3 +1,4 @@
+# typed: false
 class Game < ApplicationRecord
   include PgSearch::Model
 

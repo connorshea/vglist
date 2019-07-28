@@ -1,3 +1,4 @@
+# typed: false
 FactoryBot.define do
   factory :company do
     name { "Valve Corporation" }
