@@ -1,3 +1,4 @@
+# typed: true
 class GamePurchasesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 

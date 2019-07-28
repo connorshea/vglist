@@ -1,3 +1,4 @@
+# typed: true
 # Defines defaults for all policies.
 class ApplicationPolicy
   class Scope

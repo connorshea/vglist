@@ -1,3 +1,4 @@
+# typed: true
 class CompanyPolicy < ApplicationPolicy
   attr_reader :user, :company
 

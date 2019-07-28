@@ -1,3 +1,4 @@
+# typed: false
 class Platform < ApplicationRecord
   include PgSearch::Model
 

@@ -1,3 +1,4 @@
+# typed: true
 class CreateReleaseDevelopers < ActiveRecord::Migration[5.2]
   def change
     create_table :release_developers do |t|

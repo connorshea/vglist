@@ -1,3 +1,4 @@
+# typed: false
 class WikidataHelper
   require "addressable/template"
   require "open-uri"

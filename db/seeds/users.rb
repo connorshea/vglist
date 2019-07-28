@@ -1,3 +1,4 @@
+# typed: true
 # Fetches an avatar image from Faker, or uses an image from the test suite
 # if in CI, to avoid external HTTP requests.
 def avatar_fetcher

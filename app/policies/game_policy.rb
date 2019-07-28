@@ -1,3 +1,4 @@
+# typed: true
 class GamePolicy < ApplicationPolicy
   attr_reader :user, :game
 
