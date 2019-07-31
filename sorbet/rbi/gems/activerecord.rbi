@@ -4238,6 +4238,43 @@ class ActiveRecord::TableMetadata
   def resolve_column_aliases(hash); end
   def type(column_name); end
 end
+module ActiveRecord::Migration::Compatibility
+  def self.find(version); end
+end
+class ActiveRecord::Migration::Compatibility::V5_1 < ActiveRecord::Migration::Current
+  def change_column(table_name, column_name, type, options = nil); end
+  def create_table(table_name, options = nil); end
+end
+class ActiveRecord::Migration::Compatibility::V5_0 < ActiveRecord::Migration::Compatibility::V5_1
+  def add_belongs_to(table_name, ref_name, **options); end
+  def add_column(table_name, column_name, type, options = nil); end
+  def add_reference(table_name, ref_name, **options); end
+  def change_table(table_name, options = nil); end
+  def compatible_table_definition(t); end
+  def create_join_table(table_1, table_2, column_options: nil, **options); end
+  def create_table(table_name, options = nil); end
+end
+module ActiveRecord::Migration::Compatibility::V5_0::TableDefinition
+  def belongs_to(*args, **options); end
+  def primary_key(name, type = nil, **options); end
+  def references(*args, **options); end
+end
+class ActiveRecord::Migration::Compatibility::V4_2 < ActiveRecord::Migration::Compatibility::V5_0
+  def add_belongs_to(*arg0, **options); end
+  def add_reference(*arg0, **options); end
+  def add_timestamps(_, **options); end
+  def change_table(table_name, options = nil); end
+  def compatible_table_definition(t); end
+  def create_table(table_name, options = nil); end
+  def index_exists?(table_name, column_name, options = nil); end
+  def index_name_for_remove(table_name, options = nil); end
+  def remove_index(table_name, options = nil); end
+end
+module ActiveRecord::Migration::Compatibility::V4_2::TableDefinition
+  def belongs_to(*arg0, **options); end
+  def references(*arg0, **options); end
+  def timestamps(**options); end
+end
 module ActiveRecord::ConnectionAdapters::MySQL
 end
 class ActiveRecord::ConnectionAdapters::MySQL::Column < ActiveRecord::ConnectionAdapters::Column
@@ -4611,42 +4648,33 @@ class ActiveRecord::Result
   def to_hash; end
   include Enumerable
 end
-module ActiveRecord::Migration::Compatibility
-  def self.find(version); end
+class ActiveRecord::StatementCache
+  def bind_map; end
+  def execute(params, connection, &block); end
+  def initialize(query_builder, bind_map, klass); end
+  def klass; end
+  def query_builder; end
+  def self.create(connection, block = nil); end
+  def self.partial_query(values); end
+  def self.query(sql); end
+  def self.unsupported_value?(value); end
 end
-class ActiveRecord::Migration::Compatibility::V5_1 < ActiveRecord::Migration::Current
-  def change_column(table_name, column_name, type, options = nil); end
-  def create_table(table_name, options = nil); end
+class ActiveRecord::StatementCache::Substitute
 end
-class ActiveRecord::Migration::Compatibility::V5_0 < ActiveRecord::Migration::Compatibility::V5_1
-  def add_belongs_to(table_name, ref_name, **options); end
-  def add_column(table_name, column_name, type, options = nil); end
-  def add_reference(table_name, ref_name, **options); end
-  def change_table(table_name, options = nil); end
-  def compatible_table_definition(t); end
-  def create_join_table(table_1, table_2, column_options: nil, **options); end
-  def create_table(table_name, options = nil); end
+class ActiveRecord::StatementCache::Query
+  def initialize(sql); end
+  def sql_for(binds, connection); end
 end
-module ActiveRecord::Migration::Compatibility::V5_0::TableDefinition
-  def belongs_to(*args, **options); end
-  def primary_key(name, type = nil, **options); end
-  def references(*args, **options); end
+class ActiveRecord::StatementCache::PartialQuery < ActiveRecord::StatementCache::Query
+  def initialize(values); end
+  def sql_for(binds, connection); end
 end
-class ActiveRecord::Migration::Compatibility::V4_2 < ActiveRecord::Migration::Compatibility::V5_0
-  def add_belongs_to(*arg0, **options); end
-  def add_reference(*arg0, **options); end
-  def add_timestamps(_, **options); end
-  def change_table(table_name, options = nil); end
-  def compatible_table_definition(t); end
-  def create_table(table_name, options = nil); end
-  def index_exists?(table_name, column_name, options = nil); end
-  def index_name_for_remove(table_name, options = nil); end
-  def remove_index(table_name, options = nil); end
+class ActiveRecord::StatementCache::Params
+  def bind; end
 end
-module ActiveRecord::Migration::Compatibility::V4_2::TableDefinition
-  def belongs_to(*arg0, **options); end
-  def references(*arg0, **options); end
-  def timestamps(**options); end
+class ActiveRecord::StatementCache::BindMap
+  def bind(values); end
+  def initialize(bound_attributes); end
 end
 class ActiveRecord::Associations::HasOneAssociation < ActiveRecord::Associations::SingularAssociation
   def _create_record(attributes, raise_error = nil, &block); end
@@ -4658,6 +4686,15 @@ class ActiveRecord::Associations::HasOneAssociation < ActiveRecord::Associations
   def set_new_record(record); end
   def transaction_if(value); end
   include ActiveRecord::Associations::ForeignAssociation
+end
+module ActiveRecord::LegacyYamlAdapter
+  def self.convert(klass, coder); end
+end
+module ActiveRecord::LegacyYamlAdapter::Rails420
+  def self.convert(klass, coder); end
+end
+module ActiveRecord::LegacyYamlAdapter::Rails41
+  def self.convert(klass, coder); end
 end
 class ActiveRecord::Associations::AssociationScope
   def add_constraints(scope, owner, chain); end
@@ -4687,34 +4724,6 @@ class ActiveRecord::Associations::AliasTracker
   def self.create(connection, initial_table, joins); end
   def self.initial_count_for(connection, name, table_joins); end
   def truncate(name); end
-end
-class ActiveRecord::StatementCache
-  def bind_map; end
-  def execute(params, connection, &block); end
-  def initialize(query_builder, bind_map, klass); end
-  def klass; end
-  def query_builder; end
-  def self.create(connection, block = nil); end
-  def self.partial_query(values); end
-  def self.query(sql); end
-  def self.unsupported_value?(value); end
-end
-class ActiveRecord::StatementCache::Substitute
-end
-class ActiveRecord::StatementCache::Query
-  def initialize(sql); end
-  def sql_for(binds, connection); end
-end
-class ActiveRecord::StatementCache::PartialQuery < ActiveRecord::StatementCache::Query
-  def initialize(values); end
-  def sql_for(binds, connection); end
-end
-class ActiveRecord::StatementCache::Params
-  def bind; end
-end
-class ActiveRecord::StatementCache::BindMap
-  def bind(values); end
-  def initialize(bound_attributes); end
 end
 class ActiveRecord::Associations::BelongsToAssociation < ActiveRecord::Associations::SingularAssociation
   def decrement_counters; end
@@ -4746,15 +4755,6 @@ class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ActiveRecord
   def replace_keys(record); end
   def stale_state; end
   def target_changed?; end
-end
-module ActiveRecord::LegacyYamlAdapter
-  def self.convert(klass, coder); end
-end
-module ActiveRecord::LegacyYamlAdapter::Rails420
-  def self.convert(klass, coder); end
-end
-module ActiveRecord::LegacyYamlAdapter::Rails41
-  def self.convert(klass, coder); end
 end
 class ActiveRecord::Coders::JSON
   def self.dump(obj); end

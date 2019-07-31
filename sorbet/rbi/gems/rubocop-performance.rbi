@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.4.0
+# rubocop-performance-1.4.1
 module RuboCop
 end
 module RuboCop::Performance
@@ -200,9 +200,11 @@ class RuboCop::Cop::Performance::RegexpMatch < RuboCop::Cop::Cop
   def match_with_int_arg_method?(node = nil); end
   def match_with_lvasgn?(node); end
   def message(node); end
+  def modifier_form?(match_node); end
   def next_match_pos(body, match_node_pos, scope_root); end
   def on_case(node); end
   def on_if(node); end
+  def range_to_search_for_last_matches(match_node, body, scope_root); end
   def scope_body(node); end
   def scope_root(node); end
   def search_match_nodes(node0); end

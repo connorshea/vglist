@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
-# capybara-3.26.0
+# capybara-3.27.0
 module Capybara
   def self.HTML(html); end
   def self.add_selector(name, **options, &block); end
@@ -603,6 +603,7 @@ class Capybara::Selector::RegexpDisassembler::Expression
   def each; end
   def extract_strings(process_alternatives); end
   def fixed_repeat?; end
+  def ignore?; end
   def indeterminate?; end
   def initialize(exp); end
   def max_repeat; end
@@ -813,12 +814,10 @@ class Capybara::Queries::MatchQuery < Capybara::Queries::SelectorQuery
 end
 class Capybara::Queries::AncestorQuery < Capybara::Queries::SelectorQuery
   def description(applied = nil); end
-  def initialize(*args); end
   def resolve_for(node, exact = nil); end
 end
 class Capybara::Queries::SiblingQuery < Capybara::Queries::SelectorQuery
   def description(applied = nil); end
-  def initialize(*args); end
   def resolve_for(node, exact = nil); end
 end
 class Capybara::Queries::StyleQuery < Capybara::Queries::BaseQuery
@@ -1343,15 +1342,21 @@ module Capybara::Selenium::Node::Html5Drag
 end
 class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   def bridge; end
-  def browser_version; end
+  def browser_version(to_float = nil); end
+  def capabilities; end
+  def chromedriver_fixed_actions_key_state?; end
+  def chromedriver_supports_displayed_endpoint?; end
+  def chromedriver_version; end
   def click(*arg0); end
   def disabled?; end
   def drop(*args); end
   def file_errors; end
+  def native_displayed?; end
   def perform_legacy_drag(element); end
   def select_option; end
   def set_file(value); end
   def set_text(value, clear: nil, **_unused); end
+  def visible?; end
   def w3c?; end
   include Capybara::Selenium::Node::Html5Drag
 end
@@ -1373,6 +1378,7 @@ module Capybara::Selenium::Driver::ChromeDriver
   def reset!; end
   def resize_window_to(handle, width, height); end
   def self.extended(base); end
+  def storage_clears; end
   def storage_types_to_clear; end
   def uniform_storage_clear?; end
 end
@@ -1385,13 +1391,16 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
   def disabled?; end
   def drop(*args); end
   def hover; end
+  def native_displayed?; end
   def select_option; end
   def send_keys(*args); end
   def set_file(value); end
   def upload(local_file); end
+  def visible?; end
   include Capybara::Selenium::Node::Html5Drag
 end
 module Capybara::Selenium::Driver::FirefoxDriver
+  def bridge; end
   def self.extended(driver); end
   def self.w3c?(driver); end
 end
@@ -1462,6 +1471,7 @@ module Capybara::Selenium::Driver::EdgeDriver
   def fullscreen_window(handle); end
   def reset!; end
   def resize_window_to(handle, width, height); end
+  def storage_clears; end
   def storage_types_to_clear; end
   def uniform_storage_clear?; end
 end
