@@ -48,3 +48,4 @@ prod.env
 
 sbin/
 .vscode/settings.json
+sorbet/rbi/hidden-definitions/errors.txt
