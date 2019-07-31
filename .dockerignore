@@ -14,3 +14,4 @@ yarn-debug.log
 .DS_Store
 prod.env
 app-visualization.svg
+sorbet/rbi/hidden-definitions/errors.txt
