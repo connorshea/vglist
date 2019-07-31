@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 # Fetches an avatar image from Faker, or uses an image from the test suite
 # if in CI, to avoid external HTTP requests.
 def avatar_fetcher
@@ -16,9 +16,9 @@ puts "Creating Users..."
   user = User.create!(
     email: Faker::Internet.unique.email,
     # Usernames must be between (inclusive) 4 and 20 characters.
-    username: Faker::Internet.unique.username(4..20),
+    username: Faker::Internet.unique.username(specifier: 4..20),
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
-    password: Faker::Internet.password(8, 20),
+    password: Faker::Internet.password(min_length: 8, max_length: 20),
     bio: Faker::Lorem.sentence
   )
 
@@ -36,9 +36,9 @@ end
   User.create!(
     email: Faker::Internet.unique.email,
     # Usernames must be between (inclusive) 4 and 20 characters.
-    username: Faker::Internet.unique.username(4..20),
+    username: Faker::Internet.unique.username(specifier: 4..20),
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
-    password: Faker::Internet.password(8, 20),
+    password: Faker::Internet.password(min_length: 8, max_length: 20),
     bio: Faker::Lorem.sentence,
     role: :moderator
   )

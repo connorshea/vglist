@@ -65,7 +65,7 @@ RSpec.describe "Genres", type: :request do
 
     it "fails to create a new genre" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       genre_attributes[:name] = long_name
       post genres_path, params: { genre: genre_attributes }
       expect(response.body).to include('Unable to save genre.')
@@ -86,7 +86,7 @@ RSpec.describe "Genres", type: :request do
 
     it "fails to update genre" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       genre_attributes[:name] = long_name
       put genre_path(id: genre.id), params: { genre: genre_attributes }
       expect(response.body).to include('Unable to update genre.')

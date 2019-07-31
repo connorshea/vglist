@@ -16,7 +16,7 @@ FactoryBot.define do
     end
 
     trait :wikidata_id do
-      wikidata_id { Faker::Number.number(6) }
+      wikidata_id { Faker::Number.number(digits: 6) }
     end
 
     factory :company_with_everything, traits: [:description, :game_as_developer, :game_as_publisher, :wikidata_id]

@@ -65,7 +65,7 @@ RSpec.describe "Platforms", type: :request do
 
     it "fails to create a new platform" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       attributes[:name] = long_name
       post platforms_path, params: { platform: attributes }
       expect(response.body).to include('Unable to save platform.')
@@ -86,7 +86,7 @@ RSpec.describe "Platforms", type: :request do
 
     it "fails to update platform" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       platform_attributes[:name] = long_name
       put platform_path(id: platform.id), params: { platform: platform_attributes }
       expect(response.body).to include('Unable to update platform.')
