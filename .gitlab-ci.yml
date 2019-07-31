@@ -31,6 +31,10 @@ before_script:
   - bundle exec rails db:create
   - bundle exec rails db:migrate --trace
 
+sorbet:tc:
+  script:
+    - bundle exec srb tc . --ignore=vendor/
+
 rubocop:
   script:
     - bundle exec rubocop
