@@ -5,7 +5,11 @@ namespace 'import:wikidata' do
   desc "Import games from Wikidata"
   task games: :environment do
     puts "Importing games from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
 
     rows = []
     rows.concat(client.query(games_query))

@@ -11,7 +11,11 @@ namespace 'import:wikidata' do
     abort("You can't import companies if there are already companies in the database.") if Company.count > 0
 
     puts "Importing game developers and publishers from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
 
     rows = []
     rows.concat(client.query(developers_query))
@@ -56,7 +60,11 @@ namespace 'import:wikidata' do
     abort("You can't import platforms if there are already platforms in the database.") if Platform.count > 0
 
     puts "Importing game platforms from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
 
     rows = []
     rows.concat(client.query(platforms_query))
@@ -100,7 +108,11 @@ namespace 'import:wikidata' do
     abort("You can't import genres if there are already genres in the database.") if Genre.count > 0
 
     puts "Importing game genres from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
 
     rows = []
     rows.concat(client.query(genres_query))
@@ -145,7 +157,11 @@ namespace 'import:wikidata' do
     abort("You can't import series if there are already series in the database.") if Series.count > 0
 
     puts "Importing game series' from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
 
     rows = []
     rows.concat(client.query(series_query))
@@ -189,7 +205,11 @@ namespace 'import:wikidata' do
     abort("You can't import engines if there are already engines in the database.") if Engine.count > 0
 
     puts "Importing game engines from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
 
     rows = []
     rows.concat(client.query(engines_query))
