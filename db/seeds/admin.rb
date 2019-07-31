@@ -35,8 +35,8 @@ puts "Creating Game Purchases for admin..."
     user: admin,
     rating: rand(0..100),
     completion_status: rand(0..5),
-    start_date: Faker::Date.between(1.month.ago, 1.day.ago),
-    completion_date: Faker::Date.between(1.month.ago, 1.day.ago),
+    start_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
+    completion_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
     comments: Faker::Lorem.sentence,
     hours_played: rand(0.100),
     platforms: platforms

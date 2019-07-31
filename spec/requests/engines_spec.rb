@@ -60,7 +60,7 @@ RSpec.describe "Engines", type: :request do
 
     it "fails to create a new engine" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       engine_attributes[:name] = long_name
       post engines_path, params: { engine: engine_attributes }
       expect(response.body).to include('Unable to create engine.')
@@ -81,7 +81,7 @@ RSpec.describe "Engines", type: :request do
 
     it "fails to update engine" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       engine_attributes[:name] = long_name
       put engine_path(id: engine.id), params: { engine: engine_attributes }
       expect(response.body).to include('Unable to update engine.')

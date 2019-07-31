@@ -12,7 +12,7 @@ FactoryBot.define do
     end
 
     trait :wikidata_id do
-      wikidata_id { Faker::Number.number(6) }
+      wikidata_id { Faker::Number.number(digits: 6) }
     end
 
     factory :genre_with_everything, traits: [:description, :game, :wikidata_id]

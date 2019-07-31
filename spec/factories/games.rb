@@ -38,19 +38,19 @@ FactoryBot.define do
     end
 
     trait :wikidata_id do
-      wikidata_id { Faker::Number.number(6) }
+      wikidata_id { Faker::Number.number(digits: 6) }
     end
 
     trait :steam_app_id do
-      steam_app_id { Faker::Number.number(5) }
+      steam_app_id { Faker::Number.number(digits: 5) }
     end
 
     trait :pcgamingwiki_id do
-      pcgamingwiki_id { Faker::Lorem.words(3).join('_') }
+      pcgamingwiki_id { Faker::Lorem.words(number: 3).join('_') }
     end
 
     trait :mobygames_id do
-      mobygames_id { Faker::Lorem.words(3).join('-') }
+      mobygames_id { Faker::Lorem.words(number: 3).join('-') }
     end
 
     factory :game_with_cover, traits: [:cover]

@@ -79,7 +79,7 @@ RSpec.describe "Games", type: :request do
 
     it "fails to create a new game" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       game_attributes[:name] = long_name
       post games_path, params: { game: game_attributes }
       expect(response.body).to include('Unable to create game.')
@@ -100,7 +100,7 @@ RSpec.describe "Games", type: :request do
 
     it "fails to update game" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       game_attributes[:name] = long_name
       put game_path(id: game.id), params: { game: game_attributes }
       expect(response.body).to include('Unable to update game.')

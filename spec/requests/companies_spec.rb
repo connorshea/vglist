@@ -65,7 +65,7 @@ RSpec.describe "Companies", type: :request do
 
     it "fails to create a new company" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       company_attributes[:name] = long_name
       post companies_path, params: { company: company_attributes }
       expect(response.body).to include('Unable to create company.')
@@ -86,7 +86,7 @@ RSpec.describe "Companies", type: :request do
 
     it "fails to update company" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       company_attributes[:name] = long_name
       put company_path(id: company.id), params: { company: company_attributes }
       expect(response.body).to include('Unable to update company.')

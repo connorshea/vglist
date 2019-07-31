@@ -65,7 +65,7 @@ RSpec.describe "Series", type: :request do
 
     it "fails to create a new series" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       series_attributes[:name] = long_name
       post series_index_path, params: { series: series_attributes }
       expect(response.body).to include('Unable to create series.')
@@ -86,7 +86,7 @@ RSpec.describe "Series", type: :request do
 
     it "fails to update series" do
       sign_in(user)
-      long_name = Faker::Lorem.characters(125)
+      long_name = Faker::Lorem.characters(number: 125)
       series_attributes[:name] = long_name
       put series_path(id: series.id), params: { series: series_attributes }
       expect(response.body).to include('Unable to update series.')
