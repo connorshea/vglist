@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-1.9.6
+# faker-2.0.0
 module Faker
 end
 module Faker::Base58
@@ -66,24 +66,24 @@ end
 class Faker::Books::Dune < Faker::Base
   def self.character; end
   def self.planet; end
-  def self.quote(character = nil); end
-  def self.saying(source = nil); end
+  def self.quote(character: nil); end
+  def self.saying(source: nil); end
   def self.title; end
 end
 class Faker::Books::Lovecraft < Faker::Base
   def self.deity; end
-  def self.fhtagn(number_of = nil); end
+  def self.fhtagn(number: nil); end
   def self.location; end
-  def self.paragraph(sentence_count = nil, random_sentences_to_add = nil); end
-  def self.paragraph_by_chars(chars = nil); end
-  def self.paragraphs(paragraph_count = nil); end
-  def self.sentence(word_count = nil, random_words_to_add = nil); end
-  def self.sentences(sentence_count = nil); end
+  def self.paragraph(sentence_count: nil, random_sentences_to_add: nil); end
+  def self.paragraph_by_chars(characters: nil); end
+  def self.paragraphs(number: nil); end
+  def self.sentence(word_count: nil, random_words_to_add: nil); end
+  def self.sentences(number: nil); end
   def self.tome; end
   def self.word; end
-  def self.words(num = nil, spaces_allowed = nil); end
+  def self.words(number: nil, spaces_allowed: nil); end
 end
-module Faker::Creature
+class Faker::Creature
 end
 class Faker::Creature::Animal < Faker::Base
   def self.name; end
@@ -109,7 +109,7 @@ class Faker::Creature::Horse < Faker::Base
 end
 class Faker::Address < Faker::Base
   def self.building_number; end
-  def self.city(options = nil); end
+  def self.city(options: nil); end
   def self.city_prefix; end
   def self.city_suffix; end
   def self.community; end
@@ -121,20 +121,20 @@ class Faker::Address < Faker::Base
   def self.full_address; end
   def self.latitude; end
   def self.longitude; end
-  def self.postcode(state_abbreviation = nil); end
+  def self.postcode(state_abbreviation: nil); end
   def self.secondary_address; end
   def self.state; end
   def self.state_abbr; end
-  def self.street_address(include_secondary = nil); end
+  def self.street_address(include_secondary: nil); end
   def self.street_name; end
   def self.street_suffix; end
   def self.time_zone; end
-  def self.zip(state_abbreviation = nil); end
-  def self.zip_code(state_abbreviation = nil); end
+  def self.zip(state_abbreviation: nil); end
+  def self.zip_code(state_abbreviation: nil); end
 end
 class Faker::Alphanumeric < Faker::Base
-  def self.alpha(char_count = nil); end
-  def self.alphanumeric(char_count = nil); end
+  def self.alpha(number: nil); end
+  def self.alphanumeric(number: nil); end
 end
 class Faker::Ancient < Faker::Base
   def self.god; end
@@ -156,14 +156,14 @@ class Faker::Artist < Faker::Base
   def self.name; end
 end
 class Faker::Avatar < Faker::Base
-  def self.image(slug = nil, size = nil, format = nil, set = nil, bgset = nil); end
+  def self.image(slug: nil, size: nil, format: nil, set: nil, bgset: nil); end
 end
 class Faker::Bank < Faker::Base
-  def self.account_number(digits = nil); end
+  def self.account_number(digits: nil); end
   def self.checksum(num_string); end
   def self.compile_fraction(routing_num); end
   def self.compile_routing_number; end
-  def self.iban(country_code = nil); end
+  def self.iban(country_code: nil); end
   def self.iban_checksum(country_code, account); end
   def self.name; end
   def self.rand_numstring; end
@@ -183,7 +183,7 @@ class Faker::Beer < Faker::Base
   def self.yeast; end
 end
 class Faker::Boolean < Faker::Base
-  def self.boolean(true_ratio = nil); end
+  def self.boolean(true_ratio: nil); end
 end
 class Faker::BossaNova < Faker::Base
   def self.artist; end
@@ -195,6 +195,7 @@ class Faker::Business < Faker::Base
   def self.credit_card_type; end
 end
 class Faker::Cannabis < Faker::Base
+  def self.brand; end
   def self.buzzword; end
   def self.cannabinoid; end
   def self.cannabinoid_abbreviation; end
@@ -208,16 +209,16 @@ end
 class Faker::ChileRut < Faker::Base
   def self.check_digit; end
   def self.dv; end
-  def self.full_rut(min_rut = nil, fixed = nil); end
+  def self.full_rut(min_rut: nil, fixed: nil); end
   def self.last_rut; end
-  def self.rut(min_rut = nil, fixed = nil); end
+  def self.rut(min_rut: nil, fixed: nil); end
 end
 class Faker::ChuckNorris < Faker::Base
   def self.fact; end
 end
 class Faker::Code < Faker::Base
   def self.asin; end
-  def self.ean(base = nil); end
+  def self.ean(base: nil); end
   def self.generate_base10_isbn; end
   def self.generate_base13_ean; end
   def self.generate_base13_isbn; end
@@ -226,9 +227,9 @@ class Faker::Code < Faker::Base
   def self.generate_nric_check_alphabet(values, prefix); end
   def self.generate_sin_check_digit(digits); end
   def self.imei; end
-  def self.isbn(base = nil); end
+  def self.isbn(base: nil); end
   def self.npi; end
-  def self.nric(min_age = nil, max_age = nil); end
+  def self.nric(min_age: nil, max_age: nil); end
   def self.rut; end
   def self.rut_verificator_digit(rut); end
   def self.sin; end
@@ -257,12 +258,12 @@ end
 class Faker::Commerce < Faker::Base
   def self.categories(num); end
   def self.color; end
-  def self.department(max = nil, fixed_amount = nil); end
+  def self.department(max: nil, fixed_amount: nil); end
   def self.material; end
   def self.merge_categories(categories); end
-  def self.price(range = nil, as_string = nil); end
+  def self.price(range: nil, as_string: nil); end
   def self.product_name; end
-  def self.promotion_code(digits = nil); end
+  def self.promotion_code(digits: nil); end
 end
 class Faker::Company < Faker::Base
   def self.abn_checksum(abn); end
@@ -283,7 +284,7 @@ class Faker::Company < Faker::Base
   def self.mod11(number); end
   def self.name; end
   def self.norwegian_organisation_number; end
-  def self.polish_register_of_national_economy(length = nil); end
+  def self.polish_register_of_national_economy(length: nil); end
   def self.polish_taxpayer_identification_number; end
   def self.profession; end
   def self.sic_code; end
@@ -340,11 +341,11 @@ class Faker::Crypto < Faker::Base
   def self.sha256; end
 end
 class Faker::CryptoCoin < Faker::Base
-  def self.acronym(coin = nil); end
+  def self.acronym(coin: nil); end
   def self.coin_array; end
   def self.coin_hash; end
-  def self.coin_name(coin = nil); end
-  def self.url_logo(coin = nil); end
+  def self.coin_name(coin: nil); end
+  def self.url_logo(coin: nil); end
 end
 class Faker::Currency < Faker::Base
   def self.code; end
@@ -352,12 +353,12 @@ class Faker::Currency < Faker::Base
   def self.symbol; end
 end
 class Faker::Date < Faker::Base
-  def self.backward(days = nil); end
-  def self.between(from, to); end
-  def self.between_except(from, to, excepted); end
-  def self.birthday(min_age = nil, max_age = nil); end
+  def self.backward(days: nil); end
+  def self.between(from:, to:); end
+  def self.between_except(from:, to:, excepted:); end
+  def self.birthday(min_age: nil, max_age: nil); end
   def self.birthday_date(date, age); end
-  def self.forward(days = nil); end
+  def self.forward(days: nil); end
   def self.get_date_object(date); end
 end
 class Faker::DcComics < Faker::Base
@@ -370,7 +371,7 @@ end
 class Faker::Demographic < Faker::Base
   def self.demonym; end
   def self.educational_attainment; end
-  def self.height(unit = nil); end
+  def self.height(unit: nil); end
   def self.marital_status; end
   def self.race; end
   def self.sex; end
@@ -398,9 +399,8 @@ class Faker::DrivingLicence < Faker::Base
   def self.uk_driving_licence(*args); end
 end
 class Faker::Educator < Faker::Base
-  def self._deprecated_course; end
   def self.campus; end
-  def self.course(*args, &block); end
+  def self.course; end
   def self.course_name; end
   def self.degree; end
   def self.secondary_school; end
@@ -420,17 +420,17 @@ class Faker::Esport < Faker::Base
   def self.team; end
 end
 class Faker::File < Faker::Base
-  def self.dir(segment_count = nil, root = nil, directory_separator = nil); end
+  def self.dir(segment_count: nil, root: nil, directory_separator: nil); end
   def self.extension; end
-  def self.file_name(dir = nil, name = nil, ext = nil, directory_separator = nil); end
+  def self.file_name(dir: nil, name: nil, ext: nil, directory_separator: nil); end
   def self.mime_type; end
 end
 class Faker::Fillmurray < Faker::Base
-  def self.image(grayscale = nil, width = nil, height = nil); end
+  def self.image(grayscale: nil, width: nil, height: nil); end
 end
 class Faker::Finance < Faker::Base
   def self.credit_card(*types); end
-  def self.vat_number(country = nil); end
+  def self.vat_number(country: nil); end
   def self.vat_number_keys; end
 end
 class Faker::Food < Faker::Base
@@ -450,8 +450,6 @@ class Faker::FunnyName < Faker::Base
   def self.three_word_name; end
   def self.two_word_name; end
 end
-module Faker::Games
-end
 class Faker::Gender < Faker::Base
   def self.binary_type; end
   def self.type; end
@@ -470,13 +468,13 @@ class Faker::Hacker < Faker::Base
   def self.verb; end
 end
 class Faker::Hipster < Faker::Base
-  def self.paragraph(sentence_count = nil, supplemental = nil, random_sentences_to_add = nil); end
-  def self.paragraph_by_chars(chars = nil, supplemental = nil); end
-  def self.paragraphs(paragraph_count = nil, supplemental = nil); end
-  def self.sentence(word_count = nil, supplemental = nil, random_words_to_add = nil); end
-  def self.sentences(sentence_count = nil, supplemental = nil); end
+  def self.paragraph(sentence_count: nil, supplemental: nil, random_sentences_to_add: nil); end
+  def self.paragraph_by_chars(characters: nil, supplemental: nil); end
+  def self.paragraphs(number: nil, supplemental: nil); end
+  def self.sentence(word_count: nil, supplemental: nil, random_words_to_add: nil); end
+  def self.sentences(number: nil, supplemental: nil); end
   def self.word; end
-  def self.words(num = nil, supplemental = nil, spaces_allowed = nil); end
+  def self.words(number: nil, supplemental: nil, spaces_allowed: nil); end
 end
 class Faker::House < Faker::Base
   def self.furniture; end
@@ -504,43 +502,41 @@ class Faker::IndustrySegments < Faker::Base
 end
 class Faker::Internet < Faker::Base
   def self.device_token; end
-  def self.domain_name(subdomain = nil); end
+  def self.domain_name(subdomain: nil); end
   def self.domain_suffix; end
   def self.domain_word; end
-  def self.email(name = nil, *separators); end
-  def self.fix_umlauts(string = nil); end
-  def self.free_email(name = nil); end
+  def self.email(name: nil, separators: nil); end
+  def self.fix_umlauts(string: nil); end
+  def self.free_email(name: nil); end
   def self.ip_v4_address; end
   def self.ip_v4_cidr; end
   def self.ip_v6_address; end
   def self.ip_v6_cidr; end
-  def self.mac_address(prefix = nil); end
-  def self.password(min_length = nil, max_length = nil, mix_case = nil, special_chars = nil); end
+  def self.mac_address(prefix: nil); end
+  def self.password(min_length: nil, max_length: nil, mix_case: nil, special_characters: nil); end
   def self.private_ip_v4_address; end
   def self.private_net_checker; end
   def self.private_nets_regex; end
   def self.public_ip_v4_address; end
   def self.reserved_net_checker; end
   def self.reserved_nets_regex; end
-  def self.safe_email(name = nil); end
-  def self.slug(words = nil, glue = nil); end
-  def self.url(host = nil, path = nil, scheme = nil); end
-  def self.user_agent(vendor = nil); end
-  def self.user_name(specifier = nil, separators = nil); end
-  def self.username(specifier = nil, separators = nil); end
+  def self.safe_email(name: nil); end
+  def self.slug(words: nil, glue: nil); end
+  def self.url(host: nil, path: nil, scheme: nil); end
+  def self.user_agent(vendor: nil); end
+  def self.user_name(specifier: nil, separators: nil); end
+  def self.username(specifier: nil, separators: nil); end
   def self.uuid; end
 end
 class Faker::Invoice < Faker::Base
-  def self.amount_between(from = nil, to = nil); end
+  def self.amount_between(from: nil, to: nil); end
   def self.calculate_weighted_sum(base, weight_factors); end
-  def self.creditor_reference(ref = nil); end
+  def self.creditor_reference(ref: nil); end
   def self.iban_checksum(country_code, account); end
   def self.kidmod10(base); end
   def self.method_731(base); end
   def self.mod10_remainder(number); end
-  def self.reference(ref = nil); end
-end
-module Faker::JapaneseMedia
+  def self.reference(ref: nil); end
 end
 class Faker::Job < Faker::Base
   def self.field; end
@@ -549,12 +545,12 @@ class Faker::Job < Faker::Base
   def self.title; end
 end
 class Faker::Json < Faker::Base
-  def self.add_depth_to_json(json = nil, width = nil, options = nil); end
+  def self.add_depth_to_json(json: nil, width: nil, options: nil); end
   def self.add_hash(key_array, hash, width, options); end
   def self.add_hash_to_bottom(hash, key_array, width, options); end
   def self.build_keys_from_array(key_array); end
   def self.build_shallow_hash(width, options); end
-  def self.shallow_json(width = nil, options = nil); end
+  def self.shallow_json(width: nil, options: nil); end
 end
 class Faker::Kpop < Faker::Base
   def self.boy_bands; end
@@ -566,30 +562,30 @@ class Faker::Kpop < Faker::Base
 end
 class Faker::Lorem < Faker::Base
   def self.character; end
-  def self.characters(char_count = nil); end
+  def self.characters(number: nil); end
   def self.locale_period; end
   def self.locale_question_mark; end
   def self.locale_space; end
   def self.multibyte; end
-  def self.paragraph(sentence_count = nil, supplemental = nil, random_sentences_to_add = nil); end
-  def self.paragraph_by_chars(chars = nil, supplemental = nil); end
-  def self.paragraphs(paragraph_count = nil, supplemental = nil); end
-  def self.question(word_count = nil, supplemental = nil, random_words_to_add = nil); end
-  def self.questions(question_count = nil, supplemental = nil); end
-  def self.sentence(word_count = nil, supplemental = nil, random_words_to_add = nil); end
-  def self.sentences(sentence_count = nil, supplemental = nil); end
+  def self.paragraph(sentence_count: nil, supplemental: nil, random_sentences_to_add: nil); end
+  def self.paragraph_by_chars(number: nil, supplemental: nil); end
+  def self.paragraphs(number: nil, supplemental: nil); end
+  def self.question(word_count: nil, supplemental: nil, random_words_to_add: nil); end
+  def self.questions(number: nil, supplemental: nil); end
+  def self.sentence(word_count: nil, supplemental: nil, random_words_to_add: nil); end
+  def self.sentences(number: nil, supplemental: nil); end
   def self.word; end
-  def self.words(num = nil, supplemental = nil); end
+  def self.words(number: nil, supplemental: nil); end
 end
 class Faker::LoremFlickr < Faker::Base
   def self.build_url(size, format, search_terms, match_all); end
-  def self.colorized_image(size = nil, color = nil, search_terms = nil, match_all = nil); end
-  def self.grayscale_image(size = nil, search_terms = nil, match_all = nil); end
-  def self.image(size = nil, search_terms = nil, match_all = nil); end
-  def self.pixelated_image(size = nil, search_terms = nil, match_all = nil); end
+  def self.colorized_image(size: nil, color: nil, search_terms: nil, match_all: nil); end
+  def self.grayscale_image(size: nil, search_terms: nil, match_all: nil); end
+  def self.image(size: nil, search_terms: nil, match_all: nil); end
+  def self.pixelated_image(size: nil, search_terms: nil, match_all: nil); end
 end
 class Faker::LoremPixel < Faker::Base
-  def self.image(size = nil, is_gray = nil, category = nil, number = nil, text = nil, secure: nil); end
+  def self.image(size: nil, is_gray: nil, category: nil, number: nil, text: nil, secure: nil); end
 end
 class Faker::Markdown < Faker::Base
   def self.available_methods; end
@@ -599,7 +595,7 @@ class Faker::Markdown < Faker::Base
   def self.inline_code; end
   def self.ordered_list; end
   def self.random(*args); end
-  def self.sandwich(sentences = nil, repeat = nil); end
+  def self.sandwich(sentences: nil, repeat: nil); end
   def self.table; end
   def self.unordered_list; end
 end
@@ -610,15 +606,15 @@ class Faker::Measurement < Faker::Base
   def self.check_for_plural(text, number); end
   def self.define_measurement_locale(amount, locale); end
   def self.ensure_valid_amount(amount); end
-  def self.height(amount = nil); end
-  def self.length(amount = nil); end
+  def self.height(amount: nil); end
+  def self.length(amount: nil); end
   def self.make_plural(text); end
-  def self.metric_height(amount = nil); end
-  def self.metric_length(amount = nil); end
-  def self.metric_volume(amount = nil); end
-  def self.metric_weight(amount = nil); end
-  def self.volume(amount = nil); end
-  def self.weight(amount = nil); end
+  def self.metric_height(amount: nil); end
+  def self.metric_length(amount: nil); end
+  def self.metric_volume(amount: nil); end
+  def self.metric_weight(amount: nil); end
+  def self.volume(amount: nil); end
+  def self.weight(amount: nil); end
 end
 class Faker::Military < Faker::Base
   def self.air_force_rank; end
@@ -627,15 +623,13 @@ class Faker::Military < Faker::Base
   def self.marines_rank; end
   def self.navy_rank; end
 end
-module Faker::Movies
-end
 class Faker::Name < Faker::Base
   def self.female_first_name; end
   def self.feminine_name; end
   def self.first_name; end
   def self.first_name_men; end
   def self.first_name_women; end
-  def self.initials(character_count = nil); end
+  def self.initials(number: nil); end
   def self.last_name; end
   def self.male_first_name; end
   def self.masculine_name; end
@@ -657,26 +651,25 @@ class Faker::NatoPhoneticAlphabet < Faker::Base
 end
 class Faker::NationalHealthService < Faker::Base
   def self.british_number; end
-  def self.check_digit(number = nil); end
+  def self.check_digit(number: nil); end
 end
 class Faker::Number < Faker::Base
-  def self._deprecated_decimal_part(digits = nil); end
-  def self._deprecated_leading_zero_number(digits = nil); end
-  def self.between(from = nil, to = nil); end
-  def self.decimal(l_digits = nil, r_digits = nil); end
-  def self.decimal_part(*args, &block); end
+  def self.between(from: nil, to: nil); end
+  def self.decimal(l_digits: nil, r_digits: nil); end
+  def self.decimal_part(digits: nil); end
   def self.digit; end
+  def self.generate(count); end
   def self.greater_than_zero(number); end
-  def self.hexadecimal(digits = nil); end
-  def self.leading_zero_number(*args, &block); end
+  def self.hexadecimal(digits: nil); end
+  def self.leading_zero_number(digits: nil); end
   def self.less_than_zero(number); end
-  def self.negative(from = nil, to = nil); end
+  def self.negative(from: nil, to: nil); end
   def self.non_zero_digit; end
-  def self.normal(mean = nil, standard_deviation = nil); end
-  def self.number(digits = nil); end
-  def self.positive(from = nil, to = nil); end
+  def self.normal(mean: nil, standard_deviation: nil); end
+  def self.number(digits: nil); end
+  def self.positive(from: nil, to: nil); end
   def self.should_be(number, method_to_compare); end
-  def self.within(range = nil); end
+  def self.within(range: nil); end
 end
 class Faker::Omniauth < Faker::Base
   def email; end
@@ -702,21 +695,21 @@ class Faker::PhoneNumber < Faker::Base
   def self.cell_phone_with_country_code; end
   def self.country_code; end
   def self.exchange_code; end
-  def self.extension(length = nil); end
+  def self.extension(length: nil); end
   def self.phone_number; end
   def self.phone_number_with_country_code; end
-  def self.subscriber_number(length = nil); end
+  def self.subscriber_number(length: nil); end
 end
 class Faker::Placeholdit < Faker::Base
   def self.generate_color; end
-  def self.image(size = nil, format = nil, background_color = nil, text_color = nil, text = nil); end
+  def self.image(size: nil, format: nil, background_color: nil, text_color: nil, text: nil); end
 end
 class Faker::ProgrammingLanguage < Faker::Base
   def self.creator; end
   def self.name; end
 end
 class Faker::Relationship < Faker::Base
-  def self.familial(connection = nil); end
+  def self.familial(connection: nil); end
   def self.in_law; end
   def self.parent; end
   def self.sibling; end
@@ -742,9 +735,9 @@ class Faker::SlackEmoji < Faker::Base
   def self.travel_and_places; end
 end
 class Faker::Source < Faker::Base
-  def self.hello_world(lang = nil); end
+  def self.hello_world(lang: nil); end
   def self.print(str: nil, lang: nil); end
-  def self.print_1_to_10(lang = nil); end
+  def self.print_1_to_10(lang: nil); end
 end
 class Faker::SouthAfrica < Faker::Base
   def self.cell_phone; end
@@ -765,7 +758,7 @@ class Faker::Space < Faker::Base
   def self.constellation; end
   def self.distance_measurement; end
   def self.galaxy; end
-  def self.launch_vehicule; end
+  def self.launch_vehicle; end
   def self.meteorite; end
   def self.moon; end
   def self.nasa_space_craft; end
@@ -776,18 +769,18 @@ class Faker::Space < Faker::Base
 end
 class Faker::String < Faker::Base
   def self.char_space_ratio; end
-  def self.random(length = nil); end
+  def self.random(length: nil); end
   def self.select_a(length); end
   def self.space_or_utf8_char(ratio); end
   def self.utf8character; end
   def self.utf8string(length); end
 end
 class Faker::Stripe < Faker::Base
-  def self.ccv(card_type = nil); end
-  def self.invalid_card(card_error = nil); end
+  def self.ccv(card_type: nil); end
+  def self.invalid_card(card_error: nil); end
   def self.month; end
-  def self.valid_card(card_type = nil); end
-  def self.valid_token(card_type = nil); end
+  def self.valid_card(card_type: nil); end
+  def self.valid_token(card_type: nil); end
   def self.year; end
 end
 class Faker::Subscription < Faker::Base
@@ -811,17 +804,17 @@ class Faker::Team < Faker::Base
   def self.sport; end
   def self.state; end
 end
-class Faker::Time < Faker::Date
-  def self.backward(days = nil, period = nil, format = nil); end
-  def self.between(from, to, period = nil, format = nil); end
+class Faker::Time < Faker::Base
+  def self.backward(days: nil, period: nil, format: nil); end
+  def self.between(from:, to:, format: nil); end
+  def self.between_dates(from:, to:, period: nil, format: nil); end
   def self.date_with_random_time(date, period); end
-  def self.forward(days = nil, period = nil, format = nil); end
+  def self.forward(days: nil, period: nil, format: nil); end
+  def self.get_time_object(time); end
   def self.hours(period); end
   def self.minutes; end
   def self.seconds; end
   def self.time_with_format(time, format); end
-end
-module Faker::TvShows
 end
 class Faker::Twitter < Faker::Base
   def self.created_at; end
@@ -836,13 +829,13 @@ class Faker::Twitter < Faker::Base
 end
 class Faker::Types < Faker::Base
   def self.character; end
-  def self.complex_rb_hash(key_count = nil); end
+  def self.complex_rb_hash(number: nil); end
   def self.random_complex_type; end
   def self.random_type; end
-  def self.rb_array(len = nil); end
-  def self.rb_hash(key_count = nil, type = nil); end
-  def self.rb_integer(from = nil, to = nil); end
-  def self.rb_string(words = nil); end
+  def self.rb_array(len: nil); end
+  def self.rb_hash(number: nil, type: nil); end
+  def self.rb_integer(from: nil, to: nil); end
+  def self.rb_string(words: nil); end
   def self.titleize(word); end
 end
 class Faker::University < Faker::Base
@@ -864,14 +857,14 @@ class Faker::Vehicle < Faker::Base
   def self.engine_size; end
   def self.first_eight(number); end
   def self.fuel_type; end
-  def self.kilometrage(min = nil, max = nil); end
+  def self.kilometrage(min: nil, max: nil); end
   def self.last_eight(number); end
-  def self.license_plate(state_abreviation = nil); end
+  def self.license_plate(state_abreviation: nil); end
   def self.make; end
   def self.make_and_model; end
   def self.manufacture; end
-  def self.mileage(min = nil, max = nil); end
-  def self.model(make_of_model = nil); end
+  def self.mileage(min: nil, max: nil); end
+  def self.model(make_of_model: nil); end
   def self.singapore_checksum(plate_number); end
   def self.singapore_license_plate; end
   def self.standard_specs; end
@@ -890,28 +883,12 @@ class Faker::Verb < Faker::Base
 end
 class Faker::WorldCup < Faker::Base
   def self.city; end
-  def self.group(group = nil); end
-  def self.roster(country = nil, type = nil); end
+  def self.group(group: nil); end
+  def self.roster(country: nil, type: nil); end
   def self.stadium; end
   def self.team; end
 end
-class Faker::Football
-  def self._deprecated_coach; end
-  def self._deprecated_competition; end
-  def self._deprecated_player; end
-  def self._deprecated_position; end
-  def self._deprecated_team; end
-  def self.coach(*args, &block); end
-  def self.competition(*args, &block); end
-  def self.player(*args, &block); end
-  def self.position(*args, &block); end
-  def self.team(*args, &block); end
-end
-class Faker::Movies::GratefulDead < Faker::Base
-  def self._deprecated_player; end
-  def self._deprecated_song; end
-  def self.player(*args, &block); end
-  def self.song(*args, &block); end
+class Faker::Games
 end
 class Faker::Games::Dota < Faker::Base
   def self.hero; end
@@ -1009,6 +986,8 @@ class Faker::Games::Zelda < Faker::Base
   def self.item; end
   def self.location; end
 end
+class Faker::JapaneseMedia
+end
 class Faker::JapaneseMedia::DragonBall < Faker::Base
   def self.character; end
 end
@@ -1025,6 +1004,8 @@ class Faker::JapaneseMedia::SwordArtOnline < Faker::Base
   def self.item; end
   def self.location; end
   def self.real_name; end
+end
+class Faker::Movies
 end
 class Faker::Movies::BackToTheFuture < Faker::Base
   def self.character; end
@@ -1088,7 +1069,7 @@ class Faker::Movies::StarWars < Faker::Base
   def self.droids; end
   def self.planet; end
   def self.planets; end
-  def self.quote(character = nil); end
+  def self.quote(character: nil); end
   def self.specie; end
   def self.species; end
   def self.vehicle; end
@@ -1168,6 +1149,8 @@ class Faker::Sports::Football < Faker::Base
   def self.player; end
   def self.position; end
   def self.team; end
+end
+class Faker::TvShows
 end
 class Faker::TvShows::AquaTeenHungerForce < Faker::Base
   def self.character; end

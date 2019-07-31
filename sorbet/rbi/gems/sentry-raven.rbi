@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sentry-raven/all/sentry-raven.rbi
 #
-# sentry-raven-2.9.0
+# sentry-raven-2.11.0
 module Raven
   def self.annotate(*args, &block); end
   def self.annotateException(*args, &block); end
@@ -168,6 +168,7 @@ class Raven::Configuration
   def detect_project_root; end
   def detect_release; end
   def detect_release_from_capistrano; end
+  def detect_release_from_env; end
   def detect_release_from_git; end
   def detect_release_from_heroku; end
   def dsn=(value); end

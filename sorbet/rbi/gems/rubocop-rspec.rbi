@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rspec/all/rubocop-rspec.rbi
 #
-# rubocop-rspec-1.34.0
+# rubocop-rspec-1.34.1
 module RuboCop
 end
 module RuboCop::RSpec

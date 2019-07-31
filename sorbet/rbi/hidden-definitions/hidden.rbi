@@ -1153,27 +1153,23 @@ class ActionView::Base
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113868394740(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271698089180(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113886849340(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271698771080(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113887971780(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271699124420(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113889514780(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271699771880(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113891850260(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271714134720(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113892658820(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271718431560(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113892758500(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271723559600(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113893343660(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271724142220(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113893922760(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113895382360(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__2994269668588585103_70113897592420(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271736182980(local_assigns, output_buffer); end
 end
 
 class ActionView::DependencyTracker::ERBTracker
@@ -7921,62 +7917,6 @@ end
 
 FileList = Rake::FileList
 
-module FileTest
-  def self.blockdev?(_); end
-
-  def self.chardev?(_); end
-
-  def self.directory?(_); end
-
-  def self.empty?(_); end
-
-  def self.executable?(_); end
-
-  def self.executable_real?(_); end
-
-  def self.exist?(_); end
-
-  def self.exists?(_); end
-
-  def self.file?(_); end
-
-  def self.grpowned?(_); end
-
-  def self.identical?(_, _1); end
-
-  def self.owned?(_); end
-
-  def self.pipe?(_); end
-
-  def self.readable?(_); end
-
-  def self.readable_real?(_); end
-
-  def self.setgid?(_); end
-
-  def self.setuid?(_); end
-
-  def self.size(_); end
-
-  def self.size?(_); end
-
-  def self.socket?(_); end
-
-  def self.sticky?(_); end
-
-  def self.symlink?(_); end
-
-  def self.world_readable?(_); end
-
-  def self.world_writable?(_); end
-
-  def self.writable?(_); end
-
-  def self.writable_real?(_); end
-
-  def self.zero?(_); end
-end
-
 module FileUtils
   include ::FileUtils::StreamUtils_
   LN_SUPPORTED = ::T.let(nil, ::T.untyped)
@@ -13788,7 +13728,7 @@ class Hash
 end
 
 class Hash
-  def self.from_trusted_xml(xml); end
+  def self.try_convert(_); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -16111,33 +16051,6 @@ end
 
 class Method
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def <<(_); end
-
-  def ===(*_); end
-
-  def >>(_); end
-
-  def [](*_); end
-
-  def arity(); end
-
-  def clone(); end
-
-  def curry(*_); end
-
-  def name(); end
-
-  def original_name(); end
-
-  def owner(); end
-
-  def parameters(); end
-
-  def receiver(); end
-
-  def super_method(); end
-
-  def unbind(); end
 end
 
 module MethodSource
@@ -16204,17 +16117,9 @@ end
 module Minitest::Assertions
   def _synchronize(); end
 
-  def assert(test, msg=T.unsafe(nil)); end
-
-  def assert_empty(obj, msg=T.unsafe(nil)); end
-
-  def assert_equal(exp, act, msg=T.unsafe(nil)); end
-
   def assert_in_delta(exp, act, delta=T.unsafe(nil), msg=T.unsafe(nil)); end
 
   def assert_in_epsilon(exp, act, epsilon=T.unsafe(nil), msg=T.unsafe(nil)); end
-
-  def assert_includes(collection, obj, msg=T.unsafe(nil)); end
 
   def assert_instance_of(cls, obj, msg=T.unsafe(nil)); end
 
@@ -16222,15 +16127,11 @@ module Minitest::Assertions
 
   def assert_match(matcher, obj, msg=T.unsafe(nil)); end
 
-  def assert_nil(obj, msg=T.unsafe(nil)); end
-
   def assert_operator(o1, op, o2=T.unsafe(nil), msg=T.unsafe(nil)); end
 
   def assert_output(stdout=T.unsafe(nil), stderr=T.unsafe(nil)); end
 
   def assert_predicate(o1, op, msg=T.unsafe(nil)); end
-
-  def assert_raises(*exp); end
 
   def assert_respond_to(obj, meth, msg=T.unsafe(nil)); end
 
@@ -16260,25 +16161,15 @@ module Minitest::Assertions
 
   def pass(_msg=T.unsafe(nil)); end
 
-  def refute(test, msg=T.unsafe(nil)); end
-
-  def refute_empty(obj, msg=T.unsafe(nil)); end
-
-  def refute_equal(exp, act, msg=T.unsafe(nil)); end
-
   def refute_in_delta(exp, act, delta=T.unsafe(nil), msg=T.unsafe(nil)); end
 
   def refute_in_epsilon(a, b, epsilon=T.unsafe(nil), msg=T.unsafe(nil)); end
-
-  def refute_includes(collection, obj, msg=T.unsafe(nil)); end
 
   def refute_instance_of(cls, obj, msg=T.unsafe(nil)); end
 
   def refute_kind_of(cls, obj, msg=T.unsafe(nil)); end
 
   def refute_match(matcher, obj, msg=T.unsafe(nil)); end
-
-  def refute_nil(obj, msg=T.unsafe(nil)); end
 
   def refute_operator(o1, op, o2=T.unsafe(nil), msg=T.unsafe(nil)); end
 
@@ -16391,7 +16282,6 @@ class Minitest::Runnable
 end
 
 class Minitest::Test
-  include ::Minitest::Assertions
   include ::Minitest::Reportable
   include ::Minitest::Test::LifecycleHooks
   include ::Minitest::Guard
@@ -17106,6 +16996,9 @@ class NilClassPolicy::Scope
 end
 
 class NilClassPolicy::Scope
+end
+
+class NilClassPolicy
 end
 
 class NoMemoryError
@@ -32067,6 +31960,8 @@ class Sorbet::Private::RequireEverything
   def self.patch_kernel(); end
 
   def self.rails?(); end
+
+  def self.rb_file_paths(); end
 
   def self.require_all_files(); end
 
