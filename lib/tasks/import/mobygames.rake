@@ -6,7 +6,11 @@ namespace 'import' do
   desc "Import MobyGames IDs from Wikidata"
   task mobygames: :environment do
     puts "Importing MobyGames IDs from Wikidata..."
-    client = SPARQL::Client.new("https://query.wikidata.org/sparql", method: :get)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
 
     rows = []
     rows.concat(client.query(mobygames_query))
