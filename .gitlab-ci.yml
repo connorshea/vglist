@@ -31,7 +31,20 @@ before_script:
   - bundle exec rails db:create
   - bundle exec rails db:migrate --trace
 
+.no_db_template:
+  before_script: &no_db_necessary
+    - ruby -v
+    - gem install bundler:$BUNDLER_VERSION
+    - bundle install -j $(nproc)
+    - yarn install --frozen-lockfile
+
+sorbet:tc:
+  before_script: *no_db_necessary
+  script:
+    - bundle exec srb tc . --ignore=vendor/
+
 rubocop:
+  before_script: *no_db_necessary
   script:
     - bundle exec rubocop
 
