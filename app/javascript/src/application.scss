@@ -571,3 +571,14 @@ nav.navbar {
 .game-library .selection-info-bar {
   display: none;
 }
+
+.library-edit-bar.level {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #dcdfe6;
+  margin-bottom: 5px;
+  z-index: 1000;
+  padding: 8px 5px 8px 15px;
+}

@@ -1,12 +1,15 @@
 <template>
-  <div class="library-edit-bar">
-    <p class="has-text-weight-bold">{{ gamePurchases.length }} games selected</p>
-
-    <!-- <ul v-for="gamePurchase in gamePurchases" :key="gamePurchase.id">
-      <li>{{gamePurchase}}</li>
-    </ul>-->
-    <button class="button is-fullwidth-mobile mr-5 mr-0-mobile" @click="updateGames">Update</button>
-    <button class="button is-fullwidth-mobile mr-5 mr-0-mobile" @click="$emit('closeEditBar')">Close</button>
+  <div class="library-edit-bar level">
+    <div class="level-left">
+      <span class="has-text-weight-bold">{{ selectedGamesString }}</span>
+    </div>
+    <div class="level-right">
+      <button class="button is-fullwidth-mobile mr-5 mr-0-mobile" @click="updateGames">Update</button>
+      <button
+        class="button is-fullwidth-mobile mr-5 mr-0-mobile"
+        @click="$emit('closeEditBar')"
+      >Cancel</button>
+    </div>
   </div>
 </template>
 
@@ -32,6 +35,12 @@ export default {
   methods: {
     updateGames() {
       console.log('foo');
+    }
+  },
+  computed: {
+    selectedGamesString() {
+      let gpLength = this.gamePurchases.length;
+      return `${gpLength} game${gpLength > 1 ? 's' : ''} selected`;
     }
   }
 };
