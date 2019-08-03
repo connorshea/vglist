@@ -21,7 +21,9 @@ Rails.application.routes.draw do
     delete :unfavorite, on: :member
   end
 
-  resources :game_purchases, except: [:new, :edit]
+  resources :game_purchases, except: [:edit, :new] do
+    post :bulk_update, on: :collection
+  end
 
   resources :users do
     get :index, on: :collection
