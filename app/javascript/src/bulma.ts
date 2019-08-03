@@ -40,12 +40,13 @@ let initBulma = () => {
       });
     });
 
+    // Close the dropdown if the user clicks outside the dropdown.
     document.addEventListener('click', function(event) {
       // If the user is clicking on something other than an element, return early.
-      if (event.target !instanceof Element) {
+      if (event.target !instanceof Element && event.target !instanceof HTMLDocument) {
         return;
       }
-      // If user clicks outside the dropdown, close it!
+      // If the user clicks on the dropdown itself, don't close the dropdown.
       if ((event.target as Element).closest('.dropdown:not(.is-hoverable)')) {
         return;
       }
