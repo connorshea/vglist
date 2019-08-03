@@ -4,11 +4,11 @@
       <span class="has-text-weight-bold">{{ selectedGamesString }}</span>
     </div>
     <div class="level-right">
-      <button class="button is-fullwidth-mobile mr-5 mr-0-mobile" @click="updateGames">Update</button>
       <button
         class="button is-fullwidth-mobile mr-5 mr-0-mobile"
         @click="$emit('closeEditBar')"
       >Cancel</button>
+      <button class="button is-fullwidth-mobile mr-5 mr-0-mobile" @click="updateGames">Update</button>
     </div>
   </div>
 </template>
