@@ -1,6 +1,14 @@
 <template>
   <div class="game-library">
+    <library-edit-bar
+      v-if="isEditBarActive"
+      :isActive="isEditBarActive"
+      :gamePurchases="selectedGamePurchases"
+      @closeEditBar="closeEditBar"
+    ></library-edit-bar>
+
     <library-table
+      ref="library-table-component"
       :rows="games"
       :isEditable="isEditable"
       :gamePurchasesUrl="gamePurchasesUrl"
@@ -9,6 +17,9 @@
       @edit="activateModal"
       @delete="refreshLibrary"
       @addGame="activateModal({})"
+      @openEditBar="activateEditBar"
+      @selectedGamePurchasesChanged="selectedGamePurchasesChanged"
+      @deactivateEditBar="deactivateEditBar"
     ></library-table>
 
     <game-modal
@@ -27,11 +38,13 @@
 <script lang="ts">
 import LibraryTable from './library-table.vue';
 import GameModal from './game-modal.vue';
+import LibraryEditBar from './library-edit-bar.vue';
 
 export default {
   components: {
     LibraryTable,
-    GameModal
+    GameModal,
+    LibraryEditBar
   },
   props: {
     gamePurchasesUrl: {
@@ -51,6 +64,8 @@ export default {
   data: function() {
     return {
       isModalActive: false,
+      isEditBarActive: false,
+      selectedGamePurchases: [],
       currentGame: {},
       doesGamePurchaseExist: false,
       games: [],
@@ -103,6 +118,26 @@ export default {
       html.classList.remove('is-clipped');
 
       this.isModalActive = false;
+    },
+    activateEditBar() {
+      this.isEditBarActive = true;
+    },
+    deactivateEditBar() {
+      this.isEditBarActive = false;
+    },
+    selectedGamePurchasesChanged(gamePurchases) {
+      if (gamePurchases.length > 0) {
+        this.activateEditBar();
+      } else {
+        this.deactivateEditBar();
+      }
+      this.selectedGamePurchases = gamePurchases;
+    },
+    closeEditBar() {
+      this.deactivateEditBar();
+      this.$refs['library-table-component'].$refs[
+        'game-library-table'
+      ].unselectAllInternal();
     },
     closeAndRefresh() {
       this.deactivateModal();
