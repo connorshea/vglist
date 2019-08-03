@@ -40,17 +40,15 @@ class GamePurchasesController < ApplicationController
   end
 
   def bulk_update
-    @game_purchases = GamePurchase.where(id: params[:ids])
-
-    # Filter out any game purchases that don't belong to the current user.
-    # This is dumb, but prevents errors when authorizing the game purchase updates.
-    @game_purchases = @game_purchases.filter { |purchase| purchase.user_id == current_user.id }
+    @game_purchases = GamePurchase.where(id: bulk_game_purchase_params[:game_purchase_ids])
+    # puts @game_purchases.inspect
     @game_purchases.each { |purchase| authorize purchase }
+    puts bulk_game_purchase_params[:game_purchase].to_h
 
     # Use update because it allows you to pass an array of records to update
     # and also triggers validations and callbacks (update_all does not).
     respond_to do |format|
-      if @game_purchases.update(bulk_game_purchase_params)
+      if GamePurchase.update(bulk_game_purchase_params[:game_purchase_ids], bulk_game_purchase_params[:game_purchase].to_h)
         format.json { render json: @game_purchases, status: :ok }
       else
         format.json { render json: @game_purchases.errors.full_messages, status: :unprocessable_entity }
@@ -80,11 +78,10 @@ class GamePurchasesController < ApplicationController
 
   # Only specific game purchase attributes can be modified in bulk.
   def bulk_game_purchase_params
-    params.require(:game_purchase).permit(
-      :user_id,
-      :game_id,
+    params.permit(
       :rating,
-      :completion_status
+      :completion_status,
+      game_purchase_ids: []
     )
   end
 end

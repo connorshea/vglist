@@ -14,6 +14,8 @@
 </template>
 
 <script lang="ts">
+import Rails from 'rails-ujs';
+import Turbolinks from 'turbolinks';
 import SingleSelect from './fields/single-select.vue';
 
 export default {
@@ -29,12 +31,38 @@ export default {
   },
   data: function() {
     return {
-      test: null
+      updateData: {
+        game_purchase_ids: [],
+        rating: 100
+      }
     };
   },
   methods: {
     updateGames() {
-      console.log('foo');
+      console.log(this.gamePurchases);
+      this.gamePurchases.forEach(gamePurchase => {
+        this.updateData['game_purchase_ids'].push(gamePurchase.id);
+      });
+
+      console.log(this.updateData);
+
+      fetch('/game_purchases/bulk_update.json', {
+        method: 'POST',
+        body: JSON.stringify(this.updateData),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': Rails.csrfToken(),
+          Accept: 'application/json'
+        },
+        credentials: 'same-origin'
+      }).then(response => {
+        if (response.ok) {
+          // Redirects to self.
+          Turbolinks.visit(window.location);
+        } else {
+          console.log('Add error handling, doofus.');
+        }
+      });
     }
   },
   computed: {
