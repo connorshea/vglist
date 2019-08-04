@@ -32,19 +32,17 @@ export default {
   data: function() {
     return {
       updateData: {
-        game_purchase_ids: [],
-        rating: 100
+        ids: []
       }
     };
   },
   methods: {
     updateGames() {
-      console.log(this.gamePurchases);
+      // Clear the array first.
+      this.updateData['ids'] = [];
       this.gamePurchases.forEach(gamePurchase => {
-        this.updateData['game_purchase_ids'].push(gamePurchase.id);
+        this.updateData['ids'].push(gamePurchase.id);
       });
-
-      console.log(this.updateData);
 
       fetch('/game_purchases/bulk_update.json', {
         method: 'POST',
