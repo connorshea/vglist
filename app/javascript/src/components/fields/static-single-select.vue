@@ -7,6 +7,7 @@
         :maxHeight="maxHeight"
         :disabled="disabled"
         label="label"
+        :placeholder="placeholder"
         :inputId="inputId"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
@@ -29,6 +30,11 @@ export default {
     label: {
       type: String,
       required: false
+    },
+    placeholder: {
+      type: String,
+      required: false,
+      default: ''
     },
     value: {
       type: Object,

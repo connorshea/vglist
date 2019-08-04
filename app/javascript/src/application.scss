@@ -582,4 +582,9 @@ nav.navbar {
   // Modal overlay is 40, make sure to stay below it.
   z-index: 39;
   padding: 8px 5px 8px 15px;
+
+  .vs__search,
+  .vs__search:focus {
+    width: auto;
+  }
 }

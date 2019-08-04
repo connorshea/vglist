@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div class="field" :class="fieldClass">
     <label v-if="label" class="label" v-bind:for="numberFieldId">{{ label }}</label>
     <div class="control">
       <input
@@ -26,6 +26,11 @@ export default {
     formClass: {
       type: String,
       required: true
+    },
+    fieldClass: {
+      type: String,
+      required: false,
+      default: ''
     },
     attribute: {
       type: String,
