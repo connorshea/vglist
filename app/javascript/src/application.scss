@@ -567,3 +567,26 @@ nav.navbar {
     transition: opacity 0.25s;
   }
 }
+
+.game-library .selection-info-bar {
+  display: none;
+}
+
+.library-edit-bar.level {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #dcdfe6;
+  margin-bottom: 5px;
+  // Modal overlay is 40, make sure to stay below it.
+  z-index: 39;
+  padding: 8px 5px 8px 15px;
+
+  // Set width to auto to make the input field display the placeholder value.
+  // By default, width is set to 0 for some reason.
+  .vs__search,
+  .vs__search:focus {
+    width: auto;
+  }
+}

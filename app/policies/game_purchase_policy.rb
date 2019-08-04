@@ -34,6 +34,11 @@ class GamePurchasePolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
+  def bulk_update?
+    game_purchase_belongs_to_user?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
     game_purchase_belongs_to_user?
   end

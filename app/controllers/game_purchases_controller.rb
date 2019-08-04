@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 class GamePurchasesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -39,11 +39,40 @@ class GamePurchasesController < ApplicationController
     end
   end
 
+  def bulk_update
+    @game_purchases = GamePurchase.where(id: bulk_game_purchase_params[:ids])
+
+    # Authorize each purchase individually and then skip authorization
+    # because Pundit is stupid and will say we didn't check a policy here.
+    # Pundit doesn't support validating an array of records, sadly.
+    @game_purchases.each { |purchase| authorize purchase }
+    skip_authorization
+
+    # Separate the ids and the actual parameters we want to submit.
+    submittable_ids = bulk_game_purchase_params.dig(:ids)
+    actual_params = bulk_game_purchase_params.except(:ids)
+
+    # Use update because it allows you to pass an array of records to update
+    # and also triggers validations and callbacks (update_all does not).
+    respond_to do |format|
+      # This looks so dumb because it needs to be in a format like:
+      #   update([1, 2, 3], [{ rating: 5 }, { rating: 5 }, { rating: 5 }])
+      # so we create an array of x params where all the params are the same.
+      if GamePurchase.update(submittable_ids, Array.new(submittable_ids.length, actual_params))
+        format.json { render json: @game_purchases, status: :ok }
+      else
+        format.json { render json: @game_purchases.errors.full_messages, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def destroy
     @game_purchase = GamePurchase.find(params[:id])
     authorize @game_purchase
     @game_purchase.destroy
   end
+
+  private
 
   def game_purchase_params
     params.require(:game_purchase).permit(
@@ -56,6 +85,15 @@ class GamePurchasesController < ApplicationController
       :completion_date,
       :hours_played,
       platform_ids: []
+    )
+  end
+
+  # Only specific game purchase attributes can be modified in bulk.
+  def bulk_game_purchase_params
+    params.permit(
+      :rating,
+      :completion_status,
+      ids: []
     )
   end
 end

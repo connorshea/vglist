@@ -1,5 +1,6 @@
 <template>
   <vue-good-table
+    ref="game-library-table"
     :columns="columns"
     :rows="rows"
     :sort-options="{
@@ -9,6 +10,14 @@
     :search-options="{
       enabled: false
     }"
+    :selectOptions="{
+      enabled: true,
+      selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
+      selectionInfoClass: 'selection-info-bar',
+      selectionText: 'rows selected',
+      clearSelectionText: 'clear'
+    }"
+    @on-selected-rows-change="selectionChanged"
   >
     <div slot="table-actions">
       <div class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile js-no-close-on-click">
@@ -29,7 +38,7 @@
               :key="column.index"
             >
               <a @click="toggleColumn(column.index, $event)">
-                <input :checked="!column.hidden" type="checkbox">
+                <input :checked="!column.hidden" type="checkbox" />
                 {{ column.label }}
               </a>
             </div>
@@ -42,6 +51,7 @@
         class="button is-fullwidth-mobile mr-5 mr-0-mobile"
       >Add a game to your library</button>
     </div>
+    <div slot="selected-row-actions"></div>
     <template slot="table-row" slot-scope="props">
       <span v-if="props.column.field == 'after'">
         <a class="mr-5" @click="onEdit(props.row)">Edit</a>
@@ -174,6 +184,15 @@ export default {
           hidden: false,
           index: 7
         }
+      ],
+      completionStatuses: [
+        'unplayed',
+        'in_progress',
+        'dropped',
+        'completed',
+        'fully_completed',
+        'not_applicable',
+        'paused'
       ]
     };
   },
@@ -222,6 +241,9 @@ export default {
     addGame() {
       this.$emit('addGame');
     },
+    openEditBar() {
+      this.$emit('openEditBar');
+    },
     formatHoursPlayed(value) {
       if (value === null || parseFloat(value) === 0) {
         return;
@@ -249,6 +271,9 @@ export default {
     toggleColumn(index, event) {
       // Set hidden to inverse of what it currently is
       this.$set(this.columns[index], 'hidden', !this.columns[index].hidden);
+    },
+    selectionChanged(params) {
+      this.$emit('selectedGamePurchasesChanged', params.selectedRows);
     }
   }
 };
