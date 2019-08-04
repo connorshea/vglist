@@ -1,6 +1,9 @@
 # typed: strict
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  # Put this at the top for ~performance~
+  root 'home#index'
+
   devise_for :users, controllers: {
     confirmations: 'users/confirmations',
     passwords: 'users/passwords',
@@ -9,8 +12,6 @@ Rails.application.routes.draw do
   }
 
   get 'home/index'
-
-  root 'home#index'
 
   resources :games do
     get :search, on: :collection
