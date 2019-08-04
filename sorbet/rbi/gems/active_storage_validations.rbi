@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/active_storage_validations/all/active_storage_validations.rbi
 #
-# active_storage_validations-0.7.1
+# active_storage_validations-0.8.0
 module ActiveStorageValidations
 end
 class ActiveStorageValidations::Railtie < Rails::Railtie
@@ -35,9 +35,26 @@ class ActiveStorageValidations::LimitValidator < ActiveModel::EachValidator
   def files_count_valid?(count); end
   def validate_each(record, attribute, _value); end
 end
+class ActiveStorageValidations::Metadata
+  def file; end
+  def initialize(file); end
+  def logger; end
+  def metadata; end
+  def read_file_path; end
+  def read_image; end
+  def rotated_image?(image); end
+end
 class ActiveStorageValidations::DimensionValidator < ActiveModel::EachValidator
+  def add_error(record, attribute, type, *attrs); end
   def check_validity!; end
-  def dimension_valid?(record, attribute, file_metadata); end
   def initialize(options); end
+  def is_valid?(record, attribute, file_metadata); end
+  def validate_each(record, attribute, _value); end
+end
+class ActiveStorageValidations::AspectRatioValidator < ActiveModel::EachValidator
+  def add_error(record, attribute, type, interpolate = nil); end
+  def check_validity!; end
+  def initialize(options); end
+  def is_valid?(record, attribute, metadata); end
   def validate_each(record, attribute, _value); end
 end

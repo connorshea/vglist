@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/shoulda-matchers/all/shoulda-matchers.rbi
 #
-# shoulda-matchers-4.1.1
+# shoulda-matchers-4.1.2
 module Shoulda
 end
 module Shoulda::Matchers
@@ -309,7 +309,9 @@ module Shoulda::Matchers::RailsShim
   def self.action_pack_version; end
   def self.active_record_gte_5?; end
   def self.active_record_version; end
+  def self.attribute_serialization_coder_for(model, attribute_name); end
   def self.attribute_type_for(model, attribute_name); end
+  def self.attribute_types_for(model); end
   def self.digestible_attributes_in(record); end
   def self.generate_validation_message(record, attribute, type, model_name, options); end
   def self.has_secure_password?(record, attribute_name); end
@@ -324,7 +326,7 @@ module Shoulda::Matchers::RailsShim
   def self.validation_message_key_for_association_required_option; end
   def self.verb_for_update; end
 end
-class InvalidName___Class_0x00___LegacyAttributeType_35
+class InvalidName___Class_0x00___FakeAttributeType_35
   def attribute_name; end
   def coder; end
   def initialize(model, attribute_name); end
@@ -1051,7 +1053,7 @@ class Shoulda::Matchers::ActiveModel::ValidatePresenceOfMatcher < Shoulda::Match
   def association_reflection; end
   def attachment?; end
   def attribute_accepts_string_values?; end
-  def attribute_serializer; end
+  def attribute_serialization_coder; end
   def attribute_type; end
   def belongs_to_association_being_validated?; end
   def belongs_to_association_configured_to_be_required?; end
@@ -1618,7 +1620,6 @@ class Shoulda::Matchers::ActiveRecord::SerializeMatcher
   def model_class; end
   def serialization_coder; end
   def serialization_valid?; end
-  def serialized_attributes; end
   def type_valid?; end
 end
 class Shoulda::Matchers::ActiveRecord::AcceptNestedAttributesForMatcher

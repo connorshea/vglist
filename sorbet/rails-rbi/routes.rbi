@@ -4,6 +4,12 @@
 class ActionController::Base
   extend T::Sig
 
+  # Sigs for route /
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def root_path(*args, **kwargs); end
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def root_url(*args, **kwargs); end
+
   # Sigs for route /users/sign_in(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def new_user_session_path(*args, **kwargs); end
@@ -82,12 +88,6 @@ class ActionController::Base
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def home_index_url(*args, **kwargs); end
 
-  # Sigs for route /
-  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def root_path(*args, **kwargs); end
-  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def root_url(*args, **kwargs); end
-
   # Sigs for route /games/search(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def search_games_path(*args, **kwargs); end
@@ -147,6 +147,12 @@ class ActionController::Base
   def game_path(*args, **kwargs); end
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def game_url(*args, **kwargs); end
+
+  # Sigs for route /game_purchases/bulk_update(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def bulk_update_game_purchases_path(*args, **kwargs); end
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def bulk_update_game_purchases_url(*args, **kwargs); end
 
   # Sigs for route /game_purchases(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }

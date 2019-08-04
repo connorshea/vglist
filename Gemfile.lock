@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/chanzuckerberg/sorbet-rails.git
-  revision: edc5f801575dd0b195b887cd9b0b0e5ab091b346
+  revision: a01ce6de6f7b4c75976c66dffe8071e4ee5ab9ab
   specs:
     sorbet-rails (0.4.0)
+      parlour (~> 0.6.0)
 
 GEM
   remote: https://rubygems.org/
@@ -181,6 +182,9 @@ GEM
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
     parallel (1.17.0)
+    parlour (0.6.1)
+      rainbow (~> 3.0.0)
+      sorbet-runtime
     parser (2.6.3.0)
       ast (~> 2.4.0)
     pg (1.1.4)
@@ -291,10 +295,10 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    sorbet (0.4.4544)
-      sorbet-static (= 0.4.4544)
-    sorbet-runtime (0.4.4544)
-    sorbet-static (0.4.4544-universal-darwin-14)
+    sorbet (0.4.4573)
+      sorbet-static (= 0.4.4573)
+    sorbet-runtime (0.4.4573)
+    sorbet-static (0.4.4573-universal-darwin-14)
     sparql (3.0.2)
       builder (~> 3.2)
       ebnf (~> 1.1)
