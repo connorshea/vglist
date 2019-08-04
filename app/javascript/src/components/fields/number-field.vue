@@ -1,11 +1,12 @@
 <template>
   <div class="field">
-    <label class="label" v-bind:for="numberFieldId">{{ label }}</label>
+    <label v-if="label" class="label" v-bind:for="numberFieldId">{{ label }}</label>
     <div class="control">
       <input
         autocomplete="off"
         class="input"
         type="number"
+        :placeholder="placeholder"
         :min="min"
         :max="max"
         :required="required"
@@ -13,7 +14,7 @@
         v-bind:id="numberFieldId"
         v-bind:value="dataValue"
         v-on:input="$emit('input', $event.target.value)"
-      >
+      />
     </div>
   </div>
 </template>
@@ -32,7 +33,12 @@ export default {
     },
     label: {
       type: String,
-      required: true
+      required: false
+    },
+    placeholder: {
+      type: String,
+      required: false,
+      default: ''
     },
     value: {
       type: [Number, String],
