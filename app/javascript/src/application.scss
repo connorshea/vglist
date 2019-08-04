@@ -583,6 +583,8 @@ nav.navbar {
   z-index: 39;
   padding: 8px 5px 8px 15px;
 
+  // Set width to auto to make the input field display the placeholder value.
+  // By default, width is set to 0 for some reason.
   .vs__search,
   .vs__search:focus {
     width: auto;
