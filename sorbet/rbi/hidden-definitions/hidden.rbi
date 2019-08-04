@@ -1153,23 +1153,27 @@ class ActionView::Base
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271698089180(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179563694620(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271698771080(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179568049200(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271699124420(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179586925640(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271699771880(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179594994720(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271714134720(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179595545400(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271718431560(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179596319440(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271723559600(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179606417400(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271724142220(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179607531500(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___1784301296806207085_70271736182980(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179608626840(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179614770700(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179616514260(local_assigns, output_buffer); end
 end
 
 class ActionView::DependencyTracker::ERBTracker
@@ -2942,6 +2946,11 @@ module ActiveStorage::VERSION
   TINY = ::T.let(nil, ::T.untyped)
 end
 
+class ActiveStorageValidations::AspectRatioValidator
+  AVAILABLE_CHECKS = ::T.let(nil, ::T.untyped)
+  PRECISION = ::T.let(nil, ::T.untyped)
+end
+
 class ActiveStorageValidations::DimensionValidator
   AVAILABLE_CHECKS = ::T.let(nil, ::T.untyped)
 end
@@ -3665,6 +3674,16 @@ class ApplicationController
   def success(); end
 end
 
+module ApplicationHelper
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ApplicationPolicy
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class ApplicationRecord
   include ::ApplicationRecord::GeneratedAssociationMethods
   include ::Kaminari::ActiveRecordModelExtension
@@ -3719,15 +3738,11 @@ class Array
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::Array
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def append(*_); end
-
   def bsearch(); end
 
   def bsearch_index(); end
 
   def collect!(); end
-
-  def difference(*_); end
 
   def dig(*_); end
 
@@ -3737,8 +3752,6 @@ class Array
 
   def pack(*_); end
 
-  def prepend(*_); end
-
   def quote(); end
 
   def replace(_); end
@@ -3747,7 +3760,6 @@ class Array
 
   def to_h(); end
 
-  def union(*_); end
 end
 
 class Array
@@ -7905,13 +7917,13 @@ class File::Stat
 end
 
 class File
+  def self.empty?(_); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 
 end
 
@@ -9593,6 +9605,11 @@ module GamePurchasePlatform::GeneratedAssociationMethods
 end
 
 module GamePurchasePlatform::GeneratedAssociationMethods
+end
+
+module GamesHelper
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 module Gem
@@ -13728,7 +13745,7 @@ class Hash
 end
 
 class Hash
-  def self.try_convert(_); end
+  def self.from_xml(xml, disallowed_types=T.unsafe(nil)); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -16014,7 +16031,6 @@ end
 
 class MatchData
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def named_captures(); end
 end
 
 module MessagePack
@@ -26162,16 +26178,7 @@ class RuboCop::CommentConfig
 end
 
 class RuboCop::Config
-  COMMON_PARAMS = ::T.let(nil, ::T.untyped)
   DEFAULT_RAILS_VERSION = ::T.let(nil, ::T.untyped)
-  DEFAULT_RUBY_VERSION = ::T.let(nil, ::T.untyped)
-  INTERNAL_PARAMS = ::T.let(nil, ::T.untyped)
-  KNOWN_RUBIES = ::T.let(nil, ::T.untyped)
-  OBSOLETE_COPS = ::T.let(nil, ::T.untyped)
-  OBSOLETE_ENFORCED_STYLES = ::T.let(nil, ::T.untyped)
-  OBSOLETE_PARAMETERS = ::T.let(nil, ::T.untyped)
-  OBSOLETE_RUBIES = ::T.let(nil, ::T.untyped)
-  RUBY_VERSION_FILENAME = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::ConfigLoader
@@ -26184,6 +26191,26 @@ end
 
 class RuboCop::ConfigLoader
   extend ::RuboCop::FileFinder
+end
+
+class RuboCop::ConfigObsoletion
+  MOVED_COPS = ::T.let(nil, ::T.untyped)
+  OBSOLETE_COPS = ::T.let(nil, ::T.untyped)
+  OBSOLETE_ENFORCED_STYLES = ::T.let(nil, ::T.untyped)
+  OBSOLETE_PARAMETERS = ::T.let(nil, ::T.untyped)
+  REMOVED_COPS = ::T.let(nil, ::T.untyped)
+  REMOVED_COPS_WITH_REASON = ::T.let(nil, ::T.untyped)
+  RENAMED_COPS = ::T.let(nil, ::T.untyped)
+  SPLIT_COPS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::ConfigValidator
+  COMMON_PARAMS = ::T.let(nil, ::T.untyped)
+  DEFAULT_RUBY_VERSION = ::T.let(nil, ::T.untyped)
+  INTERNAL_PARAMS = ::T.let(nil, ::T.untyped)
+  KNOWN_RUBIES = ::T.let(nil, ::T.untyped)
+  OBSOLETE_RUBIES = ::T.let(nil, ::T.untyped)
+  RUBY_VERSION_FILENAME = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::Alignment
@@ -28670,6 +28697,7 @@ end
 
 module RuboCop::Cop::SurroundingSpace
   NO_SPACE_COMMAND = ::T.let(nil, ::T.untyped)
+  SINGLE_SPACE_REGEXP = ::T.let(nil, ::T.untyped)
   SPACE_COMMAND = ::T.let(nil, ::T.untyped)
 end
 
@@ -31961,6 +31989,8 @@ class Sorbet::Private::RequireEverything
 
   def self.rails?(); end
 
+  def self.rails_load_paths(); end
+
   def self.rb_file_paths(); end
 
   def self.require_all_files(); end
@@ -32754,14 +32784,6 @@ end
 
 class ThreadGroup
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def add(_); end
-
-  def enclose(); end
-
-  def enclosed?(); end
-
-  def list(); end
-  Default = ::T.let(nil, ::T.untyped)
 end
 
 module ThreadSafe

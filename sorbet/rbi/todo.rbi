@@ -17,3 +17,9 @@ module Anonymous_Module_25::Anonymous_Module_26; end
 module Anonymous_Module_25::Anonymous_Module_27; end
 module Anonymous_Module_25::Anonymous_Module_27; end
 module OrmAdapter::ActiveRecord::ToAdapter; end
+module T::Private::Methods::MethodHooks; end
+module T::Private::Methods::MethodHooks; end
+module T::Private::Methods::MethodHooks; end
+module T::Private::Methods::SingletonMethodHooks; end
+module T::Private::Methods::SingletonMethodHooks; end
+module T::Private::Methods::SingletonMethodHooks; end

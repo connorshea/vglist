@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-edc5f801575d
+# sorbet-rails-a01ce6de6f7b
 module SorbetRails
 end
 module SorbetRails::CustomFinderMethods

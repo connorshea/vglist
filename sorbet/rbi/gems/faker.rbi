@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.0.0
+# faker-2.1.0
 module Faker
 end
 module Faker::Base58
