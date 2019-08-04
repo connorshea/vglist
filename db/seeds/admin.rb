@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 puts "Creating admin..."
 
 # Create an account for admin usage.
@@ -38,7 +38,7 @@ puts "Creating Game Purchases for admin..."
     start_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
     completion_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
     comments: Faker::Lorem.sentence,
-    hours_played: rand(0.100),
+    hours_played: rand(0..100),
     platforms: platforms
   )
 end
