@@ -55,6 +55,39 @@ RSpec.describe "GamePurchases", type: :request do
     end
   end
 
+  describe "POST bulk_update_game_purchases_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase1) { create(:game_purchase, user: user) }
+    let(:game_purchase2) { create(:game_purchase, user: user) }
+
+    it "updates multiple game_purchases to have the same rating" do
+      sign_in(user)
+      post bulk_update_game_purchases_path(format: :json),
+        params: {
+          ids: [game_purchase1.id, game_purchase2.id],
+          rating: 100
+        }
+      expect(game_purchase1.reload.rating).to eq(100)
+      expect(game_purchase2.reload.rating).to eq(100)
+    end
+
+    # rubocop:disable RSpec/MultipleExpectations
+    it "updates multiple game_purchases to have the same completion status and rating" do
+      sign_in(user)
+      post bulk_update_game_purchases_path(format: :json),
+        params: {
+          ids: [game_purchase1.id, game_purchase2.id],
+          rating: 100,
+          completion_status: :unplayed
+        }
+      expect(game_purchase1.reload.rating).to eq(100)
+      expect(game_purchase2.reload.rating).to eq(100)
+      expect(game_purchase1.reload.completion_status).to eq('unplayed')
+      expect(game_purchase2.reload.completion_status).to eq('unplayed')
+    end
+    # rubocop:enable RSpec/MultipleExpectations
+  end
+
   describe "PUT game_purchase_path" do
     let(:user) { create(:confirmed_user) }
     let!(:game_purchase) { create(:game_purchase, user: user) }
@@ -64,7 +97,7 @@ RSpec.describe "GamePurchases", type: :request do
       sign_in(user)
       game_purchase_attributes[:rating] = 50
       put game_purchase_path(id: game_purchase.id, format: :json), params: { game_purchase: game_purchase_attributes }
-      expect(game_purchase.reload.rating).to be(50)
+      expect(game_purchase.reload.rating).to eq(50)
     end
   end
 

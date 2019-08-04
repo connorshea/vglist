@@ -15,6 +15,7 @@ RSpec.describe GamePurchasePolicy, type: :policy do
           :show,
           :create,
           :update,
+          :bulk_update,
           :destroy
         ]
       )
@@ -28,7 +29,7 @@ RSpec.describe GamePurchasePolicy, type: :policy do
 
     it "isn't allowed to modify another user's game purchases" do
       expect(game_purchase_policy).to permit_actions([:index, :show])
-      expect(game_purchase_policy).to forbid_actions([:create, :update, :destroy])
+      expect(game_purchase_policy).to forbid_actions([:create, :update, :destroy, :bulk_update])
     end
   end
 
@@ -43,6 +44,7 @@ RSpec.describe GamePurchasePolicy, type: :policy do
           :show,
           :create,
           :update,
+          :bulk_update,
           :destroy
         ]
       )
@@ -60,6 +62,7 @@ RSpec.describe GamePurchasePolicy, type: :policy do
           :show,
           :create,
           :update,
+          :bulk_update,
           :destroy
         ]
       )
@@ -73,10 +76,11 @@ RSpec.describe GamePurchasePolicy, type: :policy do
     it { should permit_actions([:index, :show]) }
 
     it "isn't allowed to do most things" do
-      expect(game_purchase_policy).not_to permit_actions(
+      expect(game_purchase_policy).to forbid_actions(
         [
           :create,
           :update,
+          :bulk_update,
           :destroy
         ]
       )
