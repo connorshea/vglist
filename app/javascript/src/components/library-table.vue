@@ -11,7 +11,7 @@
       enabled: false
     }"
     :selectOptions="{
-      enabled: true,
+      enabled: isEditable,
       selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
       selectionInfoClass: 'selection-info-bar',
       selectionText: 'rows selected',
