@@ -31,7 +31,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_storage_validations (0.8.0)
+    active_storage_validations (0.8.1)
       rails (>= 5.2.0)
     activejob (5.2.3)
       activesupport (= 5.2.3)
