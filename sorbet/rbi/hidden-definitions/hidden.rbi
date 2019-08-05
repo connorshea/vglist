@@ -1153,27 +1153,31 @@ class ActionView::Base
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179563694620(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70158940202700(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179568049200(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70158943534280(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179586925640(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159007110800(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179594994720(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159007188800(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179595545400(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159023413180(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179596319440(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159024037060(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179606417400(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159034338960(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179607531500(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159035656640(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179608626840(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159036087040(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179614770700(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159037144600(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb__1783290909216647400_70179616514260(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159037711620(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159042402760(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159054644060(local_assigns, output_buffer); end
 end
 
 class ActionView::DependencyTracker::ERBTracker
@@ -2640,7 +2644,6 @@ class ActiveStorage::AnalyzeJob
 end
 
 class ActiveStorage::Attachment
-  include ::ActiveStorage::Attachment::GeneratedAssociationMethods
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
   def autosave_associated_records_for_blob(*args); end
@@ -2655,26 +2658,15 @@ class ActiveStorage::Attachment
 end
 
 module ActiveStorage::Attachment::GeneratedAssociationMethods
-  def blob(); end
-
-  def blob=(value); end
-
   def build_blob(*args, &block); end
 
   def create_blob(*args, &block); end
 
   def create_blob!(*args, &block); end
 
-  def record(); end
-
-  def record=(value); end
-
   def reload_blob(); end
 
   def reload_record(); end
-end
-
-module ActiveStorage::Attachment::GeneratedAssociationMethods
 end
 
 class ActiveStorage::Attachment
@@ -2689,7 +2681,6 @@ class ActiveStorage::BaseJob
 end
 
 class ActiveStorage::Blob
-  include ::ActiveStorage::Blob::GeneratedAssociationMethods
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
   include ::ActiveStorage::Blob::Analyzable
@@ -2780,30 +2771,15 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
 
   def attachment_ids=(ids); end
 
-  def attachments(); end
-
-  def attachments=(value); end
-
   def build_preview_image_attachment(*args, &block); end
 
   def create_preview_image_attachment(*args, &block); end
 
   def create_preview_image_attachment!(*args, &block); end
 
-  def preview_image_attachment(); end
-
-  def preview_image_attachment=(value); end
-
-  def preview_image_blob(); end
-
-  def preview_image_blob=(value); end
-
   def reload_preview_image_attachment(); end
 
   def reload_preview_image_blob(); end
-end
-
-module ActiveStorage::Blob::GeneratedAssociationMethods
 end
 
 module ActiveStorage::Blob::Identifiable
@@ -5610,7 +5586,6 @@ class CodeRay::TokensProxy
 end
 
 class Company
-  include ::Company::GeneratedAssociationMethods
   include ::PgSearch::Multisearchable
   def after_add_for_developed_games(); end
 
@@ -5744,42 +5719,19 @@ module Company::GeneratedAssociationMethods
 
   def developed_game_ids=(ids); end
 
-  def developed_games(); end
-
-  def developed_games=(value); end
-
   def game_developer_ids(); end
 
   def game_developer_ids=(ids); end
-
-  def game_developers(); end
-
-  def game_developers=(value); end
 
   def game_publisher_ids(); end
 
   def game_publisher_ids=(ids); end
 
-  def game_publishers(); end
-
-  def game_publishers=(value); end
-
-  def pg_search_document(); end
-
-  def pg_search_document=(value); end
-
   def published_game_ids(); end
 
   def published_game_ids=(ids); end
 
-  def published_games(); end
-
-  def published_games=(value); end
-
   def reload_pg_search_document(); end
-end
-
-module Company::GeneratedAssociationMethods
 end
 
 class Company
@@ -6145,9 +6097,6 @@ class Devise::ConfirmationsController
   def show(); end
 end
 
-class Devise::ConfirmationsController
-end
-
 module Devise::Controllers::Helpers
   def authenticate_user!(opts=T.unsafe(nil)); end
 
@@ -6364,9 +6313,6 @@ class Devise::PasswordsController
   def update(); end
 end
 
-class Devise::PasswordsController
-end
-
 class Devise::RegistrationsController
   def account_update_params(); end
 
@@ -6401,9 +6347,6 @@ class Devise::RegistrationsController
   def update_resource(resource, params); end
 end
 
-class Devise::RegistrationsController
-end
-
 class Devise::SessionsController
   def auth_options(); end
 
@@ -6416,9 +6359,6 @@ class Devise::SessionsController
   def serialize_options(resource); end
 
   def sign_in_params(); end
-end
-
-class Devise::SessionsController
 end
 
 module Devise::Test::ControllerHelpers
@@ -6515,9 +6455,6 @@ class DeviseController
   def translation_scope(); end
 
   def unknown_action!(msg); end
-end
-
-class DeviseController
 end
 
 module DeviseHelper
@@ -6790,7 +6727,6 @@ class Encoding
 end
 
 class Engine
-  include ::Engine::GeneratedAssociationMethods
   include ::PgSearch::Multisearchable
   def after_add_for_game_engines(); end
 
@@ -6868,26 +6804,11 @@ module Engine::GeneratedAssociationMethods
 
   def game_engine_ids=(ids); end
 
-  def game_engines(); end
-
-  def game_engines=(value); end
-
   def game_ids(); end
 
   def game_ids=(ids); end
 
-  def games(); end
-
-  def games=(value); end
-
-  def pg_search_document(); end
-
-  def pg_search_document=(value); end
-
   def reload_pg_search_document(); end
-end
-
-module Engine::GeneratedAssociationMethods
 end
 
 class Engine
@@ -7348,7 +7269,6 @@ class ExitCalledError
 end
 
 class ExternalAccount
-  include ::ExternalAccount::GeneratedAssociationMethods
   def autosave_associated_records_for_user(*args); end
 
   def belongs_to_counter_cache_after_update(reflection); end
@@ -7362,13 +7282,6 @@ module ExternalAccount::GeneratedAssociationMethods
   def create_user!(*args, &block); end
 
   def reload_user(); end
-
-  def user(); end
-
-  def user=(value); end
-end
-
-module ExternalAccount::GeneratedAssociationMethods
 end
 
 class FSEvent
@@ -7828,7 +7741,6 @@ class Faraday::Utils::Headers
 end
 
 class FavoriteGame
-  include ::FavoriteGame::GeneratedAssociationMethods
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_user(*args); end
@@ -7849,20 +7761,9 @@ module FavoriteGame::GeneratedAssociationMethods
 
   def create_user!(*args, &block); end
 
-  def game(); end
-
-  def game=(value); end
-
   def reload_game(); end
 
   def reload_user(); end
-
-  def user(); end
-
-  def user=(value); end
-end
-
-module FavoriteGame::GeneratedAssociationMethods
 end
 
 module Fcntl
@@ -8343,7 +8244,6 @@ module GC
 end
 
 class Game
-  include ::Game::GeneratedAssociationMethods
   include ::PgSearch::Multisearchable
   def after_add_for_developers(); end
 
@@ -8737,14 +8637,6 @@ module Game::GeneratedAssociationMethods
 
   def build_series(*args, &block); end
 
-  def cover_attachment(); end
-
-  def cover_attachment=(value); end
-
-  def cover_blob(); end
-
-  def cover_blob=(value); end
-
   def create_cover_attachment(*args, &block); end
 
   def create_cover_attachment!(*args, &block); end
@@ -8761,109 +8653,53 @@ module Game::GeneratedAssociationMethods
 
   def developer_ids=(ids); end
 
-  def developers(); end
-
-  def developers=(value); end
-
   def engine_ids(); end
 
   def engine_ids=(ids); end
-
-  def engines(); end
-
-  def engines=(value); end
 
   def favorite_ids(); end
 
   def favorite_ids=(ids); end
 
-  def favorites(); end
-
-  def favorites=(value); end
-
   def game_developer_ids(); end
 
   def game_developer_ids=(ids); end
-
-  def game_developers(); end
-
-  def game_developers=(value); end
 
   def game_engine_ids(); end
 
   def game_engine_ids=(ids); end
 
-  def game_engines(); end
-
-  def game_engines=(value); end
-
   def game_genre_ids(); end
 
   def game_genre_ids=(ids); end
-
-  def game_genres(); end
-
-  def game_genres=(value); end
 
   def game_platform_ids(); end
 
   def game_platform_ids=(ids); end
 
-  def game_platforms(); end
-
-  def game_platforms=(value); end
-
   def game_publisher_ids(); end
 
   def game_publisher_ids=(ids); end
-
-  def game_publishers(); end
-
-  def game_publishers=(value); end
 
   def game_purchase_ids(); end
 
   def game_purchase_ids=(ids); end
 
-  def game_purchases(); end
-
-  def game_purchases=(value); end
-
   def genre_ids(); end
 
   def genre_ids=(ids); end
-
-  def genres(); end
-
-  def genres=(value); end
-
-  def pg_search_document(); end
-
-  def pg_search_document=(value); end
 
   def platform_ids(); end
 
   def platform_ids=(ids); end
 
-  def platforms(); end
-
-  def platforms=(value); end
-
   def publisher_ids(); end
 
   def publisher_ids=(ids); end
 
-  def publishers(); end
-
-  def publishers=(value); end
-
   def purchaser_ids(); end
 
   def purchaser_ids=(ids); end
-
-  def purchasers(); end
-
-  def purchasers=(value); end
 
   def reload_cover_attachment(); end
 
@@ -8872,13 +8708,6 @@ module Game::GeneratedAssociationMethods
   def reload_pg_search_document(); end
 
   def reload_series(); end
-
-  def series(); end
-
-  def series=(value); end
-end
-
-module Game::GeneratedAssociationMethods
 end
 
 class Game
@@ -9220,7 +9049,6 @@ class Game
 end
 
 class GameDeveloper
-  include ::GameDeveloper::GeneratedAssociationMethods
   def autosave_associated_records_for_company(*args); end
 
   def autosave_associated_records_for_game(*args); end
@@ -9233,10 +9061,6 @@ module GameDeveloper::GeneratedAssociationMethods
 
   def build_game(*args, &block); end
 
-  def company(); end
-
-  def company=(value); end
-
   def create_company(*args, &block); end
 
   def create_company!(*args, &block); end
@@ -9245,20 +9069,12 @@ module GameDeveloper::GeneratedAssociationMethods
 
   def create_game!(*args, &block); end
 
-  def game(); end
-
-  def game=(value); end
-
   def reload_company(); end
 
   def reload_game(); end
 end
 
-module GameDeveloper::GeneratedAssociationMethods
-end
-
 class GameEngine
-  include ::GameEngine::GeneratedAssociationMethods
   def autosave_associated_records_for_engine(*args); end
 
   def autosave_associated_records_for_game(*args); end
@@ -9279,24 +9095,12 @@ module GameEngine::GeneratedAssociationMethods
 
   def create_game!(*args, &block); end
 
-  def engine(); end
-
-  def engine=(value); end
-
-  def game(); end
-
-  def game=(value); end
-
   def reload_engine(); end
 
   def reload_game(); end
 end
 
-module GameEngine::GeneratedAssociationMethods
-end
-
 class GameGenre
-  include ::GameGenre::GeneratedAssociationMethods
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_genre(*args); end
@@ -9317,24 +9121,12 @@ module GameGenre::GeneratedAssociationMethods
 
   def create_genre!(*args, &block); end
 
-  def game(); end
-
-  def game=(value); end
-
-  def genre(); end
-
-  def genre=(value); end
-
   def reload_game(); end
 
   def reload_genre(); end
 end
 
-module GameGenre::GeneratedAssociationMethods
-end
-
 class GamePlatform
-  include ::GamePlatform::GeneratedAssociationMethods
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_platform(*args); end
@@ -9355,24 +9147,12 @@ module GamePlatform::GeneratedAssociationMethods
 
   def create_platform!(*args, &block); end
 
-  def game(); end
-
-  def game=(value); end
-
-  def platform(); end
-
-  def platform=(value); end
-
   def reload_game(); end
 
   def reload_platform(); end
 end
 
-module GamePlatform::GeneratedAssociationMethods
-end
-
 class GamePublisher
-  include ::GamePublisher::GeneratedAssociationMethods
   def autosave_associated_records_for_company(*args); end
 
   def autosave_associated_records_for_game(*args); end
@@ -9385,10 +9165,6 @@ module GamePublisher::GeneratedAssociationMethods
 
   def build_game(*args, &block); end
 
-  def company(); end
-
-  def company=(value); end
-
   def create_company(*args, &block); end
 
   def create_company!(*args, &block); end
@@ -9397,20 +9173,12 @@ module GamePublisher::GeneratedAssociationMethods
 
   def create_game!(*args, &block); end
 
-  def game(); end
-
-  def game=(value); end
-
   def reload_company(); end
 
   def reload_game(); end
 end
 
-module GamePublisher::GeneratedAssociationMethods
-end
-
 class GamePurchase
-  include ::GamePurchase::GeneratedAssociationMethods
   def after_add_for_game_purchase_platforms(); end
 
   def after_add_for_game_purchase_platforms=(val); end
@@ -9487,36 +9255,17 @@ module GamePurchase::GeneratedAssociationMethods
 
   def create_user!(*args, &block); end
 
-  def game(); end
-
-  def game=(value); end
-
   def game_purchase_platform_ids(); end
 
   def game_purchase_platform_ids=(ids); end
-
-  def game_purchase_platforms(); end
-
-  def game_purchase_platforms=(value); end
 
   def platform_ids(); end
 
   def platform_ids=(ids); end
 
-  def platforms(); end
-
-  def platforms=(value); end
-
   def reload_game(); end
 
   def reload_user(); end
-
-  def user(); end
-
-  def user=(value); end
-end
-
-module GamePurchase::GeneratedAssociationMethods
 end
 
 class GamePurchase
@@ -9570,7 +9319,6 @@ class GamePurchase
 end
 
 class GamePurchasePlatform
-  include ::GamePurchasePlatform::GeneratedAssociationMethods
   def autosave_associated_records_for_game_purchase(*args); end
 
   def autosave_associated_records_for_platform(*args); end
@@ -9591,20 +9339,9 @@ module GamePurchasePlatform::GeneratedAssociationMethods
 
   def create_platform!(*args, &block); end
 
-  def game_purchase(); end
-
-  def game_purchase=(value); end
-
-  def platform(); end
-
-  def platform=(value); end
-
   def reload_game_purchase(); end
 
   def reload_platform(); end
-end
-
-module GamePurchasePlatform::GeneratedAssociationMethods
 end
 
 module GamesHelper
@@ -13527,7 +13264,6 @@ module Gem
 end
 
 class Genre
-  include ::Genre::GeneratedAssociationMethods
   include ::PgSearch::Multisearchable
   def after_add_for_game_genres(); end
 
@@ -13605,26 +13341,11 @@ module Genre::GeneratedAssociationMethods
 
   def game_genre_ids=(ids); end
 
-  def game_genres(); end
-
-  def game_genres=(value); end
-
   def game_ids(); end
 
   def game_ids=(ids); end
 
-  def games(); end
-
-  def games=(value); end
-
-  def pg_search_document(); end
-
-  def pg_search_document=(value); end
-
   def reload_pg_search_document(); end
-end
-
-module Genre::GeneratedAssociationMethods
 end
 
 class Genre
@@ -19690,6 +19411,24 @@ class Parallel::UserInterruptHandler
   INTERRUPT_SIGNAL = ::T.let(nil, ::T.untyped)
 end
 
+module Parlour
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Parlour::Plugin
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::InterfaceWrapper::Helpers
+end
+
+class Parlour::RbiGenerator::Parameter
+  PREFIXES = ::T.let(nil, ::T.untyped)
+end
+
+class Parlour::RbiGenerator::RbiObject
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::InterfaceWrapper::Helpers
+end
+
 ParseError = Racc::ParseError
 
 module Parser
@@ -19772,7 +19511,6 @@ class PgSearch::ScopeOptions
 end
 
 class Platform
-  include ::Platform::GeneratedAssociationMethods
   include ::PgSearch::Multisearchable
   def after_add_for_game_platforms(); end
 
@@ -19910,10 +19648,6 @@ module Platform::GeneratedAssociationMethods
 
   def game_platform_ids=(ids); end
 
-  def game_platforms(); end
-
-  def game_platforms=(value); end
-
   def game_purchase_ids(); end
 
   def game_purchase_ids=(ids); end
@@ -19922,26 +19656,7 @@ module Platform::GeneratedAssociationMethods
 
   def game_purchase_platform_ids=(ids); end
 
-  def game_purchase_platforms(); end
-
-  def game_purchase_platforms=(value); end
-
-  def game_purchases(); end
-
-  def game_purchases=(value); end
-
-  def games(); end
-
-  def games=(value); end
-
-  def pg_search_document(); end
-
-  def pg_search_document=(value); end
-
   def reload_pg_search_document(); end
-end
-
-module Platform::GeneratedAssociationMethods
 end
 
 class Platform
@@ -24909,6 +24624,8 @@ class Rails::Html::Sanitizer
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+Rails::Html::WhiteListSanitizer = Rails::Html::SafeListSanitizer
+
 module Rails::Info
   def properties(); end
 
@@ -27427,6 +27144,10 @@ class RuboCop::Cop::RSpec::HookArgument
 end
 
 class RuboCop::Cop::RSpec::HooksBeforeExamples
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::RSpec::ImplicitBlockExpectation
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -31189,7 +30910,6 @@ module Selenium::WebDriver::Zipper
 end
 
 class Series
-  include ::Series::GeneratedAssociationMethods
   include ::PgSearch::Multisearchable
   def after_add_for_games(); end
 
@@ -31239,18 +30959,7 @@ module Series::GeneratedAssociationMethods
 
   def game_ids=(ids); end
 
-  def games(); end
-
-  def games=(value); end
-
-  def pg_search_document(); end
-
-  def pg_search_document=(value); end
-
   def reload_pg_search_document(); end
-end
-
-module Series::GeneratedAssociationMethods
 end
 
 class Series
@@ -31826,13 +31535,13 @@ class Sorbet::Private::GemGeneratorTracepoint::Tracer
 
   def self.install_tracepoints(); end
 
-  def self.method_added(mod, method, singleton); end
+  def self.on_method_added(mod, method, singleton); end
 
-  def self.module_created(mod); end
+  def self.on_module_created(mod); end
 
-  def self.module_extended(extended, extender); end
+  def self.on_module_extended(extended, extender); end
 
-  def self.module_included(included, includer); end
+  def self.on_module_included(included, includer); end
 
   def self.pre_cache_module_methods(); end
 
@@ -32073,6 +31782,13 @@ class Sorbet::Private::TodoRBI
   def self.main(); end
 
   def self.output_file(); end
+end
+
+SorbetRails::ModelPlugins::Base::Parameter = Parlour::RbiGenerator::Parameter
+
+module SorbetRails::ModelUtils
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::InterfaceWrapper::Helpers
 end
 
 class SortedSet
@@ -33410,7 +33126,6 @@ class UniformNotifier::Slack
 end
 
 class User
-  include ::User::GeneratedAssociationMethods
   include ::FriendlyId::Reserved
   include ::FriendlyId::Model
   include ::Devise::Models::Authenticatable
@@ -33531,14 +33246,6 @@ class User
 end
 
 module User::GeneratedAssociationMethods
-  def avatar_attachment(); end
-
-  def avatar_attachment=(value); end
-
-  def avatar_blob(); end
-
-  def avatar_blob=(value); end
-
   def build_avatar_attachment(*args, &block); end
 
   def build_external_account(*args, &block); end
@@ -33551,17 +33258,9 @@ module User::GeneratedAssociationMethods
 
   def create_external_account!(*args, &block); end
 
-  def external_account(); end
-
-  def external_account=(value); end
-
   def favorite_game_ids(); end
 
   def favorite_game_ids=(ids); end
-
-  def favorite_games(); end
-
-  def favorite_games=(value); end
 
   def game_ids(); end
 
@@ -33571,22 +33270,11 @@ module User::GeneratedAssociationMethods
 
   def game_purchase_ids=(ids); end
 
-  def game_purchases(); end
-
-  def game_purchases=(value); end
-
-  def games(); end
-
-  def games=(value); end
-
   def reload_avatar_attachment(); end
 
   def reload_avatar_blob(); end
 
   def reload_external_account(); end
-end
-
-module User::GeneratedAssociationMethods
 end
 
 class User
@@ -33679,18 +33367,6 @@ class User
   def self.devise_modules?(); end
 
   def self.with_attached_avatar(*args); end
-end
-
-class Users::ConfirmationsController
-end
-
-class Users::PasswordsController
-end
-
-class Users::RegistrationsController
-end
-
-class Users::SessionsController
 end
 
 Visitor = Psych::Visitors::Visitor
