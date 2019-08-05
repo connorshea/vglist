@@ -7177,10 +7177,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
 
-vue-good-table@^2.17.4:
-  version "2.17.4"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.17.4.tgz#26df075903a0c7dfcd663ff67a67ea4d56eb5ea0"
-  integrity sha512-4iqEVVHXcpKjTHmGnraU6zQJ4TdSXDK+lvf1kl8/IFHg7jSYKE5TuVVqBv/2vHEXh3G/UX9Cu/r13MofBDH8bQ==
+vue-good-table@^2.17.5:
+  version "2.17.5"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.17.5.tgz#254eb59f2c4282102d0547d3059ec1dd1323b6b0"
+  integrity sha512-bA5yGsNBFa03GjymS443xkIvJQeT7LoOiMlrJY75zQIoVNiGmmRVedZTlqtLQETSEqm1/VhQMleMGR41SauouA==
   dependencies:
     date-fns "2.0.0-alpha.7"
     diacriticless "1.0.1"
