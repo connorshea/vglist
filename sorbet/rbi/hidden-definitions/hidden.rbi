@@ -1153,31 +1153,31 @@ class ActionView::Base
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70158940202700(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341328690260(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70158943534280(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341395236260(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159007110800(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341397102980(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159007188800(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341407236000(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159023413180(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341407536920(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159024037060(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341412558460(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159034338960(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341415600660(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159035656640(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341416045400(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159036087040(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341419193040(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159037144600(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341419631660(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159037711620(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341420227120(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159042402760(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341420526680(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___447859534511743216_70159054644060(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341420829720(local_assigns, output_buffer); end
 end
 
 class ActionView::DependencyTracker::ERBTracker
@@ -19415,18 +19415,8 @@ module Parlour
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
-class Parlour::Plugin
-  extend ::T::Private::Abstract::Hooks
-  extend ::T::InterfaceWrapper::Helpers
-end
-
 class Parlour::RbiGenerator::Parameter
   PREFIXES = ::T.let(nil, ::T.untyped)
-end
-
-class Parlour::RbiGenerator::RbiObject
-  extend ::T::Private::Abstract::Hooks
-  extend ::T::InterfaceWrapper::Helpers
 end
 
 ParseError = Racc::ParseError
@@ -31782,13 +31772,6 @@ class Sorbet::Private::TodoRBI
   def self.main(); end
 
   def self.output_file(); end
-end
-
-SorbetRails::ModelPlugins::Base::Parameter = Parlour::RbiGenerator::Parameter
-
-module SorbetRails::ModelUtils
-  extend ::T::Private::Abstract::Hooks
-  extend ::T::InterfaceWrapper::Helpers
 end
 
 class SortedSet

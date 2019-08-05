@@ -82,6 +82,11 @@ module Genre::GeneratedAssociationMethods
   def pg_search_document=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(Genre::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class Genre::ActiveRecord_Relation < ActiveRecord::Relation
   include Genre::ModelRelationShared
   extend T::Sig
@@ -97,6 +102,7 @@ class Genre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
 end
 
 module Genre::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(Genre::ActiveRecord_Relation) }

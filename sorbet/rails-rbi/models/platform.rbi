@@ -94,6 +94,11 @@ module Platform::GeneratedAssociationMethods
   def pg_search_document=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(Platform::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class Platform::ActiveRecord_Relation < ActiveRecord::Relation
   include Platform::ModelRelationShared
   extend T::Sig
@@ -109,6 +114,7 @@ class Platform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associ
 end
 
 module Platform::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(Platform::ActiveRecord_Relation) }

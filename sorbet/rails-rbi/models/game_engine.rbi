@@ -67,6 +67,11 @@ module GameEngine::GeneratedAssociationMethods
   def game=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(GameEngine::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class GameEngine::ActiveRecord_Relation < ActiveRecord::Relation
   include GameEngine::ModelRelationShared
   extend T::Sig
@@ -82,6 +87,7 @@ class GameEngine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Asso
 end
 
 module GameEngine::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(GameEngine::ActiveRecord_Relation) }

@@ -202,6 +202,11 @@ module Game::GeneratedAssociationMethods
   def series=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(Game::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class Game::ActiveRecord_Relation < ActiveRecord::Relation
   include Game::ModelRelationShared
   extend T::Sig
@@ -217,6 +222,7 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 end
 
 module Game::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }

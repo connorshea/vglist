@@ -257,6 +257,11 @@ module User::GeneratedAssociationMethods
   def games=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(User::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class User::ActiveRecord_Relation < ActiveRecord::Relation
   include User::ModelRelationShared
   extend T::Sig
@@ -294,6 +299,7 @@ class User < ApplicationRecord
 end
 
 module User::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
