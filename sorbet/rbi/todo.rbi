@@ -16,7 +16,6 @@ module Anonymous_Module_25::Anonymous_Module_26; end
 module Anonymous_Module_25::Anonymous_Module_26; end
 module Anonymous_Module_25::Anonymous_Module_27; end
 module Anonymous_Module_25::Anonymous_Module_27; end
-module KaminariRbiPlugin::Parameter; end
 module OrmAdapter::ActiveRecord::ToAdapter; end
 module T::InterfaceWrapper::Helpers; end
 module T::InterfaceWrapper::Helpers; end

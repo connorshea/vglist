@@ -1153,31 +1153,27 @@ class ActionView::Base
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341328690260(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246429220100(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341395236260(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246436985400(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341397102980(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246437243300(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341407236000(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246473616320(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341407536920(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246474175840(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341412558460(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246474319000(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341415600660(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246475423460(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341416045400(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246475548460(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341419193040(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246481629120(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341419631660(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246482229980(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341420227120(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341420526680(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2392960814421965330_70341420829720(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246492886280(local_assigns, output_buffer); end
 end
 
 class ActionView::DependencyTracker::ERBTracker
@@ -7834,7 +7830,6 @@ module FileUtils
   include ::FileUtils::StreamUtils_
   LN_SUPPORTED = ::T.let(nil, ::T.untyped)
   RUBY = ::T.let(nil, ::T.untyped)
-  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module FileUtils::DryRun
@@ -7852,71 +7847,6 @@ end
 
 class FileUtils::Entry_
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def blockdev?(); end
-
-  def chardev?(); end
-
-  def chmod(mode); end
-
-  def chown(uid, gid); end
-
-  def copy(dest); end
-
-  def copy_file(dest); end
-
-  def copy_metadata(path); end
-
-  def dereference?(); end
-
-  def directory?(); end
-
-  def door?(); end
-
-  def entries(); end
-
-  def exist?(); end
-
-  def file?(); end
-
-  def initialize(a, b=T.unsafe(nil), deref=T.unsafe(nil)); end
-
-  def link(dest); end
-
-  def lstat(); end
-
-  def lstat!(); end
-
-  def path(); end
-
-  def pipe?(); end
-
-  def platform_support(); end
-
-  def postorder_traverse(); end
-
-  def prefix(); end
-
-  def preorder_traverse(); end
-
-  def rel(); end
-
-  def remove(); end
-
-  def remove_dir1(); end
-
-  def remove_file(); end
-
-  def socket?(); end
-
-  def stat(); end
-
-  def stat!(); end
-
-  def symlink?(); end
-
-  def traverse(); end
-
-  def wrap_traverse(pre, post); end
 end
 
 module FileUtils::NoWrite
@@ -7945,101 +7875,6 @@ end
 
 module FileUtils
   extend ::FileUtils::StreamUtils_
-  def self.cd(dir, verbose: T.unsafe(nil), &block); end
-
-  def self.chdir(dir, verbose: T.unsafe(nil), &block); end
-
-  def self.chmod(mode, list, noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.chmod_R(mode, list, noop: T.unsafe(nil), verbose: T.unsafe(nil), force: T.unsafe(nil)); end
-
-  def self.chown(user, group, list, noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.chown_R(user, group, list, noop: T.unsafe(nil), verbose: T.unsafe(nil), force: T.unsafe(nil)); end
-
-  def self.cmp(a, b); end
-
-  def self.collect_method(opt); end
-
-  def self.commands(); end
-
-  def self.compare_file(a, b); end
-
-  def self.compare_stream(a, b); end
-
-  def self.copy(src, dest, preserve: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.copy_entry(src, dest, preserve=T.unsafe(nil), dereference_root=T.unsafe(nil), remove_destination=T.unsafe(nil)); end
-
-  def self.copy_file(src, dest, preserve=T.unsafe(nil), dereference=T.unsafe(nil)); end
-
-  def self.copy_stream(src, dest); end
-
-  def self.cp(src, dest, preserve: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.cp_lr(src, dest, noop: T.unsafe(nil), verbose: T.unsafe(nil), dereference_root: T.unsafe(nil), remove_destination: T.unsafe(nil)); end
-
-  def self.getwd(); end
-
-  def self.have_option?(mid, opt); end
-
-  def self.identical?(a, b); end
-
-  def self.install(src, dest, mode: T.unsafe(nil), owner: T.unsafe(nil), group: T.unsafe(nil), preserve: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.link(src, dest, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.link_entry(src, dest, dereference_root=T.unsafe(nil), remove_destination=T.unsafe(nil)); end
-
-  def self.ln(src, dest, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.ln_s(src, dest, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.ln_sf(src, dest, noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.makedirs(list, mode: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.mkdir(list, mode: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.mkpath(list, mode: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.move(src, dest, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil), secure: T.unsafe(nil)); end
-
-  def self.mv(src, dest, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil), secure: T.unsafe(nil)); end
-
-  def self.options(); end
-
-  def self.options_of(mid); end
-
-  def self.private_module_function(name); end
-
-  def self.pwd(); end
-
-  def self.remove(list, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.remove_dir(path, force=T.unsafe(nil)); end
-
-  def self.remove_entry(path, force=T.unsafe(nil)); end
-
-  def self.remove_entry_secure(path, force=T.unsafe(nil)); end
-
-  def self.remove_file(path, force=T.unsafe(nil)); end
-
-  def self.rm(list, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.rm_f(list, noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.rm_rf(list, noop: T.unsafe(nil), verbose: T.unsafe(nil), secure: T.unsafe(nil)); end
-
-  def self.rmdir(list, parents: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.rmtree(list, noop: T.unsafe(nil), verbose: T.unsafe(nil), secure: T.unsafe(nil)); end
-
-  def self.safe_unlink(list, noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.symlink(src, dest, force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
-
-  def self.uptodate?(new, old_list); end
 end
 
 module Find
@@ -32249,12 +32084,6 @@ Struct::Tms = Process::Tms
 
 class Symbol
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def casecmp?(_); end
-
-  def match?(*_); end
-
-  def next(); end
-
 end
 
 class Symbol
