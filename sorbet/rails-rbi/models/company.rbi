@@ -208,6 +208,7 @@ end
 class Company < ApplicationRecord
   include Company::GeneratedAttributeMethods
   include Company::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Company::ModelRelationShared

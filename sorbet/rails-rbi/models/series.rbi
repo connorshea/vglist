@@ -181,6 +181,7 @@ end
 class Series < ApplicationRecord
   include Series::GeneratedAttributeMethods
   include Series::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Series::ModelRelationShared

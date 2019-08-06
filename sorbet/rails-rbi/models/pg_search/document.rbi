@@ -184,6 +184,7 @@ end
 class PgSearch::Document < ActiveRecord::Base
   include PgSearch::Document::GeneratedAttributeMethods
   include PgSearch::Document::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend PgSearch::Document::ModelRelationShared

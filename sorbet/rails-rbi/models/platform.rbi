@@ -208,6 +208,7 @@ end
 class Platform < ApplicationRecord
   include Platform::GeneratedAttributeMethods
   include Platform::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Platform::ModelRelationShared

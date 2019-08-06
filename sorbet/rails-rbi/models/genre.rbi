@@ -196,6 +196,7 @@ end
 class Genre < ApplicationRecord
   include Genre::GeneratedAttributeMethods
   include Genre::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Genre::ModelRelationShared

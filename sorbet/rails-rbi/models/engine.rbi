@@ -187,6 +187,7 @@ end
 class Engine < ApplicationRecord
   include Engine::GeneratedAttributeMethods
   include Engine::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Engine::ModelRelationShared

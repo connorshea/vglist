@@ -340,6 +340,7 @@ end
 class Game < ApplicationRecord
   include Game::GeneratedAttributeMethods
   include Game::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Game::ModelRelationShared
