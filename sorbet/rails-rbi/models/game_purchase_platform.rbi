@@ -67,11 +67,6 @@ module GamePurchasePlatform::GeneratedAssociationMethods
   def platform=(value); end
 end
 
-module Kaminari::ActiveRecordModelExtension
-  sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
-  def page(num = nil); end
-end
-
 class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
   include GamePurchasePlatform::ModelRelationShared
   extend T::Sig
@@ -87,7 +82,6 @@ class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRe
 end
 
 module GamePurchasePlatform::ModelRelationShared
-  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(GamePurchasePlatform::ActiveRecord_Relation) }
@@ -176,6 +170,9 @@ module GamePurchasePlatform::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  def page(num = nil); end
 end
 
 class GamePurchasePlatform < ApplicationRecord

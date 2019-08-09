@@ -15,11 +15,6 @@ module ActiveRecord::SchemaMigration::GeneratedAttributeMethods
   def version?; end
 end
 
-module Kaminari::ActiveRecordModelExtension
-  sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
-  def page(num = nil); end
-end
-
 class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relation
   include ActiveRecord::SchemaMigration::ModelRelationShared
   extend T::Sig
@@ -35,7 +30,6 @@ class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy <
 end
 
 module ActiveRecord::SchemaMigration::ModelRelationShared
-  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
@@ -124,6 +118,9 @@ module ActiveRecord::SchemaMigration::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def page(num = nil); end
 end
 
 class ActiveRecord::SchemaMigration < ActiveRecord::Base

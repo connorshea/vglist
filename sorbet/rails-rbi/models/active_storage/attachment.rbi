@@ -76,11 +76,6 @@ module ActiveStorage::Attachment::GeneratedAssociationMethods
   def record=(value); end
 end
 
-module Kaminari::ActiveRecordModelExtension
-  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
-  def page(num = nil); end
-end
-
 class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
   include ActiveStorage::Attachment::ModelRelationShared
   extend T::Sig
@@ -96,7 +91,6 @@ class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < Act
 end
 
 module ActiveStorage::Attachment::ModelRelationShared
-  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
@@ -185,6 +179,9 @@ module ActiveStorage::Attachment::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def page(num = nil); end
 end
 
 class ActiveStorage::Attachment < ActiveRecord::Base

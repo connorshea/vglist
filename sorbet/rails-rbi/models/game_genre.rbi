@@ -67,11 +67,6 @@ module GameGenre::GeneratedAssociationMethods
   def genre=(value); end
 end
 
-module Kaminari::ActiveRecordModelExtension
-  sig { params(num: Integer).returns(GameGenre::ActiveRecord_Relation) }
-  def page(num = nil); end
-end
-
 class GameGenre::ActiveRecord_Relation < ActiveRecord::Relation
   include GameGenre::ModelRelationShared
   extend T::Sig
@@ -87,7 +82,6 @@ class GameGenre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Assoc
 end
 
 module GameGenre::ModelRelationShared
-  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(GameGenre::ActiveRecord_Relation) }
@@ -176,6 +170,9 @@ module GameGenre::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameGenre::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(num: Integer).returns(GameGenre::ActiveRecord_Relation) }
+  def page(num = nil); end
 end
 
 class GameGenre < ApplicationRecord

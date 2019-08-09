@@ -94,11 +94,6 @@ module Company::GeneratedAssociationMethods
   def published_games=(value); end
 end
 
-module Kaminari::ActiveRecordModelExtension
-  sig { params(num: Integer).returns(Company::ActiveRecord_Relation) }
-  def page(num = nil); end
-end
-
 class Company::ActiveRecord_Relation < ActiveRecord::Relation
   include Company::ModelRelationShared
   extend T::Sig
@@ -114,7 +109,6 @@ class Company::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associa
 end
 
 module Company::ModelRelationShared
-  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(Company::ActiveRecord_Relation) }
@@ -203,6 +197,9 @@ module Company::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Company::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(num: Integer).returns(Company::ActiveRecord_Relation) }
+  def page(num = nil); end
 end
 
 class Company < ApplicationRecord

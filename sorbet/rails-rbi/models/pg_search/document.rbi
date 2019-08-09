@@ -70,11 +70,6 @@ module PgSearch::Document::GeneratedAssociationMethods
   def searchable=(value); end
 end
 
-module Kaminari::ActiveRecordModelExtension
-  sig { params(num: Integer).returns(PgSearch::Document::ActiveRecord_Relation) }
-  def page(num = nil); end
-end
-
 class PgSearch::Document::ActiveRecord_Relation < ActiveRecord::Relation
   include PgSearch::Document::ModelRelationShared
   extend T::Sig
@@ -90,7 +85,6 @@ class PgSearch::Document::ActiveRecord_Associations_CollectionProxy < ActiveReco
 end
 
 module PgSearch::Document::ModelRelationShared
-  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(PgSearch::Document::ActiveRecord_Relation) }
@@ -179,6 +173,9 @@ module PgSearch::Document::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(PgSearch::Document::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(num: Integer).returns(PgSearch::Document::ActiveRecord_Relation) }
+  def page(num = nil); end
 end
 
 class PgSearch::Document < ActiveRecord::Base

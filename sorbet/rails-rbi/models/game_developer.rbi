@@ -67,11 +67,6 @@ module GameDeveloper::GeneratedAssociationMethods
   def game=(value); end
 end
 
-module Kaminari::ActiveRecordModelExtension
-  sig { params(num: Integer).returns(GameDeveloper::ActiveRecord_Relation) }
-  def page(num = nil); end
-end
-
 class GameDeveloper::ActiveRecord_Relation < ActiveRecord::Relation
   include GameDeveloper::ModelRelationShared
   extend T::Sig
@@ -87,7 +82,6 @@ class GameDeveloper::ActiveRecord_Associations_CollectionProxy < ActiveRecord::A
 end
 
 module GameDeveloper::ModelRelationShared
-  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(GameDeveloper::ActiveRecord_Relation) }
@@ -176,6 +170,9 @@ module GameDeveloper::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameDeveloper::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(num: Integer).returns(GameDeveloper::ActiveRecord_Relation) }
+  def page(num = nil); end
 end
 
 class GameDeveloper < ApplicationRecord

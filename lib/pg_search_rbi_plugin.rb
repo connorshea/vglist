@@ -2,7 +2,7 @@
 class PgSearchRbiPlugin < SorbetRails::ModelPlugins::Base
   # If you include PgSearch::Model, the class implicitly gets methods from
   # PgSearch::Model::ClassMethods.
-  sig { params(root: Parlour::RbiGenerator::Namespace).void }
+  sig { params(root: Parlour::RbiGenerator::Namespace).void.implementation }
   def generate(root)
     return unless @model_class.include?(PgSearch::Model)
 
