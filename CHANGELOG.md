@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.8.8
+### Changed
+- Update Sorbet and add some Sorbet signatures. ([#598])
+
+## v2019.8.3
+### Added
+- Add mass editing for game libraries. ([#584])
+
+### Fixed
+- Fix dropdowns not closing properly.
+
+## v2019.7.31
+### Added
+- Add Sorbet typechecking to CI. ([#577])
+
+### Changed
+- Update Faker to 2.0.0. ([#575])
+
+### Fixed
+- Fix Wikidata import task by adding a user agent to every request. ([#572])
+
+## v2019.7.28
+### Added
+- Add Sorbet typechecking! ([#561])
+
+### Fixed
+- Fix deploy task failing to `bundle install` sometimes.
+
 ## v2019.6.19
 ### Changed
 - Convert all JavaScript in the project to TypeScript. ([#506])
@@ -428,3 +456,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#474]: https://github.com/connorshea/VideoGameList/pull/474
 [#495]: https://github.com/connorshea/VideoGameList/pull/495
 [#506]: https://github.com/connorshea/VideoGameList/pull/506
+[#561]: https://github.com/connorshea/VideoGameList/pull/561
+[#572]: https://github.com/connorshea/VideoGameList/pull/572
+[#575]: https://github.com/connorshea/VideoGameList/pull/575
+[#577]: https://github.com/connorshea/VideoGameList/pull/577
+[#584]: https://github.com/connorshea/VideoGameList/pull/584
+[#598]: https://github.com/connorshea/VideoGameList/pull/598
