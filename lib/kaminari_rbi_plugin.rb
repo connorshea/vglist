@@ -4,8 +4,8 @@ class KaminariRbiPlugin < SorbetRails::ModelPlugins::Base
   # https://github.com/kaminari/kaminari/blob/c5186f5d9b7f23299d115408e62047447fd3189d/kaminari-activerecord/lib/kaminari/activerecord/active_record_model_extension.rb#L15
   def generate(root)
     return unless @model_class.include?(Kaminari::ActiveRecordModelExtension)
-    
-    ar_querying_rbi = root.create_module(self.model_relation_shared_module_name)
+
+    ar_querying_rbi = root.create_module(model_relation_shared_module_name)
     ar_querying_rbi.create_include('Kaminari::ActiveRecordModelExtension')
 
     # Get the configured Kaminari page method name, or fall back to 'page' if necessary.
@@ -17,7 +17,7 @@ class KaminariRbiPlugin < SorbetRails::ModelPlugins::Base
       parameters: [
         Parlour::RbiGenerator::Parameter.new('num', type: 'Integer', default: 'nil')
       ],
-      return_type: self.model_relation_class_name
+      return_type: model_relation_class_name
     )
   end
 end
