@@ -113,7 +113,6 @@ class WikidataHelper
     return response
   end
 
-  #
   # Get labels ('names') of the given items
   #
   # @param [String, Array<String>] ids Wikidata IDs, e.g. 'Q123' or ['Q123', 'Q124']
@@ -140,7 +139,6 @@ class WikidataHelper
     return response
   end
 
-  #
   # Get sitelinks for a given Wikidata item.
   #
   # @param [String] ids Wikidata IDs, e.g. 'Q123' or 'P123'
