@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-a01ce6de6f7b
+# sorbet-rails-d15eb95cad36
 module SorbetRails
 end
 module SorbetRails::CustomFinderMethods
@@ -18,4 +18,86 @@ module SorbetRails::CustomFinderMethods
   def last_n(n); end
 end
 class SorbetRails::Railtie < Rails::Railtie
+end
+module SorbetRails::ModelUtils
+  def exists_class_method?(*args, &blk); end
+  def exists_instance_method?(*args, &blk); end
+  def model_assoc_proxy_class_name(*args, &blk); end
+  def model_class(*args, &blk); end
+  def model_class_name(*args, &blk); end
+  def model_module_name(*args, &blk); end
+  def model_relation_class_name(*args, &blk); end
+  def model_relation_shared_module_name(*args, &blk); end
+  extend T::Helpers
+  extend T::InterfaceWrapper::Helpers
+  extend T::Private::Abstract::Hooks
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+end
+module SorbetRails::ModelPlugins
+  def get_plugins(*args, &blk); end
+  def register_plugin(*args, &blk); end
+  def set_plugins(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+end
+class SorbetRails::ModelPlugins::Base < Parlour::Plugin
+  def available_classes(*args, &blk); end
+  def initialize(*args, &blk); end
+  def model_class(*args, &blk); end
+  extend T::Helpers
+  extend T::InterfaceWrapper::Helpers
+  extend T::Private::Abstract::Hooks
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+  include SorbetRails::ModelUtils
+end
+class SorbetRails::ModelPlugins::ActiveRecordEnum < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::ActiveRecordQuerying < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::ActiveRecordNamedScope < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::ActiveRecordAttribute < SorbetRails::ModelPlugins::Base
+  def active_record_type_to_sorbet_type(*args, &blk); end
+  def generate(*args, &blk); end
+  def type_for_column_def(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::ActiveRecordAssoc < SorbetRails::ModelPlugins::Base
+  def assoc_should_be_untyped?(*args, &blk); end
+  def generate(*args, &blk); end
+  def initialize(*args, &blk); end
+  def polymorphic_assoc?(*args, &blk); end
+  def populate_collection_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
+  def populate_single_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
+  def relation_should_be_untyped?(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelRbiFormatter
+  def available_classes(*args, &blk); end
+  def generate_base_rbi(*args, &blk); end
+  def generate_rbi(*args, &blk); end
+  def initialize(*args, &blk); end
+  def model_class(*args, &blk); end
+  def run_plugins(*args, &blk); end
+  extend SorbetRails::ModelPlugins
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+  include SorbetRails::ModelUtils
 end

@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class GenresController < ApplicationController
   def index
     @genres = Genre.order(:id).page params[:page]

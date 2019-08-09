@@ -179,6 +179,11 @@ module GamePurchase::GeneratedAssociationMethods
   def user=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
   include GamePurchase::ModelRelationShared
   extend T::Sig
@@ -228,6 +233,7 @@ class GamePurchase < ApplicationRecord
 end
 
 module GamePurchase::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }

@@ -73,6 +73,11 @@ module Engine::GeneratedAssociationMethods
   def pg_search_document=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(Engine::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class Engine::ActiveRecord_Relation < ActiveRecord::Relation
   include Engine::ModelRelationShared
   extend T::Sig
@@ -88,6 +93,7 @@ class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associat
 end
 
 module Engine::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(Engine::ActiveRecord_Relation) }
@@ -181,6 +187,7 @@ end
 class Engine < ApplicationRecord
   include Engine::GeneratedAttributeMethods
   include Engine::GeneratedAssociationMethods
+  extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Engine::ModelRelationShared

@@ -67,6 +67,11 @@ module GamePlatform::GeneratedAssociationMethods
   def platform=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(GamePlatform::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class GamePlatform::ActiveRecord_Relation < ActiveRecord::Relation
   include GamePlatform::ModelRelationShared
   extend T::Sig
@@ -82,6 +87,7 @@ class GamePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 end
 
 module GamePlatform::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(GamePlatform::ActiveRecord_Relation) }

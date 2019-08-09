@@ -67,6 +67,11 @@ module FavoriteGame::GeneratedAssociationMethods
   def user=(value); end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
   include FavoriteGame::ModelRelationShared
   extend T::Sig
@@ -82,6 +87,7 @@ class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 end
 
 module FavoriteGame::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(FavoriteGame::ActiveRecord_Relation) }

@@ -42,6 +42,11 @@ module ActiveRecord::InternalMetadata::GeneratedAttributeMethods
   def value?; end
 end
 
+module Kaminari::ActiveRecordModelExtension
+  sig { params(num: Integer).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
+  def page(num = nil); end
+end
+
 class ActiveRecord::InternalMetadata::ActiveRecord_Relation < ActiveRecord::Relation
   include ActiveRecord::InternalMetadata::ModelRelationShared
   extend T::Sig
@@ -57,6 +62,7 @@ class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy 
 end
 
 module ActiveRecord::InternalMetadata::ModelRelationShared
+  include Kaminari::ActiveRecordModelExtension
   extend T::Sig
 
   sig { returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rspec/all/rubocop-rspec.rbi
 #
-# rubocop-rspec-1.34.1
+# rubocop-rspec-1.35.0
 module RuboCop
 end
 module RuboCop::RSpec
@@ -508,6 +508,15 @@ class RuboCop::Cop::RSpec::HooksBeforeExamples < RuboCop::Cop::RSpec::Cop
   def source(node); end
   include RuboCop::Cop::RangeHelp
   include RuboCop::RSpec::FinalEndLocation
+end
+class RuboCop::Cop::RSpec::ImplicitBlockExpectation < RuboCop::Cop::RSpec::Cop
+  def find_subject(block_node); end
+  def implicit_expect(node = nil); end
+  def lambda?(node = nil); end
+  def lambda_subject?(node = nil); end
+  def multi_statement_example_group?(node); end
+  def nearest_subject(node); end
+  def on_send(node); end
 end
 class RuboCop::Cop::RSpec::ImplicitExpect < RuboCop::Cop::RSpec::Cop
   def autocorrect(node); end

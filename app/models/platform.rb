@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 class Platform < ApplicationRecord
   include PgSearch::Model
 
