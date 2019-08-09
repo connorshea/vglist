@@ -1,10 +1,10 @@
-# typed: false
+# typed: strict
 class WikidataHelper
   require "addressable/template"
   require "open-uri"
   require "json"
+  extend T::Sig
 
-  #
   # Make an API call.
   #
   # @param [String] action The action to perform, see https://www.wikidata.org/w/api.php?action=help&modules=main
@@ -12,9 +12,19 @@ class WikidataHelper
   # @param [String] props Property type
   # @param [String] languages Language code
   # @param [String] entity Wikidata entity ID, e.g. 'Q123'
+  # @param [String] property 
   #
-  # @return [Hash] Ruby hash form of the Wikidata JSON Response.
-  #
+  # @return [Hash, nil] Ruby hash form of the Wikidata JSON Response.
+  sig do
+    params(
+      action: T.nilable(String),
+      ids: T.nilable(String),
+      props: T.nilable(String),
+      languages: T.nilable(String),
+      entity: T.nilable(String),
+      property: T.nilable(String)
+    ).returns(T.nilable(T::Hash[T.untyped, T.untyped]))
+  end
   def self.api(action: nil, ids: nil, props: nil, languages: 'en', entity: nil, property: nil)
     query_options = [
       :format,
@@ -28,7 +38,7 @@ class WikidataHelper
     ]
     query_options_string = query_options.join(',')
 
-    template = Addressable::Template.new("https://www.wikidata.org/w/api.php{?#{query_options_string}}")
+    template = T.unsafe(Addressable::Template).new("https://www.wikidata.org/w/api.php{?#{query_options_string}}")
     template = template.expand(
       {
         'action': action,
@@ -55,6 +65,7 @@ class WikidataHelper
     return nil
   end
 
+  sig { params(ids: String).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def self.get_all_entities(ids:)
     response = api(
       action: 'wbgetentities',
@@ -64,6 +75,7 @@ class WikidataHelper
     return response
   end
 
+  sig { params(ids: String).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def self.get_descriptions(ids:)
     response = api(
       action: 'wbgetentities',
@@ -74,6 +86,7 @@ class WikidataHelper
     return response
   end
 
+  sig { params(ids: String).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def self.get_datatype(ids:)
     response = api(
       action: 'wbgetentities',
@@ -84,13 +97,12 @@ class WikidataHelper
     return response
   end
 
-  #
   # Get aliases for a set of Wikidata items.
   #
-  # @param [Array<String>] ids Wikidata item IDs.
+  # @param [String] ids Wikidata item IDs.
   #
   # @return [Hash] Hash of aliases.
-  #
+  sig { params(ids: String).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def self.get_aliases(ids:)
     response = api(
       action: 'wbgetentities',
@@ -108,7 +120,12 @@ class WikidataHelper
   # @param [String, Array<String>] languages A country code or array of country codes, e.g. 'en' or ['en', 'es']
   #
   # @return [Hash] Hash of labels in the listed languages.
-  #
+  sig do
+    params(
+      ids: T.any(String, T::Array[String]),
+      languages: T.nilable(T.any(String, T::Array[String]))
+    ).returns(T.nilable(T::Hash[T.untyped, T.untyped]))
+  end
   def self.get_labels(ids:, languages: nil)
     ids = ids.join('|') if ids.is_a?(Array)
     languages = languages.join('|') if languages.is_a?(Array)
@@ -128,7 +145,7 @@ class WikidataHelper
   #
   # @param [String] ids Wikidata IDs, e.g. 'Q123' or 'P123'
   #
-  # @return [Hash] Returns a hash of sitelinks.
+  # @return [Array] Returns a hash of sitelinks.
   #
   # {
   #   "afwiki"=>{
@@ -143,6 +160,7 @@ class WikidataHelper
   #   }
   # }
   #
+  sig { params(ids: String).returns(T.nilable(T::Array[T.untyped])) }
   def self.get_sitelinks(ids:)
     response = api(
       action: 'wbgetentities',
@@ -151,12 +169,11 @@ class WikidataHelper
     )
 
     sitelinks = []
-    response['sitelinks'].each { |sitelink| sitelinks << sitelink[1] }
+    T.must(response)['sitelinks'].each { |sitelink| sitelinks << sitelink[1] }
 
     return sitelinks
   end
 
-  #
   # Get claims about an Wikidata entity.
   # https://www.wikidata.org/w/api.php?action=help&modules=wbgetclaims
   #
@@ -164,7 +181,7 @@ class WikidataHelper
   # @param [String] property Wikidata property ID, e.g. 'P123'
   #
   # @return [Hash] Returns a hash with the properties of the entity.
-  #
+  sig { params(entity: String, property: T.nilable(String)).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def self.get_claims(entity:, property: nil)
     response = api(
       action: 'wbgetclaims',
