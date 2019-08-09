@@ -2,6 +2,7 @@
 class KaminariRbiPlugin < SorbetRails::ModelPlugins::Base
   # Kaminari generates a dynamic `page` method on ActiveRecord relations.
   # https://github.com/kaminari/kaminari/blob/c5186f5d9b7f23299d115408e62047447fd3189d/kaminari-activerecord/lib/kaminari/activerecord/active_record_model_extension.rb#L15
+  sig { params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root)
     return unless @model_class.include?(Kaminari::ActiveRecordModelExtension)
 

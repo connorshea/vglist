@@ -12,7 +12,7 @@ class WikidataHelper
   # @param [String] props Property type
   # @param [String] languages Language code
   # @param [String] entity Wikidata entity ID, e.g. 'Q123'
-  # @param [String] property 
+  # @param [String] property
   #
   # @return [Hash, nil] Ruby hash form of the Wikidata JSON Response.
   sig do
