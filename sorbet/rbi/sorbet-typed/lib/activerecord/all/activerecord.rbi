@@ -138,7 +138,7 @@ module ActiveRecord::Associations::ClassMethods
       polymorphic: T.nilable(T::Boolean),
       primary_key: T.nilable(T.any(Symbol, String)),
       required: T.nilable(T::Boolean),
-      touch: T.nilable(T::Boolean),
+      touch: T.nilable(T.any(T::Boolean, Symbol)),
       validate: T.nilable(T::Boolean),
       default: T.nilable(T.proc.returns(T.untyped))
     ).void
@@ -650,6 +650,14 @@ module ActiveRecord::Persistence
   end
   def update!(attributes); end
 
+  # update_attributes! is an alias of update!
+  sig do
+    params(
+      attributes: T::Hash[T.any(Symbol, String), T.untyped]
+    ).returns(TrueClass)
+  end
+  def update_attributes!(attributes); end
+
   sig do
     params(
       attributes: T::Hash[T.any(Symbol, String), T.untyped]
@@ -657,8 +665,13 @@ module ActiveRecord::Persistence
   end
   def update(attributes); end
 
-  alias update_attributes update
-  alias update_attributes! update!
+  # update_attributes is an alias of update
+  sig do
+    params(
+      attributes: T::Hash[T.any(Symbol, String), T.untyped]
+    ).returns(T::Boolean)
+  end
+  def update_attributes(attributes); end
 end
 
 module ActiveRecord::Persistence::ClassMethods
