@@ -21,9 +21,7 @@ namespace :sorbet do
         system('SRB_YES=true bundle exec srb rbi update')
         # Delete a Makefile created by a Ruby file in node_modules.
         FileUtils.rm('Makefile') if File.exist?('Makefile')
-        system('bundle exec rake rails_rbi:models')
-        system('bundle exec rake rails_rbi:routes')
-        system('bundle exec rake rails_rbi:helpers')
+        system('bundle exec rake rails_rbi:all')
       end
     end
 
@@ -47,6 +45,8 @@ namespace :sorbet do
     task :hidden do
       Bundler.with_clean_env do
         system('bundle exec srb rbi hidden-definitions')
+        # Delete a Makefile created by a Ruby file in node_modules.
+        FileUtils.rm('Makefile') if File.exist?('Makefile')
       end
     end
 
@@ -60,9 +60,7 @@ namespace :sorbet do
     desc "Update Sorbet Rails RBIs."
     task :rails do
       Bundler.with_clean_env do
-        system('bundle exec rake rails_rbi:models')
-        system('bundle exec rake rails_rbi:routes')
-        system('bundle exec rake rails_rbi:helpers')
+        system('bundle exec rake rails_rbi:all')
       end
     end
   end
