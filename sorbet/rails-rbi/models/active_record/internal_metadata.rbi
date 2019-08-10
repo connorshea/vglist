@@ -154,7 +154,7 @@ module ActiveRecord::InternalMetadata::ModelRelationShared
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def except(*args, &block); end
 
-  sig { params(num: Integer).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
+  sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def page(num = nil); end
 end
 

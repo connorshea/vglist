@@ -179,7 +179,7 @@ module GamePurchasePlatform::ModelRelationShared
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def except(*args, &block); end
 
-  sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def page(num = nil); end
 end
 

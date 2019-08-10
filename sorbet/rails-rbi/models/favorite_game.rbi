@@ -179,7 +179,7 @@ module FavoriteGame::ModelRelationShared
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
   def except(*args, &block); end
 
-  sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_Relation) }
+  sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
   def page(num = nil); end
 end
 

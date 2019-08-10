@@ -281,7 +281,7 @@ module ExternalAccount::ModelRelationShared
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
   def except(*args, &block); end
 
-  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
+  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
   def page(num = nil); end
 end
 

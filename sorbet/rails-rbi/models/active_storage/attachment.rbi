@@ -188,7 +188,7 @@ module ActiveStorage::Attachment::ModelRelationShared
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def except(*args, &block); end
 
-  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def page(num = nil); end
 end
 

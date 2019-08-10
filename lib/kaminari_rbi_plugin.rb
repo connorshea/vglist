@@ -13,7 +13,7 @@ class KaminariRbiPlugin < SorbetRails::ModelPlugins::Base
     ar_querying_rbi.create_method(
       page_method.to_s,
       parameters: [
-        Parlour::RbiGenerator::Parameter.new('num', type: 'Integer', default: 'nil')
+        Parlour::RbiGenerator::Parameter.new('num', type: 'T.nilable(Integer)', default: 'nil')
       ],
       return_type: model_relation_class_name
     )

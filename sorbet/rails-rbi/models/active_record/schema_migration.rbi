@@ -127,7 +127,7 @@ module ActiveRecord::SchemaMigration::ModelRelationShared
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def except(*args, &block); end
 
-  sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def page(num = nil); end
 end
 
