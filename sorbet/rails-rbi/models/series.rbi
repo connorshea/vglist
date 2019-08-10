@@ -2,6 +2,11 @@
 # Please rerun rake rails_rbi:models[Series] to regenerate.
 
 # typed: strong
+module Series::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module Series::GeneratedAttributeMethods
   extend T::Sig
 
@@ -67,18 +72,21 @@ module Series::GeneratedAssociationMethods
   def pg_search_document=(value); end
 end
 
-class Series::ActiveRecord_Relation < ActiveRecord::Relation
-  include Series::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Series)
-end
+module Series::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[Series]) }
+  def first_n(limit); end
 
-class Series::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Series::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Series)
+  sig { params(limit: Integer).returns(T::Array[Series]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[Series]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(Series)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(Series) }
+  def find_by_id!(id); end
 end
 
 module Series::ModelRelationShared
@@ -175,12 +183,245 @@ module Series::ModelRelationShared
   def page(num = nil); end
 end
 
+class Series::ActiveRecord_Relation < ActiveRecord::Relation
+  include Series::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include Series::CustomFinderMethods
+  include Enumerable
+  include Series::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: Series)
+
+  sig { params(args: T.untyped).returns(Series) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Series)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Series) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(Series)) }
+  def first; end
+
+  sig { returns(Series) }
+  def first!; end
+
+  sig { returns(T.nilable(Series)) }
+  def second; end
+
+  sig { returns(Series) }
+  def second!; end
+
+  sig { returns(T.nilable(Series)) }
+  def third; end
+
+  sig { returns(Series) }
+  def third!; end
+
+  sig { returns(T.nilable(Series)) }
+  def third_to_last; end
+
+  sig { returns(Series) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(Series)) }
+  def second_to_last; end
+
+  sig { returns(Series) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(Series)) }
+  def last; end
+
+  sig { returns(Series) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: Series).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[Series]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[Series]) }
+  def to_a; end
+end
+
+class Series::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Series::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include Series::CustomFinderMethods
+  include Enumerable
+  include Series::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: Series)
+
+  sig { params(args: T.untyped).returns(Series) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Series)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Series) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(Series)) }
+  def first; end
+
+  sig { returns(Series) }
+  def first!; end
+
+  sig { returns(T.nilable(Series)) }
+  def second; end
+
+  sig { returns(Series) }
+  def second!; end
+
+  sig { returns(T.nilable(Series)) }
+  def third; end
+
+  sig { returns(Series) }
+  def third!; end
+
+  sig { returns(T.nilable(Series)) }
+  def third_to_last; end
+
+  sig { returns(Series) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(Series)) }
+  def second_to_last; end
+
+  sig { returns(Series) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(Series)) }
+  def last; end
+
+  sig { returns(Series) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: Series).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[Series]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[Series]) }
+  def to_a; end
+
+  sig { params(records: T.any(Series, T::Array[Series])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Series, T::Array[Series])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Series, T::Array[Series])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Series, T::Array[Series])).returns(T.self_type) }
+  def concat(*records); end
+end
+
 class Series < ApplicationRecord
   include Series::GeneratedAttributeMethods
   include Series::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend Series::CustomFinderMethods
   extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Series::ModelRelationShared
-  Elem = type_template(fixed: Series)
+
+  sig { params(args: T.untyped).returns(Series) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Series)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Series) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(Series)) }
+  def self.first; end
+
+  sig { returns(Series) }
+  def self.first!; end
+
+  sig { returns(T.nilable(Series)) }
+  def self.second; end
+
+  sig { returns(Series) }
+  def self.second!; end
+
+  sig { returns(T.nilable(Series)) }
+  def self.third; end
+
+  sig { returns(Series) }
+  def self.third!; end
+
+  sig { returns(T.nilable(Series)) }
+  def self.third_to_last; end
+
+  sig { returns(Series) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(Series)) }
+  def self.second_to_last; end
+
+  sig { returns(Series) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(Series)) }
+  def self.last; end
+
+  sig { returns(Series) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end

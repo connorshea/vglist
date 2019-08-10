@@ -2,6 +2,11 @@
 # Please rerun rake rails_rbi:models[Engine] to regenerate.
 
 # typed: strong
+module Engine::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module Engine::GeneratedAttributeMethods
   extend T::Sig
 
@@ -73,18 +78,21 @@ module Engine::GeneratedAssociationMethods
   def pg_search_document=(value); end
 end
 
-class Engine::ActiveRecord_Relation < ActiveRecord::Relation
-  include Engine::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Engine)
-end
+module Engine::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[Engine]) }
+  def first_n(limit); end
 
-class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Engine::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Engine)
+  sig { params(limit: Integer).returns(T::Array[Engine]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[Engine]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(Engine)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(Engine) }
+  def find_by_id!(id); end
 end
 
 module Engine::ModelRelationShared
@@ -181,12 +189,245 @@ module Engine::ModelRelationShared
   def page(num = nil); end
 end
 
+class Engine::ActiveRecord_Relation < ActiveRecord::Relation
+  include Engine::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include Engine::CustomFinderMethods
+  include Enumerable
+  include Engine::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: Engine)
+
+  sig { params(args: T.untyped).returns(Engine) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Engine)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Engine) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(Engine)) }
+  def first; end
+
+  sig { returns(Engine) }
+  def first!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def second; end
+
+  sig { returns(Engine) }
+  def second!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def third; end
+
+  sig { returns(Engine) }
+  def third!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def third_to_last; end
+
+  sig { returns(Engine) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def second_to_last; end
+
+  sig { returns(Engine) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def last; end
+
+  sig { returns(Engine) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: Engine).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[Engine]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[Engine]) }
+  def to_a; end
+end
+
+class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Engine::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include Engine::CustomFinderMethods
+  include Enumerable
+  include Engine::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: Engine)
+
+  sig { params(args: T.untyped).returns(Engine) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Engine)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Engine) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(Engine)) }
+  def first; end
+
+  sig { returns(Engine) }
+  def first!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def second; end
+
+  sig { returns(Engine) }
+  def second!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def third; end
+
+  sig { returns(Engine) }
+  def third!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def third_to_last; end
+
+  sig { returns(Engine) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def second_to_last; end
+
+  sig { returns(Engine) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def last; end
+
+  sig { returns(Engine) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: Engine).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[Engine]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[Engine]) }
+  def to_a; end
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def concat(*records); end
+end
+
 class Engine < ApplicationRecord
   include Engine::GeneratedAttributeMethods
   include Engine::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend Engine::CustomFinderMethods
   extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Engine::ModelRelationShared
-  Elem = type_template(fixed: Engine)
+
+  sig { params(args: T.untyped).returns(Engine) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Engine)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Engine) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(Engine)) }
+  def self.first; end
+
+  sig { returns(Engine) }
+  def self.first!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def self.second; end
+
+  sig { returns(Engine) }
+  def self.second!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def self.third; end
+
+  sig { returns(Engine) }
+  def self.third!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def self.third_to_last; end
+
+  sig { returns(Engine) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def self.second_to_last; end
+
+  sig { returns(Engine) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(Engine)) }
+  def self.last; end
+
+  sig { returns(Engine) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end

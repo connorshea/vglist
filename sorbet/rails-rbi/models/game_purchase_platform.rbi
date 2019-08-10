@@ -2,6 +2,11 @@
 # Please rerun rake rails_rbi:models[GamePurchasePlatform] to regenerate.
 
 # typed: strong
+module GamePurchasePlatform::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module GamePurchasePlatform::GeneratedAttributeMethods
   extend T::Sig
 
@@ -67,18 +72,21 @@ module GamePurchasePlatform::GeneratedAssociationMethods
   def platform=(value); end
 end
 
-class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
-  include GamePurchasePlatform::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: GamePurchasePlatform)
-end
+module GamePurchasePlatform::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[GamePurchasePlatform]) }
+  def first_n(limit); end
 
-class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include GamePurchasePlatform::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: GamePurchasePlatform)
+  sig { params(limit: Integer).returns(T::Array[GamePurchasePlatform]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[GamePurchasePlatform]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(GamePurchasePlatform)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(GamePurchasePlatform) }
+  def find_by_id!(id); end
 end
 
 module GamePurchasePlatform::ModelRelationShared
@@ -175,11 +183,244 @@ module GamePurchasePlatform::ModelRelationShared
   def page(num = nil); end
 end
 
+class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
+  include GamePurchasePlatform::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include GamePurchasePlatform::CustomFinderMethods
+  include Enumerable
+  include GamePurchasePlatform::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: GamePurchasePlatform)
+
+  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GamePurchasePlatform)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def first; end
+
+  sig { returns(GamePurchasePlatform) }
+  def first!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def second; end
+
+  sig { returns(GamePurchasePlatform) }
+  def second!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def third; end
+
+  sig { returns(GamePurchasePlatform) }
+  def third!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def third_to_last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def second_to_last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[GamePurchasePlatform]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[GamePurchasePlatform]) }
+  def to_a; end
+end
+
+class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include GamePurchasePlatform::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include GamePurchasePlatform::CustomFinderMethods
+  include Enumerable
+  include GamePurchasePlatform::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: GamePurchasePlatform)
+
+  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GamePurchasePlatform)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def first; end
+
+  sig { returns(GamePurchasePlatform) }
+  def first!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def second; end
+
+  sig { returns(GamePurchasePlatform) }
+  def second!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def third; end
+
+  sig { returns(GamePurchasePlatform) }
+  def third!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def third_to_last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def second_to_last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[GamePurchasePlatform]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[GamePurchasePlatform]) }
+  def to_a; end
+
+  sig { params(records: T.any(GamePurchasePlatform, T::Array[GamePurchasePlatform])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(GamePurchasePlatform, T::Array[GamePurchasePlatform])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(GamePurchasePlatform, T::Array[GamePurchasePlatform])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(GamePurchasePlatform, T::Array[GamePurchasePlatform])).returns(T.self_type) }
+  def concat(*records); end
+end
+
 class GamePurchasePlatform < ApplicationRecord
   include GamePurchasePlatform::GeneratedAttributeMethods
   include GamePurchasePlatform::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend GamePurchasePlatform::CustomFinderMethods
   extend T::Sig
   extend T::Generic
   extend GamePurchasePlatform::ModelRelationShared
-  Elem = type_template(fixed: GamePurchasePlatform)
+
+  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GamePurchasePlatform)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def self.first; end
+
+  sig { returns(GamePurchasePlatform) }
+  def self.first!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def self.second; end
+
+  sig { returns(GamePurchasePlatform) }
+  def self.second!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def self.third; end
+
+  sig { returns(GamePurchasePlatform) }
+  def self.third!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def self.third_to_last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def self.second_to_last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(GamePurchasePlatform)) }
+  def self.last; end
+
+  sig { returns(GamePurchasePlatform) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/active_storage_validations/all/active_storage_validations.rbi
 #
-# active_storage_validations-0.8.1
+# active_storage_validations-0.8.2
 module ActiveStorageValidations
 end
 class ActiveStorageValidations::Railtie < Rails::Railtie
@@ -19,7 +19,7 @@ class ActiveStorageValidations::AttachedValidator < ActiveModel::EachValidator
 end
 class ActiveStorageValidations::ContentTypeValidator < ActiveModel::EachValidator
   def content_type(file); end
-  def content_type_valid?(file); end
+  def is_valid?(file); end
   def types; end
   def types_to_human_format; end
   def validate_each(record, attribute, _value); end

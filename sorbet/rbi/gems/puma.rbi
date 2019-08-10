@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-4.0.1
+# puma-4.1.0
 module Puma
   def self.jruby?; end
   def self.stats; end
@@ -82,6 +82,7 @@ class Puma::DSL
   def initialize(options, config); end
   def inject(&blk); end
   def load(file); end
+  def log_formatter(&block); end
   def log_requests(which = nil); end
   def lowlevel_error_handler(obj = nil, &block); end
   def on_restart(&block); end
@@ -288,6 +289,8 @@ class Puma::MiniSSL::Context
   def key=(key); end
   def no_tlsv1; end
   def no_tlsv1=(tlsv1); end
+  def no_tlsv1_1; end
+  def no_tlsv1_1=(tlsv1_1); end
   def ssl_cipher_filter; end
   def ssl_cipher_filter=(arg0); end
   def verify_mode; end
@@ -527,6 +530,7 @@ class Puma::Cluster::Worker
   def ping!(status); end
   def ping_timeout?(which); end
   def signal; end
+  def started_at; end
   def term; end
 end
 class Puma::Single < Puma::Runner

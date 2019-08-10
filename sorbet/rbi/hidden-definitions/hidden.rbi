@@ -1153,27 +1153,49 @@ class ActionView::Base
 end
 
 module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246429220100(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296856774120(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246436985400(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296861062540(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246437243300(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296881316160(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246473616320(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296882756800(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246474175840(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296883081240(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246474319000(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296889742840(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246475423460(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296890655540(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246475548460(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296890870820(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246481629120(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296890919500(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246482229980(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296891526100(local_assigns, output_buffer); end
 
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___286886343089286480_70246492886280(local_assigns, output_buffer); end
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296892692180(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296892802680(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296892920000(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296894241920(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296894559220(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296894936540(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296894983600(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296895327500(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296901641060(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296912640820(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296913557440(local_assigns, output_buffer); end
+
+  def _app_views_devise_mailer_confirmation_instructions_html_erb__4458877577548257327_70296913747600(local_assigns, output_buffer); end
 end
 
 class ActionView::DependencyTracker::ERBTracker
@@ -20595,6 +20617,9 @@ module Puma::Const
   HTTP_HOST = ::T.let(nil, ::T.untyped)
   HTTP_VERSION = ::T.let(nil, ::T.untyped)
   HTTP_X_FORWARDED_FOR = ::T.let(nil, ::T.untyped)
+  HTTP_X_FORWARDED_PROTO = ::T.let(nil, ::T.untyped)
+  HTTP_X_FORWARDED_SCHEME = ::T.let(nil, ::T.untyped)
+  HTTP_X_FORWARDED_SSL = ::T.let(nil, ::T.untyped)
   KEEP_ALIVE = ::T.let(nil, ::T.untyped)
   LINE_END = ::T.let(nil, ::T.untyped)
   LOCALHOST = ::T.let(nil, ::T.untyped)
@@ -20651,6 +20676,9 @@ end
 
 module Puma::MiniSSL
   OPENSSL_LIBRARY_VERSION = ::T.let(nil, ::T.untyped)
+  OPENSSL_NO_SSL3 = ::T.let(nil, ::T.untyped)
+  OPENSSL_NO_TLS1 = ::T.let(nil, ::T.untyped)
+  OPENSSL_NO_TLS1_1 = ::T.let(nil, ::T.untyped)
   OPENSSL_VERSION = ::T.let(nil, ::T.untyped)
   VERIFY_FAIL_IF_NO_PEER_CERT = ::T.let(nil, ::T.untyped)
   VERIFY_NONE = ::T.let(nil, ::T.untyped)
