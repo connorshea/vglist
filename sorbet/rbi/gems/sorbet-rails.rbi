@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-d15eb95cad36
+# sorbet-rails-5f9e081ec094
 module SorbetRails
 end
 module SorbetRails::CustomFinderMethods
@@ -65,6 +65,11 @@ class SorbetRails::ModelPlugins::ActiveRecordQuerying < SorbetRails::ModelPlugin
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
 end
+class SorbetRails::ModelPlugins::ActiveRelationWhereNot < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
 class SorbetRails::ModelPlugins::ActiveRecordNamedScope < SorbetRails::ModelPlugins::Base
   def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
@@ -85,6 +90,24 @@ class SorbetRails::ModelPlugins::ActiveRecordAssoc < SorbetRails::ModelPlugins::
   def populate_collection_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
   def populate_single_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
   def relation_should_be_untyped?(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::ActiveRecordFinderMethods < SorbetRails::ModelPlugins::Base
+  def create_finder_method_pair(*args, &blk); end
+  def create_finder_methods_for(*args, &blk); end
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::CustomFinderMethods < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::EnumerableCollections < SorbetRails::ModelPlugins::Base
+  def create_enumerable_methods_for(*args, &blk); end
+  def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
 end

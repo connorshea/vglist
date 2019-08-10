@@ -24,6 +24,11 @@ module User::EnumInstanceMethods
   def admin!; end
 end
 
+module User::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module User::GeneratedAttributeMethods
   extend T::Sig
 
@@ -257,28 +262,32 @@ module User::GeneratedAssociationMethods
   def games=(value); end
 end
 
-class User::ActiveRecord_Relation < ActiveRecord::Relation
-  include User::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: User)
-end
+module User::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[User]) }
+  def first_n(limit); end
 
-class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include User::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: User)
+  sig { params(limit: Integer).returns(T::Array[User]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[User]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(User)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(User) }
+  def find_by_id!(id); end
 end
 
 class User < ApplicationRecord
   include User::EnumInstanceMethods
   include User::GeneratedAttributeMethods
   include User::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend User::CustomFinderMethods
   extend T::Sig
   extend T::Generic
   extend User::ModelRelationShared
-  Elem = type_template(fixed: User)
 
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.roles; end
@@ -291,6 +300,66 @@ class User < ApplicationRecord
 
   sig { returns(User::ActiveRecord_Relation) }
   def self.admin; end
+
+  sig { params(args: T.untyped).returns(User) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(User)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(User) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(User)) }
+  def self.first; end
+
+  sig { returns(User) }
+  def self.first!; end
+
+  sig { returns(T.nilable(User)) }
+  def self.second; end
+
+  sig { returns(User) }
+  def self.second!; end
+
+  sig { returns(T.nilable(User)) }
+  def self.third; end
+
+  sig { returns(User) }
+  def self.third!; end
+
+  sig { returns(T.nilable(User)) }
+  def self.third_to_last; end
+
+  sig { returns(User) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(User)) }
+  def self.second_to_last; end
+
+  sig { returns(User) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(User)) }
+  def self.last; end
+
+  sig { returns(User) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end
 
 module User::ModelRelationShared
@@ -397,4 +466,176 @@ module User::ModelRelationShared
 
   sig { params(num: Integer).returns(User::ActiveRecord_Relation) }
   def page(num = nil); end
+end
+
+class User::ActiveRecord_Relation < ActiveRecord::Relation
+  include User::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include User::CustomFinderMethods
+  include Enumerable
+  include User::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: User)
+
+  sig { params(args: T.untyped).returns(User) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(User)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(User) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(User)) }
+  def first; end
+
+  sig { returns(User) }
+  def first!; end
+
+  sig { returns(T.nilable(User)) }
+  def second; end
+
+  sig { returns(User) }
+  def second!; end
+
+  sig { returns(T.nilable(User)) }
+  def third; end
+
+  sig { returns(User) }
+  def third!; end
+
+  sig { returns(T.nilable(User)) }
+  def third_to_last; end
+
+  sig { returns(User) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(User)) }
+  def second_to_last; end
+
+  sig { returns(User) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(User)) }
+  def last; end
+
+  sig { returns(User) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: User).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[User]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[User]) }
+  def to_a; end
+end
+
+class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include User::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include User::CustomFinderMethods
+  include Enumerable
+  include User::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: User)
+
+  sig { params(args: T.untyped).returns(User) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(User)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(User) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(User)) }
+  def first; end
+
+  sig { returns(User) }
+  def first!; end
+
+  sig { returns(T.nilable(User)) }
+  def second; end
+
+  sig { returns(User) }
+  def second!; end
+
+  sig { returns(T.nilable(User)) }
+  def third; end
+
+  sig { returns(User) }
+  def third!; end
+
+  sig { returns(T.nilable(User)) }
+  def third_to_last; end
+
+  sig { returns(User) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(User)) }
+  def second_to_last; end
+
+  sig { returns(User) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(User)) }
+  def last; end
+
+  sig { returns(User) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: User).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[User]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[User]) }
+  def to_a; end
+
+  sig { params(records: T.any(User, T::Array[User])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(User, T::Array[User])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(User, T::Array[User])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(User, T::Array[User])).returns(T.self_type) }
+  def concat(*records); end
 end

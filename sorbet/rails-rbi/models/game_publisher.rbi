@@ -2,6 +2,11 @@
 # Please rerun rake rails_rbi:models[GamePublisher] to regenerate.
 
 # typed: strong
+module GamePublisher::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module GamePublisher::GeneratedAttributeMethods
   extend T::Sig
 
@@ -67,18 +72,21 @@ module GamePublisher::GeneratedAssociationMethods
   def game=(value); end
 end
 
-class GamePublisher::ActiveRecord_Relation < ActiveRecord::Relation
-  include GamePublisher::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: GamePublisher)
-end
+module GamePublisher::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[GamePublisher]) }
+  def first_n(limit); end
 
-class GamePublisher::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include GamePublisher::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: GamePublisher)
+  sig { params(limit: Integer).returns(T::Array[GamePublisher]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[GamePublisher]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(GamePublisher)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(GamePublisher) }
+  def find_by_id!(id); end
 end
 
 module GamePublisher::ModelRelationShared
@@ -175,11 +183,244 @@ module GamePublisher::ModelRelationShared
   def page(num = nil); end
 end
 
+class GamePublisher::ActiveRecord_Relation < ActiveRecord::Relation
+  include GamePublisher::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include GamePublisher::CustomFinderMethods
+  include Enumerable
+  include GamePublisher::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: GamePublisher)
+
+  sig { params(args: T.untyped).returns(GamePublisher) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GamePublisher)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GamePublisher) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def first; end
+
+  sig { returns(GamePublisher) }
+  def first!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def second; end
+
+  sig { returns(GamePublisher) }
+  def second!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def third; end
+
+  sig { returns(GamePublisher) }
+  def third!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def third_to_last; end
+
+  sig { returns(GamePublisher) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def second_to_last; end
+
+  sig { returns(GamePublisher) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def last; end
+
+  sig { returns(GamePublisher) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: GamePublisher).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[GamePublisher]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[GamePublisher]) }
+  def to_a; end
+end
+
+class GamePublisher::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include GamePublisher::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include GamePublisher::CustomFinderMethods
+  include Enumerable
+  include GamePublisher::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: GamePublisher)
+
+  sig { params(args: T.untyped).returns(GamePublisher) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GamePublisher)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GamePublisher) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def first; end
+
+  sig { returns(GamePublisher) }
+  def first!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def second; end
+
+  sig { returns(GamePublisher) }
+  def second!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def third; end
+
+  sig { returns(GamePublisher) }
+  def third!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def third_to_last; end
+
+  sig { returns(GamePublisher) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def second_to_last; end
+
+  sig { returns(GamePublisher) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def last; end
+
+  sig { returns(GamePublisher) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: GamePublisher).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[GamePublisher]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[GamePublisher]) }
+  def to_a; end
+
+  sig { params(records: T.any(GamePublisher, T::Array[GamePublisher])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(GamePublisher, T::Array[GamePublisher])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(GamePublisher, T::Array[GamePublisher])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(GamePublisher, T::Array[GamePublisher])).returns(T.self_type) }
+  def concat(*records); end
+end
+
 class GamePublisher < ApplicationRecord
   include GamePublisher::GeneratedAttributeMethods
   include GamePublisher::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend GamePublisher::CustomFinderMethods
   extend T::Sig
   extend T::Generic
   extend GamePublisher::ModelRelationShared
-  Elem = type_template(fixed: GamePublisher)
+
+  sig { params(args: T.untyped).returns(GamePublisher) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GamePublisher)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GamePublisher) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def self.first; end
+
+  sig { returns(GamePublisher) }
+  def self.first!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def self.second; end
+
+  sig { returns(GamePublisher) }
+  def self.second!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def self.third; end
+
+  sig { returns(GamePublisher) }
+  def self.third!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def self.third_to_last; end
+
+  sig { returns(GamePublisher) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def self.second_to_last; end
+
+  sig { returns(GamePublisher) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(GamePublisher)) }
+  def self.last; end
+
+  sig { returns(GamePublisher) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end

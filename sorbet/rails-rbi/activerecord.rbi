@@ -1,4 +1,4 @@
-# typed: strong
+# typed: ignore
 class ActiveRecord::Relation
   extend T::Sig
   extend T::Generic

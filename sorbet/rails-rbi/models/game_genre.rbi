@@ -2,6 +2,11 @@
 # Please rerun rake rails_rbi:models[GameGenre] to regenerate.
 
 # typed: strong
+module GameGenre::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module GameGenre::GeneratedAttributeMethods
   extend T::Sig
 
@@ -67,18 +72,21 @@ module GameGenre::GeneratedAssociationMethods
   def genre=(value); end
 end
 
-class GameGenre::ActiveRecord_Relation < ActiveRecord::Relation
-  include GameGenre::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: GameGenre)
-end
+module GameGenre::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[GameGenre]) }
+  def first_n(limit); end
 
-class GameGenre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include GameGenre::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: GameGenre)
+  sig { params(limit: Integer).returns(T::Array[GameGenre]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[GameGenre]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(GameGenre)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(GameGenre) }
+  def find_by_id!(id); end
 end
 
 module GameGenre::ModelRelationShared
@@ -175,11 +183,244 @@ module GameGenre::ModelRelationShared
   def page(num = nil); end
 end
 
+class GameGenre::ActiveRecord_Relation < ActiveRecord::Relation
+  include GameGenre::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include GameGenre::CustomFinderMethods
+  include Enumerable
+  include GameGenre::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: GameGenre)
+
+  sig { params(args: T.untyped).returns(GameGenre) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GameGenre)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GameGenre) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def first; end
+
+  sig { returns(GameGenre) }
+  def first!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def second; end
+
+  sig { returns(GameGenre) }
+  def second!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def third; end
+
+  sig { returns(GameGenre) }
+  def third!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def third_to_last; end
+
+  sig { returns(GameGenre) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def second_to_last; end
+
+  sig { returns(GameGenre) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def last; end
+
+  sig { returns(GameGenre) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: GameGenre).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[GameGenre]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[GameGenre]) }
+  def to_a; end
+end
+
+class GameGenre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include GameGenre::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include GameGenre::CustomFinderMethods
+  include Enumerable
+  include GameGenre::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: GameGenre)
+
+  sig { params(args: T.untyped).returns(GameGenre) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GameGenre)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GameGenre) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def first; end
+
+  sig { returns(GameGenre) }
+  def first!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def second; end
+
+  sig { returns(GameGenre) }
+  def second!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def third; end
+
+  sig { returns(GameGenre) }
+  def third!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def third_to_last; end
+
+  sig { returns(GameGenre) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def second_to_last; end
+
+  sig { returns(GameGenre) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def last; end
+
+  sig { returns(GameGenre) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: GameGenre).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[GameGenre]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[GameGenre]) }
+  def to_a; end
+
+  sig { params(records: T.any(GameGenre, T::Array[GameGenre])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(GameGenre, T::Array[GameGenre])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(GameGenre, T::Array[GameGenre])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(GameGenre, T::Array[GameGenre])).returns(T.self_type) }
+  def concat(*records); end
+end
+
 class GameGenre < ApplicationRecord
   include GameGenre::GeneratedAttributeMethods
   include GameGenre::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend GameGenre::CustomFinderMethods
   extend T::Sig
   extend T::Generic
   extend GameGenre::ModelRelationShared
-  Elem = type_template(fixed: GameGenre)
+
+  sig { params(args: T.untyped).returns(GameGenre) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(GameGenre)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(GameGenre) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def self.first; end
+
+  sig { returns(GameGenre) }
+  def self.first!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def self.second; end
+
+  sig { returns(GameGenre) }
+  def self.second!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def self.third; end
+
+  sig { returns(GameGenre) }
+  def self.third!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def self.third_to_last; end
+
+  sig { returns(GameGenre) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def self.second_to_last; end
+
+  sig { returns(GameGenre) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(GameGenre)) }
+  def self.last; end
+
+  sig { returns(GameGenre) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end

@@ -2,6 +2,11 @@
 # Please rerun rake rails_rbi:models[PgSearch::Document] to regenerate.
 
 # typed: strong
+module PgSearch::Document::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module PgSearch::Document::GeneratedAttributeMethods
   extend T::Sig
 
@@ -70,18 +75,21 @@ module PgSearch::Document::GeneratedAssociationMethods
   def searchable=(value); end
 end
 
-class PgSearch::Document::ActiveRecord_Relation < ActiveRecord::Relation
-  include PgSearch::Document::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: PgSearch::Document)
-end
+module PgSearch::Document::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[PgSearch::Document]) }
+  def first_n(limit); end
 
-class PgSearch::Document::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include PgSearch::Document::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: PgSearch::Document)
+  sig { params(limit: Integer).returns(T::Array[PgSearch::Document]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[PgSearch::Document]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(PgSearch::Document)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(PgSearch::Document) }
+  def find_by_id!(id); end
 end
 
 module PgSearch::Document::ModelRelationShared
@@ -178,12 +186,245 @@ module PgSearch::Document::ModelRelationShared
   def page(num = nil); end
 end
 
+class PgSearch::Document::ActiveRecord_Relation < ActiveRecord::Relation
+  include PgSearch::Document::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include PgSearch::Document::CustomFinderMethods
+  include Enumerable
+  include PgSearch::Document::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: PgSearch::Document)
+
+  sig { params(args: T.untyped).returns(PgSearch::Document) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(PgSearch::Document)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(PgSearch::Document) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def first; end
+
+  sig { returns(PgSearch::Document) }
+  def first!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def second; end
+
+  sig { returns(PgSearch::Document) }
+  def second!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def third; end
+
+  sig { returns(PgSearch::Document) }
+  def third!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def third_to_last; end
+
+  sig { returns(PgSearch::Document) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def second_to_last; end
+
+  sig { returns(PgSearch::Document) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def last; end
+
+  sig { returns(PgSearch::Document) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[PgSearch::Document]) }
+  def to_a; end
+end
+
+class PgSearch::Document::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include PgSearch::Document::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include PgSearch::Document::CustomFinderMethods
+  include Enumerable
+  include PgSearch::Document::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: PgSearch::Document)
+
+  sig { params(args: T.untyped).returns(PgSearch::Document) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(PgSearch::Document)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(PgSearch::Document) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def first; end
+
+  sig { returns(PgSearch::Document) }
+  def first!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def second; end
+
+  sig { returns(PgSearch::Document) }
+  def second!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def third; end
+
+  sig { returns(PgSearch::Document) }
+  def third!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def third_to_last; end
+
+  sig { returns(PgSearch::Document) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def second_to_last; end
+
+  sig { returns(PgSearch::Document) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def last; end
+
+  sig { returns(PgSearch::Document) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[PgSearch::Document]) }
+  def to_a; end
+
+  sig { params(records: T.any(PgSearch::Document, T::Array[PgSearch::Document])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(PgSearch::Document, T::Array[PgSearch::Document])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(PgSearch::Document, T::Array[PgSearch::Document])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(PgSearch::Document, T::Array[PgSearch::Document])).returns(T.self_type) }
+  def concat(*records); end
+end
+
 class PgSearch::Document < ActiveRecord::Base
   include PgSearch::Document::GeneratedAttributeMethods
   include PgSearch::Document::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend PgSearch::Document::CustomFinderMethods
   extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend PgSearch::Document::ModelRelationShared
-  Elem = type_template(fixed: PgSearch::Document)
+
+  sig { params(args: T.untyped).returns(PgSearch::Document) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(PgSearch::Document)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(PgSearch::Document) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def self.first; end
+
+  sig { returns(PgSearch::Document) }
+  def self.first!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def self.second; end
+
+  sig { returns(PgSearch::Document) }
+  def self.second!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def self.third; end
+
+  sig { returns(PgSearch::Document) }
+  def self.third!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def self.third_to_last; end
+
+  sig { returns(PgSearch::Document) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def self.second_to_last; end
+
+  sig { returns(PgSearch::Document) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(PgSearch::Document)) }
+  def self.last; end
+
+  sig { returns(PgSearch::Document) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end

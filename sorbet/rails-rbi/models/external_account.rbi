@@ -12,6 +12,11 @@ module ExternalAccount::EnumInstanceMethods
   def steam!; end
 end
 
+module ExternalAccount::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module ExternalAccount::GeneratedAttributeMethods
   extend T::Sig
 
@@ -89,34 +94,98 @@ module ExternalAccount::GeneratedAssociationMethods
   def user=(value); end
 end
 
-class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
-  include ExternalAccount::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: ExternalAccount)
-end
+module ExternalAccount::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[ExternalAccount]) }
+  def first_n(limit); end
 
-class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include ExternalAccount::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: ExternalAccount)
+  sig { params(limit: Integer).returns(T::Array[ExternalAccount]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[ExternalAccount]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(ExternalAccount)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(ExternalAccount) }
+  def find_by_id!(id); end
 end
 
 class ExternalAccount < ApplicationRecord
   include ExternalAccount::EnumInstanceMethods
   include ExternalAccount::GeneratedAttributeMethods
   include ExternalAccount::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend ExternalAccount::CustomFinderMethods
   extend T::Sig
   extend T::Generic
   extend ExternalAccount::ModelRelationShared
-  Elem = type_template(fixed: ExternalAccount)
 
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.account_types; end
 
   sig { returns(ExternalAccount::ActiveRecord_Relation) }
   def self.steam; end
+
+  sig { params(args: T.untyped).returns(ExternalAccount) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(ExternalAccount)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def self.first; end
+
+  sig { returns(ExternalAccount) }
+  def self.first!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def self.second; end
+
+  sig { returns(ExternalAccount) }
+  def self.second!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def self.third; end
+
+  sig { returns(ExternalAccount) }
+  def self.third!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def self.third_to_last; end
+
+  sig { returns(ExternalAccount) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def self.second_to_last; end
+
+  sig { returns(ExternalAccount) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def self.last; end
+
+  sig { returns(ExternalAccount) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end
 
 module ExternalAccount::ModelRelationShared
@@ -214,4 +283,176 @@ module ExternalAccount::ModelRelationShared
 
   sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
   def page(num = nil); end
+end
+
+class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
+  include ExternalAccount::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include ExternalAccount::CustomFinderMethods
+  include Enumerable
+  include ExternalAccount::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: ExternalAccount)
+
+  sig { params(args: T.untyped).returns(ExternalAccount) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(ExternalAccount)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def first; end
+
+  sig { returns(ExternalAccount) }
+  def first!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def second; end
+
+  sig { returns(ExternalAccount) }
+  def second!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def third; end
+
+  sig { returns(ExternalAccount) }
+  def third!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def third_to_last; end
+
+  sig { returns(ExternalAccount) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def second_to_last; end
+
+  sig { returns(ExternalAccount) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def last; end
+
+  sig { returns(ExternalAccount) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: ExternalAccount).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[ExternalAccount]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[ExternalAccount]) }
+  def to_a; end
+end
+
+class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include ExternalAccount::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include ExternalAccount::CustomFinderMethods
+  include Enumerable
+  include ExternalAccount::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: ExternalAccount)
+
+  sig { params(args: T.untyped).returns(ExternalAccount) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(ExternalAccount)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def first; end
+
+  sig { returns(ExternalAccount) }
+  def first!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def second; end
+
+  sig { returns(ExternalAccount) }
+  def second!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def third; end
+
+  sig { returns(ExternalAccount) }
+  def third!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def third_to_last; end
+
+  sig { returns(ExternalAccount) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def second_to_last; end
+
+  sig { returns(ExternalAccount) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  def last; end
+
+  sig { returns(ExternalAccount) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: ExternalAccount).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[ExternalAccount]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[ExternalAccount]) }
+  def to_a; end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def concat(*records); end
 end

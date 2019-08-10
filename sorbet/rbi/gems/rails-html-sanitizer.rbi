@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rails-html-sanitizer/all/rails-html-sanitizer.rbi
 #
-# rails-html-sanitizer-1.1.0
+# rails-html-sanitizer-1.2.0
 module Rails
 end
 module Rails::Html

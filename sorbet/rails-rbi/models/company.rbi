@@ -2,6 +2,11 @@
 # Please rerun rake rails_rbi:models[Company] to regenerate.
 
 # typed: strong
+module Company::ActiveRelation_WhereNot
+  sig { params(opts: T.untyped, rest: T.untyped).returns(T.self_type) }
+  def not(opts, *rest); end
+end
+
 module Company::GeneratedAttributeMethods
   extend T::Sig
 
@@ -94,18 +99,21 @@ module Company::GeneratedAssociationMethods
   def published_games=(value); end
 end
 
-class Company::ActiveRecord_Relation < ActiveRecord::Relation
-  include Company::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Company)
-end
+module Company::CustomFinderMethods
+  sig { params(limit: Integer).returns(T::Array[Company]) }
+  def first_n(limit); end
 
-class Company::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Company::ModelRelationShared
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Company)
+  sig { params(limit: Integer).returns(T::Array[Company]) }
+  def last_n(limit); end
+
+  sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[Company]) }
+  def find_n(*args); end
+
+  sig { params(id: Integer).returns(T.nilable(Company)) }
+  def find_by_id(id); end
+
+  sig { params(id: Integer).returns(Company) }
+  def find_by_id!(id); end
 end
 
 module Company::ModelRelationShared
@@ -202,12 +210,245 @@ module Company::ModelRelationShared
   def page(num = nil); end
 end
 
+class Company::ActiveRecord_Relation < ActiveRecord::Relation
+  include Company::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include Company::CustomFinderMethods
+  include Enumerable
+  include Company::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: Company)
+
+  sig { params(args: T.untyped).returns(Company) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Company)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Company) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(Company)) }
+  def first; end
+
+  sig { returns(Company) }
+  def first!; end
+
+  sig { returns(T.nilable(Company)) }
+  def second; end
+
+  sig { returns(Company) }
+  def second!; end
+
+  sig { returns(T.nilable(Company)) }
+  def third; end
+
+  sig { returns(Company) }
+  def third!; end
+
+  sig { returns(T.nilable(Company)) }
+  def third_to_last; end
+
+  sig { returns(Company) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(Company)) }
+  def second_to_last; end
+
+  sig { returns(Company) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(Company)) }
+  def last; end
+
+  sig { returns(Company) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: Company).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[Company]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[Company]) }
+  def to_a; end
+end
+
+class Company::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Company::ActiveRelation_WhereNot
+  include SorbetRails::CustomFinderMethods
+  include Company::CustomFinderMethods
+  include Enumerable
+  include Company::ModelRelationShared
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: Company)
+
+  sig { params(args: T.untyped).returns(Company) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Company)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Company) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(Company)) }
+  def first; end
+
+  sig { returns(Company) }
+  def first!; end
+
+  sig { returns(T.nilable(Company)) }
+  def second; end
+
+  sig { returns(Company) }
+  def second!; end
+
+  sig { returns(T.nilable(Company)) }
+  def third; end
+
+  sig { returns(Company) }
+  def third!; end
+
+  sig { returns(T.nilable(Company)) }
+  def third_to_last; end
+
+  sig { returns(Company) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(Company)) }
+  def second_to_last; end
+
+  sig { returns(Company) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(Company)) }
+  def last; end
+
+  sig { returns(Company) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: Company).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[Company]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[Company]) }
+  def to_a; end
+
+  sig { params(records: T.any(Company, T::Array[Company])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Company, T::Array[Company])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Company, T::Array[Company])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Company, T::Array[Company])).returns(T.self_type) }
+  def concat(*records); end
+end
+
 class Company < ApplicationRecord
   include Company::GeneratedAttributeMethods
   include Company::GeneratedAssociationMethods
+  extend SorbetRails::CustomFinderMethods
+  extend Company::CustomFinderMethods
   extend PgSearch::Model::ClassMethods
   extend T::Sig
   extend T::Generic
   extend Company::ModelRelationShared
-  Elem = type_template(fixed: Company)
+
+  sig { params(args: T.untyped).returns(Company) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(Company)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(Company) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(Company)) }
+  def self.first; end
+
+  sig { returns(Company) }
+  def self.first!; end
+
+  sig { returns(T.nilable(Company)) }
+  def self.second; end
+
+  sig { returns(Company) }
+  def self.second!; end
+
+  sig { returns(T.nilable(Company)) }
+  def self.third; end
+
+  sig { returns(Company) }
+  def self.third!; end
+
+  sig { returns(T.nilable(Company)) }
+  def self.third_to_last; end
+
+  sig { returns(Company) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(Company)) }
+  def self.second_to_last; end
+
+  sig { returns(Company) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(Company)) }
+  def self.last; end
+
+  sig { returns(Company) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
 end
