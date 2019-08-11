@@ -74,7 +74,7 @@ module GamePurchase::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def completion_date?; end
 
-  sig { returns(String) }
+  sig { returns(T.nilable(String)) }
   def completion_status; end
 
   sig { params(value: T.nilable(T.any(Integer, String, Symbol))).void }
