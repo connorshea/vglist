@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.2.1
+# rubocop-rails-2.3.0
 module RuboCop
 end
 module RuboCop::Rails
@@ -166,8 +166,17 @@ class RuboCop::Cop::Rails::DynamicFindBy < RuboCop::Cop::Cop
   def static_method_name(method_name); end
   def whitelist; end
 end
+class RuboCop::Cop::Rails::EnumHash < RuboCop::Cop::Cop
+  def array_pair?(node = nil); end
+  def autocorrect(node); end
+  def enum?(node = nil); end
+  def enum_name(key); end
+  def on_send(node); end
+end
 class RuboCop::Cop::Rails::EnumUniqueness < RuboCop::Cop::Cop
-  def enum_declaration(node = nil); end
+  def enum?(node = nil); end
+  def enum_name(key); end
+  def enum_values(node = nil); end
   def on_send(node); end
   include RuboCop::Cop::Duplication
 end
@@ -482,6 +491,7 @@ class RuboCop::Cop::Rails::SaveBang < RuboCop::Cop::Cop
   def const_matches?(const, allowed_const); end
   def expected_signature?(node); end
   def explicit_return?(node); end
+  def find_method_with_sibling_index(node, sibling_index = nil); end
   def hash_parent(node); end
   def implicit_return?(node); end
   def join_force?(force_class); end
