@@ -31,7 +31,7 @@ gem 'kaminari', '~> 1.1'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use Pundit for access control.
-gem 'pundit', '~> 2.0'
+gem 'pundit', '~> 2.1'
 
 # Postgres Search
 gem 'pg_search', '~> 2.3'
