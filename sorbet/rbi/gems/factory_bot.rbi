@@ -14,10 +14,6 @@ module FactoryBot
   def self.aliases_for(attribute); end
   def self.allow_class_lookup(*args, &block); end
   def self.allow_class_lookup=(*args, &block); end
-  def self.allow_class_lookup_with_deprecation(*args, &block); end
-  def self.allow_class_lookup_with_deprecation=(*args, &block); end
-  def self.allow_class_lookup_without_deprecation; end
-  def self.allow_class_lookup_without_deprecation=(arg0); end
   def self.callback_names(*args, &block); end
   def self.callbacks(*args, &block); end
   def self.configuration; end

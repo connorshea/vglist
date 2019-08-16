@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/pundit/all/pundit.rbi
 #
-# pundit-2.0.1
+# pundit-2.1.0
 module Pundit
   def authorize(record, query = nil, policy_class: nil); end
   def permitted_attributes(record, action = nil); end
@@ -43,9 +43,9 @@ class Pundit::PolicyFinder
   def scope!; end
   def scope; end
 end
-module Pundit::Generators
-end
 class Pundit::Error < StandardError
+end
+module Pundit::Generators
 end
 class Pundit::NotAuthorizedError < Pundit::Error
   def initialize(options = nil); end

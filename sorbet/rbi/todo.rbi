@@ -2,20 +2,22 @@
 #   srb rbi todo
 
 # typed: strong
-module ::Anonymous_Delegator_1; end
 module ::Anonymous_Delegator_11; end
 module ::Anonymous_Delegator_12; end
 module ::Anonymous_Delegator_13; end
 module ::Anonymous_Delegator_14; end
 module ::Anonymous_Delegator_15; end
-module ::Anonymous_Delegator_18; end
-module ::Anonymous_Delegator_37; end
-module ::Anonymous_Delegator_38; end
+module ::Anonymous_Delegator_16; end
+module ::Anonymous_Delegator_17; end
+module ::Anonymous_Delegator_2; end
+module ::Anonymous_Delegator_34; end
+module ::Anonymous_Delegator_35; end
+module ActiveRecord::CollectionCacheKey; end
 module Addressable::Template; end
-module Anonymous_Module_25::Anonymous_Module_26; end
-module Anonymous_Module_25::Anonymous_Module_26; end
-module Anonymous_Module_25::Anonymous_Module_27; end
-module Anonymous_Module_25::Anonymous_Module_27; end
+module Anonymous_Module_23::Anonymous_Module_24; end
+module Anonymous_Module_23::Anonymous_Module_24; end
+module Anonymous_Module_23::Anonymous_Module_25; end
+module Anonymous_Module_23::Anonymous_Module_25; end
 module OrmAdapter::ActiveRecord::ToAdapter; end
 module T::InterfaceWrapper::Helpers; end
 module T::InterfaceWrapper::Helpers; end

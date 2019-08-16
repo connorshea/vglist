@@ -315,6 +315,27 @@ module GamePurchase::ModelRelationShared
   def not_applicable(*args); end
 
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def not_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def not_dropped(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def not_fully_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def not_in_progress(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def not_not_applicable(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def not_paused(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def not_unplayed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
   def paused(*args); end
 
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
@@ -328,6 +349,9 @@ module GamePurchase::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def select(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
+  def reselect(*args, &block); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def order(*args, &block); end
@@ -361,6 +385,9 @@ module GamePurchase::ModelRelationShared
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def preload(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
+  def extract_associated(*args, &block); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def eager_load(*args, &block); end
@@ -402,10 +429,16 @@ module GamePurchase::ModelRelationShared
   def unscope(*args, &block); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
+  def optimizer_hints(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def merge(*args, &block); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def except(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
+  def only(*args, &block); end
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
   def page(num = nil); end

@@ -216,12 +216,10 @@ end
 class PgSearch::PgSearchHighlightNotSelected < StandardError
   def message; end
 end
-module Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_28
+module PgSearch::Document::GeneratedAttributeMethods
 end
 class PgSearch::Document < ActiveRecord::Base
   def autosave_associated_records_for_searchable(*args); end
-  def belongs_to_counter_cache_after_update(reflection); end
-  def counter_cache_target(reflection, model, foreign_key); end
   def self.__callbacks; end
   def self._reflections; end
   def self._validators; end
@@ -232,10 +230,10 @@ class PgSearch::Document < ActiveRecord::Base
   def self.search(*args); end
   extend Kaminari::ConfigurationMethods::ClassMethods
   extend PgSearch::Model::ClassMethods
-  include Anonymous_ActiveRecord_AttributeMethods_GeneratedAttributeMethods_28
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
   include PgSearch::Document::GeneratedAssociationMethods
+  include PgSearch::Document::GeneratedAttributeMethods
   include PgSearch::Model
 end
 module PgSearch::Document::GeneratedAssociationMethods

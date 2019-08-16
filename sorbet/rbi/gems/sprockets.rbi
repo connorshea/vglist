@@ -35,7 +35,7 @@ class Sprockets::Cache
   def self.default_logger; end
   def set(key, value, local = nil); end
 end
-class Anonymous_Struct_21 < Struct
+class Anonymous_Struct_19 < Struct
   def cache; end
   def cache=(_); end
   def self.[](*arg0); end
@@ -43,7 +43,7 @@ class Anonymous_Struct_21 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Sprockets::Cache::Wrapper < Anonymous_Struct_21
+class Sprockets::Cache::Wrapper < Anonymous_Struct_19
 end
 class Sprockets::Cache::GetWrapper < Sprockets::Cache::Wrapper
   def get(key); end

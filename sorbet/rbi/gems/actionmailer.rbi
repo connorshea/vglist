@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionmailer/all/actionmailer.rbi
 #
-# actionmailer-5.2.3
+# actionmailer-6.0.0.rc2
 module ActionMailer
   def self.eager_load!; end
   def self.gem_version; end
@@ -47,9 +47,18 @@ module ActionMailer::DeliveryMethods::ClassMethods
   def deliveries=(arg); end
   def wrap_delivery_behavior(mail, method = nil, options = nil); end
 end
+class ActionMailer::DeliveryJob < ActiveJob::Base
+  def handle_exception_with_mailer_class(exception); end
+  def mailer_class; end
+  def perform(mailer, mail_method, delivery_method, *args); end
+  def self.__callbacks; end
+  def self.queue_name; end
+  def self.rescue_handlers; end
+end
 class ActionMailer::MessageDelivery < Delegator
   def __getobj__; end
   def __setobj__(mail_message); end
+  def arguments_for(delivery_job, delivery_method); end
   def deliver_later!(options = nil); end
   def deliver_later(options = nil); end
   def deliver_now!; end
@@ -59,13 +68,6 @@ class ActionMailer::MessageDelivery < Delegator
   def message; end
   def processed?; end
   def processed_mailer; end
-end
-class ActionMailer::DeliveryJob < ActiveJob::Base
-  def handle_exception_with_mailer_class(exception); end
-  def mailer_class; end
-  def perform(mailer, mail_method, delivery_method, *args); end
-  def self.queue_name; end
-  def self.rescue_handlers; end
 end
 module ActionMailer::Parameterized
   extend ActiveSupport::Concern
@@ -78,20 +80,25 @@ class ActionMailer::Parameterized::Mailer
   def method_missing(method_name, *args); end
   def respond_to_missing?(method, include_all = nil); end
 end
+class ActionMailer::Parameterized::DeliveryJob < ActionMailer::DeliveryJob
+  def perform(mailer, mail_method, delivery_method, params, *args); end
+end
 class ActionMailer::Parameterized::MessageDelivery < ActionMailer::MessageDelivery
+  def arguments_for(delivery_job, delivery_method); end
+  def delivery_job_class; end
   def enqueue_delivery(delivery_method, options = nil); end
   def initialize(mailer_class, action, params, *args); end
   def processed_mailer; end
-end
-class ActionMailer::Parameterized::DeliveryJob < ActionMailer::DeliveryJob
-  def perform(mailer, mail_method, delivery_method, params, *args); end
 end
 module ActionMailer::Previews
   extend ActiveSupport::Concern
 end
 module ActionMailer::Previews::ClassMethods
+  def interceptor_class_for(interceptor); end
   def register_preview_interceptor(interceptor); end
   def register_preview_interceptors(*interceptors); end
+  def unregister_preview_interceptor(interceptor); end
+  def unregister_preview_interceptors(*interceptors); end
 end
 class ActionMailer::Preview
   def initialize(params = nil); end
@@ -135,16 +142,13 @@ class ActionMailer::Base < AbstractController::Base
   def _helpers; end
   def _helpers=(val); end
   def _helpers?; end
-  def _layout(formats); end
+  def _layout(lookup_context, formats); end
   def _process_action_callbacks; end
   def _protected_ivars; end
   def _run_process_action_callbacks(&block); end
   def _view_cache_dependencies; end
   def _view_cache_dependencies=(val); end
   def _view_cache_dependencies?; end
-  def _view_paths; end
-  def _view_paths=(val); end
-  def _view_paths?; end
   def apply_defaults(headers); end
   def asset_host; end
   def asset_host=(value); end
@@ -152,7 +156,8 @@ class ActionMailer::Base < AbstractController::Base
   def assets_dir=(value); end
   def assign_headers_to_message(message, headers); end
   def attachments; end
-  def collect_responses(headers); end
+  def collect_responses(headers, &block); end
+  def collect_responses_from_block(headers); end
   def collect_responses_from_templates(headers); end
   def collect_responses_from_text(headers); end
   def compute_default(value); end
@@ -237,9 +242,6 @@ class ActionMailer::Base < AbstractController::Base
   def self._view_cache_dependencies; end
   def self._view_cache_dependencies=(val); end
   def self._view_cache_dependencies?; end
-  def self._view_paths; end
-  def self._view_paths=(val); end
-  def self._view_paths?; end
   def self.asset_host; end
   def self.asset_host=(value); end
   def self.assets_dir; end
@@ -321,6 +323,10 @@ class ActionMailer::Base < AbstractController::Base
   def self.test_settings; end
   def self.test_settings=(val); end
   def self.test_settings?; end
+  def self.unregister_interceptor(interceptor); end
+  def self.unregister_interceptors(*interceptors); end
+  def self.unregister_observer(observer); end
+  def self.unregister_observers(*observers); end
   def sendmail_settings; end
   def sendmail_settings=(val); end
   def sendmail_settings?; end
@@ -350,7 +356,7 @@ class ActionMailer::Base < AbstractController::Base
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   extend ActiveSupport::Rescuable::ClassMethods
-  extend Anonymous_Module_20
+  extend Anonymous_Module_18
   include AbstractController::AssetPaths
   include AbstractController::Caching
   include AbstractController::Caching::Fragments
@@ -386,6 +392,6 @@ class ActionMailer::Base::LateAttachmentsProxy < SimpleDelegator
   def _raise_error; end
   def inline; end
 end
-module Anonymous_Module_20
+module Anonymous_Module_18
   def inherited(klass); end
 end

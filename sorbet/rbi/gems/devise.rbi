@@ -520,12 +520,12 @@ class Devise::FailureApp < ActionController::Metal
   include ActionDispatch::Routing::UrlFor
   include ActionDispatch::Routing::UrlFor
   include ActiveSupport::Benchmarkable
-  include Anonymous_Module_25
+  include Anonymous_Module_23
   include Devise::Controllers::StoreLocation
   include Turbolinks::Controller
   include Turbolinks::Redirection
 end
-module Anonymous_Module_25
+module Anonymous_Module_23
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -537,11 +537,11 @@ module Anonymous_Module_25
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_26
-  extend Anonymous_Module_27
+  extend Anonymous_Module_24
+  extend Anonymous_Module_25
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_26
-  include Anonymous_Module_27
+  include Anonymous_Module_24
+  include Anonymous_Module_25
 end
 class Devise::Strategies::Base < Warden::Strategies::Base
   def mapping; end

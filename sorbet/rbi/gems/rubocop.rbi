@@ -401,6 +401,8 @@ module RuboCop::AST::CollectionNode
   def empty?(*args, &block); end
   def entries(*args, &block); end
   def exclude?(*args, &block); end
+  def excluding(*args, &block); end
+  def extract!(*args, &block); end
   def extract_options!(*args, &block); end
   def fetch(*args, &block); end
   def fifth(*args, &block); end
@@ -423,8 +425,10 @@ module RuboCop::AST::CollectionNode
   def in_groups(*args, &block); end
   def in_groups_of(*args, &block); end
   def include?(*args, &block); end
+  def including(*args, &block); end
   def index(*args, &block); end
   def index_by(*args, &block); end
+  def index_with(*args, &block); end
   def inject(*args, &block); end
   def inquiry(*args, &block); end
   def insert(*args, &block); end

@@ -505,7 +505,7 @@ class Mail::Header
   include Mail::Constants
   include Mail::Utilities
 end
-class Mail::PartsList < Anonymous_Delegator_37
+class Mail::PartsList < Anonymous_Delegator_34
   def attachments; end
   def collect!; end
   def collect; end
@@ -1559,6 +1559,10 @@ class Mail::ContentTypeElement
   def parameters; end
   def sub_type; end
 end
+class Mail::ContentTransferEncodingElement
+  def encoding; end
+  def initialize(string); end
+end
 class Mail::AddressList
   def addresses; end
   def addresses_grouped_by_group; end
@@ -1593,10 +1597,6 @@ class Mail::Address
   def to_s; end
   include Mail::Utilities
 end
-class Mail::ContentTransferEncodingElement
-  def encoding; end
-  def initialize(string); end
-end
 class Mail::MessageIdsElement
   def clean_msg_id(val); end
   def initialize(string); end
@@ -1607,4 +1607,9 @@ class Mail::MimeVersionElement
   def initialize(string); end
   def major; end
   def minor; end
+end
+class Mail::DateTimeElement
+  def date_string; end
+  def initialize(string); end
+  def time_string; end
 end
