@@ -3,8 +3,8 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/~>5.2.0/activerecord.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/~>6.0.0.rc1/activerecord.rbi
 #
 # typed: strong
 
-ActiveRecord::Migration::Compatibility::V5_2 = ActiveRecord::Migration::Current
+ActiveRecord::Migration::Compatibility::V6_0 = ActiveRecord::Migration::Current

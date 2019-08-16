@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/devise/all/devise.rbi
 #
-# devise-4.6.2
+# devise-12fc5b76d89c
 module Devise
   def allow_unconfirmed_access_for; end
   def allow_unconfirmed_access_for=(obj); end
@@ -481,8 +481,7 @@ class Devise::FailureApp < ActionController::Metal
   def is_navigational_format?; end
   def logger; end
   def logger=(value); end
-  def rails_5_and_down?; end
-  def rails_5_up?; end
+  def rails_51_and_up?; end
   def recall; end
   def recall_app(app); end
   def redirect; end
@@ -520,12 +519,12 @@ class Devise::FailureApp < ActionController::Metal
   include ActionDispatch::Routing::UrlFor
   include ActionDispatch::Routing::UrlFor
   include ActiveSupport::Benchmarkable
-  include Anonymous_Module_25
+  include Anonymous_Module_23
   include Devise::Controllers::StoreLocation
   include Turbolinks::Controller
   include Turbolinks::Redirection
 end
-module Anonymous_Module_25
+module Anonymous_Module_23
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -537,11 +536,11 @@ module Anonymous_Module_25
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_26
-  extend Anonymous_Module_27
+  extend Anonymous_Module_24
+  extend Anonymous_Module_25
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_26
-  include Anonymous_Module_27
+  include Anonymous_Module_24
+  include Anonymous_Module_25
 end
 class Devise::Strategies::Base < Warden::Strategies::Base
   def mapping; end

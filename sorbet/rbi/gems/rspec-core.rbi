@@ -609,6 +609,7 @@ module RSpec::Core::HashImitatable
   def except!(*args, &block); end
   def except(*args, &block); end
   def exclude?(*args, &block); end
+  def excluding(*args, &block); end
   def extra_hash_attributes; end
   def extract!(*args, &block); end
   def extractable_options?(*args, &block); end
@@ -630,8 +631,10 @@ module RSpec::Core::HashImitatable
   def has_value?(*args, &block); end
   def hash_for_delegation; end
   def include?(*args, &block); end
+  def including(*args, &block); end
   def index(*args, &block); end
   def index_by(*args, &block); end
+  def index_with(*args, &block); end
   def inject(*args, &block); end
   def invert(*args, &block); end
   def issue_deprecation(_method_name, *_args); end

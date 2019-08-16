@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '~> 2.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
@@ -22,7 +22,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.9'
 
 # Use devise for Users and authentication.
-gem 'devise', '~> 4.6'
+gem 'devise', git: 'https://github.com/plataformatec/devise'
 
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.1'

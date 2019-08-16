@@ -42,7 +42,7 @@ module ActionController::Live
 end
 
 class ActionController::Live::SSE
-  WHITELISTED_OPTIONS = ::T.let(nil, ::T.untyped)
+  PERMITTED_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
 class ActionController::LogSubscriber
@@ -112,6 +112,10 @@ end
 module ActionController::RequestForgeryProtection
   AUTHENTICITY_TOKEN_LENGTH = ::T.let(nil, ::T.untyped)
   NULL_ORIGIN_MESSAGE = ::T.let(nil, ::T.untyped)
+end
+
+class ActionController::RespondToMismatchError
+  DEFAULT_MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
 class ActionController::Responder
@@ -248,6 +252,7 @@ end
 
 module ActionDispatch::ContentSecurityPolicy::Request
   NONCE = ::T.let(nil, ::T.untyped)
+  NONCE_DIRECTIVES = ::T.let(nil, ::T.untyped)
   NONCE_GENERATOR = ::T.let(nil, ::T.untyped)
   POLICY = ::T.let(nil, ::T.untyped)
   POLICY_REPORT_ONLY = ::T.let(nil, ::T.untyped)
@@ -265,10 +270,10 @@ class ActionDispatch::Cookies
   HTTP_HEADER = ::T.let(nil, ::T.untyped)
   MAX_COOKIE_SIZE = ::T.let(nil, ::T.untyped)
   SECRET_KEY_BASE = ::T.let(nil, ::T.untyped)
-  SECRET_TOKEN = ::T.let(nil, ::T.untyped)
   SIGNED_COOKIE_DIGEST = ::T.let(nil, ::T.untyped)
   SIGNED_COOKIE_SALT = ::T.let(nil, ::T.untyped)
   USE_AUTHENTICATED_COOKIE_ENCRYPTION = ::T.let(nil, ::T.untyped)
+  USE_COOKIES_WITH_METADATA = ::T.let(nil, ::T.untyped)
 end
 
 class ActionDispatch::Cookies::CookieJar
@@ -284,7 +289,6 @@ ActionDispatch::Cookies::SerializedCookieJars::SERIALIZER = ActiveSupport::Messa
 
 class ActionDispatch::DebugExceptions
   include ::Raven::Rails::Overrides::DebugExceptionsCatcher
-  RESCUES_TEMPLATE_PATH = ::T.let(nil, ::T.untyped)
 end
 
 class ActionDispatch::DebugLocks
@@ -296,8 +300,36 @@ end
 class ActionDispatch::DebugLocks
 end
 
+class ActionDispatch::DebugView
+  def debug_hash(object); end
+
+  def debug_headers(headers); end
+
+  def debug_params(params); end
+
+  def initialize(assigns); end
+
+  def params_valid?(); end
+
+  def protect_against_forgery?(); end
+
+  def render(*_); end
+  RESCUES_TEMPLATE_PATH = ::T.let(nil, ::T.untyped)
+end
+
+class ActionDispatch::DebugView
+end
+
 class ActionDispatch::Flash
   KEY = ::T.let(nil, ::T.untyped)
+end
+
+class ActionDispatch::HostAuthorization
+  DEFAULT_RESPONSE_APP = ::T.let(nil, ::T.untyped)
+end
+
+module ActionDispatch::Http
+  include ::ActiveSupport::Deprecation::DeprecatedConstantAccessor
 end
 
 module ActionDispatch::Http::Cache::Request
@@ -314,6 +346,11 @@ module ActionDispatch::Http::Cache::Response
   PRIVATE = ::T.let(nil, ::T.untyped)
   PUBLIC = ::T.let(nil, ::T.untyped)
   SPECIAL_KEYS = ::T.let(nil, ::T.untyped)
+end
+
+class ActionDispatch::Http::ContentDisposition
+  RFC_5987_ESCAPED_CHAR = ::T.let(nil, ::T.untyped)
+  TRADITIONAL_ESCAPED_CHAR = ::T.let(nil, ::T.untyped)
 end
 
 module ActionDispatch::Http::FilterParameters
@@ -336,11 +373,10 @@ end
 
 module ActionDispatch::Http::MimeNegotiation
   BROWSER_LIKE_ACCEPTS = ::T.let(nil, ::T.untyped)
+  RESCUABLE_MIME_FORMAT_ERRORS = ::T.let(nil, ::T.untyped)
 end
 
-class ActionDispatch::Http::ParameterFilter
-  FILTERED = ::T.let(nil, ::T.untyped)
-end
+ActionDispatch::Http::ParameterFilter = ActiveSupport::ParameterFilter
 
 module ActionDispatch::Http::Parameters
   DEFAULT_PARSERS = ::T.let(nil, ::T.untyped)
@@ -359,7 +395,7 @@ end
 module ActionDispatch::Integration::RequestHelpers
   def delete(path, **args); end
 
-  def follow_redirect!(); end
+  def follow_redirect!(**args); end
 
   def get(path, **args); end
 
@@ -525,6 +561,8 @@ class ActionDispatch::IntegrationTest
   include ::ActionDispatch::Routing::UrlFor
   include ::ActionDispatch::Routing::PolymorphicRoutes
   include ::ActionDispatch::IntegrationTest::UrlOptions
+  include ::ActionMailer::TestHelper
+  include ::ActiveJob::TestHelper
   include ::ActionMailer::TestCase::ClearTestDeliveries
 end
 
@@ -794,7 +832,7 @@ class ActionDispatch::SystemTestCase
 end
 
 class ActionDispatch::SystemTestCase
-  def self.driven_by(driver, using: T.unsafe(nil), screen_size: T.unsafe(nil), options: T.unsafe(nil)); end
+  def self.driven_by(driver, using: T.unsafe(nil), screen_size: T.unsafe(nil), options: T.unsafe(nil), &capabilities); end
 
   def self.driver(); end
 
@@ -818,6 +856,8 @@ module ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
   def after_teardown(); end
 
   def before_setup(); end
+
+  def before_teardown(); end
 
   def host!(host); end
   DEFAULT_HOST = ::T.let(nil, ::T.untyped)
@@ -887,15 +927,9 @@ class ActionDispatch::TestRequest
 end
 
 class ActionDispatch::TestResponse
-  def error?(); end
-
-  def initialize(*_); end
-
-  def missing?(); end
-
   def parsed_body(); end
 
-  def success?(); end
+  def response_parser(); end
 end
 
 class ActionDispatch::TestResponse
@@ -916,6 +950,13 @@ class ActionMailer::LogSubscriber
   def process(event); end
 
   def receive(event); end
+end
+
+class ActionMailer::MailDeliveryJob
+  def perform(mailer, mail_method, delivery_method, args:, params: T.unsafe(nil)); end
+end
+
+class ActionMailer::MailDeliveryJob
 end
 
 class ActionMailer::NonInferrableMailerError
@@ -981,7 +1022,7 @@ end
 
 module ActionMailer::TestHelper
   include ::ActiveJob::TestHelper
-  def assert_emails(number); end
+  def assert_emails(number, &block); end
 
   def assert_enqueued_email_with(mailer, method, args: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
@@ -1015,6 +1056,10 @@ module ActionView
   ENCODING_FLAG = ::T.let(nil, ::T.untyped)
 end
 
+class ActionView::AbstractRenderer::RenderedTemplate
+  EMPTY_SPACER = ::T.let(nil, ::T.untyped)
+end
+
 class ActionView::ActionViewError
 end
 
@@ -1023,7 +1068,6 @@ end
 
 class ActionView::Base
   include ::ActionView::Context
-  include ::ActionView::CompiledTemplates
   include ::ERB::Util
   include ::Webpacker::Helper
   include ::Devise::Controllers::UrlHelpers
@@ -1088,6 +1132,7 @@ class ActionView::Base
   def unknown_asset_fallback=(val); end
 
   def unknown_asset_fallback?(); end
+  NULL = ::T.let(nil, ::T.untyped)
 end
 
 class ActionView::Base
@@ -1152,30 +1197,6 @@ class ActionView::Base
   def self.unknown_asset_fallback?(); end
 end
 
-module ActionView::CompiledTemplates
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163608719080(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163608795820(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163648714720(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163667982300(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163668929720(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163669784980(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163670257980(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163672537180(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163689348900(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163690182980(local_assigns, output_buffer); end
-
-  def _app_views_devise_mailer_confirmation_instructions_html_erb___2706754729650141024_70163691546160(local_assigns, output_buffer); end
-end
-
 class ActionView::DependencyTracker::ERBTracker
   EXPLICIT_DEPENDENCY = ::T.let(nil, ::T.untyped)
   IDENTIFIER = ::T.let(nil, ::T.untyped)
@@ -1185,6 +1206,68 @@ class ActionView::DependencyTracker::ERBTracker
   RENDER_ARGUMENTS = ::T.let(nil, ::T.untyped)
   STRING = ::T.let(nil, ::T.untyped)
   VARIABLE_OR_METHOD_CHAIN = ::T.let(nil, ::T.untyped)
+end
+
+class ActionView::Digestor
+end
+
+class ActionView::Digestor::Injected
+  def digest(finder, _=T.unsafe(nil)); end
+end
+
+class ActionView::Digestor::Injected
+end
+
+class ActionView::Digestor::Missing
+  def digest(finder, _=T.unsafe(nil)); end
+end
+
+class ActionView::Digestor::Missing
+end
+
+class ActionView::Digestor::Node
+  def children(); end
+
+  def dependency_digest(finder, stack); end
+
+  def digest(finder, stack=T.unsafe(nil)); end
+
+  def initialize(name, logical_name, template, children=T.unsafe(nil)); end
+
+  def logical_name(); end
+
+  def name(); end
+
+  def template(); end
+
+  def to_dep_map(); end
+end
+
+class ActionView::Digestor::Node
+  def self.create(name, logical_name, template, partial); end
+end
+
+class ActionView::Digestor::NullLogger
+end
+
+class ActionView::Digestor::NullLogger
+  def self.debug(_); end
+
+  def self.error(_); end
+end
+
+class ActionView::Digestor::Partial
+end
+
+class ActionView::Digestor::Partial
+end
+
+class ActionView::Digestor
+  def self.digest(name:, finder:, format: T.unsafe(nil), dependencies: T.unsafe(nil)); end
+
+  def self.logger(); end
+
+  def self.tree(name, finder, partial=T.unsafe(nil), seen=T.unsafe(nil)); end
 end
 
 class ActionView::EncodingError
@@ -1247,6 +1330,7 @@ class ActionView::MissingTemplate
 end
 
 class ActionView::PartialRenderer
+  include ::ActiveRecord::Railties::CollectionCacheAssociationLoading
   IDENTIFIER_ERROR_MESSAGE = ::T.let(nil, ::T.untyped)
   OPTION_AS_ERROR_MESSAGE = ::T.let(nil, ::T.untyped)
   PREFIXED_PARTIAL_NAMES = ::T.let(nil, ::T.untyped)
@@ -1255,6 +1339,10 @@ end
 class ActionView::PathResolver
   DEFAULT_PATTERN = ::T.let(nil, ::T.untyped)
   EXTENSIONS = ::T.let(nil, ::T.untyped)
+end
+
+class ActionView::Railtie
+  NULL_OPTION = ::T.let(nil, ::T.untyped)
 end
 
 module ActionView::RecordIdentifier
@@ -1274,12 +1362,8 @@ class ActionView::StreamingTemplateRenderer::Body
   include ::Raven::Rails::Overrides::StreamingReporter
 end
 
-class ActionView::Template
-  Finalizer = ::T.let(nil, ::T.untyped)
-end
-
 class ActionView::Template::Error
-  def annoted_source_code(); end
+  def annotated_source_code(); end
 
   def file_name(); end
 
@@ -1299,7 +1383,9 @@ class ActionView::Template::Error
 end
 
 class ActionView::Template::HTML
-  def formats(); end
+  def format(); end
+
+  def formats(*args, &block); end
 
   def identifier(); end
 
@@ -1310,8 +1396,6 @@ class ActionView::Template::HTML
   def to_str(); end
 
   def type(); end
-
-  def type=(type); end
 end
 
 class ActionView::Template::HTML
@@ -1325,8 +1409,38 @@ class ActionView::Template::Handlers::ERB::Erubi
   BLOCK_EXPR = ::T.let(nil, ::T.untyped)
 end
 
+class ActionView::Template::Inline
+  Finalizer = ::T.let(nil, ::T.untyped)
+end
+
+class ActionView::Template::Inline
+end
+
+class ActionView::Template::RawFile
+  def format(); end
+
+  def format=(format); end
+
+  def formats(*args, &block); end
+
+  def identifier(); end
+
+  def initialize(filename); end
+
+  def render(*args); end
+
+  def type(); end
+
+  def type=(type); end
+end
+
+class ActionView::Template::RawFile
+end
+
 class ActionView::Template::Text
-  def formats(); end
+  def format(); end
+
+  def formats(*args, &block); end
 
   def identifier(); end
 
@@ -1384,7 +1498,6 @@ class ActionView::TestCase
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::JavaScriptHelper
   include ::ActionView::Helpers::NumberHelper
-  include ::ActionView::Helpers::RecordTagHelper
   include ::ActionView::Helpers::RenderingHelper
   include ::ActiveSupport::Testing::ConstantLookup
   include ::ActionView::TestCase::Behavior
@@ -1392,7 +1505,6 @@ class ActionView::TestCase
   include ::ActionDispatch::TestProcess::FixtureFile
   include ::ActionController::TemplateAssertions
   include ::ActionView::Context
-  include ::ActionView::CompiledTemplates
   include ::ActionView::RecordIdentifier
   include ::ActionView::ModelNaming
   include ::ActionView::RoutingUrlFor
@@ -1420,7 +1532,6 @@ module ActionView::TestCase::Behavior
   include ::ActionDispatch::TestProcess::FixtureFile
   include ::ActionController::TemplateAssertions
   include ::ActionView::Context
-  include ::ActionView::CompiledTemplates
   include ::ActionView::RecordIdentifier
   include ::ActionView::ModelNaming
   include ::ActionView::RoutingUrlFor
@@ -1547,7 +1658,7 @@ class ActionView::WrongEncodingError
 end
 
 module ActiveJob::Arguments
-  TYPE_WHITELIST = ::T.let(nil, ::T.untyped)
+  OBJECT_SERIALIZER_KEY = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveJob::Base
@@ -1613,6 +1724,10 @@ class ActiveJob::QueueAdapters::TestAdapter
 
   def performed_jobs=(performed_jobs); end
 
+  def queue(); end
+
+  def queue=(queue); end
+
   def reject(); end
 
   def reject=(reject); end
@@ -1635,13 +1750,13 @@ module ActiveJob::TestHelper
 
   def assert_enqueued_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil)); end
 
-  def assert_no_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), &block); end
+  def assert_no_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
-  def assert_no_performed_jobs(only: T.unsafe(nil), except: T.unsafe(nil), &block); end
+  def assert_no_performed_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
-  def assert_performed_jobs(number, only: T.unsafe(nil), except: T.unsafe(nil)); end
+  def assert_performed_jobs(number, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
-  def assert_performed_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil)); end
+  def assert_performed_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   def before_setup(); end
 
@@ -1649,7 +1764,7 @@ module ActiveJob::TestHelper
 
   def enqueued_jobs=(arg); end
 
-  def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil)); end
+  def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil)); end
 
   def performed_jobs(*args, &block); end
 
@@ -1684,10 +1799,7 @@ module ActiveModel::AttributeMethods
 end
 
 module ActiveModel::AttributeMethods::AttrNames
-end
-
-module ActiveModel::AttributeMethods::AttrNames
-  def self.set_name_cache(name, value); end
+  DEF_SAFE_NAME = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveModel::AttributeMutationTracker
@@ -1695,6 +1807,8 @@ class ActiveModel::AttributeMutationTracker
 end
 
 module ActiveModel::Attributes
+  def attribute_names(); end
+
   def attributes(); end
 
   def initialize(*_); end
@@ -1702,6 +1816,8 @@ end
 
 module ActiveModel::Attributes::ClassMethods
   def attribute(name, type=T.unsafe(nil), **options); end
+
+  def attribute_names(); end
 end
 
 module ActiveModel::Attributes::ClassMethods
@@ -1829,56 +1945,22 @@ class ActiveRecord::Associations::Builder::HasAndBelongsToMany
   def through_model(); end
 end
 
-class ActiveRecord::Associations::Builder::HasAndBelongsToMany::JoinTableResolver
-end
-
-class ActiveRecord::Associations::Builder::HasAndBelongsToMany::JoinTableResolver::KnownClass
-  def initialize(lhs_class, rhs_class_name); end
-
-  def join_table(); end
-end
-
-class ActiveRecord::Associations::Builder::HasAndBelongsToMany::JoinTableResolver::KnownClass
-end
-
-class ActiveRecord::Associations::Builder::HasAndBelongsToMany::JoinTableResolver::KnownTable
-  def join_table(); end
-
-  def join_table=(_); end
-end
-
-class ActiveRecord::Associations::Builder::HasAndBelongsToMany::JoinTableResolver::KnownTable
-  def self.[](*_); end
-
-  def self.members(); end
-end
-
-class ActiveRecord::Associations::Builder::HasAndBelongsToMany::JoinTableResolver
-  def self.build(lhs_class, name, options); end
-end
-
 class ActiveRecord::Associations::Builder::HasAndBelongsToMany
 end
 
 class ActiveRecord::Associations::HasManyThroughAssociation
   include ::ActiveRecord::Associations::ThroughAssociation
-  def concat_records(records); end
 end
 
 class ActiveRecord::Associations::HasManyThroughAssociation
-end
-
-class ActiveRecord::Associations::HasOneThroughAssociation
-  include ::ActiveRecord::Associations::ThroughAssociation
-end
-
-class ActiveRecord::Associations::HasOneThroughAssociation
 end
 
 class ActiveRecord::Associations::JoinDependency::JoinAssociation
   def initialize(reflection, children); end
 
   def join_constraints(foreign_table, foreign_klass, join_type, alias_tracker); end
+
+  def readonly?(); end
 
   def reflection(); end
 
@@ -1932,82 +2014,26 @@ end
 class ActiveRecord::Associations::Preloader::Association
   def initialize(klass, owners, reflection, preload_scope); end
 
-  def klass(); end
-
-  def model(); end
-
-  def owners(); end
-
-  def preload_scope(); end
-
   def preloaded_records(); end
 
-  def reflection(); end
+  def records_by_owner(); end
 
-  def run(preloader); end
+  def run(); end
 end
 
 class ActiveRecord::Associations::Preloader::Association
 end
 
 class ActiveRecord::Associations::Preloader::ThroughAssociation
+  def initialize(*_); end
+  PRELOADER = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveRecord::Associations::Preloader::ThroughAssociation
 end
 
-module ActiveRecord::Associations::ThroughAssociation
-  def source_reflection(*args, &block); end
-end
-
-module ActiveRecord::Associations::ThroughAssociation
-end
-
 module ActiveRecord::AttributeMethods
-  BLACKLISTED_CLASS_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-module ActiveRecord::AttributeMethods::AttrNames
-  ATTR_2696f6 = ::T.let(nil, ::T.untyped)
-  ATTR_26974756f53796a756 = ::T.let(nil, ::T.untyped)
-  ATTR_26c6f626f59646 = ::T.let(nil, ::T.untyped)
-  ATTR_275636f62746f547970756 = ::T.let(nil, ::T.untyped)
-  ATTR_275636f62746f59646 = ::T.let(nil, ::T.untyped)
-  ATTR_2756375647f50716373777f62746f53756e647f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_2756375647f50716373777f62746f547f6b656e6 = ::T.let(nil, ::T.untyped)
-  ATTR_2756d656d6265627f536275616475646f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_27f6c656 = ::T.let(nil, ::T.untyped)
-  ATTR_36275616475646f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_3657272756e647f5379676e6f596e6f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_3657272756e647f5379676e6f596e6f59607 = ::T.let(nil, ::T.untyped)
-  ATTR_36865636b63757d6 = ::T.let(nil, ::T.untyped)
-  ATTR_36f6e64756e647 = ::T.let(nil, ::T.untyped)
-  ATTR_36f6e64756e647f547970756 = ::T.let(nil, ::T.untyped)
-  ATTR_36f6e6669627d6164796f6e6f53756e647f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_36f6e6669627d6164796f6e6f547f6b656e6 = ::T.let(nil, ::T.untyped)
-  ATTR_36f6e6669627d65646f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_3756162736861626c656f547970756 = ::T.let(nil, ::T.untyped)
-  ATTR_3756162736861626c656f59646 = ::T.let(nil, ::T.untyped)
-  ATTR_379676e6f596e6f536f657e647 = ::T.let(nil, ::T.untyped)
-  ATTR_37c65776 = ::T.let(nil, ::T.untyped)
-  ATTR_465637362796074796f6e6 = ::T.let(nil, ::T.untyped)
-  ATTR_56d61696c6 = ::T.let(nil, ::T.untyped)
-  ATTR_56e636279707475646f50716373777f62746 = ::T.let(nil, ::T.untyped)
-  ATTR_57074616475646f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_57375627e616d656 = ::T.let(nil, ::T.untyped)
-  ATTR_57e636f6e6669627d65646f556d61696c6 = ::T.let(nil, ::T.untyped)
-  ATTR_6696c656e616d656 = ::T.let(nil, ::T.untyped)
-  ATTR_7796b69646164716f59646 = ::T.let(nil, ::T.untyped)
-  ATTR_b65697 = ::T.let(nil, ::T.untyped)
-  ATTR_c6163747f5379676e6f596e6f51647 = ::T.let(nil, ::T.untyped)
-  ATTR_c6163747f5379676e6f596e6f59607 = ::T.let(nil, ::T.untyped)
-  ATTR_d656471646164716 = ::T.let(nil, ::T.untyped)
-  ATTR_e616d656 = ::T.let(nil, ::T.untyped)
-end
-
-module ActiveRecord::AttributeMethods::ClassMethods
-  COLUMN_NAME_ORDER_WHITELIST = ::T.let(nil, ::T.untyped)
-  COLUMN_NAME_WHITELIST = ::T.let(nil, ::T.untyped)
+  RESTRICTED_CLASS_METHODS = ::T.let(nil, ::T.untyped)
 end
 
 module ActiveRecord::AttributeMethods::PrimaryKey::ClassMethods
@@ -2016,6 +2042,10 @@ end
 
 class ActiveRecord::Base
   include ::Bullet::SaveWithBulletSupport
+end
+
+module ActiveRecord::Base::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 ActiveRecord::Base::OrmAdapter = OrmAdapter::ActiveRecord
@@ -2064,13 +2094,17 @@ class ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter
   ER_DATA_TOO_LONG = ::T.let(nil, ::T.untyped)
   ER_DO_NOT_HAVE_DEFAULT = ::T.let(nil, ::T.untyped)
   ER_DUP_ENTRY = ::T.let(nil, ::T.untyped)
+  ER_FK_INCOMPATIBLE_COLUMNS = ::T.let(nil, ::T.untyped)
   ER_LOCK_DEADLOCK = ::T.let(nil, ::T.untyped)
   ER_LOCK_WAIT_TIMEOUT = ::T.let(nil, ::T.untyped)
   ER_NOT_NULL_VIOLATION = ::T.let(nil, ::T.untyped)
+  ER_NO_REFERENCED_ROW = ::T.let(nil, ::T.untyped)
   ER_NO_REFERENCED_ROW_2 = ::T.let(nil, ::T.untyped)
   ER_OUT_OF_RANGE = ::T.let(nil, ::T.untyped)
   ER_QUERY_INTERRUPTED = ::T.let(nil, ::T.untyped)
   ER_QUERY_TIMEOUT = ::T.let(nil, ::T.untyped)
+  ER_ROW_IS_REFERENCED = ::T.let(nil, ::T.untyped)
+  ER_ROW_IS_REFERENCED_2 = ::T.let(nil, ::T.untyped)
   NATIVE_DATABASE_TYPES = ::T.let(nil, ::T.untyped)
 end
 
@@ -2114,6 +2148,10 @@ end
 
 ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::OID = ActiveRecord::ConnectionAdapters::PostgreSQL::OID
 
+ActiveRecord::ConnectionAdapters::PostgreSQLColumn = ActiveRecord::ConnectionAdapters::PostgreSQL::Column
+
+ActiveRecord::ConnectionAdapters::PostgreSQLTypeMetadata = ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata
+
 ActiveRecord::ConnectionAdapters::SchemaCreation = ActiveRecord::ConnectionAdapters::AbstractAdapter::SchemaCreation
 
 class ActiveRecord::ConnectionAdapters::StatementPool
@@ -2127,10 +2165,6 @@ end
 module ActiveRecord::ConnectionHandling
   DEFAULT_ENV = ::T.let(nil, ::T.untyped)
   RAILS_ENV = ::T.let(nil, ::T.untyped)
-end
-
-module ActiveRecord::Enum
-  ENUM_CONFLICT_MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveRecord::ExplainSubscriber
@@ -2155,6 +2189,10 @@ end
 module ActiveRecord::InternalMetadata::GeneratedAssociationMethods
 end
 
+module ActiveRecord::InternalMetadata::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class ActiveRecord::InternalMetadata
   extend ::Kaminari::ConfigurationMethods::ClassMethods
   def self.[](key); end
@@ -2163,13 +2201,93 @@ class ActiveRecord::InternalMetadata
 
   def self.create_table(); end
 
+  def self.drop_table(); end
+
   def self.page(num=T.unsafe(nil)); end
 end
 
+module ActiveRecord::LegacyYamlAdapter
+end
+
+module ActiveRecord::LegacyYamlAdapter::Rails41
+end
+
+module ActiveRecord::LegacyYamlAdapter::Rails41
+  def self.convert(klass, coder); end
+end
+
+module ActiveRecord::LegacyYamlAdapter::Rails420
+end
+
+module ActiveRecord::LegacyYamlAdapter::Rails420
+  def self.convert(klass, coder); end
+end
+
+module ActiveRecord::LegacyYamlAdapter
+  def self.convert(klass, coder); end
+end
+
 class ActiveRecord::LogSubscriber
+  def backtrace_cleaner(); end
+
+  def backtrace_cleaner=(val); end
+
+  def backtrace_cleaner?(); end
+
   def sql(event); end
   IGNORE_PAYLOAD_NAMES = ::T.let(nil, ::T.untyped)
-  RAILS_GEM_ROOT = ::T.let(nil, ::T.untyped)
+end
+
+class ActiveRecord::Middleware::DatabaseSelector
+  def call(env); end
+
+  def context_klass(); end
+
+  def initialize(app, resolver_klass=T.unsafe(nil), context_klass=T.unsafe(nil), options=T.unsafe(nil)); end
+
+  def options(); end
+
+  def resolver_klass(); end
+end
+
+class ActiveRecord::Middleware::DatabaseSelector::Resolver
+  def context(); end
+
+  def delay(); end
+
+  def initialize(context, options=T.unsafe(nil)); end
+
+  def instrumenter(); end
+
+  def read(&blk); end
+
+  def write(&blk); end
+  SEND_TO_REPLICA_DELAY = ::T.let(nil, ::T.untyped)
+end
+
+class ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+  def initialize(session); end
+
+  def last_write_timestamp(); end
+
+  def session(); end
+
+  def update_last_write_timestamp(); end
+end
+
+class ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+  def self.call(request); end
+
+  def self.convert_time_to_timestamp(time); end
+
+  def self.convert_timestamp_to_time(timestamp); end
+end
+
+class ActiveRecord::Middleware::DatabaseSelector::Resolver
+  def self.call(context, options=T.unsafe(nil)); end
+end
+
+class ActiveRecord::Middleware::DatabaseSelector
 end
 
 class ActiveRecord::Migration
@@ -2193,11 +2311,15 @@ class ActiveRecord::Migration::CommandRecorder
 
   def change_column(*args, &block); end
 
+  def change_column_comment(*args, &block); end
+
   def change_column_default(*args, &block); end
 
   def change_column_null(*args, &block); end
 
   def change_table(table_name, options=T.unsafe(nil)); end
+
+  def change_table_comment(*args, &block); end
 
   def commands(); end
 
@@ -2253,6 +2375,8 @@ class ActiveRecord::Migration::CommandRecorder
 
   def rename_table(*args, &block); end
 
+  def replay(migration); end
+
   def revert(); end
 
   def reverting(); end
@@ -2289,8 +2413,6 @@ module ActiveRecord::Migration::CommandRecorder::StraightReversions
   def invert_remove_reference(args, &block); end
 
   def invert_remove_timestamps(args, &block); end
-
-  def invert_transaction(args, &block); end
 end
 
 module ActiveRecord::Migration::CommandRecorder::StraightReversions
@@ -2351,9 +2473,17 @@ module ActiveRecord::QueryMethods
   VALID_UNSCOPING_VALUES = ::T.let(nil, ::T.untyped)
 end
 
+module ActiveRecord::Querying
+  QUERYING_METHODS = ::T.let(nil, ::T.untyped)
+end
+
 class ActiveRecord::Reflection::AssociationReflection
   INVALID_AUTOMATIC_INVERSE_OPTIONS = ::T.let(nil, ::T.untyped)
   VALID_AUTOMATIC_INVERSE_MACROS = ::T.let(nil, ::T.untyped)
+end
+
+module ActiveRecord::Reflection
+  extend ::ActiveStorage::Reflection::ReflectionExtension
 end
 
 class ActiveRecord::Relation
@@ -2383,6 +2513,10 @@ class ActiveRecord::Schema
   def define(info, &block); end
 end
 
+module ActiveRecord::SchemaMigration::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class ActiveRecord::Scoping::ScopeRegistry
   VALID_SCOPE_TYPES = ::T.let(nil, ::T.untyped)
 end
@@ -2398,9 +2532,11 @@ class ActiveRecord::SuppressorRegistry
 end
 
 module ActiveRecord::Tasks::DatabaseTasks
+  def cache_dump_filename(namespace); end
+
   def charset(*arguments); end
 
-  def charset_current(environment=T.unsafe(nil)); end
+  def charset_current(environment=T.unsafe(nil), specification_name=T.unsafe(nil)); end
 
   def check_protected_environments!(); end
 
@@ -2410,13 +2546,13 @@ module ActiveRecord::Tasks::DatabaseTasks
 
   def collation(*arguments); end
 
-  def collation_current(environment=T.unsafe(nil)); end
+  def collation_current(environment=T.unsafe(nil), specification_name=T.unsafe(nil)); end
 
   def create(*arguments); end
 
   def create_all(); end
 
-  def create_current(environment=T.unsafe(nil)); end
+  def create_current(environment=T.unsafe(nil), spec_name=T.unsafe(nil)); end
 
   def current_config(options=T.unsafe(nil)); end
 
@@ -2436,6 +2572,10 @@ module ActiveRecord::Tasks::DatabaseTasks
 
   def drop_current(environment=T.unsafe(nil)); end
 
+  def dump_filename(namespace, format=T.unsafe(nil)); end
+
+  def dump_schema(configuration, format=T.unsafe(nil), spec_name=T.unsafe(nil)); end
+
   def dump_schema_cache(conn, filename); end
 
   def env(); end
@@ -2446,13 +2586,17 @@ module ActiveRecord::Tasks::DatabaseTasks
 
   def fixtures_path=(fixtures_path); end
 
-  def load_schema(configuration, format=T.unsafe(nil), file=T.unsafe(nil), environment=T.unsafe(nil)); end
+  def for_each(databases); end
+
+  def load_schema(configuration, format=T.unsafe(nil), file=T.unsafe(nil), environment=T.unsafe(nil), spec_name=T.unsafe(nil)); end
 
   def load_schema_current(format=T.unsafe(nil), file=T.unsafe(nil), environment=T.unsafe(nil)); end
 
   def load_seed(); end
 
   def migrate(); end
+
+  def migrate_status(); end
 
   def migrations_paths(); end
 
@@ -2464,6 +2608,10 @@ module ActiveRecord::Tasks::DatabaseTasks
 
   def purge_current(environment=T.unsafe(nil)); end
 
+  def raise_for_multi_db(environment=T.unsafe(nil), command:); end
+
+  def reconstruct_from_schema(configuration, format=T.unsafe(nil), file=T.unsafe(nil), environment=T.unsafe(nil), spec_name=T.unsafe(nil)); end
+
   def register_task(pattern, task); end
 
   def root(); end
@@ -2472,15 +2620,25 @@ module ActiveRecord::Tasks::DatabaseTasks
 
   def schema_file(format=T.unsafe(nil)); end
 
+  def schema_file_type(format=T.unsafe(nil)); end
+
+  def schema_up_to_date?(configuration, format=T.unsafe(nil), file=T.unsafe(nil), environment=T.unsafe(nil), spec_name=T.unsafe(nil)); end
+
   def seed_loader(); end
 
   def seed_loader=(seed_loader); end
+
+  def setup_initial_database_yaml(); end
+
+  def spec(); end
 
   def structure_dump(*arguments); end
 
   def structure_load(*arguments); end
 
   def target_version(); end
+
+  def truncate_all(environment=T.unsafe(nil)); end
   LOCAL_HOSTS = ::T.let(nil, ::T.untyped)
 end
 
@@ -2515,6 +2673,7 @@ class ActiveRecord::Tasks::MySQLDatabaseTasks
   def structure_dump(filename, extra_flags); end
 
   def structure_load(filename, extra_flags); end
+  ER_DB_CREATE_EXISTS = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveRecord::Tasks::MySQLDatabaseTasks
@@ -2573,6 +2732,13 @@ end
 class ActiveRecord::Tasks::SQLiteDatabaseTasks
 end
 
+module ActiveRecord::TestDatabases
+end
+
+module ActiveRecord::TestDatabases
+  def self.create_and_load_schema(i, env_name:); end
+end
+
 module ActiveRecord::TestFixtures
   def after_teardown(); end
 
@@ -2618,8 +2784,6 @@ ActiveRecord::Type::Decimal = ActiveModel::Type::Decimal
 
 ActiveRecord::Type::Float = ActiveModel::Type::Float
 
-ActiveRecord::Type::Helpers = ActiveModel::Type::Helpers
-
 ActiveRecord::Type::Integer = ActiveModel::Type::Integer
 
 ActiveRecord::Type::String = ActiveModel::Type::String
@@ -2639,14 +2803,73 @@ end
 class ActiveStorage::AnalyzeJob
 end
 
+class ActiveStorage::Attached::Changes::CreateMany
+  def attachables(); end
+
+  def attachments(); end
+
+  def blobs(); end
+
+  def initialize(name, record, attachables); end
+
+  def name(); end
+
+  def record(); end
+
+  def save(); end
+
+  def upload(); end
+end
+
+class ActiveStorage::Attached::Changes::CreateMany
+end
+
+class ActiveStorage::Attached::Changes::CreateOneOfMany
+end
+
+class ActiveStorage::Attached::Changes::CreateOneOfMany
+end
+
+class ActiveStorage::Attached::Changes::DeleteMany
+  def attachables(); end
+
+  def attachments(); end
+
+  def blobs(); end
+
+  def initialize(name, record); end
+
+  def name(); end
+
+  def record(); end
+
+  def save(); end
+end
+
+class ActiveStorage::Attached::Changes::DeleteMany
+end
+
+class ActiveStorage::Attached::Changes::DeleteOne
+  def attachment(); end
+
+  def initialize(name, record); end
+
+  def name(); end
+
+  def record(); end
+
+  def save(); end
+end
+
+class ActiveStorage::Attached::Changes::DeleteOne
+end
+
 class ActiveStorage::Attachment
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
   def autosave_associated_records_for_blob(*args); end
 
   def autosave_associated_records_for_record(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 
   def purge(); end
 
@@ -2663,6 +2886,186 @@ module ActiveStorage::Attachment::GeneratedAssociationMethods
   def reload_blob(); end
 
   def reload_record(); end
+end
+
+module ActiveStorage::Attachment::GeneratedAttributeMethods
+  def blob_id_before_last_save(*args); end
+
+  def blob_id_before_type_cast(*args); end
+
+  def blob_id_came_from_user?(*args); end
+
+  def blob_id_change(*args); end
+
+  def blob_id_change_to_be_saved(*args); end
+
+  def blob_id_changed?(*args); end
+
+  def blob_id_in_database(*args); end
+
+  def blob_id_previous_change(*args); end
+
+  def blob_id_previously_changed?(*args); end
+
+  def blob_id_was(*args); end
+
+  def blob_id_will_change!(*args); end
+
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def name_before_last_save(*args); end
+
+  def name_before_type_cast(*args); end
+
+  def name_came_from_user?(*args); end
+
+  def name_change(*args); end
+
+  def name_change_to_be_saved(*args); end
+
+  def name_changed?(*args); end
+
+  def name_in_database(*args); end
+
+  def name_previous_change(*args); end
+
+  def name_previously_changed?(*args); end
+
+  def name_was(*args); end
+
+  def name_will_change!(*args); end
+
+  def record_id_before_last_save(*args); end
+
+  def record_id_before_type_cast(*args); end
+
+  def record_id_came_from_user?(*args); end
+
+  def record_id_change(*args); end
+
+  def record_id_change_to_be_saved(*args); end
+
+  def record_id_changed?(*args); end
+
+  def record_id_in_database(*args); end
+
+  def record_id_previous_change(*args); end
+
+  def record_id_previously_changed?(*args); end
+
+  def record_id_was(*args); end
+
+  def record_id_will_change!(*args); end
+
+  def record_type_before_last_save(*args); end
+
+  def record_type_before_type_cast(*args); end
+
+  def record_type_came_from_user?(*args); end
+
+  def record_type_change(*args); end
+
+  def record_type_change_to_be_saved(*args); end
+
+  def record_type_changed?(*args); end
+
+  def record_type_in_database(*args); end
+
+  def record_type_previous_change(*args); end
+
+  def record_type_previously_changed?(*args); end
+
+  def record_type_was(*args); end
+
+  def record_type_will_change!(*args); end
+
+  def restore_blob_id!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_name!(*args); end
+
+  def restore_record_id!(*args); end
+
+  def restore_record_type!(*args); end
+
+  def saved_change_to_blob_id(*args); end
+
+  def saved_change_to_blob_id?(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_name(*args); end
+
+  def saved_change_to_name?(*args); end
+
+  def saved_change_to_record_id(*args); end
+
+  def saved_change_to_record_id?(*args); end
+
+  def saved_change_to_record_type(*args); end
+
+  def saved_change_to_record_type?(*args); end
+
+  def will_save_change_to_blob_id?(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_name?(*args); end
+
+  def will_save_change_to_record_id?(*args); end
+
+  def will_save_change_to_record_type?(*args); end
+end
+
+module ActiveStorage::Attachment::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class ActiveStorage::Attachment
@@ -2718,9 +3121,7 @@ class ActiveStorage::Blob
 
   def image?(); end
 
-  def preview_image(); end
-
-  def preview_image=(attachable); end
+  def open(tmpdir: T.unsafe(nil), &block); end
 
   def purge(); end
 
@@ -2744,7 +3145,11 @@ class ActiveStorage::Blob
 
   def text?(); end
 
-  def upload(io); end
+  def unfurl(io, identify: T.unsafe(nil)); end
+
+  def upload(io, identify: T.unsafe(nil)); end
+
+  def upload_without_unfurling(io); end
 
   def validate_associated_records_for_attachments(*args); end
 
@@ -2773,9 +3178,253 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
 
   def create_preview_image_attachment!(*args, &block); end
 
+  def preview_image(); end
+
+  def preview_image=(attachable); end
+
   def reload_preview_image_attachment(); end
 
   def reload_preview_image_blob(); end
+end
+
+module ActiveStorage::Blob::GeneratedAttributeMethods
+  def byte_size_before_last_save(*args); end
+
+  def byte_size_before_type_cast(*args); end
+
+  def byte_size_came_from_user?(*args); end
+
+  def byte_size_change(*args); end
+
+  def byte_size_change_to_be_saved(*args); end
+
+  def byte_size_changed?(*args); end
+
+  def byte_size_in_database(*args); end
+
+  def byte_size_previous_change(*args); end
+
+  def byte_size_previously_changed?(*args); end
+
+  def byte_size_was(*args); end
+
+  def byte_size_will_change!(*args); end
+
+  def checksum_before_last_save(*args); end
+
+  def checksum_before_type_cast(*args); end
+
+  def checksum_came_from_user?(*args); end
+
+  def checksum_change(*args); end
+
+  def checksum_change_to_be_saved(*args); end
+
+  def checksum_changed?(*args); end
+
+  def checksum_in_database(*args); end
+
+  def checksum_previous_change(*args); end
+
+  def checksum_previously_changed?(*args); end
+
+  def checksum_was(*args); end
+
+  def checksum_will_change!(*args); end
+
+  def content_type_before_last_save(*args); end
+
+  def content_type_before_type_cast(*args); end
+
+  def content_type_came_from_user?(*args); end
+
+  def content_type_change(*args); end
+
+  def content_type_change_to_be_saved(*args); end
+
+  def content_type_changed?(*args); end
+
+  def content_type_in_database(*args); end
+
+  def content_type_previous_change(*args); end
+
+  def content_type_previously_changed?(*args); end
+
+  def content_type_was(*args); end
+
+  def content_type_will_change!(*args); end
+
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def filename_before_last_save(*args); end
+
+  def filename_before_type_cast(*args); end
+
+  def filename_came_from_user?(*args); end
+
+  def filename_change(*args); end
+
+  def filename_change_to_be_saved(*args); end
+
+  def filename_changed?(*args); end
+
+  def filename_in_database(*args); end
+
+  def filename_previous_change(*args); end
+
+  def filename_previously_changed?(*args); end
+
+  def filename_was(*args); end
+
+  def filename_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def key_before_last_save(*args); end
+
+  def key_before_type_cast(*args); end
+
+  def key_came_from_user?(*args); end
+
+  def key_change(*args); end
+
+  def key_change_to_be_saved(*args); end
+
+  def key_changed?(*args); end
+
+  def key_in_database(*args); end
+
+  def key_previous_change(*args); end
+
+  def key_previously_changed?(*args); end
+
+  def key_was(*args); end
+
+  def key_will_change!(*args); end
+
+  def metadata_before_last_save(*args); end
+
+  def metadata_before_type_cast(*args); end
+
+  def metadata_came_from_user?(*args); end
+
+  def metadata_change(*args); end
+
+  def metadata_change_to_be_saved(*args); end
+
+  def metadata_changed?(*args); end
+
+  def metadata_in_database(*args); end
+
+  def metadata_previous_change(*args); end
+
+  def metadata_previously_changed?(*args); end
+
+  def metadata_was(*args); end
+
+  def metadata_will_change!(*args); end
+
+  def restore_byte_size!(*args); end
+
+  def restore_checksum!(*args); end
+
+  def restore_content_type!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_filename!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_key!(*args); end
+
+  def restore_metadata!(*args); end
+
+  def saved_change_to_byte_size(*args); end
+
+  def saved_change_to_byte_size?(*args); end
+
+  def saved_change_to_checksum(*args); end
+
+  def saved_change_to_checksum?(*args); end
+
+  def saved_change_to_content_type(*args); end
+
+  def saved_change_to_content_type?(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_filename(*args); end
+
+  def saved_change_to_filename?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_key(*args); end
+
+  def saved_change_to_key?(*args); end
+
+  def saved_change_to_metadata(*args); end
+
+  def saved_change_to_metadata?(*args); end
+
+  def will_save_change_to_byte_size?(*args); end
+
+  def will_save_change_to_checksum?(*args); end
+
+  def will_save_change_to_content_type?(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_filename?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_key?(*args); end
+
+  def will_save_change_to_metadata?(*args); end
+end
+
+module ActiveStorage::Blob::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 module ActiveStorage::Blob::Identifiable
@@ -2831,9 +3480,11 @@ class ActiveStorage::Blob
 
   def self.before_remove_for_attachments?(); end
 
-  def self.build_after_upload(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil)); end
+  def self.build_after_unfurling(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
 
-  def self.create_after_upload!(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil)); end
+  def self.build_after_upload(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
+
+  def self.create_after_upload!(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
 
   def self.create_before_direct_upload!(filename:, byte_size:, checksum:, content_type: T.unsafe(nil), metadata: T.unsafe(nil)); end
 
@@ -2866,28 +3517,9 @@ class ActiveStorage::Filename
 
   def initialize(filename); end
 
-  def parameters(); end
-
   def sanitized(); end
 
   def to_json(); end
-end
-
-class ActiveStorage::Filename::Parameters
-  def ascii(); end
-
-  def combined(); end
-
-  def filename(); end
-
-  def initialize(filename); end
-
-  def utf8(); end
-  RFC_5987_ESCAPED_CHAR = ::T.let(nil, ::T.untyped)
-  TRADITIONAL_ESCAPED_CHAR = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveStorage::Filename::Parameters
 end
 
 class ActiveStorage::Filename
@@ -2908,6 +3540,23 @@ class ActiveStorage::LogSubscriber
   def service_upload(event); end
 
   def service_url(event); end
+end
+
+class ActiveStorage::Transformers::MiniMagickTransformer
+end
+
+class ActiveStorage::Transformers::MiniMagickTransformer
+end
+
+class ActiveStorage::Transformers::Transformer
+  def initialize(transformations); end
+
+  def transform(file, format:); end
+
+  def transformations(); end
+end
+
+class ActiveStorage::Transformers::Transformer
 end
 
 module ActiveStorage::VERSION
@@ -2936,20 +3585,7 @@ class ActiveStorageValidations::SizeValidator
 end
 
 class ActiveSupport::BacktraceCleaner
-  def add_filter(&block); end
-
-  def add_silencer(&block); end
-
-  def clean(backtrace, kind=T.unsafe(nil)); end
-
-  def filter(backtrace, kind=T.unsafe(nil)); end
-
-  def remove_filters!(); end
-
-  def remove_silencers!(); end
-end
-
-class ActiveSupport::BacktraceCleaner
+  FORMATTED_GEMS_PATTERN = ::T.let(nil, ::T.untyped)
 end
 
 module ActiveSupport::Cache
@@ -2966,13 +3602,13 @@ class ActiveSupport::Cache::FileStore
 
   def initialize(cache_path, options=T.unsafe(nil)); end
   DIR_FORMATTER = ::T.let(nil, ::T.untyped)
-  EXCLUDED_DIRS = ::T.let(nil, ::T.untyped)
   FILENAME_MAX_SIZE = ::T.let(nil, ::T.untyped)
   FILEPATH_MAX_SIZE = ::T.let(nil, ::T.untyped)
   GITKEEP_FILES = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveSupport::Cache::FileStore
+  def self.supports_cache_versioning?(); end
 end
 
 class ActiveSupport::Cache::MemoryStore
@@ -3099,10 +3735,6 @@ module ActiveSupport::JSON
   DATE_REGEX = ::T.let(nil, ::T.untyped)
 end
 
-class ActiveSupport::LegacyKeyGenerator
-  SECRET_MIN_LENGTH = ::T.let(nil, ::T.untyped)
-end
-
 class ActiveSupport::LogSubscriber
   def colorize_logging(); end
 
@@ -3146,22 +3778,9 @@ class ActiveSupport::MessageVerifier
 end
 
 module ActiveSupport::Multibyte::Unicode
-  HANGUL_LBASE = ::T.let(nil, ::T.untyped)
-  HANGUL_LCOUNT = ::T.let(nil, ::T.untyped)
-  HANGUL_NCOUNT = ::T.let(nil, ::T.untyped)
-  HANGUL_SBASE = ::T.let(nil, ::T.untyped)
-  HANGUL_SCOUNT = ::T.let(nil, ::T.untyped)
-  HANGUL_SLAST = ::T.let(nil, ::T.untyped)
-  HANGUL_TBASE = ::T.let(nil, ::T.untyped)
-  HANGUL_TCOUNT = ::T.let(nil, ::T.untyped)
-  HANGUL_VBASE = ::T.let(nil, ::T.untyped)
-  HANGUL_VCOUNT = ::T.let(nil, ::T.untyped)
   NORMALIZATION_FORMS = ::T.let(nil, ::T.untyped)
+  NORMALIZATION_FORM_ALIASES = ::T.let(nil, ::T.untyped)
   UNICODE_VERSION = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveSupport::Multibyte::Unicode::UnicodeDatabase
-  ATTRIBUTES = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveSupport::NumberHelper::NumberConverter
@@ -3282,12 +3901,17 @@ end
 class ActiveSupport::OrderedHash
 end
 
+class ActiveSupport::ParameterFilter
+  FILTERED = ::T.let(nil, ::T.untyped)
+end
+
 module ActiveSupport::RangeWithFormat
   RANGE_FORMATS = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveSupport::SafeBuffer
   UNSAFE_STRING_METHODS = ::T.let(nil, ::T.untyped)
+  UNSAFE_STRING_METHODS_WITH_BACKREF = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveSupport::Subscriber
@@ -3377,6 +4001,12 @@ class ActiveSupport::TestCase
 
   def self.file_fixture_path?(); end
 
+  def self.parallelize(workers: T.unsafe(nil), with: T.unsafe(nil)); end
+
+  def self.parallelize_setup(&block); end
+
+  def self.parallelize_teardown(&block); end
+
   def self.test_order=(new_order); end
 end
 
@@ -3460,6 +4090,48 @@ module ActiveSupport::Testing::Isolation
   def self.included(klass); end
 end
 
+class ActiveSupport::Testing::Parallelization
+  def <<(work); end
+
+  def after_fork(worker); end
+
+  def after_fork_hooks(); end
+
+  def initialize(queue_size); end
+
+  def run_cleanup(worker); end
+
+  def run_cleanup_hooks(); end
+
+  def shutdown(); end
+
+  def start(); end
+end
+
+class ActiveSupport::Testing::Parallelization::Server
+  include ::DRb::DRbUndumped
+  def <<(o); end
+
+  def length(); end
+
+  def pop(); end
+
+  def record(reporter, result); end
+end
+
+class ActiveSupport::Testing::Parallelization::Server
+end
+
+class ActiveSupport::Testing::Parallelization
+  def self.after_fork_hook(&blk); end
+
+  def self.after_fork_hooks(); end
+
+  def self.run_cleanup_hook(&blk); end
+
+  def self.run_cleanup_hooks(); end
+end
+
 module ActiveSupport::Testing::SetupAndTeardown
   def after_teardown(); end
 
@@ -3520,6 +4192,8 @@ module ActiveSupport::Testing::TimeHelpers
   def travel_back(); end
 
   def travel_to(date_or_time); end
+
+  def unfreeze_time(); end
 end
 
 module ActiveSupport::Testing::TimeHelpers
@@ -3535,8 +4209,6 @@ end
 
 class ActiveSupport::TimeZone
   MAPPING = ::T.let(nil, ::T.untyped)
-  UTC_OFFSET_WITHOUT_COLON = ::T.let(nil, ::T.untyped)
-  UTC_OFFSET_WITH_COLON = ::T.let(nil, ::T.untyped)
 end
 
 module ActiveSupport::VERSION
@@ -3657,6 +4329,7 @@ class ApplicationPolicy
 end
 
 class ApplicationRecord
+  include ::ApplicationRecord::GeneratedAttributeMethods
   include ::ApplicationRecord::GeneratedAssociationMethods
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
@@ -3666,6 +4339,13 @@ module ApplicationRecord::GeneratedAssociationMethods
 end
 
 module ApplicationRecord::GeneratedAssociationMethods
+end
+
+module ApplicationRecord::GeneratedAttributeMethods
+end
+
+module ApplicationRecord::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class ApplicationRecord
@@ -3687,23 +4367,6 @@ end
 
 class Arel::Visitors::DepthFirst
   DISPATCH = ::T.let(nil, ::T.untyped)
-end
-
-class Arel::Visitors::PostgreSQL
-  CUBE = ::T.let(nil, ::T.untyped)
-  GROUPING_SET = ::T.let(nil, ::T.untyped)
-  ROLLUP = ::T.let(nil, ::T.untyped)
-end
-
-class Arel::Visitors::ToSql
-  AND = ::T.let(nil, ::T.untyped)
-  COMMA = ::T.let(nil, ::T.untyped)
-  DISTINCT = ::T.let(nil, ::T.untyped)
-  GROUP_BY = ::T.let(nil, ::T.untyped)
-  ORDER_BY = ::T.let(nil, ::T.untyped)
-  SPACE = ::T.let(nil, ::T.untyped)
-  WHERE = ::T.let(nil, ::T.untyped)
-  WINDOW = ::T.let(nil, ::T.untyped)
 end
 
 class Array
@@ -3735,7 +4398,7 @@ class Array
 end
 
 class Array
-  def self.wrap(object); end
+  def self.try_convert(_); end
 end
 
 class BCrypt::Engine
@@ -5727,6 +6390,186 @@ module Company::GeneratedAssociationMethods
   def reload_pg_search_document(); end
 end
 
+module Company::GeneratedAttributeMethods
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def description_before_last_save(*args); end
+
+  def description_before_type_cast(*args); end
+
+  def description_came_from_user?(*args); end
+
+  def description_change(*args); end
+
+  def description_change_to_be_saved(*args); end
+
+  def description_changed?(*args); end
+
+  def description_in_database(*args); end
+
+  def description_previous_change(*args); end
+
+  def description_previously_changed?(*args); end
+
+  def description_was(*args); end
+
+  def description_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def name_before_last_save(*args); end
+
+  def name_before_type_cast(*args); end
+
+  def name_came_from_user?(*args); end
+
+  def name_change(*args); end
+
+  def name_change_to_be_saved(*args); end
+
+  def name_changed?(*args); end
+
+  def name_in_database(*args); end
+
+  def name_previous_change(*args); end
+
+  def name_previously_changed?(*args); end
+
+  def name_was(*args); end
+
+  def name_will_change!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_description!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_name!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def restore_wikidata_id!(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_description(*args); end
+
+  def saved_change_to_description?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_name(*args); end
+
+  def saved_change_to_name?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def saved_change_to_wikidata_id(*args); end
+
+  def saved_change_to_wikidata_id?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def wikidata_id_before_last_save(*args); end
+
+  def wikidata_id_before_type_cast(*args); end
+
+  def wikidata_id_came_from_user?(*args); end
+
+  def wikidata_id_change(*args); end
+
+  def wikidata_id_change_to_be_saved(*args); end
+
+  def wikidata_id_changed?(*args); end
+
+  def wikidata_id_in_database(*args); end
+
+  def wikidata_id_previous_change(*args); end
+
+  def wikidata_id_previously_changed?(*args); end
+
+  def wikidata_id_was(*args); end
+
+  def wikidata_id_will_change!(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_description?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_name?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+
+  def will_save_change_to_wikidata_id?(*args); end
+end
+
+module Company::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class Company
   def self.after_add_for_developed_games(); end
 
@@ -5925,8 +6768,6 @@ module Concurrent::Utility::NativeInteger
   MIN_VALUE = ::T.let(nil, ::T.untyped)
 end
 
-ConditionVariable = Thread::ConditionVariable
-
 class ConnectionPool
   def available(); end
 
@@ -6002,6 +6843,13 @@ class Crass::Tokenizer
   RE_UNICODE_RANGE_START = ::T.let(nil, ::T.untyped)
   RE_WHITESPACE = ::T.let(nil, ::T.untyped)
   RE_WHITESPACE_ANCHORED = ::T.let(nil, ::T.untyped)
+end
+
+module DRb::DRbUndumped
+  def _dump(dummy); end
+end
+
+module DRb::DRbUndumped
 end
 
 class Data
@@ -6570,16 +7418,6 @@ module Digest::UUID
   X500_NAMESPACE = ::T.let(nil, ::T.untyped)
 end
 
-module Digest::UUID
-  def self.uuid_from_hash(hash_class, uuid_namespace, name); end
-
-  def self.uuid_v3(uuid_namespace, name); end
-
-  def self.uuid_v4(); end
-
-  def self.uuid_v5(uuid_namespace, name); end
-end
-
 class Dir
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def children(); end
@@ -6802,6 +7640,156 @@ module Engine::GeneratedAssociationMethods
   def game_ids=(ids); end
 
   def reload_pg_search_document(); end
+end
+
+module Engine::GeneratedAttributeMethods
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def name_before_last_save(*args); end
+
+  def name_before_type_cast(*args); end
+
+  def name_came_from_user?(*args); end
+
+  def name_change(*args); end
+
+  def name_change_to_be_saved(*args); end
+
+  def name_changed?(*args); end
+
+  def name_in_database(*args); end
+
+  def name_previous_change(*args); end
+
+  def name_previously_changed?(*args); end
+
+  def name_was(*args); end
+
+  def name_will_change!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_name!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def restore_wikidata_id!(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_name(*args); end
+
+  def saved_change_to_name?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def saved_change_to_wikidata_id(*args); end
+
+  def saved_change_to_wikidata_id?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def wikidata_id_before_last_save(*args); end
+
+  def wikidata_id_before_type_cast(*args); end
+
+  def wikidata_id_came_from_user?(*args); end
+
+  def wikidata_id_change(*args); end
+
+  def wikidata_id_change_to_be_saved(*args); end
+
+  def wikidata_id_changed?(*args); end
+
+  def wikidata_id_in_database(*args); end
+
+  def wikidata_id_previous_change(*args); end
+
+  def wikidata_id_previously_changed?(*args); end
+
+  def wikidata_id_was(*args); end
+
+  def wikidata_id_will_change!(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_name?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+
+  def will_save_change_to_wikidata_id?(*args); end
+end
+
+module Engine::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class Engine
@@ -7263,8 +8251,6 @@ end
 
 class ExternalAccount
   def autosave_associated_records_for_user(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module ExternalAccount::GeneratedAssociationMethods
@@ -7275,6 +8261,14 @@ module ExternalAccount::GeneratedAssociationMethods
   def create_user!(*args, &block); end
 
   def reload_user(); end
+end
+
+module ExternalAccount::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+class ExternalAccount
+  def self.not_steam(*args); end
 end
 
 class FSEvent
@@ -7740,8 +8734,6 @@ class FavoriteGame
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_user(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module FavoriteGame::GeneratedAssociationMethods
@@ -7760,6 +8752,10 @@ module FavoriteGame::GeneratedAssociationMethods
   def reload_game(); end
 
   def reload_user(); end
+end
+
+module FavoriteGame::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 module Fcntl
@@ -8030,12 +9026,11 @@ module FriendlyId::SimpleI18n
 end
 
 class FriendlyId::Slug
+  include ::FriendlyId::Slug::GeneratedAttributeMethods
   include ::FriendlyId::Slug::GeneratedAssociationMethods
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
   def autosave_associated_records_for_sluggable(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module FriendlyId::Slug::GeneratedAssociationMethods
@@ -8047,6 +9042,13 @@ module FriendlyId::Slug::GeneratedAssociationMethods
 end
 
 module FriendlyId::Slug::GeneratedAssociationMethods
+end
+
+module FriendlyId::Slug::GeneratedAttributeMethods
+end
+
+module FriendlyId::Slug::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class FriendlyId::Slug
@@ -8426,12 +9428,6 @@ class Game
 
   def before_remove_for_purchasers?(); end
 
-  def belongs_to_counter_cache_after_update(reflection); end
-
-  def cover(); end
-
-  def cover=(attachable); end
-
   def pg_search_multisearchable_options(); end
 
   def pg_search_multisearchable_options=(val); end
@@ -8471,6 +9467,10 @@ module Game::GeneratedAssociationMethods
   def build_pg_search_document(*args, &block); end
 
   def build_series(*args, &block); end
+
+  def cover(); end
+
+  def cover=(attachable); end
 
   def create_cover_attachment(*args, &block); end
 
@@ -8543,6 +9543,10 @@ module Game::GeneratedAssociationMethods
   def reload_pg_search_document(); end
 
   def reload_series(); end
+end
+
+module Game::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class Game
@@ -8887,8 +9891,6 @@ class GameDeveloper
   def autosave_associated_records_for_company(*args); end
 
   def autosave_associated_records_for_game(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module GameDeveloper::GeneratedAssociationMethods
@@ -8909,12 +9911,14 @@ module GameDeveloper::GeneratedAssociationMethods
   def reload_game(); end
 end
 
+module GameDeveloper::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class GameEngine
   def autosave_associated_records_for_engine(*args); end
 
   def autosave_associated_records_for_game(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module GameEngine::GeneratedAssociationMethods
@@ -8935,12 +9939,14 @@ module GameEngine::GeneratedAssociationMethods
   def reload_game(); end
 end
 
+module GameEngine::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class GameGenre
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_genre(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module GameGenre::GeneratedAssociationMethods
@@ -8961,12 +9967,14 @@ module GameGenre::GeneratedAssociationMethods
   def reload_genre(); end
 end
 
+module GameGenre::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class GamePlatform
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_platform(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module GamePlatform::GeneratedAssociationMethods
@@ -8987,12 +9995,14 @@ module GamePlatform::GeneratedAssociationMethods
   def reload_platform(); end
 end
 
+module GamePlatform::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class GamePublisher
   def autosave_associated_records_for_company(*args); end
 
   def autosave_associated_records_for_game(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module GamePublisher::GeneratedAssociationMethods
@@ -9011,6 +10021,10 @@ module GamePublisher::GeneratedAssociationMethods
   def reload_company(); end
 
   def reload_game(); end
+end
+
+module GamePublisher::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class GamePurchase
@@ -9070,8 +10084,6 @@ class GamePurchase
 
   def before_remove_for_platforms?(); end
 
-  def belongs_to_counter_cache_after_update(reflection); end
-
   def validate_associated_records_for_game_purchase_platforms(*args); end
 
   def validate_associated_records_for_platforms(*args); end
@@ -9101,6 +10113,10 @@ module GamePurchase::GeneratedAssociationMethods
   def reload_game(); end
 
   def reload_user(); end
+end
+
+module GamePurchase::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class GamePurchase
@@ -9151,14 +10167,26 @@ class GamePurchase
   def self.before_remove_for_platforms=(val); end
 
   def self.before_remove_for_platforms?(); end
+
+  def self.not_completed(*args); end
+
+  def self.not_dropped(*args); end
+
+  def self.not_fully_completed(*args); end
+
+  def self.not_in_progress(*args); end
+
+  def self.not_not_applicable(*args); end
+
+  def self.not_paused(*args); end
+
+  def self.not_unplayed(*args); end
 end
 
 class GamePurchasePlatform
   def autosave_associated_records_for_game_purchase(*args); end
 
   def autosave_associated_records_for_platform(*args); end
-
-  def belongs_to_counter_cache_after_update(reflection); end
 end
 
 module GamePurchasePlatform::GeneratedAssociationMethods
@@ -9177,6 +10205,10 @@ module GamePurchasePlatform::GeneratedAssociationMethods
   def reload_game_purchase(); end
 
   def reload_platform(); end
+end
+
+module GamePurchasePlatform::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 module GamesHelper
@@ -9208,6 +10240,10 @@ class Gem::Platform
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
+class Gem::RemoteFetcher
+  def s3_uri_signer(uri); end
+end
+
 class Gem::Requirement
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
@@ -9216,12 +10252,69 @@ class Gem::Resolver::Molinillo::DependencyGraph::Log
   extend ::Enumerable
 end
 
+class Gem::S3URISigner
+  def initialize(uri); end
+
+  def sign(expiration=T.unsafe(nil)); end
+
+  def uri(); end
+
+  def uri=(uri); end
+  BASE64_URI_TRANSLATE = ::T.let(nil, ::T.untyped)
+  EC2_METADATA_CREDENTIALS = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::S3URISigner::ConfigurationError
+  def initialize(message); end
+end
+
+class Gem::S3URISigner::ConfigurationError
+end
+
+class Gem::S3URISigner::InstanceProfileError
+  def initialize(message); end
+end
+
+class Gem::S3URISigner::InstanceProfileError
+end
+
+class Gem::S3URISigner::S3Config
+  def access_key_id(); end
+
+  def access_key_id=(_); end
+
+  def region(); end
+
+  def region=(_); end
+
+  def secret_access_key(); end
+
+  def secret_access_key=(_); end
+
+  def security_token(); end
+
+  def security_token=(_); end
+end
+
+class Gem::S3URISigner::S3Config
+  def self.[](*_); end
+
+  def self.members(); end
+end
+
+class Gem::S3URISigner
+end
+
 class Gem::Specification
   extend ::Enumerable
 end
 
 class Gem::StubSpecification::StubLine
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+end
+
+module Gem::Util
+  def self.correct_for_windows_path(path); end
 end
 
 class Gem::Version
@@ -9311,6 +10404,186 @@ module Genre::GeneratedAssociationMethods
   def game_ids=(ids); end
 
   def reload_pg_search_document(); end
+end
+
+module Genre::GeneratedAttributeMethods
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def description_before_last_save(*args); end
+
+  def description_before_type_cast(*args); end
+
+  def description_came_from_user?(*args); end
+
+  def description_change(*args); end
+
+  def description_change_to_be_saved(*args); end
+
+  def description_changed?(*args); end
+
+  def description_in_database(*args); end
+
+  def description_previous_change(*args); end
+
+  def description_previously_changed?(*args); end
+
+  def description_was(*args); end
+
+  def description_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def name_before_last_save(*args); end
+
+  def name_before_type_cast(*args); end
+
+  def name_came_from_user?(*args); end
+
+  def name_change(*args); end
+
+  def name_change_to_be_saved(*args); end
+
+  def name_changed?(*args); end
+
+  def name_in_database(*args); end
+
+  def name_previous_change(*args); end
+
+  def name_previously_changed?(*args); end
+
+  def name_was(*args); end
+
+  def name_will_change!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_description!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_name!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def restore_wikidata_id!(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_description(*args); end
+
+  def saved_change_to_description?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_name(*args); end
+
+  def saved_change_to_name?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def saved_change_to_wikidata_id(*args); end
+
+  def saved_change_to_wikidata_id?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def wikidata_id_before_last_save(*args); end
+
+  def wikidata_id_before_type_cast(*args); end
+
+  def wikidata_id_came_from_user?(*args); end
+
+  def wikidata_id_change(*args); end
+
+  def wikidata_id_change_to_be_saved(*args); end
+
+  def wikidata_id_changed?(*args); end
+
+  def wikidata_id_in_database(*args); end
+
+  def wikidata_id_previous_change(*args); end
+
+  def wikidata_id_previously_changed?(*args); end
+
+  def wikidata_id_was(*args); end
+
+  def wikidata_id_will_change!(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_description?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_name?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+
+  def will_save_change_to_wikidata_id?(*args); end
+end
+
+module Genre::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class Genre
@@ -9432,6 +10705,8 @@ end
 
 class Hash
   def self.from_trusted_xml(xml); end
+
+  def self.try_convert(_); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -9977,6 +11252,10 @@ IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
 
 class IO
   def self.console(*_); end
+
+  def self.console_size(); end
+
+  def self.default_console_size(); end
 
   def self.foreach(*_); end
 
@@ -10832,8 +12111,6 @@ module Kernel
 end
 
 module Kernel
-  def self.`(_); end
-
   def self.at_exit(); end
 
   def self.autoload(_, _1); end
@@ -11127,17 +12404,6 @@ end
 class Mail::DateField
   CAPITALIZED_FIELD = ::T.let(nil, ::T.untyped)
   FIELD_NAME = ::T.let(nil, ::T.untyped)
-end
-
-class Mail::DateTimeElement
-  def date_string(); end
-
-  def initialize(string); end
-
-  def time_string(); end
-end
-
-class Mail::DateTimeElement
 end
 
 class Mail::Encodings::Base64
@@ -11773,6 +13039,14 @@ module Mime
   SET = ::T.let(nil, ::T.untyped)
 end
 
+class Mime::Type
+  MIME_NAME = ::T.let(nil, ::T.untyped)
+  MIME_PARAMETER = ::T.let(nil, ::T.untyped)
+  MIME_PARAMETER_KEY = ::T.let(nil, ::T.untyped)
+  MIME_PARAMETER_VALUE = ::T.let(nil, ::T.untyped)
+  MIME_REGEXP = ::T.let(nil, ::T.untyped)
+end
+
 class MimeMagic
   EXTENSIONS = ::T.let(nil, ::T.untyped)
   MAGIC = ::T.let(nil, ::T.untyped)
@@ -12094,8 +13368,6 @@ module MonitorMixin
   def self.extend_object(obj); end
 end
 
-Mutex = Thread::Mutex
-
 module Mutex_m
   VERSION = ::T.let(nil, ::T.untyped)
 end
@@ -12253,6 +13525,8 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
+Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
+
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -12290,13 +13564,7 @@ class Net::HTTPGenericRequest::Chunker
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
-class Net::HTTPInformation
-end
-
-Net::HTTPInformationCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPInformation
-end
+Net::HTTPInformationCode = Net::HTTPInformation
 
 class Net::HTTPLoopDetected
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12373,23 +13641,11 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-class Net::HTTP
-end
+Net::HTTPSession = Net::HTTP
 
-Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
+Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
-Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
-
-class Net::HTTP
-end
-
-class Net::HTTPSuccess
-end
-
-Net::HTTPSuccessCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPSuccess
-end
+Net::HTTPSuccessCode = Net::HTTPSuccess
 
 class Net::HTTPURITooLong
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -15461,6 +16717,186 @@ class PgSearch::Configuration
   VALID_VALUES = ::T.let(nil, ::T.untyped)
 end
 
+module PgSearch::Document::GeneratedAttributeMethods
+  def content_before_last_save(*args); end
+
+  def content_before_type_cast(*args); end
+
+  def content_came_from_user?(*args); end
+
+  def content_change(*args); end
+
+  def content_change_to_be_saved(*args); end
+
+  def content_changed?(*args); end
+
+  def content_in_database(*args); end
+
+  def content_previous_change(*args); end
+
+  def content_previously_changed?(*args); end
+
+  def content_was(*args); end
+
+  def content_will_change!(*args); end
+
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def restore_content!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_searchable_id!(*args); end
+
+  def restore_searchable_type!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def saved_change_to_content(*args); end
+
+  def saved_change_to_content?(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_searchable_id(*args); end
+
+  def saved_change_to_searchable_id?(*args); end
+
+  def saved_change_to_searchable_type(*args); end
+
+  def saved_change_to_searchable_type?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def searchable_id_before_last_save(*args); end
+
+  def searchable_id_before_type_cast(*args); end
+
+  def searchable_id_came_from_user?(*args); end
+
+  def searchable_id_change(*args); end
+
+  def searchable_id_change_to_be_saved(*args); end
+
+  def searchable_id_changed?(*args); end
+
+  def searchable_id_in_database(*args); end
+
+  def searchable_id_previous_change(*args); end
+
+  def searchable_id_previously_changed?(*args); end
+
+  def searchable_id_was(*args); end
+
+  def searchable_id_will_change!(*args); end
+
+  def searchable_type_before_last_save(*args); end
+
+  def searchable_type_before_type_cast(*args); end
+
+  def searchable_type_came_from_user?(*args); end
+
+  def searchable_type_change(*args); end
+
+  def searchable_type_change_to_be_saved(*args); end
+
+  def searchable_type_changed?(*args); end
+
+  def searchable_type_in_database(*args); end
+
+  def searchable_type_previous_change(*args); end
+
+  def searchable_type_previously_changed?(*args); end
+
+  def searchable_type_was(*args); end
+
+  def searchable_type_will_change!(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def will_save_change_to_content?(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_searchable_id?(*args); end
+
+  def will_save_change_to_searchable_type?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+end
+
+module PgSearch::Document::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class PgSearch::Features::TSearch
   DISALLOWED_TSQUERY_CHARACTERS = ::T.let(nil, ::T.untyped)
 end
@@ -15618,6 +17054,186 @@ module Platform::GeneratedAssociationMethods
   def reload_pg_search_document(); end
 end
 
+module Platform::GeneratedAttributeMethods
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def description_before_last_save(*args); end
+
+  def description_before_type_cast(*args); end
+
+  def description_came_from_user?(*args); end
+
+  def description_change(*args); end
+
+  def description_change_to_be_saved(*args); end
+
+  def description_changed?(*args); end
+
+  def description_in_database(*args); end
+
+  def description_previous_change(*args); end
+
+  def description_previously_changed?(*args); end
+
+  def description_was(*args); end
+
+  def description_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def name_before_last_save(*args); end
+
+  def name_before_type_cast(*args); end
+
+  def name_came_from_user?(*args); end
+
+  def name_change(*args); end
+
+  def name_change_to_be_saved(*args); end
+
+  def name_changed?(*args); end
+
+  def name_in_database(*args); end
+
+  def name_previous_change(*args); end
+
+  def name_previously_changed?(*args); end
+
+  def name_was(*args); end
+
+  def name_will_change!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_description!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_name!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def restore_wikidata_id!(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_description(*args); end
+
+  def saved_change_to_description?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_name(*args); end
+
+  def saved_change_to_name?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def saved_change_to_wikidata_id(*args); end
+
+  def saved_change_to_wikidata_id?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def wikidata_id_before_last_save(*args); end
+
+  def wikidata_id_before_type_cast(*args); end
+
+  def wikidata_id_came_from_user?(*args); end
+
+  def wikidata_id_change(*args); end
+
+  def wikidata_id_change_to_be_saved(*args); end
+
+  def wikidata_id_changed?(*args); end
+
+  def wikidata_id_in_database(*args); end
+
+  def wikidata_id_previous_change(*args); end
+
+  def wikidata_id_previously_changed?(*args); end
+
+  def wikidata_id_was(*args); end
+
+  def wikidata_id_will_change!(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_description?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_name?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+
+  def will_save_change_to_wikidata_id?(*args); end
+end
+
+module Platform::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class Platform
   def self.after_add_for_game_platforms(); end
 
@@ -15757,8 +17373,6 @@ class Proc
   def >>(_); end
 
   def clone(); end
-
-  def lambda?(); end
 
   def yield(*_); end
 end
@@ -16827,8 +18441,6 @@ module Pundit
   SUFFIX = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
 end
-
-Queue = Thread::Queue
 
 module REXML
   COPYRIGHT = ::T.let(nil, ::T.untyped)
@@ -20579,6 +22191,18 @@ class Rails::ApplicationController
 end
 
 class Rails::ApplicationController
+end
+
+module Rails::Autoloaders
+  extend ::Enumerable
+end
+
+class Rails::BacktraceCleaner
+  APP_DIRS_PATTERN = ::T.let(nil, ::T.untyped)
+  DOT_SLASH = ::T.let(nil, ::T.untyped)
+  EMPTY_STRING = ::T.let(nil, ::T.untyped)
+  RENDER_TEMPLATE_PATTERN = ::T.let(nil, ::T.untyped)
+  SLASH = ::T.let(nil, ::T.untyped)
 end
 
 module Rails::Html
@@ -25688,6 +27312,7 @@ class ScriptError
 end
 
 module SecureRandom
+  BASE36_ALPHABET = ::T.let(nil, ::T.untyped)
   BASE58_ALPHABET = ::T.let(nil, ::T.untyped)
 end
 
@@ -26931,6 +28556,156 @@ module Series::GeneratedAssociationMethods
   def reload_pg_search_document(); end
 end
 
+module Series::GeneratedAttributeMethods
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def name_before_last_save(*args); end
+
+  def name_before_type_cast(*args); end
+
+  def name_came_from_user?(*args); end
+
+  def name_change(*args); end
+
+  def name_change_to_be_saved(*args); end
+
+  def name_changed?(*args); end
+
+  def name_in_database(*args); end
+
+  def name_previous_change(*args); end
+
+  def name_previously_changed?(*args); end
+
+  def name_was(*args); end
+
+  def name_will_change!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_name!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def restore_wikidata_id!(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_name(*args); end
+
+  def saved_change_to_name?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def saved_change_to_wikidata_id(*args); end
+
+  def saved_change_to_wikidata_id?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def wikidata_id_before_last_save(*args); end
+
+  def wikidata_id_before_type_cast(*args); end
+
+  def wikidata_id_came_from_user?(*args); end
+
+  def wikidata_id_change(*args); end
+
+  def wikidata_id_change_to_be_saved(*args); end
+
+  def wikidata_id_changed?(*args); end
+
+  def wikidata_id_in_database(*args); end
+
+  def wikidata_id_previous_change(*args); end
+
+  def wikidata_id_previously_changed?(*args); end
+
+  def wikidata_id_was(*args); end
+
+  def wikidata_id_will_change!(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_name?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+
+  def will_save_change_to_wikidata_id?(*args); end
+end
+
+module Series::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class Series
   def self.after_add_for_games(); end
 
@@ -27145,8 +28920,6 @@ end
 module Singleton
   def self.__init__(klass); end
 end
-
-SizedQueue = Thread::SizedQueue
 
 module Skiptrace
   VERSION = ::T.let(nil, ::T.untyped)
@@ -28284,65 +30057,6 @@ end
 
 class Thread
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def abort_on_exception(); end
-
-  def abort_on_exception=(abort_on_exception); end
-
-  def add_trace_func(_); end
-
-  def backtrace(*_); end
-
-  def backtrace_locations(*_); end
-
-  def exit(); end
-
-  def fetch(*_); end
-
-  def group(); end
-
-  def initialize(*_); end
-
-  def join(*_); end
-
-  def key?(_); end
-
-  def keys(); end
-
-  def name(); end
-
-  def name=(name); end
-
-  def pending_interrupt?(*_); end
-
-  def priority(); end
-
-  def priority=(priority); end
-
-  def report_on_exception(); end
-
-  def report_on_exception=(report_on_exception); end
-
-  def run(); end
-
-  def safe_level(); end
-
-  def status(); end
-
-  def stop?(); end
-
-  def terminate(); end
-
-  def thread_variable?(_); end
-
-  def thread_variable_get(_); end
-
-  def thread_variable_set(_, _1); end
-
-  def thread_variables(); end
-
-  def value(); end
-
-  def wakeup(); end
 end
 
 class Thread::Backtrace
@@ -28355,103 +30069,14 @@ end
 
 class Thread::ConditionVariable
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def broadcast(); end
-
-  def marshal_dump(); end
-
-  def signal(); end
-
-  def wait(*_); end
 end
 
 class Thread::Mutex
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def lock(); end
-
-  def locked?(); end
-
-  def owned?(); end
-
-  def synchronize(); end
-
-  def try_lock(); end
-
-  def unlock(); end
 end
 
 class Thread::Queue
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def <<(_); end
-
-  def clear(); end
-
-  def close(); end
-
-  def closed?(); end
-
-  def deq(*_); end
-
-  def empty?(); end
-
-  def enq(_); end
-
-  def length(); end
-
-  def marshal_dump(); end
-
-  def num_waiting(); end
-
-  def pop(*_); end
-
-  def push(_); end
-
-  def shift(*_); end
-
-  def size(); end
-end
-
-class Thread::SizedQueue
-  def <<(*_); end
-
-  def enq(*_); end
-
-  def initialize(_); end
-
-  def max(); end
-
-  def max=(max); end
-
-  def push(*_); end
-end
-
-class Thread
-  def self.abort_on_exception(); end
-
-  def self.abort_on_exception=(abort_on_exception); end
-
-  def self.exclusive(&block); end
-
-  def self.exit(); end
-
-  def self.fork(*_); end
-
-  def self.handle_interrupt(_); end
-
-  def self.kill(_); end
-
-  def self.list(); end
-
-  def self.pass(); end
-
-  def self.pending_interrupt?(*_); end
-
-  def self.report_on_exception(); end
-
-  def self.report_on_exception=(report_on_exception); end
-
-  def self.start(*_); end
-
-  def self.stop(); end
 end
 
 class ThreadGroup
@@ -29067,9 +30692,46 @@ module Unicode::DisplayWidth
 end
 
 module UnicodeNormalize
+  ACCENTS = ::T.let(nil, ::T.untyped)
+  CLASS_TABLE = ::T.let(nil, ::T.untyped)
+  COMPOSITION_TABLE = ::T.let(nil, ::T.untyped)
+  DECOMPOSITION_TABLE = ::T.let(nil, ::T.untyped)
+  KOMPATIBLE_TABLE = ::T.let(nil, ::T.untyped)
+  LBASE = ::T.let(nil, ::T.untyped)
+  LCOUNT = ::T.let(nil, ::T.untyped)
+  MAX_HASH_LENGTH = ::T.let(nil, ::T.untyped)
+  NCOUNT = ::T.let(nil, ::T.untyped)
+  NF_HASH_C = ::T.let(nil, ::T.untyped)
+  NF_HASH_D = ::T.let(nil, ::T.untyped)
+  REGEXP_C = ::T.let(nil, ::T.untyped)
+  REGEXP_C_STRING = ::T.let(nil, ::T.untyped)
+  REGEXP_D = ::T.let(nil, ::T.untyped)
+  REGEXP_D_STRING = ::T.let(nil, ::T.untyped)
+  REGEXP_K = ::T.let(nil, ::T.untyped)
+  REGEXP_K_STRING = ::T.let(nil, ::T.untyped)
+  SBASE = ::T.let(nil, ::T.untyped)
+  SCOUNT = ::T.let(nil, ::T.untyped)
+  TBASE = ::T.let(nil, ::T.untyped)
+  TCOUNT = ::T.let(nil, ::T.untyped)
+  UNICODE_ENCODINGS = ::T.let(nil, ::T.untyped)
+  VBASE = ::T.let(nil, ::T.untyped)
+  VCOUNT = ::T.let(nil, ::T.untyped)
 end
 
 module UnicodeNormalize
+  def self.canonical_ordering_one(string); end
+
+  def self.hangul_comp_one(string); end
+
+  def self.hangul_decomp_one(target); end
+
+  def self.nfc_one(string); end
+
+  def self.nfd_one(string); end
+
+  def self.normalize(string, form=T.unsafe(nil)); end
+
+  def self.normalized?(string, form=T.unsafe(nil)); end
 end
 
 class UniformNotifier
@@ -29142,10 +30804,6 @@ class User
 
   def autosave_associated_records_for_games(*args); end
 
-  def avatar(); end
-
-  def avatar=(attachable); end
-
   def before_add_for_favorite_games(); end
 
   def before_add_for_favorite_games=(val); end
@@ -29202,6 +30860,10 @@ class User
 end
 
 module User::GeneratedAssociationMethods
+  def avatar(); end
+
+  def avatar=(attachable); end
+
   def build_avatar_attachment(*args, &block); end
 
   def build_external_account(*args, &block); end
@@ -29233,6 +30895,636 @@ module User::GeneratedAssociationMethods
   def reload_external_account(); end
 end
 
+module User::GeneratedAttributeMethods
+  def bio_before_last_save(*args); end
+
+  def bio_before_type_cast(*args); end
+
+  def bio_came_from_user?(*args); end
+
+  def bio_change(*args); end
+
+  def bio_change_to_be_saved(*args); end
+
+  def bio_changed?(*args); end
+
+  def bio_in_database(*args); end
+
+  def bio_previous_change(*args); end
+
+  def bio_previously_changed?(*args); end
+
+  def bio_was(*args); end
+
+  def bio_will_change!(*args); end
+
+  def confirmation_sent_at_before_last_save(*args); end
+
+  def confirmation_sent_at_before_type_cast(*args); end
+
+  def confirmation_sent_at_came_from_user?(*args); end
+
+  def confirmation_sent_at_change(*args); end
+
+  def confirmation_sent_at_change_to_be_saved(*args); end
+
+  def confirmation_sent_at_changed?(*args); end
+
+  def confirmation_sent_at_in_database(*args); end
+
+  def confirmation_sent_at_previous_change(*args); end
+
+  def confirmation_sent_at_previously_changed?(*args); end
+
+  def confirmation_sent_at_was(*args); end
+
+  def confirmation_sent_at_will_change!(*args); end
+
+  def confirmation_token_before_last_save(*args); end
+
+  def confirmation_token_before_type_cast(*args); end
+
+  def confirmation_token_came_from_user?(*args); end
+
+  def confirmation_token_change(*args); end
+
+  def confirmation_token_change_to_be_saved(*args); end
+
+  def confirmation_token_changed?(*args); end
+
+  def confirmation_token_in_database(*args); end
+
+  def confirmation_token_previous_change(*args); end
+
+  def confirmation_token_previously_changed?(*args); end
+
+  def confirmation_token_was(*args); end
+
+  def confirmation_token_will_change!(*args); end
+
+  def confirmed_at_before_last_save(*args); end
+
+  def confirmed_at_before_type_cast(*args); end
+
+  def confirmed_at_came_from_user?(*args); end
+
+  def confirmed_at_change(*args); end
+
+  def confirmed_at_change_to_be_saved(*args); end
+
+  def confirmed_at_changed?(*args); end
+
+  def confirmed_at_in_database(*args); end
+
+  def confirmed_at_previous_change(*args); end
+
+  def confirmed_at_previously_changed?(*args); end
+
+  def confirmed_at_was(*args); end
+
+  def confirmed_at_will_change!(*args); end
+
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def current_sign_in_at_before_last_save(*args); end
+
+  def current_sign_in_at_before_type_cast(*args); end
+
+  def current_sign_in_at_came_from_user?(*args); end
+
+  def current_sign_in_at_change(*args); end
+
+  def current_sign_in_at_change_to_be_saved(*args); end
+
+  def current_sign_in_at_changed?(*args); end
+
+  def current_sign_in_at_in_database(*args); end
+
+  def current_sign_in_at_previous_change(*args); end
+
+  def current_sign_in_at_previously_changed?(*args); end
+
+  def current_sign_in_at_was(*args); end
+
+  def current_sign_in_at_will_change!(*args); end
+
+  def current_sign_in_ip_before_last_save(*args); end
+
+  def current_sign_in_ip_before_type_cast(*args); end
+
+  def current_sign_in_ip_came_from_user?(*args); end
+
+  def current_sign_in_ip_change(*args); end
+
+  def current_sign_in_ip_change_to_be_saved(*args); end
+
+  def current_sign_in_ip_changed?(*args); end
+
+  def current_sign_in_ip_in_database(*args); end
+
+  def current_sign_in_ip_previous_change(*args); end
+
+  def current_sign_in_ip_previously_changed?(*args); end
+
+  def current_sign_in_ip_was(*args); end
+
+  def current_sign_in_ip_will_change!(*args); end
+
+  def email_before_last_save(*args); end
+
+  def email_before_type_cast(*args); end
+
+  def email_came_from_user?(*args); end
+
+  def email_change(*args); end
+
+  def email_change_to_be_saved(*args); end
+
+  def email_changed?(*args); end
+
+  def email_in_database(*args); end
+
+  def email_previous_change(*args); end
+
+  def email_previously_changed?(*args); end
+
+  def email_was(*args); end
+
+  def email_will_change!(*args); end
+
+  def encrypted_password_before_last_save(*args); end
+
+  def encrypted_password_before_type_cast(*args); end
+
+  def encrypted_password_came_from_user?(*args); end
+
+  def encrypted_password_change(*args); end
+
+  def encrypted_password_change_to_be_saved(*args); end
+
+  def encrypted_password_changed?(*args); end
+
+  def encrypted_password_in_database(*args); end
+
+  def encrypted_password_previous_change(*args); end
+
+  def encrypted_password_previously_changed?(*args); end
+
+  def encrypted_password_was(*args); end
+
+  def encrypted_password_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def last_sign_in_at_before_last_save(*args); end
+
+  def last_sign_in_at_before_type_cast(*args); end
+
+  def last_sign_in_at_came_from_user?(*args); end
+
+  def last_sign_in_at_change(*args); end
+
+  def last_sign_in_at_change_to_be_saved(*args); end
+
+  def last_sign_in_at_changed?(*args); end
+
+  def last_sign_in_at_in_database(*args); end
+
+  def last_sign_in_at_previous_change(*args); end
+
+  def last_sign_in_at_previously_changed?(*args); end
+
+  def last_sign_in_at_was(*args); end
+
+  def last_sign_in_at_will_change!(*args); end
+
+  def last_sign_in_ip_before_last_save(*args); end
+
+  def last_sign_in_ip_before_type_cast(*args); end
+
+  def last_sign_in_ip_came_from_user?(*args); end
+
+  def last_sign_in_ip_change(*args); end
+
+  def last_sign_in_ip_change_to_be_saved(*args); end
+
+  def last_sign_in_ip_changed?(*args); end
+
+  def last_sign_in_ip_in_database(*args); end
+
+  def last_sign_in_ip_previous_change(*args); end
+
+  def last_sign_in_ip_previously_changed?(*args); end
+
+  def last_sign_in_ip_was(*args); end
+
+  def last_sign_in_ip_will_change!(*args); end
+
+  def remember_created_at_before_last_save(*args); end
+
+  def remember_created_at_before_type_cast(*args); end
+
+  def remember_created_at_came_from_user?(*args); end
+
+  def remember_created_at_change(*args); end
+
+  def remember_created_at_change_to_be_saved(*args); end
+
+  def remember_created_at_changed?(*args); end
+
+  def remember_created_at_in_database(*args); end
+
+  def remember_created_at_previous_change(*args); end
+
+  def remember_created_at_previously_changed?(*args); end
+
+  def remember_created_at_was(*args); end
+
+  def remember_created_at_will_change!(*args); end
+
+  def reset_password_sent_at_before_last_save(*args); end
+
+  def reset_password_sent_at_before_type_cast(*args); end
+
+  def reset_password_sent_at_came_from_user?(*args); end
+
+  def reset_password_sent_at_change(*args); end
+
+  def reset_password_sent_at_change_to_be_saved(*args); end
+
+  def reset_password_sent_at_changed?(*args); end
+
+  def reset_password_sent_at_in_database(*args); end
+
+  def reset_password_sent_at_previous_change(*args); end
+
+  def reset_password_sent_at_previously_changed?(*args); end
+
+  def reset_password_sent_at_was(*args); end
+
+  def reset_password_sent_at_will_change!(*args); end
+
+  def reset_password_token_before_last_save(*args); end
+
+  def reset_password_token_before_type_cast(*args); end
+
+  def reset_password_token_came_from_user?(*args); end
+
+  def reset_password_token_change(*args); end
+
+  def reset_password_token_change_to_be_saved(*args); end
+
+  def reset_password_token_changed?(*args); end
+
+  def reset_password_token_in_database(*args); end
+
+  def reset_password_token_previous_change(*args); end
+
+  def reset_password_token_previously_changed?(*args); end
+
+  def reset_password_token_was(*args); end
+
+  def reset_password_token_will_change!(*args); end
+
+  def restore_bio!(*args); end
+
+  def restore_confirmation_sent_at!(*args); end
+
+  def restore_confirmation_token!(*args); end
+
+  def restore_confirmed_at!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_current_sign_in_at!(*args); end
+
+  def restore_current_sign_in_ip!(*args); end
+
+  def restore_email!(*args); end
+
+  def restore_encrypted_password!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_last_sign_in_at!(*args); end
+
+  def restore_last_sign_in_ip!(*args); end
+
+  def restore_remember_created_at!(*args); end
+
+  def restore_reset_password_sent_at!(*args); end
+
+  def restore_reset_password_token!(*args); end
+
+  def restore_role!(*args); end
+
+  def restore_sign_in_count!(*args); end
+
+  def restore_slug!(*args); end
+
+  def restore_unconfirmed_email!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def restore_username!(*args); end
+
+  def role_before_last_save(*args); end
+
+  def role_before_type_cast(*args); end
+
+  def role_came_from_user?(*args); end
+
+  def role_change(*args); end
+
+  def role_change_to_be_saved(*args); end
+
+  def role_changed?(*args); end
+
+  def role_in_database(*args); end
+
+  def role_previous_change(*args); end
+
+  def role_previously_changed?(*args); end
+
+  def role_was(*args); end
+
+  def role_will_change!(*args); end
+
+  def saved_change_to_bio(*args); end
+
+  def saved_change_to_bio?(*args); end
+
+  def saved_change_to_confirmation_sent_at(*args); end
+
+  def saved_change_to_confirmation_sent_at?(*args); end
+
+  def saved_change_to_confirmation_token(*args); end
+
+  def saved_change_to_confirmation_token?(*args); end
+
+  def saved_change_to_confirmed_at(*args); end
+
+  def saved_change_to_confirmed_at?(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_current_sign_in_at(*args); end
+
+  def saved_change_to_current_sign_in_at?(*args); end
+
+  def saved_change_to_current_sign_in_ip(*args); end
+
+  def saved_change_to_current_sign_in_ip?(*args); end
+
+  def saved_change_to_email(*args); end
+
+  def saved_change_to_email?(*args); end
+
+  def saved_change_to_encrypted_password(*args); end
+
+  def saved_change_to_encrypted_password?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_last_sign_in_at(*args); end
+
+  def saved_change_to_last_sign_in_at?(*args); end
+
+  def saved_change_to_last_sign_in_ip(*args); end
+
+  def saved_change_to_last_sign_in_ip?(*args); end
+
+  def saved_change_to_remember_created_at(*args); end
+
+  def saved_change_to_remember_created_at?(*args); end
+
+  def saved_change_to_reset_password_sent_at(*args); end
+
+  def saved_change_to_reset_password_sent_at?(*args); end
+
+  def saved_change_to_reset_password_token(*args); end
+
+  def saved_change_to_reset_password_token?(*args); end
+
+  def saved_change_to_role(*args); end
+
+  def saved_change_to_role?(*args); end
+
+  def saved_change_to_sign_in_count(*args); end
+
+  def saved_change_to_sign_in_count?(*args); end
+
+  def saved_change_to_slug(*args); end
+
+  def saved_change_to_slug?(*args); end
+
+  def saved_change_to_unconfirmed_email(*args); end
+
+  def saved_change_to_unconfirmed_email?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def saved_change_to_username(*args); end
+
+  def saved_change_to_username?(*args); end
+
+  def sign_in_count_before_last_save(*args); end
+
+  def sign_in_count_before_type_cast(*args); end
+
+  def sign_in_count_came_from_user?(*args); end
+
+  def sign_in_count_change(*args); end
+
+  def sign_in_count_change_to_be_saved(*args); end
+
+  def sign_in_count_changed?(*args); end
+
+  def sign_in_count_in_database(*args); end
+
+  def sign_in_count_previous_change(*args); end
+
+  def sign_in_count_previously_changed?(*args); end
+
+  def sign_in_count_was(*args); end
+
+  def sign_in_count_will_change!(*args); end
+
+  def slug_before_last_save(*args); end
+
+  def slug_before_type_cast(*args); end
+
+  def slug_came_from_user?(*args); end
+
+  def slug_change(*args); end
+
+  def slug_change_to_be_saved(*args); end
+
+  def slug_changed?(*args); end
+
+  def slug_in_database(*args); end
+
+  def slug_previous_change(*args); end
+
+  def slug_previously_changed?(*args); end
+
+  def slug_was(*args); end
+
+  def slug_will_change!(*args); end
+
+  def unconfirmed_email_before_last_save(*args); end
+
+  def unconfirmed_email_before_type_cast(*args); end
+
+  def unconfirmed_email_came_from_user?(*args); end
+
+  def unconfirmed_email_change(*args); end
+
+  def unconfirmed_email_change_to_be_saved(*args); end
+
+  def unconfirmed_email_changed?(*args); end
+
+  def unconfirmed_email_in_database(*args); end
+
+  def unconfirmed_email_previous_change(*args); end
+
+  def unconfirmed_email_previously_changed?(*args); end
+
+  def unconfirmed_email_was(*args); end
+
+  def unconfirmed_email_will_change!(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def username_before_last_save(*args); end
+
+  def username_before_type_cast(*args); end
+
+  def username_came_from_user?(*args); end
+
+  def username_change(*args); end
+
+  def username_change_to_be_saved(*args); end
+
+  def username_changed?(*args); end
+
+  def username_in_database(*args); end
+
+  def username_previous_change(*args); end
+
+  def username_previously_changed?(*args); end
+
+  def username_was(*args); end
+
+  def username_will_change!(*args); end
+
+  def will_save_change_to_bio?(*args); end
+
+  def will_save_change_to_confirmation_sent_at?(*args); end
+
+  def will_save_change_to_confirmation_token?(*args); end
+
+  def will_save_change_to_confirmed_at?(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_current_sign_in_at?(*args); end
+
+  def will_save_change_to_current_sign_in_ip?(*args); end
+
+  def will_save_change_to_email?(*args); end
+
+  def will_save_change_to_encrypted_password?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_last_sign_in_at?(*args); end
+
+  def will_save_change_to_last_sign_in_ip?(*args); end
+
+  def will_save_change_to_remember_created_at?(*args); end
+
+  def will_save_change_to_reset_password_sent_at?(*args); end
+
+  def will_save_change_to_reset_password_token?(*args); end
+
+  def will_save_change_to_role?(*args); end
+
+  def will_save_change_to_sign_in_count?(*args); end
+
+  def will_save_change_to_slug?(*args); end
+
+  def will_save_change_to_unconfirmed_email?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+
+  def will_save_change_to_username?(*args); end
+end
+
+module User::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
 class User
   extend ::FriendlyId::Base
   extend ::Devise::Models::Authenticatable::ClassMethods
@@ -29242,7 +31534,6 @@ class User
   extend ::Devise::Models::Registerable::ClassMethods
   extend ::Devise::Models::Validatable::ClassMethods
   extend ::Devise::Models::Confirmable::ClassMethods
-  extend ::FriendlyId::FinderMethods
   extend ::FriendlyId::Finders::ClassMethods
   def self.after_add_for_favorite_games(); end
 
@@ -29322,6 +31613,12 @@ class User
 
   def self.devise_modules?(); end
 
+  def self.not_admin(*args); end
+
+  def self.not_member(*args); end
+
+  def self.not_moderator(*args); end
+
   def self.with_attached_avatar(*args); end
 end
 
@@ -29394,6 +31691,21 @@ end
 
 module Warning
   extend ::Warning
+end
+
+class WeakRef
+  def initialize(orig); end
+
+  def weakref_alive?(); end
+end
+
+class WeakRef::RefError
+end
+
+class WeakRef::RefError
+end
+
+class WeakRef
 end
 
 class WebConsole::Context
