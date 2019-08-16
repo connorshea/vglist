@@ -1263,7 +1263,7 @@ class ActionView::Digestor::Partial
 end
 
 class ActionView::Digestor
-  def self.digest(name:, format:, finder:, dependencies: T.unsafe(nil)); end
+  def self.digest(name:, finder:, format: T.unsafe(nil), dependencies: T.unsafe(nil)); end
 
   def self.logger(); end
 
@@ -2610,6 +2610,8 @@ module ActiveRecord::Tasks::DatabaseTasks
 
   def raise_for_multi_db(environment=T.unsafe(nil), command:); end
 
+  def reconstruct_from_schema(configuration, format=T.unsafe(nil), file=T.unsafe(nil), environment=T.unsafe(nil), spec_name=T.unsafe(nil)); end
+
   def register_task(pattern, task); end
 
   def root(); end
@@ -2619,6 +2621,8 @@ module ActiveRecord::Tasks::DatabaseTasks
   def schema_file(format=T.unsafe(nil)); end
 
   def schema_file_type(format=T.unsafe(nil)); end
+
+  def schema_up_to_date?(configuration, format=T.unsafe(nil), file=T.unsafe(nil), environment=T.unsafe(nil), spec_name=T.unsafe(nil)); end
 
   def seed_loader(); end
 
@@ -2733,8 +2737,6 @@ end
 
 module ActiveRecord::TestDatabases
   def self.create_and_load_schema(i, env_name:); end
-
-  def self.drop(env_name:); end
 end
 
 module ActiveRecord::TestFixtures
@@ -2829,6 +2831,8 @@ class ActiveStorage::Attached::Changes::CreateOneOfMany
 end
 
 class ActiveStorage::Attached::Changes::DeleteMany
+  def attachables(); end
+
   def attachments(); end
 
   def blobs(); end
@@ -4394,7 +4398,7 @@ class Array
 end
 
 class Array
-  def self.wrap(object); end
+  def self.try_convert(_); end
 end
 
 class BCrypt::Engine
@@ -6764,8 +6768,6 @@ module Concurrent::Utility::NativeInteger
   MIN_VALUE = ::T.let(nil, ::T.untyped)
 end
 
-ConditionVariable = Thread::ConditionVariable
-
 class ConnectionPool
   def available(); end
 
@@ -8808,7 +8810,7 @@ class File::Stat
 end
 
 class File
-  def self.empty?(_); end
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
 
   def self.exists?(_); end
 
@@ -10238,6 +10240,10 @@ class Gem::Platform
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
+class Gem::RemoteFetcher
+  def s3_uri_signer(uri); end
+end
+
 class Gem::Requirement
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
@@ -10246,12 +10252,69 @@ class Gem::Resolver::Molinillo::DependencyGraph::Log
   extend ::Enumerable
 end
 
+class Gem::S3URISigner
+  def initialize(uri); end
+
+  def sign(expiration=T.unsafe(nil)); end
+
+  def uri(); end
+
+  def uri=(uri); end
+  BASE64_URI_TRANSLATE = ::T.let(nil, ::T.untyped)
+  EC2_METADATA_CREDENTIALS = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::S3URISigner::ConfigurationError
+  def initialize(message); end
+end
+
+class Gem::S3URISigner::ConfigurationError
+end
+
+class Gem::S3URISigner::InstanceProfileError
+  def initialize(message); end
+end
+
+class Gem::S3URISigner::InstanceProfileError
+end
+
+class Gem::S3URISigner::S3Config
+  def access_key_id(); end
+
+  def access_key_id=(_); end
+
+  def region(); end
+
+  def region=(_); end
+
+  def secret_access_key(); end
+
+  def secret_access_key=(_); end
+
+  def security_token(); end
+
+  def security_token=(_); end
+end
+
+class Gem::S3URISigner::S3Config
+  def self.[](*_); end
+
+  def self.members(); end
+end
+
+class Gem::S3URISigner
+end
+
 class Gem::Specification
   extend ::Enumerable
 end
 
 class Gem::StubSpecification::StubLine
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+end
+
+module Gem::Util
+  def self.correct_for_windows_path(path); end
 end
 
 class Gem::Version
@@ -10642,6 +10705,8 @@ end
 
 class Hash
   def self.from_trusted_xml(xml); end
+
+  def self.try_convert(_); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -13303,8 +13368,6 @@ module MonitorMixin
   def self.extend_object(obj); end
 end
 
-Mutex = Thread::Mutex
-
 module Mutex_m
   VERSION = ::T.let(nil, ::T.untyped)
 end
@@ -13462,6 +13525,8 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
+Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
+
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -13576,15 +13641,7 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-class Net::HTTP
-end
-
-Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
-
-Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
-
-class Net::HTTP
-end
+Net::HTTPSession = Net::HTTP
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -17317,8 +17374,6 @@ class Proc
 
   def clone(); end
 
-  def lambda?(); end
-
   def yield(*_); end
 end
 
@@ -18386,8 +18441,6 @@ module Pundit
   SUFFIX = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
 end
-
-Queue = Thread::Queue
 
 module REXML
   COPYRIGHT = ::T.let(nil, ::T.untyped)
@@ -28868,8 +28921,6 @@ module Singleton
   def self.__init__(klass); end
 end
 
-SizedQueue = Thread::SizedQueue
-
 module Skiptrace
   VERSION = ::T.let(nil, ::T.untyped)
 end
@@ -30006,65 +30057,6 @@ end
 
 class Thread
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def abort_on_exception(); end
-
-  def abort_on_exception=(abort_on_exception); end
-
-  def add_trace_func(_); end
-
-  def backtrace(*_); end
-
-  def backtrace_locations(*_); end
-
-  def exit(); end
-
-  def fetch(*_); end
-
-  def group(); end
-
-  def initialize(*_); end
-
-  def join(*_); end
-
-  def key?(_); end
-
-  def keys(); end
-
-  def name(); end
-
-  def name=(name); end
-
-  def pending_interrupt?(*_); end
-
-  def priority(); end
-
-  def priority=(priority); end
-
-  def report_on_exception(); end
-
-  def report_on_exception=(report_on_exception); end
-
-  def run(); end
-
-  def safe_level(); end
-
-  def status(); end
-
-  def stop?(); end
-
-  def terminate(); end
-
-  def thread_variable?(_); end
-
-  def thread_variable_get(_); end
-
-  def thread_variable_set(_, _1); end
-
-  def thread_variables(); end
-
-  def value(); end
-
-  def wakeup(); end
 end
 
 class Thread::Backtrace
@@ -30077,103 +30069,14 @@ end
 
 class Thread::ConditionVariable
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def broadcast(); end
-
-  def marshal_dump(); end
-
-  def signal(); end
-
-  def wait(*_); end
 end
 
 class Thread::Mutex
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def lock(); end
-
-  def locked?(); end
-
-  def owned?(); end
-
-  def synchronize(); end
-
-  def try_lock(); end
-
-  def unlock(); end
 end
 
 class Thread::Queue
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def <<(_); end
-
-  def clear(); end
-
-  def close(); end
-
-  def closed?(); end
-
-  def deq(*_); end
-
-  def empty?(); end
-
-  def enq(_); end
-
-  def length(); end
-
-  def marshal_dump(); end
-
-  def num_waiting(); end
-
-  def pop(*_); end
-
-  def push(_); end
-
-  def shift(*_); end
-
-  def size(); end
-end
-
-class Thread::SizedQueue
-  def <<(*_); end
-
-  def enq(*_); end
-
-  def initialize(_); end
-
-  def max(); end
-
-  def max=(max); end
-
-  def push(*_); end
-end
-
-class Thread
-  def self.abort_on_exception(); end
-
-  def self.abort_on_exception=(abort_on_exception); end
-
-  def self.exclusive(&block); end
-
-  def self.exit(); end
-
-  def self.fork(*_); end
-
-  def self.handle_interrupt(_); end
-
-  def self.kill(_); end
-
-  def self.list(); end
-
-  def self.pass(); end
-
-  def self.pending_interrupt?(*_); end
-
-  def self.report_on_exception(); end
-
-  def self.report_on_exception=(report_on_exception); end
-
-  def self.start(*_); end
-
-  def self.stop(); end
 end
 
 class ThreadGroup

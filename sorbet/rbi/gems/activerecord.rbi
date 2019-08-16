@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activerecord/all/activerecord.rbi
 #
-# activerecord-6.0.0.rc2
+# activerecord-6.0.0
 module Arel
   def self.arel_node?(value); end
   def self.fetch_attribute(value); end
@@ -2543,20 +2543,25 @@ class ActiveRecord::DatabaseConfigurations
   def blank?; end
   def build_configs(configs); end
   def build_db_config_from_hash(env_name, spec_name, config); end
+  def build_db_config_from_raw_config(env_name, spec_name, config); end
   def build_db_config_from_string(env_name, spec_name, config); end
-  def build_url_config(url, configs); end
   def configs_for(env_name: nil, spec_name: nil, include_replicas: nil); end
   def configurations; end
   def default_hash(env = nil); end
+  def each; end
   def empty?; end
   def env_with_configs(env = nil); end
+  def environment_url_config(env, spec_name, config); end
+  def environment_value_for(spec_name); end
   def find_db_config(env); end
+  def first; end
   def initialize(configurations = nil); end
+  def merge_db_environment_variables(current_env, configs); end
   def method_missing(method, *args, &blk); end
   def throw_getter_deprecation(method); end
   def throw_setter_deprecation(method); end
   def to_h; end
-  def walk_configs(env_name, spec_name, config); end
+  def walk_configs(env_name, config); end
 end
 class ActiveRecord::DatabaseConfigurations::DatabaseConfig
   def env_name; end
@@ -2583,6 +2588,8 @@ class ActiveRecord::DatabaseConfigurations::UrlConfig < ActiveRecord::DatabaseCo
   def replica?; end
   def url; end
   def url_config?; end
+end
+class ActiveRecord::DatabaseConfigurations::InvalidConfigurationError < StandardError
 end
 module ActiveRecord::ConnectionHandling
   def clear_active_connections!(*args, &block); end
@@ -2853,6 +2860,7 @@ module ActiveRecord::Enum
   def _enum_methods_module; end
   def assert_valid_enum_definition_values(values); end
   def detect_enum_conflict!(enum_name, method_name, klass_method = nil); end
+  def detect_negative_condition!(method_name); end
   def enum(definitions); end
   def inherited(base); end
   def raise_conflict_error(enum_name, method_name, type: nil, source: nil); end
@@ -3042,13 +3050,14 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
   def owner_to_pool; end
   def pool_from_any_process_for(spec_name); end
   def prevent_writes; end
+  def prevent_writes=(prevent_writes); end
   def remove_connection(spec_name); end
   def retrieve_connection(spec_name); end
   def retrieve_connection_pool(spec_name); end
   def self.create_owner_to_pool; end
   def self.discard_unowned_pools(pid_map); end
   def self.unowned_pool_finalizer(pid_map); end
-  def while_preventing_writes; end
+  def while_preventing_writes(enabled = nil); end
 end
 class ActiveRecord::InsertAll
   def connection; end

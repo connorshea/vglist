@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/devise/all/devise.rbi
 #
-# devise-4.6.2
+# devise-12fc5b76d89c
 module Devise
   def allow_unconfirmed_access_for; end
   def allow_unconfirmed_access_for=(obj); end
@@ -481,8 +481,7 @@ class Devise::FailureApp < ActionController::Metal
   def is_navigational_format?; end
   def logger; end
   def logger=(value); end
-  def rails_5_and_down?; end
-  def rails_5_up?; end
+  def rails_51_and_up?; end
   def recall; end
   def recall_app(app); end
   def redirect; end
