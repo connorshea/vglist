@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_17_182420) do
+ActiveRecord::Schema.define(version: 2019_08_17_182547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -143,6 +142,7 @@ ActiveRecord::Schema.define(version: 2019_08_17_182420) do
     t.bigint "game_purchase_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "event_type", null: false
     t.index ["game_purchase_id"], name: "index_game_purchase_events_on_game_purchase_id"
     t.index ["user_id"], name: "index_game_purchase_events_on_user_id"
   end
