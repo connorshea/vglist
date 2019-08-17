@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_17_182547) do
+ActiveRecord::Schema.define(version: 2019_08_17_210528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -143,6 +143,8 @@ ActiveRecord::Schema.define(version: 2019_08_17_182547) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "event_type", null: false
+    t.text "before_value"
+    t.text "after_value"
     t.index ["game_purchase_id"], name: "index_game_purchase_events_on_game_purchase_id"
     t.index ["user_id"], name: "index_game_purchase_events_on_user_id"
   end

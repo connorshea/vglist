@@ -10,7 +10,7 @@
         <div class="media-left">
           <figure class="image is-64x64">
             <%= link_to user_path(event.user) do %>
-              <%= user_avatar(current_user.id, 80) %>
+              <%= user_avatar(event.user.id, 80) %>
             <% end %>
           </figure>
         </div>
@@ -22,11 +22,23 @@
                 added <%= link_to(event.game_purchase.game.name, game_path(event.game_purchase.game)) %>
                 to their library.
               </p>
-            <% elsif event.event_type == 'changed_completion_status' %>
-              <li>Not yet implemented.</li>
+            <% elsif event.event_type == 'change_completion_status' && ['completed', 'fully_completed', 'dropped'].include?(event.after_value) %>
+              <% if event.after_value == 'completed' %>
+                <%= link_to(event.user.username, user_path(event.user)) %>
+                completed
+                <%= link_to(event.game_purchase.game.name, game_path(event.game_purchase.game)) %>.
+              <% elsif event.after_value == 'fully_completed' %>
+                <%= link_to(event.user.username, user_path(event.user)) %>
+                100% completed
+                <%= link_to(event.game_purchase.game.name, game_path(event.game_purchase.game)) %>.
+              <% elsif event.after_value == 'dropped' %>
+                <%= link_to(event.user.username, user_path(event.user)) %>
+                dropped
+                <%= link_to(event.game_purchase.game.name, game_path(event.game_purchase.game)) %>.
+              <% end %>
             <% end %>
 
-            <p class="has-text-grey">
+            <p class="has-text-grey" title="<%= event.created_at %>">
               <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
             </p>
           </div>

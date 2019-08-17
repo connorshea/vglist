@@ -1,6 +1,7 @@
 # typed: true
 class GamePurchase < ApplicationRecord
   after_create :game_purchase_creation_event
+  after_save :game_purchase_save_event
 
   belongs_to :game
   belongs_to :user
@@ -48,5 +49,17 @@ class GamePurchase < ApplicationRecord
       user_id: user.id,
       event_type: :add_to_library
     )
+  end
+
+  def game_purchase_save_event
+    if saved_changes.key?('completion_status')
+      GamePurchaseEvent.create!(
+        game_purchase_id: id,
+        user_id: user.id,
+        event_type: :change_completion_status,
+        before_value: saved_changes['completion_status'][0],
+        after_value: saved_changes['completion_status'][1]
+      )
+    end
   end
 end
