@@ -77,4 +77,14 @@ RSpec.describe GamePurchase, type: :model do
       expect { game_purchase_with_platform.destroy }.to change(GamePurchasePlatform, :count).by(-1)
     end
   end
+
+  describe 'Callbacks' do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user, game: game) }
+
+    it 'GamePurchaseEvent should be created when GamePurchase is created' do
+      expect { game_purchase }.to change(GamePurchaseEvent, :count).by(1)
+    end
+  end
 end

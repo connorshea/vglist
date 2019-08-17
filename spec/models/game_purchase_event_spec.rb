@@ -9,6 +9,8 @@ RSpec.describe GamePurchaseEvent, type: :model do
       expect(game_purchase_event).to be_valid
     end
 
+    it { should validate_presence_of(:event_type) }
+
     it 'has an event type enum' do
       expect(game_purchase_event).to define_enum_for(:event_type)
         .with_values([:add_to_library, :change_completion_status])

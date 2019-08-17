@@ -1,5 +1,7 @@
-# typed: strict
+# typed: true
 class GamePurchase < ApplicationRecord
+  after_create :game_purchase_creation_event
+
   belongs_to :game
   belongs_to :user
 
@@ -37,4 +39,14 @@ class GamePurchase < ApplicationRecord
       greater_than_or_equal_to: 0,
       allow_nil: true
     }
+
+  private
+
+  def game_purchase_creation_event
+    GamePurchaseEvent.create!(
+      game_purchase_id: id,
+      user_id: user.id,
+      event_type: :add_to_library
+    )
+  end
 end
