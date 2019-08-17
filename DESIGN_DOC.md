@@ -37,7 +37,7 @@ Similar tracking sites for movies/television/anime:
   - [ ] Activity feed?
 - [ ] Game Library
   - [ ] A "plan-to-play" list (different from a Wishlist?)
-  - [ ] Steam Importer (connect your Steam account and import/sync all the game data from it)
+  - [x] Steam Importer (connect your Steam account and import/sync all the game data from it)
     - Should be able to sync with Steam after you've imported your games.
     - How to handle duplication, e.g. if I add my games and _then_ use the Steam importer?
     - Should also support importing from other platforms, but I don't know how many even have APIs for this.
@@ -68,7 +68,7 @@ Similar tracking sites for movies/television/anime:
 - [ ] Game Purchase: A game in someone's library can be rated, can have time played, platforms upon which it's owned, etc. It is essentially a subclass of Games (General).
   - [x] Rating
   - [x] Time played (hours)
-  - [ ] Platform
+  - [x] Platform
   - [ ] Owned
     - Boolean? This is complicated by the fact that you can own a game on multiple platforms.
     - What about previously-owned?
@@ -88,6 +88,7 @@ Similar tracking sites for movies/television/anime:
 - [ ] Exporter (export your games list, probably as JSON, _maybe_ as a CSV?)
 - [x] Build the initial system for importing game information from another source (build the game database from the GiantBomb Wiki? Wikipedia/Wikidata? PCGamingWiki? A combination of these? Somewhere else?)
 - [ ] API?
+  - Use Grape or GraphQL? (both?)
 - [ ] Game creation / modification
   - AniList has a concept of "moderators" that can update information on anime, e.g. adding missing genres or tags, changing the release date when it's delayed, etc.
   - We'll need some way for the user to create a game when a new one comes out.
