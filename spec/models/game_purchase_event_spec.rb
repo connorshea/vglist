@@ -19,4 +19,35 @@ RSpec.describe GamePurchaseEvent, type: :model do
     it { should belong_to(:user) }
     it { should belong_to(:game_purchase) }
   end
+
+  describe 'Destructions' do
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase) }
+    let(:game_purchase_event) { create(:game_purchase_event, user: user, game_purchase: game_purchase) }
+
+    it 'GamePurchase should not be deleted when GamePurchaseEvent is deleted' do
+      game_purchase_event
+      expect { game_purchase_event.destroy }.to change(GamePurchase, :count).by(0)
+    end
+
+    it 'User should not be deleted when GamePurchaseEvent is deleted' do
+      game_purchase_event
+      expect { game_purchase_event.destroy }.to change(User, :count).by(0)
+    end
+
+    it 'Game should not be deleted when GamePurchaseEvent is deleted' do
+      game_purchase_event
+      expect { game_purchase_event.destroy }.to change(Game, :count).by(0)
+    end
+
+    it 'GamePurchaseEvent should be deleted when GamePurchase is deleted' do
+      game_purchase_event
+      expect { game_purchase.destroy }.to change(GamePurchaseEvent, :count).by(-1)
+    end
+
+    it 'GamePurchaseEvent should be deleted when User is deleted' do
+      game_purchase_event
+      expect { user.destroy }.to change(GamePurchaseEvent, :count).by(-1)
+    end
+  end
 end
