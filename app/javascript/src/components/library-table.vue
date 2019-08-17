@@ -156,8 +156,8 @@ export default {
           label: 'Start Date',
           field: 'start_date',
           type: 'date',
-          dateInputFormat: 'YYYY-MM-DD',
-          dateOutputFormat: 'MMMM D, YYYY',
+          dateInputFormat: 'yyyy-MM-dd',
+          dateOutputFormat: 'MMMM d, yyyy',
           hidden: true,
           index: 4
         },
@@ -165,8 +165,8 @@ export default {
           label: 'Completion Date',
           field: 'completion_date',
           type: 'date',
-          dateInputFormat: 'YYYY-MM-DD',
-          dateOutputFormat: 'MMMM D, YYYY',
+          dateInputFormat: 'yyyy-MM-dd',
+          dateOutputFormat: 'MMMM d, yyyy',
           hidden: true,
           index: 5
         },
