@@ -238,6 +238,18 @@ class ActionController::Base
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def edit_user_url(*args, **kwargs); end
 
+  # Sigs for route /activity_feed(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_feed_index_path(*args, **kwargs); end
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_feed_index_url(*args, **kwargs); end
+
+  # Sigs for route /activity_feed/:id(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_feed_path(*args, **kwargs); end
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_feed_url(*args, **kwargs); end
+
   # Sigs for route /platforms/search(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def search_platforms_path(*args, **kwargs); end
