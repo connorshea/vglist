@@ -15,7 +15,8 @@
       selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
       selectionInfoClass: 'selection-info-bar',
       selectionText: 'rows selected',
-      clearSelectionText: 'clear'
+      clearSelectionText: 'clear',
+      disableSelectInfo: true
     }"
     @on-selected-rows-change="selectionChanged"
   >
