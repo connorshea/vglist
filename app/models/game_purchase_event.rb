@@ -5,6 +5,6 @@ class GamePurchaseEvent < ApplicationRecord
 
   enum event_type: {
     add_to_library: 0,
-    completion_status: 1
+    change_completion_status: 1
   }
 end

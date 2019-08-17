@@ -47,6 +47,7 @@ RSpec.describe GamePurchase, type: :model do
     it { should belong_to(:user) }
     it { should have_many(:game_purchase_platforms) }
     it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
+    it { should have_many(:game_purchase_events) }
   end
 
   describe 'Destructions' do

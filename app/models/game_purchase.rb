@@ -7,7 +7,6 @@ class GamePurchase < ApplicationRecord
   has_many :platforms, through: :game_purchase_platforms, source: :platform
 
   has_many :game_purchase_events
-  has_many :events, through: :game_purchase_events
 
   enum completion_status: {
     unplayed: 0,
