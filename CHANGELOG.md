@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.8.16
+### Changed
+- Upgrade Rails to Rails 6.0.0. ([#180], [#615], [#616])
+
+### Fixed
+- Fix some bugs with vue-good-table, CSP, and dropdowns. ([#614])
+
 ## v2019.8.8
 ### Changed
 - Update Sorbet and add some Sorbet signatures. ([#598])
@@ -396,6 +403,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#169]: https://github.com/connorshea/VideoGameList/pull/169
 [#172]: https://github.com/connorshea/VideoGameList/pull/172
 [#173]: https://github.com/connorshea/VideoGameList/pull/173
+[#180]: https://github.com/connorshea/VideoGameList/pull/180
 [#182]: https://github.com/connorshea/VideoGameList/pull/182
 [#186]: https://github.com/connorshea/VideoGameList/pull/186
 [#198]: https://github.com/connorshea/VideoGameList/pull/198
@@ -462,3 +470,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#577]: https://github.com/connorshea/VideoGameList/pull/577
 [#584]: https://github.com/connorshea/VideoGameList/pull/584
 [#598]: https://github.com/connorshea/VideoGameList/pull/598
+[#614]: https://github.com/connorshea/VideoGameList/pull/614
+[#615]: https://github.com/connorshea/VideoGameList/pull/615
+[#616]: https://github.com/connorshea/VideoGameList/pull/616
