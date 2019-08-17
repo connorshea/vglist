@@ -1,3 +1,15 @@
+let toggleDropdown = function(event) {
+  // If the dropdown has the 'js-no-close-on-click' class,
+  // it shouldn't be toggled when active.
+  if (
+    !this.classList.contains('js-no-close-on-click') ||
+    (this.classList.contains('js-no-close-on-click') &&
+      !this.classList.contains('is-active'))
+  ) {
+    this.classList.toggle('is-active');
+  }
+}
+
 // Make bulma's hamburger menu functional with some simple JavaScript.
 let initBulma = () => {
   // Get all "navbar-burger" elements
@@ -27,17 +39,7 @@ let initBulma = () => {
 
   if ($dropdowns.length > 0) {
     $dropdowns.forEach(function($el) {
-      $el.addEventListener('click', function(event) {
-        // If the dropdown has the 'js-no-close-on-click' class,
-        // it shouldn't be toggled when active.
-        if (
-          !$el.classList.contains('js-no-close-on-click') ||
-          ($el.classList.contains('js-no-close-on-click') &&
-            !$el.classList.contains('is-active'))
-        ) {
-          $el.classList.toggle('is-active');
-        }
-      });
+      $el.addEventListener('click', toggleDropdown);
     });
 
     // Close the dropdown if the user clicks outside the dropdown.
