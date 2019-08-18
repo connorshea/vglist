@@ -30,6 +30,14 @@ module ActivityFeedHelper
     return text
   end
 
+  sig { params(event: T.untyped).returns(String) }
+  def add_to_library_event_text(event)
+    user_link = link_to(event.user.username, user_path(event.user))
+    game_link = link_to(event.game_purchase.game.name, game_path(event.game_purchase.game))
+
+    return user_link + " added " + game_link + " to their library."
+  end
+
   sig { params(event: T.untyped).returns(T.nilable(T::Boolean)) }
   def handleable_event?(event)
     case event.event_type.to_sym

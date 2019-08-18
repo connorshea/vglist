@@ -18,13 +18,9 @@
           <div class="media-content">
             <div class="content">
               <% if event.event_type == 'add_to_library' %>
-                <p>
-                  <%= link_to(event.user.username, user_path(event.user)) %>
-                  added <%= link_to(event.game_purchase.game.name, game_path(event.game_purchase.game)) %>
-                  to their library.
-                </p>
+                <p><%= add_to_library_event_text(event) %>
               <% elsif event.event_type == 'change_completion_status' %>
-                <p><%= completion_status_event_text(event) %></p>
+                <p><%= completion_status_event_text(event) %>
               <% end %>
 
               <p class="has-text-grey" title="<%= event.created_at %>">
