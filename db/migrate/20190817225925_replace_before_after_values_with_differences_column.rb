@@ -9,3 +9,4 @@ class ReplaceBeforeAfterValuesWithDifferencesColumn < ActiveRecord::Migration[6.
     add_column :game_purchase_events, :differences, :jsonb
   end
 end
+# rubocop:enable Rails/BulkChangeTable

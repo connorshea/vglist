@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 module ActivityHelper
   extend T::Sig
 
