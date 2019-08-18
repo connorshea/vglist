@@ -139,6 +139,9 @@ Style/SymbolArray:
 Style/SymbolProc:
   Enabled: false
 
+Style/WordArray:
+  Enabled: false
+
 #################### RSpec ###############################
 
 RSpec/ExampleLength:

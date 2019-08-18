@@ -52,14 +52,14 @@ class GamePurchase < ApplicationRecord
   end
 
   def game_purchase_update_event
-    if saved_changes.key?('completion_status')
-      GamePurchaseEvent.create!(
-        game_purchase_id: id,
-        user_id: user.id,
-        event_type: :change_completion_status,
-        # don't need the updated_at before/after value.
-        differences: saved_changes.except!(:updated_at)
-      )
-    end
+    return unless saved_changes.key?('completion_status')
+
+    GamePurchaseEvent.create!(
+      game_purchase_id: id,
+      user_id: user.id,
+      event_type: :change_completion_status,
+      # We don't need the updated_at value
+      differences: saved_changes.except!(:updated_at)
+    )
   end
 end
