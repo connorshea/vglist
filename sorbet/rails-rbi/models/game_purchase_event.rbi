@@ -35,6 +35,15 @@ module GamePurchaseEvent::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def created_at?; end
 
+  sig { returns(T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))) }
+  def differences; end
+
+  sig { params(value: T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))).void }
+  def differences=(value); end
+
+  sig { returns(T::Boolean) }
+  def differences?; end
+
   sig { returns(String) }
   def event_type; end
 

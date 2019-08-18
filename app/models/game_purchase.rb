@@ -1,7 +1,7 @@
 # typed: true
 class GamePurchase < ApplicationRecord
-  after_create :game_purchase_creation_event
-  after_save :game_purchase_save_event
+  after_create :game_purchase_create_event
+  after_update :game_purchase_update_event
 
   belongs_to :game
   belongs_to :user
@@ -43,7 +43,7 @@ class GamePurchase < ApplicationRecord
 
   private
 
-  def game_purchase_creation_event
+  def game_purchase_create_event
     GamePurchaseEvent.create!(
       game_purchase_id: id,
       user_id: user.id,
@@ -51,14 +51,14 @@ class GamePurchase < ApplicationRecord
     )
   end
 
-  def game_purchase_save_event
+  def game_purchase_update_event
     if saved_changes.key?('completion_status')
       GamePurchaseEvent.create!(
         game_purchase_id: id,
         user_id: user.id,
         event_type: :change_completion_status,
-        before_value: saved_changes['completion_status'][0],
-        after_value: saved_changes['completion_status'][1]
+        # don't need the updated_at before/after value.
+        differences: saved_changes.except!(:updated_at)
       )
     end
   end
