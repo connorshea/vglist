@@ -238,17 +238,17 @@ class ActionController::Base
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def edit_user_url(*args, **kwargs); end
 
-  # Sigs for route /activity_feed(.:format)
+  # Sigs for route /activity(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def activity_feed_index_path(*args, **kwargs); end
+  def activity_index_path(*args, **kwargs); end
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def activity_feed_index_url(*args, **kwargs); end
+  def activity_index_url(*args, **kwargs); end
 
-  # Sigs for route /activity_feed/:id(.:format)
+  # Sigs for route /game_purchase_events/:id(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def activity_feed_path(*args, **kwargs); end
+  def game_purchase_event_path(*args, **kwargs); end
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def activity_feed_url(*args, **kwargs); end
+  def game_purchase_event_url(*args, **kwargs); end
 
   # Sigs for route /platforms/search(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }

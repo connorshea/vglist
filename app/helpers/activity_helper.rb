@@ -1,5 +1,5 @@
 # typed: true
-module ActivityFeedHelper
+module ActivityHelper
   extend T::Sig
 
   sig { params(event: T.untyped).returns(T.nilable(T::Boolean)) }

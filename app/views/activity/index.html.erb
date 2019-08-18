@@ -1,8 +1,8 @@
-<% content_for :title, "Activity Feed" %>
+<% content_for :title, "Activity" %>
 <% content_for :description, "Recent activity on VideoGameList (VGList)." %>
 
 <div class="ml-50 mr-50">
-  <h1 class="title">Activity Feed</h1>
+  <h1 class="title">Activity</h1>
 
   <% @events.each do |event| %>
     <% if handleable_event?(event) %>
@@ -23,8 +23,15 @@
                 <p><%= completion_status_event_text(event) %>
               <% end %>
 
-              <p class="has-text-grey" title="<%= event.created_at %>">
-                <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
+              <p>
+                <span class="has-text-grey" title="<%= event.created_at %>">
+                  <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
+                </span>
+                <% if policy(event).destroy? %>
+                  <%= button_to "Delete", game_purchase_event_path(event.id),
+                    data: { confirm: "Are you sure you want to delete this event?" },
+                    method: :delete, class: 'button is-danger' %>
+                <% end %>
               </p>
             </div>
           </div>

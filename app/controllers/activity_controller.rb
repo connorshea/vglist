@@ -1,5 +1,5 @@
 # typed: true
-class ActivityFeedController < ApplicationController
+class ActivityController < ApplicationController
   before_action :authenticate_user!, except: :index
 
   def index
@@ -7,11 +7,5 @@ class ActivityFeedController < ApplicationController
                                .includes(:user, game_purchase: [:game])
                                .page params[:page]
     skip_policy_scope
-  end
-
-  def destroy
-    @event = GamePurchaseEvent.find(params[:id])
-    authorize @event
-    @event.destroy
   end
 end

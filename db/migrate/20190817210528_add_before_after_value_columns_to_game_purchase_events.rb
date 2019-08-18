@@ -1,7 +1,9 @@
 # typed: true
 class AddBeforeAfterValueColumnsToGamePurchaseEvents < ActiveRecord::Migration[6.0]
   def change
-    add_column :game_purchase_events, :before_value, :text, null: true
-    add_column :game_purchase_events, :after_value, :text, null: true
+    change_table :game_purchase_events, bulk: true do |t|
+      t.text :before_value, null: true
+      t.text :after_value, null: true
+    end
   end
 end
