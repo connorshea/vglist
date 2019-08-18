@@ -43,7 +43,7 @@ RSpec.describe GamePurchaseEvent, type: :model do
     end
 
     it 'GamePurchaseEvent should be deleted when GamePurchase is deleted' do
-      game_purchase_event
+      game_purchase
       expect { game_purchase.destroy }.to change(GamePurchaseEvent, :count).by(-1)
     end
 
