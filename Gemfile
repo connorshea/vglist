@@ -63,7 +63,7 @@ gem 'sentry-raven', '~> 2.11'
 
 # Sorbet runtime typechecker and Sorbet Rails.
 gem 'sorbet-runtime'
-gem "sorbet-rails", '~> 0.5.0'
+gem "sorbet-rails", '~> 0.5.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
