@@ -1,6 +1,7 @@
 # typed: true
 class ActivityController < ApplicationController
-  before_action :authenticate_user!, except: :index
+  # NOTE: Uncomment this if you ever add another controller method
+  # before_action :authenticate_user!, except: :index
 
   def index
     @events = GamePurchaseEvent.recently_created

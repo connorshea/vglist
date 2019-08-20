@@ -1,5 +1,5 @@
 # typed: true
-class ActivityFeedPolicy < ApplicationPolicy
+class ActivityPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
   sig { returns(T.nilable(GamePurchaseEvent)) }
@@ -14,17 +14,5 @@ class ActivityFeedPolicy < ApplicationPolicy
   sig { returns(T::Boolean) }
   def index?
     true
-  end
-
-  sig { returns(T.nilable(T::Boolean)) }
-  def destroy?
-    game_purchase_belongs_to_user?
-  end
-
-  private
-
-  sig { returns(T.nilable(T::Boolean)) }
-  def game_purchase_belongs_to_user?
-    user && @event.game_purchase&.user_id == user&.id
   end
 end
