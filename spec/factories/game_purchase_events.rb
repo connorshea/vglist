@@ -14,8 +14,13 @@ FactoryBot.define do
 
     trait :change_completion_status do
       event_type { :change_completion_status }
+      differences do
+        # Pick two random values
+        { completion_status: GamePurchase.completion_statuses.values.sample(2) }
+      end
     end
 
-    factory :game_purchase_library_event, traits: [:add_to_library]
+    factory :game_purchase_library_event,    traits: [:add_to_library]
+    factory :game_purchase_completion_event, traits: [:change_completion_status]
   end
 end

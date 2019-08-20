@@ -2,12 +2,6 @@
 module ActivityHelper
   extend T::Sig
 
-  sig { params(event: T.untyped).returns(T.nilable(T::Boolean)) }
-  def changed_completion_status?(event)
-    return event.event_type == 'change_completion_status' \
-      && ['completed', 'fully_completed', 'dropped'].include?(event.differences['completion_status'][1])
-  end
-
   sig { params(event: T.untyped).returns(String) }
   def completion_status_event_text(event)
     after_value = event.differences['completion_status'][1].to_sym
@@ -23,8 +17,6 @@ module ActivityHelper
       text = user_link + " dropped " + game_link + "."
     when :paused
       text = user_link + " paused " + game_link + "."
-    else
-      text = 'No text for this event yet. This is a bug!'
     end
 
     return text
