@@ -9,11 +9,10 @@ class FriendlyIdRbiPlugin < SorbetRails::ModelPlugins::Base
       superclass: 'ApplicationRecord'
     )
 
+    # Friendly method definition
+    # https://github.com/norman/friendly_id/blob/53f1ca01c5d9e71b62812028ff009fd138fd41b5/lib/friendly_id/base.rb#L216
     model_rbi.create_method(
       'friendly',
-      parameters: [
-        Parlour::RbiGenerator::Parameter.new('*args', type: 'T.untyped')
-      ],
       return_type: model_relation_class_name,
       class_method: true
     )

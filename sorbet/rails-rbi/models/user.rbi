@@ -361,8 +361,8 @@ class User < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
-  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
-  def self.friendly(*args); end
+  sig { returns(User::ActiveRecord_Relation) }
+  def self.friendly; end
 end
 
 module User::ModelRelationShared
