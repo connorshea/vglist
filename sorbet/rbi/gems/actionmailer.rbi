@@ -133,6 +133,13 @@ module ActionMailer::MailHelper
   def mailer; end
   def message; end
 end
+class ActionMailer::MailDeliveryJob < ActiveJob::Base
+  def handle_exception_with_mailer_class(exception); end
+  def mailer_class; end
+  def perform(mailer, mail_method, delivery_method, args:, params: nil); end
+  def self.queue_name; end
+  def self.rescue_handlers; end
+end
 class ActionMailer::Base < AbstractController::Base
   def __callbacks; end
   def __callbacks?; end
@@ -356,7 +363,7 @@ class ActionMailer::Base < AbstractController::Base
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   extend ActiveSupport::Rescuable::ClassMethods
-  extend Anonymous_Module_18
+  extend Anonymous_Module_16
   include AbstractController::AssetPaths
   include AbstractController::Caching
   include AbstractController::Caching::Fragments
@@ -392,6 +399,6 @@ class ActionMailer::Base::LateAttachmentsProxy < SimpleDelegator
   def _raise_error; end
   def inline; end
 end
-module Anonymous_Module_18
+module Anonymous_Module_16
   def inherited(klass); end
 end

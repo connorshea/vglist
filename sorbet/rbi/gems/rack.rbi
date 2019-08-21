@@ -479,15 +479,3 @@ class Rack::TempfileReaper
   def call(env); end
   def initialize(app); end
 end
-class Rack::Chunked
-  def call(env); end
-  def chunkable_version?(ver); end
-  def initialize(app); end
-  include Rack::Utils
-end
-class Rack::Chunked::Body
-  def close; end
-  def each; end
-  def initialize(body); end
-  include Rack::Utils
-end

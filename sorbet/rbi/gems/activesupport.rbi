@@ -35,7 +35,7 @@ class Hash
   def reverse_merge!(other_hash); end
   def reverse_merge(other_hash); end
   def reverse_update(other_hash); end
-  def self.[](*arg0); end
+  def self.from_trusted_xml(xml); end
   def self.from_xml(xml, disallowed_types = nil); end
   def slice!(*keys); end
   def stringify_keys!; end
@@ -966,7 +966,7 @@ module ActiveSupport::Dependencies
   def self.run_interlock; end
   def self.unload_interlock; end
   def self.verbose; end
-  def self.verbose=(obj); end
+  def self.verbose=(verbose); end
   def self.warnings_on_first_load; end
   def self.warnings_on_first_load=(obj); end
   def to_constant_name(desc); end
