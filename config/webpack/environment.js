@@ -8,7 +8,7 @@ environment.plugins.prepend('VueLoaderPlugin', new VueLoaderPlugin());
 environment.loaders.prepend('vue', vue);
 environment.loaders.prepend('typescript', typescript);
 
-// reduces compile time like crazy
+// Makes TypeScript compilation time much faster.
 environment.plugins.append(
   'ForkTsCheckerWebpackPlugin',
   new ForkTsCheckerWebpackPlugin({
