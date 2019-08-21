@@ -165,6 +165,12 @@ module GamePurchase::GeneratedAssociationMethods
   sig { params(value: ::Game).void }
   def game=(value); end
 
+  sig { returns(::GamePurchaseEvent::ActiveRecord_Associations_CollectionProxy) }
+  def game_purchase_events; end
+
+  sig { params(value: T.any(T::Array[::GamePurchaseEvent], ::GamePurchaseEvent::ActiveRecord_Associations_CollectionProxy)).void }
+  def game_purchase_events=(value); end
+
   sig { returns(::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_platforms; end
 

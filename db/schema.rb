@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,11 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_17_005153) do
+ActiveRecord::Schema.define(version: 2019_08_17_225925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -134,6 +136,17 @@ ActiveRecord::Schema.define(version: 2019_05_17_005153) do
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_game_publishers_on_company_id"
     t.index ["game_id"], name: "index_game_publishers_on_game_id"
+  end
+
+  create_table "game_purchase_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "game_purchase_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "event_type", null: false
+    t.jsonb "differences"
+    t.index ["game_purchase_id"], name: "index_game_purchase_events_on_game_purchase_id"
+    t.index ["user_id"], name: "index_game_purchase_events_on_user_id"
   end
 
   create_table "game_purchase_platforms", force: :cascade do |t|

@@ -39,6 +39,9 @@ Rails.application.routes.draw do
     get '/compare/:user_id...:other_user_id', as: :compare, action: :compare, on: :collection
   end
 
+  resources :activity, only: :index
+  resources :game_purchase_events, only: :destroy
+
   resources :platforms do
     get :search, on: :collection
   end

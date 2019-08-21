@@ -249,6 +249,12 @@ module User::GeneratedAssociationMethods
   sig { params(value: T.any(T::Array[::FavoriteGame], ::FavoriteGame::ActiveRecord_Associations_CollectionProxy)).void }
   def favorite_games=(value); end
 
+  sig { returns(::GamePurchaseEvent::ActiveRecord_Associations_CollectionProxy) }
+  def game_purchase_events; end
+
+  sig { params(value: T.any(T::Array[::GamePurchaseEvent], ::GamePurchaseEvent::ActiveRecord_Associations_CollectionProxy)).void }
+  def game_purchase_events=(value); end
+
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 

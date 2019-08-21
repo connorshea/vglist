@@ -47,6 +47,7 @@ RSpec.describe GamePurchase, type: :model do
     it { should belong_to(:user) }
     it { should have_many(:game_purchase_platforms) }
     it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
+    it { should have_many(:game_purchase_events).dependent(:destroy) }
   end
 
   describe 'Destructions' do
@@ -74,6 +75,24 @@ RSpec.describe GamePurchase, type: :model do
     it 'GamePurchasePlatform should be deleted when game purchase is deleted' do
       game_purchase_with_platform
       expect { game_purchase_with_platform.destroy }.to change(GamePurchasePlatform, :count).by(-1)
+    end
+  end
+
+  describe 'Callbacks' do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user, game: game) }
+
+    it 'GamePurchaseEvent should be created when GamePurchase is created' do
+      expect { game_purchase }.to change(GamePurchaseEvent, :count).by(1)
+    end
+
+    it 'GamePurchaseEvent should be created when GamePurchase is modified' do
+      game_purchase
+      expect do
+        game_purchase.completion_status = :dropped
+        game_purchase.save
+      end.to change(GamePurchaseEvent, :count).by(1)
     end
   end
 end

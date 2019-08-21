@@ -1,10 +1,15 @@
-# typed: strict
+# typed: true
 class GamePurchase < ApplicationRecord
+  after_create :game_purchase_create_event
+  after_update :game_purchase_update_event
+
   belongs_to :game
   belongs_to :user
 
   has_many :game_purchase_platforms
   has_many :platforms, through: :game_purchase_platforms, source: :platform
+
+  has_many :game_purchase_events, dependent: :destroy
 
   enum completion_status: {
     unplayed: 0,
@@ -35,4 +40,26 @@ class GamePurchase < ApplicationRecord
       greater_than_or_equal_to: 0,
       allow_nil: true
     }
+
+  private
+
+  def game_purchase_create_event
+    GamePurchaseEvent.create!(
+      game_purchase_id: id,
+      user_id: user.id,
+      event_type: :add_to_library
+    )
+  end
+
+  def game_purchase_update_event
+    return unless saved_changes.key?('completion_status')
+
+    GamePurchaseEvent.create!(
+      game_purchase_id: id,
+      user_id: user.id,
+      event_type: :change_completion_status,
+      # We don't need the updated_at value
+      differences: saved_changes.except!(:updated_at)
+    )
+  end
 end
