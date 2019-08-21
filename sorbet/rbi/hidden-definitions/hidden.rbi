@@ -12,12 +12,724 @@ module AbstractController::Rendering
 end
 
 class ActionController::API
+  include ::ActionView::ViewPaths
+  include ::AbstractController::Rendering
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::Routing::PolymorphicRoutes
+  include ::AbstractController::UrlFor
+  include ::ActionController::UrlFor
+  include ::AbstractController::Logger
+  include ::ActiveSupport::Benchmarkable
+  include ::ActionController::Redirecting
+  include ::ActionView::Rendering
+  include ::ActionController::ApiRendering
+  include ::ActionController::Rendering
+  include ::ActionController::Renderers
+  include ::ActionController::Renderers::All
+  include ::ActionController::ConditionalGet
+  include ::ActionController::Head
+  include ::ActionController::StrongParameters
+  include ::ActiveSupport::Callbacks
+  include ::AbstractController::Callbacks
+  include ::ActionController::ForceSSL
+  include ::ActionController::DataStreaming
+  include ::ActionController::DefaultHeaders
+  include ::ActiveSupport::Rescuable
+  include ::ActionController::Rescue
+  include ::ActionController::Instrumentation
+  include ::ActionController::ParamsWrapper
+  include ::ActionController::RespondWith
+  include ::ActionDispatch::Routing::RouteSet::MountedHelpers
+  include ::ActiveRecord::Railties::ControllerRuntime
+  include ::AbstractController::Helpers
+  include ::ActionController::Helpers
+  include ::ActionController::ImplicitRender
+  include ::ActionController::BasicImplicitRender
+  include ::Raven::Rails::ControllerMethods
+  include ::Raven::Rails::ControllerTransaction
+  include ::Turbolinks::Controller
+  include ::Turbolinks::Redirection
+  include ::Devise::Controllers::Helpers
+  include ::Devise::Controllers::SignInOut
+  include ::Devise::Controllers::StoreLocation
+  include ::Devise::Controllers::UrlHelpers
+  def __callbacks(); end
+
+  def __callbacks?(); end
+
+  def _helper_methods(); end
+
+  def _helper_methods=(val); end
+
+  def _helper_methods?(); end
+
+  def _helpers(); end
+
+  def _helpers=(val); end
+
+  def _helpers?(); end
+
+  def _process_action_callbacks(); end
+
+  def _renderers(); end
+
+  def _renderers=(val); end
+
+  def _renderers?(); end
+
+  def _run_process_action_callbacks(&block); end
+
+  def _wrapper_options(); end
+
+  def _wrapper_options=(val); end
+
+  def _wrapper_options?(); end
+
+  def default_url_options(); end
+
+  def default_url_options=(val); end
+
+  def default_url_options?(); end
+
+  def etaggers(); end
+
+  def etaggers=(val); end
+
+  def etaggers?(); end
+
+  def helpers_path(); end
+
+  def helpers_path=(val); end
+
+  def helpers_path?(); end
+
+  def include_all_helpers(); end
+
+  def include_all_helpers=(val); end
+
+  def include_all_helpers?(); end
+
+  def logger(); end
+
+  def logger=(value); end
+
+  def mimes_for_respond_to(); end
+
+  def mimes_for_respond_to=(val); end
+
+  def mimes_for_respond_to?(); end
+
+  def rescue_handlers(); end
+
+  def rescue_handlers=(val); end
+
+  def rescue_handlers?(); end
+
+  def responder(); end
+
+  def responder=(val); end
+
+  def responder?(); end
   MODULES = ::T.let(nil, ::T.untyped)
 end
 
+class ActionController::API
+  extend ::AbstractController::UrlFor::ClassMethods
+  extend ::ActionController::Rendering::ClassMethods
+  extend ::ActionController::Renderers::ClassMethods
+  extend ::ActionController::ConditionalGet::ClassMethods
+  extend ::AbstractController::Callbacks::ClassMethods
+  extend ::ActionController::ForceSSL::ClassMethods
+  extend ::ActionController::DefaultHeaders::ClassMethods
+  extend ::ActionController::Instrumentation::ClassMethods
+  extend ::ActionController::ParamsWrapper::ClassMethods
+  extend ::ActionController::RespondWith::ClassMethods
+  extend ::ActionController::Railties::Helpers
+  extend ::AbstractController::Helpers::ClassMethods
+  extend ::ActionController::Helpers::ClassMethods
+  def self.__callbacks(); end
+
+  def self.__callbacks=(val); end
+
+  def self.__callbacks?(); end
+
+  def self._helper_methods(); end
+
+  def self._helper_methods=(val); end
+
+  def self._helper_methods?(); end
+
+  def self._helpers=(val); end
+
+  def self._helpers?(); end
+
+  def self._process_action_callbacks(); end
+
+  def self._process_action_callbacks=(value); end
+
+  def self._renderers(); end
+
+  def self._renderers=(val); end
+
+  def self._renderers?(); end
+
+  def self._wrapper_options(); end
+
+  def self._wrapper_options=(val); end
+
+  def self._wrapper_options?(); end
+
+  def self.default_url_options(); end
+
+  def self.default_url_options=(val); end
+
+  def self.default_url_options?(); end
+
+  def self.etaggers(); end
+
+  def self.etaggers=(val); end
+
+  def self.etaggers?(); end
+
+  def self.helpers_path(); end
+
+  def self.helpers_path=(val); end
+
+  def self.helpers_path?(); end
+
+  def self.include_all_helpers(); end
+
+  def self.include_all_helpers=(val); end
+
+  def self.include_all_helpers?(); end
+
+  def self.logger(); end
+
+  def self.logger=(value); end
+
+  def self.mimes_for_respond_to(); end
+
+  def self.mimes_for_respond_to=(val); end
+
+  def self.mimes_for_respond_to?(); end
+
+  def self.rescue_handlers(); end
+
+  def self.rescue_handlers=(val); end
+
+  def self.rescue_handlers?(); end
+
+  def self.responder(); end
+
+  def self.responder=(val); end
+
+  def self.responder?(); end
+
+  def self.without_modules(*modules); end
+end
+
 class ActionController::Base
+  include ::ActionView::ViewPaths
+  include ::AbstractController::Rendering
+  include ::AbstractController::Translation
+  include ::AbstractController::AssetPaths
+  include ::AbstractController::Helpers
+  include ::ActionController::Helpers
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::Routing::PolymorphicRoutes
+  include ::AbstractController::UrlFor
+  include ::ActionController::UrlFor
+  include ::AbstractController::Logger
+  include ::ActiveSupport::Benchmarkable
+  include ::ActionController::Redirecting
+  include ::ActionView::Rendering
+  include ::ActionView::Layouts
+  include ::ActionController::Rendering
+  include ::ActionController::Renderers
+  include ::ActionController::Renderers::All
+  include ::ActionController::ConditionalGet
+  include ::ActionController::Head
+  include ::ActionController::EtagWithTemplateDigest
+  include ::ActionController::EtagWithFlash
+  include ::ActionController::Caching
+  include ::AbstractController::Caching::Fragments
+  include ::AbstractController::Caching
+  include ::AbstractController::Caching::ConfigMethods
+  include ::ActionController::MimeResponds
+  include ::ActionController::ImplicitRender
+  include ::ActionController::BasicImplicitRender
+  include ::ActionController::StrongParameters
+  include ::ActionController::ParameterEncoding
+  include ::ActionController::Cookies
+  include ::ActionController::Flash
+  include ::ActionController::FormBuilder
+  include ::ActiveSupport::Callbacks
+  include ::AbstractController::Callbacks
+  include ::ActionController::RequestForgeryProtection
+  include ::ActionController::ContentSecurityPolicy
+  include ::ActionController::ForceSSL
+  include ::ActionController::Streaming
+  include ::ActionController::DataStreaming
+  include ::ActionController::HttpAuthentication::Basic::ControllerMethods
+  include ::ActionController::HttpAuthentication::Digest::ControllerMethods
+  include ::ActionController::HttpAuthentication::Token::ControllerMethods
+  include ::ActionController::DefaultHeaders
+  include ::ActiveSupport::Rescuable
+  include ::ActionController::Rescue
+  include ::ActionController::Instrumentation
+  include ::ActionController::ParamsWrapper
+  include ::ActionController::RespondWith
+  include ::ActionDispatch::Routing::RouteSet::MountedHelpers
+  include ::ActiveRecord::Railties::ControllerRuntime
+  include ::Raven::Rails::ControllerMethods
+  include ::Raven::Rails::ControllerTransaction
+  include ::Turbolinks::Controller
+  include ::Turbolinks::Redirection
+  include ::Devise::Controllers::Helpers
+  include ::Devise::Controllers::SignInOut
+  include ::Devise::Controllers::StoreLocation
+  include ::Devise::Controllers::UrlHelpers
+  def __callbacks(); end
+
+  def __callbacks?(); end
+
+  def _helper_methods(); end
+
+  def _helper_methods=(val); end
+
+  def _helper_methods?(); end
+
+  def _helpers(); end
+
+  def _helpers=(val); end
+
+  def _helpers?(); end
+
+  def _process_action_callbacks(); end
+
+  def _renderers(); end
+
+  def _renderers=(val); end
+
+  def _renderers?(); end
+
+  def _run_process_action_callbacks(&block); end
+
+  def _view_cache_dependencies(); end
+
+  def _view_cache_dependencies=(val); end
+
+  def _view_cache_dependencies?(); end
+
+  def _wrapper_options(); end
+
+  def _wrapper_options=(val); end
+
+  def _wrapper_options?(); end
+
+  def alert(); end
+
+  def allow_forgery_protection(); end
+
+  def allow_forgery_protection=(value); end
+
+  def asset_host(); end
+
+  def asset_host=(value); end
+
+  def assets_dir(); end
+
+  def assets_dir=(value); end
+
+  def default_asset_host_protocol(); end
+
+  def default_asset_host_protocol=(value); end
+
+  def default_protect_from_forgery(); end
+
+  def default_protect_from_forgery=(value); end
+
+  def default_static_extension(); end
+
+  def default_static_extension=(value); end
+
+  def default_url_options(); end
+
+  def default_url_options=(val); end
+
+  def default_url_options?(); end
+
+  def enable_fragment_cache_logging(); end
+
+  def enable_fragment_cache_logging=(value); end
+
+  def etag_with_template_digest(); end
+
+  def etag_with_template_digest=(val); end
+
+  def etag_with_template_digest?(); end
+
+  def etaggers(); end
+
+  def etaggers=(val); end
+
+  def etaggers?(); end
+
+  def flash(*args, &block); end
+
+  def forgery_protection_origin_check(); end
+
+  def forgery_protection_origin_check=(value); end
+
+  def forgery_protection_strategy(); end
+
+  def forgery_protection_strategy=(value); end
+
+  def fragment_cache_keys(); end
+
+  def fragment_cache_keys=(val); end
+
+  def fragment_cache_keys?(); end
+
+  def helpers_path(); end
+
+  def helpers_path=(val); end
+
+  def helpers_path?(); end
+
+  def include_all_helpers(); end
+
+  def include_all_helpers=(val); end
+
+  def include_all_helpers?(); end
+
+  def javascripts_dir(); end
+
+  def javascripts_dir=(value); end
+
+  def log_warning_on_csrf_failure(); end
+
+  def log_warning_on_csrf_failure=(value); end
+
+  def logger(); end
+
+  def logger=(value); end
+
+  def mimes_for_respond_to(); end
+
+  def mimes_for_respond_to=(val); end
+
+  def mimes_for_respond_to?(); end
+
+  def notice(); end
+
+  def per_form_csrf_tokens(); end
+
+  def per_form_csrf_tokens=(value); end
+
+  def perform_caching(); end
+
+  def perform_caching=(value); end
+
+  def relative_url_root(); end
+
+  def relative_url_root=(value); end
+
+  def request_forgery_protection_token(); end
+
+  def request_forgery_protection_token=(value); end
+
+  def rescue_handlers(); end
+
+  def rescue_handlers=(val); end
+
+  def rescue_handlers?(); end
+
+  def responder(); end
+
+  def responder=(val); end
+
+  def responder?(); end
+
+  def stylesheets_dir(); end
+
+  def stylesheets_dir=(value); end
   MODULES = ::T.let(nil, ::T.untyped)
   PROTECTED_IVARS = ::T.let(nil, ::T.untyped)
+end
+
+class ActionController::Base
+  extend ::AbstractController::Helpers::ClassMethods
+  extend ::ActionController::Helpers::ClassMethods
+  extend ::AbstractController::UrlFor::ClassMethods
+  extend ::ActionController::Rendering::ClassMethods
+  extend ::ActionController::Renderers::ClassMethods
+  extend ::ActionController::ConditionalGet::ClassMethods
+  extend ::AbstractController::Caching::Fragments::ClassMethods
+  extend ::AbstractController::Caching::ClassMethods
+  extend ::AbstractController::Caching::ConfigMethods
+  extend ::ActionController::ParameterEncoding::ClassMethods
+  extend ::ActionController::Flash::ClassMethods
+  extend ::ActionController::FormBuilder::ClassMethods
+  extend ::AbstractController::Callbacks::ClassMethods
+  extend ::ActionController::RequestForgeryProtection::ClassMethods
+  extend ::ActionController::ContentSecurityPolicy::ClassMethods
+  extend ::ActionController::ForceSSL::ClassMethods
+  extend ::ActionController::DefaultHeaders::ClassMethods
+  extend ::ActionController::Instrumentation::ClassMethods
+  extend ::ActionController::ParamsWrapper::ClassMethods
+  extend ::Responders::ControllerMethod
+  extend ::ActionController::RespondWith::ClassMethods
+  extend ::ActionController::Railties::Helpers
+  def self.__callbacks(); end
+
+  def self.__callbacks=(val); end
+
+  def self.__callbacks?(); end
+
+  def self._default_form_builder(); end
+
+  def self._default_form_builder=(val); end
+
+  def self._default_form_builder?(); end
+
+  def self._flash_types(); end
+
+  def self._flash_types=(val); end
+
+  def self._flash_types?(); end
+
+  def self._helper_methods(); end
+
+  def self._helper_methods=(val); end
+
+  def self._helper_methods?(); end
+
+  def self._helpers=(val); end
+
+  def self._helpers?(); end
+
+  def self._layout(); end
+
+  def self._layout=(val); end
+
+  def self._layout?(); end
+
+  def self._layout_conditions(); end
+
+  def self._layout_conditions=(val); end
+
+  def self._layout_conditions?(); end
+
+  def self._process_action_callbacks(); end
+
+  def self._process_action_callbacks=(value); end
+
+  def self._renderers(); end
+
+  def self._renderers=(val); end
+
+  def self._renderers?(); end
+
+  def self._view_cache_dependencies(); end
+
+  def self._view_cache_dependencies=(val); end
+
+  def self._view_cache_dependencies?(); end
+
+  def self._wrapper_options(); end
+
+  def self._wrapper_options=(val); end
+
+  def self._wrapper_options?(); end
+
+  def self.allow_forgery_protection(); end
+
+  def self.allow_forgery_protection=(value); end
+
+  def self.asset_host(); end
+
+  def self.asset_host=(value); end
+
+  def self.assets_dir(); end
+
+  def self.assets_dir=(value); end
+
+  def self.default_asset_host_protocol(); end
+
+  def self.default_asset_host_protocol=(value); end
+
+  def self.default_protect_from_forgery(); end
+
+  def self.default_protect_from_forgery=(value); end
+
+  def self.default_static_extension(); end
+
+  def self.default_static_extension=(value); end
+
+  def self.default_url_options(); end
+
+  def self.default_url_options=(val); end
+
+  def self.default_url_options?(); end
+
+  def self.enable_fragment_cache_logging(); end
+
+  def self.enable_fragment_cache_logging=(value); end
+
+  def self.etag_with_template_digest(); end
+
+  def self.etag_with_template_digest=(val); end
+
+  def self.etag_with_template_digest?(); end
+
+  def self.etaggers(); end
+
+  def self.etaggers=(val); end
+
+  def self.etaggers?(); end
+
+  def self.forgery_protection_origin_check(); end
+
+  def self.forgery_protection_origin_check=(value); end
+
+  def self.forgery_protection_strategy(); end
+
+  def self.forgery_protection_strategy=(value); end
+
+  def self.fragment_cache_keys(); end
+
+  def self.fragment_cache_keys=(val); end
+
+  def self.fragment_cache_keys?(); end
+
+  def self.helpers_path(); end
+
+  def self.helpers_path=(val); end
+
+  def self.helpers_path?(); end
+
+  def self.include_all_helpers(); end
+
+  def self.include_all_helpers=(val); end
+
+  def self.include_all_helpers?(); end
+
+  def self.javascripts_dir(); end
+
+  def self.javascripts_dir=(value); end
+
+  def self.log_warning_on_csrf_failure(); end
+
+  def self.log_warning_on_csrf_failure=(value); end
+
+  def self.logger(); end
+
+  def self.logger=(value); end
+
+  def self.mimes_for_respond_to(); end
+
+  def self.mimes_for_respond_to=(val); end
+
+  def self.mimes_for_respond_to?(); end
+
+  def self.per_form_csrf_tokens(); end
+
+  def self.per_form_csrf_tokens=(value); end
+
+  def self.perform_caching(); end
+
+  def self.perform_caching=(value); end
+
+  def self.relative_url_root(); end
+
+  def self.relative_url_root=(value); end
+
+  def self.request_forgery_protection_token(); end
+
+  def self.request_forgery_protection_token=(value); end
+
+  def self.rescue_handlers(); end
+
+  def self.rescue_handlers=(val); end
+
+  def self.rescue_handlers?(); end
+
+  def self.responder(); end
+
+  def self.responder=(val); end
+
+  def self.responder?(); end
+
+  def self.stylesheets_dir(); end
+
+  def self.stylesheets_dir=(value); end
+
+  def self.without_modules(*modules); end
+end
+
+module ActionController::BasicImplicitRender
+  def default_render(); end
+
+  def send_action(method, *args); end
+end
+
+module ActionController::BasicImplicitRender
+end
+
+module ActionController::Caching
+end
+
+module ActionController::Caching
+  extend ::ActiveSupport::Autoload
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::ConditionalGet
+  include ::ActionController::Head
+  def expires_in(seconds, options=T.unsafe(nil)); end
+
+  def expires_now(); end
+
+  def fresh_when(object=T.unsafe(nil), etag: T.unsafe(nil), weak_etag: T.unsafe(nil), strong_etag: T.unsafe(nil), last_modified: T.unsafe(nil), public: T.unsafe(nil), template: T.unsafe(nil)); end
+
+  def http_cache_forever(public: T.unsafe(nil)); end
+
+  def stale?(object=T.unsafe(nil), **freshness_kwargs); end
+end
+
+module ActionController::ConditionalGet::ClassMethods
+  def etag(&etagger); end
+end
+
+module ActionController::ConditionalGet::ClassMethods
+end
+
+module ActionController::ConditionalGet
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::ContentSecurityPolicy
+end
+
+module ActionController::ContentSecurityPolicy::ClassMethods
+  def content_security_policy(enabled=T.unsafe(nil), **options, &block); end
+
+  def content_security_policy_report_only(report_only=T.unsafe(nil), **options); end
+end
+
+module ActionController::ContentSecurityPolicy::ClassMethods
+end
+
+module ActionController::ContentSecurityPolicy
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::Cookies
+end
+
+module ActionController::Cookies
+  extend ::ActiveSupport::Concern
 end
 
 module ActionController::DataStreaming
@@ -25,16 +737,250 @@ module ActionController::DataStreaming
   DEFAULT_SEND_FILE_TYPE = ::T.let(nil, ::T.untyped)
 end
 
+module ActionController::DataStreaming
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::DefaultHeaders
+end
+
+module ActionController::DefaultHeaders::ClassMethods
+  def make_response!(request); end
+end
+
+module ActionController::DefaultHeaders::ClassMethods
+end
+
+module ActionController::DefaultHeaders
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::EtagWithFlash
+end
+
+module ActionController::EtagWithFlash
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::EtagWithTemplateDigest
+end
+
+module ActionController::EtagWithTemplateDigest
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::Flash
+  extend ::ActiveSupport::Concern
+end
+
 module ActionController::ForceSSL
+  def force_ssl_redirect(host_or_options=T.unsafe(nil)); end
   ACTION_OPTIONS = ::T.let(nil, ::T.untyped)
   REDIRECT_OPTIONS = ::T.let(nil, ::T.untyped)
   URL_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
+module ActionController::ForceSSL::ClassMethods
+  def force_ssl(options=T.unsafe(nil)); end
+end
+
+module ActionController::ForceSSL::ClassMethods
+end
+
+module ActionController::ForceSSL
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::FormBuilder
+  def default_form_builder(); end
+end
+
+module ActionController::FormBuilder::ClassMethods
+  def default_form_builder(builder); end
+end
+
+module ActionController::FormBuilder::ClassMethods
+end
+
+module ActionController::FormBuilder
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::Head
+  def head(status, options=T.unsafe(nil)); end
+end
+
+module ActionController::Head
+end
+
+module ActionController::HttpAuthentication
+end
+
+module ActionController::HttpAuthentication::Basic
+  def auth_param(request); end
+
+  def auth_scheme(request); end
+
+  def authenticate(request, &login_procedure); end
+
+  def authentication_request(controller, realm, message); end
+
+  def decode_credentials(request); end
+
+  def encode_credentials(user_name, password); end
+
+  def has_basic_credentials?(request); end
+
+  def user_name_and_password(request); end
+end
+
+module ActionController::HttpAuthentication::Basic::ControllerMethods
+  def authenticate_or_request_with_http_basic(realm=T.unsafe(nil), message=T.unsafe(nil), &login_procedure); end
+
+  def authenticate_with_http_basic(&login_procedure); end
+
+  def http_basic_authenticate_or_request_with(name:, password:, realm: T.unsafe(nil), message: T.unsafe(nil)); end
+
+  def request_http_basic_authentication(realm=T.unsafe(nil), message=T.unsafe(nil)); end
+end
+
+module ActionController::HttpAuthentication::Basic::ControllerMethods
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::HttpAuthentication::Basic
+  extend ::ActionController::HttpAuthentication::Basic
+end
+
+module ActionController::HttpAuthentication::Digest
+  def authenticate(request, realm, &password_procedure); end
+
+  def authentication_header(controller, realm); end
+
+  def authentication_request(controller, realm, message=T.unsafe(nil)); end
+
+  def decode_credentials(header); end
+
+  def decode_credentials_header(request); end
+
+  def encode_credentials(http_method, credentials, password, password_is_ha1); end
+
+  def expected_response(http_method, uri, credentials, password, password_is_ha1=T.unsafe(nil)); end
+
+  def ha1(credentials, password); end
+
+  def nonce(secret_key, time=T.unsafe(nil)); end
+
+  def opaque(secret_key); end
+
+  def secret_token(request); end
+
+  def validate_digest_response(request, realm, &password_procedure); end
+
+  def validate_nonce(secret_key, request, value, seconds_to_timeout=T.unsafe(nil)); end
+end
+
+module ActionController::HttpAuthentication::Digest::ControllerMethods
+  def authenticate_or_request_with_http_digest(realm=T.unsafe(nil), message=T.unsafe(nil), &password_procedure); end
+
+  def authenticate_with_http_digest(realm=T.unsafe(nil), &password_procedure); end
+
+  def request_http_digest_authentication(realm=T.unsafe(nil), message=T.unsafe(nil)); end
+end
+
+module ActionController::HttpAuthentication::Digest::ControllerMethods
+end
+
+module ActionController::HttpAuthentication::Digest
+  extend ::ActionController::HttpAuthentication::Digest
+end
+
 module ActionController::HttpAuthentication::Token
+  def authenticate(controller, &login_procedure); end
+
+  def authentication_request(controller, realm, message=T.unsafe(nil)); end
+
+  def encode_credentials(token, options=T.unsafe(nil)); end
+
+  def params_array_from(raw_params); end
+
+  def raw_params(auth); end
+
+  def rewrite_param_values(array_params); end
+
+  def token_and_options(request); end
+
+  def token_params_from(auth); end
   AUTHN_PAIR_DELIMITERS = ::T.let(nil, ::T.untyped)
   TOKEN_KEY = ::T.let(nil, ::T.untyped)
   TOKEN_REGEX = ::T.let(nil, ::T.untyped)
+end
+
+module ActionController::HttpAuthentication::Token::ControllerMethods
+  def authenticate_or_request_with_http_token(realm=T.unsafe(nil), message=T.unsafe(nil), &login_procedure); end
+
+  def authenticate_with_http_token(&login_procedure); end
+
+  def request_http_token_authentication(realm=T.unsafe(nil), message=T.unsafe(nil)); end
+end
+
+module ActionController::HttpAuthentication::Token::ControllerMethods
+end
+
+module ActionController::HttpAuthentication::Token
+  extend ::ActionController::HttpAuthentication::Token
+end
+
+module ActionController::HttpAuthentication
+end
+
+module ActionController::ImplicitRender
+  include ::ActionController::BasicImplicitRender
+  def default_render(); end
+
+  def method_for_action(action_name); end
+end
+
+module ActionController::ImplicitRender
+end
+
+module ActionController::Instrumentation
+  def process_action(*args); end
+
+  def redirect_to(*args); end
+
+  def render(*args); end
+
+  def send_data(data, options=T.unsafe(nil)); end
+
+  def send_file(path, options=T.unsafe(nil)); end
+
+  def view_runtime(); end
+
+  def view_runtime=(view_runtime); end
+end
+
+module ActionController::Instrumentation::ClassMethods
+  def log_process_action(payload); end
+end
+
+module ActionController::Instrumentation::ClassMethods
+end
+
+module ActionController::Instrumentation
+  extend ::ActiveSupport::Concern
+end
+
+class ActionController::InvalidAuthenticityToken
+end
+
+class ActionController::InvalidAuthenticityToken
+end
+
+class ActionController::InvalidCrossOriginRequest
+end
+
+class ActionController::InvalidCrossOriginRequest
 end
 
 module ActionController::Live
@@ -74,6 +1020,9 @@ class ActionController::LogSubscriber
   INTERNAL_PARAMS = ::T.let(nil, ::T.untyped)
 end
 
+class ActionController::LogSubscriber
+end
+
 class ActionController::Metal
   include ::ActionController::Testing::Functional
 end
@@ -84,6 +1033,67 @@ class ActionController::MiddlewareStack
   NULL = ::T.let(nil, ::T.untyped)
 end
 
+class ActionController::MimeResponds::Collector
+  include ::AbstractController::Collector
+  def all(*args, &block); end
+
+  def any(*args, &block); end
+
+  def custom(mime_type, &block); end
+
+  def format(); end
+
+  def format=(format); end
+
+  def initialize(mimes, variant=T.unsafe(nil)); end
+
+  def negotiate_format(request); end
+
+  def response(); end
+end
+
+class ActionController::MimeResponds::Collector::VariantCollector
+  def all(*args, &block); end
+
+  def any(*args, &block); end
+
+  def initialize(variant=T.unsafe(nil)); end
+
+  def method_missing(name, *args, &block); end
+
+  def variant(); end
+end
+
+class ActionController::MimeResponds::Collector::VariantCollector
+end
+
+class ActionController::MissingRenderer
+  def initialize(format); end
+end
+
+class ActionController::MissingRenderer
+end
+
+module ActionController::ParameterEncoding
+end
+
+module ActionController::ParameterEncoding::ClassMethods
+  def binary_params_for?(action); end
+
+  def inherited(klass); end
+
+  def setup_param_encode(); end
+
+  def skip_parameter_encoding(action); end
+end
+
+module ActionController::ParameterEncoding::ClassMethods
+end
+
+module ActionController::ParameterEncoding
+  extend ::ActiveSupport::Concern
+end
+
 class ActionController::Parameters
   EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
   EMPTY_HASH = ::T.let(nil, ::T.untyped)
@@ -91,22 +1101,130 @@ class ActionController::Parameters
 end
 
 module ActionController::ParamsWrapper
+  def process_action(*args); end
   EXCLUDE_PARAMETERS = ::T.let(nil, ::T.untyped)
 end
 
+module ActionController::ParamsWrapper::ClassMethods
+  def _set_wrapper_options(options); end
+
+  def inherited(klass); end
+
+  def wrap_parameters(name_or_model_or_options, options=T.unsafe(nil)); end
+end
+
+module ActionController::ParamsWrapper::ClassMethods
+end
+
+class ActionController::ParamsWrapper::Options
+  include ::Mutex_m
+  def initialize(name, format, include, exclude, klass, model); end
+
+  def lock(); end
+
+  def locked?(); end
+
+  def synchronize(&block); end
+
+  def try_lock(); end
+
+  def unlock(); end
+end
+
+class ActionController::ParamsWrapper::Options
+  def self.from_hash(hash); end
+end
+
+module ActionController::ParamsWrapper
+  extend ::ActiveSupport::Concern
+end
+
 class ActionController::Renderer
+  def controller(); end
+
+  def defaults(); end
+
+  def initialize(controller, env, defaults); end
+
+  def new(env=T.unsafe(nil)); end
+
+  def render(*args); end
+
+  def with_defaults(defaults); end
   DEFAULTS = ::T.let(nil, ::T.untyped)
   IDENTITY = ::T.let(nil, ::T.untyped)
   RACK_KEY_TRANSLATION = ::T.let(nil, ::T.untyped)
   RACK_VALUE_TRANSLATION = ::T.let(nil, ::T.untyped)
 end
 
+class ActionController::Renderer
+  def self.for(controller, env=T.unsafe(nil), defaults=T.unsafe(nil)); end
+end
+
 module ActionController::Renderers
+  def _render_to_body_with_renderer(options); end
+
+  def _render_with_renderer_js(js, options); end
+
+  def _render_with_renderer_json(json, options); end
+
+  def _render_with_renderer_xml(xml, options); end
+
+  def render_to_body(options); end
   RENDERERS = ::T.let(nil, ::T.untyped)
 end
 
+module ActionController::Renderers::All
+end
+
+module ActionController::Renderers::All
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::Renderers::ClassMethods
+  def use_renderer(*args); end
+
+  def use_renderers(*args); end
+end
+
+module ActionController::Renderers::ClassMethods
+end
+
+module ActionController::Renderers
+  extend ::ActiveSupport::Concern
+  def self._render_with_renderer_method_name(key); end
+
+  def self.add(key, &block); end
+
+  def self.remove(key); end
+end
+
 module ActionController::Rendering
+  def process_action(*_); end
+
+  def render(*args); end
+
+  def render_to_body(options=T.unsafe(nil)); end
+
+  def render_to_string(*_); end
   RENDER_FORMATS_IN_PRIORITY = ::T.let(nil, ::T.untyped)
+end
+
+module ActionController::Rendering::ClassMethods
+  def inherited(klass); end
+
+  def render(*args, &block); end
+
+  def renderer(); end
+
+  def setup_renderer!(); end
+end
+
+module ActionController::Rendering::ClassMethods
+end
+
+module ActionController::Rendering
+  extend ::ActiveSupport::Concern
 end
 
 module ActionController::RequestForgeryProtection
@@ -114,16 +1232,182 @@ module ActionController::RequestForgeryProtection
   NULL_ORIGIN_MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
+module ActionController::RequestForgeryProtection::ClassMethods
+  def skip_forgery_protection(options=T.unsafe(nil)); end
+end
+
+module ActionController::RequestForgeryProtection::ProtectionMethods
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::Exception
+  def handle_unverified_request(); end
+
+  def initialize(controller); end
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::Exception
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
+  def handle_unverified_request(); end
+
+  def initialize(controller); end
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullCookieJar
+  def write(*_); end
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullCookieJar
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullSessionHash
+  def initialize(req); end
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullSessionHash
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::ResetSession
+  def handle_unverified_request(); end
+
+  def initialize(controller); end
+end
+
+class ActionController::RequestForgeryProtection::ProtectionMethods::ResetSession
+end
+
+module ActionController::RequestForgeryProtection::ProtectionMethods
+end
+
+module ActionController::RequestForgeryProtection
+  extend ::ActiveSupport::Concern
+end
+
+module ActionController::Rescue
+  def show_detailed_exceptions?(); end
+end
+
+module ActionController::Rescue
+  extend ::ActiveSupport::Concern
+end
+
 class ActionController::RespondToMismatchError
   DEFAULT_MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
+module ActionController::RespondWith
+  def collect_mimes_from_class_level(); end
+
+  def respond_with(*resources, &block); end
+
+  def verify_request_format!(); end
+
+  def verify_requested_format!(); end
+end
+
+module ActionController::RespondWith::ClassMethods
+  def clear_respond_to(); end
+
+  def respond_to(*mimes); end
+end
+
+module ActionController::RespondWith::ClassMethods
+end
+
+module ActionController::RespondWith
+  extend ::ActiveSupport::Concern
+end
+
 class ActionController::Responder
+  def api_behavior(); end
+
+  def api_location(); end
+
+  def controller(); end
+
+  def default_action(); end
+
+  def default_render(); end
+
+  def delete?(*args, &block); end
+
+  def display(resource, given_options=T.unsafe(nil)); end
+
+  def display_errors(); end
+
+  def format(); end
+
+  def get?(*args, &block); end
+
+  def has_errors?(); end
+
+  def has_renderer?(); end
+
+  def has_view_rendering?(); end
+
+  def head(*args, &block); end
+
+  def initialize(controller, resources, options=T.unsafe(nil)); end
+
+  def json_resource_errors(); end
+
+  def navigation_behavior(error); end
+
+  def navigation_location(); end
+
+  def options(); end
+
+  def patch?(*args, &block); end
+
+  def post?(*args, &block); end
+
+  def put?(*args, &block); end
+
+  def redirect_to(*args, &block); end
+
+  def render(*args, &block); end
+
+  def rendering_options(); end
+
+  def request(); end
+
+  def resource(); end
+
+  def resource_errors(); end
+
+  def resource_location(); end
+
+  def resources(); end
+
+  def respond(); end
+
+  def response_overridden?(); end
+
+  def to_format(); end
+
+  def to_html(); end
+
+  def to_js(); end
   DEFAULT_ACTIONS_FOR_VERBS = ::T.let(nil, ::T.untyped)
+end
+
+class ActionController::Responder
+  def self.call(*args); end
 end
 
 class ActionController::SessionOverflowError
   DEFAULT_MESSAGE = ::T.let(nil, ::T.untyped)
+end
+
+module ActionController::Streaming
+end
+
+module ActionController::Streaming
+  extend ::ActiveSupport::Concern
 end
 
 module ActionController::TemplateAssertions
@@ -226,6 +1510,12 @@ module ActionController::Testing
   extend ::ActiveSupport::Concern
 end
 
+module ActionController
+  def self.add_renderer(key, &block); end
+
+  def self.remove_renderer(key); end
+end
+
 class ActionDispatch::AssertionResponse
   def code(); end
 
@@ -240,8 +1530,42 @@ end
 class ActionDispatch::AssertionResponse
 end
 
+module ActionDispatch::Assertions
+  include ::ActionDispatch::Assertions::ResponseAssertions
+  include ::ActionDispatch::Assertions::RoutingAssertions
+  include ::Turbolinks::Assertions
+  def html_document(); end
+end
+
 module ActionDispatch::Assertions::ResponseAssertions
+  def assert_redirected_to(options=T.unsafe(nil), message=T.unsafe(nil)); end
+
+  def assert_response(type, message=T.unsafe(nil)); end
   RESPONSE_PREDICATES = ::T.let(nil, ::T.untyped)
+end
+
+module ActionDispatch::Assertions::ResponseAssertions
+end
+
+module ActionDispatch::Assertions::RoutingAssertions
+  def assert_generates(expected_path, options, defaults=T.unsafe(nil), extras=T.unsafe(nil), message=T.unsafe(nil)); end
+
+  def assert_recognizes(expected_options, path, extras=T.unsafe(nil), msg=T.unsafe(nil)); end
+
+  def assert_routing(path, options, defaults=T.unsafe(nil), extras=T.unsafe(nil), message=T.unsafe(nil)); end
+
+  def method_missing(selector, *args, &block); end
+
+  def setup(); end
+
+  def with_routing(); end
+end
+
+module ActionDispatch::Assertions::RoutingAssertions
+end
+
+module ActionDispatch::Assertions
+  extend ::ActiveSupport::Concern
 end
 
 class ActionDispatch::ContentSecurityPolicy::Middleware
@@ -952,13 +2276,6 @@ class ActionMailer::LogSubscriber
   def receive(event); end
 end
 
-class ActionMailer::MailDeliveryJob
-  def perform(mailer, mail_method, delivery_method, args:, params: T.unsafe(nil)); end
-end
-
-class ActionMailer::MailDeliveryJob
-end
-
 class ActionMailer::NonInferrableMailerError
   def initialize(name); end
 end
@@ -1356,6 +2673,16 @@ class ActionView::Resolver::Cache
   NO_TEMPLATES = ::T.let(nil, ::T.untyped)
   PARTIAL_BLOCK = ::T.let(nil, ::T.untyped)
   PREFIX_BLOCK = ::T.let(nil, ::T.untyped)
+end
+
+module ActionView::RoutingUrlFor
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::Routing::PolymorphicRoutes
+  def default_url_options=(obj); end
+end
+
+module ActionView::RoutingUrlFor
+  def self.default_url_options=(obj); end
 end
 
 class ActionView::StreamingTemplateRenderer::Body
@@ -2011,25 +3338,8 @@ end
 class ActiveRecord::Associations::JoinDependency::JoinPart
 end
 
-class ActiveRecord::Associations::Preloader::Association
-  def initialize(klass, owners, reflection, preload_scope); end
-
-  def preloaded_records(); end
-
-  def records_by_owner(); end
-
-  def run(); end
-end
-
-class ActiveRecord::Associations::Preloader::Association
-end
-
 class ActiveRecord::Associations::Preloader::ThroughAssociation
-  def initialize(*_); end
   PRELOADER = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveRecord::Associations::Preloader::ThroughAssociation
 end
 
 module ActiveRecord::AttributeMethods
@@ -2225,6 +3535,9 @@ end
 
 module ActiveRecord::LegacyYamlAdapter
   def self.convert(klass, coder); end
+end
+
+class ActiveRecord::Locking::LockingType
 end
 
 class ActiveRecord::LogSubscriber
@@ -2786,7 +4099,13 @@ ActiveRecord::Type::Float = ActiveModel::Type::Float
 
 ActiveRecord::Type::Integer = ActiveModel::Type::Integer
 
+class ActiveRecord::Type::Serialized
+end
+
 ActiveRecord::Type::String = ActiveModel::Type::String
+
+class ActiveRecord::Type::Time::Value
+end
 
 module ActiveRecord::VERSION
   MAJOR = ::T.let(nil, ::T.untyped)
@@ -2794,13 +4113,6 @@ module ActiveRecord::VERSION
   PRE = ::T.let(nil, ::T.untyped)
   STRING = ::T.let(nil, ::T.untyped)
   TINY = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveStorage::AnalyzeJob
-  def perform(blob); end
-end
-
-class ActiveStorage::AnalyzeJob
 end
 
 class ActiveStorage::Attached::Changes::CreateMany
@@ -2862,30 +4174,6 @@ class ActiveStorage::Attached::Changes::DeleteOne
 end
 
 class ActiveStorage::Attached::Changes::DeleteOne
-end
-
-class ActiveStorage::Attachment
-  include ::Kaminari::ActiveRecordModelExtension
-  include ::Kaminari::ConfigurationMethods
-  def autosave_associated_records_for_blob(*args); end
-
-  def autosave_associated_records_for_record(*args); end
-
-  def purge(); end
-
-  def purge_later(); end
-end
-
-module ActiveStorage::Attachment::GeneratedAssociationMethods
-  def build_blob(*args, &block); end
-
-  def create_blob(*args, &block); end
-
-  def create_blob!(*args, &block); end
-
-  def reload_blob(); end
-
-  def reload_record(); end
 end
 
 module ActiveStorage::Attachment::GeneratedAttributeMethods
@@ -3068,123 +4356,11 @@ module ActiveStorage::Attachment::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
-class ActiveStorage::Attachment
-  extend ::Kaminari::ConfigurationMethods::ClassMethods
-  def self.page(num=T.unsafe(nil)); end
+class ActiveStorage::BaseController
+  include ::ActiveStorage::SetCurrent
 end
 
-class ActiveStorage::BaseJob
-end
-
-class ActiveStorage::BaseJob
-end
-
-class ActiveStorage::Blob
-  include ::Kaminari::ActiveRecordModelExtension
-  include ::Kaminari::ConfigurationMethods
-  include ::ActiveStorage::Blob::Analyzable
-  include ::ActiveStorage::Blob::Identifiable
-  include ::ActiveStorage::Blob::Representable
-  def after_add_for_attachments(); end
-
-  def after_add_for_attachments=(val); end
-
-  def after_add_for_attachments?(); end
-
-  def after_remove_for_attachments(); end
-
-  def after_remove_for_attachments=(val); end
-
-  def after_remove_for_attachments?(); end
-
-  def audio?(); end
-
-  def autosave_associated_records_for_attachments(*args); end
-
-  def autosave_associated_records_for_preview_image_attachment(); end
-
-  def autosave_associated_records_for_preview_image_blob(); end
-
-  def before_add_for_attachments(); end
-
-  def before_add_for_attachments=(val); end
-
-  def before_add_for_attachments?(); end
-
-  def before_remove_for_attachments(); end
-
-  def before_remove_for_attachments=(val); end
-
-  def before_remove_for_attachments?(); end
-
-  def download(&block); end
-
-  def image?(); end
-
-  def open(tmpdir: T.unsafe(nil), &block); end
-
-  def purge(); end
-
-  def purge_later(); end
-
-  def regenerate_key(); end
-
-  def service(); end
-
-  def service=(val); end
-
-  def service?(); end
-
-  def service_headers_for_direct_upload(); end
-
-  def service_url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil), filename: T.unsafe(nil), **options); end
-
-  def service_url_for_direct_upload(expires_in: T.unsafe(nil)); end
-
-  def signed_id(); end
-
-  def text?(); end
-
-  def unfurl(io, identify: T.unsafe(nil)); end
-
-  def upload(io, identify: T.unsafe(nil)); end
-
-  def upload_without_unfurling(io); end
-
-  def validate_associated_records_for_attachments(*args); end
-
-  def video?(); end
-end
-
-module ActiveStorage::Blob::Analyzable
-  def analyze(); end
-
-  def analyze_later(); end
-
-  def analyzed?(); end
-end
-
-module ActiveStorage::Blob::Analyzable
-end
-
-module ActiveStorage::Blob::GeneratedAssociationMethods
-  def attachment_ids(); end
-
-  def attachment_ids=(ids); end
-
-  def build_preview_image_attachment(*args, &block); end
-
-  def create_preview_image_attachment(*args, &block); end
-
-  def create_preview_image_attachment!(*args, &block); end
-
-  def preview_image(); end
-
-  def preview_image=(attachable); end
-
-  def reload_preview_image_attachment(); end
-
-  def reload_preview_image_blob(); end
+class ActiveStorage::BaseController
 end
 
 module ActiveStorage::Blob::GeneratedAttributeMethods
@@ -3427,103 +4603,37 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
-module ActiveStorage::Blob::Identifiable
-  def identified?(); end
-
-  def identify(); end
+class ActiveStorage::BlobsController
+  include ::ActiveStorage::SetBlob
+  def show(); end
 end
 
-module ActiveStorage::Blob::Identifiable
+class ActiveStorage::BlobsController
 end
 
-module ActiveStorage::Blob::Representable
-  def preview(transformations); end
-
-  def previewable?(); end
-
-  def representable?(); end
-
-  def representation(transformations); end
-
-  def variable?(); end
-
-  def variant(transformations); end
+class ActiveStorage::Current
 end
 
-module ActiveStorage::Blob::Representable
-  extend ::ActiveSupport::Concern
+class ActiveStorage::Current
+  def self.host(); end
+
+  def self.host=(attribute); end
 end
 
-class ActiveStorage::Blob
-  extend ::Kaminari::ConfigurationMethods::ClassMethods
-  def self.after_add_for_attachments(); end
-
-  def self.after_add_for_attachments=(val); end
-
-  def self.after_add_for_attachments?(); end
-
-  def self.after_remove_for_attachments(); end
-
-  def self.after_remove_for_attachments=(val); end
-
-  def self.after_remove_for_attachments?(); end
-
-  def self.before_add_for_attachments(); end
-
-  def self.before_add_for_attachments=(val); end
-
-  def self.before_add_for_attachments?(); end
-
-  def self.before_remove_for_attachments(); end
-
-  def self.before_remove_for_attachments=(val); end
-
-  def self.before_remove_for_attachments?(); end
-
-  def self.build_after_unfurling(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
-
-  def self.build_after_upload(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
-
-  def self.create_after_upload!(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
-
-  def self.create_before_direct_upload!(filename:, byte_size:, checksum:, content_type: T.unsafe(nil), metadata: T.unsafe(nil)); end
-
-  def self.find_signed(id); end
-
-  def self.page(num=T.unsafe(nil)); end
-
-  def self.service(); end
-
-  def self.service=(val); end
-
-  def self.service?(); end
-
-  def self.unattached(*args); end
-
-  def self.with_attached_preview_image(*args); end
+class ActiveStorage::DirectUploadsController
+  def create(); end
 end
 
-class ActiveStorage::Filename
-  include ::Comparable
-  def as_json(*_); end
-
-  def base(); end
-
-  def extension(); end
-
-  def extension_with_delimiter(); end
-
-  def extension_without_delimiter(); end
-
-  def initialize(filename); end
-
-  def sanitized(); end
-
-  def to_json(); end
+class ActiveStorage::DirectUploadsController
 end
 
-class ActiveStorage::Filename
-  def self.wrap(filename); end
+class ActiveStorage::DiskController
+  def show(); end
+
+  def update(); end
+end
+
+class ActiveStorage::DiskController
 end
 
 class ActiveStorage::LogSubscriber
@@ -3540,6 +4650,58 @@ class ActiveStorage::LogSubscriber
   def service_upload(event); end
 
   def service_url(event); end
+end
+
+class ActiveStorage::Preview
+  def blob(); end
+
+  def image(); end
+
+  def initialize(blob, variation_or_variation_key); end
+
+  def processed(); end
+
+  def service_url(**options); end
+
+  def variation(); end
+end
+
+class ActiveStorage::Preview::UnprocessedError
+end
+
+class ActiveStorage::Preview::UnprocessedError
+end
+
+class ActiveStorage::Preview
+end
+
+class ActiveStorage::PurgeJob
+  def perform(blob); end
+end
+
+class ActiveStorage::PurgeJob
+end
+
+class ActiveStorage::RepresentationsController
+  include ::ActiveStorage::SetBlob
+  def show(); end
+end
+
+class ActiveStorage::RepresentationsController
+end
+
+module ActiveStorage::SetBlob
+end
+
+module ActiveStorage::SetBlob
+  extend ::ActiveSupport::Concern
+end
+
+module ActiveStorage::SetCurrent
+end
+
+module ActiveStorage::SetCurrent
+  extend ::ActiveSupport::Concern
 end
 
 class ActiveStorage::Transformers::MiniMagickTransformer
@@ -3565,6 +4727,58 @@ module ActiveStorage::VERSION
   PRE = ::T.let(nil, ::T.untyped)
   STRING = ::T.let(nil, ::T.untyped)
   TINY = ::T.let(nil, ::T.untyped)
+end
+
+class ActiveStorage::Variant
+  def blob(); end
+
+  def content_type(*args, &block); end
+
+  def filename(*args, &block); end
+
+  def format(*args, &block); end
+
+  def image(); end
+
+  def initialize(blob, variation_or_variation_key); end
+
+  def key(); end
+
+  def processed(); end
+
+  def service(*args, &block); end
+
+  def service_url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
+
+  def variation(); end
+  WEB_IMAGE_CONTENT_TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class ActiveStorage::Variant::Specification
+end
+
+class ActiveStorage::Variant::Specification
+end
+
+class ActiveStorage::Variant
+end
+
+class ActiveStorage::Variation
+  def initialize(transformations); end
+
+  def key(); end
+
+  def transform(file, format: T.unsafe(nil), &block); end
+
+  def transformations(); end
+end
+
+class ActiveStorage::Variation
+  def self.decode(key); end
+
+  def self.encode(transformations); end
+
+  def self.wrap(variator); end
 end
 
 class ActiveStorageValidations::AspectRatioValidator
@@ -3629,6 +4843,7 @@ end
 
 module ActiveSupport::Dependencies
   extend ::Bootsnap::LoadPathCache::CoreExt::ActiveSupport::ClassMethods
+  extend ::ActiveSupport::Dependencies::ZeitwerkIntegration::Decorations
 end
 
 class ActiveSupport::Deprecation
@@ -4234,6 +5449,11 @@ module ActiveSupport::XmlMini_REXML
   CONTENT_KEY = ::T.let(nil, ::T.untyped)
 end
 
+module ActivityHelper
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 module Addressable::IDNA
   ACE_MAX_LENGTH = ::T.let(nil, ::T.untyped)
   ACE_PREFIX = ::T.let(nil, ::T.untyped)
@@ -4372,6 +5592,7 @@ end
 class Array
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::Array
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def bsearch(); end
 
@@ -4410,6 +5631,7 @@ end
 BasicObject::BasicObject = BasicObject
 
 class Benchmark::Job
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def initialize(width); end
 
@@ -4423,6 +5645,7 @@ class Benchmark::Job
 end
 
 class Benchmark::Report
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def initialize(width=T.unsafe(nil), format=T.unsafe(nil)); end
 
@@ -4434,6 +5657,7 @@ class Benchmark::Report
 end
 
 class Benchmark::Tms
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def *(x); end
 
@@ -4507,6 +5731,7 @@ end
 Bindex = Skiptrace
 
 class Binding
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def clone(); end
 
@@ -5579,6 +6804,7 @@ class Byebug::WidthSetting
 end
 
 class CGI
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -6853,6 +8079,7 @@ module DRb::DRbUndumped
 end
 
 class Data
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -6869,6 +8096,7 @@ class DatabaseCleaner::Safeguard::RemoteDatabaseUrl
 end
 
 class Date
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   DATE_FORMATS = ::T.let(nil, ::T.untyped)
 end
@@ -6983,23 +8211,6 @@ end
 class Devise::Hooks::Proxy
 end
 
-class Devise::Mailer
-  include ::Devise::Mailers::Helpers
-  include ::Devise::Controllers::ScopedViews
-  def confirmation_instructions(record, token, opts=T.unsafe(nil)); end
-
-  def email_changed(record, opts=T.unsafe(nil)); end
-
-  def password_change(record, opts=T.unsafe(nil)); end
-
-  def reset_password_instructions(record, token, opts=T.unsafe(nil)); end
-
-  def unlock_instructions(record, token, opts=T.unsafe(nil)); end
-end
-
-class Devise::Mailer
-end
-
 module Devise::Models::Authenticatable
   BLACKLIST_FOR_SERIALIZATION = ::T.let(nil, ::T.untyped)
 end
@@ -7109,6 +8320,21 @@ end
 
 module Devise::Models::Validatable
   VALIDATIONS = ::T.let(nil, ::T.untyped)
+end
+
+class Devise::OmniauthCallbacksController
+  def after_omniauth_failure_path_for(scope); end
+
+  def failed_strategy(); end
+
+  def failure(); end
+
+  def failure_message(); end
+
+  def passthru(); end
+end
+
+class Devise::OmniauthCallbacksController
 end
 
 class Devise::ParameterFilter
@@ -7253,6 +8479,21 @@ class Devise::TimeInflector
   def self.time_ago_in_words(*args, &block); end
 end
 
+class Devise::UnlocksController
+  def after_sending_unlock_instructions_path_for(resource); end
+
+  def after_unlock_path_for(resource); end
+
+  def create(); end
+
+  def new(); end
+
+  def show(); end
+end
+
+class Devise::UnlocksController
+end
+
 class DeviseController
   include ::Devise::Controllers::ScopedViews
   def assert_is_devise_resource!(); end
@@ -7303,6 +8544,7 @@ module DeviseHelper
 end
 
 class DidYouMean::ClassNameChecker
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def class_name(); end
 
@@ -7349,6 +8591,7 @@ module DidYouMean::Levenshtein
 end
 
 class DidYouMean::MethodNameChecker
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def corrections(); end
 
@@ -7363,6 +8606,7 @@ class DidYouMean::MethodNameChecker
 end
 
 class DidYouMean::NullChecker
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def corrections(); end
 
@@ -7377,6 +8621,7 @@ class DidYouMean::PlainFormatter
 end
 
 class DidYouMean::SpellChecker
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def correct(input); end
 
@@ -7384,6 +8629,7 @@ class DidYouMean::SpellChecker
 end
 
 class DidYouMean::VariableNameChecker
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def corrections(); end
 
@@ -7408,6 +8654,7 @@ module DidYouMean
 end
 
 class Digest::Class
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -7419,6 +8666,7 @@ module Digest::UUID
 end
 
 class Dir
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def children(); end
 
@@ -7449,6 +8697,7 @@ class Docile::FallbackContextProxy
 end
 
 class ERB
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def def_method(mod, methodname, fname=T.unsafe(nil)); end
 
@@ -7458,18 +8707,22 @@ class ERB
 end
 
 class ERB::Compiler
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class ERB::Compiler::Buffer
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class ERB::Compiler::PercentLine
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class ERB::Compiler::Scanner
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   DEFAULT_ETAGS = ::T.let(nil, ::T.untyped)
   DEFAULT_STAGS = ::T.let(nil, ::T.untyped)
@@ -7485,6 +8738,7 @@ end
 Emitter = Psych::Stream::Emitter
 
 class Encoding
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def _dump(*_); end
 end
@@ -7880,6 +9134,7 @@ module Enumerable
 end
 
 class Enumerator
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +(_); end
 
@@ -7911,6 +9166,7 @@ class Enumerator::Chain
 end
 
 class Enumerator::Generator
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def each(*_, &blk); end
 
@@ -7928,6 +9184,7 @@ class Enumerator::Lazy
 end
 
 class Enumerator::Yielder
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -8204,6 +9461,7 @@ end
 
 class Exception
   include ::BetterErrors::ExceptionExtension
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def full_message(*_); end
 
@@ -8346,6 +9604,7 @@ end
 class FalseClass
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -8788,6 +10047,7 @@ module Fcntl
 end
 
 class Fiber
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def resume(*_); end
 
@@ -8805,6 +10065,7 @@ class File
 end
 
 class File::Stat
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def size?(); end
 end
@@ -8842,6 +10103,7 @@ module FileUtils::DryRun
 end
 
 class FileUtils::Entry_
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -10028,6 +11290,12 @@ module GamePublisher::GeneratedAttributeMethods
 end
 
 class GamePurchase
+  def after_add_for_game_purchase_events(); end
+
+  def after_add_for_game_purchase_events=(val); end
+
+  def after_add_for_game_purchase_events?(); end
+
   def after_add_for_game_purchase_platforms(); end
 
   def after_add_for_game_purchase_platforms=(val); end
@@ -10039,6 +11307,12 @@ class GamePurchase
   def after_add_for_platforms=(val); end
 
   def after_add_for_platforms?(); end
+
+  def after_remove_for_game_purchase_events(); end
+
+  def after_remove_for_game_purchase_events=(val); end
+
+  def after_remove_for_game_purchase_events?(); end
 
   def after_remove_for_game_purchase_platforms(); end
 
@@ -10054,11 +11328,19 @@ class GamePurchase
 
   def autosave_associated_records_for_game(*args); end
 
+  def autosave_associated_records_for_game_purchase_events(*args); end
+
   def autosave_associated_records_for_game_purchase_platforms(*args); end
 
   def autosave_associated_records_for_platforms(*args); end
 
   def autosave_associated_records_for_user(*args); end
+
+  def before_add_for_game_purchase_events(); end
+
+  def before_add_for_game_purchase_events=(val); end
+
+  def before_add_for_game_purchase_events?(); end
 
   def before_add_for_game_purchase_platforms(); end
 
@@ -10072,6 +11354,12 @@ class GamePurchase
 
   def before_add_for_platforms?(); end
 
+  def before_remove_for_game_purchase_events(); end
+
+  def before_remove_for_game_purchase_events=(val); end
+
+  def before_remove_for_game_purchase_events?(); end
+
   def before_remove_for_game_purchase_platforms(); end
 
   def before_remove_for_game_purchase_platforms=(val); end
@@ -10083,6 +11371,8 @@ class GamePurchase
   def before_remove_for_platforms=(val); end
 
   def before_remove_for_platforms?(); end
+
+  def validate_associated_records_for_game_purchase_events(*args); end
 
   def validate_associated_records_for_game_purchase_platforms(*args); end
 
@@ -10102,6 +11392,10 @@ module GamePurchase::GeneratedAssociationMethods
 
   def create_user!(*args, &block); end
 
+  def game_purchase_event_ids(); end
+
+  def game_purchase_event_ids=(ids); end
+
   def game_purchase_platform_ids(); end
 
   def game_purchase_platform_ids=(ids); end
@@ -10120,6 +11414,12 @@ module GamePurchase::GeneratedAttributeMethods
 end
 
 class GamePurchase
+  def self.after_add_for_game_purchase_events(); end
+
+  def self.after_add_for_game_purchase_events=(val); end
+
+  def self.after_add_for_game_purchase_events?(); end
+
   def self.after_add_for_game_purchase_platforms(); end
 
   def self.after_add_for_game_purchase_platforms=(val); end
@@ -10131,6 +11431,12 @@ class GamePurchase
   def self.after_add_for_platforms=(val); end
 
   def self.after_add_for_platforms?(); end
+
+  def self.after_remove_for_game_purchase_events(); end
+
+  def self.after_remove_for_game_purchase_events=(val); end
+
+  def self.after_remove_for_game_purchase_events?(); end
 
   def self.after_remove_for_game_purchase_platforms(); end
 
@@ -10144,6 +11450,12 @@ class GamePurchase
 
   def self.after_remove_for_platforms?(); end
 
+  def self.before_add_for_game_purchase_events(); end
+
+  def self.before_add_for_game_purchase_events=(val); end
+
+  def self.before_add_for_game_purchase_events?(); end
+
   def self.before_add_for_game_purchase_platforms(); end
 
   def self.before_add_for_game_purchase_platforms=(val); end
@@ -10155,6 +11467,12 @@ class GamePurchase
   def self.before_add_for_platforms=(val); end
 
   def self.before_add_for_platforms?(); end
+
+  def self.before_remove_for_game_purchase_events(); end
+
+  def self.before_remove_for_game_purchase_events=(val); end
+
+  def self.before_remove_for_game_purchase_events?(); end
 
   def self.before_remove_for_game_purchase_platforms(); end
 
@@ -10181,6 +11499,42 @@ class GamePurchase
   def self.not_paused(*args); end
 
   def self.not_unplayed(*args); end
+end
+
+class GamePurchaseEvent
+  def autosave_associated_records_for_game_purchase(*args); end
+
+  def autosave_associated_records_for_user(*args); end
+end
+
+module GamePurchaseEvent::GeneratedAssociationMethods
+  def build_game_purchase(*args, &block); end
+
+  def build_user(*args, &block); end
+
+  def create_game_purchase(*args, &block); end
+
+  def create_game_purchase!(*args, &block); end
+
+  def create_user(*args, &block); end
+
+  def create_user!(*args, &block); end
+
+  def reload_game_purchase(); end
+
+  def reload_user(); end
+end
+
+module GamePurchaseEvent::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+class GamePurchaseEvent
+  def self.not_add_to_library(*args); end
+
+  def self.not_change_completion_status(*args); end
+
+  def self.recently_created(*args); end
 end
 
 class GamePurchasePlatform
@@ -10217,26 +11571,32 @@ module GamesHelper
 end
 
 class Gem::BasicSpecification
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Gem::Dependency
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Gem::ErrorReason
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Gem::List
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Gem::PathSupport
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Gem::Platform
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -10245,6 +11605,7 @@ class Gem::RemoteFetcher
 end
 
 class Gem::Requirement
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -10310,6 +11671,7 @@ class Gem::Specification
 end
 
 class Gem::StubSpecification::StubLine
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -10318,6 +11680,7 @@ module Gem::Util
 end
 
 class Gem::Version
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -10648,13 +12011,10 @@ module GlobalID::Locator
   DEFAULT_LOCATOR = ::T.let(nil, ::T.untyped)
 end
 
-class HTMLSelector
-  NO_STRIP = ::T.let(nil, ::T.untyped)
-end
-
 class Hash
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::Hash
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def <(_); end
 
@@ -10704,8 +12064,6 @@ class Hash
 end
 
 class Hash
-  def self.from_trusted_xml(xml); end
-
   def self.try_convert(_); end
 end
 
@@ -11180,6 +12538,7 @@ module I18n
 end
 
 class IO
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def beep(); end
 
@@ -12032,6 +13391,7 @@ class Integer
 end
 
 class JSON::Ext::Generator::State
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -12040,6 +13400,7 @@ class JSON::Ext::Generator::State
 end
 
 class JSON::Ext::Parser
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def initialize(*_); end
 end
@@ -12114,10 +13475,6 @@ module Kernel
   def self.at_exit(); end
 
   def self.autoload(_, _1); end
-
-  def self.load(path, wrap=T.unsafe(nil)); end
-
-  def self.require(path); end
 end
 
 class KeyError
@@ -12208,17 +13565,20 @@ class LocalJumpError
 end
 
 class Logger
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   SEV_LABEL = ::T.let(nil, ::T.untyped)
 end
 
 class Logger::Formatter
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   Format = ::T.let(nil, ::T.untyped)
 end
 
 class Logger::LogDevice
   include ::MonitorMixin
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -12982,6 +14342,7 @@ module Marshal
 end
 
 class MatchData
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -12990,14 +14351,17 @@ module MessagePack
 end
 
 class MessagePack::Buffer
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class MessagePack::Factory
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class MessagePack::Packer
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13014,10 +14378,12 @@ class MessagePack::Timestamp
 end
 
 class MessagePack::Unpacker
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Method
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13301,6 +14667,7 @@ class Minitest::Test
 end
 
 class Module
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def deprecate_constant(*_); end
 
@@ -13315,6 +14682,7 @@ class Module
 end
 
 class Monitor
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def enter(); end
 
@@ -13346,6 +14714,7 @@ module MonitorMixin
 end
 
 class MonitorMixin::ConditionVariable
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def broadcast(); end
 
@@ -13415,6 +14784,7 @@ end
 Net::APOPSession = Net::APOP
 
 class Net::BufferedIO
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def write_timeout(); end
 
@@ -13441,6 +14811,7 @@ class Net::HTTP
 end
 
 class Net::HTTP::Persistent
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ca_path(); end
 
@@ -13525,8 +14896,6 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
-Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
-
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -13557,10 +14926,12 @@ class Net::HTTPGatewayTimeout
 end
 
 class Net::HTTPGenericRequest
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::HTTPGenericRequest::Chunker
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13628,10 +14999,12 @@ Net::HTTPRequestURITooLarge = Net::HTTPURITooLong
 Net::HTTPResponceReceiver = Net::HTTPResponse
 
 class Net::HTTPResponse
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::HTTPResponse::Inflater
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13641,7 +15014,15 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-Net::HTTPSession = Net::HTTP
+class Net::HTTP
+end
+
+Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
+
+Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
+
+class Net::HTTP
+end
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -13670,26 +15051,32 @@ class Net::IMAP
 end
 
 class Net::IMAP::Atom
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::CramMD5Authenticator
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::DigestMD5Authenticator
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::Literal
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::LoginAuthenticator
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::MessageSet
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13700,18 +15087,22 @@ module Net::IMAP::NumValidator
 end
 
 class Net::IMAP::PlainAuthenticator
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::QuotedString
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::RawData
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::IMAP::ResponseParser
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13899,10 +15290,12 @@ Net::POPSession = Net::POP3
 Net::ProtocRetryError = Net::ProtoRetriableError
 
 class Net::Protocol
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Net::ReadAdapter
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13913,12 +15306,14 @@ class Net::ReadTimeout
 end
 
 class Net::SMTP::Response
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 Net::SMTPSession = Net::SMTP
 
 class Net::WriteAdapter
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -13934,6 +15329,7 @@ end
 class NilClass
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::NilClass
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def to_d(); end
 
@@ -14242,6 +15638,7 @@ module Nokogiri::XML::Searchable
 end
 
 class Numeric
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def finite?(); end
 
@@ -14260,6 +15657,7 @@ class Numeric
 end
 
 class Object
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::MakeMakefile
   include ::PP::ObjectMixin
@@ -14300,6 +15698,7 @@ class ObjectSpace::InternalObjectWrapper
 end
 
 class ObjectSpace::WeakMap
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def [](_); end
 
@@ -14400,6 +15799,7 @@ module Observable
 end
 
 class OpenSSL::ASN1::ASN1Data
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def indefinite_length(); end
 
@@ -14407,6 +15807,7 @@ class OpenSSL::ASN1::ASN1Data
 end
 
 class OpenSSL::BN
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +@(); end
 
@@ -14418,18 +15819,22 @@ class OpenSSL::BN
 end
 
 class OpenSSL::Cipher
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::Config
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::Engine
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::HMAC
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -14447,58 +15852,71 @@ module OpenSSL::KDF
 end
 
 class OpenSSL::Netscape::SPKI
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::OCSP::BasicResponse
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::OCSP::CertificateId
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::OCSP::Request
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def signed?(); end
 end
 
 class OpenSSL::OCSP::Response
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::OCSP::SingleResponse
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::PKCS12
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::PKCS7
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::PKCS7::RecipientInfo
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 OpenSSL::PKCS7::Signer = OpenSSL::PKCS7::SignerInfo
 
 class OpenSSL::PKCS7::SignerInfo
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::PKey::EC::Group
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::PKey::EC::Point
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def to_octet_string(_); end
 end
 
 class OpenSSL::PKey::PKey
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -14526,39 +15944,47 @@ module OpenSSL::X509
 end
 
 class OpenSSL::X509::Attribute
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 end
 
 class OpenSSL::X509::CRL
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 end
 
 class OpenSSL::X509::Certificate
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::X509::Extension
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 end
 
 class OpenSSL::X509::ExtensionFactory
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::X509::Name
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def to_utf8(); end
 end
 
 class OpenSSL::X509::Request
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 end
 
 class OpenSSL::X509::Revoked
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 
@@ -14566,10 +15992,12 @@ class OpenSSL::X509::Revoked
 end
 
 class OpenSSL::X509::Store
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::X509::StoreContext
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -14578,6 +16006,7 @@ module OpenSSL
 end
 
 class OpenStruct
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -14677,6 +16106,7 @@ module OpenURI
 end
 
 class OptionParser
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -14685,6 +16115,7 @@ class OptionParser::CompletingHash
 end
 
 class OptionParser::List
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -14693,6 +16124,7 @@ class OptionParser::OptionMap
 end
 
 class OptionParser::Switch
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -16697,6 +18129,7 @@ class Parser::Source::TreeRewriter
 end
 
 class Pathname
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def empty?(); end
 
@@ -17341,30 +18774,37 @@ class Platform
 end
 
 class PrettyPrint
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class PrettyPrint::Breakable
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class PrettyPrint::Group
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class PrettyPrint::GroupQueue
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class PrettyPrint::SingleLine
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class PrettyPrint::Text
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Proc
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def <<(_); end
 
@@ -17384,6 +18824,7 @@ module Process
 end
 
 class Process::Status
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -21118,6 +22559,7 @@ class Racc::CparseParams
 end
 
 class Racc::Parser
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   Racc_Main_Parsing_Routine = ::T.let(nil, ::T.untyped)
   Racc_Runtime_Core_Id_C = ::T.let(nil, ::T.untyped)
@@ -21363,9 +22805,30 @@ end
 class Rack::Cascade
 end
 
+class Rack::Chunked
+  include ::Rack::Utils
+  def call(env); end
+
+  def chunkable_version?(ver); end
+
+  def initialize(app); end
+end
+
 class Rack::Chunked::Body
+  include ::Rack::Utils
+  def close(); end
+
+  def each(&blk); end
+
+  def initialize(body); end
   TAIL = ::T.let(nil, ::T.untyped)
   TERM = ::T.let(nil, ::T.untyped)
+end
+
+class Rack::Chunked::Body
+end
+
+class Rack::Chunked
 end
 
 class Rack::CommonLogger
@@ -22205,6 +23668,66 @@ class Rails::BacktraceCleaner
   SLASH = ::T.let(nil, ::T.untyped)
 end
 
+module Rails::Dom
+end
+
+module Rails::Dom::Testing
+end
+
+module Rails::Dom::Testing::Assertions
+  include ::Rails::Dom::Testing::Assertions::DomAssertions
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
+end
+
+module Rails::Dom::Testing::Assertions::DomAssertions
+  def assert_dom_equal(expected, actual, message=T.unsafe(nil)); end
+
+  def assert_dom_not_equal(expected, actual, message=T.unsafe(nil)); end
+
+  def compare_doms(expected, actual); end
+
+  def equal_attribute?(attr, other_attr); end
+
+  def equal_attribute_nodes?(nodes, other_nodes); end
+
+  def equal_children?(child, other_child); end
+end
+
+module Rails::Dom::Testing::Assertions::DomAssertions
+end
+
+module Rails::Dom::Testing::Assertions::SelectorAssertions
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
+  def assert_select(*args, &block); end
+
+  def assert_select_email(&block); end
+
+  def assert_select_encoded(element=T.unsafe(nil), &block); end
+
+  def css_select(*args); end
+end
+
+module Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
+end
+
+module Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
+  extend ::ActiveSupport::Concern
+end
+
+module Rails::Dom::Testing::Assertions::SelectorAssertions
+end
+
+module Rails::Dom::Testing::Assertions
+  extend ::ActiveSupport::Concern
+end
+
+module Rails::Dom::Testing
+end
+
+module Rails::Dom
+end
+
 module Rails::Html
   XPATHS_TO_REMOVE = ::T.let(nil, ::T.untyped)
 end
@@ -22369,6 +23892,7 @@ end
 RakeFileUtils = Rake::FileUtilsExt
 
 class Random
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -22390,6 +23914,7 @@ class Range
   include ::ActiveSupport::IncludeTimeWithZone
   include ::ActiveSupport::CompareWithRange
   include ::ActiveSupport::RangeWithFormat
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def %(_); end
 
@@ -22564,6 +24089,7 @@ module Readline
 end
 
 class Regexp
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def match?(*_); end
   TOKEN_KEYS = ::T.let(nil, ::T.untyped)
@@ -27207,6 +28733,7 @@ module RubyToken
 end
 
 class RubyVM
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -27241,6 +28768,7 @@ module RubyVM::AbstractSyntaxTree
 end
 
 class RubyVM::InstructionSequence
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def absolute_path(); end
 
@@ -28741,6 +30269,7 @@ class Series
 end
 
 class Set
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 
@@ -29017,6 +30546,7 @@ class Socket
 end
 
 class Socket::AncillaryData
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -29112,14 +30642,17 @@ module Socket::Constants
 end
 
 class Socket::Option
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Socket::UDPSource
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Sorbet
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -29803,6 +31336,7 @@ end
 class String
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::String
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +@(); end
 
@@ -29870,6 +31404,7 @@ class StringIO
 end
 
 class StringScanner
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def <<(_); end
 
@@ -29965,6 +31500,7 @@ class StringScanner
 end
 
 class Struct
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def [](_); end
 
@@ -30000,6 +31536,7 @@ Struct::Passwd = Etc::Passwd
 Struct::Tms = Process::Tms
 
 class Symbol
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -30056,30 +31593,37 @@ class Tempfile::Remover
 end
 
 class Thread
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Thread::Backtrace
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Thread::Backtrace::Location
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Thread::ConditionVariable
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Thread::Mutex
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Thread::Queue
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class ThreadGroup
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -30341,12 +31885,14 @@ module ThreadSafe::Util
 end
 
 class Time
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   COMMON_YEAR_DAYS_IN_MONTH = ::T.let(nil, ::T.untyped)
   DATE_FORMATS = ::T.let(nil, ::T.untyped)
 end
 
 class TracePoint
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def __enable(_, _1); end
 
@@ -30362,6 +31908,7 @@ end
 class TrueClass
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -30427,6 +31974,7 @@ class URI::GID
 end
 
 class URI::Generic
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +(oth); end
 
@@ -30619,6 +32167,7 @@ URI::Parser = URI::RFC2396_Parser
 URI::REGEXP = URI::RFC2396_REGEXP
 
 class URI::RFC2396_Parser
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def escape(str, unsafe=T.unsafe(nil)); end
 
@@ -30642,6 +32191,7 @@ class URI::RFC2396_Parser
 end
 
 class URI::RFC3986_Parser
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def join(*uris); end
 
@@ -30669,6 +32219,7 @@ module URI
 end
 
 class UnboundMethod
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def clone(); end
 
@@ -30762,6 +32313,12 @@ class User
 
   def after_add_for_favorite_games?(); end
 
+  def after_add_for_game_purchase_events(); end
+
+  def after_add_for_game_purchase_events=(val); end
+
+  def after_add_for_game_purchase_events?(); end
+
   def after_add_for_game_purchases(); end
 
   def after_add_for_game_purchases=(val); end
@@ -30779,6 +32336,12 @@ class User
   def after_remove_for_favorite_games=(val); end
 
   def after_remove_for_favorite_games?(); end
+
+  def after_remove_for_game_purchase_events(); end
+
+  def after_remove_for_game_purchase_events=(val); end
+
+  def after_remove_for_game_purchase_events?(); end
 
   def after_remove_for_game_purchases(); end
 
@@ -30800,6 +32363,8 @@ class User
 
   def autosave_associated_records_for_favorite_games(*args); end
 
+  def autosave_associated_records_for_game_purchase_events(*args); end
+
   def autosave_associated_records_for_game_purchases(*args); end
 
   def autosave_associated_records_for_games(*args); end
@@ -30809,6 +32374,12 @@ class User
   def before_add_for_favorite_games=(val); end
 
   def before_add_for_favorite_games?(); end
+
+  def before_add_for_game_purchase_events(); end
+
+  def before_add_for_game_purchase_events=(val); end
+
+  def before_add_for_game_purchase_events?(); end
 
   def before_add_for_game_purchases(); end
 
@@ -30827,6 +32398,12 @@ class User
   def before_remove_for_favorite_games=(val); end
 
   def before_remove_for_favorite_games?(); end
+
+  def before_remove_for_game_purchase_events(); end
+
+  def before_remove_for_game_purchase_events=(val); end
+
+  def before_remove_for_game_purchase_events?(); end
 
   def before_remove_for_game_purchases(); end
 
@@ -30853,6 +32430,8 @@ class User
   def password_confirmation=(password_confirmation); end
 
   def validate_associated_records_for_favorite_games(*args); end
+
+  def validate_associated_records_for_game_purchase_events(*args); end
 
   def validate_associated_records_for_game_purchases(*args); end
 
@@ -30883,6 +32462,10 @@ module User::GeneratedAssociationMethods
   def game_ids(); end
 
   def game_ids=(ids); end
+
+  def game_purchase_event_ids(); end
+
+  def game_purchase_event_ids=(ids); end
 
   def game_purchase_ids(); end
 
@@ -31541,6 +33124,12 @@ class User
 
   def self.after_add_for_favorite_games?(); end
 
+  def self.after_add_for_game_purchase_events(); end
+
+  def self.after_add_for_game_purchase_events=(val); end
+
+  def self.after_add_for_game_purchase_events?(); end
+
   def self.after_add_for_game_purchases(); end
 
   def self.after_add_for_game_purchases=(val); end
@@ -31558,6 +33147,12 @@ class User
   def self.after_remove_for_favorite_games=(val); end
 
   def self.after_remove_for_favorite_games?(); end
+
+  def self.after_remove_for_game_purchase_events(); end
+
+  def self.after_remove_for_game_purchase_events=(val); end
+
+  def self.after_remove_for_game_purchase_events?(); end
 
   def self.after_remove_for_game_purchases(); end
 
@@ -31577,6 +33172,12 @@ class User
 
   def self.before_add_for_favorite_games?(); end
 
+  def self.before_add_for_game_purchase_events(); end
+
+  def self.before_add_for_game_purchase_events=(val); end
+
+  def self.before_add_for_game_purchase_events?(); end
+
   def self.before_add_for_game_purchases(); end
 
   def self.before_add_for_game_purchases=(val); end
@@ -31594,6 +33195,12 @@ class User
   def self.before_remove_for_favorite_games=(val); end
 
   def self.before_remove_for_favorite_games?(); end
+
+  def self.before_remove_for_game_purchase_events(); end
+
+  def self.before_remove_for_game_purchase_events=(val); end
+
+  def self.before_remove_for_game_purchase_events?(); end
 
   def self.before_remove_for_game_purchases(); end
 
@@ -31625,6 +33232,7 @@ end
 Visitor = Psych::Visitors::Visitor
 
 class WEBrick::HTTPServlet::AbstractServlet
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -31745,12 +33353,17 @@ end
 class WebConsole::ExceptionMapper
   def [](index); end
 
+  def exc(); end
+
   def first(); end
 
   def initialize(exception); end
 end
 
 class WebConsole::ExceptionMapper
+  def self.find_binding(mappers, exception_object_id); end
+
+  def self.follow(exc); end
 end
 
 class WebConsole::Injector
@@ -31766,6 +33379,10 @@ class WebConsole::Middleware
   TEMPLATES_PATH = ::T.let(nil, ::T.untyped)
 end
 
+class WebConsole::Permissions
+  ALWAYS_PERMITTED_NETWORKS = ::T.let(nil, ::T.untyped)
+end
+
 class WebConsole::Session
   def context(objpath); end
 
@@ -31773,11 +33390,11 @@ class WebConsole::Session
 
   def id(); end
 
-  def initialize(bindings); end
+  def initialize(exception_mappers); end
 
   def inmemory_storage(); end
 
-  def switch_binding_to(index); end
+  def switch_binding_to(index, exception_object_id); end
 end
 
 class WebConsole::Session
@@ -31820,14 +33437,10 @@ class WebConsole::View
 end
 
 class WebConsole::WhinyRequest
-  def from_whitelisted_ip?(); end
+  def permitted?(); end
 end
 
 class WebConsole::WhinyRequest
-end
-
-class WebConsole::Whitelist
-  ALWAYS_WHITELISTED_NETWORKS = ::T.let(nil, ::T.untyped)
 end
 
 module Webdrivers
@@ -31859,6 +33472,10 @@ end
 YAML = Psych
 
 YAMLTree = Psych::Visitors::YAMLTree
+
+module Zeitwerk::ExplicitNamespace
+  extend ::Zeitwerk::RealModName
+end
 
 module Zip
   CDIR_ENTRY_STATIC_HEADER_LENGTH = ::T.let(nil, ::T.untyped)
@@ -31966,6 +33583,9 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+end
+
+class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

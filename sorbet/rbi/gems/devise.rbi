@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/devise/all/devise.rbi
 #
-# devise-12fc5b76d89c
+# devise-4.7.0
 module Devise
   def allow_unconfirmed_access_for; end
   def allow_unconfirmed_access_for=(obj); end
@@ -519,12 +519,12 @@ class Devise::FailureApp < ActionController::Metal
   include ActionDispatch::Routing::UrlFor
   include ActionDispatch::Routing::UrlFor
   include ActiveSupport::Benchmarkable
-  include Anonymous_Module_23
+  include Anonymous_Module_21
   include Devise::Controllers::StoreLocation
   include Turbolinks::Controller
   include Turbolinks::Redirection
 end
-module Anonymous_Module_23
+module Anonymous_Module_21
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -536,11 +536,11 @@ module Anonymous_Module_23
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_24
-  extend Anonymous_Module_25
+  extend Anonymous_Module_22
+  extend Anonymous_Module_23
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_24
-  include Anonymous_Module_25
+  include Anonymous_Module_22
+  include Anonymous_Module_23
 end
 class Devise::Strategies::Base < Warden::Strategies::Base
   def mapping; end
@@ -757,13 +757,6 @@ class Devise::Delegator
   def call(env); end
   def failure_app(env); end
 end
-module Devise::Controllers::ScopedViews
-  extend ActiveSupport::Concern
-end
-module Devise::Controllers::ScopedViews::ClassMethods
-  def scoped_views=(value); end
-  def scoped_views?; end
-end
 module Devise::Encryptor
   def self.compare(klass, hashed_password, password); end
   def self.digest(klass, password); end
@@ -781,4 +774,42 @@ module Devise::Mailers::Helpers
   def subject_for(key); end
   def template_paths; end
   extend ActiveSupport::Concern
+end
+module Devise::Controllers::ScopedViews
+  extend ActiveSupport::Concern
+end
+module Devise::Controllers::ScopedViews::ClassMethods
+  def scoped_views=(value); end
+  def scoped_views?; end
+end
+class Devise::Mailer < ActionMailer::Base
+  def _layout(lookup_context, formats); end
+  def confirmation_instructions(record, token, opts = nil); end
+  def email_changed(record, opts = nil); end
+  def password_change(record, opts = nil); end
+  def reset_password_instructions(record, token, opts = nil); end
+  def self._helpers; end
+  def self._routes; end
+  def unlock_instructions(record, token, opts = nil); end
+  extend Devise::Controllers::ScopedViews::ClassMethods
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_24
+  include Devise::Controllers::ScopedViews
+  include Devise::Mailers::Helpers
+end
+module Anonymous_Module_24
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_22
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_22
 end

@@ -146,7 +146,7 @@ end
 module Arel::Attributes
   def self.for(column); end
 end
-class Anonymous_Struct_9 < Struct
+class Anonymous_Struct_6 < Struct
   def name; end
   def name=(_); end
   def relation; end
@@ -156,7 +156,7 @@ class Anonymous_Struct_9 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Arel::Attributes::Attribute < Anonymous_Struct_9
+class Arel::Attributes::Attribute < Anonymous_Struct_6
   def able_to_type_cast?; end
   def lower; end
   def type_cast_for_database(value); end
@@ -635,7 +635,7 @@ class Arel::Visitors::Dot::Node
   def name; end
   def name=(arg0); end
 end
-class Anonymous_Struct_10 < Struct
+class Anonymous_Struct_7 < Struct
   def from; end
   def from=(_); end
   def name; end
@@ -647,7 +647,7 @@ class Anonymous_Struct_10 < Struct
   def to; end
   def to=(_); end
 end
-class Arel::Visitors::Dot::Edge < Anonymous_Struct_10
+class Arel::Visitors::Dot::Edge < Anonymous_Struct_7
 end
 class Arel::Visitors::IBM_DB < Arel::Visitors::ToSql
   def collect_optimizer_hints(o, collector); end
@@ -2785,7 +2785,7 @@ class ActiveRecord::Type::Time < ActiveModel::Type::Time
   def serialize(value); end
   include ActiveRecord::Type::Internal::Timezone
 end
-class ActiveRecord::Type::Time::Value < Anonymous_Delegator_11
+class ActiveRecord::Type::Time::Value < Anonymous_Delegator_8
 end
 class ActiveRecord::Type::Text < ActiveModel::Type::String
   def type; end
@@ -2794,7 +2794,7 @@ class ActiveRecord::Type::UnsignedInteger < ActiveModel::Type::Integer
   def max_value; end
   def min_value; end
 end
-class ActiveRecord::Type::Serialized < Anonymous_Delegator_12
+class ActiveRecord::Type::Serialized < Anonymous_Delegator_9
   def accessor; end
   def assert_valid_value(value); end
   def changed_in_place?(raw_old_value, value); end
@@ -3373,7 +3373,7 @@ module ActiveRecord::Locking::Optimistic::ClassMethods
   def reset_locking_column; end
   def update_counters(id, counters); end
 end
-class ActiveRecord::Locking::LockingType < Anonymous_Delegator_13
+class ActiveRecord::Locking::LockingType < Anonymous_Delegator_10
   def deserialize(value); end
   def encode_with(coder); end
   def init_with(coder); end
@@ -3438,7 +3438,7 @@ end
 module ActiveRecord::AttributeMethods::TimeZoneConversion
   extend ActiveSupport::Concern
 end
-class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_14
+class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_11
   def cast(value); end
   def convert_time_to_time_zone(value); end
   def deserialize(value); end
@@ -5030,7 +5030,7 @@ module ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaStatements
   def validate_constraint(table_name, constraint_name); end
   def validate_foreign_key(from_table, to_table = nil, **options); end
 end
-class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_15
+class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_12
   def ==(other); end
   def eql?(other); end
   def fmod; end
@@ -5573,6 +5573,42 @@ class ActiveRecord::Associations::Preloader::AlreadyLoaded
   def reflection; end
   def run; end
 end
+class ActiveRecord::Associations::Preloader::Association
+  def associate_records_to_owner(owner, records); end
+  def association_key_name; end
+  def association_key_type; end
+  def build_scope; end
+  def convert_key(key); end
+  def initialize(klass, owners, reflection, preload_scope); end
+  def key_conversion_required?; end
+  def klass; end
+  def model; end
+  def owner_key_name; end
+  def owner_key_type; end
+  def owner_keys; end
+  def owners; end
+  def owners_by_key; end
+  def preload_scope; end
+  def preloaded_records; end
+  def records_by_owner; end
+  def records_for(ids); end
+  def reflection; end
+  def reflection_scope; end
+  def run; end
+  def scope; end
+end
+class ActiveRecord::Associations::Preloader::ThroughAssociation < ActiveRecord::Associations::Preloader::Association
+  def initialize(*arg0); end
+  def middle_records; end
+  def preload_index; end
+  def preloaded_records; end
+  def records_by_owner; end
+  def source_preloaders; end
+  def source_reflection; end
+  def through_preloaders; end
+  def through_reflection; end
+  def through_scope; end
+end
 class ActiveRecord::Associations::JoinDependency
   def alias_tracker; end
   def aliases; end
@@ -6028,7 +6064,7 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   def type_with_size_to_sql(type, size); end
   def update_table_definition(table_name, base); end
 end
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_16
+class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_13
   def ==(other); end
   def eql?(other); end
   def extra; end
