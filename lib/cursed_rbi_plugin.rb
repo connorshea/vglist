@@ -1,8 +1,10 @@
 # typed: true
 class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
   # Add some cursed methods to the Rails generators.
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root)
-    return unless @model_class.reflections.length > 0
+    return if @model_class.reflections.keys.empty?
+
     assoc_module_name = model_module_name("GeneratedAssociationMethods")
     assoc_module_rbi = root.create_module(assoc_module_name)
 
@@ -78,6 +80,12 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
         model_klass = root.create_class(model_class_name)
         autosave_and_validate_associated_records_methods(assoc_name, model_klass)
       end
+
+      # Generate the methods for GeneratedAttributeMethods.
+      model_generated_attribute_methods = root.create_module(model_module_name("GeneratedAttributeMethods"))
+      @model_class.attribute_names.each do |attribute|
+        dirty_methods(attribute, model_generated_attribute_methods)
+      end
     end
   end
 
@@ -123,7 +131,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
       ],
       return_type: 'T.untyped'
     )
-    
+
     # def validate_associated_records_for_developers(*args); end
     model_klass.create_method(
       "validate_associated_records_for_#{assoc_name}",
@@ -132,5 +140,36 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
       ],
       return_type: 'T.untyped'
     )
+  end
+
+  def dirty_methods(attribute_name, model_klass)
+    methods = [
+      "saved_change_to_#{attribute_name}?",
+      "saved_change_to_#{attribute_name}",
+      "#{attribute_name}_before_last_save",
+      "will_save_change_to_#{attribute_name}?",
+      "#{attribute_name}_change_to_be_saved",
+      "#{attribute_name}_in_database",
+      "#{attribute_name}_changed?",
+      "#{attribute_name}_change",
+      "#{attribute_name}_will_change!",
+      "#{attribute_name}_was",
+      "#{attribute_name}_previously_changed?",
+      "#{attribute_name}_previous_change",
+      "restore_#{attribute_name}!",
+      # technically these two aren't from ActiveModel::Dirty, but whatever.
+      "#{attribute_name}_before_type_cast",
+      "#{attribute_name}_came_from_user?"
+    ]
+
+    methods.each do |meth|
+      model_klass.create_method(
+        meth,
+        parameters: [
+          Parlour::RbiGenerator::Parameter.new('*args', type: 'T.untyped')
+        ],
+        return_type: 'T.untyped'
+      )
+    end
   end
 end
