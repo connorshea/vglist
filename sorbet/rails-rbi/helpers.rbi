@@ -11,21 +11,6 @@ module GamesHelper
   include ActionView::Helpers
 end
 
-module GenresHelper
-  include Kernel
-  include ActionView::Helpers
-end
-
-module HomeHelper
-  include Kernel
-  include ActionView::Helpers
-end
-
-module PlatformsHelper
-  include Kernel
-  include ActionView::Helpers
-end
-
 module SettingsHelper
   include Kernel
   include ActionView::Helpers
