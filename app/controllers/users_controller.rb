@@ -252,6 +252,7 @@ class UsersController < ApplicationController
     @user2 = User.friendly.find(params[:other_user_id])
 
     authorize @user1
+    authorize @user2
 
     respond_to do |format|
       format.html

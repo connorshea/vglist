@@ -18,7 +18,7 @@ class UserPolicy < ApplicationPolicy
 
   sig { returns(T.nilable(T::Boolean)) }
   def show?
-    user_profile_is_public?
+    user_profile_is_visible?
   end
 
   sig { returns(T.nilable(T::Boolean)) }
@@ -69,14 +69,16 @@ class UserPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def statistics?
-    true
+    user_profile_is_visible?
   end
 
-  sig { returns(T::Boolean) }
+  # The authorize method is called once for each user in the compare page, so
+  # we only need to worry about checking one user's visibility at a time.
+  sig { returns(T.nilable(T::Boolean)) }
   def compare?
-    true
+    user_profile_is_visible?
   end
 
   private
@@ -87,7 +89,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
-  def user_profile_is_public?
-    user&.public_account? || user_is_current_user?
+  def user_profile_is_visible?
+    user&.public_account? || user_is_current_user? || current_user&.admin?
   end
 end
