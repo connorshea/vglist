@@ -48,7 +48,7 @@ FactoryBot.define do
 
     factory :confirmed_user,                  traits: [:confirmed]
     factory :confirmed_user_with_avatar,      traits: [:confirmed, :avatar]
-    factory :private_user,                    traits: [:private_account]
+    factory :private_user,                    traits: [:confirmed, :private_account]
 
     factory :moderator,                       traits: [:moderator]
     factory :confirmed_moderator,             traits: [:confirmed, :moderator]

@@ -14,6 +14,7 @@ RSpec.describe "Users", type: :request do
     let(:user_with_avatar) { create(:user_with_avatar) }
     let(:user_with_game_purchase) { create(:user_with_game_purchase) }
     let(:user_with_favorite_game) { create(:user_with_favorite_game) }
+    let(:private_user) { create(:private_user) }
 
     it "returns http success" do
       get user_path(id: user.id)
@@ -34,10 +35,16 @@ RSpec.describe "Users", type: :request do
       get user_path(id: user_with_favorite_game.id)
       expect(response).to have_http_status(:success)
     end
+
+    it "returns http success for user with private account" do
+      get user_path(id: private_user.id)
+      expect(response).to have_http_status(:success)
+    end
   end
 
   describe "GET statistics_user_path" do
     let(:user) { create(:confirmed_user) }
+    let(:private_user) { create(:private_user) }
 
     it "returns http success" do
       get statistics_user_path(id: user.id, format: :json)
@@ -139,11 +146,17 @@ RSpec.describe "Users", type: :request do
       parsed_response = JSON.parse(response.body)
       expect(parsed_response['total_days_played']).to eq(0)
     end
+
+    it "returns http redirect for private user" do
+      get statistics_user_path(id: private_user.id, format: :json)
+      expect(response).to have_http_status(:redirect)
+    end
   end
 
   describe 'GET compare_users_path' do
     let(:user) { create(:confirmed_user) }
     let(:other_user) { create(:confirmed_user) }
+    let(:private_user) { create(:private_user) }
 
     it "returns http success when users have no game purchases" do
       get compare_users_path(user_id: user.id, other_user_id: other_user.id, format: :json)
@@ -160,6 +173,21 @@ RSpec.describe "Users", type: :request do
       create(:game_purchase, user: user)
       create(:game_purchase, user: other_user)
       get compare_users_path(user_id: user.id, other_user_id: other_user.id, format: :json)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http redirect for private user if not logged in" do
+      create(:game_purchase, user: user)
+      create(:game_purchase, user: private_user)
+      get compare_users_path(user_id: user.id, other_user_id: private_user.id, format: :json)
+      expect(response).to have_http_status(:redirect)
+    end
+
+    it "returns http success for private user logged in as themselves" do
+      create(:game_purchase, user: user)
+      create(:game_purchase, user: private_user)
+      sign_in(private_user)
+      get compare_users_path(user_id: user.id, other_user_id: private_user.id, format: :json)
       expect(response).to have_http_status(:success)
     end
   end
