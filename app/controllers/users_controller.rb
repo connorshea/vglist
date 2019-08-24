@@ -7,6 +7,9 @@ class UsersController < ApplicationController
 
   def show
     @user = User.friendly.find(params[:id])
+    # The user can access the page, but it'll just have a message about the
+    # account being private. The visibility of data is handled in the user
+    # view.
     skip_authorization
   end
 
