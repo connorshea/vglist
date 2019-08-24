@@ -9,7 +9,7 @@ RSpec.describe GamePurchase, type: :model do
       expect(game_purchase).to be_valid
     end
 
-    it { should validate_length_of(:comments).is_at_most(500) }
+    it { should validate_length_of(:comments).is_at_most(2000) }
     it { should validate_uniqueness_of(:game_id).scoped_to(:user_id) }
     it 'validates the rating' do
       expect(game_purchase).to validate_numericality_of(:rating)

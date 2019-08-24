@@ -22,7 +22,7 @@ class GamePurchase < ApplicationRecord
   }
 
   validates :comments,
-    length: { maximum: 500 }
+    length: { maximum: 2000 }
 
   validates :game_id,
     uniqueness: { scope: :user_id }
