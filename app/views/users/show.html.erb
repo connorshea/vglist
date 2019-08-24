@@ -16,9 +16,13 @@
     <h1 class="title"><%= @user.username %></h1>
 
     <% if !@user.bio.blank? %>
-      <h2 class="subtitle"><%= @user.bio %>
+      <h2 class="subtitle"><%= @user.bio %></h2>
     <% else %>
-      <h2 class="subtitle"><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
+      <h2 class="subtitle"><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %></h2>
+    <% end %>
+
+    <% if @user.private_account? %>
+      <p class='has-text-weight-semibold'>This user's account is private.
     <% end %>
 
     <% if @user.admin? %>

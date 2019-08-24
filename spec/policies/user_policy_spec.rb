@@ -168,4 +168,27 @@ RSpec.describe UserPolicy, type: :policy do
       )
     end
   end
+
+  describe "A user that is not logged in looking at a private user's profile" do
+    let(:current_user) { nil }
+    let(:user) { create(:private_user) }
+
+    it { should permit_actions([:index]) }
+    it "does not permit actions" do
+      expect(user_policy).to forbid_actions(
+        [
+          :show,
+          :update_role, 
+          :remove_avatar,
+          :statistics,
+          :compare,
+          :update,
+          :steam_import,
+          :connect_steam,
+          :disconnect_steam,
+          :reset_game_library
+        ]
+      )
+    end
+  end
 end
