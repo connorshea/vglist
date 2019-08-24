@@ -32,9 +32,10 @@ export default {
       type: String,
       required: true
     },
+    // Optional to allow for null.
     value: {
       type: String,
-      required: true
+      required: false
     },
     required: {
       type: Boolean,
