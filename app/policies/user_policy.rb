@@ -16,9 +16,9 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def show?
-    true
+    user_profile_is_public?
   end
 
   sig { returns(T.nilable(T::Boolean)) }
@@ -84,5 +84,10 @@ class UserPolicy < ApplicationPolicy
   sig { returns(T.nilable(T::Boolean)) }
   def user_is_current_user?
     current_user && user == current_user
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def user_profile_is_public?
+    user&.public_account? || user_is_current_user?
   end
 end

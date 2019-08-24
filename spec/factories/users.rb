@@ -42,6 +42,10 @@ FactoryBot.define do
       role { :admin }
     end
 
+    trait :private_account do
+      privacy { :private_account }
+    end
+
     factory :confirmed_user,                  traits: [:confirmed]
     factory :confirmed_user_with_avatar,      traits: [:confirmed, :avatar]
 

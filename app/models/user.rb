@@ -33,6 +33,12 @@ class User < ApplicationRecord
     admin: 2
   }
 
+  # Account privacy
+  enum privacy: {
+    public_account: 0,
+    private_account: 1
+  }
+
   validates :username,
     # Username is required
     presence: true,
