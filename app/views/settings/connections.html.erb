@@ -57,8 +57,16 @@
     </div>
 
     <% if @unmatched_games %>
+      <hr>
       <div class="content">
-        <p>Unable to find the following games in the database<%= @unmatched_games.count == 50 ? " (only displaying the first 50 games)" : "" %>:
+        <p class="has-text-weight-bold">Unable to find the following games in the database<%= @unmatched_games.count == 50 ? " (only displaying the first 50 games)" : "" %>:
+        <div class="notification is-warning">
+          <p><strong>Note:</strong> This list usually includes alternate
+          versions of games already in the VideoGameList database, e.g.
+          'Game of the Year' editions. These shouldn't be added to the
+          database, and can be ignored. Similarly, DLC shouldn't be added
+          to the database.
+        </div>
         <ul>
           <% @unmatched_games.each do |game| %>
             <li><%= game['name'] %> (<%= link_to 'Create', new_game_path(name: game['name'], steam_app_id: game['steam_id']), target: "_blank" %>)</li>
