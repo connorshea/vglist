@@ -15,6 +15,9 @@
         <div class="notification is-info">
           <p>If you connect your <%= link_to 'Steam', 'https://store.steampowered.com/' %> account you
           can import games from your account and kickstart your game library.
+          If your provided username isn't finding an account, you may need to set a 'Custom URL'
+          in <%= link_to 'your Steam profile settings', 'https://steamcommunity.com/my/edit' %>.
+          The username in your Custom URL should be what you provide in the form below.
         </div>
         <%= form_with url: connect_steam_user_path(id: @user.id), local: true do |f| %>
           <div class="field">
