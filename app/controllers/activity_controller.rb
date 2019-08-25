@@ -5,8 +5,11 @@ class ActivityController < ApplicationController
 
   def index
     @events = GamePurchaseEvent.recently_created
-                               .includes(:user, game_purchase: [:game])
+                               .joins(:user)
+                               .where(users: { privacy: :public_account })
+                               .includes(game_purchase: [:game])
                                .page params[:page]
+
     skip_policy_scope
   end
 end
