@@ -124,7 +124,7 @@ RSpec.describe UserPolicy, type: :policy do
         ]
       )
     end
-    
+
     it { should_not permit_actions([:update_role]) }
   end
 
@@ -155,7 +155,7 @@ RSpec.describe UserPolicy, type: :policy do
       expect(user_policy).to forbid_actions(
         [
           :show,
-          :update_role, 
+          :update_role,
           :remove_avatar,
           :statistics,
           :compare,
@@ -178,7 +178,7 @@ RSpec.describe UserPolicy, type: :policy do
       expect(user_policy).to forbid_actions(
         [
           :show,
-          :update_role, 
+          :update_role,
           :remove_avatar,
           :statistics,
           :compare,

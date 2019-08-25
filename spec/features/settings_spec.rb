@@ -12,7 +12,7 @@ RSpec.describe "Settings", type: :feature do
       within(".bio-form") do
         fill_in('user[bio]', with: 'New bio!')
       end
-      click_button 'Submit'
+      click_button 'Save changes'
 
       expect(page).to have_content("#{user.username} was successfully updated.")
       expect(user.reload.bio).to eql('New bio!')
