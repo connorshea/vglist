@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.8.25
+### Added
+- Add Private Accounts. ([#628])
+
+## v2019.8.23
+### Changed
+- Increase character limit to 2000 for comments on games in the game library.
+
+## v2019.8.20
+### Added
+- Add a global Activity Feed where events like games being added to a user's library or a user completing a game are logged. ([#617])
+
 ## v2019.8.16
 ### Changed
 - Upgrade Rails to Rails 6.0.0. ([#180], [#615], [#616])
@@ -473,3 +485,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#614]: https://github.com/connorshea/VideoGameList/pull/614
 [#615]: https://github.com/connorshea/VideoGameList/pull/615
 [#616]: https://github.com/connorshea/VideoGameList/pull/616
+[#617]: https://github.com/connorshea/VideoGameList/pull/617
+[#628]: https://github.com/connorshea/VideoGameList/pull/628
