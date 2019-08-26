@@ -18,13 +18,29 @@
         </p>
       </div>
 
+      <%= link_to("Activity", activity_index_path, class: "navbar-item") %>
       <%= link_to("Games", games_path, class: "navbar-item") %>
       <%= link_to("Users", users_path, class: "navbar-item") %>
-      <%= link_to("Platforms", platforms_path, class: "navbar-item") %>
-      <%= link_to("Genres", genres_path, class: "navbar-item") %>
-      <%= link_to("Companies", companies_path, class: "navbar-item") %>
-      <%= link_to("Engines", engines_path, class: "navbar-item") %>
-      <%= link_to("Series", series_index_path, class: "navbar-item") %>
+      
+      <%# Include these on mobile. %>
+      <%= link_to("Platforms", platforms_path, class: "navbar-item is-hidden-desktop") %>
+      <%= link_to("Genres", genres_path, class: "navbar-item is-hidden-desktop") %>
+      <%= link_to("Companies", companies_path, class: "navbar-item is-hidden-desktop") %>
+      <%= link_to("Engines", engines_path, class: "navbar-item is-hidden-desktop") %>
+      <%= link_to("Series", series_index_path, class: "navbar-item is-hidden-desktop") %>
+
+      <%# Hide these behind a dropdown on desktop. %>
+      <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
+        <a class="navbar-link">More</a>
+
+        <div class="navbar-dropdown is-right">
+          <%= link_to("Platforms", platforms_path, class: "navbar-item") %>
+          <%= link_to("Genres", genres_path, class: "navbar-item") %>
+          <%= link_to("Companies", companies_path, class: "navbar-item") %>
+          <%= link_to("Engines", engines_path, class: "navbar-item") %>
+          <%= link_to("Series", series_index_path, class: "navbar-item") %>
+        </div>
+      </div>
     </div>
 
     <%# This is a bit screwy because we hide the dropdown items on mobile
