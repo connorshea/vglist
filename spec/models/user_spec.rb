@@ -56,8 +56,17 @@ RSpec.describe User, type: :model do
         .with_values([:member, :moderator, :admin])
     end
 
+    it 'has a privacy enum with private_account or public_account' do
+      expect(user).to define_enum_for(:privacy)
+        .with_values([:public_account, :private_account])
+    end
+
     it 'has a default role of member' do
       expect(user.role).to eql("member")
+    end
+
+    it 'has a default privacy of public_account' do
+      expect(user.privacy).to eql("public_account")
     end
 
     it { should validate_presence_of(:role) }

@@ -21,17 +21,42 @@
       %>">
     </div>
 
-    <h2 class="subtitle is-3 mt-25 mb-10">Bio</h2>
+    <h2 class="subtitle is-4 mt-45 mb-10">Profile Details</h2>
 
     <%= form_for @user, html: { class: "bio-form" } do |f| %>
       <div class="field">
+        <%= f.label :bio, class: "label" %>
         <div class="control">
           <%= f.text_area :bio, class: "textarea" %>
         </div>
       </div>
 
       <div class="field">
-        <%= f.submit "Submit", class: "button is-primary" %>
+        <%= f.label :privacy, "Account Privacy", class: "label" %>
+        <div class="control">
+          <%= f.radio_button :privacy, "public_account" %>
+          <%= f.label :privacy_public_account do %>
+            <span>Public Account</span><br>
+            <span class='has-text-grey ml-20'>
+              Your library will be visible to all users and your activity will
+              show up in the global activity feed.
+            </span>
+          <% end %>
+        </div>
+        <div class="control mt-10 mb-25">
+          <%= f.radio_button :privacy, "private_account" %>
+          <%= f.label :privacy_private_account do %>
+            <span>Private Account</span><br>
+            <span class='has-text-grey ml-20'>
+              Your library will be visible to only yourself and admins. Your
+              activity will not show up in the global activity feed.
+            </span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.submit "Save changes", class: "button is-primary" %>
       </div>
     <% end %>
   </div>

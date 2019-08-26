@@ -15,10 +15,18 @@
   <div class="text-block">
     <h1 class="title"><%= @user.username %></h1>
 
-    <% if !@user.bio.blank? %>
-      <h2 class="subtitle"><%= @user.bio %>
-    <% else %>
-      <h2 class="subtitle"><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
+    <%# Only display the user's bio if it's a public account or the current
+        user has access for some other reason. %>
+    <% if @user.public_account? || policy(@user).show? %>
+      <% if !@user.bio.blank? %>
+        <h2 class="subtitle"><%= @user.bio %></h2>
+      <% else %>
+        <h2 class="subtitle"><%= @user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %></h2>
+      <% end %>
+
+      <% if @user.private_account? %>
+        <p class='has-text-weight-semibold'>This user's account is private.
+      <% end %>
     <% end %>
 
     <% if @user.admin? %>
@@ -29,77 +37,82 @@
   </div>
 </div>
 
-<% if current_user && @user != current_user %>
-  <%= link_to "Compare with your library",
-    compare_users_path(user_id: current_user.slug, other_user_id: @user.slug),
-    class: 'button is-fullwidth-mobile mr-5 mr-0-mobile mt-10'
-  %>
-<% end %>
+<%# Display a message if the user's account is private, and hide everything else. %>
+<% if @user.public_account? || policy(@user).show? %>
+  <% if current_user && @user != current_user %>
+    <%= link_to "Compare with your library",
+      compare_users_path(user_id: current_user.slug, other_user_id: @user.slug),
+      class: 'button is-fullwidth-mobile mr-5 mr-0-mobile mt-10'
+    %>
+  <% end %>
 
-<% if (policy(@user).update_role? || policy(@user).remove_avatar?) && @user != current_user %>
-  <div class="dropdown is-fullwidth-mobile mt-10">
-    <div class="dropdown-trigger is-fullwidth-mobile">
-      <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
-        <span>Actions</span>
-      </button>
-    </div>
-    <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">
-      <div class="dropdown-content">
-        <% if policy(@user).update_role? && @user != current_user %>
-          <% unless @user.role == "member" %>
-            <%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post", confirm: "Are you sure you want to make this user a member?" }, class: "dropdown-item" %>
+  <% if (policy(@user).update_role? || policy(@user).remove_avatar?) && @user != current_user %>
+    <div class="dropdown is-fullwidth-mobile mt-10">
+      <div class="dropdown-trigger is-fullwidth-mobile">
+        <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span>Actions</span>
+        </button>
+      </div>
+      <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <% if policy(@user).update_role? && @user != current_user %>
+            <% unless @user.role == "member" %>
+              <%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post", confirm: "Are you sure you want to make this user a member?" }, class: "dropdown-item" %>
+            <% end %>
+            <% unless @user.role == "moderator" %>
+              <%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post", confirm: "Are you sure you want to make this user a moderator?" }, class: "dropdown-item" %>
+            <% end %>
+            <% unless @user.role == "admin" %>
+              <%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post", confirm: "Are you sure you want to make this user an admin?" }, class: "dropdown-item" %>
+            <% end %>
           <% end %>
-          <% unless @user.role == "moderator" %>
-            <%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post", confirm: "Are you sure you want to make this user a moderator?" }, class: "dropdown-item" %>
-          <% end %>
-          <% unless @user.role == "admin" %>
-            <%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post", confirm: "Are you sure you want to make this user an admin?" }, class: "dropdown-item" %>
-          <% end %>
-        <% end %>
 
-        <% if policy(@user).remove_avatar? && @user != current_user && @user.avatar.attached? %>
-          <%= link_to "Remove avatar",
-              remove_avatar_user_path(@user.id),
-              method: :delete,
-              data: { confirm: "Are you sure you want to remove #{@user.username}'s avatar?" },
-              class: "dropdown-item has-text-danger" %></p>
-        <% end %>
+          <% if policy(@user).remove_avatar? && @user != current_user && @user.avatar.attached? %>
+            <%= link_to "Remove avatar",
+                remove_avatar_user_path(@user.id),
+                method: :delete,
+                data: { confirm: "Are you sure you want to remove #{@user.username}'s avatar?" },
+                class: "dropdown-item has-text-danger" %></p>
+          <% end %>
+        </div>
       </div>
     </div>
+  <% end %>
+
+  <div data-vue-component="user-statistics"
+    data-vue-props="<%=
+      {
+        userId: @user.slug
+      }.to_json
+    %>"
+  >
+  <% if @user.games.count > 0 %>
+    <div class="card is-two-thirds column m-auto mt-10" style="height: 200px"></div>
+  <% end %>
   </div>
-<% end %>
 
-<div data-vue-component="user-statistics"
-  data-vue-props="<%=
-    {
-      userId: @user.slug
-    }.to_json
-  %>"
->
-<% if @user.games.count > 0 %>
-  <div class="card is-two-thirds column m-auto mt-10" style="height: 200px"></div>
-<% end %>
-</div>
+  <h3 class="title is-3 mt-15">Library</h3>
+  <div data-vue-component="library"
+    data-vue-props="<%=
+      {
+        gamePurchasesUrl: game_purchases_path(user_id: @user.id, format: :json),
+        isEditable: policy(@user).add_game_to_library?,
+        userId: @user.id
+      }.to_json
+    %>"
+  ></div>
 
-<h3 class="title is-3 mt-15">Library</h3>
-<div data-vue-component="library"
-  data-vue-props="<%=
-    {
-      gamePurchasesUrl: game_purchases_path(user_id: @user.id, format: :json),
-      isEditable: policy(@user).add_game_to_library?,
-      userId: @user.id
-    }.to_json
-  %>"
-></div>
+  <h3 class="title is-3 mt-25">Favorites</h3>
 
-<h3 class="title is-3 mt-25">Favorites</h3>
-
-<% if @user.favorite_games.length > 0 %>
-  <div class="game-card-list mt-20">
-    <% @user.favorite_games.each do |favorite| %>
-      <%= render 'shared/game_card', game: Game.find(favorite.game_id) %>
-    <% end %>
-  </div>
+  <% if @user.favorite_games.length > 0 %>
+    <div class="game-card-list mt-20">
+      <% @user.favorite_games.each do |favorite| %>
+        <%= render 'shared/game_card', game: Game.find(favorite.game_id) %>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No favorited games.
+  <% end %>
 <% else %>
-  <p>No favorited games.
+  <h2 class='subtitle has-text-centered has-text-weight-semibold mt-30'>This user's account is private.</h2>
 <% end %>

@@ -7,6 +7,9 @@ class UsersController < ApplicationController
 
   def show
     @user = User.friendly.find(params[:id])
+    # The user can access the page, but it'll just have a message about the
+    # account being private. The visibility of data is handled in the user
+    # view.
     skip_authorization
   end
 
@@ -252,6 +255,7 @@ class UsersController < ApplicationController
     @user2 = User.friendly.find(params[:other_user_id])
 
     authorize @user1
+    authorize @user2
 
     respond_to do |format|
       format.html
@@ -264,7 +268,8 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(
       :bio,
-      :avatar
+      :avatar,
+      :privacy
     )
   end
 end

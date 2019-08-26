@@ -6,6 +6,18 @@ module User::EnumInstanceMethods
   extend T::Sig
 
   sig { returns(T::Boolean) }
+  def public_account?; end
+
+  sig { void }
+  def public_account!; end
+
+  sig { returns(T::Boolean) }
+  def private_account?; end
+
+  sig { void }
+  def private_account!; end
+
+  sig { returns(T::Boolean) }
   def member?; end
 
   sig { void }
@@ -139,6 +151,15 @@ module User::GeneratedAttributeMethods
 
   sig { returns(T::Boolean) }
   def last_sign_in_ip?; end
+
+  sig { returns(String) }
+  def privacy; end
+
+  sig { params(value: T.any(Integer, String, Symbol)).void }
+  def privacy=(value); end
+
+  sig { returns(T::Boolean) }
+  def privacy?; end
 
   sig { returns(T.nilable(DateTime)) }
   def remember_created_at; end
@@ -296,6 +317,15 @@ class User < ApplicationRecord
   extend User::ModelRelationShared
 
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+  def self.privacies; end
+
+  sig { returns(User::ActiveRecord_Relation) }
+  def self.public_account; end
+
+  sig { returns(User::ActiveRecord_Relation) }
+  def self.private_account; end
+
+  sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.roles; end
 
   sig { returns(User::ActiveRecord_Relation) }
@@ -391,6 +421,18 @@ module User::ModelRelationShared
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
   def not_moderator(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
+  def not_private_account(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
+  def not_public_account(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
+  def private_account(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
+  def public_account(*args); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
   def with_attached_avatar(*args); end

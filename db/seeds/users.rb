@@ -31,8 +31,8 @@ puts "Creating Users..."
   )
 end
 
-# Create 5 moderators.
-5.times do
+# Create 4 moderators.
+4.times do
   User.create!(
     email: Faker::Internet.unique.email,
     # Usernames must be between (inclusive) 4 and 20 characters.
@@ -41,5 +41,18 @@ end
     password: Faker::Internet.password(min_length: 8, max_length: 20),
     bio: Faker::Lorem.sentence,
     role: :moderator
+  )
+end
+
+# Create 2 private accounts
+2.times do
+  User.create!(
+    email: Faker::Internet.unique.email,
+    # Make private users with similar names
+    username: "private_user#{Faker::Number.number(digits: 3)}",
+    # Passwords can be up to 128 characters, but we'll just do up to 20 here.
+    password: Faker::Internet.password(min_length: 8, max_length: 20),
+    bio: Faker::Lorem.sentence,
+    privacy: :private_account
   )
 end
