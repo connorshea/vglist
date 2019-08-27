@@ -12,6 +12,7 @@ class Event < ApplicationRecord
   enum event_category: {
     add_to_library: 0,
     change_completion_status: 1,
-    favorite_game: 2
+    favorite_game: 2,
+    new_user: 3
   }
 end

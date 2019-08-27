@@ -50,6 +50,7 @@ RSpec.describe FavoriteGame, type: :model do
     let(:favorite_game) { create(:favorite_game, user: user, game: game) }
 
     it 'Event should be created when FavoriteGame is created' do
+      user
       expect { favorite_game }.to change(Event, :count).by(1)
     end
   end

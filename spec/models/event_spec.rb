@@ -13,7 +13,14 @@ RSpec.describe Event, type: :model do
 
     it 'has a type enum' do
       expect(event).to define_enum_for(:event_category)
-        .with_values([:add_to_library, :change_completion_status, :favorite_game])
+        .with_values(
+          [
+            :add_to_library,
+            :change_completion_status,
+            :favorite_game,
+            :new_user
+          ]
+        )
     end
   end
 
@@ -78,9 +85,17 @@ RSpec.describe Event, type: :model do
       expect { favorite_game.destroy }.to change(Event, :count).by(-1)
     end
 
-    it 'Event should be deleted when User is deleted' do
+    it 'Favorite Game Event should be deleted when User is deleted' do
       favorite_game
-      expect { user.destroy }.to change(Event, :count).by(-1)
+      expect { user.destroy }.to change(Event.where(eventable_type: 'FavoriteGame'), :count).by(-1)
+    end
+  end
+
+  describe 'User Creation Event Destructions' do
+    let!(:user) { create(:confirmed_user) }
+
+    it 'Event should be deleted when User is deleted' do
+      expect { user.destroy }.to change(Event.where(eventable_type: 'User'), :count).by(-1)
     end
   end
 end

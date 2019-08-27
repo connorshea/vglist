@@ -2,6 +2,8 @@
 class User < ApplicationRecord
   extend FriendlyId
 
+  after_create :user_create_event
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -16,6 +18,9 @@ class User < ApplicationRecord
 
   # Users have activity feed events.
   has_many :events, dependent: :destroy
+
+  # Users have an event for their creation.
+  has_many :events, as: :eventable, dependent: :destroy
 
   # External accounts, e.g. Steam. Can be changed to a has_many association if
   # other external account types are added later.
@@ -66,4 +71,15 @@ class User < ApplicationRecord
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 3.megabytes }
+
+  private
+
+  def user_create_event
+    Event.create!(
+      eventable_type: 'User',
+      eventable_id: id,
+      user_id: id,
+      event_category: :new_user
+    )
+  end
 end

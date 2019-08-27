@@ -4,12 +4,15 @@ module ActivityHelper
 
   sig { params(event: T.untyped).returns(String) }
   def event_text(event)
-    if event.event_category == 'add_to_library'
+    case event.event_category
+    when 'add_to_library'
       add_to_library_event_text(event)
-    elsif event.event_category == 'change_completion_status'
+    when 'change_completion_status'
       completion_status_event_text(event)
-    elsif event.event_category == 'favorite_game'
+    when 'favorite_game'
       favorite_game_event_text(event)
+    when 'new_user'
+      new_user_event_text(event)
     else
       ''
     end
@@ -49,6 +52,13 @@ module ActivityHelper
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
 
     return user_link + " favorited " + game_link + "."
+  end
+
+  sig { params(event: T.untyped).returns(String) }
+  def new_user_event_text(event)
+    user_link = link_to(event.user.username, user_path(event.user))
+
+    return user_link + " created their account."
   end
 
   sig { params(event: T.untyped).returns(T.nilable(T::Boolean)) }
