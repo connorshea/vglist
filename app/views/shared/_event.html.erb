@@ -16,7 +16,7 @@
             <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
           </span>
           <% if policy(event).destroy? %>
-            <%= link_to "Delete", game_purchase_event_path(event.id),
+            <%= link_to "Delete", event_path(event.id),
               data: { confirm: "Are you sure you want to delete this event?" },
               method: :delete, class: 'has-text-danger' %>
           <% end %>

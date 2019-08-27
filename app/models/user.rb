@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :favorite_games, dependent: :destroy
 
   # Users have activity feed events.
-  has_many :game_purchase_events, dependent: :destroy
+  has_many :events, dependent: :destroy
 
   # External accounts, e.g. Steam. Can be changed to a has_many association if
   # other external account types are added later.

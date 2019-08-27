@@ -9,7 +9,7 @@ class GamePurchase < ApplicationRecord
   has_many :game_purchase_platforms
   has_many :platforms, through: :game_purchase_platforms, source: :platform
 
-  has_many :game_purchase_events, dependent: :destroy
+  has_many :events, as: :eventable, dependent: :destroy
 
   enum completion_status: {
     unplayed: 0,
@@ -44,20 +44,22 @@ class GamePurchase < ApplicationRecord
   private
 
   def game_purchase_create_event
-    GamePurchaseEvent.create!(
-      game_purchase_id: id,
+    Event.create!(
+      eventable_id: id,
+      eventable_type: 'GamePurchase',
       user_id: user.id,
-      event_type: :add_to_library
+      event_category: :add_to_library
     )
   end
 
   def game_purchase_update_event
     return unless saved_changes.key?('completion_status')
 
-    GamePurchaseEvent.create!(
-      game_purchase_id: id,
+    Event.create!(
+      eventable_id: id,
+      eventable_type: 'GamePurchase',
       user_id: user.id,
-      event_type: :change_completion_status,
+      event_category: :change_completion_status,
       # We don't need the updated_at value
       differences: saved_changes.except!(:updated_at)
     )

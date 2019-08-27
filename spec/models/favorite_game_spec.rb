@@ -19,6 +19,7 @@ RSpec.describe FavoriteGame, type: :model do
   describe "Associations" do
     it { should belong_to(:user) }
     it { should belong_to(:game) }
+    it { should have_many(:events).dependent(:destroy) }
   end
 
   describe "Indexes" do
@@ -40,6 +41,16 @@ RSpec.describe FavoriteGame, type: :model do
     it 'User should not be deleted when favorite is deleted' do
       favorite_game
       expect { favorite_game.destroy }.to change(User, :count).by(0)
+    end
+  end
+
+  describe 'Callbacks' do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:favorite_game) { create(:favorite_game, user: user, game: game) }
+
+    it 'Event should be created when FavoriteGame is created' do
+      expect { favorite_game }.to change(Event, :count).by(1)
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_24_031742) do
+ActiveRecord::Schema.define(version: 2019_08_27_015409) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -54,6 +54,19 @@ ActiveRecord::Schema.define(version: 2019_08_24_031742) do
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
     t.index ["wikidata_id"], name: "index_engines_on_wikidata_id", unique: true
+  end
+
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "eventable_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "event_category", null: false
+    t.jsonb "differences"
+    t.string "eventable_type"
+    t.index ["eventable_id", "eventable_type", "user_id"], name: "index_events_on_id_type_and_user_id"
+    t.index ["eventable_id"], name: "index_events_on_eventable_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "external_accounts", force: :cascade do |t|
@@ -135,17 +148,6 @@ ActiveRecord::Schema.define(version: 2019_08_24_031742) do
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_game_publishers_on_company_id"
     t.index ["game_id"], name: "index_game_publishers_on_game_id"
-  end
-
-  create_table "game_purchase_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "game_purchase_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "event_type", null: false
-    t.jsonb "differences"
-    t.index ["game_purchase_id"], name: "index_game_purchase_events_on_game_purchase_id"
-    t.index ["user_id"], name: "index_game_purchase_events_on_user_id"
   end
 
   create_table "game_purchase_platforms", force: :cascade do |t|
