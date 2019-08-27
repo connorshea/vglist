@@ -47,7 +47,7 @@ RSpec.describe GamePurchase, type: :model do
     it { should belong_to(:user) }
     it { should have_many(:game_purchase_platforms) }
     it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
-    it { should have_many(:game_purchase_events).dependent(:destroy) }
+    it { should have_many(:events).dependent(:destroy) }
   end
 
   describe 'Destructions' do
@@ -83,16 +83,16 @@ RSpec.describe GamePurchase, type: :model do
     let(:user) { create(:confirmed_user) }
     let(:game_purchase) { create(:game_purchase, user: user, game: game) }
 
-    it 'GamePurchaseEvent should be created when GamePurchase is created' do
-      expect { game_purchase }.to change(GamePurchaseEvent, :count).by(1)
+    it 'Event should be created when GamePurchase is created' do
+      expect { game_purchase }.to change(Event, :count).by(1)
     end
 
-    it 'GamePurchaseEvent should be created when GamePurchase is modified' do
+    it 'Event should be created when GamePurchase is modified' do
       game_purchase
       expect do
         game_purchase.completion_status = :dropped
         game_purchase.save
-      end.to change(GamePurchaseEvent, :count).by(1)
+      end.to change(Event, :count).by(1)
     end
   end
 end

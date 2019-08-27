@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   end
 
   resources :activity, only: :index
-  resources :game_purchase_events, only: :destroy
+  resources :events, only: :destroy
 
   resources :platforms do
     get :search, on: :collection

@@ -159,17 +159,17 @@ end
 module GamePurchase::GeneratedAssociationMethods
   extend T::Sig
 
+  sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
+  def events; end
+
+  sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
+  def events=(value); end
+
   sig { returns(::Game) }
   def game; end
 
   sig { params(value: ::Game).void }
   def game=(value); end
-
-  sig { returns(::GamePurchaseEvent::ActiveRecord_Associations_CollectionProxy) }
-  def game_purchase_events; end
-
-  sig { params(value: T.any(T::Array[::GamePurchaseEvent], ::GamePurchaseEvent::ActiveRecord_Associations_CollectionProxy)).void }
-  def game_purchase_events=(value); end
 
   sig { returns(::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_platforms; end

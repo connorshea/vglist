@@ -1,0 +1,27 @@
+<div class="box">
+  <article class="media">
+    <div class="media-left">
+      <figure class="image is-64x64">
+        <%= link_to user_path(event.user) do %>
+          <%= user_avatar(event.user.id, 80) %>
+        <% end %>
+      </figure>
+    </div>
+    <div class="media-content">
+      <div class="content">
+        <p><%= event_text(event) %>
+
+        <p>
+          <span class="has-text-grey" title="<%= event.created_at %>">
+            <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
+          </span>
+          <% if policy(event).destroy? %>
+            <%= link_to "Delete", event_path(event.id),
+              data: { confirm: "Are you sure you want to delete this event?" },
+              method: :delete, class: 'has-text-danger' %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </article>
+</div>

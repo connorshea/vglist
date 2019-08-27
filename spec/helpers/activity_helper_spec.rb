@@ -60,7 +60,7 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:game_purchase_completion_event_dropped) do
       create(
         :game_purchase_completion_event,
-        game_purchase: game_purchase,
+        eventable: game_purchase,
         user: user,
         differences: { completion_status: [nil, "dropped"] }
       )
@@ -68,7 +68,7 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:game_purchase_completion_event_paused) do
       create(
         :game_purchase_completion_event,
-        game_purchase: game_purchase,
+        eventable: game_purchase,
         user: user,
         differences: { completion_status: [nil, "paused"] }
       )
@@ -76,7 +76,7 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:game_purchase_completion_event_completed) do
       create(
         :game_purchase_completion_event,
-        game_purchase: game_purchase,
+        eventable: game_purchase,
         user: user,
         differences: { completion_status: [nil, "completed"] }
       )
@@ -84,7 +84,7 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:game_purchase_completion_event_fully_completed) do
       create(
         :game_purchase_completion_event,
-        game_purchase: game_purchase,
+        eventable: game_purchase,
         user: user,
         differences: { completion_status: [nil, "fully_completed"] }
       )
@@ -123,7 +123,7 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:user) { create(:user) }
     let(:game) { create(:game) }
     let(:game_purchase) { create(:game_purchase, game: game, user: user) }
-    let(:game_purchase_library_event) { create(:game_purchase_library_event, user: user, game_purchase: game_purchase) }
+    let(:game_purchase_library_event) { create(:game_purchase_library_event, user: user, eventable: game_purchase) }
 
     it 'returns a sensible piece of text' do
       game_purchase_library_event
