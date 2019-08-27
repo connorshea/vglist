@@ -6,37 +6,7 @@
 
   <% @events.each do |event| %>
     <% if handleable_event?(event) %>
-      <div class="box">
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-64x64">
-              <%= link_to user_path(event.user) do %>
-                <%= user_avatar(event.user.id, 80) %>
-              <% end %>
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <% if event.event_type == 'add_to_library' %>
-                <p><%= add_to_library_event_text(event) %>
-              <% elsif event.event_type == 'change_completion_status' %>
-                <p><%= completion_status_event_text(event) %>
-              <% end %>
-
-              <p>
-                <span class="has-text-grey" title="<%= event.created_at %>">
-                  <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
-                </span>
-                <% if policy(event).destroy? %>
-                  <%= link_to "Delete", game_purchase_event_path(event.id),
-                    data: { confirm: "Are you sure you want to delete this event?" },
-                    method: :delete, class: 'has-text-danger' %>
-                <% end %>
-              </p>
-            </div>
-          </div>
-        </article>
-      </div>
+      <%= render 'shared/event', event: event %>
     <% end %>
   <% end %>
 
