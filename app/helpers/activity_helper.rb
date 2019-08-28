@@ -4,14 +4,14 @@ module ActivityHelper
 
   sig { params(event: T.untyped).returns(String) }
   def event_text(event)
-    case event.event_category
-    when 'add_to_library'
+    case event.event_category.to_sym
+    when :add_to_library
       add_to_library_event_text(event)
-    when 'change_completion_status'
+    when :change_completion_status
       completion_status_event_text(event)
-    when 'favorite_game'
+    when :favorite_game
       favorite_game_event_text(event)
-    when 'new_user'
+    when :new_user
       new_user_event_text(event)
     else
       ''
@@ -61,7 +61,7 @@ module ActivityHelper
     return user_link + " created their account."
   end
 
-  sig { params(event: T.untyped).returns(T.nilable(T::Boolean)) }
+  sig { params(event: T.untyped).returns(T::Boolean) }
   def handleable_event?(event)
     case event.event_category.to_sym
     when :change_completion_status
@@ -70,6 +70,10 @@ module ActivityHelper
       true
     when :favorite_game
       true
+    when :new_user
+      true
+    else
+      false
     end
   end
 end
