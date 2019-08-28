@@ -30,13 +30,14 @@ Rails.application.routes.draw do
     get :index, on: :collection
     get :show, on: :member
     get :statistics, on: :member
+    get :activity, on: :member
+    get '/compare/:user_id...:other_user_id', as: :compare, action: :compare, on: :collection
     post :update_role, on: :member
     delete :remove_avatar, on: :member
     post :connect_steam, on: :member
     delete :disconnect_steam, on: :member
     post :steam_import, on: :member
     delete :reset_game_library, on: :member
-    get '/compare/:user_id...:other_user_id', as: :compare, action: :compare, on: :collection
   end
 
   resources :activity, only: :index

@@ -263,6 +263,26 @@ class UsersController < ApplicationController
     end
   end
 
+  def activity
+    @user = User.friendly.find(params[:id])
+    
+    # Handle authorization with a redirect.
+    skip_authorization
+    
+    # Redirect if the user's page is private.
+    redirect_to user_path(@user) unless policy(@user).activity?
+    
+    @events = Event.recently_created
+                   .joins(:user)
+                   .where(user_id: @user.id)
+                   .includes(eventable: [:game])
+                   .page params[:page]
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
   private
 
   def user_params
