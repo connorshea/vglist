@@ -1,5 +1,8 @@
 # typed: true
 class UsersController < ApplicationController
+  # Skip bullet on activity to avoid errors.
+  around_action :activity, if: -> { defined?(Bullet) }
+
   def index
     @users = User.order(:id).page params[:page]
     skip_policy_scope
