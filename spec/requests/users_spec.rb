@@ -175,7 +175,7 @@ RSpec.describe "Users", type: :request do
     end
 
     it "redirects for user with private account" do
-      get activity_user_path(id: user_with_favorite_game.id)
+      get activity_user_path(id: private_user.id)
       expect(response).to redirect_to(user_path(private_user))
     end
   end

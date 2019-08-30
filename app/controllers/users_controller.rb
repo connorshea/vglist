@@ -1,7 +1,7 @@
 # typed: true
 class UsersController < ApplicationController
   # Skip bullet on activity to avoid errors.
-  around_action :activity, if: -> { defined?(Bullet) }
+  around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   def index
     @users = User.order(:id).page params[:page]
@@ -268,22 +268,18 @@ class UsersController < ApplicationController
 
   def activity
     @user = User.friendly.find(params[:id])
-    
+
     # Handle authorization with a redirect.
     skip_authorization
-    
+
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).activity?
-    
+
     @events = Event.recently_created
                    .joins(:user)
                    .where(user_id: @user.id)
                    .includes(eventable: [:game])
                    .page params[:page]
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   private
@@ -294,5 +290,13 @@ class UsersController < ApplicationController
       :avatar,
       :privacy
     )
+  end
+
+  def skip_bullet
+    previous_value = Bullet.enable?
+    Bullet.enable = false
+    yield
+  ensure
+    Bullet.enable = previous_value
   end
 end
