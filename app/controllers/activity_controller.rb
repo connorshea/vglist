@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 class ActivityController < ApplicationController
   # NOTE: Uncomment this if you ever add another controller method
   # before_action :authenticate_user!, except: :index

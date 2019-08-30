@@ -5354,6 +5354,7 @@ class ActiveRecord::Base
   def self.include_root_in_json?; end
   def self.index_nested_attribute_errors; end
   def self.index_nested_attribute_errors=(obj); end
+  def self.inherited(child); end
   def self.internal_metadata_table_name; end
   def self.internal_metadata_table_name=(val); end
   def self.internal_metadata_table_name?; end
@@ -5382,6 +5383,7 @@ class ActiveRecord::Base
   def self.record_timestamps; end
   def self.record_timestamps=(val); end
   def self.record_timestamps?; end
+  def self.sbr_old_inherited(kls); end
   def self.schema_format; end
   def self.schema_format=(obj); end
   def self.schema_migrations_table_name; end
@@ -6436,6 +6438,14 @@ class ActiveRecord::Associations::HasOneAssociation < ActiveRecord::Associations
   def transaction_if(value); end
   include ActiveRecord::Associations::ForeignAssociation
 end
+class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ActiveRecord::Associations::BelongsToAssociation
+  def inverse_reflection_for(record); end
+  def klass; end
+  def raise_on_type_mismatch!(record); end
+  def replace_keys(record); end
+  def stale_state; end
+  def target_changed?; end
+end
 class ActiveRecord::Associations::AssociationScope
   def add_constraints(scope, owner, chain); end
   def apply_scope(scope, table, key, value); end
@@ -6464,14 +6474,6 @@ class ActiveRecord::Associations::AliasTracker
   def self.create(connection, initial_table, joins); end
   def self.initial_count_for(connection, name, table_joins); end
   def truncate(name); end
-end
-class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ActiveRecord::Associations::BelongsToAssociation
-  def inverse_reflection_for(record); end
-  def klass; end
-  def raise_on_type_mismatch!(record); end
-  def replace_keys(record); end
-  def stale_state; end
-  def target_changed?; end
 end
 module ActiveRecord::Associations::ThroughAssociation
   def build_record(attributes); end

@@ -95,8 +95,183 @@ module FavoriteGame::CustomFinderMethods
   def find_by_id!(id); end
 end
 
-module FavoriteGame::ModelRelationShared
+class FavoriteGame < ApplicationRecord
+  include FavoriteGame::GeneratedAttributeMethods
+  include FavoriteGame::GeneratedAssociationMethods
+  extend FavoriteGame::CustomFinderMethods
   extend T::Sig
+  extend T::Generic
+
+  sig { returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.unscoped(&block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.select(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.reselect(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.order(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.reorder(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.group(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.limit(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.offset(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.left_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.left_outer_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.where(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.rewhere(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.preload(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.extract_associated(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.eager_load(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.includes(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.from(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.lock(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.readonly(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.extending(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.or(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.having(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.create_with(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.distinct(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.references(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.none(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.unscope(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.optimizer_hints(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.merge(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.except(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.only(*args, &block); end
+
+  sig { params(args: T.untyped).returns(FavoriteGame) }
+  def self.find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(FavoriteGame)) }
+  def self.find_by(*args); end
+
+  sig { params(args: T.untyped).returns(FavoriteGame) }
+  def self.find_by!(*args); end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def self.first; end
+
+  sig { returns(FavoriteGame) }
+  def self.first!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def self.second; end
+
+  sig { returns(FavoriteGame) }
+  def self.second!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def self.third; end
+
+  sig { returns(FavoriteGame) }
+  def self.third!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def self.third_to_last; end
+
+  sig { returns(FavoriteGame) }
+  def self.third_to_last!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def self.second_to_last; end
+
+  sig { returns(FavoriteGame) }
+  def self.second_to_last!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def self.last; end
+
+  sig { returns(FavoriteGame) }
+  def self.last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def self.exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.one?(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+end
+
+class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
+  include FavoriteGame::ActiveRelation_WhereNot
+  include FavoriteGame::CustomFinderMethods
+  include Enumerable
+  extend T::Sig
+  extend T::Generic
+  Elem = type_member(fixed: FavoriteGame)
 
   sig { returns(FavoriteGame::ActiveRecord_Relation) }
   def all; end
@@ -197,19 +372,193 @@ module FavoriteGame::ModelRelationShared
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
   def only(*args, &block); end
 
+  sig { params(args: T.untyped).returns(FavoriteGame) }
+  def find(*args); end
+
+  sig { params(args: T.untyped).returns(T.nilable(FavoriteGame)) }
+  def find_by(*args); end
+
+  sig { params(args: T.untyped).returns(FavoriteGame) }
+  def find_by!(*args); end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def first; end
+
+  sig { returns(FavoriteGame) }
+  def first!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def second; end
+
+  sig { returns(FavoriteGame) }
+  def second!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def third; end
+
+  sig { returns(FavoriteGame) }
+  def third!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def third_to_last; end
+
+  sig { returns(FavoriteGame) }
+  def third_to_last!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def second_to_last; end
+
+  sig { returns(FavoriteGame) }
+  def second_to_last!; end
+
+  sig { returns(T.nilable(FavoriteGame)) }
+  def last; end
+
+  sig { returns(FavoriteGame) }
+  def last!; end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
+  sig { implementation.params(block: T.proc.params(e: FavoriteGame).void).void }
+  def each(&block); end
+
+  sig { params(level: T.nilable(Integer)).returns(T::Array[FavoriteGame]) }
+  def flatten(level); end
+
+  sig { returns(T::Array[FavoriteGame]) }
+  def to_a; end
+
+  sig do
+    type_parameters(:U).params(
+        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
+    )
+    .returns(T::Array[T.type_parameter(:U)])
+  end
+  def map(&blk); end
+
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
   def page(num = nil); end
 end
 
-class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
+class FavoriteGame::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include FavoriteGame::ActiveRelation_WhereNot
-  include SorbetRails::CustomFinderMethods
   include FavoriteGame::CustomFinderMethods
   include Enumerable
-  include FavoriteGame::ModelRelationShared
   extend T::Sig
   extend T::Generic
   Elem = type_member(fixed: FavoriteGame)
+
+  sig { returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def select(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def reselect(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def order(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def reorder(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def group(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def limit(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def offset(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def left_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def left_outer_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def where(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def rewhere(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def preload(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def extract_associated(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def eager_load(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def includes(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def from(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def lock(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def readonly(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def extending(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def or(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def having(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def create_with(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def distinct(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def references(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def none(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def unscope(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def optimizer_hints(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def merge(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def except(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def only(*args, &block); end
 
   sig { params(args: T.untyped).returns(FavoriteGame) }
   def find(*args); end
@@ -279,17 +628,124 @@ class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { returns(T::Array[FavoriteGame]) }
   def to_a; end
+
+  sig do
+    type_parameters(:U).params(
+        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
+    )
+    .returns(T::Array[T.type_parameter(:U)])
+  end
+  def map(&blk); end
+
+  sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
 end
 
 class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include FavoriteGame::ActiveRelation_WhereNot
-  include SorbetRails::CustomFinderMethods
   include FavoriteGame::CustomFinderMethods
   include Enumerable
-  include FavoriteGame::ModelRelationShared
   extend T::Sig
   extend T::Generic
   Elem = type_member(fixed: FavoriteGame)
+
+  sig { returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def select(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def reselect(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def order(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def reorder(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def group(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def limit(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def offset(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def left_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def left_outer_joins(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def where(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def rewhere(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def preload(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def extract_associated(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def eager_load(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def includes(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def from(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def lock(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def readonly(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def extending(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def or(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def having(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def create_with(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def distinct(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def references(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def none(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def unscope(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def optimizer_hints(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def merge(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def except(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def only(*args, &block); end
 
   sig { params(args: T.untyped).returns(FavoriteGame) }
   def find(*args); end
@@ -359,6 +815,14 @@ class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { returns(T::Array[FavoriteGame]) }
   def to_a; end
+
+  sig do
+    type_parameters(:U).params(
+        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
+    )
+    .returns(T::Array[T.type_parameter(:U)])
+  end
+  def map(&blk); end
 
   sig { params(records: T.any(FavoriteGame, T::Array[FavoriteGame])).returns(T.self_type) }
   def <<(*records); end
@@ -371,74 +835,7 @@ class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(records: T.any(FavoriteGame, T::Array[FavoriteGame])).returns(T.self_type) }
   def concat(*records); end
-end
 
-class FavoriteGame < ApplicationRecord
-  include FavoriteGame::GeneratedAttributeMethods
-  include FavoriteGame::GeneratedAssociationMethods
-  extend SorbetRails::CustomFinderMethods
-  extend FavoriteGame::CustomFinderMethods
-  extend T::Sig
-  extend T::Generic
-  extend FavoriteGame::ModelRelationShared
-
-  sig { params(args: T.untyped).returns(FavoriteGame) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(FavoriteGame)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(FavoriteGame) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def self.first; end
-
-  sig { returns(FavoriteGame) }
-  def self.first!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def self.second; end
-
-  sig { returns(FavoriteGame) }
-  def self.second!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def self.third; end
-
-  sig { returns(FavoriteGame) }
-  def self.third!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def self.third_to_last; end
-
-  sig { returns(FavoriteGame) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def self.second_to_last; end
-
-  sig { returns(FavoriteGame) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def self.last; end
-
-  sig { returns(FavoriteGame) }
-  def self.last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def self.exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.one?(*args); end
+  sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
 end

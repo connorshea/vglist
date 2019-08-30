@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.3.0
+# rubocop-rails-2.3.1
 module RuboCop
 end
 module RuboCop::Rails
@@ -368,6 +368,7 @@ class RuboCop::Cop::Rails::PluralizationGrammar < RuboCop::Cop::Cop
 end
 class RuboCop::Cop::Rails::Presence < RuboCop::Cop::Cop
   def autocorrect(node); end
+  def build_source_for_or_method(other); end
   def ignore_if_node?(node); end
   def ignore_other_node?(node); end
   def message(node, receiver, other); end
@@ -375,6 +376,7 @@ class RuboCop::Cop::Rails::Presence < RuboCop::Cop::Cop
   def redundant_negative_receiver_and_other(node = nil); end
   def redundant_receiver_and_other(node = nil); end
   def replacement(receiver, other); end
+  include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Rails::Present < RuboCop::Cop::Cop
   def autocorrect(node); end
