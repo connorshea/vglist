@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-6ad22d373a5a
+# sorbet-rails-0.5.3
 module SorbetRails
   def self.config(&blk); end
   def self.configure(*args, &blk); end
@@ -143,4 +143,19 @@ class SorbetRails::ModelRbiFormatter
   extend T::Private::Methods::SingletonMethodHooks
   extend T::Sig
   include SorbetRails::ModelUtils
+end
+class KaminariPlugin < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class PgSearchPlugin < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class FriendlyIdPlugin < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
 end

@@ -3546,8 +3546,6 @@ class ActiveRecord::InternalMetadata
   def self.create_table(); end
 
   def self.drop_table(); end
-
-  def self.page(num=T.unsafe(nil)); end
 end
 
 module ActiveRecord::LegacyYamlAdapter
@@ -9911,24 +9909,6 @@ module Event::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class Event
-  def self.favorite_games(*args); end
-
-  def self.game_purchases(*args); end
-
-  def self.new_user(*args); end
-
-  def self.not_add_to_library(*args); end
-
-  def self.not_change_completion_status(*args); end
-
-  def self.not_favorite_game(*args); end
-
-  def self.not_new_user(*args); end
-
-  def self.recently_created(*args); end
-end
-
 class Exception
   include ::BetterErrors::ExceptionExtension
   include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
@@ -10030,10 +10010,6 @@ end
 
 module ExternalAccount::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class ExternalAccount
-  def self.not_steam(*args); end
 end
 
 class FSEvent
@@ -11811,29 +11787,13 @@ class Game
 
   def self.before_remove_for_purchasers?(); end
 
-  def self.least_recently_updated(*args); end
-
-  def self.most_favorites(*args); end
-
-  def self.most_owners(*args); end
-
-  def self.newest(*args); end
-
-  def self.oldest(*args); end
-
-  def self.on_platform(*args); end
-
   def self.pg_search_multisearchable_options(); end
 
   def self.pg_search_multisearchable_options=(val); end
 
   def self.pg_search_multisearchable_options?(); end
 
-  def self.recently_updated(*args); end
-
   def self.search(*args); end
-
-  def self.with_attached_cover(*args); end
 end
 
 class GameDeveloper
@@ -12403,20 +12363,6 @@ class GamePurchase
   def self.before_remove_for_platforms=(val); end
 
   def self.before_remove_for_platforms?(); end
-
-  def self.not_completed(*args); end
-
-  def self.not_dropped(*args); end
-
-  def self.not_fully_completed(*args); end
-
-  def self.not_in_progress(*args); end
-
-  def self.not_not_applicable(*args); end
-
-  def self.not_paused(*args); end
-
-  def self.not_unplayed(*args); end
 end
 
 class GamePurchasePlatform
@@ -13014,8 +12960,6 @@ class Hash
 end
 
 class Hash
-  def self.from_trusted_xml(xml); end
-
   def self.try_convert(_); end
 end
 
@@ -15848,8 +15792,6 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
-Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
-
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -15968,7 +15910,15 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-Net::HTTPSession = Net::HTTP
+class Net::HTTP
+end
+
+Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
+
+Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
+
+class Net::HTTP
+end
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -34324,18 +34274,6 @@ class User
   def self.devise_modules=(val); end
 
   def self.devise_modules?(); end
-
-  def self.not_admin(*args); end
-
-  def self.not_member(*args); end
-
-  def self.not_moderator(*args); end
-
-  def self.not_private_account(*args); end
-
-  def self.not_public_account(*args); end
-
-  def self.with_attached_avatar(*args); end
 end
 
 Visitor = Psych::Visitors::Visitor
