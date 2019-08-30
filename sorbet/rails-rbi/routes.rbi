@@ -184,6 +184,18 @@ class ActionController::Base
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def statistics_user_url(*args, **kwargs); end
 
+  # Sigs for route /users/:id/activity(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_user_path(*args, **kwargs); end
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_user_url(*args, **kwargs); end
+
+  # Sigs for route /users/compare/:user_id...:other_user_id(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def compare_users_path(*args, **kwargs); end
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def compare_users_url(*args, **kwargs); end
+
   # Sigs for route /users/:id/update_role(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def update_role_user_path(*args, **kwargs); end
@@ -219,12 +231,6 @@ class ActionController::Base
   def reset_game_library_user_path(*args, **kwargs); end
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def reset_game_library_user_url(*args, **kwargs); end
-
-  # Sigs for route /users/compare/:user_id...:other_user_id(.:format)
-  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def compare_users_path(*args, **kwargs); end
-  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def compare_users_url(*args, **kwargs); end
 
   # Sigs for route /users/new(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }

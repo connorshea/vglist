@@ -153,6 +153,33 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET activity_user_path" do
+    let(:user) { create(:user) }
+    let(:user_with_game_purchase) { create(:user_with_game_purchase) }
+    let(:user_with_favorite_game) { create(:user_with_favorite_game) }
+    let(:private_user) { create(:private_user) }
+
+    it "returns http success for user" do
+      get activity_user_path(id: user.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for user with game purchase" do
+      get activity_user_path(id: user_with_game_purchase.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for user with favorite game" do
+      get activity_user_path(id: user_with_favorite_game.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for user with private account" do
+      get activity_user_path(id: private_user.id)
+      expect(response).to redirect_to(user_path(private_user))
+    end
+  end
+
   describe 'GET compare_users_path' do
     let(:user) { create(:confirmed_user) }
     let(:other_user) { create(:confirmed_user) }

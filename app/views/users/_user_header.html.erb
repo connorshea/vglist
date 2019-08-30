@@ -1,0 +1,44 @@
+<div class="hero-area">
+  <div class="hero-image hero-image-150 user-avatar">
+    <%= user_avatar(user.id, 150) %>
+  </div>
+
+  <div class="text-block">
+    <h1 class="title"><%= user.username %></h1>
+
+    <%# Only display the user's bio if it's a public account or the current
+        user has access for some other reason. %>
+    <% if user.public_account? || policy(user).show? %>
+      <% if !user.bio.blank? %>
+        <h2 class="subtitle"><%= user.bio %></h2>
+      <% else %>
+        <h2 class="subtitle">
+          <%= user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
+        </h2>
+      <% end %>
+
+      <% if user.private_account? %>
+        <p class='has-text-weight-semibold'>This user's account is private.
+      <% end %>
+    <% end %>
+
+    <% if user.admin? %>
+      <p><span class="tag is-primary has-text-weight-semibold">Admin</span>
+    <% elsif user.moderator? %>
+      <p><span class="tag is-primary has-text-weight-semibold">Moderator</span>
+    <% end %>
+  </div>
+</div>
+
+<% if user.public_account? || policy(user).show? %>
+  <div class="tabs">
+    <ul>
+      <li class="<%= 'is-active' if current_page?(user_path(user)) %>">
+        <%= link_to 'Library', user_path(user) %>
+      </li>
+      <li class="<%= 'is-active' if current_page?(activity_user_path(user)) %>">
+        <%= link_to 'Activity', activity_user_path(user) %>
+      </li>
+    </ul>
+  </div>
+<% end %>

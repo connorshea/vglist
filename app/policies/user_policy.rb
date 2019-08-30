@@ -81,6 +81,11 @@ class UserPolicy < ApplicationPolicy
     user_profile_is_visible?
   end
 
+  sig { returns(T.nilable(T::Boolean)) }
+  def activity?
+    user_profile_is_visible?
+  end
+
   private
 
   sig { returns(T.nilable(T::Boolean)) }
