@@ -3493,6 +3493,33 @@ class ActiveRecord::InternalMetadata
   include ::Kaminari::ConfigurationMethods
 end
 
+class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
+end
+
+class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
+end
+
+class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveRecord::InternalMetadata::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
+end
+
+class ActiveRecord::InternalMetadata::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module ActiveRecord::InternalMetadata::GeneratedAssociationMethods
 end
 
@@ -3500,6 +3527,13 @@ module ActiveRecord::InternalMetadata::GeneratedAssociationMethods
 end
 
 module ActiveRecord::InternalMetadata::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module ActiveRecord::InternalMetadata::GeneratedRelationMethods
+end
+
+module ActiveRecord::InternalMetadata::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -3535,9 +3569,6 @@ end
 
 module ActiveRecord::LegacyYamlAdapter
   def self.convert(klass, coder); end
-end
-
-class ActiveRecord::Locking::LockingType
 end
 
 class ActiveRecord::LogSubscriber
@@ -3830,6 +3861,10 @@ module ActiveRecord::SchemaMigration::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module ActiveRecord::SchemaMigration::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class ActiveRecord::Scoping::ScopeRegistry
   VALID_SCOPE_TYPES = ::T.let(nil, ::T.untyped)
 end
@@ -4099,13 +4134,7 @@ ActiveRecord::Type::Float = ActiveModel::Type::Float
 
 ActiveRecord::Type::Integer = ActiveModel::Type::Integer
 
-class ActiveRecord::Type::Serialized
-end
-
 ActiveRecord::Type::String = ActiveModel::Type::String
-
-class ActiveRecord::Type::Time::Value
-end
 
 module ActiveRecord::VERSION
   MAJOR = ::T.let(nil, ::T.untyped)
@@ -4356,6 +4385,10 @@ module ActiveStorage::Attachment::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module ActiveStorage::Attachment::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class ActiveStorage::BaseController
   include ::ActiveStorage::SetCurrent
 end
@@ -4600,6 +4633,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
 end
 
 module ActiveStorage::Blob::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module ActiveStorage::Blob::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -5555,6 +5592,33 @@ class ApplicationRecord
   include ::Kaminari::ConfigurationMethods
 end
 
+class ApplicationRecord::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ApplicationRecord::GeneratedRelationMethods
+end
+
+class ApplicationRecord::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ApplicationRecord::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ApplicationRecord::GeneratedRelationMethods
+end
+
+class ApplicationRecord::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ApplicationRecord::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ApplicationRecord::GeneratedRelationMethods
+end
+
+class ApplicationRecord::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module ApplicationRecord::GeneratedAssociationMethods
 end
 
@@ -5565,6 +5629,13 @@ module ApplicationRecord::GeneratedAttributeMethods
 end
 
 module ApplicationRecord::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module ApplicationRecord::GeneratedRelationMethods
+end
+
+module ApplicationRecord::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -7590,6 +7661,33 @@ class Company
   def validate_associated_records_for_published_games(*args); end
 end
 
+class Company::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Company::GeneratedRelationMethods
+end
+
+class Company::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Company::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Company::GeneratedRelationMethods
+end
+
+class Company::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Company::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Company::GeneratedRelationMethods
+end
+
+class Company::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module Company::GeneratedAssociationMethods
   def build_pg_search_document(*args, &block); end
 
@@ -7793,6 +7891,13 @@ module Company::GeneratedAttributeMethods
 end
 
 module Company::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Company::GeneratedRelationMethods
+end
+
+module Company::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -8878,6 +8983,33 @@ class Engine
   def validate_associated_records_for_games(*args); end
 end
 
+class Engine::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Engine::GeneratedRelationMethods
+end
+
+class Engine::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Engine::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Engine::GeneratedRelationMethods
+end
+
+class Engine::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Engine::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Engine::GeneratedRelationMethods
+end
+
+class Engine::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module Engine::GeneratedAssociationMethods
   def build_pg_search_document(*args, &block); end
 
@@ -9043,6 +9175,13 @@ module Engine::GeneratedAttributeMethods
 end
 
 module Engine::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Engine::GeneratedRelationMethods
+end
+
+module Engine::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -9459,6 +9598,337 @@ module Etc
   def self.uname(); end
 end
 
+class Event
+  def autosave_associated_records_for_eventable(*args); end
+
+  def autosave_associated_records_for_user(*args); end
+end
+
+class Event::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Event::GeneratedRelationMethods
+end
+
+class Event::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Event::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Event::GeneratedRelationMethods
+end
+
+class Event::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Event::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Event::GeneratedRelationMethods
+end
+
+class Event::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+module Event::GeneratedAssociationMethods
+  def build_user(*args, &block); end
+
+  def create_user(*args, &block); end
+
+  def create_user!(*args, &block); end
+
+  def reload_eventable(); end
+
+  def reload_user(); end
+end
+
+module Event::GeneratedAttributeMethods
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def differences_before_last_save(*args); end
+
+  def differences_before_type_cast(*args); end
+
+  def differences_came_from_user?(*args); end
+
+  def differences_change(*args); end
+
+  def differences_change_to_be_saved(*args); end
+
+  def differences_changed?(*args); end
+
+  def differences_in_database(*args); end
+
+  def differences_previous_change(*args); end
+
+  def differences_previously_changed?(*args); end
+
+  def differences_was(*args); end
+
+  def differences_will_change!(*args); end
+
+  def event_category_before_last_save(*args); end
+
+  def event_category_before_type_cast(*args); end
+
+  def event_category_came_from_user?(*args); end
+
+  def event_category_change(*args); end
+
+  def event_category_change_to_be_saved(*args); end
+
+  def event_category_changed?(*args); end
+
+  def event_category_in_database(*args); end
+
+  def event_category_previous_change(*args); end
+
+  def event_category_previously_changed?(*args); end
+
+  def event_category_was(*args); end
+
+  def event_category_will_change!(*args); end
+
+  def eventable_id_before_last_save(*args); end
+
+  def eventable_id_before_type_cast(*args); end
+
+  def eventable_id_came_from_user?(*args); end
+
+  def eventable_id_change(*args); end
+
+  def eventable_id_change_to_be_saved(*args); end
+
+  def eventable_id_changed?(*args); end
+
+  def eventable_id_in_database(*args); end
+
+  def eventable_id_previous_change(*args); end
+
+  def eventable_id_previously_changed?(*args); end
+
+  def eventable_id_was(*args); end
+
+  def eventable_id_will_change!(*args); end
+
+  def eventable_type_before_last_save(*args); end
+
+  def eventable_type_before_type_cast(*args); end
+
+  def eventable_type_came_from_user?(*args); end
+
+  def eventable_type_change(*args); end
+
+  def eventable_type_change_to_be_saved(*args); end
+
+  def eventable_type_changed?(*args); end
+
+  def eventable_type_in_database(*args); end
+
+  def eventable_type_previous_change(*args); end
+
+  def eventable_type_previously_changed?(*args); end
+
+  def eventable_type_was(*args); end
+
+  def eventable_type_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_differences!(*args); end
+
+  def restore_event_category!(*args); end
+
+  def restore_eventable_id!(*args); end
+
+  def restore_eventable_type!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def restore_user_id!(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_differences(*args); end
+
+  def saved_change_to_differences?(*args); end
+
+  def saved_change_to_event_category(*args); end
+
+  def saved_change_to_event_category?(*args); end
+
+  def saved_change_to_eventable_id(*args); end
+
+  def saved_change_to_eventable_id?(*args); end
+
+  def saved_change_to_eventable_type(*args); end
+
+  def saved_change_to_eventable_type?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def saved_change_to_user_id(*args); end
+
+  def saved_change_to_user_id?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def user_id_before_last_save(*args); end
+
+  def user_id_before_type_cast(*args); end
+
+  def user_id_came_from_user?(*args); end
+
+  def user_id_change(*args); end
+
+  def user_id_change_to_be_saved(*args); end
+
+  def user_id_changed?(*args); end
+
+  def user_id_in_database(*args); end
+
+  def user_id_previous_change(*args); end
+
+  def user_id_previously_changed?(*args); end
+
+  def user_id_was(*args); end
+
+  def user_id_will_change!(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_differences?(*args); end
+
+  def will_save_change_to_event_category?(*args); end
+
+  def will_save_change_to_eventable_id?(*args); end
+
+  def will_save_change_to_eventable_type?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+
+  def will_save_change_to_user_id?(*args); end
+end
+
+module Event::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Event::GeneratedRelationMethods
+  def add_to_library(*args, &block); end
+
+  def change_completion_status(*args, &block); end
+
+  def favorite_game(*args, &block); end
+
+  def favorite_games(*args, &block); end
+
+  def game_purchases(*args, &block); end
+
+  def new_user(*args, &block); end
+
+  def not_add_to_library(*args, &block); end
+
+  def not_change_completion_status(*args, &block); end
+
+  def not_favorite_game(*args, &block); end
+
+  def not_new_user(*args, &block); end
+
+  def recently_created(*args, &block); end
+end
+
+module Event::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+class Event
+  def self.favorite_games(*args); end
+
+  def self.game_purchases(*args); end
+
+  def self.new_user(*args); end
+
+  def self.not_add_to_library(*args); end
+
+  def self.not_change_completion_status(*args); end
+
+  def self.not_favorite_game(*args); end
+
+  def self.not_new_user(*args); end
+
+  def self.recently_created(*args); end
+end
+
 class Exception
   include ::BetterErrors::ExceptionExtension
   include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
@@ -9511,6 +9981,33 @@ class ExternalAccount
   def autosave_associated_records_for_user(*args); end
 end
 
+class ExternalAccount::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ExternalAccount::GeneratedRelationMethods
+end
+
+class ExternalAccount::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ExternalAccount::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ExternalAccount::GeneratedRelationMethods
+end
+
+class ExternalAccount::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ExternalAccount::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ExternalAccount::GeneratedRelationMethods
+end
+
+class ExternalAccount::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module ExternalAccount::GeneratedAssociationMethods
   def build_user(*args, &block); end
 
@@ -9522,6 +10019,16 @@ module ExternalAccount::GeneratedAssociationMethods
 end
 
 module ExternalAccount::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module ExternalAccount::GeneratedRelationMethods
+  def not_steam(*args, &block); end
+
+  def steam(*args, &block); end
+end
+
+module ExternalAccount::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -9555,7 +10062,12 @@ module Faker
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+class Faker::Alphanumeric
+  ALPHANUMS = ::T.let(nil, ::T.untyped)
+end
+
 class Faker::Base
+  LLetters = ::T.let(nil, ::T.untyped)
   Letters = ::T.let(nil, ::T.untyped)
   Numbers = ::T.let(nil, ::T.untyped)
   ULetters = ::T.let(nil, ::T.untyped)
@@ -9990,9 +10502,64 @@ class Faraday::Utils::Headers
 end
 
 class FavoriteGame
+  def after_add_for_events(); end
+
+  def after_add_for_events=(val); end
+
+  def after_add_for_events?(); end
+
+  def after_remove_for_events(); end
+
+  def after_remove_for_events=(val); end
+
+  def after_remove_for_events?(); end
+
+  def autosave_associated_records_for_events(*args); end
+
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_user(*args); end
+
+  def before_add_for_events(); end
+
+  def before_add_for_events=(val); end
+
+  def before_add_for_events?(); end
+
+  def before_remove_for_events(); end
+
+  def before_remove_for_events=(val); end
+
+  def before_remove_for_events?(); end
+
+  def validate_associated_records_for_events(*args); end
+end
+
+class FavoriteGame::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::FavoriteGame::GeneratedRelationMethods
+end
+
+class FavoriteGame::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class FavoriteGame::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::FavoriteGame::GeneratedRelationMethods
+end
+
+class FavoriteGame::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class FavoriteGame::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::FavoriteGame::GeneratedRelationMethods
+end
+
+class FavoriteGame::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module FavoriteGame::GeneratedAssociationMethods
@@ -10008,6 +10575,10 @@ module FavoriteGame::GeneratedAssociationMethods
 
   def create_user!(*args, &block); end
 
+  def event_ids(); end
+
+  def event_ids=(ids); end
+
   def reload_game(); end
 
   def reload_user(); end
@@ -10015,6 +10586,39 @@ end
 
 module FavoriteGame::GeneratedAttributeMethods
   extend ::Mutex_m
+end
+
+module FavoriteGame::GeneratedRelationMethods
+end
+
+module FavoriteGame::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+class FavoriteGame
+  def self.after_add_for_events(); end
+
+  def self.after_add_for_events=(val); end
+
+  def self.after_add_for_events?(); end
+
+  def self.after_remove_for_events(); end
+
+  def self.after_remove_for_events=(val); end
+
+  def self.after_remove_for_events?(); end
+
+  def self.before_add_for_events(); end
+
+  def self.before_add_for_events=(val); end
+
+  def self.before_add_for_events?(); end
+
+  def self.before_remove_for_events(); end
+
+  def self.before_remove_for_events=(val); end
+
+  def self.before_remove_for_events?(); end
 end
 
 module Fcntl
@@ -10295,6 +10899,33 @@ class FriendlyId::Slug
   def autosave_associated_records_for_sluggable(*args); end
 end
 
+class FriendlyId::Slug::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::FriendlyId::Slug::GeneratedRelationMethods
+end
+
+class FriendlyId::Slug::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class FriendlyId::Slug::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::FriendlyId::Slug::GeneratedRelationMethods
+end
+
+class FriendlyId::Slug::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class FriendlyId::Slug::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::FriendlyId::Slug::GeneratedRelationMethods
+end
+
+class FriendlyId::Slug::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module FriendlyId::Slug::GeneratedAssociationMethods
   def reload_sluggable(); end
 
@@ -10310,6 +10941,13 @@ module FriendlyId::Slug::GeneratedAttributeMethods
 end
 
 module FriendlyId::Slug::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module FriendlyId::Slug::GeneratedRelationMethods
+end
+
+module FriendlyId::Slug::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -10723,6 +11361,33 @@ class Game
   def validate_associated_records_for_purchasers(*args); end
 end
 
+class Game::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Game::GeneratedRelationMethods
+end
+
+class Game::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Game::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Game::GeneratedRelationMethods
+end
+
+class Game::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Game::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Game::GeneratedRelationMethods
+end
+
+class Game::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module Game::GeneratedAssociationMethods
   def build_cover_attachment(*args, &block); end
 
@@ -10808,6 +11473,28 @@ module Game::GeneratedAssociationMethods
 end
 
 module Game::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Game::GeneratedRelationMethods
+  def least_recently_updated(*args, &block); end
+
+  def most_favorites(*args, &block); end
+
+  def most_owners(*args, &block); end
+
+  def newest(*args, &block); end
+
+  def oldest(*args, &block); end
+
+  def on_platform(*args, &block); end
+
+  def recently_updated(*args, &block); end
+
+  def with_attached_cover(*args, &block); end
+end
+
+module Game::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -11155,6 +11842,33 @@ class GameDeveloper
   def autosave_associated_records_for_game(*args); end
 end
 
+class GameDeveloper::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameDeveloper::GeneratedRelationMethods
+end
+
+class GameDeveloper::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GameDeveloper::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameDeveloper::GeneratedRelationMethods
+end
+
+class GameDeveloper::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GameDeveloper::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameDeveloper::GeneratedRelationMethods
+end
+
+class GameDeveloper::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module GameDeveloper::GeneratedAssociationMethods
   def build_company(*args, &block); end
 
@@ -11177,10 +11891,44 @@ module GameDeveloper::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module GameDeveloper::GeneratedRelationMethods
+end
+
+module GameDeveloper::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class GameEngine
   def autosave_associated_records_for_engine(*args); end
 
   def autosave_associated_records_for_game(*args); end
+end
+
+class GameEngine::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameEngine::GeneratedRelationMethods
+end
+
+class GameEngine::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GameEngine::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameEngine::GeneratedRelationMethods
+end
+
+class GameEngine::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GameEngine::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameEngine::GeneratedRelationMethods
+end
+
+class GameEngine::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GameEngine::GeneratedAssociationMethods
@@ -11205,10 +11953,44 @@ module GameEngine::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module GameEngine::GeneratedRelationMethods
+end
+
+module GameEngine::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class GameGenre
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_genre(*args); end
+end
+
+class GameGenre::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameGenre::GeneratedRelationMethods
+end
+
+class GameGenre::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GameGenre::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameGenre::GeneratedRelationMethods
+end
+
+class GameGenre::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GameGenre::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GameGenre::GeneratedRelationMethods
+end
+
+class GameGenre::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GameGenre::GeneratedAssociationMethods
@@ -11233,10 +12015,44 @@ module GameGenre::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module GameGenre::GeneratedRelationMethods
+end
+
+module GameGenre::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class GamePlatform
   def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_platform(*args); end
+end
+
+class GamePlatform::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePlatform::GeneratedRelationMethods
+end
+
+class GamePlatform::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePlatform::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePlatform::GeneratedRelationMethods
+end
+
+class GamePlatform::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePlatform::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePlatform::GeneratedRelationMethods
+end
+
+class GamePlatform::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePlatform::GeneratedAssociationMethods
@@ -11261,10 +12077,44 @@ module GamePlatform::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module GamePlatform::GeneratedRelationMethods
+end
+
+module GamePlatform::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class GamePublisher
   def autosave_associated_records_for_company(*args); end
 
   def autosave_associated_records_for_game(*args); end
+end
+
+class GamePublisher::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePublisher::GeneratedRelationMethods
+end
+
+class GamePublisher::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePublisher::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePublisher::GeneratedRelationMethods
+end
+
+class GamePublisher::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePublisher::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePublisher::GeneratedRelationMethods
+end
+
+class GamePublisher::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePublisher::GeneratedAssociationMethods
@@ -11289,12 +12139,19 @@ module GamePublisher::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module GamePublisher::GeneratedRelationMethods
+end
+
+module GamePublisher::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class GamePurchase
-  def after_add_for_game_purchase_events(); end
+  def after_add_for_events(); end
 
-  def after_add_for_game_purchase_events=(val); end
+  def after_add_for_events=(val); end
 
-  def after_add_for_game_purchase_events?(); end
+  def after_add_for_events?(); end
 
   def after_add_for_game_purchase_platforms(); end
 
@@ -11308,11 +12165,11 @@ class GamePurchase
 
   def after_add_for_platforms?(); end
 
-  def after_remove_for_game_purchase_events(); end
+  def after_remove_for_events(); end
 
-  def after_remove_for_game_purchase_events=(val); end
+  def after_remove_for_events=(val); end
 
-  def after_remove_for_game_purchase_events?(); end
+  def after_remove_for_events?(); end
 
   def after_remove_for_game_purchase_platforms(); end
 
@@ -11326,9 +12183,9 @@ class GamePurchase
 
   def after_remove_for_platforms?(); end
 
-  def autosave_associated_records_for_game(*args); end
+  def autosave_associated_records_for_events(*args); end
 
-  def autosave_associated_records_for_game_purchase_events(*args); end
+  def autosave_associated_records_for_game(*args); end
 
   def autosave_associated_records_for_game_purchase_platforms(*args); end
 
@@ -11336,11 +12193,11 @@ class GamePurchase
 
   def autosave_associated_records_for_user(*args); end
 
-  def before_add_for_game_purchase_events(); end
+  def before_add_for_events(); end
 
-  def before_add_for_game_purchase_events=(val); end
+  def before_add_for_events=(val); end
 
-  def before_add_for_game_purchase_events?(); end
+  def before_add_for_events?(); end
 
   def before_add_for_game_purchase_platforms(); end
 
@@ -11354,11 +12211,11 @@ class GamePurchase
 
   def before_add_for_platforms?(); end
 
-  def before_remove_for_game_purchase_events(); end
+  def before_remove_for_events(); end
 
-  def before_remove_for_game_purchase_events=(val); end
+  def before_remove_for_events=(val); end
 
-  def before_remove_for_game_purchase_events?(); end
+  def before_remove_for_events?(); end
 
   def before_remove_for_game_purchase_platforms(); end
 
@@ -11372,11 +12229,38 @@ class GamePurchase
 
   def before_remove_for_platforms?(); end
 
-  def validate_associated_records_for_game_purchase_events(*args); end
+  def validate_associated_records_for_events(*args); end
 
   def validate_associated_records_for_game_purchase_platforms(*args); end
 
   def validate_associated_records_for_platforms(*args); end
+end
+
+class GamePurchase::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchase::GeneratedRelationMethods
+end
+
+class GamePurchase::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePurchase::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchase::GeneratedRelationMethods
+end
+
+class GamePurchase::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePurchase::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchase::GeneratedRelationMethods
+end
+
+class GamePurchase::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePurchase::GeneratedAssociationMethods
@@ -11392,9 +12276,9 @@ module GamePurchase::GeneratedAssociationMethods
 
   def create_user!(*args, &block); end
 
-  def game_purchase_event_ids(); end
+  def event_ids(); end
 
-  def game_purchase_event_ids=(ids); end
+  def event_ids=(ids); end
 
   def game_purchase_platform_ids(); end
 
@@ -11413,12 +12297,46 @@ module GamePurchase::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module GamePurchase::GeneratedRelationMethods
+  def completed(*args, &block); end
+
+  def dropped(*args, &block); end
+
+  def fully_completed(*args, &block); end
+
+  def in_progress(*args, &block); end
+
+  def not_applicable(*args, &block); end
+
+  def not_completed(*args, &block); end
+
+  def not_dropped(*args, &block); end
+
+  def not_fully_completed(*args, &block); end
+
+  def not_in_progress(*args, &block); end
+
+  def not_not_applicable(*args, &block); end
+
+  def not_paused(*args, &block); end
+
+  def not_unplayed(*args, &block); end
+
+  def paused(*args, &block); end
+
+  def unplayed(*args, &block); end
+end
+
+module GamePurchase::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class GamePurchase
-  def self.after_add_for_game_purchase_events(); end
+  def self.after_add_for_events(); end
 
-  def self.after_add_for_game_purchase_events=(val); end
+  def self.after_add_for_events=(val); end
 
-  def self.after_add_for_game_purchase_events?(); end
+  def self.after_add_for_events?(); end
 
   def self.after_add_for_game_purchase_platforms(); end
 
@@ -11432,11 +12350,11 @@ class GamePurchase
 
   def self.after_add_for_platforms?(); end
 
-  def self.after_remove_for_game_purchase_events(); end
+  def self.after_remove_for_events(); end
 
-  def self.after_remove_for_game_purchase_events=(val); end
+  def self.after_remove_for_events=(val); end
 
-  def self.after_remove_for_game_purchase_events?(); end
+  def self.after_remove_for_events?(); end
 
   def self.after_remove_for_game_purchase_platforms(); end
 
@@ -11450,11 +12368,11 @@ class GamePurchase
 
   def self.after_remove_for_platforms?(); end
 
-  def self.before_add_for_game_purchase_events(); end
+  def self.before_add_for_events(); end
 
-  def self.before_add_for_game_purchase_events=(val); end
+  def self.before_add_for_events=(val); end
 
-  def self.before_add_for_game_purchase_events?(); end
+  def self.before_add_for_events?(); end
 
   def self.before_add_for_game_purchase_platforms(); end
 
@@ -11468,11 +12386,11 @@ class GamePurchase
 
   def self.before_add_for_platforms?(); end
 
-  def self.before_remove_for_game_purchase_events(); end
+  def self.before_remove_for_events(); end
 
-  def self.before_remove_for_game_purchase_events=(val); end
+  def self.before_remove_for_events=(val); end
 
-  def self.before_remove_for_game_purchase_events?(); end
+  def self.before_remove_for_events?(); end
 
   def self.before_remove_for_game_purchase_platforms(); end
 
@@ -11501,46 +12419,37 @@ class GamePurchase
   def self.not_unplayed(*args); end
 end
 
-class GamePurchaseEvent
-  def autosave_associated_records_for_game_purchase(*args); end
-
-  def autosave_associated_records_for_user(*args); end
-end
-
-module GamePurchaseEvent::GeneratedAssociationMethods
-  def build_game_purchase(*args, &block); end
-
-  def build_user(*args, &block); end
-
-  def create_game_purchase(*args, &block); end
-
-  def create_game_purchase!(*args, &block); end
-
-  def create_user(*args, &block); end
-
-  def create_user!(*args, &block); end
-
-  def reload_game_purchase(); end
-
-  def reload_user(); end
-end
-
-module GamePurchaseEvent::GeneratedAttributeMethods
-  extend ::Mutex_m
-end
-
-class GamePurchaseEvent
-  def self.not_add_to_library(*args); end
-
-  def self.not_change_completion_status(*args); end
-
-  def self.recently_created(*args); end
-end
-
 class GamePurchasePlatform
   def autosave_associated_records_for_game_purchase(*args); end
 
   def autosave_associated_records_for_platform(*args); end
+end
+
+class GamePurchasePlatform::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchasePlatform::GeneratedRelationMethods
+end
+
+class GamePurchasePlatform::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchasePlatform::GeneratedRelationMethods
+end
+
+class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePurchasePlatform::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchasePlatform::GeneratedRelationMethods
+end
+
+class GamePurchasePlatform::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePurchasePlatform::GeneratedAssociationMethods
@@ -11562,6 +12471,13 @@ module GamePurchasePlatform::GeneratedAssociationMethods
 end
 
 module GamePurchasePlatform::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module GamePurchasePlatform::GeneratedRelationMethods
+end
+
+module GamePurchasePlatform::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -11749,6 +12665,33 @@ class Genre
   def validate_associated_records_for_game_genres(*args); end
 
   def validate_associated_records_for_games(*args); end
+end
+
+class Genre::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Genre::GeneratedRelationMethods
+end
+
+class Genre::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Genre::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Genre::GeneratedRelationMethods
+end
+
+class Genre::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Genre::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Genre::GeneratedRelationMethods
+end
+
+class Genre::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Genre::GeneratedAssociationMethods
@@ -11949,6 +12892,13 @@ module Genre::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module Genre::GeneratedRelationMethods
+end
+
+module Genre::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class Genre
   def self.after_add_for_game_genres(); end
 
@@ -12064,6 +13014,8 @@ class Hash
 end
 
 class Hash
+  def self.from_trusted_xml(xml); end
+
   def self.try_convert(_); end
 end
 
@@ -14896,6 +15848,8 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
+Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
+
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -15014,15 +15968,7 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-class Net::HTTP
-end
-
-Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
-
-Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
-
-class Net::HTTP
-end
+Net::HTTPSession = Net::HTTP
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -15643,10 +16589,6 @@ class Numeric
   def finite?(); end
 
   def infinite?(); end
-
-  def negative?(); end
-
-  def positive?(); end
 
   EXABYTE = ::T.let(nil, ::T.untyped)
   GIGABYTE = ::T.let(nil, ::T.untyped)
@@ -18461,6 +19403,33 @@ class Platform
   def validate_associated_records_for_games(*args); end
 end
 
+class Platform::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Platform::GeneratedRelationMethods
+end
+
+class Platform::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Platform::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Platform::GeneratedRelationMethods
+end
+
+class Platform::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Platform::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Platform::GeneratedRelationMethods
+end
+
+class Platform::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module Platform::GeneratedAssociationMethods
   def build_pg_search_document(*args, &block); end
 
@@ -18664,6 +19633,13 @@ module Platform::GeneratedAttributeMethods
 end
 
 module Platform::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Platform::GeneratedRelationMethods
+end
+
+module Platform::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -30070,6 +31046,33 @@ class Series
   def validate_associated_records_for_games(*args); end
 end
 
+class Series::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Series::GeneratedRelationMethods
+end
+
+class Series::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Series::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Series::GeneratedRelationMethods
+end
+
+class Series::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Series::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Series::GeneratedRelationMethods
+end
+
+class Series::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module Series::GeneratedAssociationMethods
   def build_pg_search_document(*args, &block); end
 
@@ -30231,6 +31234,13 @@ module Series::GeneratedAttributeMethods
 end
 
 module Series::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Series::GeneratedRelationMethods
+end
+
+module Series::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -31057,6 +32067,10 @@ class Sorbet::Private::TodoRBI
   def self.main(); end
 
   def self.output_file(); end
+end
+
+module SorbetRails
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 class SortedSet
@@ -32307,17 +33321,17 @@ class User
   include ::Devise::Models::Trackable
   include ::FriendlyId::Slugged
   include ::FriendlyId::Finders
+  def after_add_for_events(); end
+
+  def after_add_for_events=(val); end
+
+  def after_add_for_events?(); end
+
   def after_add_for_favorite_games(); end
 
   def after_add_for_favorite_games=(val); end
 
   def after_add_for_favorite_games?(); end
-
-  def after_add_for_game_purchase_events(); end
-
-  def after_add_for_game_purchase_events=(val); end
-
-  def after_add_for_game_purchase_events?(); end
 
   def after_add_for_game_purchases(); end
 
@@ -32331,17 +33345,17 @@ class User
 
   def after_add_for_games?(); end
 
+  def after_remove_for_events(); end
+
+  def after_remove_for_events=(val); end
+
+  def after_remove_for_events?(); end
+
   def after_remove_for_favorite_games(); end
 
   def after_remove_for_favorite_games=(val); end
 
   def after_remove_for_favorite_games?(); end
-
-  def after_remove_for_game_purchase_events(); end
-
-  def after_remove_for_game_purchase_events=(val); end
-
-  def after_remove_for_game_purchase_events?(); end
 
   def after_remove_for_game_purchases(); end
 
@@ -32359,27 +33373,27 @@ class User
 
   def autosave_associated_records_for_avatar_blob(); end
 
+  def autosave_associated_records_for_events(*args); end
+
   def autosave_associated_records_for_external_account(); end
 
   def autosave_associated_records_for_favorite_games(*args); end
 
-  def autosave_associated_records_for_game_purchase_events(*args); end
-
   def autosave_associated_records_for_game_purchases(*args); end
 
   def autosave_associated_records_for_games(*args); end
+
+  def before_add_for_events(); end
+
+  def before_add_for_events=(val); end
+
+  def before_add_for_events?(); end
 
   def before_add_for_favorite_games(); end
 
   def before_add_for_favorite_games=(val); end
 
   def before_add_for_favorite_games?(); end
-
-  def before_add_for_game_purchase_events(); end
-
-  def before_add_for_game_purchase_events=(val); end
-
-  def before_add_for_game_purchase_events?(); end
 
   def before_add_for_game_purchases(); end
 
@@ -32393,17 +33407,17 @@ class User
 
   def before_add_for_games?(); end
 
+  def before_remove_for_events(); end
+
+  def before_remove_for_events=(val); end
+
+  def before_remove_for_events?(); end
+
   def before_remove_for_favorite_games(); end
 
   def before_remove_for_favorite_games=(val); end
 
   def before_remove_for_favorite_games?(); end
-
-  def before_remove_for_game_purchase_events(); end
-
-  def before_remove_for_game_purchase_events=(val); end
-
-  def before_remove_for_game_purchase_events?(); end
 
   def before_remove_for_game_purchases(); end
 
@@ -32429,13 +33443,42 @@ class User
 
   def password_confirmation=(password_confirmation); end
 
-  def validate_associated_records_for_favorite_games(*args); end
+  def validate_associated_records_for_events(*args); end
 
-  def validate_associated_records_for_game_purchase_events(*args); end
+  def validate_associated_records_for_favorite_games(*args); end
 
   def validate_associated_records_for_game_purchases(*args); end
 
   def validate_associated_records_for_games(*args); end
+end
+
+class User::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::User::GeneratedRelationMethods
+  include ::FriendlyId::FinderMethods
+end
+
+class User::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class User::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::User::GeneratedRelationMethods
+end
+
+class User::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class User::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::User::GeneratedRelationMethods
+  include ::FriendlyId::FinderMethods
+end
+
+class User::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module User::GeneratedAssociationMethods
@@ -32455,6 +33498,10 @@ module User::GeneratedAssociationMethods
 
   def create_external_account!(*args, &block); end
 
+  def event_ids(); end
+
+  def event_ids=(ids); end
+
   def favorite_game_ids(); end
 
   def favorite_game_ids=(ids); end
@@ -32462,10 +33509,6 @@ module User::GeneratedAssociationMethods
   def game_ids(); end
 
   def game_ids=(ids); end
-
-  def game_purchase_event_ids(); end
-
-  def game_purchase_event_ids=(ids); end
 
   def game_purchase_ids(); end
 
@@ -32737,6 +33780,28 @@ module User::GeneratedAttributeMethods
 
   def last_sign_in_ip_will_change!(*args); end
 
+  def privacy_before_last_save(*args); end
+
+  def privacy_before_type_cast(*args); end
+
+  def privacy_came_from_user?(*args); end
+
+  def privacy_change(*args); end
+
+  def privacy_change_to_be_saved(*args); end
+
+  def privacy_changed?(*args); end
+
+  def privacy_in_database(*args); end
+
+  def privacy_previous_change(*args); end
+
+  def privacy_previously_changed?(*args); end
+
+  def privacy_was(*args); end
+
+  def privacy_will_change!(*args); end
+
   def remember_created_at_before_last_save(*args); end
 
   def remember_created_at_before_type_cast(*args); end
@@ -32827,6 +33892,8 @@ module User::GeneratedAttributeMethods
 
   def restore_last_sign_in_ip!(*args); end
 
+  def restore_privacy!(*args); end
+
   def restore_remember_created_at!(*args); end
 
   def restore_reset_password_sent_at!(*args); end
@@ -32914,6 +33981,10 @@ module User::GeneratedAttributeMethods
   def saved_change_to_last_sign_in_ip(*args); end
 
   def saved_change_to_last_sign_in_ip?(*args); end
+
+  def saved_change_to_privacy(*args); end
+
+  def saved_change_to_privacy?(*args); end
 
   def saved_change_to_remember_created_at(*args); end
 
@@ -33085,6 +34156,8 @@ module User::GeneratedAttributeMethods
 
   def will_save_change_to_last_sign_in_ip?(*args); end
 
+  def will_save_change_to_privacy?(*args); end
+
   def will_save_change_to_remember_created_at?(*args); end
 
   def will_save_change_to_reset_password_sent_at?(*args); end
@@ -33108,6 +34181,38 @@ module User::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+module User::GeneratedRelationMethods
+  def admin(*args, &block); end
+
+  def friendly_id_config(*args, &block); end
+
+  def member(*args, &block); end
+
+  def moderator(*args, &block); end
+
+  def name(*args, &block); end
+
+  def not_admin(*args, &block); end
+
+  def not_member(*args, &block); end
+
+  def not_moderator(*args, &block); end
+
+  def not_private_account(*args, &block); end
+
+  def not_public_account(*args, &block); end
+
+  def private_account(*args, &block); end
+
+  def public_account(*args, &block); end
+
+  def with_attached_avatar(*args, &block); end
+end
+
+module User::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class User
   extend ::FriendlyId::Base
   extend ::Devise::Models::Authenticatable::ClassMethods
@@ -33118,17 +34223,17 @@ class User
   extend ::Devise::Models::Validatable::ClassMethods
   extend ::Devise::Models::Confirmable::ClassMethods
   extend ::FriendlyId::Finders::ClassMethods
+  def self.after_add_for_events(); end
+
+  def self.after_add_for_events=(val); end
+
+  def self.after_add_for_events?(); end
+
   def self.after_add_for_favorite_games(); end
 
   def self.after_add_for_favorite_games=(val); end
 
   def self.after_add_for_favorite_games?(); end
-
-  def self.after_add_for_game_purchase_events(); end
-
-  def self.after_add_for_game_purchase_events=(val); end
-
-  def self.after_add_for_game_purchase_events?(); end
 
   def self.after_add_for_game_purchases(); end
 
@@ -33142,17 +34247,17 @@ class User
 
   def self.after_add_for_games?(); end
 
+  def self.after_remove_for_events(); end
+
+  def self.after_remove_for_events=(val); end
+
+  def self.after_remove_for_events?(); end
+
   def self.after_remove_for_favorite_games(); end
 
   def self.after_remove_for_favorite_games=(val); end
 
   def self.after_remove_for_favorite_games?(); end
-
-  def self.after_remove_for_game_purchase_events(); end
-
-  def self.after_remove_for_game_purchase_events=(val); end
-
-  def self.after_remove_for_game_purchase_events?(); end
 
   def self.after_remove_for_game_purchases(); end
 
@@ -33166,17 +34271,17 @@ class User
 
   def self.after_remove_for_games?(); end
 
+  def self.before_add_for_events(); end
+
+  def self.before_add_for_events=(val); end
+
+  def self.before_add_for_events?(); end
+
   def self.before_add_for_favorite_games(); end
 
   def self.before_add_for_favorite_games=(val); end
 
   def self.before_add_for_favorite_games?(); end
-
-  def self.before_add_for_game_purchase_events(); end
-
-  def self.before_add_for_game_purchase_events=(val); end
-
-  def self.before_add_for_game_purchase_events?(); end
 
   def self.before_add_for_game_purchases(); end
 
@@ -33190,17 +34295,17 @@ class User
 
   def self.before_add_for_games?(); end
 
+  def self.before_remove_for_events(); end
+
+  def self.before_remove_for_events=(val); end
+
+  def self.before_remove_for_events?(); end
+
   def self.before_remove_for_favorite_games(); end
 
   def self.before_remove_for_favorite_games=(val); end
 
   def self.before_remove_for_favorite_games?(); end
-
-  def self.before_remove_for_game_purchase_events(); end
-
-  def self.before_remove_for_game_purchase_events=(val); end
-
-  def self.before_remove_for_game_purchase_events?(); end
 
   def self.before_remove_for_game_purchases(); end
 
@@ -33225,6 +34330,10 @@ class User
   def self.not_member(*args); end
 
   def self.not_moderator(*args); end
+
+  def self.not_private_account(*args); end
+
+  def self.not_public_account(*args); end
 
   def self.with_attached_avatar(*args); end
 end
@@ -33583,9 +34692,6 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

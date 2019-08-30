@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/nio4r/all/nio4r.rbi
 #
-# nio4r-2.4.0
+# nio4r-2.5.1
 module NIO
   def self.engine; end
 end

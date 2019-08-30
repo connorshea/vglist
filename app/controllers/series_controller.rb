@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 class SeriesController < ApplicationController
   def index
     @series = Series.order(:id).page params[:page]

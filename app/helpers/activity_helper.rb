@@ -1,8 +1,8 @@
-# typed: false
+# typed: strict
 module ActivityHelper
   extend T::Sig
 
-  sig { params(event: T.untyped).returns(String) }
+  sig { params(event: Event).returns(String) }
   def event_text(event)
     case event.event_category.to_sym
     when :add_to_library
@@ -18,9 +18,10 @@ module ActivityHelper
     end
   end
 
-  sig { params(event: T.untyped).returns(String) }
+  sig { params(event: Event).returns(String) }
   def completion_status_event_text(event)
-    after_value = event.differences['completion_status'][1].to_sym
+    # Coerce the value to a hash since we know it will always be one
+    after_value = T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1].to_sym
     user_link = link_to(event.user.username, user_path(event.user))
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
 
@@ -38,7 +39,7 @@ module ActivityHelper
     return text
   end
 
-  sig { params(event: T.untyped).returns(String) }
+  sig { params(event: Event).returns(String) }
   def add_to_library_event_text(event)
     user_link = link_to(event.user.username, user_path(event.user))
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
@@ -46,7 +47,7 @@ module ActivityHelper
     return user_link + " added " + game_link + " to their library."
   end
 
-  sig { params(event: T.untyped).returns(String) }
+  sig { params(event: Event).returns(String) }
   def favorite_game_event_text(event)
     user_link = link_to(event.user.username, user_path(event.user))
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
@@ -54,18 +55,22 @@ module ActivityHelper
     return user_link + " favorited " + game_link + "."
   end
 
-  sig { params(event: T.untyped).returns(String) }
+  sig { params(event: Event).returns(String) }
   def new_user_event_text(event)
     user_link = link_to(event.user.username, user_path(event.user))
 
     return user_link + " created their account."
   end
 
-  sig { params(event: T.untyped).returns(T::Boolean) }
+  sig { params(event: Event).returns(T::Boolean) }
   def handleable_event?(event)
     case event.event_category.to_sym
     when :change_completion_status
-      ['completed', 'fully_completed', 'dropped', 'paused'].include?(event.differences['completion_status'][1])
+
+      ['completed', 'fully_completed', 'dropped', 'paused'].include?(
+        # Coerce the value to a hash since we know it will always be one
+        T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1]
+      )
     when :add_to_library
       true
     when :favorite_game

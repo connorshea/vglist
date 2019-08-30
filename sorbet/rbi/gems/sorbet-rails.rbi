@@ -7,8 +7,11 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.1
+# sorbet-rails-6ad22d373a5a
 module SorbetRails
+  def self.config(&blk); end
+  def self.configure(*args, &blk); end
+  def self.register_configured_plugins(&blk); end
 end
 module SorbetRails::CustomFinderMethods
   def find_by_id!(id); end
@@ -17,17 +20,29 @@ module SorbetRails::CustomFinderMethods
   def first_n(n); end
   def last_n(n); end
 end
+class SorbetRails::Config
+  def enabled_gem_plugins(*args, &blk); end
+  def enabled_gem_plugins=(arg0); end
+  def enabled_model_plugins(*args, &blk); end
+  def enabled_model_plugins=(arg0); end
+  def enabled_plugins(*args, &blk); end
+  def initialize(&blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+end
 class SorbetRails::Railtie < Rails::Railtie
 end
 module SorbetRails::ModelUtils
+  def add_relation_query_method(*args, &blk); end
   def exists_class_method?(*args, &blk); end
   def exists_instance_method?(*args, &blk); end
   def model_assoc_proxy_class_name(*args, &blk); end
+  def model_assoc_relation_class_name(*args, &blk); end
   def model_class(*args, &blk); end
   def model_class_name(*args, &blk); end
   def model_module_name(*args, &blk); end
   def model_relation_class_name(*args, &blk); end
-  def model_relation_shared_module_name(*args, &blk); end
   extend T::Helpers
   extend T::InterfaceWrapper::Helpers
   extend T::Private::Abstract::Hooks
@@ -36,12 +51,15 @@ module SorbetRails::ModelUtils
   extend T::Sig
 end
 module SorbetRails::ModelPlugins
+  def get_plugin_by_name(*args, &blk); end
   def get_plugins(*args, &blk); end
   def register_plugin(*args, &blk); end
+  def register_plugin_by_name(arg0, &blk); end
   def set_plugins(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
   extend T::Sig
+  include Kernel
 end
 class SorbetRails::ModelPlugins::Base < Parlour::Plugin
   def available_classes(*args, &blk); end
@@ -110,6 +128,8 @@ class SorbetRails::ModelPlugins::EnumerableCollections < SorbetRails::ModelPlugi
   def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::UnrecognizedPluginName < StandardError
 end
 class SorbetRails::ModelRbiFormatter
   def available_classes(*args, &blk); end
