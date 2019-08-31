@@ -11,10 +11,17 @@
 
 <%# Display a message if the user's account is private, and hide everything else. %>
 <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
-  <% @events.each do |event| %>
-    <% if handleable_event?(event) %>
-      <%= render 'shared/event', event: event %>
+  <% if @events.length > 0 %>
+    <% @events.each do |event| %>
+      <% if handleable_event?(event) %>
+        <%= render 'shared/event', event: event %>
+      <% end %>
     <% end %>
+  <% else %>
+    <%# This technically shouldn't be possible since there's an event for a
+        user's creation, but since users can delete events we include a
+        message, just in case. %>
+    <p class="has-text-centered">No activity for this user yet.
   <% end %>
 
   <%= paginate @events %>
