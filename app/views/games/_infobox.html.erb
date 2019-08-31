@@ -1,4 +1,11 @@
 <div class="box infobox">
+  <p class="infobox-header has-text-weight-semibold">Average Rating
+  <% if @avg_rating.nil? %>
+    <p>No average rating yet
+  <% else %>
+    <p><span class="has-text-weight-medium"><%= @avg_rating %></span>/100
+  <% end %>
+
   <% unless game.developers.blank? %>
     <p class="infobox-header has-text-weight-semibold"><%= "Developer".pluralize(game.developers.count) %>
     <ul>
