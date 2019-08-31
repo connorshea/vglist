@@ -7,18 +7,18 @@ class GamesController < ApplicationController
 
     @games = @games.on_platform(params[:platform_filter]) if params[:platform_filter]
 
-    case params[:order_by]
-    when 'newest'
+    case params[:order_by].to_sym
+    when :newest
       @games = @games.newest
-    when 'oldest'
+    when :oldest
       @games = @games.oldest
-    when 'recently_updated'
+    when :recently_updated
       @games = @games.recently_updated
-    when 'least_recently_updated'
+    when :least_recently_updated
       @games = @games.least_recently_updated
-    when 'most_favorites'
+    when :most_favorites
       @games = @games.most_favorites
-    when 'most_owners'
+    when :most_owners
       @games = @games.most_owners
     else
       @games = @games.order(:id)
