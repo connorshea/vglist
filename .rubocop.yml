@@ -82,6 +82,10 @@ Rails/HelperInstanceVariable:
   Exclude:
     - 'app/helpers/settings_helper.rb'
 
+# This cop is buggy.
+Rails/BulkChangeTable:
+  Enabled: false
+
 #################### Style ###############################
 
 Style/BlockDelimiters:
