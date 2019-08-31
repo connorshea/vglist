@@ -225,6 +225,7 @@ class GamesController < ApplicationController
       :steam_app_id,
       :mobygames_id,
       :series_id,
+      :release_date,
       genre_ids: [],
       engine_ids: [],
       developer_ids: [],

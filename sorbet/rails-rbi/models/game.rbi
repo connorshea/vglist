@@ -64,6 +64,15 @@ module Game::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def pcgamingwiki_id?; end
 
+  sig { returns(T.nilable(Date)) }
+  def release_date; end
+
+  sig { params(value: T.nilable(Date)).void }
+  def release_date=(value); end
+
+  sig { returns(T::Boolean) }
+  def release_date?; end
+
   sig { returns(T.nilable(Integer)) }
   def series_id; end
 
