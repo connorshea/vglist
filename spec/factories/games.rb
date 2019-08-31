@@ -53,6 +53,10 @@ FactoryBot.define do
       mobygames_id { Faker::Lorem.words(number: 3).join('-') }
     end
 
+    trait :release_date do
+      release_date { Faker::Date.between(from: 25.years.ago, to: 2.years.from_now) }
+    end
+
     factory :game_with_cover, traits: [:cover]
     factory :game_with_everything,
       traits: [
@@ -67,7 +71,8 @@ FactoryBot.define do
         :wikidata_id,
         :steam_app_id,
         :pcgamingwiki_id,
-        :mobygames_id
+        :mobygames_id,
+        :release_date
       ]
   end
 end

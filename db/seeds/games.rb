@@ -31,7 +31,8 @@ puts "Creating Games..."
     description: Faker::Lorem.sentence,
     genres: genres,
     engines: engines,
-    series: Series.find(rand(1..Series.count))
+    series: Series.find(rand(1..Series.count)),
+    release_date: Faker::Date.between(from: 25.years.ago, to: 2.years.from_now)
   )
 
   next unless rand(0..4) != 0

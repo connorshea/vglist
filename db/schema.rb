@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_27_015409) do
+ActiveRecord::Schema.define(version: 2019_08_31_230621) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -186,6 +185,7 @@ ActiveRecord::Schema.define(version: 2019_08_27_015409) do
     t.text "pcgamingwiki_id"
     t.integer "steam_app_id"
     t.text "mobygames_id"
+    t.date "release_date"
     t.index ["mobygames_id"], name: "index_games_on_mobygames_id", unique: true
     t.index ["series_id"], name: "index_games_on_series_id"
     t.index ["steam_app_id"], name: "index_games_on_steam_app_id", unique: true
