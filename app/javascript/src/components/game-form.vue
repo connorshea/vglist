@@ -28,6 +28,14 @@
       v-model="game.description"
     ></text-area>
 
+    <date-field
+      :form-class="formData.class"
+      :attribute="formData.releaseDate.attribute"
+      :label="formData.releaseDate.label"
+      :required="false"
+      v-model="game.releaseDate"
+    ></date-field>
+
     <multi-select
       :label="formData.genres.label"
       v-model="game.genres"
@@ -109,6 +117,7 @@ import SingleSelect from './fields/single-select.vue';
 import NumberField from './fields/number-field.vue';
 import MultiSelect from './fields/multi-select.vue';
 import FileSelect from './fields/file-select.vue';
+import DateField from './fields/date-field.vue';
 import Rails from 'rails-ujs';
 import { DirectUpload } from 'activestorage';
 import Turbolinks from 'turbolinks';
@@ -121,7 +130,8 @@ export default {
     NumberField,
     SingleSelect,
     MultiSelect,
-    FileSelect
+    FileSelect,
+    DateField
   },
   props: {
     name: {
@@ -133,6 +143,10 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    releaseDate: {
+      type: Date,
+      required: false
     },
     genres: {
       type: Array,
@@ -219,6 +233,7 @@ export default {
       game: {
         name: this.$props.name,
         description: this.$props.description,
+        releaseDate: this.$props.releaseDate,
         genres: this.$props.genres,
         engines: this.$props.engines,
         developers: this.$props.developers,
@@ -244,6 +259,10 @@ export default {
         description: {
           label: 'Description',
           attribute: 'description'
+        },
+        releaseDate: {
+          label: 'Release Date',
+          attribute: 'release_date'
         },
         genres: {
           label: 'Genres'
@@ -325,6 +344,7 @@ export default {
         game: {
           name: this.game.name,
           description: this.game.description,
+          release_date: this.game.releaseDate,
           genre_ids: genreIds,
           engine_ids: engineIds,
           developer_ids: developerIds,
