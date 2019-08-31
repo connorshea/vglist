@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.8.31
+### Added
+- Add Average Rating to game pages. ([#638])
+
+## v2019.8.29
+### Added
+- Add User Activity Feeds. ([#632])
+
+## v2019.8.26
+### Added
+- Add events for favoriting games and users creating their accounts. ([#630])
+
 ## v2019.8.25
 ### Added
 - Add Private Accounts. ([#628])
@@ -487,3 +499,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#616]: https://github.com/connorshea/VideoGameList/pull/616
 [#617]: https://github.com/connorshea/VideoGameList/pull/617
 [#628]: https://github.com/connorshea/VideoGameList/pull/628
+[#630]: https://github.com/connorshea/VideoGameList/pull/630
+[#632]: https://github.com/connorshea/VideoGameList/pull/632
+[#638]: https://github.com/connorshea/VideoGameList/pull/638
