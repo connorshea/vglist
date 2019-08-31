@@ -7,7 +7,7 @@ class GamesController < ApplicationController
 
     @games = @games.on_platform(params[:platform_filter]) if params[:platform_filter]
 
-    case params[:order_by].to_sym
+    case params[:order_by]&.to_sym
     when :newest
       @games = @games.newest
     when :oldest
