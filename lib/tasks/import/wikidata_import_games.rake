@@ -279,7 +279,12 @@ namespace 'import:wikidata' do
 
       next if earliest_release_date.nil?
 
-      game.update!(release_date: earliest_release_date)
+      begin
+        game.update!(release_date: earliest_release_date)
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Record Invalid: #{e}"
+        next
+      end
     end
   end
 
