@@ -236,6 +236,9 @@ namespace 'import:wikidata' do
       existing_wikidata_ids.include?(wikidata_id.to_i)
     end
 
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     progress_bar = ProgressBar.create(
       total: rows.length,
       format: formatting
