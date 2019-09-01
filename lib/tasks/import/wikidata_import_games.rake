@@ -1,3 +1,4 @@
+# rubocop:disable Rails/TimeZone
 namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'
@@ -86,11 +87,9 @@ namespace 'import:wikidata' do
 
         release_dates = wikidata_json.dig('P577')&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
         release_dates&.map! do |time|
-          begin
-            Time.parse(time).to_date
-          rescue ArgumentError => e
-            nil
-          end
+          Time.parse(time).to_date
+        rescue ArgumentError
+          nil
         end
         # Set release date equal to nil, or the earliest release date if
         # all of the release dates above resolved to a proper date. It's done
@@ -266,7 +265,7 @@ namespace 'import:wikidata' do
         # skip these entirely to avoid bad data.
         begin
           release_dates << Time.parse(release_date_hash['time']).to_date unless release_date_hash.nil?
-        rescue ArgumentError => e
+        rescue ArgumentError
           puts "Bad datetime, skipping. (#{release_date_hash['time']})"
           # Break out of the loop to prevent incorrect release dates, in case a
           # game has a release date like "1985" and then a later, valid release
@@ -301,3 +300,4 @@ namespace 'import:wikidata' do
     return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end
+# rubocop:enable Rails/TimeZone
