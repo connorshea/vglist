@@ -1,3 +1,4 @@
+# rubocop:disable Rails/TimeZone
 namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'
@@ -84,6 +85,20 @@ namespace 'import:wikidata' do
         steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
         mobygames_id = wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value')
 
+        release_dates = wikidata_json.dig('P577')&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
+        release_dates&.map! do |time|
+          Time.parse(time).to_date
+        rescue ArgumentError
+          nil
+        end
+        # Set release date equal to nil, or the earliest release date if
+        # all of the release dates above resolved to a proper date. It's done
+        # this way to prevent bad release dates from being used if Wikidata
+        # returns a date like "June 2019", which is represented as "2019-06-00",
+        # an invalid date.
+        release_date = nil
+        release_date = release_dates&.min unless release_dates&.any? { |date| date.nil? }
+
         hash = {
           name: game_hash[:name],
           wikidata_id: game_hash[:wikidata_id]
@@ -92,6 +107,7 @@ namespace 'import:wikidata' do
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
         hash[:steam_app_id] = steam_app_id unless steam_app_id.nil?
         hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
+        hash[:release_date] = release_date unless release_date.nil?
 
         begin
           game = Game.create!(hash)
@@ -196,6 +212,77 @@ namespace 'import:wikidata' do
     puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Games]' to have pg_search rebuild its multisearch index."
   end
 
+  desc "Import release dates for games from Wikidata"
+  task 'games:release_dates': :environment do
+    puts "Importing game release dates from Wikidata..."
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'VideoGameList Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
+
+    rows = []
+    rows.concat(client.query(games_query))
+
+    # Get every game in the database that has a Wikidata ID and no release date.
+    games = Game.where.not(wikidata_id: nil).where(release_date: nil)
+
+    existing_wikidata_ids = games.map { |game| game[:wikidata_id] }
+
+    # Filter to wikidata items that already exist in the database.
+    rows = rows.select do |row|
+      url = row.to_h[:item].to_s
+      wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '')
+      existing_wikidata_ids.include?(wikidata_id.to_i)
+    end
+
+    progress_bar = ProgressBar.create(
+      total: rows.length,
+      format: formatting
+    )
+
+    rows.each do |row|
+      progress_bar.increment
+
+      url = row.to_h[:item].to_s
+      wikidata_id = url.gsub('http://www.wikidata.org/entity/', '')
+      wikidata_id_no_q = url.gsub('http://www.wikidata.org/entity/Q', '')
+
+      game = Game.find_by(wikidata_id: wikidata_id_no_q.to_i)
+
+      wikidata_json = WikidataHelper.get_claims(
+        entity: wikidata_id
+      )
+
+      next if wikidata_json['P577'].nil?
+
+      release_dates = []
+      wikidata_json['P577'].each do |snak|
+        release_date_hash = snak.dig('mainsnak', 'datavalue', 'value')
+        # Catch the case where the release date is invalid. This happens
+        # because Wikidata allows dates like "June 2019", so the API returns
+        # bad data like '2019-06-00', which isn't a valid date. We just
+        # skip these entirely to avoid bad data.
+        begin
+          release_dates << Time.parse(release_date_hash['time']).to_date unless release_date_hash.nil?
+        rescue ArgumentError
+          puts "Bad datetime, skipping. (#{release_date_hash['time']})"
+          # Break out of the loop to prevent incorrect release dates, in case a
+          # game has a release date like "1985" and then a later, valid release
+          # date. We'd rather just skip adding a release date altogether.
+          break
+        end
+      end
+
+      # Get earliest release date
+      earliest_release_date = release_dates.min
+
+      next if earliest_release_date.nil?
+
+      game.update!(release_date: earliest_release_date)
+    end
+  end
+
   # The SPARQL query for getting all video games with English labels on Wikidata.
   def games_query
     sparql = <<-SPARQL
@@ -213,3 +300,4 @@ namespace 'import:wikidata' do
     return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end
+# rubocop:enable Rails/TimeZone
