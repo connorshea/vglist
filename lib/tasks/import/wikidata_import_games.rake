@@ -84,6 +84,22 @@ namespace 'import:wikidata' do
         steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
         mobygames_id = wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value')
 
+        release_dates = wikidata_json.dig('P577')&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
+        release_dates&.map! do |time|
+          begin
+            Time.parse(time).to_date
+          rescue ArgumentError => e
+            nil
+          end
+        end
+        # Set release date equal to nil, or the earliest release date if
+        # all of the release dates above resolved to a proper date. It's done
+        # this way to prevent bad release dates from being used if Wikidata
+        # returns a date like "June 2019", which is represented as "2019-06-00",
+        # an invalid date.
+        release_date = nil
+        release_date = release_dates&.min unless release_dates&.any? { |date| date.nil? }
+
         hash = {
           name: game_hash[:name],
           wikidata_id: game_hash[:wikidata_id]
@@ -92,6 +108,7 @@ namespace 'import:wikidata' do
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
         hash[:steam_app_id] = steam_app_id unless steam_app_id.nil?
         hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
+        hash[:release_date] = release_date unless release_date.nil?
 
         begin
           game = Game.create!(hash)
