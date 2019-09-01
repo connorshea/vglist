@@ -20,6 +20,8 @@ class GamesController < ApplicationController
       @games = @games.most_favorites
     when :most_owners
       @games = @games.most_owners
+    when :recently_released
+      @games = @games.recently_released
     else
       @games = @games.order(:id)
     end

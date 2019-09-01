@@ -46,6 +46,9 @@ class Game < ApplicationRecord
       .group(:id)
       .order(Arel.sql('count(game_purchases.game_id) desc'))
   }
+  scope :recently_released, -> {
+    where("release_date < ?", 1.day.from_now).order("release_date desc")
+  }
   # Find games available on a given platform.
   scope :on_platform, ->(platform_id) {
     joins(:game_platforms).where(game_platforms: { platform_id: platform_id })
