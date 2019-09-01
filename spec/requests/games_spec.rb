@@ -44,6 +44,11 @@ RSpec.describe "Games", type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    it "returns http success when ordered by recently released" do
+      get games_path(order_by: :recently_released)
+      expect(response).to have_http_status(:success)
+    end
+
     it "returns http success when filtered by platform" do
       game_with_platform
       get games_path(filter_platform: platform.id)

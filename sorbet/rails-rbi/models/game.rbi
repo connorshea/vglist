@@ -260,6 +260,9 @@ class Game < ApplicationRecord
   def self.on_platform(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.recently_released(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.recently_updated(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -453,6 +456,9 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def on_platform(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def recently_released(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def recently_updated(*args); end
@@ -667,6 +673,9 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   def on_platform(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def recently_released(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def recently_updated(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
@@ -876,6 +885,9 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def on_platform(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def recently_released(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def recently_updated(*args); end

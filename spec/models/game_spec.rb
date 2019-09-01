@@ -169,6 +169,48 @@ RSpec.describe Game, type: :model do
       end
     end
 
+    context 'with three games that have differing release dates' do
+      let!(:game1) { create(:game, release_date: 2.days.ago) }
+      let!(:game2) { create(:game, release_date: 1.day.ago) }
+      let!(:game3) { create(:game, release_date: 3.days.ago) }
+
+      it "the game with the most recent release date comes first" do
+        expect(Game.recently_released).to eq([game2, game1, game3])
+      end
+    end
+
+    context 'with three games where one is in the future' do
+      let!(:game1) { create(:game, release_date: 2.days.ago) }
+      let!(:game2) { create(:game, release_date: 1.day.ago) }
+      let(:game3) { create(:game, release_date: 1.day.from_now) }
+
+      it "only return the two released before today" do
+        game3
+        expect(Game.recently_released).to eq([game2, game1])
+      end
+    end
+
+    context 'with three games where one has no release date' do
+      let(:game1) { create(:game) }
+      let!(:game2) { create(:game, release_date: 1.day.ago) }
+      let!(:game3) { create(:game, release_date: 2.days.ago) }
+
+      it "only return the two with release dates" do
+        game1
+        expect(Game.recently_released).to eq([game2, game3])
+      end
+    end
+
+    context 'with three games where one was released today' do
+      let!(:game1) { create(:game, release_date: 1.day.ago) }
+      let!(:game2) { create(:game, release_date: Time.zone.today) }
+      let!(:game3) { create(:game, release_date: 2.days.ago) }
+
+      it "return all three in proper order" do
+        expect(Game.recently_released).to eq([game2, game1, game3])
+      end
+    end
+
     context 'with three games where two have platforms and one does not' do
       let(:platform1) { create(:platform) }
       let(:platform2) { create(:platform) }
