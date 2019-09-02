@@ -86,6 +86,24 @@ RSpec.describe "Games", type: :feature do
     end
   end
 
+  describe "edit game page has content in multi-select", js: true do
+    let(:company) { create(:company, name: 'Gearbox') }
+    let(:game) { create(:game_with_everything, publishers: [company]) }
+    let(:user) { create(:confirmed_user) }
+
+    it "displays the correct publisher" do
+      sign_in(user)
+
+      visit(edit_game_path(game))
+
+      within('#game-form') do
+        within(".label[for='publishers'] ~ .control") do
+          expect(page).to have_content('Gearbox')
+        end
+      end
+    end
+  end
+
   describe "delete game" do
     let!(:game) { create(:game) }
     let(:moderator) { create(:confirmed_moderator) }
