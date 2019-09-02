@@ -101,7 +101,7 @@
     ></text-field>
 
     <button
-      class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile"
+      class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile js-submit-button"
       value="Submit"
       @click.prevent="onSubmit"
     >Submit</button>
@@ -395,6 +395,11 @@ export default {
         })
         .catch(errors => {
           this.errors = errors;
+          let submitButton = document.querySelector('.js-submit-button');
+          submitButton.classList.add('js-submit-button-error');
+          setTimeout(() => {
+            submitButton.classList.remove('js-submit-button-error');
+          }, 2000);
         });
     }
   }
