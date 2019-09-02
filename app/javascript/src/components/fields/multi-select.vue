@@ -9,6 +9,7 @@
         :inputId="inputId"
         label="name"
         @change="onChange"
+        v-bind:value="value"
         v-on:input="$emit('input', $event)"
       ></v-select>
     </div>
