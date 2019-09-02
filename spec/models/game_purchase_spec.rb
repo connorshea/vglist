@@ -10,7 +10,13 @@ RSpec.describe GamePurchase, type: :model do
     end
 
     it { should validate_length_of(:comments).is_at_most(2000) }
-    it { should validate_uniqueness_of(:game_id).scoped_to(:user_id) }
+
+    it 'validates the uniqueness of the game purchase' do
+      expect(game_purchase).to validate_uniqueness_of(:game_id)
+        .scoped_to(:user_id)
+        .with_message('is already in your library')
+    end
+
     it 'validates the rating' do
       expect(game_purchase).to validate_numericality_of(:rating)
         .only_integer
