@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.9.2
+### Changed
+- Improved error handling when adding games to your library. ([#652])
+
 ## v2019.8.31
 ### Added
 - Add Average Rating to game pages. ([#638])
+- Add Release Dates for Games. ([#639], [#640], [#641])
 
 ## v2019.8.29
 ### Added
@@ -502,3 +507,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#630]: https://github.com/connorshea/VideoGameList/pull/630
 [#632]: https://github.com/connorshea/VideoGameList/pull/632
 [#638]: https://github.com/connorshea/VideoGameList/pull/638
+[#639]: https://github.com/connorshea/VideoGameList/pull/639
+[#640]: https://github.com/connorshea/VideoGameList/pull/640
+[#641]: https://github.com/connorshea/VideoGameList/pull/641
+[#652]: https://github.com/connorshea/VideoGameList/pull/652
