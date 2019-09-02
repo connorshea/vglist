@@ -7,6 +7,16 @@
         <button @click="onClose" class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body modal-card-body-allow-overflow">
+        <!-- Display errors if there are any. -->
+        <div class="notification errors-notification is-danger" v-if="errors.length > 0">
+          <p>
+            {{ errors.length > 1 ? 'Errors' : 'An error' }} prevented this game from
+            being added to your library:
+          </p>
+          <ul>
+            <li v-for="error in errors" :key="error">{{ error }}</li>
+          </ul>
+        </div>
         <div v-if="gameSelected">
           <single-select
             :label="formData.game.label"
@@ -82,7 +92,7 @@
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button @click="onSave" class="button is-success">Save changes</button>
+        <button @click="onSave" class="button is-success js-submit-button">Save changes</button>
         <button @click="onClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -172,6 +182,7 @@ export default {
   },
   data() {
     return {
+      errors: [],
       gamePurchase: {
         comments: this.$props.comments,
         rating: this.$props.rating,
@@ -314,6 +325,14 @@ export default {
         .then(gamePurchase => {
           this.$emit('create', gamePurchase);
           this.$emit('closeAndRefresh');
+        })
+        .catch(errors => {
+          this.errors = errors;
+          let submitButton = document.querySelector('.js-submit-button');
+          submitButton.classList.add('js-submit-button-error');
+          setTimeout(() => {
+            submitButton.classList.remove('js-submit-button-error');
+          }, 2000);
         });
     },
     selectGame() {
