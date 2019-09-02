@@ -1,6 +1,6 @@
 # Dockerfile for running the application in a production environment.
 # Can be run locally for testing that matches production very closely.
-FROM ruby:2.6.3-alpine3.9
+FROM ruby:2.6.4-alpine3.9
 
 ENV APP_ROOT videogamelist
 ENV BUNDLER_VERSION 2.0.1
