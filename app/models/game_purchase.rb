@@ -25,7 +25,7 @@ class GamePurchase < ApplicationRecord
     length: { maximum: 2000 }
 
   validates :game_id,
-    uniqueness: { scope: :user_id }
+    uniqueness: { scope: :user_id, message: 'is aleady in your library' }
 
   validates :rating,
     numericality: {
