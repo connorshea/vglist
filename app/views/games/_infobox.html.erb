@@ -9,7 +9,7 @@
   <% unless game.release_date.nil? %>
     <p class="infobox-header has-text-weight-semibold">Release Date
     <ul>
-      <li><%= game.release_date.to_formatted_s(:long) %>
+      <li><%= game.release_date.strftime("%B %-d, %Y") %>
     </ul>
   <% end %>
 
