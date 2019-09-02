@@ -63,7 +63,7 @@ class Game < ApplicationRecord
 
   validates :cover,
     attached: false,
-    content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    content_type: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'],
     size: { less_than: 4.megabytes }
 
   validates :wikidata_id,
