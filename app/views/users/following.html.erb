@@ -9,10 +9,10 @@
 
 <%= render 'user_header', user: @user %>
 
-<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile user-card-list">
   <% if @following.length > 0 %>
     <% @following.each do |user| %>
-      <%= user.username %>
+      <%= render 'shared/user_card', user: user %>
     <% end %>
   <% else %>
     <p class="has-text-centered">This user isn't following anyone yet.
