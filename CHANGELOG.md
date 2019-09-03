@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.9.2
+### Added
+- Add a basic system for following users. ([#656])
+
 ### Changed
 - Improved error handling when adding games to your library. ([#652])
 
@@ -511,3 +514,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#640]: https://github.com/connorshea/VideoGameList/pull/640
 [#641]: https://github.com/connorshea/VideoGameList/pull/641
 [#652]: https://github.com/connorshea/VideoGameList/pull/652
+[#656]: https://github.com/connorshea/VideoGameList/pull/656
