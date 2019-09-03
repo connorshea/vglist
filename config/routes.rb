@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     delete :disconnect_steam, on: :member
     post :steam_import, on: :member
     delete :reset_game_library, on: :member
+
+    resource :relationship, only: [:create, :destroy]
   end
 
   resources :activity, only: :index

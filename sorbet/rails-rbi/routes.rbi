@@ -276,6 +276,13 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def reset_game_library_user_url(*args, **kwargs); end
 
+  # Sigs for route /users/:user_id/relationship(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def user_relationship_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def user_relationship_url(*args, **kwargs); end
+
   # Sigs for route /users/new(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def new_user_path(*args, **kwargs); end
