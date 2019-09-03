@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     post :steam_import, on: :member
     delete :reset_game_library, on: :member
 
+    get :following, on: :member
+    get :followers, on: :member
     resource :relationship, only: [:create, :destroy]
   end
 

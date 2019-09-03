@@ -21,6 +21,11 @@ module SettingsHelper
   include ActionView::Helpers
 end
 
+module UsersHelper
+  include Kernel
+  include ActionView::Helpers
+end
+
 module DeviseHelper
   include Kernel
   include ActionView::Helpers

@@ -9,7 +9,6 @@
 
 <%= render 'user_header', user: @user %>
 
-<%# Display a message if the user's account is private, and hide everything else. %>
 <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
   <% if @events.length > 0 %>
     <% @events.each do |event| %>
