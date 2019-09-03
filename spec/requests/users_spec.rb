@@ -180,6 +180,36 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET following_user_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:private_user) { create(:private_user) }
+
+    it "returns http success for user" do
+      get following_user_path(id: user.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for user with private account" do
+      get following_user_path(id: private_user.id)
+      expect(response).to redirect_to(user_path(private_user))
+    end
+  end
+
+  describe "GET followers_user_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:private_user) { create(:private_user) }
+
+    it "returns http success for user" do
+      get followers_user_path(id: user.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for user with private account" do
+      get followers_user_path(id: private_user.id)
+      expect(response).to redirect_to(user_path(private_user))
+    end
+  end
+
   describe 'GET compare_users_path' do
     let(:user) { create(:confirmed_user) }
     let(:other_user) { create(:confirmed_user) }
