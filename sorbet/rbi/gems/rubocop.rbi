@@ -261,7 +261,10 @@ class RuboCop::AST::Node < Parser::AST::Node
   def nonempty_line_count; end
   def not_type?; end
   def nth_ref_type?; end
+  def numargs_type?; end
+  def numblock_type?; end
   def numeric_type?; end
+  def numparam_type?; end
   def objc_kwarg_type?; end
   def objc_restarg_type?; end
   def objc_varargs_type?; end

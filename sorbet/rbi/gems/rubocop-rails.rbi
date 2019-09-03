@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.3.1
+# rubocop-rails-2.3.2
 module RuboCop
 end
 module RuboCop::Rails
@@ -564,7 +564,11 @@ class RuboCop::Cop::Rails::Validation < RuboCop::Cop::Cop
   def autocorrect(node); end
   def braced_options(options); end
   def correct_validate_type(corrector, node); end
+  def correct_validate_type_for_array(corrector, node, arguments, loc); end
+  def correct_validate_type_for_hash(corrector, node, arguments); end
+  def frozen_array_argument?(argument); end
   def message(node); end
   def on_send(node); end
   def preferred_method(method); end
+  def validate_type(node); end
 end

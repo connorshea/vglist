@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.6.3.0
+# parser-2.6.4.0
 module Parser
 end
 module Parser::Deprecation
@@ -79,6 +79,7 @@ class Parser::AST::Processor < AST::Processor
   def on_next(node); end
   def on_not(node); end
   def on_nth_ref(node); end
+  def on_numblock(node); end
   def on_op_asgn(node); end
   def on_optarg(node); end
   def on_or(node); end
@@ -470,6 +471,8 @@ class Parser::Lexer
   def in_kwarg=(arg0); end
   def initialize(version); end
   def literal; end
+  def max_numparam; end
+  def max_numparam_stack; end
   def next_state_for_literal(literal); end
   def pop_cmdarg; end
   def pop_cond; end
@@ -608,6 +611,16 @@ class Parser::Lexer::Dedenter
   def initialize(dedent_level); end
   def interrupt; end
 end
+class Parser::Lexer::MaxNumparamStack
+  def can_have_numparams?; end
+  def cant_have_numparams!; end
+  def initialize; end
+  def pop; end
+  def push; end
+  def register(numparam); end
+  def set(value); end
+  def top; end
+end
 class Parser::Builders::Default
   def __ENCODING__(__ENCODING__t); end
   def __FILE__(__FILE__t); end
@@ -641,6 +654,7 @@ class Parser::Builders::Default
   def case(case_t, expr, when_bodies, else_t, else_body, end_t); end
   def character(char_t); end
   def check_condition(cond); end
+  def check_duplicate_arg(this_arg, map = nil); end
   def check_duplicate_args(args, map = nil); end
   def collapse_string_parts?(parts); end
   def collection_map(begin_t, parts, end_t); end
@@ -703,7 +717,9 @@ class Parser::Builders::Default
   def nil(nil_t); end
   def not_op(not_t, begin_t = nil, receiver = nil, end_t = nil); end
   def nth_ref(token); end
+  def numargs(max_numparam); end
   def numeric(kind, token); end
+  def numparam(token); end
   def objc_kwarg(kwname_t, assoc_t, name_t); end
   def objc_restarg(star_t, name = nil); end
   def objc_varargs(pair, rest_of_varargs); end
@@ -733,6 +749,8 @@ class Parser::Builders::Default
   def restarg(star_t, name_t = nil); end
   def restarg_expr(star_t, expr = nil); end
   def self(token); end
+  def self.emit_arg_inside_procarg0; end
+  def self.emit_arg_inside_procarg0=(arg0); end
   def self.emit_encoding; end
   def self.emit_encoding=(arg0); end
   def self.emit_index; end
@@ -780,7 +798,9 @@ end
 class Parser::Context
   def class_definition_allowed?; end
   def dynamic_const_definition_allowed?; end
+  def in_block?; end
   def in_class?; end
+  def in_lambda?; end
   def indirectly_in_def?; end
   def initialize; end
   def module_definition_allowed?; end
