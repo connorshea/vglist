@@ -282,6 +282,30 @@ class UsersController < ApplicationController
                    .page params[:page]
   end
 
+  def following
+    @user = User.friendly.find(params[:id])
+
+    # Handle authorization with a redirect.
+    skip_authorization
+
+    # Redirect if the user's page is private.
+    redirect_to user_path(@user) unless policy(@user).following?
+
+    @following = @user.following.page params[:page]
+  end
+
+  def followers
+    @user = User.friendly.find(params[:id])
+
+    # Handle authorization with a redirect.
+    skip_authorization
+
+    # Redirect if the user's page is private.
+    redirect_to user_path(@user) unless policy(@user).followers?
+
+    @followers = @user.followers.page params[:page]
+  end
+
   private
 
   def user_params

@@ -1,0 +1,22 @@
+<% content_for :title, "#{@user.username}'s Followers'" %>
+<% content_for :description, "#{@user.username}'s followers on VideoGameList (VGList)" %>
+<% if @user.avatar.attached? %>
+  <%# This technically doesn't give us what we want because it won't be square, but oh well. %>
+  <% content_for :opengraph_image, rails_blob_url(@user.avatar) %>
+<% else %>
+  <% content_for :opengraph_image, image_url('default-avatar.png') %>
+<% end %>
+
+<%= render 'user_header', user: @user %>
+
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile user-card-list">
+  <% if @followers.length > 0 %>
+    <% @followers.each do |follower| %>
+      <%= render 'shared/user_card', user: follower %>
+    <% end %>
+  <% else %>
+    <p class="has-text-centered">This user doesn't have any followers yet.
+  <% end %>
+
+  <%= paginate @followers %>
+</div>

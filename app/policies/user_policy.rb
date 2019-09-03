@@ -86,6 +86,16 @@ class UserPolicy < ApplicationPolicy
     user_profile_is_visible?
   end
 
+  sig { returns(T.nilable(T::Boolean)) }
+  def following?
+    user_profile_is_visible?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def followers?
+    user_profile_is_visible?
+  end
+
   private
 
   sig { returns(T.nilable(T::Boolean)) }

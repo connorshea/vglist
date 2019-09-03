@@ -16,6 +16,22 @@ class User < ApplicationRecord
   # Users have favorites of various types.
   has_many :favorite_games, dependent: :destroy
 
+  # Users can follow other users.
+  has_many :active_relationships,
+    class_name: 'Relationship',
+    foreign_key: 'follower_id',
+    inverse_of: :follower,
+    dependent: :destroy
+  has_many :following, through: :active_relationships, source: :followed
+
+  # Users can also be followed by other users.
+  has_many :passive_relationships,
+    class_name: 'Relationship',
+    foreign_key: 'followed_id',
+    inverse_of: :followed,
+    dependent: :destroy
+  has_many :followers, through: :passive_relationships, source: :follower
+
   # Users have activity feed events.
   has_many :events, dependent: :destroy
 

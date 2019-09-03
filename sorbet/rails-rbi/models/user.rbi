@@ -246,6 +246,12 @@ end
 module User::GeneratedAssociationMethods
   extend T::Sig
 
+  sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
+  def active_relationships; end
+
+  sig { params(value: T.any(T::Array[::Relationship], ::Relationship::ActiveRecord_Associations_CollectionProxy)).void }
+  def active_relationships=(value); end
+
   sig { returns(T.nilable(::ActiveStorage::Attachment)) }
   def avatar_attachment; end
 
@@ -276,6 +282,18 @@ module User::GeneratedAssociationMethods
   sig { params(value: T.any(T::Array[::FavoriteGame], ::FavoriteGame::ActiveRecord_Associations_CollectionProxy)).void }
   def favorite_games=(value); end
 
+  sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
+  def followers; end
+
+  sig { params(value: T.any(T::Array[::User], ::User::ActiveRecord_Associations_CollectionProxy)).void }
+  def followers=(value); end
+
+  sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
+  def following; end
+
+  sig { params(value: T.any(T::Array[::User], ::User::ActiveRecord_Associations_CollectionProxy)).void }
+  def following=(value); end
+
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 
@@ -287,6 +305,12 @@ module User::GeneratedAssociationMethods
 
   sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
   def games=(value); end
+
+  sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
+  def passive_relationships; end
+
+  sig { params(value: T.any(T::Array[::Relationship], ::Relationship::ActiveRecord_Associations_CollectionProxy)).void }
+  def passive_relationships=(value); end
 end
 
 module User::CustomFinderMethods
