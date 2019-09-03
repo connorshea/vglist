@@ -276,12 +276,33 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def reset_game_library_user_url(*args, **kwargs); end
 
-  # Sigs for route /users/:user_id/relationship(.:format)
+  # Sigs for route /users/:id/following(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def user_relationship_path(*args, **kwargs); end
+  def following_user_path(*args, **kwargs); end
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def user_relationship_url(*args, **kwargs); end
+  def following_user_url(*args, **kwargs); end
+
+  # Sigs for route /users/:id/followers(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def followers_user_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def followers_user_url(*args, **kwargs); end
+
+  # Sigs for route /users/:user_id/follow(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def user_follow_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def user_follow_url(*args, **kwargs); end
+
+  # Sigs for route /users/:user_id/unfollow(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def user_unfollow_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def user_unfollow_url(*args, **kwargs); end
 
   # Sigs for route /users/new(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }

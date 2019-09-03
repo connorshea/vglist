@@ -41,7 +41,8 @@ Rails.application.routes.draw do
 
     get :following, on: :member
     get :followers, on: :member
-    resource :relationship, only: [:create, :destroy]
+    post :follow, to: 'relationships#create'
+    delete :unfollow, to: 'relationships#destroy'
   end
 
   resources :activity, only: :index
