@@ -1,7 +1,7 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe GamesHelper, type: :helper do
+RSpec.describe UsersHelper, type: :helper do
   describe 'game in user library' do
     let(:user1) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }

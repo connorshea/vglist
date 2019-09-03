@@ -12,7 +12,7 @@ RSpec.describe RelationshipPolicy, type: :policy do
   end
 
   describe 'A logged-in user trying to follow themselves' do
-    let(:user) { create(:user)}
+    let(:user) { create(:user) }
     let(:current_user) { user }
     let(:followed) { user }
 
