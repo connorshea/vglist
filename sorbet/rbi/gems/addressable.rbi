@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/addressable/all/addressable.rbi
 #
-# addressable-2.6.0
+# addressable-2.7.0
 module Addressable
 end
 module Addressable::VERSION
@@ -49,7 +49,7 @@ class Addressable::URI
   def authority=(new_authority); end
   def basename; end
   def default_port; end
-  def defer_validation(&block); end
+  def defer_validation; end
   def display_uri; end
   def domain; end
   def dup; end

@@ -5536,6 +5536,8 @@ class Addressable::URI
   RULE_2D = ::T.let(nil, ::T.untyped)
   RULE_PREFIXED_PARENT = ::T.let(nil, ::T.untyped)
   SELF_REF = ::T.let(nil, ::T.untyped)
+  SEQUENCE_ENCODING_TABLE = ::T.let(nil, ::T.untyped)
+  SEQUENCE_UPCASED_PERCENT_ENCODING_TABLE = ::T.let(nil, ::T.untyped)
   SLASH = ::T.let(nil, ::T.untyped)
   URIREGEX = ::T.let(nil, ::T.untyped)
 end
@@ -6001,30 +6003,6 @@ module Bullet::StackTraceFilter
   VENDOR_PATH = ::T.let(nil, ::T.untyped)
 end
 
-class Bundler::CurrentRuby
-  def jruby_27?(); end
-
-  def maglev_27?(); end
-
-  def mingw_27?(); end
-
-  def mri_27?(); end
-
-  def mswin64_27?(); end
-
-  def mswin_27?(); end
-
-  def on_27?(); end
-
-  def rbx_27?(); end
-
-  def ruby_27?(); end
-
-  def truffleruby_27?(); end
-
-  def x64_mingw_27?(); end
-end
-
 Bundler::Deprecate = Gem::Deprecate
 
 class Bundler::Env
@@ -6072,14 +6050,8 @@ class Bundler::Fetcher::AuthenticationRequiredError
   def initialize(remote_uri); end
 end
 
-class Bundler::Fetcher::AuthenticationRequiredError
-end
-
 class Bundler::Fetcher::BadAuthenticationError
   def initialize(remote_uri); end
-end
-
-class Bundler::Fetcher::BadAuthenticationError
 end
 
 class Bundler::Fetcher::Base
@@ -6105,9 +6077,6 @@ end
 
 class Bundler::Fetcher::CertificateFailureError
   def initialize(remote_uri); end
-end
-
-class Bundler::Fetcher::CertificateFailureError
 end
 
 class Bundler::Fetcher::CompactIndex
@@ -6172,12 +6141,6 @@ end
 class Bundler::Fetcher::Downloader
 end
 
-class Bundler::Fetcher::FallbackError
-end
-
-class Bundler::Fetcher::FallbackError
-end
-
 class Bundler::Fetcher::Index
   def fetch_spec(spec); end
 
@@ -6187,17 +6150,8 @@ end
 class Bundler::Fetcher::Index
 end
 
-class Bundler::Fetcher::NetworkDownError
-end
-
-class Bundler::Fetcher::NetworkDownError
-end
-
 class Bundler::Fetcher::SSLError
   def initialize(msg=T.unsafe(nil)); end
-end
-
-class Bundler::Fetcher::SSLError
 end
 
 class Bundler::Fetcher
@@ -6485,58 +6439,11 @@ end
 module Bundler::Plugin::API::Source
 end
 
-class Bundler::Plugin::DSL
-  def _gem(name, *args); end
-
-  def inferred_plugins(); end
-
-  def plugin(name, *args); end
-end
-
-class Bundler::Plugin::DSL::PluginGemfileError
-end
-
-class Bundler::Plugin::DSL::PluginGemfileError
-end
-
-class Bundler::Plugin::DSL
-end
-
 module Bundler::Plugin::Events
   GEM_AFTER_INSTALL = ::T.let(nil, ::T.untyped)
   GEM_AFTER_INSTALL_ALL = ::T.let(nil, ::T.untyped)
   GEM_BEFORE_INSTALL = ::T.let(nil, ::T.untyped)
   GEM_BEFORE_INSTALL_ALL = ::T.let(nil, ::T.untyped)
-end
-
-module Bundler::Plugin::Events
-  def self.defined_event?(event); end
-end
-
-class Bundler::Plugin::Index
-  def command_plugin(command); end
-
-  def commands(); end
-
-  def global_index_file(); end
-
-  def hook_plugins(event); end
-
-  def index_file(); end
-
-  def installed?(name); end
-
-  def load_paths(name); end
-
-  def local_index_file(); end
-
-  def plugin_path(name); end
-
-  def register_plugin(name, path, load_paths, commands, sources, hooks); end
-
-  def source?(source); end
-
-  def source_plugin(name); end
 end
 
 class Bundler::Plugin::Index::CommandConflict
@@ -6551,9 +6458,6 @@ class Bundler::Plugin::Index::SourceConflict
 end
 
 class Bundler::Plugin::Index::SourceConflict
-end
-
-class Bundler::Plugin::Index
 end
 
 class Bundler::Plugin::Installer
@@ -7099,6 +7003,7 @@ class Capybara::Queries::BaseQuery
 end
 
 class Capybara::Queries::SelectorQuery
+  SPATIAL_KEYS = ::T.let(nil, ::T.untyped)
   VALID_KEYS = ::T.let(nil, ::T.untyped)
   VALID_MATCH = ::T.let(nil, ::T.untyped)
 end
@@ -9951,6 +9856,41 @@ module Exception2MessageMapper
   def self.message(klass, exp); end
 end
 
+module ExceptionForMatrix
+  def Fail(err=T.unsafe(nil), *rest); end
+
+  def Raise(err=T.unsafe(nil), *rest); end
+end
+
+class ExceptionForMatrix::ErrDimensionMismatch
+end
+
+class ExceptionForMatrix::ErrDimensionMismatch
+end
+
+class ExceptionForMatrix::ErrNotRegular
+end
+
+class ExceptionForMatrix::ErrNotRegular
+end
+
+class ExceptionForMatrix::ErrOperationNotDefined
+end
+
+class ExceptionForMatrix::ErrOperationNotDefined
+end
+
+class ExceptionForMatrix::ErrOperationNotImplemented
+end
+
+class ExceptionForMatrix::ErrOperationNotImplemented
+end
+
+module ExceptionForMatrix
+  extend ::Exception2MessageMapper
+  def self.included(mod); end
+end
+
 class ExitCalledError
 end
 
@@ -11464,6 +11404,8 @@ module Game::GeneratedRelationMethods
   def oldest(*args, &block); end
 
   def on_platform(*args, &block); end
+
+  def recently_released(*args, &block); end
 
   def recently_updated(*args, &block); end
 
@@ -15242,6 +15184,325 @@ class MatchData
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
+class Matrix
+  include ::Enumerable
+  include ::ExceptionForMatrix
+  include ::Matrix::CoercionHelper
+  def *(m); end
+
+  def **(other); end
+
+  def +(m); end
+
+  def +@(); end
+
+  def -(m); end
+
+  def -@(); end
+
+  def /(other); end
+
+  def ==(other); end
+
+  def [](i, j); end
+
+  def []=(i, j, v); end
+
+  def adjugate(); end
+
+  def antisymmetric?(); end
+
+  def coerce(other); end
+
+  def cofactor(row, column); end
+
+  def cofactor_expansion(row: T.unsafe(nil), column: T.unsafe(nil)); end
+
+  def collect(which=T.unsafe(nil), &block); end
+
+  def collect!(which=T.unsafe(nil)); end
+
+  def column(j); end
+
+  def column_count(); end
+
+  def column_size(); end
+
+  def column_vectors(); end
+
+  def combine(*matrices, &block); end
+
+  def component(i, j); end
+
+  def conj(); end
+
+  def conjugate(); end
+
+  def det(); end
+
+  def det_e(); end
+
+  def determinant(); end
+
+  def determinant_e(); end
+
+  def diagonal?(); end
+
+  def each(which=T.unsafe(nil), &blk); end
+
+  def each_with_index(which=T.unsafe(nil)); end
+
+  def eigen(); end
+
+  def eigensystem(); end
+
+  def element(i, j); end
+
+  def elements_to_f(); end
+
+  def elements_to_i(); end
+
+  def elements_to_r(); end
+
+  def empty?(); end
+
+  def entrywise_product(m); end
+
+  def eql?(other); end
+
+  def find_index(*args); end
+
+  def first_minor(row, column); end
+
+  def hadamard_product(m); end
+
+  def hermitian?(); end
+
+  def hstack(*matrices); end
+
+  def imag(); end
+
+  def imaginary(); end
+
+  def index(*args); end
+
+  def initialize(rows, column_count=T.unsafe(nil)); end
+
+  def inv(); end
+
+  def inverse(); end
+
+  def laplace_expansion(row: T.unsafe(nil), column: T.unsafe(nil)); end
+
+  def lower_triangular?(); end
+
+  def lup(); end
+
+  def lup_decomposition(); end
+
+  def map(which=T.unsafe(nil), &block); end
+
+  def map!(which=T.unsafe(nil)); end
+
+  def minor(*param); end
+
+  def normal?(); end
+
+  def orthogonal?(); end
+
+  def permutation?(); end
+
+  def rank(); end
+
+  def rank_e(); end
+
+  def real(); end
+
+  def real?(); end
+
+  def rect(); end
+
+  def rectangular(); end
+
+  def regular?(); end
+
+  def round(ndigits=T.unsafe(nil)); end
+
+  def row(i, &block); end
+
+  def row_count(); end
+
+  def row_size(); end
+
+  def row_vectors(); end
+
+  def rows(); end
+
+  def singular?(); end
+
+  def skew_symmetric?(); end
+
+  def square?(); end
+
+  def symmetric?(); end
+
+  def t(); end
+
+  def to_a(); end
+
+  def to_matrix(); end
+
+  def tr(); end
+
+  def trace(); end
+
+  def transpose(); end
+
+  def unitary?(); end
+
+  def upper_triangular?(); end
+
+  def vstack(*matrices); end
+
+  def zero?(); end
+  SELECTORS = ::T.let(nil, ::T.untyped)
+end
+
+module Matrix::CoercionHelper
+end
+
+module Matrix::CoercionHelper
+  def self.check_int(val, count, kind); end
+
+  def self.check_range(val, count, kind); end
+
+  def self.coerce_to(obj, cls, meth); end
+
+  def self.coerce_to_int(obj); end
+
+  def self.coerce_to_matrix(obj); end
+end
+
+module Matrix::ConversionHelper
+end
+
+module Matrix::ConversionHelper
+end
+
+class Matrix::EigenvalueDecomposition
+  def d(); end
+
+  def eigenvalue_matrix(); end
+
+  def eigenvalues(); end
+
+  def eigenvector_matrix(); end
+
+  def eigenvector_matrix_inv(); end
+
+  def eigenvectors(); end
+
+  def initialize(a); end
+
+  def to_a(); end
+
+  def to_ary(); end
+
+  def v(); end
+
+  def v_inv(); end
+end
+
+class Matrix::EigenvalueDecomposition
+end
+
+class Matrix::LUPDecomposition
+  include ::Matrix::ConversionHelper
+  def det(); end
+
+  def determinant(); end
+
+  def initialize(a); end
+
+  def l(); end
+
+  def p(); end
+
+  def pivots(); end
+
+  def singular?(); end
+
+  def solve(b); end
+
+  def to_a(); end
+
+  def to_ary(); end
+
+  def u(); end
+end
+
+class Matrix::LUPDecomposition
+end
+
+class Matrix::Scalar
+  include ::ExceptionForMatrix
+  include ::Matrix::CoercionHelper
+  def *(other); end
+
+  def **(other); end
+
+  def +(other); end
+
+  def -(other); end
+
+  def /(other); end
+
+  def initialize(value); end
+end
+
+class Matrix::Scalar
+  extend ::Exception2MessageMapper
+  def self.included(mod); end
+end
+
+class Matrix
+  extend ::Exception2MessageMapper
+  extend ::Matrix::ConversionHelper
+  def self.I(n); end
+
+  def self.[](*rows); end
+
+  def self.build(row_count, column_count=T.unsafe(nil)); end
+
+  def self.column_vector(column); end
+
+  def self.columns(columns); end
+
+  def self.combine(*matrices); end
+
+  def self.diagonal(*values); end
+
+  def self.empty(row_count=T.unsafe(nil), column_count=T.unsafe(nil)); end
+
+  def self.hstack(x, *matrices); end
+
+  def self.identity(n); end
+
+  def self.included(mod); end
+
+  def self.row_vector(row); end
+
+  def self.rows(rows, copy=T.unsafe(nil)); end
+
+  def self.scalar(n, value); end
+
+  def self.unit(n); end
+
+  def self.vstack(x, *matrices); end
+
+  def self.zero(row_count, column_count=T.unsafe(nil)); end
+end
+
 module MessagePack
   DEFAULT_EMPTY_PARAMS = ::T.let(nil, ::T.untyped)
 end
@@ -18984,6 +19245,7 @@ class Parser::Lexer
   KEYWORDS = ::T.let(nil, ::T.untyped)
   KEYWORDS_BEGIN = ::T.let(nil, ::T.untyped)
   LEX_STATES = ::T.let(nil, ::T.untyped)
+  NUMPARAM_MAX = ::T.let(nil, ::T.untyped)
   PUNCTUATION = ::T.let(nil, ::T.untyped)
   PUNCTUATION_BEGIN = ::T.let(nil, ::T.untyped)
   REGEXP_META_CHARACTERS = ::T.let(nil, ::T.untyped)
@@ -25258,6 +25520,68 @@ end
 
 class Regexp
   def self.union(*_); end
+end
+
+class Relationship
+  def autosave_associated_records_for_followed(*args); end
+
+  def autosave_associated_records_for_follower(*args); end
+end
+
+class Relationship::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Relationship::GeneratedRelationMethods
+end
+
+class Relationship::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Relationship::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Relationship::GeneratedRelationMethods
+end
+
+class Relationship::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Relationship::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Relationship::GeneratedRelationMethods
+end
+
+class Relationship::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+module Relationship::GeneratedAssociationMethods
+  def build_followed(*args, &block); end
+
+  def build_follower(*args, &block); end
+
+  def create_followed(*args, &block); end
+
+  def create_followed!(*args, &block); end
+
+  def create_follower(*args, &block); end
+
+  def create_follower!(*args, &block); end
+
+  def reload_followed(); end
+
+  def reload_follower(); end
+end
+
+module Relationship::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Relationship::GeneratedRelationMethods
+end
+
+module Relationship::GeneratedRelationMethods
+  extend ::Mutex_m
 end
 
 class Resolv::DNS
@@ -33271,6 +33595,12 @@ class User
   include ::Devise::Models::Trackable
   include ::FriendlyId::Slugged
   include ::FriendlyId::Finders
+  def after_add_for_active_relationships(); end
+
+  def after_add_for_active_relationships=(val); end
+
+  def after_add_for_active_relationships?(); end
+
   def after_add_for_events(); end
 
   def after_add_for_events=(val); end
@@ -33282,6 +33612,18 @@ class User
   def after_add_for_favorite_games=(val); end
 
   def after_add_for_favorite_games?(); end
+
+  def after_add_for_followers(); end
+
+  def after_add_for_followers=(val); end
+
+  def after_add_for_followers?(); end
+
+  def after_add_for_following(); end
+
+  def after_add_for_following=(val); end
+
+  def after_add_for_following?(); end
 
   def after_add_for_game_purchases(); end
 
@@ -33295,6 +33637,18 @@ class User
 
   def after_add_for_games?(); end
 
+  def after_add_for_passive_relationships(); end
+
+  def after_add_for_passive_relationships=(val); end
+
+  def after_add_for_passive_relationships?(); end
+
+  def after_remove_for_active_relationships(); end
+
+  def after_remove_for_active_relationships=(val); end
+
+  def after_remove_for_active_relationships?(); end
+
   def after_remove_for_events(); end
 
   def after_remove_for_events=(val); end
@@ -33306,6 +33660,18 @@ class User
   def after_remove_for_favorite_games=(val); end
 
   def after_remove_for_favorite_games?(); end
+
+  def after_remove_for_followers(); end
+
+  def after_remove_for_followers=(val); end
+
+  def after_remove_for_followers?(); end
+
+  def after_remove_for_following(); end
+
+  def after_remove_for_following=(val); end
+
+  def after_remove_for_following?(); end
 
   def after_remove_for_game_purchases(); end
 
@@ -33319,6 +33685,14 @@ class User
 
   def after_remove_for_games?(); end
 
+  def after_remove_for_passive_relationships(); end
+
+  def after_remove_for_passive_relationships=(val); end
+
+  def after_remove_for_passive_relationships?(); end
+
+  def autosave_associated_records_for_active_relationships(*args); end
+
   def autosave_associated_records_for_avatar_attachment(); end
 
   def autosave_associated_records_for_avatar_blob(); end
@@ -33329,9 +33703,21 @@ class User
 
   def autosave_associated_records_for_favorite_games(*args); end
 
+  def autosave_associated_records_for_followers(*args); end
+
+  def autosave_associated_records_for_following(*args); end
+
   def autosave_associated_records_for_game_purchases(*args); end
 
   def autosave_associated_records_for_games(*args); end
+
+  def autosave_associated_records_for_passive_relationships(*args); end
+
+  def before_add_for_active_relationships(); end
+
+  def before_add_for_active_relationships=(val); end
+
+  def before_add_for_active_relationships?(); end
 
   def before_add_for_events(); end
 
@@ -33345,6 +33731,18 @@ class User
 
   def before_add_for_favorite_games?(); end
 
+  def before_add_for_followers(); end
+
+  def before_add_for_followers=(val); end
+
+  def before_add_for_followers?(); end
+
+  def before_add_for_following(); end
+
+  def before_add_for_following=(val); end
+
+  def before_add_for_following?(); end
+
   def before_add_for_game_purchases(); end
 
   def before_add_for_game_purchases=(val); end
@@ -33356,6 +33754,18 @@ class User
   def before_add_for_games=(val); end
 
   def before_add_for_games?(); end
+
+  def before_add_for_passive_relationships(); end
+
+  def before_add_for_passive_relationships=(val); end
+
+  def before_add_for_passive_relationships?(); end
+
+  def before_remove_for_active_relationships(); end
+
+  def before_remove_for_active_relationships=(val); end
+
+  def before_remove_for_active_relationships?(); end
 
   def before_remove_for_events(); end
 
@@ -33369,6 +33779,18 @@ class User
 
   def before_remove_for_favorite_games?(); end
 
+  def before_remove_for_followers(); end
+
+  def before_remove_for_followers=(val); end
+
+  def before_remove_for_followers?(); end
+
+  def before_remove_for_following(); end
+
+  def before_remove_for_following=(val); end
+
+  def before_remove_for_following?(); end
+
   def before_remove_for_game_purchases(); end
 
   def before_remove_for_game_purchases=(val); end
@@ -33380,6 +33802,12 @@ class User
   def before_remove_for_games=(val); end
 
   def before_remove_for_games?(); end
+
+  def before_remove_for_passive_relationships(); end
+
+  def before_remove_for_passive_relationships=(val); end
+
+  def before_remove_for_passive_relationships?(); end
 
   def current_password(); end
 
@@ -33393,13 +33821,21 @@ class User
 
   def password_confirmation=(password_confirmation); end
 
+  def validate_associated_records_for_active_relationships(*args); end
+
   def validate_associated_records_for_events(*args); end
 
   def validate_associated_records_for_favorite_games(*args); end
 
+  def validate_associated_records_for_followers(*args); end
+
+  def validate_associated_records_for_following(*args); end
+
   def validate_associated_records_for_game_purchases(*args); end
 
   def validate_associated_records_for_games(*args); end
+
+  def validate_associated_records_for_passive_relationships(*args); end
 end
 
 class User::ActiveRecord_AssociationRelation
@@ -33432,6 +33868,10 @@ class User::ActiveRecord_Relation
 end
 
 module User::GeneratedAssociationMethods
+  def active_relationship_ids(); end
+
+  def active_relationship_ids=(ids); end
+
   def avatar(); end
 
   def avatar=(attachable); end
@@ -33456,6 +33896,14 @@ module User::GeneratedAssociationMethods
 
   def favorite_game_ids=(ids); end
 
+  def follower_ids(); end
+
+  def follower_ids=(ids); end
+
+  def following_ids(); end
+
+  def following_ids=(ids); end
+
   def game_ids(); end
 
   def game_ids=(ids); end
@@ -33463,6 +33911,10 @@ module User::GeneratedAssociationMethods
   def game_purchase_ids(); end
 
   def game_purchase_ids=(ids); end
+
+  def passive_relationship_ids(); end
+
+  def passive_relationship_ids=(ids); end
 
   def reload_avatar_attachment(); end
 
@@ -34173,6 +34625,12 @@ class User
   extend ::Devise::Models::Validatable::ClassMethods
   extend ::Devise::Models::Confirmable::ClassMethods
   extend ::FriendlyId::Finders::ClassMethods
+  def self.after_add_for_active_relationships(); end
+
+  def self.after_add_for_active_relationships=(val); end
+
+  def self.after_add_for_active_relationships?(); end
+
   def self.after_add_for_events(); end
 
   def self.after_add_for_events=(val); end
@@ -34184,6 +34642,18 @@ class User
   def self.after_add_for_favorite_games=(val); end
 
   def self.after_add_for_favorite_games?(); end
+
+  def self.after_add_for_followers(); end
+
+  def self.after_add_for_followers=(val); end
+
+  def self.after_add_for_followers?(); end
+
+  def self.after_add_for_following(); end
+
+  def self.after_add_for_following=(val); end
+
+  def self.after_add_for_following?(); end
 
   def self.after_add_for_game_purchases(); end
 
@@ -34197,6 +34667,18 @@ class User
 
   def self.after_add_for_games?(); end
 
+  def self.after_add_for_passive_relationships(); end
+
+  def self.after_add_for_passive_relationships=(val); end
+
+  def self.after_add_for_passive_relationships?(); end
+
+  def self.after_remove_for_active_relationships(); end
+
+  def self.after_remove_for_active_relationships=(val); end
+
+  def self.after_remove_for_active_relationships?(); end
+
   def self.after_remove_for_events(); end
 
   def self.after_remove_for_events=(val); end
@@ -34208,6 +34690,18 @@ class User
   def self.after_remove_for_favorite_games=(val); end
 
   def self.after_remove_for_favorite_games?(); end
+
+  def self.after_remove_for_followers(); end
+
+  def self.after_remove_for_followers=(val); end
+
+  def self.after_remove_for_followers?(); end
+
+  def self.after_remove_for_following(); end
+
+  def self.after_remove_for_following=(val); end
+
+  def self.after_remove_for_following?(); end
 
   def self.after_remove_for_game_purchases(); end
 
@@ -34221,6 +34715,18 @@ class User
 
   def self.after_remove_for_games?(); end
 
+  def self.after_remove_for_passive_relationships(); end
+
+  def self.after_remove_for_passive_relationships=(val); end
+
+  def self.after_remove_for_passive_relationships?(); end
+
+  def self.before_add_for_active_relationships(); end
+
+  def self.before_add_for_active_relationships=(val); end
+
+  def self.before_add_for_active_relationships?(); end
+
   def self.before_add_for_events(); end
 
   def self.before_add_for_events=(val); end
@@ -34232,6 +34738,18 @@ class User
   def self.before_add_for_favorite_games=(val); end
 
   def self.before_add_for_favorite_games?(); end
+
+  def self.before_add_for_followers(); end
+
+  def self.before_add_for_followers=(val); end
+
+  def self.before_add_for_followers?(); end
+
+  def self.before_add_for_following(); end
+
+  def self.before_add_for_following=(val); end
+
+  def self.before_add_for_following?(); end
 
   def self.before_add_for_game_purchases(); end
 
@@ -34245,6 +34763,18 @@ class User
 
   def self.before_add_for_games?(); end
 
+  def self.before_add_for_passive_relationships(); end
+
+  def self.before_add_for_passive_relationships=(val); end
+
+  def self.before_add_for_passive_relationships?(); end
+
+  def self.before_remove_for_active_relationships(); end
+
+  def self.before_remove_for_active_relationships=(val); end
+
+  def self.before_remove_for_active_relationships?(); end
+
   def self.before_remove_for_events(); end
 
   def self.before_remove_for_events=(val); end
@@ -34256,6 +34786,18 @@ class User
   def self.before_remove_for_favorite_games=(val); end
 
   def self.before_remove_for_favorite_games?(); end
+
+  def self.before_remove_for_followers(); end
+
+  def self.before_remove_for_followers=(val); end
+
+  def self.before_remove_for_followers?(); end
+
+  def self.before_remove_for_following(); end
+
+  def self.before_remove_for_following=(val); end
+
+  def self.before_remove_for_following?(); end
 
   def self.before_remove_for_game_purchases(); end
 
@@ -34269,11 +34811,133 @@ class User
 
   def self.before_remove_for_games?(); end
 
+  def self.before_remove_for_passive_relationships(); end
+
+  def self.before_remove_for_passive_relationships=(val); end
+
+  def self.before_remove_for_passive_relationships?(); end
+
   def self.devise_modules(); end
 
   def self.devise_modules=(val); end
 
   def self.devise_modules?(); end
+end
+
+module UsersHelper
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Vector
+  include ::ExceptionForMatrix
+  include ::Enumerable
+  include ::Matrix::CoercionHelper
+  def *(x); end
+
+  def +(v); end
+
+  def +@(); end
+
+  def -(v); end
+
+  def -@(); end
+
+  def /(x); end
+
+  def ==(other); end
+
+  def [](i); end
+
+  def []=(i, v); end
+
+  def angle_with(v); end
+
+  def coerce(other); end
+
+  def collect(&block); end
+
+  def collect!(&block); end
+
+  def collect2(v); end
+
+  def component(i); end
+
+  def covector(); end
+
+  def cross(*vs); end
+
+  def cross_product(*vs); end
+
+  def dot(v); end
+
+  def each(&block); end
+
+  def each2(v); end
+
+  def element(i); end
+
+  def elements(); end
+
+  def elements_to_f(); end
+
+  def elements_to_i(); end
+
+  def elements_to_r(); end
+
+  def eql?(other); end
+
+  def independent?(*vs); end
+
+  def initialize(array); end
+
+  def inner_product(v); end
+
+  def magnitude(); end
+
+  def map(&block); end
+
+  def map!(&block); end
+
+  def map2(v, &block); end
+
+  def norm(); end
+
+  def normalize(); end
+
+  def r(); end
+
+  def round(ndigits=T.unsafe(nil)); end
+
+  def size(); end
+
+  def to_a(); end
+
+  def to_matrix(); end
+
+  def zero?(); end
+end
+
+class Vector::ZeroVectorError
+end
+
+class Vector::ZeroVectorError
+end
+
+class Vector
+  extend ::Exception2MessageMapper
+  extend ::Matrix::ConversionHelper
+  def self.[](*array); end
+
+  def self.basis(size:, index:); end
+
+  def self.elements(array, copy=T.unsafe(nil)); end
+
+  def self.included(mod); end
+
+  def self.independent?(*vs); end
+
+  def self.zero(size); end
 end
 
 Visitor = Psych::Visitors::Visitor

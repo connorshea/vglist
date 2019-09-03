@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/selenium-webdriver/all/selenium-webdriver.rbi
 #
-# selenium-webdriver-3.142.3
+# selenium-webdriver-3.142.4
 module Selenium
 end
 module Selenium::WebDriver
@@ -793,7 +793,9 @@ module Selenium::WebDriver::Chrome
   def self.path=(path); end
 end
 module Selenium::WebDriver::Chrome::Bridge
+  def available_log_types; end
   def commands(command); end
+  def log(type); end
   def network_conditions; end
   def network_conditions=(conditions); end
   def send_command(command_params); end

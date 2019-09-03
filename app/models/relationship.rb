@@ -1,4 +1,4 @@
-# typed: true
+# typed: strong
 class Relationship < ApplicationRecord
   # The user that's following the other.
   belongs_to :follower, class_name: 'User'
