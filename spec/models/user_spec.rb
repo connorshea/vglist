@@ -78,6 +78,30 @@ RSpec.describe User, type: :model do
     it { should have_many(:favorite_games).dependent(:destroy) }
     it { should have_many(:events).dependent(:destroy) }
     it { should have_one(:external_account).dependent(:destroy) }
+
+    it 'has many active relationships' do
+      expect(user).to have_many(:active_relationships)
+        .class_name('Relationship')
+        .with_foreign_key('follower_id')
+        .inverse_of(:follower)
+        .dependent(:destroy)
+
+      expect(user).to have_many(:following)
+        .through(:active_relationships)
+        .source(:followed)
+    end
+
+    it 'has many passive relationships' do
+      expect(user).to have_many(:passive_relationships)
+        .class_name('Relationship')
+        .with_foreign_key('followed_id')
+        .inverse_of(:followed)
+        .dependent(:destroy)
+
+      expect(user).to have_many(:followers)
+        .through(:passive_relationships)
+        .source(:follower)
+    end
   end
 
   describe 'Destructions' do
