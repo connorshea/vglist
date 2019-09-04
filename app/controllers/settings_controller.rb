@@ -17,7 +17,7 @@ class SettingsController < ApplicationController
     @user = current_user
     authorize @user, policy_class: SettingsPolicy
 
-    @steam_account = ExternalAccount.find_by(user_id: current_user.id, account_type: :steam)
+    @steam_account = ExternalAccount.find_by(user_id: current_user&.id, account_type: :steam)
     return if @steam_account.nil?
 
     @unmatched_games = params[:unmatched_games]

@@ -5,6 +5,6 @@ module UsersHelper
   # Checks if the current user is already following the other user.
   sig { params(user: User).returns(T::Boolean) }
   def current_user_following?(user)
-    current_user.following.find_by(id: user.id).present?
+    current_user&.following&.find_by(id: user.id).present?
   end
 end

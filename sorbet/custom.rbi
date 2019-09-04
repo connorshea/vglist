@@ -15,3 +15,8 @@ end
 module UsersHelper
   include Devise::Controllers::Helpers
 end
+
+module Devise::Controllers::Helpers
+  sig { returns(T.nilable(User)) }
+  def current_user; end
+end

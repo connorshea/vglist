@@ -6,12 +6,12 @@ module GamesHelper
   # This is probably pretty slow and should be optimized.
   sig { params(game: Game).returns(T::Boolean) }
   def game_in_user_library?(game)
-    return current_user.game_purchases.find_by(game_id: game.id).present?
+    return current_user&.game_purchases&.find_by(game_id: game.id).present?
   end
 
   sig { params(game: Game).returns(T::Boolean) }
   def game_in_user_favorites?(game)
-    return current_user.favorite_games.find_by(game_id: game.id).present?
+    return current_user&.favorite_games&.find_by(game_id: game.id).present?
   end
 
   sig { params(sort: T.nilable(Symbol), humanized_name: String).returns(T.untyped) }
