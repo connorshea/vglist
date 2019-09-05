@@ -4,9 +4,9 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
-import * as ActiveStorage from 'activestorage';
+import * as ActiveStorage from '@rails/activestorage';
 import '../src/application.scss';
 import TurbolinksAdapter from '../src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';

@@ -107,7 +107,7 @@ import DateField from './fields/date-field.vue';
 import SingleSelect from './fields/single-select.vue';
 import MultiSelect from './fields/multi-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 
 export default {
   name: 'game-modal',

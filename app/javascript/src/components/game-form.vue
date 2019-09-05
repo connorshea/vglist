@@ -118,8 +118,8 @@ import NumberField from './fields/number-field.vue';
 import MultiSelect from './fields/multi-select.vue';
 import FileSelect from './fields/file-select.vue';
 import DateField from './fields/date-field.vue';
-import Rails from 'rails-ujs';
-import { DirectUpload } from 'activestorage';
+import Rails from '@rails/ujs';
+import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
 
 export default {

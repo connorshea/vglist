@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import * as _ from 'lodash';
 
 export default {

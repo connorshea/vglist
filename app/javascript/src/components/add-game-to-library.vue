@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import GameModal from './game-modal.vue';
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 
 export default {
