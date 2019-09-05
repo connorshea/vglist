@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import SingleSelect from './fields/single-select.vue';
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 
 export default {

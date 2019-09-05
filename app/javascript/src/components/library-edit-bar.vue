@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
