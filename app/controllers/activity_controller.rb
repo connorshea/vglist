@@ -19,7 +19,6 @@ class ActivityController < ApplicationController
     @events = Event.recently_created
                    .joins(:user)
                    .where(user_id: user_ids)
-                   .includes(eventable: [:game])
                    .page params[:page]
 
     authorize @events.first, policy_class: ActivityPolicy
