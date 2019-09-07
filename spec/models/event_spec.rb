@@ -11,7 +11,7 @@ RSpec.describe Event, type: :model do
 
     it { should validate_presence_of(:event_category) }
 
-    it 'has a type enum' do
+    it 'has an event category enum' do
       expect(event).to define_enum_for(:event_category)
         .with_values(
           [
@@ -31,7 +31,8 @@ RSpec.describe Event, type: :model do
 
   describe 'GamePurchase Event Destructions' do
     let(:user) { create(:confirmed_user) }
-    let(:game_purchase) { create(:game_purchase) }
+    let(:game) { create(:game) }
+    let(:game_purchase) { create(:game_purchase, game: game) }
     let(:game_purchase_event) { create(:game_purchase_event, user: user, eventable: game_purchase) }
 
     it 'GamePurchase should not be deleted when Event is deleted' do
@@ -58,11 +59,17 @@ RSpec.describe Event, type: :model do
       game_purchase_event
       expect { user.destroy }.to change(Event, :count).by(-1)
     end
+
+    it 'Event should be deleted when Game is deleted' do
+      game_purchase
+      expect { game.destroy }.to change(Event, :count).by(-1)
+    end
   end
 
   describe 'FavoriteGame Event Destructions' do
     let(:user) { create(:confirmed_user) }
-    let(:favorite_game) { create(:favorite_game, user: user) }
+    let(:game) { create(:game) }
+    let(:favorite_game) { create(:favorite_game, user: user, game: game) }
     let(:favorite_game_event) { create(:favorite_game_event, user: user, eventable: favorite_game) }
 
     it 'FavoriteGame should not be deleted when Event is deleted' do
@@ -85,7 +92,12 @@ RSpec.describe Event, type: :model do
       expect { favorite_game.destroy }.to change(Event, :count).by(-1)
     end
 
-    it 'Favorite Game Event should be deleted when User is deleted' do
+    it 'FavoriteGame Event should be deleted when Game is deleted' do
+      favorite_game
+      expect { game.destroy }.to change(Event, :count).by(-1)
+    end
+
+    it 'FavoriteGame Event should be deleted when User is deleted' do
       favorite_game
       expect { user.destroy }.to change(Event.where(eventable_type: 'FavoriteGame'), :count).by(-1)
     end

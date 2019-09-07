@@ -2,7 +2,7 @@
 class Game < ApplicationRecord
   include PgSearch::Model
 
-  has_many :game_purchases
+  has_many :game_purchases, dependent: :destroy
   has_many :purchasers, through: :game_purchases, source: :user
 
   has_many :game_developers
