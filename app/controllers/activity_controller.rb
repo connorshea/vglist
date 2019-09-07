@@ -1,15 +1,25 @@
 # typed: false
 class ActivityController < ApplicationController
-  # NOTE: Uncomment this if you ever add another controller method
-  # before_action :authenticate_user!, except: :index
+  before_action :authenticate_user!, except: :global
 
-  def index
+  def global
     @events = Event.recently_created
                    .joins(:user)
                    .where(users: { privacy: :public_account })
                    .includes(eventable: [:game])
                    .page params[:page]
 
-    skip_policy_scope
+    skip_authorization
+  end
+
+  def following
+    user_ids = current_user.following.map { |u| u.id }
+    @events = Event.recently_created
+                   .joins(:user)
+                   .where(user_id: user_ids)
+                   .includes(eventable: [:game])
+                   .page params[:page]
+
+    authorize @events.first, policy_class: ActivityPolicy
   end
 end

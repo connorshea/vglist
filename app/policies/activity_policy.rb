@@ -12,7 +12,12 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   sig { returns(T::Boolean) }
-  def index?
+  def global?
     true
+  end
+
+  sig { returns(T::Boolean) }
+  def following?
+    !user.nil?
   end
 end
