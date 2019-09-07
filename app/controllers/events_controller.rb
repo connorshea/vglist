@@ -6,6 +6,6 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     authorize @event
     @event.destroy
-    redirect_to activity_index_url, success: "Event was successfully deleted."
+    redirect_to activity_url, success: "Event was successfully deleted."
   end
 end

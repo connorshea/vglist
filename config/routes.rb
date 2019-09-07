@@ -45,7 +45,11 @@ Rails.application.routes.draw do
     delete :unfollow, to: 'relationships#destroy'
   end
 
-  resources :activity, only: :index
+  namespace :activity do
+    get :global, as: '/', path: '/'
+    get :following
+  end
+
   resources :events, only: :destroy
 
   resources :platforms do

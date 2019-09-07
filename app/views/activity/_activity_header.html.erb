@@ -1,0 +1,10 @@
+<div class="tabs">
+  <ul>
+    <li class="<%= 'is-active' if current_page?(activity_following_path) %>">
+      <%= link_to 'Following', activity_following_path %>
+    </li>
+    <li class="<%= 'is-active' if current_page?(activity_path) %>">
+      <%= link_to 'Global', activity_path %>
+    </li>
+  </ul>
+</div>

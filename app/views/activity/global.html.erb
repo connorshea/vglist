@@ -1,0 +1,18 @@
+<% content_for :title, "Global Activity" %>
+<% content_for :description, "Recent activity for all users on VideoGameList (VGList)." %>
+
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+  <h1 class="title">Global Activity</h1>
+
+  <% unless current_user.nil? %>
+    <%= render 'activity_header' %>
+  <% end %>
+
+  <% @events.each do |event| %>
+    <% if handleable_event?(event) %>
+      <%= render 'shared/event', event: event %>
+    <% end %>
+  <% end %>
+
+  <%= paginate @events %>
+</div>

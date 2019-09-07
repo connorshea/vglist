@@ -18,7 +18,12 @@
         </p>
       </div>
 
-      <%= link_to("Activity", activity_index_path, class: "navbar-item") %>
+      <%# Link to the global activity if the user isn't logged in. %>
+      <% if current_user.nil? %>
+        <%= link_to("Activity", activity_path, class: "navbar-item") %>
+      <% else %>
+        <%= link_to("Activity", activity_following_path, class: "navbar-item") %>
+      <% end %>
       <%= link_to("Games", games_path, class: "navbar-item") %>
       <%= link_to("Users", users_path, class: "navbar-item") %>
       

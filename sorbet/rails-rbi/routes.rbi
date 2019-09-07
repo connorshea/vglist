@@ -320,10 +320,17 @@ module GeneratedUrlHelpers
 
   # Sigs for route /activity(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def activity_index_path(*args, **kwargs); end
+  def activity_path(*args, **kwargs); end
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def activity_index_url(*args, **kwargs); end
+  def activity_url(*args, **kwargs); end
+
+  # Sigs for route /activity/following(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_following_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def activity_following_url(*args, **kwargs); end
 
   # Sigs for route /events/:id(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
