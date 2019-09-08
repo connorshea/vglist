@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.9.8
+### Added
+- Add an event for when one user follows another. ([#670])
+
 ### Changed
 - Have every user follow User with ID 1 by default. ([#667])
 
@@ -529,3 +532,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#656]: https://github.com/connorshea/VideoGameList/pull/656
 [#665]: https://github.com/connorshea/VideoGameList/pull/665
 [#667]: https://github.com/connorshea/VideoGameList/pull/667
+[#670]: https://github.com/connorshea/VideoGameList/pull/670
