@@ -4,12 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.9.8
+### Changed
+- Have every user follow User with ID 1 by default. ([#667])
+
+## v2019.9.7
+### Added
+- Add a 'Following' Activity view for viewing only activity from users you follow. ([#665])
+
 ## v2019.9.2
 ### Added
 - Add a basic system for following users. ([#656])
 
 ### Changed
 - Improved error handling when adding games to your library. ([#652])
+
+### Fixed
+- Fix multiselect dropdowns not working. ([#654])
 
 ## v2019.8.31
 ### Added
@@ -514,4 +525,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#640]: https://github.com/connorshea/VideoGameList/pull/640
 [#641]: https://github.com/connorshea/VideoGameList/pull/641
 [#652]: https://github.com/connorshea/VideoGameList/pull/652
+[#654]: https://github.com/connorshea/VideoGameList/pull/654
 [#656]: https://github.com/connorshea/VideoGameList/pull/656
+[#665]: https://github.com/connorshea/VideoGameList/pull/665
+[#667]: https://github.com/connorshea/VideoGameList/pull/667
