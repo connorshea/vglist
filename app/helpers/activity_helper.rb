@@ -13,6 +13,8 @@ module ActivityHelper
       favorite_game_event_text(event)
     when :new_user
       new_user_event_text(event)
+    when :following
+      following_event_text(event)
     else
       ''
     end
@@ -62,6 +64,14 @@ module ActivityHelper
     return user_link + " created their account."
   end
 
+  sig { params(event: Event).returns(String) }
+  def following_event_text(event)
+    follower_user_link = link_to(event.user.username, user_path(event.user))
+    followed_user_link = link_to(event.eventable.followed.username, user_path(event.eventable.followed))
+
+    return follower_user_link + " started following " + followed_user_link + "."
+  end
+
   sig { params(event: Event).returns(T::Boolean) }
   def handleable_event?(event)
     case event.event_category.to_sym
@@ -75,6 +85,8 @@ module ActivityHelper
     when :favorite_game
       true
     when :new_user
+      true
+    when :following
       true
     else
       false

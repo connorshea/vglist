@@ -28,6 +28,12 @@ module Event::EnumInstanceMethods
 
   sig { void }
   def new_user!; end
+
+  sig { returns(T::Boolean) }
+  def following?; end
+
+  sig { void }
+  def following!; end
 end
 
 module Event::ActiveRelation_WhereNot
@@ -168,6 +174,9 @@ class Event < ApplicationRecord
   def self.favorite_games(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def self.game_purchases(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
@@ -183,10 +192,19 @@ class Event < ApplicationRecord
   def self.not_favorite_game(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def self.not_new_user(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def self.recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.users(*args); end
 
   sig { returns(Event::ActiveRecord_Relation) }
   def self.all; end
@@ -372,6 +390,9 @@ class Event::ActiveRecord_Relation < ActiveRecord::Relation
   def favorite_games(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def game_purchases(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
@@ -387,10 +408,19 @@ class Event::ActiveRecord_Relation < ActiveRecord::Relation
   def not_favorite_game(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def not_new_user(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def users(*args); end
 
   sig { returns(Event::ActiveRecord_Relation) }
   def all; end
@@ -593,6 +623,9 @@ class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
   def favorite_games(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def game_purchases(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
@@ -608,10 +641,19 @@ class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
   def not_favorite_game(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def not_new_user(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def users(*args); end
 
   sig { returns(Event::ActiveRecord_AssociationRelation) }
   def all; end
@@ -813,6 +855,9 @@ class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
   def favorite_games(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def game_purchases(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
@@ -828,10 +873,19 @@ class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
   def not_favorite_game(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def not_new_user(*args); end
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def users(*args); end
 
   sig { returns(Event::ActiveRecord_AssociationRelation) }
   def all; end
