@@ -66,7 +66,6 @@ module ActivityHelper
   def handleable_event?(event)
     case event.event_category.to_sym
     when :change_completion_status
-
       ['completed', 'fully_completed', 'dropped', 'paused'].include?(
         # Coerce the value to a hash since we know it will always be one
         T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1]
