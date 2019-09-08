@@ -22,7 +22,6 @@ class ActiveStorageStfuLogFormatter
       # Each request in Rails log ends with "Completed ..." message, so do suppressed messages.
       @suppress.delete(uuid)
       return nil
-
     elsif message&.start_with?(
       "Processing by ActiveStorage::DiskController#show",
       "Processing by ActiveStorage::BlobsController#show",
@@ -35,7 +34,6 @@ class ActiveStorageStfuLogFormatter
       # These three types we would like to hide.
       @suppress << uuid
       return nil
-
     elsif !@suppress.include?(uuid)
       # All messages, which are not suppressed, print. New line must be added here.
       return "#{message}\n"
