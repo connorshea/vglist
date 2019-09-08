@@ -99,11 +99,11 @@ class User < ApplicationRecord
     )
 
     # Follow User #1 by default (aka connor)
-    if id != 1 && !User.where(id: 1).empty?
-      Relationship.create!(
-        follower_id: id,
-        followed: User.find(1)
-      )
-    end
+    return if id == 1 || User.where(id: 1).empty?
+
+    Relationship.create!(
+      follower_id: id,
+      followed: User.find(1)
+    )
   end
 end
