@@ -124,4 +124,22 @@ RSpec.describe User, type: :model do
       expect { user_with_external_account.destroy }.to change(ExternalAccount, :count).by(-1)
     end
   end
+
+  describe 'Callbacks' do
+    let(:user) { create(:confirmed_user, id: 1) }
+    let(:user2) { create(:confirmed_user) }
+
+    it 'User 1 should not follow themselves' do
+      user
+      # Get the first relationship the user has and make sure it's following the user with ID 1
+      expect(user.active_relationships.length).to eq(0)
+    end
+
+    it 'User should follow user with ID 1' do
+      user
+      user2
+      # Get the first relationship the user has and make sure it's following the user with ID 1
+      expect(user2.active_relationships.first.followed_id).to eq(1)
+    end
+  end
 end

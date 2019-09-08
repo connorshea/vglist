@@ -2,7 +2,7 @@
 class User < ApplicationRecord
   extend FriendlyId
 
-  after_create :user_create_event
+  after_create :on_user_creation
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -90,12 +90,20 @@ class User < ApplicationRecord
 
   private
 
-  def user_create_event
+  def on_user_creation
     Event.create!(
       eventable_type: 'User',
       eventable_id: id,
       user_id: id,
       event_category: :new_user
+    )
+
+    # Follow User #1 by default (aka connor)
+    return if id == 1 || User.where(id: 1).empty?
+
+    Relationship.create!(
+      follower_id: id,
+      followed: User.find(1)
     )
   end
 end
