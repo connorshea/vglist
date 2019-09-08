@@ -8,6 +8,7 @@ RSpec.describe "Relationships", type: :request do
 
     it "creates a follow" do
       sign_in(user1)
+      user2
 
       expect do
         post user_follow_path(user_id: user2.id)
