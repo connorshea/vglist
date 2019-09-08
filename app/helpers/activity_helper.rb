@@ -80,13 +80,7 @@ module ActivityHelper
         # Coerce the value to a hash since we know it will always be one
         T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1]
       )
-    when :add_to_library
-      true
-    when :favorite_game
-      true
-    when :new_user
-      true
-    when :following
+    when :add_to_library, :favorite_game, :new_user, :following
       true
     else
       false
