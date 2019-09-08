@@ -9,14 +9,16 @@
 
 <%= render 'user_header', user: @user %>
 
-<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile user-card-list">
-  <% if @following.length > 0 %>
+<% if @following.length > 0 %>
+  <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile user-card-list">
     <% @following.each do |user| %>
       <%= render 'shared/user_card', user: user %>
     <% end %>
-  <% else %>
-    <p class="has-text-centered">This user isn't following anyone yet.
-  <% end %>
 
-  <%= paginate @following %>
-</div>
+    <%= paginate @following %>
+  </div>
+<% else %>
+  <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+    <p class="has-text-centered">This user isn't following anyone yet.
+  </div>
+<% end %>
