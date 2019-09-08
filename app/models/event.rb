@@ -3,8 +3,10 @@ class Event < ApplicationRecord
   belongs_to :eventable, polymorphic: true
   belongs_to :user, inverse_of: :events
 
-  scope :game_purchases, -> { where(eventable_type: 'GamePurchase') }
-  scope :favorite_games, -> { where(eventable_type: 'FavoriteGame') }
+  scope :game_purchases,   -> { where(eventable_type: 'GamePurchase') }
+  scope :favorite_games,   -> { where(eventable_type: 'FavoriteGame') }
+  scope :users,            -> { where(eventable_type: 'User') }
+  scope :relationships,    -> { where(eventable_type: 'Relationship') }
   scope :recently_created, -> { order("created_at desc") }
 
   validates :event_category, presence: true
@@ -13,6 +15,7 @@ class Event < ApplicationRecord
     add_to_library: 0,
     change_completion_status: 1,
     favorite_game: 2,
-    new_user: 3
+    new_user: 3,
+    following: 4
   }
 end

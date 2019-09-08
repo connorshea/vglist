@@ -13,6 +13,7 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:game_purchase_completion_event7) { create(:game_purchase_completion_event, differences: { completion_status: [nil, "paused"] }) }
     let(:favorite_game_event) { create(:favorite_game_event) }
     let(:new_user_event) { create(:new_user_event) }
+    let(:following_event) { create(:following_event) }
 
     it 'returns true for a library event' do
       expect(helper.handleable_event?(game_purchase_library_event)).to be(true)
@@ -53,10 +54,15 @@ RSpec.describe ActivityHelper, type: :helper do
     it 'returns true for a new user event' do
       expect(helper.handleable_event?(new_user_event)).to be(true)
     end
+
+    it 'returns true for a following event' do
+      expect(helper.handleable_event?(following_event)).to be(true)
+    end
   end
 
   describe 'event text' do
     let(:user) { create(:user) }
+    let(:user2) { create(:user) }
     let(:game) { create(:game) }
     let(:game_purchase) { create(:game_purchase, game: game, user: user) }
     let(:game_purchase_library_event) { create(:game_purchase_library_event, user: user, eventable: game_purchase) }
@@ -71,6 +77,8 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:favorite_game) { create(:favorite_game, game: game, user: user) }
     let(:favorite_game_event) { create(:favorite_game_event, user: user, eventable: favorite_game) }
     let(:new_user_event) { create(:new_user_event, user: user, eventable: user) }
+    let(:relationship) { create(:relationship, follower: user, followed: user2) }
+    let(:following_event) { create(:following_event, user: user, eventable: relationship) }
 
     it 'returns the correct text for a game library event' do
       expect(
@@ -94,6 +102,12 @@ RSpec.describe ActivityHelper, type: :helper do
       expect(
         strip_tags(helper.event_text(new_user_event))
       ).to eq "#{user.username} created their account."
+    end
+
+    it 'returns the correct text for a following event' do
+      expect(
+        strip_tags(helper.event_text(following_event))
+      ).to eq "#{user.username} started following #{user2.username}."
     end
   end
 
@@ -193,6 +207,19 @@ RSpec.describe ActivityHelper, type: :helper do
       expect(
         strip_tags(helper.new_user_event_text(new_user_event))
       ).to eq "#{user.username} created their account."
+    end
+  end
+
+  describe 'new follower event text method' do
+    let(:user) { create(:user) }
+    let(:user2) { create(:user) }
+    let(:relationship) { create(:relationship, follower: user, followed: user2) }
+    let(:following_event) { create(:following_event, user: user, eventable: relationship) }
+
+    it 'returns a sensible piece of text' do
+      expect(
+        strip_tags(helper.following_event_text(following_event))
+      ).to eq "#{user.username} started following #{user2.username}."
     end
   end
 end

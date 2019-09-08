@@ -22,6 +22,11 @@ FactoryBot.define do
       event_category { :new_user }
     end
 
+    trait :for_following do
+      association(:eventable, factory: :relationship)
+      event_category { :following }
+    end
+
     trait :add_to_library do
       event_category { :add_to_library }
     end
@@ -39,5 +44,6 @@ FactoryBot.define do
     factory :game_purchase_completion_event, traits: [:for_game_purchase, :change_completion_status]
     factory :favorite_game_event,            traits: [:for_favorite_game]
     factory :new_user_event,                 traits: [:for_new_user]
+    factory :following_event,                traits: [:for_following]
   end
 end

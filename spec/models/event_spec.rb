@@ -18,7 +18,8 @@ RSpec.describe Event, type: :model do
             :add_to_library,
             :change_completion_status,
             :favorite_game,
-            :new_user
+            :new_user,
+            :following
           ]
         )
     end
@@ -108,6 +109,27 @@ RSpec.describe Event, type: :model do
 
     it 'Event should be deleted when User is deleted' do
       expect { user.destroy }.to change(Event.where(eventable_type: 'User'), :count).by(-1)
+    end
+  end
+
+  describe 'User Relationship Event Destructions' do
+    let!(:user) { create(:confirmed_user) }
+    let(:relationship_follower) { create(:relationship, follower: user) }
+    let(:relationship_followed) { create(:relationship, followed: user) }
+
+    it 'Event should be deleted when Following User is deleted' do
+      relationship_follower
+      expect { user.destroy }.to change(Event.where(eventable_type: 'Relationship'), :count).by(-1)
+    end
+
+    it 'Event should be deleted when Followed User is deleted' do
+      relationship_followed
+      expect { user.destroy }.to change(Event.where(eventable_type: 'Relationship'), :count).by(-1)
+    end
+
+    it 'Event should be deleted when Relationship is deleted' do
+      relationship_followed
+      expect { relationship_followed.destroy }.to change(Event.where(eventable_type: 'Relationship'), :count).by(-1)
     end
   end
 end

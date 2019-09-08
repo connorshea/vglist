@@ -59,6 +59,12 @@ end
 module Relationship::GeneratedAssociationMethods
   extend T::Sig
 
+  sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
+  def events; end
+
+  sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
+  def events=(value); end
+
   sig { returns(::User) }
   def followed; end
 
