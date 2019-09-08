@@ -1,4 +1,48 @@
-# typed: strict
+# typed: true
+# Solution for muting the ActiveStorage logger from:
+# https://stackoverflow.com/a/57108948/7143763
+class ActiveStorageStfuLogFormatter
+  def initialize
+    # Suppress is an array of request uuids. Each listed uuid means no messages from this request.
+    @suppress = []
+  end
+
+  def call(_severity, _datetime, _progname, message)
+    # Get uuid, which we need to properly distinguish between parallel requests.
+    # Also remove uuid information from log (that's why we match the rest of message)
+    matches = /\[([0-9a-zA-Z\-_]+)\] (.*)/m.match(message)
+
+    # Return message as it is (including new line at the end)
+    return "#{message}\n" unless matches
+
+    uuid = matches[1]
+    message = matches[2]
+
+    if @suppress.include?(uuid) && message&.start_with?("Completed ")
+      # Each request in Rails log ends with "Completed ..." message, so do suppressed messages.
+      @suppress.delete(uuid)
+      return nil
+
+    elsif message&.start_with?(
+      "Processing by ActiveStorage::DiskController#show",
+      "Processing by ActiveStorage::BlobsController#show",
+      "Processing by ActiveStorage::RepresentationsController#show",
+      "Started GET \"/rails/active_storage/disk/",
+      "Started GET \"/rails/active_storage/blobs/",
+      "Started GET \"/rails/active_storage/representations/"
+    )
+      # When we use ActiveStorage disk provider, there are three types of request: Disk requests, Blobs requests and Representation requests.
+      # These three types we would like to hide.
+      @suppress << uuid
+      return nil
+
+    elsif !@suppress.include?(uuid)
+      # All messages, which are not suppressed, print. New line must be added here.
+      return "#{message}\n"
+    end
+  end
+end
+
 Rails.application.configure do
   # Verifies that versions and hashed value of the package contents in the project's package.json
   config.webpacker.check_yarn_integrity = true
@@ -73,4 +117,8 @@ Rails.application.configure do
 
   # Faker gem configuration
   Faker::Config.locale = 'en'
+
+  # Make ActiveStorage stfu
+  config.log_tags = [:uuid]
+  config.log_formatter = ActiveStorageStfuLogFormatter.new
 end
