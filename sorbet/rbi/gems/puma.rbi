@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-4.1.0
+# puma-4.1.1
 module Puma
   def self.jruby?; end
   def self.stats; end
@@ -511,6 +511,7 @@ class Puma::Cluster < Puma::Runner
   def stop; end
   def stop_blocked; end
   def stop_workers; end
+  def wait_workers; end
   def wakeup!; end
   def worker(index, master); end
 end
@@ -532,6 +533,7 @@ class Puma::Cluster::Worker
   def signal; end
   def started_at; end
   def term; end
+  def term?; end
 end
 class Puma::Single < Puma::Runner
   def halt; end

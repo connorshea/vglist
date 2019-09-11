@@ -270,75 +270,6 @@ class ActiveModel::BlockValidator < ActiveModel::EachValidator
   def initialize(options, &block); end
   def validate_each(record, attribute, value); end
 end
-module ActiveModel::SecurePassword
-  def self.min_cost; end
-  def self.min_cost=(arg0); end
-  extend ActiveSupport::Concern
-end
-module ActiveModel::SecurePassword::ClassMethods
-  def has_secure_password(attribute = nil, validations: nil); end
-end
-class ActiveModel::SecurePassword::InstanceMethodsOnActivation < Module
-  def initialize(attribute); end
-end
-module ActiveModel::Callbacks
-  def _define_after_model_callback(klass, callback); end
-  def _define_around_model_callback(klass, callback); end
-  def _define_before_model_callback(klass, callback); end
-  def define_model_callbacks(*callbacks); end
-  def self.extended(base); end
-end
-class ActiveModel::Attribute::UserProvidedDefault < ActiveModel::Attribute::FromUser
-  def initialize(name, value, type, database_default); end
-  def marshal_dump; end
-  def marshal_load(values); end
-  def user_provided_value; end
-  def value_before_type_cast; end
-  def with_type(type); end
-end
-class ActiveModel::Name
-  def !~(*args, &block); end
-  def <=>(*args, &block); end
-  def ==(arg); end
-  def ===(arg); end
-  def =~(*args, &block); end
-  def _singularize(string); end
-  def as_json(*args, &block); end
-  def cache_key; end
-  def collection; end
-  def element; end
-  def eql?(*args, &block); end
-  def human(options = nil); end
-  def i18n_key; end
-  def initialize(klass, namespace = nil, name = nil); end
-  def match?(*args, &block); end
-  def name; end
-  def param_key; end
-  def plural; end
-  def route_key; end
-  def singular; end
-  def singular_route_key; end
-  def to_s(*args, &block); end
-  def to_str(*args, &block); end
-  include Comparable
-end
-module ActiveModel::Naming
-  def model_name; end
-  def self.extended(base); end
-  def self.model_name_from_record_or_class(record_or_class); end
-  def self.param_key(record_or_class); end
-  def self.plural(record_or_class); end
-  def self.route_key(record_or_class); end
-  def self.singular(record_or_class); end
-  def self.singular_route_key(record_or_class); end
-  def self.uncountable?(record_or_class); end
-end
-module ActiveModel::Translation
-  def human_attribute_name(attribute, options = nil); end
-  def i18n_scope; end
-  def lookup_ancestors; end
-  include ActiveModel::Naming
-end
 module ActiveModel::Type
   def self.default_value; end
   def self.lookup(*args, **kwargs); end
@@ -519,6 +450,75 @@ class ActiveModel::Type::Registration
   def initialize(name, block, **arg2); end
   def matches?(type_name, *args, **kwargs); end
   def name; end
+end
+module ActiveModel::SecurePassword
+  def self.min_cost; end
+  def self.min_cost=(arg0); end
+  extend ActiveSupport::Concern
+end
+module ActiveModel::SecurePassword::ClassMethods
+  def has_secure_password(attribute = nil, validations: nil); end
+end
+class ActiveModel::SecurePassword::InstanceMethodsOnActivation < Module
+  def initialize(attribute); end
+end
+module ActiveModel::Callbacks
+  def _define_after_model_callback(klass, callback); end
+  def _define_around_model_callback(klass, callback); end
+  def _define_before_model_callback(klass, callback); end
+  def define_model_callbacks(*callbacks); end
+  def self.extended(base); end
+end
+class ActiveModel::Attribute::UserProvidedDefault < ActiveModel::Attribute::FromUser
+  def initialize(name, value, type, database_default); end
+  def marshal_dump; end
+  def marshal_load(values); end
+  def user_provided_value; end
+  def value_before_type_cast; end
+  def with_type(type); end
+end
+class ActiveModel::Name
+  def !~(*args, &block); end
+  def <=>(*args, &block); end
+  def ==(arg); end
+  def ===(arg); end
+  def =~(*args, &block); end
+  def _singularize(string); end
+  def as_json(*args, &block); end
+  def cache_key; end
+  def collection; end
+  def element; end
+  def eql?(*args, &block); end
+  def human(options = nil); end
+  def i18n_key; end
+  def initialize(klass, namespace = nil, name = nil); end
+  def match?(*args, &block); end
+  def name; end
+  def param_key; end
+  def plural; end
+  def route_key; end
+  def singular; end
+  def singular_route_key; end
+  def to_s(*args, &block); end
+  def to_str(*args, &block); end
+  include Comparable
+end
+module ActiveModel::Naming
+  def model_name; end
+  def self.extended(base); end
+  def self.model_name_from_record_or_class(record_or_class); end
+  def self.param_key(record_or_class); end
+  def self.plural(record_or_class); end
+  def self.route_key(record_or_class); end
+  def self.singular(record_or_class); end
+  def self.singular_route_key(record_or_class); end
+  def self.uncountable?(record_or_class); end
+end
+module ActiveModel::Translation
+  def human_attribute_name(attribute, options = nil); end
+  def i18n_scope; end
+  def lookup_ancestors; end
+  include ActiveModel::Naming
 end
 class ActiveModel::ForbiddenAttributesError < StandardError
 end

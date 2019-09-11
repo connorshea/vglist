@@ -65,16 +65,16 @@ module FavoriteGame::GeneratedAssociationMethods
   sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
   def events=(value); end
 
-  sig { returns(T.nilable(::Game)) }
+  sig { returns(::Game) }
   def game; end
 
-  sig { params(value: T.nilable(::Game)).void }
+  sig { params(value: ::Game).void }
   def game=(value); end
 
-  sig { returns(T.nilable(::User)) }
+  sig { returns(::User) }
   def user; end
 
-  sig { params(value: T.nilable(::User)).void }
+  sig { params(value: ::User).void }
   def user=(value); end
 end
 

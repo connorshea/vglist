@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/zeitwerk/all/zeitwerk.rbi
 #
-# zeitwerk-2.1.9
+# zeitwerk-2.1.10
 module Zeitwerk::RealModName
   def real_mod_name(mod); end
 end
@@ -124,4 +124,6 @@ end
 class Zeitwerk::Error < StandardError
 end
 class Zeitwerk::ReloadingDisabledError < Zeitwerk::Error
+end
+class Zeitwerk::NameError < NameError
 end

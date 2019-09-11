@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.3
+# sorbet-rails-0.5.4
 module SorbetRails
   def self.config(&blk); end
   def self.configure(*args, &blk); end
@@ -26,6 +26,8 @@ class SorbetRails::Config
   def enabled_model_plugins(*args, &blk); end
   def enabled_model_plugins=(arg0); end
   def enabled_plugins(*args, &blk); end
+  def extra_helper_includes(*args, &blk); end
+  def extra_helper_includes=(arg0); end
   def initialize(&blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
@@ -73,6 +75,13 @@ class SorbetRails::ModelPlugins::Base < Parlour::Plugin
   extend T::Sig
   include SorbetRails::ModelUtils
 end
+module SorbetRails::Utils
+  def self.rails_eager_load_all!(*args, &blk); end
+  def self.valid_method_name?(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+end
 class SorbetRails::ModelPlugins::ActiveRecordEnum < SorbetRails::ModelPlugins::Base
   def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
@@ -105,8 +114,8 @@ class SorbetRails::ModelPlugins::ActiveRecordAssoc < SorbetRails::ModelPlugins::
   def generate(*args, &blk); end
   def initialize(*args, &blk); end
   def polymorphic_assoc?(*args, &blk); end
-  def populate_collection_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
-  def populate_single_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
+  def populate_collection_assoc_getter_setter(*args, &blk); end
+  def populate_single_assoc_getter_setter(*args, &blk); end
   def relation_should_be_untyped?(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
@@ -126,6 +135,27 @@ end
 class SorbetRails::ModelPlugins::EnumerableCollections < SorbetRails::ModelPlugins::Base
   def create_enumerable_methods_for(*args, &blk); end
   def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class ActiveRecordOverrides
+  def enum_calls; end
+  def initialize; end
+  def self.allocate; end
+  def self.instance; end
+  def self.new(*arg0); end
+  def store_enum_call(class_name, kwargs); end
+  extend Singleton::SingletonClassMethods
+  include Singleton
+end
+module ActiveRecord::Enum
+  def old_enum(definitions); end
+end
+class SorbetRails::ModelPlugins::ActiveStorageMethods < SorbetRails::ModelPlugins::Base
+  def create_has_many_methods(*args, &blk); end
+  def create_has_one_methods(*args, &blk); end
+  def generate(*args, &blk); end
+  def initialize(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
 end

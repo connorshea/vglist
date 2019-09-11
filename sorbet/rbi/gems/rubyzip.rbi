@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubyzip/all/rubyzip.rbi
 #
-# rubyzip-1.2.3
+# rubyzip-1.2.4
 module Zip
   def case_insensitive_match; end
   def case_insensitive_match=(arg0); end
@@ -338,7 +338,7 @@ class Zip::File < Zip::CentralDirectory
   def get_input_stream(entry, &aProc); end
   def get_output_stream(entry, permission_int = nil, comment = nil, extra = nil, compressed_size = nil, crc = nil, compression_method = nil, size = nil, time = nil, &aProc); end
   def glob(*args, &block); end
-  def initialize(file_name, create = nil, buffer = nil, options = nil); end
+  def initialize(path_or_io, create = nil, buffer = nil, options = nil); end
   def mkdir(entryName, permissionInt = nil); end
   def name; end
   def on_success_replace; end
