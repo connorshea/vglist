@@ -66,6 +66,12 @@ module T::Private::Methods::MethodHooks; end
 module T::Private::Methods::MethodHooks; end
 module T::Private::Methods::MethodHooks; end
 module T::Private::Methods::MethodHooks; end
+module T::Private::Methods::MethodHooks; end
+module T::Private::Methods::MethodHooks; end
+module T::Private::Methods::MethodHooks; end
+module T::Private::Methods::SingletonMethodHooks; end
+module T::Private::Methods::SingletonMethodHooks; end
+module T::Private::Methods::SingletonMethodHooks; end
 module T::Private::Methods::SingletonMethodHooks; end
 module T::Private::Methods::SingletonMethodHooks; end
 module T::Private::Methods::SingletonMethodHooks; end

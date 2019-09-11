@@ -83,28 +83,6 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   def metadata?; end
 end
 
-module ActiveStorage::Blob::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(::ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy) }
-  def attachments; end
-
-  sig { params(value: T.any(T::Array[::ActiveStorage::Attachment], ::ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy)).void }
-  def attachments=(value); end
-
-  sig { returns(T.nilable(::ActiveStorage::Attachment)) }
-  def preview_image_attachment; end
-
-  sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
-  def preview_image_attachment=(value); end
-
-  sig { returns(T.nilable(::ActiveStorage::Blob)) }
-  def preview_image_blob; end
-
-  sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
-  def preview_image_blob=(value); end
-end
-
 module ActiveStorage::Blob::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[ActiveStorage::Blob]) }
   def first_n(limit); end
@@ -889,4 +867,32 @@ class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy < ActiveRec
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Blob::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module ActiveStorage::Blob::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(::ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy) }
+  def attachments; end
+
+  sig { params(value: T.any(T::Array[::ActiveStorage::Attachment], ::ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy)).void }
+  def attachments=(value); end
+
+  sig { returns(T.nilable(::ActiveStorage::Attachment)) }
+  def preview_image_attachment; end
+
+  sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
+  def preview_image_attachment=(value); end
+
+  sig { returns(T.nilable(::ActiveStorage::Blob)) }
+  def preview_image_blob; end
+
+  sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
+  def preview_image_blob=(value); end
+
+  sig { returns(T.nilable(ActiveStorage::Attached::One)) }
+  def preview_image; end
+
+  sig { params(attachable: T.untyped).returns(T.untyped) }
+  def preview_image=(attachable); end
 end

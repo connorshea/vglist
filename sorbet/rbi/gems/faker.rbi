@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.2.1
+# faker-2.2.2
 module Faker
 end
 module Faker::Base58
@@ -1344,6 +1344,7 @@ class Faker::Base
   def self.shuffle(list); end
   def self.translate(*args); end
   def self.unique(max_retries = nil); end
+  def self.warn_for_deprecated_arguments; end
   def self.warn_with_uplevel(message, uplevel: nil); end
   def self.with_locale(tmp_locale = nil); end
 end

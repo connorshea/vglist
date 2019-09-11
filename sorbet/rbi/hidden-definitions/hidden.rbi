@@ -5807,16 +5807,6 @@ class Binding
   def clone(); end
 
   def irb(); end
-
-  def local_variable_defined?(_); end
-
-  def local_variable_get(_); end
-
-  def local_variable_set(_, _1); end
-
-  def receiver(); end
-
-  def source_location(); end
 end
 
 module Bootsnap
@@ -8177,8 +8167,6 @@ end
 module Devise::Controllers::Helpers
   def authenticate_user!(opts=T.unsafe(nil)); end
 
-  def current_user(); end
-
   def user_session(); end
 
   def user_signed_in?(); end
@@ -9795,6 +9783,8 @@ module Event::GeneratedRelationMethods
 
   def favorite_games(*args, &block); end
 
+  def following(*args, &block); end
+
   def game_purchases(*args, &block); end
 
   def new_user(*args, &block); end
@@ -9805,9 +9795,15 @@ module Event::GeneratedRelationMethods
 
   def not_favorite_game(*args, &block); end
 
+  def not_following(*args, &block); end
+
   def not_new_user(*args, &block); end
 
   def recently_created(*args, &block); end
+
+  def relationships(*args, &block); end
+
+  def users(*args, &block); end
 end
 
 module Event::GeneratedRelationMethods
@@ -11310,10 +11306,6 @@ module Game::GeneratedAssociationMethods
   def build_pg_search_document(*args, &block); end
 
   def build_series(*args, &block); end
-
-  def cover(); end
-
-  def cover=(attachable); end
 
   def create_cover_attachment(*args, &block); end
 
@@ -14785,6 +14777,9 @@ end
 class Mail::POP3
 end
 
+class Mail::PartsList
+end
+
 class Mail::PhraseList
   def initialize(string); end
 
@@ -16797,10 +16792,6 @@ end
 class Numeric
   include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def finite?(); end
-
-  def infinite?(); end
-
   EXABYTE = ::T.let(nil, ::T.untyped)
   GIGABYTE = ::T.let(nil, ::T.untyped)
   KILOBYTE = ::T.let(nil, ::T.untyped)
@@ -25523,9 +25514,37 @@ class Regexp
 end
 
 class Relationship
+  def after_add_for_events(); end
+
+  def after_add_for_events=(val); end
+
+  def after_add_for_events?(); end
+
+  def after_remove_for_events(); end
+
+  def after_remove_for_events=(val); end
+
+  def after_remove_for_events?(); end
+
+  def autosave_associated_records_for_events(*args); end
+
   def autosave_associated_records_for_followed(*args); end
 
   def autosave_associated_records_for_follower(*args); end
+
+  def before_add_for_events(); end
+
+  def before_add_for_events=(val); end
+
+  def before_add_for_events?(); end
+
+  def before_remove_for_events(); end
+
+  def before_remove_for_events=(val); end
+
+  def before_remove_for_events?(); end
+
+  def validate_associated_records_for_events(*args); end
 end
 
 class Relationship::ActiveRecord_AssociationRelation
@@ -25568,9 +25587,159 @@ module Relationship::GeneratedAssociationMethods
 
   def create_follower!(*args, &block); end
 
+  def event_ids(); end
+
+  def event_ids=(ids); end
+
   def reload_followed(); end
 
   def reload_follower(); end
+end
+
+module Relationship::GeneratedAttributeMethods
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def followed_id_before_last_save(*args); end
+
+  def followed_id_before_type_cast(*args); end
+
+  def followed_id_came_from_user?(*args); end
+
+  def followed_id_change(*args); end
+
+  def followed_id_change_to_be_saved(*args); end
+
+  def followed_id_changed?(*args); end
+
+  def followed_id_in_database(*args); end
+
+  def followed_id_previous_change(*args); end
+
+  def followed_id_previously_changed?(*args); end
+
+  def followed_id_was(*args); end
+
+  def followed_id_will_change!(*args); end
+
+  def follower_id_before_last_save(*args); end
+
+  def follower_id_before_type_cast(*args); end
+
+  def follower_id_came_from_user?(*args); end
+
+  def follower_id_change(*args); end
+
+  def follower_id_change_to_be_saved(*args); end
+
+  def follower_id_changed?(*args); end
+
+  def follower_id_in_database(*args); end
+
+  def follower_id_previous_change(*args); end
+
+  def follower_id_previously_changed?(*args); end
+
+  def follower_id_was(*args); end
+
+  def follower_id_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_followed_id!(*args); end
+
+  def restore_follower_id!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_followed_id(*args); end
+
+  def saved_change_to_followed_id?(*args); end
+
+  def saved_change_to_follower_id(*args); end
+
+  def saved_change_to_follower_id?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_followed_id?(*args); end
+
+  def will_save_change_to_follower_id?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
 end
 
 module Relationship::GeneratedAttributeMethods
@@ -25578,10 +25747,39 @@ module Relationship::GeneratedAttributeMethods
 end
 
 module Relationship::GeneratedRelationMethods
+  def name(*args, &block); end
 end
 
 module Relationship::GeneratedRelationMethods
   extend ::Mutex_m
+end
+
+class Relationship
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+  def self.after_add_for_events(); end
+
+  def self.after_add_for_events=(val); end
+
+  def self.after_add_for_events?(); end
+
+  def self.after_remove_for_events(); end
+
+  def self.after_remove_for_events=(val); end
+
+  def self.after_remove_for_events?(); end
+
+  def self.before_add_for_events(); end
+
+  def self.before_add_for_events=(val); end
+
+  def self.before_add_for_events?(); end
+
+  def self.before_remove_for_events(); end
+
+  def self.before_remove_for_events=(val); end
+
+  def self.before_remove_for_events?(); end
 end
 
 class Resolv::DNS
@@ -33264,129 +33462,6 @@ end
 class URI::Generic
   include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def +(oth); end
-
-  def -(oth); end
-
-  def ==(oth); end
-
-  def absolute(); end
-
-  def absolute?(); end
-
-  def coerce(oth); end
-
-  def component(); end
-
-  def component_ary(); end
-
-  def default_port(); end
-
-  def eql?(oth); end
-
-  def find_proxy(env=T.unsafe(nil)); end
-
-  def fragment(); end
-
-  def fragment=(v); end
-
-  def hierarchical?(); end
-
-  def host(); end
-
-  def host=(v); end
-
-  def hostname(); end
-
-  def hostname=(v); end
-
-  def initialize(scheme, userinfo, host, port, registry, path, opaque, query, fragment, parser=T.unsafe(nil), arg_check=T.unsafe(nil)); end
-
-  def merge(oth); end
-
-  def merge!(oth); end
-
-  def normalize(); end
-
-  def normalize!(); end
-
-  def opaque(); end
-
-  def opaque=(v); end
-
-  def parser(); end
-
-  def password(); end
-
-  def password=(password); end
-
-  def path(); end
-
-  def path=(v); end
-
-  def port(); end
-
-  def port=(v); end
-
-  def query(); end
-
-  def query=(v); end
-
-  def registry(); end
-
-  def registry=(v); end
-
-  def relative?(); end
-
-  def route_from(oth); end
-
-  def route_to(oth); end
-
-  def scheme(); end
-
-  def scheme=(v); end
-
-  def select(*components); end
-
-  def set_host(v); end
-
-  def set_opaque(v); end
-
-  def set_password(v); end
-
-  def set_path(v); end
-
-  def set_port(v); end
-
-  def set_registry(v); end
-
-  def set_scheme(v); end
-
-  def set_user(v); end
-
-  def set_userinfo(user, password=T.unsafe(nil)); end
-
-  def user(); end
-
-  def user=(user); end
-
-  def userinfo(); end
-
-  def userinfo=(userinfo); end
-end
-
-class URI::Generic
-  def self.build(args); end
-
-  def self.build2(args); end
-
-  def self.component(); end
-
-  def self.default_port(); end
-
-  def self.use_proxy?(hostname, addr, port, no_proxy); end
-
-  def self.use_registry(); end
 end
 
 class URI::HTTP
@@ -33871,10 +33946,6 @@ module User::GeneratedAssociationMethods
   def active_relationship_ids(); end
 
   def active_relationship_ids=(ids); end
-
-  def avatar(); end
-
-  def avatar=(attachable); end
 
   def build_avatar_attachment(*args, &block); end
 
@@ -35294,6 +35365,9 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+end
+
+class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

@@ -68,10 +68,10 @@ end
 module PgSearch::Document::GeneratedAssociationMethods
   extend T::Sig
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def searchable; end
 
-  sig { params(value: T.nilable(T.untyped)).void }
+  sig { params(value: T.untyped).void }
   def searchable=(value); end
 end
 
