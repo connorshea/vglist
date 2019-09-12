@@ -282,6 +282,18 @@ class UsersController < ApplicationController
                    .page params[:page]
   end
 
+  def favorites
+    @user = User.friendly.find(params[:id])
+
+    # Handle authorization with a redirect.
+    skip_authorization
+
+    # Redirect if the user's page is private.
+    redirect_to user_path(@user) unless policy(@user).favorites?
+
+    @favorites = @user.favorite_games.page params[:page]
+  end
+
   def following
     @user = User.friendly.find(params[:id])
 

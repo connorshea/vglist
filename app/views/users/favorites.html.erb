@@ -1,0 +1,24 @@
+<% content_for :title, "#{@user.username}'s Favorites" %>
+<% content_for :description, "#{@user.username}'s favorite games on VideoGameList (VGList)" %>
+<% if @user.avatar.attached? %>
+  <%# This technically doesn't give us what we want because it won't be square, but oh well. %>
+  <% content_for :opengraph_image, rails_blob_url(@user.avatar) %>
+<% else %>
+  <% content_for :opengraph_image, image_url('default-avatar.png') %>
+<% end %>
+
+<%= render 'user_header', user: @user %>
+
+<% if @favorites.length > 0 %>
+  <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile game-card-list">
+    <% @favorites.each do |favorite| %>
+      <%= render 'shared/game_card', game: Game.find(favorite.game_id) %>
+    <% end %>
+
+    <%= paginate @favorites %>
+  </div>
+<% else %>
+  <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+    <p class="has-text-centered">This user doesn't have any favorites yet.
+  </div>
+<% end %>

@@ -87,6 +87,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
+  def favorites?
+    user_profile_is_visible?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
   def following?
     user_profile_is_visible?
   end

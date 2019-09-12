@@ -17,7 +17,8 @@ RSpec.describe UserPolicy, type: :policy do
           :compare,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -50,7 +51,8 @@ RSpec.describe UserPolicy, type: :policy do
           :compare,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -84,7 +86,8 @@ RSpec.describe UserPolicy, type: :policy do
           :compare,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -118,7 +121,8 @@ RSpec.describe UserPolicy, type: :policy do
           :compare,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -155,7 +159,8 @@ RSpec.describe UserPolicy, type: :policy do
           :compare,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -181,7 +186,8 @@ RSpec.describe UserPolicy, type: :policy do
           :compare,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -204,7 +210,8 @@ RSpec.describe UserPolicy, type: :policy do
           :compare,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -242,7 +249,8 @@ RSpec.describe UserPolicy, type: :policy do
           :reset_game_library,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
@@ -268,7 +276,8 @@ RSpec.describe UserPolicy, type: :policy do
           :reset_game_library,
           :activity,
           :following,
-          :followers
+          :followers,
+          :favorites
         ]
       )
     end
