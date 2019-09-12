@@ -276,6 +276,13 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def reset_game_library_user_url(*args, **kwargs); end
 
+  # Sigs for route /users/:id/favorites(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def favorites_user_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def favorites_user_url(*args, **kwargs); end
+
   # Sigs for route /users/:id/following(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def following_user_path(*args, **kwargs); end

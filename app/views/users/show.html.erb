@@ -64,9 +64,9 @@
       }.to_json
     %>"
   >
-  <% if @user.games.count > 0 %>
-    <div class="card is-two-thirds column m-auto mt-10" style="height: 200px"></div>
-  <% end %>
+    <% if @user.games.count > 0 %>
+      <div class="card is-two-thirds column m-auto mt-10" style="height: 200px"></div>
+    <% end %>
   </div>
 
   <h3 class="title is-3 mt-15">Library</h3>
@@ -79,18 +79,6 @@
       }.to_json
     %>"
   ></div>
-
-  <h3 class="title is-3 mt-25">Favorites</h3>
-
-  <% if @user.favorite_games.length > 0 %>
-    <div class="game-card-list mt-20">
-      <% @user.favorite_games.each do |favorite| %>
-        <%= render 'shared/game_card', game: Game.find(favorite.game_id) %>
-      <% end %>
-    </div>
-  <% else %>
-    <p>No favorited games.
-  <% end %>
 <% else %>
   <h2 class='subtitle has-text-centered has-text-weight-semibold mt-30'>This user's account is private.</h2>
 <% end %>

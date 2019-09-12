@@ -39,6 +39,9 @@
       <li class="<%= 'is-active' if current_page?(activity_user_path(user)) %>">
         <%= link_to 'Activity', activity_user_path(user) %>
       </li>
+      <li class="<%= 'is-active' if current_page?(favorites_user_path(user)) %>">
+        <%= link_to 'Favorites', favorites_user_path(user) %>
+      </li>
       <li class="<%= 'is-active' if current_page?(following_user_path(user)) %>">
         <%= link_to 'Following', following_user_path(user) %>
       </li>

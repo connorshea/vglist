@@ -180,6 +180,27 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET favorites_user_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:user_with_favorite) { create(:user_with_favorite_game) }
+    let(:private_user) { create(:private_user) }
+
+    it "returns http success for user" do
+      get favorites_user_path(id: user.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for user with favorite" do
+      get favorites_user_path(id: user_with_favorite.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for user with private account" do
+      get favorites_user_path(id: private_user.id)
+      expect(response).to redirect_to(user_path(private_user))
+    end
+  end
+
   describe "GET following_user_path" do
     let(:user) { create(:confirmed_user) }
     let(:private_user) { create(:private_user) }
