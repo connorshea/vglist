@@ -51,6 +51,10 @@ Rails.application.routes.draw do
     get :following
   end
 
+  namespace :admin do
+    get :dashboard, as: '/', path: '/'
+  end
+
   resources :events, only: :destroy
 
   resources :platforms do
