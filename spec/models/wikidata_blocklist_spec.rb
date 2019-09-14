@@ -23,4 +23,14 @@ RSpec.describe WikidataBlocklist, type: :model do
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
   end
+
+  describe "Deletions" do
+    let(:admin) { create(:confirmed_admin) }
+    let(:wikidata_blocklist) { create(:wikidata_blocklist, user: admin) }
+
+    it 'Blocklist entry shouldn\'t be deleted when user is deleted' do
+      wikidata_blocklist
+      expect { admin.destroy }.to change(WikidataBlocklist, :count).by(0)
+    end
+  end
 end
