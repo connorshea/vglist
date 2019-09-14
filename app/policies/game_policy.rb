@@ -57,4 +57,9 @@ class GamePolicy < ApplicationPolicy
   def unfavorite?
     user.present?
   end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def add_to_wikidata_blocklist?
+    user&.admin?
+  end
 end

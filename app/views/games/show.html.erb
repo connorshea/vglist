@@ -50,6 +50,9 @@
           <% if @game.cover.attached? && policy(@game).remove_cover? %>
             <%= link_to "Remove cover", remove_cover_game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
           <% end %>
+          <% if policy(@game).add_to_wikidata_blocklist? && !@game.wikidata_id.nil?%>
+            <%= link_to "Add to Wikidata Blocklist", add_to_wikidata_blocklist_game_path(@game.id), method: :post, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
+          <% end %>
           <% if policy(@game).destroy? %>
             <%= link_to "Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
           <% end %>

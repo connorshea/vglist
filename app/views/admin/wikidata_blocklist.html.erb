@@ -1,0 +1,28 @@
+<% content_for :title, "Wikidata Blocklist - Admin" %>
+
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+  <%= render 'admin_header' %>
+
+  <div class="table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Wikidata ID</th>
+          <th>Game Name</th>
+          <th>Created by</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @blocklist.each do |blocked_item| %>
+          <tr>
+            <th><%= link_to(blocked_item.wikidata_id, "https://www.wikidata.org/wiki/Q#{blocked_item.wikidata_id}") %></th>
+            <td><%= blocked_item.name %></td>
+            <td><%= link_to(blocked_item.user.username, blocked_item.user) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= paginate @blocklist %>
+</div>

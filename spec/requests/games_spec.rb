@@ -172,6 +172,25 @@ RSpec.describe "Games", type: :request do
     end
   end
 
+  describe "POST add_to_wikidata_blocklist_game_path" do
+    let(:admin) { create(:confirmed_admin) }
+    let(:game) { create(:game, :wikidata_id) }
+
+    it "creates a new blocklist entry" do
+      sign_in(admin)
+      expect do
+        post add_to_wikidata_blocklist_game_path(game)
+      end.to change(WikidataBlocklist, :count).by(1)
+    end
+
+    it "removes the wikidata_id for a game" do
+      sign_in(admin)
+      post add_to_wikidata_blocklist_game_path(game)
+      expect(response).to redirect_to(game_path(game))
+      expect(game.reload.wikidata_id).to eq(nil)
+    end
+  end
+
   describe "DELETE remove_game_from_library_game_path" do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }

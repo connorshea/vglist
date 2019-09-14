@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_03_012523) do
+ActiveRecord::Schema.define(version: 2019_09_14_185512) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -266,6 +265,16 @@ ActiveRecord::Schema.define(version: 2019_09_03_012523) do
     t.index ["slug"], name: "index_users_on_slug", unique: true
   end
 
+  create_table "wikidata_blocklists", force: :cascade do |t|
+    t.bigint "wikidata_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "name", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_wikidata_blocklists_on_user_id"
+    t.index ["wikidata_id"], name: "index_wikidata_blocklists_on_wikidata_id", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "external_accounts", "users", on_delete: :cascade
   add_foreign_key "favorite_games", "games", on_delete: :cascade
@@ -287,4 +296,5 @@ ActiveRecord::Schema.define(version: 2019_09_03_012523) do
   add_foreign_key "games", "series", on_delete: :nullify
   add_foreign_key "relationships", "users", column: "followed_id"
   add_foreign_key "relationships", "users", column: "follower_id"
+  add_foreign_key "wikidata_blocklists", "users"
 end

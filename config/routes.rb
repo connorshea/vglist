@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     delete :remove_cover, on: :member
     post :favorite, on: :member
     delete :unfavorite, on: :member
+
+    post :add_to_wikidata_blocklist, on: :member
   end
 
   resources :game_purchases, except: [:edit, :new] do
@@ -49,6 +51,11 @@ Rails.application.routes.draw do
   namespace :activity do
     get :global, as: '/', path: '/'
     get :following
+  end
+
+  namespace :admin do
+    get :dashboard, as: '/', path: '/'
+    get :wikidata_blocklist, path: 'wikidata'
   end
 
   resources :events, only: :destroy
