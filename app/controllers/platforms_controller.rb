@@ -1,7 +1,7 @@
 # typed: false
 class PlatformsController < ApplicationController
   def index
-    @platforms = Platform.order(:id).page params[:page]
+    @platforms = Platform.order(:id).page helpers.page_param
     skip_policy_scope
   end
 
@@ -12,7 +12,7 @@ class PlatformsController < ApplicationController
     @games = @platform.games
                       .with_attached_cover
                       .includes(:platforms, :developers)
-                      .page params[:page]
+                      .page helpers.page_param
 
     respond_to do |format|
       format.html
@@ -62,9 +62,9 @@ class PlatformsController < ApplicationController
 
   def search
     if params[:query].present?
-      @platforms = Platform.search(params[:query]).page(params[:page])
+      @platforms = Platform.search(params[:query]).page(helpers.page_param)
     else
-      @platforms = Platform.none.page(params[:page])
+      @platforms = Platform.none.page(helpers.page_param)
     end
 
     authorize @platforms

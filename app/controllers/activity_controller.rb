@@ -7,7 +7,7 @@ class ActivityController < ApplicationController
                    .joins(:user)
                    .where(users: { privacy: :public_account })
                    .includes(eventable: [:game])
-                   .page params[:page]
+                   .page helpers.page_param
 
     skip_authorization
   end
@@ -19,7 +19,7 @@ class ActivityController < ApplicationController
     @events = Event.recently_created
                    .joins(:user)
                    .where(user_id: user_ids)
-                   .page params[:page]
+                   .page helpers.page_param
 
     authorize @events.first, policy_class: ActivityPolicy
   end
