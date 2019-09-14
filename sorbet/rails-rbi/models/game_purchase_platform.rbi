@@ -426,7 +426,7 @@ class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
+  sig { override.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GamePurchasePlatform]) }
@@ -614,7 +614,7 @@ class GamePurchasePlatform::ActiveRecord_AssociationRelation < ActiveRecord::Ass
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
+  sig { override.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GamePurchasePlatform]) }
@@ -801,7 +801,7 @@ class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRe
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
+  sig { override.params(block: T.proc.params(e: GamePurchasePlatform).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GamePurchasePlatform]) }

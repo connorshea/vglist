@@ -429,7 +429,7 @@ class WikidataBlocklist::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: WikidataBlocklist).void).void }
+  sig { override.params(block: T.proc.params(e: WikidataBlocklist).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[WikidataBlocklist]) }
@@ -617,7 +617,7 @@ class WikidataBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::Associ
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: WikidataBlocklist).void).void }
+  sig { override.params(block: T.proc.params(e: WikidataBlocklist).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[WikidataBlocklist]) }
@@ -804,7 +804,7 @@ class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy < ActiveRecor
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: WikidataBlocklist).void).void }
+  sig { override.params(block: T.proc.params(e: WikidataBlocklist).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[WikidataBlocklist]) }

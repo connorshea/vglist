@@ -430,7 +430,7 @@ class PgSearch::Document::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }
@@ -618,7 +618,7 @@ class PgSearch::Document::ActiveRecord_AssociationRelation < ActiveRecord::Assoc
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }
@@ -805,7 +805,7 @@ class PgSearch::Document::ActiveRecord_Associations_CollectionProxy < ActiveReco
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }

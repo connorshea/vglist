@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.6.4.0
+# parser-2.6.4.1
 module Parser
 end
 module Parser::Deprecation
@@ -445,7 +445,7 @@ class Parser::StaticEnvironment
 end
 class Parser::Lexer
   def advance; end
-  def arg_or_cmdarg; end
+  def arg_or_cmdarg(cmd_state); end
   def cmdarg; end
   def cmdarg=(arg0); end
   def comments; end
@@ -700,6 +700,7 @@ class Parser::Builders::Default
   def keyword_mod_map(pre_e, keyword_t, post_e); end
   def kwarg(name_t); end
   def kwarg_map(name_t, value_e = nil); end
+  def kwnilarg(dstar_t, nil_t); end
   def kwoptarg(name_t, value); end
   def kwrestarg(dstar_t, name_t = nil); end
   def kwsplat(dstar_t, arg); end
