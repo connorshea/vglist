@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   def index
-    @users = User.order(:id).page params[:page]
+    @users = User.order(:id).page helpers.page_param
     skip_policy_scope
   end
 
@@ -279,7 +279,7 @@ class UsersController < ApplicationController
                    .joins(:user)
                    .where(user_id: @user.id)
                    .includes(eventable: [:game])
-                   .page params[:page]
+                   .page helpers.page_param
   end
 
   def favorites
@@ -291,7 +291,7 @@ class UsersController < ApplicationController
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).favorites?
 
-    @favorites = @user.favorite_games.page params[:page]
+    @favorites = @user.favorite_games.page helpers.page_param
   end
 
   def following
@@ -303,7 +303,7 @@ class UsersController < ApplicationController
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).following?
 
-    @following = @user.following.page params[:page]
+    @following = @user.following.page helpers.page_param
   end
 
   def followers
@@ -315,7 +315,7 @@ class UsersController < ApplicationController
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).followers?
 
-    @followers = @user.followers.page params[:page]
+    @followers = @user.followers.page helpers.page_param
   end
 
   private

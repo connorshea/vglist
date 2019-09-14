@@ -1,7 +1,7 @@
 # typed: false
 class GenresController < ApplicationController
   def index
-    @genres = Genre.order(:id).page params[:page]
+    @genres = Genre.order(:id).page helpers.page_param
     skip_policy_scope
     respond_to do |format|
       format.html
@@ -15,7 +15,7 @@ class GenresController < ApplicationController
     @games = @genre.games
                    .with_attached_cover
                    .includes(:platforms, :developers)
-                   .page params[:page]
+                   .page helpers.page_param
   end
 
   def new
@@ -60,9 +60,9 @@ class GenresController < ApplicationController
 
   def search
     if params[:query].present?
-      @genres = Genre.search(params[:query]).page(params[:page])
+      @genres = Genre.search(params[:query]).page(helpers.page_param)
     else
-      @genres = Genre.none.page(params[:page])
+      @genres = Genre.none.page(helpers.page_param)
     end
 
     authorize @genres

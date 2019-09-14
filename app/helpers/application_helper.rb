@@ -78,4 +78,11 @@ module ApplicationHelper
     return "#{T.must(array[0...limit]).join(', ')}, and #{(array.length - limit)} more" if array.length > limit
     return array.join(', ') if array.length <= limit
   end
+
+  # This returns the :page parameter for Kaminari, it's a convenience method
+  # for helping Sorbet understand the parameter.
+  sig { returns(T.nilable(Integer)) }
+  def page_param
+    return T.cast(params[:page].to_i, T.nilable(Integer))
+  end
 end

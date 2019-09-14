@@ -3,7 +3,7 @@ class EnginesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
   def index
-    @engines = Engine.order(:id).page params[:page]
+    @engines = Engine.order(:id).page helpers.page_param
     skip_policy_scope
   end
 
@@ -14,7 +14,7 @@ class EnginesController < ApplicationController
     @games = @engine.games
                     .with_attached_cover
                     .includes(:platforms, :developers)
-                    .page params[:page]
+                    .page helpers.page_param
   end
 
   def new
@@ -76,9 +76,9 @@ class EnginesController < ApplicationController
 
   def search
     if params[:query].present?
-      @engines = Engine.search(params[:query]).page(params[:page])
+      @engines = Engine.search(params[:query]).page(helpers.page_param)
     else
-      @engines = Engine.none.page(params[:page])
+      @engines = Engine.none.page(helpers.page_param)
     end
 
     authorize @engines

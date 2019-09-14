@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class AdminController < ApplicationController
   before_action :authenticate_user!
 
@@ -26,6 +26,6 @@ class AdminController < ApplicationController
 
     @blocklist = WikidataBlocklist.all
                                   .includes(:user)
-                                  .page params[:page]
+                                  .page helpers.page_param
   end
 end

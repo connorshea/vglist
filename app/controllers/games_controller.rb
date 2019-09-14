@@ -28,7 +28,7 @@ class GamesController < ApplicationController
 
     @games = @games.with_attached_cover
                    .includes(:platforms, :developers)
-                   .page params[:page]
+                   .page helpers.page_param
 
     skip_policy_scope
   end
@@ -119,9 +119,9 @@ class GamesController < ApplicationController
 
   def search
     if params[:query].present?
-      @games = Game.search(params[:query]).page(params[:page])
+      @games = Game.search(params[:query]).page(helpers.page_param)
     else
-      @games = Game.none.page(params[:page])
+      @games = Game.none.page(helpers.page_param)
     end
 
     authorize @games

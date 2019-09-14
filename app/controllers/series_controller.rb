@@ -1,7 +1,7 @@
 # typed: false
 class SeriesController < ApplicationController
   def index
-    @series = Series.order(:id).page params[:page]
+    @series = Series.order(:id).page helpers.page_param
     skip_policy_scope
   end
 
@@ -12,7 +12,7 @@ class SeriesController < ApplicationController
     @games = @series.games
                     .with_attached_cover
                     .includes(:platforms, :developers)
-                    .page params[:page]
+                    .page helpers.page_param
 
     respond_to do |format|
       format.html
@@ -62,9 +62,9 @@ class SeriesController < ApplicationController
 
   def search
     if params[:query].present?
-      @series = Series.search(params[:query]).page(params[:page])
+      @series = Series.search(params[:query]).page(helpers.page_param)
     else
-      @series = Series.none.page(params[:page])
+      @series = Series.none.page(helpers.page_param)
     end
 
     authorize @series
