@@ -215,6 +215,23 @@ class GamesController < ApplicationController
     end
   end
 
+  def add_to_wikidata_blocklist
+    @game = Game.find(params[:id])
+
+    authorize @game
+
+    @blocklist = WikidataBlocklist.new(user_id: current_user&.id, name: @game.name, wikidata_id: @game.wikidata_id)
+
+    respond_to do |format|
+      if @blocklist.save && @game.update(wikidata_id: nil)
+        format.html { redirect_to @game, success: "The Wikidata ID for #{@game.name} was successfully added to the blocklist." }
+      else
+        errors = @wikidata_blocklist.errors.full_messages.concat(@game.errors.full_messages)
+        format.json { render json: { errors: errors } }
+      end
+    end
+  end
+
   private
 
   def game_params
