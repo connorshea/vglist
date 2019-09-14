@@ -19,4 +19,8 @@ RSpec.describe WikidataBlocklist, type: :model do
   describe "Associations" do
     it { should belong_to(:user).optional }
   end
+
+  describe "Indexes" do
+    it { should have_db_index(:wikidata_id).unique }
+  end
 end

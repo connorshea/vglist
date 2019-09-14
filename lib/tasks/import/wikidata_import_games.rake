@@ -19,12 +19,14 @@ namespace 'import:wikidata' do
     games = Game.where.not(wikidata_id: nil)
 
     existing_wikidata_ids = games.map { |game| game[:wikidata_id] }
+    blocklisted_ids = WikidataBlocklist.pluck(:wikidata_id)
 
     # Filter to wikidata items that don't already exist in the database.
+    # Also filter out blocklisted Wikidata items.
     rows = rows.reject do |row|
       url = row.to_h[:item].to_s
       wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '')
-      existing_wikidata_ids.include?(wikidata_id.to_i)
+      existing_wikidata_ids.include?(wikidata_id.to_i) || blocklisted_ids.include?(wikidata_id.to_i)
     end
 
     properties = {

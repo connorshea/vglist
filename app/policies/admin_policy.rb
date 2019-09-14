@@ -5,8 +5,8 @@ class AdminPolicy < ApplicationPolicy
   sig { returns(NilClass) }
   attr_reader :nilable
 
-  sig { params(user: User, nilable: NilClass).void }
-  def initialize(user, nilable)
+  sig { params(user: User, _nilable: NilClass).void }
+  def initialize(user, _nilable)
     @user = user
   end
 

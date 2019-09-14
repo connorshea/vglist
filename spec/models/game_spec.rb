@@ -78,6 +78,17 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  describe 'Custom Validations' do
+    let!(:wikidata_blocklist) { create(:wikidata_blocklist, wikidata_id: 420) }
+    let(:game) { build(:game, wikidata_id: 420) }
+
+    it 'fails validation if Wikidata ID is blocklisted' do
+      wikidata_blocklist
+      expect(game).to be_invalid
+      expect(game.errors[:wikidata_id]).to include('is blocklisted')
+    end
+  end
+
   describe "Associations" do
     it { should have_many(:game_purchases) }
     it { should have_many(:purchasers).through(:game_purchases).source(:user) }

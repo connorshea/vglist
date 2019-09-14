@@ -100,6 +100,8 @@ class Game < ApplicationRecord
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 
+  validate :wikidata_id_not_blocklisted
+
   # Include games in global search.
   multisearchable against: [:name]
 
@@ -109,4 +111,13 @@ class Game < ApplicationRecord
     using: {
       tsearch: { prefix: true }
     }
+
+  protected
+
+  # Prevent the game from using a Wikidata ID which has been blocklisted.
+  def wikidata_id_not_blocklisted
+    return unless wikidata_id.present? && WikidataBlocklist.pluck(:wikidata_id).include?(wikidata_id)
+
+    errors.add(:wikidata_id, "is blocklisted")
+  end
 end

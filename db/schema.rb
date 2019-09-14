@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_14_181400) do
+ActiveRecord::Schema.define(version: 2019_09_14_185512) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -272,6 +272,7 @@ ActiveRecord::Schema.define(version: 2019_09_14_181400) do
     t.text "name", null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_wikidata_blocklists_on_user_id"
+    t.index ["wikidata_id"], name: "index_wikidata_blocklists_on_wikidata_id", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
