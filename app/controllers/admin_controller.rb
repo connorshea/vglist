@@ -11,6 +11,8 @@ class AdminController < ApplicationController
     # We don't have anything specific to validate, so just pass nil.
     authorize nil, policy_class: AdminPolicy
 
-    @blocklist = WikidataBlocklist.all.page params[:page]
+    @blocklist = WikidataBlocklist.all
+                                  .includes(:user)
+                                  .page params[:page]
   end
 end
