@@ -1225,6 +1225,12 @@ module User::GeneratedAssociationMethods
   sig { params(value: T.any(T::Array[::Relationship], ::Relationship::ActiveRecord_Associations_CollectionProxy)).void }
   def passive_relationships=(value); end
 
+  sig { returns(::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy) }
+  def wikidata_blocklists; end
+
+  sig { params(value: T.any(T::Array[::WikidataBlocklist], ::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy)).void }
+  def wikidata_blocklists=(value); end
+
   sig { returns(T.nilable(ActiveStorage::Attached::One)) }
   def avatar; end
 

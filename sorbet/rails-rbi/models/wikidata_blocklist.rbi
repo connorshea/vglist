@@ -28,6 +28,15 @@ module WikidataBlocklist::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def id?; end
 
+  sig { returns(String) }
+  def name; end
+
+  sig { params(value: String).void }
+  def name=(value); end
+
+  sig { returns(T::Boolean) }
+  def name?; end
+
   sig { returns(DateTime) }
   def updated_at; end
 
@@ -37,6 +46,15 @@ module WikidataBlocklist::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def updated_at?; end
 
+  sig { returns(T.nilable(Integer)) }
+  def user_id; end
+
+  sig { params(value: T.nilable(Integer)).void }
+  def user_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def user_id?; end
+
   sig { returns(Integer) }
   def wikidata_id; end
 
@@ -45,6 +63,16 @@ module WikidataBlocklist::GeneratedAttributeMethods
 
   sig { returns(T::Boolean) }
   def wikidata_id?; end
+end
+
+module WikidataBlocklist::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(T.nilable(::User)) }
+  def user; end
+
+  sig { params(value: T.nilable(::User)).void }
+  def user=(value); end
 end
 
 module WikidataBlocklist::CustomFinderMethods
@@ -66,6 +94,7 @@ end
 
 class WikidataBlocklist < ApplicationRecord
   include WikidataBlocklist::GeneratedAttributeMethods
+  include WikidataBlocklist::GeneratedAssociationMethods
   extend WikidataBlocklist::CustomFinderMethods
   extend T::Sig
   extend T::Generic

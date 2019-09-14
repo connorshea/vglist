@@ -150,6 +150,13 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def unfavorite_game_url(*args, **kwargs); end
 
+  # Sigs for route /games/:id/add_to_wikidata_blocklist(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def add_to_wikidata_blocklist_game_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def add_to_wikidata_blocklist_game_url(*args, **kwargs); end
+
   # Sigs for route /games(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def games_path(*args, **kwargs); end
@@ -338,6 +345,20 @@ module GeneratedUrlHelpers
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def activity_following_url(*args, **kwargs); end
+
+  # Sigs for route /admin(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_url(*args, **kwargs); end
+
+  # Sigs for route /admin/wikidata(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_wikidata_blocklist_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_wikidata_blocklist_url(*args, **kwargs); end
 
   # Sigs for route /events/:id(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
