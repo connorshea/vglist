@@ -3,7 +3,7 @@ class CompaniesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
   def index
-    @companies = Company.order(:id).page helpers.page_param
+    @companies = Company.order(:id).page(helpers.page_param)
     skip_policy_scope
     respond_to do |format|
       format.html
@@ -17,12 +17,12 @@ class CompaniesController < ApplicationController
     @published_games = @company.published_games
                                .with_attached_cover
                                .includes(:platforms, :developers)
-                               .page params[:publisher_page]
+                               .page(helpers.page_param(param: :publisher_page))
 
     @developed_games = @company.developed_games
                                .with_attached_cover
                                .includes(:platforms, :developers)
-                               .page params[:developer_page]
+                               .page(helpers.page_param(param: :developer_page))
 
     skip_authorization
   end

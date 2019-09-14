@@ -81,8 +81,8 @@ module ApplicationHelper
 
   # This returns the :page parameter for Kaminari, it's a convenience method
   # for helping Sorbet understand the parameter.
-  sig { returns(T.nilable(Integer)) }
-  def page_param
-    return T.cast(params[:page].to_i, T.nilable(Integer))
+  sig { params(param: Symbol).returns(T.nilable(Integer)) }
+  def page_param(param: :page)
+    return T.cast(params[param].to_i, T.nilable(Integer))
   end
 end
