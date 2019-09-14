@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class CompaniesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -84,7 +84,7 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company).permit(
+    params.typed_require(:company).permit(
       :name,
       :description,
       :wikidata_id

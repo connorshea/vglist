@@ -11,3 +11,8 @@ SorbetRails.configure do |config|
     'Devise::Controllers::Helpers'
   ]
 end
+
+ActiveSupport.on_load(:action_controller) do
+  require Rails.root.join('lib', 'sorbet_rails_hack')
+  ActionController::Parameters.include SorbetRailsHack
+end
