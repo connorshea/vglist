@@ -1,0 +1,10 @@
+<div class="tabs">
+  <ul>
+    <li class="<%= 'is-active' if current_page?(admin_path) %>">
+      <%= link_to 'Dashboard', admin_path %>
+    </li>
+    <li class="<%= 'is-active' if current_page?(admin_wikidata_blocklist_path) %>">
+      <%= link_to 'Wikidata Blocklist', admin_wikidata_blocklist_path %>
+    </li>
+  </ul>
+</div>

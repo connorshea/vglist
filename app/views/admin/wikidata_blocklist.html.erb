@@ -1,0 +1,11 @@
+<% content_for :title, "Wikidata Blocklist - Admin" %>
+
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+  <%= render 'admin_header' %>
+
+  <% @blocklist.each do |blocked_wikidata_item| %>
+    <%= blocked_wikidata_item.inspect %>
+  <% end %>
+
+  <%= paginate @blocklist %>
+</div>

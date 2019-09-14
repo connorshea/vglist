@@ -14,4 +14,9 @@ class AdminPolicy < ApplicationPolicy
   def dashboard?
     user.admin?
   end
+
+  sig { returns(T::Boolean) }
+  def wikidata_blocklist?
+    user.admin?
+  end
 end
