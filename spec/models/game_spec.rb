@@ -237,6 +237,20 @@ RSpec.describe Game, type: :model do
         expect(Game.on_platform(platform2.id)).to eq([game2])
       end
     end
+
+    context 'with three games where each was made in a different year' do
+      let!(:game2014) { create(:game, release_date: Faker::Date.between(from: 'January 1, 2014', to: 'December 31, 2014')) }
+      let!(:game2017) { create(:game, release_date: Faker::Date.between(from: 'January 1, 2017', to: 'December 31, 2017')) }
+      let!(:game2018) { create(:game, release_date: Faker::Date.between(from: 'January 1, 2018', to: 'December 31, 2018')) }
+      let(:game_no_release_date) { create(:game, release_date: nil) }
+
+      it 'filtering by year only returns relevant games' do
+        game_no_release_date
+        expect(Game.by_year(2014)).to eq([game2014])
+        expect(Game.by_year(2017)).to eq([game2017])
+        expect(Game.by_year(2018)).to eq([game2018])
+      end
+    end
   end
 
   describe 'Destructions' do
