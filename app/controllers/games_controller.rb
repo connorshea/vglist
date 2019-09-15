@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class GamesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -7,7 +7,7 @@ class GamesController < ApplicationController
 
     @games = @games.on_platform(params[:platform_filter]) if params[:platform_filter]
 
-    case params[:order_by]&.to_sym
+    case T.cast(params[:order_by], T.nilable(String))&.to_sym
     when :newest
       @games = @games.newest
     when :oldest
@@ -46,7 +46,7 @@ class GamesController < ApplicationController
     @favoriters = User.where(id: @game.favorites.limit(10).collect(&:user_id))
     @favoriters_count = @game.favorites.count
 
-    @game_purchase = current_user.game_purchases.find_by(game_id: @game.id) if current_user
+    @game_purchase = current_user&.game_purchases&.find_by(game_id: @game.id) if current_user
 
     unless @game.series_id.nil?
       series = Series.find(@game.series_id)
@@ -155,7 +155,7 @@ class GamesController < ApplicationController
   def remove_game_from_library
     @user = current_user
     @game = Game.find(params[:id])
-    @game_purchase = @user.game_purchases.find_by(game_id: @game.id)
+    @game_purchase = @user&.game_purchases&.find_by(game_id: @game.id)
     authorize @user
 
     respond_to do |format|
@@ -176,7 +176,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     authorize @game
 
-    @game.cover.purge
+    @game.cover&.purge
 
     respond_to do |format|
       format.html { redirect_to @game, success: "Cover successfully removed from #{@game.name}." }
@@ -204,7 +204,7 @@ class GamesController < ApplicationController
     authorize @game
 
     @user = current_user
-    @favorite = @user.favorite_games.find_by(game_id: @game.id)
+    @favorite = @user&.favorite_games&.find_by(game_id: @game.id)
 
     respond_to do |format|
       if @favorite&.destroy
@@ -235,7 +235,7 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(
+    params.typed_require(:game).permit(
       :name,
       :description,
       :cover,
@@ -254,7 +254,7 @@ class GamesController < ApplicationController
   end
 
   def game_purchase_params
-    params.require(:game_purchase).permit(
+    params.typed_require(:game_purchase).permit(
       :user_id,
       :game_id
     )

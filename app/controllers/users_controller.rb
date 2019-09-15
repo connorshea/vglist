@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class UsersController < ApplicationController
   # Skip bullet on activity to avoid errors.
   around_action :skip_bullet, if: -> { defined?(Bullet) }
@@ -36,7 +36,7 @@ class UsersController < ApplicationController
 
   def update_role
     @user = User.friendly.find(params[:id])
-    role = params[:role].to_sym
+    role = params.fetch(:role).to_sym
 
     authorize @user
 
@@ -60,7 +60,7 @@ class UsersController < ApplicationController
     @user = User.friendly.find(params[:id])
     authorize @user
 
-    @user.avatar.purge
+    @user.avatar&.purge
 
     respond_to do |format|
       format.html { redirect_to @user, success: "Avatar successfully removed." }
@@ -321,7 +321,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(
+    params.typed_require(:user).permit(
       :bio,
       :avatar,
       :privacy

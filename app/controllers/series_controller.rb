@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class SeriesController < ApplicationController
   def index
     @series = Series.order(:id).page helpers.page_param
@@ -77,7 +77,7 @@ class SeriesController < ApplicationController
   private
 
   def series_params
-    params.require(:series).permit(
+    params.typed_require(:series).permit(
       :name,
       :wikidata_id
     )

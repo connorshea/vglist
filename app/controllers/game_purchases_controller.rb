@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class GamePurchasesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -61,7 +61,8 @@ class GamePurchasesController < ApplicationController
       if GamePurchase.update(submittable_ids, Array.new(submittable_ids.length, actual_params))
         format.json { render json: @game_purchases, status: :ok }
       else
-        format.json { render json: @game_purchases.errors.full_messages, status: :unprocessable_entity }
+        # TODO: Get this to work without a type error.
+        format.json { render json: T.unsafe(@game_purchases).errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
@@ -75,7 +76,7 @@ class GamePurchasesController < ApplicationController
   private
 
   def game_purchase_params
-    params.require(:game_purchase).permit(
+    params.typed_require(:game_purchase).permit(
       :user_id,
       :game_id,
       :comments,

@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class EnginesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -91,7 +91,7 @@ class EnginesController < ApplicationController
   private
 
   def engine_params
-    params.require(:engine).permit(
+    params.typed_require(:engine).permit(
       :name,
       :wikidata_id
     )

@@ -1095,6 +1095,7 @@ module ActionController::ParameterEncoding
 end
 
 class ActionController::Parameters
+  include ::SorbetRails::CustomParamsMethods
   EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
   EMPTY_HASH = ::T.let(nil, ::T.untyped)
   PERMITTED_SCALAR_TYPES = ::T.let(nil, ::T.untyped)
@@ -9826,6 +9827,7 @@ end
 
 module Exception2MessageMapper
   def bind(cl); end
+
 end
 
 Exception2MessageMapper::E2MM = Exception2MessageMapper
@@ -10587,13 +10589,13 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 
 end
 
@@ -14775,9 +14777,6 @@ class Mail::POP3
 end
 
 class Mail::POP3
-end
-
-class Mail::PartsList
 end
 
 class Mail::PhraseList
@@ -32541,6 +32540,16 @@ class Sorbet::Private::TodoRBI
   def self.output_file(); end
 end
 
+module SorbetRails::CustomParamsMethods
+  include ::Kernel
+end
+
+module SorbetRails::CustomParamsMethods
+  extend ::T::Helpers
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 module SorbetRails
   extend ::T::Private::Methods::SingletonMethodHooks
 end
@@ -33718,6 +33727,12 @@ class User
 
   def after_add_for_passive_relationships?(); end
 
+  def after_add_for_wikidata_blocklists(); end
+
+  def after_add_for_wikidata_blocklists=(val); end
+
+  def after_add_for_wikidata_blocklists?(); end
+
   def after_remove_for_active_relationships(); end
 
   def after_remove_for_active_relationships=(val); end
@@ -33766,6 +33781,12 @@ class User
 
   def after_remove_for_passive_relationships?(); end
 
+  def after_remove_for_wikidata_blocklists(); end
+
+  def after_remove_for_wikidata_blocklists=(val); end
+
+  def after_remove_for_wikidata_blocklists?(); end
+
   def autosave_associated_records_for_active_relationships(*args); end
 
   def autosave_associated_records_for_avatar_attachment(); end
@@ -33787,6 +33808,8 @@ class User
   def autosave_associated_records_for_games(*args); end
 
   def autosave_associated_records_for_passive_relationships(*args); end
+
+  def autosave_associated_records_for_wikidata_blocklists(*args); end
 
   def before_add_for_active_relationships(); end
 
@@ -33836,6 +33859,12 @@ class User
 
   def before_add_for_passive_relationships?(); end
 
+  def before_add_for_wikidata_blocklists(); end
+
+  def before_add_for_wikidata_blocklists=(val); end
+
+  def before_add_for_wikidata_blocklists?(); end
+
   def before_remove_for_active_relationships(); end
 
   def before_remove_for_active_relationships=(val); end
@@ -33884,6 +33913,12 @@ class User
 
   def before_remove_for_passive_relationships?(); end
 
+  def before_remove_for_wikidata_blocklists(); end
+
+  def before_remove_for_wikidata_blocklists=(val); end
+
+  def before_remove_for_wikidata_blocklists?(); end
+
   def current_password(); end
 
   def devise_modules(); end
@@ -33911,6 +33946,8 @@ class User
   def validate_associated_records_for_games(*args); end
 
   def validate_associated_records_for_passive_relationships(*args); end
+
+  def validate_associated_records_for_wikidata_blocklists(*args); end
 end
 
 class User::ActiveRecord_AssociationRelation
@@ -33992,6 +34029,10 @@ module User::GeneratedAssociationMethods
   def reload_avatar_blob(); end
 
   def reload_external_account(); end
+
+  def wikidata_blocklist_ids(); end
+
+  def wikidata_blocklist_ids=(ids); end
 end
 
 module User::GeneratedAttributeMethods
@@ -34744,6 +34785,12 @@ class User
 
   def self.after_add_for_passive_relationships?(); end
 
+  def self.after_add_for_wikidata_blocklists(); end
+
+  def self.after_add_for_wikidata_blocklists=(val); end
+
+  def self.after_add_for_wikidata_blocklists?(); end
+
   def self.after_remove_for_active_relationships(); end
 
   def self.after_remove_for_active_relationships=(val); end
@@ -34791,6 +34838,12 @@ class User
   def self.after_remove_for_passive_relationships=(val); end
 
   def self.after_remove_for_passive_relationships?(); end
+
+  def self.after_remove_for_wikidata_blocklists(); end
+
+  def self.after_remove_for_wikidata_blocklists=(val); end
+
+  def self.after_remove_for_wikidata_blocklists?(); end
 
   def self.before_add_for_active_relationships(); end
 
@@ -34840,6 +34893,12 @@ class User
 
   def self.before_add_for_passive_relationships?(); end
 
+  def self.before_add_for_wikidata_blocklists(); end
+
+  def self.before_add_for_wikidata_blocklists=(val); end
+
+  def self.before_add_for_wikidata_blocklists?(); end
+
   def self.before_remove_for_active_relationships(); end
 
   def self.before_remove_for_active_relationships=(val); end
@@ -34887,6 +34946,12 @@ class User
   def self.before_remove_for_passive_relationships=(val); end
 
   def self.before_remove_for_passive_relationships?(); end
+
+  def self.before_remove_for_wikidata_blocklists(); end
+
+  def self.before_remove_for_wikidata_blocklists=(val); end
+
+  def self.before_remove_for_wikidata_blocklists?(); end
 
   def self.devise_modules(); end
 
@@ -35239,6 +35304,58 @@ class Webpacker::Env
   DEFAULT = ::T.let(nil, ::T.untyped)
 end
 
+class WikidataBlocklist
+  def autosave_associated_records_for_user(*args); end
+end
+
+class WikidataBlocklist::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::WikidataBlocklist::GeneratedRelationMethods
+end
+
+class WikidataBlocklist::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::WikidataBlocklist::GeneratedRelationMethods
+end
+
+class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class WikidataBlocklist::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::WikidataBlocklist::GeneratedRelationMethods
+end
+
+class WikidataBlocklist::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+module WikidataBlocklist::GeneratedAssociationMethods
+  def build_user(*args, &block); end
+
+  def create_user(*args, &block); end
+
+  def create_user!(*args, &block); end
+
+  def reload_user(); end
+end
+
+module WikidataBlocklist::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module WikidataBlocklist::GeneratedRelationMethods
+end
+
+module WikidataBlocklist::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 module XPath::DSL
   AXES = ::T.let(nil, ::T.untyped)
   LOWERCASE_LETTERS = ::T.let(nil, ::T.untyped)
@@ -35365,9 +35482,6 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

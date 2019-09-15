@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class GenresController < ApplicationController
   def index
     @genres = Genre.order(:id).page helpers.page_param
@@ -75,7 +75,7 @@ class GenresController < ApplicationController
   private
 
   def genre_params
-    params.require(:genre).permit(
+    params.typed_require(:genre).permit(
       :name,
       :description,
       :wikidata_id

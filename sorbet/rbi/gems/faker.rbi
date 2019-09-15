@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.2.2
+# faker-2.3.0
 module Faker
 end
 module Faker::Base58
@@ -685,6 +685,7 @@ class Faker::Omniauth < Faker::Base
   def initialize(name: nil, email: nil); end
   def last_name; end
   def name; end
+  def self.apple(name: nil, email: nil, uid: nil); end
   def self.city_state; end
   def self.facebook(legacy_name = nil, legacy_email = nil, legacy_username = nil, legacy_uid = nil, name: nil, email: nil, username: nil, uid: nil); end
   def self.gender; end

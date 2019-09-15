@@ -442,7 +442,7 @@ class Genre::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Genre).void).void }
+  sig { override.params(block: T.proc.params(e: Genre).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Genre]) }
@@ -630,7 +630,7 @@ class Genre::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Genre).void).void }
+  sig { override.params(block: T.proc.params(e: Genre).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Genre]) }
@@ -817,7 +817,7 @@ class Genre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Genre).void).void }
+  sig { override.params(block: T.proc.params(e: Genre).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Genre]) }

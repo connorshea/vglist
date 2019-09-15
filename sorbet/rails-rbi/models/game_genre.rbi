@@ -426,7 +426,7 @@ class GameGenre::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: GameGenre).void).void }
+  sig { override.params(block: T.proc.params(e: GameGenre).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GameGenre]) }
@@ -614,7 +614,7 @@ class GameGenre::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRel
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: GameGenre).void).void }
+  sig { override.params(block: T.proc.params(e: GameGenre).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GameGenre]) }
@@ -801,7 +801,7 @@ class GameGenre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Assoc
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: GameGenre).void).void }
+  sig { override.params(block: T.proc.params(e: GameGenre).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GameGenre]) }

@@ -519,7 +519,7 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Game).void).void }
+  sig { override.params(block: T.proc.params(e: Game).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Game]) }
@@ -734,7 +734,7 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Game).void).void }
+  sig { override.params(block: T.proc.params(e: Game).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Game]) }
@@ -948,7 +948,7 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Game).void).void }
+  sig { override.params(block: T.proc.params(e: Game).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Game]) }

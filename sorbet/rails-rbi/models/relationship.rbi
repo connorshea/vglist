@@ -432,7 +432,7 @@ class Relationship::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Relationship).void).void }
+  sig { override.params(block: T.proc.params(e: Relationship).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Relationship]) }
@@ -620,7 +620,7 @@ class Relationship::ActiveRecord_AssociationRelation < ActiveRecord::Association
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Relationship).void).void }
+  sig { override.params(block: T.proc.params(e: Relationship).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Relationship]) }
@@ -807,7 +807,7 @@ class Relationship::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: Relationship).void).void }
+  sig { override.params(block: T.proc.params(e: Relationship).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Relationship]) }

@@ -464,7 +464,7 @@ class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: ExternalAccount).void).void }
+  sig { override.params(block: T.proc.params(e: ExternalAccount).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ExternalAccount]) }
@@ -658,7 +658,7 @@ class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::Associat
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: ExternalAccount).void).void }
+  sig { override.params(block: T.proc.params(e: ExternalAccount).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ExternalAccount]) }
@@ -851,7 +851,7 @@ class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord:
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { implementation.params(block: T.proc.params(e: ExternalAccount).void).void }
+  sig { override.params(block: T.proc.params(e: ExternalAccount).void).void }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ExternalAccount]) }

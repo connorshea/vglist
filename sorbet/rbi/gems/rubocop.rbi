@@ -235,6 +235,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def keyword?; end
   def kwarg_type?; end
   def kwbegin_type?; end
+  def kwnilarg_type?; end
   def kwoptarg_type?; end
   def kwrestarg_type?; end
   def kwsplat_type?; end
