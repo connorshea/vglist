@@ -226,7 +226,7 @@ class GamesController < ApplicationController
       if @blocklist.save && @game.update(wikidata_id: nil)
         format.html { redirect_to @game, success: "The Wikidata ID for #{@game.name} was successfully added to the blocklist." }
       else
-        errors = @wikidata_blocklist.errors.full_messages.concat(@game.errors.full_messages)
+        errors = @blocklist.errors.full_messages.concat(@game.errors.full_messages)
         format.json { render json: { errors: errors } }
       end
     end
