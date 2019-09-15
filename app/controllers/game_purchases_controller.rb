@@ -59,7 +59,9 @@ class GamePurchasesController < ApplicationController
       #   update([1, 2, 3], [{ rating: 5 }, { rating: 5 }, { rating: 5 }])
       # so we create an array of x params where all the params are the same.
       if GamePurchase.update(submittable_ids, Array.new(submittable_ids.length, actual_params))
-        format.json { render json: @game_purchases, status: :ok }
+        format.json do
+          render json: @game_purchases, status: :ok
+        end
       end
     end
   end
