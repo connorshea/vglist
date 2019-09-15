@@ -53,13 +53,13 @@ namespace :sorbet do
 
     sigil_total = 0
     sigils.each { |sigil| sigil_total += output_hash[sigil] }
-    
+
     sigils.each do |sigil|
       output_hash[sigil] = "#{output_hash[sigil]} (#{(output_hash[sigil].fdiv(sigil_total) * 100).round(2)}%)"
     end
 
     output_hash[:sends_percentage_typed] = \
-      "#{((metrics_hash[key_map[:sends_typed]].fdiv(metrics_hash[key_map[:sends]])) * 100).round(2)}%"
+      "#{metrics_hash[key_map[:sends_typed]].fdiv(metrics_hash[key_map[:sends]] * 100).round(2)}%"
 
     output_hash.each do |key, value|
       puts "#{key.to_s.rjust(25)}: #{value}"
