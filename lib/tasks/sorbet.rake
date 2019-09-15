@@ -59,7 +59,7 @@ namespace :sorbet do
     end
 
     output_hash[:sends_percentage_typed] = \
-      "#{metrics_hash[key_map[:sends_typed]].fdiv(metrics_hash[key_map[:sends]] * 100).round(2)}%"
+      "#{(metrics_hash[key_map[:sends_typed]].fdiv(metrics_hash[key_map[:sends]]) * 100).round(2)}%"
 
     output_hash.each do |key, value|
       puts "#{key.to_s.rjust(25)}: #{value}"
