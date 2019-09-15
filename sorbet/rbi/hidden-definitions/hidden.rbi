@@ -1096,6 +1096,7 @@ end
 
 class ActionController::Parameters
   include ::SorbetRails::CustomParamsMethods
+  include ::SorbetRailsHack
   EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
   EMPTY_HASH = ::T.let(nil, ::T.untyped)
   PERMITTED_SCALAR_TYPES = ::T.let(nil, ::T.untyped)
@@ -11387,6 +11388,8 @@ module Game::GeneratedAttributeMethods
 end
 
 module Game::GeneratedRelationMethods
+  def by_year(*args, &block); end
+
   def least_recently_updated(*args, &block); end
 
   def most_favorites(*args, &block); end
@@ -32551,6 +32554,11 @@ module SorbetRails::CustomParamsMethods
 end
 
 module SorbetRails
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module SorbetRailsHack
+  extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.5
+# sorbet-rails-0.5.5.1
 module SorbetRails
   def self.config(&blk); end
   def self.configure(*args, &blk); end
@@ -164,20 +164,35 @@ module ITypeAssert
   extend T::Private::Methods::SingletonMethodHooks
   extend T::Sig
 end
-module TypeAssertImpl
-  def self.included(klass); end
-end
-class TypeAssertImpl::Unsupported < StandardError
-end
 class TA
   def assert(*args, &blk); end
-  def self.[](*types); end
   extend T::Generic
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
   extend T::Sig
   include ITypeAssert
-  include TypeAssertImpl
+end
+module IntegerStringImpl
+  def _is_a_integer_string?; end
+  def instance_of?(type); end
+  def is_a?(type); end
+  def kind_of?(type); end
+end
+class String
+  include BooleanStringImpl
+  include IntegerStringImpl
+end
+class IntegerString < String
+  def self.===(other); end
+end
+module BooleanStringImpl
+  def _is_a_boolean_string?; end
+  def instance_of?(type); end
+  def is_a?(type); end
+  def kind_of?(type); end
+end
+class BooleanString < String
+  def self.===(other); end
 end
 class KaminariPlugin < SorbetRails::ModelPlugins::Base
   def generate(*args, &blk); end
@@ -196,11 +211,12 @@ class FriendlyIdPlugin < SorbetRails::ModelPlugins::Base
 end
 class ActiveRecordOverrides
   def enum_calls; end
+  def get_enum_call(klass, enum_sym); end
   def initialize; end
   def self.allocate; end
   def self.instance; end
   def self.new(*arg0); end
-  def store_enum_call(class_name, kwargs); end
+  def store_enum_call(klass, kwargs); end
   extend Singleton::SingletonClassMethods
   include Singleton
 end
