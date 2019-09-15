@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class Game < ApplicationRecord
   include PgSearch::Model
 
@@ -65,7 +65,7 @@ class Game < ApplicationRecord
   validates :description,
     length: { maximum: 1000 }
 
-  validates :cover,
+  T.unsafe(self).validates :cover,
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 4.megabytes }

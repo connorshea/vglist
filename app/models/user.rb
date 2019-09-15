@@ -1,5 +1,6 @@
-# typed: false
+# typed: strict
 class User < ApplicationRecord
+  extend T::Sig
   extend FriendlyId
 
   after_create :on_user_creation
@@ -87,13 +88,14 @@ class User < ApplicationRecord
   validates :role,
     presence: true
 
-  validates :avatar,
+  T.unsafe(self).validates :avatar,
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 3.megabytes }
 
   private
 
+  sig { void }
   def on_user_creation
     Event.create!(
       eventable_type: 'User',

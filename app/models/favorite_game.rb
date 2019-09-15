@@ -1,5 +1,7 @@
-# typed: true
+# typed: strict
 class FavoriteGame < ApplicationRecord
+  extend T::Sig
+
   after_create :favorite_game_create_event
 
   belongs_to :game
@@ -13,11 +15,12 @@ class FavoriteGame < ApplicationRecord
 
   private
 
+  sig { void }
   def favorite_game_create_event
     Event.create!(
       eventable_type: 'FavoriteGame',
       eventable_id: id,
-      user_id: T.must(user).id,
+      user_id: user.id,
       event_category: :favorite_game
     )
   end
