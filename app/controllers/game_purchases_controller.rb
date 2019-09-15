@@ -75,7 +75,7 @@ class GamePurchasesController < ApplicationController
   private
 
   def game_purchase_params
-    params.require(:game_purchase).permit(
+    params.typed_require(:game_purchase).permit(
       :user_id,
       :game_id,
       :comments,

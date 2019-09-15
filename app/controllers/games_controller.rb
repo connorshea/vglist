@@ -235,7 +235,7 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(
+    params.typed_require(:game).permit(
       :name,
       :description,
       :cover,
@@ -254,7 +254,7 @@ class GamesController < ApplicationController
   end
 
   def game_purchase_params
-    params.require(:game_purchase).permit(
+    params.typed_require(:game_purchase).permit(
       :user_id,
       :game_id
     )

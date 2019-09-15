@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class PlatformsController < ApplicationController
   def index
     @platforms = Platform.order(:id).page helpers.page_param
@@ -77,7 +77,7 @@ class PlatformsController < ApplicationController
   private
 
   def platform_params
-    params.require(:platform).permit(
+    params.typed_require(:platform).permit(
       :name,
       :description,
       :wikidata_id

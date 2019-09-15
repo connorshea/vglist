@@ -12,7 +12,6 @@ module Devise::Controllers::Helpers
   def current_user; end
 end
 
-
 class ActionController::Parameters
   # This is a disgusting hack to make `params.require` less verbose for its
   # most common case. I am not proud of what I have done.
