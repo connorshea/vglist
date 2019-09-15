@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.9.15
+### Added
+- Add filtering by release year to games. ([#681])
+
 ## v2019.9.14
 ### Added
 - Add some functionality to block Wikidata IDs from being added to the database. The purpose of this functionality is to prevent bad data (e.g. Wikidata has entries for sets of Pokemon games as one entry, like 'Pokemon Sun & Moon') from being introduced into the site. ([#678])
@@ -538,3 +542,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#667]: https://github.com/connorshea/VideoGameList/pull/667
 [#670]: https://github.com/connorshea/VideoGameList/pull/670
 [#678]: https://github.com/connorshea/VideoGameList/pull/678
+[#681]: https://github.com/connorshea/VideoGameList/pull/681
