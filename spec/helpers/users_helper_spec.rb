@@ -2,9 +2,9 @@
 require 'rails_helper'
 
 RSpec.describe UsersHelper, type: :helper do
-  describe 'game in user library' do
-    let(:user1) { create(:confirmed_user) }
-    let(:user2) { create(:confirmed_user) }
+  describe 'checking whether current user is following other users' do
+    let(:user1) { create(:confirmed_user, id: rand(2..10_000)) }
+    let(:user2) { create(:confirmed_user, id: rand(2..10_000)) }
     let(:relationship) { create(:relationship, follower: user1, followed: user2) }
 
     it 'returns true when current_user is following user' do
