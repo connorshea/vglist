@@ -14,6 +14,39 @@ namespace :sorbet do
     end
   end
 
+  desc "Prints stats for Sorbet's progress in the repository."
+  task :stats do
+    metrics = {}
+    Bundler.with_clean_env do
+      system('bundle exec srb tc --metrics-file tmp/sorbet_metrics.json')
+      json = JSON.parse(File.read('tmp/sorbet_metrics.json'))
+      metrics = json['metrics']
+    end
+
+    key_map = {
+      total_signatures: "ruby_typer.unknown..types.sig.count",
+      total_methods: "ruby_typer.unknown..types.input.methods.total",
+      total_classes: "ruby_typer.unknown..types.input.classes.total",
+      sigil_ignore: "ruby_typer.unknown..types.input.files.sigil.ignore",
+      sigil_false: "ruby_typer.unknown..types.input.files.sigil.false",
+      sigil_true: "ruby_typer.unknown..types.input.files.sigil.true",
+      sigil_strict: "ruby_typer.unknown..types.input.files.sigil.strict",
+      sigil_strong: "ruby_typer.unknown..types.input.files.sigil.strong",
+      sends: "ruby_typer.unknown..types.input.sends.total",
+      sends_typed: "ruby_typer.unknown..types.input.sends.typed"
+    }
+
+    metrics_hash = {}
+
+    metrics.each do |metric|
+      metrics_hash[metric['name']] = metric['value']
+    end
+
+    key_map.each do |key, path|
+      puts "#{key}: #{metrics_hash[path]}"
+    end
+  end
+
   namespace :update do
     desc "Update Sorbet and Sorbet Rails RBIs."
     task :all do
