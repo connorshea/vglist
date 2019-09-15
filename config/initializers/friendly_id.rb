@@ -20,7 +20,10 @@ FriendlyId.defaults do |config|
   config.reserved_words = %w[new edit index session login logout users admin
                              stylesheets assets javascripts images games
                              confirmation password registration settings
-                             sign_out sign_up sign_in update_role]
+                             sign_out sign_up sign_in update_role
+                             activity following followers series company
+                             companies engine engines user users
+                             favorite favorites platform platforms]
 
   # This adds an option to treat reserved words as conflicts rather than exceptions.
   # When there is no good candidate, a UUID will be appended, matching the existing
