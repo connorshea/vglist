@@ -36,7 +36,7 @@ export default {
       type: Object,
       required: false
     },
-    // Replace this with a CSS change when vue-select 3.0.0 comes out.
+    // TODO: Replace this with a CSS change when vue-select 3.0.0 comes out.
     // https://github.com/sagalbot/vue-select/pull/759
     maxHeight: {
       type: String,

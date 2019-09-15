@@ -53,6 +53,10 @@ class Game < ApplicationRecord
   scope :on_platform, ->(platform_id) {
     joins(:game_platforms).where(game_platforms: { platform_id: platform_id })
   }
+  # Find games released in a given year.
+  scope :by_year, ->(year) {
+    where('extract(year from release_date) = ?', year)
+  }
 
   validates :name,
     presence: true,

@@ -136,6 +136,9 @@ class Game < ApplicationRecord
   extend T::Generic
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.least_recently_updated(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -332,6 +335,9 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   extend T::Sig
   extend T::Generic
   Elem = type_member(fixed: Game)
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def by_year(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def least_recently_updated(*args); end
@@ -549,6 +555,9 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   Elem = type_member(fixed: Game)
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def least_recently_updated(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
@@ -761,6 +770,9 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
   extend T::Sig
   extend T::Generic
   Elem = type_member(fixed: Game)
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def by_year(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def least_recently_updated(*args); end

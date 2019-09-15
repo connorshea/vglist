@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div :class="grandparentClass">
     <label v-if="label" :for="inputId" class="label">{{ label }}</label>
     <div class="control">
       <v-select
@@ -44,7 +44,12 @@ export default {
       type: Array,
       required: true
     },
-    // Replace this with a CSS change when vue-select 3.0.0 comes out.
+    grandparentClass: {
+      type: String,
+      required: false,
+      default: 'field'
+    },
+    // TODO: Replace this with a CSS change when vue-select 3.0.0 comes out.
     // https://github.com/sagalbot/vue-select/pull/759
     maxHeight: {
       type: String,
