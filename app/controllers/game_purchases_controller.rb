@@ -60,9 +60,6 @@ class GamePurchasesController < ApplicationController
       # so we create an array of x params where all the params are the same.
       if GamePurchase.update(submittable_ids, Array.new(submittable_ids.length, actual_params))
         format.json { render json: @game_purchases, status: :ok }
-      else
-        # TODO: Get this to work without a type error.
-        format.json { render json: T.unsafe(@game_purchases).errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
