@@ -612,3 +612,12 @@ nav.navbar {
     transform: translate3d(4px, 0, 0);
   }
 }
+
+.games-filters {
+  // display: flex;
+  // flex-flow: row wrap;
+
+  .control {
+    margin-right: 10px;
+  }
+}

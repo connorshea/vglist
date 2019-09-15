@@ -6,6 +6,7 @@ class GamesController < ApplicationController
     @games = Game.all
 
     @games = @games.on_platform(params[:platform_filter]) if params[:platform_filter]
+    @games = @games.by_year(params[:by_year]) if params[:by_year]
 
     case T.cast(params[:order_by], T.nilable(String))&.to_sym
     when :newest
