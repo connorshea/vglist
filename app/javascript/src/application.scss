@@ -114,14 +114,6 @@ nav.navbar {
   }
 }
 
-.games-filter .v-select {
-  width: 300px;
-
-  @include touch {
-    width: 100%;
-  }
-}
-
 .buttons {
   align-items: initial;
 }
@@ -613,11 +605,17 @@ nav.navbar {
   }
 }
 
-.games-filters {
-  // display: flex;
-  // flex-flow: row wrap;
+// Spacing between elements and make sure the dropdowns are fullwidth.
+.games-search-sidebar {
+  .games-filters > div {
+    margin-top: 10px;
+  }
 
-  .control {
-    margin-right: 10px;
+  .dropdown {
+    display: block;
+  }
+
+  .dropdown-menu {
+    position: relative;
   }
 }
