@@ -298,7 +298,7 @@ GEM
       faraday (>= 0.7.6, < 1.0)
     shoulda-matchers (4.1.2)
       activesupport (>= 4.2.0)
-    simplecov (0.17.0)
+    simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
