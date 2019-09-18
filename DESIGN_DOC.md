@@ -22,19 +22,18 @@ Similar tracking sites for movies/television/anime:
   - [x] Authentication with Devise
   - [ ] 2FA (via devise-two-factor probably)
   - [x] Username
-  - [ ] Display Name
   - [x] Avatar
   - [ ] External account links (Discord, Steam, Epic Games, Xbox Live, PSN, etc.)
   - [x] Users have a Game Library which contains Games
   - [x] Users have a profile
-- [ ] Profiles
-  - [ ] Profiles can be Public or Private (only visible to Friends/Yourself? Username, Display Name, and Avatar will always be visible.)
+- [x] Profiles
+  - [x] Profiles can be Public or Private (only visible to Friends/Yourself? Username, Display Name, and Avatar will always be visible.)
   - [x] Bio (a longer-form description of the user)
   - [x] Game Library with scores, completion status, time played, etc.
     - Should there be more granular access options, e.g. hiding time played?
     - Should the user that owns the profile be able to choose what's visible by default in their profile's Library list?
-- [ ] Friends (or followers/following?)
-  - [ ] Activity feed?
+- [x] Followers/Following
+  - [x] Activity Feed
 - [ ] Game Library
   - [ ] A "plan-to-play" list (different from a Wishlist?)
   - [x] Steam Importer (connect your Steam account and import/sync all the game data from it)
@@ -50,7 +49,7 @@ Similar tracking sites for movies/television/anime:
   - [x] Developer (can have more than one)
   - [x] Publisher (can have more than one?)
   - [x] Cover image
-  - [ ] Release date(s) (note that a game can have more than one release date due to platform differences or due to regional differences)
+  - [x] Release date(s) (~~note that a game can have more than one release date due to platform differences or due to regional differences~~ This was too complex to implement so games just have one release date)
   - [x] External Links (Steam page, Discord store page, Discord server, PCGamingWiki, SteamDB, etc.)
   - [ ] Relationships with other games (sequels, prequels, spinoffs, DLC, Special Editions, GOTY/Complete Editions, Remakes, Deluxe Editions, "sibling"(?) titles (e.g. Pokemon Red and Blue), etc?)
   - [x] Series
@@ -58,7 +57,7 @@ Similar tracking sites for movies/television/anime:
     - Note there can be more than one, e.g. for multiple languages.
   - [x] Genres
     - I don't look forward to figuring out how to manage genres, but it seems kind of necessary.
-  - [ ] Average Rating
+  - [x] Average Rating
     - Maybe also Median or a more detailed bar graph of the scores?
   - [ ] Number of users who own the game / have completed it / plan to play it
 - [x] Companies
