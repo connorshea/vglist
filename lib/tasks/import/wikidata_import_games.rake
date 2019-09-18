@@ -92,6 +92,8 @@ namespace 'import:wikidata' do
 
         release_dates = wikidata_json.dig('P577')&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
         release_dates&.map! do |time|
+          return nil if time.nil?
+
           Time.parse(time).to_date
         rescue ArgumentError
           nil
