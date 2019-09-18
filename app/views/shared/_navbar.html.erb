@@ -60,7 +60,9 @@
 
           <div class="navbar-dropdown is-right">
             <%= link_to("Profile", user_path(current_user.slug), class: "navbar-item") %>
-            <%= link_to_if(current_user.admin?, "Admin", admin_path, class: "navbar-item") %>
+            <% if current_user.admin? %>
+              <%= link_to("Admin", admin_path, class: "navbar-item") %>
+            <% end %>
             <%= link_to("Settings", settings_path, class: "navbar-item") %>
             <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item") %>
             <hr class="navbar-divider">
@@ -72,7 +74,9 @@
         </div>
 
         <%= link_to(current_user.username, user_path(current_user.id), class: "navbar-item is-hidden-desktop") %>
-        <%= link_to_if(current_user.admin?, "Admin", admin_path, class: "navbar-item is-hidden-desktop") %>
+        <% if current_user.admin? %>
+          <%= link_to("Admin", admin_path, class: "navbar-item is-hidden-desktop") %>
+        <% end %>
         <%= link_to("Settings", settings_path, class: "navbar-item is-hidden-desktop") %>
         <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item is-hidden-desktop") %>
         <%= link_to("About", about_path, class: "navbar-item is-hidden-desktop") %>
