@@ -43,6 +43,9 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     PgSearch.disable_multisearch do
       rows.each do |row|
         progress_bar.increment
@@ -113,6 +116,7 @@ namespace 'import:wikidata' do
 
         begin
           game = Game.create!(hash)
+          puts "Created #{hash[:name]}."
         rescue ActiveRecord::RecordInvalid => e
           puts "Record Invalid: #{e}"
           next
