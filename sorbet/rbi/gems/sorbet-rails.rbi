@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.5.1
+# sorbet-rails-0.5.6
 module SorbetRails
   def self.config(&blk); end
   def self.configure(*args, &blk); end
@@ -98,7 +98,9 @@ end
 class SorbetRails::ModelPlugins::ActiveRecordAttribute < SorbetRails::ModelPlugins::Base
   def active_record_type_to_sorbet_type(*args, &blk); end
   def generate(*args, &blk); end
+  def time_zone_aware_column?(*args, &blk); end
   def type_for_column_def(*args, &blk); end
+  def value_type_for_attr_writer(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
 end
@@ -116,6 +118,12 @@ end
 class SorbetRails::ModelPlugins::ActiveRecordFinderMethods < SorbetRails::ModelPlugins::Base
   def create_finder_method_pair(*args, &blk); end
   def create_finder_methods_for(*args, &blk); end
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class SorbetRails::ModelPlugins::ActiveRecordFactoryMethods < SorbetRails::ModelPlugins::Base
+  def add_factory_method(*args, &blk); end
   def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
