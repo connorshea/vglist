@@ -62,7 +62,7 @@ gem 'ruby-progressbar', '~> 1.10', require: false
 gem 'sentry-raven', '~> 2.11'
 
 # Sorbet runtime typechecker and Sorbet Rails.
-gem 'sorbet-runtime'
+gem 'sorbet-runtime', '0.4.4756'
 gem "sorbet-rails", '~> 0.5.3'
 
 group :development, :test do
@@ -105,7 +105,7 @@ group :development, :test do
   gem 'bullet', '~> 6.0'
 
   # Sorbet typechecker
-  gem 'sorbet', '~> 0.4'
+  gem 'sorbet', '0.4.4756'
 end
 
 group :development do
