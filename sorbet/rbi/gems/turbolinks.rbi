@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/turbolinks/all/turbolinks.rbi
 #
-# turbolinks-5.2.0
+# turbolinks-5.2.1
 module Turbolinks
 end
 module Turbolinks::Redirection

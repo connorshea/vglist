@@ -10511,6 +10511,8 @@ module FavoriteGame::GeneratedRelationMethods
 end
 
 class FavoriteGame
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
   def self.after_add_for_events(); end
 
   def self.after_add_for_events=(val); end
@@ -24987,18 +24989,6 @@ class RailsERD::Config
   USER_WIDE_CONFIG_FILE = ::T.let(nil, ::T.untyped)
 end
 
-class Rainbow::Color::Named
-  NAMES = ::T.let(nil, ::T.untyped)
-end
-
-class Rainbow::Presenter
-  TERM_EFFECTS = ::T.let(nil, ::T.untyped)
-end
-
-module Rainbow::X11ColorNames
-  NAMES = ::T.let(nil, ::T.untyped)
-end
-
 module Rake
   EARLY = ::T.let(nil, ::T.untyped)
   EMPTY_TASK_ARGS = ::T.let(nil, ::T.untyped)
@@ -32849,14 +32839,6 @@ class String
 
   def casecmp?(_); end
 
-  def delete_prefix(_); end
-
-  def delete_prefix!(_); end
-
-  def delete_suffix(_); end
-
-  def delete_suffix!(_); end
-
   def each_grapheme_cluster(); end
 
   def encode(*_); end
@@ -34745,6 +34727,8 @@ class User
   extend ::Devise::Models::Validatable::ClassMethods
   extend ::Devise::Models::Confirmable::ClassMethods
   extend ::FriendlyId::Finders::ClassMethods
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
   def self.after_add_for_active_relationships(); end
 
   def self.after_add_for_active_relationships=(val); end
