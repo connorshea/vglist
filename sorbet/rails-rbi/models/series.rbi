@@ -10,10 +10,10 @@ end
 module Series::GeneratedAttributeMethods
   extend T::Sig
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -37,10 +37,10 @@ module Series::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def name?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def updated_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -256,6 +256,15 @@ class Series < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(Series) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(Series) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(Series) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(Series::ActiveRecord_Relation) }
   def self.page(num = nil); end
 end
@@ -427,7 +436,7 @@ class Series::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: Series).void).void }
+  sig { override.params(block: T.proc.params(e: Series).void).returns(T::Array[Series]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Series]) }
@@ -615,7 +624,7 @@ class Series::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelati
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: Series).void).void }
+  sig { override.params(block: T.proc.params(e: Series).void).returns(T::Array[Series]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Series]) }
@@ -802,7 +811,7 @@ class Series::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associat
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: Series).void).void }
+  sig { override.params(block: T.proc.params(e: Series).void).returns(T::Array[Series]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Series]) }

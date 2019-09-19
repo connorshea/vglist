@@ -19,10 +19,10 @@ module ActiveStorage::Attachment::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def blob_id?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -264,6 +264,15 @@ class ActiveStorage::Attachment < ActiveRecord::Base
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Attachment) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Attachment) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Attachment) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def self.page(num = nil); end
 end
@@ -435,7 +444,7 @@ class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: ActiveStorage::Attachment).void).void }
+  sig { override.params(block: T.proc.params(e: ActiveStorage::Attachment).void).returns(T::Array[ActiveStorage::Attachment]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveStorage::Attachment]) }
@@ -623,7 +632,7 @@ class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: ActiveStorage::Attachment).void).void }
+  sig { override.params(block: T.proc.params(e: ActiveStorage::Attachment).void).returns(T::Array[ActiveStorage::Attachment]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveStorage::Attachment]) }
@@ -810,7 +819,7 @@ class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < Act
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: ActiveStorage::Attachment).void).void }
+  sig { override.params(block: T.proc.params(e: ActiveStorage::Attachment).void).returns(T::Array[ActiveStorage::Attachment]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveStorage::Attachment]) }

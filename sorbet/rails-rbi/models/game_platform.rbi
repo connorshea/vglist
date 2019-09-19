@@ -10,10 +10,10 @@ end
 module GamePlatform::GeneratedAttributeMethods
   extend T::Sig
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -46,10 +46,10 @@ module GamePlatform::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def platform_id?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def updated_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -255,6 +255,15 @@ class GamePlatform < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePlatform) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePlatform) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePlatform) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(GamePlatform::ActiveRecord_Relation) }
   def self.page(num = nil); end
 end
@@ -426,7 +435,7 @@ class GamePlatform::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: GamePlatform).void).void }
+  sig { override.params(block: T.proc.params(e: GamePlatform).void).returns(T::Array[GamePlatform]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GamePlatform]) }
@@ -614,7 +623,7 @@ class GamePlatform::ActiveRecord_AssociationRelation < ActiveRecord::Association
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: GamePlatform).void).void }
+  sig { override.params(block: T.proc.params(e: GamePlatform).void).returns(T::Array[GamePlatform]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GamePlatform]) }
@@ -801,7 +810,7 @@ class GamePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: GamePlatform).void).void }
+  sig { override.params(block: T.proc.params(e: GamePlatform).void).returns(T::Array[GamePlatform]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[GamePlatform]) }
