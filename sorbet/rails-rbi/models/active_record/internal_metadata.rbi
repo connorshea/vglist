@@ -10,10 +10,10 @@ end
 module ActiveRecord::InternalMetadata::GeneratedAttributeMethods
   extend T::Sig
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -28,10 +28,10 @@ module ActiveRecord::InternalMetadata::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def key?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def updated_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -229,6 +229,15 @@ class ActiveRecord::InternalMetadata < ActiveRecord::Base
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveRecord::InternalMetadata) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveRecord::InternalMetadata) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveRecord::InternalMetadata) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def self.page(num = nil); end
 end
@@ -400,7 +409,7 @@ class ActiveRecord::InternalMetadata::ActiveRecord_Relation < ActiveRecord::Rela
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: ActiveRecord::InternalMetadata).void).void }
+  sig { override.params(block: T.proc.params(e: ActiveRecord::InternalMetadata).void).returns(T::Array[ActiveRecord::InternalMetadata]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveRecord::InternalMetadata]) }
@@ -588,7 +597,7 @@ class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation < ActiveR
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: ActiveRecord::InternalMetadata).void).void }
+  sig { override.params(block: T.proc.params(e: ActiveRecord::InternalMetadata).void).returns(T::Array[ActiveRecord::InternalMetadata]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveRecord::InternalMetadata]) }
@@ -775,7 +784,7 @@ class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: ActiveRecord::InternalMetadata).void).void }
+  sig { override.params(block: T.proc.params(e: ActiveRecord::InternalMetadata).void).returns(T::Array[ActiveRecord::InternalMetadata]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveRecord::InternalMetadata]) }

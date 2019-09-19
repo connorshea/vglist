@@ -10,10 +10,10 @@ end
 module FavoriteGame::GeneratedAttributeMethods
   extend T::Sig
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -37,10 +37,10 @@ module FavoriteGame::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def id?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def updated_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -261,6 +261,15 @@ class FavoriteGame < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(FavoriteGame) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(FavoriteGame) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(FavoriteGame) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
   def self.page(num = nil); end
 end
@@ -432,7 +441,7 @@ class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: FavoriteGame).void).void }
+  sig { override.params(block: T.proc.params(e: FavoriteGame).void).returns(T::Array[FavoriteGame]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[FavoriteGame]) }
@@ -620,7 +629,7 @@ class FavoriteGame::ActiveRecord_AssociationRelation < ActiveRecord::Association
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: FavoriteGame).void).void }
+  sig { override.params(block: T.proc.params(e: FavoriteGame).void).returns(T::Array[FavoriteGame]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[FavoriteGame]) }
@@ -807,7 +816,7 @@ class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: FavoriteGame).void).void }
+  sig { override.params(block: T.proc.params(e: FavoriteGame).void).returns(T::Array[FavoriteGame]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[FavoriteGame]) }

@@ -19,10 +19,10 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def content?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -55,10 +55,10 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def searchable_type?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def updated_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -259,6 +259,15 @@ class PgSearch::Document < ActiveRecord::Base
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(PgSearch::Document) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(PgSearch::Document) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(PgSearch::Document) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(PgSearch::Document::ActiveRecord_Relation) }
   def self.page(num = nil); end
 end
@@ -430,7 +439,7 @@ class PgSearch::Document::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).returns(T::Array[PgSearch::Document]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }
@@ -618,7 +627,7 @@ class PgSearch::Document::ActiveRecord_AssociationRelation < ActiveRecord::Assoc
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).returns(T::Array[PgSearch::Document]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }
@@ -805,7 +814,7 @@ class PgSearch::Document::ActiveRecord_Associations_CollectionProxy < ActiveReco
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).void }
+  sig { override.params(block: T.proc.params(e: PgSearch::Document).void).returns(T::Array[PgSearch::Document]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[PgSearch::Document]) }

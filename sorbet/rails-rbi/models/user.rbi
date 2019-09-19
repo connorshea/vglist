@@ -53,10 +53,10 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def bio?; end
 
-  sig { returns(T.nilable(DateTime)) }
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
   def confirmation_sent_at; end
 
-  sig { params(value: T.nilable(DateTime)).void }
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
   def confirmation_sent_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -71,28 +71,28 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def confirmation_token?; end
 
-  sig { returns(T.nilable(DateTime)) }
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
   def confirmed_at; end
 
-  sig { params(value: T.nilable(DateTime)).void }
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
   def confirmed_at=(value); end
 
   sig { returns(T::Boolean) }
   def confirmed_at?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
   def created_at?; end
 
-  sig { returns(T.nilable(DateTime)) }
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
   def current_sign_in_at; end
 
-  sig { params(value: T.nilable(DateTime)).void }
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
   def current_sign_in_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -134,10 +134,10 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def id?; end
 
-  sig { returns(T.nilable(DateTime)) }
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
   def last_sign_in_at; end
 
-  sig { params(value: T.nilable(DateTime)).void }
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
   def last_sign_in_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -161,19 +161,19 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def privacy?; end
 
-  sig { returns(T.nilable(DateTime)) }
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
   def remember_created_at; end
 
-  sig { params(value: T.nilable(DateTime)).void }
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
   def remember_created_at=(value); end
 
   sig { returns(T::Boolean) }
   def remember_created_at?; end
 
-  sig { returns(T.nilable(DateTime)) }
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
   def reset_password_sent_at; end
 
-  sig { params(value: T.nilable(DateTime)).void }
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
   def reset_password_sent_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -224,10 +224,10 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def unconfirmed_email?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def updated_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -466,6 +466,15 @@ class User < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(User) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(User) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(User) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(User::ActiveRecord_Relation) }
   def self.page(num = nil); end
 
@@ -673,7 +682,7 @@ class User::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: User).void).void }
+  sig { override.params(block: T.proc.params(e: User).void).returns(T::Array[User]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[User]) }
@@ -897,7 +906,7 @@ class User::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: User).void).void }
+  sig { override.params(block: T.proc.params(e: User).void).returns(T::Array[User]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[User]) }
@@ -1120,7 +1129,7 @@ class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: User).void).void }
+  sig { override.params(block: T.proc.params(e: User).void).returns(T::Array[User]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[User]) }

@@ -36,3 +36,8 @@ module DeviseHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
 end
+
+module ActionController::Helpers
+  sig { returns(T.all(ActivityHelper, ApplicationHelper, GamesHelper, SettingsHelper, UsersHelper, DeviseHelper)) }
+  def helpers; end
+end

@@ -10,10 +10,10 @@ end
 module Relationship::GeneratedAttributeMethods
   extend T::Sig
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def created_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -46,10 +46,10 @@ module Relationship::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def id?; end
 
-  sig { returns(DateTime) }
+  sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
-  sig { params(value: DateTime).void }
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
   def updated_at=(value); end
 
   sig { returns(T::Boolean) }
@@ -261,6 +261,15 @@ class Relationship < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(attributes: T.untyped, block: T.untyped).returns(Relationship) }
+  def self.create(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(Relationship) }
+  def self.create!(attributes = nil, &block); end
+
+  sig { params(attributes: T.untyped, block: T.untyped).returns(Relationship) }
+  def self.new(attributes = nil, &block); end
+
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_Relation) }
   def self.page(num = nil); end
 end
@@ -432,7 +441,7 @@ class Relationship::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: Relationship).void).void }
+  sig { override.params(block: T.proc.params(e: Relationship).void).returns(T::Array[Relationship]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Relationship]) }
@@ -620,7 +629,7 @@ class Relationship::ActiveRecord_AssociationRelation < ActiveRecord::Association
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: Relationship).void).void }
+  sig { override.params(block: T.proc.params(e: Relationship).void).returns(T::Array[Relationship]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Relationship]) }
@@ -807,7 +816,7 @@ class Relationship::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
-  sig { override.params(block: T.proc.params(e: Relationship).void).void }
+  sig { override.params(block: T.proc.params(e: Relationship).void).returns(T::Array[Relationship]) }
   def each(&block); end
 
   sig { params(level: T.nilable(Integer)).returns(T::Array[Relationship]) }
