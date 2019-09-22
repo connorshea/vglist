@@ -270,6 +270,12 @@ class ActiveModel::BlockValidator < ActiveModel::EachValidator
   def initialize(options, &block); end
   def validate_each(record, attribute, value); end
 end
+class ActiveModel::ForbiddenAttributesError < StandardError
+end
+module ActiveModel::ForbiddenAttributesProtection
+  def sanitize_for_mass_assignment(attributes); end
+  def sanitize_forbidden_attributes(attributes); end
+end
 module ActiveModel::SecurePassword
   def self.min_cost; end
   def self.min_cost=(arg0); end
@@ -519,12 +525,6 @@ class ActiveModel::Type::Registration
   def initialize(name, block, **arg2); end
   def matches?(type_name, *args, **kwargs); end
   def name; end
-end
-class ActiveModel::ForbiddenAttributesError < StandardError
-end
-module ActiveModel::ForbiddenAttributesProtection
-  def sanitize_for_mass_assignment(attributes); end
-  def sanitize_forbidden_attributes(attributes); end
 end
 module ActiveModel::AttributeAssignment
   def _assign_attribute(k, v); end
