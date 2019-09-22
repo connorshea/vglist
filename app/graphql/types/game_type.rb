@@ -4,9 +4,9 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :description, String, null: true
-    field :wikidata_id, Integer, null: true
-    field :pcgamingwiki_id, String, null: true
-    field :mobygames_id, String, null: true
+    field :wikidata_id, Integer, null: true, description: "Identifier in Wikidata."
+    field :pcgamingwiki_id, String, null: true, description: "Identifier on PCGamingWiki."
+    field :mobygames_id, String, null: true, description: "Identifier in the MobyGames database."
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was last updated."
 
@@ -17,5 +17,6 @@ module Types
     field :engines, [EngineType], null: true
     field :genres, [GenreType], null: true
     field :platforms, [PlatformType], null: true
+    field :owners, [UserType], null: true, method: :purchasers, description: "Users who have this game in their libraries."
   end
 end
