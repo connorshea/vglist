@@ -1,14 +1,59 @@
-# typed: true
+# typed: false
 module Types
   class QueryType < Types::BaseObject
     # Add root-level fields here.
-    # They will be entry points for queries on your schema.
+    field :game, GameType, null: true do
+      description "Find a game by ID."
+      argument :id, ID, required: true
+    end
 
-    # TODO: remove me
-    field :test_field, String, null: false,
-      description: "An example field added by the generator"
-    def test_field
-      "Hello World!"
+    field :series, SeriesType, null: true do
+      description "Find a series by ID."
+      argument :id, ID, required: true
+    end
+
+    field :company, CompanyType, null: true do
+      description "Find a company by ID."
+      argument :id, ID, required: true
+    end
+
+    field :platform, PlatformType, null: true do
+      description "Find a platform by ID."
+      argument :id, ID, required: true
+    end
+
+    field :engine, EngineType, null: true do
+      description "Find an engine by ID."
+      argument :id, ID, required: true
+    end
+
+    field :genre, GenreType, null: true do
+      description "Find a genre by ID."
+      argument :id, ID, required: true
+    end
+
+    def game(id:)
+      Game.find(id)
+    end
+
+    def series(id:)
+      Series.find(id)
+    end
+
+    def company(id:)
+      Company.find(id)
+    end
+
+    def platform(id:)
+      Platform.find(id)
+    end
+
+    def engine(id:)
+      Engine.find(id)
+    end
+
+    def genre(id:)
+      Genre.find(id)
     end
   end
 end
