@@ -3,9 +3,9 @@ module Types
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :username, String, null: false
-    field :bio, String, null: true
-    field :slug, String, null: false
-    field :role, UserRoleType, null: false
+    field :bio, String, null: true, description: "User profile description, aka 'bio'."
+    field :slug, String, null: false, description: "The user's slug, used for their profile URL."
+    field :role, UserRoleType, null: false, description: "User permission level."
 
     # Associations
     field :game_purchases, [GamePurchaseType], null: true, description: "Games in this user's library."
