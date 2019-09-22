@@ -66,6 +66,11 @@ module Types
       argument :id, ID, required: true
     end
 
+    field :game_purchase, GamePurchaseType, null: true do
+      description "Find a game purchase by ID."
+      argument :id, ID, required: true
+    end
+
     def game(id:)
       Game.find(id)
     end
@@ -116,6 +121,10 @@ module Types
 
     def user(id:)
       User.find(id)
+    end
+
+    def game_purchase(id:)
+      GamePurchase.find(id)
     end
   end
 end
