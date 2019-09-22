@@ -32,6 +32,11 @@ module Types
       argument :id, ID, required: true
     end
 
+    field :user, UserType, null: true do
+      description "Find a user by ID."
+      argument :id, ID, required: true
+    end
+
     def game(id:)
       Game.find(id)
     end
@@ -54,6 +59,10 @@ module Types
 
     def genre(id:)
       Genre.find(id)
+    end
+
+    def user(id:)
+      User.find(id)
     end
   end
 end

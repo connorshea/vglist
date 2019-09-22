@@ -1,7 +1,9 @@
 # typed: true
 class GraphqlController < ApplicationController
   def execute
+    # TODO: Authenticate things properly.
     skip_authorization
+
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
@@ -11,8 +13,9 @@ class GraphqlController < ApplicationController
     }
     result = VideoGameListSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
-  rescue => e
+  rescue StandardError => e
     raise e unless Rails.env.development?
+
     handle_error_in_development e
   end
 
