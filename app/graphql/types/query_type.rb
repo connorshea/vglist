@@ -1,10 +1,14 @@
 # typed: false
 module Types
   class QueryType < Types::BaseObject
-    # Add root-level fields here.
     field :game, GameType, null: true do
       description "Find a game by ID."
-      argument :id, ID, required: true
+      argument :id, ID, required: true, description: "Find a game by its unique ID."
+    end
+
+    field :game_search, [GameType], null: true do
+      description "Find a game by searching based on its name."
+      argument :query, String, required: true, description: "Name to search by."
     end
 
     field :series, SeriesType, null: true do
@@ -39,6 +43,10 @@ module Types
 
     def game(id:)
       Game.find(id)
+    end
+
+    def game_search(query:)
+      Game.search(query)
     end
 
     def series(id:)
