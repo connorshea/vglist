@@ -6,6 +6,8 @@ module Types
     field :bio, String, null: true, description: "User profile description, aka 'bio'."
     field :slug, String, null: false, description: "The user's slug, used for their profile URL."
     field :role, UserRoleType, null: false, description: "User permission level."
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this user was first created."
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this user was last updated."
 
     # Associations
     field :game_purchases, [GamePurchaseType], null: true, description: "Games in this user's library."

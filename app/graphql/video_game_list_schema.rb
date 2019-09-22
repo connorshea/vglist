@@ -5,9 +5,12 @@ class VideoGameListSchema < GraphQL::Schema
   mutation(Types::MutationType)
   query(Types::QueryType)
 
-  # Configure max_complexity and max_depth to prevent crazy queries.
-  max_depth 10
-  max_complexity 50
+  # Configure max_depth to prevent crazy queries.
+  # max_complexity is disabled for now to allow the GraphiQL documentation
+  # panel to work. max_depth is set to 13 as that's what's requires for
+  # introspection to work, which is what's used for the documentation panel.
+  max_depth 13
+  # max_complexity 50
 
   # Override this hook to handle cases when `authorized?` returns false for an object.
   sig { params(error: GraphQL::UnauthorizedError).void }
