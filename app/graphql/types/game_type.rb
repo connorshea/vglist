@@ -7,6 +7,7 @@ module Types
     field :wikidata_id, Integer, null: true, description: "Identifier in Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier on PCGamingWiki."
     field :mobygames_id, String, null: true, description: "Identifier in the MobyGames database."
+    # TODO: Add a field for steam_app_id when the Steam App IDs are split into their own separate model.
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was last updated."
 
