@@ -1,17 +1,17 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe "Games API", type: :request do
-  describe "Query for data on games" do
+RSpec.describe "Companies API", type: :request do
+  describe "Query for data on companies" do
     let(:user) { create(:confirmed_user) }
-    let(:game) { create(:game) }
+    let(:company) { create(:company) }
 
-    it "returns basic data for game" do
+    it "returns basic data for company" do
       sign_in(user)
-      game
+      company
       query_string = <<-GRAPHQL
         query($id: ID!) {
-          game(id: $id) {
+          company(id: $id) {
             id
             name
           }
@@ -21,22 +21,22 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { id: game.id }
+        variables: { id: company.id }
       )
-      expect(result.to_h["data"]["game"]).to eq(
+      expect(result.to_h["data"]["company"]).to eq(
         {
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => company.id.to_s,
+          "name" => company.name
         }
       )
     end
 
-    it "returns data for a game when searching" do
+    it "returns data for a company when searching" do
       sign_in(user)
-      game
+      company
       query_string = <<-GRAPHQL
         query($query: String!) {
-          gameSearch(query: $query) {
+          companySearch(query: $query) {
             id
             name
           }
@@ -46,12 +46,12 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { query: game.name }
+        variables: { query: company.name }
       )
-      expect(result.to_h["data"]["gameSearch"]).to eq(
+      expect(result.to_h["data"]["companySearch"]).to eq(
         [{
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => company.id.to_s,
+          "name" => company.name
         }]
       )
     end

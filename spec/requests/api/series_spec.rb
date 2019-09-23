@@ -1,17 +1,17 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe "Games API", type: :request do
-  describe "Query for data on games" do
+RSpec.describe "Series API", type: :request do
+  describe "Query for data on series" do
     let(:user) { create(:confirmed_user) }
-    let(:game) { create(:game) }
+    let(:series) { create(:series) }
 
-    it "returns basic data for game" do
+    it "returns basic data for series" do
       sign_in(user)
-      game
+      series
       query_string = <<-GRAPHQL
         query($id: ID!) {
-          game(id: $id) {
+          series(id: $id) {
             id
             name
           }
@@ -21,22 +21,22 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { id: game.id }
+        variables: { id: series.id }
       )
-      expect(result.to_h["data"]["game"]).to eq(
+      expect(result.to_h["data"]["series"]).to eq(
         {
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => series.id.to_s,
+          "name" => series.name
         }
       )
     end
 
-    it "returns data for a game when searching" do
+    it "returns data for a series when searching" do
       sign_in(user)
-      game
+      series
       query_string = <<-GRAPHQL
         query($query: String!) {
-          gameSearch(query: $query) {
+          seriesSearch(query: $query) {
             id
             name
           }
@@ -46,12 +46,12 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { query: game.name }
+        variables: { query: series.name }
       )
-      expect(result.to_h["data"]["gameSearch"]).to eq(
+      expect(result.to_h["data"]["seriesSearch"]).to eq(
         [{
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => series.id.to_s,
+          "name" => series.name
         }]
       )
     end

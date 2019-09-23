@@ -1,17 +1,17 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe "Games API", type: :request do
-  describe "Query for data on games" do
+RSpec.describe "Platforms API", type: :request do
+  describe "Query for data on platforms" do
     let(:user) { create(:confirmed_user) }
-    let(:game) { create(:game) }
+    let(:platform) { create(:platform) }
 
-    it "returns basic data for game" do
+    it "returns basic data for platform" do
       sign_in(user)
-      game
+      platform
       query_string = <<-GRAPHQL
         query($id: ID!) {
-          game(id: $id) {
+          platform(id: $id) {
             id
             name
           }
@@ -21,22 +21,22 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { id: game.id }
+        variables: { id: platform.id }
       )
-      expect(result.to_h["data"]["game"]).to eq(
+      expect(result.to_h["data"]["platform"]).to eq(
         {
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => platform.id.to_s,
+          "name" => platform.name
         }
       )
     end
 
-    it "returns data for a game when searching" do
+    it "returns data for a platform when searching" do
       sign_in(user)
-      game
+      platform
       query_string = <<-GRAPHQL
         query($query: String!) {
-          gameSearch(query: $query) {
+          platformSearch(query: $query) {
             id
             name
           }
@@ -46,12 +46,12 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { query: game.name }
+        variables: { query: platform.name }
       )
-      expect(result.to_h["data"]["gameSearch"]).to eq(
+      expect(result.to_h["data"]["platformSearch"]).to eq(
         [{
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => platform.id.to_s,
+          "name" => platform.name
         }]
       )
     end

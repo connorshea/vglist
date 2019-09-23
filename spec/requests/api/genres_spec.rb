@@ -1,17 +1,17 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe "Games API", type: :request do
-  describe "Query for data on games" do
+RSpec.describe "Genres API", type: :request do
+  describe "Query for data on genres" do
     let(:user) { create(:confirmed_user) }
-    let(:game) { create(:game) }
+    let(:genre) { create(:genre) }
 
-    it "returns basic data for game" do
+    it "returns basic data for genre" do
       sign_in(user)
-      game
+      genre
       query_string = <<-GRAPHQL
         query($id: ID!) {
-          game(id: $id) {
+          genre(id: $id) {
             id
             name
           }
@@ -21,22 +21,22 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { id: game.id }
+        variables: { id: genre.id }
       )
-      expect(result.to_h["data"]["game"]).to eq(
+      expect(result.to_h["data"]["genre"]).to eq(
         {
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => genre.id.to_s,
+          "name" => genre.name
         }
       )
     end
 
-    it "returns data for a game when searching" do
+    it "returns data for a genre when searching" do
       sign_in(user)
-      game
+      genre
       query_string = <<-GRAPHQL
         query($query: String!) {
-          gameSearch(query: $query) {
+          genreSearch(query: $query) {
             id
             name
           }
@@ -46,12 +46,12 @@ RSpec.describe "Games API", type: :request do
       result = VideoGameListSchema.execute(
         query_string,
         context: { current_user: user },
-        variables: { query: game.name }
+        variables: { query: genre.name }
       )
-      expect(result.to_h["data"]["gameSearch"]).to eq(
+      expect(result.to_h["data"]["genreSearch"]).to eq(
         [{
-          "id" => game.id.to_s,
-          "name" => game.name
+          "id" => genre.id.to_s,
+          "name" => genre.name
         }]
       )
     end
