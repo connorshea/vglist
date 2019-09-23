@@ -14,5 +14,11 @@ module Types
 
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game purchase was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game purchase was last updated."
+
+    # If the user's profile is private, their game purchases shouldn't be
+    # accessible unless explicitly allowed.
+    def self.authorized?(object, context)
+      return GamePurchasePolicy.new(context[:current_user], object).show?
+    end
   end
 end

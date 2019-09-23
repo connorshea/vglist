@@ -15,12 +15,15 @@ class GamePurchasePolicy < ApplicationPolicy
 
   sig { returns(T::Boolean) }
   def index?
-    true
+    authorized = user_profile_is_visible?
+    return false if authorized.nil?
+
+    return authorized
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def show?
-    true
+    user_profile_is_visible?
   end
 
   sig { returns(T.nilable(T::Boolean)) }
@@ -48,5 +51,10 @@ class GamePurchasePolicy < ApplicationPolicy
   sig { returns(T.nilable(T::Boolean)) }
   def game_purchase_belongs_to_user?
     user && game_purchase&.user_id == user&.id
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def user_profile_is_visible?
+    game_purchase&.user&.public_account? || game_purchase_belongs_to_user? || user&.admin?
   end
 end
