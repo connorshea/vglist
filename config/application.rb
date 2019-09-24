@@ -48,6 +48,17 @@ module VideoGameList
       end
     end
 
+    config.to_prepare do
+      # Only Applications list
+      T.unsafe(Doorkeeper::ApplicationsController).layout "application"
+
+      # Only Authorization endpoint
+      T.unsafe(Doorkeeper::AuthorizationsController).layout "application"
+
+      # Only Authorized Applications
+      T.unsafe(Doorkeeper::AuthorizedApplicationsController).layout "application"
+    end
+
     # Add spec to the directories that 'rails notes' checks.
     config.annotations.register_directories("spec")
     # Add .vue files to the file extensions picked up by 'rails notes'.
