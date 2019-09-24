@@ -591,6 +591,90 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def graphql_url(*args, **kwargs); end
 
+  # Sigs for route /oauth/authorize/native(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def native_oauth_authorization_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def native_oauth_authorization_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/authorize(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_authorization_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_authorization_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/token(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_token_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_token_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/revoke(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_revoke_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_revoke_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/introspect(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_introspect_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_introspect_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/applications(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_applications_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_applications_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/applications/new(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def new_oauth_application_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def new_oauth_application_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/applications/:id/edit(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def edit_oauth_application_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def edit_oauth_application_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/applications/:id(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_application_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_application_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/authorized_applications(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_authorized_applications_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_authorized_applications_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/authorized_applications/:id(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_authorized_application_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_authorized_application_url(*args, **kwargs); end
+
+  # Sigs for route /oauth/token/info(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_token_info_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def oauth_token_info_url(*args, **kwargs); end
+
   # Sigs for route /rails/active_storage/blobs/:signed_id/*filename(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def rails_service_blob_path(*args, **kwargs); end

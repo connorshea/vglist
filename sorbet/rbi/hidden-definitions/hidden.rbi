@@ -53,6 +53,7 @@ class ActionController::API
   include ::Devise::Controllers::SignInOut
   include ::Devise::Controllers::StoreLocation
   include ::Devise::Controllers::UrlHelpers
+  include ::Doorkeeper::Rails::Helpers
   def __callbacks(); end
 
   def __callbacks?(); end
@@ -289,6 +290,7 @@ class ActionController::Base
   include ::Devise::Controllers::SignInOut
   include ::Devise::Controllers::StoreLocation
   include ::Devise::Controllers::UrlHelpers
+  include ::Doorkeeper::Rails::Helpers
   def __callbacks(); end
 
   def __callbacks?(); end
@@ -2050,6 +2052,7 @@ module ActionDispatch::Routing
 end
 
 class ActionDispatch::Routing::Mapper
+  include ::Doorkeeper::Rails::Routes::Helper
   URL_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
@@ -8620,6 +8623,139 @@ class Docile::FallbackContextProxy
   NON_FALLBACK_METHODS = ::T.let(nil, ::T.untyped)
   NON_PROXIED_INSTANCE_VARIABLES = ::T.let(nil, ::T.untyped)
   NON_PROXIED_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+module Doorkeeper::AccessGrant::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::AccessGrant::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::AccessToken::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::AccessToken::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::Application::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::Application::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+class Doorkeeper::ApplicationController
+  include ::Doorkeeper::Helpers::Controller
+end
+
+class Doorkeeper::ApplicationController
+end
+
+class Doorkeeper::ApplicationMetalController
+  include ::Doorkeeper::Helpers::Controller
+end
+
+class Doorkeeper::ApplicationMetalController
+end
+
+class Doorkeeper::ApplicationsController
+  def application_secret(); end
+
+  def create(); end
+
+  def destroy(); end
+
+  def edit(); end
+
+  def index(); end
+
+  def new(); end
+
+  def show(); end
+
+  def update(); end
+end
+
+class Doorkeeper::ApplicationsController
+end
+
+class Doorkeeper::AuthorizationsController
+  def create(); end
+
+  def destroy(); end
+
+  def new(); end
+end
+
+class Doorkeeper::AuthorizationsController
+end
+
+class Doorkeeper::AuthorizedApplicationsController
+  def destroy(); end
+
+  def index(); end
+end
+
+class Doorkeeper::AuthorizedApplicationsController
+end
+
+module Doorkeeper::DashboardHelper
+  def doorkeeper_errors_for(object, method); end
+
+  def doorkeeper_submit_path(application); end
+end
+
+module Doorkeeper::DashboardHelper
+end
+
+module Doorkeeper::OAuth
+  AUTHORIZATION_CODE = ::T.let(nil, ::T.untyped)
+  CLIENT_CREDENTIALS = ::T.let(nil, ::T.untyped)
+  GRANT_TYPES = ::T.let(nil, ::T.untyped)
+  IMPLICIT = ::T.let(nil, ::T.untyped)
+  PASSWORD = ::T.let(nil, ::T.untyped)
+  REFRESH_TOKEN = ::T.let(nil, ::T.untyped)
+end
+
+class Doorkeeper::OAuth::NonStandard
+  IETF_WG_OAUTH2_OOB = ::T.let(nil, ::T.untyped)
+  IETF_WG_OAUTH2_OOB_AUTO = ::T.let(nil, ::T.untyped)
+  IETF_WG_OAUTH2_OOB_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class Doorkeeper::StaleRecordsCleaner
+  CLEANER_CLASS = ::T.let(nil, ::T.untyped)
+end
+
+class Doorkeeper::TokenInfoController
+  def show(); end
+end
+
+class Doorkeeper::TokenInfoController
+end
+
+class Doorkeeper::TokensController
+  def create(); end
+
+  def introspect(); end
+
+  def revoke(); end
+end
+
+class Doorkeeper::TokensController
+end
+
+module Doorkeeper::VERSION
+  MAJOR = ::T.let(nil, ::T.untyped)
+  MINOR = ::T.let(nil, ::T.untyped)
+  PRE = ::T.let(nil, ::T.untyped)
+  STRING = ::T.let(nil, ::T.untyped)
+  TINY = ::T.let(nil, ::T.untyped)
 end
 
 class ERB
