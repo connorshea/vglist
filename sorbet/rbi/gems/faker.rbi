@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.3.0
+# faker-2.4.0
 module Faker
 end
 module Faker::Base58
@@ -30,6 +30,13 @@ end
 class Faker::UniqueGenerator::RetryLimitExceeded < StandardError
 end
 class Faker::Blockchain
+end
+class Faker::Blockchain::Aeternity < Faker::Base
+  def self.address; end
+  def self.contract; end
+  def self.oracle; end
+  def self.rand_strings(length = nil); end
+  def self.transaction; end
 end
 class Faker::Blockchain::Bitcoin < Faker::Base
   def self.address; end

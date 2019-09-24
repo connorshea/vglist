@@ -275,6 +275,10 @@ module ActionView::Helpers::UrlHelper
 end
 
 module ActionView::Layouts
+  extend T::Helpers  
+
+  module ClassMethods ; end
+  
   mixes_in_class_methods(ActionView::Layouts::ClassMethods)
 end
 

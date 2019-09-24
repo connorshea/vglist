@@ -53,10 +53,76 @@ RSpec.describe GamePurchasePolicy, type: :policy do
 
   describe 'An admin user' do
     let(:user) { create(:admin) }
-    let(:game_purchase) { create(:game_purchase, user: user) }
+    let(:owning_user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: owning_user) }
 
-    it "is allowed to admin do everything" do
+    it "is allowed to see the game purchases but not modify them" do
       expect(game_purchase_policy).to permit_actions(
+        [
+          :index,
+          :show
+        ]
+      )
+      expect(game_purchase_policy).to forbid_actions(
+        [
+          :create,
+          :update,
+          :bulk_update,
+          :destroy
+        ]
+      )
+    end
+  end
+
+  describe 'An admin user when the user that is being viewed is private' do
+    let(:private_user) { create(:private_user) }
+    let(:user) { create(:confirmed_admin) }
+    let(:game_purchase) { create(:game_purchase, user: private_user) }
+
+    it "is allowed to see the game purchases but not modify them" do
+      expect(game_purchase_policy).to permit_actions(
+        [
+          :index,
+          :show
+        ]
+      )
+      expect(game_purchase_policy).to forbid_actions(
+        [
+          :create,
+          :update,
+          :bulk_update,
+          :destroy
+        ]
+      )
+    end
+  end
+
+  describe 'A normal user when the user that is being viewed is private' do
+    let(:private_user) { create(:private_user) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: private_user) }
+
+    it "is allowed to see and do nothing" do
+      expect(game_purchase_policy).to forbid_actions(
+        [
+          :index,
+          :show,
+          :create,
+          :update,
+          :bulk_update,
+          :destroy
+        ]
+      )
+    end
+  end
+
+  describe 'A user that is not logged in when the user that is being viewed is private' do
+    let(:private_user) { create(:private_user) }
+    let(:user) { nil }
+    let(:game_purchase) { create(:game_purchase, user: private_user) }
+
+    it "is allowed to see and do nothing" do
+      expect(game_purchase_policy).to forbid_actions(
         [
           :index,
           :show,

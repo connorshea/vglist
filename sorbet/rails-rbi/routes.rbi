@@ -10,6 +10,20 @@ module ActionView::Helpers
 end
 
 module GeneratedUrlHelpers
+  # Sigs for route /graphiql
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def graphiql_rails_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def graphiql_rails_url(*args, **kwargs); end
+
+  # Sigs for route /graphql(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def graphql_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def graphql_url(*args, **kwargs); end
+
   # Sigs for route /
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def root_path(*args, **kwargs); end
@@ -611,4 +625,7 @@ module GeneratedUrlHelpers
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def rails_direct_uploads_url(*args, **kwargs); end
+end
+
+module GeneratedUrlHelpers
 end

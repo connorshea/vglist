@@ -65,6 +65,9 @@ gem 'sentry-raven', '~> 2.11'
 gem 'sorbet-runtime', '0.4.4756'
 gem "sorbet-rails", '~> 0.5.3'
 
+# GraphQL API https://github.com/rmosolgo/graphql-ruby
+gem 'graphql', '~> 1.9'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -123,6 +126,8 @@ group :development do
   gem 'launchy', '~> 2.4'
   # Generate a graph of the app structure.
   gem 'rails-erd', '~> 1.6'
+  # GraphiQL IDE
+  gem 'graphiql-rails', '~> 1.7.0'
 end
 
 group :test do
