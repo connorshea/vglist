@@ -43,6 +43,19 @@ class User < ApplicationRecord
   # We want to keep the entry even if the user that created it is deleted.
   has_many :wikidata_blocklists, dependent: :nullify
 
+  # rubocop:disable Rails/InverseOf
+  # Users have Doorkeeper access tokens and grants.
+  has_many :access_grants,
+    class_name: 'Doorkeeper::AccessGrant',
+    foreign_key: :resource_owner_id,
+    dependent: :destroy
+
+  has_many :access_tokens,
+    class_name: 'Doorkeeper::AccessToken',
+    foreign_key: :resource_owner_id,
+    dependent: :destroy
+  # rubocop:enable Rails/InverseOf
+
   # External accounts, e.g. Steam. Can be changed to a has_many association if
   # other external account types are added later.
   has_one :external_account, dependent: :destroy

@@ -80,6 +80,20 @@ RSpec.describe User, type: :model do
     it { should have_many(:wikidata_blocklists).dependent(:nullify) }
     it { should have_one(:external_account).dependent(:destroy) }
 
+    it 'have many access grants' do
+      expect(user).to have_many(:access_grants)
+        .class_name('Doorkeeper::AccessGrant')
+        .with_foreign_key(:resource_owner_id)
+        .dependent(:destroy)
+    end
+
+    it 'have many access tokens' do
+      expect(user).to have_many(:access_tokens)
+        .class_name('Doorkeeper::AccessToken')
+        .with_foreign_key(:resource_owner_id)
+        .dependent(:destroy)
+    end
+
     it 'has many active relationships' do
       expect(user).to have_many(:active_relationships)
         .class_name('Relationship')
