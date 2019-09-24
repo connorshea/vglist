@@ -101,4 +101,6 @@ Rails.application.routes.draw do
   # TODO: Enable this in production when the authentication stuff has been built.
   # Execute GraphQL queries posted to '/graphql'.
   post "/graphql", to: "graphql#execute" if Rails.env.development?
+
+  use_doorkeeper
 end
