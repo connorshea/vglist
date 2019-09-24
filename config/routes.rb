@@ -95,6 +95,7 @@ Rails.application.routes.draw do
   # API routes
   # Add the GraphiQL IDE in development mode.
   mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql" if Rails.env.development?
+  # TODO: Enable this in production when the authentication stuff has been built.
   # Execute GraphQL queries posted to '/graphql'.
-  post "/graphql", to: "graphql#execute"
+  post "/graphql", to: "graphql#execute" if Rails.env.development?
 end
