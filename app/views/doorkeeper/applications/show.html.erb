@@ -35,8 +35,7 @@
   <div class="col-md-4">
     <h3><%= t('.actions') %></h3>
 
-    <p><%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(@application), class: 'btn btn-primary' %></p>
-
-    <p><%= render 'delete_form', application: @application, submit_btn_css: 'btn btn-danger' %></p>
+    <%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(@application), class: 'button is-primary' %>
+    <%= link_to 'Delete', oauth_application_path(@application), method: :delete, data: { confirm: "Are you sure you want to delete this application?" }, class: "button is-danger" %>
   </div>
 </div>

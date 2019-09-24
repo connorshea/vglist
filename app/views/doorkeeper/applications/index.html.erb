@@ -1,38 +1,33 @@
-<div class="border-bottom mb-4">
-  <h1><%= t('.title') %></h1>
-</div>
+<h1 class="title"><%= t('.title') %></h1>
 
-<p><%= link_to t('.new'), new_oauth_application_path, class: 'btn btn-success' %></p>
+<p><%= link_to t('.new'), new_oauth_application_path, class: 'button is-success mb-25' %></p>
 
-<table class="table table-striped">
+<table class="table is-striped is-fullwidth">
   <thead>
-  <tr>
-    <th><%= t('.name') %></th>
-    <th><%= t('.callback_url') %></th>
-    <th><%= t('.confidential') %></th>
-    <th><%= t('.actions') %></th>
-    <th></th>
-  </tr>
+    <tr>
+      <th><%= t('.name') %></th>
+      <th><%= t('.callback_url') %></th>
+      <th><%= t('.confidential') %></th>
+      <th><%= t('.actions') %></th>
+    </tr>
   </thead>
   <tbody>
-  <% @applications.each do |application| %>
-    <tr id="application_<%= application.id %>">
-      <td class="align-middle">
-        <%= link_to application.name, oauth_application_path(application) %>
-      </td>
-      <td class="align-middle">
-        <%= simple_format(application.redirect_uri) %>
-      </td>
-      <td class="align-middle">
-        <%= application.confidential? ? t('doorkeeper.applications.index.confidentiality.yes') : t('doorkeeper.applications.index.confidentiality.no') %>
-      </td>
-      <td class="align-middle">
-        <%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(application), class: 'btn btn-link' %>
-      </td>
-      <td class="align-middle">
-        <%= render 'delete_form', application: application %>
-      </td>
-    </tr>
-  <% end %>
+    <% @applications.each do |application| %>
+      <tr id="application_<%= application.id %>">
+        <td class="align-middle">
+          <%= link_to application.name, oauth_application_path(application) %>
+        </td>
+        <td class="align-middle">
+          <%= simple_format(application.redirect_uri) %>
+        </td>
+        <td class="align-middle">
+          <%= application.confidential? ? t('doorkeeper.applications.index.confidentiality.yes') : t('doorkeeper.applications.index.confidentiality.no') %>
+        </td>
+        <td class="align-middle">
+          <%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(application) %>
+          <%= link_to 'Delete', oauth_application_path(application), method: :delete, data: { confirm: "Are you sure you want to delete this application?" }, class: "ml-10 has-text-danger" %>
+        </td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
