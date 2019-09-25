@@ -1,22 +1,38 @@
-<h1 class="title"><%= t('doorkeeper.authorized_applications.index.title') %></h1>
+<% content_for :title, t('doorkeeper.authorized_applications.index.title') %>
 
-<main role="main">
-  <table class="table is-striped">
-    <thead>
-    <tr>
-      <th><%= t('doorkeeper.authorized_applications.index.application') %></th>
-      <th><%= t('doorkeeper.authorized_applications.index.created_at') %></th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <% @applications.each do |application| %>
-      <tr>
-        <td><%= application.name %></td>
-        <td><%= application.created_at.strftime(t('doorkeeper.authorized_applications.index.date_format')) %></td>
-        <td><%= render 'delete_form', application: application %></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-</main>
+<div class="columns">
+  <div class="column is-3-desktop">
+    <div class="box">
+      <%= render 'settings/nav' %>
+    </div>
+  </div>
+
+  <div class="column">
+    <h1 class="title"><%= t('doorkeeper.authorized_applications.index.title') %></h1>
+
+    <main role="main">
+      <% if @applications.length.positive? %>
+        <table class="table is-striped is-fullwidth">
+          <thead>
+          <tr>
+            <th><%= t('doorkeeper.authorized_applications.index.application') %></th>
+            <th><%= t('doorkeeper.authorized_applications.index.created_at') %></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @applications.each do |application| %>
+            <tr>
+              <td><%= application.name %></td>
+              <td><%= application.created_at.strftime(t('doorkeeper.authorized_applications.index.date_format')) %></td>
+              <td><%= link_to 'Revoke', oauth_authorized_application_path(application), method: :delete, data: { confirm: "Are you sure you want to revoke this application's permissions?" }, class: "ml-10 has-text-danger" %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p>You haven't authorized any applications yet.
+      <% end %>
+    </main>
+  </div>
+</div>

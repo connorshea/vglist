@@ -90,6 +90,10 @@ Rails.application.routes.draw do
     get :connections
   end
 
+  scope :settings do
+    use_doorkeeper
+  end
+
   # Implement the .well-known/change-password URL.
   get '.well-known/change-password', to: redirect('/settings/account')
 
@@ -101,6 +105,4 @@ Rails.application.routes.draw do
   # TODO: Enable this in production when the authentication stuff has been built.
   # Execute GraphQL queries posted to '/graphql'.
   post "/graphql", to: "graphql#execute" if Rails.env.development?
-
-  use_doorkeeper
 end

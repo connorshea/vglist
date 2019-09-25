@@ -1,6 +1,4 @@
-<div class="border-bottom mb-4">
-  <h1><%= t('doorkeeper.authorizations.error.title') %></h1>
-</div>
+<h1 class="title"><%= t('doorkeeper.authorizations.error.title') %></h1>
 
 <main role="main">
   <pre><%= @pre_auth.error_response.body[:error_description] %></pre>
