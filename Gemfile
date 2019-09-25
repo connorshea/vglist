@@ -44,7 +44,7 @@ gem 'mini_magick', '~> 4.9'
 gem 'active_storage_validations', '~> 0.8'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
-gem 'friendly_id', '~> 5.2.5'
+gem 'friendly_id', '~> 5.3.0'
 
 # Use SPARQL for querying Wikidata in imports.
 gem 'sparql', '~> 3.0.2', require: false
