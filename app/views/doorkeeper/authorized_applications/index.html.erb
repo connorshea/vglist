@@ -15,8 +15,9 @@
         <table class="table is-striped is-fullwidth">
           <thead>
           <tr>
-            <th><%= t('doorkeeper.authorized_applications.index.application') %></th>
-            <th><%= t('doorkeeper.authorized_applications.index.created_at') %></th>
+            <th>Application</th>
+            <th>Created at</th>
+            <th>Scope(s)</th>
             <th></th>
           </tr>
           </thead>
@@ -25,6 +26,7 @@
             <tr>
               <td><%= application.name %></td>
               <td><%= application.created_at.strftime(t('doorkeeper.authorized_applications.index.date_format')) %></td>
+              <td><%= application.scopes %></td>
               <td><%= link_to 'Revoke', oauth_authorized_application_path(application), method: :delete, data: { confirm: "Are you sure you want to revoke this application's permissions?" }, class: "ml-10 has-text-danger" %></td>
             </tr>
           <% end %>

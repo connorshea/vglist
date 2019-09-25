@@ -1,5 +1,7 @@
 # typed: true
 class GraphqlController < ApplicationController
+  before_action :doorkeeper_authorize!
+
   def execute
     # TODO: Authenticate things properly.
     skip_authorization
