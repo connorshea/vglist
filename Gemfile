@@ -77,7 +77,7 @@ group :development, :test do
 
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.4'
-  gem 'rubocop-rspec', '~> 1.35'
+  gem 'rubocop-rspec', '~> 1.36'
   gem 'rubocop-rails', '~> 2.3'
 
   # Database cleaner for cleaning the database after tests/before seeding.
