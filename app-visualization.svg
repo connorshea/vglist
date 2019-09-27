@@ -182,35 +182,39 @@
 <!-- m_Doorkeeper::Application -->
 <g id="node6" class="node">
 <title>m_Doorkeeper::Application</title>
-<path fill="none" stroke="#000000" d="M1796.9582,-412C1796.9582,-412 1916.9582,-412 1916.9582,-412 1922.9582,-412 1928.9582,-418 1928.9582,-424 1928.9582,-424 1928.9582,-520 1928.9582,-520 1928.9582,-526 1922.9582,-532 1916.9582,-532 1916.9582,-532 1796.9582,-532 1796.9582,-532 1790.9582,-532 1784.9582,-526 1784.9582,-520 1784.9582,-520 1784.9582,-424 1784.9582,-424 1784.9582,-418 1790.9582,-412 1796.9582,-412"/>
-<text text-anchor="start" x="1796.2575" y="-518.7" font-family="Arial BoldMT" font-size="11.00" fill="#000000">Doorkeeper::Application</text>
-<polyline fill="none" stroke="#000000" points="1784.9582,-513 1928.9582,-513 "/>
-<text text-anchor="start" x="1791.9582" y="-499.5" font-family="ArialMT" font-size="10.00" fill="#000000">confidential </text>
-<text text-anchor="start" x="1845.3274" y="-499.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="1791.9582" y="-486.5" font-family="ArialMT" font-size="10.00" fill="#000000">id </text>
-<text text-anchor="start" x="1802.5197" y="-486.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
-<text text-anchor="start" x="1791.9582" y="-473.5" font-family="ArialMT" font-size="10.00" fill="#000000">name </text>
-<text text-anchor="start" x="1819.7512" y="-473.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="1791.9582" y="-460.5" font-family="ArialMT" font-size="10.00" fill="#000000">redirect_uri </text>
-<text text-anchor="start" x="1844.7561" y="-460.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text ∗</text>
-<text text-anchor="start" x="1791.9582" y="-447.5" font-family="ArialMT" font-size="10.00" fill="#000000">scopes </text>
-<text text-anchor="start" x="1826.4211" y="-447.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="1791.9582" y="-434.5" font-family="ArialMT" font-size="10.00" fill="#000000">secret </text>
-<text text-anchor="start" x="1821.968" y="-434.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="1791.9582" y="-421.5" font-family="ArialMT" font-size="10.00" fill="#000000">uid </text>
-<text text-anchor="start" x="1808.0813" y="-421.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗ U</text>
+<path fill="none" stroke="#000000" d="M1796.9582,-399C1796.9582,-399 1916.9582,-399 1916.9582,-399 1922.9582,-399 1928.9582,-405 1928.9582,-411 1928.9582,-411 1928.9582,-533 1928.9582,-533 1928.9582,-539 1922.9582,-545 1916.9582,-545 1916.9582,-545 1796.9582,-545 1796.9582,-545 1790.9582,-545 1784.9582,-539 1784.9582,-533 1784.9582,-533 1784.9582,-411 1784.9582,-411 1784.9582,-405 1790.9582,-399 1796.9582,-399"/>
+<text text-anchor="start" x="1796.2575" y="-531.7" font-family="Arial BoldMT" font-size="11.00" fill="#000000">Doorkeeper::Application</text>
+<polyline fill="none" stroke="#000000" points="1784.9582,-526 1928.9582,-526 "/>
+<text text-anchor="start" x="1791.9582" y="-512.5" font-family="ArialMT" font-size="10.00" fill="#000000">confidential </text>
+<text text-anchor="start" x="1845.3274" y="-512.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1791.9582" y="-499.5" font-family="ArialMT" font-size="10.00" fill="#000000">id </text>
+<text text-anchor="start" x="1802.5197" y="-499.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
+<text text-anchor="start" x="1791.9582" y="-486.5" font-family="ArialMT" font-size="10.00" fill="#000000">name </text>
+<text text-anchor="start" x="1819.7512" y="-486.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="1791.9582" y="-473.5" font-family="ArialMT" font-size="10.00" fill="#000000">owner_id </text>
+<text text-anchor="start" x="1835.3176" y="-473.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="1791.9582" y="-460.5" font-family="ArialMT" font-size="10.00" fill="#000000">owner_type </text>
+<text text-anchor="start" x="1846.4358" y="-460.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1791.9582" y="-447.5" font-family="ArialMT" font-size="10.00" fill="#000000">redirect_uri </text>
+<text text-anchor="start" x="1844.7561" y="-447.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text ∗</text>
+<text text-anchor="start" x="1791.9582" y="-434.5" font-family="ArialMT" font-size="10.00" fill="#000000">scopes </text>
+<text text-anchor="start" x="1826.4211" y="-434.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="1791.9582" y="-421.5" font-family="ArialMT" font-size="10.00" fill="#000000">secret </text>
+<text text-anchor="start" x="1821.968" y="-421.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="1791.9582" y="-408.5" font-family="ArialMT" font-size="10.00" fill="#000000">uid </text>
+<text text-anchor="start" x="1808.0813" y="-408.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string ∗ U</text>
 </g>
 <!-- m_Doorkeeper::Application&#45;&gt;m_Doorkeeper::AccessGrant -->
 <g id="edge7" class="edge">
 <title>m_Doorkeeper::Application&#45;&gt;m_Doorkeeper::AccessGrant</title>
-<path fill="none" stroke="#000000" d="M1814.0637,-411.6871C1788.4843,-375.7203 1755.8115,-329.7799 1728.6675,-291.6134"/>
-<polygon fill="#000000" stroke="#000000" points="1731.0994,-289.5976 1723.3162,-284.089 1725.9654,-293.2489 1731.0994,-289.5976"/>
+<path fill="none" stroke="#000000" d="M1804.8484,-398.7295C1780.9636,-365.1457 1752.6996,-325.4043 1728.7343,-291.7073"/>
+<polygon fill="#000000" stroke="#000000" points="1731.1575,-289.6794 1723.3743,-284.1707 1726.0235,-293.3307 1731.1575,-289.6794"/>
 </g>
 <!-- m_Doorkeeper::Application&#45;&gt;m_Doorkeeper::AccessToken -->
 <g id="edge8" class="edge">
 <title>m_Doorkeeper::Application&#45;&gt;m_Doorkeeper::AccessToken</title>
-<path fill="none" stroke="#000000" d="M1856.9582,-411.6871C1856.9582,-378.2169 1856.9582,-336.1096 1856.9582,-299.6675"/>
-<polygon fill="#000000" stroke="#000000" points="1860.1083,-299.5333 1856.9582,-290.5333 1853.8083,-299.5334 1860.1083,-299.5333"/>
+<path fill="none" stroke="#000000" d="M1856.9582,-398.7295C1856.9582,-367.856 1856.9582,-331.7787 1856.9582,-299.9773"/>
+<polygon fill="#000000" stroke="#000000" points="1860.1083,-299.6938 1856.9582,-290.6939 1853.8083,-299.6939 1860.1083,-299.6938"/>
 </g>
 <!-- m_Doorkeeper::Application&#45;&gt;m_Doorkeeper::Application -->
 <g id="edge9" class="edge">

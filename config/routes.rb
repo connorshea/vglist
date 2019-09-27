@@ -91,7 +91,10 @@ Rails.application.routes.draw do
   end
 
   scope :settings do
-    use_doorkeeper
+    use_doorkeeper do
+      # This is contributed by Doorkeeper, but Sorbet doesn't know that so we have to hack around it.
+      T.unsafe(self).controllers applications: 'oauth/applications'
+    end
   end
 
   # Implement the .well-known/change-password URL.

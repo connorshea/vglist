@@ -46,6 +46,24 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def name?; end
 
+  sig { returns(T.nilable(Integer)) }
+  def owner_id; end
+
+  sig { params(value: T.nilable(Integer)).void }
+  def owner_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def owner_id?; end
+
+  sig { returns(T.nilable(String)) }
+  def owner_type; end
+
+  sig { params(value: T.nilable(String)).void }
+  def owner_type=(value); end
+
+  sig { returns(T::Boolean) }
+  def owner_type?; end
+
   sig { returns(String) }
   def redirect_uri; end
 
@@ -118,6 +136,12 @@ module Doorkeeper::Application::GeneratedAssociationMethods
 
   sig { params(value: T.any(T::Array[::Doorkeeper::AccessToken], ::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy)).void }
   def authorized_tokens=(value); end
+
+  sig { returns(T.nilable(T.untyped)) }
+  def owner; end
+
+  sig { params(value: T.nilable(T.untyped)).void }
+  def owner=(value); end
 end
 
 module Doorkeeper::Application::CustomFinderMethods
