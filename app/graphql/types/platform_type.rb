@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Types
   class PlatformType < Types::BaseObject
     field :id, ID, null: false

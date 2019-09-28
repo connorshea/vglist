@@ -1,4 +1,4 @@
-# typed: true
+# typed: strong
 module Types
   class MutationType < Types::BaseObject
     # TODO: Do something here

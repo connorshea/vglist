@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rspec/all/rubocop-rspec.rbi
 #
-# rubocop-rspec-1.35.0
+# rubocop-rspec-1.36.0
 module RuboCop
 end
 module RuboCop::RSpec
@@ -206,6 +206,7 @@ end
 module RuboCop::Cop::RSpec::Capybara
 end
 class RuboCop::Cop::RSpec::Capybara::CurrentPathExpectation < RuboCop::Cop::RSpec::Cop
+  def add_ignore_query_options(corrector, node); end
   def as_is_matcher(node = nil); end
   def autocorrect(node); end
   def convert_regexp_str_to_literal(corrector, matcher_node, regexp_str); end
@@ -228,14 +229,13 @@ end
 module RuboCop::Cop::RSpec::FactoryBot
 end
 class RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically < RuboCop::Cop::RSpec::Cop
-  def association?(attribute); end
+  def association?(node = nil); end
   def attribute_defining_method?(method_name); end
   def autocorrect(node); end
   def autocorrect_replacing_parens(node); end
   def autocorrect_without_parens(node); end
   def braces(node); end
   def factory_attributes(node0); end
-  def factory_key?(hash_node); end
   def offensive_receiver?(receiver, node); end
   def on_block(node); end
   def proc?(attribute); end
@@ -341,6 +341,12 @@ class RuboCop::Cop::RSpec::BeforeAfterAll < RuboCop::Cop::RSpec::Cop
   def before_or_after_all(node = nil); end
   def on_send(node); end
 end
+class RuboCop::Cop::RSpec::ContextMethod < RuboCop::Cop::RSpec::Cop
+  def autocorrect(node); end
+  def context_method(node = nil); end
+  def method_name?(description); end
+  def on_block(node); end
+end
 class RuboCop::Cop::RSpec::ContextWording < RuboCop::Cop::RSpec::Cop
   def bad_prefix?(description); end
   def context_wording(node = nil); end
@@ -349,7 +355,7 @@ class RuboCop::Cop::RSpec::ContextWording < RuboCop::Cop::RSpec::Cop
   def prefixes; end
 end
 class RuboCop::Cop::RSpec::DescribeClass < RuboCop::Cop::RSpec::Cop
-  def describe_with_metadata(node = nil); end
+  def describe_with_rails_metadata?(node = nil); end
   def on_top_level_describe(node, args); end
   def rails_metadata?(node = nil); end
   def shared_group?(node = nil); end
@@ -370,6 +376,7 @@ class RuboCop::Cop::RSpec::DescribedClass < RuboCop::Cop::RSpec::Cop
   def collapse_namespace(namespace, const); end
   def common_instance_exec_closure?(node = nil); end
   def const_name(node); end
+  def contains_described_class?(node0); end
   def described_constant(node = nil); end
   def find_usage(node, &block); end
   def full_const_name(node); end
@@ -397,6 +404,15 @@ class RuboCop::Cop::RSpec::EmptyExampleGroup < RuboCop::Cop::RSpec::Cop
   def custom_include?(method_name); end
   def custom_include_methods; end
   def on_block(node); end
+end
+class RuboCop::Cop::RSpec::EmptyLineAfterExample < RuboCop::Cop::RSpec::Cop
+  def allow_consecutive_one_liners?; end
+  def allowed_one_liner?(node); end
+  def consecutive_one_liner?(node); end
+  def next_one_line_example?(node); end
+  def next_sibling(node); end
+  def on_block(node); end
+  include RuboCop::RSpec::BlankLineSeparation
 end
 class RuboCop::Cop::RSpec::EmptyLineAfterExampleGroup < RuboCop::Cop::RSpec::Cop
   def on_block(node); end
@@ -430,12 +446,14 @@ class RuboCop::Cop::RSpec::ExampleWithoutDescription < RuboCop::Cop::RSpec::Cop
 end
 class RuboCop::Cop::RSpec::ExampleWording < RuboCop::Cop::RSpec::Cop
   def add_wording_offense(node, message); end
-  def autocorrect(range); end
+  def autocorrect(node); end
   def custom_transform; end
+  def docstring(node); end
   def ignored_words; end
   def it_description(node = nil); end
   def on_block(node); end
-  def replacement_text(range); end
+  def replacement_text(node); end
+  def text(node); end
 end
 class RuboCop::Cop::RSpec::ExpectActual < RuboCop::Cop::RSpec::Cop
   def complex_literal?(node); end
@@ -636,19 +654,16 @@ class RuboCop::Cop::RSpec::MultipleDescribes < RuboCop::Cop::RSpec::Cop
   include RuboCop::RSpec::TopLevelDescribe
 end
 class RuboCop::Cop::RSpec::MultipleExpectations < RuboCop::Cop::RSpec::Cop
-  def aggregate_failures?(example_or_group_node); end
+  def aggregate_failures?(node = nil); end
   def aggregate_failures_block?(node = nil); end
-  def aggregate_failures_present?(node); end
-  def disabled_aggregate_failures?(node0); end
+  def aggregate_failures_present?(node = nil); end
   def example_with_aggregate_failures?(example_node); end
   def expect?(node = nil); end
   def find_aggregate_failures(example_node); end
   def find_expectation(node, &block); end
   def flag_example(node, expectation_count:); end
   def max_expectations; end
-  def metadata(example_or_group_node); end
   def on_block(node); end
-  def with_aggregate_failures?(node0); end
   include RuboCop::Cop::ConfigurableMax
 end
 class RuboCop::Cop::RSpec::MultipleSubjects < RuboCop::Cop::RSpec::Cop
@@ -691,12 +706,12 @@ class RuboCop::Cop::RSpec::OverwritingSetup < RuboCop::Cop::RSpec::Cop
   def setup?(node = nil); end
 end
 class RuboCop::Cop::RSpec::Pending < RuboCop::Cop::RSpec::Cop
-  def metadata(node = nil); end
   def on_send(node); end
   def pending_block?(node = nil); end
-  def skip_node?(node); end
-  def skip_symbol?(symbol_node); end
-  def skipped_from_metadata?(node); end
+  def skip_or_pending?(node = nil); end
+  def skippable?(node = nil); end
+  def skipped?(node); end
+  def skipped_in_metadata?(node = nil); end
 end
 module RuboCop::Cop::RSpec::InflectedHelper
   def autocorrect_inflected(node); end

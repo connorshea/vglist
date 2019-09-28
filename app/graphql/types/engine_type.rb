@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Types
   class EngineType < Types::BaseObject
     field :id, ID, null: false
