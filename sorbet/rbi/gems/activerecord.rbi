@@ -146,7 +146,7 @@ end
 module Arel::Attributes
   def self.for(column); end
 end
-class Anonymous_Struct_6 < Struct
+class Anonymous_Struct_9 < Struct
   def name; end
   def name=(_); end
   def relation; end
@@ -156,7 +156,7 @@ class Anonymous_Struct_6 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Arel::Attributes::Attribute < Anonymous_Struct_6
+class Arel::Attributes::Attribute < Anonymous_Struct_9
   def able_to_type_cast?; end
   def lower; end
   def type_cast_for_database(value); end
@@ -635,7 +635,7 @@ class Arel::Visitors::Dot::Node
   def name; end
   def name=(arg0); end
 end
-class Anonymous_Struct_7 < Struct
+class Anonymous_Struct_10 < Struct
   def from; end
   def from=(_); end
   def name; end
@@ -647,7 +647,7 @@ class Anonymous_Struct_7 < Struct
   def to; end
   def to=(_); end
 end
-class Arel::Visitors::Dot::Edge < Anonymous_Struct_7
+class Arel::Visitors::Dot::Edge < Anonymous_Struct_10
 end
 class Arel::Visitors::IBM_DB < Arel::Visitors::ToSql
   def collect_optimizer_hints(o, collector); end
@@ -3181,7 +3181,7 @@ class ActiveRecord::Type::Time < ActiveModel::Type::Time
   def serialize(value); end
   include ActiveRecord::Type::Internal::Timezone
 end
-class ActiveRecord::Type::Time::Value < Anonymous_Delegator_8
+class ActiveRecord::Type::Time::Value < Anonymous_Delegator_11
 end
 class ActiveRecord::Type::Text < ActiveModel::Type::String
   def type; end
@@ -3190,7 +3190,7 @@ class ActiveRecord::Type::UnsignedInteger < ActiveModel::Type::Integer
   def max_value; end
   def min_value; end
 end
-class ActiveRecord::Type::Serialized < Anonymous_Delegator_9
+class ActiveRecord::Type::Serialized < Anonymous_Delegator_12
   def accessor; end
   def assert_valid_value(value); end
   def changed_in_place?(raw_old_value, value); end
@@ -3769,7 +3769,7 @@ module ActiveRecord::Locking::Optimistic::ClassMethods
   def reset_locking_column; end
   def update_counters(id, counters); end
 end
-class ActiveRecord::Locking::LockingType < Anonymous_Delegator_10
+class ActiveRecord::Locking::LockingType < Anonymous_Delegator_13
   def deserialize(value); end
   def encode_with(coder); end
   def init_with(coder); end
@@ -3834,7 +3834,7 @@ end
 module ActiveRecord::AttributeMethods::TimeZoneConversion
   extend ActiveSupport::Concern
 end
-class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_11
+class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_14
   def cast(value); end
   def convert_time_to_time_zone(value); end
   def deserialize(value); end
@@ -5030,7 +5030,7 @@ module ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaStatements
   def validate_constraint(table_name, constraint_name); end
   def validate_foreign_key(from_table, to_table = nil, **options); end
 end
-class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_12
+class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_15
   def ==(other); end
   def eql?(other); end
   def fmod; end
@@ -5570,6 +5570,15 @@ module ActiveRecord::Base::GeneratedAttributeMethods
 end
 module ActiveRecord::Base::GeneratedAssociationMethods
 end
+module Doorkeeper::Application::GeneratedAssociationMethods
+  def owner; end
+  def owner=(value); end
+  def reload_owner; end
+end
+class Doorkeeper::Application < ActiveRecord::Base
+  def autosave_associated_records_for_owner(*args); end
+  include Doorkeeper::Models::Ownership
+end
 class ActiveRecord::Associations::Preloader
   def grouped_records(association, records, polymorphic_parent); end
   def preload(records, associations, preload_scope = nil); end
@@ -6066,7 +6075,7 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   def type_with_size_to_sql(type, size); end
   def update_table_definition(table_name, base); end
 end
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_13
+class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_16
   def ==(other); end
   def eql?(other); end
   def extra; end

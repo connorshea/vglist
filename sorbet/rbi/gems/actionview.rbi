@@ -742,7 +742,7 @@ class ActionView::Template::Handlers::Builder
   def self.default_format=(val); end
   def self.default_format?; end
 end
-class ActionView::Template::LegacyTemplate < Anonymous_Delegator_14
+class ActionView::Template::LegacyTemplate < Anonymous_Delegator_17
   def initialize(template, source); end
   def source; end
 end
@@ -1175,6 +1175,14 @@ end
 module ActionView::Layouts::ClassMethods::LayoutConditions
   def _conditional_layout?; end
 end
+module ActionView::RoutingUrlFor
+  def _generate_paths_by_default; end
+  def _routes_context; end
+  def ensure_only_path_option(options); end
+  def optimize_routes_generation?; end
+  def url_for(options = nil); end
+  def url_options; end
+end
 module ActionView::Template::Sources
   extend ActiveSupport::Autoload
 end
@@ -1186,14 +1194,6 @@ class ActionView::UnboundTemplate
   def bind_locals(locals); end
   def build_template(locals); end
   def initialize(source, identifer, handler, options); end
-end
-module ActionView::RoutingUrlFor
-  def _generate_paths_by_default; end
-  def _routes_context; end
-  def ensure_only_path_option(options); end
-  def optimize_routes_generation?; end
-  def url_for(options = nil); end
-  def url_options; end
 end
 class ActionView::Renderer
   def cache_hits; end

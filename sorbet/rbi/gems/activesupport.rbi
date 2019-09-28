@@ -2268,11 +2268,6 @@ class ActiveSupport::Cache::MemoryStore < ActiveSupport::Cache::Store
   def synchronize(&block); end
   def write_entry(key, entry, options); end
 end
-class ActiveSupport::Digest
-  def self.hash_digest_class; end
-  def self.hash_digest_class=(klass); end
-  def self.hexdigest(arg); end
-end
 module ActiveSupport::Configurable
   def config; end
   extend ActiveSupport::Concern
@@ -2297,6 +2292,11 @@ module ActiveSupport::Rescuable::ClassMethods
   def handler_for_rescue(exception, object: nil); end
   def rescue_from(*klasses, with: nil, &block); end
   def rescue_with_handler(exception, object: nil, visited_exceptions: nil); end
+end
+class ActiveSupport::Digest
+  def self.hash_digest_class; end
+  def self.hash_digest_class=(klass); end
+  def self.hexdigest(arg); end
 end
 class ActiveSupport::CurrentAttributes
   def __callbacks; end

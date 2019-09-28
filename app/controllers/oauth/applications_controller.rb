@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   before_action :authenticate_user!
 

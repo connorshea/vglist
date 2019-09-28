@@ -192,6 +192,8 @@ class ActionDispatch::Response::RackBody
   def to_path; end
 end
 module ActionController
+  def self.add_renderer(key, &block); end
+  def self.remove_renderer(key); end
   extend ActiveSupport::Autoload
 end
 module ActionController::Live
@@ -346,6 +348,10 @@ class ActionController::Parameters
   def values_at(*keys); end
   def with_defaults!(other_hash); end
   def with_defaults(other_hash); end
+  include SorbetRails::CustomParamsMethods
+  include SorbetRails::CustomParamsMethods
+  include SorbetRailsHack
+  include SorbetRailsHack
 end
 module ActionController::StrongParameters
   def params; end
@@ -2152,6 +2158,55 @@ class ActionDispatch::Flash::FlashHash
   def update(h); end
   include Enumerable
 end
+class ActionController::LogSubscriber < ActiveSupport::LogSubscriber
+end
+module ActionController::ParamsWrapper
+  def _extract_parameters(parameters); end
+  def _perform_parameter_wrapping; end
+  def _wrap_parameters(parameters); end
+  def _wrapper_enabled?; end
+  def _wrapper_formats; end
+  def _wrapper_key; end
+  def process_action(*args); end
+  extend ActiveSupport::Concern
+end
+class Anonymous_Struct_3 < Struct
+  def exclude; end
+  def exclude=(_); end
+  def format; end
+  def format=(_); end
+  def include; end
+  def include=(_); end
+  def klass; end
+  def klass=(_); end
+  def model; end
+  def model=(_); end
+  def name; end
+  def name=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class ActionController::ParamsWrapper::Options < Anonymous_Struct_3
+  def _default_wrap_model; end
+  def include; end
+  def initialize(name, format, include, exclude, klass, model); end
+  def lock; end
+  def locked?; end
+  def model; end
+  def name; end
+  def self.from_hash(hash); end
+  def synchronize(&block); end
+  def try_lock; end
+  def unlock; end
+  include Mutex_m
+end
+module ActionController::ParamsWrapper::ClassMethods
+  def _set_wrapper_options(options); end
+  def inherited(klass); end
+  def wrap_parameters(name_or_model_or_options, options = nil); end
+end
 class AbstractController::Error < StandardError
 end
 class AbstractController::ActionNotFound < StandardError
@@ -2239,6 +2294,36 @@ class ActionController::Metal < AbstractController::Base
   def to_a; end
   def url_for(string); end
 end
+class AbstractController::DoubleRenderError < AbstractController::Error
+  def initialize(message = nil); end
+end
+module AbstractController::Rendering
+  def _normalize_args(action = nil, options = nil); end
+  def _normalize_options(options); end
+  def _normalize_render(*args, &block); end
+  def _process_format(format); end
+  def _process_options(options); end
+  def _process_variant(options); end
+  def _protected_ivars; end
+  def _set_html_content_type; end
+  def _set_rendered_content_type(format); end
+  def render(*args, &block); end
+  def render_to_body(options = nil); end
+  def render_to_string(*args, &block); end
+  def rendered_format; end
+  def view_assigns; end
+  extend ActiveSupport::Concern
+  include ActionView::ViewPaths
+end
+module AbstractController::Translation
+  def l(*args); end
+  def localize(*args); end
+  def t(key, options = nil); end
+  def translate(key, options = nil); end
+end
+module AbstractController::AssetPaths
+  extend ActiveSupport::Concern
+end
 module AbstractController::UrlFor
   def _routes; end
   extend ActiveSupport::Concern
@@ -2266,6 +2351,83 @@ module ActionController::Redirecting
   extend ActiveSupport::Concern
   include AbstractController::Logger
   include ActionController::UrlFor
+end
+module ActionController::Rendering
+  def _normalize_args(action = nil, options = nil, &blk); end
+  def _normalize_options(options); end
+  def _normalize_text(options); end
+  def _process_options(options); end
+  def _process_variant(options); end
+  def _render_in_priorities(options); end
+  def _set_html_content_type; end
+  def _set_rendered_content_type(format); end
+  def process_action(*arg0); end
+  def render(*args); end
+  def render_to_body(options = nil); end
+  def render_to_string(*arg0); end
+  extend ActiveSupport::Concern
+end
+module ActionController::Rendering::ClassMethods
+  def inherited(klass); end
+  def render(*args, &block); end
+  def renderer; end
+  def setup_renderer!; end
+end
+class ActionController::MissingRenderer < LoadError
+  def initialize(format); end
+end
+module ActionController::Renderers
+  def _render_to_body_with_renderer(options); end
+  def _render_with_renderer_js(js, options); end
+  def _render_with_renderer_json(json, options); end
+  def _render_with_renderer_xml(xml, options); end
+  def render_to_body(options); end
+  def self._render_with_renderer_method_name(key); end
+  def self.add(key, &block); end
+  def self.remove(key); end
+  extend ActiveSupport::Concern
+end
+module ActionController::Renderers::All
+  extend ActiveSupport::Concern
+  include ActionController::Renderers
+end
+module ActionController::Renderers::ClassMethods
+  def use_renderer(*args); end
+  def use_renderers(*args); end
+end
+module ActionController::Head
+  def head(status, options = nil); end
+  def include_content?(status); end
+end
+module ActionController::ConditionalGet
+  def combine_etags(validator, options); end
+  def expires_in(seconds, options = nil); end
+  def expires_now; end
+  def fresh_when(object = nil, etag: nil, weak_etag: nil, strong_etag: nil, last_modified: nil, public: nil, template: nil); end
+  def http_cache_forever(public: nil); end
+  def stale?(object = nil, **freshness_kwargs); end
+  extend ActiveSupport::Concern
+  include ActionController::Head
+end
+module ActionController::ConditionalGet::ClassMethods
+  def etag(&etagger); end
+end
+module ActionController::EtagWithTemplateDigest
+  def determine_template_etag(options); end
+  def lookup_and_digest_template(template); end
+  def pick_template_for_etag(options); end
+  extend ActiveSupport::Concern
+  include ActionController::ConditionalGet
+end
+module ActionController::EtagWithFlash
+  extend ActiveSupport::Concern
+  include ActionController::ConditionalGet
+end
+module ActionController::Caching
+  def instrument_name; end
+  def instrument_payload(key); end
+  extend ActiveSupport::Autoload
+  extend ActiveSupport::Concern
 end
 module AbstractController::Collector
   def atom(*args, &block); end
@@ -2305,35 +2467,64 @@ module AbstractController::Collector
   def yaml(*args, &block); end
   def zip(*args, &block); end
 end
-class AbstractController::DoubleRenderError < AbstractController::Error
-  def initialize(message = nil); end
+module ActionController::MimeResponds
+  def respond_to(*mimes); end
 end
-module AbstractController::Rendering
-  def _normalize_args(action = nil, options = nil); end
-  def _normalize_options(options); end
-  def _normalize_render(*args, &block); end
-  def _process_format(format); end
-  def _process_options(options); end
-  def _process_variant(options); end
-  def _protected_ivars; end
-  def _set_html_content_type; end
-  def _set_rendered_content_type(format); end
-  def render(*args, &block); end
-  def render_to_body(options = nil); end
-  def render_to_string(*args, &block); end
-  def rendered_format; end
-  def view_assigns; end
+class ActionController::MimeResponds::Collector
+  def all(*args, &block); end
+  def any(*args, &block); end
+  def custom(mime_type, &block); end
+  def format; end
+  def format=(arg0); end
+  def initialize(mimes, variant = nil); end
+  def negotiate_format(request); end
+  def response; end
+  include AbstractController::Collector
+end
+class ActionController::MimeResponds::Collector::VariantCollector
+  def all(*args, &block); end
+  def any(*args, &block); end
+  def initialize(variant = nil); end
+  def method_missing(name, *args, &block); end
+  def variant; end
+  def variant_key; end
+end
+module ActionController::BasicImplicitRender
+  def default_render; end
+  def send_action(method, *args); end
+end
+module ActionController::ImplicitRender
+  def default_render; end
+  def interactive_browser_request?; end
+  def method_for_action(action_name); end
+  include ActionController::BasicImplicitRender
+end
+module ActionController::ParameterEncoding
   extend ActiveSupport::Concern
-  include ActionView::ViewPaths
 end
-module AbstractController::Translation
-  def l(*args); end
-  def localize(*args); end
-  def t(key, options = nil); end
-  def translate(key, options = nil); end
+module ActionController::ParameterEncoding::ClassMethods
+  def binary_params_for?(action); end
+  def inherited(klass); end
+  def setup_param_encode; end
+  def skip_parameter_encoding(action); end
 end
-module AbstractController::AssetPaths
+module ActionController::Cookies
+  def cookies; end
   extend ActiveSupport::Concern
+end
+module ActionController::Flash
+  def redirect_to(options = nil, response_options_and_flash = nil); end
+  extend ActiveSupport::Concern
+end
+module ActionController::Flash::ClassMethods
+  def add_flash_types(*types); end
+end
+module ActionController::FormBuilder
+  def default_form_builder; end
+  extend ActiveSupport::Concern
+end
+module ActionController::FormBuilder::ClassMethods
+  def default_form_builder(builder); end
 end
 module AbstractController::Callbacks
   def process_action(*args); end
@@ -2356,6 +2547,195 @@ module AbstractController::Callbacks::ClassMethods
   def skip_after_action(*names); end
   def skip_around_action(*names); end
   def skip_before_action(*names); end
+end
+class ActionController::InvalidAuthenticityToken < ActionController::ActionControllerError
+end
+class ActionController::InvalidCrossOriginRequest < ActionController::ActionControllerError
+end
+module ActionController::RequestForgeryProtection
+  def any_authenticity_token_valid?; end
+  def compare_with_real_token(token, session); end
+  def form_authenticity_param; end
+  def form_authenticity_token(form_options: nil); end
+  def handle_unverified_request; end
+  def mark_for_same_origin_verification!; end
+  def marked_for_same_origin_verification?; end
+  def masked_authenticity_token(session, form_options: nil); end
+  def non_xhr_javascript_response?; end
+  def normalize_action_path(action_path); end
+  def per_form_csrf_token(session, action_path, method); end
+  def protect_against_forgery?; end
+  def real_csrf_token(session); end
+  def request_authenticity_tokens; end
+  def unmask_token(masked_token); end
+  def valid_authenticity_token?(session, encoded_masked_token); end
+  def valid_per_form_csrf_token?(token, session); end
+  def valid_request_origin?; end
+  def verified_request?; end
+  def verify_authenticity_token; end
+  def verify_same_origin_request; end
+  def xor_byte_strings(s1, s2); end
+  extend ActiveSupport::Concern
+  include AbstractController::Callbacks
+  include AbstractController::Helpers
+end
+module ActionController::RequestForgeryProtection::ClassMethods
+  def protect_from_forgery(options = nil); end
+  def protection_method_class(name); end
+  def skip_forgery_protection(options = nil); end
+end
+module ActionController::RequestForgeryProtection::ProtectionMethods
+end
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
+  def handle_unverified_request; end
+  def initialize(controller); end
+end
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullSessionHash < Rack::Session::Abstract::SessionHash
+  def destroy; end
+  def exists?; end
+  def initialize(req); end
+end
+class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullCookieJar < ActionDispatch::Cookies::CookieJar
+  def write(*arg0); end
+end
+class ActionController::RequestForgeryProtection::ProtectionMethods::ResetSession
+  def handle_unverified_request; end
+  def initialize(controller); end
+end
+class ActionController::RequestForgeryProtection::ProtectionMethods::Exception
+  def handle_unverified_request; end
+  def initialize(controller); end
+end
+module ActionController::ContentSecurityPolicy
+  def content_security_policy?; end
+  def content_security_policy_nonce; end
+  def current_content_security_policy; end
+  extend ActiveSupport::Concern
+  include AbstractController::Callbacks
+  include AbstractController::Helpers
+end
+module ActionController::ContentSecurityPolicy::ClassMethods
+  def content_security_policy(enabled = nil, **options, &block); end
+  def content_security_policy_report_only(report_only = nil, **options); end
+end
+module ActionController::ForceSSL
+  def force_ssl_redirect(host_or_options = nil); end
+  extend ActiveSupport::Concern
+  include AbstractController::Callbacks
+end
+module ActionController::ForceSSL::ClassMethods
+  def force_ssl(options = nil); end
+end
+module ActionController::Streaming
+  def _process_options(options); end
+  def _render_template(options); end
+  extend ActiveSupport::Concern
+end
+class ActionDispatch::Http::ContentDisposition
+  def ascii_filename; end
+  def disposition; end
+  def filename; end
+  def initialize(disposition:, filename:); end
+  def percent_escape(string, pattern); end
+  def self.format(disposition:, filename:); end
+  def to_s; end
+  def utf8_filename; end
+end
+module ActionController::DataStreaming
+  def send_data(data, options = nil); end
+  def send_file(path, options = nil); end
+  def send_file_headers!(options); end
+  extend ActiveSupport::Concern
+  include ActionController::Rendering
+end
+module ActionController::HttpAuthentication
+end
+module ActionController::HttpAuthentication::Basic
+  def auth_param(request); end
+  def auth_scheme(request); end
+  def authenticate(request, &login_procedure); end
+  def authentication_request(controller, realm, message); end
+  def decode_credentials(request); end
+  def encode_credentials(user_name, password); end
+  def has_basic_credentials?(request); end
+  def user_name_and_password(request); end
+  extend ActionController::HttpAuthentication::Basic
+end
+module ActionController::HttpAuthentication::Basic::ControllerMethods
+  def authenticate_or_request_with_http_basic(realm = nil, message = nil, &login_procedure); end
+  def authenticate_with_http_basic(&login_procedure); end
+  def http_basic_authenticate_or_request_with(name:, password:, realm: nil, message: nil); end
+  def request_http_basic_authentication(realm = nil, message = nil); end
+  extend ActiveSupport::Concern
+end
+module ActionController::HttpAuthentication::Basic::ControllerMethods::ClassMethods
+  def http_basic_authenticate_with(name:, password:, realm: nil, **options); end
+end
+module ActionController::HttpAuthentication::Digest
+  def authenticate(request, realm, &password_procedure); end
+  def authentication_header(controller, realm); end
+  def authentication_request(controller, realm, message = nil); end
+  def decode_credentials(header); end
+  def decode_credentials_header(request); end
+  def encode_credentials(http_method, credentials, password, password_is_ha1); end
+  def expected_response(http_method, uri, credentials, password, password_is_ha1 = nil); end
+  def ha1(credentials, password); end
+  def nonce(secret_key, time = nil); end
+  def opaque(secret_key); end
+  def secret_token(request); end
+  def validate_digest_response(request, realm, &password_procedure); end
+  def validate_nonce(secret_key, request, value, seconds_to_timeout = nil); end
+  extend ActionController::HttpAuthentication::Digest
+end
+module ActionController::HttpAuthentication::Digest::ControllerMethods
+  def authenticate_or_request_with_http_digest(realm = nil, message = nil, &password_procedure); end
+  def authenticate_with_http_digest(realm = nil, &password_procedure); end
+  def request_http_digest_authentication(realm = nil, message = nil); end
+end
+module ActionController::HttpAuthentication::Token
+  def authenticate(controller, &login_procedure); end
+  def authentication_request(controller, realm, message = nil); end
+  def encode_credentials(token, options = nil); end
+  def params_array_from(raw_params); end
+  def raw_params(auth); end
+  def rewrite_param_values(array_params); end
+  def token_and_options(request); end
+  def token_params_from(auth); end
+  extend ActionController::HttpAuthentication::Token
+end
+module ActionController::HttpAuthentication::Token::ControllerMethods
+  def authenticate_or_request_with_http_token(realm = nil, message = nil, &login_procedure); end
+  def authenticate_with_http_token(&login_procedure); end
+  def request_http_token_authentication(realm = nil, message = nil); end
+end
+module ActionController::DefaultHeaders
+  extend ActiveSupport::Concern
+end
+module ActionController::DefaultHeaders::ClassMethods
+  def make_response!(request); end
+end
+module ActionController::Rescue
+  def process_action(*args); end
+  def show_detailed_exceptions?; end
+  extend ActiveSupport::Concern
+  include ActiveSupport::Rescuable
+end
+module ActionController::Instrumentation
+  def append_info_to_payload(payload); end
+  def cleanup_view_runtime; end
+  def halted_callback_hook(filter); end
+  def process_action(*args); end
+  def redirect_to(*args); end
+  def render(*args); end
+  def send_data(data, options = nil); end
+  def send_file(path, options = nil); end
+  def view_runtime; end
+  def view_runtime=(arg0); end
+  extend ActiveSupport::Concern
+  include AbstractController::Logger
+end
+module ActionController::Instrumentation::ClassMethods
+  def log_process_action(payload); end
 end
 module AbstractController::Caching
   def cache(key, options = nil, &block); end
@@ -2385,6 +2765,489 @@ end
 module AbstractController::Caching::ClassMethods
   def view_cache_dependency(&dependency); end
 end
+class ActionController::Renderer
+  def controller; end
+  def defaults; end
+  def initialize(controller, env, defaults); end
+  def new(env = nil); end
+  def normalize_keys(env); end
+  def rack_key_for(key); end
+  def rack_value_for(key, value); end
+  def render(*args); end
+  def self.for(controller, env = nil, defaults = nil); end
+  def with_defaults(defaults); end
+end
+module ActionDispatch::Assertions
+  def html_document; end
+  extend ActiveSupport::Concern
+  include ActionDispatch::Assertions::ResponseAssertions
+  include ActionDispatch::Assertions::RoutingAssertions
+  include Rails::Dom::Testing::Assertions
+  include Turbolinks::Assertions
+  include Turbolinks::Assertions
+end
+module ActionDispatch::Assertions::ResponseAssertions
+  def assert_redirected_to(options = nil, message = nil); end
+  def assert_response(type, message = nil); end
+  def code_with_name(code_or_name); end
+  def generate_response_message(expected, actual = nil); end
+  def location_if_redirected; end
+  def normalize_argument_to_redirection(fragment); end
+  def parameterize(value); end
+  def response_body_if_short; end
+end
+module ActionDispatch::Assertions::RoutingAssertions
+  def assert_generates(expected_path, options, defaults = nil, extras = nil, message = nil); end
+  def assert_recognizes(expected_options, path, extras = nil, msg = nil); end
+  def assert_routing(path, options, defaults = nil, extras = nil, message = nil); end
+  def fail_on(exception_class, message); end
+  def method_missing(selector, *args, &block); end
+  def recognized_request_for(path, extras = nil, msg); end
+  def setup; end
+  def with_routing; end
+end
+class ActionController::API < ActionController::Metal
+  def __callbacks; end
+  def __callbacks?; end
+  def _helper_methods; end
+  def _helper_methods=(val); end
+  def _helper_methods?; end
+  def _helpers; end
+  def _helpers=(val); end
+  def _helpers?; end
+  def _process_action_callbacks; end
+  def _renderers; end
+  def _renderers=(val); end
+  def _renderers?; end
+  def _run_process_action_callbacks(&block); end
+  def _wrapper_options; end
+  def _wrapper_options=(val); end
+  def _wrapper_options?; end
+  def default_url_options; end
+  def default_url_options=(val); end
+  def default_url_options?; end
+  def etaggers; end
+  def etaggers=(val); end
+  def etaggers?; end
+  def helpers_path; end
+  def helpers_path=(val); end
+  def helpers_path?; end
+  def include_all_helpers; end
+  def include_all_helpers=(val); end
+  def include_all_helpers?; end
+  def logger; end
+  def logger=(value); end
+  def mimes_for_respond_to; end
+  def mimes_for_respond_to=(val); end
+  def mimes_for_respond_to?; end
+  def rescue_handlers; end
+  def rescue_handlers=(val); end
+  def rescue_handlers?; end
+  def responder; end
+  def responder=(val); end
+  def responder?; end
+  def self.__callbacks; end
+  def self.__callbacks=(val); end
+  def self.__callbacks?; end
+  def self._helper_methods; end
+  def self._helper_methods=(val); end
+  def self._helper_methods?; end
+  def self._helpers; end
+  def self._helpers=(val); end
+  def self._helpers?; end
+  def self._process_action_callbacks; end
+  def self._process_action_callbacks=(value); end
+  def self._renderers; end
+  def self._renderers=(val); end
+  def self._renderers?; end
+  def self._wrapper_options; end
+  def self._wrapper_options=(val); end
+  def self._wrapper_options?; end
+  def self.default_url_options; end
+  def self.default_url_options=(val); end
+  def self.default_url_options?; end
+  def self.etaggers; end
+  def self.etaggers=(val); end
+  def self.etaggers?; end
+  def self.helpers_path; end
+  def self.helpers_path=(val); end
+  def self.helpers_path?; end
+  def self.include_all_helpers; end
+  def self.include_all_helpers=(val); end
+  def self.include_all_helpers?; end
+  def self.logger; end
+  def self.logger=(value); end
+  def self.middleware_stack; end
+  def self.mimes_for_respond_to; end
+  def self.mimes_for_respond_to=(val); end
+  def self.mimes_for_respond_to?; end
+  def self.rescue_handlers; end
+  def self.rescue_handlers=(val); end
+  def self.rescue_handlers?; end
+  def self.responder; end
+  def self.responder=(val); end
+  def self.responder?; end
+  def self.without_modules(*modules); end
+  extend AbstractController::Callbacks::ClassMethods
+  extend AbstractController::Helpers::ClassMethods
+  extend AbstractController::UrlFor::ClassMethods
+  extend ActionController::ConditionalGet::ClassMethods
+  extend ActionController::DefaultHeaders::ClassMethods
+  extend ActionController::ForceSSL::ClassMethods
+  extend ActionController::Helpers::ClassMethods
+  extend ActionController::Instrumentation::ClassMethods
+  extend ActionController::ParamsWrapper::ClassMethods
+  extend ActionController::Railties::Helpers
+  extend ActionController::Renderers::ClassMethods
+  extend ActionController::Rendering::ClassMethods
+  extend ActionController::RespondWith::ClassMethods
+  extend ActionView::Rendering::ClassMethods
+  extend ActionView::ViewPaths::ClassMethods
+  extend ActiveRecord::Railties::ControllerRuntime::ClassMethods
+  extend ActiveSupport::Callbacks::ClassMethods
+  extend ActiveSupport::DescendantsTracker
+  extend ActiveSupport::Rescuable::ClassMethods
+  extend Anonymous_Module_4
+  extend Devise::Controllers::Helpers::ClassMethods
+  include AbstractController::Callbacks
+  include AbstractController::Callbacks
+  include AbstractController::Helpers
+  include AbstractController::Logger
+  include AbstractController::Logger
+  include AbstractController::Rendering
+  include AbstractController::UrlFor
+  include ActionController::ApiRendering
+  include ActionController::BasicImplicitRender
+  include ActionController::ConditionalGet
+  include ActionController::DataStreaming
+  include ActionController::DefaultHeaders
+  include ActionController::ForceSSL
+  include ActionController::Helpers
+  include ActionController::ImplicitRender
+  include ActionController::Instrumentation
+  include ActionController::ParamsWrapper
+  include ActionController::Redirecting
+  include ActionController::Renderers
+  include ActionController::Renderers::All
+  include ActionController::Rendering
+  include ActionController::Rendering
+  include ActionController::Rescue
+  include ActionController::RespondWith
+  include ActionController::StrongParameters
+  include ActionController::UrlFor
+  include ActionController::UrlFor
+  include ActionDispatch::Routing::RouteSet::MountedHelpers
+  include ActionDispatch::Routing::UrlFor
+  include ActionDispatch::Routing::UrlFor
+  include ActionView::Rendering
+  include ActionView::ViewPaths
+  include ActionView::ViewPaths
+  include ActiveRecord::Railties::ControllerRuntime
+  include ActiveSupport::Benchmarkable
+  include ActiveSupport::Callbacks
+  include ActiveSupport::Rescuable
+  include Devise::Controllers::Helpers
+  include Devise::Controllers::UrlHelpers
+  include Doorkeeper::Rails::Helpers
+  include Raven::Rails::ControllerMethods
+  include Raven::Rails::ControllerTransaction
+  include Turbolinks::Controller
+  include Turbolinks::Redirection
+end
+class ActionController::Base < ActionController::Metal
+  def __callbacks; end
+  def __callbacks?; end
+  def _helper_methods; end
+  def _helper_methods=(val); end
+  def _helper_methods?; end
+  def _helpers; end
+  def _helpers=(val); end
+  def _helpers?; end
+  def _layout(lookup_context, formats); end
+  def _process_action_callbacks; end
+  def _protected_ivars; end
+  def _renderers; end
+  def _renderers=(val); end
+  def _renderers?; end
+  def _run_process_action_callbacks(&block); end
+  def _view_cache_dependencies; end
+  def _view_cache_dependencies=(val); end
+  def _view_cache_dependencies?; end
+  def _wrapper_options; end
+  def _wrapper_options=(val); end
+  def _wrapper_options?; end
+  def alert; end
+  def allow_forgery_protection; end
+  def allow_forgery_protection=(value); end
+  def asset_host; end
+  def asset_host=(value); end
+  def assets_dir; end
+  def assets_dir=(value); end
+  def default_asset_host_protocol; end
+  def default_asset_host_protocol=(value); end
+  def default_protect_from_forgery; end
+  def default_protect_from_forgery=(value); end
+  def default_static_extension; end
+  def default_static_extension=(value); end
+  def default_url_options; end
+  def default_url_options=(val); end
+  def default_url_options?; end
+  def enable_fragment_cache_logging; end
+  def enable_fragment_cache_logging=(value); end
+  def etag_with_template_digest; end
+  def etag_with_template_digest=(val); end
+  def etag_with_template_digest?; end
+  def etaggers; end
+  def etaggers=(val); end
+  def etaggers?; end
+  def flash(*args, &block); end
+  def forgery_protection_origin_check; end
+  def forgery_protection_origin_check=(value); end
+  def forgery_protection_strategy; end
+  def forgery_protection_strategy=(value); end
+  def fragment_cache_keys; end
+  def fragment_cache_keys=(val); end
+  def fragment_cache_keys?; end
+  def helpers_path; end
+  def helpers_path=(val); end
+  def helpers_path?; end
+  def include_all_helpers; end
+  def include_all_helpers=(val); end
+  def include_all_helpers?; end
+  def javascripts_dir; end
+  def javascripts_dir=(value); end
+  def log_warning_on_csrf_failure; end
+  def log_warning_on_csrf_failure=(value); end
+  def logger; end
+  def logger=(value); end
+  def mimes_for_respond_to; end
+  def mimes_for_respond_to=(val); end
+  def mimes_for_respond_to?; end
+  def notice; end
+  def per_form_csrf_tokens; end
+  def per_form_csrf_tokens=(value); end
+  def perform_caching; end
+  def perform_caching=(value); end
+  def relative_url_root; end
+  def relative_url_root=(value); end
+  def request_forgery_protection_token; end
+  def request_forgery_protection_token=(value); end
+  def rescue_handlers; end
+  def rescue_handlers=(val); end
+  def rescue_handlers?; end
+  def responder; end
+  def responder=(val); end
+  def responder?; end
+  def self.__callbacks; end
+  def self.__callbacks=(val); end
+  def self.__callbacks?; end
+  def self._default_form_builder; end
+  def self._default_form_builder=(val); end
+  def self._default_form_builder?; end
+  def self._flash_types; end
+  def self._flash_types=(val); end
+  def self._flash_types?; end
+  def self._helper_methods; end
+  def self._helper_methods=(val); end
+  def self._helper_methods?; end
+  def self._helpers; end
+  def self._helpers=(val); end
+  def self._helpers?; end
+  def self._layout; end
+  def self._layout=(val); end
+  def self._layout?; end
+  def self._layout_conditions; end
+  def self._layout_conditions=(val); end
+  def self._layout_conditions?; end
+  def self._process_action_callbacks; end
+  def self._process_action_callbacks=(value); end
+  def self._renderers; end
+  def self._renderers=(val); end
+  def self._renderers?; end
+  def self._view_cache_dependencies; end
+  def self._view_cache_dependencies=(val); end
+  def self._view_cache_dependencies?; end
+  def self._wrapper_options; end
+  def self._wrapper_options=(val); end
+  def self._wrapper_options?; end
+  def self.allow_forgery_protection; end
+  def self.allow_forgery_protection=(value); end
+  def self.asset_host; end
+  def self.asset_host=(value); end
+  def self.assets_dir; end
+  def self.assets_dir=(value); end
+  def self.default_asset_host_protocol; end
+  def self.default_asset_host_protocol=(value); end
+  def self.default_protect_from_forgery; end
+  def self.default_protect_from_forgery=(value); end
+  def self.default_static_extension; end
+  def self.default_static_extension=(value); end
+  def self.default_url_options; end
+  def self.default_url_options=(val); end
+  def self.default_url_options?; end
+  def self.enable_fragment_cache_logging; end
+  def self.enable_fragment_cache_logging=(value); end
+  def self.etag_with_template_digest; end
+  def self.etag_with_template_digest=(val); end
+  def self.etag_with_template_digest?; end
+  def self.etaggers; end
+  def self.etaggers=(val); end
+  def self.etaggers?; end
+  def self.forgery_protection_origin_check; end
+  def self.forgery_protection_origin_check=(value); end
+  def self.forgery_protection_strategy; end
+  def self.forgery_protection_strategy=(value); end
+  def self.fragment_cache_keys; end
+  def self.fragment_cache_keys=(val); end
+  def self.fragment_cache_keys?; end
+  def self.helpers_path; end
+  def self.helpers_path=(val); end
+  def self.helpers_path?; end
+  def self.include_all_helpers; end
+  def self.include_all_helpers=(val); end
+  def self.include_all_helpers?; end
+  def self.javascripts_dir; end
+  def self.javascripts_dir=(value); end
+  def self.log_warning_on_csrf_failure; end
+  def self.log_warning_on_csrf_failure=(value); end
+  def self.logger; end
+  def self.logger=(value); end
+  def self.middleware_stack; end
+  def self.mimes_for_respond_to; end
+  def self.mimes_for_respond_to=(val); end
+  def self.mimes_for_respond_to?; end
+  def self.per_form_csrf_tokens; end
+  def self.per_form_csrf_tokens=(value); end
+  def self.perform_caching; end
+  def self.perform_caching=(value); end
+  def self.relative_url_root; end
+  def self.relative_url_root=(value); end
+  def self.request_forgery_protection_token; end
+  def self.request_forgery_protection_token=(value); end
+  def self.rescue_handlers; end
+  def self.rescue_handlers=(val); end
+  def self.rescue_handlers?; end
+  def self.responder; end
+  def self.responder=(val); end
+  def self.responder?; end
+  def self.stylesheets_dir; end
+  def self.stylesheets_dir=(value); end
+  def self.without_modules(*modules); end
+  def stylesheets_dir; end
+  def stylesheets_dir=(value); end
+  extend AbstractController::Caching::ClassMethods
+  extend AbstractController::Caching::ConfigMethods
+  extend AbstractController::Caching::Fragments::ClassMethods
+  extend AbstractController::Callbacks::ClassMethods
+  extend AbstractController::Helpers::ClassMethods
+  extend AbstractController::UrlFor::ClassMethods
+  extend ActionController::ConditionalGet::ClassMethods
+  extend ActionController::ContentSecurityPolicy::ClassMethods
+  extend ActionController::DefaultHeaders::ClassMethods
+  extend ActionController::Flash::ClassMethods
+  extend ActionController::ForceSSL::ClassMethods
+  extend ActionController::FormBuilder::ClassMethods
+  extend ActionController::Helpers::ClassMethods
+  extend ActionController::HttpAuthentication::Basic::ControllerMethods::ClassMethods
+  extend ActionController::Instrumentation::ClassMethods
+  extend ActionController::ParameterEncoding::ClassMethods
+  extend ActionController::ParamsWrapper::ClassMethods
+  extend ActionController::Railties::Helpers
+  extend ActionController::Renderers::ClassMethods
+  extend ActionController::Rendering::ClassMethods
+  extend ActionController::RequestForgeryProtection::ClassMethods
+  extend ActionController::RespondWith::ClassMethods
+  extend ActionView::Layouts::ClassMethods
+  extend ActionView::Rendering::ClassMethods
+  extend ActionView::ViewPaths::ClassMethods
+  extend ActiveRecord::Railties::ControllerRuntime::ClassMethods
+  extend ActiveSupport::Callbacks::ClassMethods
+  extend ActiveSupport::DescendantsTracker
+  extend ActiveSupport::Rescuable::ClassMethods
+  extend Anonymous_Module_5
+  extend Devise::Controllers::Helpers::ClassMethods
+  extend Responders::ControllerMethod
+  extend Responders::ControllerMethod
+  include AbstractController::AssetPaths
+  include AbstractController::Caching
+  include AbstractController::Caching::Fragments
+  include AbstractController::Callbacks
+  include AbstractController::Callbacks
+  include AbstractController::Callbacks
+  include AbstractController::Callbacks
+  include AbstractController::Helpers
+  include AbstractController::Helpers
+  include AbstractController::Helpers
+  include AbstractController::Logger
+  include AbstractController::Logger
+  include AbstractController::Rendering
+  include AbstractController::Translation
+  include AbstractController::UrlFor
+  include ActionController::Caching
+  include ActionController::ConditionalGet
+  include ActionController::ConditionalGet
+  include ActionController::ConditionalGet
+  include ActionController::ContentSecurityPolicy
+  include ActionController::Cookies
+  include ActionController::DataStreaming
+  include ActionController::DefaultHeaders
+  include ActionController::EtagWithFlash
+  include ActionController::EtagWithTemplateDigest
+  include ActionController::Flash
+  include ActionController::ForceSSL
+  include ActionController::FormBuilder
+  include ActionController::Helpers
+  include ActionController::HttpAuthentication::Basic::ControllerMethods
+  include ActionController::HttpAuthentication::Digest::ControllerMethods
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+  include ActionController::ImplicitRender
+  include ActionController::Instrumentation
+  include ActionController::MimeResponds
+  include ActionController::ParameterEncoding
+  include ActionController::ParamsWrapper
+  include ActionController::Redirecting
+  include ActionController::Renderers
+  include ActionController::Renderers::All
+  include ActionController::Rendering
+  include ActionController::Rendering
+  include ActionController::RequestForgeryProtection
+  include ActionController::Rescue
+  include ActionController::RespondWith
+  include ActionController::Streaming
+  include ActionController::StrongParameters
+  include ActionController::UrlFor
+  include ActionController::UrlFor
+  include ActionDispatch::Routing::RouteSet::MountedHelpers
+  include ActionDispatch::Routing::UrlFor
+  include ActionDispatch::Routing::UrlFor
+  include ActionView::Layouts
+  include ActionView::Rendering
+  include ActionView::ViewPaths
+  include ActionView::ViewPaths
+  include ActiveRecord::Railties::ControllerRuntime
+  include ActiveSupport::Benchmarkable
+  include ActiveSupport::Callbacks
+  include ActiveSupport::Rescuable
+  include Devise::Controllers::Helpers
+  include Devise::Controllers::UrlHelpers
+  include Doorkeeper::Rails::Helpers
+  include Raven::Rails::ControllerMethods
+  include Raven::Rails::ControllerTransaction
+  include Turbolinks::Controller
+  include Turbolinks::Redirection
+end
+module Anonymous_Module_4
+  def inherited(klass); end
+end
+module ActionView::RoutingUrlFor
+  def default_url_options=(obj); end
+  def self.default_url_options=(obj); end
+  include ActionDispatch::Routing::UrlFor
+  include ActionDispatch::Routing::UrlFor
+end
+module Anonymous_Module_5
+  def inherited(klass); end
+end
 class ActionDispatch::Routing::RoutesProxy
   def _routes; end
   def default_url_options; end
@@ -2403,14 +3266,4 @@ class ActionDispatch::Routing::RoutesProxy
   def self.default_url_options?; end
   def url_options; end
   include ActionDispatch::Routing::UrlFor
-end
-class ActionDispatch::Http::ContentDisposition
-  def ascii_filename; end
-  def disposition; end
-  def filename; end
-  def initialize(disposition:, filename:); end
-  def percent_escape(string, pattern); end
-  def self.format(disposition:, filename:); end
-  def to_s; end
-  def utf8_filename; end
 end
