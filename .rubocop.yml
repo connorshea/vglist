@@ -165,3 +165,6 @@ RSpec/MultipleExpectations:
 
 RSpec/DescribedClass:
   Enabled: false
+
+RSpec/EmptyLineAfterExample:
+  Enabled: false
