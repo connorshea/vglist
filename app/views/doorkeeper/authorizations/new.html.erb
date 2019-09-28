@@ -2,7 +2,14 @@
 
 <main class="card column is-half m-auto" role="main">
   <p class="h4">
-    <%= raw t('.prompt', client_name: content_tag(:strong, class: 'text-info') { @pre_auth.client.name }) %>
+    Authorize
+    <%= content_tag(:strong, class: 'text-info') { @pre_auth.client.name } %>
+    to use your account?
+  </p>
+
+  <p class="h4 mt-10">
+    This application is owned by
+    <%= link_to(@pre_auth.client.application.owner.username, user_path(@pre_auth.client.application.owner)) %>.
   </p>
 
   <% if @pre_auth.scopes.count > 0 %>

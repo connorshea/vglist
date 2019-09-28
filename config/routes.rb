@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   # Put this at the top for ~performance~
@@ -91,9 +91,11 @@ Rails.application.routes.draw do
   end
 
   scope :settings do
-    use_doorkeeper do
-      # This is contributed by Doorkeeper, but Sorbet doesn't know that so we have to hack around it.
-      T.unsafe(self).controllers applications: 'oauth/applications'
+    # This is contributed by Doorkeeper, but Sorbet doesn't know that so we have to hack around it.
+    T.unsafe(self).use_doorkeeper do
+      T.unsafe(self).controllers applications: 'oauth/applications',
+                                 authorized_applications: 'oauth/authorized_applications',
+                                 authorizations: 'oauth/authorizations'
     end
   end
 

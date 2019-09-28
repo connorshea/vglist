@@ -47,7 +47,7 @@
       <%= f.text_field :scopes, class: "input #{ 'has-error' if application.errors[:scopes].present? }" %>
       <%= doorkeeper_errors_for application, :scopes %>
       <span class="help">
-        Separate scopes with spaces. The only valid scopes are 'Read' and 'Write'.
+        Separate scopes with spaces. The only valid scopes are 'read' and 'write'.
       </span>
     </div>
   </div>

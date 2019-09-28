@@ -20,3 +20,5 @@ class ActionController::Parameters
 end
 
 class Doorkeeper::ApplicationsController < ApplicationController; end
+class Doorkeeper::AuthorizedApplicationsController < ApplicationController; end
+class Doorkeeper::AuthorizationsController < ApplicationController; end

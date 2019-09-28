@@ -19,7 +19,7 @@ Doorkeeper.configure do
     if current_user
       head :forbidden unless current_user.admin?
     else
-      redirect_to sign_in_url
+      redirect_to new_user_session_url
     end
   end
 
@@ -157,7 +157,7 @@ Doorkeeper.configure do
   # For more information go to
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
-  default_scopes  :read
+  default_scopes :read
   optional_scopes :write
 
   # Allows to restrict only certain scopes for grant_type.
