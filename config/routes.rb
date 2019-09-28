@@ -90,6 +90,9 @@ Rails.application.routes.draw do
     get :connections
   end
 
+  # Implement the .well-known/change-password URL.
+  get '.well-known/change-password', to: redirect('/settings/account')
+
   get '/about', to: 'static_pages#about'
 
   # API routes

@@ -30,6 +30,12 @@ RSpec.describe "Settings", type: :request do
       get settings_account_path
       expect(response).to redirect_to(root_path)
     end
+
+    it ".well-known/change-password redirects to settings_account_path" do
+      sign_in(user)
+      get '/.well-known/change-password'
+      expect(response).to redirect_to(settings_account_path)
+    end
   end
 
   describe "GET settings_connections_path" do
