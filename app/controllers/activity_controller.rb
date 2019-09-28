@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 class ActivityController < ApplicationController
   before_action :authenticate_user!, except: :global
 

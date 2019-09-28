@@ -7,9 +7,10 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-4.1.1
+# puma-4.2.0
 module Puma
   def self.jruby?; end
+  def self.set_thread_name(name); end
   def self.stats; end
   def self.stats_object=(val); end
   def self.windows?; end
@@ -76,6 +77,7 @@ class Puma::DSL
   def drain_on_shutdown(which = nil); end
   def early_hints(answer = nil); end
   def environment(environment); end
+  def extra_runtime_dependencies(answer = nil); end
   def first_data_timeout(seconds); end
   def force_shutdown_after(val = nil); end
   def get(key, default = nil); end
@@ -223,13 +225,8 @@ class Puma::ThreadPool
 end
 class Puma::ThreadPool::ForceShutdown < RuntimeError
 end
-class Puma::ThreadPool::AutoTrim
-  def initialize(pool, timeout); end
-  def start!; end
-  def stop; end
-end
-class Puma::ThreadPool::Reaper
-  def initialize(pool, timeout); end
+class Puma::ThreadPool::Automaton
+  def initialize(pool, timeout, thread_name, message); end
   def start!; end
   def stop; end
 end
@@ -353,9 +350,7 @@ class Puma::Client
   def timeout_at; end
   def to_io; end
   def try_to_finish; end
-  def write_400; end
-  def write_408; end
-  def write_500; end
+  def write_error(status_code); end
   extend Puma::Delegation
   include Puma::Const
 end
@@ -364,6 +359,8 @@ class Puma::Binder
   def add_tcp_listener(host, port, optimize_for_latency = nil, backlog = nil); end
   def add_unix_listener(path, umask = nil, mode = nil, backlog = nil); end
   def close; end
+  def close_listeners; end
+  def close_unix_paths; end
   def connected_port; end
   def env(sock); end
   def import_from_env; end
@@ -372,9 +369,9 @@ class Puma::Binder
   def inherit_unix_listener(path, fd); end
   def initialize(events); end
   def ios; end
-  def listeners; end
   def loopback_addresses; end
   def parse(binds, logger); end
+  def redirects_for_restart; end
   include Puma::Const
 end
 module OpenSSL
@@ -518,8 +515,6 @@ end
 class Puma::Cluster::Worker
   def boot!; end
   def booted?; end
-  def dead!; end
-  def dead?; end
   def hup; end
   def index; end
   def initialize(idx, pid, phase, options); end
@@ -548,22 +543,29 @@ end
 class Puma::Launcher
   def binder; end
   def close_binder_listeners; end
+  def close_binder_unix_paths; end
   def clustered?; end
   def config; end
   def connected_port; end
   def delete_pidfile; end
+  def dependencies_and_files_to_require_after_prune; end
   def environment; end
   def events; end
+  def extra_runtime_deps_directories; end
   def generate_restart_data; end
   def graceful_stop; end
   def halt; end
   def initialize(conf, launcher_args = nil); end
   def log(str); end
+  def log_thread_status; end
   def options; end
   def phased_restart; end
   def prune_bundler; end
   def prune_bundler?; end
+  def puma_wild_location; end
   def reload_worker_directory; end
+  def require_paths_for_gem(gem_spec); end
+  def require_rubygems_min_version!(min_version, feature); end
   def restart!; end
   def restart; end
   def restart_args; end
@@ -572,6 +574,7 @@ class Puma::Launcher
   def set_process_title; end
   def set_rack_environment; end
   def setup_signals; end
+  def spec_for_gem(gem_name); end
   def stats; end
   def stop; end
   def title; end

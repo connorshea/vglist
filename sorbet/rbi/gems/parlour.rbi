@@ -7,8 +7,27 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parlour/all/parlour.rbi
 #
-# parlour-0.8.0
+# parlour-0.8.1
 module Parlour
+end
+module Parlour::Debugging
+  def self.debug_mode=(*args, &blk); end
+  def self.debug_mode?(*args, &blk); end
+  def self.debug_puts(*args, &blk); end
+  def self.name_for_debug_caller(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+end
+module Parlour::Debugging::Tree
+  def self.begin(*args, &blk); end
+  def self.end(*args, &blk); end
+  def self.here(*args, &blk); end
+  def self.line_prefix; end
+  def self.text_prefix; end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
 end
 module Kernel
 end

@@ -2383,12 +2383,6 @@ class ActionView::AbstractRenderer::RenderedTemplate
   EMPTY_SPACER = ::T.let(nil, ::T.untyped)
 end
 
-class ActionView::ActionViewError
-end
-
-class ActionView::ActionViewError
-end
-
 class ActionView::Base
   include ::ActionView::Context
   include ::ERB::Util
@@ -2593,12 +2587,6 @@ class ActionView::Digestor
   def self.tree(name, finder, partial=T.unsafe(nil), seen=T.unsafe(nil)); end
 end
 
-class ActionView::EncodingError
-end
-
-class ActionView::EncodingError
-end
-
 module ActionView::Helpers::AssetUrlHelper
   ASSET_EXTENSIONS = ::T.let(nil, ::T.untyped)
   ASSET_PUBLIC_DIRECTORIES = ::T.let(nil, ::T.untyped)
@@ -2645,11 +2633,6 @@ end
 
 class ActionView::MissingTemplate
   def initialize(paths, path, prefixes, partial, details, *_); end
-
-  def path(); end
-end
-
-class ActionView::MissingTemplate
 end
 
 class ActionView::PartialRenderer
@@ -2710,9 +2693,6 @@ class ActionView::Template::Error
 
   def sub_template_of(template_path); end
   SOURCE_CODE_RADIUS = ::T.let(nil, ::T.untyped)
-end
-
-class ActionView::Template::Error
 end
 
 class ActionView::Template::HTML
@@ -2794,8 +2774,6 @@ end
 class ActionView::Template::Types::Type
   SET = ::T.let(nil, ::T.untyped)
 end
-
-ActionView::TemplateError = ActionView::Template::Error
 
 class ActionView::TestCase
   include ::Rails::Dom::Testing::Assertions
@@ -2985,9 +2963,6 @@ end
 
 class ActionView::WrongEncodingError
   def initialize(string, encoding); end
-end
-
-class ActionView::WrongEncodingError
 end
 
 module ActiveJob::Arguments
@@ -5667,10 +5642,7 @@ class Arel::Visitors::DepthFirst
 end
 
 class Array
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::Array
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def bsearch(); end
 
   def bsearch_index(); end
@@ -5692,7 +5664,6 @@ class Array
   def shelljoin(); end
 
   def to_h(); end
-
 end
 
 class Array
@@ -5708,8 +5679,6 @@ end
 BasicObject::BasicObject = BasicObject
 
 class Benchmark::Job
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def initialize(width); end
 
   def item(label=T.unsafe(nil), &blk); end
@@ -5722,8 +5691,6 @@ class Benchmark::Job
 end
 
 class Benchmark::Report
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def initialize(width=T.unsafe(nil), format=T.unsafe(nil)); end
 
   def item(label=T.unsafe(nil), *format, &blk); end
@@ -5734,8 +5701,6 @@ class Benchmark::Report
 end
 
 class Benchmark::Tms
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def *(x); end
 
   def +(other); end
@@ -5789,8 +5754,8 @@ module BetterErrors::REPL
 end
 
 class BigDecimal
-  include ::ActiveSupport::NumericWithFormat
   include ::ActiveSupport::BigDecimalWithDefaultFormat
+  include ::ActiveSupport::NumericWithFormat
   def clone(); end
 
   def to_d(); end
@@ -5808,8 +5773,6 @@ end
 Bindex = Skiptrace
 
 class Binding
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def clone(); end
 
   def irb(); end
@@ -6772,15 +6735,6 @@ class Byebug::WidthSetting
   DEFAULT = ::T.let(nil, ::T.untyped)
 end
 
-class CGI
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class CGI::Cookie
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module CGI::HtmlExtension
   def a(href=T.unsafe(nil)); end
 
@@ -6828,10 +6782,6 @@ module CGI::HtmlExtension
 end
 
 module CGI::HtmlExtension
-end
-
-class CGI::InvalidEncoding
-  include ::BetterErrors::ExceptionExtension
 end
 
 module Capybara
@@ -8049,7 +7999,6 @@ module Coverage
   def self.peek_result(); end
 
   def self.running?(); end
-
 end
 
 class Crass::Parser
@@ -8082,11 +8031,6 @@ end
 module DRb::DRbUndumped
 end
 
-class Data
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class DatabaseCleaner::Safeguard
   CHECKS = ::T.let(nil, ::T.untyped)
 end
@@ -8100,8 +8044,6 @@ class DatabaseCleaner::Safeguard::RemoteDatabaseUrl
 end
 
 class Date
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   DATE_FORMATS = ::T.let(nil, ::T.untyped)
 end
 
@@ -8546,8 +8488,6 @@ module DeviseHelper
 end
 
 class DidYouMean::ClassNameChecker
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def class_name(); end
 
   def class_names(); end
@@ -8593,8 +8533,6 @@ module DidYouMean::Levenshtein
 end
 
 class DidYouMean::MethodNameChecker
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def corrections(); end
 
   def initialize(exception); end
@@ -8608,8 +8546,6 @@ class DidYouMean::MethodNameChecker
 end
 
 class DidYouMean::NullChecker
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def corrections(); end
 
   def initialize(*_); end
@@ -8623,16 +8559,12 @@ class DidYouMean::PlainFormatter
 end
 
 class DidYouMean::SpellChecker
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def correct(input); end
 
   def initialize(dictionary:); end
 end
 
 class DidYouMean::VariableNameChecker
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def corrections(); end
 
   def cvar_names(); end
@@ -8655,11 +8587,6 @@ module DidYouMean
   def self.formatter=(formatter); end
 end
 
-class Digest::Class
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module Digest::UUID
   DNS_NAMESPACE = ::T.let(nil, ::T.untyped)
   OID_NAMESPACE = ::T.let(nil, ::T.untyped)
@@ -8668,12 +8595,9 @@ module Digest::UUID
 end
 
 class Dir
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def children(); end
 
   def each_child(); end
-
 end
 
 class Dir
@@ -8699,8 +8623,6 @@ class Docile::FallbackContextProxy
 end
 
 class ERB
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def def_method(mod, methodname, fname=T.unsafe(nil)); end
 
   def def_module(methodname=T.unsafe(nil)); end
@@ -8708,24 +8630,7 @@ class ERB
   def result_with_hash(hash); end
 end
 
-class ERB::Compiler
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class ERB::Compiler::Buffer
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class ERB::Compiler::PercentLine
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class ERB::Compiler::Scanner
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   DEFAULT_ETAGS = ::T.let(nil, ::T.untyped)
   DEFAULT_STAGS = ::T.let(nil, ::T.untyped)
 end
@@ -8740,8 +8645,6 @@ end
 Emitter = Psych::Stream::Emitter
 
 class Encoding
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def _dump(*_); end
 end
 
@@ -9170,12 +9073,9 @@ module Enumerable
 end
 
 class Enumerator
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +(_); end
 
   def each_with_index(); end
-
 end
 
 class Enumerator::ArithmeticSequence
@@ -9202,8 +9102,6 @@ class Enumerator::Chain
 end
 
 class Enumerator::Generator
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def each(*_, &blk); end
 
   def initialize(*_); end
@@ -9217,11 +9115,6 @@ class Enumerator::Lazy
   def force(*_); end
 
   def slice_when(*_); end
-end
-
-class Enumerator::Yielder
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Errno::EAUTH
@@ -9818,10 +9711,7 @@ end
 
 class Exception
   include ::BetterErrors::ExceptionExtension
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def full_message(*_); end
-
 end
 
 class Exception
@@ -9832,7 +9722,6 @@ end
 
 module Exception2MessageMapper
   def bind(cl); end
-
 end
 
 Exception2MessageMapper::E2MM = Exception2MessageMapper
@@ -9960,7 +9849,7 @@ class FSEvent
 end
 
 module FactoryBot
-  DEPRECATOR = ::T.let(nil, ::T.untyped)
+  Deprecation = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
@@ -9970,6 +9859,11 @@ end
 
 class FactoryBot::Evaluation
   include ::Observable
+end
+
+module FactoryBot::Internal
+  DEFAULT_CALLBACKS = ::T.let(nil, ::T.untyped)
+  DEFAULT_STRATEGIES = ::T.let(nil, ::T.untyped)
 end
 
 class FactoryBot::Strategy::Stub
@@ -10033,13 +9927,12 @@ class Faker::Vehicle
 end
 
 class FalseClass
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module Faraday
+  METHODS_WITH_BODY = ::T.let(nil, ::T.untyped)
+  METHODS_WITH_QUERY = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
@@ -10060,10 +9953,12 @@ class Faraday::Adapter::EMHttp
   def perform_single_request(env); end
 
   def raise_error(msg); end
+
+  def timeout_message?(msg); end
 end
 
 class Faraday::Adapter::EMHttp::Manager
-  def add(); end
+  def add(&block); end
 
   def check_finished(); end
 
@@ -10103,7 +9998,7 @@ module Faraday::Adapter::EMHttp::Options
 end
 
 class Faraday::Adapter::EMHttp
-  def self.setup_parallel_manager(options=T.unsafe(nil)); end
+  def self.setup_parallel_manager(_options=T.unsafe(nil)); end
 end
 
 class Faraday::Adapter::EMSynchrony
@@ -10121,13 +10016,14 @@ class Faraday::Adapter::EMSynchrony::ParallelManager
 end
 
 class Faraday::Adapter::EMSynchrony
-  def self.setup_parallel_manager(options=T.unsafe(nil)); end
+  def self.setup_parallel_manager(_options=T.unsafe(nil)); end
 end
 
 class Faraday::Adapter::Excon
   def create_connection(env, opts); end
 
   def read_body(env); end
+  OPTS_KEYS = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Adapter::Excon
@@ -10138,11 +10034,15 @@ class Faraday::Adapter::HTTPClient
 
   def configure_client(); end
 
+  def configure_open_timeout(req); end
+
   def configure_proxy(proxy); end
 
   def configure_socket(bind); end
 
   def configure_ssl(ssl); end
+
+  def configure_timeout(req); end
 
   def configure_timeouts(req); end
 
@@ -10155,6 +10055,7 @@ class Faraday::Adapter::HTTPClient
 end
 
 class Faraday::Adapter::NetHttp
+  def initialize(app=T.unsafe(nil), opts=T.unsafe(nil), &block); end
   NET_HTTP_EXCEPTIONS = ::T.let(nil, ::T.untyped)
 end
 
@@ -10162,6 +10063,7 @@ class Faraday::Adapter::NetHttp
 end
 
 class Faraday::Adapter::NetHttpPersistent
+  SSL_CONFIGURATIONS = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Adapter::NetHttpPersistent
@@ -10176,8 +10078,6 @@ class Faraday::Adapter::Patron
 end
 
 class Faraday::Adapter::Rack
-  def execute_request(env, rack_env); end
-
   def initialize(faraday_app, rack_app); end
   SPECIAL_HEADERS = ::T.let(nil, ::T.untyped)
 end
@@ -10259,6 +10159,10 @@ class Faraday::Connection
   METHODS = ::T.let(nil, ::T.untyped)
 end
 
+module Faraday::DecodeMethods
+  SUBKEYS_REGEX = ::T.let(nil, ::T.untyped)
+end
+
 class Faraday::Env
   ContentLength = ::T.let(nil, ::T.untyped)
   MethodsWithBodies = ::T.let(nil, ::T.untyped)
@@ -10266,21 +10170,18 @@ class Faraday::Env
   SuccessfulStatuses = ::T.let(nil, ::T.untyped)
 end
 
-Faraday::Error::ClientError = Faraday::ClientError
-
-Faraday::Error::ConnectionFailed = Faraday::ConnectionFailed
-
-Faraday::Error::ParsingError = Faraday::ParsingError
-
-Faraday::Error::ResourceNotFound = Faraday::ResourceNotFound
-
-Faraday::Error::RetriableResponse = Faraday::RetriableResponse
-
-Faraday::Error::SSLError = Faraday::SSLError
-
-Faraday::Error::TimeoutError = Faraday::TimeoutError
+Faraday::FilePart = UploadIO
 
 Faraday::Parts = Parts
+
+class Faraday::RackBuilder
+  LOCK_ERR = ::T.let(nil, ::T.untyped)
+  NO_ARGUMENT = ::T.let(nil, ::T.untyped)
+end
+
+class Faraday::RackBuilder::Handler
+  REGISTRY = ::T.let(nil, ::T.untyped)
+end
 
 class Faraday::Request::Authorization
   def call(env); end
@@ -10321,6 +10222,8 @@ class Faraday::Request::Multipart
   def create_multipart(env, params); end
 
   def has_multipart?(obj); end
+
+  def part(boundary, key, value); end
 
   def process_params(params, prefix=T.unsafe(nil), pieces=T.unsafe(nil), &block); end
 
@@ -10379,29 +10282,16 @@ class Faraday::Request::UrlEncoded
 end
 
 class Faraday::Response::Logger
-  def debug(*args, &block); end
-
-  def error(*args, &block); end
-
-  def fatal(*args, &block); end
-
-  def filter(filter_word, filter_replacement); end
-
-  def info(*args, &block); end
-
   def initialize(app, logger=T.unsafe(nil), options=T.unsafe(nil)); end
-
-  def warn(*args, &block); end
-  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Response::Logger
-  extend ::Forwardable
 end
 
 class Faraday::Response::RaiseError
   def response_values(env); end
   ClientErrorStatuses = ::T.let(nil, ::T.untyped)
+  ServerErrorStatuses = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Response::RaiseError
@@ -10572,8 +10462,6 @@ module Fcntl
 end
 
 class Fiber
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def resume(*_); end
 
   def transfer(*_); end
@@ -10590,20 +10478,17 @@ class File
 end
 
 class File::Stat
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def size?(); end
 end
 
 class File
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
-
 end
 
 FileList = Rake::FileList
@@ -10615,34 +10500,29 @@ module FileUtils
 end
 
 module FileUtils::DryRun
-  include ::FileUtils::LowMethods
   include ::FileUtils
   include ::FileUtils::StreamUtils_
+  include ::FileUtils::LowMethods
 end
 
 module FileUtils::DryRun
   extend ::FileUtils::DryRun
-  extend ::FileUtils::LowMethods
   extend ::FileUtils
   extend ::FileUtils::StreamUtils_
-end
-
-class FileUtils::Entry_
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+  extend ::FileUtils::LowMethods
 end
 
 module FileUtils::NoWrite
-  include ::FileUtils::LowMethods
   include ::FileUtils
   include ::FileUtils::StreamUtils_
+  include ::FileUtils::LowMethods
 end
 
 module FileUtils::NoWrite
   extend ::FileUtils::NoWrite
-  extend ::FileUtils::LowMethods
   extend ::FileUtils
   extend ::FileUtils::StreamUtils_
+  extend ::FileUtils::LowMethods
 end
 
 module FileUtils::Verbose
@@ -10670,9 +10550,8 @@ module Find
 end
 
 class Float
-  include ::ActiveSupport::NumericWithFormat
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::Float
+  include ::ActiveSupport::NumericWithFormat
   def to_d(precision=T.unsafe(nil)); end
 end
 
@@ -12377,43 +12256,8 @@ module GamesHelper
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 
-class Gem::BasicSpecification
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Gem::Dependency
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Gem::ErrorReason
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Gem::List
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Gem::PathSupport
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Gem::Platform
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class Gem::RemoteFetcher
   def s3_uri_signer(uri); end
-end
-
-class Gem::Requirement
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Gem::Resolver::Molinillo::DependencyGraph::Log
@@ -12477,18 +12321,8 @@ class Gem::Specification
   extend ::Enumerable
 end
 
-class Gem::StubSpecification::StubLine
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module Gem::Util
   def self.correct_for_windows_path(path); end
-end
-
-class Gem::Version
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Genre
@@ -13252,10 +13086,7 @@ class GraphiQL::Rails::EditorsController
 end
 
 class Hash
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::Hash
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def <(_); end
 
   def <=(_); end
@@ -13778,8 +13609,6 @@ module I18n
 end
 
 class IO
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def beep(); end
 
   def cooked(); end
@@ -13861,7 +13690,6 @@ class IO
   def self.open(*_); end
 
   def self.pipe(*_); end
-
 end
 
 class IPAddr
@@ -14607,9 +14435,8 @@ module IRB
 end
 
 class Integer
-  include ::ActiveSupport::NumericWithFormat
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::Integer
+  include ::ActiveSupport::NumericWithFormat
   def allbits?(_); end
 
   def anybits?(_); end
@@ -14631,17 +14458,10 @@ class Integer
 end
 
 class JSON::Ext::Generator::State
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class JSON::Ext::Generator::State
   def self.from_state(_); end
 end
 
 class JSON::Ext::Parser
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def initialize(*_); end
 end
 
@@ -14805,21 +14625,15 @@ class LocalJumpError
 end
 
 class Logger
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   SEV_LABEL = ::T.let(nil, ::T.untyped)
 end
 
 class Logger::Formatter
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   Format = ::T.let(nil, ::T.untyped)
 end
 
 class Logger::LogDevice
   include ::MonitorMixin
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module Logger::Period
@@ -15581,11 +15395,6 @@ module Marshal
   def self.restore(*_); end
 end
 
-class MatchData
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class Matrix
   include ::Enumerable
   include ::ExceptionForMatrix
@@ -15909,21 +15718,6 @@ module MessagePack
   DEFAULT_EMPTY_PARAMS = ::T.let(nil, ::T.untyped)
 end
 
-class MessagePack::Buffer
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class MessagePack::Factory
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class MessagePack::Packer
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module MessagePack::Time
   Packer = ::T.let(nil, ::T.untyped)
   TIME_AT_3_AVAILABLE = ::T.let(nil, ::T.untyped)
@@ -15934,16 +15728,6 @@ class MessagePack::Timestamp
   TIMESTAMP32_MAX_SEC = ::T.let(nil, ::T.untyped)
   TIMESTAMP64_MAX_SEC = ::T.let(nil, ::T.untyped)
   TYPE = ::T.let(nil, ::T.untyped)
-end
-
-class MessagePack::Unpacker
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Method
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module MethodSource
@@ -16226,8 +16010,6 @@ class Minitest::Test
 end
 
 class Module
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def deprecate_constant(*_); end
 
   def undef_method(*_); end
@@ -16241,8 +16023,6 @@ class Module
 end
 
 class Monitor
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def enter(); end
 
   def exit(); end
@@ -16273,8 +16053,6 @@ module MonitorMixin
 end
 
 class MonitorMixin::ConditionVariable
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def broadcast(); end
 
   def initialize(monitor); end
@@ -16286,10 +16064,6 @@ class MonitorMixin::ConditionVariable
   def wait_until(); end
 
   def wait_while(); end
-end
-
-class MonitorMixin::ConditionVariable::Timeout
-  include ::BetterErrors::ExceptionExtension
 end
 
 module MonitorMixin
@@ -16349,8 +16123,6 @@ end
 Net::APOPSession = Net::APOP
 
 class Net::BufferedIO
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def write_timeout(); end
 
   def write_timeout=(write_timeout); end
@@ -16376,8 +16148,6 @@ class Net::HTTP
 end
 
 class Net::HTTP::Persistent
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ca_path(); end
 
   def ca_path=(path); end
@@ -16490,16 +16260,6 @@ end
 class Net::HTTPGatewayTimeout
 end
 
-class Net::HTTPGenericRequest
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::HTTPGenericRequest::Chunker
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 Net::HTTPInformationCode = Net::HTTPInformation
 
 class Net::HTTPLoopDetected
@@ -16563,16 +16323,6 @@ Net::HTTPRequestURITooLarge = Net::HTTPURITooLong
 
 Net::HTTPResponceReceiver = Net::HTTPResponse
 
-class Net::HTTPResponse
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::HTTPResponse::Inflater
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 Net::HTTPRetriableCode = Net::HTTPRedirection
 
 Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
@@ -16611,64 +16361,13 @@ end
 
 class Net::IMAP
   def open_timeout(); end
-
   RESPONSE_ERRORS = ::T.let(nil, ::T.untyped)
-end
-
-class Net::IMAP::Atom
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::CramMD5Authenticator
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::DigestMD5Authenticator
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::Literal
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::LoginAuthenticator
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::MessageSet
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module Net::IMAP::NumValidator
   def self.ensure_mod_sequence_value(num); end
 
   def self.valid_mod_sequence_value?(num); end
-end
-
-class Net::IMAP::PlainAuthenticator
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::QuotedString
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::RawData
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::IMAP::ResponseParser
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 Net::NetPrivate::HTTPRequest = Net::HTTPRequest
@@ -16854,33 +16553,13 @@ Net::POPSession = Net::POP3
 
 Net::ProtocRetryError = Net::ProtoRetriableError
 
-class Net::Protocol
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Net::ReadAdapter
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class Net::ReadTimeout
   def initialize(io=T.unsafe(nil)); end
 
   def io(); end
 end
 
-class Net::SMTP::Response
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 Net::SMTPSession = Net::SMTP
-
-class Net::WriteAdapter
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
 
 class Net::WriteTimeout
   def initialize(io=T.unsafe(nil)); end
@@ -16892,10 +16571,7 @@ class Net::WriteTimeout
 end
 
 class NilClass
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::NilClass
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def to_d(); end
 
   def to_i(); end
@@ -16924,12 +16600,7 @@ end
 class NilClassPolicy
 end
 
-class NoMemoryError
-  include ::BetterErrors::ExceptionExtension
-end
-
 class NoMethodError
-  include ::DidYouMean::Correctable
   def args(); end
 
   def private_call?(); end
@@ -17203,8 +16874,6 @@ module Nokogiri::XML::Searchable
 end
 
 class Numeric
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   EXABYTE = ::T.let(nil, ::T.untyped)
   GIGABYTE = ::T.let(nil, ::T.untyped)
   KILOBYTE = ::T.let(nil, ::T.untyped)
@@ -17214,11 +16883,11 @@ class Numeric
 end
 
 class Object
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  include ::MakeMakefile
-  include ::PP::ObjectMixin
   include ::JSON::Ext::Generator::GeneratorMethods::Object
+  include ::PP::ObjectMixin
+  include ::MakeMakefile
+  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   def dclone(); end
 
   def to_yaml(options=T.unsafe(nil)); end
@@ -17255,8 +16924,6 @@ class ObjectSpace::InternalObjectWrapper
 end
 
 class ObjectSpace::WeakMap
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def [](_); end
 
   def []=(_, _1); end
@@ -17356,16 +17023,12 @@ module Observable
 end
 
 class OpenSSL::ASN1::ASN1Data
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def indefinite_length(); end
 
   def indefinite_length=(indefinite_length); end
 end
 
 class OpenSSL::BN
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +@(); end
 
   def -@(); end
@@ -17375,23 +17038,7 @@ class OpenSSL::BN
   def negative?(); end
 end
 
-class OpenSSL::Cipher
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::Config
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::Engine
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::HMAC
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
+module OpenSSL::Buffering
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
@@ -17408,73 +17055,14 @@ module OpenSSL::KDF
   def self.pbkdf2_hmac(*_); end
 end
 
-class OpenSSL::Netscape::SPKI
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::OCSP::BasicResponse
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::OCSP::CertificateId
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class OpenSSL::OCSP::Request
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def signed?(); end
-end
-
-class OpenSSL::OCSP::Response
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::OCSP::SingleResponse
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::PKCS12
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::PKCS7
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::PKCS7::RecipientInfo
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 OpenSSL::PKCS7::Signer = OpenSSL::PKCS7::SignerInfo
 
-class OpenSSL::PKCS7::SignerInfo
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::PKey::EC::Group
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class OpenSSL::PKey::EC::Point
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def to_octet_string(_); end
-end
-
-class OpenSSL::PKey::PKey
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::PKey::RSA
@@ -17501,70 +17089,33 @@ module OpenSSL::X509
 end
 
 class OpenSSL::X509::Attribute
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 end
 
 class OpenSSL::X509::CRL
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
-end
-
-class OpenSSL::X509::Certificate
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class OpenSSL::X509::Extension
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 end
 
-class OpenSSL::X509::ExtensionFactory
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class OpenSSL::X509::Name
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def to_utf8(); end
 end
 
 class OpenSSL::X509::Request
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 end
 
 class OpenSSL::X509::Revoked
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 
   def to_der(); end
 end
 
-class OpenSSL::X509::Store
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OpenSSL::X509::StoreContext
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module OpenSSL
   def self.fips_mode(); end
-end
-
-class OpenStruct
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module OpenURI
@@ -17660,29 +17211,6 @@ module OpenURI
   def self.redirectable?(uri1, uri2); end
 
   def self.scan_open_optional_arguments(*rest); end
-end
-
-class OptionParser
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OptionParser::CompletingHash
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OptionParser::List
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OptionParser::OptionMap
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class OptionParser::Switch
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module OrmAdapter
@@ -19629,6 +19157,10 @@ module Parlour
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+module Parlour::Debugging::Tree
+  INDENT_SPACES = ::T.let(nil, ::T.untyped)
+end
+
 class Parlour::RbiGenerator::Parameter
   PREFIXES = ::T.let(nil, ::T.untyped)
 end
@@ -19687,8 +19219,6 @@ class Parser::Source::TreeRewriter
 end
 
 class Pathname
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def empty?(); end
 
   def fnmatch?(*_); end
@@ -19696,7 +19226,6 @@ class Pathname
   def glob(*_); end
 
   def make_symlink(_); end
-
 end
 
 module PgSearch
@@ -20365,39 +19894,7 @@ class Platform
   def self.search(*args); end
 end
 
-class PrettyPrint
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class PrettyPrint::Breakable
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class PrettyPrint::Group
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class PrettyPrint::GroupQueue
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class PrettyPrint::SingleLine
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class PrettyPrint::Text
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 class Proc
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def <<(_); end
 
   def ===(*_); end
@@ -20415,14 +19912,8 @@ module Process
   CLOCK_UPTIME_RAW_APPROX = ::T.let(nil, ::T.untyped)
 end
 
-class Process::Status
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module Process::Sys
   def self.getegid(); end
-
 end
 
 class Process::Tms
@@ -20453,7 +19944,6 @@ module Process
   def self.last_status(); end
 
   def self.setpgrp(); end
-
 end
 
 class ProgressBar::Components::Bar
@@ -21351,11 +20841,7 @@ module Puma::Const
   CONTENT_LENGTH_S = ::T.let(nil, ::T.untyped)
   CONTINUE = ::T.let(nil, ::T.untyped)
   EARLY_HINTS = ::T.let(nil, ::T.untyped)
-  ERROR_400_RESPONSE = ::T.let(nil, ::T.untyped)
-  ERROR_404_RESPONSE = ::T.let(nil, ::T.untyped)
-  ERROR_408_RESPONSE = ::T.let(nil, ::T.untyped)
-  ERROR_500_RESPONSE = ::T.let(nil, ::T.untyped)
-  ERROR_503_RESPONSE = ::T.let(nil, ::T.untyped)
+  ERROR_RESPONSE = ::T.let(nil, ::T.untyped)
   FAST_TRACK_KA_TIMEOUT = ::T.let(nil, ::T.untyped)
   FIRST_DATA_TIMEOUT = ::T.let(nil, ::T.untyped)
   GATEWAY_INTERFACE = ::T.let(nil, ::T.untyped)
@@ -24151,8 +23637,6 @@ class Racc::CparseParams
 end
 
 class Racc::Parser
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   Racc_Main_Parsing_Routine = ::T.let(nil, ::T.untyped)
   Racc_Runtime_Core_Id_C = ::T.let(nil, ::T.untyped)
   Racc_Runtime_Core_Revision = ::T.let(nil, ::T.untyped)
@@ -25471,14 +24955,8 @@ end
 
 RakeFileUtils = Rake::FileUtilsExt
 
-class Random
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module Random::Formatter
   def alphanumeric(n=T.unsafe(nil)); end
-
   ALPHANUMERIC = ::T.let(nil, ::T.untyped)
 end
 
@@ -25490,12 +24968,10 @@ class Random
 end
 
 class Range
-  include ::ActiveSupport::EachTimeWithZone
-  include ::ActiveSupport::IncludeTimeWithZone
-  include ::ActiveSupport::CompareWithRange
   include ::ActiveSupport::RangeWithFormat
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+  include ::ActiveSupport::CompareWithRange
+  include ::ActiveSupport::IncludeTimeWithZone
+  include ::ActiveSupport::EachTimeWithZone
   def %(_); end
 
   def entries(); end
@@ -25669,8 +25145,6 @@ module Readline
 end
 
 class Regexp
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def match?(*_); end
   TOKEN_KEYS = ::T.let(nil, ::T.untyped)
 end
@@ -27991,6 +27465,10 @@ class RuboCop::Cop::RSpec::Capybara::FeatureMethods
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::RSpec::ContextMethod
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::RSpec::ContextWording
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -28022,6 +27500,10 @@ class RuboCop::Cop::RSpec::Dialect
 end
 
 class RuboCop::Cop::RSpec::EmptyExampleGroup
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::RSpec::EmptyLineAfterExample
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -28096,8 +27578,6 @@ end
 
 class RuboCop::Cop::RSpec::Focus
   FOCUSABLE_SELECTORS = ::T.let(nil, ::T.untyped)
-  FOCUS_SYMBOL = ::T.let(nil, ::T.untyped)
-  FOCUS_TRUE = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -28218,11 +27698,8 @@ end
 
 class RuboCop::Cop::RSpec::Pending
   MSG = ::T.let(nil, ::T.untyped)
-  PENDING_EXAMPLES = ::T.let(nil, ::T.untyped)
-  PENDING_SYMBOL = ::T.let(nil, ::T.untyped)
-  SKIPPABLE_EXAMPLES = ::T.let(nil, ::T.untyped)
-  SKIPPABLE_SELECTORS = ::T.let(nil, ::T.untyped)
-  SKIP_SYMBOL = ::T.let(nil, ::T.untyped)
+  PENDING = ::T.let(nil, ::T.untyped)
+  SKIPPABLE = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker
@@ -30581,11 +30058,6 @@ module RubyToken
   def self.def_token(token_n, super_token=T.unsafe(nil), reading=T.unsafe(nil), *opts); end
 end
 
-class RubyVM
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module RubyVM::AbstractSyntaxTree
 end
 
@@ -30617,8 +30089,6 @@ module RubyVM::AbstractSyntaxTree
 end
 
 class RubyVM::InstructionSequence
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def absolute_path(); end
 
   def base_label(); end
@@ -30684,10 +30154,6 @@ end
 
 ScanError = StringScanner::Error
 
-class ScriptError
-  include ::BetterErrors::ExceptionExtension
-end
-
 module SecureRandom
   BASE36_ALPHABET = ::T.let(nil, ::T.untyped)
   BASE58_ALPHABET = ::T.let(nil, ::T.untyped)
@@ -30696,10 +30162,6 @@ end
 module SecureRandom
   extend ::Random::Formatter
   def self.bytes(n); end
-end
-
-class SecurityError
-  include ::BetterErrors::ExceptionExtension
 end
 
 module Selenium::WebDriver
@@ -32152,8 +31614,6 @@ class Series
 end
 
 class Set
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def ==(other); end
 
   def ===(o); end
@@ -32272,7 +31732,6 @@ module Shoulda::Matchers::WordWrap
 end
 
 class SignalException
-  include ::BetterErrors::ExceptionExtension
   def signm(); end
 
   def signo(); end
@@ -32428,11 +31887,6 @@ class Socket
   TCP_NOPUSH = ::T.let(nil, ::T.untyped)
 end
 
-class Socket::AncillaryData
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
 module Socket::Constants
   AF_CCITT = ::T.let(nil, ::T.untyped)
   AF_CHAOS = ::T.let(nil, ::T.untyped)
@@ -32522,21 +31976,6 @@ module Socket::Constants
   SO_WANTOOBFLAG = ::T.let(nil, ::T.untyped)
   TCP_NOOPT = ::T.let(nil, ::T.untyped)
   TCP_NOPUSH = ::T.let(nil, ::T.untyped)
-end
-
-class Socket::Option
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Socket::UDPSource
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Sorbet
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class Sorbet::Private::ConstantLookupCache
@@ -33227,19 +32666,12 @@ module Sprockets
   extend ::Sprockets::DigestUtils
 end
 
-class StandardError
-  include ::BetterErrors::ExceptionExtension
-end
-
 class StopIteration
   def result(); end
 end
 
 class String
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::String
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def +@(); end
 
   def -@(); end
@@ -33285,7 +32717,6 @@ class String
   def unpack1(_); end
 
   def unspace(); end
-
   BLANK_RE = ::T.let(nil, ::T.untyped)
   ENCODED_BLANKS = ::T.let(nil, ::T.untyped)
 end
@@ -33294,12 +32725,9 @@ class StringIO
   def length(); end
 
   def truncate(_); end
-
 end
 
 class StringScanner
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def <<(_); end
 
   def [](_); end
@@ -33394,8 +32822,6 @@ class StringScanner
 end
 
 class Struct
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def [](_); end
 
   def []=(_, _1); end
@@ -33430,11 +32856,6 @@ Struct::Passwd = Etc::Passwd
 Struct::Tms = Process::Tms
 
 class Symbol
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Symbol
   def self.from_msgpack_ext(data); end
 end
 
@@ -33443,14 +32864,9 @@ class SystemCallError
 end
 
 class SystemExit
-  include ::BetterErrors::ExceptionExtension
   def status(); end
 
   def success?(); end
-end
-
-class SystemStackError
-  include ::BetterErrors::ExceptionExtension
 end
 
 module TZInfo::RubyCoreSupport
@@ -33484,41 +32900,6 @@ class Tempfile::Remover
 end
 
 class Tempfile::Remover
-end
-
-class Thread
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Thread::Backtrace
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Thread::Backtrace::Location
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Thread::ConditionVariable
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Thread::Mutex
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Thread::Queue
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class ThreadGroup
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module ThreadSafe
@@ -33779,15 +33160,11 @@ module ThreadSafe::Util
 end
 
 class Time
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   COMMON_YEAR_DAYS_IN_MONTH = ::T.let(nil, ::T.untyped)
   DATE_FORMATS = ::T.let(nil, ::T.untyped)
 end
 
 class TracePoint
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def __enable(_, _1); end
 
   def eval_script(); end
@@ -33800,10 +33177,7 @@ class TracePoint
 end
 
 class TrueClass
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module Turbolinks
@@ -33838,6 +33212,18 @@ module Types::BaseInterface
   extend ::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
   extend ::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension
   extend ::Types::BaseInterface::DefinitionMethods
+end
+
+class Types::UserType
+  def bio(); end
+
+  def favorite_games(); end
+
+  def followers(); end
+
+  def following(); end
+
+  def game_purchases(); end
 end
 
 module URI
@@ -33887,11 +33273,6 @@ end
 class URI::GID
   COMPONENT = ::T.let(nil, ::T.untyped)
   PATH_REGEXP = ::T.let(nil, ::T.untyped)
-end
-
-class URI::Generic
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 class URI::HTTP
@@ -33960,8 +33341,6 @@ URI::Parser = URI::RFC2396_Parser
 URI::REGEXP = URI::RFC2396_REGEXP
 
 class URI::RFC2396_Parser
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def escape(str, unsafe=T.unsafe(nil)); end
 
   def extract(str, schemes=T.unsafe(nil)); end
@@ -33984,8 +33363,6 @@ class URI::RFC2396_Parser
 end
 
 class URI::RFC3986_Parser
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def join(*uris); end
 
   def parse(uri); end
@@ -34012,8 +33389,6 @@ module URI
 end
 
 class UnboundMethod
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   def clone(); end
 
   def original_name(); end
@@ -35157,6 +34532,7 @@ class User
   extend ::Devise::Models::Registerable::ClassMethods
   extend ::Devise::Models::Validatable::ClassMethods
   extend ::Devise::Models::Confirmable::ClassMethods
+  extend ::FriendlyId::FinderMethods
   extend ::FriendlyId::Finders::ClassMethods
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -35504,11 +34880,6 @@ class VideoGameListSchema
 end
 
 Visitor = Psych::Visitors::Visitor
-
-class WEBrick::HTTPServlet::AbstractServlet
-  include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
 
 class Warden::Proxy
   ENV_SESSION_OPTIONS = ::T.let(nil, ::T.untyped)

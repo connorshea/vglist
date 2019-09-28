@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Types
   class GamePurchaseCompletionStatusType < Types::BaseEnum
     value "UNPLAYED", value: 'unplayed', description: "The game is unplayed."

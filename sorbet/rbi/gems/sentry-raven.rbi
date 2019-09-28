@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sentry-raven/all/sentry-raven.rbi
 #
-# sentry-raven-2.11.2
+# sentry-raven-2.11.3
 module Raven
   def self.annotate(*args, &block); end
   def self.annotateException(*args, &block); end

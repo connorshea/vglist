@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Types
   class SeriesType < Types::BaseObject
     field :id, ID, null: false

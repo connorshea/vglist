@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 class PlatformsController < ApplicationController
   def index
     @platforms = Platform.order(:id).page helpers.page_param

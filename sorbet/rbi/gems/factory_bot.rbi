@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/factory_bot/all/factory_bot.rbi
 #
-# factory_bot-5.0.2
+# factory_bot-5.1.0
 module FactoryBot
   def self.aliases; end
   def self.aliases=(arg0); end
@@ -21,27 +21,27 @@ module FactoryBot
   def self.definition_file_paths; end
   def self.definition_file_paths=(arg0); end
   def self.factories(*args, &block); end
-  def self.factory_by_name(name); end
+  def self.factory_by_name(*args, &block); end
   def self.find_definitions; end
   def self.initialize_with(*args, &block); end
   def self.lint(*args); end
-  def self.register_callback(name); end
-  def self.register_default_callbacks; end
-  def self.register_default_strategies; end
-  def self.register_factory(factory); end
-  def self.register_sequence(sequence); end
-  def self.register_strategy(strategy_name, strategy_class); end
-  def self.register_trait(trait); end
+  def self.register_callback(*args, &block); end
+  def self.register_default_callbacks(*args, &block); end
+  def self.register_default_strategies(*args, &block); end
+  def self.register_factory(*args, &block); end
+  def self.register_sequence(*args, &block); end
+  def self.register_strategy(*args, &block); end
+  def self.register_trait(*args, &block); end
   def self.reload; end
   def self.reset_configuration; end
-  def self.rewind_sequences; end
-  def self.sequence_by_name(name); end
+  def self.rewind_sequences(*args, &block); end
+  def self.sequence_by_name(*args, &block); end
   def self.sequences(*args, &block); end
   def self.skip_create(*args, &block); end
   def self.strategies(*args, &block); end
-  def self.strategy_by_name(name); end
+  def self.strategy_by_name(*args, &block); end
   def self.to_create(*args, &block); end
-  def self.trait_by_name(name); end
+  def self.trait_by_name(*args, &block); end
   def self.traits(*args, &block); end
   def self.use_parent_strategy; end
   def self.use_parent_strategy=(obj); end
@@ -74,6 +74,8 @@ class FactoryBot::Configuration
   def traits; end
 end
 class FactoryBot::AssociationDefinitionError < RuntimeError
+end
+class FactoryBot::TraitDefinitionError < RuntimeError
 end
 class FactoryBot::InvalidCallbackNameError < RuntimeError
 end
@@ -122,6 +124,7 @@ end
 class FactoryBot::Strategy::Stub
   def association(runner); end
   def clear_changes_information(result_instance); end
+  def has_settable_id?(result_instance); end
   def missing_created_at?(result_instance); end
   def missing_updated_at?(result_instance); end
   def next_id; end
@@ -308,6 +311,7 @@ end
 class FactoryBot::Declaration::Association < FactoryBot::Declaration
   def ==(other); end
   def build; end
+  def ensure_factory_is_not_a_declaration!; end
   def initialize(name, *options); end
   def options; end
 end
@@ -392,6 +396,7 @@ class FactoryBot::Definition
 end
 class FactoryBot::DefinitionProxy
   def __declare_attribute__(name, block); end
+  def __valid_association_options?(options); end
   def add_attribute(name, &block); end
   def after(*args, &block); end
   def association(name, *options); end
@@ -502,9 +507,26 @@ class FactoryBot::Linter::FactoryTraitError < FactoryBot::Linter::FactoryError
   def location; end
 end
 module FactoryBot::Internal
+  def self.callback_names(*args, &block); end
   def self.configuration; end
+  def self.factories(*args, &block); end
+  def self.factory_by_name(name); end
   def self.inline_sequences(*args, &block); end
+  def self.register_callback(name); end
+  def self.register_default_callbacks; end
+  def self.register_default_strategies; end
+  def self.register_factory(factory); end
   def self.register_inline_sequence(sequence); end
+  def self.register_sequence(sequence); end
+  def self.register_strategy(strategy_name, strategy_class); end
+  def self.register_trait(trait); end
   def self.reset_configuration; end
   def self.rewind_inline_sequences; end
+  def self.rewind_sequences; end
+  def self.sequence_by_name(name); end
+  def self.sequences(*args, &block); end
+  def self.strategies(*args, &block); end
+  def self.strategy_by_name(name); end
+  def self.trait_by_name(name); end
+  def self.traits(*args, &block); end
 end

@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Types
   class GenreType < Types::BaseObject
     field :id, ID, null: false

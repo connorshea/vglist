@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/friendly_id/all/friendly_id.rbi
 #
-# friendly_id-5.2.5
+# friendly_id-5.3.0
 module FriendlyId
   def self.defaults(&block); end
   def self.extended(model_class); end
