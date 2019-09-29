@@ -1394,9 +1394,6 @@ end
 class ActionView::Template::Inline
 end
 
-class ActionView::Template::LegacyTemplate
-end
-
 class ActionView::Template::RawFile
   def format(); end
 
@@ -2071,9 +2068,6 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   CHARSETS_OF_4BYTES_MAXLEN = ::T.let(nil, ::T.untyped)
 end
 
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata
-end
-
 module ActiveRecord::ConnectionAdapters::PostgreSQL::DatabaseStatements
   BYTEA_COLUMN_TYPE_OID = ::T.let(nil, ::T.untyped)
   MONEY_COLUMN_TYPE_OID = ::T.let(nil, ::T.untyped)
@@ -2089,9 +2083,6 @@ end
 
 class ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid
   ACCEPTABLE_UUID = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata
 end
 
 class ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
@@ -11586,6 +11577,10 @@ class GraphQL::Query::Arguments
   NULL_ARGUMENT_VALUE = ::T.let(nil, ::T.untyped)
 end
 
+module GraphQL::RailsLogger
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
 module GraphQL::Relay
   PageInfo = ::T.let(nil, ::T.untyped)
 end
@@ -13749,9 +13744,6 @@ class Mail::POP3
 end
 
 class Mail::POP3
-end
-
-class Mail::PartsList
 end
 
 class Mail::PhraseList
@@ -24905,6 +24897,231 @@ module Responders::LocationResponder
   def self.included(_base); end
 end
 
+class Rouge::Formatter
+  REGISTRY = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Formatters::HTML
+  TABLE_FOR_ESCAPE_HTML = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Formatters::Terminal256::EscapeSequence
+  MAX_DISTANCE = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Formatters::Tex
+  ESCAPE = ::T.let(nil, ::T.untyped)
+  ESCAPE_REGEX = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Guessers::Modeline
+  EMACS_MODELINE = ::T.let(nil, ::T.untyped)
+  MODELINES = ::T.let(nil, ::T.untyped)
+  VIM_MODELINE_1 = ::T.let(nil, ::T.untyped)
+  VIM_MODELINE_2 = ::T.let(nil, ::T.untyped)
+end
+
+module Rouge::Guessers::Util::SourceNormalizer
+  UTF8_BOM = ::T.let(nil, ::T.untyped)
+  UTF8_BOM_RE = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Ada
+  EXP = ::T.let(nil, ::T.untyped)
+  ID = ::T.let(nil, ::T.untyped)
+  NUM = ::T.let(nil, ::T.untyped)
+  XNUM = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::BPF
+  MISC_KEYWORDS = ::T.let(nil, ::T.untyped)
+  TYPE_KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Bsl
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::CMake
+  BRACKET_OPEN = ::T.let(nil, ::T.untyped)
+  BUILTIN_COMMANDS = ::T.let(nil, ::T.untyped)
+  SPACE = ::T.let(nil, ::T.untyped)
+  STATES_MAP = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::CommonLisp
+  BUILTIN_CLASSES = ::T.let(nil, ::T.untyped)
+  BUILTIN_FUNCTIONS = ::T.let(nil, ::T.untyped)
+  BUILTIN_TYPES = ::T.let(nil, ::T.untyped)
+  DECLARATIONS = ::T.let(nil, ::T.untyped)
+  LAMBDA_LIST_KEYWORDS = ::T.let(nil, ::T.untyped)
+  MACROS = ::T.let(nil, ::T.untyped)
+  SPECIAL_FORMS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Digdag
+  KEYWORD_PATTERN = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Docker
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Eiffel
+  BooleanConstants = ::T.let(nil, ::T.untyped)
+  LanguageKeywords = ::T.let(nil, ::T.untyped)
+  LanguageVariables = ::T.let(nil, ::T.untyped)
+  SimpleString = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Go
+  BIG_U_VALUE = ::T.let(nil, ::T.untyped)
+  BYTE_VALUE = ::T.let(nil, ::T.untyped)
+  CHAR_LIT = ::T.let(nil, ::T.untyped)
+  COMMENT = ::T.let(nil, ::T.untyped)
+  DECIMALS = ::T.let(nil, ::T.untyped)
+  DECIMAL_DIGIT = ::T.let(nil, ::T.untyped)
+  DECIMAL_LIT = ::T.let(nil, ::T.untyped)
+  ESCAPED_CHAR = ::T.let(nil, ::T.untyped)
+  ESCAPE_SEQUENCE = ::T.let(nil, ::T.untyped)
+  EXPONENT = ::T.let(nil, ::T.untyped)
+  FLOAT_LIT = ::T.let(nil, ::T.untyped)
+  GENERAL_COMMENT = ::T.let(nil, ::T.untyped)
+  HEX_BYTE_VALUE = ::T.let(nil, ::T.untyped)
+  HEX_DIGIT = ::T.let(nil, ::T.untyped)
+  HEX_LIT = ::T.let(nil, ::T.untyped)
+  IDENTIFIER = ::T.let(nil, ::T.untyped)
+  IMAGINARY_LIT = ::T.let(nil, ::T.untyped)
+  INTERPRETED_STRING_LIT = ::T.let(nil, ::T.untyped)
+  INT_LIT = ::T.let(nil, ::T.untyped)
+  KEYWORD = ::T.let(nil, ::T.untyped)
+  LETTER = ::T.let(nil, ::T.untyped)
+  LINE_COMMENT = ::T.let(nil, ::T.untyped)
+  LITTLE_U_VALUE = ::T.let(nil, ::T.untyped)
+  NEWLINE = ::T.let(nil, ::T.untyped)
+  OCTAL_BYTE_VALUE = ::T.let(nil, ::T.untyped)
+  OCTAL_DIGIT = ::T.let(nil, ::T.untyped)
+  OCTAL_LIT = ::T.let(nil, ::T.untyped)
+  OPERATOR = ::T.let(nil, ::T.untyped)
+  PREDECLARED_CONSTANTS = ::T.let(nil, ::T.untyped)
+  PREDECLARED_FUNCTIONS = ::T.let(nil, ::T.untyped)
+  PREDECLARED_TYPES = ::T.let(nil, ::T.untyped)
+  RAW_STRING_LIT = ::T.let(nil, ::T.untyped)
+  SEPARATOR = ::T.let(nil, ::T.untyped)
+  STRING_LIT = ::T.let(nil, ::T.untyped)
+  UNICODE_CHAR = ::T.let(nil, ::T.untyped)
+  UNICODE_DIGIT = ::T.let(nil, ::T.untyped)
+  UNICODE_LETTER = ::T.let(nil, ::T.untyped)
+  UNICODE_VALUE = ::T.let(nil, ::T.untyped)
+  WHITE_SPACE = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Julia
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  OPERATORS = ::T.let(nil, ::T.untyped)
+  PUNCTUATION = ::T.let(nil, ::T.untyped)
+  TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Mason
+  COMPONENTS = ::T.let(nil, ::T.untyped)
+  PERL_BLOCKS = ::T.let(nil, ::T.untyped)
+  TEXT_BLOCKS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Nim
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  NAMESPACE = ::T.let(nil, ::T.untyped)
+  OPWORDS = ::T.let(nil, ::T.untyped)
+  PSEUDOKEYWORDS = ::T.let(nil, ::T.untyped)
+  TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Powershell
+  ATTRIBUTES = ::T.let(nil, ::T.untyped)
+  AUTO_VARS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  KEYWORDS_TYPE = ::T.let(nil, ::T.untyped)
+  MULTILINE_KEYWORDS = ::T.let(nil, ::T.untyped)
+  OPERATORS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::R
+  BUILTIN_CONSTANTS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  KEYWORD_CONSTANTS = ::T.let(nil, ::T.untyped)
+  PRIMITIVE_FUNCTIONS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Shell
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::TCL
+  ALL = ::T.let(nil, ::T.untyped)
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  CHARS = ::T.let(nil, ::T.untyped)
+  CLOSE = ::T.let(nil, ::T.untyped)
+  END_LINE = ::T.let(nil, ::T.untyped)
+  END_WORD = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  NOT_CHARS = ::T.let(nil, ::T.untyped)
+  OPEN = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::YAML
+  SPECIAL_VALUES = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::RegexLexer
+  MAX_NULL_SCANS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Themes::Gruvbox
+  C_bright_aqua = ::T.let(nil, ::T.untyped)
+  C_bright_blue = ::T.let(nil, ::T.untyped)
+  C_bright_green = ::T.let(nil, ::T.untyped)
+  C_bright_orange = ::T.let(nil, ::T.untyped)
+  C_bright_purple = ::T.let(nil, ::T.untyped)
+  C_bright_red = ::T.let(nil, ::T.untyped)
+  C_bright_yellow = ::T.let(nil, ::T.untyped)
+  C_dark0 = ::T.let(nil, ::T.untyped)
+  C_dark0_hard = ::T.let(nil, ::T.untyped)
+  C_dark0_soft = ::T.let(nil, ::T.untyped)
+  C_dark1 = ::T.let(nil, ::T.untyped)
+  C_dark2 = ::T.let(nil, ::T.untyped)
+  C_dark3 = ::T.let(nil, ::T.untyped)
+  C_dark4 = ::T.let(nil, ::T.untyped)
+  C_dark4_256 = ::T.let(nil, ::T.untyped)
+  C_faded_aqua = ::T.let(nil, ::T.untyped)
+  C_faded_blue = ::T.let(nil, ::T.untyped)
+  C_faded_green = ::T.let(nil, ::T.untyped)
+  C_faded_orange = ::T.let(nil, ::T.untyped)
+  C_faded_purple = ::T.let(nil, ::T.untyped)
+  C_faded_red = ::T.let(nil, ::T.untyped)
+  C_faded_yellow = ::T.let(nil, ::T.untyped)
+  C_gray_244 = ::T.let(nil, ::T.untyped)
+  C_gray_245 = ::T.let(nil, ::T.untyped)
+  C_light0 = ::T.let(nil, ::T.untyped)
+  C_light0_hard = ::T.let(nil, ::T.untyped)
+  C_light0_soft = ::T.let(nil, ::T.untyped)
+  C_light1 = ::T.let(nil, ::T.untyped)
+  C_light2 = ::T.let(nil, ::T.untyped)
+  C_light3 = ::T.let(nil, ::T.untyped)
+  C_light4 = ::T.let(nil, ::T.untyped)
+  C_light4_256 = ::T.let(nil, ::T.untyped)
+  C_neutral_aqua = ::T.let(nil, ::T.untyped)
+  C_neutral_blue = ::T.let(nil, ::T.untyped)
+  C_neutral_green = ::T.let(nil, ::T.untyped)
+  C_neutral_orange = ::T.let(nil, ::T.untyped)
+  C_neutral_purple = ::T.let(nil, ::T.untyped)
+  C_neutral_red = ::T.let(nil, ::T.untyped)
+  C_neutral_yellow = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::AST::ArrayNode
   PERCENT_LITERAL_TYPES = ::T.let(nil, ::T.untyped)
 end
@@ -34110,9 +34327,6 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

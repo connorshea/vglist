@@ -1658,6 +1658,8 @@ class ActionDispatch::Routing::Mapper::Scope
   def scope_level; end
   include Enumerable
 end
+class ActionController::LogSubscriber < ActiveSupport::LogSubscriber
+end
 class ActionDispatch::Request::Utils
   def perform_deep_munge; end
   def perform_deep_munge=(obj); end
@@ -2157,8 +2159,6 @@ class ActionDispatch::Flash::FlashHash
   def to_session_value; end
   def update(h); end
   include Enumerable
-end
-class ActionController::LogSubscriber < ActiveSupport::LogSubscriber
 end
 module ActionController::ParamsWrapper
   def _extract_parameters(parameters); end
