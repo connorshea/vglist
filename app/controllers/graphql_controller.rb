@@ -1,6 +1,8 @@
 # typed: false
 class GraphqlController < ApplicationController
-  before_action :doorkeeper_authorize!
+  # Allow bypassing doorkeeper_authorize! if the user is logged in, to
+  # enable GraphiQL.
+  before_action :doorkeeper_authorize!, if: -> { current_user.nil? }
   # Disable CSRF protection for GraphQL because we don't want to have CSRF
   # protection on our API endpoint. The point is to let anyone send requests
   # to the API.
@@ -14,7 +16,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      current_user: current_user,
+      current_user: current_user || doorkeeper_user,
       pundit: self
     }
     result = VideoGameListSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
@@ -52,9 +54,9 @@ class GraphqlController < ApplicationController
     render json: { error: { message: err.message, backtrace: err.backtrace }, data: {} }, status: :internal_server_error
   end
 
-  # Define current_user based on the doorkeeper token because Doorkeeper
-  # requests don't have a current_user variable by default.
-  def current_user
-    @current_user ||= User.find(doorkeeper_token[:resource_owner_id])
+  # Define doorkeeper_user based on the doorkeeper token because Doorkeeper
+  # token-based requests don't have a current_user variable.
+  def doorkeeper_user
+    @doorkeeper_user ||= User.find(doorkeeper_token[:resource_owner_id])
   end
 end
