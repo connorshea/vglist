@@ -20,8 +20,6 @@ module Anonymous_Module_24::Anonymous_Module_26; end
 module Anonymous_Module_24::Anonymous_Module_26; end
 module Anonymous_Module_27::Anonymous_Module_25; end
 module Anonymous_Module_27::Anonymous_Module_25; end
-module Doorkeeper::AuthorizationsController; end
-module Doorkeeper::AuthorizedApplicationsController; end
 module Doorkeeper::Helpers::Controller; end
 module Doorkeeper::Models::Ownership; end
 module Doorkeeper::Rails::Helpers; end
