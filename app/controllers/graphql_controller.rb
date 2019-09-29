@@ -1,6 +1,10 @@
 # typed: true
 class GraphqlController < ApplicationController
   before_action :doorkeeper_authorize!
+  # Disable CSRF protection for GraphQL because we don't want to have CSRF
+  # protection on our API endpoint. The point is to let anyone send requests
+  # to the API.
+  skip_before_action :verify_authenticity_token
 
   def execute
     # TODO: Authenticate things properly.
@@ -46,5 +50,11 @@ class GraphqlController < ApplicationController
     logger.error err.backtrace.join("\n")
 
     render json: { error: { message: err.message, backtrace: err.backtrace }, data: {} }, status: :internal_server_error
+  end
+
+  # Define current_user based on the doorkeeper token because Doorkeeper
+  # requests don't have a current_user variable by default.
+  def current_user
+    @current_user ||= User.find(doorkeeper_token[:resource_owner_id])
   end
 end
