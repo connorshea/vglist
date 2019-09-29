@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 class GraphqlController < ApplicationController
   before_action :doorkeeper_authorize!
   # Disable CSRF protection for GraphQL because we don't want to have CSRF

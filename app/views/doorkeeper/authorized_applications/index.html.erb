@@ -17,6 +17,7 @@
           <tr>
             <th>Application</th>
             <th>Created at</th>
+            <th>Owner</th>
             <th>Scope(s)</th>
             <th></th>
           </tr>
@@ -26,6 +27,7 @@
             <tr>
               <td><%= application.name %></td>
               <td><%= application.created_at.strftime(t('doorkeeper.authorized_applications.index.date_format')) %></td>
+              <td><%= link_to(application.owner.username, user_path(application.owner)) %></td>
               <td><%= application.scopes %></td>
               <td><%= link_to 'Revoke', oauth_authorized_application_path(application), method: :delete, data: { confirm: "Are you sure you want to revoke this application's permissions?" }, class: "ml-10 has-text-danger" %></td>
             </tr>
