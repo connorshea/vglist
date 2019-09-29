@@ -131,6 +131,9 @@ group :development do
   gem 'rails-erd', '~> 1.6'
   # GraphiQL IDE
   gem 'graphiql-rails', '~> 1.7.0'
+  # Improve the formatting of GraphQL requests in the logs.
+  # https://github.com/jetruby/graphql-rails_logger
+  gem 'graphql-rails_logger', '~> 1.2.2'
 end
 
 group :test do
