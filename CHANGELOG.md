@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.9.29
+### Added
+- Add a favicon and logo! ([#712])
+
+## v2019.9.27
+### Added
+- Add support for the `/.well-known/change-password` route.
+
+## v2019.9.23
+### Added
+- Add a GraphQL API (currently disabled until the OAuth system is finished and the API is documented). ([#697])
+
 ## v2019.9.15
 ### Added
 - Add filtering by release year to games. ([#681])
@@ -543,3 +555,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#670]: https://github.com/connorshea/VideoGameList/pull/670
 [#678]: https://github.com/connorshea/VideoGameList/pull/678
 [#681]: https://github.com/connorshea/VideoGameList/pull/681
+[#697]: https://github.com/connorshea/VideoGameList/pull/697
+[#712]: https://github.com/connorshea/VideoGameList/pull/712
