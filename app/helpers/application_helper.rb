@@ -14,8 +14,8 @@ module ApplicationHelper
   end
 
   # A helper for displaying user avatars.
-  sig { params(user_id: T.any(Integer, String), size: Integer).returns(T.untyped) }
-  def user_avatar(user_id, size)
+  sig { params(user_id: T.any(Integer, String), size: Integer, css_class_name: String).returns(T.untyped) }
+  def user_avatar(user_id, size, css_class_name: 'user-avatar')
     user = User.find(user_id)
     if user.avatar&.attached?
       # Resize the image, center it, and then crop it to a square.
@@ -29,9 +29,13 @@ module ApplicationHelper
         }
       ),
       height: "#{size}px",
-      width: "#{size}px"
+      width: "#{size}px",
+      class: css_class_name
     else
-      image_tag 'default-avatar.png', height: "#{size}px", width: "#{size}px"
+      image_tag 'default-avatar.png',
+        height: "#{size}px",
+        width: "#{size}px",
+        class: css_class_name
     end
   end
 
