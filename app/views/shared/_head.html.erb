@@ -2,6 +2,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= meta_title(yield(:title)) %></title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5856d6">
+  <meta name="msapplication-TileColor" content="#5856d6">
+  <meta name="theme-color" content="#5856d6">
+
   <meta name="description" content="<%= meta_description(yield(:description)) %>">
 
   <meta property="og:type" content="website">
@@ -9,7 +18,9 @@
   <meta property="og:title" content="<%= meta_title(yield(:title)) %>">
   <meta property="og:description" content="<%= meta_description(yield(:description)) %>">
   <meta property="og:url" content="<%= request.original_url %>">
-  <% unless yield(:opengraph_image).blank? %>
+  <% if yield(:opengraph_image).blank? %>
+    <meta property="og:image" content="/favicon-512.png">
+  <% else %>
     <meta property="og:image" content="<%= yield(:opengraph_image) %>">
   <% end %>
 
