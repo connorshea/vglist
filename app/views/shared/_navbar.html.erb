@@ -1,6 +1,8 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <%= link_to("VideoGameList", root_path, class: "navbar-item has-text-weight-semibold") %>
+    <%= link_to(root_path, class: "navbar-item has-text-weight-semibold") do %>
+      <%= image_tag(image_url('/assets/vglist-logo.svg'), width: '80px', class: 'mt-5') %>
+    <% end %>
     <%# Hamburger menu for mobile %>
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
       <span aria-hidden="true"></span>

@@ -4,11 +4,9 @@
 @import './stylesheets/home.scss';
 
 nav.navbar {
-  // Background gradient for the navbar
-  background: rgb(5, 53, 137);
-  background: linear-gradient(45deg, #053589 0%, #5178bc 100%);
+  background: #5856d6;
   // Subtle box-shadow for nav bar.
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
   padding: 0 20px;
 
   // Override burger icon color when hovered.
@@ -59,7 +57,7 @@ nav.navbar {
     font-size: 1rem;
   }
 
-  .navbar-item img {
+  .navbar-item img.user-avatar {
     max-height: 1.8rem;
     max-width: 1.8rem;
     object-fit: scale-down;
