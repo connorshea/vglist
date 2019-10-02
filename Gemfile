@@ -76,7 +76,7 @@ group :development, :test do
   gem 'rubocop', '~> 0.75', require: false
 
   # rubocop extensions
-  gem 'rubocop-performance', '~> 1.4'
+  gem 'rubocop-performance', '~> 1.5'
   gem 'rubocop-rspec', '~> 1.36'
   gem 'rubocop-rails', '~> 2.3'
 
