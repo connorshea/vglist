@@ -18,7 +18,7 @@ This is a Rails application for tracking your video game library.
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 2.0.1, `gem install bundler:2.0.1`
+1. To get Bundler 2.0.2, `gem install bundler:2.0.2`
 1. `bundle install`
 1. `yarn install`
 1. `bin/rails db:setup`
@@ -56,7 +56,7 @@ Docker isn't currently used for development, you can just run the application "n
 
 To update the Docker container used by GitLab CI:
 
-- Log into the GitLab CI Docker registry with `docker login registry.gitlab.com`.
+- Log into the GitLab CI Docker registry with `docker login registry.gitlab.com` (you'll need to use a Personal Access Token as your password).
 - Build the container with `docker build -f Dockerfile.ci -t registry.gitlab.com/connorshea/videogamelist .`
 - Then use `docker push registry.gitlab.com/connorshea/videogamelist` to push the container to the GitLab Container Registry.
 

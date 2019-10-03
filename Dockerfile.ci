@@ -1,5 +1,5 @@
 # Dockerfile for running the application in a CI environment.
-FROM ruby:2.6.5-alpine3.9
+FROM ruby:2.6.5
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
