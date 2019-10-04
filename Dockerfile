@@ -3,7 +3,7 @@
 FROM ruby:2.6.5-alpine3.9
 
 ENV APP_ROOT videogamelist
-ENV BUNDLER_VERSION 2.0.1
+ENV BUNDLER_VERSION 2.0.2
 ENV RAILS_ENV production
 ENV RACK_ENV production
 ENV NODE_ENV production
