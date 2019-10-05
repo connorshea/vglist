@@ -1168,6 +1168,18 @@ end
 module User::GeneratedAssociationMethods
   extend T::Sig
 
+  sig { returns(::Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy) }
+  def access_grants; end
+
+  sig { params(value: T.any(T::Array[::Doorkeeper::AccessGrant], ::Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy)).void }
+  def access_grants=(value); end
+
+  sig { returns(::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy) }
+  def access_tokens; end
+
+  sig { params(value: T.any(T::Array[::Doorkeeper::AccessToken], ::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy)).void }
+  def access_tokens=(value); end
+
   sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
   def active_relationships; end
 
@@ -1227,6 +1239,12 @@ module User::GeneratedAssociationMethods
 
   sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
   def games=(value); end
+
+  sig { returns(::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy) }
+  def oauth_applications; end
+
+  sig { params(value: T.any(T::Array[::Doorkeeper::Application], ::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy)).void }
+  def oauth_applications=(value); end
 
   sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
   def passive_relationships; end

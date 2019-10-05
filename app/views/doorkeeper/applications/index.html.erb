@@ -1,0 +1,45 @@
+<% content_for :title, t('.title') %>
+
+<div class="columns">
+  <div class="column is-3-desktop">
+    <div class="box">
+      <%= render 'settings/nav' %>
+    </div>
+  </div>
+
+  <div class="column">
+    <h1 class="title"><%= t('.title') %></h1>
+
+    <p><%= link_to t('.new'), new_oauth_application_path, class: 'button is-success mb-25' %></p>
+
+    <table class="table is-striped is-fullwidth">
+      <thead>
+        <tr>
+          <th><%= t('.name') %></th>
+          <th><%= t('.callback_url') %></th>
+          <th><%= t('.confidential') %></th>
+          <th><%= t('.actions') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @applications.each do |application| %>
+          <tr id="application_<%= application.id %>">
+            <td class="align-middle">
+              <%= link_to application.name, oauth_application_path(application) %>
+            </td>
+            <td class="align-middle">
+              <%= simple_format(application.redirect_uri) %>
+            </td>
+            <td class="align-middle">
+              <%= application.confidential? ? t('doorkeeper.applications.index.confidentiality.yes') : t('doorkeeper.applications.index.confidentiality.no') %>
+            </td>
+            <td class="align-middle">
+              <%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(application) %>
+              <%= link_to 'Delete', oauth_application_path(application), method: :delete, data: { confirm: "Are you sure you want to delete this application?" }, class: "ml-10 has-text-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

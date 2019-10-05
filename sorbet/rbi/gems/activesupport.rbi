@@ -2005,6 +2005,34 @@ class ActiveSupport::Cache::Entry
   def value; end
   def version; end
 end
+class ActiveSupport::Subscriber
+  def self.add_event_subscriber(event); end
+  def self.attach_to(namespace, subscriber = nil, notifier = nil); end
+  def self.detach_from(namespace, notifier = nil); end
+  def self.find_attached_subscriber; end
+  def self.invalid_event?(event); end
+  def self.method_added(event); end
+  def self.namespace; end
+  def self.notifier; end
+  def self.pattern_subscribed?(pattern); end
+  def self.prepare_pattern(event); end
+  def self.remove_event_subscriber(event); end
+  def self.subscriber; end
+  def self.subscribers; end
+end
+class ActiveSupport::SubscriberQueueRegistry
+  def get_queue(queue_key); end
+  def initialize; end
+  extend ActiveSupport::PerThreadRegistry
+end
+class ActiveSupport::LogSubscriber < ActiveSupport::Subscriber
+  def self.colorize_logging; end
+  def self.colorize_logging=(obj); end
+  def self.flush_all!; end
+  def self.log_subscribers; end
+  def self.logger; end
+  def self.logger=(arg0); end
+end
 class ActiveSupport::ExecutionWrapper
   def __callbacks; end
   def __callbacks?; end
@@ -2207,34 +2235,6 @@ class ActiveSupport::Cache::Strategy::LocalCache::Middleware
   def name; end
   def new(app); end
 end
-class ActiveSupport::Subscriber
-  def self.add_event_subscriber(event); end
-  def self.attach_to(namespace, subscriber = nil, notifier = nil); end
-  def self.detach_from(namespace, notifier = nil); end
-  def self.find_attached_subscriber; end
-  def self.invalid_event?(event); end
-  def self.method_added(event); end
-  def self.namespace; end
-  def self.notifier; end
-  def self.pattern_subscribed?(pattern); end
-  def self.prepare_pattern(event); end
-  def self.remove_event_subscriber(event); end
-  def self.subscriber; end
-  def self.subscribers; end
-end
-class ActiveSupport::SubscriberQueueRegistry
-  def get_queue(queue_key); end
-  def initialize; end
-  extend ActiveSupport::PerThreadRegistry
-end
-class ActiveSupport::LogSubscriber < ActiveSupport::Subscriber
-  def self.colorize_logging; end
-  def self.colorize_logging=(obj); end
-  def self.flush_all!; end
-  def self.log_subscribers; end
-  def self.logger; end
-  def self.logger=(arg0); end
-end
 class ActiveSupport::BacktraceCleaner
   def add_filter(&block); end
   def add_gem_filter; end
@@ -2268,11 +2268,6 @@ class ActiveSupport::Cache::MemoryStore < ActiveSupport::Cache::Store
   def synchronize(&block); end
   def write_entry(key, entry, options); end
 end
-class ActiveSupport::Digest
-  def self.hash_digest_class; end
-  def self.hash_digest_class=(klass); end
-  def self.hexdigest(arg); end
-end
 module ActiveSupport::Configurable
   def config; end
   extend ActiveSupport::Concern
@@ -2297,6 +2292,11 @@ module ActiveSupport::Rescuable::ClassMethods
   def handler_for_rescue(exception, object: nil); end
   def rescue_from(*klasses, with: nil, &block); end
   def rescue_with_handler(exception, object: nil, visited_exceptions: nil); end
+end
+class ActiveSupport::Digest
+  def self.hash_digest_class; end
+  def self.hash_digest_class=(klass); end
+  def self.hexdigest(arg); end
 end
 class ActiveSupport::CurrentAttributes
   def __callbacks; end

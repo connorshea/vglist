@@ -18,3 +18,7 @@ class ActionController::Parameters
   sig { params(key: Symbol).returns(ActionController::Parameters) }
   def typed_require(key); end
 end
+
+class Doorkeeper::ApplicationsController < ApplicationController; end
+class Doorkeeper::AuthorizedApplicationsController < ApplicationController; end
+class Doorkeeper::AuthorizationsController < ApplicationController; end

@@ -1,0 +1,15 @@
+<% content_for :title, t('.title') %>
+
+<div class="columns">
+  <div class="column is-3-desktop">
+    <div class="box">
+      <%= render 'settings/nav' %>
+    </div>
+  </div>
+
+  <div class="column">
+    <h1 class="title"><%= t('.title') %></h1>
+
+    <%= render 'form', application: @application %>
+  </div>
+</div>

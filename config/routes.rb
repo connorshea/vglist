@@ -90,6 +90,15 @@ Rails.application.routes.draw do
     get :connections
   end
 
+  scope :settings do
+    # This is contributed by Doorkeeper, but Sorbet doesn't know that so we have to hack around it.
+    T.unsafe(self).use_doorkeeper do
+      T.unsafe(self).controllers applications: 'oauth/applications',
+                                 authorized_applications: 'oauth/authorized_applications',
+                                 authorizations: 'oauth/authorizations'
+    end
+  end
+
   # Implement the .well-known/change-password URL.
   get '.well-known/change-password', to: redirect('/settings/account')
 
@@ -100,5 +109,5 @@ Rails.application.routes.draw do
   mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql" if Rails.env.development?
   # TODO: Enable this in production when the authentication stuff has been built.
   # Execute GraphQL queries posted to '/graphql'.
-  post "/graphql", to: "graphql#execute" if Rails.env.development?
+  post "/graphql", to: "graphql#execute"
 end

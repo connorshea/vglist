@@ -455,7 +455,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   include ActiveStorage::Blob::GeneratedAttributeMethods
   include ActiveStorage::Blob::Identifiable
   include ActiveStorage::Blob::Representable
-  include Anonymous_Module_15
+  include Anonymous_Module_18
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
 end
@@ -495,7 +495,7 @@ class ActiveStorage::Blob::ActiveRecord_AssociationRelation < ActiveRecord::Asso
   include ActiveRecord::Delegation::ClassSpecificRelation
   include ActiveStorage::Blob::GeneratedRelationMethods
 end
-module Anonymous_Module_15
+module Anonymous_Module_18
   def analyzed; end
   def analyzed=(value); end
   def analyzed_before_last_save; end

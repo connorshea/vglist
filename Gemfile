@@ -68,6 +68,9 @@ gem "sorbet-rails", '~> 0.5.3'
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 1.9'
 
+# Doorkeeper for API tokens
+gem "doorkeeper", "~> 5.2"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -128,6 +131,9 @@ group :development do
   gem 'rails-erd', '~> 1.6'
   # GraphiQL IDE
   gem 'graphiql-rails', '~> 1.7.0'
+  # Improve the formatting of GraphQL requests in the logs.
+  # https://github.com/jetruby/graphql-rails_logger
+  gem 'graphql-rails_logger', '~> 1.2.2'
 end
 
 group :test do

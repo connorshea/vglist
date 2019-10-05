@@ -1,0 +1,59 @@
+<%= form_for application, url: doorkeeper_submit_path(application), html: { role: 'form' } do |f| %>
+  <% if application.errors.any? %>
+    <div class="alert alert-danger" data-alert><p><%= t('doorkeeper.applications.form.error') %></p></div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, class: 'label' %>
+    <div class="control">
+      <%= f.text_field :name, class: "input #{ 'is-invalid' if application.errors[:name].present? }", required: true %>
+      <%= doorkeeper_errors_for application, :name %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.label :redirect_uri, class: 'label' %>
+    <div class="control">
+      <%= f.text_area :redirect_uri, class: "textarea #{ 'is-invalid' if application.errors[:redirect_uri].present? }" %>
+      <%= doorkeeper_errors_for application, :redirect_uri %>
+      <span class="help">
+        <%= t('doorkeeper.applications.help.redirect_uri') %>
+      </span>
+
+      <% if Doorkeeper.configuration.allow_blank_redirect_uri?(application) %>
+        <span class="form-text text-secondary">
+          <%= t('doorkeeper.applications.help.blank_redirect_uri') %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="control">
+      <%= f.label :confidential, class: 'checkbox' do %>
+        <%= f.check_box :confidential %>
+        Confidential
+      <% end %>
+      <p class="help">
+        <%= t('doorkeeper.applications.help.confidential') %>
+      </p>
+      <%= doorkeeper_errors_for application, :confidential %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.label :scopes, class: 'label' %>
+    <div class="control">
+      <%= f.text_field :scopes, class: "input #{ 'has-error' if application.errors[:scopes].present? }" %>
+      <%= doorkeeper_errors_for application, :scopes %>
+      <span class="help">
+        Separate scopes with spaces. The only valid scopes are 'read' and 'write'.
+      </span>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.submit t('doorkeeper.applications.buttons.submit'), class: 'button is-primary' %>
+    <%= link_to t('doorkeeper.applications.buttons.cancel'), oauth_applications_path, class: 'button' %>
+  </div>
+<% end %>

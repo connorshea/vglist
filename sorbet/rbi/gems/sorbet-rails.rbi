@@ -217,6 +217,15 @@ class FriendlyIdPlugin < SorbetRails::ModelPlugins::Base
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
 end
+module SorbetRails::CustomParamsMethods
+  def fetch_typed(*args, &blk); end
+  def require_typed(*args, &blk); end
+  extend T::Helpers
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+  include Kernel
+end
 class ActiveRecordOverrides
   def enum_calls; end
   def get_enum_call(klass, enum_sym); end

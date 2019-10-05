@@ -12,724 +12,12 @@ module AbstractController::Rendering
 end
 
 class ActionController::API
-  include ::ActionView::ViewPaths
-  include ::AbstractController::Rendering
-  include ::ActionDispatch::Routing::UrlFor
-  include ::ActionDispatch::Routing::PolymorphicRoutes
-  include ::AbstractController::UrlFor
-  include ::ActionController::UrlFor
-  include ::AbstractController::Logger
-  include ::ActiveSupport::Benchmarkable
-  include ::ActionController::Redirecting
-  include ::ActionView::Rendering
-  include ::ActionController::ApiRendering
-  include ::ActionController::Rendering
-  include ::ActionController::Renderers
-  include ::ActionController::Renderers::All
-  include ::ActionController::ConditionalGet
-  include ::ActionController::Head
-  include ::ActionController::StrongParameters
-  include ::ActiveSupport::Callbacks
-  include ::AbstractController::Callbacks
-  include ::ActionController::ForceSSL
-  include ::ActionController::DataStreaming
-  include ::ActionController::DefaultHeaders
-  include ::ActiveSupport::Rescuable
-  include ::ActionController::Rescue
-  include ::ActionController::Instrumentation
-  include ::ActionController::ParamsWrapper
-  include ::ActionController::RespondWith
-  include ::ActionDispatch::Routing::RouteSet::MountedHelpers
-  include ::ActiveRecord::Railties::ControllerRuntime
-  include ::AbstractController::Helpers
-  include ::ActionController::Helpers
-  include ::ActionController::ImplicitRender
-  include ::ActionController::BasicImplicitRender
-  include ::Raven::Rails::ControllerMethods
-  include ::Raven::Rails::ControllerTransaction
-  include ::Turbolinks::Controller
-  include ::Turbolinks::Redirection
-  include ::Devise::Controllers::Helpers
-  include ::Devise::Controllers::SignInOut
-  include ::Devise::Controllers::StoreLocation
-  include ::Devise::Controllers::UrlHelpers
-  def __callbacks(); end
-
-  def __callbacks?(); end
-
-  def _helper_methods(); end
-
-  def _helper_methods=(val); end
-
-  def _helper_methods?(); end
-
-  def _helpers(); end
-
-  def _helpers=(val); end
-
-  def _helpers?(); end
-
-  def _process_action_callbacks(); end
-
-  def _renderers(); end
-
-  def _renderers=(val); end
-
-  def _renderers?(); end
-
-  def _run_process_action_callbacks(&block); end
-
-  def _wrapper_options(); end
-
-  def _wrapper_options=(val); end
-
-  def _wrapper_options?(); end
-
-  def default_url_options(); end
-
-  def default_url_options=(val); end
-
-  def default_url_options?(); end
-
-  def etaggers(); end
-
-  def etaggers=(val); end
-
-  def etaggers?(); end
-
-  def helpers_path(); end
-
-  def helpers_path=(val); end
-
-  def helpers_path?(); end
-
-  def include_all_helpers(); end
-
-  def include_all_helpers=(val); end
-
-  def include_all_helpers?(); end
-
-  def logger(); end
-
-  def logger=(value); end
-
-  def mimes_for_respond_to(); end
-
-  def mimes_for_respond_to=(val); end
-
-  def mimes_for_respond_to?(); end
-
-  def rescue_handlers(); end
-
-  def rescue_handlers=(val); end
-
-  def rescue_handlers?(); end
-
-  def responder(); end
-
-  def responder=(val); end
-
-  def responder?(); end
   MODULES = ::T.let(nil, ::T.untyped)
 end
 
-class ActionController::API
-  extend ::AbstractController::UrlFor::ClassMethods
-  extend ::ActionController::Rendering::ClassMethods
-  extend ::ActionController::Renderers::ClassMethods
-  extend ::ActionController::ConditionalGet::ClassMethods
-  extend ::AbstractController::Callbacks::ClassMethods
-  extend ::ActionController::ForceSSL::ClassMethods
-  extend ::ActionController::DefaultHeaders::ClassMethods
-  extend ::ActionController::Instrumentation::ClassMethods
-  extend ::ActionController::ParamsWrapper::ClassMethods
-  extend ::ActionController::RespondWith::ClassMethods
-  extend ::ActionController::Railties::Helpers
-  extend ::AbstractController::Helpers::ClassMethods
-  extend ::ActionController::Helpers::ClassMethods
-  def self.__callbacks(); end
-
-  def self.__callbacks=(val); end
-
-  def self.__callbacks?(); end
-
-  def self._helper_methods(); end
-
-  def self._helper_methods=(val); end
-
-  def self._helper_methods?(); end
-
-  def self._helpers=(val); end
-
-  def self._helpers?(); end
-
-  def self._process_action_callbacks(); end
-
-  def self._process_action_callbacks=(value); end
-
-  def self._renderers(); end
-
-  def self._renderers=(val); end
-
-  def self._renderers?(); end
-
-  def self._wrapper_options(); end
-
-  def self._wrapper_options=(val); end
-
-  def self._wrapper_options?(); end
-
-  def self.default_url_options(); end
-
-  def self.default_url_options=(val); end
-
-  def self.default_url_options?(); end
-
-  def self.etaggers(); end
-
-  def self.etaggers=(val); end
-
-  def self.etaggers?(); end
-
-  def self.helpers_path(); end
-
-  def self.helpers_path=(val); end
-
-  def self.helpers_path?(); end
-
-  def self.include_all_helpers(); end
-
-  def self.include_all_helpers=(val); end
-
-  def self.include_all_helpers?(); end
-
-  def self.logger(); end
-
-  def self.logger=(value); end
-
-  def self.mimes_for_respond_to(); end
-
-  def self.mimes_for_respond_to=(val); end
-
-  def self.mimes_for_respond_to?(); end
-
-  def self.rescue_handlers(); end
-
-  def self.rescue_handlers=(val); end
-
-  def self.rescue_handlers?(); end
-
-  def self.responder(); end
-
-  def self.responder=(val); end
-
-  def self.responder?(); end
-
-  def self.without_modules(*modules); end
-end
-
 class ActionController::Base
-  include ::ActionView::ViewPaths
-  include ::AbstractController::Rendering
-  include ::AbstractController::Translation
-  include ::AbstractController::AssetPaths
-  include ::AbstractController::Helpers
-  include ::ActionController::Helpers
-  include ::ActionDispatch::Routing::UrlFor
-  include ::ActionDispatch::Routing::PolymorphicRoutes
-  include ::AbstractController::UrlFor
-  include ::ActionController::UrlFor
-  include ::AbstractController::Logger
-  include ::ActiveSupport::Benchmarkable
-  include ::ActionController::Redirecting
-  include ::ActionView::Rendering
-  include ::ActionView::Layouts
-  include ::ActionController::Rendering
-  include ::ActionController::Renderers
-  include ::ActionController::Renderers::All
-  include ::ActionController::ConditionalGet
-  include ::ActionController::Head
-  include ::ActionController::EtagWithTemplateDigest
-  include ::ActionController::EtagWithFlash
-  include ::ActionController::Caching
-  include ::AbstractController::Caching::Fragments
-  include ::AbstractController::Caching
-  include ::AbstractController::Caching::ConfigMethods
-  include ::ActionController::MimeResponds
-  include ::ActionController::ImplicitRender
-  include ::ActionController::BasicImplicitRender
-  include ::ActionController::StrongParameters
-  include ::ActionController::ParameterEncoding
-  include ::ActionController::Cookies
-  include ::ActionController::Flash
-  include ::ActionController::FormBuilder
-  include ::ActiveSupport::Callbacks
-  include ::AbstractController::Callbacks
-  include ::ActionController::RequestForgeryProtection
-  include ::ActionController::ContentSecurityPolicy
-  include ::ActionController::ForceSSL
-  include ::ActionController::Streaming
-  include ::ActionController::DataStreaming
-  include ::ActionController::HttpAuthentication::Basic::ControllerMethods
-  include ::ActionController::HttpAuthentication::Digest::ControllerMethods
-  include ::ActionController::HttpAuthentication::Token::ControllerMethods
-  include ::ActionController::DefaultHeaders
-  include ::ActiveSupport::Rescuable
-  include ::ActionController::Rescue
-  include ::ActionController::Instrumentation
-  include ::ActionController::ParamsWrapper
-  include ::ActionController::RespondWith
-  include ::ActionDispatch::Routing::RouteSet::MountedHelpers
-  include ::ActiveRecord::Railties::ControllerRuntime
-  include ::Raven::Rails::ControllerMethods
-  include ::Raven::Rails::ControllerTransaction
-  include ::Turbolinks::Controller
-  include ::Turbolinks::Redirection
-  include ::Devise::Controllers::Helpers
-  include ::Devise::Controllers::SignInOut
-  include ::Devise::Controllers::StoreLocation
-  include ::Devise::Controllers::UrlHelpers
-  def __callbacks(); end
-
-  def __callbacks?(); end
-
-  def _helper_methods(); end
-
-  def _helper_methods=(val); end
-
-  def _helper_methods?(); end
-
-  def _helpers(); end
-
-  def _helpers=(val); end
-
-  def _helpers?(); end
-
-  def _process_action_callbacks(); end
-
-  def _renderers(); end
-
-  def _renderers=(val); end
-
-  def _renderers?(); end
-
-  def _run_process_action_callbacks(&block); end
-
-  def _view_cache_dependencies(); end
-
-  def _view_cache_dependencies=(val); end
-
-  def _view_cache_dependencies?(); end
-
-  def _wrapper_options(); end
-
-  def _wrapper_options=(val); end
-
-  def _wrapper_options?(); end
-
-  def alert(); end
-
-  def allow_forgery_protection(); end
-
-  def allow_forgery_protection=(value); end
-
-  def asset_host(); end
-
-  def asset_host=(value); end
-
-  def assets_dir(); end
-
-  def assets_dir=(value); end
-
-  def default_asset_host_protocol(); end
-
-  def default_asset_host_protocol=(value); end
-
-  def default_protect_from_forgery(); end
-
-  def default_protect_from_forgery=(value); end
-
-  def default_static_extension(); end
-
-  def default_static_extension=(value); end
-
-  def default_url_options(); end
-
-  def default_url_options=(val); end
-
-  def default_url_options?(); end
-
-  def enable_fragment_cache_logging(); end
-
-  def enable_fragment_cache_logging=(value); end
-
-  def etag_with_template_digest(); end
-
-  def etag_with_template_digest=(val); end
-
-  def etag_with_template_digest?(); end
-
-  def etaggers(); end
-
-  def etaggers=(val); end
-
-  def etaggers?(); end
-
-  def flash(*args, &block); end
-
-  def forgery_protection_origin_check(); end
-
-  def forgery_protection_origin_check=(value); end
-
-  def forgery_protection_strategy(); end
-
-  def forgery_protection_strategy=(value); end
-
-  def fragment_cache_keys(); end
-
-  def fragment_cache_keys=(val); end
-
-  def fragment_cache_keys?(); end
-
-  def helpers_path(); end
-
-  def helpers_path=(val); end
-
-  def helpers_path?(); end
-
-  def include_all_helpers(); end
-
-  def include_all_helpers=(val); end
-
-  def include_all_helpers?(); end
-
-  def javascripts_dir(); end
-
-  def javascripts_dir=(value); end
-
-  def log_warning_on_csrf_failure(); end
-
-  def log_warning_on_csrf_failure=(value); end
-
-  def logger(); end
-
-  def logger=(value); end
-
-  def mimes_for_respond_to(); end
-
-  def mimes_for_respond_to=(val); end
-
-  def mimes_for_respond_to?(); end
-
-  def notice(); end
-
-  def per_form_csrf_tokens(); end
-
-  def per_form_csrf_tokens=(value); end
-
-  def perform_caching(); end
-
-  def perform_caching=(value); end
-
-  def relative_url_root(); end
-
-  def relative_url_root=(value); end
-
-  def request_forgery_protection_token(); end
-
-  def request_forgery_protection_token=(value); end
-
-  def rescue_handlers(); end
-
-  def rescue_handlers=(val); end
-
-  def rescue_handlers?(); end
-
-  def responder(); end
-
-  def responder=(val); end
-
-  def responder?(); end
-
-  def stylesheets_dir(); end
-
-  def stylesheets_dir=(value); end
   MODULES = ::T.let(nil, ::T.untyped)
   PROTECTED_IVARS = ::T.let(nil, ::T.untyped)
-end
-
-class ActionController::Base
-  extend ::AbstractController::Helpers::ClassMethods
-  extend ::ActionController::Helpers::ClassMethods
-  extend ::AbstractController::UrlFor::ClassMethods
-  extend ::ActionController::Rendering::ClassMethods
-  extend ::ActionController::Renderers::ClassMethods
-  extend ::ActionController::ConditionalGet::ClassMethods
-  extend ::AbstractController::Caching::Fragments::ClassMethods
-  extend ::AbstractController::Caching::ClassMethods
-  extend ::AbstractController::Caching::ConfigMethods
-  extend ::ActionController::ParameterEncoding::ClassMethods
-  extend ::ActionController::Flash::ClassMethods
-  extend ::ActionController::FormBuilder::ClassMethods
-  extend ::AbstractController::Callbacks::ClassMethods
-  extend ::ActionController::RequestForgeryProtection::ClassMethods
-  extend ::ActionController::ContentSecurityPolicy::ClassMethods
-  extend ::ActionController::ForceSSL::ClassMethods
-  extend ::ActionController::DefaultHeaders::ClassMethods
-  extend ::ActionController::Instrumentation::ClassMethods
-  extend ::ActionController::ParamsWrapper::ClassMethods
-  extend ::Responders::ControllerMethod
-  extend ::ActionController::RespondWith::ClassMethods
-  extend ::ActionController::Railties::Helpers
-  def self.__callbacks(); end
-
-  def self.__callbacks=(val); end
-
-  def self.__callbacks?(); end
-
-  def self._default_form_builder(); end
-
-  def self._default_form_builder=(val); end
-
-  def self._default_form_builder?(); end
-
-  def self._flash_types(); end
-
-  def self._flash_types=(val); end
-
-  def self._flash_types?(); end
-
-  def self._helper_methods(); end
-
-  def self._helper_methods=(val); end
-
-  def self._helper_methods?(); end
-
-  def self._helpers=(val); end
-
-  def self._helpers?(); end
-
-  def self._layout(); end
-
-  def self._layout=(val); end
-
-  def self._layout?(); end
-
-  def self._layout_conditions(); end
-
-  def self._layout_conditions=(val); end
-
-  def self._layout_conditions?(); end
-
-  def self._process_action_callbacks(); end
-
-  def self._process_action_callbacks=(value); end
-
-  def self._renderers(); end
-
-  def self._renderers=(val); end
-
-  def self._renderers?(); end
-
-  def self._view_cache_dependencies(); end
-
-  def self._view_cache_dependencies=(val); end
-
-  def self._view_cache_dependencies?(); end
-
-  def self._wrapper_options(); end
-
-  def self._wrapper_options=(val); end
-
-  def self._wrapper_options?(); end
-
-  def self.allow_forgery_protection(); end
-
-  def self.allow_forgery_protection=(value); end
-
-  def self.asset_host(); end
-
-  def self.asset_host=(value); end
-
-  def self.assets_dir(); end
-
-  def self.assets_dir=(value); end
-
-  def self.default_asset_host_protocol(); end
-
-  def self.default_asset_host_protocol=(value); end
-
-  def self.default_protect_from_forgery(); end
-
-  def self.default_protect_from_forgery=(value); end
-
-  def self.default_static_extension(); end
-
-  def self.default_static_extension=(value); end
-
-  def self.default_url_options(); end
-
-  def self.default_url_options=(val); end
-
-  def self.default_url_options?(); end
-
-  def self.enable_fragment_cache_logging(); end
-
-  def self.enable_fragment_cache_logging=(value); end
-
-  def self.etag_with_template_digest(); end
-
-  def self.etag_with_template_digest=(val); end
-
-  def self.etag_with_template_digest?(); end
-
-  def self.etaggers(); end
-
-  def self.etaggers=(val); end
-
-  def self.etaggers?(); end
-
-  def self.forgery_protection_origin_check(); end
-
-  def self.forgery_protection_origin_check=(value); end
-
-  def self.forgery_protection_strategy(); end
-
-  def self.forgery_protection_strategy=(value); end
-
-  def self.fragment_cache_keys(); end
-
-  def self.fragment_cache_keys=(val); end
-
-  def self.fragment_cache_keys?(); end
-
-  def self.helpers_path(); end
-
-  def self.helpers_path=(val); end
-
-  def self.helpers_path?(); end
-
-  def self.include_all_helpers(); end
-
-  def self.include_all_helpers=(val); end
-
-  def self.include_all_helpers?(); end
-
-  def self.javascripts_dir(); end
-
-  def self.javascripts_dir=(value); end
-
-  def self.log_warning_on_csrf_failure(); end
-
-  def self.log_warning_on_csrf_failure=(value); end
-
-  def self.logger(); end
-
-  def self.logger=(value); end
-
-  def self.mimes_for_respond_to(); end
-
-  def self.mimes_for_respond_to=(val); end
-
-  def self.mimes_for_respond_to?(); end
-
-  def self.per_form_csrf_tokens(); end
-
-  def self.per_form_csrf_tokens=(value); end
-
-  def self.perform_caching(); end
-
-  def self.perform_caching=(value); end
-
-  def self.relative_url_root(); end
-
-  def self.relative_url_root=(value); end
-
-  def self.request_forgery_protection_token(); end
-
-  def self.request_forgery_protection_token=(value); end
-
-  def self.rescue_handlers(); end
-
-  def self.rescue_handlers=(val); end
-
-  def self.rescue_handlers?(); end
-
-  def self.responder(); end
-
-  def self.responder=(val); end
-
-  def self.responder?(); end
-
-  def self.stylesheets_dir(); end
-
-  def self.stylesheets_dir=(value); end
-
-  def self.without_modules(*modules); end
-end
-
-module ActionController::BasicImplicitRender
-  def default_render(); end
-
-  def send_action(method, *args); end
-end
-
-module ActionController::BasicImplicitRender
-end
-
-module ActionController::Caching
-end
-
-module ActionController::Caching
-  extend ::ActiveSupport::Autoload
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::ConditionalGet
-  include ::ActionController::Head
-  def expires_in(seconds, options=T.unsafe(nil)); end
-
-  def expires_now(); end
-
-  def fresh_when(object=T.unsafe(nil), etag: T.unsafe(nil), weak_etag: T.unsafe(nil), strong_etag: T.unsafe(nil), last_modified: T.unsafe(nil), public: T.unsafe(nil), template: T.unsafe(nil)); end
-
-  def http_cache_forever(public: T.unsafe(nil)); end
-
-  def stale?(object=T.unsafe(nil), **freshness_kwargs); end
-end
-
-module ActionController::ConditionalGet::ClassMethods
-  def etag(&etagger); end
-end
-
-module ActionController::ConditionalGet::ClassMethods
-end
-
-module ActionController::ConditionalGet
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::ContentSecurityPolicy
-end
-
-module ActionController::ContentSecurityPolicy::ClassMethods
-  def content_security_policy(enabled=T.unsafe(nil), **options, &block); end
-
-  def content_security_policy_report_only(report_only=T.unsafe(nil), **options); end
-end
-
-module ActionController::ContentSecurityPolicy::ClassMethods
-end
-
-module ActionController::ContentSecurityPolicy
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::Cookies
-end
-
-module ActionController::Cookies
-  extend ::ActiveSupport::Concern
 end
 
 module ActionController::DataStreaming
@@ -737,250 +25,16 @@ module ActionController::DataStreaming
   DEFAULT_SEND_FILE_TYPE = ::T.let(nil, ::T.untyped)
 end
 
-module ActionController::DataStreaming
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::DefaultHeaders
-end
-
-module ActionController::DefaultHeaders::ClassMethods
-  def make_response!(request); end
-end
-
-module ActionController::DefaultHeaders::ClassMethods
-end
-
-module ActionController::DefaultHeaders
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::EtagWithFlash
-end
-
-module ActionController::EtagWithFlash
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::EtagWithTemplateDigest
-end
-
-module ActionController::EtagWithTemplateDigest
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::Flash
-  extend ::ActiveSupport::Concern
-end
-
 module ActionController::ForceSSL
-  def force_ssl_redirect(host_or_options=T.unsafe(nil)); end
   ACTION_OPTIONS = ::T.let(nil, ::T.untyped)
   REDIRECT_OPTIONS = ::T.let(nil, ::T.untyped)
   URL_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
-module ActionController::ForceSSL::ClassMethods
-  def force_ssl(options=T.unsafe(nil)); end
-end
-
-module ActionController::ForceSSL::ClassMethods
-end
-
-module ActionController::ForceSSL
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::FormBuilder
-  def default_form_builder(); end
-end
-
-module ActionController::FormBuilder::ClassMethods
-  def default_form_builder(builder); end
-end
-
-module ActionController::FormBuilder::ClassMethods
-end
-
-module ActionController::FormBuilder
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::Head
-  def head(status, options=T.unsafe(nil)); end
-end
-
-module ActionController::Head
-end
-
-module ActionController::HttpAuthentication
-end
-
-module ActionController::HttpAuthentication::Basic
-  def auth_param(request); end
-
-  def auth_scheme(request); end
-
-  def authenticate(request, &login_procedure); end
-
-  def authentication_request(controller, realm, message); end
-
-  def decode_credentials(request); end
-
-  def encode_credentials(user_name, password); end
-
-  def has_basic_credentials?(request); end
-
-  def user_name_and_password(request); end
-end
-
-module ActionController::HttpAuthentication::Basic::ControllerMethods
-  def authenticate_or_request_with_http_basic(realm=T.unsafe(nil), message=T.unsafe(nil), &login_procedure); end
-
-  def authenticate_with_http_basic(&login_procedure); end
-
-  def http_basic_authenticate_or_request_with(name:, password:, realm: T.unsafe(nil), message: T.unsafe(nil)); end
-
-  def request_http_basic_authentication(realm=T.unsafe(nil), message=T.unsafe(nil)); end
-end
-
-module ActionController::HttpAuthentication::Basic::ControllerMethods
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::HttpAuthentication::Basic
-  extend ::ActionController::HttpAuthentication::Basic
-end
-
-module ActionController::HttpAuthentication::Digest
-  def authenticate(request, realm, &password_procedure); end
-
-  def authentication_header(controller, realm); end
-
-  def authentication_request(controller, realm, message=T.unsafe(nil)); end
-
-  def decode_credentials(header); end
-
-  def decode_credentials_header(request); end
-
-  def encode_credentials(http_method, credentials, password, password_is_ha1); end
-
-  def expected_response(http_method, uri, credentials, password, password_is_ha1=T.unsafe(nil)); end
-
-  def ha1(credentials, password); end
-
-  def nonce(secret_key, time=T.unsafe(nil)); end
-
-  def opaque(secret_key); end
-
-  def secret_token(request); end
-
-  def validate_digest_response(request, realm, &password_procedure); end
-
-  def validate_nonce(secret_key, request, value, seconds_to_timeout=T.unsafe(nil)); end
-end
-
-module ActionController::HttpAuthentication::Digest::ControllerMethods
-  def authenticate_or_request_with_http_digest(realm=T.unsafe(nil), message=T.unsafe(nil), &password_procedure); end
-
-  def authenticate_with_http_digest(realm=T.unsafe(nil), &password_procedure); end
-
-  def request_http_digest_authentication(realm=T.unsafe(nil), message=T.unsafe(nil)); end
-end
-
-module ActionController::HttpAuthentication::Digest::ControllerMethods
-end
-
-module ActionController::HttpAuthentication::Digest
-  extend ::ActionController::HttpAuthentication::Digest
-end
-
 module ActionController::HttpAuthentication::Token
-  def authenticate(controller, &login_procedure); end
-
-  def authentication_request(controller, realm, message=T.unsafe(nil)); end
-
-  def encode_credentials(token, options=T.unsafe(nil)); end
-
-  def params_array_from(raw_params); end
-
-  def raw_params(auth); end
-
-  def rewrite_param_values(array_params); end
-
-  def token_and_options(request); end
-
-  def token_params_from(auth); end
   AUTHN_PAIR_DELIMITERS = ::T.let(nil, ::T.untyped)
   TOKEN_KEY = ::T.let(nil, ::T.untyped)
   TOKEN_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-module ActionController::HttpAuthentication::Token::ControllerMethods
-  def authenticate_or_request_with_http_token(realm=T.unsafe(nil), message=T.unsafe(nil), &login_procedure); end
-
-  def authenticate_with_http_token(&login_procedure); end
-
-  def request_http_token_authentication(realm=T.unsafe(nil), message=T.unsafe(nil)); end
-end
-
-module ActionController::HttpAuthentication::Token::ControllerMethods
-end
-
-module ActionController::HttpAuthentication::Token
-  extend ::ActionController::HttpAuthentication::Token
-end
-
-module ActionController::HttpAuthentication
-end
-
-module ActionController::ImplicitRender
-  include ::ActionController::BasicImplicitRender
-  def default_render(); end
-
-  def method_for_action(action_name); end
-end
-
-module ActionController::ImplicitRender
-end
-
-module ActionController::Instrumentation
-  def process_action(*args); end
-
-  def redirect_to(*args); end
-
-  def render(*args); end
-
-  def send_data(data, options=T.unsafe(nil)); end
-
-  def send_file(path, options=T.unsafe(nil)); end
-
-  def view_runtime(); end
-
-  def view_runtime=(view_runtime); end
-end
-
-module ActionController::Instrumentation::ClassMethods
-  def log_process_action(payload); end
-end
-
-module ActionController::Instrumentation::ClassMethods
-end
-
-module ActionController::Instrumentation
-  extend ::ActiveSupport::Concern
-end
-
-class ActionController::InvalidAuthenticityToken
-end
-
-class ActionController::InvalidAuthenticityToken
-end
-
-class ActionController::InvalidCrossOriginRequest
-end
-
-class ActionController::InvalidCrossOriginRequest
 end
 
 module ActionController::Live
@@ -1020,9 +74,6 @@ class ActionController::LogSubscriber
   INTERNAL_PARAMS = ::T.let(nil, ::T.untyped)
 end
 
-class ActionController::LogSubscriber
-end
-
 class ActionController::Metal
   include ::ActionController::Testing::Functional
 end
@@ -1033,200 +84,29 @@ class ActionController::MiddlewareStack
   NULL = ::T.let(nil, ::T.untyped)
 end
 
-class ActionController::MimeResponds::Collector
-  include ::AbstractController::Collector
-  def all(*args, &block); end
-
-  def any(*args, &block); end
-
-  def custom(mime_type, &block); end
-
-  def format(); end
-
-  def format=(format); end
-
-  def initialize(mimes, variant=T.unsafe(nil)); end
-
-  def negotiate_format(request); end
-
-  def response(); end
-end
-
-class ActionController::MimeResponds::Collector::VariantCollector
-  def all(*args, &block); end
-
-  def any(*args, &block); end
-
-  def initialize(variant=T.unsafe(nil)); end
-
-  def method_missing(name, *args, &block); end
-
-  def variant(); end
-end
-
-class ActionController::MimeResponds::Collector::VariantCollector
-end
-
-class ActionController::MissingRenderer
-  def initialize(format); end
-end
-
-class ActionController::MissingRenderer
-end
-
-module ActionController::ParameterEncoding
-end
-
-module ActionController::ParameterEncoding::ClassMethods
-  def binary_params_for?(action); end
-
-  def inherited(klass); end
-
-  def setup_param_encode(); end
-
-  def skip_parameter_encoding(action); end
-end
-
-module ActionController::ParameterEncoding::ClassMethods
-end
-
-module ActionController::ParameterEncoding
-  extend ::ActiveSupport::Concern
-end
-
 class ActionController::Parameters
-  include ::SorbetRails::CustomParamsMethods
-  include ::SorbetRailsHack
   EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
   EMPTY_HASH = ::T.let(nil, ::T.untyped)
   PERMITTED_SCALAR_TYPES = ::T.let(nil, ::T.untyped)
 end
 
 module ActionController::ParamsWrapper
-  def process_action(*args); end
   EXCLUDE_PARAMETERS = ::T.let(nil, ::T.untyped)
 end
 
-module ActionController::ParamsWrapper::ClassMethods
-  def _set_wrapper_options(options); end
-
-  def inherited(klass); end
-
-  def wrap_parameters(name_or_model_or_options, options=T.unsafe(nil)); end
-end
-
-module ActionController::ParamsWrapper::ClassMethods
-end
-
-class ActionController::ParamsWrapper::Options
-  include ::Mutex_m
-  def initialize(name, format, include, exclude, klass, model); end
-
-  def lock(); end
-
-  def locked?(); end
-
-  def synchronize(&block); end
-
-  def try_lock(); end
-
-  def unlock(); end
-end
-
-class ActionController::ParamsWrapper::Options
-  def self.from_hash(hash); end
-end
-
-module ActionController::ParamsWrapper
-  extend ::ActiveSupport::Concern
-end
-
 class ActionController::Renderer
-  def controller(); end
-
-  def defaults(); end
-
-  def initialize(controller, env, defaults); end
-
-  def new(env=T.unsafe(nil)); end
-
-  def render(*args); end
-
-  def with_defaults(defaults); end
   DEFAULTS = ::T.let(nil, ::T.untyped)
   IDENTITY = ::T.let(nil, ::T.untyped)
   RACK_KEY_TRANSLATION = ::T.let(nil, ::T.untyped)
   RACK_VALUE_TRANSLATION = ::T.let(nil, ::T.untyped)
 end
 
-class ActionController::Renderer
-  def self.for(controller, env=T.unsafe(nil), defaults=T.unsafe(nil)); end
-end
-
 module ActionController::Renderers
-  def _render_to_body_with_renderer(options); end
-
-  def _render_with_renderer_js(js, options); end
-
-  def _render_with_renderer_json(json, options); end
-
-  def _render_with_renderer_xml(xml, options); end
-
-  def render_to_body(options); end
   RENDERERS = ::T.let(nil, ::T.untyped)
 end
 
-module ActionController::Renderers::All
-end
-
-module ActionController::Renderers::All
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::Renderers::ClassMethods
-  def use_renderer(*args); end
-
-  def use_renderers(*args); end
-end
-
-module ActionController::Renderers::ClassMethods
-end
-
-module ActionController::Renderers
-  extend ::ActiveSupport::Concern
-  def self._render_with_renderer_method_name(key); end
-
-  def self.add(key, &block); end
-
-  def self.remove(key); end
-end
-
 module ActionController::Rendering
-  def process_action(*_); end
-
-  def render(*args); end
-
-  def render_to_body(options=T.unsafe(nil)); end
-
-  def render_to_string(*_); end
   RENDER_FORMATS_IN_PRIORITY = ::T.let(nil, ::T.untyped)
-end
-
-module ActionController::Rendering::ClassMethods
-  def inherited(klass); end
-
-  def render(*args, &block); end
-
-  def renderer(); end
-
-  def setup_renderer!(); end
-end
-
-module ActionController::Rendering::ClassMethods
-end
-
-module ActionController::Rendering
-  extend ::ActiveSupport::Concern
 end
 
 module ActionController::RequestForgeryProtection
@@ -1234,182 +114,16 @@ module ActionController::RequestForgeryProtection
   NULL_ORIGIN_MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
-module ActionController::RequestForgeryProtection::ClassMethods
-  def skip_forgery_protection(options=T.unsafe(nil)); end
-end
-
-module ActionController::RequestForgeryProtection::ProtectionMethods
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::Exception
-  def handle_unverified_request(); end
-
-  def initialize(controller); end
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::Exception
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
-  def handle_unverified_request(); end
-
-  def initialize(controller); end
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullCookieJar
-  def write(*_); end
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullCookieJar
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullSessionHash
-  def initialize(req); end
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullSessionHash
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::ResetSession
-  def handle_unverified_request(); end
-
-  def initialize(controller); end
-end
-
-class ActionController::RequestForgeryProtection::ProtectionMethods::ResetSession
-end
-
-module ActionController::RequestForgeryProtection::ProtectionMethods
-end
-
-module ActionController::RequestForgeryProtection
-  extend ::ActiveSupport::Concern
-end
-
-module ActionController::Rescue
-  def show_detailed_exceptions?(); end
-end
-
-module ActionController::Rescue
-  extend ::ActiveSupport::Concern
-end
-
 class ActionController::RespondToMismatchError
   DEFAULT_MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
-module ActionController::RespondWith
-  def collect_mimes_from_class_level(); end
-
-  def respond_with(*resources, &block); end
-
-  def verify_request_format!(); end
-
-  def verify_requested_format!(); end
-end
-
-module ActionController::RespondWith::ClassMethods
-  def clear_respond_to(); end
-
-  def respond_to(*mimes); end
-end
-
-module ActionController::RespondWith::ClassMethods
-end
-
-module ActionController::RespondWith
-  extend ::ActiveSupport::Concern
-end
-
 class ActionController::Responder
-  def api_behavior(); end
-
-  def api_location(); end
-
-  def controller(); end
-
-  def default_action(); end
-
-  def default_render(); end
-
-  def delete?(*args, &block); end
-
-  def display(resource, given_options=T.unsafe(nil)); end
-
-  def display_errors(); end
-
-  def format(); end
-
-  def get?(*args, &block); end
-
-  def has_errors?(); end
-
-  def has_renderer?(); end
-
-  def has_view_rendering?(); end
-
-  def head(*args, &block); end
-
-  def initialize(controller, resources, options=T.unsafe(nil)); end
-
-  def json_resource_errors(); end
-
-  def navigation_behavior(error); end
-
-  def navigation_location(); end
-
-  def options(); end
-
-  def patch?(*args, &block); end
-
-  def post?(*args, &block); end
-
-  def put?(*args, &block); end
-
-  def redirect_to(*args, &block); end
-
-  def render(*args, &block); end
-
-  def rendering_options(); end
-
-  def request(); end
-
-  def resource(); end
-
-  def resource_errors(); end
-
-  def resource_location(); end
-
-  def resources(); end
-
-  def respond(); end
-
-  def response_overridden?(); end
-
-  def to_format(); end
-
-  def to_html(); end
-
-  def to_js(); end
   DEFAULT_ACTIONS_FOR_VERBS = ::T.let(nil, ::T.untyped)
-end
-
-class ActionController::Responder
-  def self.call(*args); end
 end
 
 class ActionController::SessionOverflowError
   DEFAULT_MESSAGE = ::T.let(nil, ::T.untyped)
-end
-
-module ActionController::Streaming
-end
-
-module ActionController::Streaming
-  extend ::ActiveSupport::Concern
 end
 
 module ActionController::TemplateAssertions
@@ -1512,12 +226,6 @@ module ActionController::Testing
   extend ::ActiveSupport::Concern
 end
 
-module ActionController
-  def self.add_renderer(key, &block); end
-
-  def self.remove_renderer(key); end
-end
-
 class ActionDispatch::AssertionResponse
   def code(); end
 
@@ -1532,42 +240,8 @@ end
 class ActionDispatch::AssertionResponse
 end
 
-module ActionDispatch::Assertions
-  include ::ActionDispatch::Assertions::ResponseAssertions
-  include ::ActionDispatch::Assertions::RoutingAssertions
-  include ::Turbolinks::Assertions
-  def html_document(); end
-end
-
 module ActionDispatch::Assertions::ResponseAssertions
-  def assert_redirected_to(options=T.unsafe(nil), message=T.unsafe(nil)); end
-
-  def assert_response(type, message=T.unsafe(nil)); end
   RESPONSE_PREDICATES = ::T.let(nil, ::T.untyped)
-end
-
-module ActionDispatch::Assertions::ResponseAssertions
-end
-
-module ActionDispatch::Assertions::RoutingAssertions
-  def assert_generates(expected_path, options, defaults=T.unsafe(nil), extras=T.unsafe(nil), message=T.unsafe(nil)); end
-
-  def assert_recognizes(expected_options, path, extras=T.unsafe(nil), msg=T.unsafe(nil)); end
-
-  def assert_routing(path, options, defaults=T.unsafe(nil), extras=T.unsafe(nil), message=T.unsafe(nil)); end
-
-  def method_missing(selector, *args, &block); end
-
-  def setup(); end
-
-  def with_routing(); end
-end
-
-module ActionDispatch::Assertions::RoutingAssertions
-end
-
-module ActionDispatch::Assertions
-  extend ::ActiveSupport::Concern
 end
 
 class ActionDispatch::ContentSecurityPolicy::Middleware
@@ -2050,6 +724,7 @@ module ActionDispatch::Routing
 end
 
 class ActionDispatch::Routing::Mapper
+  include ::Doorkeeper::Rails::Routes::Helper
   URL_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
@@ -2662,16 +1337,6 @@ class ActionView::Resolver::Cache
   NO_TEMPLATES = ::T.let(nil, ::T.untyped)
   PARTIAL_BLOCK = ::T.let(nil, ::T.untyped)
   PREFIX_BLOCK = ::T.let(nil, ::T.untyped)
-end
-
-module ActionView::RoutingUrlFor
-  include ::ActionDispatch::Routing::UrlFor
-  include ::ActionDispatch::Routing::PolymorphicRoutes
-  def default_url_options=(obj); end
-end
-
-module ActionView::RoutingUrlFor
-  def self.default_url_options=(obj); end
 end
 
 class ActionView::StreamingTemplateRenderer::Body
@@ -8483,10 +7148,6 @@ class DeviseController
   def unknown_action!(msg); end
 end
 
-module DeviseHelper
-  def devise_error_messages!(); end
-end
-
 class DidYouMean::ClassNameChecker
   def class_name(); end
 
@@ -8620,6 +7281,82 @@ class Docile::FallbackContextProxy
   NON_FALLBACK_METHODS = ::T.let(nil, ::T.untyped)
   NON_PROXIED_INSTANCE_VARIABLES = ::T.let(nil, ::T.untyped)
   NON_PROXIED_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+module Doorkeeper::AccessGrant::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::AccessGrant::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::AccessToken::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::AccessToken::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::Application::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Doorkeeper::Application::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+class Doorkeeper::ApplicationMetalController
+  include ::Doorkeeper::Helpers::Controller
+end
+
+class Doorkeeper::ApplicationMetalController
+end
+
+module Doorkeeper::OAuth
+  AUTHORIZATION_CODE = ::T.let(nil, ::T.untyped)
+  CLIENT_CREDENTIALS = ::T.let(nil, ::T.untyped)
+  GRANT_TYPES = ::T.let(nil, ::T.untyped)
+  IMPLICIT = ::T.let(nil, ::T.untyped)
+  PASSWORD = ::T.let(nil, ::T.untyped)
+  REFRESH_TOKEN = ::T.let(nil, ::T.untyped)
+end
+
+class Doorkeeper::OAuth::NonStandard
+  IETF_WG_OAUTH2_OOB = ::T.let(nil, ::T.untyped)
+  IETF_WG_OAUTH2_OOB_AUTO = ::T.let(nil, ::T.untyped)
+  IETF_WG_OAUTH2_OOB_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class Doorkeeper::StaleRecordsCleaner
+  CLEANER_CLASS = ::T.let(nil, ::T.untyped)
+end
+
+class Doorkeeper::TokenInfoController
+  def show(); end
+end
+
+class Doorkeeper::TokenInfoController
+end
+
+class Doorkeeper::TokensController
+  def create(); end
+
+  def introspect(); end
+
+  def revoke(); end
+end
+
+class Doorkeeper::TokensController
+end
+
+module Doorkeeper::VERSION
+  MAJOR = ::T.let(nil, ::T.untyped)
+  MINOR = ::T.let(nil, ::T.untyped)
+  PRE = ::T.let(nil, ::T.untyped)
+  STRING = ::T.let(nil, ::T.untyped)
+  TINY = ::T.let(nil, ::T.untyped)
 end
 
 class ERB
@@ -12840,6 +11577,10 @@ class GraphQL::Query::Arguments
   NULL_ARGUMENT_VALUE = ::T.let(nil, ::T.untyped)
 end
 
+module GraphQL::RailsLogger
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
 module GraphQL::Relay
   PageInfo = ::T.let(nil, ::T.untyped)
 end
@@ -13083,6 +11824,10 @@ class GraphiQL::Rails::EditorsController
 end
 
 class GraphiQL::Rails::EditorsController
+end
+
+class HTMLSelector
+  NO_STRIP = ::T.let(nil, ::T.untyped)
 end
 
 class Hash
@@ -23881,30 +22626,9 @@ end
 class Rack::Cascade
 end
 
-class Rack::Chunked
-  include ::Rack::Utils
-  def call(env); end
-
-  def chunkable_version?(ver); end
-
-  def initialize(app); end
-end
-
 class Rack::Chunked::Body
-  include ::Rack::Utils
-  def close(); end
-
-  def each(&blk); end
-
-  def initialize(body); end
   TAIL = ::T.let(nil, ::T.untyped)
   TERM = ::T.let(nil, ::T.untyped)
-end
-
-class Rack::Chunked::Body
-end
-
-class Rack::Chunked
 end
 
 class Rack::CommonLogger
@@ -24742,66 +23466,6 @@ class Rails::BacktraceCleaner
   EMPTY_STRING = ::T.let(nil, ::T.untyped)
   RENDER_TEMPLATE_PATTERN = ::T.let(nil, ::T.untyped)
   SLASH = ::T.let(nil, ::T.untyped)
-end
-
-module Rails::Dom
-end
-
-module Rails::Dom::Testing
-end
-
-module Rails::Dom::Testing::Assertions
-  include ::Rails::Dom::Testing::Assertions::DomAssertions
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-end
-
-module Rails::Dom::Testing::Assertions::DomAssertions
-  def assert_dom_equal(expected, actual, message=T.unsafe(nil)); end
-
-  def assert_dom_not_equal(expected, actual, message=T.unsafe(nil)); end
-
-  def compare_doms(expected, actual); end
-
-  def equal_attribute?(attr, other_attr); end
-
-  def equal_attribute_nodes?(nodes, other_nodes); end
-
-  def equal_children?(child, other_child); end
-end
-
-module Rails::Dom::Testing::Assertions::DomAssertions
-end
-
-module Rails::Dom::Testing::Assertions::SelectorAssertions
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-  def assert_select(*args, &block); end
-
-  def assert_select_email(&block); end
-
-  def assert_select_encoded(element=T.unsafe(nil), &block); end
-
-  def css_select(*args); end
-end
-
-module Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-end
-
-module Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-  extend ::ActiveSupport::Concern
-end
-
-module Rails::Dom::Testing::Assertions::SelectorAssertions
-end
-
-module Rails::Dom::Testing::Assertions
-  extend ::ActiveSupport::Concern
-end
-
-module Rails::Dom::Testing
-end
-
-module Rails::Dom
 end
 
 module Rails::Html
@@ -26231,6 +24895,231 @@ end
 
 module Responders::LocationResponder
   def self.included(_base); end
+end
+
+class Rouge::Formatter
+  REGISTRY = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Formatters::HTML
+  TABLE_FOR_ESCAPE_HTML = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Formatters::Terminal256::EscapeSequence
+  MAX_DISTANCE = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Formatters::Tex
+  ESCAPE = ::T.let(nil, ::T.untyped)
+  ESCAPE_REGEX = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Guessers::Modeline
+  EMACS_MODELINE = ::T.let(nil, ::T.untyped)
+  MODELINES = ::T.let(nil, ::T.untyped)
+  VIM_MODELINE_1 = ::T.let(nil, ::T.untyped)
+  VIM_MODELINE_2 = ::T.let(nil, ::T.untyped)
+end
+
+module Rouge::Guessers::Util::SourceNormalizer
+  UTF8_BOM = ::T.let(nil, ::T.untyped)
+  UTF8_BOM_RE = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Ada
+  EXP = ::T.let(nil, ::T.untyped)
+  ID = ::T.let(nil, ::T.untyped)
+  NUM = ::T.let(nil, ::T.untyped)
+  XNUM = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::BPF
+  MISC_KEYWORDS = ::T.let(nil, ::T.untyped)
+  TYPE_KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Bsl
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::CMake
+  BRACKET_OPEN = ::T.let(nil, ::T.untyped)
+  BUILTIN_COMMANDS = ::T.let(nil, ::T.untyped)
+  SPACE = ::T.let(nil, ::T.untyped)
+  STATES_MAP = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::CommonLisp
+  BUILTIN_CLASSES = ::T.let(nil, ::T.untyped)
+  BUILTIN_FUNCTIONS = ::T.let(nil, ::T.untyped)
+  BUILTIN_TYPES = ::T.let(nil, ::T.untyped)
+  DECLARATIONS = ::T.let(nil, ::T.untyped)
+  LAMBDA_LIST_KEYWORDS = ::T.let(nil, ::T.untyped)
+  MACROS = ::T.let(nil, ::T.untyped)
+  SPECIAL_FORMS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Digdag
+  KEYWORD_PATTERN = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Docker
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Eiffel
+  BooleanConstants = ::T.let(nil, ::T.untyped)
+  LanguageKeywords = ::T.let(nil, ::T.untyped)
+  LanguageVariables = ::T.let(nil, ::T.untyped)
+  SimpleString = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Go
+  BIG_U_VALUE = ::T.let(nil, ::T.untyped)
+  BYTE_VALUE = ::T.let(nil, ::T.untyped)
+  CHAR_LIT = ::T.let(nil, ::T.untyped)
+  COMMENT = ::T.let(nil, ::T.untyped)
+  DECIMALS = ::T.let(nil, ::T.untyped)
+  DECIMAL_DIGIT = ::T.let(nil, ::T.untyped)
+  DECIMAL_LIT = ::T.let(nil, ::T.untyped)
+  ESCAPED_CHAR = ::T.let(nil, ::T.untyped)
+  ESCAPE_SEQUENCE = ::T.let(nil, ::T.untyped)
+  EXPONENT = ::T.let(nil, ::T.untyped)
+  FLOAT_LIT = ::T.let(nil, ::T.untyped)
+  GENERAL_COMMENT = ::T.let(nil, ::T.untyped)
+  HEX_BYTE_VALUE = ::T.let(nil, ::T.untyped)
+  HEX_DIGIT = ::T.let(nil, ::T.untyped)
+  HEX_LIT = ::T.let(nil, ::T.untyped)
+  IDENTIFIER = ::T.let(nil, ::T.untyped)
+  IMAGINARY_LIT = ::T.let(nil, ::T.untyped)
+  INTERPRETED_STRING_LIT = ::T.let(nil, ::T.untyped)
+  INT_LIT = ::T.let(nil, ::T.untyped)
+  KEYWORD = ::T.let(nil, ::T.untyped)
+  LETTER = ::T.let(nil, ::T.untyped)
+  LINE_COMMENT = ::T.let(nil, ::T.untyped)
+  LITTLE_U_VALUE = ::T.let(nil, ::T.untyped)
+  NEWLINE = ::T.let(nil, ::T.untyped)
+  OCTAL_BYTE_VALUE = ::T.let(nil, ::T.untyped)
+  OCTAL_DIGIT = ::T.let(nil, ::T.untyped)
+  OCTAL_LIT = ::T.let(nil, ::T.untyped)
+  OPERATOR = ::T.let(nil, ::T.untyped)
+  PREDECLARED_CONSTANTS = ::T.let(nil, ::T.untyped)
+  PREDECLARED_FUNCTIONS = ::T.let(nil, ::T.untyped)
+  PREDECLARED_TYPES = ::T.let(nil, ::T.untyped)
+  RAW_STRING_LIT = ::T.let(nil, ::T.untyped)
+  SEPARATOR = ::T.let(nil, ::T.untyped)
+  STRING_LIT = ::T.let(nil, ::T.untyped)
+  UNICODE_CHAR = ::T.let(nil, ::T.untyped)
+  UNICODE_DIGIT = ::T.let(nil, ::T.untyped)
+  UNICODE_LETTER = ::T.let(nil, ::T.untyped)
+  UNICODE_VALUE = ::T.let(nil, ::T.untyped)
+  WHITE_SPACE = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Julia
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  OPERATORS = ::T.let(nil, ::T.untyped)
+  PUNCTUATION = ::T.let(nil, ::T.untyped)
+  TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Mason
+  COMPONENTS = ::T.let(nil, ::T.untyped)
+  PERL_BLOCKS = ::T.let(nil, ::T.untyped)
+  TEXT_BLOCKS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Nim
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  NAMESPACE = ::T.let(nil, ::T.untyped)
+  OPWORDS = ::T.let(nil, ::T.untyped)
+  PSEUDOKEYWORDS = ::T.let(nil, ::T.untyped)
+  TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Powershell
+  ATTRIBUTES = ::T.let(nil, ::T.untyped)
+  AUTO_VARS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  KEYWORDS_TYPE = ::T.let(nil, ::T.untyped)
+  MULTILINE_KEYWORDS = ::T.let(nil, ::T.untyped)
+  OPERATORS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::R
+  BUILTIN_CONSTANTS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  KEYWORD_CONSTANTS = ::T.let(nil, ::T.untyped)
+  PRIMITIVE_FUNCTIONS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Shell
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::TCL
+  ALL = ::T.let(nil, ::T.untyped)
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  CHARS = ::T.let(nil, ::T.untyped)
+  CLOSE = ::T.let(nil, ::T.untyped)
+  END_LINE = ::T.let(nil, ::T.untyped)
+  END_WORD = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  NOT_CHARS = ::T.let(nil, ::T.untyped)
+  OPEN = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::YAML
+  SPECIAL_VALUES = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::RegexLexer
+  MAX_NULL_SCANS = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Themes::Gruvbox
+  C_bright_aqua = ::T.let(nil, ::T.untyped)
+  C_bright_blue = ::T.let(nil, ::T.untyped)
+  C_bright_green = ::T.let(nil, ::T.untyped)
+  C_bright_orange = ::T.let(nil, ::T.untyped)
+  C_bright_purple = ::T.let(nil, ::T.untyped)
+  C_bright_red = ::T.let(nil, ::T.untyped)
+  C_bright_yellow = ::T.let(nil, ::T.untyped)
+  C_dark0 = ::T.let(nil, ::T.untyped)
+  C_dark0_hard = ::T.let(nil, ::T.untyped)
+  C_dark0_soft = ::T.let(nil, ::T.untyped)
+  C_dark1 = ::T.let(nil, ::T.untyped)
+  C_dark2 = ::T.let(nil, ::T.untyped)
+  C_dark3 = ::T.let(nil, ::T.untyped)
+  C_dark4 = ::T.let(nil, ::T.untyped)
+  C_dark4_256 = ::T.let(nil, ::T.untyped)
+  C_faded_aqua = ::T.let(nil, ::T.untyped)
+  C_faded_blue = ::T.let(nil, ::T.untyped)
+  C_faded_green = ::T.let(nil, ::T.untyped)
+  C_faded_orange = ::T.let(nil, ::T.untyped)
+  C_faded_purple = ::T.let(nil, ::T.untyped)
+  C_faded_red = ::T.let(nil, ::T.untyped)
+  C_faded_yellow = ::T.let(nil, ::T.untyped)
+  C_gray_244 = ::T.let(nil, ::T.untyped)
+  C_gray_245 = ::T.let(nil, ::T.untyped)
+  C_light0 = ::T.let(nil, ::T.untyped)
+  C_light0_hard = ::T.let(nil, ::T.untyped)
+  C_light0_soft = ::T.let(nil, ::T.untyped)
+  C_light1 = ::T.let(nil, ::T.untyped)
+  C_light2 = ::T.let(nil, ::T.untyped)
+  C_light3 = ::T.let(nil, ::T.untyped)
+  C_light4 = ::T.let(nil, ::T.untyped)
+  C_light4_256 = ::T.let(nil, ::T.untyped)
+  C_neutral_aqua = ::T.let(nil, ::T.untyped)
+  C_neutral_blue = ::T.let(nil, ::T.untyped)
+  C_neutral_green = ::T.let(nil, ::T.untyped)
+  C_neutral_orange = ::T.let(nil, ::T.untyped)
+  C_neutral_purple = ::T.let(nil, ::T.untyped)
+  C_neutral_red = ::T.let(nil, ::T.untyped)
+  C_neutral_yellow = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::AST::ArrayNode
@@ -32381,16 +31270,6 @@ class Sorbet::Private::TodoRBI
   def self.output_file(); end
 end
 
-module SorbetRails::CustomParamsMethods
-  include ::Kernel
-end
-
-module SorbetRails::CustomParamsMethods
-  extend ::T::Helpers
-  extend ::T::Private::Methods::MethodHooks
-  extend ::T::Private::Methods::SingletonMethodHooks
-end
-
 module SorbetRails
   extend ::T::Private::Methods::SingletonMethodHooks
 end
@@ -33475,6 +32354,18 @@ class User
   include ::Devise::Models::Trackable
   include ::FriendlyId::Slugged
   include ::FriendlyId::Finders
+  def after_add_for_access_grants(); end
+
+  def after_add_for_access_grants=(val); end
+
+  def after_add_for_access_grants?(); end
+
+  def after_add_for_access_tokens(); end
+
+  def after_add_for_access_tokens=(val); end
+
+  def after_add_for_access_tokens?(); end
+
   def after_add_for_active_relationships(); end
 
   def after_add_for_active_relationships=(val); end
@@ -33517,6 +32408,12 @@ class User
 
   def after_add_for_games?(); end
 
+  def after_add_for_oauth_applications(); end
+
+  def after_add_for_oauth_applications=(val); end
+
+  def after_add_for_oauth_applications?(); end
+
   def after_add_for_passive_relationships(); end
 
   def after_add_for_passive_relationships=(val); end
@@ -33528,6 +32425,18 @@ class User
   def after_add_for_wikidata_blocklists=(val); end
 
   def after_add_for_wikidata_blocklists?(); end
+
+  def after_remove_for_access_grants(); end
+
+  def after_remove_for_access_grants=(val); end
+
+  def after_remove_for_access_grants?(); end
+
+  def after_remove_for_access_tokens(); end
+
+  def after_remove_for_access_tokens=(val); end
+
+  def after_remove_for_access_tokens?(); end
 
   def after_remove_for_active_relationships(); end
 
@@ -33571,6 +32480,12 @@ class User
 
   def after_remove_for_games?(); end
 
+  def after_remove_for_oauth_applications(); end
+
+  def after_remove_for_oauth_applications=(val); end
+
+  def after_remove_for_oauth_applications?(); end
+
   def after_remove_for_passive_relationships(); end
 
   def after_remove_for_passive_relationships=(val); end
@@ -33582,6 +32497,10 @@ class User
   def after_remove_for_wikidata_blocklists=(val); end
 
   def after_remove_for_wikidata_blocklists?(); end
+
+  def autosave_associated_records_for_access_grants(*args); end
+
+  def autosave_associated_records_for_access_tokens(*args); end
 
   def autosave_associated_records_for_active_relationships(*args); end
 
@@ -33603,9 +32522,23 @@ class User
 
   def autosave_associated_records_for_games(*args); end
 
+  def autosave_associated_records_for_oauth_applications(*args); end
+
   def autosave_associated_records_for_passive_relationships(*args); end
 
   def autosave_associated_records_for_wikidata_blocklists(*args); end
+
+  def before_add_for_access_grants(); end
+
+  def before_add_for_access_grants=(val); end
+
+  def before_add_for_access_grants?(); end
+
+  def before_add_for_access_tokens(); end
+
+  def before_add_for_access_tokens=(val); end
+
+  def before_add_for_access_tokens?(); end
 
   def before_add_for_active_relationships(); end
 
@@ -33649,6 +32582,12 @@ class User
 
   def before_add_for_games?(); end
 
+  def before_add_for_oauth_applications(); end
+
+  def before_add_for_oauth_applications=(val); end
+
+  def before_add_for_oauth_applications?(); end
+
   def before_add_for_passive_relationships(); end
 
   def before_add_for_passive_relationships=(val); end
@@ -33660,6 +32599,18 @@ class User
   def before_add_for_wikidata_blocklists=(val); end
 
   def before_add_for_wikidata_blocklists?(); end
+
+  def before_remove_for_access_grants(); end
+
+  def before_remove_for_access_grants=(val); end
+
+  def before_remove_for_access_grants?(); end
+
+  def before_remove_for_access_tokens(); end
+
+  def before_remove_for_access_tokens=(val); end
+
+  def before_remove_for_access_tokens?(); end
 
   def before_remove_for_active_relationships(); end
 
@@ -33703,6 +32654,12 @@ class User
 
   def before_remove_for_games?(); end
 
+  def before_remove_for_oauth_applications(); end
+
+  def before_remove_for_oauth_applications=(val); end
+
+  def before_remove_for_oauth_applications?(); end
+
   def before_remove_for_passive_relationships(); end
 
   def before_remove_for_passive_relationships=(val); end
@@ -33727,6 +32684,10 @@ class User
 
   def password_confirmation=(password_confirmation); end
 
+  def validate_associated_records_for_access_grants(*args); end
+
+  def validate_associated_records_for_access_tokens(*args); end
+
   def validate_associated_records_for_active_relationships(*args); end
 
   def validate_associated_records_for_events(*args); end
@@ -33740,6 +32701,8 @@ class User
   def validate_associated_records_for_game_purchases(*args); end
 
   def validate_associated_records_for_games(*args); end
+
+  def validate_associated_records_for_oauth_applications(*args); end
 
   def validate_associated_records_for_passive_relationships(*args); end
 
@@ -33776,6 +32739,14 @@ class User::ActiveRecord_Relation
 end
 
 module User::GeneratedAssociationMethods
+  def access_grant_ids(); end
+
+  def access_grant_ids=(ids); end
+
+  def access_token_ids(); end
+
+  def access_token_ids=(ids); end
+
   def active_relationship_ids(); end
 
   def active_relationship_ids=(ids); end
@@ -33815,6 +32786,10 @@ module User::GeneratedAssociationMethods
   def game_purchase_ids(); end
 
   def game_purchase_ids=(ids); end
+
+  def oauth_application_ids(); end
+
+  def oauth_application_ids=(ids); end
 
   def passive_relationship_ids(); end
 
@@ -34536,6 +33511,18 @@ class User
   extend ::FriendlyId::Finders::ClassMethods
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
+  def self.after_add_for_access_grants(); end
+
+  def self.after_add_for_access_grants=(val); end
+
+  def self.after_add_for_access_grants?(); end
+
+  def self.after_add_for_access_tokens(); end
+
+  def self.after_add_for_access_tokens=(val); end
+
+  def self.after_add_for_access_tokens?(); end
+
   def self.after_add_for_active_relationships(); end
 
   def self.after_add_for_active_relationships=(val); end
@@ -34578,6 +33565,12 @@ class User
 
   def self.after_add_for_games?(); end
 
+  def self.after_add_for_oauth_applications(); end
+
+  def self.after_add_for_oauth_applications=(val); end
+
+  def self.after_add_for_oauth_applications?(); end
+
   def self.after_add_for_passive_relationships(); end
 
   def self.after_add_for_passive_relationships=(val); end
@@ -34589,6 +33582,18 @@ class User
   def self.after_add_for_wikidata_blocklists=(val); end
 
   def self.after_add_for_wikidata_blocklists?(); end
+
+  def self.after_remove_for_access_grants(); end
+
+  def self.after_remove_for_access_grants=(val); end
+
+  def self.after_remove_for_access_grants?(); end
+
+  def self.after_remove_for_access_tokens(); end
+
+  def self.after_remove_for_access_tokens=(val); end
+
+  def self.after_remove_for_access_tokens?(); end
 
   def self.after_remove_for_active_relationships(); end
 
@@ -34632,6 +33637,12 @@ class User
 
   def self.after_remove_for_games?(); end
 
+  def self.after_remove_for_oauth_applications(); end
+
+  def self.after_remove_for_oauth_applications=(val); end
+
+  def self.after_remove_for_oauth_applications?(); end
+
   def self.after_remove_for_passive_relationships(); end
 
   def self.after_remove_for_passive_relationships=(val); end
@@ -34643,6 +33654,18 @@ class User
   def self.after_remove_for_wikidata_blocklists=(val); end
 
   def self.after_remove_for_wikidata_blocklists?(); end
+
+  def self.before_add_for_access_grants(); end
+
+  def self.before_add_for_access_grants=(val); end
+
+  def self.before_add_for_access_grants?(); end
+
+  def self.before_add_for_access_tokens(); end
+
+  def self.before_add_for_access_tokens=(val); end
+
+  def self.before_add_for_access_tokens?(); end
 
   def self.before_add_for_active_relationships(); end
 
@@ -34686,6 +33709,12 @@ class User
 
   def self.before_add_for_games?(); end
 
+  def self.before_add_for_oauth_applications(); end
+
+  def self.before_add_for_oauth_applications=(val); end
+
+  def self.before_add_for_oauth_applications?(); end
+
   def self.before_add_for_passive_relationships(); end
 
   def self.before_add_for_passive_relationships=(val); end
@@ -34697,6 +33726,18 @@ class User
   def self.before_add_for_wikidata_blocklists=(val); end
 
   def self.before_add_for_wikidata_blocklists?(); end
+
+  def self.before_remove_for_access_grants(); end
+
+  def self.before_remove_for_access_grants=(val); end
+
+  def self.before_remove_for_access_grants?(); end
+
+  def self.before_remove_for_access_tokens(); end
+
+  def self.before_remove_for_access_tokens=(val); end
+
+  def self.before_remove_for_access_tokens?(); end
 
   def self.before_remove_for_active_relationships(); end
 
@@ -34739,6 +33780,12 @@ class User
   def self.before_remove_for_games=(val); end
 
   def self.before_remove_for_games?(); end
+
+  def self.before_remove_for_oauth_applications(); end
+
+  def self.before_remove_for_oauth_applications=(val); end
+
+  def self.before_remove_for_oauth_applications?(); end
 
   def self.before_remove_for_passive_relationships(); end
 

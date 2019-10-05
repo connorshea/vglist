@@ -1,0 +1,5 @@
+<h1 class="title"><%= t('doorkeeper.authorizations.error.title') %></h1>
+
+<main role="main">
+  <pre><%= @pre_auth.error_response.body[:error_description] %></pre>
+</main>
