@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/selenium-webdriver/all/selenium-webdriver.rbi
 #
-# selenium-webdriver-3.142.4
+# selenium-webdriver-3.142.6
 module Selenium
 end
 module Selenium::WebDriver

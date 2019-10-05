@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.4.1
+# rubocop-performance-1.5.0
 module RuboCop
 end
 module RuboCop::Performance
@@ -72,7 +72,6 @@ class RuboCop::Cop::Performance::Count < RuboCop::Cop::Cop
   def on_send(node); end
   def source_starting_at(node); end
   include RuboCop::Cop::RangeHelp
-  include RuboCop::Cop::SafeMode
 end
 class RuboCop::Cop::Performance::Detect < RuboCop::Cop::Cop
   def accept_first_call?(receiver, body); end
@@ -82,7 +81,6 @@ class RuboCop::Cop::Performance::Detect < RuboCop::Cop::Cop
   def on_send(node); end
   def preferred_method; end
   def register_offense(node, receiver, second_method); end
-  include RuboCop::Cop::SafeMode
 end
 class RuboCop::Cop::Performance::DoubleStartEndWith < RuboCop::Cop::Cop
   def add_offense_for_double_call(node, receiver, method, combined_args); end

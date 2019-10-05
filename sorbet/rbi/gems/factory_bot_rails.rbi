@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/factory_bot_rails/all/factory_bot_rails.rbi
 #
-# factory_bot_rails-5.1.0
+# factory_bot_rails-5.1.1
 module FactoryBotRails
 end
 module FactoryBotRails::Generators

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rake/all/rake.rbi
 #
-# rake-12.3.3
+# rake-13.0.0
 module Rake
   def self.add_rakelib(*files); end
   def self.application; end
@@ -25,53 +25,52 @@ module Rake::Cloneable
 end
 module FileUtils
   def create_shell_runner(cmd); end
-  def ruby(*args, &block); end
-  def safe_ln(*args); end
+  def ruby(*args, **options, &block); end
+  def safe_ln(*args, **options); end
   def set_verbose_option(options); end
   def sh(*cmd, &block); end
   def sh_show_command(cmd); end
   def split_all(path); end
 end
 module Rake::FileUtilsExt
-  def cd(*args, &block); end
-  def chdir(*args, &block); end
-  def chmod(*args, &block); end
-  def chmod_R(*args, &block); end
-  def chown(*args, &block); end
-  def chown_R(*args, &block); end
-  def copy(*args, &block); end
-  def cp(*args, &block); end
-  def cp_lr(*args, &block); end
-  def cp_r(*args, &block); end
-  def install(*args, &block); end
-  def link(*args, &block); end
-  def ln(*args, &block); end
-  def ln_s(*args, &block); end
-  def ln_sf(*args, &block); end
-  def makedirs(*args, &block); end
-  def mkdir(*args, &block); end
-  def mkdir_p(*args, &block); end
-  def mkpath(*args, &block); end
-  def move(*args, &block); end
-  def mv(*args, &block); end
+  def cd(*args, **options, &block); end
+  def chdir(*args, **options, &block); end
+  def chmod(*args, **options, &block); end
+  def chmod_R(*args, **options, &block); end
+  def chown(*args, **options, &block); end
+  def chown_R(*args, **options, &block); end
+  def copy(*args, **options, &block); end
+  def cp(*args, **options, &block); end
+  def cp_lr(*args, **options, &block); end
+  def cp_r(*args, **options, &block); end
+  def install(*args, **options, &block); end
+  def link(*args, **options, &block); end
+  def ln(*args, **options, &block); end
+  def ln_s(*args, **options, &block); end
+  def ln_sf(*args, **options, &block); end
+  def makedirs(*args, **options, &block); end
+  def mkdir(*args, **options, &block); end
+  def mkdir_p(*args, **options, &block); end
+  def mkpath(*args, **options, &block); end
+  def move(*args, **options, &block); end
+  def mv(*args, **options, &block); end
   def nowrite(value = nil); end
   def rake_check_options(options, *optdecl); end
-  def rake_merge_option(args, defaults); end
   def rake_output_message(message); end
-  def remove(*args, &block); end
-  def rm(*args, &block); end
-  def rm_f(*args, &block); end
-  def rm_r(*args, &block); end
-  def rm_rf(*args, &block); end
-  def rmdir(*args, &block); end
-  def rmtree(*args, &block); end
-  def safe_unlink(*args, &block); end
+  def remove(*args, **options, &block); end
+  def rm(*args, **options, &block); end
+  def rm_f(*args, **options, &block); end
+  def rm_r(*args, **options, &block); end
+  def rm_rf(*args, **options, &block); end
+  def rmdir(*args, **options, &block); end
+  def rmtree(*args, **options, &block); end
+  def safe_unlink(*args, **options, &block); end
   def self.nowrite_flag; end
   def self.nowrite_flag=(arg0); end
   def self.verbose_flag; end
   def self.verbose_flag=(arg0); end
-  def symlink(*args, &block); end
-  def touch(*args, &block); end
+  def symlink(*args, **options, &block); end
+  def touch(*args, **options, &block); end
   def verbose(value = nil); end
   def when_writing(msg = nil); end
   extend Rake::FileUtilsExt
@@ -545,6 +544,7 @@ class Rake::Task
   def name; end
   def name_with_args; end
   def needed?; end
+  def order_only_prerequisites; end
   def prereqs; end
   def prerequisite_tasks; end
   def prerequisites; end
@@ -554,6 +554,7 @@ class Rake::Task
   def self.clear; end
   def self.create_rule(*args, &block); end
   def self.define_task(*args, &block); end
+  def self.format_deps(deps); end
   def self.scope_name(scope, task_name); end
   def self.task_defined?(task_name); end
   def self.tasks; end
@@ -564,6 +565,7 @@ class Rake::Task
   def timestamp; end
   def to_s; end
   def transform_comments(separator, &block); end
+  def |(deps); end
 end
 class Rake::EarlyTime
   def <=>(other); end
@@ -589,54 +591,53 @@ class Rake::MultiTask < Rake::Task
   def invoke_prerequisites(task_args, invocation_chain); end
 end
 module Rake::DSL
-  def cd(*args, &block); end
-  def chdir(*args, &block); end
-  def chmod(*args, &block); end
-  def chmod_R(*args, &block); end
-  def chown(*args, &block); end
-  def chown_R(*args, &block); end
-  def copy(*args, &block); end
-  def cp(*args, &block); end
-  def cp_lr(*args, &block); end
-  def cp_r(*args, &block); end
+  def cd(*args, **options, &block); end
+  def chdir(*args, **options, &block); end
+  def chmod(*args, **options, &block); end
+  def chmod_R(*args, **options, &block); end
+  def chown(*args, **options, &block); end
+  def chown_R(*args, **options, &block); end
+  def copy(*args, **options, &block); end
+  def cp(*args, **options, &block); end
+  def cp_lr(*args, **options, &block); end
+  def cp_r(*args, **options, &block); end
   def desc(description); end
   def directory(*args, &block); end
   def file(*args, &block); end
   def file_create(*args, &block); end
   def import(*fns); end
-  def install(*args, &block); end
-  def link(*args, &block); end
-  def ln(*args, &block); end
-  def ln_s(*args, &block); end
-  def ln_sf(*args, &block); end
-  def makedirs(*args, &block); end
-  def mkdir(*args, &block); end
-  def mkdir_p(*args, &block); end
-  def mkpath(*args, &block); end
-  def move(*args, &block); end
+  def install(*args, **options, &block); end
+  def link(*args, **options, &block); end
+  def ln(*args, **options, &block); end
+  def ln_s(*args, **options, &block); end
+  def ln_sf(*args, **options, &block); end
+  def makedirs(*args, **options, &block); end
+  def mkdir(*args, **options, &block); end
+  def mkdir_p(*args, **options, &block); end
+  def mkpath(*args, **options, &block); end
+  def move(*args, **options, &block); end
   def multitask(*args, &block); end
-  def mv(*args, &block); end
+  def mv(*args, **options, &block); end
   def namespace(name = nil, &block); end
   def nowrite(value = nil); end
   def rake_check_options(options, *optdecl); end
-  def rake_merge_option(args, defaults); end
   def rake_output_message(message); end
-  def remove(*args, &block); end
-  def rm(*args, &block); end
-  def rm_f(*args, &block); end
-  def rm_r(*args, &block); end
-  def rm_rf(*args, &block); end
-  def rmdir(*args, &block); end
-  def rmtree(*args, &block); end
-  def ruby(*args, &block); end
+  def remove(*args, **options, &block); end
+  def rm(*args, **options, &block); end
+  def rm_f(*args, **options, &block); end
+  def rm_r(*args, **options, &block); end
+  def rm_rf(*args, **options, &block); end
+  def rmdir(*args, **options, &block); end
+  def rmtree(*args, **options, &block); end
+  def ruby(*args, **options, &block); end
   def rule(*args, &block); end
-  def safe_ln(*args); end
-  def safe_unlink(*args, &block); end
+  def safe_ln(*args, **options); end
+  def safe_unlink(*args, **options, &block); end
   def sh(*cmd, &block); end
   def split_all(path); end
-  def symlink(*args, &block); end
+  def symlink(*args, **options, &block); end
   def task(*args, &block); end
-  def touch(*args, &block); end
+  def touch(*args, **options, &block); end
   def verbose(value = nil); end
   def when_writing(msg = nil); end
   include Rake::FileUtilsExt

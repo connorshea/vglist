@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/bundler/all/bundler.rbi
 #
-# typed: true
+# typed: strong
 
 module Bundler
   FREEBSD = ::T.let(nil, T.untyped)
@@ -1249,6 +1249,8 @@ class Bundler::Dsl::DSLError < Bundler::GemfileError
 end
 
 class Bundler::EndpointSpecification < Gem::Specification
+  # we need this because Gem::Specification extends Enumerable
+  Elem = type_template
   ILLFORMED_MESSAGE = ::T.let(nil, T.untyped)
 
   sig do

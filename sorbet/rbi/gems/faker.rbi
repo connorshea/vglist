@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.4.0
+# faker-2.5.0
 module Faker
 end
 module Faker::Base58
@@ -732,7 +732,10 @@ class Faker::Relationship < Faker::Base
   def self.spouse; end
 end
 class Faker::Restaurant < Faker::Base
+  def self.description; end
   def self.name; end
+  def self.review; end
+  def self.type; end
 end
 class Faker::Science < Faker::Base
   def self.element; end
@@ -1198,6 +1201,7 @@ class Faker::TvShows::DrWho < Faker::Base
   def self.quote; end
   def self.specie; end
   def self.the_doctor; end
+  def self.villain; end
   def self.villian; end
 end
 class Faker::TvShows::DumbAndDumber < Faker::Base

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/loofah/all/loofah.rbi
 #
-# loofah-2.2.3
+# loofah-2.3.0
 module Loofah
   def self.document(*args, &block); end
   def self.fragment(*args, &block); end
@@ -26,7 +26,7 @@ module Loofah::Elements
 end
 module Loofah::HTML5
 end
-module Loofah::HTML5::WhiteList
+module Loofah::HTML5::SafeList
 end
 module Loofah::LibxmlWorkarounds
 end

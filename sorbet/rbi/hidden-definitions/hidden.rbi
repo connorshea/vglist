@@ -9219,13 +9219,13 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -11880,7 +11880,7 @@ class Hash
 end
 
 class Hash
-  def self.try_convert(_); end
+  def self.from_xml(xml, disallowed_types=T.unsafe(nil)); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -13397,13 +13397,7 @@ module Loofah::Elements
   STRICT_BLOCK_LEVEL_HTML5 = ::T.let(nil, ::T.untyped)
 end
 
-module Loofah::HTML5::Scrub
-  CONTROL_CHARACTERS = ::T.let(nil, ::T.untyped)
-  CRASS_SEMICOLON = ::T.let(nil, ::T.untyped)
-  CSS_KEYWORDISH = ::T.let(nil, ::T.untyped)
-end
-
-module Loofah::HTML5::WhiteList
+module Loofah::HTML5::SafeList
   ACCEPTABLE_ATTRIBUTES = ::T.let(nil, ::T.untyped)
   ACCEPTABLE_CSS_FUNCTIONS = ::T.let(nil, ::T.untyped)
   ACCEPTABLE_CSS_KEYWORDS = ::T.let(nil, ::T.untyped)
@@ -13433,6 +13427,14 @@ module Loofah::HTML5::WhiteList
   TAGS_SAFE_WITH_LIBXML2 = ::T.let(nil, ::T.untyped)
   VOID_ELEMENTS = ::T.let(nil, ::T.untyped)
 end
+
+module Loofah::HTML5::Scrub
+  CONTROL_CHARACTERS = ::T.let(nil, ::T.untyped)
+  CRASS_SEMICOLON = ::T.let(nil, ::T.untyped)
+  CSS_KEYWORDISH = ::T.let(nil, ::T.untyped)
+end
+
+Loofah::HTML5::WhiteList = Loofah::HTML5::SafeList
 
 module Loofah::LibxmlWorkarounds
   BROKEN_ESCAPING_ATTRIBUTES = ::T.let(nil, ::T.untyped)
@@ -14795,6 +14797,8 @@ module MonitorMixin
   def synchronize(); end
 
   def try_mon_enter(); end
+  EXCEPTION_IMMEDIATE = ::T.let(nil, ::T.untyped)
+  EXCEPTION_NEVER = ::T.let(nil, ::T.untyped)
 end
 
 class MonitorMixin::ConditionVariable
@@ -15797,7 +15801,11 @@ class OpenSSL::KDF::KDFError
 end
 
 module OpenSSL::KDF
+  def self.hkdf(*_); end
+
   def self.pbkdf2_hmac(*_); end
+
+  def self.scrypt(*_); end
 end
 
 class OpenSSL::OCSP::Request
@@ -15805,6 +15813,10 @@ class OpenSSL::OCSP::Request
 end
 
 OpenSSL::PKCS7::Signer = OpenSSL::PKCS7::SignerInfo
+
+class OpenSSL::PKey::EC
+  EXPLICIT_CURVE = ::T.let(nil, ::T.untyped)
+end
 
 class OpenSSL::PKey::EC::Point
   def to_octet_string(_); end
@@ -15817,19 +15829,25 @@ class OpenSSL::PKey::RSA
 end
 
 module OpenSSL::SSL
+  OP_ALLOW_NO_DHE_KEX = ::T.let(nil, ::T.untyped)
   OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION = ::T.let(nil, ::T.untyped)
   OP_CRYPTOPRO_TLSEXT_BUG = ::T.let(nil, ::T.untyped)
   OP_LEGACY_SERVER_CONNECT = ::T.let(nil, ::T.untyped)
+  OP_NO_ENCRYPT_THEN_MAC = ::T.let(nil, ::T.untyped)
+  OP_NO_RENEGOTIATION = ::T.let(nil, ::T.untyped)
+  OP_NO_TLSv1_3 = ::T.let(nil, ::T.untyped)
   OP_SAFARI_ECDHE_ECDSA_BUG = ::T.let(nil, ::T.untyped)
   OP_TLSEXT_PADDING = ::T.let(nil, ::T.untyped)
   SSL2_VERSION = ::T.let(nil, ::T.untyped)
   SSL3_VERSION = ::T.let(nil, ::T.untyped)
   TLS1_1_VERSION = ::T.let(nil, ::T.untyped)
   TLS1_2_VERSION = ::T.let(nil, ::T.untyped)
+  TLS1_3_VERSION = ::T.let(nil, ::T.untyped)
   TLS1_VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module OpenSSL::X509
+  V_FLAG_NO_CHECK_TIME = ::T.let(nil, ::T.untyped)
   V_FLAG_TRUSTED_FIRST = ::T.let(nil, ::T.untyped)
 end
 
@@ -21712,6 +21730,8 @@ class RSpec::Matchers::BuiltIn::RaiseError
 
   def supports_block_expectations?(); end
 
+  def supports_value_expectations?(); end
+
   def with_message(expected_message); end
 end
 
@@ -21784,6 +21804,8 @@ class RSpec::Matchers::BuiltIn::ThrowSymbol
   def matches?(given_proc); end
 
   def supports_block_expectations?(); end
+
+  def supports_value_expectations?(); end
 end
 
 class RSpec::Matchers::BuiltIn::ThrowSymbol
@@ -25576,6 +25598,7 @@ end
 class RuboCop::Cop::Layout::MultilineBlockLayout
   ARG_MSG = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
+  PIPE_SIZE = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Layout::MultilineHashBraceLayout
@@ -25812,14 +25835,8 @@ class RuboCop::Cop::Lint::FloatOutOfRange
 end
 
 class RuboCop::Cop::Lint::FormatParameterMismatch
-  DIGIT_DOLLAR_FLAG = ::T.let(nil, ::T.untyped)
-  FIELD_REGEX = ::T.let(nil, ::T.untyped)
   KERNEL = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
-  NAMED_FIELD_REGEX = ::T.let(nil, ::T.untyped)
-  NAMED_INTERPOLATION = ::T.let(nil, ::T.untyped)
-  PERCENT = ::T.let(nil, ::T.untyped)
-  PERCENT_PERCENT = ::T.let(nil, ::T.untyped)
   SHOVEL = ::T.let(nil, ::T.untyped)
   STRING_TYPES = ::T.let(nil, ::T.untyped)
 end
@@ -25970,6 +25987,11 @@ class RuboCop::Cop::Lint::ScriptPermission
   SHEBANG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::SendWithMixinArgument
+  MIXIN_METHODS = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::ShadowedArgument
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -26112,6 +26134,10 @@ end
 class RuboCop::Cop::Metrics::Utils::AbcSizeCalculator
   BRANCH_NODES = ::T.let(nil, ::T.untyped)
   CONDITION_NODES = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Migration::DepartmentName
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::MultilineExpressionIndentation
@@ -27229,9 +27255,7 @@ class RuboCop::Cop::Style::FormatString
 end
 
 class RuboCop::Cop::Style::FormatStringToken
-  FIELD_CHARACTERS = ::T.let(nil, ::T.untyped)
   FORMAT_STRING_METHODS = ::T.let(nil, ::T.untyped)
-  STYLE_PATTERNS = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::FrozenStringLiteralComment
@@ -27270,7 +27294,8 @@ end
 
 class RuboCop::Cop::Style::IfUnlessModifier
   ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
+  MSG_USE_MODIFIER = ::T.let(nil, ::T.untyped)
+  MSG_USE_NORMAL = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::IfUnlessModifierOfIfUnless
@@ -27779,6 +27804,19 @@ module RuboCop::Cop::Util
   LITERAL_REGEX = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Utils::FormatString
+  DIGIT_DOLLAR = ::T.let(nil, ::T.untyped)
+  FLAG = ::T.let(nil, ::T.untyped)
+  NAME = ::T.let(nil, ::T.untyped)
+  NUMBER = ::T.let(nil, ::T.untyped)
+  NUMBER_ARG = ::T.let(nil, ::T.untyped)
+  PRECISION = ::T.let(nil, ::T.untyped)
+  SEQUENCE = ::T.let(nil, ::T.untyped)
+  TEMPLATE_NAME = ::T.let(nil, ::T.untyped)
+  TYPE = ::T.let(nil, ::T.untyped)
+  WIDTH = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::VariableForce
   ARGUMENT_DECLARATION_TYPES = ::T.let(nil, ::T.untyped)
   LOGICAL_OPERATOR_ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
@@ -27876,6 +27914,13 @@ class RuboCop::Formatter::HTMLFormatter::ERBContext
   SEVERITY_COLORS = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Formatter::PacmanFormatter
+  FALLBACK_TERMINAL_WIDTH = ::T.let(nil, ::T.untyped)
+  GHOST = ::T.let(nil, ::T.untyped)
+  PACDOT = ::T.let(nil, ::T.untyped)
+  PACMAN = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Formatter::ProgressFormatter
   DOT = ::T.let(nil, ::T.untyped)
 end
@@ -27968,28 +28013,6 @@ end
 module RuboCop::Version
   MSG = ::T.let(nil, ::T.untyped)
   STRING = ::T.let(nil, ::T.untyped)
-end
-
-module RubyDep
-  PROJECT_URL = ::T.let(nil, ::T.untyped)
-end
-
-class RubyDep::NullLogger
-  LOG_LEVELS = ::T.let(nil, ::T.untyped)
-end
-
-class RubyDep::RubyVersion
-  VERSION_INFO = ::T.let(nil, ::T.untyped)
-end
-
-class RubyDep::Warning
-  DISABLING_ENVIRONMENT_VAR = ::T.let(nil, ::T.untyped)
-  NOTICE_BUGGY_ALTERNATIVE = ::T.let(nil, ::T.untyped)
-  NOTICE_HOW_TO_DISABLE = ::T.let(nil, ::T.untyped)
-  NOTICE_OPEN_ISSUE = ::T.let(nil, ::T.untyped)
-  NOTICE_RECOMMENDATION = ::T.let(nil, ::T.untyped)
-  PREFIX = ::T.let(nil, ::T.untyped)
-  WARNING = ::T.let(nil, ::T.untyped)
 end
 
 class RubyLex

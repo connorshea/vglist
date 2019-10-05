@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/factory_bot/all/factory_bot.rbi
 #
-# factory_bot-5.1.0
+# factory_bot-5.1.1
 module FactoryBot
   def self.aliases; end
   def self.aliases=(arg0); end

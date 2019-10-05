@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faraday/all/faraday.rbi
 #
-# faraday-0.16.1
+# faraday-0.16.2
 module Faraday
   def self.default_adapter; end
   def self.default_adapter=(adapter); end
@@ -520,14 +520,8 @@ class Faraday::Response::Middleware < Faraday::Middleware
   def call(env); end
   def on_complete(env); end
 end
-class Faraday::DeprecatedConstant < Module
-  def class; end
-  def const_missing(name); end
-  def initialize(old_const, new_const); end
-  def inspect; end
-  def method_missing(method_name, *args, &block); end
-  def self.new(*args, &block); end
-  def warn; end
+module Faraday::DeprecatedClass
+  def self.proxy_class(old_klass, new_klass); end
 end
 class Faraday::Error < StandardError
   def backtrace; end
@@ -565,19 +559,33 @@ class Faraday::ParsingError < Faraday::Error
 end
 class Faraday::RetriableResponse < Faraday::Error
 end
-module Faraday::Error::ClientError
+class Faraday::Error::ClientError < Faraday::ClientError
+  def initialize(*args, &block); end
+  def warn; end
 end
-module Faraday::Error::ConnectionFailed
+class Faraday::Error::ConnectionFailed < Faraday::ConnectionFailed
+  def initialize(*args, &block); end
+  def warn; end
 end
-module Faraday::Error::ResourceNotFound
+class Faraday::Error::ResourceNotFound < Faraday::ResourceNotFound
+  def initialize(*args, &block); end
+  def warn; end
 end
-module Faraday::Error::ParsingError
+class Faraday::Error::ParsingError < Faraday::ParsingError
+  def initialize(*args, &block); end
+  def warn; end
 end
-module Faraday::Error::TimeoutError
+class Faraday::Error::TimeoutError < Faraday::TimeoutError
+  def initialize(*args, &block); end
+  def warn; end
 end
-module Faraday::Error::SSLError
+class Faraday::Error::SSLError < Faraday::SSLError
+  def initialize(*args, &block); end
+  def warn; end
 end
-module Faraday::Error::RetriableResponse
+class Faraday::Error::RetriableResponse < Faraday::RetriableResponse
+  def initialize(*args, &block); end
+  def warn; end
 end
 class Faraday::CompositeReadIO
   def advance_io; end
