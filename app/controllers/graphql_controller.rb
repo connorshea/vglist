@@ -9,7 +9,6 @@ class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def execute
-    # TODO: Authenticate things properly.
     skip_authorization
 
     variables = ensure_hash(params[:variables])
@@ -58,5 +57,22 @@ class GraphqlController < ApplicationController
   # token-based requests don't have a current_user variable.
   def doorkeeper_user
     @doorkeeper_user ||= User.find(doorkeeper_token[:resource_owner_id])
+  end
+
+  # Handle doorkeeper's unauthorized errors so they return valid JSON.
+  def doorkeeper_unauthorized_render_options(error: nil)
+    {
+      json: {
+        data: nil,
+        errors: [
+          {
+            message: "You are not authorized to perform this action."
+          },
+          {
+            message: error.description
+          }
+        ]
+      }
+    }
   end
 end
