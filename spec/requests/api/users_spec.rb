@@ -5,6 +5,7 @@ RSpec.describe "Users API", type: :request do
   describe "Query for data on users" do
     let(:user) { create(:confirmed_user) }
     let(:user_with_avatar) { create(:confirmed_user_with_avatar) }
+    let(:private_user) { create(:private_user) }
 
     it "returns basic data for user" do
       sign_in(user)
@@ -58,6 +59,33 @@ RSpec.describe "Users API", type: :request do
           "id" => user_with_avatar.id.to_s,
           "username" => user_with_avatar.username,
           "avatarUrl" => Rails.application.routes.url_helpers.rails_blob_url(user_with_avatar.avatar_attachment, only_path: true)
+        }
+      )
+    end
+
+    it "returns only public data for private user" do
+      sign_in(user)
+
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          user(id: $id) {
+            id
+            username
+            bio
+          }
+        }
+      GRAPHQL
+
+      result = VideoGameListSchema.execute(
+        query_string,
+        context: { current_user: user },
+        variables: { id: private_user.id }
+      )
+      expect(result.to_h["data"]["user"]).to eq(
+        {
+          "id" => private_user.id.to_s,
+          "username" => private_user.username,
+          "bio" => nil
         }
       )
     end
