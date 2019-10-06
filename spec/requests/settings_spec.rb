@@ -59,4 +59,50 @@ RSpec.describe "Settings", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "GET oauth_applications_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      sign_in(user)
+      get oauth_applications_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for users who aren't logged in" do
+      get oauth_applications_path
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
+  describe "GET new_oauth_application_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      sign_in(user)
+      get new_oauth_application_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for users who aren't logged in" do
+      get new_oauth_application_path
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
+
+  describe "GET oauth_authorized_applications_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      sign_in(user)
+      get oauth_authorized_applications_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for users who aren't logged in" do
+      get oauth_authorized_applications_path
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
 end
