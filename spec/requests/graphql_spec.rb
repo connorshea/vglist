@@ -7,6 +7,11 @@ RSpec.describe "GraphQL", type: :request do
     let(:application) { create(:application, owner: user) }
     let(:token) { create(:access_token, application: application, resource_owner: user) }
 
+    it 'responds with http unauthorized if not authenticated' do
+      post graphql_path(format: :json)
+      expect(response).to have_http_status(:unauthorized)
+    end
+
     it 'responds with http success if you use an access token' do
       post graphql_path(format: :json, access_token: token.token)
       expect(response).to have_http_status(:success)
