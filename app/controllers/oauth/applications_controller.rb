@@ -10,10 +10,10 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   def index
     skip_policy_scope
     @applications = current_user&.oauth_applications
-    if @applications.nil?
+    if @applications&.empty?
       skip_authorization
     else
-      @applications.each do |app|
+      @applications&.each do |app|
         authorize app, policy_class: Oauth::ApplicationPolicy
       end
     end
