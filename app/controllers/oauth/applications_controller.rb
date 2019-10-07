@@ -8,14 +8,30 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
 
   # Only display applications owned by the current user.
   def index
-    skip_authorization
     skip_policy_scope
     @applications = current_user&.oauth_applications
+    if @applications.nil?
+      skip_authorization
+    else
+      @applications.each do |app|
+        authorize app, policy_class: Oauth::ApplicationPolicy
+      end
+    end
+  end
+
+  def show
+    authorize @application, policy_class: Oauth::ApplicationPolicy
+    super
+  end
+
+  def new
+    authorize @application, policy_class: Oauth::ApplicationPolicy
+    super
   end
 
   # Every application must have some owner
   def create
-    skip_authorization
+    authorize @application, policy_class: Oauth::ApplicationPolicy
     @application = Doorkeeper::Application.new(application_params)
     @application.owner = current_user if T.unsafe(Doorkeeper).configuration.confirm_application_owner?
     if @application.save
@@ -26,13 +42,18 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
     end
   end
 
-  def new
-    skip_authorization
+  def edit
+    authorize @application, policy_class: Oauth::ApplicationPolicy
     super
   end
 
-  def show
-    skip_authorization
+  def update
+    authorize @application, policy_class: Oauth::ApplicationPolicy
+    super
+  end
+
+  def destroy
+    authorize @application, policy_class: Oauth::ApplicationPolicy
     super
   end
 
