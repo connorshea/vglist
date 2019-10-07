@@ -17,17 +17,17 @@ class Oauth::ApplicationPolicy < ApplicationPolicy
   end
 
   sig { returns(T::Boolean) }
-  def create?
-    user_is_logged_in
-  end
-
-  sig { returns(T::Boolean) }
   def show?
     application&.owner == user
   end
 
   sig { returns(T::Boolean) }
   def new?
+    user_is_logged_in
+  end
+
+  sig { returns(T::Boolean) }
+  def create?
     user_is_logged_in
   end
 
