@@ -18,7 +18,7 @@ class Oauth::ApplicationPolicy < ApplicationPolicy
 
   sig { returns(T::Boolean) }
   def show?
-    application&.owner == user
+    user_owns_application
   end
 
   sig { returns(T::Boolean) }
@@ -33,22 +33,26 @@ class Oauth::ApplicationPolicy < ApplicationPolicy
 
   sig { returns(T::Boolean) }
   def edit?
-    application&.owner == user
+    user_owns_application
   end
 
   sig { returns(T::Boolean) }
   def update?
-    application&.owner == user
+    user_owns_application
   end
 
   sig { returns(T::Boolean) }
   def destroy?
-    application&.owner == user
+    user_owns_application
   end
 
   private
 
   def user_is_logged_in
     !user.nil?
+  end
+
+  def user_owns_application
+    application&.owner&.id == user&.id
   end
 end
