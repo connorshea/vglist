@@ -9,7 +9,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     let(:record) { nil }
 
     it 'defaults to disallowing everything' do
-      expect(application_policy).not_to permit_actions(
+      expect(application_policy).to forbid_actions(
         [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end
@@ -20,7 +20,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     let(:record) { nil }
 
     it 'defaults to disallowing everything' do
-      expect(application_policy).not_to permit_actions(
+      expect(application_policy).to forbid_actions(
         [:index, :show, :create, :new, :edit, :update, :destroy, :search]
       )
     end

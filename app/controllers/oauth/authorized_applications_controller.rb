@@ -1,7 +1,6 @@
 # typed: true
 class Oauth::AuthorizedApplicationsController < Doorkeeper::AuthorizedApplicationsController
   before_action :authenticate_resource_owner!
-  after_action :verify_authorized, only: :index
 
   def index
     skip_authorization
@@ -10,6 +9,7 @@ class Oauth::AuthorizedApplicationsController < Doorkeeper::AuthorizedApplicatio
   end
 
   def destroy
+    skip_authorization
     super
   end
 end

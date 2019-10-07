@@ -16,6 +16,17 @@ module Types
     field :following, [UserType], null: true, description: "Users that this user is following."
     field :favorite_games, [GameType], null: true, description: "Games that this user has favorited."
 
+    field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar."
+
+    # This causes an N+2 query, figure out a better way to do this.
+    # https://github.com/rmosolgo/graphql-ruby/issues/1777
+    def avatar_url
+      attachment = @object.avatar_attachment
+      return if attachment.nil?
+
+      Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true)
+    end
+
     # Extremely cursed metaprogramming that protects private users from having their details exposed
     # if the UserPolicy wants to prevent it.
     def handler(field_name)
