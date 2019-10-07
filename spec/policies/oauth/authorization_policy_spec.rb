@@ -24,7 +24,7 @@ RSpec.describe Oauth::AuthorizationPolicy, type: :policy do
     let(:application) { create(:application) }
 
     it "can't do anything" do
-      expect(oauth_authorization_policy).to permit_actions(
+      expect(oauth_authorization_policy).to forbid_actions(
         [
           :new,
           :create,
