@@ -1,7 +1,7 @@
 # typed: false
 FactoryBot.define do
   factory :application, class: 'Doorkeeper::Application' do
-    name { Faker::String.random }
+    name { Faker::Lorem.words(number: 3).join(' ') }
     confidential { false }
     owner_type { 'User' }
     association :owner, factory: :user
