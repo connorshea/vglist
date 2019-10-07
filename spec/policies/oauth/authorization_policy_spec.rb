@@ -9,11 +9,13 @@ RSpec.describe Oauth::AuthorizationPolicy, type: :policy do
     let(:application) { create(:application) }
 
     it "can do everything" do
-      expect(oauth_authorization_policy).to permit_actions([
-        :new,
-        :create,
-        :destroy
-      ])
+      expect(oauth_authorization_policy).to permit_actions(
+        [
+          :new,
+          :create,
+          :destroy
+        ]
+      )
     end
   end
 
@@ -22,11 +24,13 @@ RSpec.describe Oauth::AuthorizationPolicy, type: :policy do
     let(:application) { create(:application) }
 
     it "can't do anything" do
-      expect(oauth_authorization_policy).to permit_actions([
-        :new,
-        :create,
-        :destroy
-      ])
+      expect(oauth_authorization_policy).to permit_actions(
+        [
+          :new,
+          :create,
+          :destroy
+        ]
+      )
     end
   end
 end
