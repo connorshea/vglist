@@ -63,7 +63,7 @@ gem 'sentry-raven', '~> 2.11'
 
 # Sorbet runtime typechecker and Sorbet Rails.
 gem 'sorbet-runtime', '~> 0.4'
-gem "sorbet-rails", '~> 0.5.3'
+gem "sorbet-rails", '~> 0.5.7'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 1.9'
