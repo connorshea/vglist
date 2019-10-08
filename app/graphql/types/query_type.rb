@@ -71,6 +71,11 @@ module Types
       argument :id, ID, required: true
     end
 
+    field :activity, [EventType], null: true do
+      description "View recent activity."
+      argument :feed_type, ActivityFeedType, required: false
+    end
+
     def game(id:)
       Game.find(id)
     end
@@ -125,6 +130,21 @@ module Types
 
     def game_purchase(id:)
       GamePurchase.find(id)
+    end
+
+    def activity(feed_type: 'following')
+      if feed_type == 'global'
+        Event.recently_created
+             .joins(:user)
+             .where(users: { privacy: :public_account })
+      elsif feed_type == 'following'
+        user_ids = @context[:current_user]&.following&.map { |u| u.id }
+        # Include the user's own activity in the feed.
+        user_ids << @context[:current_user].id
+        Event.recently_created
+             .joins(:user)
+             .where(user_id: user_ids)
+      end
     end
   end
 end

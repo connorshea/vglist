@@ -8,6 +8,7 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this event was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this event was last updated."
 
+    # Associations
     field :user, UserType, null: false, description: "The user that this event is about."
     field :eventable, EventableUnion, null: false, description: "The 'eventable' type that this event is about. This can be one of a number of different types, depending on the event."
   end
