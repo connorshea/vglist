@@ -8668,8 +8668,6 @@ class FalseClass
 end
 
 module Faraday
-  METHODS_WITH_BODY = ::T.let(nil, ::T.untyped)
-  METHODS_WITH_QUERY = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
@@ -8690,12 +8688,10 @@ class Faraday::Adapter::EMHttp
   def perform_single_request(env); end
 
   def raise_error(msg); end
-
-  def timeout_message?(msg); end
 end
 
 class Faraday::Adapter::EMHttp::Manager
-  def add(&block); end
+  def add(); end
 
   def check_finished(); end
 
@@ -8735,7 +8731,7 @@ module Faraday::Adapter::EMHttp::Options
 end
 
 class Faraday::Adapter::EMHttp
-  def self.setup_parallel_manager(_options=T.unsafe(nil)); end
+  def self.setup_parallel_manager(options=T.unsafe(nil)); end
 end
 
 class Faraday::Adapter::EMSynchrony
@@ -8753,14 +8749,13 @@ class Faraday::Adapter::EMSynchrony::ParallelManager
 end
 
 class Faraday::Adapter::EMSynchrony
-  def self.setup_parallel_manager(_options=T.unsafe(nil)); end
+  def self.setup_parallel_manager(options=T.unsafe(nil)); end
 end
 
 class Faraday::Adapter::Excon
   def create_connection(env, opts); end
 
   def read_body(env); end
-  OPTS_KEYS = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Adapter::Excon
@@ -8771,15 +8766,11 @@ class Faraday::Adapter::HTTPClient
 
   def configure_client(); end
 
-  def configure_open_timeout(req); end
-
   def configure_proxy(proxy); end
 
   def configure_socket(bind); end
 
   def configure_ssl(ssl); end
-
-  def configure_timeout(req); end
 
   def configure_timeouts(req); end
 
@@ -8792,7 +8783,6 @@ class Faraday::Adapter::HTTPClient
 end
 
 class Faraday::Adapter::NetHttp
-  def initialize(app=T.unsafe(nil), opts=T.unsafe(nil), &block); end
   NET_HTTP_EXCEPTIONS = ::T.let(nil, ::T.untyped)
 end
 
@@ -8800,7 +8790,6 @@ class Faraday::Adapter::NetHttp
 end
 
 class Faraday::Adapter::NetHttpPersistent
-  SSL_CONFIGURATIONS = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Adapter::NetHttpPersistent
@@ -8815,6 +8804,8 @@ class Faraday::Adapter::Patron
 end
 
 class Faraday::Adapter::Rack
+  def execute_request(env, rack_env); end
+
   def initialize(faraday_app, rack_app); end
   SPECIAL_HEADERS = ::T.let(nil, ::T.untyped)
 end
@@ -8896,10 +8887,6 @@ class Faraday::Connection
   METHODS = ::T.let(nil, ::T.untyped)
 end
 
-module Faraday::DecodeMethods
-  SUBKEYS_REGEX = ::T.let(nil, ::T.untyped)
-end
-
 class Faraday::Env
   ContentLength = ::T.let(nil, ::T.untyped)
   MethodsWithBodies = ::T.let(nil, ::T.untyped)
@@ -8907,18 +8894,21 @@ class Faraday::Env
   SuccessfulStatuses = ::T.let(nil, ::T.untyped)
 end
 
-Faraday::FilePart = UploadIO
+Faraday::Error::ClientError = Faraday::ClientError
+
+Faraday::Error::ConnectionFailed = Faraday::ConnectionFailed
+
+Faraday::Error::ParsingError = Faraday::ParsingError
+
+Faraday::Error::ResourceNotFound = Faraday::ResourceNotFound
+
+Faraday::Error::RetriableResponse = Faraday::RetriableResponse
+
+Faraday::Error::SSLError = Faraday::SSLError
+
+Faraday::Error::TimeoutError = Faraday::TimeoutError
 
 Faraday::Parts = Parts
-
-class Faraday::RackBuilder
-  LOCK_ERR = ::T.let(nil, ::T.untyped)
-  NO_ARGUMENT = ::T.let(nil, ::T.untyped)
-end
-
-class Faraday::RackBuilder::Handler
-  REGISTRY = ::T.let(nil, ::T.untyped)
-end
 
 class Faraday::Request::Authorization
   def call(env); end
@@ -8959,8 +8949,6 @@ class Faraday::Request::Multipart
   def create_multipart(env, params); end
 
   def has_multipart?(obj); end
-
-  def part(boundary, key, value); end
 
   def process_params(params, prefix=T.unsafe(nil), pieces=T.unsafe(nil), &block); end
 
@@ -9019,16 +9007,29 @@ class Faraday::Request::UrlEncoded
 end
 
 class Faraday::Response::Logger
+  def debug(*args, &block); end
+
+  def error(*args, &block); end
+
+  def fatal(*args, &block); end
+
+  def filter(filter_word, filter_replacement); end
+
+  def info(*args, &block); end
+
   def initialize(app, logger=T.unsafe(nil), options=T.unsafe(nil)); end
+
+  def warn(*args, &block); end
+  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Response::Logger
+  extend ::Forwardable
 end
 
 class Faraday::Response::RaiseError
   def response_values(env); end
   ClientErrorStatuses = ::T.let(nil, ::T.untyped)
-  ServerErrorStatuses = ::T.let(nil, ::T.untyped)
 end
 
 class Faraday::Response::RaiseError
@@ -21730,8 +21731,6 @@ class RSpec::Matchers::BuiltIn::RaiseError
 
   def supports_block_expectations?(); end
 
-  def supports_value_expectations?(); end
-
   def with_message(expected_message); end
 end
 
@@ -21804,8 +21803,6 @@ class RSpec::Matchers::BuiltIn::ThrowSymbol
   def matches?(given_proc); end
 
   def supports_block_expectations?(); end
-
-  def supports_value_expectations?(); end
 end
 
 class RSpec::Matchers::BuiltIn::ThrowSymbol
@@ -32116,6 +32113,11 @@ module Types::BaseInterface
   extend ::Types::BaseInterface::DefinitionMethods
 end
 
+class Types::GameType
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class Types::UserType
   def bio(); end
 
@@ -32358,6 +32360,10 @@ end
 class UniformNotifier
   AVAILABLE_NOTIFIERS = ::T.let(nil, ::T.untyped)
   NOTIFIERS = ::T.let(nil, ::T.untyped)
+end
+
+class UniformNotifier::RollbarNotifier
+  DEFAULT_LEVEL = ::T.let(nil, ::T.untyped)
 end
 
 class UniformNotifier::Slack

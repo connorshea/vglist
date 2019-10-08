@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-4.2.0
+# puma-4.2.1
 module Puma
   def self.jruby?; end
   def self.set_thread_name(name); end
@@ -311,9 +311,6 @@ class Puma::Reactor
   def run_internal; end
   def shutdown; end
 end
-module Puma::Delegation
-  def forward(what, who); end
-end
 class IO
 end
 module IO::WaitReadable
@@ -351,7 +348,7 @@ class Puma::Client
   def to_io; end
   def try_to_finish; end
   def write_error(status_code); end
-  extend Puma::Delegation
+  extend Forwardable
   include Puma::Const
 end
 class Puma::Binder
@@ -467,7 +464,7 @@ class Puma::Server
   def tcp_mode!; end
   def thread; end
   def uncork_socket(socket); end
-  extend Puma::Delegation
+  extend Forwardable
   include Puma::Const
 end
 class Puma::Runner
@@ -543,7 +540,6 @@ end
 class Puma::Launcher
   def binder; end
   def close_binder_listeners; end
-  def close_binder_unix_paths; end
   def clustered?; end
   def config; end
   def connected_port; end

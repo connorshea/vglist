@@ -7,7 +7,7 @@ class SeriesPolicy < ApplicationPolicy
   sig { returns(T.nilable(Series)) }
   attr_reader :series
 
-  sig { params(user: T.nilable(User), series: T.nilable(T.any(ActiveRecord::Relation, Series))).void }
+  sig { params(user: T.nilable(User), series: T.nilable(T.any(Series::ActiveRecord_Relation, Series))).void }
   def initialize(user, series)
     @user = user
     @series = series

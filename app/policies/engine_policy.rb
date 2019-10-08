@@ -7,7 +7,7 @@ class EnginePolicy < ApplicationPolicy
   sig { returns(T.nilable(Engine)) }
   attr_reader :engine
 
-  sig { params(user: T.nilable(User), engine: T.nilable(T.any(ActiveRecord::Relation, Engine))).void }
+  sig { params(user: T.nilable(User), engine: T.nilable(T.any(Engine::ActiveRecord_Relation, Engine))).void }
   def initialize(user, engine)
     @user = user
     @engine = engine
