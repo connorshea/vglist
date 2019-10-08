@@ -2535,6 +2535,7 @@ class ActiveRecord::Relation
   include ActiveRecord::FinderMethods
   include Enumerable
   include SorbetRails::CustomFinderMethods
+  include SorbetRails::PluckToTStruct
 end
 class ActiveRecord::Relation::HashMerger
   def hash; end
@@ -5506,6 +5507,7 @@ class ActiveRecord::Base
   extend Kaminari::ActiveRecordExtension::ClassMethods
   extend OrmAdapter::ToAdapter
   extend SorbetRails::CustomFinderMethods
+  extend SorbetRails::PluckToTStruct
   include ActiveModel::AttributeMethods
   include ActiveModel::AttributeMethods
   include ActiveModel::Conversion

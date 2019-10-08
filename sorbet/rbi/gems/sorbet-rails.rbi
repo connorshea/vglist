@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.6
+# sorbet-rails-0.5.7
 module SorbetRails
   def self.config(&blk); end
   def self.configure(*args, &blk); end
@@ -246,4 +246,12 @@ module SorbetRails::CustomFinderMethods
   def find_n(*ids); end
   def first_n(n); end
   def last_n(n); end
+end
+module SorbetRails::PluckToTStruct
+  def pluck_to_tstruct(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+end
+class SorbetRails::PluckToTStruct::UnexpectedType < StandardError
 end

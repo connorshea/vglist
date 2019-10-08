@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubyzip/all/rubyzip.rbi
 #
-# rubyzip-1.3.0
+# rubyzip-2.0.0
 module Zip
   def case_insensitive_match; end
   def case_insensitive_match=(arg0); end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.11.0
+# rouge-3.11.1
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
   def self.reload!; end

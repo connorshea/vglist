@@ -7,7 +7,7 @@ class PlatformPolicy < ApplicationPolicy
   sig { returns(T.nilable(Platform)) }
   attr_reader :platform
 
-  sig { params(user: T.nilable(User), platform: T.nilable(T.any(ActiveRecord::Relation, Platform))).void }
+  sig { params(user: T.nilable(User), platform: T.nilable(T.any(Platform::ActiveRecord_Relation, Platform))).void }
   def initialize(user, platform)
     @user = user
     @platform = platform
