@@ -87,7 +87,7 @@ group :development, :test do
   gem 'database_cleaner', '~> 1.7'
 
   # Rspec-rails for testing.
-  gem 'rspec-rails', '~> 3.8'
+  gem 'rspec-rails', '~> 3.9'
 
   # Factory Bot for creating factories.
   gem 'factory_bot_rails', '~> 5.1'
