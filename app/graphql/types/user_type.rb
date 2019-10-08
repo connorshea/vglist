@@ -15,8 +15,17 @@ module Types
     field :followers, [UserType], null: true, description: "Users that are following this user."
     field :following, [UserType], null: true, description: "Users that this user is following."
     field :favorite_games, [GameType], null: true, description: "Games that this user has favorited."
+    field :events, [EventType], null: true, description: "Events that refer to this user."
 
     field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar."
+
+    def events
+      return nil unless user_visible?
+
+      Event.recently_created
+           .joins(:user)
+           .where(user_id: @object.id)
+    end
 
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
@@ -30,7 +39,7 @@ module Types
     # Extremely cursed metaprogramming that protects private users from having their details exposed
     # if the UserPolicy wants to prevent it.
     def handler(field_name)
-      return @object.public_send(field_name) if user_public?
+      return @object.public_send(field_name) if user_visible?
 
       nil
     end
@@ -45,7 +54,7 @@ module Types
       end
     end
 
-    def user_public?
+    def user_visible?
       # Short-circuit if the user has a public account, to prevent instantiating
       # a UserPolicy and all that.
       return @object.public_account? || UserPolicy.new(@context[:current_user], @object).show?
