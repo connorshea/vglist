@@ -15,8 +15,15 @@ module Types
     field :followers, [UserType], null: true, description: "Users that are following this user."
     field :following, [UserType], null: true, description: "Users that this user is following."
     field :favorite_games, [GameType], null: true, description: "Games that this user has favorited."
+    field :events, [EventType], null: true, description: "Events that refer to this user."
 
     field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar."
+
+    def events
+      Event.recently_created
+           .joins(:user)
+           .where(user_id: @object.id)
+    end
 
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
