@@ -7,71 +7,6 @@ module GamePublisher::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module GamePublisher::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(Integer) }
-  def company_id; end
-
-  sig { params(value: Integer).void }
-  def company_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def company_id?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(Integer) }
-  def game_id; end
-
-  sig { params(value: Integer).void }
-  def game_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def game_id?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-end
-
-module GamePublisher::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(::Company) }
-  def company; end
-
-  sig { params(value: ::Company).void }
-  def company=(value); end
-
-  sig { returns(::Game) }
-  def game; end
-
-  sig { params(value: ::Game).void }
-  def game=(value); end
-end
-
 module GamePublisher::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[GamePublisher]) }
   def first_n(limit); end
@@ -263,6 +198,54 @@ class GamePublisher < ApplicationRecord
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(GamePublisher) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_game(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_game(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_company; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_company?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_company=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_company; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_company?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_company=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_company; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_company?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_company=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_company; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_company?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_company=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_company(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_company(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(GamePublisher::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -841,4 +824,324 @@ class GamePublisher::ActiveRecord_Associations_CollectionProxy < ActiveRecord::A
 
   sig { params(num: T.nilable(Integer)).returns(GamePublisher::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module GamePublisher::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(Integer) }
+  def company_id; end
+
+  sig { params(value: Integer).void }
+  def company_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def company_id?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(Integer) }
+  def game_id; end
+
+  sig { params(value: Integer).void }
+  def game_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def game_id?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_game_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_game_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_game_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_game_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_company_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_company_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_company_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_company_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def company_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+end
+
+module GamePublisher::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(::Company) }
+  def company; end
+
+  sig { params(value: ::Company).void }
+  def company=(value); end
+
+  sig { returns(::Game) }
+  def game; end
+
+  sig { params(value: ::Game).void }
+  def game=(value); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_game!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_game; end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_company(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_company(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_company!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_company; end
+
+  sig { returns(T.untyped) }
+  def company_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def company_ids=(ids); end
 end

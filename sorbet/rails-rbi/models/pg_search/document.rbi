@@ -7,74 +7,6 @@ module PgSearch::Document::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module PgSearch::Document::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(T.nilable(String)) }
-  def content; end
-
-  sig { params(value: T.nilable(String)).void }
-  def content=(value); end
-
-  sig { returns(T::Boolean) }
-  def content?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(T.nilable(Integer)) }
-  def searchable_id; end
-
-  sig { params(value: T.nilable(Integer)).void }
-  def searchable_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def searchable_id?; end
-
-  sig { returns(T.nilable(String)) }
-  def searchable_type; end
-
-  sig { params(value: T.nilable(String)).void }
-  def searchable_type=(value); end
-
-  sig { returns(T::Boolean) }
-  def searchable_type?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-end
-
-module PgSearch::Document::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(T.untyped) }
-  def searchable; end
-
-  sig { params(value: T.untyped).void }
-  def searchable=(value); end
-end
-
 module PgSearch::Document::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[PgSearch::Document]) }
   def first_n(limit); end
@@ -267,6 +199,12 @@ class PgSearch::Document < ActiveRecord::Base
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(PgSearch::Document) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_searchable(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_searchable(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(PgSearch::Document::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -845,4 +783,354 @@ class PgSearch::Document::ActiveRecord_Associations_CollectionProxy < ActiveReco
 
   sig { params(num: T.nilable(Integer)).returns(PgSearch::Document::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module PgSearch::Document::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(T.nilable(String)) }
+  def content; end
+
+  sig { params(value: T.nilable(String)).void }
+  def content=(value); end
+
+  sig { returns(T::Boolean) }
+  def content?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def searchable_id; end
+
+  sig { params(value: T.nilable(Integer)).void }
+  def searchable_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def searchable_id?; end
+
+  sig { returns(T.nilable(String)) }
+  def searchable_type; end
+
+  sig { params(value: T.nilable(String)).void }
+  def searchable_type=(value); end
+
+  sig { returns(T::Boolean) }
+  def searchable_type?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_content?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_content(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_content?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_content!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_searchable_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_searchable_type(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_searchable_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_searchable_type!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_type_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_searchable_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_searchable_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_searchable_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_searchable_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def searchable_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+end
+
+module PgSearch::Document::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(T.untyped) }
+  def searchable; end
+
+  sig { params(value: T.untyped).void }
+  def searchable=(value); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_searchable(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_searchable(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_searchable!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_searchable; end
 end

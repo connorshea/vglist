@@ -17,83 +17,6 @@ module ExternalAccount::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module ExternalAccount::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(String) }
-  def account_type; end
-
-  sig { params(value: T.any(Integer, String, Symbol)).void }
-  def account_type=(value); end
-
-  sig { returns(T::Boolean) }
-  def account_type?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(T.nilable(Integer)) }
-  def steam_id; end
-
-  sig { params(value: T.nilable(Integer)).void }
-  def steam_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def steam_id?; end
-
-  sig { returns(T.nilable(String)) }
-  def steam_profile_url; end
-
-  sig { params(value: T.nilable(String)).void }
-  def steam_profile_url=(value); end
-
-  sig { returns(T::Boolean) }
-  def steam_profile_url?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-
-  sig { returns(Integer) }
-  def user_id; end
-
-  sig { params(value: Integer).void }
-  def user_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def user_id?; end
-end
-
-module ExternalAccount::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(::User) }
-  def user; end
-
-  sig { params(value: ::User).void }
-  def user=(value); end
-end
-
 module ExternalAccount::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[ExternalAccount]) }
   def first_n(limit); end
@@ -295,6 +218,12 @@ class ExternalAccount < ApplicationRecord
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(ExternalAccount) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_user(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_user(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -891,4 +820,408 @@ class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord:
 
   sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module ExternalAccount::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(String) }
+  def account_type; end
+
+  sig { params(value: T.any(Integer, String, Symbol)).void }
+  def account_type=(value); end
+
+  sig { returns(T::Boolean) }
+  def account_type?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def steam_id; end
+
+  sig { params(value: T.nilable(Integer)).void }
+  def steam_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def steam_id?; end
+
+  sig { returns(T.nilable(String)) }
+  def steam_profile_url; end
+
+  sig { params(value: T.nilable(String)).void }
+  def steam_profile_url=(value); end
+
+  sig { returns(T::Boolean) }
+  def steam_profile_url?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { returns(Integer) }
+  def user_id; end
+
+  sig { params(value: Integer).void }
+  def user_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def user_id?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_user_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_user_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_user_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_user_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_account_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_account_type(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_account_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_account_type!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def account_type_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_steam_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_steam_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_steam_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_steam_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_steam_profile_url?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_steam_profile_url(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_steam_profile_url?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_steam_profile_url!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def steam_profile_url_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+end
+
+module ExternalAccount::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(::User) }
+  def user; end
+
+  sig { params(value: ::User).void }
+  def user=(value); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_user!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_user; end
 end

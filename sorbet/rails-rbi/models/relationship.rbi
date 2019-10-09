@@ -7,77 +7,6 @@ module Relationship::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module Relationship::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(Integer) }
-  def followed_id; end
-
-  sig { params(value: Integer).void }
-  def followed_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def followed_id?; end
-
-  sig { returns(Integer) }
-  def follower_id; end
-
-  sig { params(value: Integer).void }
-  def follower_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def follower_id?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-end
-
-module Relationship::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
-  def events; end
-
-  sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
-  def events=(value); end
-
-  sig { returns(::User) }
-  def followed; end
-
-  sig { params(value: ::User).void }
-  def followed=(value); end
-
-  sig { returns(::User) }
-  def follower; end
-
-  sig { params(value: ::User).void }
-  def follower=(value); end
-end
-
 module Relationship::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[Relationship]) }
   def first_n(limit); end
@@ -269,6 +198,96 @@ class Relationship < ApplicationRecord
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(Relationship) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_follower(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_follower(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_followed; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_followed?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_followed=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_followed; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_followed?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_followed=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_followed; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_followed?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_followed=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_followed; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_followed?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_followed=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_followed(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_followed(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_events(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -847,4 +866,336 @@ class Relationship::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module Relationship::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(Integer) }
+  def followed_id; end
+
+  sig { params(value: Integer).void }
+  def followed_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def followed_id?; end
+
+  sig { returns(Integer) }
+  def follower_id; end
+
+  sig { params(value: Integer).void }
+  def follower_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def follower_id?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_follower_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_follower_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_follower_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_follower_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def follower_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_followed_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_followed_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_followed_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_followed_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def followed_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+end
+
+module Relationship::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
+  def events; end
+
+  sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
+  def events=(value); end
+
+  sig { returns(::User) }
+  def followed; end
+
+  sig { params(value: ::User).void }
+  def followed=(value); end
+
+  sig { returns(::User) }
+  def follower; end
+
+  sig { params(value: ::User).void }
+  def follower=(value); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_follower(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_follower(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_follower!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_follower; end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_followed(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_followed(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_followed!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_followed; end
+
+  sig { returns(T.untyped) }
+  def followed_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def followed_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def event_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def event_ids=(ids); end
 end

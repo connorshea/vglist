@@ -41,208 +41,6 @@ module User::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module User::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(String) }
-  def bio; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def bio=(value); end
-
-  sig { returns(T::Boolean) }
-  def bio?; end
-
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def confirmation_sent_at; end
-
-  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
-  def confirmation_sent_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def confirmation_sent_at?; end
-
-  sig { returns(T.nilable(String)) }
-  def confirmation_token; end
-
-  sig { params(value: T.nilable(String)).void }
-  def confirmation_token=(value); end
-
-  sig { returns(T::Boolean) }
-  def confirmation_token?; end
-
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def confirmed_at; end
-
-  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
-  def confirmed_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def confirmed_at?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def current_sign_in_at; end
-
-  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
-  def current_sign_in_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def current_sign_in_at?; end
-
-  sig { returns(T.nilable(T.untyped)) }
-  def current_sign_in_ip; end
-
-  sig { params(value: T.nilable(T.untyped)).void }
-  def current_sign_in_ip=(value); end
-
-  sig { returns(T::Boolean) }
-  def current_sign_in_ip?; end
-
-  sig { returns(String) }
-  def email; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def email=(value); end
-
-  sig { returns(T::Boolean) }
-  def email?; end
-
-  sig { returns(String) }
-  def encrypted_password; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def encrypted_password=(value); end
-
-  sig { returns(T::Boolean) }
-  def encrypted_password?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def last_sign_in_at; end
-
-  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
-  def last_sign_in_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def last_sign_in_at?; end
-
-  sig { returns(T.nilable(T.untyped)) }
-  def last_sign_in_ip; end
-
-  sig { params(value: T.nilable(T.untyped)).void }
-  def last_sign_in_ip=(value); end
-
-  sig { returns(T::Boolean) }
-  def last_sign_in_ip?; end
-
-  sig { returns(String) }
-  def privacy; end
-
-  sig { params(value: T.any(Integer, String, Symbol)).void }
-  def privacy=(value); end
-
-  sig { returns(T::Boolean) }
-  def privacy?; end
-
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def remember_created_at; end
-
-  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
-  def remember_created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def remember_created_at?; end
-
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def reset_password_sent_at; end
-
-  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
-  def reset_password_sent_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def reset_password_sent_at?; end
-
-  sig { returns(T.nilable(String)) }
-  def reset_password_token; end
-
-  sig { params(value: T.nilable(String)).void }
-  def reset_password_token=(value); end
-
-  sig { returns(T::Boolean) }
-  def reset_password_token?; end
-
-  sig { returns(String) }
-  def role; end
-
-  sig { params(value: T.any(Integer, String, Symbol)).void }
-  def role=(value); end
-
-  sig { returns(T::Boolean) }
-  def role?; end
-
-  sig { returns(Integer) }
-  def sign_in_count; end
-
-  sig { params(value: Integer).void }
-  def sign_in_count=(value); end
-
-  sig { returns(T::Boolean) }
-  def sign_in_count?; end
-
-  sig { returns(T.nilable(String)) }
-  def slug; end
-
-  sig { params(value: T.nilable(String)).void }
-  def slug=(value); end
-
-  sig { returns(T::Boolean) }
-  def slug?; end
-
-  sig { returns(T.nilable(String)) }
-  def unconfirmed_email; end
-
-  sig { params(value: T.nilable(String)).void }
-  def unconfirmed_email=(value); end
-
-  sig { returns(T::Boolean) }
-  def unconfirmed_email?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-
-  sig { returns(String) }
-  def username; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def username=(value); end
-
-  sig { returns(T::Boolean) }
-  def username?; end
-end
-
 module User::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[User]) }
   def first_n(limit); end
@@ -474,6 +272,636 @@ class User < ApplicationRecord
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(User) }
   def self.new(attributes = nil, &block); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_game_purchases=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_game_purchases(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_game_purchases(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_games=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_games(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_games(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_favorite_games=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_favorite_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_favorite_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_favorite_games=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_favorite_games(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_favorite_games(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_active_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_active_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_active_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_active_relationships=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_active_relationships(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_active_relationships(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_following; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_following=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_following; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_following=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_following; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_following=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_following; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_following=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_following(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_following(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_passive_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_passive_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_passive_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_passive_relationships=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_passive_relationships(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_passive_relationships(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_followers; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_followers=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_followers; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_followers=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_followers; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_followers=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_followers; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_followers=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_followers(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_followers(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_events(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_wikidata_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_wikidata_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_wikidata_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_wikidata_blocklists=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_wikidata_blocklists(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_wikidata_blocklists(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_access_grants=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_access_grants(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_access_grants(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_access_tokens=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_access_tokens(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_access_tokens(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_oauth_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_oauth_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_oauth_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_oauth_applications=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_oauth_applications(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_oauth_applications(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_external_account=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_external_account=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_external_account=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_external_account=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_external_account(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_external_account(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_avatar_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_avatar_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_avatar_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_avatar_attachment=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_avatar_attachment(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_avatar_attachment(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_avatar_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_avatar_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_avatar_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_avatar_blob=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_avatar_blob(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_avatar_blob(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(User::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -1165,6 +1593,1198 @@ class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
   def friendly; end
 end
 
+module User::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(String) }
+  def bio; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def bio=(value); end
+
+  sig { returns(T::Boolean) }
+  def bio?; end
+
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def confirmation_sent_at; end
+
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
+  def confirmation_sent_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def confirmation_sent_at?; end
+
+  sig { returns(T.nilable(String)) }
+  def confirmation_token; end
+
+  sig { params(value: T.nilable(String)).void }
+  def confirmation_token=(value); end
+
+  sig { returns(T::Boolean) }
+  def confirmation_token?; end
+
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def confirmed_at; end
+
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
+  def confirmed_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def confirmed_at?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def current_sign_in_at; end
+
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
+  def current_sign_in_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def current_sign_in_at?; end
+
+  sig { returns(T.nilable(T.untyped)) }
+  def current_sign_in_ip; end
+
+  sig { params(value: T.nilable(T.untyped)).void }
+  def current_sign_in_ip=(value); end
+
+  sig { returns(T::Boolean) }
+  def current_sign_in_ip?; end
+
+  sig { returns(String) }
+  def email; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def email=(value); end
+
+  sig { returns(T::Boolean) }
+  def email?; end
+
+  sig { returns(String) }
+  def encrypted_password; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def encrypted_password=(value); end
+
+  sig { returns(T::Boolean) }
+  def encrypted_password?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def last_sign_in_at; end
+
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
+  def last_sign_in_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def last_sign_in_at?; end
+
+  sig { returns(T.nilable(T.untyped)) }
+  def last_sign_in_ip; end
+
+  sig { params(value: T.nilable(T.untyped)).void }
+  def last_sign_in_ip=(value); end
+
+  sig { returns(T::Boolean) }
+  def last_sign_in_ip?; end
+
+  sig { returns(String) }
+  def privacy; end
+
+  sig { params(value: T.any(Integer, String, Symbol)).void }
+  def privacy=(value); end
+
+  sig { returns(T::Boolean) }
+  def privacy?; end
+
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def remember_created_at; end
+
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
+  def remember_created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def remember_created_at?; end
+
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def reset_password_sent_at; end
+
+  sig { params(value: T.nilable(T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone))).void }
+  def reset_password_sent_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def reset_password_sent_at?; end
+
+  sig { returns(T.nilable(String)) }
+  def reset_password_token; end
+
+  sig { params(value: T.nilable(String)).void }
+  def reset_password_token=(value); end
+
+  sig { returns(T::Boolean) }
+  def reset_password_token?; end
+
+  sig { returns(String) }
+  def role; end
+
+  sig { params(value: T.any(Integer, String, Symbol)).void }
+  def role=(value); end
+
+  sig { returns(T::Boolean) }
+  def role?; end
+
+  sig { returns(Integer) }
+  def sign_in_count; end
+
+  sig { params(value: Integer).void }
+  def sign_in_count=(value); end
+
+  sig { returns(T::Boolean) }
+  def sign_in_count?; end
+
+  sig { returns(T.nilable(String)) }
+  def slug; end
+
+  sig { params(value: T.nilable(String)).void }
+  def slug=(value); end
+
+  sig { returns(T::Boolean) }
+  def slug?; end
+
+  sig { returns(T.nilable(String)) }
+  def unconfirmed_email; end
+
+  sig { params(value: T.nilable(String)).void }
+  def unconfirmed_email=(value); end
+
+  sig { returns(T::Boolean) }
+  def unconfirmed_email?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { returns(String) }
+  def username; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def username=(value); end
+
+  sig { returns(T::Boolean) }
+  def username?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_email?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_email(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_email?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_email!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def email_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_encrypted_password?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_encrypted_password(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_encrypted_password?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_encrypted_password!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_password_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_reset_password_token?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_reset_password_token(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_reset_password_token?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_reset_password_token!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_token_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_reset_password_sent_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_reset_password_sent_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_reset_password_sent_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_reset_password_sent_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def reset_password_sent_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_remember_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_remember_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_remember_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_remember_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def remember_created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_sign_in_count?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_sign_in_count(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_sign_in_count?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_sign_in_count!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def sign_in_count_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_current_sign_in_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_current_sign_in_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_current_sign_in_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_current_sign_in_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_last_sign_in_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_last_sign_in_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_last_sign_in_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_last_sign_in_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_current_sign_in_ip?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_current_sign_in_ip(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_current_sign_in_ip?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_current_sign_in_ip!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def current_sign_in_ip_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_last_sign_in_ip?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_last_sign_in_ip(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_last_sign_in_ip?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_last_sign_in_ip!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def last_sign_in_ip_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_confirmation_token?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_confirmation_token(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_confirmation_token?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_confirmation_token!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_token_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_confirmed_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_confirmed_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_confirmed_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_confirmed_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmed_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_confirmation_sent_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_confirmation_sent_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_confirmation_sent_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_confirmation_sent_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def confirmation_sent_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_unconfirmed_email?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_unconfirmed_email(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_unconfirmed_email?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_unconfirmed_email!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def unconfirmed_email_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_username?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_username(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_username?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_username!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def username_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_bio?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_bio(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_bio?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_bio!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def bio_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_role?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_role(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_role?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_role!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def role_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_slug?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_slug(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_slug?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_slug!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def slug_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_privacy?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_privacy(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_privacy?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_privacy!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def privacy_came_from_user?(*args); end
+end
+
 module User::GeneratedAssociationMethods
   extend T::Sig
 
@@ -1263,4 +2883,118 @@ module User::GeneratedAssociationMethods
 
   sig { params(attachable: T.untyped).returns(T.untyped) }
   def avatar=(attachable); end
+
+  sig { returns(T.untyped) }
+  def game_purchase_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def game_purchase_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def game_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def game_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def favorite_game_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def favorite_game_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def active_relationship_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def active_relationship_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def following_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def following_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def passive_relationship_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def passive_relationship_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def follower_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def follower_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def event_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def event_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def wikidata_blocklist_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def wikidata_blocklist_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def access_grant_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def access_grant_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def access_token_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def access_token_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def oauth_application_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def oauth_application_ids=(ids); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_external_account(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_external_account(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_external_account!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_external_account; end
+
+  sig { returns(T.untyped) }
+  def external_account_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def external_account_ids=(ids); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_avatar_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_avatar_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_avatar_attachment!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def avatar_attachment_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def avatar_attachment_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def avatar_blob_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def avatar_blob_ids=(ids); end
 end

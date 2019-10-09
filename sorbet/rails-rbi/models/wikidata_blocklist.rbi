@@ -7,74 +7,6 @@ module WikidataBlocklist::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module WikidataBlocklist::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(String) }
-  def name; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def name=(value); end
-
-  sig { returns(T::Boolean) }
-  def name?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-
-  sig { returns(T.nilable(Integer)) }
-  def user_id; end
-
-  sig { params(value: T.nilable(Integer)).void }
-  def user_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def user_id?; end
-
-  sig { returns(Integer) }
-  def wikidata_id; end
-
-  sig { params(value: Integer).void }
-  def wikidata_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def wikidata_id?; end
-end
-
-module WikidataBlocklist::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(T.nilable(::User)) }
-  def user; end
-
-  sig { params(value: T.nilable(::User)).void }
-  def user=(value); end
-end
-
 module WikidataBlocklist::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[WikidataBlocklist]) }
   def first_n(limit); end
@@ -266,6 +198,12 @@ class WikidataBlocklist < ApplicationRecord
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(WikidataBlocklist) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_user(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_user(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(WikidataBlocklist::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -844,4 +782,354 @@ class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy < ActiveRecor
 
   sig { params(num: T.nilable(Integer)).returns(WikidataBlocklist::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module WikidataBlocklist::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(String) }
+  def name; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def name=(value); end
+
+  sig { returns(T::Boolean) }
+  def name?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def user_id; end
+
+  sig { params(value: T.nilable(Integer)).void }
+  def user_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def user_id?; end
+
+  sig { returns(Integer) }
+  def wikidata_id; end
+
+  sig { params(value: Integer).void }
+  def wikidata_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def wikidata_id?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_wikidata_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_wikidata_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_wikidata_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_wikidata_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_name(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_name!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_user_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_user_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_user_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_user_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_came_from_user?(*args); end
+end
+
+module WikidataBlocklist::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(T.nilable(::User)) }
+  def user; end
+
+  sig { params(value: T.nilable(::User)).void }
+  def user=(value); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_user!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_user; end
 end

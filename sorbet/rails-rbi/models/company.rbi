@@ -7,98 +7,6 @@ module Company::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module Company::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(String) }
-  def description; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def description=(value); end
-
-  sig { returns(T::Boolean) }
-  def description?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(String) }
-  def name; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def name=(value); end
-
-  sig { returns(T::Boolean) }
-  def name?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-
-  sig { returns(T.nilable(Integer)) }
-  def wikidata_id; end
-
-  sig { params(value: T.nilable(Integer)).void }
-  def wikidata_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def wikidata_id?; end
-end
-
-module Company::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
-  def developed_games; end
-
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
-  def developed_games=(value); end
-
-  sig { returns(::GameDeveloper::ActiveRecord_Associations_CollectionProxy) }
-  def game_developers; end
-
-  sig { params(value: T.any(T::Array[::GameDeveloper], ::GameDeveloper::ActiveRecord_Associations_CollectionProxy)).void }
-  def game_developers=(value); end
-
-  sig { returns(::GamePublisher::ActiveRecord_Associations_CollectionProxy) }
-  def game_publishers; end
-
-  sig { params(value: T.any(T::Array[::GamePublisher], ::GamePublisher::ActiveRecord_Associations_CollectionProxy)).void }
-  def game_publishers=(value); end
-
-  sig { returns(T.nilable(::PgSearch::Document)) }
-  def pg_search_document; end
-
-  sig { params(value: T.nilable(::PgSearch::Document)).void }
-  def pg_search_document=(value); end
-
-  sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
-  def published_games; end
-
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
-  def published_games=(value); end
-end
-
 module Company::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[Company]) }
   def first_n(limit); end
@@ -291,6 +199,216 @@ class Company < ApplicationRecord
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(Company) }
   def self.new(attributes = nil, &block); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_developers; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_developers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_game_developers=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_developers; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_developers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_game_developers=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_developers; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_developers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_game_developers=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_developers; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_developers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_game_developers=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_game_developers(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_game_developers(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_developed_games; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_developed_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_developed_games=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_developed_games; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_developed_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_developed_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_developed_games; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_developed_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_developed_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_developed_games; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_developed_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_developed_games=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_developed_games(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_developed_games(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_publishers; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_publishers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_game_publishers=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_publishers; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_publishers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_game_publishers=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_publishers; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_publishers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_game_publishers=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_publishers; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_publishers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_game_publishers=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_game_publishers(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_game_publishers(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_published_games; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_published_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_published_games=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_published_games; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_published_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_published_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_published_games; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_published_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_published_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_published_games; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_published_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_published_games=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_published_games(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_published_games(*args); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_pg_search_document=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_pg_search_document(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_pg_search_document(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(Company::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -869,4 +987,408 @@ class Company::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associa
 
   sig { params(num: T.nilable(Integer)).returns(Company::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module Company::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(String) }
+  def description; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def description=(value); end
+
+  sig { returns(T::Boolean) }
+  def description?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(String) }
+  def name; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def name=(value); end
+
+  sig { returns(T::Boolean) }
+  def name?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def wikidata_id; end
+
+  sig { params(value: T.nilable(Integer)).void }
+  def wikidata_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def wikidata_id?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_name(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_name!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_description?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_description(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_description?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_description!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def description_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_wikidata_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_wikidata_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_wikidata_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_wikidata_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def wikidata_id_came_from_user?(*args); end
+end
+
+module Company::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
+  def developed_games; end
+
+  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  def developed_games=(value); end
+
+  sig { returns(::GameDeveloper::ActiveRecord_Associations_CollectionProxy) }
+  def game_developers; end
+
+  sig { params(value: T.any(T::Array[::GameDeveloper], ::GameDeveloper::ActiveRecord_Associations_CollectionProxy)).void }
+  def game_developers=(value); end
+
+  sig { returns(::GamePublisher::ActiveRecord_Associations_CollectionProxy) }
+  def game_publishers; end
+
+  sig { params(value: T.any(T::Array[::GamePublisher], ::GamePublisher::ActiveRecord_Associations_CollectionProxy)).void }
+  def game_publishers=(value); end
+
+  sig { returns(T.nilable(::PgSearch::Document)) }
+  def pg_search_document; end
+
+  sig { params(value: T.nilable(::PgSearch::Document)).void }
+  def pg_search_document=(value); end
+
+  sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
+  def published_games; end
+
+  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  def published_games=(value); end
+
+  sig { returns(T.untyped) }
+  def game_developer_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def game_developer_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def developed_game_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def developed_game_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def game_publisher_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def game_publisher_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def published_game_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def published_game_ids=(ids); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_pg_search_document!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def pg_search_document_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def pg_search_document_ids=(ids); end
 end

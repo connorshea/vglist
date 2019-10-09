@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-expectations/all/rspec-expectations.rbi
 #
-# rspec-expectations-3.8.6
+# rspec-expectations-3.9.0
 module RSpec
 end
 module RSpec::Matchers
@@ -203,7 +203,7 @@ module RSpec::Matchers::DSL::Macros
   def failure_message_when_negated(&definition); end
   def match(options = nil, &match_block); end
   def match_unless_raises(expected_exception = nil, &match_block); end
-  def match_when_negated(&match_block); end
+  def match_when_negated(options = nil, &match_block); end
   def supports_block_expectations; end
 end
 module RSpec::Matchers::DSL::Macros::Deprecated
