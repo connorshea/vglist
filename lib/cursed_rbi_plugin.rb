@@ -98,27 +98,31 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
       'before_remove_for_'
     ]
 
-    # This should also create separate class and instance methods, but
-    # currently Parlour doesn't like when you do that.
-    prefixes.each do |prefix|
-      # def after_add_for_author(); end
-      model_klass.create_method(
-        "#{prefix}#{assoc_name}",
-        return_type: 'T.untyped'
-      )
-      # def after_add_for_author?(); end
-      model_klass.create_method(
-        "#{prefix}#{assoc_name}?",
-        return_type: 'T.untyped'
-      )
-      # def after_add_for_author=(val); end
-      model_klass.create_method(
-        "#{prefix}#{assoc_name}=",
-        parameters: [
-          Parlour::RbiGenerator::Parameter.new('val', type: 'T.untyped')
-        ],
-        return_type: 'T.untyped'
-      )
+    # Create separate class and instance methods since Rails has them... for some reason.
+    [true, false].each do |bool|
+      prefixes.each do |prefix|
+        # def after_add_for_author(); end
+        model_klass.create_method(
+          "#{prefix}#{assoc_name}",
+          return_type: 'T.untyped',
+          class_method: bool
+        )
+        # def after_add_for_author?(); end
+        model_klass.create_method(
+          "#{prefix}#{assoc_name}?",
+          return_type: 'T.untyped',
+          class_method: bool
+        )
+        # def after_add_for_author=(val); end
+        model_klass.create_method(
+          "#{prefix}#{assoc_name}=",
+          parameters: [
+            Parlour::RbiGenerator::Parameter.new('val', type: 'T.untyped')
+          ],
+          return_type: 'T.untyped',
+          class_method: bool
+        )
+      end
     end
   end
 
