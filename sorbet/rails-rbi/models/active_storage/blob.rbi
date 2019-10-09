@@ -212,6 +212,42 @@ class ActiveStorage::Blob < ActiveRecord::Base
   def validate_associated_records_for_preview_image_attachment(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_preview_image_blob; end
 
   sig { returns(T.untyped) }
@@ -252,6 +288,42 @@ class ActiveStorage::Blob < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_preview_image_blob(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_attachments=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_attachments; end

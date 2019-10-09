@@ -206,6 +206,42 @@ class FavoriteGame < ApplicationRecord
   def validate_associated_records_for_game(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_user=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_user; end
 
   sig { returns(T.untyped) }
@@ -246,6 +282,42 @@ class FavoriteGame < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_user(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_events=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_events; end

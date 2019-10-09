@@ -274,6 +274,42 @@ class User < ApplicationRecord
   def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_game_purchases; end
 
   sig { returns(T.untyped) }
@@ -314,6 +350,42 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_game_purchases(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_games=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_games; end
@@ -358,6 +430,42 @@ class User < ApplicationRecord
   def validate_associated_records_for_games(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_favorite_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_favorite_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_favorite_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_favorite_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_favorite_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_favorite_games=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_favorite_games; end
 
   sig { returns(T.untyped) }
@@ -398,6 +506,42 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_favorite_games(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_active_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_active_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_active_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_active_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_active_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_active_relationships=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_active_relationships; end
@@ -442,6 +586,42 @@ class User < ApplicationRecord
   def validate_associated_records_for_active_relationships(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_following; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_following=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_following; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_following=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_following; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_following=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_following; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_following?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_following=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_following; end
 
   sig { returns(T.untyped) }
@@ -482,6 +662,42 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_following(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_passive_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_passive_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_passive_relationships=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_passive_relationships; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_passive_relationships?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_passive_relationships=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_passive_relationships; end
@@ -526,6 +742,42 @@ class User < ApplicationRecord
   def validate_associated_records_for_passive_relationships(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_followers; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_followers=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_followers; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_followers=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_followers; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_followers=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_followers; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_followers?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_followers=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_followers; end
 
   sig { returns(T.untyped) }
@@ -566,6 +818,42 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_followers(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_events=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_events; end
@@ -610,6 +898,42 @@ class User < ApplicationRecord
   def validate_associated_records_for_events(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_wikidata_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_wikidata_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_wikidata_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_wikidata_blocklists; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_wikidata_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_wikidata_blocklists=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_wikidata_blocklists; end
 
   sig { returns(T.untyped) }
@@ -650,6 +974,42 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_wikidata_blocklists(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_access_grants=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_access_grants; end
@@ -694,6 +1054,42 @@ class User < ApplicationRecord
   def validate_associated_records_for_access_grants(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_access_tokens; end
 
   sig { returns(T.untyped) }
@@ -734,6 +1130,42 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_access_tokens(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_oauth_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_oauth_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_oauth_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_oauth_applications; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_oauth_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_oauth_applications=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_oauth_applications; end
@@ -778,6 +1210,42 @@ class User < ApplicationRecord
   def validate_associated_records_for_oauth_applications(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_external_account=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_external_account=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_external_account=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_external_account; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_external_account?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_external_account=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_external_account; end
 
   sig { returns(T.untyped) }
@@ -820,6 +1288,42 @@ class User < ApplicationRecord
   def validate_associated_records_for_external_account(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_avatar_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_avatar_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_avatar_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_avatar_attachment; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_avatar_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_avatar_attachment=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_avatar_attachment; end
 
   sig { returns(T.untyped) }
@@ -860,6 +1364,42 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_avatar_attachment(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_avatar_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_avatar_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_avatar_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_avatar_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_avatar_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_avatar_blob=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_avatar_blob; end

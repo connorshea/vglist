@@ -201,6 +201,42 @@ class Platform < ApplicationRecord
   def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_game_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_platforms=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_game_platforms; end
 
   sig { returns(T.untyped) }
@@ -241,6 +277,42 @@ class Platform < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_game_platforms(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_games=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_games; end
@@ -285,6 +357,42 @@ class Platform < ApplicationRecord
   def validate_associated_records_for_games(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_purchase_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_purchase_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_purchase_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_purchase_platforms=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_game_purchase_platforms; end
 
   sig { returns(T.untyped) }
@@ -327,6 +435,42 @@ class Platform < ApplicationRecord
   def validate_associated_records_for_game_purchase_platforms(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchases; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchases?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_purchases=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_game_purchases; end
 
   sig { returns(T.untyped) }
@@ -367,6 +511,42 @@ class Platform < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_game_purchases(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_pg_search_document=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_pg_search_document; end

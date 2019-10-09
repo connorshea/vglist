@@ -200,6 +200,42 @@ class Doorkeeper::Application < ActiveRecord::Base
   def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_grants; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_grants?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_access_grants=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_access_grants; end
 
   sig { returns(T.untyped) }
@@ -240,6 +276,42 @@ class Doorkeeper::Application < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_access_grants(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_access_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_access_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_access_tokens=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_access_tokens; end
@@ -284,6 +356,42 @@ class Doorkeeper::Application < ActiveRecord::Base
   def validate_associated_records_for_access_tokens(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_authorized_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_authorized_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_authorized_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_authorized_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_authorized_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_authorized_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_authorized_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_authorized_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_authorized_tokens=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_authorized_tokens; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_authorized_tokens?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_authorized_tokens=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_authorized_tokens; end
 
   sig { returns(T.untyped) }
@@ -326,6 +434,42 @@ class Doorkeeper::Application < ActiveRecord::Base
   def validate_associated_records_for_authorized_tokens(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_authorized_applications; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_authorized_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_authorized_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_authorized_applications; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_authorized_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_authorized_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_authorized_applications; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_authorized_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_authorized_applications=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_authorized_applications; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_authorized_applications?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_authorized_applications=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_authorized_applications; end
 
   sig { returns(T.untyped) }
@@ -366,6 +510,42 @@ class Doorkeeper::Application < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_authorized_applications(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_owner; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_owner?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_owner=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_owner; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_owner?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_owner=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_owner; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_owner?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_owner=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_owner; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_owner?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_owner=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_owner; end

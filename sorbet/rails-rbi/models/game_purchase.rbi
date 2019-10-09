@@ -298,6 +298,42 @@ class GamePurchase < ApplicationRecord
   def validate_associated_records_for_game(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_user=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_user; end
 
   sig { returns(T.untyped) }
@@ -338,6 +374,42 @@ class GamePurchase < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_user(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_purchase_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_purchase_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_purchase_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchase_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchase_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_purchase_platforms=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_game_purchase_platforms; end
@@ -382,6 +454,42 @@ class GamePurchase < ApplicationRecord
   def validate_associated_records_for_game_purchase_platforms(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_platforms=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_platforms; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_platforms?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_platforms=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_platforms; end
 
   sig { returns(T.untyped) }
@@ -422,6 +530,42 @@ class GamePurchase < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_platforms(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_events; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_events=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_events; end

@@ -289,6 +289,42 @@ class Event < ApplicationRecord
   def validate_associated_records_for_eventable(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_user=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_user; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_user?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_user=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_user; end
 
   sig { returns(T.untyped) }

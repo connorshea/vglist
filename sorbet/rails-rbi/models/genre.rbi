@@ -201,6 +201,42 @@ class Genre < ApplicationRecord
   def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_game_genres; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_genres?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_genres=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_genres; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_genres?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_genres=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_genres; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_genres?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_genres=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_genres; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_genres?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_genres=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_game_genres; end
 
   sig { returns(T.untyped) }
@@ -243,6 +279,42 @@ class Genre < ApplicationRecord
   def validate_associated_records_for_game_genres(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_games; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_games=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_games; end
 
   sig { returns(T.untyped) }
@@ -283,6 +355,42 @@ class Genre < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_games(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_pg_search_document; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_pg_search_document=(val); end
 
   sig { returns(T.untyped) }
   def after_add_for_pg_search_document; end

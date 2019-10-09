@@ -206,6 +206,42 @@ class GameGenre < ApplicationRecord
   def validate_associated_records_for_game(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_genre; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_genre?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_genre=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_genre; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_genre?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_genre=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_genre; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_genre?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_genre=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_genre; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_genre?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_genre=(val); end
+
+  sig { returns(T.untyped) }
   def after_add_for_genre; end
 
   sig { returns(T.untyped) }
