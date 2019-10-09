@@ -7,71 +7,6 @@ module GamePurchasePlatform::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module GamePurchasePlatform::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(Integer) }
-  def game_purchase_id; end
-
-  sig { params(value: Integer).void }
-  def game_purchase_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def game_purchase_id?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(Integer) }
-  def platform_id; end
-
-  sig { params(value: Integer).void }
-  def platform_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def platform_id?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-end
-
-module GamePurchasePlatform::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(::GamePurchase) }
-  def game_purchase; end
-
-  sig { params(value: ::GamePurchase).void }
-  def game_purchase=(value); end
-
-  sig { returns(::Platform) }
-  def platform; end
-
-  sig { params(value: ::Platform).void }
-  def platform=(value); end
-end
-
 module GamePurchasePlatform::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[GamePurchasePlatform]) }
   def first_n(limit); end
@@ -263,6 +198,90 @@ class GamePurchasePlatform < ApplicationRecord
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(GamePurchasePlatform) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_game_purchase(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_game_purchase(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_platform; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_platform=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_platform; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_platform=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_platform; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_platform=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_platform; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_platform=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_platform; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_platform=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_platform; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_platform=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_platform; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_platform=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_platform; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_platform?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_platform=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_platform(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_platform(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -841,4 +860,324 @@ class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRe
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module GamePurchasePlatform::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(Integer) }
+  def game_purchase_id; end
+
+  sig { params(value: Integer).void }
+  def game_purchase_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def game_purchase_id?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(Integer) }
+  def platform_id; end
+
+  sig { params(value: Integer).void }
+  def platform_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def platform_id?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def updated_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_game_purchase_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_game_purchase_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_game_purchase_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_game_purchase_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def game_purchase_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_platform_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_platform_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_platform_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_platform_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def platform_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_came_from_user?(*args); end
+end
+
+module GamePurchasePlatform::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(::GamePurchase) }
+  def game_purchase; end
+
+  sig { params(value: ::GamePurchase).void }
+  def game_purchase=(value); end
+
+  sig { returns(::Platform) }
+  def platform; end
+
+  sig { params(value: ::Platform).void }
+  def platform=(value); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_game_purchase(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_game_purchase(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_game_purchase!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_game_purchase; end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_platform(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_platform(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_platform!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_platform; end
+
+  sig { returns(T.untyped) }
+  def platform_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def platform_ids=(ids); end
 end

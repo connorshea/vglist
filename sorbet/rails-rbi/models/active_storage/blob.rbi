@@ -7,82 +7,6 @@ module ActiveStorage::Blob::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module ActiveStorage::Blob::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(Integer) }
-  def byte_size; end
-
-  sig { params(value: Integer).void }
-  def byte_size=(value); end
-
-  sig { returns(T::Boolean) }
-  def byte_size?; end
-
-  sig { returns(String) }
-  def checksum; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def checksum=(value); end
-
-  sig { returns(T::Boolean) }
-  def checksum?; end
-
-  sig { returns(T.nilable(String)) }
-  def content_type; end
-
-  sig { params(value: T.nilable(String)).void }
-  def content_type=(value); end
-
-  sig { returns(T::Boolean) }
-  def content_type?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(String) }
-  def filename; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def filename=(value); end
-
-  sig { returns(T::Boolean) }
-  def filename?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(String) }
-  def key; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def key=(value); end
-
-  sig { returns(T::Boolean) }
-  def key?; end
-
-  sig { returns(T.nilable(String)) }
-  def metadata; end
-
-  sig { params(value: T.nilable(String)).void }
-  def metadata=(value); end
-
-  sig { returns(T::Boolean) }
-  def metadata?; end
-end
-
 module ActiveStorage::Blob::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[ActiveStorage::Blob]) }
   def first_n(limit); end
@@ -280,6 +204,168 @@ class ActiveStorage::Blob < ActiveRecord::Base
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Blob) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_preview_image_attachment(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_preview_image_attachment(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_preview_image_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_preview_image_blob; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_preview_image_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_preview_image_blob=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_preview_image_blob(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_preview_image_blob(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_attachments=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_attachments; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_attachments?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_attachments=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_attachments(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_attachments(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Blob::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -878,6 +964,442 @@ class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy < ActiveRec
   def page(num = nil); end
 end
 
+module ActiveStorage::Blob::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(Integer) }
+  def byte_size; end
+
+  sig { params(value: Integer).void }
+  def byte_size=(value); end
+
+  sig { returns(T::Boolean) }
+  def byte_size?; end
+
+  sig { returns(String) }
+  def checksum; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def checksum=(value); end
+
+  sig { returns(T::Boolean) }
+  def checksum?; end
+
+  sig { returns(T.nilable(String)) }
+  def content_type; end
+
+  sig { params(value: T.nilable(String)).void }
+  def content_type=(value); end
+
+  sig { returns(T::Boolean) }
+  def content_type?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(String) }
+  def filename; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def filename=(value); end
+
+  sig { returns(T::Boolean) }
+  def filename?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(String) }
+  def key; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def key=(value); end
+
+  sig { returns(T::Boolean) }
+  def key?; end
+
+  sig { returns(T.nilable(String)) }
+  def metadata; end
+
+  sig { params(value: T.nilable(String)).void }
+  def metadata=(value); end
+
+  sig { returns(T::Boolean) }
+  def metadata?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_key?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_key(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_key?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_key!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def key_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_filename?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_filename(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_filename?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_filename!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def filename_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_content_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_content_type(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_content_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_content_type!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def content_type_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_metadata?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_metadata(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_metadata?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_metadata!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def metadata_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_byte_size?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_byte_size(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_byte_size?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_byte_size!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def byte_size_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_checksum?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_checksum(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_checksum?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_checksum!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def checksum_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+end
+
 module ActiveStorage::Blob::GeneratedAssociationMethods
   extend T::Sig
 
@@ -904,4 +1426,28 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
 
   sig { params(attachable: T.untyped).returns(T.untyped) }
   def preview_image=(attachable); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_preview_image_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_preview_image_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_preview_image_attachment!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_preview_image_attachment; end
+
+  sig { returns(T.untyped) }
+  def preview_image_blob_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def preview_image_blob_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def attachment_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def attachment_ids=(ids); end
 end

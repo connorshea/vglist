@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-core/all/rspec-core.rbi
 #
-# rspec-core-3.8.2
+# rspec-core-3.9.0
 module RSpec
   def self.clear_examples; end
   def self.configuration; end
@@ -402,6 +402,7 @@ class RSpec::Core::Reporter
   def example_pending(example); end
   def example_started(example); end
   def examples; end
+  def exit_early(exit_code); end
   def fail_fast_limit_met?; end
   def failed_examples; end
   def finish; end
@@ -1153,8 +1154,7 @@ class RSpec::Core::Configuration
   def extend(mod, *filters); end
   def extract_location(path); end
   def fail_fast; end
-  def fail_fast=(arg0); end
-  def fail_fast?; end
+  def fail_fast=(value); end
   def fail_if_no_examples; end
   def fail_if_no_examples=(arg0); end
   def fail_if_no_examples?; end

@@ -7,80 +7,6 @@ module ActiveStorage::Attachment::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module ActiveStorage::Attachment::GeneratedAttributeMethods
-  extend T::Sig
-
-  sig { returns(Integer) }
-  def blob_id; end
-
-  sig { params(value: Integer).void }
-  def blob_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def blob_id?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: Integer).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(String) }
-  def name; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def name=(value); end
-
-  sig { returns(T::Boolean) }
-  def name?; end
-
-  sig { returns(Integer) }
-  def record_id; end
-
-  sig { params(value: Integer).void }
-  def record_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def record_id?; end
-
-  sig { returns(String) }
-  def record_type; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def record_type=(value); end
-
-  sig { returns(T::Boolean) }
-  def record_type?; end
-end
-
-module ActiveStorage::Attachment::GeneratedAssociationMethods
-  extend T::Sig
-
-  sig { returns(::ActiveStorage::Blob) }
-  def blob; end
-
-  sig { params(value: ::ActiveStorage::Blob).void }
-  def blob=(value); end
-
-  sig { returns(T.untyped) }
-  def record; end
-
-  sig { params(value: T.untyped).void }
-  def record=(value); end
-end
-
 module ActiveStorage::Attachment::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[ActiveStorage::Attachment]) }
   def first_n(limit); end
@@ -272,6 +198,90 @@ class ActiveStorage::Attachment < ActiveRecord::Base
 
   sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Attachment) }
   def self.new(attributes = nil, &block); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_record(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_record(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_blob; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_blob; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_blob; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_blob; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_blob; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_blob=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_blob; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_blob?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_blob=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_blob(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_blob(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -850,4 +860,378 @@ class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < Act
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+end
+
+module ActiveStorage::Attachment::GeneratedAttributeMethods
+  extend T::Sig
+
+  sig { returns(Integer) }
+  def blob_id; end
+
+  sig { params(value: Integer).void }
+  def blob_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def blob_id?; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def created_at; end
+
+  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: Integer).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(String) }
+  def name; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def name=(value); end
+
+  sig { returns(T::Boolean) }
+  def name?; end
+
+  sig { returns(Integer) }
+  def record_id; end
+
+  sig { params(value: Integer).void }
+  def record_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def record_id?; end
+
+  sig { returns(String) }
+  def record_type; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def record_type=(value); end
+
+  sig { returns(T::Boolean) }
+  def record_type?; end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_name(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_name!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def name_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_record_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_record_type(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_record_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_record_type!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_type_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_record_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_record_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_record_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_record_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def record_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_blob_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_blob_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_blob_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_blob_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def blob_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_came_from_user?(*args); end
+end
+
+module ActiveStorage::Attachment::GeneratedAssociationMethods
+  extend T::Sig
+
+  sig { returns(::ActiveStorage::Blob) }
+  def blob; end
+
+  sig { params(value: ::ActiveStorage::Blob).void }
+  def blob=(value); end
+
+  sig { returns(T.untyped) }
+  def record; end
+
+  sig { params(value: T.untyped).void }
+  def record=(value); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_record(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_record(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_record!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_record; end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_blob!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_blob; end
+
+  sig { returns(T.untyped) }
+  def blob_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def blob_ids=(ids); end
 end
