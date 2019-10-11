@@ -18,6 +18,9 @@ require 'simplecov'
 SimpleCov.start :rails do
   add_group "Policies", "app/policies"
   add_group "GraphQL", "app/graphql"
+
+  # No need to include this in the coverage tracking.
+  add_filter "lib/cursed_rbi_plugin.rb"
 end
 require "pundit/rspec"
 require 'pundit/matchers'
