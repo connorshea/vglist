@@ -5,6 +5,7 @@ RSpec.describe "Activity API", type: :request do
   describe "Query for data on activity globally" do
     let(:user) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
+    let(:user3) { create(:confirmed_user) }
     let(:game_purchase) { create(:game_purchase, user: user) }
     let(:relationship) { create(:relationship, follower: user, followed: user2) }
     let(:favorite_game) { create(:favorite_game, user: user) }
@@ -135,6 +136,60 @@ RSpec.describe "Activity API", type: :request do
               "id" => user.id.to_s
             }
           },
+        ]
+      )
+    end
+
+    it "returns basic data for 'following' activity" do
+      sign_in(user)
+      user2
+      user3
+      relationship
+      query_string = <<-GRAPHQL
+        query {
+          activity(feedType: FOLLOWING) {
+            user {
+              username
+            }
+            eventable {
+              __typename
+            }
+          }
+        }
+      GRAPHQL
+
+      result = VideoGameListSchema.execute(
+        query_string,
+        context: { current_user: user }
+      )
+
+      # Doesn't include user3 because user isn't following them.
+      expect(result.to_h["data"]["activity"]).to eq(
+        [
+          {
+            "user" => {
+              "username" => user.username
+            },
+            "eventable" => {
+              "__typename" => "Relationship"
+            }
+          },
+          {
+            "user" => {
+              "username" => user2.username
+            },
+            "eventable" => {
+              "__typename" => "User"
+            }
+          },
+          {
+            "user" => {
+              "username" => user.username
+            },
+            "eventable" => {
+              "__typename" => "User"
+            }
+          }
         ]
       )
     end
