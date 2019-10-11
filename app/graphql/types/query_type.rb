@@ -62,8 +62,9 @@ module Types
     end
 
     field :user, UserType, null: true do
-      description "Find a user by ID."
-      argument :id, ID, required: true
+      description "Find a user."
+      argument :id, ID, required: false, description: "Find a user by their ID."
+      argument :username, String, required: false, description: "Find a user by their username."
     end
 
     field :game_purchase, GamePurchaseType, null: true do
@@ -124,8 +125,14 @@ module Types
       Genre.search(query)
     end
 
-    def user(id:)
-      User.find(id)
+    def user(id: nil, username: nil)
+      if !id.nil?
+        User.find(id)
+      elsif !username.nil?
+        User.find_by(username: username)
+      else
+        raise GraphQL::ExecutionError, "Field 'user' is missing a required argument: 'id' or 'username'"
+      end
     end
 
     def game_purchase(id:)

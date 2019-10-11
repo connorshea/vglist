@@ -38,6 +38,37 @@ RSpec.describe "Users API", type: :request do
       )
     end
 
+    it "returns basic data for user when searching by username" do
+      sign_in(user)
+      query_string = <<-GRAPHQL
+        query($username: String!) {
+          user(username: $username) {
+            id
+            username
+            role
+            privacy
+            avatarUrl
+          }
+        }
+      GRAPHQL
+
+      result = VideoGameListSchema.execute(
+        query_string,
+        context: { current_user: user },
+        variables: { username: user.username }
+      )
+
+      expect(result.to_h["data"]["user"]).to eq(
+        {
+          "id" => user.id.to_s,
+          "username" => user.username,
+          "role" => user.role.upcase,
+          "privacy" => user.privacy.upcase,
+          "avatarUrl" => nil
+        }
+      )
+    end
+
     it "returns avatar for user" do
       sign_in(user_with_avatar)
       query_string = <<-GRAPHQL
