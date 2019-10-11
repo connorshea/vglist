@@ -9,7 +9,7 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
     let(:query_string) do
       <<-GRAPHQL
         mutation($id: ID!) {
-          unfavoriteGame(input: { gameId: $id }) {
+          unfavoriteGame(gameId: $id) {
             game {
               id
               name
