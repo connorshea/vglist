@@ -135,7 +135,7 @@ RSpec.describe "Activity API", type: :request do
               "__typename" => "User",
               "id" => user.id.to_s
             }
-          },
+          }
         ]
       )
     end
