@@ -15,11 +15,11 @@ module Types
     field :followers, [UserType], null: true, description: "Users that are following this user."
     field :following, [UserType], null: true, description: "Users that this user is following."
     field :favorite_games, [GameType], null: true, description: "Games that this user has favorited."
-    field :events, [EventType], null: true, description: "Events that refer to this user."
+    field :activity, [EventType], null: true, description: "Activity Events that refer to this user."
 
     field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar."
 
-    def events
+    def activity
       return nil unless user_visible?
 
       Event.recently_created

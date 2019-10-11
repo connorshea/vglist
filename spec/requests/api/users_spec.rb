@@ -26,6 +26,7 @@ RSpec.describe "Users API", type: :request do
         context: { current_user: user },
         variables: { id: user.id }
       )
+
       expect(result.to_h["data"]["user"]).to eq(
         {
           "id" => user.id.to_s,
@@ -54,6 +55,7 @@ RSpec.describe "Users API", type: :request do
         context: { current_user: user_with_avatar },
         variables: { id: user_with_avatar.id }
       )
+
       expect(result.to_h["data"]["user"]).to eq(
         {
           "id" => user_with_avatar.id.to_s,
@@ -72,6 +74,12 @@ RSpec.describe "Users API", type: :request do
             id
             username
             bio
+            gamePurchases {
+              id
+            }
+            activity {
+              id
+            }
           }
         }
       GRAPHQL
@@ -81,11 +89,67 @@ RSpec.describe "Users API", type: :request do
         context: { current_user: user },
         variables: { id: private_user.id }
       )
+
       expect(result.to_h["data"]["user"]).to eq(
         {
           "id" => private_user.id.to_s,
           "username" => private_user.username,
-          "bio" => nil
+          "bio" => nil,
+          "gamePurchases" => nil,
+          "activity" => nil
+        }
+      )
+    end
+
+    it "returns activity for user" do
+      sign_in(user)
+
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          user(id: $id) {
+            id
+            username
+            activity {
+              id
+              eventable {
+                __typename
+                ... on User {
+                  id
+                }
+                ... on GamePurchase {
+                  id
+                }
+                ... on Relationship {
+                  id
+                }
+                ... on FavoriteGame {
+                  id
+                }
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = VideoGameListSchema.execute(
+        query_string,
+        context: { current_user: user },
+        variables: { id: user.id }
+      )
+
+      expect(result.to_h["data"]["user"]).to eq(
+        {
+          "id" => user.id.to_s,
+          "username" => user.username,
+          "activity" => [
+            {
+              "id" => user.events.first.id,
+              "eventable" => {
+                "id" => user.id.to_s,
+                "__typename" => "User"
+              }
+            }
+          ]
         }
       )
     end

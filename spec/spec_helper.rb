@@ -17,6 +17,7 @@
 require 'simplecov'
 SimpleCov.start :rails do
   add_group "Policies", "app/policies"
+  add_group "GraphQL", "app/graphql"
 end
 require "pundit/rspec"
 require 'pundit/matchers'
