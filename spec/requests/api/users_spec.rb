@@ -72,6 +72,12 @@ RSpec.describe "Users API", type: :request do
             id
             username
             bio
+            gamePurchases {
+              id
+            }
+            activity {
+              id
+            }
           }
         }
       GRAPHQL
@@ -85,7 +91,9 @@ RSpec.describe "Users API", type: :request do
         {
           "id" => private_user.id.to_s,
           "username" => private_user.username,
-          "bio" => nil
+          "bio" => nil,
+          "gamePurchases" => nil,
+          "activity" => nil
         }
       )
     end
