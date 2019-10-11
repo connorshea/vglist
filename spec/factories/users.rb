@@ -1,6 +1,10 @@
 # typed: false
 FactoryBot.define do
   factory :user do
+    # Exclude id 1 to prevent flaky tests involving the behavior where users
+    # automatically follow the user with an ID of 1.
+    id { rand(2..100_000) }
+
     sequence(:email) { |n| "johndoe#{n}@example.com" }
     password { "password" }
     sequence(:username) { |n| "johndoe#{n}" }
