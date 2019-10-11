@@ -11,9 +11,7 @@ class Mutations::UnfavoriteGame < Mutations::BaseMutation
 
     favorite_game = FavoriteGame.find_by(user: @context[:current_user], game: game)
 
-    raise GraphQL::ExecutionError, "FavoriteGame does not exist." if favorite_game.nil?
-
-    favorite_game.destroy
+    raise GraphQL::ExecutionError, "FavoriteGame does not exist or could not be deleted." unless favorite_game&.destroy
 
     {
       game: game

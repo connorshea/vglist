@@ -9,7 +9,9 @@ class Mutations::FavoriteGame < Mutations::BaseMutation
   def resolve(game_id:)
     game = Game.find(game_id)
 
-    FavoriteGame.create!(user: @context[:current_user], game: game)
+    favorite = FavoriteGame.create(user: @context[:current_user], game: game)
+
+    raise GraphQL::ExecutionError, favorite.errors.full_messages.join(", ") unless favorite.save
 
     {
       game: game
