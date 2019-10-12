@@ -37,8 +37,10 @@ RSpec.describe "Platforms API", type: :request do
       query_string = <<-GRAPHQL
         query($query: String!) {
           platformSearch(query: $query) {
-            id
-            name
+            nodes {
+              id
+              name
+            }
           }
         }
       GRAPHQL
@@ -48,7 +50,7 @@ RSpec.describe "Platforms API", type: :request do
         context: { current_user: user },
         variables: { query: platform.name }
       )
-      expect(result.to_h["data"]["platformSearch"]).to eq(
+      expect(result.to_h["data"]["platformSearch"]["nodes"]).to eq(
         [{
           "id" => platform.id.to_s,
           "name" => platform.name

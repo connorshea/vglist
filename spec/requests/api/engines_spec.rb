@@ -37,8 +37,10 @@ RSpec.describe "Engines API", type: :request do
       query_string = <<-GRAPHQL
         query($query: String!) {
           engineSearch(query: $query) {
-            id
-            name
+            nodes {
+              id
+              name
+            }
           }
         }
       GRAPHQL
@@ -48,7 +50,7 @@ RSpec.describe "Engines API", type: :request do
         context: { current_user: user },
         variables: { query: engine.name }
       )
-      expect(result.to_h["data"]["engineSearch"]).to eq(
+      expect(result.to_h["data"]["engineSearch"]["nodes"]).to eq(
         [{
           "id" => engine.id.to_s,
           "name" => engine.name

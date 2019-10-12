@@ -65,8 +65,10 @@ RSpec.describe "Games API", type: :request do
       query_string = <<-GRAPHQL
         query($query: String!) {
           gameSearch(query: $query) {
-            id
-            name
+            nodes {
+              id
+              name
+            }
           }
         }
       GRAPHQL
@@ -76,7 +78,7 @@ RSpec.describe "Games API", type: :request do
         context: { current_user: user },
         variables: { query: game.name }
       )
-      expect(result.to_h["data"]["gameSearch"]).to eq(
+      expect(result.to_h["data"]["gameSearch"]["nodes"]).to eq(
         [{
           "id" => game.id.to_s,
           "name" => game.name

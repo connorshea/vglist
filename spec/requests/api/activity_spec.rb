@@ -16,11 +16,13 @@ RSpec.describe "Activity API", type: :request do
       query_string = <<-GRAPHQL
         query {
           activity(feedType: GLOBAL) {
-            user {
-              username
-            }
-            eventable {
-              __typename
+            nodes {
+              user {
+                username
+              }
+              eventable {
+                __typename
+              }
             }
           }
         }
@@ -31,7 +33,7 @@ RSpec.describe "Activity API", type: :request do
         context: { current_user: user }
       )
 
-      expect(result.to_h["data"]["activity"]).to eq(
+      expect(result.to_h["data"]["activity"]["nodes"]).to eq(
         [
           {
             "user" => {
@@ -62,22 +64,24 @@ RSpec.describe "Activity API", type: :request do
       query_string = <<-GRAPHQL
         query {
           activity(feedType: GLOBAL) {
-            user {
-              username
-            }
-            eventable {
-              __typename
-              ... on User {
-                id
+            nodes {
+              user {
+                username
               }
-              ... on GamePurchase {
-                id
-              }
-              ... on Relationship {
-                id
-              }
-              ... on FavoriteGame {
-                id
+              eventable {
+                __typename
+                ... on User {
+                  id
+                }
+                ... on GamePurchase {
+                  id
+                }
+                ... on Relationship {
+                  id
+                }
+                ... on FavoriteGame {
+                  id
+                }
               }
             }
           }
@@ -89,7 +93,7 @@ RSpec.describe "Activity API", type: :request do
         context: { current_user: user }
       )
 
-      expect(result.to_h["data"]["activity"]).to eq(
+      expect(result.to_h["data"]["activity"]["nodes"]).to eq(
         [
           {
             "user" => {
@@ -148,11 +152,13 @@ RSpec.describe "Activity API", type: :request do
       query_string = <<-GRAPHQL
         query {
           activity(feedType: FOLLOWING) {
-            user {
-              username
-            }
-            eventable {
-              __typename
+            nodes {
+              user {
+                username
+              }
+              eventable {
+                __typename
+              }
             }
           }
         }
@@ -164,7 +170,7 @@ RSpec.describe "Activity API", type: :request do
       )
 
       # Doesn't include user3 because user isn't following them.
-      expect(result.to_h["data"]["activity"]).to eq(
+      expect(result.to_h["data"]["activity"]["nodes"]).to eq(
         [
           {
             "user" => {
