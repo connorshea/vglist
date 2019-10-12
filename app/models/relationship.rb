@@ -1,4 +1,4 @@
-# typed: strong
+# typed: true
 class Relationship < ApplicationRecord
   extend T::Sig
 
@@ -18,7 +18,14 @@ class Relationship < ApplicationRecord
     presence: true,
     uniqueness: { scope: :followed_id }
 
+  validate :user_cannot_follow_self
+
   private
+
+  sig { void }
+  def user_cannot_follow_self
+    errors.add(:follower_id, "can't follow themselves") if follower_id == followed_id
+  end
 
   # Create an event when following a user.
   sig { void }
