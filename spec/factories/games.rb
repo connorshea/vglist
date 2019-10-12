@@ -58,6 +58,7 @@ FactoryBot.define do
     end
 
     factory :game_with_cover, traits: [:cover]
+    factory :game_with_release_date, traits: [:release_date]
     factory :game_with_everything,
       traits: [
         :description,

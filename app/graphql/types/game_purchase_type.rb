@@ -8,6 +8,8 @@ module Types
     field :rating, Integer, null: true, description: "Rating out of 100."
     field :hours_played, Float, null: true
     field :completion_status, GamePurchaseCompletionStatusType, null: true
+    field :start_date, GraphQL::Types::ISO8601Date, null: true, description: "The date on which the user started the game."
+    field :completion_date, GraphQL::Types::ISO8601Date, null: true, description: "The date on which the user completed the game."
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game purchase was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game purchase was last updated."
 

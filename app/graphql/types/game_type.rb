@@ -6,13 +6,13 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :description, String, null: true
+    field :release_date, GraphQL::Types::ISO8601Date, null: true, description: "The release date of the game."
     field :wikidata_id, Integer, null: true, description: "Identifier in Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier on PCGamingWiki."
     field :mobygames_id, String, null: true, description: "Identifier in the MobyGames database."
     # TODO: Add a field for steam_app_id when the Steam App IDs are split into their own separate model.
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was last updated."
-    # TODO: Add a field for release_date once the Date type is included in graphql-ruby.
 
     # Assocations
     field :series, SeriesType, null: true
