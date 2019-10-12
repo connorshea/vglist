@@ -6,7 +6,7 @@ module Types
       argument :id, ID, required: true, description: "Find a game by its unique ID."
     end
 
-    field :game_search, [GameType], null: true do
+    field :game_search, GameType.connection_type, null: true do
       description "Find a game by searching based on its name."
       argument :query, String, required: true, description: "Name to search by."
     end
@@ -16,7 +16,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :series_search, [SeriesType], null: true do
+    field :series_search, SeriesType.connection_type, null: true do
       description "Find a series by searching based on its name."
       argument :query, String, required: true, description: "Name to search by."
     end
@@ -26,7 +26,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :company_search, [CompanyType], null: true do
+    field :company_search, CompanyType.connection_type, null: true do
       description "Find a company by searching based on its name."
       argument :query, String, required: true, description: "Name to search by."
     end
@@ -36,7 +36,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :platform_search, [PlatformType], null: true do
+    field :platform_search, PlatformType.connection_type, null: true do
       description "Find a platform by searching based on its name."
       argument :query, String, required: true, description: "Name to search by."
     end
@@ -46,7 +46,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :engine_search, [EngineType], null: true do
+    field :engine_search, EngineType.connection_type, null: true do
       description "Find a game engine by searching based on its name."
       argument :query, String, required: true, description: "Name to search by."
     end
@@ -56,7 +56,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :genre_search, [GenreType], null: true do
+    field :genre_search, GenreType.connection_type, null: true do
       description "Find a genre by searching based on its name."
       argument :query, String, required: true, description: "Name to search by."
     end
@@ -72,7 +72,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :activity, Types::EventType.connection_type, null: true do
+    field :activity, EventType.connection_type, null: true do
       description "View recent activity."
       argument :feed_type, ActivityFeedType, required: false
     end
