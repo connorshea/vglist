@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.10.11
+### Added
+- Add GraphQL mutations for follow/unfollowUser, add/removeGameFromLibrary, and favorite/unfavoriteGame. ([#757], [#758], [#759])
+
+## v2019.10.7
+### Changed
+- Various improvements to the GraphQL API. ([#738], [#747], [#755], [#756])
+
+## v2019.10.5
+### Added
+- Add OAuth for API authentication. ([#711])
+
 ## v2019.9.29
 ### Added
 - Add a favicon and logo! ([#712])
@@ -556,4 +568,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#678]: https://github.com/connorshea/VideoGameList/pull/678
 [#681]: https://github.com/connorshea/VideoGameList/pull/681
 [#697]: https://github.com/connorshea/VideoGameList/pull/697
+[#711]: https://github.com/connorshea/VideoGameList/pull/711
 [#712]: https://github.com/connorshea/VideoGameList/pull/712
+[#738]: https://github.com/connorshea/VideoGameList/pull/738
+[#747]: https://github.com/connorshea/VideoGameList/pull/747
+[#755]: https://github.com/connorshea/VideoGameList/pull/755
+[#756]: https://github.com/connorshea/VideoGameList/pull/756
+[#757]: https://github.com/connorshea/VideoGameList/pull/757
+[#758]: https://github.com/connorshea/VideoGameList/pull/758
+[#759]: https://github.com/connorshea/VideoGameList/pull/759
