@@ -11,11 +11,11 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this user was last updated."
 
     # Associations
-    field :game_purchases, [GamePurchaseType], null: true, description: "Games in this user's library."
-    field :followers, [UserType], null: true, description: "Users that are following this user."
-    field :following, [UserType], null: true, description: "Users that this user is following."
-    field :favorite_games, [GameType], null: true, description: "Games that this user has favorited."
-    field :activity, [EventType], null: true, description: "Activity Events that refer to this user."
+    field :game_purchases, GamePurchaseType.connection_type, null: true, description: "Games in this user's library."
+    field :followers, UserType.connection_type, null: true, description: "Users that are following this user."
+    field :following, UserType.connection_type, null: true, description: "Users that this user is following."
+    field :favorite_games, GameType.connection_type, null: true, description: "Games that this user has favorited."
+    field :activity, EventType.connection_type, null: true, description: "Activity Events that refer to this user."
 
     field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar."
 
