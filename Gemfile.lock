@@ -142,7 +142,7 @@ GEM
     graphiql-rails (1.7.0)
       railties
       sprockets-rails
-    graphql (1.9.13)
+    graphql (1.10.0.pre1)
     graphql-rails_logger (1.2.2)
       actionpack (> 5.0)
       activesupport (> 5.0)
@@ -394,7 +394,7 @@ DEPENDENCIES
   friendly_id (~> 5.3.0)
   fuubar (~> 2.4.1)
   graphiql-rails (~> 1.7.0)
-  graphql (~> 1.9)
+  graphql (~> 1.10.0.pre1)
   graphql-rails_logger (~> 1.2.2)
   jbuilder (~> 2.9)
   kaminari (~> 1.1)

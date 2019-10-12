@@ -72,7 +72,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :activity, [EventType], null: true do
+    field :activity, Types::EventType.connection_type, null: true do
       description "View recent activity."
       argument :feed_type, ActivityFeedType, required: false
     end

@@ -11981,10 +11981,36 @@ module MonitorMixin
   def self.extend_object(obj); end
 end
 
-module Mutations
+class Mutations::AddGameToLibrary
+  def load_comments(value); end
+
+  def load_completion_status(value); end
+
+  def load_game_id(value); end
+
+  def load_hours_played(value); end
+
+  def load_rating(value); end
 end
 
-module Mutations
+class Mutations::FavoriteGame
+  def load_game_id(value); end
+end
+
+class Mutations::FollowUser
+  def load_user_id(value); end
+end
+
+class Mutations::RemoveGameFromLibrary
+  def load_game_id(value); end
+end
+
+class Mutations::UnfavoriteGame
+  def load_game_id(value); end
+end
+
+class Mutations::UnfollowUser
+  def load_user_id(value); end
 end
 
 module Mutex_m
@@ -28272,6 +28298,7 @@ module Types::BaseInterface
   extend ::GraphQL::Schema::Member::HasPath
   extend ::GraphQL::Schema::Member::RelayShortcuts
   extend ::GraphQL::Schema::Member::Scoped
+  extend ::GraphQL::Schema::Member::HasAstNode
   extend ::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
   extend ::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension
   extend ::Types::BaseInterface::DefinitionMethods
