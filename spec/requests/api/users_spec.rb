@@ -106,10 +106,14 @@ RSpec.describe "Users API", type: :request do
             username
             bio
             gamePurchases {
-              id
+              nodes {
+                id
+              }
             }
             activity {
-              id
+              nodes {
+                id
+              }
             }
           }
         }
@@ -141,20 +145,22 @@ RSpec.describe "Users API", type: :request do
             id
             username
             activity {
-              id
-              eventable {
-                __typename
-                ... on User {
-                  id
-                }
-                ... on GamePurchase {
-                  id
-                }
-                ... on Relationship {
-                  id
-                }
-                ... on FavoriteGame {
-                  id
+              nodes {
+                id
+                eventable {
+                  __typename
+                  ... on User {
+                    id
+                  }
+                  ... on GamePurchase {
+                    id
+                  }
+                  ... on Relationship {
+                    id
+                  }
+                  ... on FavoriteGame {
+                    id
+                  }
                 }
               }
             }
@@ -172,15 +178,17 @@ RSpec.describe "Users API", type: :request do
         {
           "id" => user.id.to_s,
           "username" => user.username,
-          "activity" => [
-            {
-              "id" => user.events.first.id,
-              "eventable" => {
-                "id" => user.id.to_s,
-                "__typename" => "User"
+          "activity" => {
+            "nodes" => [
+              {
+                "id" => user.events.first.id,
+                "eventable" => {
+                  "id" => user.id.to_s,
+                  "__typename" => "User"
+                }
               }
-            }
-          ]
+            ]
+          }
         }
       )
     end

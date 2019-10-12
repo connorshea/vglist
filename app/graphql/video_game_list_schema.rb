@@ -6,6 +6,7 @@ class VideoGameListSchema < GraphQL::Schema
   use GraphQL::Execution::Interpreter
   use GraphQL::Analysis::AST
   use GraphQL::Execution::Errors
+  use GraphQL::Pagination::Connections
 
   mutation(Types::MutationType)
   query(Types::QueryType)
@@ -16,6 +17,8 @@ class VideoGameListSchema < GraphQL::Schema
   # introspection to work, which is what's used for the documentation panel.
   max_depth 13
   # max_complexity 50
+
+  default_max_page_size 30
 
   # Return a valid response when an ActiveRecord record can't be found.
   rescue_from(ActiveRecord::RecordNotFound) do |_err, _obj, _args, _ctx, field|

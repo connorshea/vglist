@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Types
   class MutationType < Types::BaseObject
     field :favorite_game, mutation: Mutations::FavoriteGame

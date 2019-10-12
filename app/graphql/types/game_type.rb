@@ -16,12 +16,12 @@ module Types
 
     # Assocations
     field :series, SeriesType, null: true
-    field :developers, [CompanyType], null: true
-    field :publishers, [CompanyType], null: true
-    field :engines, [EngineType], null: true
-    field :genres, [GenreType], null: true
-    field :platforms, [PlatformType], null: true
-    field :owners, [UserType], null: true, method: :purchasers, description: "Users who have this game in their libraries."
+    field :developers, CompanyType.connection_type, null: true
+    field :publishers, CompanyType.connection_type, null: true
+    field :engines, EngineType.connection_type, null: true
+    field :genres, GenreType.connection_type, null: true
+    field :platforms, PlatformType.connection_type, null: true
+    field :owners, UserType.connection_type, null: true, method: :purchasers, description: "Users who have this game in their libraries."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover."
 

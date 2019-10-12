@@ -37,8 +37,10 @@ RSpec.describe "Genres API", type: :request do
       query_string = <<-GRAPHQL
         query($query: String!) {
           genreSearch(query: $query) {
-            id
-            name
+            nodes {
+              id
+              name
+            }
           }
         }
       GRAPHQL
@@ -48,7 +50,7 @@ RSpec.describe "Genres API", type: :request do
         context: { current_user: user },
         variables: { query: genre.name }
       )
-      expect(result.to_h["data"]["genreSearch"]).to eq(
+      expect(result.to_h["data"]["genreSearch"]["nodes"]).to eq(
         [{
           "id" => genre.id.to_s,
           "name" => genre.name

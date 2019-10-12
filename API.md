@@ -13,9 +13,11 @@ query($id: ID!) {
     id
     wikidataId
     engines {
-      id
-      name
-      wikidataId
+      nodes {
+        id
+        name
+        wikidataId
+      }
     }
   }
 }
@@ -32,18 +34,20 @@ JSON response:
       "name": "Half-Life 2",
       "id": "372",
       "wikidataId": "193581",
-      "engines": [
-        {
-          "id": "3",
-          "name": "Havok",
-          "wikidataId": "616957"
-        },
-        {
-          "id": "6",
-          "name": "Source Engine",
-          "wikidataId": "643572"
-        }
-      ]
+      "engines": {
+        "nodes": [
+          {
+            "id": "3",
+            "name": "Havok",
+            "wikidataId": "616957"
+          },
+          {
+            "id": "6",
+            "name": "Source Engine",
+            "wikidataId": "643572"
+          }
+        ]
+      }
     }
   }
 }
@@ -73,11 +77,78 @@ Currently, there's no rate limiting! I will change this very soon!
 
 ## Pagination
 
-Currently, there's no pagination! I will change this very soon!
+All endpoints which return lists of items (for example, if you query for all the owners of a game) will have pagination. The paginated items will return "Connection" types, e.g. `UserConnection`.
+
+For example, you can get a user's game purchases (games in a user's library) with a query like this:
+
+```graphql
+query($id:ID!) {
+  user(id: $id) {
+    gamePurchases {
+      nodes {
+        game {
+          name
+        }
+      }
+      pageInfo {
+        hasNextPage
+        total
+        endCursor
+      }
+    }
+  }
+}
+```
+
+The `nodes` represent the items in the paginated list, so in this case `nodes` returns an array of `gamePurchase` types. The `pageInfo` field provides information about the status of the current query's pagination. It's useful for getting the total number of items returned by the query, whether more pages exist, and the 'cursor' which can be used to get more pages on subsequent requests.
+
+In this case, the return value of `endCursor` is `"Mw"`, and we can resubmit the same query with `gamePurchases(after: "Mw")` to get all the items on the next page.
+
+```graphql
+query($id: ID!) {
+  user(id: $id) {
+    gamePurchases(after: "Mw") {
+      nodes {
+        game {
+          name
+        }
+      }
+      pageInfo {
+        hasNextPage
+        total
+        endCursor
+      }
+    }
+  }
+}
+```
+
+You may want to use a variable for the cursor value, to make it easier to page through the query response.
 
 ## Documentation
 
 I intend to add a GraphiQL editor interface to the website for testing API queries and viewing documentation, but I have not done so in production yet. You should be able to get API documentation for now using a tool like [Insomnia](https://insomnia.rest/).
+
+For writing GraphQL queries, the [GraphQL website](https://graphql.org/) should be a sufficient introduction.
+
+You can also find a lot of example queries inside vglist's API test suite, in [`spec/requests/api/`](https://github.com/connorshea/VideoGameList/tree/master/spec/requests/api). Queries are stored in "HEREDOCs" that look like this:
+
+```ruby
+query_string = <<-GRAPHQL
+  query {
+    activity(feedType: GLOBAL) {
+      user {
+        username
+      }
+      eventable {
+        __typename
+      }
+    }
+  }
+GRAPHQL
+```
+
+The query itself is everything between the two `GRAPHQL`s.
 
 ## Stability
 

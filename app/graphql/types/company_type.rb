@@ -8,7 +8,7 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this company was last updated."
 
     # Associations
-    field :published_games, [GameType], null: true, description: "Games published by this company."
-    field :developed_games, [GameType], null: true, description: "Games developed by this company."
+    field :published_games, GameType.connection_type, null: true, description: "Games published by this company."
+    field :developed_games, GameType.connection_type, null: true, description: "Games developed by this company."
   end
 end

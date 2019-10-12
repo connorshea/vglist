@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.5.0
+# faker-2.6.0
 module Faker
 end
 module Faker::Base58
@@ -367,6 +367,7 @@ class Faker::Date < Faker::Base
   def self.birthday_date(date, age); end
   def self.forward(legacy_days = nil, days: nil); end
   def self.get_date_object(date); end
+  def self.in_date_period(month: nil, year: nil); end
 end
 class Faker::DcComics < Faker::Base
   def self.hero; end

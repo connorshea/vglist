@@ -37,8 +37,10 @@ RSpec.describe "Series API", type: :request do
       query_string = <<-GRAPHQL
         query($query: String!) {
           seriesSearch(query: $query) {
-            id
-            name
+            nodes {
+              id
+              name
+            }
           }
         }
       GRAPHQL
@@ -48,7 +50,7 @@ RSpec.describe "Series API", type: :request do
         context: { current_user: user },
         variables: { query: series.name }
       )
-      expect(result.to_h["data"]["seriesSearch"]).to eq(
+      expect(result.to_h["data"]["seriesSearch"]["nodes"]).to eq(
         [{
           "id" => series.id.to_s,
           "name" => series.name

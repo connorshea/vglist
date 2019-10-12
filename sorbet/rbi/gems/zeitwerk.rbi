@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/zeitwerk/all/zeitwerk.rbi
 #
-# zeitwerk-2.1.10
+# zeitwerk-2.2.0
 module Zeitwerk::RealModName
   def real_mod_name(mod); end
 end
@@ -113,6 +113,8 @@ module Zeitwerk::ExplicitNamespace
 end
 class Zeitwerk::Inflector
   def camelize(basename, _abspath); end
+  def inflect(inflections); end
+  def overrides; end
 end
 class Zeitwerk::GemInflector < Zeitwerk::Inflector
   def camelize(basename, abspath); end

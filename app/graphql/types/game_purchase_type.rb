@@ -14,7 +14,7 @@ module Types
     # Associations
     field :game, GameType, null: false
     field :user, UserType, null: false
-    field :platforms, [PlatformType], null: true, description: "Platforms that the user owns this game on."
+    field :platforms, PlatformType.connection_type, null: true, description: "Platforms that the user owns this game on."
 
     # If the user's profile is private, their game purchases shouldn't be
     # accessible unless explicitly allowed.
