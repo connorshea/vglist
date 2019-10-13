@@ -127,6 +127,40 @@ query($id: ID!) {
 
 You may want to use a variable for the cursor value, to make it easier to page through the query response.
 
+## Mutations
+
+In GraphQL, API requests that are intended to change the data in the API (e.g. adding a game to a user's library) are called [Mutations](https://graphql.org/learn/queries/#mutations). Unlike queries, which only _read_ data, mutations can be used to _write_ data.
+
+Mutations in the vglist API look like the following:
+
+```graphql
+mutation($id: ID!) {
+  addGameToLibrary(
+    gameId: $id,
+    hoursPlayed: 150,
+    comments: "Pretty good",
+    completionStatus: COMPLETED,
+    rating: 100
+  ) {
+    gamePurchase {
+      game {
+        name
+      }
+      hoursPlayed
+      comments
+      completionStatus
+      rating
+    }
+  }
+}
+```
+
+Mutations start with the `mutation` keyword, and any variables can be defined from there. The and all mutations accept parameters. In this case, we're adding a game to the user's library with 150 hours played, a comment that says "Pretty good", a completion status of `COMPLETED`, and a rating of 100.
+
+The mutation will return the defined data (the `gamePurchase`, the associated game, and the hoursPlayed, comments, completionStatus, and rating) if it was successful. If it failed - for example when the user already has the game in their library - it will instead return an empty `data` object and an `errors` object.
+
+Each different mutation has different parameters. The specific parameters are documented in the GraphQL schema.
+
 ## Documentation
 
 I intend to add a GraphiQL editor interface to the website for testing API queries and viewing documentation, but I have not done so in production yet. You should be able to get API documentation for now using a tool like [Insomnia](https://insomnia.rest/).
