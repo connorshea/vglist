@@ -77,7 +77,9 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
             hoursPlayed: 10,
             comments: "Pretty good",
             completionStatus: NOT_APPLICABLE,
-            rating: 100
+            rating: 100,
+            startDate: "2019-10-10",
+            completionDate: "2019-10-11"
           ) {
             gamePurchase {
               user {
@@ -90,6 +92,8 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
               comments
               completionStatus
               rating
+              startDate
+              completionDate
             }
           }
         }
@@ -130,7 +134,9 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
           "hoursPlayed" => 10,
           "comments" => "Pretty good",
           "completionStatus" => "NOT_APPLICABLE",
-          "rating" => 100
+          "rating" => 100,
+          "startDate" => "2019-10-10",
+          "completionDate" => "2019-10-11"
         }
       )
     end

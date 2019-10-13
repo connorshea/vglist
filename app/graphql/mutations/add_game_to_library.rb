@@ -7,12 +7,13 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
   argument :rating, Integer, required: false, description: "The game rating (out of 100)."
   argument :hours_played, Float, required: false, description: "The number of hours a game has been played."
   argument :comments, String, required: false
+  argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user started the game."
+  argument :completion_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user completed the game."
   # TODO: Add platforms.
-  # TODO: Add start and completion dates.
 
   field :game_purchase, Types::GamePurchaseType, null: true
 
-  def resolve(game_id:, completion_status: nil, rating: nil, hours_played: nil, comments: "")
+  def resolve(game_id:, completion_status: nil, rating: nil, hours_played: nil, comments: "", start_date: nil, completion_date: nil)
     game = Game.find(game_id)
 
     game_purchase = GamePurchase.create(
@@ -21,7 +22,9 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
       completion_status: completion_status,
       rating: rating,
       hours_played: hours_played,
-      comments: comments
+      comments: comments,
+      start_date: start_date,
+      completion_date: completion_date
     )
 
     raise GraphQL::ExecutionError, game_purchase.errors.full_messages.join(", ") unless game_purchase.save
