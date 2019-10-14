@@ -4,6 +4,7 @@ require 'rails_helper'
 RSpec.describe "Users API", type: :request do
   describe "Query for data on users" do
     let(:user) { create(:confirmed_user) }
+    let(:user2) { create(:confirmed_user) }
     let(:user_with_avatar) { create(:confirmed_user_with_avatar) }
     let(:private_user) { create(:private_user) }
 
@@ -190,6 +191,39 @@ RSpec.describe "Users API", type: :request do
             ]
           }
         }
+      )
+    end
+
+    it "returns data for users when listing" do
+      sign_in(user)
+      user
+      user2
+      query_string = <<-GRAPHQL
+        query {
+          users {
+            nodes {
+              id
+              username
+            }
+          }
+        }
+      GRAPHQL
+
+      result = VideoGameListSchema.execute(
+        query_string,
+        context: { current_user: user }
+      )
+      expect(result.to_h["data"]["users"]["nodes"]).to eq(
+        [
+          {
+            "id" => user.id.to_s,
+            "username" => user.username
+          },
+          {
+            "id" => user2.id.to_s,
+            "username" => user2.username
+          }
+        ]
       )
     end
   end
