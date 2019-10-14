@@ -5,6 +5,7 @@ RSpec.describe "Games API", type: :request do
   describe "Query for data on games" do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
+    let(:game2) { create(:game) }
     let(:game_with_cover) { create(:game_with_cover) }
     let(:game_with_release_date) { create(:game_with_release_date) }
 
@@ -115,6 +116,39 @@ RSpec.describe "Games API", type: :request do
           "id" => game.id.to_s,
           "name" => game.name
         }]
+      )
+    end
+
+    it "returns data for games when listing" do
+      sign_in(user)
+      game
+      game2
+      query_string = <<-GRAPHQL
+        query {
+          games {
+            nodes {
+              id
+              name
+            }
+          }
+        }
+      GRAPHQL
+
+      result = VideoGameListSchema.execute(
+        query_string,
+        context: { current_user: user }
+      )
+      expect(result.to_h["data"]["games"]["nodes"]).to eq(
+        [
+          {
+            "id" => game.id.to_s,
+            "name" => game.name
+          },
+          {
+            "id" => game2.id.to_s,
+            "name" => game2.name
+          }
+        ]
       )
     end
   end
