@@ -70,7 +70,7 @@ namespace :import do
 
     puts "Found #{games.count} games with a PCGamingWiki ID and no cover."
 
-    cover_not_found_count = 0
+    cover_not_found_or_errored_count = 0
     cover_added_count = 0
 
     progress_bar = ProgressBar.create(
@@ -108,7 +108,7 @@ namespace :import do
       json = json.dig('query', 'results')
       if json.nil? || json.blank?
         progress_bar.log "Not finding any covers, skipping."
-        cover_not_found_count += 1
+        cover_not_found_or_errored_count += 1
         progress_bar.increment
         next
       end
@@ -118,7 +118,7 @@ namespace :import do
 
       if cover_url.nil?
         progress_bar.log "Not finding any covers, skipping."
-        cover_not_found_count += 1
+        cover_not_found_or_errored_count += 1
         progress_bar.increment
         # Exit early if the game has no cover.
         next
@@ -132,12 +132,21 @@ namespace :import do
       begin
         cover_blob = URI.open(cover_url)
       rescue OpenURI::HTTPError, URI::InvalidURIError => e
-        puts "Error: #{e}"
+        progress_bar.log "Error: #{e}"
+        progress_bar.increment
+        cover_not_found_or_errored_count += 1
         next
       end
 
       # Copy the image data to a file with ActiveStorage.
       game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
+
+      if game.reload.cover.blank?
+        progress_bar.log "Cover could not be added for #{game[:name]}."
+        progress_bar.increment
+        cover_not_found_or_errored_count += 1
+        next
+      end
 
       cover_added_count += 1
       progress_bar.increment
@@ -149,7 +158,7 @@ namespace :import do
     games_with_covers = Game.joins(:cover_attachment)
     puts
     puts "Done. #{games_with_covers.count} games now have covers."
-    puts "#{cover_added_count} covers added and #{cover_not_found_count} covers not found."
+    puts "#{cover_added_count} covers added and #{cover_not_found_or_errored_count} covers not found or failed to upload."
   end
 
   # SPARQL query for getting all video games with PCGamingWiki IDs on Wikidata.
