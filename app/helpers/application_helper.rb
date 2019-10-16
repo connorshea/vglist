@@ -17,7 +17,7 @@ module ApplicationHelper
   sig { params(user_id: T.any(Integer, String), size: Integer, css_class_name: String).returns(T.untyped) }
   def user_avatar(user_id, size, css_class_name: 'user-avatar')
     user = User.find(user_id)
-    if user.avatar&.attached?
+    if user.avatar&.attached? && user.avatar&.variable?
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
       # too wide or too tall.
@@ -31,6 +31,8 @@ module ApplicationHelper
       height: "#{size}px",
       width: "#{size}px",
       class: css_class_name
+    elsif user.avatar&.attached? && !user.avatar&.variable?
+      image_tag user.avatar, width: "#{size}px", height: "#{size}px", class: css_class_name
     else
       image_tag 'default-avatar.png',
         height: "#{size}px",
@@ -42,12 +44,14 @@ module ApplicationHelper
   # A helper for displaying game covers.
   sig { params(game: Game, width: Integer, height: Integer).returns(T.untyped) }
   def game_cover(game, width, height)
-    if game.cover&.attached?
+    if game.cover&.attached? && game.cover&.variable?
       image_tag T.must(game.cover).variant(
         resize: "#{width}x#{height}>"
       ),
       width: "#{width}px",
       height: "#{height}px"
+    elsif game.cover&.attached? && !game.cover&.variable?
+      image_tag game.cover, width: "#{width}px", height: "#{height}px"
     else
       image_tag 'no-cover.png', width: "#{width}px", height: "#{height}px"
     end
