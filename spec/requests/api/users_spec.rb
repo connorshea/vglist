@@ -213,17 +213,15 @@ RSpec.describe "Users API", type: :request do
         query_string,
         context: { current_user: user }
       )
-      expect(result.to_h["data"]["users"]["nodes"]).to eq(
-        [
-          {
-            "id" => user.id.to_s,
-            "username" => user.username
-          },
-          {
-            "id" => user2.id.to_s,
-            "username" => user2.username
-          }
-        ]
+      expect(result.to_h["data"]["users"]["nodes"]).to include(
+        {
+          "id" => user.id.to_s,
+          "username" => user.username
+        },
+        {
+          "id" => user2.id.to_s,
+          "username" => user2.username
+        }
       )
     end
   end
