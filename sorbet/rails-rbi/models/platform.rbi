@@ -1503,25 +1503,25 @@ module Platform::GeneratedAssociationMethods
   sig { returns(::GamePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_platforms; end
 
-  sig { params(value: T.any(T::Array[::GamePlatform], ::GamePlatform::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePlatform]).void }
   def game_platforms=(value); end
 
   sig { returns(::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_platforms; end
 
-  sig { params(value: T.any(T::Array[::GamePurchasePlatform], ::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePurchasePlatform]).void }
   def game_purchase_platforms=(value); end
 
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 
-  sig { params(value: T.any(T::Array[::GamePurchase], ::GamePurchase::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePurchase]).void }
   def game_purchases=(value); end
 
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
 
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
   sig { returns(T.nilable(::PgSearch::Document)) }

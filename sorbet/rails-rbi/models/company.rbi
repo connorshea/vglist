@@ -1503,19 +1503,19 @@ module Company::GeneratedAssociationMethods
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def developed_games; end
 
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Game]).void }
   def developed_games=(value); end
 
   sig { returns(::GameDeveloper::ActiveRecord_Associations_CollectionProxy) }
   def game_developers; end
 
-  sig { params(value: T.any(T::Array[::GameDeveloper], ::GameDeveloper::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GameDeveloper]).void }
   def game_developers=(value); end
 
   sig { returns(::GamePublisher::ActiveRecord_Associations_CollectionProxy) }
   def game_publishers; end
 
-  sig { params(value: T.any(T::Array[::GamePublisher], ::GamePublisher::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePublisher]).void }
   def game_publishers=(value); end
 
   sig { returns(T.nilable(::PgSearch::Document)) }
@@ -1527,7 +1527,7 @@ module Company::GeneratedAssociationMethods
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def published_games; end
 
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Game]).void }
   def published_games=(value); end
 
   sig { returns(T.untyped) }

@@ -2841,61 +2841,61 @@ module Game::GeneratedAssociationMethods
   sig { returns(::Company::ActiveRecord_Associations_CollectionProxy) }
   def developers; end
 
-  sig { params(value: T.any(T::Array[::Company], ::Company::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Company]).void }
   def developers=(value); end
 
   sig { returns(::Engine::ActiveRecord_Associations_CollectionProxy) }
   def engines; end
 
-  sig { params(value: T.any(T::Array[::Engine], ::Engine::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Engine]).void }
   def engines=(value); end
 
   sig { returns(::FavoriteGame::ActiveRecord_Associations_CollectionProxy) }
   def favorites; end
 
-  sig { params(value: T.any(T::Array[::FavoriteGame], ::FavoriteGame::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::FavoriteGame]).void }
   def favorites=(value); end
 
   sig { returns(::GameDeveloper::ActiveRecord_Associations_CollectionProxy) }
   def game_developers; end
 
-  sig { params(value: T.any(T::Array[::GameDeveloper], ::GameDeveloper::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GameDeveloper]).void }
   def game_developers=(value); end
 
   sig { returns(::GameEngine::ActiveRecord_Associations_CollectionProxy) }
   def game_engines; end
 
-  sig { params(value: T.any(T::Array[::GameEngine], ::GameEngine::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GameEngine]).void }
   def game_engines=(value); end
 
   sig { returns(::GameGenre::ActiveRecord_Associations_CollectionProxy) }
   def game_genres; end
 
-  sig { params(value: T.any(T::Array[::GameGenre], ::GameGenre::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GameGenre]).void }
   def game_genres=(value); end
 
   sig { returns(::GamePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_platforms; end
 
-  sig { params(value: T.any(T::Array[::GamePlatform], ::GamePlatform::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePlatform]).void }
   def game_platforms=(value); end
 
   sig { returns(::GamePublisher::ActiveRecord_Associations_CollectionProxy) }
   def game_publishers; end
 
-  sig { params(value: T.any(T::Array[::GamePublisher], ::GamePublisher::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePublisher]).void }
   def game_publishers=(value); end
 
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 
-  sig { params(value: T.any(T::Array[::GamePurchase], ::GamePurchase::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePurchase]).void }
   def game_purchases=(value); end
 
   sig { returns(::Genre::ActiveRecord_Associations_CollectionProxy) }
   def genres; end
 
-  sig { params(value: T.any(T::Array[::Genre], ::Genre::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Genre]).void }
   def genres=(value); end
 
   sig { returns(T.nilable(::PgSearch::Document)) }
@@ -2907,19 +2907,19 @@ module Game::GeneratedAssociationMethods
   sig { returns(::Platform::ActiveRecord_Associations_CollectionProxy) }
   def platforms; end
 
-  sig { params(value: T.any(T::Array[::Platform], ::Platform::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Platform]).void }
   def platforms=(value); end
 
   sig { returns(::Company::ActiveRecord_Associations_CollectionProxy) }
   def publishers; end
 
-  sig { params(value: T.any(T::Array[::Company], ::Company::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Company]).void }
   def publishers=(value); end
 
   sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
   def purchasers; end
 
-  sig { params(value: T.any(T::Array[::User], ::User::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::User]).void }
   def purchasers=(value); end
 
   sig { returns(T.nilable(::Series)) }

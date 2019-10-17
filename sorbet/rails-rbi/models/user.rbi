@@ -3331,19 +3331,19 @@ module User::GeneratedAssociationMethods
   sig { returns(::Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy) }
   def access_grants; end
 
-  sig { params(value: T.any(T::Array[::Doorkeeper::AccessGrant], ::Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Doorkeeper::AccessGrant]).void }
   def access_grants=(value); end
 
   sig { returns(::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy) }
   def access_tokens; end
 
-  sig { params(value: T.any(T::Array[::Doorkeeper::AccessToken], ::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Doorkeeper::AccessToken]).void }
   def access_tokens=(value); end
 
   sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
   def active_relationships; end
 
-  sig { params(value: T.any(T::Array[::Relationship], ::Relationship::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Relationship]).void }
   def active_relationships=(value); end
 
   sig { returns(T.nilable(::ActiveStorage::Attachment)) }
@@ -3361,7 +3361,7 @@ module User::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
-  sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Event]).void }
   def events=(value); end
 
   sig { returns(T.nilable(::ExternalAccount)) }
@@ -3373,49 +3373,49 @@ module User::GeneratedAssociationMethods
   sig { returns(::FavoriteGame::ActiveRecord_Associations_CollectionProxy) }
   def favorite_games; end
 
-  sig { params(value: T.any(T::Array[::FavoriteGame], ::FavoriteGame::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::FavoriteGame]).void }
   def favorite_games=(value); end
 
   sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
   def followers; end
 
-  sig { params(value: T.any(T::Array[::User], ::User::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::User]).void }
   def followers=(value); end
 
   sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
   def following; end
 
-  sig { params(value: T.any(T::Array[::User], ::User::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::User]).void }
   def following=(value); end
 
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 
-  sig { params(value: T.any(T::Array[::GamePurchase], ::GamePurchase::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePurchase]).void }
   def game_purchases=(value); end
 
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
 
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
   sig { returns(::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy) }
   def oauth_applications; end
 
-  sig { params(value: T.any(T::Array[::Doorkeeper::Application], ::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Doorkeeper::Application]).void }
   def oauth_applications=(value); end
 
   sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
   def passive_relationships; end
 
-  sig { params(value: T.any(T::Array[::Relationship], ::Relationship::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Relationship]).void }
   def passive_relationships=(value); end
 
   sig { returns(::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy) }
   def wikidata_blocklists; end
 
-  sig { params(value: T.any(T::Array[::WikidataBlocklist], ::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::WikidataBlocklist]).void }
   def wikidata_blocklists=(value); end
 
   sig { returns(T.nilable(ActiveStorage::Attached::One)) }

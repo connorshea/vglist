@@ -1772,25 +1772,25 @@ module Doorkeeper::Application::GeneratedAssociationMethods
   sig { returns(::Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy) }
   def access_grants; end
 
-  sig { params(value: T.any(T::Array[::Doorkeeper::AccessGrant], ::Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Doorkeeper::AccessGrant]).void }
   def access_grants=(value); end
 
   sig { returns(::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy) }
   def access_tokens; end
 
-  sig { params(value: T.any(T::Array[::Doorkeeper::AccessToken], ::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Doorkeeper::AccessToken]).void }
   def access_tokens=(value); end
 
   sig { returns(::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy) }
   def authorized_applications; end
 
-  sig { params(value: T.any(T::Array[::Doorkeeper::Application], ::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Doorkeeper::Application]).void }
   def authorized_applications=(value); end
 
   sig { returns(::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy) }
   def authorized_tokens; end
 
-  sig { params(value: T.any(T::Array[::Doorkeeper::AccessToken], ::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Doorkeeper::AccessToken]).void }
   def authorized_tokens=(value); end
 
   sig { returns(T.nilable(T.untyped)) }

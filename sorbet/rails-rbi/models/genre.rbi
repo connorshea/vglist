@@ -1347,13 +1347,13 @@ module Genre::GeneratedAssociationMethods
   sig { returns(::GameGenre::ActiveRecord_Associations_CollectionProxy) }
   def game_genres; end
 
-  sig { params(value: T.any(T::Array[::GameGenre], ::GameGenre::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GameGenre]).void }
   def game_genres=(value); end
 
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
 
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
   sig { returns(T.nilable(::PgSearch::Document)) }

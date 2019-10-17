@@ -6991,46 +6991,6 @@ class Etc::Passwd
   def self.members(); end
 end
 
-module Etc
-  def self.confstr(_); end
-
-  def self.endgrent(); end
-
-  def self.endpwent(); end
-
-  def self.getgrent(); end
-
-  def self.getgrgid(*_); end
-
-  def self.getgrnam(_); end
-
-  def self.getlogin(); end
-
-  def self.getpwent(); end
-
-  def self.getpwnam(_); end
-
-  def self.getpwuid(*_); end
-
-  def self.group(); end
-
-  def self.nprocessors(); end
-
-  def self.passwd(); end
-
-  def self.setgrent(); end
-
-  def self.setpwent(); end
-
-  def self.sysconf(_); end
-
-  def self.sysconfdir(); end
-
-  def self.systmpdir(); end
-
-  def self.uname(); end
-end
-
 class Event::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Event::GeneratedRelationMethods
@@ -7779,13 +7739,13 @@ class File::Stat
 end
 
 class File
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -11984,6 +11944,8 @@ end
 class Mutations::AddGameToLibrary
   def load_comments(value); end
 
+  def load_completion_date(value); end
+
   def load_completion_status(value); end
 
   def load_game_id(value); end
@@ -11991,6 +11953,8 @@ class Mutations::AddGameToLibrary
   def load_hours_played(value); end
 
   def load_rating(value); end
+
+  def load_start_date(value); end
 end
 
 class Mutations::FavoriteGame
@@ -23655,10 +23619,6 @@ class RuboCop::Cop::Style::FormatString
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Style::FormatStringToken
-  FORMAT_STRING_METHODS = ::T.let(nil, ::T.untyped)
-end
-
 class RuboCop::Cop::Style::FrozenStringLiteralComment
   MSG = ::T.let(nil, ::T.untyped)
   MSG_UNNECESSARY = ::T.let(nil, ::T.untyped)
@@ -24357,6 +24317,7 @@ class RuboCop::Options
 end
 
 module RuboCop::OptionsHelp
+  FORMATTER_OPTION_LIST = ::T.let(nil, ::T.untyped)
   MAX_EXCL = ::T.let(nil, ::T.untyped)
   TEXT = ::T.let(nil, ::T.untyped)
 end
@@ -27761,17 +27722,11 @@ end
 
 class String
   include ::JSON::Ext::Generator::GeneratorMethods::String
-  def +@(); end
-
-  def -@(); end
-
   def []=(*_); end
 
   def casecmp?(_); end
 
   def each_grapheme_cluster(); end
-
-  def encode(*_); end
 
   def encode!(*_); end
 

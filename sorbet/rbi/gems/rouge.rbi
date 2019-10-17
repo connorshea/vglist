@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.11.1
+# rouge-3.12.0
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
   def self.reload!; end
@@ -527,7 +527,6 @@ class Rouge::Lexers::Prometheus < Rouge::RegexLexer
 end
 class Rouge::Lexers::Mason < Rouge::TemplateLexer
   def initialize(*arg0); end
-  def self.detect?(text); end
 end
 class Rouge::Lexers::EEX < Rouge::TemplateLexer
   def initialize(opts = nil); end
@@ -886,6 +885,12 @@ class Rouge::Lexers::Sed::Replacement < Rouge::RegexLexer
 end
 class Rouge::Lexers::Mosel < Rouge::RegexLexer
   def self.detect?(text); end
+end
+class Rouge::Lexers::MiniZinc < Rouge::RegexLexer
+  def self.builtins; end
+  def self.keywords; end
+  def self.keywords_type; end
+  def self.operators; end
 end
 class Rouge::Lexers::CMake < Rouge::RegexLexer
 end

@@ -1215,7 +1215,7 @@ module Series::GeneratedAssociationMethods
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
 
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
   sig { returns(T.nilable(::PgSearch::Document)) }
