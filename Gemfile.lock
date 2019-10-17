@@ -105,7 +105,7 @@ GEM
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
-    crass (1.0.4)
+    crass (1.0.5)
     database_cleaner (1.7.0)
     debug_inspector (0.0.3)
     devise (4.7.1)
