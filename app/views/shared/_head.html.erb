@@ -19,7 +19,7 @@
   <meta property="og:description" content="<%= meta_description(yield(:description)) %>">
   <meta property="og:url" content="<%= request.original_url %>">
   <% if yield(:opengraph_image).blank? %>
-    <meta property="og:image" content="/favicon-512.png">
+    <meta property="og:image" content="<%= image_url('favicon-high-res.png')%>">
   <% else %>
     <meta property="og:image" content="<%= yield(:opengraph_image) %>">
   <% end %>
