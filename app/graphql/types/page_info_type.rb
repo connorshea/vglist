@@ -5,6 +5,6 @@ class Types::PageInfoType < GraphQL::Types::Relay::PageInfo
   # TODO: Make this work properly (right now the nodes are only the nodes on
   # the current page, rather than all the nodes returned by the query)
   def total
-    object.nodes.size
+    T.cast(object, GraphQL::Pagination::ActiveRecordRelationConnection).nodes.size
   end
 end

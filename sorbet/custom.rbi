@@ -47,3 +47,10 @@ class Doorkeeper::AuthorizationsController < ApplicationController; end
 class Types::QueryType < Types::BaseObject
   extend GraphQL::Schema::Member::HasArguments
 end
+
+module Rails::Generators
+  class Base; end
+  class NamedBase; end
+end
+
+class PrometheusExporter::Server::TypeCollector; end
