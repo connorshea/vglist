@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 module Types
   class QueryType < Types::BaseObject
     field :game, GameType, null: true do
