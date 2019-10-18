@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.7
+# sorbet-rails-0.5.8
 module SorbetRails
   def self.config(&blk); end
   def self.configure(*args, &blk); end
@@ -106,6 +106,7 @@ class SorbetRails::ModelPlugins::ActiveRecordAttribute < SorbetRails::ModelPlugi
 end
 class SorbetRails::ModelPlugins::ActiveRecordAssoc < SorbetRails::ModelPlugins::Base
   def assoc_should_be_untyped?(*args, &blk); end
+  def belongs_to_and_required?(*args, &blk); end
   def generate(*args, &blk); end
   def initialize(*args, &blk); end
   def polymorphic_assoc?(*args, &blk); end

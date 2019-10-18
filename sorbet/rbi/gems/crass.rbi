@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/crass/all/crass.rbi
 #
-# crass-1.0.4
+# crass-1.0.5
 module Crass
   def self.parse(input, options = nil); end
   def self.parse_properties(input, options = nil); end

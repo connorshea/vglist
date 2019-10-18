@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop/all/rubocop.rbi
 #
-# rubocop-0.75.0
+# rubocop-0.75.1
 module RuboCop
 end
 module RuboCop::Version
@@ -2600,9 +2600,10 @@ class RuboCop::Cop::Layout::EmptyLineAfterGuardClause < RuboCop::Cop::Cop
   def autocorrect(node); end
   def contains_guard_clause?(node); end
   def correct_style?(node); end
+  def heredoc?(node); end
   def heredoc_line(node, heredoc_node); end
-  def last_argument(node); end
   def last_argument_is_heredoc?(node); end
+  def last_heredoc_argument(node); end
   def next_line_empty?(line); end
   def next_line_rescue_or_ensure?(node); end
   def next_sibling_empty_or_guard_clause?(node); end
@@ -4922,12 +4923,10 @@ class RuboCop::Cop::Style::FormatString < RuboCop::Cop::Cop
   include RuboCop::Cop::ConfigurableEnforcedStyle
 end
 class RuboCop::Cop::Style::FormatStringToken < RuboCop::Cop::Cop
-  def includes_format_methods?(node); end
+  def format_string_in_typical_context?(node = nil); end
   def message(detected_style); end
   def message_text(style); end
   def on_str(node); end
-  def placeholder_argument?(node); end
-  def slice_source(source_range, new_begin, new_end); end
   def str_contents(source_map); end
   def token_ranges(contents); end
   def tokens(str_node, &block); end
@@ -5842,13 +5841,14 @@ class RuboCop::Cop::Style::SafeNavigation < RuboCop::Cop::Cop
   def begin_range(node, method_call); end
   def chain_size(method_chain, method); end
   def check_node(node); end
+  def comments(node); end
   def end_range(node, method_call); end
   def extract_common_parts(method_chain, checked_variable); end
   def extract_parts(node); end
   def extract_parts_from_and(node); end
   def extract_parts_from_if(node); end
   def find_matching_receiver_invocation(method_chain, checked_variable); end
-  def handle_comments(corrector, method_call); end
+  def handle_comments(corrector, node, method_call); end
   def method_called?(send_node); end
   def modifier_if_safe_navigation_candidate(node = nil); end
   def negated?(send_node); end
@@ -6461,6 +6461,7 @@ class RuboCop::Formatter::DisabledLinesFormatter < RuboCop::Formatter::BaseForma
 end
 class RuboCop::Formatter::EmacsStyleFormatter < RuboCop::Formatter::BaseFormatter
   def file_finished(file, offenses); end
+  def message(offense); end
 end
 class RuboCop::Formatter::FileListFormatter < RuboCop::Formatter::BaseFormatter
   def file_finished(file, offenses); end

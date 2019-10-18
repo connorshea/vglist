@@ -1293,13 +1293,13 @@ module Engine::GeneratedAssociationMethods
   sig { returns(::GameEngine::ActiveRecord_Associations_CollectionProxy) }
   def game_engines; end
 
-  sig { params(value: T.any(T::Array[::GameEngine], ::GameEngine::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GameEngine]).void }
   def game_engines=(value); end
 
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
 
-  sig { params(value: T.any(T::Array[::Game], ::Game::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
   sig { returns(T.nilable(::PgSearch::Document)) }

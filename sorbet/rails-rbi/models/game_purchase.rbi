@@ -1918,7 +1918,7 @@ module GamePurchase::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
-  sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Event]).void }
   def events=(value); end
 
   sig { returns(::Game) }
@@ -1930,13 +1930,13 @@ module GamePurchase::GeneratedAssociationMethods
   sig { returns(::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_platforms; end
 
-  sig { params(value: T.any(T::Array[::GamePurchasePlatform], ::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::GamePurchasePlatform]).void }
   def game_purchase_platforms=(value); end
 
   sig { returns(::Platform::ActiveRecord_Associations_CollectionProxy) }
   def platforms; end
 
-  sig { params(value: T.any(T::Array[::Platform], ::Platform::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Platform]).void }
   def platforms=(value); end
 
   sig { returns(::User) }

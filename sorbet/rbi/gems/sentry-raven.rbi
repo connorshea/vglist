@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sentry-raven/all/sentry-raven.rbi
 #
-# sentry-raven-2.11.3
+# sentry-raven-2.12.0
 module Raven
   def self.annotate(*args, &block); end
   def self.annotateException(*args, &block); end
@@ -294,6 +294,7 @@ class Raven::Client
   def failed_send(e, event); end
   def generate_auth_header; end
   def get_log_message(event); end
+  def get_message_from_exception(event); end
   def initialize(configuration); end
   def send_event(event, hint = nil); end
   def successful_send; end

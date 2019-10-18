@@ -1220,7 +1220,7 @@ module FavoriteGame::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
-  sig { params(value: T.any(T::Array[::Event], ::Event::ActiveRecord_Associations_CollectionProxy)).void }
+  sig { params(value: T::Enumerable[::Event]).void }
   def events=(value); end
 
   sig { returns(::Game) }
