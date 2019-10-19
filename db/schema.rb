@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_25_024449) do
+ActiveRecord::Schema.define(version: 2019_10_19_022324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -283,6 +283,15 @@ ActiveRecord::Schema.define(version: 2019_09_25_024449) do
     t.index ["wikidata_id"], name: "index_series_on_wikidata_id", unique: true
   end
 
+  create_table "steam_app_ids", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.integer "app_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["app_id"], name: "index_steam_app_ids_on_app_id", unique: true
+    t.index ["game_id"], name: "index_steam_app_ids_on_game_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -346,5 +355,6 @@ ActiveRecord::Schema.define(version: 2019_09_25_024449) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "relationships", "users", column: "followed_id"
   add_foreign_key "relationships", "users", column: "follower_id"
+  add_foreign_key "steam_app_ids", "games"
   add_foreign_key "wikidata_blocklists", "users"
 end

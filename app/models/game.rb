@@ -20,6 +20,9 @@ class Game < ApplicationRecord
   has_many :game_engines
   has_many :engines, through: :game_engines, source: :engine
 
+  has_many :steam_app_ids, dependent: :destroy
+  accepts_nested_attributes_for :steam_app_ids, allow_destroy: true
+
   has_many :favorites,
     foreign_key: 'game_id',
     class_name: 'FavoriteGame',
@@ -87,15 +90,6 @@ class Game < ApplicationRecord
     format: /\A[^<>\[\]#\s\\|]+\z/,
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
-
-  validates :steam_app_id,
-    uniqueness: true,
-    allow_nil: true,
-    numericality: {
-      only_integer: true,
-      allow_nil: true,
-      greater_than: 0
-    }
 
   validates :mobygames_id,
     uniqueness: true,

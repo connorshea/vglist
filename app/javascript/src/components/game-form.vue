@@ -81,9 +81,9 @@
 
     <number-field
       :form-class="formData.class"
-      :attribute="formData.steamAppId.attribute"
-      :label="formData.steamAppId.label"
-      v-model="game.steamAppId"
+      :attribute="formData.steamAppIds.attribute"
+      :label="formData.steamAppIds.label"
+      v-model="game.steamAppIds"
     ></number-field>
 
     <text-field
@@ -190,9 +190,12 @@ export default {
         return { name: '' };
       }
     },
-    steamAppId: {
-      type: Number,
-      required: false
+    steamAppIds: {
+      type: Array,
+      required: false,
+      default: function() {
+        return [];
+      }
     },
     wikidataId: {
       type: Number,
@@ -240,7 +243,7 @@ export default {
         publishers: this.$props.publishers,
         platforms: this.$props.platforms,
         series: this.$props.series,
-        steamAppId: this.$props.steamAppId,
+        steamAppIds: this.$props.steamAppIds,
         wikidataId: this.$props.wikidataId,
         pcgamingwikiId: this.$props.pcgamingwikiId,
         mobygamesId: this.$props.mobygamesId,
@@ -282,9 +285,9 @@ export default {
         series: {
           label: 'Series'
         },
-        steamAppId: {
-          label: 'Steam Application ID',
-          attribute: 'steam_app_id'
+        steamAppIds: {
+          label: 'Steam Application IDs',
+          attribute: 'steam_app_ids'
         },
         wikidataId: {
           label: 'Wikidata ID',
@@ -350,7 +353,7 @@ export default {
           developer_ids: developerIds,
           publisher_ids: publisherIds,
           platform_ids: platformIds,
-          steam_app_id: this.game.steamAppId,
+          steam_app_ids: this.game.steamAppIds,
           wikidata_id: this.game.wikidataId,
           pcgamingwiki_id: this.game.pcgamingwikiId,
           mobygames_id: this.game.mobygamesId

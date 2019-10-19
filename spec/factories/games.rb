@@ -42,7 +42,7 @@ FactoryBot.define do
     end
 
     trait :steam_app_id do
-      steam_app_id { Faker::Number.number(digits: 5) }
+      after(:create) { |game| create(:steam_app_id, game: game) }
     end
 
     trait :pcgamingwiki_id do

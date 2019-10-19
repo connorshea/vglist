@@ -47,14 +47,6 @@ RSpec.describe Game, type: :model do
       ).for(:pcgamingwiki_id)
     end
 
-    it { should validate_uniqueness_of(:steam_app_id).allow_nil }
-    it 'validates numericality of steam_app_id' do
-      expect(game).to validate_numericality_of(:steam_app_id)
-        .only_integer
-        .allow_nil
-        .is_greater_than(0)
-    end
-
     it { should validate_uniqueness_of(:mobygames_id).allow_nil }
     it { should validate_length_of(:mobygames_id).is_at_most(300) }
 
@@ -108,12 +100,13 @@ RSpec.describe Game, type: :model do
     it { should have_many(:game_engines) }
     it { should have_many(:engines).through(:game_engines).source(:engine) }
 
+    it { should have_many(:steam_app_ids) }
+
     it { should belong_to(:series).optional }
   end
 
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
-    it { should have_db_index(:steam_app_id).unique }
   end
 
   describe 'Scopes' do

@@ -1167,6 +1167,84 @@ class Game < ApplicationRecord
   def validate_associated_records_for_engines(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_steam_app_ids=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_steam_app_ids=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_steam_app_ids=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_steam_app_ids=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_steam_app_ids=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_steam_app_ids=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_steam_app_ids=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_steam_app_ids; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_steam_app_ids?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_steam_app_ids=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_steam_app_ids(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_steam_app_ids(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_favorites; end
 
   sig { returns(T.untyped) }
@@ -2928,6 +3006,12 @@ module Game::GeneratedAssociationMethods
   sig { params(value: T.nilable(::Series)).void }
   def series=(value); end
 
+  sig { returns(::SteamAppId::ActiveRecord_Associations_CollectionProxy) }
+  def steam_app_ids; end
+
+  sig { params(value: T::Enumerable[::SteamAppId]).void }
+  def steam_app_ids=(value); end
+
   sig { returns(T.nilable(ActiveStorage::Attached::One)) }
   def cover; end
 
@@ -3005,6 +3089,12 @@ module Game::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def engine_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def steam_app_id_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def steam_app_id_ids=(ids); end
 
   sig { returns(T.untyped) }
   def favorite_ids; end

@@ -74,8 +74,8 @@
       <% unless game.pcgamingwiki_id.blank? %>
         <li><%= link_to 'PCGamingWiki', "https://pcgamingwiki.com/wiki/#{game.pcgamingwiki_id}" %>
       <% end %>
-      <% unless game.steam_app_id.blank? %>
-        <li><%= link_to 'Steam', "https://store.steampowered.com/app/#{game.steam_app_id}" %>
+      <% unless game.steam_app_ids.empty? %>
+        <li><%= link_to 'Steam', "https://store.steampowered.com/app/#{game.steam_app_ids.first.app_id}" %>
       <% end %>
       <% unless game.mobygames_id.blank? %>
         <li><%= link_to 'MobyGames', "https://www.mobygames.com/game/#{game.mobygames_id}" %>
