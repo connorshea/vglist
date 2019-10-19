@@ -79,12 +79,13 @@
       v-model="game.wikidataId"
     ></number-field>
 
-    <number-field
+    <multi-select-generic
       :form-class="formData.class"
-      :attribute="formData.steamAppId.attribute"
-      :label="formData.steamAppId.label"
-      v-model="game.steamAppId"
-    ></number-field>
+      :attribute="formData.steamAppIds.attribute"
+      :label="formData.steamAppIds.label"
+      :v-select-label="'app_id'"
+      v-model="game.steamAppIds"
+    ></multi-select-generic>
 
     <text-field
       :form-class="formData.class"
@@ -116,11 +117,13 @@ import TextField from './fields/text-field.vue';
 import SingleSelect from './fields/single-select.vue';
 import NumberField from './fields/number-field.vue';
 import MultiSelect from './fields/multi-select.vue';
+import MultiSelectGeneric from './fields/multi-select-generic.vue';
 import FileSelect from './fields/file-select.vue';
 import DateField from './fields/date-field.vue';
 import Rails from '@rails/ujs';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
+import * as _ from 'lodash';
 
 export default {
   name: 'game-form',
@@ -130,6 +133,7 @@ export default {
     NumberField,
     SingleSelect,
     MultiSelect,
+    MultiSelectGeneric,
     FileSelect,
     DateField
   },
@@ -190,9 +194,12 @@ export default {
         return { name: '' };
       }
     },
-    steamAppId: {
-      type: Number,
-      required: false
+    steamAppIds: {
+      type: Array,
+      required: false,
+      default: function() {
+        return [];
+      }
     },
     wikidataId: {
       type: Number,
@@ -240,7 +247,7 @@ export default {
         publishers: this.$props.publishers,
         platforms: this.$props.platforms,
         series: this.$props.series,
-        steamAppId: this.$props.steamAppId,
+        steamAppIds: this.$props.steamAppIds,
         wikidataId: this.$props.wikidataId,
         pcgamingwikiId: this.$props.pcgamingwikiId,
         mobygamesId: this.$props.mobygamesId,
@@ -282,9 +289,9 @@ export default {
         series: {
           label: 'Series'
         },
-        steamAppId: {
-          label: 'Steam Application ID',
-          attribute: 'steam_app_id'
+        steamAppIds: {
+          label: 'Steam Application IDs',
+          attribute: 'steam_app_ids'
         },
         wikidataId: {
           label: 'Wikidata ID',
@@ -340,6 +347,24 @@ export default {
         (platform: { id: String }) => platform.id
       );
 
+      let steamAppIds = [];
+      let difference = _.difference(
+        this.$props.steamAppIds,
+        this.game.steamAppIds
+      );
+      // These can be either the steamAppId itself or the full record with ID and everything.
+      // If its just been added to the select, it's an integer.
+      this.game.steamAppIds.forEach((steamAppIdRecordOrInteger) => {
+        if (steamAppIdRecordOrInteger.id !== undefined) {
+          steamAppIds.push({ id: steamAppIdRecordOrInteger.id, app_id: steamAppIdRecordOrInteger.app_id });
+        } else {
+          steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
+        }
+      });
+      difference.forEach((appId) => {
+        steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
+      });
+
       let submittableData = {
         game: {
           name: this.game.name,
@@ -350,7 +375,7 @@ export default {
           developer_ids: developerIds,
           publisher_ids: publisherIds,
           platform_ids: platformIds,
-          steam_app_id: this.game.steamAppId,
+          steam_app_ids_attributes: steamAppIds,
           wikidata_id: this.game.wikidataId,
           pcgamingwiki_id: this.game.pcgamingwikiId,
           mobygames_id: this.game.mobygamesId

@@ -97,13 +97,14 @@ class UsersController < ApplicationController
     matched_games_count = 0
 
     steam_games&.each do |steam_game|
-      game = Game.find_by(steam_app_id: steam_game['appid'])
-      # Convert playtime from minutes to hours, rounded to one decimal place.
-      hours_played = (steam_game['playtime_forever'].to_f / 60).round(1)
-      if game.nil?
+      steam_app_id_record = SteamAppId.find_by(app_id: steam_game['appid'])
+      if steam_app_id_record.nil?
         unmatched_games << steam_game
         next
       end
+      game = steam_app_id_record.game
+      # Convert playtime from minutes to hours, rounded to one decimal place.
+      hours_played = (steam_game['playtime_forever'].to_f / 60).round(1)
 
       # Find by game id and user id, add hours played if it gets created.
       GamePurchase.create_with(hours_played: hours_played).find_or_create_by(

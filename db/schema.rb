@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_25_024449) do
+ActiveRecord::Schema.define(version: 2019_10_19_224617) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -184,12 +183,10 @@ ActiveRecord::Schema.define(version: 2019_09_25_024449) do
     t.bigint "series_id"
     t.bigint "wikidata_id"
     t.text "pcgamingwiki_id"
-    t.integer "steam_app_id"
     t.text "mobygames_id"
     t.date "release_date"
     t.index ["mobygames_id"], name: "index_games_on_mobygames_id", unique: true
     t.index ["series_id"], name: "index_games_on_series_id"
-    t.index ["steam_app_id"], name: "index_games_on_steam_app_id", unique: true
     t.index ["wikidata_id"], name: "index_games_on_wikidata_id", unique: true
   end
 
@@ -283,6 +280,13 @@ ActiveRecord::Schema.define(version: 2019_09_25_024449) do
     t.index ["wikidata_id"], name: "index_series_on_wikidata_id", unique: true
   end
 
+  create_table "steam_app_ids", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.integer "app_id", null: false
+    t.index ["app_id"], name: "index_steam_app_ids_on_app_id", unique: true
+    t.index ["game_id"], name: "index_steam_app_ids_on_game_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -346,5 +350,6 @@ ActiveRecord::Schema.define(version: 2019_09_25_024449) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "relationships", "users", column: "followed_id"
   add_foreign_key "relationships", "users", column: "follower_id"
+  add_foreign_key "steam_app_ids", "games"
   add_foreign_key "wikidata_blocklists", "users"
 end

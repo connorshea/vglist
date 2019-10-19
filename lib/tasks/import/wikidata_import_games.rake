@@ -114,7 +114,6 @@ namespace 'import:wikidata' do
         }
 
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
-        hash[:steam_app_id] = steam_app_id unless steam_app_id.nil?
         hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
         hash[:release_date] = release_date unless release_date.nil?
 
@@ -131,6 +130,14 @@ namespace 'import:wikidata' do
           next if key == :name || key == :wikidata_id || game_hash[key].nil? || game_hash[key] == []
 
           keys << key
+        end
+
+        unless steam_app_id.nil?
+          puts 'Adding Steam App ID.' if ENV['DEBUG']
+          SteamAppId.create(
+            game_id: game.id,
+            app_id: steam_app_id
+          )
         end
 
         if keys.include?(:developers)

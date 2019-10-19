@@ -68,7 +68,7 @@ class GamesController < ApplicationController
 
     # Allow the name and Steam App ID to be passed from the URL params, for prefilling the form.
     @name = params[:name]
-    @steam_app_id = params[:steam_app_id]
+    @steam_app_ids = params[:steam_app_id].nil? ? nil : [params[:steam_app_id]]
   end
 
   def edit
@@ -242,10 +242,15 @@ class GamesController < ApplicationController
       :cover,
       :wikidata_id,
       :pcgamingwiki_id,
-      :steam_app_id,
       :mobygames_id,
       :series_id,
       :release_date,
+      steam_app_ids_attributes: [
+        :id,
+        :app_id,
+        # Allow _destroy because that's how Rails knows to delete a nested record.
+        :_destroy
+      ],
       genre_ids: [],
       engine_ids: [],
       developer_ids: [],
