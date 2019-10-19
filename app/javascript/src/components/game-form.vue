@@ -79,12 +79,12 @@
       v-model="game.wikidataId"
     ></number-field>
 
-    <number-field
+    <multi-select-generic
       :form-class="formData.class"
       :attribute="formData.steamAppIds.attribute"
       :label="formData.steamAppIds.label"
       v-model="game.steamAppIds"
-    ></number-field>
+    ></multi-select-generic>
 
     <text-field
       :form-class="formData.class"
@@ -116,6 +116,7 @@ import TextField from './fields/text-field.vue';
 import SingleSelect from './fields/single-select.vue';
 import NumberField from './fields/number-field.vue';
 import MultiSelect from './fields/multi-select.vue';
+import MultiSelectGeneric from './fields/multi-select-generic.vue';
 import FileSelect from './fields/file-select.vue';
 import DateField from './fields/date-field.vue';
 import Rails from '@rails/ujs';
@@ -130,6 +131,7 @@ export default {
     NumberField,
     SingleSelect,
     MultiSelect,
+    MultiSelectGeneric,
     FileSelect,
     DateField
   },
@@ -343,6 +345,11 @@ export default {
         (platform: { id: String }) => platform.id
       );
 
+      let steamAppIds = [];
+      this.game.steamAppIds.forEach((appId) => {
+        steamAppIds.push({ app_id: appId });
+      });
+
       let submittableData = {
         game: {
           name: this.game.name,
@@ -353,7 +360,7 @@ export default {
           developer_ids: developerIds,
           publisher_ids: publisherIds,
           platform_ids: platformIds,
-          steam_app_ids: this.game.steamAppIds,
+          steam_app_ids_attributes: steamAppIds,
           wikidata_id: this.game.wikidataId,
           pcgamingwiki_id: this.game.pcgamingwikiId,
           mobygames_id: this.game.mobygamesId
