@@ -114,7 +114,7 @@ namespace 'import:wikidata' do
         }
 
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
-        hash[:steam_app_id] = steam_app_id unless steam_app_id.nil?
+        hash[:steam_app_ids] = { app_id: steam_app_id } unless steam_app_id.nil?
         hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
         hash[:release_date] = release_date unless release_date.nil?
 

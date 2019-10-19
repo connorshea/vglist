@@ -4,5 +4,5 @@ json.extract! game,
   :description,
   :pcgamingwiki_id,
   :series_id,
-  :steam_app_id,
+  :steam_app_ids,
   :wikidata_id
