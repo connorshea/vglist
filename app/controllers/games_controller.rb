@@ -68,7 +68,7 @@ class GamesController < ApplicationController
 
     # Allow the name and Steam App ID to be passed from the URL params, for prefilling the form.
     @name = params[:name]
-    @steam_app_id = params[:steam_app_id]
+    @steam_app_ids = params[:steam_app_id].nil? ? nil : [params[:steam_app_id]]
   end
 
   def edit
