@@ -83,6 +83,7 @@
       :form-class="formData.class"
       :attribute="formData.steamAppIds.attribute"
       :label="formData.steamAppIds.label"
+      :v-select-label="'app_id'"
       v-model="game.steamAppIds"
     ></multi-select-generic>
 
@@ -122,6 +123,7 @@ import DateField from './fields/date-field.vue';
 import Rails from '@rails/ujs';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
+import * as _ from 'lodash';
 
 export default {
   name: 'game-form',
@@ -346,8 +348,21 @@ export default {
       );
 
       let steamAppIds = [];
-      this.game.steamAppIds.forEach((appId) => {
-        steamAppIds.push({ app_id: appId });
+      let difference = _.difference(
+        this.$props.steamAppIds,
+        this.game.steamAppIds
+      );
+      // These can be either the steamAppId itself or the full record with ID and everything.
+      // If its just been added to the select, it's an integer.
+      this.game.steamAppIds.forEach((steamAppIdRecordOrInteger) => {
+        if (steamAppIdRecordOrInteger.id !== undefined) {
+          steamAppIds.push({ id: steamAppIdRecordOrInteger.id, app_id: steamAppIdRecordOrInteger.app_id });
+        } else {
+          steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
+        }
+      });
+      difference.forEach((appId) => {
+        steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
       });
 
       let submittableData = {

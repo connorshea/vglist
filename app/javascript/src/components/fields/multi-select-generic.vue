@@ -6,7 +6,7 @@
         multiple
         :taggable="true"
         :inputId="inputId"
-        label="name"
+        :label="vSelectLabel"
         @change="onChange"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
@@ -33,6 +33,11 @@ export default {
     value: {
       type: Array,
       required: true
+    },
+    vSelectLabel: {
+      type: String,
+      required: false,
+      default: "name"
     }
   },
   data: function() {

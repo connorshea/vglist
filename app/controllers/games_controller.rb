@@ -245,7 +245,12 @@ class GamesController < ApplicationController
       :mobygames_id,
       :series_id,
       :release_date,
-      steam_app_ids_attributes: [:app_id],
+      steam_app_ids_attributes: [
+        :id,
+        :app_id,
+        # Allow _destroy because that's how Rails knows to delete a nested record.
+        :_destroy
+      ],
       genre_ids: [],
       engine_ids: [],
       developer_ids: [],
