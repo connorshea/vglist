@@ -796,15 +796,6 @@ module SteamAppId::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def app_id?; end
 
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def created_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
   sig { returns(Integer) }
   def game_id; end
 
@@ -822,15 +813,6 @@ module SteamAppId::GeneratedAttributeMethods
 
   sig { returns(T::Boolean) }
   def id?; end
-
-  sig { returns(ActiveSupport::TimeWithZone) }
-  def updated_at; end
-
-  sig { params(value: T.any(DateTime, Date, Time, ActiveSupport::TimeWithZone)).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def saved_change_to_id?(*args); end
@@ -966,96 +948,6 @@ module SteamAppId::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def app_id_came_from_user?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_created_at?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_created_at(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def will_save_change_to_created_at?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_was(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_created_at!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def created_at_came_from_user?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_updated_at?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_updated_at(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def will_save_change_to_updated_at?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_was(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_updated_at!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def updated_at_came_from_user?(*args); end
 end
 
 module SteamAppId::GeneratedAssociationMethods
