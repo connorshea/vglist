@@ -1,5 +1,15 @@
 <template>
   <div class="avatar-form">
+    <!-- Display errors if there are any. -->
+    <div class="notification errors-notification is-danger" v-if="errors.length > 0">
+      <p>
+        {{ errors.length > 1 ? 'Errors' : 'An error' }} prevented your avatar from
+        being saved:
+      </p>
+      <ul>
+        <li v-for="error in errors" :key="error">{{ error }}</li>
+      </ul>
+    </div>
     <div class="field">
       <label class="label">Avatar</label>
       <!-- A dumb hack to display the user's current avatar if it exists. -->
@@ -10,7 +20,7 @@
     </div>
     <div class="field">
       <button
-        class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile"
+        class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile js-submit-button"
         value="Submit"
         @click.prevent="onSubmit"
         :disabled="!hasSelectedFile"
@@ -67,7 +77,8 @@ export default {
       avatar: null,
       avatarBlob: null,
       existingAvatar: null,
-      hasSelectedFile: false
+      hasSelectedFile: false,
+      errors: []
     };
   },
   created: function() {
@@ -124,6 +135,11 @@ export default {
         })
         .catch(errors => {
           this.errors = errors;
+          let submitButton = document.querySelector('.js-submit-button');
+          submitButton.classList.add('js-submit-button-error');
+          setTimeout(() => {
+            submitButton.classList.remove('js-submit-button-error');
+          }, 2000);
         });
     },
     onDelete() {
