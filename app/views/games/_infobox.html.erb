@@ -65,7 +65,7 @@
     </ul>
   <% end %>
 
-  <% unless [game.wikidata_id, game.pcgamingwiki_id, game.steam_app_id, game.mobygames_id].all?(&:blank?) %>
+  <% unless [game.wikidata_id, game.pcgamingwiki_id, game.steam_app_ids, game.mobygames_id].all?(&:blank?) %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
       <% unless game.wikidata_id.blank? %>
@@ -74,8 +74,10 @@
       <% unless game.pcgamingwiki_id.blank? %>
         <li><%= link_to 'PCGamingWiki', "https://pcgamingwiki.com/wiki/#{game.pcgamingwiki_id}" %>
       <% end %>
-      <% unless game.steam_app_ids.empty? %>
-        <li><%= link_to 'Steam', "https://store.steampowered.com/app/#{game.steam_app_ids.first.app_id}" %>
+      <% unless game.steam_app_ids.blank? %>
+        <% game.steam_app_ids.each_with_index do |steam_app_id, index| %>
+          <li><%= link_to "#{index == 0 ? 'Steam' : 'Steam (alt)'}", "https://store.steampowered.com/app/#{steam_app_id.app_id}" %>
+        <% end %>
       <% end %>
       <% unless game.mobygames_id.blank? %>
         <li><%= link_to 'MobyGames', "https://www.mobygames.com/game/#{game.mobygames_id}" %>
