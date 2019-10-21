@@ -314,7 +314,7 @@ GEM
     simplecov-html (0.10.2)
     sorbet (0.4.4886)
       sorbet-static (= 0.4.4886)
-    sorbet-rails (0.5.8)
+    sorbet-rails (0.5.8.1)
       parlour (~> 0.8.0)
     sorbet-runtime (0.4.4886)
     sorbet-static (0.4.4886-universal-darwin-14)
