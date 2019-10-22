@@ -6,7 +6,7 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "4.0.7",
     "@sentry/browser": "5.7.1",
-    "@types/node": "^12.7.12",
+    "@types/node": "^12.11.2",
     "bulma": "^0.7.5",
     "fork-ts-checker-webpack-plugin": "^1.5.1",
     "lodash": "^4.17.15",
