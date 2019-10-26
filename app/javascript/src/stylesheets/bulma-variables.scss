@@ -29,3 +29,15 @@ $input-focus-box-shadow-size: 0;
 // Fix Bulma's usage of css variables causing postcss to spam warnings.
 // https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
 $variable-columns: false;
+
+$control-height: 2.25em;
+$control-padding-vertical: calc(0.375em - 1px);
+$control-padding-horizontal: calc(0.625em - 1px);
+$button-padding-vertical: calc(0.375em - 1px);
+$button-padding-horizontal: 0.75em;
+
+// Revert to the old, better shadow style from Bulma pre-0.8.0.
+$panel-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+$box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+$card-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+$dropdown-content-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
