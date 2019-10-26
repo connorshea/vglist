@@ -108,7 +108,8 @@ class User < ApplicationRecord
   T.unsafe(self).validates :avatar,
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
-    size: { less_than: 3.megabytes }
+    size: { less_than: 3.megabytes },
+    aspect_ratio: :square
 
   private
 
