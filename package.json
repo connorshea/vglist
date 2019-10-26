@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "prettier": "1.18.2",
-    "webpack-dev-server": "^3.8"
+    "webpack-dev-server": "^3.9"
   },
   "scripts": {
     "prettier": "prettier --write './app/javascript/**/*.{js,vue,scss}'"
