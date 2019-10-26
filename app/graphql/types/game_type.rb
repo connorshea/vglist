@@ -10,7 +10,7 @@ module Types
     field :wikidata_id, Integer, null: true, description: "Identifier in Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier on PCGamingWiki."
     field :mobygames_id, String, null: true, description: "Identifier in the MobyGames database."
-    # TODO: Add a field for steam_app_id when the Steam App IDs are split into their own separate model.
+    field :steam_app_ids, [Integer], null: true, description: "Identifier for Steam games. Games can have more than one Steam App ID, but most will only have one."
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was last updated."
 
@@ -33,6 +33,12 @@ module Types
       return if attachment.nil?
 
       Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true)
+    end
+
+    # Get the Steam App ID values as an array.
+    sig { returns(T::Array[Integer]) }
+    def steam_app_ids
+      @object.steam_app_ids.map { |app_id_record| app_id_record.app_id }
     end
   end
 end
