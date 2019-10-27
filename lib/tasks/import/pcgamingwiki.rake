@@ -84,7 +84,7 @@ namespace :import do
     games.each do |game|
       progress_bar.log ""
       progress_bar.log "Adding cover for #{game[:name]}."
-      api_url = "https://pcgamingwiki.com/w/api.php?action=askargs&conditions=#{game[:pcgamingwiki_id].gsub('&', '%26')}&printouts=Cover&format=json"
+      api_url = "https://www.pcgamingwiki.com/w/api.php?action=askargs&conditions=#{game[:pcgamingwiki_id].gsub('&', '%26')}&printouts=Cover&format=json"
 
       begin
         api_url = URI.parse(api_url)
