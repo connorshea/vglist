@@ -16,7 +16,10 @@ class AdminController < ApplicationController
       genres: Genre.count,
       events: Event.count,
       game_purchases: GamePurchase.count,
-      relationships: Relationship.count
+      relationships: Relationship.count,
+      games_with_mobygames: Game.where.not(mobygames_id: nil),
+      games_with_pcgamingwiki: Game.where.not(pcgamingwiki_id: nil),
+      games_with_covers: Game.joins(:cover_attachment).count
     }
   end
 
