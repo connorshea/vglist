@@ -6486,24 +6486,3 @@ class ActiveRecord::Associations::AliasTracker
   def self.initial_count_for(connection, name, table_joins); end
   def truncate(name); end
 end
-module ActiveRecord::Associations::ThroughAssociation
-  def build_record(attributes); end
-  def construct_join_attributes(*records); end
-  def ensure_mutable; end
-  def ensure_not_nested; end
-  def foreign_key_present?; end
-  def source_reflection(*args, &block); end
-  def stale_state; end
-  def target_scope; end
-  def through_association; end
-  def through_reflection; end
-end
-class ActiveRecord::Associations::HasOneThroughAssociation < ActiveRecord::Associations::HasOneAssociation
-  def create_through_record(record, save); end
-  def replace(record, save = nil); end
-  include ActiveRecord::Associations::ThroughAssociation
-end
-class ActiveRecord::Coders::JSON
-  def self.dump(obj); end
-  def self.load(json); end
-end

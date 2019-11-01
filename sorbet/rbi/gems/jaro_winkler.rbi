@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/jaro_winkler/all/jaro_winkler.rbi
 #
-# jaro_winkler-1.5.3
+# jaro_winkler-1.5.4
 module JaroWinkler
   def self.distance(*arg0); end
   def self.jaro_distance(*arg0); end
