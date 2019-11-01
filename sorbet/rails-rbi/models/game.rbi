@@ -2378,15 +2378,6 @@ module Game::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def series_id?; end
 
-  sig { returns(T.nilable(Integer)) }
-  def steam_app_id; end
-
-  sig { params(value: T.nilable(Integer)).void }
-  def steam_app_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def steam_app_id?; end
-
   sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
@@ -2764,51 +2755,6 @@ module Game::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def pcgamingwiki_id_came_from_user?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_steam_app_id?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_steam_app_id(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def will_save_change_to_steam_app_id?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_was(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_steam_app_id!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def steam_app_id_came_from_user?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def saved_change_to_mobygames_id?(*args); end

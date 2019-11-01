@@ -7,15 +7,17 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sprockets/all/sprockets.rbi
 #
-# sprockets-3.7.2
+# sprockets-4.0.0
 module Sprockets
   extend Sprockets::Configuration
   extend Sprockets::ProcessorUtils
 end
 module Sprockets::DigestUtils
+  def build_digest(obj); end
   def detect_digest_class(bytes); end
   def digest(obj); end
   def digest_class; end
+  def hexdigest(obj); end
   def hexdigest_integrity_uri(hexdigest); end
   def integrity_uri(digest); end
   def pack_base64digest(bin); end
@@ -25,6 +27,7 @@ module Sprockets::DigestUtils
   extend Sprockets::DigestUtils
 end
 class Sprockets::Cache
+  def clear(options = nil); end
   def expand_key(key); end
   def fetch(key); end
   def get(key, local = nil); end
@@ -35,7 +38,7 @@ class Sprockets::Cache
   def self.default_logger; end
   def set(key, value, local = nil); end
 end
-class Anonymous_Struct_20 < Struct
+class Anonymous_Struct_19 < Struct
   def cache; end
   def cache=(_); end
   def self.[](*arg0); end
@@ -43,17 +46,20 @@ class Anonymous_Struct_20 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Sprockets::Cache::Wrapper < Anonymous_Struct_20
+class Sprockets::Cache::Wrapper < Anonymous_Struct_19
 end
 class Sprockets::Cache::GetWrapper < Sprockets::Cache::Wrapper
+  def clear(options = nil); end
   def get(key); end
   def set(key, value); end
 end
 class Sprockets::Cache::HashWrapper < Sprockets::Cache::Wrapper
+  def clear(options = nil); end
   def get(key); end
   def set(key, value); end
 end
 class Sprockets::Cache::ReadWriteWrapper < Sprockets::Cache::Wrapper
+  def clear(options = nil); end
   def get(key); end
   def set(key, value); end
 end
@@ -63,28 +69,24 @@ class Sprockets::Asset
   def bytesize; end
   def charset; end
   def content_type; end
-  def dependencies; end
   def digest; end
   def digest_path; end
   def each; end
   def eql?(other); end
   def etag; end
   def filename; end
+  def full_digest_path; end
   def hash; end
   def hexdigest; end
   def id; end
-  def included; end
-  def initialize(environment, attributes = nil); end
+  def initialize(attributes = nil); end
   def inspect; end
   def integrity; end
   def length; end
   def links; end
   def logical_path; end
   def metadata; end
-  def mtime; end
-  def pathname; end
   def source; end
-  def to_a; end
   def to_hash; end
   def to_s; end
   def uri; end
@@ -99,10 +101,9 @@ module Sprockets::Utils
   def dfs(initial); end
   def dfs_paths(path); end
   def duplicable?(obj); end
-  def hash_reassoc(hash, *keys, &block); end
+  def hash_reassoc(hash, key_a, key_b = nil, &block); end
   def hash_reassoc1(hash, key); end
   def module_include(base, mod); end
-  def normalize_extension(extension); end
   def string_end_with_semicolon?(str); end
   extend Sprockets::Utils
 end
@@ -124,12 +125,16 @@ module Sprockets::PathUtils
   def directory?(path); end
   def entries(path); end
   def file?(path); end
+  def find_matching_path_for_extensions(path, basename, extensions); end
   def find_upwards(basename, path, root = nil); end
+  def join(base, path); end
   def match_path_extname(path, extensions); end
   def path_extnames(path); end
   def path_parents(path, root = nil); end
   def paths_split(paths, filename); end
   def relative_path?(path); end
+  def relative_path_from(start, dest); end
+  def set_pipeline(path, mime_exts, pipeline_exts, pipeline); end
   def split_subpath(path, subpath); end
   def stat(path); end
   def stat_directory(dir); end
@@ -166,17 +171,6 @@ module Sprockets::Dependencies
   def resolve_dependency(str); end
   include Sprockets::DigestUtils
 end
-class Sprockets::LegacyTiltProcessor < Delegator
-  def __getobj__; end
-  def call(input); end
-  def initialize(klass); end
-end
-module Sprockets::Engines
-  def engine_mime_types; end
-  def engines; end
-  def register_engine(ext, klass, options = nil); end
-  include Sprockets::Utils
-end
 module Sprockets::EncodingUtils
   def base64(str); end
   def charlock_detect(str); end
@@ -202,13 +196,11 @@ module Sprockets::HTTPUtils
   extend Sprockets::HTTPUtils
 end
 module Sprockets::Mime
-  def compute_extname_map; end
-  def extname_map; end
   def mime_exts; end
   def mime_type_charset_detecter(mime_type); end
   def mime_types; end
   def read_file(filename, content_type = nil); end
-  def register_mime_type(mime_type, options = nil); end
+  def register_mime_type(mime_type, extensions: nil, charset: nil); end
   include Sprockets::HTTPUtils
 end
 module Sprockets::Paths
@@ -224,62 +216,88 @@ end
 class Sprockets::FileReader
   def self.call(input); end
 end
-class Sprockets::LegacyProcProcessor < Delegator
-  def __getobj__; end
-  def call(input); end
-  def initialize(name, proc); end
-  def name; end
-  def to_s; end
-end
 module Sprockets::ProcessorUtils
   def call_processor(processor, input); end
   def call_processors(processors, input); end
   def compose_processors(*processors); end
   def processor_cache_key(processor); end
   def processors_cache_keys(processors); end
-  def valid_processor_metadata_value?(value); end
   def validate_processor_result!(result); end
   extend Sprockets::ProcessorUtils
 end
+class Anonymous_Struct_20 < Struct
+  def param; end
+  def param=(_); end
+  def processor_strategy; end
+  def processor_strategy=(_); end
+  def processors; end
+  def processors=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Sprockets::ProcessorUtils::CompositeProcessor < Anonymous_Struct_20
+  def cache_key; end
+  def call(input); end
+  def self.create(processors); end
+end
 module Sprockets::Processing
-  def build_processors_uri(type, file_type, engine_extnames, pipeline); end
+  def build_processors_uri(type, file_type, pipeline); end
   def bundle_processors; end
-  def default_processors_for(type, file_type, engine_extnames); end
-  def deprecate_legacy_processor_interface(interface); end
+  def default_processors_for(type, file_type); end
   def pipelines; end
   def postprocessors; end
   def preprocessors; end
   def processors; end
-  def processors_for(type, file_type, engine_extnames, pipeline); end
+  def processors_for(type, file_type, pipeline); end
   def register_bundle_metadata_reducer(mime_type, key, *args, &block); end
   def register_bundle_processor(*args, &block); end
-  def register_config_processor(type, mime_type, klass, proc = nil, &block); end
+  def register_config_processor(type, mime_type, processor = nil, &block); end
   def register_pipeline(name, proc = nil, &block); end
   def register_postprocessor(*args, &block); end
   def register_preprocessor(*args, &block); end
   def register_processor(*args, &block); end
   def resolve_processors_cache_key_uri(uri); end
-  def self_processors_for(type, file_type, engine_extnames); end
+  def self_processors_for(type, file_type); end
   def unregister_bundle_processor(*args); end
-  def unregister_config_processor(type, mime_type, klass); end
+  def unregister_config_processor(type, mime_type, processor); end
   def unregister_postprocessor(*args); end
   def unregister_preprocessor(*args); end
   def unregister_processor(*args); end
-  def wrap_processor(klass, proc); end
   include Sprockets::ProcessorUtils
 end
+module Sprockets::Exporting
+  def export_concurrent; end
+  def export_concurrent=(export_concurrent); end
+  def exporters; end
+  def register_exporter(mime_types, klass = nil); end
+  def unregister_exporter(mime_types, exporter = nil); end
+end
 module Sprockets::Transformers
-  def compose_transformers(transformers, types); end
-  def compute_transformers!; end
+  def compose_transformer_list(transformers, preprocessors, postprocessors); end
+  def compose_transformers(transformers, types, preprocessors, postprocessors); end
+  def compute_transformers!(registered_transformers); end
   def expand_transform_accepts(parsed_accepts); end
   def register_transformer(from, to, proc); end
+  def register_transformer_suffix(types, type_format, extname, processor); end
   def resolve_transform_type(type, accept); end
   def transformers; end
   include Sprockets::HTTPUtils
 end
+class Sprockets::Transformers::Transformer < Struct
+  def from; end
+  def from=(_); end
+  def proc; end
+  def proc=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+  def to; end
+  def to=(_); end
+end
 module Sprockets::Configuration
-  def computed_config; end
-  def computed_config=(arg0); end
   def config; end
   def config=(config); end
   def context_class; end
@@ -310,23 +328,22 @@ class Sprockets::FileOutsidePaths < Sprockets::NotFound
 end
 module Sprockets::PathDependencyUtils
   def entries_with_dependencies(path); end
-  def file_digest_dependency_set(path); end
   def stat_directory_with_dependencies(dir); end
   def stat_sorted_tree_with_dependencies(dir); end
   include Sprockets::PathUtils
   include Sprockets::URIUtils
 end
 module Sprockets::Resolve
-  def dirname_matches(dirname, basename); end
-  def parse_accept_options(mime_type, types); end
-  def parse_path_extnames(path); end
-  def path_matches(load_path, logical_name, logical_basename); end
-  def resolve!(path, options = nil); end
-  def resolve(path, options = nil); end
+  def parse_accept_options(mime_type, explicit_type); end
+  def resolve!(path, **kargs); end
+  def resolve(path, load_paths: nil, accept: nil, pipeline: nil, base_path: nil); end
   def resolve_absolute_path(paths, filename, accept); end
   def resolve_alternates(load_path, logical_name); end
+  def resolve_alts_under_path(load_path, logical_name, mime_exts); end
   def resolve_asset_uri(uri); end
+  def resolve_index_under_path(load_path, logical_name, mime_exts); end
   def resolve_logical_path(paths, logical_path, accept); end
+  def resolve_main_under_path(load_path, logical_name, mime_exts); end
   def resolve_relative_path(paths, path, dirname, accept); end
   def resolve_under_paths(paths, logical_name, accepts); end
   include Sprockets::HTTPUtils
@@ -355,16 +372,22 @@ class Sprockets::UnloadedAsset
 end
 module Sprockets::Loader
   def asset_from_cache(key); end
+  def compress_key_from_hash(hash, key); end
+  def expand_key_from_hash(hash, key); end
   def fetch_asset_from_dependency_cache(unloaded, limit = nil); end
   def load(uri); end
   def load_from_unloaded(unloaded); end
   def resolve_dependencies(uris); end
   def store_asset(asset, unloaded); end
   include Sprockets::DigestUtils
-  include Sprockets::Engines
+  include Sprockets::Mime
+end
+module Sprockets::Npm
+  def read_package_directives(dirname, filename); end
+  def resolve_alternates(load_path, logical_path); end
 end
 module Sprockets::Server
-  def body_only?(env); end
+  def bad_request_response(env); end
   def cache_headers(env, etag); end
   def call(env); end
   def css_exception_response(exception); end
@@ -381,47 +404,54 @@ module Sprockets::Server
   def path_fingerprint(path); end
   def precondition_failed_response(env); end
 end
+module Sprockets::SourceMapUtils
+  def bsearch_mappings(mappings, offset, from = nil, to = nil); end
+  def combine_source_maps(first, second); end
+  def compare_source_offsets(a, b); end
+  def concat_source_maps(a, b); end
+  def decode_source_map(map); end
+  def decode_vlq_mappings(str, sources: nil, names: nil); end
+  def encode_source_map(map); end
+  def encode_vlq_mappings(mappings, sources: nil, names: nil); end
+  def format_source_map(map, input); end
+  def make_index_map(map); end
+  def vlq_decode(str); end
+  def vlq_decode_mappings(str); end
+  def vlq_encode(ary); end
+  def vlq_encode_mappings(ary); end
+  extend Sprockets::SourceMapUtils
+end
+class Sprockets::DoubleLinkError < Sprockets::Error
+  def initialize(parent_filename:, logical_path:, last_filename:, filename:); end
+end
 class Sprockets::Base
   def [](*args); end
   def cache; end
   def cache=(cache); end
-  def cache_get(key); end
-  def cache_set(key, value); end
   def cached; end
   def compress_from_root(uri); end
-  def each_logical_path(*args, &block); end
   def expand_from_root(uri); end
   def file_digest(path); end
-  def find_all_linked_assets(path, options = nil); end
-  def find_asset(path, options = nil); end
+  def find_all_linked_assets(*args); end
+  def find_asset!(*args); end
+  def find_asset(*args, **options); end
   def index; end
   def inspect; end
-  def logical_paths; end
-  def matches_filter(filters, logical_path, filename); end
-  def normalize_logical_path(path); end
-  def resolve(path, options = nil); end
-  def resolve_with_compat(path, options = nil); end
-  def resolve_without_compat(path, options = nil); end
-  def unescape(str); end
   include Sprockets::Bower
   include Sprockets::Configuration
+  include Sprockets::Npm
   include Sprockets::PathUtils
-  include Sprockets::Resolve
   include Sprockets::Resolve
   include Sprockets::Server
 end
 class Sprockets::Cache::MemoryStore
+  def clear(options = nil); end
   def get(key); end
   def initialize(max_size = nil); end
   def inspect; end
   def set(key, value); end
 end
 class Sprockets::CachedEnvironment < Sprockets::Base
-  def _entries(path); end
-  def _load(uri); end
-  def _processor_cache_key(processor); end
-  def _resolve_dependency(str); end
-  def _stat(path); end
   def cached; end
   def config=(config); end
   def entries(path); end
@@ -435,21 +465,16 @@ end
 class Sprockets::Environment < Sprockets::Base
   def cached; end
   def find_all_linked_assets(*args, &block); end
-  def find_asset(*args); end
+  def find_asset!(*args); end
+  def find_asset(*args, **options); end
   def index; end
   def initialize(root = nil); end
   def load(*args); end
 end
 module Sprockets::ManifestUtils
-  def find_directory_manifest(dirname); end
+  def find_directory_manifest(dirname, logger = nil); end
   def generate_manifest_path; end
   extend Sprockets::ManifestUtils
-end
-class Sprockets::Utils::Gzip
-  def can_compress?(mime_types); end
-  def cannot_compress?(mime_types); end
-  def compress(target); end
-  def initialize(asset); end
 end
 class Sprockets::Manifest
   def assets; end
@@ -459,11 +484,11 @@ class Sprockets::Manifest
   def dir; end
   def directory; end
   def environment; end
+  def executor; end
+  def exporters_for_asset(asset); end
   def filename; end
   def files; end
-  def filter_logical_paths(*args); end
   def find(*args); end
-  def find_logical_paths(*args); end
   def find_sources(*args); end
   def initialize(*args); end
   def json_decode(obj); end
@@ -472,33 +497,18 @@ class Sprockets::Manifest
   def path; end
   def remove(filename); end
   def save; end
-  def self.compile_match_filter(filter); end
-  def self.compute_alias_logical_path(path); end
-  def self.simple_logical_path?(str); end
   include Sprockets::ManifestUtils
 end
-class Sprockets::Deprecation
-  def _extract_callstack; end
-  def behavior; end
-  def behavior=(behavior); end
-  def callstack; end
-  def deprecation_caller_message; end
-  def deprecation_message(message = nil); end
-  def extract_callstack; end
-  def ignored_callstack(path); end
-  def initialize(callstack = nil); end
-  def self.silence(&block); end
-  def warn(message); end
-end
 class Sprockets::Context
-  def __LINE__; end
-  def __LINE__=(arg0); end
   def asset_data_uri(path); end
   def asset_path(path, options = nil); end
   def audio_path(path); end
+  def base64_asset_data_uri(asset); end
   def content_type; end
   def depend_on(path); end
   def depend_on_asset(path); end
+  def depend_on_env(key); end
+  def env_proxy; end
   def environment; end
   def filename; end
   def font_path(path); end
@@ -510,15 +520,27 @@ class Sprockets::Context
   def load_path; end
   def logical_path; end
   def metadata; end
-  def pathname; end
+  def optimize_quoted_uri_escapes!(escaped); end
+  def optimize_svg_for_uri_escaping!(svg); end
   def require_asset(path); end
-  def resolve(path, options = nil); end
-  def resolve_with_compat(path, options = nil); end
-  def resolve_without_compat(path, options = nil); end
+  def resolve(path, **kargs); end
   def root_path; end
   def stub_asset(path); end
   def stylesheet_path(path); end
+  def svg_asset_data_uri(asset); end
   def video_path(path); end
+end
+class Sprockets::Context::ENVProxy < SimpleDelegator
+  def [](key); end
+  def fetch(key, *arg1); end
+  def initialize(context); end
+end
+class Sprockets::SourceMapProcessor
+  def self.call(input); end
+  def self.original_content_type(source_map_content_type, error_when_not_found: nil); end
+end
+class Sprockets::AddSourceMapCommentToAssetProcessor
+  def self.call(input); end
 end
 class Sprockets::DirectiveProcessor
   def _call(input); end
@@ -527,9 +549,8 @@ class Sprockets::DirectiveProcessor
   def expand_accept_shorthand(accept); end
   def expand_relative_dirname(directive, path); end
   def extract_directives(header); end
-  def initialize(options = nil); end
+  def initialize(comments: nil); end
   def link_paths(paths, deps, accept); end
-  def load(uri); end
   def process_depend_on_asset_directive(path); end
   def process_depend_on_directive(path); end
   def process_directives(directives); end
@@ -543,14 +564,16 @@ class Sprockets::DirectiveProcessor
   def process_source(source); end
   def process_stub_directive(path); end
   def require_paths(paths, deps); end
-  def resolve(path, options = nil); end
-  def resolve_paths(paths, deps, options = nil); end
+  def resolve(path, **kargs); end
+  def resolve_paths(paths, deps, **kargs); end
   def self.call(input); end
   def self.instance; end
+  def to_load(uri); end
 end
 class Sprockets::Bundle
   def self.call(input); end
-  def self.process_bundle_reducers(assets, reducers); end
+  def self.dedup(required); end
+  def self.process_bundle_reducers(input, assets, reducers); end
 end
 module Sprockets::Autoload
 end
@@ -563,6 +586,20 @@ class Sprockets::ClosureCompressor
   def self.instance; end
 end
 class Sprockets::SassCompressor
+  def cache_key; end
+  def call(input); end
+  def initialize(options = nil); end
+  def self.cache_key; end
+  def self.call(input); end
+  def self.instance; end
+end
+class Sprockets::SasscCompressor
+  def call(input); end
+  def initialize(options = nil); end
+  def self.call(input); end
+  def self.instance; end
+end
+class Sprockets::JSMincCompressor
   def cache_key; end
   def call(input); end
   def initialize(options = nil); end
@@ -586,6 +623,14 @@ class Sprockets::YUICompressor
   def self.call(input); end
   def self.instance; end
 end
+class Sprockets::BabelProcessor
+  def cache_key; end
+  def call(input); end
+  def initialize(options = nil); end
+  def self.cache_key; end
+  def self.call(input); end
+  def self.instance; end
+end
 module Sprockets::CoffeeScriptProcessor
   def self.cache_key; end
   def self.call(input); end
@@ -600,22 +645,23 @@ module Sprockets::EjsProcessor
 end
 class Sprockets::JstProcessor
   def call(input); end
-  def initialize(options = nil); end
+  def initialize(namespace: nil); end
   def self.call(input); end
   def self.default_namespace; end
   def self.instance; end
 end
-class Sprockets::SassProcessor
-  def build_cache_store(input, version); end
+class Sprockets::SasscProcessor
   def cache_key; end
   def call(input); end
+  def engine_options(input, context); end
   def initialize(options = nil, &block); end
+  def merge_options(options); end
   def self.cache_key; end
   def self.call(input); end
   def self.instance; end
   def self.syntax; end
 end
-module Sprockets::SassProcessor::Functions
+module Sprockets::SasscProcessor::Functions
   def asset_data_url(path); end
   def asset_path(path, options = nil); end
   def asset_url(path, options = nil); end
@@ -635,7 +681,7 @@ module Sprockets::SassProcessor::Functions
   def video_path(path); end
   def video_url(path); end
 end
-class Sprockets::ScssProcessor < Sprockets::SassProcessor
+class Sprockets::ScsscProcessor < Sprockets::SasscProcessor
   def self.syntax; end
 end
 class Sprockets::ERBProcessor
@@ -644,7 +690,55 @@ class Sprockets::ERBProcessor
   def self.call(input); end
   def self.instance; end
 end
+module Sprockets::Exporters
+end
+class Sprockets::Exporters::Base
+  def asset; end
+  def call; end
+  def directory; end
+  def environment; end
+  def initialize(asset: nil, environment: nil, directory: nil); end
+  def setup; end
+  def skip?(logger); end
+  def target; end
+  def write(filename = nil); end
+end
+class Sprockets::Exporters::FileExporter < Sprockets::Exporters::Base
+  def call; end
+  def skip?(logger); end
+end
+class Sprockets::Utils::Gzip
+  def archiver; end
+  def can_compress?; end
+  def cannot_compress?; end
+  def charset; end
+  def compress(file, target); end
+  def content_type; end
+  def initialize(asset, archiver: nil); end
+  def source; end
+end
+module Sprockets::Utils::Gzip::ZlibArchiver
+  def self.call(file, source, mtime); end
+end
+module Sprockets::Utils::Gzip::ZopfliArchiver
+  def self.call(file, source, mtime); end
+end
+class Sprockets::Exporters::ZlibExporter < Sprockets::Exporters::Base
+  def call; end
+  def setup; end
+  def skip?(logger); end
+end
+class Sprockets::Exporters::ZopfliExporter < Sprockets::Exporters::ZlibExporter
+  def setup; end
+end
+module Sprockets::Preprocessors
+end
+class Sprockets::Preprocessors::DefaultSourceMap
+  def call(input); end
+  def default_mappings(lines); end
+end
 class Sprockets::Cache::FileStore
+  def clear(options = nil); end
   def compute_size(caches); end
   def find_caches; end
   def gc!; end

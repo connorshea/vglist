@@ -1928,6 +1928,13 @@ end
 class ActiveRecord::Associations::HasManyThroughAssociation
 end
 
+class ActiveRecord::Associations::HasOneThroughAssociation
+  include ::ActiveRecord::Associations::ThroughAssociation
+end
+
+class ActiveRecord::Associations::HasOneThroughAssociation
+end
+
 class ActiveRecord::Associations::JoinDependency::JoinAssociation
   def initialize(reflection, children); end
 
@@ -1988,6 +1995,13 @@ class ActiveRecord::Associations::Preloader::ThroughAssociation
   PRELOADER = ::T.let(nil, ::T.untyped)
 end
 
+module ActiveRecord::Associations::ThroughAssociation
+  def source_reflection(*args, &block); end
+end
+
+module ActiveRecord::Associations::ThroughAssociation
+end
+
 module ActiveRecord::AttributeMethods
   RESTRICTED_CLASS_METHODS = ::T.let(nil, ::T.untyped)
 end
@@ -2012,6 +2026,15 @@ end
 
 module ActiveRecord::Callbacks
   CALLBACKS = ::T.let(nil, ::T.untyped)
+end
+
+class ActiveRecord::Coders::JSON
+end
+
+class ActiveRecord::Coders::JSON
+  def self.dump(obj); end
+
+  def self.load(json); end
 end
 
 class ActiveRecord::Coders::YAMLColumn
@@ -2788,6 +2811,19 @@ module ActiveRecord::VERSION
   TINY = ::T.let(nil, ::T.untyped)
 end
 
+class ActiveStorage::AnalyzeJob
+  def perform(blob); end
+end
+
+class ActiveStorage::AnalyzeJob
+end
+
+class ActiveStorage::Analyzer::NullAnalyzer
+end
+
+class ActiveStorage::Analyzer::NullAnalyzer
+end
+
 class ActiveStorage::Attached::Changes::CreateMany
   def attachables(); end
 
@@ -2807,6 +2843,27 @@ class ActiveStorage::Attached::Changes::CreateMany
 end
 
 class ActiveStorage::Attached::Changes::CreateMany
+end
+
+class ActiveStorage::Attached::Changes::CreateOne
+  def attachable(); end
+
+  def attachment(); end
+
+  def blob(); end
+
+  def initialize(name, record, attachable); end
+
+  def name(); end
+
+  def record(); end
+
+  def save(); end
+
+  def upload(); end
+end
+
+class ActiveStorage::Attached::Changes::CreateOne
 end
 
 class ActiveStorage::Attached::Changes::CreateOneOfMany
@@ -2864,12 +2921,158 @@ end
 class ActiveStorage::BaseController
 end
 
+class ActiveStorage::BaseJob
+end
+
+class ActiveStorage::BaseJob
+end
+
+class ActiveStorage::Blob
+  include ::Kaminari::ActiveRecordModelExtension
+  include ::Kaminari::ConfigurationMethods
+  include ::ActiveStorage::Blob::Analyzable
+  include ::ActiveStorage::Blob::Identifiable
+  def audio?(); end
+
+  def download(&block); end
+
+  def filename(); end
+
+  def image?(); end
+
+  def key(); end
+
+  def open(tmpdir: T.unsafe(nil), &block); end
+
+  def purge(); end
+
+  def purge_later(); end
+
+  def regenerate_key(); end
+
+  def service(); end
+
+  def service=(val); end
+
+  def service?(); end
+
+  def service_headers_for_direct_upload(); end
+
+  def service_url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil), filename: T.unsafe(nil), **options); end
+
+  def service_url_for_direct_upload(expires_in: T.unsafe(nil)); end
+
+  def signed_id(); end
+
+  def text?(); end
+
+  def unfurl(io, identify: T.unsafe(nil)); end
+
+  def upload(io, identify: T.unsafe(nil)); end
+
+  def upload_without_unfurling(io); end
+
+  def video?(); end
+end
+
+class ActiveStorage::Blob::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveStorage::Blob::GeneratedRelationMethods
+end
+
+class ActiveStorage::Blob::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveStorage::Blob::GeneratedRelationMethods
+end
+
+class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveStorage::Blob::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveStorage::Blob::GeneratedRelationMethods
+end
+
+class ActiveStorage::Blob::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+module ActiveStorage::Blob::Analyzable
+  def analyze(); end
+
+  def analyze_later(); end
+
+  def analyzed?(); end
+end
+
+module ActiveStorage::Blob::Analyzable
+end
+
+module ActiveStorage::Blob::GeneratedAssociationMethods
+  def reload_preview_image_blob(); end
+end
+
 module ActiveStorage::Blob::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 module ActiveStorage::Blob::GeneratedRelationMethods
+  def unattached(*args, &block); end
+
+  def with_attached_preview_image(*args, &block); end
+end
+
+module ActiveStorage::Blob::GeneratedRelationMethods
   extend ::Mutex_m
+end
+
+module ActiveStorage::Blob::Identifiable
+  def identified?(); end
+
+  def identify(); end
+end
+
+module ActiveStorage::Blob::Identifiable
+end
+
+module ActiveStorage::Blob::Representable
+  def preview(transformations); end
+
+  def previewable?(); end
+
+  def representable?(); end
+
+  def representation(transformations); end
+
+  def variable?(); end
+end
+
+module ActiveStorage::Blob::Representable
+  extend ::ActiveSupport::Concern
+end
+
+class ActiveStorage::Blob
+  extend ::Kaminari::ConfigurationMethods::ClassMethods
+  def self.build_after_unfurling(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
+
+  def self.build_after_upload(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
+
+  def self.create_after_upload!(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
+
+  def self.create_before_direct_upload!(filename:, byte_size:, checksum:, content_type: T.unsafe(nil), metadata: T.unsafe(nil)); end
+
+  def self.find_signed(id); end
+
+  def self.service(); end
+
+  def self.service=(val); end
+
+  def self.service?(); end
 end
 
 class ActiveStorage::BlobsController
@@ -2905,20 +3108,27 @@ end
 class ActiveStorage::DiskController
 end
 
-class ActiveStorage::LogSubscriber
-  def service_delete(event); end
+class ActiveStorage::Filename
+  include ::Comparable
+  def as_json(*_); end
 
-  def service_delete_prefixed(event); end
+  def base(); end
 
-  def service_download(event); end
+  def extension(); end
 
-  def service_exist(event); end
+  def extension_with_delimiter(); end
 
-  def service_streaming_download(event); end
+  def extension_without_delimiter(); end
 
-  def service_upload(event); end
+  def initialize(filename); end
 
-  def service_url(event); end
+  def sanitized(); end
+
+  def to_json(); end
+end
+
+class ActiveStorage::Filename
+  def self.wrap(filename); end
 end
 
 class ActiveStorage::Preview
@@ -2957,6 +3167,68 @@ class ActiveStorage::RepresentationsController
 end
 
 class ActiveStorage::RepresentationsController
+end
+
+class ActiveStorage::Service
+  def delete(key); end
+
+  def delete_prefixed(prefix); end
+
+  def download(key); end
+
+  def download_chunk(key, range); end
+
+  def exist?(key); end
+
+  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
+
+  def open(*args, &block); end
+
+  def update_metadata(key, **metadata); end
+
+  def upload(key, io, checksum: T.unsafe(nil), **options); end
+
+  def url(key, expires_in:, disposition:, filename:, content_type:); end
+
+  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
+end
+
+class ActiveStorage::Service::Configurator
+  def build(service_name); end
+
+  def configurations(); end
+
+  def initialize(configurations); end
+end
+
+class ActiveStorage::Service::Configurator
+  def self.build(service_name, configurations); end
+end
+
+class ActiveStorage::Service::DiskService
+  def download(key, &block); end
+
+  def headers_for_direct_upload(key, content_type:, **_); end
+
+  def initialize(root:); end
+
+  def path_for(key); end
+
+  def root(); end
+
+  def upload(key, io, checksum: T.unsafe(nil), **_); end
+
+  def url(key, expires_in:, filename:, disposition:, content_type:); end
+end
+
+class ActiveStorage::Service::DiskService
+end
+
+class ActiveStorage::Service
+  extend ::ActiveSupport::Autoload
+  def self.build(configurator:, service: T.unsafe(nil), **service_config); end
+
+  def self.configure(service_name, configurations); end
 end
 
 module ActiveStorage::SetBlob
@@ -3104,6 +3376,56 @@ end
 
 module ActiveSupport::Callbacks
   CALLBACK_FILTER_TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class ActiveSupport::CurrentAttributes
+  include ::ActiveSupport::Callbacks
+  def __callbacks(); end
+
+  def __callbacks?(); end
+
+  def _reset_callbacks(); end
+
+  def _run_reset_callbacks(&block); end
+
+  def attributes(); end
+
+  def attributes=(attributes); end
+
+  def reset(); end
+
+  def set(set_attributes); end
+end
+
+class ActiveSupport::CurrentAttributes
+  extend ::ActiveSupport::DescendantsTracker
+  def self.__callbacks(); end
+
+  def self.__callbacks=(val); end
+
+  def self.__callbacks?(); end
+
+  def self._reset_callbacks(); end
+
+  def self._reset_callbacks=(value); end
+
+  def self.after_reset(&block); end
+
+  def self.attribute(*names); end
+
+  def self.before_reset(&block); end
+
+  def self.clear_all(); end
+
+  def self.instance(); end
+
+  def self.reset(*args, &block); end
+
+  def self.reset_all(); end
+
+  def self.resets(&block); end
+
+  def self.set(*args, &block); end
 end
 
 module ActiveSupport::Dependencies
@@ -3917,6 +4239,7 @@ class Array
   def shelljoin(); end
 
   def to_h(); end
+
 end
 
 class Array
@@ -7071,6 +7394,7 @@ end
 
 module Exception2MessageMapper
   def bind(cl); end
+
 end
 
 Exception2MessageMapper::E2MM = Exception2MessageMapper
@@ -7746,6 +8070,8 @@ class File
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -8075,6 +8401,8 @@ end
 
 module Game::GeneratedAssociationMethods
   def reload_cover_blob(); end
+
+  def steam_app_ids_attributes=(attributes); end
 end
 
 module Game::GeneratedAttributeMethods
@@ -8545,6 +8873,44 @@ module GlobalID::Locator
   DEFAULT_LOCATOR = ::T.let(nil, ::T.untyped)
 end
 
+class GlobalID::Locator::BaseLocator
+  def locate(gid); end
+
+  def locate_many(gids, options=T.unsafe(nil)); end
+end
+
+class GlobalID::Locator::BaseLocator
+end
+
+class GlobalID::Locator::BlockLocator
+  def initialize(block); end
+
+  def locate(gid); end
+
+  def locate_many(gids, options=T.unsafe(nil)); end
+end
+
+class GlobalID::Locator::BlockLocator
+end
+
+class GlobalID::Locator::UnscopedLocator
+end
+
+class GlobalID::Locator::UnscopedLocator
+end
+
+module GlobalID::Locator
+  def self.locate(gid, options=T.unsafe(nil)); end
+
+  def self.locate_many(gids, options=T.unsafe(nil)); end
+
+  def self.locate_many_signed(sgids, options=T.unsafe(nil)); end
+
+  def self.locate_signed(sgid, options=T.unsafe(nil)); end
+
+  def self.use(app, locator=T.unsafe(nil), &locator_block); end
+end
+
 module GraphQL
   BOOLEAN_TYPE = ::T.let(nil, ::T.untyped)
   FLOAT_TYPE = ::T.let(nil, ::T.untyped)
@@ -8969,8 +9335,6 @@ class Hash
   def default_proc(); end
 
   def default_proc=(default_proc); end
-
-  def dig(*_); end
 
   def fetch_values(*_); end
 
@@ -9555,8 +9919,6 @@ class IO
   def self.foreach(*_); end
 
   def self.open(*_); end
-
-  def self.pipe(*_); end
 end
 
 class IPAddr
@@ -11259,6 +11621,12 @@ class Marcel::MimeType
   BINARY = ::T.let(nil, ::T.untyped)
 end
 
+class Marcel::MimeType
+  def self.extend(type, extensions: T.unsafe(nil), parents: T.unsafe(nil), magic: T.unsafe(nil)); end
+
+  def self.for(pathname_or_io=T.unsafe(nil), name: T.unsafe(nil), extension: T.unsafe(nil), declared_type: T.unsafe(nil)); end
+end
+
 module Marshal
   extend ::ActiveSupport::MarshalWithAutoloading
   def self.restore(*_); end
@@ -11625,13 +11993,6 @@ class Mime::Type
   MIME_REGEXP = ::T.let(nil, ::T.untyped)
 end
 
-class MimeMagic
-  EXTENSIONS = ::T.let(nil, ::T.untyped)
-  MAGIC = ::T.let(nil, ::T.untyped)
-  TYPES = ::T.let(nil, ::T.untyped)
-  VERSION = ::T.let(nil, ::T.untyped)
-end
-
 module MiniMagick::Configuration
   CLI_DETECTION = ::T.let(nil, ::T.untyped)
 end
@@ -11685,6 +12046,8 @@ module Minitest::Assertions
 
   def assert_output(stdout=T.unsafe(nil), stderr=T.unsafe(nil)); end
 
+  def assert_path_exists(path, msg=T.unsafe(nil)); end
+
   def assert_predicate(o1, op, msg=T.unsafe(nil)); end
 
   def assert_respond_to(obj, meth, msg=T.unsafe(nil)); end
@@ -11704,6 +12067,8 @@ module Minitest::Assertions
   def diff(exp, act); end
 
   def exception_details(e, msg); end
+
+  def fail_after(y, m, d, msg); end
 
   def flunk(msg=T.unsafe(nil)); end
 
@@ -11727,6 +12092,8 @@ module Minitest::Assertions
 
   def refute_operator(o1, op, o2=T.unsafe(nil), msg=T.unsafe(nil)); end
 
+  def refute_path_exists(path, msg=T.unsafe(nil)); end
+
   def refute_predicate(o1, op, msg=T.unsafe(nil)); end
 
   def refute_respond_to(obj, meth, msg=T.unsafe(nil)); end
@@ -11735,7 +12102,11 @@ module Minitest::Assertions
 
   def skip(msg=T.unsafe(nil), bt=T.unsafe(nil)); end
 
+  def skip_until(y, m, d, msg); end
+
   def skipped?(); end
+
+  def things_to_diff(exp, act); end
   E = ::T.let(nil, ::T.untyped)
   UNDEFINED = ::T.let(nil, ::T.untyped)
 end
@@ -11752,6 +12123,8 @@ module Minitest::Guard
   def maglev?(platform=T.unsafe(nil)); end
 
   def mri?(platform=T.unsafe(nil)); end
+
+  def osx?(platform=T.unsafe(nil)); end
 
   def rubinius?(platform=T.unsafe(nil)); end
 
@@ -12139,9 +12512,13 @@ end
 class Net::HTTPAlreadyReported
 end
 
-Net::HTTPClientError::EXCEPTION_TYPE = Net::HTTPServerException
+class Net::HTTPClientError
+end
 
-Net::HTTPClientErrorCode = Net::HTTPClientError
+Net::HTTPClientErrorCode::EXCEPTION_TYPE = Net::HTTPServerException
+
+class Net::HTTPClientError
+end
 
 Net::HTTPClientException = Net::HTTPServerException
 
@@ -12161,7 +12538,13 @@ end
 class Net::HTTPGatewayTimeout
 end
 
-Net::HTTPInformationCode = Net::HTTPInformation
+class Net::HTTPInformation
+end
+
+Net::HTTPInformationCode::EXCEPTION_TYPE = Net::HTTPError
+
+class Net::HTTPInformation
+end
 
 class Net::HTTPLoopDetected
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12209,9 +12592,13 @@ end
 class Net::HTTPRangeNotSatisfiable
 end
 
-Net::HTTPRedirection::EXCEPTION_TYPE = Net::HTTPRetriableError
+class Net::HTTPRedirection
+end
 
-Net::HTTPRedirectionCode = Net::HTTPRedirection
+Net::HTTPRedirectionCode::EXCEPTION_TYPE = Net::HTTPRetriableError
+
+class Net::HTTPRedirection
+end
 
 class Net::HTTPRequestTimeout
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12226,9 +12613,13 @@ Net::HTTPResponceReceiver = Net::HTTPResponse
 
 Net::HTTPRetriableCode = Net::HTTPRedirection
 
-Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
+class Net::HTTPServerError
+end
 
-Net::HTTPServerErrorCode = Net::HTTPServerError
+Net::HTTPServerErrorCode::EXCEPTION_TYPE = Net::HTTPFatalError
+
+class Net::HTTPServerError
+end
 
 class Net::HTTP
 end
@@ -12240,9 +12631,13 @@ Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
 class Net::HTTP
 end
 
-Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
+class Net::HTTPSuccess
+end
 
-Net::HTTPSuccessCode = Net::HTTPSuccess
+Net::HTTPSuccessCode::EXCEPTION_TYPE = Net::HTTPError
+
+class Net::HTTPSuccess
+end
 
 class Net::HTTPURITooLong
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12262,6 +12657,7 @@ end
 
 class Net::IMAP
   def open_timeout(); end
+
   RESPONSE_ERRORS = ::T.let(nil, ::T.untyped)
 end
 
@@ -20233,6 +20629,7 @@ RakeFileUtils = Rake::FileUtilsExt
 
 module Random::Formatter
   def alphanumeric(n=T.unsafe(nil)); end
+
   ALPHANUMERIC = ::T.let(nil, ::T.untyped)
 end
 
@@ -21605,7 +22002,7 @@ class RuboCop::CommentConfig
   COPS_PATTERN = ::T.let(nil, ::T.untyped)
   COP_NAMES_PATTERN = ::T.let(nil, ::T.untyped)
   COP_NAME_PATTERN = ::T.let(nil, ::T.untyped)
-  UNNEEDED_DISABLE = ::T.let(nil, ::T.untyped)
+  REDUNDANT_DISABLE = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Config
@@ -22304,6 +22701,28 @@ class RuboCop::Cop::Lint::RandOne
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::RedundantCopDisableDirective
+  COP_NAME = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::RedundantCopEnableDirective
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::RedundantRequireStatement
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::RedundantSplatExpansion
+  ARRAY_PARAM_MSG = ::T.let(nil, ::T.untyped)
+  ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  PERCENT_CAPITAL_I = ::T.let(nil, ::T.untyped)
+  PERCENT_CAPITAL_W = ::T.let(nil, ::T.untyped)
+  PERCENT_I = ::T.let(nil, ::T.untyped)
+  PERCENT_W = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::RedundantWithIndex
   MSG_EACH_WITH_INDEX = ::T.let(nil, ::T.untyped)
   MSG_WITH_INDEX = ::T.let(nil, ::T.untyped)
@@ -22388,28 +22807,6 @@ end
 
 class RuboCop::Cop::Lint::UnifiedInteger
   MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UnneededCopDisableDirective
-  COP_NAME = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UnneededCopEnableDirective
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UnneededRequireStatement
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UnneededSplatExpansion
-  ARRAY_PARAM_MSG = ::T.let(nil, ::T.untyped)
-  ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PERCENT_CAPITAL_I = ::T.let(nil, ::T.untyped)
-  PERCENT_CAPITAL_W = ::T.let(nil, ::T.untyped)
-  PERCENT_I = ::T.let(nil, ::T.untyped)
-  PERCENT_W = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::UnreachableCode
@@ -23700,7 +24097,8 @@ class RuboCop::Cop::Style::Lambda
 end
 
 class RuboCop::Cop::Style::LineEndConcatenation
-  COMPLEX_STRING_EDGE_TOKEN_TYPES = ::T.let(nil, ::T.untyped)
+  COMPLEX_STRING_BEGIN_TOKEN = ::T.let(nil, ::T.untyped)
+  COMPLEX_STRING_END_TOKEN = ::T.let(nil, ::T.untyped)
   CONCAT_TOKEN_TYPES = ::T.let(nil, ::T.untyped)
   HIGH_PRECEDENCE_OP_TOKEN_TYPES = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
@@ -23895,6 +24293,15 @@ class RuboCop::Cop::Style::RedundantBegin
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::RedundantCapitalW
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RedundantCondition
+  MSG = ::T.let(nil, ::T.untyped)
+  REDUNDANT_CONDITION = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::RedundantConditional
   COMPARISON_OPERATORS = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
@@ -23909,6 +24316,22 @@ class RuboCop::Cop::Style::RedundantFreeze
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::RedundantInterpolation
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RedundantPercentQ
+  DYNAMIC_MSG = ::T.let(nil, ::T.untyped)
+  EMPTY = ::T.let(nil, ::T.untyped)
+  ESCAPED_NON_BACKSLASH = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  PERCENT_CAPITAL_Q = ::T.let(nil, ::T.untyped)
+  PERCENT_Q = ::T.let(nil, ::T.untyped)
+  QUOTE = ::T.let(nil, ::T.untyped)
+  SINGLE_QUOTE = ::T.let(nil, ::T.untyped)
+  STRING_INTERPOLATION_REGEXP = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::RedundantReturn
   MSG = ::T.let(nil, ::T.untyped)
   MULTI_RETURN_MSG = ::T.let(nil, ::T.untyped)
@@ -23916,6 +24339,10 @@ end
 
 class RuboCop::Cop::Style::RedundantSelf
   KERNEL_METHODS = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RedundantSort
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -24067,35 +24494,6 @@ class RuboCop::Cop::Style::TrivialAccessors
 end
 
 class RuboCop::Cop::Style::UnlessElse
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::UnneededCapitalW
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::UnneededCondition
-  MSG = ::T.let(nil, ::T.untyped)
-  UNNEEDED_CONDITION = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::UnneededInterpolation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::UnneededPercentQ
-  DYNAMIC_MSG = ::T.let(nil, ::T.untyped)
-  EMPTY = ::T.let(nil, ::T.untyped)
-  ESCAPED_NON_BACKSLASH = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PERCENT_CAPITAL_Q = ::T.let(nil, ::T.untyped)
-  PERCENT_Q = ::T.let(nil, ::T.untyped)
-  QUOTE = ::T.let(nil, ::T.untyped)
-  SINGLE_QUOTE = ::T.let(nil, ::T.untyped)
-  STRING_INTERPOLATION_REGEXP = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::UnneededSort
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -27462,16 +27860,21 @@ module Sprockets
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+class Sprockets::BabelProcessor
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
 class Sprockets::Base
+  include ::Sprockets::SourceMapUtils
   include ::Sprockets::Dependencies
   include ::Sprockets::Compressing
+  include ::Sprockets::Exporting
   include ::Sprockets::Loader
   include ::Sprockets::DigestUtils
   include ::Sprockets::Transformers
   include ::Sprockets::PathDependencyUtils
   include ::Sprockets::Processing
   include ::Sprockets::Mime
-  include ::Sprockets::Engines
   include ::Sprockets::Utils
   include ::Sprockets::URIUtils
   include ::Sprockets::PathDigestUtils
@@ -27489,6 +27892,8 @@ end
 
 class Sprockets::Cache::FileStore
   DEFAULT_MAX_SIZE = ::T.let(nil, ::T.untyped)
+  EXCLUDED_DIRS = ::T.let(nil, ::T.untyped)
+  GITKEEP_FILES = ::T.let(nil, ::T.untyped)
 end
 
 class Sprockets::Cache::MemoryStore
@@ -27496,6 +27901,8 @@ class Sprockets::Cache::MemoryStore
 end
 
 class Sprockets::Cache::NullStore
+  def clear(options=T.unsafe(nil)); end
+
   def get(key); end
 
   def set(key, value); end
@@ -27512,22 +27919,12 @@ module Sprockets::CoffeeScriptProcessor
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
-module Sprockets::CoffeeScriptTemplate
-  VERSION = ::T.let(nil, ::T.untyped)
-end
-
-module Sprockets::CoffeeScriptTemplate
-  def self.cache_key(); end
-
-  def self.call(*args); end
-end
-
 module Sprockets::Configuration
   include ::Sprockets::Dependencies
   include ::Sprockets::Compressing
+  include ::Sprockets::Exporting
   include ::Sprockets::Processing
   include ::Sprockets::Transformers
-  include ::Sprockets::Engines
   include ::Sprockets::Mime
   include ::Sprockets::Utils
   include ::Sprockets::URIUtils
@@ -27550,42 +27947,14 @@ end
 
 class Sprockets::DirectiveProcessor
   DIRECTIVE_PATTERN = ::T.let(nil, ::T.untyped)
-  VERSION = ::T.let(nil, ::T.untyped)
-end
-
-class Sprockets::ERBTemplate
-  def call(*args); end
-end
-
-class Sprockets::ERBTemplate
 end
 
 module Sprockets::EcoProcessor
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
-module Sprockets::EcoTemplate
-  VERSION = ::T.let(nil, ::T.untyped)
-end
-
-module Sprockets::EcoTemplate
-  def self.cache_key(); end
-
-  def self.call(*args); end
-end
-
 module Sprockets::EjsProcessor
   VERSION = ::T.let(nil, ::T.untyped)
-end
-
-module Sprockets::EjsTemplate
-  VERSION = ::T.let(nil, ::T.untyped)
-end
-
-module Sprockets::EjsTemplate
-  def self.cache_key(); end
-
-  def self.call(*args); end
 end
 
 module Sprockets::EncodingUtils
@@ -27595,7 +27964,9 @@ module Sprockets::EncodingUtils
   CHARSET_START = ::T.let(nil, ::T.untyped)
 end
 
-Sprockets::Index = Sprockets::CachedEnvironment
+class Sprockets::JSMincCompressor
+  VERSION = ::T.let(nil, ::T.untyped)
+end
 
 module Sprockets::Loader
   include ::Sprockets::Transformers
@@ -27603,14 +27974,12 @@ module Sprockets::Loader
   include ::Sprockets::PathDependencyUtils
   include ::Sprockets::PathUtils
   include ::Sprockets::Processing
-  include ::Sprockets::Mime
+  include ::Sprockets::Utils
   include ::Sprockets::URIUtils
   include ::Sprockets::ProcessorUtils
-  include ::Sprockets::HTTPUtils
 end
 
 module Sprockets::ManifestUtils
-  LEGACY_MANIFEST_RE = ::T.let(nil, ::T.untyped)
   MANIFEST_RE = ::T.let(nil, ::T.untyped)
 end
 
@@ -27643,6 +28012,11 @@ module Sprockets::ProcessorUtils
   VALID_METADATA_VALUE_TYPES_HASH = ::T.let(nil, ::T.untyped)
 end
 
+class Sprockets::ProcessorUtils::CompositeProcessor
+  PLURAL = ::T.let(nil, ::T.untyped)
+  SINGULAR = ::T.let(nil, ::T.untyped)
+end
+
 module Sprockets::Rails
   VERSION = ::T.let(nil, ::T.untyped)
 end
@@ -27665,20 +28039,17 @@ class Sprockets::SassCompressor
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
-Sprockets::SassFunctions = Sprockets::SassProcessor::Functions
-
-class Sprockets::SassTemplate
+module Sprockets::Server
+  ALLOWED_REQUEST_METHODS = ::T.let(nil, ::T.untyped)
 end
 
-class Sprockets::SassTemplate
-  def self.call(*args); end
-end
-
-class Sprockets::ScssTemplate
-end
-
-class Sprockets::ScssTemplate
-  def self.call(*args); end
+module Sprockets::SourceMapUtils
+  BASE64_DIGITS = ::T.let(nil, ::T.untyped)
+  BASE64_VALUES = ::T.let(nil, ::T.untyped)
+  VLQ_BASE = ::T.let(nil, ::T.untyped)
+  VLQ_BASE_MASK = ::T.let(nil, ::T.untyped)
+  VLQ_BASE_SHIFT = ::T.let(nil, ::T.untyped)
+  VLQ_CONTINUATION_BIT = ::T.let(nil, ::T.untyped)
 end
 
 module Sprockets::Transformers
@@ -27688,10 +28059,6 @@ end
 
 class Sprockets::UglifierCompressor
   VERSION = ::T.let(nil, ::T.untyped)
-end
-
-module Sprockets::Utils
-  UNBOUND_METHODS_BIND_TO_ANY_OBJECT = ::T.let(nil, ::T.untyped)
 end
 
 class Sprockets::Utils::Gzip
@@ -27705,15 +28072,53 @@ end
 module Sprockets
   extend ::Sprockets::Dependencies
   extend ::Sprockets::Compressing
+  extend ::Sprockets::Exporting
   extend ::Sprockets::Processing
   extend ::Sprockets::Transformers
-  extend ::Sprockets::Engines
   extend ::Sprockets::Mime
   extend ::Sprockets::Utils
   extend ::Sprockets::URIUtils
   extend ::Sprockets::PathDigestUtils
   extend ::Sprockets::HTTPUtils
   extend ::Sprockets::DigestUtils
+end
+
+class SteamAppId::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::SteamAppId::GeneratedRelationMethods
+end
+
+class SteamAppId::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class SteamAppId::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::SteamAppId::GeneratedRelationMethods
+end
+
+class SteamAppId::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class SteamAppId::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::SteamAppId::GeneratedRelationMethods
+end
+
+class SteamAppId::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+module SteamAppId::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module SteamAppId::GeneratedRelationMethods
+end
+
+module SteamAppId::GeneratedRelationMethods
+  extend ::Mutex_m
 end
 
 class StopIteration
@@ -28436,6 +28841,7 @@ module URI
   def self.encode_www_form_component(str, enc=T.unsafe(nil)); end
 
   def self.get_encoding(label); end
+
 end
 
 class UnboundMethod

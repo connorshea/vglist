@@ -148,6 +148,8 @@ class RuboCop::Cop::WorkaroundCop
   def excluded_file?(file); end
   def file_name_matches_any?(file, parameter, default_result); end
   def find_location(node, loc); end
+  def find_message(node, message); end
+  def find_severity(_node, severity); end
   def initialize(config = nil, options = nil); end
   def join_force?(_force_class); end
   def message(_node = nil); end

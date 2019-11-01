@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/nokogiri/all/nokogiri.rbi
 #
-# nokogiri-1.10.4
+# nokogiri-1.10.5
 class Nokogiri::XML::Document < Nokogiri::XML::Node
   def <<(node_or_tags); end
   def add_child(node_or_tags); end

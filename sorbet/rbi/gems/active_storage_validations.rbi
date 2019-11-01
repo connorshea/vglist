@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/active_storage_validations/all/active_storage_validations.rbi
 #
-# active_storage_validations-0.8.3
+# active_storage_validations-0.8.4
 module ActiveStorageValidations
 end
 class ActiveStorageValidations::Railtie < Rails::Railtie
@@ -33,7 +33,7 @@ end
 class ActiveStorageValidations::LimitValidator < ActiveModel::EachValidator
   def check_validity!; end
   def files_count_valid?(count); end
-  def validate_each(record, attribute, _value); end
+  def validate_each(record, attribute, _); end
 end
 class ActiveStorageValidations::Metadata
   def file; end

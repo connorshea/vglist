@@ -21,7 +21,7 @@ module ActionView
     class Error < ActionViewError; end
   end
 
-  TemplateError = T.type_alias(Template::Error)
+  TemplateError = T.type_alias {Template::Error}
 
   class SyntaxErrorInTemplate < Template::Error; end
 end
