@@ -77,11 +77,11 @@ RSpec.describe "Platforms", type: :request do
     let!(:platform) { create(:platform) }
     let(:platform_attributes) { attributes_for(:platform) }
 
-    it "updates platform description" do
+    it "updates platform Wikidata ID" do
       sign_in(user)
-      platform_attributes[:description] = "Description goes here"
+      platform_attributes[:wikidata_id] = 12_345
       put platform_path(id: platform.id), params: { platform: platform_attributes }
-      expect(platform.reload.description).to eql("Description goes here")
+      expect(platform.reload.wikidata_id).to be(12_345)
     end
 
     it "fails to update platform" do

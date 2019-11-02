@@ -2,7 +2,6 @@
 <% content_for :description, "#{@platform.name} on VideoGameList (VGList)" %>
 
 <h1 class="title"><%= @platform.name %></h1>
-<h2 class="subtitle"><%= @platform.description %></h2>
 
 <% if policy(@platform).update? || policy(@platform).destroy? %>
   <div class="field buttons">
