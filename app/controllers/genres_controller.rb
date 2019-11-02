@@ -77,7 +77,6 @@ class GenresController < ApplicationController
   def genre_params
     params.typed_require(:genre).permit(
       :name,
-      :description,
       :wikidata_id
     )
   end

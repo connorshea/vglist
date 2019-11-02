@@ -238,7 +238,6 @@ class GamesController < ApplicationController
   def game_params
     params.typed_require(:game).permit(
       :name,
-      :description,
       :cover,
       :wikidata_id,
       :pcgamingwiki_id,

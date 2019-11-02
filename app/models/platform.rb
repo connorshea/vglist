@@ -12,9 +12,6 @@ class Platform < ApplicationRecord
     presence: true,
     length: { maximum: 120 }
 
-  validates :description,
-    length: { maximum: 1000 }
-
   validates :wikidata_id,
     uniqueness: true,
     allow_nil: true,

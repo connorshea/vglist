@@ -67,7 +67,6 @@ RSpec.describe "Platforms", type: :feature do
       visit(new_platform_path)
       within('#new_platform') do
         fill_in('platform[name]', with: 'Nintendo Switch')
-        fill_in('platform[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 
@@ -85,7 +84,6 @@ RSpec.describe "Platforms", type: :feature do
       visit(edit_platform_path(platform))
       within("#edit_platform_#{platform.id}") do
         fill_in('platform[name]', with: 'Nintendo Switch')
-        fill_in('platform[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 

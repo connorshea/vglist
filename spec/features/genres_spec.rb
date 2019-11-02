@@ -67,7 +67,6 @@ RSpec.describe "Genres", type: :feature do
       visit(new_genre_path)
       within('#new_genre') do
         fill_in('genre[name]', with: 'FPS')
-        fill_in('genre[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 
@@ -85,7 +84,6 @@ RSpec.describe "Genres", type: :feature do
       visit(edit_genre_path(genre))
       within("#edit_genre_#{genre.id}") do
         fill_in('genre[name]', with: 'FPS')
-        fill_in('genre[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 

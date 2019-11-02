@@ -79,7 +79,6 @@ class PlatformsController < ApplicationController
   def platform_params
     params.typed_require(:platform).permit(
       :name,
-      :description,
       :wikidata_id
     )
   end

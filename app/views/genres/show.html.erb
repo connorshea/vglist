@@ -2,9 +2,6 @@
 <% content_for :description, "#{@genre.name} on VideoGameList (VGList)" %>
 
 <h1 class="title"><%= @genre.name %></h1>
-<h2 class="subtitle">
-  <%= @genre.description.blank? ? "This genre doesn't have a description yet." : @genre.description %>
-</h2>
 
 <% if policy(@genre).update? || policy(@genre).destroy? %>
   <div class="field buttons">
