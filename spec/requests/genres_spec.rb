@@ -77,11 +77,11 @@ RSpec.describe "Genres", type: :request do
     let!(:genre) { create(:genre) }
     let(:genre_attributes) { attributes_for(:genre) }
 
-    it "updates genre description" do
+    it "updates genre Wikidata ID" do
       sign_in(user)
-      genre_attributes[:description] = "Description goes here"
+      genre_attributes[:wikidata_id] = 12_345
       put genre_path(id: genre.id), params: { genre: genre_attributes }
-      expect(genre.reload.description).to eql("Description goes here")
+      expect(genre.reload.wikidata_id).to be(12_345)
     end
 
     it "fails to update genre" do

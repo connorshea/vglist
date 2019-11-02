@@ -497,28 +497,26 @@
 <!-- m_Genre -->
 <g id="node19" class="node">
 <title>m_Genre</title>
-<path fill="none" stroke="black" d="M748.54,-470.5C748.54,-470.5 868.54,-470.5 868.54,-470.5 874.54,-470.5 880.54,-476.5 880.54,-482.5 880.54,-482.5 880.54,-539.5 880.54,-539.5 880.54,-545.5 874.54,-551.5 868.54,-551.5 868.54,-551.5 748.54,-551.5 748.54,-551.5 742.54,-551.5 736.54,-545.5 736.54,-539.5 736.54,-539.5 736.54,-482.5 736.54,-482.5 736.54,-476.5 742.54,-470.5 748.54,-470.5"/>
-<text text-anchor="start" x="791.26" y="-538.2" font-family="Arial BoldMT" font-size="11.00">Genre</text>
-<polyline fill="none" stroke="black" points="736.54,-532.5 880.54,-532.5 "/>
-<text text-anchor="start" x="743.54" y="-519.5" font-family="ArialMT" font-size="10.00">description </text>
-<text text-anchor="start" x="794.68" y="-519.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text ∗</text>
-<text text-anchor="start" x="743.54" y="-506.5" font-family="ArialMT" font-size="10.00">id </text>
-<text text-anchor="start" x="754.11" y="-506.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
-<text text-anchor="start" x="743.54" y="-493.5" font-family="ArialMT" font-size="10.00">name </text>
-<text text-anchor="start" x="771.34" y="-493.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text ∗</text>
-<text text-anchor="start" x="743.54" y="-480.5" font-family="ArialMT" font-size="10.00">wikidata_id </text>
-<text text-anchor="start" x="795.8" y="-480.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) U</text>
+<path fill="none" stroke="black" d="M748.54,-477C748.54,-477 868.54,-477 868.54,-477 874.54,-477 880.54,-483 880.54,-489 880.54,-489 880.54,-533 880.54,-533 880.54,-539 874.54,-545 868.54,-545 868.54,-545 748.54,-545 748.54,-545 742.54,-545 736.54,-539 736.54,-533 736.54,-533 736.54,-489 736.54,-489 736.54,-483 742.54,-477 748.54,-477"/>
+<text text-anchor="start" x="791.26" y="-531.7" font-family="Arial BoldMT" font-size="11.00">Genre</text>
+<polyline fill="none" stroke="black" points="736.54,-526 880.54,-526 "/>
+<text text-anchor="start" x="743.54" y="-512.5" font-family="ArialMT" font-size="10.00">id </text>
+<text text-anchor="start" x="754.11" y="-512.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
+<text text-anchor="start" x="743.54" y="-499.5" font-family="ArialMT" font-size="10.00">name </text>
+<text text-anchor="start" x="771.34" y="-499.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text ∗</text>
+<text text-anchor="start" x="743.54" y="-486.5" font-family="ArialMT" font-size="10.00">wikidata_id </text>
+<text text-anchor="start" x="795.8" y="-486.5" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) U</text>
 </g>
 <!-- m_Genre&#45;&gt;m_GameGenre -->
 <g id="edge28" class="edge">
 <title>m_Genre&#45;&gt;m_GameGenre</title>
-<path fill="none" stroke="black" d="M830.31,-470.28C846.91,-440.84 870.87,-400.08 894.54,-366 910.74,-342.69 930.41,-317.9 946.94,-297.92"/>
+<path fill="none" stroke="black" d="M826.6,-476.89C843.2,-447.17 869.04,-402.71 894.54,-366 910.74,-342.69 930.41,-317.9 946.94,-297.92"/>
 <polygon fill="black" stroke="black" points="949.54,-299.72 952.88,-290.78 944.7,-295.69 949.54,-299.72"/>
 </g>
 <!-- m_Genre&#45;&gt;m_PgSearch::Document -->
 <g id="edge4" class="edge">
 <title>m_Genre&#45;&gt;m_PgSearch::Document</title>
-<path fill="none" stroke="black" d="M795.95,-470.45C782.98,-436.7 759.28,-389.95 721.54,-366 591.01,-283.16 517.82,-390.5 375.54,-330 357.75,-322.43 340.86,-309.88 326.83,-297.32"/>
+<path fill="none" stroke="black" d="M798.36,-476.9C786.02,-442.91 761.74,-391.51 721.54,-366 591.01,-283.16 517.82,-390.5 375.54,-330 357.75,-322.43 340.86,-309.88 326.83,-297.32"/>
 </g>
 <!-- m_Platform -->
 <g id="node21" class="node">
