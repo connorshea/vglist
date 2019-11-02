@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.11.1
+### Changed
+- Removed descriptions from games, genres, platforms, and companies. They were essentially unused and just invited spam/trolling. ([#803])
+
+## v2019.10.19
+### Changed
+- Allow more than one Steam App ID for a given game, and add Steam App IDs to the GraphQL API. This should improve the accuracy of the Steam library importer. ([#778])
+
+## v2019.10.13
+### Added
+- Add 'list' queries to the GraphQL API, for example listing all existing genres on the site. ([#761])
+
+## v2019.10.12
+### Added
+- Add pagination to the GraphQL API. ([#760])
+
 ## v2019.10.11
 ### Added
 - Add GraphQL mutations for follow/unfollowUser, add/removeGameFromLibrary, and favorite/unfavoriteGame. ([#757], [#758], [#759])
@@ -577,3 +593,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#757]: https://github.com/connorshea/VideoGameList/pull/757
 [#758]: https://github.com/connorshea/VideoGameList/pull/758
 [#759]: https://github.com/connorshea/VideoGameList/pull/759
+[#760]: https://github.com/connorshea/VideoGameList/pull/760
+[#761]: https://github.com/connorshea/VideoGameList/pull/761
+[#778]: https://github.com/connorshea/VideoGameList/pull/778
+[#803]: https://github.com/connorshea/VideoGameList/pull/803
