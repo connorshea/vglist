@@ -17,7 +17,8 @@ class AdminController < ApplicationController
       events: Event.count,
       game_purchases: GamePurchase.count,
       relationships: Relationship.count,
-      games_with_covers: Game.joins(:cover_attachment).count
+      games_with_covers: Game.joins(:cover_attachment).count,
+      games_with_release_dates: Game.where.not(release_date: nil).count
     }
 
     @external_id_counts = {
