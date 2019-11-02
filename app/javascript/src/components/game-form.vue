@@ -21,13 +21,6 @@
       v-model="game.name"
     ></text-field>
 
-    <text-area
-      :form-class="formData.class"
-      :attribute="formData.description.attribute"
-      :label="formData.description.label"
-      v-model="game.description"
-    ></text-area>
-
     <date-field
       :form-class="formData.class"
       :attribute="formData.releaseDate.attribute"
@@ -143,11 +136,6 @@ export default {
       required: false,
       default: ''
     },
-    description: {
-      type: String,
-      required: false,
-      default: ''
-    },
     releaseDate: {
       type: Date,
       required: false
@@ -239,7 +227,6 @@ export default {
       errors: [],
       game: {
         name: this.$props.name,
-        description: this.$props.description,
         releaseDate: this.$props.releaseDate,
         genres: this.$props.genres,
         engines: this.$props.engines,
@@ -262,10 +249,6 @@ export default {
         name: {
           label: 'Game title',
           attribute: 'name'
-        },
-        description: {
-          label: 'Description',
-          attribute: 'description'
         },
         releaseDate: {
           label: 'Release Date',
@@ -368,7 +351,6 @@ export default {
       let submittableData = {
         game: {
           name: this.game.name,
-          description: this.game.description,
           release_date: this.game.releaseDate,
           genre_ids: genreIds,
           engine_ids: engineIds,

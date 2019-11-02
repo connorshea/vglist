@@ -28,7 +28,6 @@ puts "Creating Games..."
 
   game = Game.create!(
     name: Faker::Game.unique.title,
-    description: Faker::Lorem.sentence,
     genres: genres,
     engines: engines,
     series: Series.find(rand(1..Series.count)),

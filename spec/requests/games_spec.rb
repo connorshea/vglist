@@ -96,11 +96,11 @@ RSpec.describe "Games", type: :request do
     let!(:game) { create(:game) }
     let(:game_attributes) { attributes_for(:game) }
 
-    it "updates game description" do
+    it "updates game Wikidata ID" do
       sign_in(user)
-      game_attributes[:description] = "Description goes here"
+      game_attributes[:wikidata_id] = 12_345
       put game_path(id: game.id), params: { game: game_attributes }
-      expect(game.reload.description).to eql("Description goes here")
+      expect(game.reload.wikidata_id).to be(12_345)
     end
 
     it "fails to update game" do

@@ -60,7 +60,6 @@ RSpec.describe "Games", type: :feature do
       visit(new_game_path)
       within('#game-form') do
         fill_in('game[name]', with: 'Half-Life')
-        fill_in('game[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 
@@ -78,7 +77,6 @@ RSpec.describe "Games", type: :feature do
       visit(edit_game_path(game))
       within('#game-form') do
         fill_in('game[name]', with: 'Half-Life')
-        fill_in('game[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 

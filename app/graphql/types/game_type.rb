@@ -5,7 +5,6 @@ module Types
 
     field :id, ID, null: false
     field :name, String, null: false
-    field :description, String, null: true
     field :release_date, GraphQL::Types::ISO8601Date, null: true, description: "The release date of the game."
     field :wikidata_id, Integer, null: true, description: "Identifier in Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier on PCGamingWiki."

@@ -65,9 +65,6 @@ class Game < ApplicationRecord
     presence: true,
     length: { maximum: 120 }
 
-  validates :description,
-    length: { maximum: 1000 }
-
   T.unsafe(self).validates :cover,
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
