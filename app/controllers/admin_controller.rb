@@ -16,7 +16,15 @@ class AdminController < ApplicationController
       genres: Genre.count,
       events: Event.count,
       game_purchases: GamePurchase.count,
-      relationships: Relationship.count
+      relationships: Relationship.count,
+      games_with_covers: Game.joins(:cover_attachment).count
+    }
+
+    @external_id_counts = {
+      mobygames_ids: Game.where.not(mobygames_id: nil).count,
+      pcgamingwiki_ids: Game.where.not(pcgamingwiki_id: nil).count,
+      wikidata_ids: Game.where.not(wikidata_id: nil).count,
+      steam_app_ids: Game.joins(:steam_app_ids).count
     }
   end
 
