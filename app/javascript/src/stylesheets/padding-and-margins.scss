@@ -42,6 +42,14 @@ $sides: (top, bottom, left, right); // Leave this variable alone
       padding-#{$side}: #{$space}px !important;
     }
   }
+
+  .m-#{$space} {
+    margin: #{$space}px !important;
+  }
+
+  .p-#{$space} {
+    padding: #{$space}px !important;
+  }
 }
 
 @each $space in $spaceamounts {
