@@ -49,7 +49,6 @@ RSpec.describe "Companies", type: :feature do
       visit(new_company_path)
       within('#new_company') do
         fill_in('company[name]', with: 'Half-Life')
-        fill_in('company[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 
@@ -67,7 +66,6 @@ RSpec.describe "Companies", type: :feature do
       visit(edit_company_path(company))
       within("#edit_company_#{company.id}") do
         fill_in('company[name]', with: 'Half-Life')
-        fill_in('company[description]', with: 'Lorem ipsum')
       end
       click_button 'Submit'
 

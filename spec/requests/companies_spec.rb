@@ -77,11 +77,11 @@ RSpec.describe "Companies", type: :request do
     let!(:company) { create(:company) }
     let(:company_attributes) { attributes_for(:company) }
 
-    it "updates company description" do
+    it "updates company Wikidata ID" do
       sign_in(user)
-      company_attributes[:description] = "Description goes here"
+      company_attributes[:wikidata_id] = 12_345
       put company_path(id: company.id), params: { company: company_attributes }
-      expect(company.reload.description).to eql("Description goes here")
+      expect(company.reload.wikidata_id).to be(12_345)
     end
 
     it "fails to update company" do
