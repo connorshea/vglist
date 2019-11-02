@@ -274,7 +274,10 @@ namespace 'import:wikidata' do
         entity: wikidata_id
       )
 
-      next if wikidata_json['P577'].nil?
+      if wikidata_json['P577'].nil?
+        progress_bar.log "No release dates found for #{game[:name]}."
+        next
+      end
 
       release_dates = []
       wikidata_json['P577'].each do |snak|
@@ -286,7 +289,7 @@ namespace 'import:wikidata' do
         begin
           release_dates << Time.parse(release_date_hash['time']).to_date unless release_date_hash.nil?
         rescue ArgumentError
-          puts "Bad datetime, skipping. (#{release_date_hash['time']})"
+          progress_bar.log "Bad datetime, skipping. (#{release_date_hash['time']})"
           # Break out of the loop to prevent incorrect release dates, in case a
           # game has a release date like "1985" and then a later, valid release
           # date. We'd rather just skip adding a release date altogether.
@@ -297,12 +300,16 @@ namespace 'import:wikidata' do
       # Get earliest release date
       earliest_release_date = release_dates.min
 
-      next if earliest_release_date.nil?
+      if earliest_release_date.nil?
+        progress_bar.log "No release dates found for #{game[:name]}."
+        next
+      end
 
       begin
         game.update!(release_date: earliest_release_date)
+        progress_bar.log "Added release date for #{game[:name]}."
       rescue ActiveRecord::RecordInvalid => e
-        puts "Record Invalid (#{game[:name]}): #{e}"
+        progress_bar.log "Record Invalid (#{game[:name]}): #{e}"
         next
       end
     end
