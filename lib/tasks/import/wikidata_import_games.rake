@@ -121,7 +121,7 @@ namespace 'import:wikidata' do
           game = Game.create!(hash)
           puts "Created #{hash[:name]}."
         rescue ActiveRecord::RecordInvalid => e
-          puts "Record Invalid: #{e}"
+          puts "Record Invalid (#{hash[:name]}): #{e}"
           next
         end
 
@@ -302,7 +302,7 @@ namespace 'import:wikidata' do
       begin
         game.update!(release_date: earliest_release_date)
       rescue ActiveRecord::RecordInvalid => e
-        puts "Record Invalid: #{e}"
+        puts "Record Invalid (#{game[:name]}): #{e}"
         next
       end
     end
