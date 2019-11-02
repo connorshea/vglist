@@ -3,26 +3,43 @@
 <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
   <%= render 'admin_header' %>
 
-  <%# Breaks the counts into two separate levels. %>
-  <nav class="level">
-    <% @counts.to_a[0...(@counts.length / 2)].each do |key, count| %>
-      <div class="level-item has-text-centered">
-        <div>
-          <p class="heading"><%= key.to_s.titlecase %></p>
-          <p class="title"><%= count %></p>
+  <div class="card pt-15 pb-15">
+    <div class="has-text-centered has-text-weight-bold mb-25">Statistics</div>
+    <%# Breaks the counts into two separate levels. %>
+    <nav class="level">
+      <% @counts.to_a[0...(@counts.length / 2)].each do |key, count| %>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading"><%= key.to_s.titlecase %></p>
+            <p class="title"><%= count %></p>
+          </div>
         </div>
-      </div>
-    <% end %>
-  </nav>
+      <% end %>
+    </nav>
 
-  <nav class="level">
-    <% @counts.to_a[(@counts.length / 2)..@counts.length].each do |key, count| %>
-      <div class="level-item has-text-centered">
-        <div>
-          <p class="heading"><%= key.to_s.titlecase %></p>
-          <p class="title"><%= count %></p>
+    <nav class="level">
+      <% @counts.to_a[(@counts.length / 2)..@counts.length].each do |key, count| %>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading"><%= key.to_s.titlecase %></p>
+            <p class="title"><%= count %></p>
+          </div>
         </div>
-      </div>
-    <% end %>
-  </nav>
+      <% end %>
+    </nav>
+  </div>
+
+  <div class="card mt-30 pt-15 pb-15">
+    <div class="has-text-centered has-text-weight-bold mb-25">External Identifiers</div>
+    <nav class="level">
+      <% @external_id_counts.each do |key, count| %>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading"><%= key.to_s.titlecase %></p>
+            <p class="title"><%= count %></p>
+          </div>
+        </div>
+      <% end %>
+    </nav>
+  </div>
 </div>
