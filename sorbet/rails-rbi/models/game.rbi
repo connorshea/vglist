@@ -2315,15 +2315,6 @@ module Game::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def created_at?; end
 
-  sig { returns(String) }
-  def description; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def description=(value); end
-
-  sig { returns(T::Boolean) }
-  def description?; end
-
   sig { returns(Integer) }
   def id; end
 
@@ -2485,51 +2476,6 @@ module Game::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_came_from_user?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_description?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_description(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def will_save_change_to_description?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_was(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_description!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def description_came_from_user?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def saved_change_to_created_at?(*args); end
