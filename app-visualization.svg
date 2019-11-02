@@ -9,7 +9,7 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(28.8 825.8)">
 <title>VideoGameList</title>
 <polygon fill="white" stroke="transparent" points="-28.8,28.8 -28.8,-825.8 2661.31,-825.8 2661.31,28.8 -28.8,28.8"/>
-<text text-anchor="middle" x="1316.26" y="-782.6" font-family="Arial BoldMT" font-size="13.00">VideoGameList Domain Model</text>
+<text text-anchor="middle" x="1316.26" y="-782.6" font-family="Arial BoldMT" font-size="13.00">vglist Domain Model</text>
 <!-- m_ActiveStorage::Attachment -->
 <g id="node1" class="node">
 <title>m_ActiveStorage::Attachment</title>

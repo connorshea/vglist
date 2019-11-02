@@ -1,5 +1,5 @@
 <% content_for :title, @game.name %>
-<% content_for :description, "#{@game.name} on VideoGameList (VGList)" %>
+<% content_for :description, "#{@game.name} on vglist" %>
 <% if @game.cover.attached? %>
   <% content_for :opengraph_image, rails_blob_url(@game.cover) %>
 <% end %>

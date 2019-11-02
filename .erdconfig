@@ -8,4 +8,4 @@ attributes:
   - inheritance
 filename: app-visualization
 filetype: svg
-title: VideoGameList Domain Model
+title: vglist Domain Model

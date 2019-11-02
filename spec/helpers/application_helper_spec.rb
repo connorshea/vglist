@@ -22,11 +22,11 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   describe 'meta title' do
     it 'returns a title when provided a parameter' do
-      expect(helper.meta_title('This is the title')).to eq("This is the title | VideoGameList")
+      expect(helper.meta_title('This is the title')).to eq("This is the title | vglist")
     end
 
     it 'returns a title when not provided a parameter' do
-      expect(helper.meta_title('')).to eq("VideoGameList")
+      expect(helper.meta_title('')).to eq("vglist")
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
 
     it 'returns a description when provided an empty string' do
-      expect(helper.meta_description('')).to eq("VideoGameList (VGList) helps you track your entire video game library across every store and platform.")
+      expect(helper.meta_description('')).to eq("vglist helps you track your entire video game library across every store and platform.")
     end
   end
 

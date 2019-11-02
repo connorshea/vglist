@@ -59,12 +59,12 @@ module ApplicationHelper
 
   sig { params(title: String).returns(String) }
   def meta_title(title)
-    return (title + " | " if title.present?).to_s + "VideoGameList"
+    return (title + " | " if title.present?).to_s + "vglist"
   end
 
   sig { params(description: String).returns(String) }
   def meta_description(description)
-    return description.presence || "VideoGameList (VGList) helps you track your entire video game library across every store and platform."
+    return description.presence || "vglist helps you track your entire video game library across every store and platform."
   end
 
   # Takes an array and creates a humanized string out of it.

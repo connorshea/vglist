@@ -1,5 +1,5 @@
 <% content_for :title, "#{@user.username}'s Activity" %>
-<% content_for :description, "#{@user.username}'s activity on VideoGameList (VGList)" %>
+<% content_for :description, "#{@user.username}'s activity on vglist" %>
 <% if @user.avatar.attached? %>
   <%# This technically doesn't give us what we want because it won't be square, but oh well. %>
   <% content_for :opengraph_image, rails_blob_url(@user.avatar) %>

@@ -1,4 +1,4 @@
-# VideoGameList (VGList)
+# vglist
 
 [![pipeline status](https://gitlab.com/connorshea/videogamelist/badges/master/pipeline.svg)](https://gitlab.com/connorshea/videogamelist/commits/master)
 [![coverage report](https://gitlab.com/connorshea/videogamelist/badges/master/coverage.svg?job=rspec)](https://gitlab.com/connorshea/videogamelist/commits/master)
