@@ -30,14 +30,16 @@ module ApplicationHelper
       ),
       height: "#{size}px",
       width: "#{size}px",
-      class: css_class_name
+      class: css_class_name,
+      alt: "Avatar for #{user.username}."
     elsif user.avatar&.attached? && !user.avatar&.variable?
-      image_tag user.avatar, width: "#{size}px", height: "#{size}px", class: css_class_name
+      image_tag user.avatar, width: "#{size}px", height: "#{size}px", class: css_class_name, alt: "Avatar for #{user.username}."
     else
       image_tag 'default-avatar.png',
         height: "#{size}px",
         width: "#{size}px",
-        class: css_class_name
+        class: css_class_name,
+        alt: "Placeholder avatar for #{user.username}."
     end
   end
 
@@ -49,11 +51,12 @@ module ApplicationHelper
         resize: "#{width}x#{height}>"
       ),
       width: "#{width}px",
-      height: "#{height}px"
+      height: "#{height}px",
+      alt: "Cover for #{game.name}."
     elsif game.cover&.attached? && !game.cover&.variable?
-      image_tag game.cover, width: "#{width}px", height: "#{height}px"
+      image_tag game.cover, width: "#{width}px", height: "#{height}px", alt: "Cover for #{game.name}."
     else
-      image_tag 'no-cover.png', width: "#{width}px", height: "#{height}px"
+      image_tag 'no-cover.png', width: "#{width}px", height: "#{height}px", alt: "Placeholder cover for #{game.name}."
     end
   end
 
