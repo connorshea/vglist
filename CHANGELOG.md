@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.11.4
+### Added
+- Add Giant Bomb IDs along with an importer for them from Wikidata. ([#811])
+
 ## v2019.11.1
 ### Changed
 - Removed descriptions from games, genres, platforms, and companies. They were essentially unused and just invited spam/trolling. ([#803])
@@ -597,3 +601,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#761]: https://github.com/connorshea/VideoGameList/pull/761
 [#778]: https://github.com/connorshea/VideoGameList/pull/778
 [#803]: https://github.com/connorshea/VideoGameList/pull/803
+[#811]: https://github.com/connorshea/VideoGameList/pull/811
