@@ -49,6 +49,10 @@ FactoryBot.define do
       mobygames_id { Faker::Lorem.words(number: 3).join('-') }
     end
 
+    trait :giantbomb_id do
+      giantbomb_id { "3030-#{Faker::Number.unique.number(digits: rand(1..4))}" }
+    end
+
     trait :release_date do
       release_date { Faker::Date.between(from: 25.years.ago, to: 2.years.from_now) }
     end
@@ -68,6 +72,7 @@ FactoryBot.define do
         :steam_app_id,
         :pcgamingwiki_id,
         :mobygames_id,
+        :giantbomb_id,
         :release_date
       ]
   end

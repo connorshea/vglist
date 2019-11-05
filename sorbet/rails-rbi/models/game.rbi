@@ -2315,6 +2315,15 @@ module Game::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def created_at?; end
 
+  sig { returns(T.nilable(String)) }
+  def giantbomb_id; end
+
+  sig { params(value: T.nilable(String)).void }
+  def giantbomb_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def giantbomb_id?; end
+
   sig { returns(Integer) }
   def id; end
 
@@ -2791,6 +2800,51 @@ module Game::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def release_date_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_giantbomb_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_giantbomb_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def will_save_change_to_giantbomb_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_giantbomb_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def giantbomb_id_came_from_user?(*args); end
 end
 
 module Game::GeneratedAssociationMethods
