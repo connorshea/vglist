@@ -50,7 +50,7 @@ FactoryBot.define do
     end
 
     trait :giantbomb_id do
-      giantbomb_id { "3030-#{Faker::Number.number(digits: rand(1..4))}" }
+      giantbomb_id { "3030-#{Faker::Number.unique.number(digits: rand(1..4))}" }
     end
 
     trait :release_date do
