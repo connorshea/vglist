@@ -65,7 +65,7 @@
     </ul>
   <% end %>
 
-  <% unless [game.wikidata_id, game.pcgamingwiki_id, game.steam_app_ids, game.mobygames_id].all?(&:blank?) %>
+  <% unless [game.wikidata_id, game.pcgamingwiki_id, game.steam_app_ids, game.mobygames_id, game.giantbomb_id].all?(&:blank?) %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
       <% unless game.wikidata_id.blank? %>
@@ -81,6 +81,9 @@
       <% end %>
       <% unless game.mobygames_id.blank? %>
         <li><%= link_to 'MobyGames', "https://www.mobygames.com/game/#{game.mobygames_id}" %>
+      <% end %>
+      <% unless game.giantbomb_id.blank? %>
+        <li><%= link_to 'GiantBomb', "https://www.giantbomb.com/wd/#{game.giantbomb_id}" %>
       <% end %>
     </ul>
   <% end %>

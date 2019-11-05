@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_02_004443) do
+ActiveRecord::Schema.define(version: 2019_11_05_030259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -183,6 +183,8 @@ ActiveRecord::Schema.define(version: 2019_11_02_004443) do
     t.text "pcgamingwiki_id"
     t.text "mobygames_id"
     t.date "release_date"
+    t.text "giantbomb_id"
+    t.index ["giantbomb_id"], name: "index_games_on_giantbomb_id", unique: true
     t.index ["mobygames_id"], name: "index_games_on_mobygames_id", unique: true
     t.index ["series_id"], name: "index_games_on_series_id"
     t.index ["wikidata_id"], name: "index_games_on_wikidata_id", unique: true

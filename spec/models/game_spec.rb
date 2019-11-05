@@ -67,6 +67,25 @@ RSpec.describe Game, type: :model do
         'PS3/game'
       ).for(:mobygames_id)
     end
+
+    it { should validate_uniqueness_of(:giantbomb_id).allow_nil }
+    it { should validate_length_of(:giantbomb_id).is_at_most(100) }
+
+    it 'allows valid Giant Bomb IDs' do
+      expect(game).to allow_values(
+        '3030-1539',
+        '3025-953',
+        '3030-7110'
+      ).for(:giantbomb_id)
+    end
+
+    it 'disallows invalid Giant Bomb IDs' do
+      expect(game).not_to allow_values(
+        '30301539',
+        '1-1234',
+        '1234-'
+      ).for(:giantbomb_id)
+    end
   end
 
   describe 'Custom Validations' do

@@ -95,6 +95,13 @@ class Game < ApplicationRecord
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 
+  validates :giantbomb_id,
+    uniqueness: true,
+    allow_nil: true,
+    # Validate that it's in a format like 3030-1539.
+    format: /\A\d{4}\-\d+\z/,
+    length: { maximum: 100 }
+
   validate :wikidata_id_not_blocklisted
 
   # Include games in global search.
