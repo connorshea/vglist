@@ -25,6 +25,7 @@ class AdminController < ApplicationController
       mobygames_ids: Game.where.not(mobygames_id: nil).count,
       pcgamingwiki_ids: Game.where.not(pcgamingwiki_id: nil).count,
       wikidata_ids: Game.where.not(wikidata_id: nil).count,
+      giantbomb_ids: Game.where.not(giantbomb_id: nil).count,
       steam_app_ids: Game.joins(:steam_app_ids).count
     }
   end

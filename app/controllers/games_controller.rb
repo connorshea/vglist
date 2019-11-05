@@ -242,6 +242,7 @@ class GamesController < ApplicationController
       :wikidata_id,
       :pcgamingwiki_id,
       :mobygames_id,
+      :giantbomb_id,
       :series_id,
       :release_date,
       steam_app_ids_attributes: [

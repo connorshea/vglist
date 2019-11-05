@@ -94,6 +94,13 @@
       v-model="game.mobygamesId"
     ></text-field>
 
+    <text-field
+      :form-class="formData.class"
+      :attribute="formData.giantbombId.attribute"
+      :label="formData.giantbombId.label"
+      v-model="game.giantbombId"
+    ></text-field>
+
     <button
       class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile js-submit-button"
       value="Submit"
@@ -201,6 +208,10 @@ export default {
       type: String,
       required: false
     },
+    giantbombId: {
+      type: String,
+      required: false
+    },
     submitPath: {
       type: String,
       required: true
@@ -238,6 +249,7 @@ export default {
         wikidataId: this.$props.wikidataId,
         pcgamingwikiId: this.$props.pcgamingwikiId,
         mobygamesId: this.$props.mobygamesId,
+        giantbombId: this.$props.giantbombId,
         cover: this.$props.cover,
         coverBlob: this.$props.coverBlob
       },
@@ -287,6 +299,10 @@ export default {
         mobygamesId: {
           label: 'MobyGames ID',
           attribute: 'mobygames_id'
+        },
+        giantbombId: {
+          label: 'Giant Bomb ID',
+          attribute: 'giantbomb_id'
         }
       }
     };
@@ -360,7 +376,8 @@ export default {
           steam_app_ids_attributes: steamAppIds,
           wikidata_id: this.game.wikidataId,
           pcgamingwiki_id: this.game.pcgamingwikiId,
-          mobygames_id: this.game.mobygamesId
+          mobygames_id: this.game.mobygamesId,
+          giantbomb_id: this.game.giantbombId
         }
       };
 
