@@ -10,5 +10,6 @@
     "octref.vetur",
     "ecmel.vscode-html-css",
     "vscode-eslint"
-  ]
+  ],
+  "postCreateCommand": "yarn install && bundle install"
 }
