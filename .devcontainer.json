@@ -1,0 +1,14 @@
+{
+  "name": "vglist",
+  "dockerComposeFile": "docker-compose.dev.yml",
+  "service": "web",
+  // Uncomment the next line if you want to publish any ports.
+  "appPort": [3000, 3035],
+  "workspaceFolder": "/workspace",
+  "extensions": [
+    "rebornix.Ruby",
+    "octref.vetur",
+    "ecmel.vscode-html-css",
+    "vscode-eslint"
+  ]
+}

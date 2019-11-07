@@ -1,0 +1,24 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci
+    ports:
+      - "3000:3000"
+    environment:
+      VGLIST_DATABASE_HOST: db
+    depends_on:
+      - db
+      - webpacker
+    command: bundle exec rails s
+  webpacker:
+    build:
+      dockerfile: Dockerfile.ci
+      context: .
+    ports: "3035:3035"
+    command: ruby ./bin/webpack-dev-server
