@@ -192,4 +192,4 @@ For now, I reserve the right to make breaking changes to the API, though I don't
 
 ## Data License
 
-As mentioned above, the vast majority of the data on vglist comes from [Wikidata](https://www.wikidata.org), which licenses all its data as public domain. For now, data from vglist should be considered proprietary (though I intend to license it under CC-BY-SA in the future). This is to discourage others from scraping the site. All game covers belong to their respective owners.
+As mentioned above, the vast majority of the data on vglist comes from [Wikidata](https://www.wikidata.org), which licenses all its data as public domain. Data on vglist is licensed under [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). This is to discourage others from scraping the site. See the 'scraping' section if you want to get a CC-0 copy of the data. All game covers belong to their respective owners.
