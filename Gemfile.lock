@@ -116,7 +116,7 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.3)
     docile (1.3.2)
-    doorkeeper (5.2.1)
+    doorkeeper (5.2.2)
       railties (>= 5)
     ebnf (1.1.3)
       rdf (~> 3.0)
