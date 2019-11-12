@@ -5,9 +5,11 @@ RSpec.describe "Users API", type: :request do
   describe "Query for data on users" do
     let(:user) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:user_with_avatar) { create(:confirmed_user_with_avatar) }
-    let(:access_token_for_user_with_avatar) { create(:access_token, resource_owner_id: user_with_avatar.id) }
+    let(:application_for_user_with_avatar) { build(:application, owner: user_with_avatar) }
+    let(:access_token_for_user_with_avatar) { create(:access_token, resource_owner_id: user_with_avatar.id, application: application_for_user_with_avatar) }
     let(:private_user) { create(:private_user) }
 
     it "returns basic data for user" do

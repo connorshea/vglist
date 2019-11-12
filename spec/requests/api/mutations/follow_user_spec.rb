@@ -5,7 +5,8 @@ RSpec.describe "FollowUser Mutation API", type: :request do
   describe "Mutation creates a new Relationship" do
     let(:user) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:query_string) do
       <<-GRAPHQL
         mutation($id: ID!) {

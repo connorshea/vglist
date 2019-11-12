@@ -4,7 +4,8 @@ require 'rails_helper'
 RSpec.describe "Platforms API", type: :request do
   describe "Query for data on platforms" do
     let(:user) { create(:confirmed_user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:platform) { create(:platform) }
     let(:platform2) { create(:platform) }
 

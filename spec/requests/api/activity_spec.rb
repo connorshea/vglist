@@ -6,7 +6,8 @@ RSpec.describe "Activity API", type: :request do
     let(:user) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
     let(:user3) { create(:confirmed_user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:game_purchase) { create(:game_purchase, user: user) }
     let(:relationship) { create(:relationship, follower: user, followed: user2) }
     let(:favorite_game) { create(:favorite_game, user: user) }
@@ -49,7 +50,6 @@ RSpec.describe "Activity API", type: :request do
           }
         }
       )
-      puts result["data"]["activity"]["nodes"].inspect
       expect(result["data"]["activity"]["nodes"].length).to eq(2)
     end
 

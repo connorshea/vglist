@@ -4,7 +4,8 @@ require 'rails_helper'
 RSpec.describe "UnfollowUser Mutation API", type: :request do
   describe "Mutation unfollows a user" do
     let(:user) { create(:confirmed_user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:user2) { create(:confirmed_user) }
     let(:relationship) { create(:relationship, follower: user, followed: user2) }
     let(:query_string) do

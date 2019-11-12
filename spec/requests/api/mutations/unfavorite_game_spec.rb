@@ -5,7 +5,8 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
   describe "Mutation unfavorites a game" do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:favorite_game) { create(:favorite_game, user: user, game: game) }
     let(:query_string) do
       <<-GRAPHQL
