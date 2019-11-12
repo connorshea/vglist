@@ -4,13 +4,14 @@ require 'rails_helper'
 RSpec.describe "Games API", type: :request do
   describe "Query for data on games" do
     let(:user) { create(:confirmed_user) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:game) { create(:game) }
     let(:game2) { create(:game) }
     let(:game_with_cover) { create(:game_with_cover) }
     let(:game_with_release_date) { create(:game_with_release_date) }
 
     it "returns basic data for game" do
-      sign_in(user)
       game
       query_string = <<-GRAPHQL
         query($id: ID!) {
@@ -21,13 +22,9 @@ RSpec.describe "Games API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: game.id }
-      )
+      result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result.to_h["data"]["game"]).to eq(
+      expect(result["data"]["game"]).to eq(
         {
           "id" => game.id.to_s,
           "name" => game.name
@@ -36,7 +33,6 @@ RSpec.describe "Games API", type: :request do
     end
 
     it "returns cover for game" do
-      sign_in(user)
       game_with_cover
       query_string = <<-GRAPHQL
         query($id: ID!) {
@@ -48,13 +44,9 @@ RSpec.describe "Games API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: game_with_cover.id }
-      )
+      result = api_request(query_string, variables: { id: game_with_cover.id }, token: access_token)
 
-      expect(result.to_h["data"]["game"]).to eq(
+      expect(result["data"]["game"]).to eq(
         {
           "id" => game_with_cover.id.to_s,
           "name" => game_with_cover.name,
@@ -64,7 +56,6 @@ RSpec.describe "Games API", type: :request do
     end
 
     it "returns other data for game" do
-      sign_in(user)
       game_with_release_date
       query_string = <<-GRAPHQL
         query($id: ID!) {
@@ -76,13 +67,9 @@ RSpec.describe "Games API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: game_with_release_date.id }
-      )
+      result = api_request(query_string, variables: { id: game_with_release_date.id }, token: access_token)
 
-      expect(result.to_h["data"]["game"]).to eq(
+      expect(result["data"]["game"]).to eq(
         {
           "id" => game_with_release_date.id.to_s,
           "name" => game_with_release_date.name,
@@ -92,7 +79,6 @@ RSpec.describe "Games API", type: :request do
     end
 
     it "returns data for a game when searching" do
-      sign_in(user)
       game
       query_string = <<-GRAPHQL
         query($query: String!) {
@@ -105,13 +91,9 @@ RSpec.describe "Games API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { query: game.name }
-      )
+      result = api_request(query_string, variables: { query: game.name }, token: access_token)
 
-      expect(result.to_h["data"]["gameSearch"]["nodes"]).to eq(
+      expect(result["data"]["gameSearch"]["nodes"]).to eq(
         [{
           "id" => game.id.to_s,
           "name" => game.name
@@ -120,7 +102,6 @@ RSpec.describe "Games API", type: :request do
     end
 
     it "returns data for games when listing" do
-      sign_in(user)
       game
       game2
       query_string = <<-GRAPHQL
@@ -134,11 +115,8 @@ RSpec.describe "Games API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user }
-      )
-      expect(result.to_h["data"]["games"]["nodes"]).to eq(
+      result = api_request(query_string, token: access_token)
+      expect(result["data"]["games"]["nodes"]).to eq(
         [
           {
             "id" => game.id.to_s,

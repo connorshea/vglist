@@ -67,7 +67,25 @@ The API does not support public access, and requires that you have a user accoun
 
 The vglist API supports authentication with [OAuth 2.0](https://www.oauth.com/). This is meant to allow other websites' users to connect their vglist accounts and import/export data, or to allow applications (e.g. a local game library client such as Playnite) to update a user's vglist library whenever they buy or play a game.
 
-<!-- TODO: Add a guide for creating an OAuth application here. -->
+<!-- TODO: Make 'native' OAuth applications w/ `urn:ietf:wg:oauth:2.0:oob` work and then document using that here. -->
+
+To create an OAuth application and use OAuth tokens, you'll need a vglist account. In your settings, you'll see a 'Developer' section in the sidebar. On that page you can create a new OAuth application.
+
+Make sure to name it, set the URL to the website you want to redirect to (this is how you get the code after a user authorizes your application), and then set the scopes (`read` if you only want to read data, or `read write` if you want to read _and_ write).
+
+The page will redirect and show the application secret. **Make sure** to copy this somewhere safe, you'll only get to see this secret once. It's encrypted and can't be shown again later. If you want to change the application secret, you'll need to create a new application.
+
+The grant type will always be `authorization_code`. The Authorization URL is `https://vglist.co/settings/oauth/authorize` and the Access Token URL is `https://vglist.co/settings/oauth/token`. The Client ID and Client Secret are provided on the Application page you were redirected to when the application was created. The exact Authorization URL - with query parameters included - is available on the OAuth Application page.
+
+To try the OAuth Application you've created, I would recommend trying to send a GraphQL request using [Insomnia](https://insomnia.rest/). You can create a 'Request', set its type to GraphQL, and authenticate using OAuth 2.0. Then you can play with it as much as you want.
+
+#### Scopes
+
+There are two available scopes for OAuth tokens: `read` and `write`. All access tokens will have the `read` scope by default.
+
+The `read` scope lets you perform GraphQL queries. `write` lets you perform GraphQL mutations.
+
+If you want to use a token with the `write` scope, make sure you send the `write` scope as an explicit part of the OAuth request whenever you send a request. The OAuth application will also need to have the `write` scope in its 'Scopes' field.
 
 ### API Tokens
 

@@ -1,8 +1,11 @@
 # typed: false
 class GraphqlController < ApplicationController
-  # Allow bypassing doorkeeper_authorize! if the user is logged in, to
+  # Skip bullet on GraphQL queries to avoid errors.
+  around_action :skip_bullet, if: -> { defined?(Bullet) }
+
+  # Allow bypassing authorization if the user is logged in, to
   # enable GraphiQL.
-  before_action :doorkeeper_authorize!, if: -> { current_user.nil? }
+  before_action :authorize_api_user, if: -> { current_user.nil? }
   # Disable CSRF protection for GraphQL because we don't want to have CSRF
   # protection on our API endpoint. The point is to let anyone send requests
   # to the API.
@@ -16,7 +19,8 @@ class GraphqlController < ApplicationController
     operation_name = params[:operationName]
     context = {
       current_user: current_user || doorkeeper_user,
-      pundit: self
+      pundit: self,
+      doorkeeper_scopes: doorkeeper_token&.scopes&.to_a
     }
     result = VideoGameListSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -74,5 +78,18 @@ class GraphqlController < ApplicationController
         ]
       }
     }
+  end
+
+  # TODO: Add handling for 'normal' API tokens here.
+  def authorize_api_user
+    doorkeeper_authorize!
+  end
+
+  def skip_bullet
+    previous_value = Bullet.enable?
+    Bullet.enable = false
+    yield
+  ensure
+    Bullet.enable = previous_value
   end
 end

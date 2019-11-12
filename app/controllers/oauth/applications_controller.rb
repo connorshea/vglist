@@ -36,6 +36,7 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
     @application.owner = current_user if T.unsafe(Doorkeeper).configuration.confirm_application_owner?
     if @application.save
       flash[:notice] = I18n.t(:notice, scope: [:doorkeeper, :flash, :applications, :create])
+      flash[:application_secret] = T.unsafe(@application).plaintext_secret
       redirect_to oauth_application_url(@application)
     else
       render :new

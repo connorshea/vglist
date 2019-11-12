@@ -4,11 +4,12 @@ require 'rails_helper'
 RSpec.describe "Platforms API", type: :request do
   describe "Query for data on platforms" do
     let(:user) { create(:confirmed_user) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:platform) { create(:platform) }
     let(:platform2) { create(:platform) }
 
     it "returns basic data for platform" do
-      sign_in(user)
       platform
       query_string = <<-GRAPHQL
         query($id: ID!) {
@@ -19,12 +20,9 @@ RSpec.describe "Platforms API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: platform.id }
-      )
-      expect(result.to_h["data"]["platform"]).to eq(
+      result = api_request(query_string, variables: { id: platform.id }, token: access_token)
+
+      expect(result["data"]["platform"]).to eq(
         {
           "id" => platform.id.to_s,
           "name" => platform.name
@@ -33,7 +31,6 @@ RSpec.describe "Platforms API", type: :request do
     end
 
     it "returns data for a platform when searching" do
-      sign_in(user)
       platform
       query_string = <<-GRAPHQL
         query($query: String!) {
@@ -46,12 +43,9 @@ RSpec.describe "Platforms API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { query: platform.name }
-      )
-      expect(result.to_h["data"]["platformSearch"]["nodes"]).to eq(
+      result = api_request(query_string, variables: { query: platform.name }, token: access_token)
+
+      expect(result["data"]["platformSearch"]["nodes"]).to eq(
         [{
           "id" => platform.id.to_s,
           "name" => platform.name
@@ -60,7 +54,6 @@ RSpec.describe "Platforms API", type: :request do
     end
 
     it "returns data for platforms when listing" do
-      sign_in(user)
       platform
       platform2
       query_string = <<-GRAPHQL
@@ -74,11 +67,9 @@ RSpec.describe "Platforms API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user }
-      )
-      expect(result.to_h["data"]["platforms"]["nodes"]).to eq(
+      result = api_request(query_string, token: access_token)
+
+      expect(result["data"]["platforms"]["nodes"]).to eq(
         [
           {
             "id" => platform.id.to_s,

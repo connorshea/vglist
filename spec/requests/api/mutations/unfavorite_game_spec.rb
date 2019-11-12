@@ -5,6 +5,8 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
   describe "Mutation unfavorites a game" do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:favorite_game) { create(:favorite_game, user: user, game: game) }
     let(:query_string) do
       <<-GRAPHQL
@@ -20,29 +22,19 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
     end
 
     it "unfavorites a game" do
-      sign_in(user)
       favorite_game
 
       expect do
-        VideoGameListSchema.execute(
-          query_string,
-          context: { current_user: user },
-          variables: { id: game.id }
-        )
+        api_request(query_string, variables: { id: game.id }, token: access_token)
       end.to change(FavoriteGame, :count).by(-1)
     end
 
     it "returns basic data for game after unfavoriting it" do
-      sign_in(user)
       favorite_game
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: game.id }
-      )
+      result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result.to_h["data"]["unfavoriteGame"]["game"]).to eq(
+      expect(result["data"]["unfavoriteGame"]["game"]).to eq(
         {
           "id" => game.id.to_s,
           "name" => game.name
