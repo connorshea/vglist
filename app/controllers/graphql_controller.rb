@@ -1,5 +1,8 @@
 # typed: false
 class GraphqlController < ApplicationController
+  # Skip bullet on GraphQL queries to avoid errors.
+  around_action :skip_bullet, if: -> { defined?(Bullet) }
+
   # Allow bypassing authorization if the user is logged in, to
   # enable GraphiQL.
   before_action :authorize_api_user, if: -> { current_user.nil? }
@@ -17,7 +20,7 @@ class GraphqlController < ApplicationController
     context = {
       current_user: current_user || doorkeeper_user,
       pundit: self,
-      doorkeeper_scopes: doorkeeper_token.scopes.to_a
+      doorkeeper_scopes: doorkeeper_token&.scopes&.to_a
     }
     result = VideoGameListSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -80,5 +83,13 @@ class GraphqlController < ApplicationController
   # TODO: Add handling for 'normal' API tokens here.
   def authorize_api_user
     doorkeeper_authorize!
+  end
+
+  def skip_bullet
+    previous_value = Bullet.enable?
+    Bullet.enable = false
+    yield
+  ensure
+    Bullet.enable = previous_value
   end
 end

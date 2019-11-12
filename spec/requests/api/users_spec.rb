@@ -5,11 +5,12 @@ RSpec.describe "Users API", type: :request do
   describe "Query for data on users" do
     let(:user) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
     let(:user_with_avatar) { create(:confirmed_user_with_avatar) }
+    let(:access_token_for_user_with_avatar) { create(:access_token, resource_owner_id: user_with_avatar.id) }
     let(:private_user) { create(:private_user) }
 
     it "returns basic data for user" do
-      sign_in(user)
       query_string = <<-GRAPHQL
         query($id: ID!) {
           user(id: $id) {
@@ -22,13 +23,9 @@ RSpec.describe "Users API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: user.id }
-      )
+      result = api_request(query_string, variables: { id: user.id }, token: access_token)
 
-      expect(result.to_h["data"]["user"]).to eq(
+      expect(result["data"]["user"]).to eq(
         {
           "id" => user.id.to_s,
           "username" => user.username,
@@ -40,7 +37,6 @@ RSpec.describe "Users API", type: :request do
     end
 
     it "returns basic data for user when searching by username" do
-      sign_in(user)
       query_string = <<-GRAPHQL
         query($username: String!) {
           user(username: $username) {
@@ -53,13 +49,9 @@ RSpec.describe "Users API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { username: user.username }
-      )
+      result = api_request(query_string, variables: { username: user.username }, token: access_token)
 
-      expect(result.to_h["data"]["user"]).to eq(
+      expect(result["data"]["user"]).to eq(
         {
           "id" => user.id.to_s,
           "username" => user.username,
@@ -82,13 +74,9 @@ RSpec.describe "Users API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user_with_avatar },
-        variables: { id: user_with_avatar.id }
-      )
+      result = api_request(query_string, variables: { id: user_with_avatar.id }, token: access_token_for_user_with_avatar)
 
-      expect(result.to_h["data"]["user"]).to eq(
+      expect(result["data"]["user"]).to eq(
         {
           "id" => user_with_avatar.id.to_s,
           "username" => user_with_avatar.username,
@@ -98,8 +86,6 @@ RSpec.describe "Users API", type: :request do
     end
 
     it "returns only public data for private user" do
-      sign_in(user)
-
       query_string = <<-GRAPHQL
         query($id: ID!) {
           user(id: $id) {
@@ -120,13 +106,9 @@ RSpec.describe "Users API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: private_user.id }
-      )
+      result = api_request(query_string, variables: { id: private_user.id }, token: access_token)
 
-      expect(result.to_h["data"]["user"]).to eq(
+      expect(result["data"]["user"]).to eq(
         {
           "id" => private_user.id.to_s,
           "username" => private_user.username,
@@ -138,8 +120,6 @@ RSpec.describe "Users API", type: :request do
     end
 
     it "returns activity for user" do
-      sign_in(user)
-
       query_string = <<-GRAPHQL
         query($id: ID!) {
           user(id: $id) {
@@ -169,13 +149,9 @@ RSpec.describe "Users API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: user.id }
-      )
+      result = api_request(query_string, variables: { id: user.id }, token: access_token)
 
-      expect(result.to_h["data"]["user"]).to eq(
+      expect(result["data"]["user"]).to eq(
         {
           "id" => user.id.to_s,
           "username" => user.username,
@@ -195,7 +171,6 @@ RSpec.describe "Users API", type: :request do
     end
 
     it "returns data for users when listing" do
-      sign_in(user)
       user
       user2
       query_string = <<-GRAPHQL
@@ -209,11 +184,9 @@ RSpec.describe "Users API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user }
-      )
-      expect(result.to_h["data"]["users"]["nodes"]).to include(
+      result = api_request(query_string, token: access_token)
+
+      expect(result["data"]["users"]["nodes"]).to include(
         {
           "id" => user.id.to_s,
           "username" => user.username

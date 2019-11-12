@@ -4,6 +4,7 @@ require 'rails_helper'
 RSpec.describe "UnfollowUser Mutation API", type: :request do
   describe "Mutation unfollows a user" do
     let(:user) { create(:confirmed_user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
     let(:user2) { create(:confirmed_user) }
     let(:relationship) { create(:relationship, follower: user, followed: user2) }
     let(:query_string) do
@@ -20,29 +21,19 @@ RSpec.describe "UnfollowUser Mutation API", type: :request do
     end
 
     it "unfollows a user" do
-      sign_in(user)
       relationship
 
       expect do
-        VideoGameListSchema.execute(
-          query_string,
-          context: { current_user: user },
-          variables: { id: user2.id }
-        )
+        api_request(query_string, variables: { id: user2.id }, token: access_token)
       end.to change(Relationship, :count).by(-1)
     end
 
     it "returns basic data for user after unfollowing them" do
-      sign_in(user)
       relationship
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: user2.id }
-      )
+      result = api_request(query_string, variables: { id: user2.id }, token: access_token)
 
-      expect(result.to_h["data"]["unfollowUser"]["user"]).to eq(
+      expect(result["data"]["unfollowUser"]["user"]).to eq(
         {
           "id" => user2.id.to_s,
           "username" => user2.username

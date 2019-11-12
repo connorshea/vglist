@@ -71,6 +71,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :feature
 
   config.include FeatureTestHelper, type: :feature
+  config.include ApiRequestTestHelper, type: :request
 
   # Raise an error on N+1 queries.
   if Bullet.enable?

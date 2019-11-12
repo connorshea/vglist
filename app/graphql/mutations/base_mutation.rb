@@ -10,7 +10,7 @@ class Mutations::BaseMutation < GraphQL::Schema::Mutation
   # Validate that the user's token has the 'write' scope.
   sig { params(_args: T.untyped).returns(T::Boolean) }
   def ready?(**_args)
-    raise GraphQL::ExecutionError, "Your token must have the 'write' scope to perform a mutation." unless context[:doorkeeper_scopes].include?('write')
+    raise GraphQL::ExecutionError, "Your token must have the 'write' scope to perform a mutation." unless context[:doorkeeper_scopes]&.include?('write')
 
     return true
   end

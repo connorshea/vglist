@@ -4,11 +4,11 @@ require 'rails_helper'
 RSpec.describe "Engines API", type: :request do
   describe "Query for data on engines" do
     let(:user) { create(:confirmed_user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
     let(:engine) { create(:engine) }
     let(:engine2) { create(:engine) }
 
     it "returns basic data for engine" do
-      sign_in(user)
       engine
       query_string = <<-GRAPHQL
         query($id: ID!) {
@@ -19,12 +19,9 @@ RSpec.describe "Engines API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: engine.id }
-      )
-      expect(result.to_h["data"]["engine"]).to eq(
+      result = api_request(query_string, variables: { id: engine.id }, token: access_token)
+
+      expect(result["data"]["engine"]).to eq(
         {
           "id" => engine.id.to_s,
           "name" => engine.name
@@ -33,7 +30,6 @@ RSpec.describe "Engines API", type: :request do
     end
 
     it "returns data for a engine when searching" do
-      sign_in(user)
       engine
       query_string = <<-GRAPHQL
         query($query: String!) {
@@ -46,12 +42,9 @@ RSpec.describe "Engines API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { query: engine.name }
-      )
-      expect(result.to_h["data"]["engineSearch"]["nodes"]).to eq(
+      result = api_request(query_string, variables: { query: engine.name }, token: access_token)
+
+      expect(result["data"]["engineSearch"]["nodes"]).to eq(
         [{
           "id" => engine.id.to_s,
           "name" => engine.name
@@ -60,7 +53,6 @@ RSpec.describe "Engines API", type: :request do
     end
 
     it "returns data for engines when listing" do
-      sign_in(user)
       engine
       engine2
       query_string = <<-GRAPHQL
@@ -74,10 +66,8 @@ RSpec.describe "Engines API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user }
-      )
+      result = api_request(query_string, token: access_token)
+
       expect(result.to_h["data"]["engines"]["nodes"]).to eq(
         [
           {

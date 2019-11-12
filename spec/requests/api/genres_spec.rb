@@ -4,11 +4,11 @@ require 'rails_helper'
 RSpec.describe "Genres API", type: :request do
   describe "Query for data on genres" do
     let(:user) { create(:confirmed_user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
     let(:genre) { create(:genre) }
     let(:genre2) { create(:genre) }
 
     it "returns basic data for genre" do
-      sign_in(user)
       genre
       query_string = <<-GRAPHQL
         query($id: ID!) {
@@ -19,12 +19,9 @@ RSpec.describe "Genres API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { id: genre.id }
-      )
-      expect(result.to_h["data"]["genre"]).to eq(
+      result = api_request(query_string, variables: { id: genre.id }, token: access_token)
+
+      expect(result["data"]["genre"]).to eq(
         {
           "id" => genre.id.to_s,
           "name" => genre.name
@@ -33,7 +30,6 @@ RSpec.describe "Genres API", type: :request do
     end
 
     it "returns data for a genre when searching" do
-      sign_in(user)
       genre
       query_string = <<-GRAPHQL
         query($query: String!) {
@@ -46,12 +42,9 @@ RSpec.describe "Genres API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user },
-        variables: { query: genre.name }
-      )
-      expect(result.to_h["data"]["genreSearch"]["nodes"]).to eq(
+      result = api_request(query_string, variables: { query: genre.name }, token: access_token)
+
+      expect(result["data"]["genreSearch"]["nodes"]).to eq(
         [{
           "id" => genre.id.to_s,
           "name" => genre.name
@@ -60,7 +53,6 @@ RSpec.describe "Genres API", type: :request do
     end
 
     it "returns data for genres when listing" do
-      sign_in(user)
       genre
       genre2
       query_string = <<-GRAPHQL
@@ -74,11 +66,9 @@ RSpec.describe "Genres API", type: :request do
         }
       GRAPHQL
 
-      result = VideoGameListSchema.execute(
-        query_string,
-        context: { current_user: user }
-      )
-      expect(result.to_h["data"]["genres"]["nodes"]).to eq(
+      result = api_request(query_string, token: access_token)
+
+      expect(result["data"]["genres"]["nodes"]).to eq(
         [
           {
             "id" => genre.id.to_s,
