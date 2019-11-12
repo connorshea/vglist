@@ -122,7 +122,7 @@ Doorkeeper.configure do
   # If you wish to use bcrypt for application secret hashing, uncomment
   # this line instead:
   #
-  # hash_application_secrets using: '::Doorkeeper::SecretStoring::BCrypt'
+  hash_application_secrets using: '::Doorkeeper::SecretStoring::BCrypt'
 
   # When the above option is enabled, and a hashed token or secret is not found,
   # you can allow to fall back to another strategy. For users upgrading
