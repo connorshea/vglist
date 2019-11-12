@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  subject(:event) { FactoryBot.create(:event) }
+  subject(:event) { build(:event) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

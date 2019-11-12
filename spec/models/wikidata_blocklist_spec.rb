@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe WikidataBlocklist, type: :model do
-  subject(:wikidata_blocklist) { FactoryBot.create(:wikidata_blocklist) }
+  subject(:wikidata_blocklist) { build(:wikidata_blocklist) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe SteamAppId, type: :model do
-  subject(:steam_app_id) { FactoryBot.create(:steam_app_id) }
+  subject(:steam_app_id) { build(:steam_app_id) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

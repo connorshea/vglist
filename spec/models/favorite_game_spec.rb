@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe FavoriteGame, type: :model do
-  subject(:favorite_game) { FactoryBot.create(:favorite_game) }
+  subject(:favorite_game) { build(:favorite_game) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

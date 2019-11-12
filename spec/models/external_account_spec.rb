@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe ExternalAccount, type: :model do
-  subject(:external_account) { FactoryBot.create(:external_account) }
+  subject(:external_account) { build(:external_account) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

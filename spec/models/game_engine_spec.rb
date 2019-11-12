@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe GameEngine, type: :model do
-  subject(:game_engine) { FactoryBot.create(:game_engine) }
+  subject(:game_engine) { build(:game_engine) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

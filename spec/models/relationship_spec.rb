@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe Relationship, type: :model do
-  subject(:relationship) { FactoryBot.create(:relationship) }
+  subject(:relationship) { build(:relationship) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

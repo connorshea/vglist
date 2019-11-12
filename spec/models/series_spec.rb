@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe Series, type: :model do
-  subject(:series) { FactoryBot.create(:series) }
+  subject(:series) { build(:series) }
 
   describe "Validations" do
     it "is valid with valid attributes" do

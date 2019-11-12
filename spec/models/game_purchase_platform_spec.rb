@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe GamePurchasePlatform, type: :model do
-  subject(:game_purchase_platform) { FactoryBot.create(:game_purchase_platform) }
+  subject(:game_purchase_platform) { build(:game_purchase_platform) }
 
   describe "Validations" do
     it "is valid with valid attributes" do
