@@ -623,3 +623,57 @@ class Hash
   sig { returns(T::Hash[Symbol, T.untyped]) }
   def to_options; end
 end
+
+class Numeric
+  sig { returns(ActiveSupport::Duration) }
+  def second; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def seconds; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def minute; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def minutes; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def hour; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def hours; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def day; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def days; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def week; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def weeks; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def fortnight; end
+
+  sig { returns(ActiveSupport::Duration) }
+  def fortnights; end
+
+  sig { returns(T.self_type) }
+  def in_milliseconds; end
+end
+
+module Enumerable
+  # https://github.com/rails/rails/blob/v5.2.3/activesupport/lib/active_support/core_ext/enumerable.rb#L64..L72
+  # the case where a block isn't given isn't handled - that seems like an unlikely case
+  sig do
+    type_parameters(:key).params(
+      block: T.proc.params(o: Enumerable::Elem).returns(T.type_parameter(:key))
+    ).returns(
+      T::Hash[T.type_parameter(:key), Enumerable::Elem]
+    )
+  end
+  def index_by(&block); end
+end

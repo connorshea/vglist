@@ -90,7 +90,7 @@ module ApplicationHelper
     return array.join(', ') if array.length <= limit
   end
 
-  # This returns the :page parameter for Kaminari, it's a convenience method
+  # This returns the `:page` parameter for Kaminari, it's a convenience method
   # for helping Sorbet understand the parameter.
   sig { params(param: Symbol).returns(T.nilable(Integer)) }
   def page_param(param: :page)

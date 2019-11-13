@@ -44,6 +44,7 @@ class Doorkeeper::AuthorizationsController < ApplicationController; end
 #
 # Note that this will only impact QueryType, and will need to be done for every
 # class where we want to use fields with arguments.
-class Types::QueryType < Types::BaseObject
-  extend GraphQL::Schema::Member::HasArguments
-end
+# class Types::QueryType < Types::BaseObject
+#   extend GraphQL::Schema::Member::HasArguments
+# end
+
