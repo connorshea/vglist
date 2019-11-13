@@ -47,4 +47,3 @@ class Doorkeeper::AuthorizationsController < ApplicationController; end
 # class Types::QueryType < Types::BaseObject
 #   extend GraphQL::Schema::Member::HasArguments
 # end
-
