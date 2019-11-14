@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.6.0
+# faker-2.7.0
 module Faker
 end
 module Faker::Base58
@@ -500,6 +500,8 @@ class Faker::IDNumber < Faker::Base
   def self.brazilian_id_checksum_digit(digits); end
   def self.brazilian_id_digit(remainder); end
   def self.brazilian_rg(legacy_formatted = nil, formatted: nil); end
+  def self.chilean_id; end
+  def self.chilean_verification_code(digits); end
   def self.invalid; end
   def self.invalid_south_african_id_number; end
   def self.south_african_id_checksum_digit(id_number); end

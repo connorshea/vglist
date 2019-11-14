@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-4.2.1
+# puma-4.3.0
 module Puma
   def self.jruby?; end
   def self.set_thread_name(name); end
@@ -350,6 +350,12 @@ class Puma::Client
   def write_error(status_code); end
   extend Forwardable
   include Puma::Const
+end
+class Puma::MiniSSL::ContextBuilder
+  def context; end
+  def events; end
+  def initialize(params, events); end
+  def params; end
 end
 class Puma::Binder
   def add_ssl_listener(host, port, ctx, optimize_for_latency = nil, backlog = nil); end

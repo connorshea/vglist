@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activemodel/all/activemodel.rbi
 #
-# activemodel-6.0.0
+# activemodel-6.0.1
 module ActiveModel
   def self.eager_load!; end
   def self.gem_version; end
@@ -649,12 +649,10 @@ class ActiveModel::Validations::AcceptanceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value); end
 end
 class ActiveModel::Validations::AcceptanceValidator::LazilyDefineAttributes < Module
-  def initialize(attribute_definition); end
-end
-class ActiveModel::Validations::AcceptanceValidator::AttributeDefinition
+  def ==(other); end
   def attributes; end
-  def convert_to_reader_name(method_name); end
   def define_on(klass); end
+  def included(klass); end
   def initialize(attributes); end
   def matches?(method_name); end
 end

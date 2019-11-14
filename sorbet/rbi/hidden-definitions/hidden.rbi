@@ -833,7 +833,9 @@ class ActionDispatch::SystemTestCase
   include ::Capybara::Minitest::Assertions
   include ::ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
   include ::ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
-  include ::ActionDispatch::SystemTesting::TestHelpers::UndefMethods
+  def initialize(*_); end
+
+  def method_missing(method, *args, &block); end
 end
 
 class ActionDispatch::SystemTestCase
@@ -869,14 +871,6 @@ module ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
 end
 
 module ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
-end
-
-module ActionDispatch::SystemTesting::TestHelpers::UndefMethods
-  METHODS = ::T.let(nil, ::T.untyped)
-end
-
-module ActionDispatch::SystemTesting::TestHelpers::UndefMethods
-  extend ::ActiveSupport::Concern
 end
 
 module ActionDispatch::TestProcess
@@ -1392,6 +1386,9 @@ class ActionView::Template::Inline
 end
 
 class ActionView::Template::Inline
+end
+
+class ActionView::Template::LegacyTemplate
 end
 
 class ActionView::Template::RawFile
@@ -1928,13 +1925,6 @@ end
 class ActiveRecord::Associations::HasManyThroughAssociation
 end
 
-class ActiveRecord::Associations::HasOneThroughAssociation
-  include ::ActiveRecord::Associations::ThroughAssociation
-end
-
-class ActiveRecord::Associations::HasOneThroughAssociation
-end
-
 class ActiveRecord::Associations::JoinDependency::JoinAssociation
   def initialize(reflection, children); end
 
@@ -1995,13 +1985,6 @@ class ActiveRecord::Associations::Preloader::ThroughAssociation
   PRELOADER = ::T.let(nil, ::T.untyped)
 end
 
-module ActiveRecord::Associations::ThroughAssociation
-  def source_reflection(*args, &block); end
-end
-
-module ActiveRecord::Associations::ThroughAssociation
-end
-
 module ActiveRecord::AttributeMethods
   RESTRICTED_CLASS_METHODS = ::T.let(nil, ::T.untyped)
 end
@@ -2026,15 +2009,6 @@ end
 
 module ActiveRecord::Callbacks
   CALLBACKS = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveRecord::Coders::JSON
-end
-
-class ActiveRecord::Coders::JSON
-  def self.dump(obj); end
-
-  def self.load(json); end
 end
 
 class ActiveRecord::Coders::YAMLColumn
@@ -2073,6 +2047,7 @@ class ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter
   ER_DATA_TOO_LONG = ::T.let(nil, ::T.untyped)
   ER_DO_NOT_HAVE_DEFAULT = ::T.let(nil, ::T.untyped)
   ER_DUP_ENTRY = ::T.let(nil, ::T.untyped)
+  ER_FILSORT_ABORT = ::T.let(nil, ::T.untyped)
   ER_FK_INCOMPATIBLE_COLUMNS = ::T.let(nil, ::T.untyped)
   ER_LOCK_DEADLOCK = ::T.let(nil, ::T.untyped)
   ER_LOCK_WAIT_TIMEOUT = ::T.let(nil, ::T.untyped)
@@ -2811,61 +2786,6 @@ module ActiveRecord::VERSION
   TINY = ::T.let(nil, ::T.untyped)
 end
 
-class ActiveStorage::AnalyzeJob
-  def perform(blob); end
-end
-
-class ActiveStorage::AnalyzeJob
-end
-
-class ActiveStorage::Analyzer::NullAnalyzer
-end
-
-class ActiveStorage::Analyzer::NullAnalyzer
-end
-
-class ActiveStorage::Attached::Changes::CreateMany
-  def attachables(); end
-
-  def attachments(); end
-
-  def blobs(); end
-
-  def initialize(name, record, attachables); end
-
-  def name(); end
-
-  def record(); end
-
-  def save(); end
-
-  def upload(); end
-end
-
-class ActiveStorage::Attached::Changes::CreateMany
-end
-
-class ActiveStorage::Attached::Changes::CreateOne
-  def attachable(); end
-
-  def attachment(); end
-
-  def blob(); end
-
-  def initialize(name, record, attachable); end
-
-  def name(); end
-
-  def record(); end
-
-  def save(); end
-
-  def upload(); end
-end
-
-class ActiveStorage::Attached::Changes::CreateOne
-end
-
 class ActiveStorage::Attached::Changes::CreateOneOfMany
 end
 
@@ -2921,158 +2841,12 @@ end
 class ActiveStorage::BaseController
 end
 
-class ActiveStorage::BaseJob
-end
-
-class ActiveStorage::BaseJob
-end
-
-class ActiveStorage::Blob
-  include ::Kaminari::ActiveRecordModelExtension
-  include ::Kaminari::ConfigurationMethods
-  include ::ActiveStorage::Blob::Analyzable
-  include ::ActiveStorage::Blob::Identifiable
-  def audio?(); end
-
-  def download(&block); end
-
-  def filename(); end
-
-  def image?(); end
-
-  def key(); end
-
-  def open(tmpdir: T.unsafe(nil), &block); end
-
-  def purge(); end
-
-  def purge_later(); end
-
-  def regenerate_key(); end
-
-  def service(); end
-
-  def service=(val); end
-
-  def service?(); end
-
-  def service_headers_for_direct_upload(); end
-
-  def service_url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil), filename: T.unsafe(nil), **options); end
-
-  def service_url_for_direct_upload(expires_in: T.unsafe(nil)); end
-
-  def signed_id(); end
-
-  def text?(); end
-
-  def unfurl(io, identify: T.unsafe(nil)); end
-
-  def upload(io, identify: T.unsafe(nil)); end
-
-  def upload_without_unfurling(io); end
-
-  def video?(); end
-end
-
-class ActiveStorage::Blob::ActiveRecord_AssociationRelation
-  include ::ActiveRecord::Delegation::ClassSpecificRelation
-  include ::ActiveStorage::Blob::GeneratedRelationMethods
-end
-
-class ActiveStorage::Blob::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
-class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy
-  include ::ActiveRecord::Delegation::ClassSpecificRelation
-  include ::ActiveStorage::Blob::GeneratedRelationMethods
-end
-
-class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
-class ActiveStorage::Blob::ActiveRecord_Relation
-  include ::ActiveRecord::Delegation::ClassSpecificRelation
-  include ::ActiveStorage::Blob::GeneratedRelationMethods
-end
-
-class ActiveStorage::Blob::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
-module ActiveStorage::Blob::Analyzable
-  def analyze(); end
-
-  def analyze_later(); end
-
-  def analyzed?(); end
-end
-
-module ActiveStorage::Blob::Analyzable
-end
-
-module ActiveStorage::Blob::GeneratedAssociationMethods
-  def reload_preview_image_blob(); end
-end
-
 module ActiveStorage::Blob::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 module ActiveStorage::Blob::GeneratedRelationMethods
-  def unattached(*args, &block); end
-
-  def with_attached_preview_image(*args, &block); end
-end
-
-module ActiveStorage::Blob::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-module ActiveStorage::Blob::Identifiable
-  def identified?(); end
-
-  def identify(); end
-end
-
-module ActiveStorage::Blob::Identifiable
-end
-
-module ActiveStorage::Blob::Representable
-  def preview(transformations); end
-
-  def previewable?(); end
-
-  def representable?(); end
-
-  def representation(transformations); end
-
-  def variable?(); end
-end
-
-module ActiveStorage::Blob::Representable
-  extend ::ActiveSupport::Concern
-end
-
-class ActiveStorage::Blob
-  extend ::Kaminari::ConfigurationMethods::ClassMethods
-  def self.build_after_unfurling(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
-
-  def self.build_after_upload(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
-
-  def self.create_after_upload!(io:, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil), identify: T.unsafe(nil)); end
-
-  def self.create_before_direct_upload!(filename:, byte_size:, checksum:, content_type: T.unsafe(nil), metadata: T.unsafe(nil)); end
-
-  def self.find_signed(id); end
-
-  def self.service(); end
-
-  def self.service=(val); end
-
-  def self.service?(); end
 end
 
 class ActiveStorage::BlobsController
@@ -3108,27 +2882,20 @@ end
 class ActiveStorage::DiskController
 end
 
-class ActiveStorage::Filename
-  include ::Comparable
-  def as_json(*_); end
+class ActiveStorage::LogSubscriber
+  def service_delete(event); end
 
-  def base(); end
+  def service_delete_prefixed(event); end
 
-  def extension(); end
+  def service_download(event); end
 
-  def extension_with_delimiter(); end
+  def service_exist(event); end
 
-  def extension_without_delimiter(); end
+  def service_streaming_download(event); end
 
-  def initialize(filename); end
+  def service_upload(event); end
 
-  def sanitized(); end
-
-  def to_json(); end
-end
-
-class ActiveStorage::Filename
-  def self.wrap(filename); end
+  def service_url(event); end
 end
 
 class ActiveStorage::Preview
@@ -3167,68 +2934,6 @@ class ActiveStorage::RepresentationsController
 end
 
 class ActiveStorage::RepresentationsController
-end
-
-class ActiveStorage::Service
-  def delete(key); end
-
-  def delete_prefixed(prefix); end
-
-  def download(key); end
-
-  def download_chunk(key, range); end
-
-  def exist?(key); end
-
-  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
-
-  def open(*args, &block); end
-
-  def update_metadata(key, **metadata); end
-
-  def upload(key, io, checksum: T.unsafe(nil), **options); end
-
-  def url(key, expires_in:, disposition:, filename:, content_type:); end
-
-  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
-end
-
-class ActiveStorage::Service::Configurator
-  def build(service_name); end
-
-  def configurations(); end
-
-  def initialize(configurations); end
-end
-
-class ActiveStorage::Service::Configurator
-  def self.build(service_name, configurations); end
-end
-
-class ActiveStorage::Service::DiskService
-  def download(key, &block); end
-
-  def headers_for_direct_upload(key, content_type:, **_); end
-
-  def initialize(root:); end
-
-  def path_for(key); end
-
-  def root(); end
-
-  def upload(key, io, checksum: T.unsafe(nil), **_); end
-
-  def url(key, expires_in:, filename:, disposition:, content_type:); end
-end
-
-class ActiveStorage::Service::DiskService
-end
-
-class ActiveStorage::Service
-  extend ::ActiveSupport::Autoload
-  def self.build(configurator:, service: T.unsafe(nil), **service_config); end
-
-  def self.configure(service_name, configurations); end
 end
 
 module ActiveStorage::SetBlob
@@ -3376,56 +3081,6 @@ end
 
 module ActiveSupport::Callbacks
   CALLBACK_FILTER_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveSupport::CurrentAttributes
-  include ::ActiveSupport::Callbacks
-  def __callbacks(); end
-
-  def __callbacks?(); end
-
-  def _reset_callbacks(); end
-
-  def _run_reset_callbacks(&block); end
-
-  def attributes(); end
-
-  def attributes=(attributes); end
-
-  def reset(); end
-
-  def set(set_attributes); end
-end
-
-class ActiveSupport::CurrentAttributes
-  extend ::ActiveSupport::DescendantsTracker
-  def self.__callbacks(); end
-
-  def self.__callbacks=(val); end
-
-  def self.__callbacks?(); end
-
-  def self._reset_callbacks(); end
-
-  def self._reset_callbacks=(value); end
-
-  def self.after_reset(&block); end
-
-  def self.attribute(*names); end
-
-  def self.before_reset(&block); end
-
-  def self.clear_all(); end
-
-  def self.instance(); end
-
-  def self.reset(*args, &block); end
-
-  def self.reset_all(); end
-
-  def self.resets(&block); end
-
-  def self.set(*args, &block); end
 end
 
 module ActiveSupport::Dependencies
@@ -7559,6 +7214,7 @@ class Faker::IDNumber
   BRAZILIAN_ID_FROM = ::T.let(nil, ::T.untyped)
   BRAZILIAN_ID_TO = ::T.let(nil, ::T.untyped)
   CHECKS = ::T.let(nil, ::T.untyped)
+  CHILEAN_MODULO = ::T.let(nil, ::T.untyped)
   INVALID_SSN = ::T.let(nil, ::T.untyped)
   ZA_CITIZENSHIP_DIGITS = ::T.let(nil, ::T.untyped)
   ZA_RACE_DIGIT = ::T.let(nil, ::T.untyped)
@@ -8070,8 +7726,6 @@ class File
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -8871,44 +8525,6 @@ end
 
 module GlobalID::Locator
   DEFAULT_LOCATOR = ::T.let(nil, ::T.untyped)
-end
-
-class GlobalID::Locator::BaseLocator
-  def locate(gid); end
-
-  def locate_many(gids, options=T.unsafe(nil)); end
-end
-
-class GlobalID::Locator::BaseLocator
-end
-
-class GlobalID::Locator::BlockLocator
-  def initialize(block); end
-
-  def locate(gid); end
-
-  def locate_many(gids, options=T.unsafe(nil)); end
-end
-
-class GlobalID::Locator::BlockLocator
-end
-
-class GlobalID::Locator::UnscopedLocator
-end
-
-class GlobalID::Locator::UnscopedLocator
-end
-
-module GlobalID::Locator
-  def self.locate(gid, options=T.unsafe(nil)); end
-
-  def self.locate_many(gids, options=T.unsafe(nil)); end
-
-  def self.locate_many_signed(sgids, options=T.unsafe(nil)); end
-
-  def self.locate_signed(sgid, options=T.unsafe(nil)); end
-
-  def self.use(app, locator=T.unsafe(nil), &locator_block); end
 end
 
 module GraphQL
@@ -11232,6 +10848,9 @@ end
 class Mail::POP3
 end
 
+class Mail::PartsList
+end
+
 class Mail::PhraseList
   def initialize(string); end
 
@@ -11621,12 +11240,6 @@ class Marcel::MimeType
   BINARY = ::T.let(nil, ::T.untyped)
 end
 
-class Marcel::MimeType
-  def self.extend(type, extensions: T.unsafe(nil), parents: T.unsafe(nil), magic: T.unsafe(nil)); end
-
-  def self.for(pathname_or_io=T.unsafe(nil), name: T.unsafe(nil), extension: T.unsafe(nil), declared_type: T.unsafe(nil)); end
-end
-
 module Marshal
   extend ::ActiveSupport::MarshalWithAutoloading
   def self.restore(*_); end
@@ -11993,6 +11606,13 @@ class Mime::Type
   MIME_REGEXP = ::T.let(nil, ::T.untyped)
 end
 
+class MimeMagic
+  EXTENSIONS = ::T.let(nil, ::T.untyped)
+  MAGIC = ::T.let(nil, ::T.untyped)
+  TYPES = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
 module MiniMagick::Configuration
   CLI_DETECTION = ::T.let(nil, ::T.untyped)
 end
@@ -12330,6 +11950,11 @@ class Mutations::AddGameToLibrary
   def load_start_date(value); end
 end
 
+class Mutations::BaseMutation
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class Mutations::FavoriteGame
   def load_game_id(value); end
 end
@@ -12512,13 +12137,9 @@ end
 class Net::HTTPAlreadyReported
 end
 
-class Net::HTTPClientError
-end
+Net::HTTPClientError::EXCEPTION_TYPE = Net::HTTPServerException
 
-Net::HTTPClientErrorCode::EXCEPTION_TYPE = Net::HTTPServerException
-
-class Net::HTTPClientError
-end
+Net::HTTPClientErrorCode = Net::HTTPClientError
 
 Net::HTTPClientException = Net::HTTPServerException
 
@@ -12538,13 +12159,7 @@ end
 class Net::HTTPGatewayTimeout
 end
 
-class Net::HTTPInformation
-end
-
-Net::HTTPInformationCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPInformation
-end
+Net::HTTPInformationCode = Net::HTTPInformation
 
 class Net::HTTPLoopDetected
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12592,13 +12207,9 @@ end
 class Net::HTTPRangeNotSatisfiable
 end
 
-class Net::HTTPRedirection
-end
+Net::HTTPRedirection::EXCEPTION_TYPE = Net::HTTPRetriableError
 
-Net::HTTPRedirectionCode::EXCEPTION_TYPE = Net::HTTPRetriableError
-
-class Net::HTTPRedirection
-end
+Net::HTTPRedirectionCode = Net::HTTPRedirection
 
 class Net::HTTPRequestTimeout
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12613,13 +12224,9 @@ Net::HTTPResponceReceiver = Net::HTTPResponse
 
 Net::HTTPRetriableCode = Net::HTTPRedirection
 
-class Net::HTTPServerError
-end
+Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
-Net::HTTPServerErrorCode::EXCEPTION_TYPE = Net::HTTPFatalError
-
-class Net::HTTPServerError
-end
+Net::HTTPServerErrorCode = Net::HTTPServerError
 
 class Net::HTTP
 end
@@ -12631,13 +12238,9 @@ Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
 class Net::HTTP
 end
 
-class Net::HTTPSuccess
-end
+Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
-Net::HTTPSuccessCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPSuccess
-end
+Net::HTTPSuccessCode = Net::HTTPSuccess
 
 class Net::HTTPURITooLong
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -28664,7 +28267,7 @@ module Types::BaseInterface
   extend ::Types::BaseInterface::DefinitionMethods
 end
 
-class Types::GameType
+class Types::BaseObject
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
 end
@@ -29544,6 +29147,9 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+end
+
+class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

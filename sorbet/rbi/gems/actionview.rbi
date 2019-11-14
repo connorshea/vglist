@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionview/all/actionview.rbi
 #
-# actionview-6.0.0
+# actionview-6.0.1
 module ActionView
   def self.eager_load!; end
   def self.gem_version; end
@@ -742,7 +742,7 @@ class ActionView::Template::Handlers::Builder
   def self.default_format=(val); end
   def self.default_format?; end
 end
-class ActionView::Template::LegacyTemplate < Anonymous_Delegator_17
+class ActionView::Template::LegacyTemplate < Anonymous_Delegator_18
   def initialize(template, source); end
   def source; end
 end

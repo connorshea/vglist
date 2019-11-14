@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/doorkeeper/all/doorkeeper.rbi
 #
-# doorkeeper-5.2.1
+# doorkeeper-5.2.2
 module Doorkeeper
   def self.authenticate(request, methods = nil); end
   def self.configuration; end
@@ -892,10 +892,10 @@ class Doorkeeper::ApplicationController < ApplicationController
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_34
+  include Anonymous_Module_36
   include Doorkeeper::Helpers::Controller
 end
-module Anonymous_Module_34
+module Anonymous_Module_36
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -907,11 +907,11 @@ module Anonymous_Module_34
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_25
-  extend Anonymous_Module_26
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_25
-  include Anonymous_Module_26
+  include Anonymous_Module_27
+  include Anonymous_Module_28
 end
 class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
@@ -937,9 +937,9 @@ class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def show; end
   def update; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_35
+  include Anonymous_Module_37
 end
-module Anonymous_Module_35
+module Anonymous_Module_37
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -951,11 +951,11 @@ module Anonymous_Module_35
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_25
-  extend Anonymous_Module_26
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_25
-  include Anonymous_Module_26
+  include Anonymous_Module_27
+  include Anonymous_Module_28
 end
 class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
@@ -981,9 +981,9 @@ class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
   def self.middleware_stack; end
   def strategy; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_36
+  include Anonymous_Module_38
 end
-module Anonymous_Module_36
+module Anonymous_Module_38
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -995,11 +995,11 @@ module Anonymous_Module_36
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_25
-  extend Anonymous_Module_26
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_25
-  include Anonymous_Module_26
+  include Anonymous_Module_27
+  include Anonymous_Module_28
 end
 class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
@@ -1012,9 +1012,9 @@ class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationCont
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_37
+  include Anonymous_Module_39
 end
-module Anonymous_Module_37
+module Anonymous_Module_39
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1026,11 +1026,11 @@ module Anonymous_Module_37
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_25
-  extend Anonymous_Module_26
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_25
-  include Anonymous_Module_26
+  include Anonymous_Module_27
+  include Anonymous_Module_28
 end
 class Doorkeeper::Orm::ActiveRecord::StaleRecordsCleaner
   def clean_expired(ttl); end
@@ -1203,6 +1203,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   def generate_secret; end
   def generate_uid; end
   def plaintext_secret; end
+  def renew_secret; end
   def scopes_match_configured; end
   def self.__callbacks; end
   def self._reflections; end
@@ -1260,7 +1261,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   def self.defined_enums; end
   def self.page(num = nil); end
   def self.revoke_tokens_and_grants_for(id, resource_owner); end
-  def to_json(options); end
+  def to_json(options = nil); end
   def validate_associated_records_for_access_grants(*args); end
   def validate_associated_records_for_access_tokens(*args); end
   def validate_associated_records_for_authorized_applications(*args); end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionpack/all/actionpack.rbi
 #
-# actionpack-6.0.0
+# actionpack-6.0.1
 module ActionPack
   def self.gem_version; end
   def self.version; end
@@ -36,201 +36,6 @@ module AbstractController
   def self.eager_load!; end
   extend ActiveSupport::Autoload
 end
-module ActionDispatch::Http::FilterRedirect
-  def filtered_location; end
-  def location_filter_match?; end
-  def location_filters; end
-end
-module ActionDispatch::Http::Cache
-end
-module ActionDispatch::Http::Cache::Request
-  def etag_matches?(etag); end
-  def fresh?(response); end
-  def if_modified_since; end
-  def if_none_match; end
-  def if_none_match_etags; end
-  def not_modified?(modified_at); end
-end
-module ActionDispatch::Http::Cache::Response
-  def cache_control; end
-  def cache_control_headers; end
-  def cache_control_segments; end
-  def date; end
-  def date=(utc_time); end
-  def date?; end
-  def etag=(weak_validators); end
-  def etag?; end
-  def generate_strong_etag(validators); end
-  def generate_weak_etag(validators); end
-  def handle_conditional_get!; end
-  def last_modified; end
-  def last_modified=(utc_time); end
-  def last_modified?; end
-  def merge_and_normalize_cache_control!(cache_control); end
-  def prepare_cache_control!; end
-  def strong_etag=(strong_validators); end
-  def strong_etag?; end
-  def weak_etag=(weak_validators); end
-  def weak_etag?; end
-end
-class ActionDispatch::Response
-  def [](*args, &block); end
-  def []=(*args, &block); end
-  def _cache_control; end
-  def _cache_control=(v); end
-  def abort; end
-  def assign_default_content_type_and_charset!; end
-  def await_commit; end
-  def await_sent; end
-  def before_committed; end
-  def before_sending; end
-  def body; end
-  def body=(body); end
-  def body_parts; end
-  def build_buffer(response, body); end
-  def charset; end
-  def charset=(charset); end
-  def close; end
-  def code; end
-  def commit!; end
-  def committed?; end
-  def content_type; end
-  def content_type=(content_type); end
-  def cookies; end
-  def default_charset; end
-  def default_charset=(obj); end
-  def default_headers; end
-  def default_headers=(obj); end
-  def delete_header(key); end
-  def each(&block); end
-  def get_header(key); end
-  def handle_no_content!; end
-  def has_header?(key); end
-  def header; end
-  def headers; end
-  def initialize(status = nil, header = nil, body = nil); end
-  def media_type; end
-  def message; end
-  def munge_body_object(body); end
-  def parse_content_type(content_type); end
-  def parsed_content_type_header; end
-  def prepare!; end
-  def rack_response(status, header); end
-  def redirect_url; end
-  def request; end
-  def request=(arg0); end
-  def reset_body!; end
-  def response_code; end
-  def return_only_media_type_on_content_type; end
-  def return_only_media_type_on_content_type=(obj); end
-  def self.create(status = nil, header = nil, body = nil, default_headers: nil); end
-  def self.default_charset; end
-  def self.default_charset=(obj); end
-  def self.default_headers; end
-  def self.default_headers=(obj); end
-  def self.merge_default_headers(original, default); end
-  def self.return_only_media_type_on_content_type; end
-  def self.return_only_media_type_on_content_type=(obj); end
-  def send_file(path); end
-  def sending!; end
-  def sending?; end
-  def sending_file=(v); end
-  def sent!; end
-  def sent?; end
-  def set_content_type(content_type, charset); end
-  def set_header(key, v); end
-  def status; end
-  def status=(status); end
-  def status_message; end
-  def stream; end
-  def to_a; end
-  def write(string); end
-  include ActionDispatch::Http::Cache::Response
-  include ActionDispatch::Http::FilterRedirect
-  include MonitorMixin
-  include Rack::Response::Helpers
-end
-class ActionDispatch::Response::Header < Anonymous_Delegator_2
-  def []=(k, v); end
-  def initialize(response, header); end
-  def merge(other); end
-  def to_hash; end
-end
-class ActionDispatch::Response::Buffer
-  def abort; end
-  def body; end
-  def close; end
-  def closed?; end
-  def each(&block); end
-  def each_chunk(&block); end
-  def initialize(response, buf); end
-  def write(string); end
-end
-class ActionDispatch::Response::FileBody
-  def body; end
-  def each; end
-  def initialize(path); end
-  def to_path; end
-end
-class ActionDispatch::Response::ContentTypeHeader < Struct
-  def charset; end
-  def charset=(_); end
-  def mime_type; end
-  def mime_type=(_); end
-  def self.[](*arg0); end
-  def self.inspect; end
-  def self.members; end
-  def self.new(*arg0); end
-end
-class ActionDispatch::Response::RackBody
-  def body; end
-  def close; end
-  def each(*args, &block); end
-  def initialize(response); end
-  def respond_to?(method, include_private = nil); end
-  def to_ary; end
-  def to_path; end
-end
-module ActionController
-  def self.add_renderer(key, &block); end
-  def self.remove_renderer(key); end
-  extend ActiveSupport::Autoload
-end
-module ActionController::Live
-  def log_error(exception); end
-  def new_controller_thread; end
-  def process(name); end
-  def response_body=(body); end
-  extend ActiveSupport::Concern
-end
-module ActionController::Live::ClassMethods
-  def make_response!(request); end
-end
-class ActionController::Live::SSE
-  def close; end
-  def initialize(stream, options = nil); end
-  def perform_write(json, options); end
-  def write(object, options = nil); end
-end
-class ActionController::Live::ClientDisconnected < RuntimeError
-end
-class ActionController::Live::Buffer < ActionDispatch::Response::Buffer
-  def abort; end
-  def call_on_error; end
-  def close; end
-  def connected?; end
-  def each_chunk(&block); end
-  def ignore_disconnect; end
-  def ignore_disconnect=(arg0); end
-  def initialize(response); end
-  def on_error(&block); end
-  def write(string); end
-  include MonitorMixin
-end
-class ActionController::Live::Response < ActionDispatch::Response
-  def before_committed; end
-  def build_buffer(response, body); end
-end
 class ActionDispatch::Http::UploadedFile
   def close(unlink_now = nil); end
   def content_type; end
@@ -250,6 +55,11 @@ class ActionDispatch::Http::UploadedFile
   def tempfile=(arg0); end
   def to_io; end
   def to_path; end
+end
+module ActionController
+  def self.add_renderer(key, &block); end
+  def self.remove_renderer(key); end
+  extend ActiveSupport::Autoload
 end
 class ActionController::ParameterMissing < KeyError
   def initialize(param); end
@@ -896,6 +706,38 @@ class ActionDispatch::Http::Headers
   def merge(headers_or_env); end
   def self.from_hash(hash); end
   include Enumerable
+end
+module ActionDispatch::Http::Cache
+end
+module ActionDispatch::Http::Cache::Request
+  def etag_matches?(etag); end
+  def fresh?(response); end
+  def if_modified_since; end
+  def if_none_match; end
+  def if_none_match_etags; end
+  def not_modified?(modified_at); end
+end
+module ActionDispatch::Http::Cache::Response
+  def cache_control; end
+  def cache_control_headers; end
+  def cache_control_segments; end
+  def date; end
+  def date=(utc_time); end
+  def date?; end
+  def etag=(weak_validators); end
+  def etag?; end
+  def generate_strong_etag(validators); end
+  def generate_weak_etag(validators); end
+  def handle_conditional_get!; end
+  def last_modified; end
+  def last_modified=(utc_time); end
+  def last_modified?; end
+  def merge_and_normalize_cache_control!(cache_control); end
+  def prepare_cache_control!; end
+  def strong_etag=(strong_validators); end
+  def strong_etag?; end
+  def weak_etag=(weak_validators); end
+  def weak_etag?; end
 end
 module Mime
   def self.[](type); end
@@ -2170,7 +2012,7 @@ module ActionController::ParamsWrapper
   def process_action(*args); end
   extend ActiveSupport::Concern
 end
-class Anonymous_Struct_3 < Struct
+class Anonymous_Struct_2 < Struct
   def exclude; end
   def exclude=(_); end
   def format; end
@@ -2188,7 +2030,7 @@ class Anonymous_Struct_3 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class ActionController::ParamsWrapper::Options < Anonymous_Struct_3
+class ActionController::ParamsWrapper::Options < Anonymous_Struct_2
   def _default_wrap_model; end
   def include; end
   def initialize(name, format, include, exclude, klass, model); end
@@ -2206,6 +2048,129 @@ module ActionController::ParamsWrapper::ClassMethods
   def _set_wrapper_options(options); end
   def inherited(klass); end
   def wrap_parameters(name_or_model_or_options, options = nil); end
+end
+module ActionDispatch::Http::FilterRedirect
+  def filtered_location; end
+  def location_filter_match?; end
+  def location_filters; end
+end
+class ActionDispatch::Response
+  def [](*args, &block); end
+  def []=(*args, &block); end
+  def _cache_control; end
+  def _cache_control=(v); end
+  def abort; end
+  def assign_default_content_type_and_charset!; end
+  def await_commit; end
+  def await_sent; end
+  def before_committed; end
+  def before_sending; end
+  def body; end
+  def body=(body); end
+  def body_parts; end
+  def build_buffer(response, body); end
+  def charset; end
+  def charset=(charset); end
+  def close; end
+  def code; end
+  def commit!; end
+  def committed?; end
+  def content_type; end
+  def content_type=(content_type); end
+  def cookies; end
+  def default_charset; end
+  def default_charset=(obj); end
+  def default_headers; end
+  def default_headers=(obj); end
+  def delete_header(key); end
+  def each(&block); end
+  def get_header(key); end
+  def handle_no_content!; end
+  def has_header?(key); end
+  def header; end
+  def headers; end
+  def initialize(status = nil, header = nil, body = nil); end
+  def media_type; end
+  def message; end
+  def munge_body_object(body); end
+  def parse_content_type(content_type); end
+  def parsed_content_type_header; end
+  def prepare!; end
+  def rack_response(status, header); end
+  def redirect_url; end
+  def request; end
+  def request=(arg0); end
+  def reset_body!; end
+  def response_code; end
+  def return_only_media_type_on_content_type; end
+  def return_only_media_type_on_content_type=(obj); end
+  def self.create(status = nil, header = nil, body = nil, default_headers: nil); end
+  def self.default_charset; end
+  def self.default_charset=(obj); end
+  def self.default_headers; end
+  def self.default_headers=(obj); end
+  def self.merge_default_headers(original, default); end
+  def self.return_only_media_type_on_content_type; end
+  def self.return_only_media_type_on_content_type=(obj); end
+  def send_file(path); end
+  def sending!; end
+  def sending?; end
+  def sending_file=(v); end
+  def sent!; end
+  def sent?; end
+  def set_content_type(content_type, charset); end
+  def set_header(key, v); end
+  def status; end
+  def status=(status); end
+  def status_message; end
+  def stream; end
+  def to_a; end
+  def write(string); end
+  include ActionDispatch::Http::Cache::Response
+  include ActionDispatch::Http::FilterRedirect
+  include MonitorMixin
+  include Rack::Response::Helpers
+end
+class ActionDispatch::Response::Header < Anonymous_Delegator_3
+  def []=(k, v); end
+  def initialize(response, header); end
+  def merge(other); end
+  def to_hash; end
+end
+class ActionDispatch::Response::Buffer
+  def abort; end
+  def body; end
+  def close; end
+  def closed?; end
+  def each(&block); end
+  def each_chunk(&block); end
+  def initialize(response, buf); end
+  def write(string); end
+end
+class ActionDispatch::Response::FileBody
+  def body; end
+  def each; end
+  def initialize(path); end
+  def to_path; end
+end
+class ActionDispatch::Response::ContentTypeHeader < Struct
+  def charset; end
+  def charset=(_); end
+  def mime_type; end
+  def mime_type=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class ActionDispatch::Response::RackBody
+  def body; end
+  def close; end
+  def each(*args, &block); end
+  def initialize(response); end
+  def respond_to?(method, include_private = nil); end
+  def to_ary; end
+  def to_path; end
 end
 class AbstractController::Error < StandardError
 end
@@ -2776,6 +2741,41 @@ class ActionController::Renderer
   def render(*args); end
   def self.for(controller, env = nil, defaults = nil); end
   def with_defaults(defaults); end
+end
+module ActionController::Live
+  def log_error(exception); end
+  def new_controller_thread; end
+  def process(name); end
+  def response_body=(body); end
+  extend ActiveSupport::Concern
+end
+module ActionController::Live::ClassMethods
+  def make_response!(request); end
+end
+class ActionController::Live::SSE
+  def close; end
+  def initialize(stream, options = nil); end
+  def perform_write(json, options); end
+  def write(object, options = nil); end
+end
+class ActionController::Live::ClientDisconnected < RuntimeError
+end
+class ActionController::Live::Buffer < ActionDispatch::Response::Buffer
+  def abort; end
+  def call_on_error; end
+  def close; end
+  def connected?; end
+  def each_chunk(&block); end
+  def ignore_disconnect; end
+  def ignore_disconnect=(arg0); end
+  def initialize(response); end
+  def on_error(&block); end
+  def write(string); end
+  include MonitorMixin
+end
+class ActionController::Live::Response < ActionDispatch::Response
+  def before_committed; end
+  def build_buffer(response, body); end
 end
 module ActionDispatch::Assertions
   def html_document; end

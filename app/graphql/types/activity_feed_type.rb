@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 module Types
   class ActivityFeedType < Types::BaseEnum
     value "GLOBAL", value: 'global', description: "Events from everyone."
