@@ -15,13 +15,13 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
 
   sig do
     params(
-      game_id: Integer,
+      game_id: T.any(String, Integer),
       completion_status: T.nilable(T.untyped),
       rating: T.nilable(Integer),
       hours_played: T.nilable(Float),
       comments: String,
-      start_date: T.nilable(GraphQL::Types::ISO8601Date),
-      completion_date: T.nilable(GraphQL::Types::ISO8601Date)
+      start_date: T.nilable(Date),
+      completion_date: T.nilable(Date)
     ).returns(T::Hash[Symbol, GamePurchase])
   end
   def resolve(game_id:, completion_status: nil, rating: nil, hours_played: nil, comments: "", start_date: nil, completion_date: nil)
