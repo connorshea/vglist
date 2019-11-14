@@ -6,6 +6,7 @@ class Mutations::FollowUser < Mutations::BaseMutation
 
   field :user, Types::UserType, null: true
 
+  sig { params(user_id: Integer).returns(T::Hash[Symbol, User]) }
   def resolve(user_id:)
     user = User.find(user_id)
 

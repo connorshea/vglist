@@ -13,6 +13,17 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
 
   field :game_purchase, Types::GamePurchaseType, null: true
 
+  sig do
+    params(
+      game_id: Integer,
+      completion_status: T.nilable(T.untyped),
+      rating: T.nilable(Integer),
+      hours_played: T.nilable(Float),
+      comments: String,
+      start_date: T.nilable(GraphQL::Types::ISO8601Date),
+      completion_date: T.nilable(GraphQL::Types::ISO8601Date)
+    ).returns(T::Hash[Symbol, GamePurchase])
+  end
   def resolve(game_id:, completion_status: nil, rating: nil, hours_played: nil, comments: "", start_date: nil, completion_date: nil)
     game = Game.find(game_id)
 

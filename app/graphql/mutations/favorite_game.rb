@@ -6,6 +6,7 @@ class Mutations::FavoriteGame < Mutations::BaseMutation
 
   field :game, Types::GameType, null: true
 
+  sig { params(game_id: Integer).returns(T::Hash[Symbol, Game]) }
   def resolve(game_id:)
     game = Game.find(game_id)
 
