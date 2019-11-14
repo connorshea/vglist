@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activesupport/all/activesupport.rbi
 #
-# activesupport-6.0.0
+# activesupport-6.0.1
 class Hash
   def _deep_transform_keys_in_object!(object, &block); end
   def _deep_transform_keys_in_object(object, &block); end
@@ -1060,6 +1060,7 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
 end
 module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
   def self.camelize(basename, _abspath); end
+  def self.inflect(overrides); end
 end
 class Method
   def duplicable?; end
@@ -2147,7 +2148,7 @@ module ActiveSupport::NumericWithFormat
 end
 class File < IO
   def self.empty?(arg0); end
-  def self.split(arg0); end
+  def self.probe_stat_in(dir); end
 end
 module ActiveSupport::RangeWithFormat
   def to_default_s(format = nil); end
@@ -2297,4 +2298,37 @@ class ActiveSupport::Digest
   def self.hash_digest_class; end
   def self.hash_digest_class=(klass); end
   def self.hexdigest(arg); end
+end
+class ActiveSupport::CurrentAttributes
+  def __callbacks; end
+  def __callbacks?; end
+  def _reset_callbacks; end
+  def _run_reset_callbacks(&block); end
+  def assign_attributes(new_attributes); end
+  def attributes; end
+  def attributes=(arg0); end
+  def compute_attributes(keys); end
+  def initialize; end
+  def reset; end
+  def self.__callbacks; end
+  def self.__callbacks=(val); end
+  def self.__callbacks?; end
+  def self._reset_callbacks; end
+  def self._reset_callbacks=(value); end
+  def self.after_reset(&block); end
+  def self.attribute(*names); end
+  def self.before_reset(&block); end
+  def self.clear_all; end
+  def self.current_instances; end
+  def self.generated_attribute_methods; end
+  def self.instance; end
+  def self.method_missing(name, *args, &block); end
+  def self.reset(*args, &block); end
+  def self.reset_all; end
+  def self.resets(&block); end
+  def self.set(*args, &block); end
+  def set(set_attributes); end
+  extend ActiveSupport::Callbacks::ClassMethods
+  extend ActiveSupport::DescendantsTracker
+  include ActiveSupport::Callbacks
 end

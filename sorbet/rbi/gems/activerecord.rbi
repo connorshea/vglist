@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activerecord/all/activerecord.rbi
 #
-# activerecord-6.0.0
+# activerecord-6.0.1
 module Arel
   def self.arel_node?(value); end
   def self.fetch_attribute(value); end
@@ -1442,6 +1442,7 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def discard!; end
   def disconnect!; end
   def enable_extension(name); end
+  def exec_insert_all(*arg0); end
   def expire; end
   def extensions; end
   def extract_limit(sql_type); end
@@ -1465,6 +1466,7 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def pool=(arg0); end
   def prefetch_primary_key?(table_name = nil); end
   def prepared_statements; end
+  def prepared_statements_disabled_cache; end
   def preventing_writes?; end
   def raw_connection; end
   def reconnect!; end
@@ -1499,6 +1501,7 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def supports_bulk_alter?; end
   def supports_comments?; end
   def supports_comments_in_create?; end
+  def supports_common_table_expressions?; end
   def supports_datetime_with_precision?; end
   def supports_ddl_transactions?; end
   def supports_explain?; end
@@ -1642,6 +1645,7 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   def enable_lazy_transactions!(*args, &block); end
   def exec_delete(sql, name = nil, binds = nil); end
   def exec_insert(sql, name = nil, binds = nil, pk = nil, sequence_name = nil); end
+  def exec_insert_all(sql, name); end
   def exec_query(sql, name = nil, binds = nil, prepare: nil); end
   def exec_rollback_db_transaction; end
   def exec_update(sql, name = nil, binds = nil); end
@@ -2732,6 +2736,7 @@ module ActiveRecord::QueryMethods
   def reverse_sql_order(order_query); end
   def rewhere(conditions); end
   def select(*fields); end
+  def select_association_list(associations); end
   def select_values; end
   def select_values=(value); end
   def skip_preloading!; end
@@ -3000,7 +3005,7 @@ module ActiveRecord::ConnectionHandling
   def clear_query_caches_for_current_thread; end
   def clear_reloadable_connections!(*args, &block); end
   def connected?; end
-  def connected_to(database: nil, role: nil, &blk); end
+  def connected_to(database: nil, role: nil, prevent_writes: nil, &blk); end
   def connected_to?(role:); end
   def connection; end
   def connection_config; end
@@ -3332,6 +3337,9 @@ module ActiveRecord::Core::ClassMethods
   def relation; end
   def table_metadata; end
   def type_caster; end
+end
+class ActiveRecord::Core::InspectionMask < Anonymous_Delegator_13
+  def pretty_print(pp); end
 end
 class ActiveRecord::ConnectionTimeoutError < ActiveRecord::ConnectionNotEstablished
 end
@@ -3770,7 +3778,7 @@ module ActiveRecord::Locking::Optimistic::ClassMethods
   def reset_locking_column; end
   def update_counters(id, counters); end
 end
-class ActiveRecord::Locking::LockingType < Anonymous_Delegator_13
+class ActiveRecord::Locking::LockingType < Anonymous_Delegator_14
   def deserialize(value); end
   def encode_with(coder); end
   def init_with(coder); end
@@ -3835,7 +3843,7 @@ end
 module ActiveRecord::AttributeMethods::TimeZoneConversion
   extend ActiveSupport::Concern
 end
-class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_14
+class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_15
   def cast(value); end
   def convert_time_to_time_zone(value); end
   def deserialize(value); end
@@ -3995,6 +4003,7 @@ module ActiveRecord::AutosaveAssociation
   def association_valid?(reflection, record, index = nil); end
   def before_save_collection_association; end
   def changed_for_autosave?; end
+  def custom_validation_context?; end
   def destroyed_by_association; end
   def destroyed_by_association=(reflection); end
   def mark_for_destruction; end
@@ -4334,12 +4343,12 @@ class ActiveRecord::Associations::CollectionProxy < ActiveRecord::Relation
 end
 class ActiveRecord::AssociationRelation < ActiveRecord::Relation
   def ==(other); end
-  def build(*args, &block); end
-  def create!(*args, &block); end
-  def create(*args, &block); end
+  def build(attributes = nil, &block); end
+  def create!(attributes = nil, &block); end
+  def create(attributes = nil, &block); end
   def exec_queries; end
   def initialize(klass, association); end
-  def new(*args, &block); end
+  def new(attributes = nil, &block); end
   def proxy_association; end
 end
 class ActiveRecord::Associations::Builder::SingularAssociation < ActiveRecord::Associations::Builder::Association
@@ -5031,7 +5040,7 @@ module ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaStatements
   def validate_constraint(table_name, constraint_name); end
   def validate_foreign_key(from_table, to_table = nil, **options); end
 end
-class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_15
+class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_16
   def ==(other); end
   def eql?(other); end
   def fmod; end
@@ -5115,6 +5124,7 @@ class ActiveRecord::ConnectionAdapters::PostgreSQLAdapter < ActiveRecord::Connec
   def supports_advisory_locks?; end
   def supports_bulk_alter?; end
   def supports_comments?; end
+  def supports_common_table_expressions?; end
   def supports_datetime_with_precision?; end
   def supports_ddl_transactions?; end
   def supports_explain?; end
@@ -5639,6 +5649,7 @@ class ActiveRecord::Associations::JoinDependency
   def alias_tracker; end
   def aliases; end
   def apply_column_aliases(relation); end
+  def base_klass; end
   def build(associations, base_klass); end
   def construct(ar_parent, parent, row, seen, model_cache); end
   def construct_model(record, node, row, model_cache, id); end
@@ -5719,6 +5730,7 @@ class ActiveRecord::Associations::Association
   def reset_scope; end
   def scope; end
   def scope_for_create; end
+  def scoping(relation, &block); end
   def set_inverse_instance(record); end
   def set_inverse_instance_from_queries(record); end
   def set_owner_attributes(record); end
@@ -6077,7 +6089,7 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   def type_with_size_to_sql(type, size); end
   def update_table_definition(table_name, base); end
 end
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_16
+class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_17
   def ==(other); end
   def eql?(other); end
   def extra; end
@@ -6155,6 +6167,7 @@ class ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter < ActiveRecord::Con
   def strict_mode?; end
   def supports_advisory_locks?; end
   def supports_bulk_alter?; end
+  def supports_common_table_expressions?; end
   def supports_datetime_with_precision?; end
   def supports_explain?; end
   def supports_expression_index?; end
@@ -6485,4 +6498,25 @@ class ActiveRecord::Associations::AliasTracker
   def self.create(connection, initial_table, joins); end
   def self.initial_count_for(connection, name, table_joins); end
   def truncate(name); end
+end
+module ActiveRecord::Associations::ThroughAssociation
+  def build_record(attributes); end
+  def construct_join_attributes(*records); end
+  def ensure_mutable; end
+  def ensure_not_nested; end
+  def foreign_key_present?; end
+  def source_reflection(*args, &block); end
+  def stale_state; end
+  def target_scope; end
+  def through_association; end
+  def through_reflection; end
+end
+class ActiveRecord::Associations::HasOneThroughAssociation < ActiveRecord::Associations::HasOneAssociation
+  def create_through_record(record, save); end
+  def replace(record, save = nil); end
+  include ActiveRecord::Associations::ThroughAssociation
+end
+class ActiveRecord::Coders::JSON
+  def self.dump(obj); end
+  def self.load(json); end
 end

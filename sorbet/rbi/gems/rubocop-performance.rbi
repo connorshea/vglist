@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.5.0
+# rubocop-performance-1.5.1
 module RuboCop
 end
 module RuboCop::Performance
@@ -95,6 +95,7 @@ end
 class RuboCop::Cop::Performance::EndWith < RuboCop::Cop::Cop
   def autocorrect(node); end
   def literal_at_end?(regex_str); end
+  def on_match_with_lvasgn(node); end
   def on_send(node); end
   def redundant_regex?(node = nil); end
 end
@@ -227,6 +228,7 @@ end
 class RuboCop::Cop::Performance::StartWith < RuboCop::Cop::Cop
   def autocorrect(node); end
   def literal_at_start?(regex_str); end
+  def on_match_with_lvasgn(node); end
   def on_send(node); end
   def redundant_regex?(node = nil); end
 end

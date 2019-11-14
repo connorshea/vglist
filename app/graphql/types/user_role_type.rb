@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 module Types
   class UserRoleType < Types::BaseEnum
     value "MEMBER", value: 'member', description: "User is a regular user."

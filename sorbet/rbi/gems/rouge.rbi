@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.12.0
+# rouge-3.13.0
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
   def self.reload!; end
@@ -991,6 +991,11 @@ class Rouge::Lexers::IgorPro < Rouge::RegexLexer
   def self.keywords; end
   def self.object_name; end
   def self.preprocessor; end
+end
+class Rouge::Lexers::TTCN3 < Rouge::RegexLexer
+  def self.keywords; end
+  def self.reserved; end
+  def self.types; end
 end
 class Rouge::Lexers::SuperCollider < Rouge::RegexLexer
   def self.constants; end

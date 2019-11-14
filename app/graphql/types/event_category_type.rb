@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 module Types
   class EventCategoryType < Types::BaseEnum
     value "ADD_TO_LIBRARY", value: 'add_to_library', description: "Event for a user adding a game to their library."
