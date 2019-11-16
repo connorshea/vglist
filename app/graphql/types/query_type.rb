@@ -3,7 +3,8 @@ module Types
   class QueryType < Types::BaseObject
     field :game, GameType, null: true do
       description "Find a game by ID."
-      argument :id, ID, required: true, description: "Find a game by its unique ID."
+      argument :id, ID, required: false, description: "Find a game by its unique ID."
+      argument :giantbomb_id, String, required: false, description: "Find a game by its GiantBomb ID, e.g. `'3030-23708'`."
     end
 
     field :games, GameType.connection_type, null: true do
@@ -105,8 +106,14 @@ module Types
       argument :feed_type, ActivityFeedType, required: false
     end
 
-    def game(id:)
-      Game.find(id)
+    def game(id: nil, giantbomb_id: nil)
+      if !id.nil?
+        Game.find(id)
+      elsif !giantbomb_id.nil?
+        Game.find_by(giantbomb_id: giantbomb_id)
+      else
+        raise GraphQL::ExecutionError, "Field 'game' is missing a required argument: 'id' or 'giantbomb_id'"
+      end
     end
 
     def games
