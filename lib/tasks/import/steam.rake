@@ -54,7 +54,13 @@ namespace 'import' do
 
       progress_bar.log "Adding Steam App ID '#{game[:steam_app_id]}' to #{game_record.name}."
 
-      SteamAppId.create!(game_id: game_record.id, app_id: game[:steam_app_id].to_s)
+      begin
+        SteamAppId.create!(game_id: game_record.id, app_id: game[:steam_app_id].to_s)
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Record Invalid (#{game[:name]}): #{e}"
+        progress_bar.increment
+        next
+      end
 
       steam_added_count += 1
       progress_bar.increment
