@@ -123,7 +123,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html do
-        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games_count} games weren't found in the VGList database."
+        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games_count} games weren't found in the vglist database."
         redirect_to settings_connections_path(unmatched_games: unmatched_games)
       end
     end
