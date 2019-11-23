@@ -16,6 +16,7 @@ seed_tasks = [
   'db:seed:companies',
   'db:seed:engines',
   'db:seed:series',
+  'db:seed:stores',
   'db:seed:games',
   'db:seed:platforms',
   'db:seed:game_purchases',
@@ -66,6 +67,6 @@ puts
 puts "Created:"
 
 # Don't forget to also update faker.rb when you add new Faker data, idiot.
-[User, Genre, Company, Engine, Series, Game, Platform, GamePurchase, GameDeveloper, GamePublisher, GamePlatform].each do |class_name|
+[User, Genre, Company, Engine, Series, Store, Game, Platform, GamePurchase, GameDeveloper, GamePublisher, GamePlatform].each do |class_name|
   puts "- #{class_name.count} #{class_name.to_s.titleize.pluralize}"
 end
