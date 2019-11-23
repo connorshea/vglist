@@ -8,6 +8,8 @@ class GamePurchase < ApplicationRecord
 
   has_many :game_purchase_platforms
   has_many :platforms, through: :game_purchase_platforms, source: :platform
+  has_many :game_purchase_stores
+  has_many :stores, through: :game_purchase_stores, source: :store
 
   has_many :events, as: :eventable, dependent: :destroy
 

@@ -53,6 +53,8 @@ RSpec.describe GamePurchase, type: :model do
     it { should belong_to(:user) }
     it { should have_many(:game_purchase_platforms) }
     it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
+    it { should have_many(:game_purchase_stores) }
+    it { should have_many(:stores).through(:game_purchase_stores).source(:store) }
     it { should have_many(:events).dependent(:destroy) }
   end
 
@@ -62,6 +64,8 @@ RSpec.describe GamePurchase, type: :model do
     let(:game_purchase) { create(:game_purchase, user: user, game: game) }
     let(:game_purchase_platform) { create(:game_purchase_platform) }
     let(:game_purchase_with_platform) { create(:game_purchase, game_purchase_platforms: [game_purchase_platform]) }
+    let(:game_purchase_store) { create(:game_purchase_store) }
+    let(:game_purchase_with_store) { create(:game_purchase, game_purchase_stores: [game_purchase_store]) }
 
     it 'User should not be deleted when game purchase is deleted' do
       game_purchase
@@ -81,6 +85,11 @@ RSpec.describe GamePurchase, type: :model do
     it 'GamePurchasePlatform should be deleted when game purchase is deleted' do
       game_purchase_with_platform
       expect { game_purchase_with_platform.destroy }.to change(GamePurchasePlatform, :count).by(-1)
+    end
+
+    it 'GamePurchaseStore should be deleted when game purchase is deleted' do
+      game_purchase_with_store
+      expect { game_purchase_with_store.destroy }.to change(GamePurchaseStore, :count).by(-1)
     end
   end
 

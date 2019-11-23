@@ -532,6 +532,162 @@ class GamePurchase < ApplicationRecord
   def validate_associated_records_for_platforms(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_purchase_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_purchase_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_purchase_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_purchase_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_game_purchase_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_game_purchase_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_game_purchase_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_purchase_stores; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_purchase_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_game_purchase_stores=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_game_purchase_stores(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_game_purchase_stores(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_stores; end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_stores; end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_stores; end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_stores; end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_stores; end
+
+  sig { returns(T.untyped) }
+  def after_add_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_stores; end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_stores; end
+
+  sig { returns(T.untyped) }
+  def before_add_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_stores=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_stores; end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_stores?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_stores=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_stores(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_stores(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_events; end
 
   sig { returns(T.untyped) }
@@ -1933,11 +2089,23 @@ module GamePurchase::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::GamePurchasePlatform]).void }
   def game_purchase_platforms=(value); end
 
+  sig { returns(::GamePurchaseStore::ActiveRecord_Associations_CollectionProxy) }
+  def game_purchase_stores; end
+
+  sig { params(value: T::Enumerable[::GamePurchaseStore]).void }
+  def game_purchase_stores=(value); end
+
   sig { returns(::Platform::ActiveRecord_Associations_CollectionProxy) }
   def platforms; end
 
   sig { params(value: T::Enumerable[::Platform]).void }
   def platforms=(value); end
+
+  sig { returns(::Store::ActiveRecord_Associations_CollectionProxy) }
+  def stores; end
+
+  sig { params(value: T::Enumerable[::Store]).void }
+  def stores=(value); end
 
   sig { returns(::User) }
   def user; end
@@ -1986,6 +2154,18 @@ module GamePurchase::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def platform_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def game_purchase_store_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def game_purchase_store_ids=(ids); end
+
+  sig { returns(T.untyped) }
+  def store_ids; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def store_ids=(ids); end
 
   sig { returns(T.untyped) }
   def event_ids; end
