@@ -147,7 +147,7 @@ export default {
           label: 'Hours Played',
           field: 'hours_played',
           type: 'decimal',
-          formatFn: this.$props.formatHoursPlayed,
+          formatFn: this.formatHoursPlayed,
           hidden: false,
           index: 2
         },
@@ -182,7 +182,7 @@ export default {
           type: 'text',
           hidden: true,
           sortable: true,
-          sortFn: this.$props.sortMultiselectColumn,
+          sortFn: this.sortMultiselectColumn,
           index: 6
         },
         {
@@ -191,7 +191,7 @@ export default {
           type: 'text',
           hidden: true,
           sortable: true,
-          sortFn: this.$props.sortMultiselectColumn,
+          sortFn: this.sortMultiselectColumn,
           index: 7
         },
         {
