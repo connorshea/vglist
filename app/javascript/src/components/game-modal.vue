@@ -272,15 +272,19 @@ export default {
           'comments'
         ] = this.gamePurchase.comments;
       }
+
       if (this.gamePurchase.rating !== '') {
         submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
       }
+
       if (this.gamePurchase.hours_played !== '') {
         submittableData['game_purchase'][
           'hours_played'
         ] = this.gamePurchase.hours_played;
       }
+
       if (
+        this.gamePurchase.completion_status !== null &&
         this.gamePurchase.completion_status !== '' &&
         typeof this.gamePurchase.completion_status !== 'undefined'
       ) {
@@ -288,6 +292,7 @@ export default {
           'completion_status'
         ] = this.gamePurchase.completion_status.value;
       }
+
       if (
         this.gamePurchase.start_date !== '' &&
         this.gamePurchase.start_date !== null
@@ -296,6 +301,7 @@ export default {
           'start_date'
         ] = this.gamePurchase.start_date;
       }
+
       if (
         this.gamePurchase.completion_date !== '' &&
         this.gamePurchase.completion_date !== null
@@ -304,18 +310,30 @@ export default {
           'completion_date'
         ] = this.gamePurchase.completion_date;
       }
+
       if (this.gamePurchase.platforms !== []) {
         submittableData['game_purchase']['platform_ids'] = Array.from(
           this.gamePurchase.platforms,
           (platform: { id: String }) => platform.id
         );
       }
+
       if (this.gamePurchase.stores !== []) {
         submittableData['game_purchase']['store_ids'] = Array.from(
           this.gamePurchase.stores,
           (store: { id: String }) => store.id
         );
       }
+
+      // If any of these properties are undefined, set them to null.
+      ['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'].forEach((property) => {
+        // Set it to a blank string if the property is comments, and null otherwise.
+        let value = property === 'comments' ? "" : null;
+
+        if (submittableData['game_purchase'][property] === undefined) {
+          submittableData['game_purchase'][property] = value;
+        }
+      });
 
       let method;
       if (
