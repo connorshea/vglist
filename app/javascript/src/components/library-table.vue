@@ -181,6 +181,8 @@ export default {
           field: 'platforms',
           type: 'text',
           hidden: true,
+          sortable: true,
+          sortFn: this.$props.sortMultiselectColumn,
           index: 6
         },
         {
@@ -188,6 +190,8 @@ export default {
           field: 'stores',
           type: 'text',
           hidden: true,
+          sortable: true,
+          sortFn: this.$props.sortMultiselectColumn,
           index: 7
         },
         {
@@ -280,6 +284,24 @@ export default {
       }
 
       return formattedValue;
+    },
+    // x - row1 value for column
+    // y - row2 value for column
+    sortMultiselectColumn(x, y, col, rowX, rowY) {
+      let xEmpty = x.length === 0;
+      let yEmpty = y.length === 0;
+
+      if (xEmpty && yEmpty) {
+        return 0;
+      } else if (yEmpty) {
+        return 1;
+      } else if (xEmpty) {
+        return -1;
+      } else {
+        let xName = x[0].name.toLowerCase();
+        let yName = y[0].name.toLowerCase();
+        return (xName < yName ? -1 : (xName > yName ? 1 : 0));
+      }
     },
     toggleColumn(index, event) {
       // Set hidden to inverse of what it currently is
