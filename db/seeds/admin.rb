@@ -30,6 +30,12 @@ puts "Creating Game Purchases for admin..."
   end
   platforms.uniq!
 
+  stores = []
+  rand(0..3).times.each do
+    stores << Store.find(rand(1..Store.count))
+  end
+  stores.uniq!
+
   GamePurchase.find_or_create_by!(
     game: game,
     user: admin,
@@ -39,6 +45,7 @@ puts "Creating Game Purchases for admin..."
     completion_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
     comments: Faker::Lorem.sentence,
     hours_played: rand(0..100),
-    platforms: platforms
+    platforms: platforms,
+    stores: stores
   )
 end
