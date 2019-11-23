@@ -116,12 +116,12 @@ export default {
         credentials: 'same-origin'
       }).then(response => {
         if (response.ok) {
-          Turbolinks.visit(window.location);
+          Turbolinks.visit(window.location.href);
         }
       });
     },
     onSubmit() {
-      Turbolinks.visit(window.location);
+      Turbolinks.visit(window.location.href);
     }
   },
   created: function() {

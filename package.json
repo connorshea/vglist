@@ -23,6 +23,9 @@
     "webpack": "^4.41"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/turbolinks": "^5.2.0",
+    "@types/vue-select": "^2.5.0",
     "prettier": "1.19.1",
     "webpack-dev-server": "^3.9"
   },

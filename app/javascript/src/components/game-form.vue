@@ -360,7 +360,7 @@ export default {
           steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
         }
       });
-      difference.forEach((appId) => {
+      difference.forEach((appId: any) => {
         steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
       });
 

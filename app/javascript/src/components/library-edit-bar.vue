@@ -99,7 +99,7 @@ export default {
       }).then(response => {
         if (response.ok) {
           // Redirects to self.
-          Turbolinks.visit(window.location);
+          Turbolinks.visit(window.location.href);
         } else {
           console.log('Add error handling, doofus.');
         }
