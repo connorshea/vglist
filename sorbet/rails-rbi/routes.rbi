@@ -542,6 +542,41 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def series_url(*args, **kwargs); end
 
+  # Sigs for route /stores/search(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def search_stores_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def search_stores_url(*args, **kwargs); end
+
+  # Sigs for route /stores(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def stores_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def stores_url(*args, **kwargs); end
+
+  # Sigs for route /stores/new(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def new_store_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def new_store_url(*args, **kwargs); end
+
+  # Sigs for route /stores/:id/edit(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def edit_store_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def edit_store_url(*args, **kwargs); end
+
+  # Sigs for route /stores/:id(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def store_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def store_url(*args, **kwargs); end
+
   # Sigs for route /search(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def search_path(*args, **kwargs); end

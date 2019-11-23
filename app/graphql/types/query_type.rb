@@ -86,6 +86,20 @@ module Types
       argument :query, String, required: true, description: "Name to search by."
     end
 
+    field :store, StoreType, null: true do
+      description "Find a store by ID."
+      argument :id, ID, required: true
+    end
+
+    field :stores, StoreType.connection_type, null: true do
+      description "List all stores."
+    end
+
+    field :store_search, StoreType.connection_type, null: true do
+      description "Find a store by searching based on its name."
+      argument :query, String, required: true, description: "Name to search by."
+    end
+
     field :user, UserType, null: true do
       description "Find a user."
       argument :id, ID, required: false, description: "Find a user by their ID."
@@ -182,6 +196,18 @@ module Types
 
     def genre_search(query:)
       Genre.search(query)
+    end
+
+    def store(id:)
+      Store.find(id)
+    end
+
+    def stores
+      Store.all
+    end
+
+    def store_search(query:)
+      Store.search(query)
     end
 
     def user(id: nil, username: nil)

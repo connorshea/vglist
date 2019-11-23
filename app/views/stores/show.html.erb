@@ -1,0 +1,15 @@
+<% content_for :title, @store.name %>
+<% content_for :description, "#{@store.name} on vglist" %>
+
+<h1 class="title"><%= @store.name %></h1>
+
+<% if policy(@store).edit? || policy(@store).destroy? %>
+  <div class="field buttons">
+    <% if policy(@store).edit? %>
+      <%= link_to("Edit", edit_store_path(@store.id), class: "button is-fullwidth-mobile mr-0-mobile") %>
+    <% end %>
+    <% if policy(@store).destroy? %>
+      <%= link_to("Delete", store_path(@store.id), method: :delete, data: { confirm: "You sure?" }, class: "button is-fullwidth-mobile is-danger") %>
+    <% end %>
+  </div>
+<% end %>

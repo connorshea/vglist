@@ -1,0 +1,16 @@
+<% content_for :title, "Stores" %>
+<% content_for :description, "All game stores on vglist." %>
+
+<h1 class="title">Stores</h1>
+
+<% if policy(@stores).create? %>
+  <p><%= link_to("Create a new store", new_store_path, class: 'button is-fullwidth-mobile mb-10') %></p>
+<% end %>
+
+<ul>
+  <% @stores.each do |store| %>
+    <li><%= link_to(store.name, store_path(store.id)) %></li>
+  <% end %>
+</ul>
+
+<%= paginate @stores %>

@@ -19,6 +19,12 @@ puts "Creating Game Purchases..."
     end
     platforms.uniq!
 
+    stores = []
+    rand(0..3).times.each do
+      stores << Store.find(rand(1..Store.count))
+    end
+    stores.uniq!
+
     begin
       GamePurchase.find_or_create_by!(
         game: game,
@@ -28,7 +34,8 @@ puts "Creating Game Purchases..."
         start_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
         completion_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
         comments: Faker::Lorem.sentence,
-        platforms: platforms
+        platforms: platforms,
+        stores: stores
       )
     rescue ActiveRecord::RecordInvalid => e
       puts "Error: #{e}"

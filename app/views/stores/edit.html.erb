@@ -1,0 +1,5 @@
+<% content_for :title, "Edit #{@store.name}" %>
+
+<h1 class="title">Edit <%= @store.name %></h1>
+
+<%= render 'form', cancel_path: store_path(@store.id) %>

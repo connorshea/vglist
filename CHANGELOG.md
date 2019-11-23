@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.11.23
+### Added
+- Add Stores for keeping track of the places where you own games. ([#842])
+
 ## v2019.11.4
 ### Added
 - Add Giant Bomb IDs along with an importer for them from Wikidata. ([#811])
@@ -602,3 +606,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#778]: https://github.com/connorshea/VideoGameList/pull/778
 [#803]: https://github.com/connorshea/VideoGameList/pull/803
 [#811]: https://github.com/connorshea/VideoGameList/pull/811
+[#842]: https://github.com/connorshea/VideoGameList/pull/842

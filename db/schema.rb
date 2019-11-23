@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_05_030259) do
+ActiveRecord::Schema.define(version: 2019_11_23_180826) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -160,6 +160,16 @@ ActiveRecord::Schema.define(version: 2019_11_05_030259) do
     t.index ["platform_id"], name: "index_game_purchase_platforms_on_platform_id"
   end
 
+  create_table "game_purchase_stores", force: :cascade do |t|
+    t.bigint "game_purchase_id", null: false
+    t.bigint "store_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_purchase_id", "store_id"], name: "index_game_purchase_stores_on_game_purchase_and_store", unique: true
+    t.index ["game_purchase_id"], name: "index_game_purchase_stores_on_game_purchase_id"
+    t.index ["store_id"], name: "index_game_purchase_stores_on_store_id"
+  end
+
   create_table "game_purchases", force: :cascade do |t|
     t.bigint "game_id", null: false
     t.bigint "user_id", null: false
@@ -286,6 +296,12 @@ ActiveRecord::Schema.define(version: 2019_11_05_030259) do
     t.index ["game_id"], name: "index_steam_app_ids_on_game_id"
   end
 
+  create_table "stores", force: :cascade do |t|
+    t.text "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -340,6 +356,8 @@ ActiveRecord::Schema.define(version: 2019_11_05_030259) do
   add_foreign_key "game_publishers", "games", on_delete: :cascade
   add_foreign_key "game_purchase_platforms", "game_purchases", on_delete: :cascade
   add_foreign_key "game_purchase_platforms", "platforms", on_delete: :cascade
+  add_foreign_key "game_purchase_stores", "game_purchases", on_delete: :cascade
+  add_foreign_key "game_purchase_stores", "stores", on_delete: :cascade
   add_foreign_key "game_purchases", "games", on_delete: :cascade
   add_foreign_key "game_purchases", "users", on_delete: :cascade
   add_foreign_key "games", "series", on_delete: :nullify

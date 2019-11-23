@@ -72,3 +72,13 @@ en:
         'Mass Effect',
         'Dragon Age'
       ]
+      store: [
+        'Steam',
+        'Epic Games Store',
+        'Origin',
+        'eShop',
+        'Uplay',
+        'Humble Store',
+        'GOG.com',
+        'Microsoft Store'
+      ]

@@ -1388,9 +1388,6 @@ end
 class ActionView::Template::Inline
 end
 
-class ActionView::Template::LegacyTemplate
-end
-
 class ActionView::Template::RawFile
   def format(); end
 
@@ -8392,6 +8389,44 @@ module GamePurchasePlatform::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
+class GamePurchaseStore::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchaseStore::GeneratedRelationMethods
+end
+
+class GamePurchaseStore::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePurchaseStore::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchaseStore::GeneratedRelationMethods
+end
+
+class GamePurchaseStore::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class GamePurchaseStore::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchaseStore::GeneratedRelationMethods
+end
+
+class GamePurchaseStore::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+module GamePurchaseStore::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module GamePurchaseStore::GeneratedRelationMethods
+end
+
+module GamePurchaseStore::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 module GamesHelper
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -10848,9 +10883,6 @@ end
 class Mail::POP3
 end
 
-class Mail::PartsList
-end
-
 class Mail::PhraseList
   def initialize(string); end
 
@@ -11945,9 +11977,13 @@ class Mutations::AddGameToLibrary
 
   def load_hours_played(value); end
 
+  def load_platforms(value); end
+
   def load_rating(value); end
 
   def load_start_date(value); end
+
+  def load_stores(value); end
 end
 
 class Mutations::BaseMutation
@@ -27728,6 +27764,48 @@ class StopIteration
   def result(); end
 end
 
+class Store::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Store::GeneratedRelationMethods
+end
+
+class Store::ActiveRecord_AssociationRelation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Store::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Store::GeneratedRelationMethods
+end
+
+class Store::ActiveRecord_Associations_CollectionProxy
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class Store::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Store::GeneratedRelationMethods
+end
+
+class Store::ActiveRecord_Relation
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+module Store::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module Store::GeneratedRelationMethods
+end
+
+module Store::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+class Store
+  def self.search(*args); end
+end
+
 class String
   include ::JSON::Ext::Generator::GeneratorMethods::String
   def []=(*_); end
@@ -29147,9 +29225,6 @@ end
 
 module Zip::NullInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-end
-
-class Zip::StreamableStream
 end
 
 Zip::ZipCompressionMethodError = Zip::CompressionMethodError

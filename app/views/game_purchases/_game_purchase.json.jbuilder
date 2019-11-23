@@ -6,6 +6,7 @@ json.extract! game_purchase,
   :start_date,
   :completion_date,
   :platforms,
+  :stores,
   :user_id
 
 humanized_completion_statuses = {

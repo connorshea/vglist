@@ -14,6 +14,10 @@ if defined?(Faker)
         def series
           fetch('game.series')
         end
+
+        def store
+          fetch('game.store')
+        end
       end
     end
   end

@@ -14,6 +14,7 @@ class AdminController < ApplicationController
       engines: Engine.count,
       companies: Company.count,
       genres: Genre.count,
+      stores: Store.count,
       events: Event.count,
       game_purchases: GamePurchase.count,
       relationships: Relationship.count,

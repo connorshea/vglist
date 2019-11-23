@@ -84,7 +84,8 @@ class GamePurchasesController < ApplicationController
       :start_date,
       :completion_date,
       :hours_played,
-      platform_ids: []
+      platform_ids: [],
+      store_ids: []
     )
   end
 

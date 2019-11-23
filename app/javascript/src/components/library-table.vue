@@ -66,6 +66,11 @@
           <a :href="`/platforms/${platform.id}`">{{ platform.name }}</a>
         </p>
       </span>
+      <span v-else-if="props.column.field == 'stores'">
+        <p v-for="store in props.row.stores" :key="store.id">
+          <a :href="`/stores/${store.id}`">{{ store.name }}</a>
+        </p>
+      </span>
       <span v-else>{{ props.formattedRow[props.column.field] }}</span>
     </template>
     <div slot="emptystate" class="vgt-center-align">
@@ -179,11 +184,18 @@ export default {
           index: 6
         },
         {
+          label: 'Stores',
+          field: 'stores',
+          type: 'text',
+          hidden: true,
+          index: 7
+        },
+        {
           label: 'Comments',
           field: 'comments',
           type: 'text',
           hidden: false,
-          index: 7
+          index: 8
         }
       ],
       completionStatuses: [
