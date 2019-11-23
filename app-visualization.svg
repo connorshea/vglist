@@ -603,8 +603,19 @@
 <title>m_Series&#45;&gt;m_PgSearch::Document</title>
 <path fill="none" stroke="black" d="M909.42,-721.9C757.35,-713.64 414.46,-691.29 375.51,-656 272.59,-562.73 276.93,-378.27 284.56,-297.25"/>
 </g>
-<!-- m_User -->
+<!-- m_Store -->
 <g id="node25" class="node">
+<title>m_Store</title>
+<path fill="none" stroke="black" d="M1094.51,-699C1094.51,-699 1214.51,-699 1214.51,-699 1220.51,-699 1226.51,-705 1226.51,-711 1226.51,-711 1226.51,-742 1226.51,-742 1226.51,-748 1220.51,-754 1214.51,-754 1214.51,-754 1094.51,-754 1094.51,-754 1088.51,-754 1082.51,-748 1082.51,-742 1082.51,-742 1082.51,-711 1082.51,-711 1082.51,-705 1088.51,-699 1094.51,-699"/>
+<text text-anchor="start" x="1139.37" y="-740.7" font-family="Arial BoldMT" font-size="11.00">Store</text>
+<polyline fill="none" stroke="black" points="1082.51,-735 1226.51,-735 "/>
+<text text-anchor="start" x="1089.51" y="-722" font-family="ArialMT" font-size="10.00">id </text>
+<text text-anchor="start" x="1100.08" y="-722" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">integer (8) PK</text>
+<text text-anchor="start" x="1089.51" y="-709" font-family="ArialMT" font-size="10.00">name </text>
+<text text-anchor="start" x="1117.31" y="-709" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">text ∗</text>
+</g>
+<!-- m_User -->
+<g id="node26" class="node">
 <title>m_User</title>
 <path fill="none" stroke="black" d="M1790.51,-366.5C1790.51,-366.5 1930.51,-366.5 1930.51,-366.5 1936.51,-366.5 1942.51,-372.5 1942.51,-378.5 1942.51,-378.5 1942.51,-643.5 1942.51,-643.5 1942.51,-649.5 1936.51,-655.5 1930.51,-655.5 1930.51,-655.5 1790.51,-655.5 1790.51,-655.5 1784.51,-655.5 1778.51,-649.5 1778.51,-643.5 1778.51,-643.5 1778.51,-378.5 1778.51,-378.5 1778.51,-372.5 1784.51,-366.5 1790.51,-366.5"/>
 <text text-anchor="start" x="1846.9" y="-642.2" font-family="Arial BoldMT" font-size="11.00">User</text>
@@ -715,7 +726,7 @@
 <polygon fill="black" stroke="black" points="1952.34,-472.53 1942.81,-472.41 1950.18,-478.45 1952.34,-472.53"/>
 </g>
 <!-- m_WikidataBlocklist -->
-<g id="node26" class="node">
+<g id="node27" class="node">
 <title>m_WikidataBlocklist</title>
 <path fill="none" stroke="black" d="M2018.51,-216C2018.51,-216 2138.51,-216 2138.51,-216 2144.51,-216 2150.51,-222 2150.51,-228 2150.51,-228 2150.51,-285 2150.51,-285 2150.51,-291 2144.51,-297 2138.51,-297 2138.51,-297 2018.51,-297 2018.51,-297 2012.51,-297 2006.51,-291 2006.51,-285 2006.51,-285 2006.51,-228 2006.51,-228 2006.51,-222 2012.51,-216 2018.51,-216"/>
 <text text-anchor="start" x="2035.25" y="-283.7" font-family="Arial BoldMT" font-size="11.00">WikidataBlocklist</text>
@@ -736,13 +747,13 @@
 <polygon fill="black" stroke="black" points="2040.83,-305.97 2044.33,-297.1 2036.06,-301.85 2040.83,-305.97"/>
 </g>
 <!-- m_primary::SchemaMigration -->
-<g id="node27" class="node">
+<g id="node28" class="node">
 <title>m_primary::SchemaMigration</title>
-<path fill="none" stroke="black" d="M1094.51,-705.5C1094.51,-705.5 1214.51,-705.5 1214.51,-705.5 1220.51,-705.5 1226.51,-711.5 1226.51,-717.5 1226.51,-717.5 1226.51,-735.5 1226.51,-735.5 1226.51,-741.5 1220.51,-747.5 1214.51,-747.5 1214.51,-747.5 1094.51,-747.5 1094.51,-747.5 1088.51,-747.5 1082.51,-741.5 1082.51,-735.5 1082.51,-735.5 1082.51,-717.5 1082.51,-717.5 1082.51,-711.5 1088.51,-705.5 1094.51,-705.5"/>
-<text text-anchor="start" x="1088.33" y="-734.2" font-family="Arial BoldMT" font-size="11.00">primary::SchemaMigration</text>
-<polyline fill="none" stroke="black" points="1082.51,-728.5 1226.51,-728.5 "/>
-<text text-anchor="start" x="1089.51" y="-715" font-family="ArialMT" font-size="10.00">version </text>
-<text text-anchor="start" x="1124.53" y="-715" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string PK</text>
+<path fill="none" stroke="black" d="M1267.51,-705.5C1267.51,-705.5 1387.51,-705.5 1387.51,-705.5 1393.51,-705.5 1399.51,-711.5 1399.51,-717.5 1399.51,-717.5 1399.51,-735.5 1399.51,-735.5 1399.51,-741.5 1393.51,-747.5 1387.51,-747.5 1387.51,-747.5 1267.51,-747.5 1267.51,-747.5 1261.51,-747.5 1255.51,-741.5 1255.51,-735.5 1255.51,-735.5 1255.51,-717.5 1255.51,-717.5 1255.51,-711.5 1261.51,-705.5 1267.51,-705.5"/>
+<text text-anchor="start" x="1261.33" y="-734.2" font-family="Arial BoldMT" font-size="11.00">primary::SchemaMigration</text>
+<polyline fill="none" stroke="black" points="1255.51,-728.5 1399.51,-728.5 "/>
+<text text-anchor="start" x="1262.51" y="-715" font-family="ArialMT" font-size="10.00">version </text>
+<text text-anchor="start" x="1297.53" y="-715" font-family="Arial ItalicMT" font-size="10.00" fill="#999999">string PK</text>
 </g>
 </g>
 </svg>

@@ -80,6 +80,10 @@ Rails.application.routes.draw do
     get :search, on: :collection
   end
 
+  resources :stores, except: :show do
+    get :search, on: :collection
+  end
+
   namespace :search do
     get :index, as: '/', path: '/'
   end
