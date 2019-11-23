@@ -18,6 +18,11 @@ class StorePolicy < ApplicationPolicy
     true
   end
 
+  sig { returns(T::Boolean) }
+  def show?
+    true
+  end
+
   sig { returns(T.nilable(T::Boolean)) }
   def create?
     user.present?

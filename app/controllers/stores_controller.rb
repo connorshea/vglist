@@ -1,10 +1,20 @@
 # typed: false
 class StoresController < ApplicationController
-  before_action :authenticate_user!, except: [:index]
+  before_action :authenticate_user!, except: [:index, :show]
 
   def index
     @stores = Store.order(:id).page helpers.page_param
     skip_policy_scope
+  end
+
+  def show
+    @store = Store.find(params[:id])
+    skip_authorization
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @store }
+    end
   end
 
   def new

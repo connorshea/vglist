@@ -80,7 +80,7 @@ Rails.application.routes.draw do
     get :search, on: :collection
   end
 
-  resources :stores, except: :show do
+  resources :stores do
     get :search, on: :collection
   end
 
