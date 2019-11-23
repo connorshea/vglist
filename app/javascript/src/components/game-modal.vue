@@ -79,6 +79,12 @@
             v-model="gamePurchase.platforms"
             :search-path-identifier="'platforms'"
           ></multi-select>
+
+          <multi-select
+            :label="formData.stores.label"
+            v-model="gamePurchase.stores"
+            :search-path-identifier="'stores'"
+          ></multi-select>
         </div>
 
         <div v-else>
@@ -159,6 +165,13 @@ export default {
         return [];
       }
     },
+    stores: {
+      type: Array,
+      required: false,
+      default: function() {
+        return [];
+      }
+    },
     game: {
       type: Object,
       required: false,
@@ -192,7 +205,8 @@ export default {
         start_date: this.$props.start_date,
         hours_played: parseFloat(this.$props.hours_played),
         completion_date: this.$props.completion_date,
-        platforms: this.$props.platforms
+        platforms: this.$props.platforms,
+        stores: this.$props.stores
       },
       formData: {
         class: 'game_purchase',
@@ -221,6 +235,9 @@ export default {
         },
         platforms: {
           label: 'Platforms'
+        },
+        stores: {
+          label: 'Stores'
         },
         game: {
           label: 'Game'
@@ -291,6 +308,12 @@ export default {
         submittableData['game_purchase']['platform_ids'] = Array.from(
           this.gamePurchase.platforms,
           (platform: { id: String }) => platform.id
+        );
+      }
+      if (this.gamePurchase.stores !== []) {
+        submittableData['game_purchase']['store_ids'] = Array.from(
+          this.gamePurchase.stores,
+          (store: { id: String }) => store.id
         );
       }
 
