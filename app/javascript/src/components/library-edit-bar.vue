@@ -52,7 +52,9 @@ export default {
   data: function() {
     return {
       updateData: {
-        ids: []
+        ids: [],
+        completion_status: null,
+        rating: null
       },
       completionStatuses: {
         unplayed: 'Unplayed',
@@ -66,14 +68,14 @@ export default {
     };
   },
   methods: {
-    updateGames() {
+    updateGames(): void {
       // Clear the array first.
       this.updateData['ids'] = [];
       this.gamePurchases.forEach(gamePurchase => {
         this.updateData['ids'].push(gamePurchase.id);
       });
 
-      if (this.updateData['rating'] === '') {
+      if (this.updateData['rating'] === null) {
         delete this.updateData['rating'];
       }
 
@@ -82,9 +84,8 @@ export default {
       // values are changed.
       let updateData = this.updateData;
 
-      if (typeof updateData['completion_status'] !== 'undefined') {
-        updateData['completion_status'] =
-          updateData['completion_status']['value'];
+      if (updateData['completion_status'] !== null) {
+        updateData['completion_status'] = updateData['completion_status']['value'];
       }
 
       fetch('/game_purchases/bulk_update.json', {
@@ -107,11 +108,11 @@ export default {
     }
   },
   computed: {
-    selectedGamesString() {
+    selectedGamesString(): string {
       let gpLength = this.gamePurchases.length;
       return `${gpLength} game${gpLength > 1 ? 's' : ''} selected`;
     },
-    updateButtonActive() {
+    updateButtonActive(): boolean {
       if (Object.keys(this.updateData).length === 1) {
         return false;
       }
@@ -123,7 +124,8 @@ export default {
       ['rating', 'completion_status'].forEach(attribute => {
         if (
           typeof this.updateData[attribute] !== 'undefined' &&
-          this.updateData[attribute] !== ''
+          this.updateData[attribute] !== '' &&
+          this.updateData[attribute] !== null
         ) {
           returnBool = true;
         }
@@ -131,7 +133,7 @@ export default {
 
       return returnBool;
     },
-    formattedCompletionStatuses: function() {
+    formattedCompletionStatuses(): any {
       return Object.entries(this.completionStatuses).map(status => {
         return { label: status[1], value: status[0] };
       });
