@@ -11,7 +11,7 @@ module Types
     def self.authorized?(_object, context)
       raise GraphQL::ExecutionError, "You must be logged in to use the API." if context[:current_user].nil?
 
-      raise GraphQL::ExecutionError, "Your token must have the 'read' scope to perform a query." unless context[:doorkeeper_scopes]&.include?('read')
+      raise GraphQL::ExecutionError, "Your token must have the 'read' scope to perform a query." if !context[:doorkeeper_scopes]&.include?('read') && !context[:graphiql_override]
 
       return true
     end
