@@ -321,7 +321,8 @@ namespace 'import:wikidata' do
   def games_query
     sparql = <<-SPARQL
       SELECT ?item WHERE {
-        ?item wdt:P31 wd:Q7889; # Instances of video games.
+        VALUES ?videoGameTypes { wd:Q7889 wd:Q21125433 }.
+        ?item wdt:P31 ?videoGameTypes; # Instances of 'video games' or 'free or open source video games'.
               rdfs:label ?label filter(lang(?label) = "en"). # with a label
       }
     SPARQL
