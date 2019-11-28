@@ -12,8 +12,8 @@ class SettingsController < ApplicationController
     authorize @user, policy_class: SettingsPolicy
   end
 
-  # Connections settings
-  def connections
+  # Import settings
+  def import
     @user = current_user
     authorize @user, policy_class: SettingsPolicy
 

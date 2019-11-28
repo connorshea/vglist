@@ -598,12 +598,12 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def settings_account_url(*args, **kwargs); end
 
-  # Sigs for route /settings/connections(.:format)
+  # Sigs for route /settings/import(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def settings_connections_path(*args, **kwargs); end
+  def settings_import_path(*args, **kwargs); end
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def settings_connections_url(*args, **kwargs); end
+  def settings_import_url(*args, **kwargs); end
 
   # Sigs for route /settings/oauth/authorize/native(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }

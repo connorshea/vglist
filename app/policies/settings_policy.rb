@@ -22,7 +22,7 @@ class SettingsPolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
-  def connections?
+  def import?
     user_is_current_user?
   end
 
