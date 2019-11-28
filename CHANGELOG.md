@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.11.27
+### Added
+- Add Export Library page in Settings. This allows users to export their entire vglist game library as a JSON file. ([#852])
+
 ## v2019.11.23
 ### Added
 - Add Stores for keeping track of the places where you own games. ([#842])
@@ -607,3 +611,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#803]: https://github.com/connorshea/VideoGameList/pull/803
 [#811]: https://github.com/connorshea/VideoGameList/pull/811
 [#842]: https://github.com/connorshea/VideoGameList/pull/842
+[#852]: https://github.com/connorshea/VideoGameList/pull/852
