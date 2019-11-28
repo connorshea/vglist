@@ -26,6 +26,16 @@ class SettingsPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
+  sig { returns(T.nilable(T::Boolean)) }
+  def export?
+    user_is_current_user?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def export_as_json?
+    user_is_current_user?
+  end
+
   private
 
   sig { returns(T.nilable(T::Boolean)) }

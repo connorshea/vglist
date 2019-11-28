@@ -1,0 +1,29 @@
+<% content_for :title, "Export Library" %>
+
+<div class="columns">
+  <div class="column is-3-desktop">
+    <div class="box">
+      <%= render 'nav' %>
+    </div>
+  </div>
+
+  <div class="column">
+    <h1 class="title">Export</h1>
+
+    <div class="content">
+      <p>
+        Want to export your library? You can export it as a JSON file, which is a standard data format used across the web.
+        Just click Export Library below.
+      </p>
+      <p>
+        <%= button_to "Export Library",
+          settings_export_as_json_path(format: :json),
+          method: :get,
+          class: 'button is-primary mt-10 mb-10' %>
+      </p>
+      <p>
+        If you're leaving for another site, we'd love to have your feedback so we can improve!
+      </p>
+    </div>
+  </div>
+</div>
