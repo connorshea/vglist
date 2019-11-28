@@ -79,7 +79,7 @@
       <span v-if="!isLoading && isEditable" class="vgt-text-disabled">
         <p>
           Want to get a headstart?
-          <a href="/settings/connections">Connect your Steam account</a> and import your games to get started.
+          <a href="/settings/import">Connect your Steam account</a> and import your games to get started.
         </p>
       </span>
     </div>

@@ -91,7 +91,9 @@ Rails.application.routes.draw do
   namespace :settings do
     get :profile, as: '/', path: '/'
     get :account
-    get :connections
+    get :import
+    get :export
+    get :export_as_json
   end
 
   scope :settings do

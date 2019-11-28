@@ -85,7 +85,7 @@ class UsersController < ApplicationController
       respond_to do |format|
         format.html do
           flash[:error] = "Unable to find any games in your Steam library. Are you sure it's public and that you've connected the correct account?"
-          redirect_to settings_connections_path
+          redirect_to settings_import_path
           return
         end
       end
@@ -124,7 +124,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:success] = "Added #{matched_games_count} games. #{unmatched_games_count} games weren't found in the vglist database."
-        redirect_to settings_connections_path(unmatched_games: unmatched_games)
+        redirect_to settings_import_path(unmatched_games: unmatched_games)
       end
     end
   end
@@ -155,12 +155,12 @@ class UsersController < ApplicationController
       if @steam_account&.save
         format.html do
           flash[:success] = "Steam account successfully connected."
-          redirect_to settings_connections_path
+          redirect_to settings_import_path
         end
       else
         format.html do
           flash[:error] = "Unable to find a Steam account with that username."
-          redirect_to settings_connections_path
+          redirect_to settings_import_path
         end
       end
     end
@@ -176,12 +176,12 @@ class UsersController < ApplicationController
       if @steam_account&.destroy
         format.html do
           flash[:success] = "Successfully disconnected Steam account."
-          redirect_to settings_connections_path
+          redirect_to settings_import_path
         end
       else
         format.html do
           flash[:error] = "Unable to disconnect Steam account."
-          redirect_to settings_connections_path
+          redirect_to settings_import_path
         end
       end
     end

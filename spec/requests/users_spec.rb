@@ -365,7 +365,7 @@ RSpec.describe "Users", type: :request do
       sign_in(user_with_external_account)
       delete disconnect_steam_user_path(user_with_external_account.id),
         params: { id: user_with_external_account.id }
-      expect(response).to redirect_to(settings_connections_path)
+      expect(response).to redirect_to(settings_import_path)
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
       expect(response.body).to include("Successfully disconnected Steam account.")
@@ -375,7 +375,7 @@ RSpec.describe "Users", type: :request do
       sign_in(user)
       delete disconnect_steam_user_path(user.id),
         params: { id: user.id }
-      expect(response).to redirect_to(settings_connections_path)
+      expect(response).to redirect_to(settings_import_path)
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
       expect(response.body).to include("Unable to disconnect Steam account.")
