@@ -60,6 +60,47 @@ RSpec.describe "Settings", type: :request do
     end
   end
 
+  describe "GET settings_export_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      sign_in(user)
+      get settings_export_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects for users who aren't logged in" do
+      get settings_export_path
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
+  describe "GET settings_export_as_json_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: user) }
+
+    it "returns http success" do
+      sign_in(user)
+      get settings_export_as_json_path(format: :json)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns expected JSON object when user has game purchase" do
+      game_purchase
+      sign_in(user)
+      get settings_export_as_json_path(format: :json)
+      json = JSON.parse(response.body)
+      expect(json.first['id']).to eq(game_purchase.id)
+      expect(json.first['game']['id']).to eq(game_purchase.game.id)
+      expect(json.first['hours_played']).to eq(game_purchase.hours_played)
+    end
+
+    it "redirects for users who aren't logged in" do
+      get settings_export_as_json_path(format: :json)
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
   describe "GET oauth_applications_path" do
     let(:user) { create(:confirmed_user) }
     let(:user_with_application) { create(:user_with_application) }
