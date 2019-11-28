@@ -87,6 +87,8 @@ The `read` scope lets you perform GraphQL queries. `write` lets you perform Grap
 
 If you want to use a token with the `write` scope, make sure you send the `write` scope as an explicit part of the OAuth request whenever you send a request. The OAuth application will also need to have the `write` scope in its 'Scopes' field.
 
+If you're getting errors about insufficient scope, make sure you include `&scope=read+write` as part of the authorization URL.
+
 ### API Tokens
 
 I intend to support long-lasting API tokens soon, but they do not currently exist. They'll be useful for creating things like Discord bots, which could be used for things like searching the vglist database with a bot command.
