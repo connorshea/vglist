@@ -5,7 +5,7 @@ FactoryBot.define do
 
     trait :cover do
       after(:build) do |game|
-        game.cover.attach(io: File.open(Rails.root.join('spec', 'factories', 'images', 'crysis.jpg')), filename: 'crysis.jpg', content_type: 'image/jpg')
+        game.cover.attach(io: File.open(Rails.root.join('spec/factories/images/crysis.jpg')), filename: 'crysis.jpg', content_type: 'image/jpg')
       end
     end
 

@@ -7,7 +7,7 @@ if Rails.env.development?
   Rake::Task["erd:load_models"].clear
 
   namespace :erd do
-    task :load_models do
+    task load_models: :environment do
       say "Loading application environment..."
       Rake::Task[:environment].invoke
 
