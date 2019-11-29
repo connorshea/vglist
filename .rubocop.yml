@@ -19,7 +19,7 @@ Bundler/OrderedGems:
 
 ###################### Layout ##############################
 
-Layout/AlignArguments:
+Layout/ArgumentAlignment:
   Enabled: false
 
 #################### Metrics ###############################
