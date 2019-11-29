@@ -28,8 +28,11 @@ RSpec.describe GamePurchasePolicy, type: :policy do
     let(:game_purchase) { create(:game_purchase, user: another_user) }
 
     it "isn't allowed to modify another user's game purchases" do
-      expect(game_purchase_policy).to permit_actions([:index, :show])
-      expect(game_purchase_policy).to forbid_actions([:create, :update, :destroy, :bulk_update])
+      # It can create because create only allows you to create for the currently-logged-in user.
+      # We don't currently check the value of current_user because of limitations
+      # in GraphQL and Pundit.
+      expect(game_purchase_policy).to permit_actions([:index, :show, :create])
+      expect(game_purchase_policy).to forbid_actions([:update, :destroy, :bulk_update])
     end
   end
 
@@ -60,12 +63,15 @@ RSpec.describe GamePurchasePolicy, type: :policy do
       expect(game_purchase_policy).to permit_actions(
         [
           :index,
-          :show
+          :show,
+          # It can create because create only allows you to create for the logged-in user.
+          # We don't currently check the value of current_user because of limitations
+          # in GraphQL and Pundit.
+          :create
         ]
       )
       expect(game_purchase_policy).to forbid_actions(
         [
-          :create,
           :update,
           :bulk_update,
           :destroy
@@ -83,12 +89,15 @@ RSpec.describe GamePurchasePolicy, type: :policy do
       expect(game_purchase_policy).to permit_actions(
         [
           :index,
-          :show
+          :show,
+          # It can create because create only allows you to create for the logged-in user.
+          # We don't currently check the value of current_user because of limitations
+          # in GraphQL and Pundit.
+          :create
         ]
       )
       expect(game_purchase_policy).to forbid_actions(
         [
-          :create,
           :update,
           :bulk_update,
           :destroy
@@ -103,11 +112,14 @@ RSpec.describe GamePurchasePolicy, type: :policy do
     let(:game_purchase) { create(:game_purchase, user: private_user) }
 
     it "is allowed to see and do nothing" do
+      # It can create because create only allows you to create for the logged-in user.
+      # We don't currently check the value of current_user because of limitations
+      # in GraphQL and Pundit.
+      expect(game_purchase_policy).to permit_action(:create)
       expect(game_purchase_policy).to forbid_actions(
         [
           :index,
           :show,
-          :create,
           :update,
           :bulk_update,
           :destroy
