@@ -3,6 +3,8 @@ module Types
   class GameType < Types::BaseObject
     extend T::Sig
 
+    description "Video games"
+
     field :id, ID, null: false
     field :name, String, null: false
     field :release_date, GraphQL::Types::ISO8601Date, null: true, description: "The release date of the game."

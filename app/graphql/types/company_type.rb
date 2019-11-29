@@ -1,6 +1,8 @@
 # typed: strict
 module Types
   class CompanyType < Types::BaseObject
+    description "Video game developers and publishers"
+
     field :id, ID, null: false
     field :name, String, null: false, description: 'Company name'
     field :wikidata_id, Integer, null: true, description: 'Wikidata identifier'

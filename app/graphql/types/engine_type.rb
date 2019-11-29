@@ -1,6 +1,8 @@
 # typed: strict
 module Types
   class EngineType < Types::BaseObject
+    description "Video game engines"
+
     field :id, ID, null: false
     field :name, String, null: false
     field :wikidata_id, Integer, null: true

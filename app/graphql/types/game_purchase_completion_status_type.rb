@@ -1,6 +1,8 @@
-# typed: strong
+# typed: strict
 module Types
   class GamePurchaseCompletionStatusType < Types::BaseEnum
+    description "Completion Status options for game purchases (games in a user's library)."
+
     value "UNPLAYED", value: 'unplayed', description: "The game is unplayed."
     value "IN_PROGRESS", value: 'in_progress', description: "The game is currently being played."
     value "DROPPED", value: 'dropped', description: "The game was dropped without being completed."
