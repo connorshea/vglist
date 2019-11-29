@@ -38,7 +38,7 @@ class Mutations::UpdateGameInLibrary < Mutations::BaseMutation
   def authorized?(object)
     game_purchase = GamePurchase.find(object[:game_purchase_id])
 
-    raise GraphQL::ExecutionError, "You aren't allowed to edit this game purchase." unless GamePurchasePolicy.new(@context[:current_user], game_purchase).update?
+    raise GraphQL::ExecutionError, "You aren't allowed to update this game purchase." unless GamePurchasePolicy.new(@context[:current_user], game_purchase).update?
 
     return true
   end

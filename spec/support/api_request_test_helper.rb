@@ -10,6 +10,8 @@ module ApiRequestTestHelper
         'Authorization': "Bearer #{token.token}"
       }
 
-    return JSON.parse(response.body)
+    response_body = JSON.parse(response.body)
+    puts "ERRORS: #{response_body['errors'].inspect}" if ENV['DEBUG'] && response_body['errors']&.any?
+    return response_body
   end
 end
