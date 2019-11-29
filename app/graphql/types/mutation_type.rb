@@ -8,6 +8,7 @@ module Types
     field :unfollow_user, mutation: Mutations::UnfollowUser
 
     field :add_game_to_library, mutation: Mutations::AddGameToLibrary
+    field :update_game_in_library, mutation: Mutations::UpdateGameInLibrary
     field :remove_game_from_library, mutation: Mutations::RemoveGameFromLibrary
   end
 end
