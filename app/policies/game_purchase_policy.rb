@@ -28,7 +28,7 @@ class GamePurchasePolicy < ApplicationPolicy
 
   sig { returns(T.nilable(T::Boolean)) }
   def create?
-    game_purchase_belongs_to_user?
+    user_signed_in?
   end
 
   sig { returns(T.nilable(T::Boolean)) }
@@ -56,5 +56,10 @@ class GamePurchasePolicy < ApplicationPolicy
   sig { returns(T.nilable(T::Boolean)) }
   def user_profile_is_visible?
     game_purchase&.user&.public_account? || game_purchase_belongs_to_user? || user&.admin?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def user_signed_in?
+    user.present?
   end
 end

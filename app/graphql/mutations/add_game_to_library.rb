@@ -59,4 +59,12 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
       game_purchase: game_purchase
     }
   end
+
+  # Check that the user is authorized to add the game to their library.
+  sig { params(_object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
+  def authorized?(_object)
+    raise GraphQL::ExecutionError, "You aren't allowed to add this game to your library." unless GamePurchasePolicy.new(@context[:current_user], nil).create?
+
+    return true
+  end
 end
