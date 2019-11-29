@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 # Only enable these in development, GraphiQL isn't enabled in production yet.
 if Rails.env.development?

@@ -140,7 +140,6 @@ end
 class Module::DelegationError < NoMethodError
 end
 class ActiveSupport::Deprecation
-  def self.allocate; end
   def self.behavior(*args, &block); end
   def self.behavior=(arg); end
   def self.debug(*args, &block); end
@@ -153,7 +152,6 @@ class ActiveSupport::Deprecation
   def self.gem_name=(arg); end
   def self.initialize(*args, &block); end
   def self.instance; end
-  def self.new(*arg0); end
   def self.silence(*args, &block); end
   def self.silenced(*args, &block); end
   def self.silenced=(arg); end
@@ -2148,7 +2146,7 @@ module ActiveSupport::NumericWithFormat
 end
 class File < IO
   def self.empty?(arg0); end
-  def self.probe_stat_in(dir); end
+  def self.split(arg0); end
 end
 module ActiveSupport::RangeWithFormat
   def to_default_s(format = nil); end

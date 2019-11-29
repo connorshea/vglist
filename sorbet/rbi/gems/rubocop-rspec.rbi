@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rspec/all/rubocop-rspec.rbi
 #
-# rubocop-rspec-1.36.0
+# rubocop-rspec-1.37.0
 module RuboCop
 end
 module RuboCop::RSpec
@@ -146,6 +146,7 @@ class RuboCop::Cop::WorkaroundCop
   def duplicate_location?(location); end
   def enabled_line?(line_number); end
   def excluded_file?(file); end
+  def external_dependency_checksum; end
   def file_name_matches_any?(file, parameter, default_result); end
   def find_location(node, loc); end
   def find_message(node, message); end
@@ -278,6 +279,11 @@ class RuboCop::Cop::RSpec::FactoryBot::CreateList::CreateListCorrector < RuboCop
   def initialize(node); end
   def node; end
 end
+class RuboCop::Cop::RSpec::FactoryBot::FactoryClassName < RuboCop::Cop::RSpec::Cop
+  def autocorrect(node); end
+  def class_name(node = nil); end
+  def on_send(node); end
+end
 module RuboCop::Cop::RSpec::Rails
 end
 class RuboCop::Cop::RSpec::Rails::HttpStatus < RuboCop::Cop::RSpec::Cop
@@ -298,6 +304,7 @@ class RuboCop::Cop::RSpec::Rails::HttpStatus::SymbolicStyleChecker
   def symbol; end
 end
 class RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker
+  def allowed_symbol?; end
   def initialize(node); end
   def message; end
   def node; end
@@ -305,7 +312,6 @@ class RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker
   def offensive?; end
   def preferred_style; end
   def symbol; end
-  def whitelisted_symbol?; end
 end
 class RuboCop::Cop::RSpec::AlignLeftLetBrace < RuboCop::Cop::RSpec::Cop
   def autocorrect(let); end
@@ -393,6 +399,10 @@ class RuboCop::Cop::RSpec::DescribedClass < RuboCop::Cop::RSpec::Cop
   def skip_blocks?; end
   def skippable_block?(node); end
   include RuboCop::Cop::ConfigurableEnforcedStyle
+end
+class RuboCop::Cop::RSpec::DescribedClassModuleWrapping < RuboCop::Cop::RSpec::Cop
+  def find_rspec_blocks(node0); end
+  def on_module(node); end
 end
 class RuboCop::Cop::RSpec::Dialect < RuboCop::Cop::RSpec::Cop
   def autocorrect(node); end
@@ -732,6 +742,7 @@ module RuboCop::Cop::RSpec::InflectedHelper
   include RuboCop::RSpec::Language
 end
 module RuboCop::Cop::RSpec::ExplicitHelper
+  def allowed_explicit_matchers; end
   def autocorrect_explicit(node); end
   def autocorrect_explicit_block(node); end
   def autocorrect_explicit_send(node); end
