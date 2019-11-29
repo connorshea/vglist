@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::UpdateGameInLibrary < Mutations::BaseMutation
-  description "Add a game to the current user's library."
+  description "Update a game in the current user's library."
 
   argument :game_purchase_id, ID, required: true, description: "ID of game purchase to modify."
   argument :completion_status, Types::GamePurchaseCompletionStatusType, required: false
