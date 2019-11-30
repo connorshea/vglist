@@ -1,6 +1,8 @@
 # typed: strict
 module Types
   class MutationType < Types::BaseObject
+    description "Mutations are GraphQL requests that can be used to create, update, or delete records on vglist."
+
     field :favorite_game, mutation: Mutations::FavoriteGame
     field :unfavorite_game, mutation: Mutations::UnfavoriteGame
 

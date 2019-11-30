@@ -1,0 +1,17 @@
+{
+  "rules": [
+    "enum-values-sorted-alphabetically",
+    "defined-types-are-used",
+    "deprecations-have-a-reason",
+    "enum-values-have-descriptions",
+    "enum-values-all-caps",
+    "fields-are-camel-cased",
+    "input-object-values-are-camel-cased",
+    "input-object-values-have-descriptions",
+    "types-are-capitalized",
+    "types-have-descriptions",
+    "relay-page-info-spec",
+    "relay-connection-arguments-spec",
+    "relay-connection-types-spec"
+  ]
+}
