@@ -1,6 +1,8 @@
 # typed: true
 module Types
   class QueryType < Types::BaseObject
+    description "Queries are GraphQL requests that can be used to request data from vglist's database."
+
     field :game, GameType, null: true do
       description "Find a game by ID."
       argument :id, ID, required: false, description: "Find a game by its unique ID."

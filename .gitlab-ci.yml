@@ -60,3 +60,8 @@ rspec:
 db:seed:
   script:
     - bundle exec rails db:seed
+
+graphql:lint:
+  script:
+    - bundle exec rake graphql:schema:idl
+    - yarn graphql-schema-linter schema.graphql
