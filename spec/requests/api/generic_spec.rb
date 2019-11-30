@@ -6,7 +6,7 @@ RSpec.describe "API", type: :request do
     let(:user) { create(:confirmed_user) }
     let(:application) { build(:application, owner: user) }
     let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
-    let(:games) { create_list(:game, 31)}
+    let(:games) { create_list(:game, 31) }
 
     it "returns correct hasNextPage with 31 records" do
       games
