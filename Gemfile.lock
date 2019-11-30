@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/rmosolgo/graphql-ruby
+  revision: f24b1cbcde511c16a25c6e0ef045131409c18cdf
+  branch: 1.10-dev
+  specs:
+    graphql (1.10.0.pre1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -142,7 +149,6 @@ GEM
     graphiql-rails (1.7.0)
       railties
       sprockets-rails
-    graphql (1.10.0.pre1)
     graphql-rails_logger (1.2.2)
       actionpack (> 5.0)
       activesupport (> 5.0)
@@ -394,7 +400,7 @@ DEPENDENCIES
   friendly_id (~> 5.3.0)
   fuubar (~> 2.5.0)
   graphiql-rails (~> 1.7.0)
-  graphql (~> 1.10.0.pre1)
+  graphql!
   graphql-rails_logger (~> 1.2.2)
   jbuilder (~> 2.9)
   kaminari (~> 1.1)
