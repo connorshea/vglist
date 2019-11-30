@@ -114,7 +114,7 @@ query($id:ID!) {
       }
       pageInfo {
         hasNextPage
-        total
+        pageSize
         endCursor
       }
     }
@@ -122,7 +122,7 @@ query($id:ID!) {
 }
 ```
 
-The `nodes` represent the items in the paginated list, so in this case `nodes` returns an array of `gamePurchase` types. The `pageInfo` field provides information about the status of the current query's pagination. It's useful for getting the total number of items returned by the query, whether more pages exist, and the 'cursor' which can be used to get more pages on subsequent requests.
+The `nodes` represent the items in the paginated list, so in this case `nodes` returns an array of `gamePurchase` types. The `pageInfo` field provides information about the status of the current query's pagination. It's useful for getting the `pageSize` for the query, whether more pages exist, and the 'cursor' which can be used to get more pages on subsequent requests.
 
 In this case, the return value of `endCursor` is `"Mw"`, and we can resubmit the same query with `gamePurchases(after: "Mw")` to get all the items on the next page.
 
@@ -137,7 +137,7 @@ query($id: ID!) {
       }
       pageInfo {
         hasNextPage
-        total
+        pageSize
         endCursor
       }
     }
