@@ -74,7 +74,7 @@ pages:
   script:
     - bundle exec rake graphql:schema:idl
     - rm -rf public/
-    - bundle exec rake graphql:docs --output-dir=public
+    - bundle exec rake graphql:docs['public']
   artifacts:
     paths:
     - public
