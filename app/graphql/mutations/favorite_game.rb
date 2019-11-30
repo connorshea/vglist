@@ -4,7 +4,7 @@ class Mutations::FavoriteGame < Mutations::BaseMutation
 
   argument :game_id, ID, required: true, description: "ID of game to favorite."
 
-  field :game, Types::GameType, null: true
+  field :game, Types::GameType, null: true, description: "The game that was added to the user's library."
 
   sig { params(game_id: T.any(String, Integer)).returns(T::Hash[Symbol, Game]) }
   def resolve(game_id:)

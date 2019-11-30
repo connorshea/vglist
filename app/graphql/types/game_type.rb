@@ -5,8 +5,8 @@ module Types
 
     description "Video games"
 
-    field :id, ID, null: false
-    field :name, String, null: false
+    field :id, ID, null: false, description: "ID of the game."
+    field :name, String, null: false, description: "Name of the game."
     field :release_date, GraphQL::Types::ISO8601Date, null: true, description: "The release date of the game."
     field :wikidata_id, Integer, null: true, description: "Identifier for Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier for PCGamingWiki."
@@ -17,12 +17,12 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was last updated."
 
     # Assocations
-    field :series, SeriesType, null: true
-    field :developers, CompanyType.connection_type, null: true
-    field :publishers, CompanyType.connection_type, null: true
-    field :engines, EngineType.connection_type, null: true
-    field :genres, GenreType.connection_type, null: true
-    field :platforms, PlatformType.connection_type, null: true
+    field :series, SeriesType, null: true, description: "The series that the game belongs to."
+    field :developers, CompanyType.connection_type, null: true, description: "Developers of the game."
+    field :publishers, CompanyType.connection_type, null: true, description: "Publishers of the game."
+    field :engines, EngineType.connection_type, null: true, description: "Game engines that the game runs on."
+    field :genres, GenreType.connection_type, null: true, description: "Genres of the game."
+    field :platforms, PlatformType.connection_type, null: true, description: "Platforms the game is available on."
     field :owners, UserType.connection_type, null: true, method: :purchasers, description: "Users who have this game in their libraries."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover."

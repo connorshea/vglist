@@ -3,16 +3,16 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
   description "Add a game to the current user's library."
 
   argument :game_id, ID, required: true, description: "ID of game to add."
-  argument :completion_status, Types::GamePurchaseCompletionStatusType, required: false
+  argument :completion_status, Types::GamePurchaseCompletionStatusType, required: false, description: "How far the user has gotten in the game."
   argument :rating, Integer, required: false, description: "The game rating (out of 100)."
   argument :hours_played, Float, required: false, description: "The number of hours a game has been played."
-  argument :comments, String, required: false
+  argument :comments, String, required: false, description: "Comments about the game."
   argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user started the game."
   argument :completion_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user completed the game."
   argument :platforms, [ID, null: true], required: false, description: "The IDs of platforms that the game is owned on."
   argument :stores, [ID, null: true], required: false, description: "The IDs of stores that the game is owned on."
 
-  field :game_purchase, Types::GamePurchaseType, null: true
+  field :game_purchase, Types::GamePurchaseType, null: true, description: "The game purchase that's been added to the user's library."
 
   sig do
     params(

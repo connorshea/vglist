@@ -5,7 +5,7 @@ class Mutations::RemoveGameFromLibrary < Mutations::BaseMutation
   argument :game_id, ID, required: false, description: "ID of game to remove from user library."
   argument :game_purchase_id, ID, required: false, description: "ID of game purchase to delete."
 
-  field :game, Types::GameType, null: true
+  field :game, Types::GameType, null: true, description: "The game being removed from the user's library."
 
   sig { params(game_id: T.nilable(T.any(String, Integer)), game_purchase_id: T.nilable(T.any(String, Integer))).returns(T::Hash[Symbol, Game]) }
   def resolve(game_id: nil, game_purchase_id: nil)

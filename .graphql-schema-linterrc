@@ -1,11 +1,12 @@
 {
-  "rules": [
+  rules: [
     "enum-values-sorted-alphabetically",
     "defined-types-are-used",
     "deprecations-have-a-reason",
     "enum-values-have-descriptions",
     "enum-values-all-caps",
     "fields-are-camel-cased",
+    "fields-have-descriptions",
     "input-object-values-are-camel-cased",
     "input-object-values-have-descriptions",
     "types-are-capitalized",

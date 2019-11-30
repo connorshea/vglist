@@ -4,7 +4,7 @@ class Mutations::FollowUser < Mutations::BaseMutation
 
   argument :user_id, ID, required: true, description: "ID of user to follow."
 
-  field :user, Types::UserType, null: true
+  field :user, Types::UserType, null: true, description: "The user being followed."
 
   sig { params(user_id: T.any(String, Integer)).returns(T::Hash[Symbol, User]) }
   def resolve(user_id:)

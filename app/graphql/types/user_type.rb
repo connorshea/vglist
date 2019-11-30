@@ -3,8 +3,8 @@ module Types
   class UserType < Types::BaseObject
     description "User accounts on vglist"
 
-    field :id, ID, null: false
-    field :username, String, null: false
+    field :id, ID, null: false, description: "ID of the user."
+    field :username, String, null: false, description: "Username of the user."
     field :bio, String, null: true, description: "User profile description, aka 'bio'."
     field :slug, String, null: false, description: "The user's slug, used for their profile URL."
     field :role, UserRoleType, null: false, description: "User permission level."
