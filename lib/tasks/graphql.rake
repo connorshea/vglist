@@ -20,7 +20,7 @@ namespace :graphql do
     GraphQLDocs.build(
       filename: 'schema.graphql',
       output_dir: args[:output_dir],
-      base_url: "/VideoGameList/"
+      base_url: "/VideoGameList"
     )
   end
 end
