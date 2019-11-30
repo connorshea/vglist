@@ -66,11 +66,15 @@ graphql:lint:
     - bundle exec rake graphql:schema:idl
     - yarn graphql-schema-linter schema.graphql
 
+# Pages needs to have the artifact in the public/ directory
+# or it won't work. So we have to delete the public/ directory
+# before outputting the GraphQL Docs there.
 pages:
   stage: deploy
   script:
     - bundle exec rake graphql:schema:idl
-    - bundle exec rake graphql:docs
+    - rm -rf public/
+    - bundle exec rake graphql:docs --output-dir=public
   artifacts:
     paths:
-    - graphql-docs
+    - public

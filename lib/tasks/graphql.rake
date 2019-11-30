@@ -13,12 +13,13 @@ GraphQL::RakeTask.new(
 
 namespace :graphql do
   desc "Generate Documentation for the GraphQL API."
-  task docs: :environment do
+  task :docs, [:output_dir] => :environment do |_task, args|
+    args.with_defaults(output_dir: 'graphql-docs')
     require 'graphql-docs'
 
     GraphQLDocs.build(
       filename: 'schema.graphql',
-      output_dir: 'graphql-docs'
+      output_dir: args[:output_dir]
     )
   end
 end
