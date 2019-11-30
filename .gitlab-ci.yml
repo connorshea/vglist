@@ -65,3 +65,11 @@ graphql:lint:
   script:
     - bundle exec rake graphql:schema:idl
     - yarn graphql-schema-linter schema.graphql
+
+pages:
+  script:
+    - bundle exec rake graphql:schema:idl
+    - bundle exec rake graphql:docs
+  artifacts:
+    paths:
+    - graphql-docs

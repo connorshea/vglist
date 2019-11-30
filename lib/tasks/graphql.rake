@@ -10,3 +10,15 @@ GraphQL::RakeTask.new(
     { current_user: User.new(role: :admin), doorkeeper_scopes: ['read', 'write'] }
   }
 )
+
+namespace :graphql do
+  desc "Generate Documentation for the GraphQL API."
+  task docs: :environment do
+    require 'graphql-docs'
+
+    GraphQLDocs.build(
+      filename: 'schema.graphql',
+      output_dir: 'graphql-docs'
+    )
+  end
+end
