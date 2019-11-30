@@ -67,6 +67,7 @@ graphql:lint:
     - yarn graphql-schema-linter schema.graphql
 
 pages:
+  stage: deploy
   script:
     - bundle exec rake graphql:schema:idl
     - bundle exec rake graphql:docs
