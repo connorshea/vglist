@@ -7783,10 +7783,10 @@ vue-resize@^0.4.5:
   resolved "https://registry.yarnpkg.com/vue-resize/-/vue-resize-0.4.5.tgz#4777a23042e3c05620d9cbda01c0b3cc5e32dcea"
   integrity sha512-bhP7MlgJQ8TIkZJXAfDf78uJO+mEI3CaLABLjv0WNzr4CcGRGPIAItyWYnP6LsPA4Oq0WE+suidNs6dgpO4RHg==
 
-vue-select@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.2.0.tgz#c72166cb1f976d76cd612cde25fc8ef29f7914f5"
-  integrity sha512-FfARbDuJWQNpYm6X9zPWCsYXmz33TNR2oqY8FktKRVksKfp1tZPqL9g+/7wgsaMaqUxcIxYEUVV7C3AD+H5cxA==
+vue-select@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.3.0.tgz#8e14b86f3169c70332defbffc844511089d2d714"
+  integrity sha512-cqfeROwwnKTJvCfg/un3PKB/xUcxFr4+TULp1R+EOfip1SJPQ5lqnECTS6cf+LW8rbITskEtMnOAxwx5ZJNq5w==
 
 vue-style-loader@^4.1.0:
   version "4.1.2"
