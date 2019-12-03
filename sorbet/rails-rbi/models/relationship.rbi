@@ -208,7 +208,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -217,7 +217,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -226,7 +226,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -235,7 +235,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -244,7 +244,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -253,7 +253,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -262,7 +262,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -271,7 +271,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_followed; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_followed?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -286,7 +286,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -295,7 +295,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -304,7 +304,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -313,7 +313,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -322,7 +322,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -331,7 +331,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -340,7 +340,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -349,7 +349,7 @@ class Relationship < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -988,7 +988,7 @@ module Relationship::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def updated_at?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -997,7 +997,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1006,7 +1006,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1018,7 +1018,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1030,10 +1030,10 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_follower_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1042,7 +1042,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def follower_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_follower_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1051,7 +1051,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def follower_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def follower_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1063,7 +1063,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def follower_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def follower_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1075,10 +1075,10 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def follower_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def follower_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_followed_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1087,7 +1087,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def followed_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_followed_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1096,7 +1096,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def followed_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def followed_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1108,7 +1108,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def followed_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def followed_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1120,10 +1120,10 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def followed_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def followed_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1132,7 +1132,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1141,7 +1141,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1153,7 +1153,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1165,10 +1165,10 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1177,7 +1177,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1186,7 +1186,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1198,7 +1198,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1210,7 +1210,7 @@ module Relationship::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_came_from_user?(*args); end
 end
 

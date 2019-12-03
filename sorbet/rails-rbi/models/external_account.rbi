@@ -888,7 +888,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def user_id?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -897,7 +897,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -906,7 +906,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -918,7 +918,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -930,10 +930,10 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_user_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -942,7 +942,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def user_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_user_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -951,7 +951,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def user_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def user_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -963,7 +963,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def user_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def user_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -975,10 +975,10 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def user_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def user_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_account_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -987,7 +987,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def account_type_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_account_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -996,7 +996,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def account_type_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def account_type_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1008,7 +1008,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def account_type_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def account_type_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1020,10 +1020,10 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def account_type_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def account_type_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_steam_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1032,7 +1032,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_steam_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1041,7 +1041,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def steam_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1053,7 +1053,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def steam_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1065,10 +1065,10 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def steam_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_steam_profile_url?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1077,7 +1077,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_profile_url_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_steam_profile_url?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1086,7 +1086,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_profile_url_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def steam_profile_url_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1098,7 +1098,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_profile_url_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def steam_profile_url_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1110,10 +1110,10 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def steam_profile_url_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def steam_profile_url_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1122,7 +1122,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1131,7 +1131,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1143,7 +1143,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1155,10 +1155,10 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1167,7 +1167,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1176,7 +1176,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1188,7 +1188,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1200,7 +1200,7 @@ module ExternalAccount::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_came_from_user?(*args); end
 end
 

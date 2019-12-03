@@ -214,7 +214,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_add_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -223,7 +223,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_remove_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -232,7 +232,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_add_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -241,7 +241,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_remove_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -250,7 +250,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_add_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -259,7 +259,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_remove_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -268,7 +268,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_add_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -277,7 +277,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_remove_for_preview_image_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_preview_image_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -292,7 +292,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_add_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -301,7 +301,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_remove_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -310,7 +310,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_add_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -319,7 +319,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_remove_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -328,7 +328,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_add_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -337,7 +337,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_remove_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -346,7 +346,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_add_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -355,7 +355,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_remove_for_attachments; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_attachments?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1039,7 +1039,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def metadata?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1048,7 +1048,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1057,7 +1057,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1069,7 +1069,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1081,10 +1081,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_key?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1093,7 +1093,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def key_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_key?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1102,7 +1102,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def key_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def key_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1114,7 +1114,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def key_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def key_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1126,10 +1126,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def key_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def key_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_filename?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1138,7 +1138,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def filename_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_filename?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1147,7 +1147,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def filename_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def filename_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1159,7 +1159,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def filename_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def filename_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1171,10 +1171,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def filename_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def filename_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_content_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1183,7 +1183,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_type_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_content_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1192,7 +1192,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_type_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def content_type_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1204,7 +1204,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_type_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def content_type_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1216,10 +1216,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_type_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def content_type_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_metadata?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1228,7 +1228,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def metadata_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_metadata?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1237,7 +1237,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def metadata_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def metadata_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1249,7 +1249,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def metadata_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def metadata_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1261,10 +1261,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def metadata_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def metadata_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_byte_size?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1273,7 +1273,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def byte_size_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_byte_size?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1282,7 +1282,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def byte_size_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def byte_size_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1294,7 +1294,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def byte_size_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def byte_size_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1306,10 +1306,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def byte_size_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def byte_size_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_checksum?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1318,7 +1318,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def checksum_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_checksum?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1327,7 +1327,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def checksum_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def checksum_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1339,7 +1339,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def checksum_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def checksum_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1351,10 +1351,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def checksum_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def checksum_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1363,7 +1363,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1372,7 +1372,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1384,7 +1384,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1396,7 +1396,7 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 end
 

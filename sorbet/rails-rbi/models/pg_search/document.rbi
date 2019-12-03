@@ -842,7 +842,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def updated_at?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -851,7 +851,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -860,7 +860,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -872,7 +872,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -884,10 +884,10 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_content?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -896,7 +896,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_content?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -905,7 +905,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def content_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -917,7 +917,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def content_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -929,10 +929,10 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def content_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def content_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_searchable_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -941,7 +941,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_type_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_searchable_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -950,7 +950,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_type_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def searchable_type_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -962,7 +962,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_type_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def searchable_type_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -974,10 +974,10 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_type_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def searchable_type_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_searchable_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -986,7 +986,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_searchable_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -995,7 +995,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def searchable_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1007,7 +1007,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def searchable_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1019,10 +1019,10 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def searchable_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def searchable_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1031,7 +1031,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1040,7 +1040,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1052,7 +1052,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1064,10 +1064,10 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1076,7 +1076,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1085,7 +1085,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1097,7 +1097,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1109,7 +1109,7 @@ module PgSearch::Document::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_came_from_user?(*args); end
 end
 

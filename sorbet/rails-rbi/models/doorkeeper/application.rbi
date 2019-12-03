@@ -202,7 +202,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -211,7 +211,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -220,7 +220,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -229,7 +229,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -238,7 +238,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -247,7 +247,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -256,7 +256,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -265,7 +265,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -280,7 +280,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -289,7 +289,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -298,7 +298,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -307,7 +307,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -316,7 +316,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -325,7 +325,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -334,7 +334,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -343,7 +343,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -358,7 +358,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_add_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -367,7 +367,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_remove_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -376,7 +376,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_add_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -385,7 +385,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_remove_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -394,7 +394,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_add_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -403,7 +403,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_remove_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -412,7 +412,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_add_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -421,7 +421,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_remove_for_authorized_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_authorized_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -436,7 +436,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_add_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -445,7 +445,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_remove_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -454,7 +454,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_add_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -463,7 +463,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_remove_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -472,7 +472,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_add_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -481,7 +481,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_remove_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -490,7 +490,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_add_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -499,7 +499,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_remove_for_authorized_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_authorized_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -514,7 +514,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_add_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -523,7 +523,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.after_remove_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -532,7 +532,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_add_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -541,7 +541,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def self.before_remove_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -550,7 +550,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_add_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -559,7 +559,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def after_remove_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -568,7 +568,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_add_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -577,7 +577,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   sig { returns(T.untyped) }
   def before_remove_for_owner; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_owner?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1270,7 +1270,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def updated_at?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1279,7 +1279,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1288,7 +1288,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1300,7 +1300,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1312,10 +1312,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_name?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1324,7 +1324,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_name?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1333,7 +1333,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1345,7 +1345,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1357,10 +1357,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_uid?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1369,7 +1369,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def uid_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_uid?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1378,7 +1378,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def uid_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def uid_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1390,7 +1390,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def uid_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def uid_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1402,10 +1402,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def uid_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def uid_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_secret?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1414,7 +1414,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def secret_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_secret?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1423,7 +1423,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def secret_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def secret_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1435,7 +1435,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def secret_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def secret_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1447,10 +1447,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def secret_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def secret_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_redirect_uri?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1459,7 +1459,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_redirect_uri?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1468,7 +1468,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def redirect_uri_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1480,7 +1480,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def redirect_uri_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1492,10 +1492,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def redirect_uri_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_scopes?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1504,7 +1504,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_scopes?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1513,7 +1513,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def scopes_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1525,7 +1525,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def scopes_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1537,10 +1537,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def scopes_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_confidential?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1549,7 +1549,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confidential_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_confidential?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1558,7 +1558,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confidential_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confidential_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1570,7 +1570,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confidential_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confidential_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1582,10 +1582,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confidential_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confidential_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1594,7 +1594,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1603,7 +1603,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1615,7 +1615,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1627,10 +1627,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1639,7 +1639,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1648,7 +1648,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1660,7 +1660,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1672,10 +1672,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_owner_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1684,7 +1684,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_owner_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1693,7 +1693,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def owner_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1705,7 +1705,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def owner_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1717,10 +1717,10 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def owner_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_owner_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1729,7 +1729,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_type_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_owner_type?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1738,7 +1738,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_type_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def owner_type_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1750,7 +1750,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_type_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def owner_type_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1762,7 +1762,7 @@ module Doorkeeper::Application::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def owner_type_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def owner_type_came_from_user?(*args); end
 end
 

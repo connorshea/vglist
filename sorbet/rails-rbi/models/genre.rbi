@@ -203,7 +203,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -212,7 +212,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -221,7 +221,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -230,7 +230,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -239,7 +239,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -248,7 +248,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -257,7 +257,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -266,7 +266,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_game_genres; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_game_genres?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -281,7 +281,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -290,7 +290,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -299,7 +299,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -308,7 +308,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -317,7 +317,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -326,7 +326,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -335,7 +335,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -344,7 +344,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -359,7 +359,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -368,7 +368,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -377,7 +377,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -386,7 +386,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -395,7 +395,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -404,7 +404,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -413,7 +413,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -422,7 +422,7 @@ class Genre < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_pg_search_document; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_pg_search_document?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1061,7 +1061,7 @@ module Genre::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def wikidata_id?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1070,7 +1070,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1079,7 +1079,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1091,7 +1091,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1103,10 +1103,10 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_name?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1115,7 +1115,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_name?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1124,7 +1124,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1136,7 +1136,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1148,10 +1148,10 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1160,7 +1160,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1169,7 +1169,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1181,7 +1181,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1193,10 +1193,10 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1205,7 +1205,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1214,7 +1214,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1226,7 +1226,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1238,10 +1238,10 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_wikidata_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1250,7 +1250,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def wikidata_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_wikidata_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1259,7 +1259,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def wikidata_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def wikidata_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1271,7 +1271,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def wikidata_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def wikidata_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1283,7 +1283,7 @@ module Genre::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def wikidata_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def wikidata_id_came_from_user?(*args); end
 end
 
