@@ -868,7 +868,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def token?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -877,7 +877,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -886,7 +886,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -898,7 +898,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -910,10 +910,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_resource_owner_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -922,7 +922,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def resource_owner_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_resource_owner_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -931,7 +931,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def resource_owner_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def resource_owner_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -943,7 +943,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def resource_owner_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def resource_owner_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -955,10 +955,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def resource_owner_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def resource_owner_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_application_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -967,7 +967,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def application_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_application_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -976,7 +976,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def application_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def application_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -988,7 +988,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def application_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def application_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1000,10 +1000,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def application_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def application_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_token?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1012,7 +1012,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def token_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_token?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1021,7 +1021,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def token_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def token_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1033,7 +1033,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def token_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def token_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1045,10 +1045,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def token_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def token_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_expires_in?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1057,7 +1057,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def expires_in_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_expires_in?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1066,7 +1066,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def expires_in_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def expires_in_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1078,7 +1078,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def expires_in_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def expires_in_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1090,10 +1090,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def expires_in_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def expires_in_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_redirect_uri?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1102,7 +1102,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_redirect_uri?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1111,7 +1111,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def redirect_uri_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1123,7 +1123,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def redirect_uri_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1135,10 +1135,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def redirect_uri_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def redirect_uri_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1147,7 +1147,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1156,7 +1156,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1168,7 +1168,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1180,10 +1180,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_scopes?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1192,7 +1192,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_scopes?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1201,7 +1201,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def scopes_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1213,7 +1213,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def scopes_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1225,10 +1225,10 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def scopes_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def scopes_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_revoked_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1237,7 +1237,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def revoked_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_revoked_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1246,7 +1246,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def revoked_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def revoked_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1258,7 +1258,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def revoked_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def revoked_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1270,7 +1270,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def revoked_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def revoked_at_came_from_user?(*args); end
 end
 

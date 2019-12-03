@@ -814,7 +814,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def id?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -823,7 +823,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -832,7 +832,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -844,7 +844,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -856,10 +856,10 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_game_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -868,7 +868,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def game_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_game_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -877,7 +877,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def game_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def game_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -889,7 +889,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def game_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def game_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -901,10 +901,10 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def game_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def game_id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_app_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -913,7 +913,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def app_id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_app_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -922,7 +922,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def app_id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def app_id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -934,7 +934,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def app_id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def app_id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -946,7 +946,7 @@ module SteamAppId::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def app_id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def app_id_came_from_user?(*args); end
 end
 

@@ -90,6 +90,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
   end
 
   # Create "(after/before)_(add/remove)_for_#{assoc_name}" methods
+  sig { params(assoc_name: String, model_klass: Parlour::RbiGenerator::ModuleNamespace).void }
   def create_after_before_add_remove_methods(assoc_name, model_klass)
     prefixes = [
       'after_add_for_',
@@ -110,7 +111,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
         # def after_add_for_author?(); end
         model_klass.create_method(
           "#{prefix}#{assoc_name}?",
-          return_type: 'T.untyped',
+          return_type: 'T::Boolean',
           class_method: bool
         )
         # def after_add_for_author=(val); end
@@ -126,6 +127,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     end
   end
 
+  sig { params(assoc_name: String, model_klass: Parlour::RbiGenerator::ModuleNamespace).void }
   def autosave_and_validate_associated_records_methods(assoc_name, model_klass)
     # def autosave_associated_records_for_developers(*args); end
     model_klass.create_method(
@@ -146,6 +148,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     )
   end
 
+  sig { params(attribute_name: String, model_klass: Parlour::RbiGenerator::ModuleNamespace).void }
   def dirty_methods(attribute_name, model_klass)
     methods = [
       "saved_change_to_#{attribute_name}?",
@@ -167,12 +170,13 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     ]
 
     methods.each do |meth|
+      return_type = meth.end_with?('?') ? 'T::Boolean' : 'T.untyped'
       model_klass.create_method(
         meth,
         parameters: [
           Parlour::RbiGenerator::Parameter.new('*args', type: 'T.untyped')
         ],
-        return_type: 'T.untyped'
+        return_type: return_type
       )
     end
   end

@@ -203,7 +203,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -212,7 +212,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -221,7 +221,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -230,7 +230,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -239,7 +239,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -248,7 +248,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -257,7 +257,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -266,7 +266,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_game_purchase_stores; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_game_purchase_stores?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -281,7 +281,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -290,7 +290,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -299,7 +299,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -308,7 +308,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -317,7 +317,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -326,7 +326,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -335,7 +335,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -344,7 +344,7 @@ class Store < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -974,7 +974,7 @@ module Store::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def updated_at?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -983,7 +983,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -992,7 +992,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1004,7 +1004,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1016,10 +1016,10 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_name?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1028,7 +1028,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_name?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1037,7 +1037,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1049,7 +1049,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1061,10 +1061,10 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def name_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def name_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1073,7 +1073,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1082,7 +1082,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1094,7 +1094,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1106,10 +1106,10 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1118,7 +1118,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1127,7 +1127,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1139,7 +1139,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -1151,7 +1151,7 @@ module Store::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_came_from_user?(*args); end
 end
 

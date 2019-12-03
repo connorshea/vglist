@@ -276,7 +276,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -285,7 +285,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -294,7 +294,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -303,7 +303,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -312,7 +312,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -321,7 +321,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -330,7 +330,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -339,7 +339,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_game_purchases; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_game_purchases?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -354,7 +354,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -363,7 +363,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -372,7 +372,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -381,7 +381,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -390,7 +390,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -399,7 +399,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -408,7 +408,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -417,7 +417,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -432,7 +432,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -441,7 +441,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -450,7 +450,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -459,7 +459,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -468,7 +468,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -477,7 +477,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -486,7 +486,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -495,7 +495,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_favorite_games; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_favorite_games?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -510,7 +510,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -519,7 +519,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -528,7 +528,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -537,7 +537,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -546,7 +546,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -555,7 +555,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -564,7 +564,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -573,7 +573,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_active_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_active_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -588,7 +588,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -597,7 +597,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -606,7 +606,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -615,7 +615,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -624,7 +624,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -633,7 +633,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -642,7 +642,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -651,7 +651,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_following; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_following?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -666,7 +666,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -675,7 +675,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -684,7 +684,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -693,7 +693,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -702,7 +702,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -711,7 +711,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -720,7 +720,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -729,7 +729,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_passive_relationships; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_passive_relationships?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -744,7 +744,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -753,7 +753,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -762,7 +762,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -771,7 +771,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -780,7 +780,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -789,7 +789,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -798,7 +798,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -807,7 +807,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_followers; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_followers?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -822,7 +822,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -831,7 +831,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -840,7 +840,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -849,7 +849,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -858,7 +858,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -867,7 +867,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -876,7 +876,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -885,7 +885,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_events; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_events?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -900,7 +900,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -909,7 +909,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -918,7 +918,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -927,7 +927,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -936,7 +936,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -945,7 +945,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -954,7 +954,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -963,7 +963,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_wikidata_blocklists; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_wikidata_blocklists?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -978,7 +978,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -987,7 +987,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -996,7 +996,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1005,7 +1005,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1014,7 +1014,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1023,7 +1023,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1032,7 +1032,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1041,7 +1041,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_access_grants; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_access_grants?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1056,7 +1056,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1065,7 +1065,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1074,7 +1074,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1083,7 +1083,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1092,7 +1092,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1101,7 +1101,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1110,7 +1110,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1119,7 +1119,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_access_tokens; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_access_tokens?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1134,7 +1134,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1143,7 +1143,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1152,7 +1152,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1161,7 +1161,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1170,7 +1170,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1179,7 +1179,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1188,7 +1188,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1197,7 +1197,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_oauth_applications; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_oauth_applications?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1212,7 +1212,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1221,7 +1221,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1230,7 +1230,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1239,7 +1239,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1248,7 +1248,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1257,7 +1257,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1266,7 +1266,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1275,7 +1275,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_external_account; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_external_account?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1290,7 +1290,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1299,7 +1299,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1308,7 +1308,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1317,7 +1317,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1326,7 +1326,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1335,7 +1335,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1344,7 +1344,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1353,7 +1353,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_avatar_attachment; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_avatar_attachment?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1368,7 +1368,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_add_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_add_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1377,7 +1377,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.after_remove_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.after_remove_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1386,7 +1386,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_add_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_add_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1395,7 +1395,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def self.before_remove_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def self.before_remove_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1404,7 +1404,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_add_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_add_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1413,7 +1413,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def after_remove_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def after_remove_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1422,7 +1422,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_add_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_add_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -1431,7 +1431,7 @@ class User < ApplicationRecord
   sig { returns(T.untyped) }
   def before_remove_for_avatar_blob; end
 
-  sig { returns(T.untyped) }
+  sig { returns(T::Boolean) }
   def before_remove_for_avatar_blob?; end
 
   sig { params(val: T.untyped).returns(T.untyped) }
@@ -2334,7 +2334,7 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def username?; end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2343,7 +2343,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_id?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2352,7 +2352,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2364,7 +2364,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2376,10 +2376,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def id_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def id_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_email?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2388,7 +2388,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def email_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_email?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2397,7 +2397,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def email_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def email_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2409,7 +2409,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def email_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def email_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2421,10 +2421,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def email_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def email_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_encrypted_password?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2433,7 +2433,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def encrypted_password_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_encrypted_password?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2442,7 +2442,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def encrypted_password_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def encrypted_password_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2454,7 +2454,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def encrypted_password_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def encrypted_password_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2466,10 +2466,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def encrypted_password_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def encrypted_password_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_reset_password_token?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2478,7 +2478,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_token_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_reset_password_token?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2487,7 +2487,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_token_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def reset_password_token_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2499,7 +2499,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_token_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def reset_password_token_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2511,10 +2511,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_token_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def reset_password_token_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_reset_password_sent_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2523,7 +2523,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_sent_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_reset_password_sent_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2532,7 +2532,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_sent_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def reset_password_sent_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2544,7 +2544,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_sent_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def reset_password_sent_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2556,10 +2556,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def reset_password_sent_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def reset_password_sent_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_remember_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2568,7 +2568,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def remember_created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_remember_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2577,7 +2577,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def remember_created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def remember_created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2589,7 +2589,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def remember_created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def remember_created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2601,10 +2601,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def remember_created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def remember_created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_sign_in_count?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2613,7 +2613,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def sign_in_count_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_sign_in_count?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2622,7 +2622,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def sign_in_count_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def sign_in_count_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2634,7 +2634,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def sign_in_count_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def sign_in_count_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2646,10 +2646,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def sign_in_count_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def sign_in_count_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_current_sign_in_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2658,7 +2658,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_current_sign_in_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2667,7 +2667,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def current_sign_in_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2679,7 +2679,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def current_sign_in_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2691,10 +2691,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def current_sign_in_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_last_sign_in_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2703,7 +2703,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_last_sign_in_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2712,7 +2712,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def last_sign_in_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2724,7 +2724,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def last_sign_in_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2736,10 +2736,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def last_sign_in_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_current_sign_in_ip?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2748,7 +2748,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_ip_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_current_sign_in_ip?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2757,7 +2757,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_ip_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def current_sign_in_ip_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2769,7 +2769,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_ip_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def current_sign_in_ip_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2781,10 +2781,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def current_sign_in_ip_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def current_sign_in_ip_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_last_sign_in_ip?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2793,7 +2793,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_ip_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_last_sign_in_ip?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2802,7 +2802,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_ip_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def last_sign_in_ip_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2814,7 +2814,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_ip_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def last_sign_in_ip_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2826,10 +2826,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def last_sign_in_ip_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def last_sign_in_ip_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_confirmation_token?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2838,7 +2838,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_token_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_confirmation_token?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2847,7 +2847,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_token_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmation_token_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2859,7 +2859,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_token_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmation_token_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2871,10 +2871,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_token_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmation_token_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_confirmed_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2883,7 +2883,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmed_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_confirmed_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2892,7 +2892,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmed_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmed_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2904,7 +2904,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmed_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmed_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2916,10 +2916,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmed_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmed_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_confirmation_sent_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2928,7 +2928,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_sent_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_confirmation_sent_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2937,7 +2937,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_sent_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmation_sent_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2949,7 +2949,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_sent_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmation_sent_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2961,10 +2961,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def confirmation_sent_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def confirmation_sent_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_unconfirmed_email?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2973,7 +2973,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def unconfirmed_email_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_unconfirmed_email?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2982,7 +2982,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def unconfirmed_email_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def unconfirmed_email_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -2994,7 +2994,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def unconfirmed_email_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def unconfirmed_email_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3006,10 +3006,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def unconfirmed_email_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def unconfirmed_email_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3018,7 +3018,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_created_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3027,7 +3027,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3039,7 +3039,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3051,10 +3051,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def created_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3063,7 +3063,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_updated_at?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3072,7 +3072,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3084,7 +3084,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3096,10 +3096,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def updated_at_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def updated_at_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_username?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3108,7 +3108,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def username_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_username?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3117,7 +3117,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def username_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def username_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3129,7 +3129,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def username_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def username_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3141,10 +3141,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def username_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def username_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_bio?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3153,7 +3153,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def bio_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_bio?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3162,7 +3162,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def bio_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def bio_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3174,7 +3174,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def bio_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def bio_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3186,10 +3186,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def bio_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def bio_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_role?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3198,7 +3198,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def role_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_role?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3207,7 +3207,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def role_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def role_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3219,7 +3219,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def role_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def role_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3231,10 +3231,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def role_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def role_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_slug?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3243,7 +3243,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def slug_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_slug?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3252,7 +3252,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def slug_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def slug_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3264,7 +3264,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def slug_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def slug_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3276,10 +3276,10 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def slug_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def slug_came_from_user?(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_privacy?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3288,7 +3288,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def privacy_before_last_save(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def will_save_change_to_privacy?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3297,7 +3297,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def privacy_in_database(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def privacy_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3309,7 +3309,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def privacy_was(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def privacy_previously_changed?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3321,7 +3321,7 @@ module User::GeneratedAttributeMethods
   sig { params(args: T.untyped).returns(T.untyped) }
   def privacy_before_type_cast(*args); end
 
-  sig { params(args: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped).returns(T::Boolean) }
   def privacy_came_from_user?(*args); end
 end
 
