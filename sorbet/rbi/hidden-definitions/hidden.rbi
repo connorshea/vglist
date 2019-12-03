@@ -7266,7 +7266,7 @@ class Faraday::Adapter::EMHttp
 end
 
 class Faraday::Adapter::EMHttp::Manager
-  def add(); end
+  def add(&block); end
 
   def check_finished(); end
 
@@ -7468,20 +7468,6 @@ class Faraday::Env
   StatusesWithoutBody = ::T.let(nil, ::T.untyped)
   SuccessfulStatuses = ::T.let(nil, ::T.untyped)
 end
-
-Faraday::Error::ClientError = Faraday::ClientError
-
-Faraday::Error::ConnectionFailed = Faraday::ConnectionFailed
-
-Faraday::Error::ParsingError = Faraday::ParsingError
-
-Faraday::Error::ResourceNotFound = Faraday::ResourceNotFound
-
-Faraday::Error::RetriableResponse = Faraday::RetriableResponse
-
-Faraday::Error::SSLError = Faraday::SSLError
-
-Faraday::Error::TimeoutError = Faraday::TimeoutError
 
 Faraday::Parts = Parts
 
@@ -7716,13 +7702,13 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -8605,7 +8591,6 @@ end
 
 class GraphQL::Directive
   ARGUMENT_DEFINITION = ::T.let(nil, ::T.untyped)
-  DEFAULT_DEPRECATION_REASON = ::T.let(nil, ::T.untyped)
   DeprecatedDirective = ::T.let(nil, ::T.untyped)
   ENUM = ::T.let(nil, ::T.untyped)
   ENUM_VALUE = ::T.let(nil, ::T.untyped)
@@ -8732,8 +8717,6 @@ end
 class GraphQL::Schema
   BUILT_IN_TYPES = ::T.let(nil, ::T.untyped)
   DYNAMIC_FIELDS = ::T.let(nil, ::T.untyped)
-  EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
-  EMPTY_HASH = ::T.let(nil, ::T.untyped)
 end
 
 class GraphQL::Schema::Argument
@@ -8793,6 +8776,15 @@ class GraphQL::Schema::Field
   NO_ARGS = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::Schema::Field
+  extend ::GraphQL::Schema::FindInheritedValue::EmptyObjects
+end
+
+module GraphQL::Schema::FindInheritedValue::EmptyObjects
+  EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
+  EMPTY_HASH = ::T.let(nil, ::T.untyped)
+end
+
 class GraphQL::Schema::InputObject
   extend ::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension
 end
@@ -8818,6 +8810,8 @@ end
 
 module GraphQL::Schema::Member::HasFields
   CONFLICT_FIELD_NAMES = ::T.let(nil, ::T.untyped)
+  GRAPHQL_RUBY_KEYWORDS = ::T.let(nil, ::T.untyped)
+  RUBY_KEYWORDS = ::T.let(nil, ::T.untyped)
 end
 
 class GraphQL::Schema::Object
@@ -8846,6 +8840,8 @@ module GraphQL::Schema::Validation::Rules
   DEFAULT_VALUE_IS_VALID_FOR_TYPE = ::T.let(nil, ::T.untyped)
   DESCRIPTION_IS_STRING_OR_NIL = ::T.let(nil, ::T.untyped)
   FIELDS_ARE_VALID = ::T.let(nil, ::T.untyped)
+  HAS_AT_LEAST_ONE_ARGUMENT = ::T.let(nil, ::T.untyped)
+  HAS_AT_LEAST_ONE_FIELD = ::T.let(nil, ::T.untyped)
   HAS_ONE_OR_MORE_POSSIBLE_TYPES = ::T.let(nil, ::T.untyped)
   INTERFACES_ARE_IMPLEMENTED = ::T.let(nil, ::T.untyped)
   NAME_IS_STRING = ::T.let(nil, ::T.untyped)
@@ -8858,7 +8854,12 @@ module GraphQL::Schema::Validation::Rules
   TYPE_IS_VALID_INPUT_TYPE = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::Schema::Warden
+  NO_REFERENCES = ::T.let(nil, ::T.untyped)
+end
+
 class GraphQL::Schema
+  extend ::GraphQL::Schema::FindInheritedValue::EmptyObjects
   extend ::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension
 end
 
@@ -8995,8 +8996,6 @@ class Hash
 
   def index(_); end
 
-  def merge!(*_); end
-
   def replace(_); end
 
   def slice(*_); end
@@ -9017,7 +9016,7 @@ class Hash
 end
 
 class Hash
-  def self.from_xml(xml, disallowed_types=T.unsafe(nil)); end
+  def self.from_trusted_xml(xml); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -10883,6 +10882,9 @@ end
 class Mail::POP3
 end
 
+class Mail::PartsList
+end
+
 class Mail::PhraseList
   def initialize(string); end
 
@@ -12001,6 +12003,8 @@ end
 
 class Mutations::RemoveGameFromLibrary
   def load_game_id(value); end
+
+  def load_game_purchase_id(value); end
 end
 
 class Mutations::UnfavoriteGame
@@ -12009,6 +12013,26 @@ end
 
 class Mutations::UnfollowUser
   def load_user_id(value); end
+end
+
+class Mutations::UpdateGameInLibrary
+  def load_comments(value); end
+
+  def load_completion_date(value); end
+
+  def load_completion_status(value); end
+
+  def load_game_purchase_id(value); end
+
+  def load_hours_played(value); end
+
+  def load_platforms(value); end
+
+  def load_rating(value); end
+
+  def load_start_date(value); end
+
+  def load_stores(value); end
 end
 
 module Mutex_m
@@ -12166,6 +12190,8 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
+Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
+
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -12264,15 +12290,7 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-class Net::HTTP
-end
-
-Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
-
-Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
-
-class Net::HTTP
-end
+Net::HTTPSession = Net::HTTP
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -21626,14 +21644,21 @@ module RuboCop::AST::Traversal
 end
 
 class RuboCop::CLI
-  PHASE_1 = ::T.let(nil, ::T.untyped)
-  PHASE_1_DISABLED = ::T.let(nil, ::T.untyped)
-  PHASE_1_OVERRIDDEN = ::T.let(nil, ::T.untyped)
-  PHASE_2 = ::T.let(nil, ::T.untyped)
   STATUS_ERROR = ::T.let(nil, ::T.untyped)
   STATUS_INTERRUPTED = ::T.let(nil, ::T.untyped)
   STATUS_OFFENSES = ::T.let(nil, ::T.untyped)
   STATUS_SUCCESS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::CLI::Command::AutoGenerateConfig
+  PHASE_1 = ::T.let(nil, ::T.untyped)
+  PHASE_1_DISABLED = ::T.let(nil, ::T.untyped)
+  PHASE_1_OVERRIDDEN = ::T.let(nil, ::T.untyped)
+  PHASE_2 = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::CLI::Command::InitDotfile
+  DOTFILE = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::CommentConfig
@@ -21777,22 +21802,17 @@ class RuboCop::Cop::Layout::AccessModifierIndentation
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Layout::AlignArguments
+class RuboCop::Cop::Layout::ArgumentAlignment
   ALIGN_PARAMS_MSG = ::T.let(nil, ::T.untyped)
   FIXED_INDENT_MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Layout::AlignArray
+class RuboCop::Cop::Layout::ArrayAlignment
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Layout::AlignHash
+class RuboCop::Cop::Layout::AssignmentIndentation
   MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::AlignParameters
-  ALIGN_PARAMS_MSG = ::T.let(nil, ::T.untyped)
-  FIXED_INDENT_MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Layout::BlockAlignment
@@ -21913,7 +21933,19 @@ class RuboCop::Cop::Layout::ExtraSpacing
   MSG_UNNECESSARY = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Layout::FirstArgumentIndentation
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Layout::FirstArrayElementIndentation
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::FirstArrayElementLineBreak
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Layout::FirstHashElementIndentation
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -21929,31 +21961,19 @@ class RuboCop::Cop::Layout::FirstMethodParameterLineBreak
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Layout::FirstParameterIndentation
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Layout::HashAlignment
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::HeredocArgumentClosingParenthesis
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Layout::IndentAssignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentFirstArgument
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentFirstArrayElement
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentFirstHashElement
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentFirstParameter
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentHeredoc
+class RuboCop::Cop::Layout::HeredocIndentation
   LIBRARY_MSG = ::T.let(nil, ::T.untyped)
   RUBY23_TYPE_MSG = ::T.let(nil, ::T.untyped)
   RUBY23_WIDTH_MSG = ::T.let(nil, ::T.untyped)
@@ -21972,11 +21992,11 @@ class RuboCop::Cop::Layout::InitialIndentation
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Layout::LeadingBlankLines
+class RuboCop::Cop::Layout::LeadingCommentSpace
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Layout::LeadingCommentSpace
+class RuboCop::Cop::Layout::LeadingEmptyLines
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -22031,6 +22051,11 @@ class RuboCop::Cop::Layout::MultilineMethodDefinitionBraceLayout
   SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Layout::ParameterAlignment
+  ALIGN_PARAMS_MSG = ::T.let(nil, ::T.untyped)
+  FIXED_INDENT_MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::RescueEnsureAlignment
   ALTERNATIVE_ACCESS_MODIFIERS = ::T.let(nil, ::T.untyped)
   ANCESTOR_TYPES = ::T.let(nil, ::T.untyped)
@@ -22058,9 +22083,11 @@ end
 class RuboCop::Cop::Layout::SpaceAroundKeyword
   ACCEPT_LEFT_PAREN = ::T.let(nil, ::T.untyped)
   ACCEPT_LEFT_SQUARE_BRACKET = ::T.let(nil, ::T.untyped)
+  ACCEPT_NAMESPACE_OPERATOR = ::T.let(nil, ::T.untyped)
   DO = ::T.let(nil, ::T.untyped)
   MSG_AFTER = ::T.let(nil, ::T.untyped)
   MSG_BEFORE = ::T.let(nil, ::T.untyped)
+  NAMESPACE_OPERATOR = ::T.let(nil, ::T.untyped)
   SAFE_NAVIGATION = ::T.let(nil, ::T.untyped)
 end
 
@@ -22183,11 +22210,11 @@ class RuboCop::Cop::Lint::DuplicateCaseCondition
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Lint::DuplicateMethods
+class RuboCop::Cop::Lint::DuplicateHashKey
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Lint::DuplicatedKey
+class RuboCop::Cop::Lint::DuplicateMethods
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -22242,10 +22269,6 @@ class RuboCop::Cop::Lint::FormatParameterMismatch
   STRING_TYPES = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Lint::HandleExceptions
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
 class RuboCop::Cop::Lint::HeredocMethodCallPosition
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -22290,7 +22313,7 @@ class RuboCop::Cop::Lint::MissingCopEnableDirective
   MSG_BOUND = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Lint::MultipleCompare
+class RuboCop::Cop::Lint::MultipleComparison
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -22362,6 +22385,11 @@ class RuboCop::Cop::Lint::RedundantSplatExpansion
   PERCENT_W = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::RedundantStringCoercion
+  MSG_DEFAULT = ::T.let(nil, ::T.untyped)
+  MSG_SELF = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::RedundantWithIndex
   MSG_EACH_WITH_INDEX = ::T.let(nil, ::T.untyped)
   MSG_WITH_INDEX = ::T.let(nil, ::T.untyped)
@@ -22427,9 +22455,8 @@ class RuboCop::Cop::Lint::ShadowingOuterLocalVariable
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Lint::StringConversionInInterpolation
-  MSG_DEFAULT = ::T.let(nil, ::T.untyped)
-  MSG_SELF = ::T.let(nil, ::T.untyped)
+class RuboCop::Cop::Lint::SuppressedException
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::Syntax
@@ -22811,6 +22838,10 @@ class RuboCop::Cop::RSpec::DescribedClass
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::RSpec::DescribedClassModuleWrapping
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::RSpec::Dialect
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -22886,6 +22917,10 @@ end
 class RuboCop::Cop::RSpec::FactoryBot::CreateList
   MSG_CREATE_LIST = ::T.let(nil, ::T.untyped)
   MSG_N_TIMES = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::RSpec::FactoryBot::FactoryClassName
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::RSpec::FilePath
@@ -23019,8 +23054,8 @@ class RuboCop::Cop::RSpec::Pending
 end
 
 class RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker
+  ALLOWED_STATUSES = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
-  WHITELIST_STATUS = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::RSpec::Rails::HttpStatus::SymbolicStyleChecker
@@ -23115,7 +23150,19 @@ class RuboCop::Cop::Rails::ActiveSupportAliases
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Rails::ApplicationController
+  BASE_PATTERN = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  SUPERCLASS = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Rails::ApplicationJob
+  BASE_PATTERN = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  SUPERCLASS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::ApplicationMailer
   BASE_PATTERN = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
   SUPERCLASS = ::T.let(nil, ::T.untyped)
@@ -23292,6 +23339,10 @@ class RuboCop::Cop::Rails::Present
   MSG_UNLESS_BLANK = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Rails::RakeEnvironment
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Rails::ReadWriteAttribute
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -23324,11 +23375,14 @@ class RuboCop::Cop::Rails::RequestReferer
 end
 
 class RuboCop::Cop::Rails::ReversibleMigration
-  IRREVERSIBLE_CHANGE_TABLE_CALLS = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Rails::SafeNavigation
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::SafeNavigationWithBlank
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -28334,6 +28388,7 @@ module Types::BaseInterface
   extend ::GraphQL::Relay::TypeExtensions
   extend ::GraphQL::Schema::Member::BaseDSLMethods
   extend ::GraphQL::Schema::FindInheritedValue
+  extend ::GraphQL::Schema::FindInheritedValue::EmptyObjects
   extend ::GraphQL::Schema::Member::TypeSystemHelpers
   extend ::GraphQL::Schema::Member::HasFields
   extend ::GraphQL::Schema::Member::HasPath
@@ -28515,12 +28570,6 @@ end
 
 module URI
   extend ::URI::Escape
-  def self.decode_www_form(str, enc=T.unsafe(nil), separator: T.unsafe(nil), use__charset_: T.unsafe(nil), isindex: T.unsafe(nil)); end
-
-  def self.encode_www_form(enum, enc=T.unsafe(nil)); end
-
-  def self.encode_www_form_component(str, enc=T.unsafe(nil)); end
-
   def self.get_encoding(label); end
 
 end
@@ -28832,10 +28881,6 @@ class Vector
   def self.independent?(*vs); end
 
   def self.zero(size); end
-end
-
-class VideoGameListSchema
-  extend ::GraphQL::Schema::MethodWrappers
 end
 
 Visitor = Psych::Visitors::Visitor

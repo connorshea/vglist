@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.7.0
+# faker-2.8.0
 module Faker
 end
 module Faker::Base58
@@ -177,6 +177,7 @@ class Faker::Bank < Faker::Base
   def self.routing_number; end
   def self.routing_number_with_format; end
   def self.swift_bic; end
+  def self.valid_checksum?(routing_number, checksum); end
   def self.valid_routing_number; end
 end
 class Faker::Beer < Faker::Base
@@ -520,10 +521,10 @@ class Faker::IndustrySegments < Faker::Base
 end
 class Faker::Internet < Faker::Base
   def self.device_token; end
-  def self.domain_name(legacy_subdomain = nil, subdomain: nil); end
+  def self.domain_name(legacy_subdomain = nil, subdomain: nil, domain: nil); end
   def self.domain_suffix; end
   def self.domain_word; end
-  def self.email(legacy_name = nil, legacy_separators = nil, name: nil, separators: nil); end
+  def self.email(legacy_name = nil, legacy_separators = nil, name: nil, separators: nil, domain: nil); end
   def self.fix_umlauts(legacy_string = nil, string: nil); end
   def self.free_email(legacy_name = nil, name: nil); end
   def self.ip_v4_address; end

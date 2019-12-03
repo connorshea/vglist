@@ -1413,3 +1413,7 @@ module ActiveRecord::Locking::Pessimistic
   def with_lock(lock = nil, &blk); end
 end
 
+class ActiveRecord::Relation
+  sig { returns(Integer) }
+  def delete_all; end
+end

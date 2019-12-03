@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.3.2
+# rubocop-rails-2.4.0
 module RuboCop
 end
 module RuboCop::Rails
@@ -57,7 +57,20 @@ class RuboCop::Cop::Rails::ActiveSupportAliases < RuboCop::Cop::Cop
   def register_offense(node, method_name); end
   def starts_with?(node = nil); end
 end
+class RuboCop::Cop::Rails::ApplicationController < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def class_definition(node = nil); end
+  def class_new_definition(node = nil); end
+  include RuboCop::Cop::EnforceSuperclass
+end
 class RuboCop::Cop::Rails::ApplicationJob < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def class_definition(node = nil); end
+  def class_new_definition(node = nil); end
+  extend RuboCop::Cop::TargetRailsVersion
+  include RuboCop::Cop::EnforceSuperclass
+end
+class RuboCop::Cop::Rails::ApplicationMailer < RuboCop::Cop::Cop
   def autocorrect(node); end
   def class_definition(node = nil); end
   def class_new_definition(node = nil); end
@@ -390,6 +403,13 @@ class RuboCop::Cop::Rails::Present < RuboCop::Cop::Cop
   def unless_blank?(node = nil); end
   def unless_condition(node, method_call); end
 end
+class RuboCop::Cop::Rails::RakeEnvironment < RuboCop::Cop::Cop
+  def on_send(node); end
+  def task_definition?(node = nil); end
+  def task_name(node); end
+  def with_dependencies?(node); end
+  def with_hash_style_dependencies?(hash_node); end
+end
 class RuboCop::Cop::Rails::ReadWriteAttribute < RuboCop::Cop::Cop
   def autocorrect(node); end
   def message(node); end
@@ -453,21 +473,21 @@ class RuboCop::Cop::Rails::RequestReferer < RuboCop::Cop::Cop
 end
 class RuboCop::Cop::Rails::ReversibleMigration < RuboCop::Cop::Cop
   def all_hash_key?(args, *keys); end
-  def change_column_default_call(node = nil); end
   def change_table_call(node = nil); end
-  def check_change_column_default_node(node); end
   def check_change_table_node(node, block); end
   def check_change_table_offense(receiver, node); end
   def check_drop_table_node(node); end
   def check_irreversible_schema_statement_node(node); end
   def check_remove_column_node(node); end
   def check_remove_foreign_key_node(node); end
+  def check_reversible_hash_node(node); end
   def drop_table_call(node = nil); end
   def irreversible_schema_statement_call(node = nil); end
   def on_block(node); end
   def on_send(node); end
   def remove_column_call(node = nil); end
   def remove_foreign_key_call(node = nil); end
+  def reversible_change_table_call?(node); end
   def within_change_method?(node); end
   def within_reversible_or_up_only_block?(node); end
 end
@@ -477,6 +497,11 @@ class RuboCop::Cop::Rails::SafeNavigation < RuboCop::Cop::Cop
   def replacement(method, params); end
   def try_call(node = nil); end
   include RuboCop::Cop::RangeHelp
+end
+class RuboCop::Cop::Rails::SafeNavigationWithBlank < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def on_if(node); end
+  def safe_navigation_blank_in_conditional?(node = nil); end
 end
 class RuboCop::Cop::Rails::SaveBang < RuboCop::Cop::Cop
   def add_offense_for_node(node, msg = nil); end
@@ -488,17 +513,19 @@ class RuboCop::Cop::Rails::SaveBang < RuboCop::Cop::Cop
   def autocorrect(node); end
   def call_to_persisted?(node); end
   def check_assignment(assignment); end
-  def check_used_in_conditional(node); end
-  def conditional?(node); end
+  def check_used_in_condition_or_compound_boolean(node); end
+  def conditional?(parent); end
   def const_matches?(const, allowed_const); end
   def expected_signature?(node); end
   def explicit_return?(node); end
   def find_method_with_sibling_index(node, sibling_index = nil); end
   def hash_parent(node); end
   def implicit_return?(node); end
+  def in_condition_or_compound_boolean?(node); end
   def join_force?(force_class); end
   def on_csend(node); end
   def on_send(node); end
+  def operator_or_single_negative?(node); end
   def persist_method?(node, methods = nil); end
   def persisted_referenced?(assignment); end
   def receiver_chain_matches?(node, allowed_receiver); end
@@ -556,8 +583,11 @@ class RuboCop::Cop::Rails::UnknownEnv < RuboCop::Cop::Cop
   def environments; end
   def message(name); end
   def on_send(node); end
+  def rails_env?(node = nil); end
   def unknown_env_name?(name); end
-  def unknown_environment?(node = nil); end
+  def unknown_env_predicate?(name); end
+  def unknown_environment_equal?(node = nil); end
+  def unknown_environment_predicate?(node = nil); end
   include RuboCop::NameSimilarity
 end
 class RuboCop::Cop::Rails::Validation < RuboCop::Cop::Cop

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faraday/all/faraday.rbi
 #
-# faraday-0.17.0
+# faraday-0.17.1
 module Faraday
   def self.const_missing(name); end
   def self.default_adapter; end
@@ -452,7 +452,7 @@ class Faraday::Response
   def initialize(env = nil); end
   def marshal_dump; end
   def marshal_load(env); end
-  def on_complete; end
+  def on_complete(&block); end
   def reason_phrase; end
   def status; end
   def success?; end
@@ -475,27 +475,104 @@ class Faraday::CompositeReadIO
   def read(length = nil, outbuf = nil); end
   def rewind; end
 end
-class Faraday::Error < StandardError
+module Faraday::DeprecatedClass
+  def self.proxy_class(origclass, ver = nil); end
 end
-class Faraday::ClientError < Faraday::Error
+module Faraday::Deprecate
+  def deprecate(name, repl, ver); end
+  def self.deprecate(name, repl, ver); end
+  def self.skip; end
+  def self.skip=(value); end
+  def self.skip_during; end
+  def skip_during; end
+end
+class Faraday::Error < StandardError
   def backtrace; end
-  def initialize(ex, response = nil); end
+  def initialize(exc, response = nil); end
   def inspect; end
   def response; end
   def wrapped_exception; end
 end
-class Faraday::ConnectionFailed < Faraday::ClientError
+class Faraday::ClientError < Faraday::Error
+end
+class Faraday::BadRequestError < Faraday::ClientError
+end
+class Faraday::UnauthorizedError < Faraday::ClientError
+end
+class Faraday::ForbiddenError < Faraday::ClientError
 end
 class Faraday::ResourceNotFound < Faraday::ClientError
 end
-class Faraday::ParsingError < Faraday::ClientError
+class Faraday::ProxyAuthError < Faraday::ClientError
 end
-class Faraday::TimeoutError < Faraday::ClientError
-  def initialize(ex = nil); end
+class Faraday::ConflictError < Faraday::ClientError
 end
-class Faraday::SSLError < Faraday::ClientError
+class Faraday::UnprocessableEntityError < Faraday::ClientError
 end
-class Faraday::RetriableResponse < Faraday::ClientError
+class Faraday::ServerError < Faraday::Error
+end
+class Faraday::TimeoutError < Faraday::ServerError
+  def initialize(exc = nil, response = nil); end
+end
+class Faraday::NilStatusError < Faraday::ServerError
+  def initialize(_exc, response: nil); end
+end
+class Faraday::ConnectionFailed < Faraday::Error
+end
+class Faraday::SSLError < Faraday::Error
+end
+class Faraday::ParsingError < Faraday::Error
+end
+class Faraday::RetriableResponse < Faraday::Error
+end
+class Faraday::Error::ClientError < Faraday::ClientError
+  def self.===(other); end
+  def self._deprecated_inherited(arg0); end
+  def self._deprecated_new(*arg0); end
+  def self.inherited(*args, &block); end
+  def self.new(*args, &block); end
+end
+class Faraday::Error::ConnectionFailed < Faraday::ConnectionFailed
+  def self.===(other); end
+  def self._deprecated_inherited(arg0); end
+  def self._deprecated_new(*arg0); end
+  def self.inherited(*args, &block); end
+  def self.new(*args, &block); end
+end
+class Faraday::Error::ResourceNotFound < Faraday::ResourceNotFound
+  def self.===(other); end
+  def self._deprecated_inherited(arg0); end
+  def self._deprecated_new(*arg0); end
+  def self.inherited(*args, &block); end
+  def self.new(*args, &block); end
+end
+class Faraday::Error::ParsingError < Faraday::ParsingError
+  def self.===(other); end
+  def self._deprecated_inherited(arg0); end
+  def self._deprecated_new(*arg0); end
+  def self.inherited(*args, &block); end
+  def self.new(*args, &block); end
+end
+class Faraday::Error::TimeoutError < Faraday::TimeoutError
+  def self.===(other); end
+  def self._deprecated_inherited(arg0); end
+  def self._deprecated_new(*arg0); end
+  def self.inherited(*args, &block); end
+  def self.new(*args, &block); end
+end
+class Faraday::Error::SSLError < Faraday::SSLError
+  def self.===(other); end
+  def self._deprecated_inherited(arg0); end
+  def self._deprecated_new(*arg0); end
+  def self.inherited(*args, &block); end
+  def self.new(*args, &block); end
+end
+class Faraday::Error::RetriableResponse < Faraday::RetriableResponse
+  def self.===(other); end
+  def self._deprecated_inherited(arg0); end
+  def self._deprecated_new(*arg0); end
+  def self.inherited(*args, &block); end
+  def self.new(*args, &block); end
 end
 module Faraday::AutoloadHelper
   def all_loaded_constants; end
