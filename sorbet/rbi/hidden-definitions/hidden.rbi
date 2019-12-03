@@ -7702,8 +7702,6 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
@@ -8593,7 +8591,6 @@ end
 
 class GraphQL::Directive
   ARGUMENT_DEFINITION = ::T.let(nil, ::T.untyped)
-  DEFAULT_DEPRECATION_REASON = ::T.let(nil, ::T.untyped)
   DeprecatedDirective = ::T.let(nil, ::T.untyped)
   ENUM = ::T.let(nil, ::T.untyped)
   ENUM_VALUE = ::T.let(nil, ::T.untyped)
@@ -8720,8 +8717,6 @@ end
 class GraphQL::Schema
   BUILT_IN_TYPES = ::T.let(nil, ::T.untyped)
   DYNAMIC_FIELDS = ::T.let(nil, ::T.untyped)
-  EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
-  EMPTY_HASH = ::T.let(nil, ::T.untyped)
 end
 
 class GraphQL::Schema::Argument
@@ -8781,6 +8776,15 @@ class GraphQL::Schema::Field
   NO_ARGS = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::Schema::Field
+  extend ::GraphQL::Schema::FindInheritedValue::EmptyObjects
+end
+
+module GraphQL::Schema::FindInheritedValue::EmptyObjects
+  EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
+  EMPTY_HASH = ::T.let(nil, ::T.untyped)
+end
+
 class GraphQL::Schema::InputObject
   extend ::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension
 end
@@ -8806,6 +8810,8 @@ end
 
 module GraphQL::Schema::Member::HasFields
   CONFLICT_FIELD_NAMES = ::T.let(nil, ::T.untyped)
+  GRAPHQL_RUBY_KEYWORDS = ::T.let(nil, ::T.untyped)
+  RUBY_KEYWORDS = ::T.let(nil, ::T.untyped)
 end
 
 class GraphQL::Schema::Object
@@ -8834,6 +8840,8 @@ module GraphQL::Schema::Validation::Rules
   DEFAULT_VALUE_IS_VALID_FOR_TYPE = ::T.let(nil, ::T.untyped)
   DESCRIPTION_IS_STRING_OR_NIL = ::T.let(nil, ::T.untyped)
   FIELDS_ARE_VALID = ::T.let(nil, ::T.untyped)
+  HAS_AT_LEAST_ONE_ARGUMENT = ::T.let(nil, ::T.untyped)
+  HAS_AT_LEAST_ONE_FIELD = ::T.let(nil, ::T.untyped)
   HAS_ONE_OR_MORE_POSSIBLE_TYPES = ::T.let(nil, ::T.untyped)
   INTERFACES_ARE_IMPLEMENTED = ::T.let(nil, ::T.untyped)
   NAME_IS_STRING = ::T.let(nil, ::T.untyped)
@@ -8846,7 +8854,12 @@ module GraphQL::Schema::Validation::Rules
   TYPE_IS_VALID_INPUT_TYPE = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::Schema::Warden
+  NO_REFERENCES = ::T.let(nil, ::T.untyped)
+end
+
 class GraphQL::Schema
+  extend ::GraphQL::Schema::FindInheritedValue::EmptyObjects
   extend ::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension
 end
 
@@ -9003,7 +9016,7 @@ class Hash
 end
 
 class Hash
-  def self.from_xml(xml, disallowed_types=T.unsafe(nil)); end
+  def self.from_trusted_xml(xml); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -10869,6 +10882,9 @@ end
 class Mail::POP3
 end
 
+class Mail::PartsList
+end
+
 class Mail::PhraseList
   def initialize(string); end
 
@@ -11987,6 +12003,8 @@ end
 
 class Mutations::RemoveGameFromLibrary
   def load_game_id(value); end
+
+  def load_game_purchase_id(value); end
 end
 
 class Mutations::UnfavoriteGame
@@ -11995,6 +12013,26 @@ end
 
 class Mutations::UnfollowUser
   def load_user_id(value); end
+end
+
+class Mutations::UpdateGameInLibrary
+  def load_comments(value); end
+
+  def load_completion_date(value); end
+
+  def load_completion_status(value); end
+
+  def load_game_purchase_id(value); end
+
+  def load_hours_played(value); end
+
+  def load_platforms(value); end
+
+  def load_rating(value); end
+
+  def load_start_date(value); end
+
+  def load_stores(value); end
 end
 
 module Mutex_m
@@ -12152,6 +12190,8 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
+Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
+
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -12250,15 +12290,7 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-class Net::HTTP
-end
-
-Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
-
-Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
-
-class Net::HTTP
-end
+Net::HTTPSession = Net::HTTP
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -23118,7 +23150,19 @@ class RuboCop::Cop::Rails::ActiveSupportAliases
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Rails::ApplicationController
+  BASE_PATTERN = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  SUPERCLASS = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Rails::ApplicationJob
+  BASE_PATTERN = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  SUPERCLASS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::ApplicationMailer
   BASE_PATTERN = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
   SUPERCLASS = ::T.let(nil, ::T.untyped)
@@ -23295,6 +23339,10 @@ class RuboCop::Cop::Rails::Present
   MSG_UNLESS_BLANK = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Rails::RakeEnvironment
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Rails::ReadWriteAttribute
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -23327,11 +23375,14 @@ class RuboCop::Cop::Rails::RequestReferer
 end
 
 class RuboCop::Cop::Rails::ReversibleMigration
-  IRREVERSIBLE_CHANGE_TABLE_CALLS = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Rails::SafeNavigation
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::SafeNavigationWithBlank
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -28337,6 +28388,7 @@ module Types::BaseInterface
   extend ::GraphQL::Relay::TypeExtensions
   extend ::GraphQL::Schema::Member::BaseDSLMethods
   extend ::GraphQL::Schema::FindInheritedValue
+  extend ::GraphQL::Schema::FindInheritedValue::EmptyObjects
   extend ::GraphQL::Schema::Member::TypeSystemHelpers
   extend ::GraphQL::Schema::Member::HasFields
   extend ::GraphQL::Schema::Member::HasPath
@@ -28829,10 +28881,6 @@ class Vector
   def self.independent?(*vs); end
 
   def self.zero(size); end
-end
-
-class VideoGameListSchema
-  extend ::GraphQL::Schema::MethodWrappers
 end
 
 Visitor = Psych::Visitors::Visitor
