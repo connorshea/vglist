@@ -33,18 +33,18 @@ JSON response:
     "game": {
       "name": "Half-Life 2",
       "id": "372",
-      "wikidataId": "193581",
+      "wikidataId": 193581,
       "engines": {
         "nodes": [
           {
             "id": "3",
             "name": "Havok",
-            "wikidataId": "616957"
+            "wikidataId": 616957
           },
           {
             "id": "6",
             "name": "Source Engine",
-            "wikidataId": "643572"
+            "wikidataId": 643572
           }
         ]
       }
@@ -175,11 +175,11 @@ mutation($id: ID!) {
 }
 ```
 
-Mutations start with the `mutation` keyword, and any variables can be defined from there. The and all mutations accept parameters. In this case, we're adding a game to the user's library with 150 hours played, a comment that says "Pretty good", a completion status of `COMPLETED`, and a rating of 100.
+Mutations start with the `mutation` keyword, and any variables can be defined from there. All mutations accept parameters. In this case, we're adding a game to the user's library with 150 hours played, a comment that says "Pretty good", a completion status of `COMPLETED`, and a rating of `100`.
 
-The mutation will return the defined data (the `gamePurchase`, the associated game, and the hoursPlayed, comments, completionStatus, and rating) if it was successful. If it failed - for example when the user already has the game in their library - it will instead return an empty `data` object and an `errors` object.
+The mutation will return the defined data (the `gamePurchase`, the associated game, `hoursPlayed`, `comments`, `completionStatus`, and `rating`) if it's successful. If it fails - for example when the user already has the game in their library or when the user doesn't have sufficient permissions to perform the action being attempted - it will instead return an empty `data` object and an `errors` object.
 
-Each different mutation has different parameters. The specific parameters are documented in the GraphQL schema.
+Each type of mutation has different parameters. The specific parameters are documented in the GraphQL schema.
 
 ## Documentation
 
