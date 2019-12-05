@@ -104,7 +104,7 @@ All endpoints which return lists of items (for example, if you query for all the
 For example, you can get a user's game purchases (games in a user's library) with a query like this:
 
 ```graphql
-query($id:ID!) {
+query($id: ID!) {
   user(id: $id) {
     gamePurchases {
       nodes {
