@@ -90,7 +90,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
   end
 
   # Create "(after/before)_(add/remove)_for_#{assoc_name}" methods
-  sig { params(assoc_name: String, model_klass: Parlour::RbiGenerator::ModuleNamespace).void }
+  sig { params(assoc_name: String, model_klass: T.any(Parlour::RbiGenerator::ClassNamespace, Parlour::RbiGenerator::ModuleNamespace)).void }
   def create_after_before_add_remove_methods(assoc_name, model_klass)
     prefixes = [
       'after_add_for_',
@@ -127,7 +127,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     end
   end
 
-  sig { params(assoc_name: String, model_klass: Parlour::RbiGenerator::ModuleNamespace).void }
+  sig { params(assoc_name: String, model_klass: T.any(Parlour::RbiGenerator::ClassNamespace, Parlour::RbiGenerator::ModuleNamespace)).void }
   def autosave_and_validate_associated_records_methods(assoc_name, model_klass)
     # def autosave_associated_records_for_developers(*args); end
     model_klass.create_method(
@@ -148,7 +148,7 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     )
   end
 
-  sig { params(attribute_name: String, model_klass: Parlour::RbiGenerator::ModuleNamespace).void }
+  sig { params(attribute_name: String, model_klass: T.any(Parlour::RbiGenerator::ClassNamespace, Parlour::RbiGenerator::ModuleNamespace)).void }
   def dirty_methods(attribute_name, model_klass)
     methods = [
       "saved_change_to_#{attribute_name}?",

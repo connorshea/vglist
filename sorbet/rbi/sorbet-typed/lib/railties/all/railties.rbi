@@ -11,7 +11,7 @@ module Rails
   sig {returns(Rails::Application)}
   def self.application; end
   
-  sig { returns(T.nilable(Pathname)) }
+  sig { returns(Pathname) }
   def self.root; end
 end
 

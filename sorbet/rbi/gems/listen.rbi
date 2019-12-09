@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/listen/all/listen.rbi
 #
-# listen-3.2.0
+# listen-3.2.1
 module Listen
   def self.logger; end
   def self.logger=(logger); end
@@ -70,6 +70,7 @@ class Listen::Directory
   def self._async_changes(snapshot, path, previous, options); end
   def self._change(snapshot, type, path, options); end
   def self._children(path); end
+  def self.ascendant_of?(base, other); end
   def self.scan(snapshot, rel_path, options); end
 end
 class Listen::Change
@@ -124,11 +125,10 @@ module Listen::Internals::ThreadPool
 end
 class Listen::Adapter::Darwin < Listen::Adapter::Base
   def _configure(dir, &callback); end
-  def _process_event(dir, event); end
+  def _process_changes(dirs); end
+  def _process_event(dir, path); end
   def _run; end
   def _run_worker(worker); end
-  def _run_workers_in_background(workers); end
-  def _to_array(queue); end
   def self.usable?; end
 end
 class Listen::Adapter::Linux < Listen::Adapter::Base
