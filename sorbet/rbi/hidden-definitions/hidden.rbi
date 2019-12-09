@@ -3878,8 +3878,6 @@ class Array
 
   def dig(*_); end
 
-  def filter!(); end
-
   def flatten!(*_); end
 
   def pack(*_); end
@@ -6671,8 +6669,6 @@ module Enumerable
 
   def each_entry(*_); end
 
-  def filter(); end
-
   def grep_v(_); end
 
   def slice_after(*_); end
@@ -6920,8 +6916,6 @@ class Etc::Passwd
 
   def change=(_); end
 
-  def dir(); end
-
   def dir=(_); end
 
   def expire(); end
@@ -6932,27 +6926,17 @@ class Etc::Passwd
 
   def gecos=(_); end
 
-  def gid(); end
-
   def gid=(_); end
-
-  def name(); end
 
   def name=(_); end
 
-  def passwd(); end
-
   def passwd=(_); end
-
-  def shell(); end
 
   def shell=(_); end
 
   def uclass(); end
 
   def uclass=(_); end
-
-  def uid(); end
 
   def uid=(_); end
 end
@@ -7702,13 +7686,13 @@ class File::Stat
 end
 
 class File
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -8680,6 +8664,10 @@ class GraphQL::Language::Nodes::AbstractNode
   NO_CHILDREN = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::Language::Nodes::Field
+  NONE = ::T.let(nil, ::T.untyped)
+end
+
 class GraphQL::Language::Parser
   EMPTY_ARRAY = ::T.let(nil, ::T.untyped)
   Racc_arg = ::T.let(nil, ::T.untyped)
@@ -8990,8 +8978,6 @@ class Hash
 
   def fetch_values(*_); end
 
-  def filter!(); end
-
   def flatten(*_); end
 
   def index(_); end
@@ -9017,6 +9003,8 @@ end
 
 class Hash
   def self.from_trusted_xml(xml); end
+
+  def self.try_convert(_); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -10882,9 +10870,6 @@ end
 class Mail::POP3
 end
 
-class Mail::PartsList
-end
-
 class Mail::PhraseList
   def initialize(string); end
 
@@ -12190,8 +12175,6 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
-Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
-
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -12290,7 +12273,15 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-Net::HTTPSession = Net::HTTP
+class Net::HTTP
+end
+
+Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
+
+Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
+
+class Net::HTTP
+end
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -16251,6 +16242,7 @@ module Puma::Const
   LOCALHOST_ADDR = ::T.let(nil, ::T.untyped)
   LOCALHOST_IP = ::T.let(nil, ::T.untyped)
   MAX_BODY = ::T.let(nil, ::T.untyped)
+  MAX_FAST_INLINE = ::T.let(nil, ::T.untyped)
   MAX_HEADER = ::T.let(nil, ::T.untyped)
   NEWLINE = ::T.let(nil, ::T.untyped)
   PATH_INFO = ::T.let(nil, ::T.untyped)
@@ -20712,10 +20704,6 @@ module Regexp::Syntax::Token::UnicodeProperty::Category
   Punctuation = ::T.let(nil, ::T.untyped)
   Separator = ::T.let(nil, ::T.untyped)
   Symbol = ::T.let(nil, ::T.untyped)
-end
-
-class Regexp
-  def self.union(*_); end
 end
 
 class Relationship::ActiveRecord_AssociationRelation
@@ -26777,8 +26765,6 @@ class Set
 
   def eql?(o); end
 
-  def filter!(&block); end
-
   def flatten_merge(set, seen=T.unsafe(nil)); end
 
   def pretty_print(pp); end
@@ -28469,8 +28455,6 @@ end
 class URI::HTTP
   include ::OpenURI::OpenRead
   def buffer_open(buf, proxy, options); end
-
-  def request_uri(); end
 end
 
 class URI::LDAP

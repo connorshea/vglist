@@ -1,6 +1,6 @@
 # typed: strict
 
-require T.must(Rails.root).join('lib', 'cursed_rbi_plugin')
+require Rails.root.join('lib/cursed_rbi_plugin')
 
 SorbetRails::ModelRbiFormatter.register_plugin(CursedRbiPlugin)
 
@@ -18,6 +18,6 @@ end
 
 # Load SorbetRailsHack to add typed_require.
 ActiveSupport.on_load(:action_controller) do
-  require T.must(Rails.root).join('lib', 'sorbet_rails_hack')
+  require Rails.root.join('lib/sorbet_rails_hack')
   ActionController::Parameters.include SorbetRailsHack
 end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-4.3.0
+# puma-4.3.1
 module Puma
   def self.jruby?; end
   def self.set_thread_name(name); end

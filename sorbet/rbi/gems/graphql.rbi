@@ -5,9 +5,9 @@
 #
 # If you would like to make changes to this file, great! Please create the gem's shim here:
 #
-#   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql-ruby/all/graphql-ruby.rbi
+#   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-ruby-f24b1cbcde51
+# graphql-1.10.0.pre2
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
   def self.parse_file(filename); end
@@ -579,7 +579,7 @@ module GraphQL::Language::Lexer
   def self._graphql_lexer_trans_cond_spaces=(arg0); end
   def self._graphql_lexer_trans_keys; end
   def self._graphql_lexer_trans_keys=(arg0); end
-  def self.emit(token_name, ts, te, meta); end
+  def self.emit(token_name, ts, te, meta, token_value = nil); end
   def self.emit_string(ts, te, meta, block:); end
   def self.graphql_lexer_en_main; end
   def self.graphql_lexer_en_main=(arg0); end
@@ -696,7 +696,7 @@ class GraphQL::Language::Nodes::Field < GraphQL::Language::Nodes::AbstractNode
   def children; end
   def children_method_name; end
   def directives; end
-  def initialize_node(name: nil, arguments: nil, directives: nil, selections: nil, **kwargs); end
+  def initialize_node(attributes); end
   def merge_argument(node_opts); end
   def merge_directive(node_opts); end
   def merge_selection(node_opts); end
@@ -1132,7 +1132,7 @@ class GraphQL::Language::Parser < Racc::Parser
 end
 class GraphQL::Language::Token
   def col; end
-  def initialize(value:, name:, line:, col:, prev_token:); end
+  def initialize(name, value, line, col, prev_token); end
   def inspect; end
   def line; end
   def line_and_column; end
@@ -1262,7 +1262,8 @@ class GraphQL::Analysis::AST::Visitor < GraphQL::Language::Visitor
 end
 class GraphQL::Analysis::AST::Analyzer
   def analyze?; end
-  def initialize(query); end
+  def initialize(subject); end
+  def multiplex; end
   def on_enter_abstract_node(node, parent, visitor); end
   def on_enter_argument(node, parent, visitor); end
   def on_enter_directive(node, parent, visitor); end
@@ -1298,6 +1299,7 @@ class GraphQL::Analysis::AST::Analyzer
   def query; end
   def result; end
   def self.build_visitor_hooks(member_name); end
+  def subject; end
 end
 class GraphQL::Analysis::AST::FieldUsage < GraphQL::Analysis::AST::Analyzer
   def initialize(query); end
@@ -1794,9 +1796,9 @@ class GraphQL::Schema
   def self.lazy_methods; end
   def self.lazy_resolve(lazy_class, value_method); end
   def self.max_complexity(max_complexity = nil); end
-  def self.max_complexity=(*args, &block); end
+  def self.max_complexity=(arg0); end
   def self.max_depth(new_max_depth = nil); end
-  def self.max_depth=(*args, &block); end
+  def self.max_depth=(arg0); end
   def self.metadata(*args, &block); end
   def self.middleware(new_middleware = nil); end
   def self.multiplex(queries, **kwargs); end
@@ -2029,7 +2031,7 @@ class GraphQL::Schema::Traversal
   def visit_fields(schema, type_defn); end
 end
 module GraphQL::Schema::TypeExpression
-  def self.build_type(types, ast_node); end
+  def self.build_type(type_owner, ast_node); end
   def self.wrap_type(type, wrapper_method); end
 end
 module GraphQL::Schema::UniqueWithinType
@@ -2234,6 +2236,7 @@ module GraphQL::Schema::Member::Instrumentation
 end
 class GraphQL::Schema::Member::Instrumentation::ProxiedResolve
   def call(obj, args, ctx); end
+  def execution_errors?(result); end
   def initialize(inner_resolve:, list_depth:, inner_return_type:); end
   def proxy_to_depth(inner_obj, depth, ctx); end
 end
@@ -2421,6 +2424,7 @@ class GraphQL::Schema::InputObject < GraphQL::Schema::Member
   def key?(key); end
   def keys(*args, &block); end
   def map(*args, &block); end
+  def prepare; end
   def self.argument(*args, **kwargs, &block); end
   def self.arguments_class; end
   def self.arguments_class=(arg0); end
@@ -2538,7 +2542,8 @@ end
 class GraphQL::Schema::Resolver
   def authorized?(**inputs); end
   def context; end
-  def initialize(object:, context:); end
+  def field; end
+  def initialize(object:, context:, field:); end
   def load_argument(name, value); end
   def load_arguments(args); end
   def object; end
@@ -2548,6 +2553,8 @@ class GraphQL::Schema::Resolver
   def self.argument(*args, **kwargs, &block); end
   def self.arguments_loads_as_type; end
   def self.complexity(new_complexity = nil); end
+  def self.extension(extension, **options); end
+  def self.extensions; end
   def self.extras(new_extras = nil); end
   def self.field_options; end
   def self.null(allow_null = nil); end
@@ -2592,7 +2599,7 @@ class GraphQL::Schema::RelayClassicMutation < GraphQL::Schema::Mutation
   def self.input_type(new_input_type = nil); end
 end
 class GraphQL::Schema::Subscription < GraphQL::Schema::Resolver
-  def initialize(object:, context:); end
+  def initialize(object:, context:, field:); end
   def load_application_object_failed(err); end
   def resolve(**args); end
   def resolve_subscribe(args); end
@@ -2690,6 +2697,7 @@ class GraphQL::Query::Arguments
   def initialize(values, context:, defaults_used:); end
   def key?(key); end
   def keys(*args, &block); end
+  def prepare; end
   def self.argument_definitions; end
   def self.argument_definitions=(arg0); end
   def self.argument_owner; end
@@ -4103,8 +4111,9 @@ class GraphQL::Subscriptions::Event
   def context; end
   def initialize(name:, arguments:, field: nil, context: nil, scope: nil); end
   def name; end
+  def self.get_arg_definition(arg_owner, arg_name); end
   def self.serialize(name, arguments, field, scope:); end
-  def self.stringify_args(args); end
+  def self.stringify_args(arg_owner, args); end
   def topic; end
 end
 class GraphQL::Subscriptions::Instrumentation
