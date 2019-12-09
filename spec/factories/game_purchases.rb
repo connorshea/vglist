@@ -25,9 +25,7 @@ FactoryBot.define do
     end
 
     trait :hours_played do
-      # TODO: Replace with Faker method when we upgrade to 2.0
-      #   Faker::Number.decimal(3, 1)
-      hours_played { "#{rand(999)}.#{rand(10)}".to_f }
+      hours_played { Faker::Number.decimal(l_digits: 3, r_digits: 1) }
     end
 
     trait :platforms do
