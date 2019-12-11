@@ -61,7 +61,7 @@ If you just want to scrape the database to create something yourself, it'd be mu
 
 ## Authentication
 
-The API does not support public access, and requires that you have a user account and OAuth token.
+The API does not support public access, and requires that you have a user account and either an API token or OAuth token.
 
 ### OAuth
 
@@ -91,7 +91,31 @@ If you're getting errors about insufficient scope, make sure you include `&scope
 
 ### API Tokens
 
-I intend to support long-lasting API tokens soon, but they do not currently exist. They'll be useful for creating things like Discord bots, which could be used for things like searching the vglist database with a bot command.
+**NOTE:** If you want to create an application that lets other users log into their accounts on vglist, _use OAuth_. API Tokens are not meant for this purpose, and should never be shared with other users.
+
+API Tokens are different from OAuth in that they last an indefinite amount of time and don't need to be refreshed. They also allow both reading and writing to the API without any scopes being specified. They're useful for creating things like Discord bots, which could be used for things like searching the vglist database with a bot command.
+
+API Tokens can be found in your Settings, in the "Developer" tab. You can click the "View Token" button to view your token or use the "Reset Token" button to change the token to a new, random value. Always keep your token secret, and reset it immediately if you find out the token was leaked or stolen. It can be used to modify your game library, follow/unfollow users, etc.
+
+When sending API requests with an API Token, you need to supply your user email and API Token. You can do so with the `X-User-Email` and `X-User-Token` HTTP headers.
+
+For example, when using the [graphql-client](https://github.com/github/graphql-client) gem in Ruby it might look something like this:
+
+```ruby
+GraphQL::Client::HTTP.new("https://vglist.co/graphql") do
+  def headers(context)
+    {
+      "User-Agent": "Example API Client",
+      "X-User-Email": "connor@example.com",
+      "X-User-Token": "API_TOKEN_HERE",
+      "Content-Type": "application/json",
+      "Accept": "*/*"
+    }
+  end
+end
+```
+
+Always make sure to include a `User-Agent` header with an identifiable name in your requests. These help identify your bot or script, and helps me block bad actors from abusing the API. In the future, they'll likely be required for the API to accept your request.
 
 ## Rate Limiting
 
