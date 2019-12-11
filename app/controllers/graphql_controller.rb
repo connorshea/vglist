@@ -5,7 +5,7 @@ class GraphqlController < ApplicationController
 
   # Allow bypassing authorization if the user is logged in, to
   # enable GraphiQL.
-  before_action :authorize_api_user, if: -> { current_user.nil? }
+  before_action :authorize_api_user, if: -> { current_user.nil? && user_using_oauth? }
 
   # Disable CSRF protection for GraphQL because we don't want to have CSRF
   # protection on our API endpoint. The point is to let anyone send requests
@@ -13,7 +13,7 @@ class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   # Use SimpleTokenAuthentication if the user's request doesn't have an OAuth token.
-  # acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.request.headers.key?('HTTP-AUTHORIZATION') }
+  acts_as_token_authentication_handler_for User, if: ->(controller) { !controller.user_using_oauth? }
 
   def execute
     skip_authorization
@@ -25,7 +25,8 @@ class GraphqlController < ApplicationController
       current_user: current_user || doorkeeper_user,
       pundit: self,
       doorkeeper_scopes: doorkeeper_token&.scopes&.to_a,
-      graphiql_override: false
+      graphiql_override: false,
+      token_auth: !user_using_oauth?
     }
 
     # Set graphiql_override to true if in development mode and the request
@@ -39,6 +40,13 @@ class GraphqlController < ApplicationController
     raise e unless Rails.env.development?
 
     handle_error_in_development(e)
+  end
+
+  protected
+
+  # Check whether the user is using OAuth based on whether an Authorization header is included.
+  def user_using_oauth?
+    request.headers.key?('Authorization')
   end
 
   private
