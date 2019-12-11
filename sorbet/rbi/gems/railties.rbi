@@ -565,6 +565,9 @@ class Rails::Application::RoutesReloader
   def updated?(*args, &block); end
   def updater; end
 end
+class Rails::BacktraceCleaner < ActiveSupport::BacktraceCleaner
+  def initialize; end
+end
 class Rails::Rack::Logger < ActiveSupport::LogSubscriber
 end
 class Rails::Application::DefaultMiddlewareStack
@@ -575,7 +578,4 @@ class Rails::Application::DefaultMiddlewareStack
   def load_rack_cache; end
   def paths; end
   def show_exceptions_app; end
-end
-class Rails::BacktraceCleaner < ActiveSupport::BacktraceCleaner
-  def initialize; end
 end

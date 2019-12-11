@@ -1500,6 +1500,252 @@ class ActionDispatch::Routing::Mapper::Scope
   def scope_level; end
   include Enumerable
 end
+class ActionDispatch::MiddlewareStack
+  def [](i); end
+  def assert_index(index, where); end
+  def build(app = nil, &block); end
+  def build_middleware(klass, args, block); end
+  def delete(target); end
+  def each; end
+  def initialize(*args); end
+  def initialize_copy(other); end
+  def insert(index, klass, *args, &block); end
+  def insert_after(index, *args, &block); end
+  def insert_before(index, klass, *args, &block); end
+  def last; end
+  def middlewares; end
+  def middlewares=(arg0); end
+  def size; end
+  def swap(target, *args, &block); end
+  def unshift(klass, *args, &block); end
+  def use(klass, *args, &block); end
+  include Enumerable
+end
+class ActionDispatch::MiddlewareStack::Middleware
+  def ==(middleware); end
+  def args; end
+  def block; end
+  def build(app); end
+  def build_instrumented(app); end
+  def initialize(klass, args, block); end
+  def inspect; end
+  def klass; end
+  def name; end
+end
+class ActionDispatch::MiddlewareStack::InstrumentationProxy
+  def call(env); end
+  def initialize(middleware, class_name); end
+end
+module ActionDispatch::Http::FilterRedirect
+  def filtered_location; end
+  def location_filter_match?; end
+  def location_filters; end
+end
+class ActionDispatch::Response
+  def [](*args, &block); end
+  def []=(*args, &block); end
+  def _cache_control; end
+  def _cache_control=(v); end
+  def abort; end
+  def assign_default_content_type_and_charset!; end
+  def await_commit; end
+  def await_sent; end
+  def before_committed; end
+  def before_sending; end
+  def body; end
+  def body=(body); end
+  def body_parts; end
+  def build_buffer(response, body); end
+  def charset; end
+  def charset=(charset); end
+  def close; end
+  def code; end
+  def commit!; end
+  def committed?; end
+  def content_type; end
+  def content_type=(content_type); end
+  def cookies; end
+  def default_charset; end
+  def default_charset=(obj); end
+  def default_headers; end
+  def default_headers=(obj); end
+  def delete_header(key); end
+  def each(&block); end
+  def get_header(key); end
+  def handle_no_content!; end
+  def has_header?(key); end
+  def header; end
+  def headers; end
+  def initialize(status = nil, header = nil, body = nil); end
+  def media_type; end
+  def message; end
+  def munge_body_object(body); end
+  def parse_content_type(content_type); end
+  def parsed_content_type_header; end
+  def prepare!; end
+  def rack_response(status, header); end
+  def redirect_url; end
+  def request; end
+  def request=(arg0); end
+  def reset_body!; end
+  def response_code; end
+  def return_only_media_type_on_content_type; end
+  def return_only_media_type_on_content_type=(obj); end
+  def self.create(status = nil, header = nil, body = nil, default_headers: nil); end
+  def self.default_charset; end
+  def self.default_charset=(obj); end
+  def self.default_headers; end
+  def self.default_headers=(obj); end
+  def self.merge_default_headers(original, default); end
+  def self.return_only_media_type_on_content_type; end
+  def self.return_only_media_type_on_content_type=(obj); end
+  def send_file(path); end
+  def sending!; end
+  def sending?; end
+  def sending_file=(v); end
+  def sent!; end
+  def sent?; end
+  def set_content_type(content_type, charset); end
+  def set_header(key, v); end
+  def status; end
+  def status=(status); end
+  def status_message; end
+  def stream; end
+  def to_a; end
+  def write(string); end
+  include ActionDispatch::Http::Cache::Response
+  include ActionDispatch::Http::FilterRedirect
+  include MonitorMixin
+  include Rack::Response::Helpers
+end
+class ActionDispatch::Response::Header < Anonymous_Delegator_2
+  def []=(k, v); end
+  def initialize(response, header); end
+  def merge(other); end
+  def to_hash; end
+end
+class ActionDispatch::Response::Buffer
+  def abort; end
+  def body; end
+  def close; end
+  def closed?; end
+  def each(&block); end
+  def each_chunk(&block); end
+  def initialize(response, buf); end
+  def write(string); end
+end
+class ActionDispatch::Response::FileBody
+  def body; end
+  def each; end
+  def initialize(path); end
+  def to_path; end
+end
+class ActionDispatch::Response::ContentTypeHeader < Struct
+  def charset; end
+  def charset=(_); end
+  def mime_type; end
+  def mime_type=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class ActionDispatch::Response::RackBody
+  def body; end
+  def close; end
+  def each(*args, &block); end
+  def initialize(response); end
+  def respond_to?(method, include_private = nil); end
+  def to_ary; end
+  def to_path; end
+end
+class AbstractController::Error < StandardError
+end
+class AbstractController::ActionNotFound < StandardError
+end
+class AbstractController::Base
+  def _find_action_name(action_name); end
+  def _handle_action_missing(*args); end
+  def _valid_action_name?(action_name); end
+  def action_method?(name); end
+  def action_methods; end
+  def action_name; end
+  def action_name=(arg0); end
+  def available_action?(action_name); end
+  def controller_path; end
+  def formats; end
+  def formats=(arg0); end
+  def method_for_action(action_name); end
+  def performed?; end
+  def process(action, *args); end
+  def process_action(method_name, *args); end
+  def response_body; end
+  def response_body=(arg0); end
+  def self.abstract!; end
+  def self.abstract; end
+  def self.abstract?; end
+  def self.action_methods; end
+  def self.clear_action_methods!; end
+  def self.controller_path; end
+  def self.inherited(klass); end
+  def self.internal_methods; end
+  def self.method_added(name); end
+  def self.supports_path?; end
+  def send_action(*arg0); end
+  extend ActiveSupport::Configurable::ClassMethods
+  extend ActiveSupport::DescendantsTracker
+  include ActiveSupport::Configurable
+end
+class ActionController::MiddlewareStack < ActionDispatch::MiddlewareStack
+  def build(action, app = nil, &block); end
+  def build_middleware(klass, args, block); end
+end
+class ActionController::MiddlewareStack::Middleware < ActionDispatch::MiddlewareStack::Middleware
+  def initialize(klass, args, actions, strategy, block); end
+  def valid?(action); end
+end
+class ActionController::Metal < AbstractController::Base
+  def content_type(*args, &block); end
+  def content_type=(arg); end
+  def controller_name; end
+  def dispatch(name, request, response); end
+  def headers(*args, &block); end
+  def initialize; end
+  def location(*args, &block); end
+  def location=(arg); end
+  def media_type(*args, &block); end
+  def middleware_stack; end
+  def middleware_stack=(val); end
+  def middleware_stack?; end
+  def params; end
+  def params=(val); end
+  def performed?; end
+  def request; end
+  def request=(arg0); end
+  def reset_session; end
+  def response; end
+  def response=(arg0); end
+  def response_body=(body); end
+  def response_code(*args, &block); end
+  def self.action(name); end
+  def self.binary_params_for?(action); end
+  def self.controller_name; end
+  def self.dispatch(name, req, res); end
+  def self.inherited(base); end
+  def self.make_response!(request); end
+  def self.middleware; end
+  def self.middleware_stack; end
+  def self.middleware_stack=(val); end
+  def self.middleware_stack?; end
+  def self.use(*args, &block); end
+  def session(*args, &block); end
+  def set_request!(request); end
+  def set_response!(response); end
+  def status(*args, &block); end
+  def status=(arg); end
+  def to_a; end
+  def url_for(string); end
+end
 class ActionController::LogSubscriber < ActiveSupport::LogSubscriber
 end
 class ActionDispatch::Request::Utils
@@ -1774,42 +2020,6 @@ class ActionDispatch::RemoteIp::GetIp
   def ips_from(header); end
   def to_s; end
 end
-class ActionDispatch::MiddlewareStack
-  def [](i); end
-  def assert_index(index, where); end
-  def build(app = nil, &block); end
-  def build_middleware(klass, args, block); end
-  def delete(target); end
-  def each; end
-  def initialize(*args); end
-  def initialize_copy(other); end
-  def insert(index, klass, *args, &block); end
-  def insert_after(index, *args, &block); end
-  def insert_before(index, klass, *args, &block); end
-  def last; end
-  def middlewares; end
-  def middlewares=(arg0); end
-  def size; end
-  def swap(target, *args, &block); end
-  def unshift(klass, *args, &block); end
-  def use(klass, *args, &block); end
-  include Enumerable
-end
-class ActionDispatch::MiddlewareStack::Middleware
-  def ==(middleware); end
-  def args; end
-  def block; end
-  def build(app); end
-  def build_instrumented(app); end
-  def initialize(klass, args, block); end
-  def inspect; end
-  def klass; end
-  def name; end
-end
-class ActionDispatch::MiddlewareStack::InstrumentationProxy
-  def call(env); end
-  def initialize(middleware, class_name); end
-end
 class ActionDispatch::HostAuthorization
   def authorized?(request); end
   def call(env); end
@@ -2012,7 +2222,7 @@ module ActionController::ParamsWrapper
   def process_action(*args); end
   extend ActiveSupport::Concern
 end
-class Anonymous_Struct_2 < Struct
+class Anonymous_Struct_3 < Struct
   def exclude; end
   def exclude=(_); end
   def format; end
@@ -2030,7 +2240,7 @@ class Anonymous_Struct_2 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class ActionController::ParamsWrapper::Options < Anonymous_Struct_2
+class ActionController::ParamsWrapper::Options < Anonymous_Struct_3
   def _default_wrap_model; end
   def include; end
   def initialize(name, format, include, exclude, klass, model); end
@@ -2048,216 +2258,6 @@ module ActionController::ParamsWrapper::ClassMethods
   def _set_wrapper_options(options); end
   def inherited(klass); end
   def wrap_parameters(name_or_model_or_options, options = nil); end
-end
-module ActionDispatch::Http::FilterRedirect
-  def filtered_location; end
-  def location_filter_match?; end
-  def location_filters; end
-end
-class ActionDispatch::Response
-  def [](*args, &block); end
-  def []=(*args, &block); end
-  def _cache_control; end
-  def _cache_control=(v); end
-  def abort; end
-  def assign_default_content_type_and_charset!; end
-  def await_commit; end
-  def await_sent; end
-  def before_committed; end
-  def before_sending; end
-  def body; end
-  def body=(body); end
-  def body_parts; end
-  def build_buffer(response, body); end
-  def charset; end
-  def charset=(charset); end
-  def close; end
-  def code; end
-  def commit!; end
-  def committed?; end
-  def content_type; end
-  def content_type=(content_type); end
-  def cookies; end
-  def default_charset; end
-  def default_charset=(obj); end
-  def default_headers; end
-  def default_headers=(obj); end
-  def delete_header(key); end
-  def each(&block); end
-  def get_header(key); end
-  def handle_no_content!; end
-  def has_header?(key); end
-  def header; end
-  def headers; end
-  def initialize(status = nil, header = nil, body = nil); end
-  def media_type; end
-  def message; end
-  def munge_body_object(body); end
-  def parse_content_type(content_type); end
-  def parsed_content_type_header; end
-  def prepare!; end
-  def rack_response(status, header); end
-  def redirect_url; end
-  def request; end
-  def request=(arg0); end
-  def reset_body!; end
-  def response_code; end
-  def return_only_media_type_on_content_type; end
-  def return_only_media_type_on_content_type=(obj); end
-  def self.create(status = nil, header = nil, body = nil, default_headers: nil); end
-  def self.default_charset; end
-  def self.default_charset=(obj); end
-  def self.default_headers; end
-  def self.default_headers=(obj); end
-  def self.merge_default_headers(original, default); end
-  def self.return_only_media_type_on_content_type; end
-  def self.return_only_media_type_on_content_type=(obj); end
-  def send_file(path); end
-  def sending!; end
-  def sending?; end
-  def sending_file=(v); end
-  def sent!; end
-  def sent?; end
-  def set_content_type(content_type, charset); end
-  def set_header(key, v); end
-  def status; end
-  def status=(status); end
-  def status_message; end
-  def stream; end
-  def to_a; end
-  def write(string); end
-  include ActionDispatch::Http::Cache::Response
-  include ActionDispatch::Http::FilterRedirect
-  include MonitorMixin
-  include Rack::Response::Helpers
-end
-class ActionDispatch::Response::Header < Anonymous_Delegator_3
-  def []=(k, v); end
-  def initialize(response, header); end
-  def merge(other); end
-  def to_hash; end
-end
-class ActionDispatch::Response::Buffer
-  def abort; end
-  def body; end
-  def close; end
-  def closed?; end
-  def each(&block); end
-  def each_chunk(&block); end
-  def initialize(response, buf); end
-  def write(string); end
-end
-class ActionDispatch::Response::FileBody
-  def body; end
-  def each; end
-  def initialize(path); end
-  def to_path; end
-end
-class ActionDispatch::Response::ContentTypeHeader < Struct
-  def charset; end
-  def charset=(_); end
-  def mime_type; end
-  def mime_type=(_); end
-  def self.[](*arg0); end
-  def self.inspect; end
-  def self.members; end
-  def self.new(*arg0); end
-end
-class ActionDispatch::Response::RackBody
-  def body; end
-  def close; end
-  def each(*args, &block); end
-  def initialize(response); end
-  def respond_to?(method, include_private = nil); end
-  def to_ary; end
-  def to_path; end
-end
-class AbstractController::Error < StandardError
-end
-class AbstractController::ActionNotFound < StandardError
-end
-class AbstractController::Base
-  def _find_action_name(action_name); end
-  def _handle_action_missing(*args); end
-  def _valid_action_name?(action_name); end
-  def action_method?(name); end
-  def action_methods; end
-  def action_name; end
-  def action_name=(arg0); end
-  def available_action?(action_name); end
-  def controller_path; end
-  def formats; end
-  def formats=(arg0); end
-  def method_for_action(action_name); end
-  def performed?; end
-  def process(action, *args); end
-  def process_action(method_name, *args); end
-  def response_body; end
-  def response_body=(arg0); end
-  def self.abstract!; end
-  def self.abstract; end
-  def self.abstract?; end
-  def self.action_methods; end
-  def self.clear_action_methods!; end
-  def self.controller_path; end
-  def self.inherited(klass); end
-  def self.internal_methods; end
-  def self.method_added(name); end
-  def self.supports_path?; end
-  def send_action(*arg0); end
-  extend ActiveSupport::Configurable::ClassMethods
-  extend ActiveSupport::DescendantsTracker
-  include ActiveSupport::Configurable
-end
-class ActionController::MiddlewareStack < ActionDispatch::MiddlewareStack
-  def build(action, app = nil, &block); end
-  def build_middleware(klass, args, block); end
-end
-class ActionController::MiddlewareStack::Middleware < ActionDispatch::MiddlewareStack::Middleware
-  def initialize(klass, args, actions, strategy, block); end
-  def valid?(action); end
-end
-class ActionController::Metal < AbstractController::Base
-  def content_type(*args, &block); end
-  def content_type=(arg); end
-  def controller_name; end
-  def dispatch(name, request, response); end
-  def headers(*args, &block); end
-  def initialize; end
-  def location(*args, &block); end
-  def location=(arg); end
-  def media_type(*args, &block); end
-  def middleware_stack; end
-  def middleware_stack=(val); end
-  def middleware_stack?; end
-  def params; end
-  def params=(val); end
-  def performed?; end
-  def request; end
-  def request=(arg0); end
-  def reset_session; end
-  def response; end
-  def response=(arg0); end
-  def response_body=(body); end
-  def response_code(*args, &block); end
-  def self.action(name); end
-  def self.binary_params_for?(action); end
-  def self.controller_name; end
-  def self.dispatch(name, req, res); end
-  def self.inherited(base); end
-  def self.make_response!(request); end
-  def self.middleware; end
-  def self.middleware_stack; end
-  def self.middleware_stack=(val); end
-  def self.middleware_stack?; end
-  def self.use(*args, &block); end
-  def session(*args, &block); end
-  def set_request!(request); end
-  def set_response!(response); end
-  def status(*args, &block); end
-  def status=(arg); end
-  def to_a; end
-  def url_for(string); end
 end
 class AbstractController::DoubleRenderError < AbstractController::Error
   def initialize(message = nil); end

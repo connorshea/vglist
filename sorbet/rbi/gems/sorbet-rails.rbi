@@ -203,30 +203,6 @@ end
 class BooleanString < String
   def self.===(other); end
 end
-class KaminariPlugin < SorbetRails::ModelPlugins::Base
-  def generate(*args, &blk); end
-  extend T::Private::Methods::MethodHooks
-  extend T::Private::Methods::SingletonMethodHooks
-end
-class PgSearchPlugin < SorbetRails::ModelPlugins::Base
-  def generate(*args, &blk); end
-  extend T::Private::Methods::MethodHooks
-  extend T::Private::Methods::SingletonMethodHooks
-end
-class FriendlyIdPlugin < SorbetRails::ModelPlugins::Base
-  def generate(*args, &blk); end
-  extend T::Private::Methods::MethodHooks
-  extend T::Private::Methods::SingletonMethodHooks
-end
-module SorbetRails::CustomParamsMethods
-  def fetch_typed(*args, &blk); end
-  def require_typed(*args, &blk); end
-  extend T::Helpers
-  extend T::Private::Methods::MethodHooks
-  extend T::Private::Methods::SingletonMethodHooks
-  extend T::Sig
-  include Kernel
-end
 class ActiveRecordOverrides
   def enum_calls; end
   def get_enum_call(klass, enum_sym); end
@@ -255,4 +231,28 @@ module SorbetRails::PluckToTStruct
   extend T::Sig
 end
 class SorbetRails::PluckToTStruct::UnexpectedType < StandardError
+end
+class KaminariPlugin < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class PgSearchPlugin < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+class FriendlyIdPlugin < SorbetRails::ModelPlugins::Base
+  def generate(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+end
+module SorbetRails::CustomParamsMethods
+  def fetch_typed(*args, &blk); end
+  def require_typed(*args, &blk); end
+  extend T::Helpers
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+  include Kernel
 end

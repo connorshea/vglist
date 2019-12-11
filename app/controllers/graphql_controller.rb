@@ -6,10 +6,14 @@ class GraphqlController < ApplicationController
   # Allow bypassing authorization if the user is logged in, to
   # enable GraphiQL.
   before_action :authorize_api_user, if: -> { current_user.nil? }
+
   # Disable CSRF protection for GraphQL because we don't want to have CSRF
   # protection on our API endpoint. The point is to let anyone send requests
   # to the API.
   skip_before_action :verify_authenticity_token
+
+  # Use SimpleTokenAuthentication if the user's request doesn't have an OAuth token.
+  # acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.request.headers.key?('HTTP-AUTHORIZATION') }
 
   def execute
     skip_authorization

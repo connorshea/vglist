@@ -276,17 +276,6 @@ module ActiveModel::ForbiddenAttributesProtection
   def sanitize_for_mass_assignment(attributes); end
   def sanitize_forbidden_attributes(attributes); end
 end
-module ActiveModel::SecurePassword
-  def self.min_cost; end
-  def self.min_cost=(arg0); end
-  extend ActiveSupport::Concern
-end
-module ActiveModel::SecurePassword::ClassMethods
-  def has_secure_password(attribute = nil, validations: nil); end
-end
-class ActiveModel::SecurePassword::InstanceMethodsOnActivation < Module
-  def initialize(attribute); end
-end
 module ActiveModel::Callbacks
   def _define_after_model_callback(klass, callback); end
   def _define_around_model_callback(klass, callback); end
@@ -735,6 +724,17 @@ module ActiveModel::Dirty
   def restore_attributes(attr_names = nil); end
   extend ActiveSupport::Concern
   include ActiveModel::AttributeMethods
+end
+module ActiveModel::SecurePassword
+  def self.min_cost; end
+  def self.min_cost=(arg0); end
+  extend ActiveSupport::Concern
+end
+module ActiveModel::SecurePassword::ClassMethods
+  def has_secure_password(attribute = nil, validations: nil); end
+end
+class ActiveModel::SecurePassword::InstanceMethodsOnActivation < Module
+  def initialize(attribute); end
 end
 module ActiveModel::Serialization
   def read_attribute_for_serialization(*arg0); end
