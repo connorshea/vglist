@@ -22,7 +22,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      current_user: current_user || doorkeeper_user,
+      current_user: current_user || api_user || doorkeeper_user,
       pundit: self,
       doorkeeper_scopes: doorkeeper_token&.scopes&.to_a,
       graphiql_override: false,
@@ -80,6 +80,10 @@ class GraphqlController < ApplicationController
   # token-based requests don't have a current_user variable.
   def doorkeeper_user
     @doorkeeper_user ||= User.find(doorkeeper_token[:resource_owner_id])
+  end
+
+  def api_user
+    User.find_by(authentication_token: request.headers['X-User-Token'])
   end
 
   # Handle doorkeeper's unauthorized errors so they return valid JSON.

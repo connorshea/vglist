@@ -1,5 +1,7 @@
 # typed: true
 class SettingsController < ApplicationController
+  before_action :authenticate_user!
+
   # Profile things
   def profile
     @user = current_user

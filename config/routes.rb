@@ -95,7 +95,7 @@ Rails.application.routes.draw do
     get :import
     get :export
     get :export_as_json
-    get :api_token
+    get :api_token, defaults: { format: :json }
   end
 
   scope :settings do
