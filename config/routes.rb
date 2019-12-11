@@ -46,6 +46,7 @@ Rails.application.routes.draw do
     get :followers, on: :member
     post :follow, to: 'relationships#create'
     delete :unfollow, to: 'relationships#destroy'
+    post :reset_token, on: :collection
   end
 
   namespace :activity do
@@ -94,6 +95,7 @@ Rails.application.routes.draw do
     get :import
     get :export
     get :export_as_json
+    get :api_token
   end
 
   scope :settings do

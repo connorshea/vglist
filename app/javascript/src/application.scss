@@ -617,3 +617,8 @@ nav.navbar {
     position: relative;
   }
 }
+
+// For easily selecting the whole piece of text, e.g. for easy copy-paste.
+.user-select-all {
+  user-select: all;
+}

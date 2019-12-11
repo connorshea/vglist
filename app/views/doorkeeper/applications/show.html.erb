@@ -3,12 +3,12 @@
 <div class="row">
   <div class="col-md-8">
     <h4><%= t('.application_id') %>:</h4>
-    <p><code class="bg-light" id="application_id"><%= @application.uid %></code></p>
+    <p><code class="bg-light user-select-all" id="application_id"><%= @application.uid %></code></p>
 
     <h4><%= t('.secret') %>:</h4>
     <p>
       <% if flash[:application_secret].present? %>
-        <code class="bg-light" id="secret">
+        <code class="bg-light user-select-all" id="secret">
           <%= flash[:application_secret].presence || @application.plaintext_secret %>
         </code>
       <% else %>

@@ -65,6 +65,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
+  def reset_token?
+    user_is_current_user?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
   def reset_game_library?
     user_is_current_user?
   end

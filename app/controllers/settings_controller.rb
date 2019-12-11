@@ -43,4 +43,15 @@ class SettingsController < ApplicationController
       format.json { send_data JSON.pretty_generate(@games.as_json(include: :game)), disposition: :json, filename: 'vglist.json' }
     end
   end
+
+  # TODO: Make this require logging in again?
+  def api_token
+    @user = current_user
+
+    authorize @user, policy_class: SettingsPolicy
+
+    respond_to do |format|
+      format.json { render json: @user&.authentication_token.to_json }
+    end
+  end
 end
