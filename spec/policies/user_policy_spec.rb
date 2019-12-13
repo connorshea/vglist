@@ -32,7 +32,8 @@ RSpec.describe UserPolicy, type: :policy do
           :steam_import,
           :connect_steam,
           :disconnect_steam,
-          :reset_game_library
+          :reset_game_library,
+          :reset_token
         ]
       )
     end
@@ -66,7 +67,8 @@ RSpec.describe UserPolicy, type: :policy do
           :steam_import,
           :connect_steam,
           :disconnect_steam,
-          :reset_game_library
+          :reset_game_library,
+          :reset_token
         ]
       )
     end
@@ -100,7 +102,8 @@ RSpec.describe UserPolicy, type: :policy do
           :steam_import,
           :connect_steam,
           :disconnect_steam,
-          :reset_game_library
+          :reset_game_library,
+          :reset_token
         ]
       )
     end
@@ -134,7 +137,8 @@ RSpec.describe UserPolicy, type: :policy do
           :steam_import,
           :connect_steam,
           :disconnect_steam,
-          :reset_game_library
+          :reset_game_library,
+          :reset_token
         ]
       )
     end
@@ -155,6 +159,7 @@ RSpec.describe UserPolicy, type: :policy do
           :connect_steam,
           :disconnect_steam,
           :reset_game_library,
+          :reset_token,
           :statistics,
           :compare,
           :activity,
@@ -182,6 +187,7 @@ RSpec.describe UserPolicy, type: :policy do
           :connect_steam,
           :disconnect_steam,
           :reset_game_library,
+          :reset_token,
           :statistics,
           :compare,
           :activity,
@@ -223,7 +229,8 @@ RSpec.describe UserPolicy, type: :policy do
           :steam_import,
           :connect_steam,
           :disconnect_steam,
-          :reset_game_library
+          :reset_game_library,
+          :reset_token
         ]
       )
     end
@@ -247,6 +254,7 @@ RSpec.describe UserPolicy, type: :policy do
           :connect_steam,
           :disconnect_steam,
           :reset_game_library,
+          :reset_token,
           :activity,
           :following,
           :followers,
@@ -274,6 +282,7 @@ RSpec.describe UserPolicy, type: :policy do
           :connect_steam,
           :disconnect_steam,
           :reset_game_library,
+          :reset_token,
           :activity,
           :following,
           :followers,
