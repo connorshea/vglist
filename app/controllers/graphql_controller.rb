@@ -83,7 +83,7 @@ class GraphqlController < ApplicationController
   end
 
   def api_user
-    User.find_by(authentication_token: request.headers['X-User-Token'])
+    User.find_by(email: request.headers['X-User-Email'])
   end
 
   # Handle doorkeeper's unauthorized errors so they return valid JSON.

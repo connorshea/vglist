@@ -16,10 +16,8 @@ RSpec.describe "GraphQL", type: :request do
         'X-User-Email': user.email,
         'X-User-Token': user.authentication_token
       }
-      post graphql_path(
-        format: :json,
-        headers: headers
-      )
+
+      post graphql_path(format: :json), headers: headers
       expect(response).to have_http_status(:success)
     end
 
