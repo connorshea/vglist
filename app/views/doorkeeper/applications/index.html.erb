@@ -1,4 +1,4 @@
-<% content_for :title, t('.title') %>
+<% content_for :title, "Developer Settings" %>
 
 <div class="columns">
   <div class="column is-3-desktop">
@@ -8,7 +8,24 @@
   </div>
 
   <div class="column">
-    <h1 class="title"><%= t('.title') %></h1>
+    <h1 class="title">Developer Settings</h1>
+
+    <h2 class="title is-4">Your API Token</h2>
+    <p>
+      This token can be used to access the API. Make sure it stays secret,
+      and reset the token if you think anyone else may have gained access
+      to it. If someone asks for your API token, do not give it to them.
+    </p>
+
+    <div class="mt-5">
+      <code class="js-token-holder is-hidden user-select-all"></code>
+    </div>
+    <div class="buttons mt-10 mb-10">
+      <button class="button js-view-token-button" data-token-path="<%= settings_api_token_path(format: :json) %>">View Token</button>
+      <%= button_to "Reset Token", reset_token_users_path, remote: true, class: "button" %>
+    </div>
+
+    <h2 class="title is-4 mt-30">Your Applications</h2>
 
     <p><%= link_to t('.new'), new_oauth_application_path, class: 'button is-success mb-25' %></p>
 

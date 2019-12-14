@@ -319,6 +319,19 @@ class UsersController < ApplicationController
     @followers = @user.followers.page helpers.page_param
   end
 
+  def reset_token
+    @user = current_user
+    authorize @user
+
+    @user.authentication_token = Devise.friendly_token
+
+    if @user.save
+      redirect_to oauth_applications_path, success: "API token successfully reset."
+    else
+      redirect_to oauth_applications_path, error: "Unable to reset API token."
+    end
+  end
+
   private
 
   def user_params

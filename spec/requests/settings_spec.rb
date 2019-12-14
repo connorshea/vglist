@@ -13,7 +13,7 @@ RSpec.describe "Settings", type: :request do
 
     it "redirects for users who aren't logged in" do
       get settings_path
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_user_session_path)
     end
   end
 
@@ -28,7 +28,7 @@ RSpec.describe "Settings", type: :request do
 
     it "redirects for users who aren't logged in" do
       get settings_account_path
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_user_session_path)
     end
 
     it ".well-known/change-password redirects to settings_account_path" do
@@ -50,7 +50,7 @@ RSpec.describe "Settings", type: :request do
 
     it "redirects for users who aren't logged in" do
       get settings_import_path
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_user_session_path)
     end
 
     it "returns http success for a user with an external account" do
@@ -71,7 +71,7 @@ RSpec.describe "Settings", type: :request do
 
     it "redirects for users who aren't logged in" do
       get settings_export_path
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_user_session_path)
     end
   end
 
@@ -97,7 +97,7 @@ RSpec.describe "Settings", type: :request do
 
     it "redirects for users who aren't logged in" do
       get settings_export_as_json_path(format: :json)
-      expect(response).to redirect_to(root_path)
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 
@@ -224,6 +224,22 @@ RSpec.describe "Settings", type: :request do
     it "redirects for users who aren't logged in" do
       get oauth_authorized_applications_path
       expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
+  describe "GET settings_api_token_path" do
+    let(:user) { create(:confirmed_user, authentication_token: 'foo') }
+
+    it "returns http success for users that are logged in" do
+      sign_in(user)
+      get settings_api_token_path
+      expect(response).to have_http_status(:success)
+      expect(response.body).to eql('foo'.to_json)
+    end
+
+    it "redirects for users who aren't logged in" do
+      get settings_api_token_path
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end

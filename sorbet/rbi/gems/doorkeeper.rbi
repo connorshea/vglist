@@ -880,156 +880,6 @@ module Doorkeeper::Orm::ActiveRecord
   def self.lazy_load(&block); end
   def self.models; end
 end
-module Doorkeeper::DashboardHelper
-  def doorkeeper_errors_for(object, method); end
-  def doorkeeper_submit_path(application); end
-end
-class Doorkeeper::ApplicationController < ApplicationController
-  def _layout(lookup_context, formats); end
-  def self.__callbacks; end
-  def self._helpers; end
-  def self._routes; end
-  def self._wrapper_options; end
-  def self.helpers_path; end
-  def self.middleware_stack; end
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_37
-  include Doorkeeper::Helpers::Controller
-end
-module Anonymous_Module_37
-  def _generate_paths_by_default; end
-  def _routes; end
-  def self._routes; end
-  def self.full_url_for(options); end
-  def self.optimize_routes_generation?; end
-  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
-  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
-  def self.route_for(name, *args); end
-  def self.url_for(options); end
-  def self.url_options; end
-  extend ActiveSupport::Concern
-  extend Anonymous_Module_27
-  extend Anonymous_Module_28
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_27
-  include Anonymous_Module_28
-end
-class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
-  def _layout(lookup_context, formats); end
-  def application_params; end
-  def create; end
-  def destroy; end
-  def edit; end
-  def i18n_scope(action); end
-  def index; end
-  def new; end
-  def self.__callbacks; end
-  def self._helpers; end
-  def self._layout; end
-  def self._layout_conditions; end
-  def self._routes; end
-  def self._wrapper_options; end
-  def self.helpers_path; end
-  def self.middleware_stack; end
-  def set_application; end
-  def show; end
-  def update; end
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_38
-end
-module Anonymous_Module_38
-  def _generate_paths_by_default; end
-  def _routes; end
-  def self._routes; end
-  def self.full_url_for(options); end
-  def self.optimize_routes_generation?; end
-  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
-  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
-  def self.route_for(name, *args); end
-  def self.url_for(options); end
-  def self.url_options; end
-  extend ActiveSupport::Concern
-  extend Anonymous_Module_27
-  extend Anonymous_Module_28
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_27
-  include Anonymous_Module_28
-end
-class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
-  def _layout(lookup_context, formats); end
-  def after_successful_authorization; end
-  def authorization; end
-  def authorize_response; end
-  def before_successful_authorization; end
-  def create; end
-  def destroy; end
-  def matching_token?; end
-  def new; end
-  def pre_auth; end
-  def pre_auth_param_fields; end
-  def pre_auth_params; end
-  def redirect_or_render(auth); end
-  def render_error; end
-  def render_success; end
-  def self.__callbacks; end
-  def self._helpers; end
-  def self._routes; end
-  def self._wrapper_options; end
-  def self.helpers_path; end
-  def self.middleware_stack; end
-  def strategy; end
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_39
-end
-module Anonymous_Module_39
-  def _generate_paths_by_default; end
-  def _routes; end
-  def self._routes; end
-  def self.full_url_for(options); end
-  def self.optimize_routes_generation?; end
-  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
-  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
-  def self.route_for(name, *args); end
-  def self.url_for(options); end
-  def self.url_options; end
-  extend ActiveSupport::Concern
-  extend Anonymous_Module_27
-  extend Anonymous_Module_28
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_27
-  include Anonymous_Module_28
-end
-class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationController
-  def _layout(lookup_context, formats); end
-  def destroy; end
-  def index; end
-  def self.__callbacks; end
-  def self._helpers; end
-  def self._routes; end
-  def self._wrapper_options; end
-  def self.helpers_path; end
-  def self.middleware_stack; end
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_40
-end
-module Anonymous_Module_40
-  def _generate_paths_by_default; end
-  def _routes; end
-  def self._routes; end
-  def self.full_url_for(options); end
-  def self.optimize_routes_generation?; end
-  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
-  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
-  def self.route_for(name, *args); end
-  def self.url_for(options); end
-  def self.url_options; end
-  extend ActiveSupport::Concern
-  extend Anonymous_Module_27
-  extend Anonymous_Module_28
-  include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_27
-  include Anonymous_Module_28
-end
 class Doorkeeper::Orm::ActiveRecord::StaleRecordsCleaner
   def clean_expired(ttl); end
   def clean_revoked; end
@@ -1314,4 +1164,154 @@ end
 module Doorkeeper::Models::Ownership
   def validate_owner?; end
   extend ActiveSupport::Concern
+end
+module Doorkeeper::DashboardHelper
+  def doorkeeper_errors_for(object, method); end
+  def doorkeeper_submit_path(application); end
+end
+class Doorkeeper::ApplicationController < ApplicationController
+  def _layout(lookup_context, formats); end
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_37
+  include Doorkeeper::Helpers::Controller
+end
+module Anonymous_Module_37
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
+  def _layout(lookup_context, formats); end
+  def application_params; end
+  def create; end
+  def destroy; end
+  def edit; end
+  def i18n_scope(action); end
+  def index; end
+  def new; end
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._layout; end
+  def self._layout_conditions; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  def set_application; end
+  def show; end
+  def update; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_38
+end
+module Anonymous_Module_38
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
+  def _layout(lookup_context, formats); end
+  def after_successful_authorization; end
+  def authorization; end
+  def authorize_response; end
+  def before_successful_authorization; end
+  def create; end
+  def destroy; end
+  def matching_token?; end
+  def new; end
+  def pre_auth; end
+  def pre_auth_param_fields; end
+  def pre_auth_params; end
+  def redirect_or_render(auth); end
+  def render_error; end
+  def render_success; end
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  def strategy; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_39
+end
+module Anonymous_Module_39
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationController
+  def _layout(lookup_context, formats); end
+  def destroy; end
+  def index; end
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_40
+end
+module Anonymous_Module_40
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
 end

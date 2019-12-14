@@ -322,6 +322,13 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def user_unfollow_url(*args, **kwargs); end
 
+  # Sigs for route /users/reset_token(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def reset_token_users_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def reset_token_users_url(*args, **kwargs); end
+
   # Sigs for route /users/new(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def new_user_path(*args, **kwargs); end
@@ -622,6 +629,13 @@ module GeneratedUrlHelpers
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def settings_export_as_json_url(*args, **kwargs); end
+
+  # Sigs for route /settings/api_token(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def settings_api_token_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def settings_api_token_url(*args, **kwargs); end
 
   # Sigs for route /settings/oauth/authorize/native(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }

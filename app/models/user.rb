@@ -11,6 +11,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable
 
+  acts_as_token_authenticatable
+
   has_many :game_purchases
   has_many :games, through: :game_purchases
 
@@ -64,7 +66,7 @@ class User < ApplicationRecord
   # other external account types are added later.
   has_one :external_account, dependent: :destroy
 
-  has_one_attached :avatar
+  T.unsafe(self).has_one_attached :avatar
 
   friendly_id :username, use: [:slugged, :finders]
 

@@ -21,7 +21,7 @@ RSpec.describe "Settings", type: :feature do
     it "with no user" do
       visit(settings_path)
       expect(page).not_to have_current_path(settings_path)
-      expect(page).to have_content("You are not authorized to perform this action.")
+      expect(page).to have_content("You need to sign in or sign up before continuing.")
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe "Settings", type: :feature do
     it "with no user" do
       visit(settings_account_path)
       expect(page).not_to have_current_path(settings_account_path)
-      expect(page).to have_content("You are not authorized to perform this action.")
+      expect(page).to have_content("You need to sign in or sign up before continuing.")
     end
   end
 end

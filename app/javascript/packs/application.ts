@@ -18,6 +18,7 @@ import * as _ from "lodash";
 import '../src/vue-loader';
 import '../src/toggleable-buttons';
 import '../src/bulma';
+import '../src/settings';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({ dsn: process.env.SENTRY_DSN_JS });

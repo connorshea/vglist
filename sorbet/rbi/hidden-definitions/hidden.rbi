@@ -1991,7 +1991,13 @@ module ActiveRecord::AttributeMethods::PrimaryKey::ClassMethods
 end
 
 class ActiveRecord::Base
+  include ::GlobalID::Identification
+  include ::ActiveStorage::Attached::Model
+  include ::ActiveStorage::Reflection::ActiveRecordExtensions
   include ::Bullet::SaveWithBulletSupport
+  def attachment_reflections(); end
+
+  def attachment_reflections?(); end
 end
 
 module ActiveRecord::Base::GeneratedAttributeMethods
@@ -1999,6 +2005,19 @@ module ActiveRecord::Base::GeneratedAttributeMethods
 end
 
 ActiveRecord::Base::OrmAdapter = OrmAdapter::ActiveRecord
+
+class ActiveRecord::Base
+  extend ::SorbetRails::CustomFinderMethods
+  def self.attachment_reflections(); end
+
+  def self.attachment_reflections=(val); end
+
+  def self.attachment_reflections?(); end
+
+  def self.inherited(child); end
+
+  def self.sbr_old_inherited(kls); end
+end
 
 module ActiveRecord::Batches
   ORDER_IGNORE_MESSAGE = ::T.let(nil, ::T.untyped)
@@ -2477,6 +2496,7 @@ class ActiveRecord::Relation
   include ::ActiveModel::ForbiddenAttributesProtection
   include ::ActiveRecord::SpawnMethods
   include ::ActiveRecord::Calculations
+  include ::SorbetRails::CustomFinderMethods
   CLAUSE_METHODS = ::T.let(nil, ::T.untyped)
   INVALID_METHODS_FOR_DELETE_ALL = ::T.let(nil, ::T.untyped)
   MULTI_VALUE_METHODS = ::T.let(nil, ::T.untyped)
@@ -6448,6 +6468,10 @@ module Doorkeeper::AccessToken::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
+class Doorkeeper::Application
+  include ::Doorkeeper::Models::Ownership
+end
+
 module Doorkeeper::Application::GeneratedAttributeMethods
   extend ::Mutex_m
 end
@@ -8954,6 +8978,13 @@ class GraphiQL::Rails::EditorsController
 end
 
 class GraphiQL::Rails::EditorsController
+end
+
+class GraphqlController
+  include ::SimpleTokenAuthentication::TokenAuthenticationHandler
+  def authenticate_user_from_token(); end
+
+  def authenticate_user_from_token!(); end
 end
 
 class HTMLSelector

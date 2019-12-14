@@ -36,6 +36,11 @@ class SettingsPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
+  sig { returns(T.nilable(T::Boolean)) }
+  def api_token?
+    user_is_current_user?
+  end
+
   private
 
   sig { returns(T.nilable(T::Boolean)) }
