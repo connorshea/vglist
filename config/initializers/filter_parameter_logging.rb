@@ -8,5 +8,6 @@ Rails.application.config.filter_parameters += [
   # as much garbage.
   :encoded_key,
   :signed_blob_id,
-  :variation_key
+  :variation_key,
+  :authentication_token
 ]
