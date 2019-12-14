@@ -363,6 +363,12 @@ class FavoriteGame < ApplicationRecord
 
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
   def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
@@ -472,85 +478,14 @@ class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(FavoriteGame::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(FavoriteGame) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(FavoriteGame)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(FavoriteGame) }
-  def find_by!(*args); end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def first; end
-
-  sig { returns(FavoriteGame) }
-  def first!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def second; end
-
-  sig { returns(FavoriteGame) }
-  def second!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def third; end
-
-  sig { returns(FavoriteGame) }
-  def third!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def third_to_last; end
-
-  sig { returns(FavoriteGame) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def second_to_last; end
-
-  sig { returns(FavoriteGame) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(FavoriteGame)) }
-  def last; end
-
-  sig { returns(FavoriteGame) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { override.params(block: T.proc.params(e: FavoriteGame).void).returns(T::Array[FavoriteGame]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[FavoriteGame]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[FavoriteGame]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_Relation) }
+  def padding(num); end
 end
 
 class FavoriteGame::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -739,6 +674,12 @@ class FavoriteGame::ActiveRecord_AssociationRelation < ActiveRecord::Association
 
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -938,6 +879,12 @@ class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 module FavoriteGame::GeneratedAttributeMethods
@@ -955,7 +902,7 @@ module FavoriteGame::GeneratedAttributeMethods
   sig { returns(T.nilable(Integer)) }
   def game_id; end
 
-  sig { params(value: T.nilable(Integer)).void }
+  sig { params(value: T.nilable(T.any(Integer, Float, ActiveSupport::Duration))).void }
   def game_id=(value); end
 
   sig { returns(T::Boolean) }
@@ -964,7 +911,7 @@ module FavoriteGame::GeneratedAttributeMethods
   sig { returns(Integer) }
   def id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def id=(value); end
 
   sig { returns(T::Boolean) }
@@ -982,7 +929,7 @@ module FavoriteGame::GeneratedAttributeMethods
   sig { returns(T.nilable(Integer)) }
   def user_id; end
 
-  sig { params(value: T.nilable(Integer)).void }
+  sig { params(value: T.nilable(T.any(Integer, Float, ActiveSupport::Duration))).void }
   def user_id=(value); end
 
   sig { returns(T::Boolean) }

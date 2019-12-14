@@ -767,6 +767,12 @@ class GamePurchase < ApplicationRecord
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
   def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
@@ -918,85 +924,14 @@ class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(GamePurchase) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(GamePurchase)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase) }
-  def find_by!(*args); end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def first; end
-
-  sig { returns(GamePurchase) }
-  def first!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def second; end
-
-  sig { returns(GamePurchase) }
-  def second!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def third; end
-
-  sig { returns(GamePurchase) }
-  def third!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def third_to_last; end
-
-  sig { returns(GamePurchase) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def second_to_last; end
-
-  sig { returns(GamePurchase) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def last; end
-
-  sig { returns(GamePurchase) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { override.params(block: T.proc.params(e: GamePurchase).void).returns(T::Array[GamePurchase]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[GamePurchase]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[GamePurchase]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
   sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_Relation) }
+  def padding(num); end
 end
 
 class GamePurchase::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -1227,6 +1162,12 @@ class GamePurchase::ActiveRecord_AssociationRelation < ActiveRecord::Association
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 class GamePurchase::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -1468,6 +1409,12 @@ class GamePurchase::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 module GamePurchase::GeneratedAttributeMethods
@@ -1512,7 +1459,7 @@ module GamePurchase::GeneratedAttributeMethods
   sig { returns(Integer) }
   def game_id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def game_id=(value); end
 
   sig { returns(T::Boolean) }
@@ -1530,7 +1477,7 @@ module GamePurchase::GeneratedAttributeMethods
   sig { returns(Integer) }
   def id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def id=(value); end
 
   sig { returns(T::Boolean) }
@@ -1539,7 +1486,7 @@ module GamePurchase::GeneratedAttributeMethods
   sig { returns(T.nilable(Integer)) }
   def rating; end
 
-  sig { params(value: T.nilable(Integer)).void }
+  sig { params(value: T.nilable(T.any(Integer, Float, ActiveSupport::Duration))).void }
   def rating=(value); end
 
   sig { returns(T::Boolean) }
@@ -1566,7 +1513,7 @@ module GamePurchase::GeneratedAttributeMethods
   sig { returns(Integer) }
   def user_id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def user_id=(value); end
 
   sig { returns(T::Boolean) }

@@ -592,6 +592,12 @@ class Platform < ApplicationRecord
 
   sig { params(num: T.nilable(Integer)).returns(Platform::ActiveRecord_Relation) }
   def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Platform::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Platform::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 class Platform::ActiveRecord_Relation < ActiveRecord::Relation
@@ -701,85 +707,14 @@ class Platform::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Platform::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(Platform) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Platform)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Platform) }
-  def find_by!(*args); end
-
-  sig { returns(T.nilable(Platform)) }
-  def first; end
-
-  sig { returns(Platform) }
-  def first!; end
-
-  sig { returns(T.nilable(Platform)) }
-  def second; end
-
-  sig { returns(Platform) }
-  def second!; end
-
-  sig { returns(T.nilable(Platform)) }
-  def third; end
-
-  sig { returns(Platform) }
-  def third!; end
-
-  sig { returns(T.nilable(Platform)) }
-  def third_to_last; end
-
-  sig { returns(Platform) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Platform)) }
-  def second_to_last; end
-
-  sig { returns(Platform) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Platform)) }
-  def last; end
-
-  sig { returns(Platform) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Platform).void).returns(T::Array[Platform]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Platform]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Platform]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
   sig { params(num: T.nilable(Integer)).returns(Platform::ActiveRecord_Relation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Platform::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Platform::ActiveRecord_Relation) }
+  def padding(num); end
 end
 
 class Platform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -968,6 +903,12 @@ class Platform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRela
 
   sig { params(num: T.nilable(Integer)).returns(Platform::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Platform::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Platform::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 class Platform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -1167,6 +1108,12 @@ class Platform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associ
 
   sig { params(num: T.nilable(Integer)).returns(Platform::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Platform::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Platform::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 module Platform::GeneratedAttributeMethods
@@ -1184,7 +1131,7 @@ module Platform::GeneratedAttributeMethods
   sig { returns(Integer) }
   def id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def id=(value); end
 
   sig { returns(T::Boolean) }
@@ -1211,7 +1158,7 @@ module Platform::GeneratedAttributeMethods
   sig { returns(T.nilable(Integer)) }
   def wikidata_id; end
 
-  sig { params(value: T.nilable(Integer)).void }
+  sig { params(value: T.nilable(T.any(Integer, Float, ActiveSupport::Duration))).void }
   def wikidata_id=(value); end
 
   sig { returns(T::Boolean) }

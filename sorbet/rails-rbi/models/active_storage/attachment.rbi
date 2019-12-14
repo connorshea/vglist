@@ -285,6 +285,12 @@ class ActiveStorage::Attachment < ActiveRecord::Base
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
@@ -394,85 +400,14 @@ class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(ActiveStorage::Attachment) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(ActiveStorage::Attachment)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(ActiveStorage::Attachment) }
-  def find_by!(*args); end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def first; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def first!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def second; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def second!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def third; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def third!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def third_to_last; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def second_to_last; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def last; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { override.params(block: T.proc.params(e: ActiveStorage::Attachment).void).returns(T::Array[ActiveStorage::Attachment]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveStorage::Attachment]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[ActiveStorage::Attachment]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def padding(num); end
 end
 
 class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -661,6 +596,12 @@ class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -860,6 +801,12 @@ class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < Act
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 module ActiveStorage::Attachment::GeneratedAttributeMethods
@@ -868,7 +815,7 @@ module ActiveStorage::Attachment::GeneratedAttributeMethods
   sig { returns(Integer) }
   def blob_id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def blob_id=(value); end
 
   sig { returns(T::Boolean) }
@@ -886,7 +833,7 @@ module ActiveStorage::Attachment::GeneratedAttributeMethods
   sig { returns(Integer) }
   def id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def id=(value); end
 
   sig { returns(T::Boolean) }
@@ -904,7 +851,7 @@ module ActiveStorage::Attachment::GeneratedAttributeMethods
   sig { returns(Integer) }
   def record_id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def record_id=(value); end
 
   sig { returns(T::Boolean) }

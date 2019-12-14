@@ -2146,7 +2146,7 @@ module ActiveSupport::NumericWithFormat
 end
 class File < IO
   def self.empty?(arg0); end
-  def self.probe_stat_in(dir); end
+  def self.split(arg0); end
 end
 module ActiveSupport::RangeWithFormat
   def to_default_s(format = nil); end

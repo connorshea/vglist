@@ -207,6 +207,12 @@ class Doorkeeper::AccessGrant < ActiveRecord::Base
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 class Doorkeeper::AccessGrant::ActiveRecord_Relation < ActiveRecord::Relation
@@ -316,85 +322,14 @@ class Doorkeeper::AccessGrant::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessGrant) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessGrant) }
-  def find_by!(*args); end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def first; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def first!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def second; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def second!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def third; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def third!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def third_to_last; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def second_to_last; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def last; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Doorkeeper::AccessGrant).void).returns(T::Array[Doorkeeper::AccessGrant]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Doorkeeper::AccessGrant]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Doorkeeper::AccessGrant]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
+  def padding(num); end
 end
 
 class Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -583,6 +518,12 @@ class Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation < ActiveRecord::
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 class Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -782,6 +723,12 @@ class Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy < Activ
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 module Doorkeeper::AccessGrant::GeneratedAttributeMethods
@@ -790,7 +737,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { returns(Integer) }
   def application_id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def application_id=(value); end
 
   sig { returns(T::Boolean) }
@@ -808,7 +755,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { returns(Integer) }
   def expires_in; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def expires_in=(value); end
 
   sig { returns(T::Boolean) }
@@ -817,7 +764,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { returns(Integer) }
   def id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def id=(value); end
 
   sig { returns(T::Boolean) }
@@ -835,7 +782,7 @@ module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   sig { returns(Integer) }
   def resource_owner_id; end
 
-  sig { params(value: Integer).void }
+  sig { params(value: T.any(Integer, Float, ActiveSupport::Duration)).void }
   def resource_owner_id=(value); end
 
   sig { returns(T::Boolean) }
@@ -1277,10 +1224,10 @@ end
 module Doorkeeper::AccessGrant::GeneratedAssociationMethods
   extend T::Sig
 
-  sig { returns(T.nilable(::Doorkeeper::Application)) }
+  sig { returns(::Doorkeeper::Application) }
   def application; end
 
-  sig { params(value: T.nilable(::Doorkeeper::Application)).void }
+  sig { params(value: ::Doorkeeper::Application).void }
   def application=(value); end
 
   sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
