@@ -240,6 +240,12 @@ class ActiveRecord::InternalMetadata < ActiveRecord::Base
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 class ActiveRecord::InternalMetadata::ActiveRecord_Relation < ActiveRecord::Relation
@@ -349,85 +355,14 @@ class ActiveRecord::InternalMetadata::ActiveRecord_Relation < ActiveRecord::Rela
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(ActiveRecord::InternalMetadata) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(ActiveRecord::InternalMetadata) }
-  def find_by!(*args); end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def first; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def first!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def second; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def second!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def third; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def third!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def third_to_last; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def second_to_last; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def last; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { override.params(block: T.proc.params(e: ActiveRecord::InternalMetadata).void).returns(T::Array[ActiveRecord::InternalMetadata]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[ActiveRecord::InternalMetadata]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[ActiveRecord::InternalMetadata]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
+  def padding(num); end
 end
 
 class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -616,6 +551,12 @@ class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation < ActiveR
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
 
 class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -815,4 +756,10 @@ class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy 
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end

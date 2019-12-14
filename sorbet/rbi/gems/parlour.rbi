@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parlour/all/parlour.rbi
 #
-# parlour-0.8.1
+# parlour-1.0.0
 module Parlour
 end
 module Parlour::Debugging
@@ -96,6 +96,7 @@ class Parlour::RbiGenerator::Method < Parlour::RbiGenerator::RbiObject
   def abstract(*args, &blk); end
   def class_method(*args, &blk); end
   def describe(*args, &blk); end
+  def final(*args, &blk); end
   def generate_definition(*args, &blk); end
   def generate_rbi(*args, &blk); end
   def implementation(*args, &blk); end
@@ -185,14 +186,17 @@ class Parlour::RbiGenerator::Namespace < Parlour::RbiGenerator::RbiObject
   def create_attribute(*args, &blk); end
   def create_class(*args, &blk); end
   def create_constant(*args, &blk); end
+  def create_enum_class(*args, &blk); end
   def create_extend(*args, &blk); end
   def create_extends(*args, &blk); end
   def create_include(*args, &blk); end
   def create_includes(*args, &blk); end
   def create_method(*args, &blk); end
   def create_module(*args, &blk); end
+  def create_type_alias(*args, &blk); end
   def describe(*args, &blk); end
   def extends(*args, &blk); end
+  def final(*args, &blk); end
   def generate_body(*args, &blk); end
   def generate_rbi(*args, &blk); end
   def includes(*args, &blk); end
@@ -224,6 +228,15 @@ class Parlour::RbiGenerator::ClassNamespace < Parlour::RbiGenerator::Namespace
   def merge_into_self(*args, &blk); end
   def mergeable?(*args, &blk); end
   def superclass(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+end
+class Parlour::RbiGenerator::EnumClassNamespace < Parlour::RbiGenerator::ClassNamespace
+  def enums(*args, &blk); end
+  def generate_body(*args, &blk); end
+  def initialize(*args, &blk); end
+  def mergeable?(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
   extend T::Sig

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/doorkeeper/all/doorkeeper.rbi
 #
-# doorkeeper-5.2.2
+# doorkeeper-5.2.3
 module Doorkeeper
   def self.authenticate(request, methods = nil); end
   def self.configuration; end
@@ -411,6 +411,7 @@ class Doorkeeper::OAuth::PreAuthorization
   def missing_param; end
   def pre_auth_hash; end
   def redirect_uri; end
+  def response_on_fragment?; end
   def response_type; end
   def scope; end
   def scopes; end
@@ -916,7 +917,6 @@ end
 class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
   def application_params; end
-  def application_secret; end
   def create; end
   def destroy; end
   def edit; end
@@ -924,8 +924,6 @@ class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def index; end
   def new; end
   def self.__callbacks; end
-  def self._flash_types; end
-  def self._helper_methods; end
   def self._helpers; end
   def self._layout; end
   def self._layout_conditions; end
@@ -1037,14 +1035,6 @@ class Doorkeeper::Orm::ActiveRecord::StaleRecordsCleaner
   def clean_revoked; end
   def initialize(base_scope); end
 end
-class Doorkeeper::RedirectUriValidator < ActiveModel::EachValidator
-  def forbidden_uri?(uri); end
-  def invalid_ssl_uri?(uri); end
-  def oob_redirect_uri?(uri); end
-  def relative_uri?(uri); end
-  def unspecified_scheme?(uri); end
-  def validate_each(record, attribute, value); end
-end
 module Doorkeeper::AccessGrant::GeneratedAttributeMethods
 end
 class Doorkeeper::AccessGrant < ActiveRecord::Base
@@ -1143,6 +1133,14 @@ class Doorkeeper::AccessToken::ActiveRecord_AssociationRelation < ActiveRecord::
   extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
   include ActiveRecord::Delegation::ClassSpecificRelation
   include Doorkeeper::AccessToken::GeneratedRelationMethods
+end
+class Doorkeeper::RedirectUriValidator < ActiveModel::EachValidator
+  def forbidden_uri?(uri); end
+  def invalid_ssl_uri?(uri); end
+  def oob_redirect_uri?(uri); end
+  def relative_uri?(uri); end
+  def unspecified_scheme?(uri); end
+  def validate_each(record, attribute, value); end
 end
 module Doorkeeper::Application::GeneratedAttributeMethods
 end

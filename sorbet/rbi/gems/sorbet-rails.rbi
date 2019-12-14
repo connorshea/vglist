@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.8.1
+# sorbet-rails-0.5.9.1
 module SorbetRails
   def self.config(&blk); end
   def self.configure(*args, &blk); end
