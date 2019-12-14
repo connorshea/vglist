@@ -6,6 +6,8 @@ document.addEventListener('turbolinks:load', () => {
 
   if (viewTokenButton) {
     viewTokenButton.addEventListener('click', () => {
+      // For some reason TypeScript thinks dataset doesn't exist here.
+      // @ts-ignore
       let tokenPath = viewTokenButton.dataset.tokenPath;
 
       fetch(tokenPath, {
@@ -29,6 +31,7 @@ document.addEventListener('turbolinks:load', () => {
           // Display the token and disable the "View Token" button.
           document.querySelector('.js-token-holder').innerHTML = token;
           document.querySelector('.js-token-holder').classList.remove('is-hidden');
+          // @ts-ignore
           viewTokenButton.disabled = true;
         })
         .catch(errors => {
