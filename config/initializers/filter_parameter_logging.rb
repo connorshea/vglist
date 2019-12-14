@@ -9,5 +9,6 @@ Rails.application.config.filter_parameters += [
   :encoded_key,
   :signed_blob_id,
   :variation_key,
-  :authentication_token
+  :authentication_token,
+  :secret
 ]
