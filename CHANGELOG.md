@@ -4,9 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.12.13
+### Added
+- Add support for long-lasting API tokens. ([#884])
+
 ## v2019.11.29
 ### Added
 - Add `updateGameInLibrary` mutation to API. ([#859])
+- Add Schema Linter for GraphQL API. ([#860])
+
+### Fixed
+- Update graphql-ruby to fix pagination in the API. ([#861])
 
 ## v2019.11.27
 ### Added
@@ -617,3 +625,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#842]: https://github.com/connorshea/VideoGameList/pull/842
 [#852]: https://github.com/connorshea/VideoGameList/pull/852
 [#859]: https://github.com/connorshea/VideoGameList/pull/859
+[#860]: https://github.com/connorshea/VideoGameList/pull/860
+[#861]: https://github.com/connorshea/VideoGameList/pull/861
+[#884]: https://github.com/connorshea/VideoGameList/pull/884
