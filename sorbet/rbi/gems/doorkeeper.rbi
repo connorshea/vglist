@@ -1202,7 +1202,6 @@ end
 class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
   def application_params; end
-  def application_secret; end
   def create; end
   def destroy; end
   def edit; end
@@ -1210,8 +1209,6 @@ class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def index; end
   def new; end
   def self.__callbacks; end
-  def self._flash_types; end
-  def self._helper_methods; end
   def self._helpers; end
   def self._layout; end
   def self._layout_conditions; end

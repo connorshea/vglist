@@ -8980,6 +8980,13 @@ end
 class GraphiQL::Rails::EditorsController
 end
 
+class GraphqlController
+  include ::SimpleTokenAuthentication::TokenAuthenticationHandler
+  def authenticate_user_from_token(); end
+
+  def authenticate_user_from_token!(); end
+end
+
 class HTMLSelector
   NO_STRIP = ::T.let(nil, ::T.untyped)
 end
