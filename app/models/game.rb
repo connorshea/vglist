@@ -111,7 +111,7 @@ class Game < ApplicationRecord
   pg_search_scope :search,
     against: [:name],
     using: {
-      tsearch: { prefix: true }
+      tsearch: { normalization: 2 }
     }
 
   protected
