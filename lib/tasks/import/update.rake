@@ -16,7 +16,9 @@ namespace :import do
       "import:update:series",
       "import:update:platforms",
       "import:update:genres",
-      "import:update:engines"
+      "import:update:engines",
+      "import:update:developers",
+      "import:update:publishers"
     ]
 
     import_tasks.each do |task|
@@ -99,6 +101,16 @@ namespace :import do
     task engines: :environment do
       add_props_to_games('engine')
     end
+
+    desc "Adds game developers from Wikidata to games."
+    task developers: :environment do
+      add_props_to_games('developer', 'company')
+    end
+
+    desc "Adds game publishers from Wikidata to games."
+    task publishers: :environment do
+      add_props_to_games('publisher', 'company')
+    end
   end
 
   # Games with an associated series.
@@ -128,6 +140,16 @@ namespace :import do
   # Returns games with at least one engine.
   def games_with_engines_query
     return games_with_property_query('P408', 'engines')
+  end
+
+  # Returns games with at least one developer.
+  def games_with_developers_query
+    return games_with_property_query('P178', 'developers')
+  end
+
+  # Returns games with at least one publisher.
+  def games_with_publishers_query
+    return games_with_property_query('P123', 'publishers')
   end
 
   # Returns a SPARQL query for a given property.
@@ -169,8 +191,12 @@ namespace :import do
   # e.g. GamePlatforms.
   #
   # @param [String] property_name The singular name of the property, e.g. 'platform'.
+  # @param [String] klass_name The singular name of the corresponding class
+  #    if it differs from the titleized property name, e.g. 'company'.
   # @return [void]
-  def add_props_to_games(property_name)
+  def add_props_to_games(property_name, klass_name = nil)
+    klass_name = property_name if klass_name.nil?
+
     puts "Adding game #{property_name.pluralize} from Wikidata to games."
 
     # Get all games that have Wikidata IDs.
@@ -217,7 +243,7 @@ namespace :import do
       game_was_updated = false
 
       props_to_add.each do |prop_wikidata_id|
-        prop = Object.const_get(property_name.titleize).find_by(wikidata_id: prop_wikidata_id)
+        prop = Object.const_get(klass_name.titleize).find_by(wikidata_id: prop_wikidata_id)
         progress_bar.log prop.inspect if ENV['DEBUG']
         # Go to the next iteration if there's no record for the
         # given Wikidata ID.
@@ -228,7 +254,7 @@ namespace :import do
         # Create a record for a game join model, e.g. GamePlatform.
         # It needs game_id and then an id for the property, e.g. platform_id
         game_join_args = { game_id: hash[:game].id }
-        game_join_args["#{property_name}_id".to_sym] = prop.id
+        game_join_args["#{klass_name}_id".to_sym] = prop.id
 
         Object.const_get("Game#{property_name.titleize}").create(
           game_join_args
