@@ -15,7 +15,8 @@ namespace :import do
       "import:mobygames",
       "import:update:series",
       "import:update:platforms",
-      "import:update:genres"
+      "import:update:genres",
+      "import:update:engines"
     ]
 
     import_tasks.each do |task|
@@ -172,7 +173,7 @@ namespace :import do
         game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
         next unless games.include?(game_wikidata_id)
 
-        genre_ids = row[:genres].to_s.split(', ').map { |plat| plat.delete('Q').to_i }
+        genre_ids = row[:genres].to_s.split(', ').map { |genre| genre.delete('Q').to_i }
         games_to_update << {
           game: Game.find_by(wikidata_id: game_wikidata_id),
           genres: genre_ids
@@ -221,6 +222,75 @@ namespace :import do
 
       puts "Added genres to #{updated_games_count} games."
     end
+
+    desc "Adds game engines from Wikidata to games."
+    task engines: :environment do
+      puts "Adding game engines from Wikidata to games."
+
+      # Get all games that have Wikidata IDs.
+      games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id)
+
+      rows = get_rows(games_with_engines_query)
+
+      # Limit logging in production to allow the progress bar to work and
+      # to prevent spamming the logs when running the command.
+      Rails.logger.level = 2 if Rails.env.production?
+
+      games_to_update = []
+      rows.map do |row|
+        row = row.to_h
+        game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+        next unless games.include?(game_wikidata_id)
+
+        engine_ids = row[:engines].to_s.split(', ').map { |engine| engine.delete('Q').to_i }
+        games_to_update << {
+          game: Game.find_by(wikidata_id: game_wikidata_id),
+          engines: engine_ids
+        }
+      end
+
+      progress_bar = ProgressBar.create(
+        total: games_to_update.count,
+        format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+      )
+
+      updated_games_count = 0
+      games_to_update.each do |hash|
+        progress_bar.increment
+
+        progress_bar.log 'Adding engines.' if ENV['DEBUG']
+
+        # Get the Wikidata IDs for the game's engines.
+        wikidata_ids = hash[:game].engines.map { |engine| engine[:wikidata_id] }
+
+        # Filter engines down to just the ones not already represented by
+        # an associated GameEngine.
+        engines_to_add = hash[:engines].difference(wikidata_ids)
+
+        game_was_updated = false
+
+        engines_to_add.each do |engine_wikidata_id|
+          engine = Engine.find_by(wikidata_id: engine_wikidata_id)
+          progress_bar.log engine.inspect if ENV['DEBUG']
+          # Go to the next iteration if there's no engine record for the
+          # given Wikidata ID.
+          next if engine.nil?
+
+          progress_bar.log "Adding #{engine.name} to #{hash[:game].name}."
+
+          # Create a GameEngine.
+          GameEngine.create(
+            game_id: hash[:game].id,
+            engine_id: engine.id
+          )
+          game_was_updated = true
+        end
+
+        updated_games_count += 1 if game_was_updated
+      end
+
+      puts "Added engines to #{updated_games_count} games."
+    end
   end
 
   # Games with an associated series.
@@ -245,6 +315,11 @@ namespace :import do
   # Returns games with at least one genre.
   def games_with_genres_query
     return games_with_property_query('P136', 'genres')
+  end
+
+  # Returns games with at least one engine.
+  def games_with_engines_query
+    return games_with_property_query('P408', 'engines')
   end
 
   # Returns a SPARQL query for a given property.
