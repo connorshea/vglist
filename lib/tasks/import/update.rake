@@ -238,37 +238,24 @@ namespace :import do
   end
 
   # Returns games with at least one platform.
-  #
-  # The response is an array of objects that look like this:
-  # ```ruby
-  # {
-  #   item: <RDF id='Q123'>,
-  #   itemLabel: Civilization V,
-  #   platforms: "Q123, Q124, Q125"
-  # }
-  # ```
   def games_with_platforms_query
-    sparql = <<-SPARQL
-      SELECT ?item ?itemLabel (group_concat(distinct ?platform;separator=", ") as ?platforms) with {
-        SELECT ?item WHERE
-        {
-          ?item wdt:P31 wd:Q7889 .
-        }
-      } as %i
-      WHERE {
-        include %i
-        ?item wdt:P400 ?p1.
-        bind(strafter(str(?p1), "http://www.wikidata.org/entity/") as ?platform)
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-      } GROUP BY ?item ?itemLabel
-    SPARQL
-
-    return sparql
+    return games_with_property_query('P400', 'platforms')
   end
 
   # Returns games with at least one genre.
+  def games_with_genres_query
+    return games_with_property_query('P136', 'genres')
+  end
+
+  # Returns a SPARQL query for a given property.
   #
-  # The response is an array of objects that look like this:
+  # @param [String] property Property ID, like 'P123'.
+  # @params [String] plural Plural name of the variable, e.g. 'genres'.
+  # @return [String]
+  #
+  # Returns games with at least one of this property.
+  #
+  # The response from the query is an array of objects that look like this:
   # ```ruby
   # {
   #   item: <RDF id='Q123'>,
@@ -276,9 +263,9 @@ namespace :import do
   #   genres: "Q123, Q124, Q125"
   # }
   # ```
-  def games_with_genres_query
+  def games_with_property_query(property, plural)
     sparql = <<-SPARQL
-      SELECT ?item ?itemLabel (group_concat(distinct ?genre;separator=", ") as ?genres) with {
+      SELECT ?item ?itemLabel (group_concat(distinct ?prop;separator=", ") as ?#{plural}) with {
         SELECT ?item WHERE
         {
           ?item wdt:P31 wd:Q7889 .
@@ -286,8 +273,8 @@ namespace :import do
       } as %i
       WHERE {
         include %i
-        ?item wdt:P136 ?p1.
-        bind(strafter(str(?p1), "http://www.wikidata.org/entity/") as ?genre)
+        ?item wdt:#{property} ?p1.
+        bind(strafter(str(?p1), "http://www.wikidata.org/entity/") as ?prop)
         SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       } GROUP BY ?item ?itemLabel
     SPARQL
