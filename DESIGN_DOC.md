@@ -16,7 +16,7 @@ Similar tracking sites for movies/television/anime:
 - [Kitsu](https://kitsu.io)
 - [IMDb](https://www.imdb.com/)
 
-## TODO
+## Feature Plan
 
 - [ ] Users
   - [x] Authentication with Devise
@@ -52,6 +52,7 @@ Similar tracking sites for movies/television/anime:
   - [x] Release date(s) (~~note that a game can have more than one release date due to platform differences or due to regional differences~~ This was too complex to implement so games just have one release date)
   - [x] External Links (Steam page, Discord store page, Discord server, PCGamingWiki, SteamDB, etc.)
   - [ ] Relationships with other games (sequels, prequels, spinoffs, DLC, Special Editions, GOTY/Complete Editions, Remakes, Deluxe Editions, "sibling"(?) titles (e.g. Pokemon Red and Blue), etc?)
+    - For now, this adds too much complexity. Series' are sufficient.
   - [x] Series
   - [ ] Official Website
     - Note there can be more than one, e.g. for multiple languages.
@@ -84,19 +85,25 @@ Similar tracking sites for movies/television/anime:
   - [x] Favorite (you can favorite games in your library, which is tracked separately from your Score)
   - [ ] Physical/Digital
     - I'm really not sure how to handle this, theoretically you can own a game for Switch digitally as well as physically.
-- [ ] Exporter (export your games list, probably as JSON, _maybe_ as a CSV?)
+- [x] Exporter, for exporting your games list as JSON
 - [x] Build the initial system for importing game information from another source (build the game database from the GiantBomb Wiki? Wikipedia/Wikidata? PCGamingWiki? A combination of these? Somewhere else?)
-- [ ] API?
-  - Use Grape or GraphQL? (both?)
+  - Ended up getting data from Wikidata, as well as covers from PCGW and MobyGames.
+- [x] API
+  - GraphQL API
 - [ ] Game creation / modification
   - AniList has a concept of "moderators" that can update information on anime, e.g. adding missing genres or tags, changing the release date when it's delayed, etc.
   - We'll need some way for the user to create a game when a new one comes out.
-  - Uploading cover art is another sticking point, since we'll need to host those images.
+  - All users can create games, but usually games are created when they're imported from Wikidata once every few days/weeks.
 
 Some decisions that need to be made:
 
-- Should scores work like AniList's multiple-score-types system? e.g. have 1/10, 1.0/10, 10/100, and thumbs-up/thumbs-down, you can theoretically represent all of those integer values of 1-100, but converting between some formats to others can be "lossy", though it doesn't _have_ to be.
-- Should there be an API? If so, should it be a REST API or use GraphQL?
-- Should games have separate entries for each platform (e.g. Team Fortress 2 on Windows is very different from Team Fortress 2 on Xbox 360)?
-- Should this differentiate between, e.g. Steam vs. Discord vs. Epic, etc?
-- How to handle completion statuses, especially for games that are multiplayer with no real "win state", e.g. Counter-Strike or Overwatch.
+- [ ] Should scores work like AniList's multiple-score-types system? e.g. have 1/10, 1.0/10, 10/100, and thumbs-up/thumbs-down, you can theoretically represent all of those integer values of 1-100, but converting between some formats to others can be "lossy", though it doesn't _have_ to be.
+  - A: Right now it's only a 100-point scale, though those other representations are still worth considering.
+- [x] Should there be an API? If so, should it be a REST API or use GraphQL?
+  - A: Yes, GraphQL.
+- [x] Should games have separate entries for each platform (e.g. Team Fortress 2 on Windows is very different from Team Fortress 2 on Xbox 360)?
+  - A: No. One game entry that covers all platforms.
+- [x] Should this differentiate between, e.g. Steam vs. Discord vs. Epic, etc?
+  - A: Not really, though you can set which store(s) you own a game on.
+- [x] How to handle completion statuses, especially for games that are multiplayer with no real "win state", e.g. Counter-Strike or Overwatch.
+  - A: It's pretty much just `N/A` for multiplayer games.
