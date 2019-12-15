@@ -103,7 +103,6 @@ class GraphqlController < ApplicationController
     }
   end
 
-  # TODO: Add handling for 'normal' API tokens here.
   def authorize_api_user
     doorkeeper_authorize!
   end
