@@ -1,4 +1,4 @@
-namespace 'import' do
+namespace :import do
   require 'sparql/client'
   require 'wikidata_helper'
   require 'ruby-progressbar'

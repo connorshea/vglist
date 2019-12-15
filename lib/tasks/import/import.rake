@@ -29,26 +29,4 @@ namespace :import do
     puts "Import completed!"
     puts "Run 'bundle exec rake rebuild:multisearch:all' to rebuild all the multisearch indices, or nothing will show up in your search results!"
   end
-
-  desc "Runs an import to update all data from Wikidata."
-  task update: :environment do
-    puts 'Running an import to update all existing games in the database...'
-
-    import_tasks = [
-      "import:steam",
-      "import:pcgamingwiki",
-      "import:giantbomb",
-      "import:mobygames"
-    ]
-
-    import_tasks.each do |task|
-      puts "Running 'rake #{task}'."
-      Rake::Task[task].invoke
-      puts
-      puts '-------------------------'
-      puts
-    end
-
-    puts "Import completed!"
-  end
 end
