@@ -87,209 +87,17 @@ namespace :import do
 
     desc "Adds game platforms from Wikidata to games."
     task platforms: :environment do
-      puts "Adding game platforms from Wikidata to games."
-
-      # Get all games that have Wikidata IDs.
-      games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id)
-
-      rows = get_rows(games_with_platforms_query)
-
-      # Limit logging in production to allow the progress bar to work and
-      # to prevent spamming the logs when running the command.
-      Rails.logger.level = 2 if Rails.env.production?
-
-      games_to_update = []
-      rows.map do |row|
-        row = row.to_h
-        game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
-        next unless games.include?(game_wikidata_id)
-
-        platform_ids = row[:platforms].to_s.split(', ').map { |plat| plat.delete('Q').to_i }
-        games_to_update << {
-          game: Game.find_by(wikidata_id: game_wikidata_id),
-          platforms: platform_ids
-        }
-      end
-
-      progress_bar = ProgressBar.create(
-        total: games_to_update.count,
-        format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-      )
-
-      updated_games_count = 0
-      games_to_update.each do |hash|
-        progress_bar.increment
-
-        progress_bar.log 'Adding platforms.' if ENV['DEBUG']
-
-        # Get the Wikidata IDs for the game's platforms.
-        wikidata_ids = hash[:game].platforms.map { |platform| platform[:wikidata_id] }
-
-        # Filter platforms down to just the ones not already represented by
-        # an associated GamePlatform.
-        platforms_to_add = hash[:platforms].difference(wikidata_ids)
-
-        game_was_updated = false
-
-        platforms_to_add.each do |platform_wikidata_id|
-          platform = Platform.find_by(wikidata_id: platform_wikidata_id)
-          progress_bar.log platform.inspect if ENV['DEBUG']
-          # Go to the next iteration if there's no platform record for the
-          # given Wikidata ID.
-          next if platform.nil?
-
-          progress_bar.log "Adding #{platform.name} to #{hash[:game].name}."
-
-          # Create a GamePlatform.
-          GamePlatform.create(
-            game_id: hash[:game].id,
-            platform_id: platform.id
-          )
-          game_was_updated = true
-        end
-
-        updated_games_count += 1 if game_was_updated
-      end
-
-      puts "Added platforms to #{updated_games_count} games."
+      add_props_to_games('platform')
     end
 
     desc "Adds game genres from Wikidata to games."
     task genres: :environment do
-      puts "Adding game genres from Wikidata to games."
-
-      # Get all games that have Wikidata IDs.
-      games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id)
-
-      rows = get_rows(games_with_genres_query)
-
-      # Limit logging in production to allow the progress bar to work and
-      # to prevent spamming the logs when running the command.
-      Rails.logger.level = 2 if Rails.env.production?
-
-      games_to_update = []
-      rows.map do |row|
-        row = row.to_h
-        game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
-        next unless games.include?(game_wikidata_id)
-
-        genre_ids = row[:genres].to_s.split(', ').map { |genre| genre.delete('Q').to_i }
-        games_to_update << {
-          game: Game.find_by(wikidata_id: game_wikidata_id),
-          genres: genre_ids
-        }
-      end
-
-      progress_bar = ProgressBar.create(
-        total: games_to_update.count,
-        format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-      )
-
-      updated_games_count = 0
-      games_to_update.each do |hash|
-        progress_bar.increment
-
-        progress_bar.log 'Adding genres.' if ENV['DEBUG']
-
-        # Get the Wikidata IDs for the game's genres.
-        wikidata_ids = hash[:game].genres.map { |genre| genre[:wikidata_id] }
-
-        # Filter genres down to just the ones not already represented by
-        # an associated GameGenre.
-        genres_to_add = hash[:genres].difference(wikidata_ids)
-
-        game_was_updated = false
-
-        genres_to_add.each do |genre_wikidata_id|
-          genre = Genre.find_by(wikidata_id: genre_wikidata_id)
-          progress_bar.log genre.inspect if ENV['DEBUG']
-          # Go to the next iteration if there's no genre record for the
-          # given Wikidata ID.
-          next if genre.nil?
-
-          progress_bar.log "Adding #{genre.name} to #{hash[:game].name}."
-
-          # Create a GameGenre.
-          GameGenre.create(
-            game_id: hash[:game].id,
-            genre_id: genre.id
-          )
-          game_was_updated = true
-        end
-
-        updated_games_count += 1 if game_was_updated
-      end
-
-      puts "Added genres to #{updated_games_count} games."
+      add_props_to_games('genre')
     end
 
     desc "Adds game engines from Wikidata to games."
     task engines: :environment do
-      puts "Adding game engines from Wikidata to games."
-
-      # Get all games that have Wikidata IDs.
-      games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id)
-
-      rows = get_rows(games_with_engines_query)
-
-      # Limit logging in production to allow the progress bar to work and
-      # to prevent spamming the logs when running the command.
-      Rails.logger.level = 2 if Rails.env.production?
-
-      games_to_update = []
-      rows.map do |row|
-        row = row.to_h
-        game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
-        next unless games.include?(game_wikidata_id)
-
-        engine_ids = row[:engines].to_s.split(', ').map { |engine| engine.delete('Q').to_i }
-        games_to_update << {
-          game: Game.find_by(wikidata_id: game_wikidata_id),
-          engines: engine_ids
-        }
-      end
-
-      progress_bar = ProgressBar.create(
-        total: games_to_update.count,
-        format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-      )
-
-      updated_games_count = 0
-      games_to_update.each do |hash|
-        progress_bar.increment
-
-        progress_bar.log 'Adding engines.' if ENV['DEBUG']
-
-        # Get the Wikidata IDs for the game's engines.
-        wikidata_ids = hash[:game].engines.map { |engine| engine[:wikidata_id] }
-
-        # Filter engines down to just the ones not already represented by
-        # an associated GameEngine.
-        engines_to_add = hash[:engines].difference(wikidata_ids)
-
-        game_was_updated = false
-
-        engines_to_add.each do |engine_wikidata_id|
-          engine = Engine.find_by(wikidata_id: engine_wikidata_id)
-          progress_bar.log engine.inspect if ENV['DEBUG']
-          # Go to the next iteration if there's no engine record for the
-          # given Wikidata ID.
-          next if engine.nil?
-
-          progress_bar.log "Adding #{engine.name} to #{hash[:game].name}."
-
-          # Create a GameEngine.
-          GameEngine.create(
-            game_id: hash[:game].id,
-            engine_id: engine.id
-          )
-          game_was_updated = true
-        end
-
-        updated_games_count += 1 if game_was_updated
-      end
-
-      puts "Added engines to #{updated_games_count} games."
+      add_props_to_games('engine')
     end
   end
 
@@ -357,6 +165,86 @@ namespace :import do
     return sparql
   end
 
+  # A metaprogrammed abomination for creating records associated with games,
+  # e.g. GamePlatforms.
+  #
+  # @param [String] property_name The singular name of the property, e.g. 'platform'.
+  # @return [void]
+  def add_props_to_games(property_name)
+    puts "Adding game #{property_name.pluralize} from Wikidata to games."
+
+    # Get all games that have Wikidata IDs.
+    games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id)
+
+    # This has to use send because methods in Rake tasks are private by default.
+    rows = get_rows(send("games_with_#{property_name.pluralize}_query"))
+
+    # Limit logging in production to allow the progress bar to work and
+    # to prevent spamming the logs when running the command.
+    Rails.logger.level = 2 if Rails.env.production?
+
+    games_to_update = []
+    rows.map do |row|
+      row = row.to_h
+      game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+      next unless games.include?(game_wikidata_id)
+
+      prop_ids = row[property_name.pluralize.to_sym].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
+      games_to_update << {
+        game: Game.find_by(wikidata_id: game_wikidata_id),
+        props: prop_ids
+      }
+    end
+
+    progress_bar = ProgressBar.create(
+      total: games_to_update.count,
+      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    )
+
+    updated_games_count = 0
+    games_to_update.each do |hash|
+      progress_bar.increment
+
+      progress_bar.log "Adding #{property_name.pluralize}." if ENV['DEBUG']
+
+      # Get the Wikidata IDs for the game's property.
+      wikidata_ids = hash[:game].public_send(property_name.pluralize).map { |prop| prop[:wikidata_id] }
+
+      # Filter props down to just the ones not already represented by
+      # an associated game join model, e.g. GamePlatform.
+      props_to_add = hash[:props].difference(wikidata_ids)
+
+      game_was_updated = false
+
+      props_to_add.each do |prop_wikidata_id|
+        prop = Object.const_get(property_name.titleize).find_by(wikidata_id: prop_wikidata_id)
+        progress_bar.log prop.inspect if ENV['DEBUG']
+        # Go to the next iteration if there's no record for the
+        # given Wikidata ID.
+        next if prop.nil?
+
+        progress_bar.log "Adding #{prop.name} to #{hash[:game].name}."
+
+        # Create a record for a game join model, e.g. GamePlatform.
+        # It needs game_id and then an id for the property, e.g. platform_id
+        game_join_args = { game_id: hash[:game].id }
+        game_join_args["#{property_name}_id".to_sym] = prop.id
+
+        Object.const_get("Game#{property_name.titleize}").create(
+          game_join_args
+        )
+        game_was_updated = true
+      end
+
+      updated_games_count += 1 if game_was_updated
+    end
+
+    puts "Added #{property_name.pluralize} to #{updated_games_count} games."
+  end
+
+  # Get rows from a SPARQL query.
+  # @param [String] query
+  # @return [Array<Hash>]
   def get_rows(query)
     client = SPARQL::Client.new(
       "https://query.wikidata.org/sparql",
