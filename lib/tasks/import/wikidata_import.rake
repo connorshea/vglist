@@ -5,21 +5,10 @@ namespace 'import:wikidata' do
 
   desc "Import game developers and publishers from Wikidata"
   task companies: :environment do
-    # Abort if there are already records in the database.
-    # In the future we may want to be able to re-import from Wikidata,
-    # but for now we can just fail for any attempted imports after the first run.
-    abort("You can't import companies if there are already companies in the database.") if Company.count > 0
-
     puts "Importing game developers and publishers from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
-    )
 
-    rows = []
-    rows.concat(client.query(developers_query))
-    rows.concat(client.query(publishers_query))
+    rows = get_rows(developers_query)
+    rows.concat(get_rows(publishers_query))
 
     puts "Importing up to #{rows.length} companies."
     puts "Processing..."
@@ -29,6 +18,11 @@ namespace 'import:wikidata' do
     )
     companies = wikidata_item_filter(rows: rows, progress_bar: progress_bar_for_filter)
     companies.uniq! { |company| company&.dig(:wikidata_id) }
+
+    # Filter companies that are already represented in the vglist database.
+    wikidata_ids_in_db = Company.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    companies = companies.reject { |company| wikidata_ids_in_db.include?(company[:wikidata_id].delete('Q').to_i) }
+
     puts
     puts "Found #{companies.length} companies."
     puts "Importing..."
@@ -54,20 +48,9 @@ namespace 'import:wikidata' do
 
   desc "Import game platforms from Wikidata"
   task platforms: :environment do
-    # Abort if there are already records in the database.
-    # In the future we may want to be able to re-import from Wikidata,
-    # but for now we can just fail for any attempted imports after the first run.
-    abort("You can't import platforms if there are already platforms in the database.") if Platform.count > 0
-
     puts "Importing game platforms from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
-    )
 
-    rows = []
-    rows.concat(client.query(platforms_query))
+    rows = get_rows(platforms_query)
 
     puts "Importing up to #{rows.length} platforms."
     puts "Processing..."
@@ -77,6 +60,11 @@ namespace 'import:wikidata' do
     )
     platforms = wikidata_item_filter(rows: rows, count_limit: 80, progress_bar: progress_bar_for_filter)
     platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
+
+    # Filter platforms that are already represented in the vglist database.
+    wikidata_ids_in_db = Platform.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    platforms = platforms.reject { |platform| wikidata_ids_in_db.include?(platform[:wikidata_id].delete('Q').to_i) }
+
     puts
     puts "Found #{platforms.length} platforms."
     puts "Importing..."
@@ -102,20 +90,9 @@ namespace 'import:wikidata' do
 
   desc "Import game genres from Wikidata"
   task genres: :environment do
-    # Abort if there are already records in the database.
-    # In the future we may want to be able to re-import from Wikidata,
-    # but for now we can just fail for any attempted imports after the first run.
-    abort("You can't import genres if there are already genres in the database.") if Genre.count > 0
-
     puts "Importing game genres from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
-    )
 
-    rows = []
-    rows.concat(client.query(genres_query))
+    rows = get_rows(genres_query)
 
     puts "Importing up to #{rows.length} genres."
     puts "Processing..."
@@ -125,6 +102,11 @@ namespace 'import:wikidata' do
     )
     genres = wikidata_item_filter(rows: rows, count_limit: 50, progress_bar: progress_bar_for_filter)
     genres.uniq! { |genre| genre&.dig(:wikidata_id) }
+
+    # Filter genres that are already represented in the vglist database.
+    wikidata_ids_in_db = Genre.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    genres = genres.reject { |genre| wikidata_ids_in_db.include?(genre[:wikidata_id].delete('Q').to_i) }
+
     progress_bar_for_filter.finish unless progress_bar_for_filter.finished?
     puts
     puts "Found #{genres.length} genres."
@@ -151,20 +133,9 @@ namespace 'import:wikidata' do
 
   desc "Import game series from Wikidata"
   task series: :environment do
-    # Abort if there are already records in the database.
-    # In the future we may want to be able to re-import from Wikidata,
-    # but for now we can just fail for any attempted imports after the first run.
-    abort("You can't import series if there are already series in the database.") if Series.count > 0
-
     puts "Importing game series' from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
-    )
 
-    rows = []
-    rows.concat(client.query(series_query))
+    rows = get_rows(series_query)
 
     puts "Importing up to #{rows.length} series'."
     puts "Processing..."
@@ -174,6 +145,11 @@ namespace 'import:wikidata' do
     )
     series = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     series.uniq! { |s| s&.dig(:wikidata_id) }
+
+    # Filter series that are already represented in the vglist database.
+    wikidata_ids_in_db = Series.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    series = series.reject { |srs| wikidata_ids_in_db.include?(srs[:wikidata_id].delete('Q').to_i) }
+
     puts
     puts "Found #{series.length} series'."
     puts "Importing..."
@@ -199,20 +175,9 @@ namespace 'import:wikidata' do
 
   desc "Import game engines from Wikidata"
   task engines: :environment do
-    # Abort if there are already records in the database.
-    # In the future we may want to be able to re-import from Wikidata,
-    # but for now we can just fail for any attempted imports after the first run.
-    abort("You can't import engines if there are already engines in the database.") if Engine.count > 0
-
     puts "Importing game engines from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
-    )
 
-    rows = []
-    rows.concat(client.query(engines_query))
+    rows = get_rows(engines_query)
 
     puts "Importing up to #{rows.length} engines."
     puts "Processing..."
@@ -222,6 +187,11 @@ namespace 'import:wikidata' do
     )
     engines = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     engines.uniq! { |engine| engine&.dig(:wikidata_id) }
+
+    # Filter engines that are already represented in the vglist database.
+    wikidata_ids_in_db = Engine.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    engines = engines.reject { |engine| wikidata_ids_in_db.include?(engine[:wikidata_id].delete('Q').to_i) }
+
     puts
     puts "Found #{engines.length} engines."
     puts "Importing..."
@@ -245,6 +215,8 @@ namespace 'import:wikidata' do
     puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Engines]' to have pg_search rebuild its multisearch index."
   end
 
+  # Filter invalid items from a set of wikidata rows, and get better
+  # data like labels.
   def wikidata_item_filter(rows:, count_limit: 0, progress_bar:)
     wikidata_ids = []
 
@@ -348,5 +320,19 @@ namespace 'import:wikidata' do
   # Return the formatting to use for the progress bar.
   def formatting
     return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+  end
+
+  # Convenience method for getting rows from SPARQL.
+  def get_rows(query)
+    client = SPARQL::Client.new(
+      "https://query.wikidata.org/sparql",
+      method: :get,
+      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.6' }
+    )
+
+    rows = []
+    rows.concat(client.query(query))
+
+    return rows
   end
 end

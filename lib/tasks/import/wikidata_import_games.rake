@@ -96,10 +96,12 @@ namespace 'import:wikidata' do
           if time.nil?
             nil
           else
-            Time.parse(time).to_date
+            begin
+              Time.parse(time).to_date
+            rescue ArgumentError
+              nil
+            end
           end
-        rescue ArgumentError
-          nil
         end
         # Set release date equal to nil, or the earliest release date if
         # all of the release dates above resolved to a proper date. It's done
