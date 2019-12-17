@@ -22,7 +22,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.10'
 
 # Use devise for Users and authentication.
-gem 'devise', '~> 4.7'
+gem 'devise', git: 'https://github.com/plataformatec/devise'
 
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.2'
@@ -79,6 +79,9 @@ gem "rack-cors", "~> 1.1"
 
 # Render SVGs inline using Webpacker.
 gem 'inline_svg', '~> 1.7'
+
+gem 'sprockets', git: 'https://github.com/rails/sprockets'
+gem 'sprockets-rails', git: 'https://github.com/rails/sprockets-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
