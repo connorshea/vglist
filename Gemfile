@@ -66,7 +66,7 @@ gem 'sorbet-runtime', '~> 0.4'
 gem "sorbet-rails", '~> 0.5.9'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
-gem 'graphql', '~> 1.10.0.pre2'
+gem 'graphql', '~> 1.10.0.pre3'
 
 # Doorkeeper for OAuth API tokens
 gem "doorkeeper", "~> 5.2"
