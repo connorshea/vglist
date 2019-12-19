@@ -1,4 +1,4 @@
-# typed: true
+# typed: strong
 class RelationshipPolicy < ApplicationPolicy
   extend T::Sig
 

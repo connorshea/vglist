@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.8.1
+# faker-2.9.0
 module Faker
 end
 module Faker::Base58
@@ -461,6 +461,7 @@ class Faker::FunnyName < Faker::Base
 end
 class Faker::Gender < Faker::Base
   def self.binary_type; end
+  def self.short_binary_type; end
   def self.type; end
 end
 class Faker::GreekPhilosophers < Faker::Base

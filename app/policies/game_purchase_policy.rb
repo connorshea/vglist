@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 class GamePurchasePolicy < ApplicationPolicy
   extend T::Sig
 

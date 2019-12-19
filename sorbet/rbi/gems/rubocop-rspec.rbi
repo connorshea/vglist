@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rspec/all/rubocop-rspec.rbi
 #
-# rubocop-rspec-1.37.0
+# rubocop-rspec-1.37.1
 module RuboCop
 end
 module RuboCop::RSpec
@@ -280,6 +280,7 @@ class RuboCop::Cop::RSpec::FactoryBot::CreateList::CreateListCorrector < RuboCop
   def node; end
 end
 class RuboCop::Cop::RSpec::FactoryBot::FactoryClassName < RuboCop::Cop::RSpec::Cop
+  def allowed?(const_name); end
   def autocorrect(node); end
   def class_name(node = nil); end
   def on_send(node); end

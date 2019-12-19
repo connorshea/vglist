@@ -1,10 +1,10 @@
-# typed: true
+# typed: strict
 class GamePolicy < ApplicationPolicy
   extend T::Sig
 
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Game)) }
+  sig { returns(T.nilable(T.any(Game::ActiveRecord_Relation, Game))) }
   attr_reader :game
 
   sig { params(user: T.nilable(User), game: T.nilable(T.any(Game::ActiveRecord_Relation, Game))).void }

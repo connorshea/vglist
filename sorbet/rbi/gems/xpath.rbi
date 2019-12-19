@@ -9,6 +9,7 @@
 #
 # xpath-3.2.0
 module XPath
+  def self.generate; end
   extend XPath::DSL
   include XPath::DSL
 end

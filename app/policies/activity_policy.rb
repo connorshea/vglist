@@ -1,8 +1,8 @@
-# typed: true
+# typed: strong
 class ActivityPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Event)) }
+  sig { returns(T.nilable(T.any(Event::ActiveRecord_Relation, Event))) }
   attr_reader :event
 
   sig { params(user: T.nilable(User), event: T.nilable(T.any(Event::ActiveRecord_Relation, Event))).void }

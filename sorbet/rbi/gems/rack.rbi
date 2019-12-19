@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rack/all/rack.rbi
 #
-# rack-2.0.7
+# rack-2.0.8
 module Rack
   def self.release; end
   def self.version; end
@@ -356,6 +356,16 @@ class Rack::MethodOverride
   def method_override(env); end
   def method_override_param(req); end
 end
+class Rack::Session::SessionId
+  def cookie_value; end
+  def empty?; end
+  def hash_sid(sid); end
+  def initialize(public_id); end
+  def inspect; end
+  def private_id; end
+  def public_id; end
+  def to_s; end
+end
 module Rack::Session::Abstract
 end
 class Rack::Session::Abstract::SessionHash
@@ -398,6 +408,7 @@ class Rack::Session::Abstract::Persisted
   def commit_session(req, res); end
   def commit_session?(req, session, options); end
   def context(env, app = nil); end
+  def cookie_value(data); end
   def current_session_id(req); end
   def default_options; end
   def delete_session(req, sid, options); end
@@ -420,13 +431,22 @@ class Rack::Session::Abstract::Persisted
   def sid_secure; end
   def write_session(req, sid, session, options); end
 end
+class Rack::Session::Abstract::PersistedSecure < Rack::Session::Abstract::Persisted
+  def cookie_value(data); end
+  def extract_session_id(*arg0); end
+  def generate_sid(*arg0); end
+  def session_class; end
+end
+class Rack::Session::Abstract::PersistedSecure::SecureSessionHash < Rack::Session::Abstract::SessionHash
+  def [](key); end
+end
 class Rack::Session::Abstract::ID < Rack::Session::Abstract::Persisted
   def delete_session(req, sid, options); end
   def find_session(req, sid); end
   def self.inherited(klass); end
   def write_session(req, sid, session, options); end
 end
-class Rack::Session::Cookie < Rack::Session::Abstract::Persisted
+class Rack::Session::Cookie < Rack::Session::Abstract::PersistedSecure
   def coder; end
   def delete_session(req, session_id, options); end
   def digest_match?(data, digest); end
@@ -458,6 +478,10 @@ end
 class Rack::Session::Cookie::Identity
   def decode(str); end
   def encode(str); end
+end
+class Rack::Session::Cookie::SessionId < Anonymous_Delegator_7
+  def cookie_value; end
+  def initialize(session_id, cookie_value); end
 end
 class Rack::ConditionalGet
   def call(env); end
