@@ -525,12 +525,12 @@ class Devise::FailureApp < ActionController::Metal
   include ActionDispatch::Routing::UrlFor
   include ActionDispatch::Routing::UrlFor
   include ActiveSupport::Benchmarkable
-  include Anonymous_Module_26
+  include Anonymous_Module_28
   include Devise::Controllers::StoreLocation
   include Turbolinks::Controller
   include Turbolinks::Redirection
 end
-module Anonymous_Module_26
+module Anonymous_Module_28
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -542,11 +542,11 @@ module Anonymous_Module_26
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_27
-  extend Anonymous_Module_28
+  extend Anonymous_Module_29
+  extend Anonymous_Module_30
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_27
-  include Anonymous_Module_28
+  include Anonymous_Module_29
+  include Anonymous_Module_30
 end
 class Devise::Strategies::Base < Warden::Strategies::Base
   def mapping; end
@@ -799,11 +799,11 @@ class Devise::Mailer < ActionMailer::Base
   def unlock_instructions(record, token, opts = nil); end
   extend Devise::Controllers::ScopedViews::ClassMethods
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_29
+  include Anonymous_Module_31
   include Devise::Controllers::ScopedViews
   include Devise::Mailers::Helpers
 end
-module Anonymous_Module_29
+module Anonymous_Module_31
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -815,7 +815,7 @@ module Anonymous_Module_29
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_27
+  extend Anonymous_Module_29
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_27
+  include Anonymous_Module_29
 end

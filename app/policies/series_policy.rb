@@ -1,10 +1,10 @@
-# typed: true
+# typed: strict
 class SeriesPolicy < ApplicationPolicy
   extend T::Sig
 
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Series)) }
+  sig { returns(T.nilable(T.any(Series::ActiveRecord_Relation, Series))) }
   attr_reader :series
 
   sig { params(user: T.nilable(User), series: T.nilable(T.any(Series::ActiveRecord_Relation, Series))).void }

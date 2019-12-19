@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionpack/all/actionpack.rbi
 #
-# actionpack-6.0.2
+# actionpack-6.0.2.1
 module ActionPack
   def self.gem_version; end
   def self.version; end
@@ -2152,7 +2152,14 @@ class ActionDispatch::Session::AbstractStore < Rack::Session::Abstract::Persiste
   include ActionDispatch::Session::SessionObject
   include ActionDispatch::Session::StaleSessionCheck
 end
-class ActionDispatch::Session::CookieStore < ActionDispatch::Session::AbstractStore
+class ActionDispatch::Session::AbstractSecureStore < Rack::Session::Abstract::PersistedSecure
+  def generate_sid; end
+  def set_cookie(request, session_id, cookie); end
+  include ActionDispatch::Session::Compatibility
+  include ActionDispatch::Session::SessionObject
+  include ActionDispatch::Session::StaleSessionCheck
+end
+class ActionDispatch::Session::CookieStore < ActionDispatch::Session::AbstractSecureStore
   def cookie_jar(request); end
   def delete_session(req, session_id, options); end
   def extract_session_id(req); end
@@ -2163,6 +2170,10 @@ class ActionDispatch::Session::CookieStore < ActionDispatch::Session::AbstractSt
   def set_cookie(request, session_id, cookie); end
   def unpacked_cookie_data(req); end
   def write_session(req, sid, session_data, options); end
+end
+class ActionDispatch::Session::CookieStore::SessionId < Anonymous_Delegator_3
+  def cookie_value; end
+  def initialize(session_id, cookie_value = nil); end
 end
 class ActionDispatch::Flash
   def self.new(app); end
@@ -2222,7 +2233,7 @@ module ActionController::ParamsWrapper
   def process_action(*args); end
   extend ActiveSupport::Concern
 end
-class Anonymous_Struct_3 < Struct
+class Anonymous_Struct_4 < Struct
   def exclude; end
   def exclude=(_); end
   def format; end
@@ -2240,7 +2251,7 @@ class Anonymous_Struct_3 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class ActionController::ParamsWrapper::Options < Anonymous_Struct_3
+class ActionController::ParamsWrapper::Options < Anonymous_Struct_4
   def _default_wrap_model; end
   def include; end
   def initialize(name, format, include, exclude, klass, model); end
@@ -2907,7 +2918,7 @@ class ActionController::API < ActionController::Metal
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   extend ActiveSupport::Rescuable::ClassMethods
-  extend Anonymous_Module_4
+  extend Anonymous_Module_5
   extend Devise::Controllers::Helpers::ClassMethods
   include AbstractController::Callbacks
   include AbstractController::Callbacks
@@ -3164,7 +3175,7 @@ class ActionController::Base < ActionController::Metal
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   extend ActiveSupport::Rescuable::ClassMethods
-  extend Anonymous_Module_5
+  extend Anonymous_Module_6
   extend Devise::Controllers::Helpers::ClassMethods
   extend Responders::ControllerMethod
   extend Responders::ControllerMethod
@@ -3236,7 +3247,7 @@ class ActionController::Base < ActionController::Metal
   include Turbolinks::Controller
   include Turbolinks::Redirection
 end
-module Anonymous_Module_4
+module Anonymous_Module_5
   def inherited(klass); end
 end
 module ActionView::RoutingUrlFor
@@ -3245,7 +3256,7 @@ module ActionView::RoutingUrlFor
   include ActionDispatch::Routing::UrlFor
   include ActionDispatch::Routing::UrlFor
 end
-module Anonymous_Module_5
+module Anonymous_Module_6
   def inherited(klass); end
 end
 class ActionDispatch::Routing::RoutesProxy

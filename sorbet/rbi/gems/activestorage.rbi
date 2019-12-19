@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activestorage/all/activestorage.rbi
 #
-# activestorage-6.0.2
+# activestorage-6.0.2.1
 module ActiveStorage
   def analyzers; end
   def analyzers=(obj); end
@@ -457,7 +457,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   include ActiveStorage::Blob::GeneratedAttributeMethods
   include ActiveStorage::Blob::Identifiable
   include ActiveStorage::Blob::Representable
-  include Anonymous_Module_19
+  include Anonymous_Module_21
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
 end
@@ -497,7 +497,7 @@ class ActiveStorage::Blob::ActiveRecord_AssociationRelation < ActiveRecord::Asso
   include ActiveRecord::Delegation::ClassSpecificRelation
   include ActiveStorage::Blob::GeneratedRelationMethods
 end
-module Anonymous_Module_19
+module Anonymous_Module_21
   def analyzed; end
   def analyzed=(value); end
   def analyzed_before_last_save; end

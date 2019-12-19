@@ -326,7 +326,7 @@ module Shoulda::Matchers::RailsShim
   def self.validation_message_key_for_association_required_option; end
   def self.verb_for_update; end
 end
-class InvalidName___Class_0x00___FakeAttributeType_41
+class InvalidName___Class_0x00___FakeAttributeType_43
   def attribute_name; end
   def coder; end
   def initialize(model, attribute_name); end

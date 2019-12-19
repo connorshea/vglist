@@ -222,6 +222,7 @@ class Gem::Package
   def extract_tar_gz(io, destination_dir, pattern = nil); end
   def file_mode(mode); end
   def files; end
+  def gem; end
   def gzip_to(io); end
   def initialize(gem, security_policy); end
   def install_location(filename, destination_dir); end
@@ -236,6 +237,7 @@ class Gem::Package
   def security_policy=(arg0); end
   def self.build(spec, skip_validation = nil, strict_validation = nil, file_name = nil); end
   def self.new(gem, security_policy = nil); end
+  def self.raw_spec(path, security_policy = nil); end
   def setup_signer(signer_options: nil); end
   def spec; end
   def spec=(arg0); end

@@ -1,4 +1,4 @@
-# typed: true
+# typed: strong
 class EventPolicy < ApplicationPolicy
   extend T::Sig
 

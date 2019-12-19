@@ -1,10 +1,10 @@
-# typed: true
+# typed: strict
 class EnginePolicy < ApplicationPolicy
   extend T::Sig
 
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Engine)) }
+  sig { returns(T.nilable(T.any(Engine::ActiveRecord_Relation, Engine))) }
   attr_reader :engine
 
   sig { params(user: T.nilable(User), engine: T.nilable(T.any(Engine::ActiveRecord_Relation, Engine))).void }

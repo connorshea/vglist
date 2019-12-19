@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.0.pre2
+# graphql-1.10.0.pre3
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
   def self.parse_file(filename); end
@@ -285,19 +285,24 @@ class GraphQL::NonNullType < GraphQL::BaseType
   include GraphQL::BaseType::ModifiesAnotherType
 end
 class GraphQL::UnionType < GraphQL::BaseType
-  def dirty_possible_types; end
+  def add_possible_types(types, options); end
   def get_possible_type(type_name, ctx); end
-  def include?(child_type_defn); end
+  def include?(child_type_defn, ctx = nil); end
   def initialize; end
   def initialize_copy(other); end
   def kind; end
   def possible_type?(type, ctx); end
-  def possible_types; end
-  def possible_types=(new_possible_types); end
+  def possible_types(ctx = nil); end
+  def possible_types=(types); end
+  def possible_types_for_context(ctx); end
   def resolve_type(value, ctx); end
   def resolve_type=(new_resolve_type_proc); end
   def resolve_type_proc; end
   def resolve_type_proc=(arg0); end
+  def type_membership_class; end
+  def type_membership_class=(arg0); end
+  def type_memberships; end
+  def type_memberships=(type_memberships); end
 end
 class GraphQL::Argument
   def as; end
@@ -1509,7 +1514,7 @@ class GraphQL::Execution::Interpreter::HashResponse
 end
 class GraphQL::Execution::Interpreter::Runtime
   def add_dead_path(path); end
-  def after_lazy(lazy_obj, owner:, field:, path:, owner_object:, arguments:, eager: nil); end
+  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: nil); end
   def arg_to_value(graphql_object, arg_type, ast_value, already_arguments:); end
   def arguments(graphql_object, arg_owner, ast_node_or_hash); end
   def context; end
@@ -1518,7 +1523,7 @@ class GraphQL::Execution::Interpreter::Runtime
   def dead_path?(path); end
   def directives_include?(node, graphql_object, parent_type); end
   def each_argument_pair(ast_args_or_hash); end
-  def evaluate_selections(path, owner_object, owner_type, selections, root_operation_type: nil); end
+  def evaluate_selections(path, scoped_context, owner_object, owner_type, selections, root_operation_type: nil); end
   def final_value; end
   def flatten_ast_value(v); end
   def gather_selections(owner_object, owner_type, selections, selections_by_name); end
@@ -1635,9 +1640,12 @@ module GraphQL::Execution::Typecast
   def self.subtype?(parent_type, child_type); end
 end
 class GraphQL::Execution::Errors
+  def initialize(schema); end
   def self.use(schema); end
-  def trace(event, data); end
-  def with_error_handling(trace_data); end
+  def with_error_handling(ctx); end
+end
+class GraphQL::Execution::Errors::NullErrorHandler
+  def self.with_error_handling(_ctx); end
 end
 module GraphQL::Dig
   def dig(own_key, *rest_keys); end
@@ -1680,6 +1688,7 @@ class GraphQL::Schema
   def disable_introspection_entry_points?; end
   def error_bubbling; end
   def error_bubbling=(arg0); end
+  def error_handler(*args, &block); end
   def execute(query_str = nil, **kwargs); end
   def execution_strategy_for_operation(operation); end
   def find(path); end
@@ -1727,7 +1736,7 @@ class GraphQL::Schema
   def orphan_types=(arg0); end
   def parse_error(err, ctx); end
   def parse_error=(new_proc); end
-  def possible_types(type_defn); end
+  def possible_types(type_defn, context = nil); end
   def query; end
   def query=(arg0); end
   def query_analyzers; end
@@ -1771,6 +1780,8 @@ class GraphQL::Schema
   def self.disable_introspection_entry_points?; end
   def self.error_bubbling(new_error_bubbling = nil); end
   def self.error_bubbling=(arg0); end
+  def self.error_handler; end
+  def self.error_handler=(arg0); end
   def self.execute(query_str = nil, **kwargs); end
   def self.execution_strategy_for_operation(*args, &block); end
   def self.find(path); end
@@ -1826,7 +1837,7 @@ class GraphQL::Schema
   def self.own_union_memberships; end
   def self.parse_error(parse_err, ctx); end
   def self.plugins; end
-  def self.possible_types(type = nil); end
+  def self.possible_types(type = nil, context = nil); end
   def self.query(new_query_object = nil); end
   def self.query_analyzer(new_analyzer); end
   def self.query_analyzers; end
@@ -1985,7 +1996,7 @@ module GraphQL::Schema::NullMask
 end
 class GraphQL::Schema::PossibleTypes
   def initialize(schema); end
-  def possible_types(type_defn); end
+  def possible_types(type_defn, ctx); end
 end
 class GraphQL::Schema::RescueMiddleware
   def attempt_rescue(err); end
@@ -2063,6 +2074,9 @@ class GraphQL::Schema::Warden
   def interfaces(obj_type); end
   def orphan_type?(type_defn); end
   def possible_types(type_defn); end
+  def reachable_type?(type_name); end
+  def reachable_type_set; end
+  def reachable_types; end
   def read_through; end
   def referenced?(type_defn); end
   def root_type?(type_defn); end
@@ -2398,6 +2412,7 @@ class GraphQL::Schema::Field
   extend GraphQL::Schema::FindInheritedValue
   extend GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
   extend GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor
+  include GraphQL::Schema::FindInheritedValue::EmptyObjects
   include GraphQL::Schema::Member::AcceptsDefinition
   include GraphQL::Schema::Member::CachedGraphQLDefinition
   include GraphQL::Schema::Member::HasArguments
@@ -2504,8 +2519,10 @@ class GraphQL::Schema::Object < GraphQL::Schema::Member
 end
 class GraphQL::Schema::Union < GraphQL::Schema::Member
   def self.kind; end
-  def self.possible_types(*types); end
+  def self.possible_types(*types, context: nil, **options); end
   def self.to_graphql; end
+  def self.type_membership_class(membership_class = nil); end
+  def self.type_memberships; end
   extend GraphQL::Schema::Member::AcceptsDefinition
   extend GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
 end
@@ -2538,6 +2555,13 @@ class GraphQL::Schema::Directive::Feature < GraphQL::Schema::Directive
 end
 class GraphQL::Schema::Directive::Transform < GraphQL::Schema::Directive
   def self.resolve(object, arguments, context); end
+end
+class GraphQL::Schema::TypeMembership
+  def abstract_type; end
+  def initialize(abstract_type, object_type, options); end
+  def object_type; end
+  def object_type=(arg0); end
+  def visible?(_ctx); end
 end
 class GraphQL::Schema::Resolver
   def authorized?(**inputs); end
@@ -2624,7 +2648,7 @@ class GraphQL::Schema::UnresolvedLateBoundTypeError < GraphQL::Error
 end
 class GraphQL::Schema::InvalidDocumentError < GraphQL::Error
 end
-module InvalidName___Class_0x00___ResolveTypeWithType_36
+module InvalidName___Class_0x00___ResolveTypeWithType_38
   def resolve_type(type, obj, ctx); end
 end
 class GraphQL::Schema::CyclicalDefinitionError < GraphQL::Error
@@ -2683,6 +2707,7 @@ class GraphQL::Query
   def validation_pipeline; end
   def variables; end
   def warden; end
+  def with_error_handling; end
   def with_prepared_ast; end
   extend Forwardable
   include GraphQL::Tracing::Traceable
@@ -2726,7 +2751,7 @@ module GraphQL::Query::ArgumentsCache
   def self.build(query); end
 end
 class GraphQL::Query::Context
-  def [](*args, &block); end
+  def [](key); end
   def []=(*args, &block); end
   def ast_node; end
   def dig(*args, &block); end
@@ -2739,15 +2764,19 @@ class GraphQL::Query::Context
   def interpreter=(arg0); end
   def interpreter?(*args, &block); end
   def irep_node; end
-  def key?(*args, &block); end
+  def key?(key); end
   def namespace(ns); end
   def path; end
   def query; end
   def received_null_child; end
   def schema; end
+  def scoped_context; end
+  def scoped_context=(arg0); end
+  def scoped_merge!(hash); end
+  def scoped_set!(key, value); end
   def strategy; end
-  def to_h(*args, &block); end
-  def to_hash(*args, &block); end
+  def to_h; end
+  def to_hash; end
   def trace(*args, &block); end
   def value=(arg0); end
   def warden; end
@@ -2828,9 +2857,11 @@ class GraphQL::Query::LiteralInput
   def self.from_arguments(ast_arguments, argument_owner, variables); end
 end
 class GraphQL::Query::NullContext
+  def [](key); end
   def initialize; end
   def query; end
   def schema; end
+  def self.[](key); end
   def self.instance; end
   def self.query(*args, &block); end
   def self.schema(*args, &block); end

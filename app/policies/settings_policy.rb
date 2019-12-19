@@ -1,4 +1,4 @@
-# typed: true
+# typed: strong
 class SettingsPolicy < ApplicationPolicy
   extend T::Sig
 

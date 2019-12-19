@@ -1,8 +1,8 @@
-# typed: true
+# typed: strict
 class CompanyPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Company)) }
+  sig { returns(T.nilable(T.any(Company::ActiveRecord_Relation, Company))) }
   attr_reader :company
 
   sig { params(user: T.nilable(User), company: T.nilable(T.any(Company::ActiveRecord_Relation, Company))).void }

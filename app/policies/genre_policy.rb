@@ -1,10 +1,10 @@
-# typed: true
+# typed: strict
 class GenrePolicy < ApplicationPolicy
   extend T::Sig
 
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Genre)) }
+  sig { returns(T.nilable(T.any(Genre::ActiveRecord_Relation, Genre))) }
   attr_reader :genre
 
   sig { params(user: T.nilable(User), genre: T.nilable(T.any(Genre::ActiveRecord_Relation, Genre))).void }
