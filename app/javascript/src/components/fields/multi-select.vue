@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label class="label" :for="inputId">{{ label }}</label>
+    <label v-if="label" class="label" :for="inputId">{{ label }}</label>
     <div class="control">
       <v-select
         multiple
@@ -29,7 +29,7 @@ export default {
   props: {
     label: {
       type: String,
-      required: true
+      required: false
     },
     value: {
       type: Array,

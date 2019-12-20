@@ -94,6 +94,7 @@ class GamePurchasesController < ApplicationController
     params.permit(
       :rating,
       :completion_status,
+      store_ids: [],
       ids: []
     )
   end
