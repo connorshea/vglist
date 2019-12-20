@@ -8,6 +8,7 @@
         @search="onSearch"
         :inputId="inputId"
         label="name"
+        :placeholder="placeholder"
         @change="onChange"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
@@ -38,6 +39,10 @@ export default {
     searchPathIdentifier: {
       type: String,
       required: true
+    },
+    placeholder: {
+      type: String,
+      required: false
     }
   },
   data: function() {
