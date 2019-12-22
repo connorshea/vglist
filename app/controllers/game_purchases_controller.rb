@@ -54,7 +54,7 @@ class GamePurchasesController < ApplicationController
     submittable_ids = bulk_game_purchase_params.dig(:ids)
     # Separate the store ids because we don't want to override them, we want
     # to add to the existing stores a game is owned on.
-    store_ids = bulk_game_purchase_params.dig(:store_ids)
+    store_ids = bulk_game_purchase_params.dig(:store_ids) || []
     # Exclude the ids and store ids from 'actual params', and then filter any
     # nil values to make sure we don't nullify the completion status or rating
     # when just trying to update stores.
