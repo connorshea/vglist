@@ -57,8 +57,12 @@ RSpec.describe "GamePurchases", type: :request do
 
   describe "POST bulk_update_game_purchases_path" do
     let(:user) { create(:confirmed_user) }
-    let(:game_purchase1) { create(:game_purchase, user: user) }
-    let(:game_purchase2) { create(:game_purchase, user: user) }
+    let(:game_purchase1) { create(:game_purchase, user: user, completion_status: :completed) }
+    let(:game_purchase2) { create(:game_purchase, user: user, completion_status: :completed) }
+    let(:game_purchase_with_store) { create(:game_purchase, user: user, stores: [store3]) }
+    let(:store1) { create(:store) }
+    let(:store2) { create(:store) }
+    let(:store3) { create(:store) }
 
     it "updates multiple game_purchases to have the same rating" do
       sign_in(user)
@@ -85,7 +89,33 @@ RSpec.describe "GamePurchases", type: :request do
       expect(game_purchase1.reload.completion_status).to eq('unplayed')
       expect(game_purchase2.reload.completion_status).to eq('unplayed')
     end
+
+    it "updates game_purchases to have the same rating but doesn't nullify completion status" do
+      sign_in(user)
+      post bulk_update_game_purchases_path(format: :json),
+        params: {
+          ids: [game_purchase1.id, game_purchase2.id],
+          rating: 100,
+          completion_status: nil
+        }
+      expect(game_purchase1.reload.rating).to eq(100)
+      expect(game_purchase2.reload.rating).to eq(100)
+      expect(game_purchase1.reload.completion_status).to eq('completed')
+      expect(game_purchase2.reload.completion_status).to eq('completed')
+    end
     # rubocop:enable RSpec/MultipleExpectations
+
+    it "updates game_purchases to have stores" do
+      sign_in(user)
+      post bulk_update_game_purchases_path(format: :json),
+        params: {
+          ids: [game_purchase1.id, game_purchase_with_store.id],
+          store_ids: [store1.id, store2.id]
+        }
+      expect(game_purchase1.reload.store_ids).to eq([store1.id, store2.id])
+      # Disregard order of elements.
+      expect(game_purchase_with_store.reload.store_ids).to contain_exactly(store1.id, store2.id, store3.id)
+    end
   end
 
   describe "PUT game_purchase_path" do
