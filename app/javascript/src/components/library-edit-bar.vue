@@ -13,6 +13,7 @@
       ></number-field>
       <static-single-select
         :placeholder="'Completion Status'"
+        :grandparent-class="'field mb-0 mr-5'"
         v-model="updateData.completion_status"
         :options="formattedCompletionStatuses"
       ></static-single-select>
