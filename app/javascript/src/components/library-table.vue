@@ -90,6 +90,7 @@
 import Rails from '@rails/ujs';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
+import VglistUtils from '../utils';
 
 export default {
   name: 'library-table',
@@ -304,11 +305,35 @@ export default {
       }
     },
     toggleColumn(index, event) {
-      // Set hidden to inverse of what it currently is
+      // Set hidden to the inverse of whatever it currently is.
       this.$set(this.columns[index], 'hidden', !this.columns[index].hidden);
+      let columnVisibility = {};
+      // Filter this down to only columns that can be toggled.
+      this.columns.filter(column => typeof column.hideable === 'undefined').forEach(column => {
+        columnVisibility[column.field] = !column.hidden
+      });
+      document.cookie = `columns=${JSON.stringify(columnVisibility)};`;
     },
     selectionChanged(params) {
       this.$emit('selectedGamePurchasesChanged', params.selectedRows);
+    }
+  },
+  mounted: function() {
+    // When the component is mounted, set the column visibility values
+    // based on the columns cookie.
+    // Don't do anything if the columns cookie isn't defined.
+    if (typeof VglistUtils.getCookie('columns') !== 'undefined') {
+      // Update the visible columns to match the defined cookie value.
+      let columnCookies = JSON.parse(VglistUtils.getCookie('columns'));
+      Object.entries(columnCookies).forEach(([key, value]) => {
+        let index = this.$data.columns.findIndex(col => col.field === key);
+        // Flip the value since the visibility cookie is stored as "whether
+        // it's visible" but the hidden value is stored as "whether it's
+        // hidden".
+        if (typeof index !== 'undefined') {
+          this.$data.columns[index].hidden = !value;
+        }
+      });
     }
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label class="label" :for="inputId">{{ label }}</label>
+    <label v-if="label" class="label" :for="inputId">{{ label }}</label>
     <div class="control">
       <v-select
         multiple
@@ -8,6 +8,7 @@
         @search="onSearch"
         :inputId="inputId"
         label="name"
+        :placeholder="placeholder"
         @change="onChange"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
@@ -29,7 +30,7 @@ export default {
   props: {
     label: {
       type: String,
-      required: true
+      required: false
     },
     value: {
       type: Array,
@@ -38,6 +39,10 @@ export default {
     searchPathIdentifier: {
       type: String,
       required: true
+    },
+    placeholder: {
+      type: String,
+      required: false
     }
   },
   data: function() {

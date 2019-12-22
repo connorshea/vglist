@@ -13,9 +13,15 @@
       ></number-field>
       <static-single-select
         :placeholder="'Completion Status'"
+        :grandparent-class="'field mb-0 mr-5'"
         v-model="updateData.completion_status"
         :options="formattedCompletionStatuses"
       ></static-single-select>
+      <multi-select
+        :placeholder="'Stores'"
+        v-model="updateData.stores"
+        :search-path-identifier="'stores'"
+      ></multi-select>
     </div>
     <div class="level-right">
       <button
@@ -36,12 +42,14 @@ import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
+import MultiSelect from './fields/multi-select.vue';
 
 export default {
   name: 'library-edit-bar',
   components: {
     NumberField,
-    StaticSingleSelect
+    StaticSingleSelect,
+    MultiSelect
   },
   props: {
     gamePurchases: {
@@ -54,7 +62,8 @@ export default {
       updateData: {
         ids: [],
         completion_status: null,
-        rating: null
+        rating: null,
+        stores: []
       },
       completionStatuses: {
         unplayed: 'Unplayed',
@@ -79,6 +88,10 @@ export default {
         delete this.updateData['rating'];
       }
 
+      if (this.updateData['stores'] === []) {
+        delete this.updateData['stores'];
+      }
+
       // Clone the object before we mess with the values.
       // This prevents the values in the edit bar from changing when these
       // values are changed.
@@ -86,6 +99,11 @@ export default {
 
       if (updateData['completion_status'] !== null) {
         updateData['completion_status'] = updateData['completion_status']['value'];
+      }
+
+      if (updateData['stores'] !== []) {
+        updateData['store_ids'] = updateData['stores'].map(store => store.id);
+        delete updateData['stores'];
       }
 
       fetch('/game_purchases/bulk_update.json', {
@@ -119,13 +137,14 @@ export default {
 
       let returnBool = false;
 
-      // Check if either rating or completion status have values.
+      // Check if rating, completion status, or stores have values.
       // If they do, return true. Otherwise, return false.
-      ['rating', 'completion_status'].forEach(attribute => {
+      ['rating', 'completion_status', 'stores'].forEach(attribute => {
         if (
           typeof this.updateData[attribute] !== 'undefined' &&
           this.updateData[attribute] !== '' &&
-          this.updateData[attribute] !== null
+          this.updateData[attribute] !== null &&
+          this.updateData[attribute].length !== 0
         ) {
           returnBool = true;
         }
