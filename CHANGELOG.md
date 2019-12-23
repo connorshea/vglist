@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2019.12.22
+### Added
+- Add Stores to the Library Edit Bar. ([#917])
+
+### Changed
+- Improve the design of the user registration and login pages. ([#918])
+
+## v2019.12.15
+### Changed
+- Improve Rake tasks for importing data from Wikidata, can now update existing games with new information more easily. ([#897])
+
 ## v2019.12.13
 ### Added
 - Add support for long-lasting API tokens. ([#884])
@@ -30,7 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.11.1
 ### Changed
-- Removed descriptions from games, genres, platforms, and companies. They were essentially unused and just invited spam/trolling. ([#803])
+- Remove descriptions from games, genres, platforms, and companies. They were essentially unused and just invited spam/trolling. ([#803])
 
 ## v2019.10.19
 ### Changed
@@ -92,7 +103,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add a basic system for following users. ([#656])
 
 ### Changed
-- Improved error handling when adding games to your library. ([#652])
+- Improve error handling when adding games to your library. ([#652])
 
 ### Fixed
 - Fix multiselect dropdowns not working. ([#654])
@@ -406,7 +417,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2019.1.27
 ### Added
-- Improved design and added dropdowns. ([#100])
+- Improve design and add dropdowns. ([#100])
 - Add ActiveStorage, user avatars, and user avatar uploading. ([#104])
 
 ### Fixed
@@ -628,3 +639,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#860]: https://github.com/connorshea/VideoGameList/pull/860
 [#861]: https://github.com/connorshea/VideoGameList/pull/861
 [#884]: https://github.com/connorshea/VideoGameList/pull/884
+[#897]: https://github.com/connorshea/VideoGameList/pull/897
+[#917]: https://github.com/connorshea/VideoGameList/pull/917
+[#918]: https://github.com/connorshea/VideoGameList/pull/918
