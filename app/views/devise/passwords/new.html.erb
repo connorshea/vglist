@@ -1,6 +1,6 @@
 <% content_for :title, "Forgot your password?" %>
 
-<div class="sign-in-container m-auto card p-30">
+<div class="sign-in-container m-auto card p-30 p-5-mobile">
   <h1 class="title has-text-centered">Forgot your password?</h1>
 
   <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
