@@ -622,3 +622,12 @@ nav.navbar {
 .user-select-all {
   user-select: all;
 }
+
+// Limit the width of the sign-in container.
+.sign-in-container {
+  max-width: 500px;
+
+  @include touch {
+    box-shadow: none;
+  }
+}
