@@ -1,14 +1,16 @@
-<%- if (controller_name != 'sessions') || (devise_mapping.registerable? && controller_name != 'registrations') %>
+<% @display_sign_in = controller_name != 'sessions' %>
+<% @display_sign_up = (devise_mapping.registerable? && controller_name != 'registrations') %>
+
+<%- if @display_sign_in || @display_sign_up %>
   <p class="mt-5 mb-5 has-text-centered">
     <%- if controller_name != 'sessions' %>
       <%= link_to "Sign in", new_session_path(resource_name) %>
     <% end -%>
 
-  <%- if controller_name != 'sessions' && devise_mapping.registerable? && controller_name != 'registrations' %>
-  |
-  <% end -%> 
+  <%# Divider for 'Sign in' and 'Sign up' links. %>
+  <%- if @display_sign_in && @display_sign_up %>•<% end -%>
 
-  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+  <%- if @display_sign_up %>
     <%= link_to "Sign up", new_registration_path(resource_name) %>
   <% end -%>
 <% end -%>
