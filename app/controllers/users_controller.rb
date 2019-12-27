@@ -123,7 +123,7 @@ class UsersController < ApplicationController
 
     user_games_count_diff = @user.games.count - user_games_count_before
 
-    # Limit to the first 50 cookies because of cookie size limits.
+    # Limit to the first 50 games because of cookie size limits.
     # Sample 50 at random to make sure the same games aren't always
     # displayed every time the user runs an import.
     cookies[:unmatched_games] = JSON.generate(unmatched_games.sample(50))
