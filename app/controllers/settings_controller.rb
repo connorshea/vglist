@@ -22,10 +22,12 @@ class SettingsController < ApplicationController
     @steam_account = ExternalAccount.find_by(user_id: current_user&.id, account_type: :steam)
     return if @steam_account.nil?
 
-    @unmatched_games = params[:unmatched_games]
+    @unmatched_games = cookies[:unmatched_games].nil? || cookies[:unmatched_games].blank? ? nil : JSON.parse(cookies[:unmatched_games])
 
     regex = %r{https://steamcommunity\.com/id/(.*)/}
     @steam_username = @steam_account[:steam_profile_url].match(regex)[1]
+    # nilify the cookie to make sure it doesn't display more than once.
+    cookies[:unmatched_games] = nil
   end
 
   # Export settings

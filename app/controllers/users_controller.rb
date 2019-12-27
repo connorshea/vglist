@@ -72,6 +72,8 @@ class UsersController < ApplicationController
     @user = User.friendly.find(params[:id])
     authorize @user
 
+    user_games_count_before = @user.games.count
+
     steam_account = ExternalAccount.find_by(user_id: @user.id, account_type: :steam)
     raise if steam_account.nil?
 
@@ -117,14 +119,19 @@ class UsersController < ApplicationController
 
     unmatched_games_count = unmatched_games.count
 
-    # Limit the results to a max of 50 games to avoid returning a URL that's too long for Puma to handle.
-    unmatched_games = unmatched_games[0...50]
     T.must(unmatched_games).map! { |game| { name: game['name'], steam_id: game['appid'] } }
+
+    user_games_count_diff = @user.games.count - user_games_count_before
+
+    # Limit to the first 50 cookies because of cookie size limits.
+    # Sample 50 at random to make sure the same games aren't always
+    # displayed every time the user runs an import.
+    cookies[:unmatched_games] = JSON.generate(unmatched_games.sample(50))
 
     respond_to do |format|
       format.html do
-        flash[:success] = "Added #{matched_games_count} games. #{unmatched_games_count} games weren't found in the vglist database."
-        redirect_to settings_import_path(unmatched_games: unmatched_games)
+        flash[:success] = "Added #{user_games_count_diff} games. #{unmatched_games_count} games weren't found in the vglist database."
+        redirect_to settings_import_path
       end
     end
   end
