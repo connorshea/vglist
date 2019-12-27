@@ -304,7 +304,7 @@ GEM
     ruby-graphviz (1.2.4)
     ruby-progressbar (1.10.1)
     rubyzip (2.0.0)
-    selenium-webdriver (3.142.6)
+    selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     sentry-raven (2.13.0)
