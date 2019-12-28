@@ -1,0 +1,3 @@
+# Mark all sorbet files as vendored files, to prevent GitHub from tracking them
+# for language statistics.
+sorbet/* linguist-vendored
