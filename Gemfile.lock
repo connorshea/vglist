@@ -88,7 +88,7 @@ GEM
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     builder (3.2.4)
-    bullet (6.0.2)
+    bullet (6.1.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.0.1)
@@ -391,7 +391,7 @@ DEPENDENCIES
   better_errors (~> 2.5)
   binding_of_caller (~> 0.8)
   bootsnap (>= 1.1.0)
-  bullet (~> 6.0)
+  bullet (~> 6.1)
   byebug
   capybara (>= 2.15)
   database_cleaner (~> 1.7)
