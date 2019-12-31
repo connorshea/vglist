@@ -8489,6 +8489,11 @@ module GamePurchaseStore::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
+class GamePurchasesController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 module GamesHelper
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -12379,6 +12384,8 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
+Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
+
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -12408,13 +12415,9 @@ end
 class Net::HTTPGatewayTimeout
 end
 
-class Net::HTTPInformation
-end
+Net::HTTPInformation::EXCEPTION_TYPE = Net::HTTPError
 
-Net::HTTPInformationCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPInformation
-end
+Net::HTTPInformationCode = Net::HTTPInformation
 
 class Net::HTTPLoopDetected
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12483,15 +12486,7 @@ Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
-class Net::HTTP
-end
-
-Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
-
-Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
-
-class Net::HTTP
-end
+Net::HTTPSession = Net::HTTP
 
 Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
@@ -13467,15 +13462,9 @@ class PG::BinaryDecoder::Boolean
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::BinaryDecoder::Boolean
-end
-
 class PG::BinaryDecoder::Bytea
   include ::PG::Coder::BinaryFormatting
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::BinaryDecoder::Bytea
 end
 
 class PG::BinaryDecoder::Float
@@ -13483,15 +13472,9 @@ class PG::BinaryDecoder::Float
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::BinaryDecoder::Float
-end
-
 class PG::BinaryDecoder::Integer
   include ::PG::Coder::BinaryFormatting
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::BinaryDecoder::Integer
 end
 
 class PG::BinaryDecoder::String
@@ -13499,24 +13482,9 @@ class PG::BinaryDecoder::String
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::BinaryDecoder::String
-end
-
 class PG::BinaryDecoder::Timestamp
   include ::PG::Coder::BinaryFormatting
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::BinaryDecoder::Timestamp
-end
-
-class PG::BinaryDecoder::TimestampLocal
-end
-
-class PG::BinaryDecoder::TimestampUtc
-end
-
-class PG::BinaryDecoder::TimestampUtcToLocal
 end
 
 class PG::BinaryDecoder::ToBase64
@@ -13524,18 +13492,9 @@ class PG::BinaryDecoder::ToBase64
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::BinaryDecoder::ToBase64
-end
-
-module PG::BinaryEncoder
-end
-
 class PG::BinaryEncoder::Boolean
   include ::PG::Coder::BinaryFormatting
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::BinaryEncoder::Boolean
 end
 
 class PG::BinaryEncoder::Bytea
@@ -13543,15 +13502,9 @@ class PG::BinaryEncoder::Bytea
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::BinaryEncoder::Bytea
-end
-
 class PG::BinaryEncoder::FromBase64
   include ::PG::Coder::BinaryFormatting
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::BinaryEncoder::FromBase64
 end
 
 class PG::BinaryEncoder::Int2
@@ -13559,15 +13512,9 @@ class PG::BinaryEncoder::Int2
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::BinaryEncoder::Int2
-end
-
 class PG::BinaryEncoder::Int4
   include ::PG::Coder::BinaryFormatting
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::BinaryEncoder::Int4
 end
 
 class PG::BinaryEncoder::Int8
@@ -13575,18 +13522,9 @@ class PG::BinaryEncoder::Int8
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::BinaryEncoder::Int8
-end
-
 class PG::BinaryEncoder::String
   include ::PG::Coder::BinaryFormatting
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::BinaryEncoder::String
-end
-
-module PG::BinaryEncoder
 end
 
 class PG::BranchTransactionAlreadyActive
@@ -13751,6 +13689,7 @@ module PG::Constants
   PG_DIAG_MESSAGE_PRIMARY = ::T.let(nil, ::T.untyped)
   PG_DIAG_SCHEMA_NAME = ::T.let(nil, ::T.untyped)
   PG_DIAG_SEVERITY = ::T.let(nil, ::T.untyped)
+  PG_DIAG_SEVERITY_NONLOCALIZED = ::T.let(nil, ::T.untyped)
   PG_DIAG_SOURCE_FILE = ::T.let(nil, ::T.untyped)
   PG_DIAG_SOURCE_FUNCTION = ::T.let(nil, ::T.untyped)
   PG_DIAG_SOURCE_LINE = ::T.let(nil, ::T.untyped)
@@ -13758,12 +13697,16 @@ module PG::Constants
   PG_DIAG_STATEMENT_POSITION = ::T.let(nil, ::T.untyped)
   PG_DIAG_TABLE_NAME = ::T.let(nil, ::T.untyped)
   PQERRORS_DEFAULT = ::T.let(nil, ::T.untyped)
+  PQERRORS_SQLSTATE = ::T.let(nil, ::T.untyped)
   PQERRORS_TERSE = ::T.let(nil, ::T.untyped)
   PQERRORS_VERBOSE = ::T.let(nil, ::T.untyped)
   PQPING_NO_ATTEMPT = ::T.let(nil, ::T.untyped)
   PQPING_NO_RESPONSE = ::T.let(nil, ::T.untyped)
   PQPING_OK = ::T.let(nil, ::T.untyped)
   PQPING_REJECT = ::T.let(nil, ::T.untyped)
+  PQSHOW_CONTEXT_ALWAYS = ::T.let(nil, ::T.untyped)
+  PQSHOW_CONTEXT_ERRORS = ::T.let(nil, ::T.untyped)
+  PQSHOW_CONTEXT_NEVER = ::T.let(nil, ::T.untyped)
   PQTRANS_ACTIVE = ::T.let(nil, ::T.untyped)
   PQTRANS_IDLE = ::T.let(nil, ::T.untyped)
   PQTRANS_INERROR = ::T.let(nil, ::T.untyped)
@@ -13890,6 +13833,12 @@ end
 class PG::DuplicateFunction
 end
 
+class PG::DuplicateJsonObjectKeyValue
+end
+
+class PG::DuplicateJsonObjectKeyValue
+end
+
 class PG::DuplicateObject
 end
 
@@ -14424,6 +14373,12 @@ end
 class PG::InvalidIndicatorParameterValue
 end
 
+class PG::InvalidJsonText
+end
+
+class PG::InvalidJsonText
+end
+
 class PG::InvalidName
 end
 
@@ -14506,6 +14461,12 @@ class PG::InvalidSchemaName
 end
 
 class PG::InvalidSchemaName
+end
+
+class PG::InvalidSqlJsonSubscript
+end
+
+class PG::InvalidSqlJsonSubscript
 end
 
 class PG::InvalidSqlStatementName
@@ -14622,6 +14583,12 @@ end
 class PG::LockNotAvailable
 end
 
+class PG::MoreThanOneSqlJsonItem
+end
+
+class PG::MoreThanOneSqlJsonItem
+end
+
 class PG::MostSpecificTypeMismatch
 end
 
@@ -14656,6 +14623,24 @@ class PG::NoResultError
 end
 
 class PG::NoResultError
+end
+
+class PG::NoSqlJsonItem
+end
+
+class PG::NoSqlJsonItem
+end
+
+class PG::NonNumericSqlJsonItem
+end
+
+class PG::NonNumericSqlJsonItem
+end
+
+class PG::NonUniqueKeysInAJsonObject
+end
+
+class PG::NonUniqueKeysInAJsonObject
 end
 
 class PG::NonstandardUseOfEscapeCharacter
@@ -14752,6 +14737,18 @@ class PG::ReadOnlySqlTransaction
 end
 
 class PG::ReadOnlySqlTransaction
+end
+
+class PG::RecordDecoder
+end
+
+class PG::RecordDecoder
+end
+
+class PG::RecordEncoder
+end
+
+class PG::RecordEncoder
 end
 
 class PG::ReservedName
@@ -14843,10 +14840,46 @@ end
 class PG::SimpleEncoder
 end
 
+class PG::SingletonSqlJsonItemRequired
+end
+
+class PG::SingletonSqlJsonItemRequired
+end
+
 class PG::SnapshotTooOld
 end
 
 class PG::SnapshotTooOld
+end
+
+class PG::SqlJsonArrayNotFound
+end
+
+class PG::SqlJsonArrayNotFound
+end
+
+class PG::SqlJsonMemberNotFound
+end
+
+class PG::SqlJsonMemberNotFound
+end
+
+class PG::SqlJsonNumberNotFound
+end
+
+class PG::SqlJsonNumberNotFound
+end
+
+class PG::SqlJsonObjectNotFound
+end
+
+class PG::SqlJsonObjectNotFound
+end
+
+class PG::SqlJsonScalarRequired
+end
+
+class PG::SqlJsonScalarRequired
 end
 
 class PG::SqlRoutineException
@@ -14949,67 +14982,39 @@ class PG::TextDecoder::Array
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextDecoder::Array
-end
-
 class PG::TextDecoder::Boolean
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextDecoder::Boolean
 end
 
 class PG::TextDecoder::Bytea
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextDecoder::Bytea
-end
-
 class PG::TextDecoder::CopyRow
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextDecoder::CopyRow
 end
 
 class PG::TextDecoder::Date
-  ISO_DATE = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextDecoder::Float
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextDecoder::Float
-end
-
 class PG::TextDecoder::FromBase64
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextDecoder::FromBase64
 end
 
 class PG::TextDecoder::Identifier
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextDecoder::Identifier
-end
-
 class PG::TextDecoder::Inet
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextDecoder::Inet
-end
-
 class PG::TextDecoder::Integer
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextDecoder::Integer
 end
 
 class PG::TextDecoder::JSON
@@ -15019,30 +15024,16 @@ class PG::TextDecoder::Numeric
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextDecoder::Numeric
+class PG::TextDecoder::Record
+  CFUNC = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextDecoder::String
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextDecoder::String
-end
-
 class PG::TextDecoder::Timestamp
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextDecoder::Timestamp
-end
-
-class PG::TextDecoder::TimestampLocal
-end
-
-class PG::TextDecoder::TimestampUtc
-end
-
-class PG::TextDecoder::TimestampUtcToLocal
 end
 
 PG::TextDecoder::TimestampWithTimeZone = PG::TextDecoder::Timestamp
@@ -15053,46 +15044,27 @@ class PG::TextEncoder::Array
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextEncoder::Array
-end
-
 class PG::TextEncoder::Boolean
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextEncoder::Boolean
 end
 
 class PG::TextEncoder::Bytea
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextEncoder::Bytea
-end
-
 class PG::TextEncoder::CopyRow
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextEncoder::CopyRow
 end
 
 class PG::TextEncoder::Date
-  STRFTIME_ISO_DATE = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextEncoder::Float
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextEncoder::Float
-end
-
 class PG::TextEncoder::Identifier
   CFUNC = ::T.let(nil, ::T.untyped)
-end
-
-class PG::TextEncoder::Identifier
 end
 
 class PG::TextEncoder::Inet
@@ -15102,48 +15074,38 @@ class PG::TextEncoder::Integer
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextEncoder::Integer
-end
-
 class PG::TextEncoder::JSON
 end
 
 class PG::TextEncoder::Numeric
+  CFUNC = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextEncoder::QuotedLiteral
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextEncoder::QuotedLiteral
-end
-
-class PG::TextEncoder::String
+class PG::TextEncoder::Record
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextEncoder::String
+  CFUNC = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextEncoder::TimestampUtc
-  STRFTIME_ISO_DATETIME_WITHOUT_TIMEZONE_UTC = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextEncoder::TimestampWithTimeZone
-  STRFTIME_ISO_DATETIME_WITH_TIMEZONE = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextEncoder::TimestampWithoutTimeZone
-  STRFTIME_ISO_DATETIME_WITHOUT_TIMEZONE = ::T.let(nil, ::T.untyped)
 end
 
 class PG::TextEncoder::ToBase64
   CFUNC = ::T.let(nil, ::T.untyped)
 end
 
-class PG::TextEncoder::ToBase64
-end
-
 class PG::TooManyArguments
 end
 
@@ -15160,6 +15122,18 @@ class PG::TooManyConnections
 end
 
 class PG::TooManyConnections
+end
+
+class PG::TooManyJsonArrayElements
+end
+
+class PG::TooManyJsonArrayElements
+end
+
+class PG::TooManyJsonObjectMembers
+end
+
+class PG::TooManyJsonObjectMembers
 end
 
 class PG::TooManyRows
@@ -15276,6 +15250,12 @@ end
 class PG::UniqueViolation
 end
 
+class PG::UnsafeNewEnumValueUsage
+end
+
+class PG::UnsafeNewEnumValueUsage
+end
+
 class PG::UnterminatedCString
 end
 
@@ -15350,10 +15330,13 @@ class Parser::Lexer
   KEYWORDS = ::T.let(nil, ::T.untyped)
   KEYWORDS_BEGIN = ::T.let(nil, ::T.untyped)
   LEX_STATES = ::T.let(nil, ::T.untyped)
-  NUMPARAM_MAX = ::T.let(nil, ::T.untyped)
   PUNCTUATION = ::T.let(nil, ::T.untyped)
   PUNCTUATION_BEGIN = ::T.let(nil, ::T.untyped)
   REGEXP_META_CHARACTERS = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Lexer::Dedenter
+  TAB_WIDTH = ::T.let(nil, ::T.untyped)
 end
 
 class Parser::Lexer::Literal
@@ -15385,6 +15368,10 @@ class Parser::Source::TreeRewriter
   ACTIONS = ::T.let(nil, ::T.untyped)
   DEPRECATION_WARNING = ::T.let(nil, ::T.untyped)
   POLICY_TO_LEVEL = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::StaticEnvironment
+  FORWARD_ARGS = ::T.let(nil, ::T.untyped)
 end
 
 class Pathname
@@ -19202,8 +19189,6 @@ class RSpec::Support::Differ
 end
 
 class RSpec::Support::EncodedString
-  ENCODE_NO_CONVERTER = ::T.let(nil, ::T.untyped)
-  ENCODE_UNCONVERTABLE_BYTES = ::T.let(nil, ::T.untyped)
   REPLACE = ::T.let(nil, ::T.untyped)
   US_ASCII = ::T.let(nil, ::T.untyped)
   UTF_8 = ::T.let(nil, ::T.untyped)
@@ -28286,10 +28271,6 @@ end
 
 module TZInfo::RubyCoreSupport
   HALF_DAYS_IN_DAY = ::T.let(nil, ::T.untyped)
-end
-
-class TZInfo::RubyDataSource
-  REQUIRE_PATH = ::T.let(nil, ::T.untyped)
 end
 
 class TZInfo::ZoneinfoDataSource

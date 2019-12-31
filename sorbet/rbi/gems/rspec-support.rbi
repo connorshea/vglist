@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-support/all/rspec-support.rbi
 #
-# rspec-support-3.9.0
+# rspec-support-3.9.2
 module RSpec
   extend RSpec::Support::Warnings
 end
@@ -77,8 +77,10 @@ module RSpec::Support::RubyFeatures
   def self.ripper_supported?; end
   def self.supports_exception_cause?; end
   def self.supports_rebinding_module_methods?; end
+  def self.supports_taint?; end
   def supports_exception_cause?; end
   def supports_rebinding_module_methods?; end
+  def supports_taint?; end
 end
 module RSpec::Support::AllExceptionsExceptOnesWeMustNotRescue
   def self.===(exception); end

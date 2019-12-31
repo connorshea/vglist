@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
-# capybara-3.29.0
+# capybara-3.30.0
 module Capybara
   def self.HTML(html); end
   def self.add_selector(name, **options, &block); end
@@ -280,7 +280,7 @@ class Capybara::Helpers::Timer
   def stalled?; end
 end
 module Capybara::SessionMatchers
-  def _verify_current_path(path, options); end
+  def _verify_current_path(path, **options); end
   def assert_current_path(path, **options); end
   def assert_no_current_path(path, **options); end
   def has_current_path?(path, **options); end
@@ -462,12 +462,14 @@ class Capybara::Server::Middleware
   def clear_error; end
   def error; end
   def initialize(app, server_errors, extra_middleware = nil); end
+  def pending_requests; end
   def pending_requests?; end
 end
 class Capybara::Server::Middleware::Counter
-  def decrement; end
-  def increment; end
+  def decrement(uri); end
+  def increment(uri); end
   def initialize; end
+  def positive?; end
   def value; end
 end
 class Capybara::Server::AnimationDisabler
@@ -557,13 +559,13 @@ class Capybara::Selector::FilterSet
   def describe(what = nil, &block); end
   def description(node_filters: nil, expression_filters: nil, **options); end
   def descriptions; end
-  def expression_filter(name, *types_and_options, &block); end
+  def expression_filter(name, *types, **options, &block); end
   def expression_filter_descriptions; end
   def expression_filters; end
-  def filter(names, *types_and_options, &block); end
+  def filter(names, *types, **options, &block); end
   def import(name, filters = nil); end
   def initialize(name, &block); end
-  def node_filter(names, *types_and_options, &block); end
+  def node_filter(names, *types, **options, &block); end
   def node_filter_descriptions; end
   def node_filters; end
   def options_with_defaults(options); end
@@ -733,7 +735,7 @@ class Capybara::Queries::SelectorQuery < Capybara::Queries::BaseQuery
   def find_nodes_by_selector_format(node, exact); end
   def find_selector(locator); end
   def first_try?; end
-  def initialize(*args, session_options:, enable_aria_label: nil, test_id: nil, selector_format: nil, **options, &filter_block); end
+  def initialize(*args, session_options:, enable_aria_label: nil, test_id: nil, selector_format: nil, order: nil, **options, &filter_block); end
   def label; end
   def locator; end
   def match; end
@@ -758,6 +760,7 @@ class Capybara::Queries::SelectorQuery < Capybara::Queries::BaseQuery
   def node_filters; end
   def normalize_ws; end
   def options; end
+  def ordered_results(results); end
   def position_cache(key); end
   def rect_cache(key); end
   def resolve_for(node, exact = nil); end
@@ -871,7 +874,7 @@ module Capybara::Node::Matchers
   def _verify_match_result(query_args, optional_filter_block); end
   def _verify_multiple(*args, wait: nil, **options); end
   def _verify_selector_result(query_args, optional_filter_block, query_type = nil); end
-  def _verify_text(query_args); end
+  def _verify_text(type = nil, expected_text, **query_options); end
   def assert_all_of_selectors(*args, **options, &optional_filter_block); end
   def assert_ancestor(*args, &optional_filter_block); end
   def assert_any_of_selectors(*args, wait: nil, **options, &optional_filter_block); end
@@ -1038,7 +1041,7 @@ class Capybara::Node::Document < Capybara::Node::Base
   def evaluate_script(*args); end
   def execute_script(*args); end
   def inspect; end
-  def scroll_to(*args); end
+  def scroll_to(*args, **options); end
   def text(type = nil, normalize_ws: nil); end
   def title; end
   include Capybara::Node::DocumentMatchers
@@ -1378,7 +1381,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   def chromedriver_fixed_actions_key_state?; end
   def chromedriver_supports_displayed_endpoint?; end
   def chromedriver_version; end
-  def click(*arg0); end
+  def click(*arg0, **arg1); end
   def disabled?; end
   def drop(*args); end
   def file_errors; end

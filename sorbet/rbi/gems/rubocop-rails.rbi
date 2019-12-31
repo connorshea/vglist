@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.4.0
+# rubocop-rails-2.4.1
 module RuboCop
 end
 module RuboCop::Rails
@@ -111,6 +111,7 @@ end
 class RuboCop::Cop::Rails::BulkChangeTable < RuboCop::Cop::Cop
   def add_offense_for_alter_methods(node); end
   def add_offense_for_change_table(node); end
+  def call_to_combinable_alter_method?(child_node); end
   def combinable_alter_methods; end
   def combinable_transformations; end
   def database; end
@@ -185,6 +186,7 @@ class RuboCop::Cop::Rails::EnumHash < RuboCop::Cop::Cop
   def enum?(node = nil); end
   def enum_name(key); end
   def on_send(node); end
+  def source(elem); end
 end
 class RuboCop::Cop::Rails::EnumUniqueness < RuboCop::Cop::Cop
   def enum?(node = nil); end

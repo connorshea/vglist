@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.6.5.0
+# parser-2.7.0.1
 module Parser
 end
 module Parser::Deprecation
@@ -30,6 +30,8 @@ class Parser::AST::Processor < AST::Processor
   def on_args(node); end
   def on_argument(node); end
   def on_array(node); end
+  def on_array_pattern(node); end
+  def on_array_pattern_with_tail(node); end
   def on_back_ref(node); end
   def on_begin(node); end
   def on_block(node); end
@@ -38,9 +40,11 @@ class Parser::AST::Processor < AST::Processor
   def on_blockarg_expr(node); end
   def on_break(node); end
   def on_case(node); end
+  def on_case_match(node); end
   def on_casgn(node); end
   def on_class(node); end
   def on_const(node); end
+  def on_const_pattern(node); end
   def on_csend(node); end
   def on_cvar(node); end
   def on_cvasgn(node); end
@@ -56,8 +60,12 @@ class Parser::AST::Processor < AST::Processor
   def on_gvar(node); end
   def on_gvasgn(node); end
   def on_hash(node); end
+  def on_hash_pattern(node); end
   def on_if(node); end
+  def on_if_guard(node); end
   def on_iflipflop(node); end
+  def on_in_match(node); end
+  def on_in_pattern(node); end
   def on_index(node); end
   def on_indexasgn(node); end
   def on_irange(node); end
@@ -72,7 +80,11 @@ class Parser::AST::Processor < AST::Processor
   def on_lvar(node); end
   def on_lvasgn(node); end
   def on_masgn(node); end
+  def on_match_alt(node); end
+  def on_match_as(node); end
   def on_match_current_line(node); end
+  def on_match_rest(node); end
+  def on_match_var(node); end
   def on_match_with_lvasgn(node); end
   def on_mlhs(node); end
   def on_module(node); end
@@ -85,6 +97,7 @@ class Parser::AST::Processor < AST::Processor
   def on_or(node); end
   def on_or_asgn(node); end
   def on_pair(node); end
+  def on_pin(node); end
   def on_postexe(node); end
   def on_preexe(node); end
   def on_procarg0(node); end
@@ -102,6 +115,7 @@ class Parser::AST::Processor < AST::Processor
   def on_splat(node); end
   def on_super(node); end
   def on_undef(node); end
+  def on_unless_guard(node); end
   def on_until(node); end
   def on_until_post(node); end
   def on_var(node); end
@@ -436,7 +450,9 @@ class Parser::Diagnostic::Engine
 end
 class Parser::StaticEnvironment
   def declare(name); end
+  def declare_forward_args; end
   def declared?(name); end
+  def declared_forward_args?; end
   def extend_dynamic; end
   def extend_static; end
   def initialize; end
@@ -448,6 +464,8 @@ class Parser::Lexer
   def arg_or_cmdarg(cmd_state); end
   def cmdarg; end
   def cmdarg=(arg0); end
+  def command_start; end
+  def command_start=(arg0); end
   def comments; end
   def comments=(arg0); end
   def cond; end
@@ -471,8 +489,6 @@ class Parser::Lexer
   def in_kwarg=(arg0); end
   def initialize(version); end
   def literal; end
-  def max_numparam; end
-  def max_numparam_stack; end
   def next_state_for_literal(literal); end
   def pop_cmdarg; end
   def pop_cond; end
@@ -611,16 +627,6 @@ class Parser::Lexer::Dedenter
   def initialize(dedent_level); end
   def interrupt; end
 end
-class Parser::Lexer::MaxNumparamStack
-  def can_have_numparams?; end
-  def cant_have_numparams!; end
-  def initialize; end
-  def pop; end
-  def push; end
-  def register(numparam); end
-  def set(value); end
-  def top; end
-end
 class Parser::Builders::Default
   def __ENCODING__(__ENCODING__t); end
   def __FILE__(__FILE__t); end
@@ -633,6 +639,7 @@ class Parser::Builders::Default
   def arg_prefix_map(op_t, name_t = nil); end
   def args(begin_t, args, end_t, check_args = nil); end
   def array(begin_t, elements, end_t); end
+  def array_pattern(lbrack_t, elements, rbrack_t); end
   def assign(lhs, eql_t, rhs); end
   def assignable(node); end
   def associate(begin_t, pairs, end_t); end
@@ -652,10 +659,15 @@ class Parser::Builders::Default
   def call_method(receiver, dot_t, selector_t, lparen_t = nil, args = nil, rparen_t = nil); end
   def call_type_for_dot(dot_t); end
   def case(case_t, expr, when_bodies, else_t, else_body, end_t); end
+  def case_match(case_t, expr, in_bodies, else_t, else_body, end_t); end
   def character(char_t); end
+  def check_assignment_to_numparam(node); end
   def check_condition(cond); end
   def check_duplicate_arg(this_arg, map = nil); end
   def check_duplicate_args(args, map = nil); end
+  def check_duplicate_pattern_key(name, loc); end
+  def check_duplicate_pattern_variable(name, loc); end
+  def check_lvar_name(name, loc); end
   def collapse_string_parts?(parts); end
   def collection_map(begin_t, parts, end_t); end
   def complex(complex_t); end
@@ -667,6 +679,7 @@ class Parser::Builders::Default
   def const_fetch(scope, t_colon2, name_t); end
   def const_global(t_colon3, name_t); end
   def const_op_assignable(node); end
+  def const_pattern(const, ldelim_t, pattern, rdelim_t); end
   def constant_map(scope, colon2_t, name_t); end
   def cvar(token); end
   def dedent_string(node, dedent_level); end
@@ -686,8 +699,15 @@ class Parser::Builders::Default
   def float(float_t); end
   def for(for_t, iterator, in_t, iteratee, do_t, body, end_t); end
   def for_map(keyword_t, in_t, begin_t, end_t); end
+  def forward_args(begin_t, dots_t, end_t); end
+  def forwarded_args(dots_t); end
+  def guard_map(keyword_t, guard_body_e); end
   def gvar(token); end
+  def hash_pattern(lbrace_t, kwargs, rbrace_t); end
   def ident(token); end
+  def if_guard(if_t, if_body); end
+  def in_match(lhs, in_t, rhs); end
+  def in_pattern(in_t, pattern, guard, then_t, body); end
   def index(receiver, lbrack_t, indexes, rbrack_t); end
   def index_asgn(receiver, lbrack_t, indexes, rbrack_t); end
   def index_map(receiver_e, lbrack_t, rbrack_t); end
@@ -708,8 +728,17 @@ class Parser::Builders::Default
   def logical_op(type, lhs, op_t, rhs); end
   def loop(type, keyword_t, cond, do_t, body, end_t); end
   def loop_mod(type, body, keyword_t, cond); end
+  def match_alt(left, pipe_t, right); end
+  def match_as(value, assoc_t, as); end
+  def match_hash_var(name_t); end
+  def match_hash_var_from_str(begin_t, strings, end_t); end
+  def match_label(label_type, label); end
+  def match_nil_pattern(dstar_t, nil_t); end
   def match_op(receiver, match_t, arg); end
-  def method_ref(receiver, dot_t, selector_t); end
+  def match_pair(label_type, label, value); end
+  def match_rest(star_t, name_t = nil); end
+  def match_var(name_t); end
+  def match_with_trailing_comma(match); end
   def module_definition_map(keyword_t, name_e, operator_t, end_t); end
   def multi_assign(lhs, eql_t, rhs); end
   def multi_lhs(begin_t, items, end_t); end
@@ -720,7 +749,6 @@ class Parser::Builders::Default
   def nth_ref(token); end
   def numargs(max_numparam); end
   def numeric(kind, token); end
-  def numparam(token); end
   def objc_kwarg(kwname_t, assoc_t, name_t); end
   def objc_restarg(star_t, name = nil); end
   def objc_varargs(pair, rest_of_varargs); end
@@ -734,6 +762,7 @@ class Parser::Builders::Default
   def pair_quoted_map(begin_t, end_t, value_e); end
   def parser; end
   def parser=(arg0); end
+  def pin(pin_t, var); end
   def postexe(postexe_t, lbrace_t, compstmt, rbrace_t); end
   def preexe(preexe_t, lbrace_t, compstmt, rbrace_t); end
   def prefix_string_map(symbol); end
@@ -787,6 +816,7 @@ class Parser::Builders::Default
   def unary_op(op_t, receiver); end
   def unary_op_map(op_t, arg_e = nil); end
   def undef_method(undef_t, names); end
+  def unless_guard(unless_t, unless_body); end
   def unquoted_map(token); end
   def value(token); end
   def var_send_map(variable_e); end
@@ -801,6 +831,7 @@ class Parser::Context
   def dynamic_const_definition_allowed?; end
   def in_block?; end
   def in_class?; end
+  def in_dynamic_block?; end
   def in_lambda?; end
   def indirectly_in_def?; end
   def initialize; end
@@ -810,17 +841,50 @@ class Parser::Context
   def reset; end
   def stack; end
 end
+class Parser::MaxNumparamStack
+  def has_numparams?; end
+  def has_ordinary_params!; end
+  def has_ordinary_params?; end
+  def initialize; end
+  def pop; end
+  def push; end
+  def register(numparam); end
+  def set(value); end
+  def stack; end
+  def top; end
+end
+class Parser::CurrentArgStack
+  def initialize; end
+  def pop; end
+  def push(value); end
+  def reset; end
+  def set(value); end
+  def stack; end
+  def top; end
+end
+class Parser::VariablesStack
+  def declare(name); end
+  def declared?(name); end
+  def initialize; end
+  def pop; end
+  def push; end
+  def reset; end
+end
 class Parser::Base < Racc::Parser
   def builder; end
   def check_kwarg_name(name_t); end
   def context; end
+  def current_arg_stack; end
   def diagnostic(level, reason, arguments, location_t, highlights_ts = nil); end
   def diagnostics; end
   def initialize(builder = nil); end
+  def max_numparam_stack; end
   def next_token; end
   def on_error(error_token_id, error_value, value_stack); end
   def parse(source_buffer); end
   def parse_with_comments(source_buffer); end
+  def pattern_hash_keys; end
+  def pattern_variables; end
   def reset; end
   def self.default_parser; end
   def self.parse(string, file = nil, line = nil); end

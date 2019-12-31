@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/pg/all/pg.rbi
 #
-# pg-1.1.4
+# pg-1.2.0
 module PG
   def self.connect(*args); end
   def self.init_openssl(arg0, arg1); end
@@ -59,6 +59,8 @@ class PG::Connection
   def exec_params(*arg0); end
   def exec_prepared(*arg0); end
   def external_encoding; end
+  def field_name_type; end
+  def field_name_type=(arg0); end
   def finish; end
   def finished?; end
   def flush; end
@@ -66,7 +68,6 @@ class PG::Connection
   def get_copy_data(*arg0); end
   def get_last_result; end
   def get_result; end
-  def guess_result_memsize=(arg0); end
   def host; end
   def initialize(*arg0); end
   def internal_encoding; end
@@ -143,6 +144,7 @@ class PG::Connection
   def server_version; end
   def set_client_encoding(arg0); end
   def set_default_encoding; end
+  def set_error_context_visibility(arg0); end
   def set_error_verbosity(arg0); end
   def set_notice_processor; end
   def set_notice_receiver; end
@@ -174,7 +176,7 @@ class PG::Connection
   def user; end
   def wait_for_notify(*arg0); end
 end
-class PG::Result
+class PG::Result < Data
   def [](arg0); end
   def autoclear?; end
   def check; end
@@ -190,6 +192,9 @@ class PG::Result
   def error_field(arg0); end
   def error_message; end
   def fformat(arg0); end
+  def field_name_type; end
+  def field_name_type=(arg0); end
+  def field_names_as(type); end
   def field_values(arg0); end
   def fields; end
   def fmod(arg0); end
@@ -215,6 +220,7 @@ class PG::Result
   def result_error_field(arg0); end
   def result_error_message; end
   def result_status; end
+  def result_verbose_error_message(arg0, arg1); end
   def stream_each; end
   def stream_each_row; end
   def stream_each_tuple; end
@@ -223,6 +229,7 @@ class PG::Result
   def type_map; end
   def type_map=(arg0); end
   def values; end
+  def verbose_error_message(arg0, arg1); end
 end
 class PG::Error < StandardError
   def connection; end
@@ -265,15 +272,14 @@ class PG::TypeMapInRuby < PG::TypeMap
 end
 class PG::Coder
   def ==(v); end
-  def decode(*arg0); end
   def dup; end
-  def encode(*arg0); end
   def flags; end
   def flags=(arg0); end
   def format; end
   def format=(arg0); end
   def initialize(params = nil); end
   def inspect; end
+  def inspect_short; end
   def marshal_dump; end
   def marshal_load(str); end
   def name; end
@@ -292,6 +298,111 @@ class PG::CompositeCoder < PG::Coder
   def needs_quotation?; end
   def to_h; end
 end
+class PG::TextEncoder::Boolean < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::Integer < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::Float < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::Numeric < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::String < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::Bytea < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::Identifier < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::Array < PG::CompositeEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::QuotedLiteral < PG::CompositeEncoder
+  def encode(*arg0); end
+end
+class PG::TextEncoder::ToBase64 < PG::CompositeEncoder
+  def encode(*arg0); end
+end
+class PG::TextDecoder::Boolean < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Integer < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Float < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Numeric < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::String < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Bytea < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Identifier < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Timestamp < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Inet < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::Array < PG::CompositeDecoder
+  def decode(*arg0); end
+end
+class PG::TextDecoder::FromBase64 < PG::CompositeDecoder
+  def decode(*arg0); end
+end
+class PG::BinaryEncoder::Boolean < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::BinaryEncoder::Int2 < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::BinaryEncoder::Int4 < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::BinaryEncoder::Int8 < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::BinaryEncoder::String < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::BinaryEncoder::Bytea < PG::SimpleEncoder
+  def encode(*arg0); end
+end
+class PG::BinaryEncoder::FromBase64 < PG::CompositeEncoder
+  def encode(*arg0); end
+end
+class PG::BinaryDecoder::Boolean < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::BinaryDecoder::Integer < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::BinaryDecoder::Float < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::BinaryDecoder::String < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::BinaryDecoder::Bytea < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::BinaryDecoder::Timestamp < PG::SimpleDecoder
+  def decode(*arg0); end
+end
+class PG::BinaryDecoder::ToBase64 < PG::CompositeDecoder
+  def decode(*arg0); end
+end
 class PG::CopyCoder < PG::Coder
   def delimiter; end
   def delimiter=(arg0); end
@@ -300,6 +411,23 @@ class PG::CopyCoder < PG::Coder
   def to_h; end
   def type_map; end
   def type_map=(arg0); end
+end
+class PG::TextEncoder::CopyRow < PG::CopyEncoder
+  def encode(*arg0); end
+end
+class PG::TextDecoder::CopyRow < PG::CopyDecoder
+  def decode(*arg0); end
+end
+class PG::RecordCoder < PG::Coder
+  def to_h; end
+  def type_map; end
+  def type_map=(arg0); end
+end
+class PG::TextEncoder::Record < PG::RecordEncoder
+  def encode(*arg0); end
+end
+class PG::TextDecoder::Record < PG::RecordDecoder
+  def decode(*arg0); end
 end
 class PG::Tuple
   def [](arg0); end
@@ -350,9 +478,6 @@ end
 class PG::TextEncoder::TimestampWithTimeZone < PG::SimpleEncoder
   def encode(value); end
 end
-class PG::TextEncoder::Numeric < PG::SimpleEncoder
-  def encode(value); end
-end
 class PG::TextEncoder::JSON < PG::SimpleEncoder
   def encode(value); end
 end
@@ -380,6 +505,7 @@ module PG::BasicTypeRegistry
   def build_coder_maps(connection); end
   def check_format_and_direction(format, direction); end
   def self.alias_type(format, new, old); end
+  def self.register_coder(coder); end
   def self.register_type(format, name, encoder_class, decoder_class); end
   def supports_ranges?(connection); end
 end
@@ -407,7 +533,10 @@ end
 class PG::BasicTypeMapForQueries < PG::TypeMapByClass
   def array_encoders_by_klass; end
   def coder_by_name(format, direction, name); end
+  def encode_array_as; end
+  def encode_array_as=(pg_type); end
   def get_array_type(value); end
+  def init_encoders; end
   def initialize(connection); end
   def populate_encoder_list; end
   include PG::BasicTypeRegistry

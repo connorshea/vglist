@@ -114,7 +114,7 @@ group :development, :test do
   gem 'bullet', '~> 6.1'
 
   # Sorbet typechecker
-  gem 'sorbet', '~> 0.4'
+  gem 'sorbet', '~> 0.5'
 end
 
 group :development do

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.5.1
+# rubocop-performance-1.5.2
 module RuboCop
 end
 module RuboCop::Performance

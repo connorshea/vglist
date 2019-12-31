@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/pg_search/all/pg_search.rbi
 #
-# pg_search-2.3.0
+# pg_search-2.3.1
 module PgSearch
   def multisearch_options; end
   def multisearch_options=(obj); end

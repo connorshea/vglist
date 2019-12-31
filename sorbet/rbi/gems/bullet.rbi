@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/bullet/all/bullet.rbi
 #
-# bullet-6.0.2
+# bullet-6.1.0
 class Object < BasicObject
   def bullet_key; end
   def bullet_primary_key_value; end
@@ -46,8 +46,8 @@ module Bullet
   def self.n_plus_one_query_enable?; end
   def self.notification?; end
   def self.notification_collector; end
-  def self.orm_pathches_applied; end
-  def self.orm_pathches_applied=(arg0); end
+  def self.orm_patches_applied; end
+  def self.orm_patches_applied=(arg0); end
   def self.perform_out_of_channel_notifications(env = nil); end
   def self.profile; end
   def self.rails_logger=(arg); end
@@ -55,6 +55,8 @@ module Bullet
   def self.reset_whitelist; end
   def self.rollbar=(arg); end
   def self.sentry=(arg); end
+  def self.skip_html_injection=(arg0); end
+  def self.skip_html_injection?; end
   def self.slack=(arg); end
   def self.stacktrace_excludes; end
   def self.stacktrace_excludes=(arg0); end
