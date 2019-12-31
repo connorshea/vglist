@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/selenium-webdriver/all/selenium-webdriver.rbi
 #
-# selenium-webdriver-3.142.6
+# selenium-webdriver-3.142.7
 module Selenium
 end
 module Selenium::WebDriver
@@ -671,6 +671,13 @@ end
 module Selenium::WebDriver::ProfileHelper::ClassMethods
   def from_json(json); end
 end
+module Selenium::WebDriver::Common
+end
+class Selenium::WebDriver::Common::Options
+  def camel_case(str); end
+  def convert_json_key(key); end
+  def generate_as_json(value); end
+end
 class Selenium::WebDriver::Driver
   def [](sel); end
   def action; end
@@ -829,7 +836,7 @@ class Selenium::WebDriver::Chrome::Profile
   extend Selenium::WebDriver::ProfileHelper::ClassMethods
   include Selenium::WebDriver::ProfileHelper
 end
-class Selenium::WebDriver::Chrome::Options
+class Selenium::WebDriver::Chrome::Options < Selenium::WebDriver::Common::Options
   def add_argument(arg); end
   def add_emulation(device_name: nil, device_metrics: nil, user_agent: nil); end
   def add_encoded_extension(encoded); end
@@ -840,6 +847,8 @@ class Selenium::WebDriver::Chrome::Options
   def as_json(*arg0); end
   def binary; end
   def binary=(arg0); end
+  def detach; end
+  def detach=(arg0); end
   def emulation; end
   def encoded_extensions; end
   def extensions; end
@@ -847,6 +856,8 @@ class Selenium::WebDriver::Chrome::Options
   def initialize(**opts); end
   def options; end
   def prefs; end
+  def profile; end
+  def profile=(arg0); end
 end
 class Selenium::WebDriver::Chrome::Service < Selenium::WebDriver::Service
   def extract_service_args(driver_opts); end
@@ -968,7 +979,7 @@ class Selenium::WebDriver::Firefox::Marionette::Driver < Selenium::WebDriver::Dr
   include Selenium::WebDriver::DriverExtensions::HasWebStorage
   include Selenium::WebDriver::DriverExtensions::TakesScreenshot
 end
-class Selenium::WebDriver::Firefox::Options
+class Selenium::WebDriver::Firefox::Options < Selenium::WebDriver::Common::Options
   def add_argument(arg); end
   def add_option(name, value); end
   def add_preference(name, value); end
@@ -1001,7 +1012,7 @@ class Selenium::WebDriver::IE::Driver < Selenium::WebDriver::Driver
   include Selenium::WebDriver::DriverExtensions::HasWebStorage
   include Selenium::WebDriver::DriverExtensions::TakesScreenshot
 end
-class Selenium::WebDriver::IE::Options
+class Selenium::WebDriver::IE::Options < Selenium::WebDriver::Common::Options
   def add_argument(arg); end
   def add_option(name, value); end
   def args; end

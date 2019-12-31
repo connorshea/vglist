@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/webdrivers/all/webdrivers.rbi
 #
-# webdrivers-4.1.3
+# webdrivers-4.2.0
 module Webdrivers
   def self.cache_time; end
   def self.cache_time=(arg0); end

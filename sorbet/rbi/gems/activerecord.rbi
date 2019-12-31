@@ -5784,27 +5784,6 @@ class ActiveRecord::Associations::HasManyAssociation < ActiveRecord::Association
   def update_counter_in_memory(difference, reflection = nil); end
   include ActiveRecord::Associations::ForeignAssociation
 end
-class ActiveRecord::Associations::BelongsToAssociation < ActiveRecord::Associations::SingularAssociation
-  def decrement_counters; end
-  def decrement_counters_before_last_save; end
-  def default(&block); end
-  def find_target?; end
-  def foreign_key_present?; end
-  def handle_dependency; end
-  def increment_counters; end
-  def inversed_from(record); end
-  def invertible_for?(record); end
-  def primary_key(klass); end
-  def replace(record); end
-  def replace_keys(record); end
-  def require_counter_update?; end
-  def reset; end
-  def stale_state; end
-  def target_changed?; end
-  def update_counters(by); end
-  def update_counters_via_scope(klass, foreign_key, by); end
-  def updated?; end
-end
 class ActiveRecord::Associations::Builder::HasOne < ActiveRecord::Associations::Builder::SingularAssociation
   def self.add_destroy_callbacks(model, reflection); end
   def self.add_touch_callbacks(model, reflection); end
@@ -6435,6 +6414,27 @@ class ActiveRecord::Associations::HasOneAssociation < ActiveRecord::Associations
   def set_new_record(record); end
   def transaction_if(value); end
   include ActiveRecord::Associations::ForeignAssociation
+end
+class ActiveRecord::Associations::BelongsToAssociation < ActiveRecord::Associations::SingularAssociation
+  def decrement_counters; end
+  def decrement_counters_before_last_save; end
+  def default(&block); end
+  def find_target?; end
+  def foreign_key_present?; end
+  def handle_dependency; end
+  def increment_counters; end
+  def inversed_from(record); end
+  def invertible_for?(record); end
+  def primary_key(klass); end
+  def replace(record); end
+  def replace_keys(record); end
+  def require_counter_update?; end
+  def reset; end
+  def stale_state; end
+  def target_changed?; end
+  def update_counters(by); end
+  def update_counters_via_scope(klass, foreign_key, by); end
+  def updated?; end
 end
 class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ActiveRecord::Associations::BelongsToAssociation
   def inverse_reflection_for(record); end
