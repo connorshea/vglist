@@ -393,7 +393,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   bullet (~> 6.1)
   byebug
-  capybara (>= 2.15)
+  capybara (~> 3.30)
   database_cleaner (~> 1.7)
   devise (~> 4.7)
   doorkeeper (~> 5.2)
@@ -409,7 +409,7 @@ DEPENDENCIES
   launchy (~> 2.4)
   listen (>= 3.0.5, < 3.3)
   mini_magick (~> 4.10)
-  pg (>= 0.18, < 2.0)
+  pg (~> 1.2)
   pg_search (~> 2.3)
   puma (~> 4.3)
   pundit (~> 2.1)
@@ -431,7 +431,7 @@ DEPENDENCIES
   sorbet-rails (~> 0.5.9)
   sorbet-runtime (~> 0.4)
   sparql (~> 3.1.0)
-  spring
+  spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   web-console (~> 4.0.1)
