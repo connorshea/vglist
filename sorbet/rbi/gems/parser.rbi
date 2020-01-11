@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.7.0.1
+# parser-2.7.0.2
 module Parser
 end
 module Parser::Deprecation

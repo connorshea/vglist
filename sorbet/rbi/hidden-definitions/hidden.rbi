@@ -6458,12 +6458,6 @@ end
 class DidYouMean::PlainFormatter
 end
 
-class DidYouMean::SpellChecker
-  def correct(input); end
-
-  def initialize(dictionary:); end
-end
-
 class DidYouMean::VariableNameChecker
   def corrections(); end
 
@@ -6776,8 +6770,6 @@ module Enumerable
   def to_set(klass=T.unsafe(nil), *args, &block); end
 
   def uniq(); end
-
-  def zip(*_); end
 end
 
 class Enumerator
@@ -12393,9 +12385,13 @@ end
 class Net::HTTPAlreadyReported
 end
 
-Net::HTTPClientError::EXCEPTION_TYPE = Net::HTTPServerException
+class Net::HTTPClientError
+end
 
-Net::HTTPClientErrorCode = Net::HTTPClientError
+Net::HTTPClientErrorCode::EXCEPTION_TYPE = Net::HTTPServerException
+
+class Net::HTTPClientError
+end
 
 Net::HTTPClientException = Net::HTTPServerException
 
@@ -12465,9 +12461,13 @@ end
 class Net::HTTPRangeNotSatisfiable
 end
 
-Net::HTTPRedirection::EXCEPTION_TYPE = Net::HTTPRetriableError
+class Net::HTTPRedirection
+end
 
-Net::HTTPRedirectionCode = Net::HTTPRedirection
+Net::HTTPRedirectionCode::EXCEPTION_TYPE = Net::HTTPRetriableError
+
+class Net::HTTPRedirection
+end
 
 class Net::HTTPRequestTimeout
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12482,15 +12482,23 @@ Net::HTTPResponceReceiver = Net::HTTPResponse
 
 Net::HTTPRetriableCode = Net::HTTPRedirection
 
-Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
+class Net::HTTPServerError
+end
 
-Net::HTTPServerErrorCode = Net::HTTPServerError
+Net::HTTPServerErrorCode::EXCEPTION_TYPE = Net::HTTPFatalError
+
+class Net::HTTPServerError
+end
 
 Net::HTTPSession = Net::HTTP
 
-Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
+class Net::HTTPSuccess
+end
 
-Net::HTTPSuccessCode = Net::HTTPSuccess
+Net::HTTPSuccessCode::EXCEPTION_TYPE = Net::HTTPError
+
+class Net::HTTPSuccess
+end
 
 class Net::HTTPURITooLong
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -19439,6 +19447,8 @@ end
 class Rack::Builder
   def call(env); end
 
+  def freeze_app(); end
+
   def initialize(default_app=T.unsafe(nil), &block); end
 
   def map(path, &block); end
@@ -19450,10 +19460,13 @@ class Rack::Builder
   def use(middleware, *args, &block); end
 
   def warmup(prc=T.unsafe(nil), &block); end
+  UTF_8_BOM = ::T.let(nil, ::T.untyped)
 end
 
 class Rack::Builder
   def self.app(default_app=T.unsafe(nil), &block); end
+
+  def self.load_file(path, opts=T.unsafe(nil)); end
 
   def self.new_from_string(builder_script, file=T.unsafe(nil)); end
 
@@ -19533,7 +19546,7 @@ class Rack::Deflater::GzipStream
 
   def each(&block); end
 
-  def initialize(body, mtime); end
+  def initialize(body, mtime, sync); end
 
   def write(data); end
 end
@@ -19587,7 +19600,9 @@ class Rack::ETag
   ETAG_STRING = ::T.let(nil, ::T.untyped)
 end
 
-class Rack::File
+Rack::File = Rack::Files
+
+class Rack::Files
   ALLOWED_VERBS = ::T.let(nil, ::T.untyped)
   ALLOW_HEADER = ::T.let(nil, ::T.untyped)
 end
@@ -19836,6 +19851,10 @@ end
 class Rack::MockResponse
   def =~(other); end
 
+  def cookie(name); end
+
+  def cookies(); end
+
   def errors(); end
 
   def errors=(errors); end
@@ -19901,6 +19920,7 @@ class Rack::Multipart::Parser
   def result(); end
 
   def state(); end
+  BOUNDARY_REGEX = ::T.let(nil, ::T.untyped)
   BUFSIZE = ::T.let(nil, ::T.untyped)
   CHARSET = ::T.let(nil, ::T.untyped)
   EMPTY = ::T.let(nil, ::T.untyped)
@@ -19911,7 +19931,7 @@ end
 class Rack::Multipart::Parser::BoundedIO
   def initialize(io, content_length); end
 
-  def read(size); end
+  def read(size, outbuf=T.unsafe(nil)); end
 
   def rewind(); end
 end
@@ -20115,6 +20135,7 @@ class Rack::Reloader
 end
 
 class Rack::Request
+  ALLOWED_SCHEMES = ::T.let(nil, ::T.untyped)
   SCHEME_WHITELIST = ::T.let(nil, ::T.untyped)
 end
 
@@ -20131,6 +20152,7 @@ end
 
 class Rack::Response
   CHUNKED = ::T.let(nil, ::T.untyped)
+  STATUS_WITH_NO_ENTITY_BODY = ::T.let(nil, ::T.untyped)
 end
 
 class Rack::Runtime
@@ -20223,6 +20245,8 @@ class Rack::ShowExceptions
   def prefers_plaintext?(env); end
 
   def pretty(env, exception); end
+
+  def template(); end
   CONTEXT = ::T.let(nil, ::T.untyped)
   TEMPLATE = ::T.let(nil, ::T.untyped)
 end
@@ -20486,7 +20510,6 @@ module Random::Formatter
 end
 
 class Random
-  extend ::Random::Formatter
   def self.bytes(_); end
 
   def self.urandom(_); end
@@ -20938,10 +20961,6 @@ end
 
 module Relationship::GeneratedAttributeMethods
   extend ::Mutex_m
-end
-
-module Relationship::GeneratedRelationMethods
-  def name(*args, &block); end
 end
 
 module Relationship::GeneratedRelationMethods
@@ -21889,11 +21908,7 @@ end
 
 class RuboCop::ConfigValidator
   COMMON_PARAMS = ::T.let(nil, ::T.untyped)
-  DEFAULT_RUBY_VERSION = ::T.let(nil, ::T.untyped)
   INTERNAL_PARAMS = ::T.let(nil, ::T.untyped)
-  KNOWN_RUBIES = ::T.let(nil, ::T.untyped)
-  OBSOLETE_RUBIES = ::T.let(nil, ::T.untyped)
-  RUBY_VERSION_FILENAME = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::Alignment
@@ -22157,7 +22172,7 @@ class RuboCop::Cop::Layout::FirstParameterIndentation
 end
 
 class RuboCop::Cop::Layout::HashAlignment
-  MSG = ::T.let(nil, ::T.untyped)
+  MESSAGES = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Layout::HeredocArgumentClosingParenthesis
@@ -22760,6 +22775,8 @@ class RuboCop::Cop::Metrics::Utils::AbcSizeCalculator
 end
 
 class RuboCop::Cop::Migration::DepartmentName
+  DISABLE_COMMENT_FORMAT = ::T.let(nil, ::T.untyped)
+  DISABLING_COPS_CONTENT_TOKEN = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -23995,7 +24012,7 @@ class RuboCop::Cop::Style::LineEndConcatenation
   SIMPLE_STRING_TOKEN_TYPE = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Style::MethodCallWithArgsParentheses
+module RuboCop::Cop::Style::MethodCallWithArgsParentheses::OmitParentheses
   TRAILING_WHITESPACE_REGEX = ::T.let(nil, ::T.untyped)
 end
 
@@ -24415,6 +24432,7 @@ class RuboCop::Cop::Style::YodaCondition
   EQUALITY_OPERATORS = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
   NONCOMMUTATIVE_OPERATORS = ::T.let(nil, ::T.untyped)
+  PROGRAM_NAMES = ::T.let(nil, ::T.untyped)
   REVERSE_COMPARISON = ::T.let(nil, ::T.untyped)
 end
 
@@ -24657,6 +24675,14 @@ end
 class RuboCop::StringInterpreter
   STRING_ESCAPES = ::T.let(nil, ::T.untyped)
   STRING_ESCAPE_REGEX = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::TargetRuby
+  DEFAULT_VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::TargetRuby::RubyVersionFile
+  FILENAME = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Version
@@ -25721,7 +25747,6 @@ module SecureRandom
 end
 
 module SecureRandom
-  extend ::Random::Formatter
   def self.bytes(n); end
 end
 

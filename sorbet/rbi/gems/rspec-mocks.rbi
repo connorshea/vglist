@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-mocks/all/rspec-mocks.rbi
 #
-# rspec-mocks-3.9.0
+# rspec-mocks-3.9.1
 module RSpec
 end
 module RSpec::Mocks

@@ -14,6 +14,12 @@ module Minitest
   class Test < Runnable
     include Minitest::Assertions
   end
+
+  sig { void }
+  def self.autorun; end
+
+  sig { params(args: T::Array[String]).returns(T::Boolean) }
+  def self.run(args = []); end
 end
 
 module Minitest::Assertions

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/pg/all/pg.rbi
 #
-# pg-1.2.0
+# pg-1.2.2
 module PG
   def self.connect(*args); end
   def self.init_openssl(arg0, arg1); end

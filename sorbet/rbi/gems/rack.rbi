@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rack/all/rack.rbi
 #
-# rack-2.0.8
+# rack-2.1.0
 module Rack
   def self.release; end
   def self.version; end
@@ -17,6 +17,8 @@ end
 module Rack::Auth::Digest
 end
 module Rack::Session
+end
+module Rack::RegexpExtensions
 end
 class Rack::QueryParser
   def initialize(params_class, key_space_limit, param_depth_limit); end
@@ -42,6 +44,7 @@ class Rack::QueryParser::Params
   def []=(key, value); end
   def initialize(limit); end
   def key?(key); end
+  def to_h; end
   def to_params_hash; end
 end
 module Rack::Utils
@@ -133,7 +136,6 @@ class Rack::Utils::HeaderHash < Hash
   def merge(other); end
   def names; end
   def replace(other); end
-  def self.new(hash = nil); end
   def to_hash; end
 end
 class Rack::MediaType
@@ -145,6 +147,8 @@ class Rack::Request
   def delete_param(k); end
   def initialize(env); end
   def params; end
+  def self.ip_filter; end
+  def self.ip_filter=(arg0); end
   def update_param(k, v); end
   include Rack::Request::Env
   include Rack::Request::Helpers
@@ -168,6 +172,7 @@ module Rack::Request::Helpers
   def []=(key, value); end
   def accept_encoding; end
   def accept_language; end
+  def allowed_scheme(header); end
   def authority; end
   def base_url; end
   def body; end
@@ -178,6 +183,8 @@ module Rack::Request::Helpers
   def default_session; end
   def delete?; end
   def delete_param(k); end
+  def extract_port(uri); end
+  def extract_proto_header(header); end
   def form_data?; end
   def forwarded_scheme; end
   def fullpath; end
@@ -217,6 +224,7 @@ module Rack::Request::Helpers
   def session_options; end
   def split_ip_addresses(ip_addresses); end
   def ssl?; end
+  def strip_port(ip_address); end
   def trace?; end
   def trusted_proxy?(ip); end
   def unlink?; end
@@ -257,14 +265,15 @@ class Rack::Response
   def status; end
   def status=(arg0); end
   def to_a(&block); end
-  def to_ary(&block); end
-  def write(str); end
+  def write(chunk); end
   include Rack::Response::Helpers
 end
 module Rack::Response::Helpers
   def accepted?; end
   def add_header(key, v); end
+  def append(chunk); end
   def bad_request?; end
+  def buffered_body!; end
   def cache_control; end
   def cache_control=(v); end
   def client_error?; end
@@ -323,7 +332,7 @@ class Rack::Head
   def call(env); end
   def initialize(app); end
 end
-class Rack::File
+class Rack::Files
   def call(env); end
   def fail(status, body, headers = nil); end
   def filesize(path); end
@@ -335,7 +344,7 @@ class Rack::File
   def root; end
   def serving(request, path); end
 end
-class Rack::File::Iterator
+class Rack::Files::Iterator
   def close; end
   def each; end
   def initialize(path, range); end
@@ -399,6 +408,7 @@ class Rack::Session::Abstract::SessionHash
   def store(key, value); end
   def stringify_keys(other); end
   def to_hash; end
+  def transform_keys(&block); end
   def update(hash); end
   def values; end
   include Enumerable
@@ -511,7 +521,11 @@ class Rack::Chunked
 end
 class Rack::Chunked::Body
   def close; end
-  def each; end
+  def each(&block); end
   def initialize(body); end
+  def insert_trailers(&block); end
   include Rack::Utils
+end
+class Rack::Chunked::TrailerBody < Rack::Chunked::Body
+  def insert_trailers(&block); end
 end

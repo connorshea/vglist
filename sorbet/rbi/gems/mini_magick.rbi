@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/mini_magick/all/mini_magick.rbi
 #
-# mini_magick-4.9.5
+# mini_magick-4.10.1
 module MiniMagick
   def self.cli_version; end
   def self.graphicsmagick?; end
@@ -150,6 +150,7 @@ class MiniMagick::Image
   def identify; end
   def info(value); end
   def initialize(input_path, tempfile = nil, &block); end
+  def landscape?; end
   def layer?; end
   def layers; end
   def method_missing(name, *args); end
@@ -157,6 +158,7 @@ class MiniMagick::Image
   def mogrify(page = nil); end
   def pages; end
   def path; end
+  def portrait?; end
   def resolution(*args); end
   def respond_to_missing?(method_name, include_private = nil); end
   def run_command(tool_name, *args); end

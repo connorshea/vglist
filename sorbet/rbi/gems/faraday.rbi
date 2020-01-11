@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faraday/all/faraday.rbi
 #
-# faraday-0.17.1
+# faraday-0.17.3
 module Faraday
   def self.const_missing(name); end
   def self.default_adapter; end
@@ -21,7 +21,7 @@ module Faraday
   def self.lib_path; end
   def self.lib_path=(arg0); end
   def self.method_missing(name, *args, &block); end
-  def self.new(url = nil, options = nil); end
+  def self.new(url = nil, options = nil, &block); end
   def self.require_lib(*libs); end
   def self.require_libs(*libs); end
   def self.respond_to?(symbol, include_private = nil); end
@@ -106,7 +106,7 @@ class Faraday::Options < Struct
   def self.fetch_error_class; end
   def self.from(value); end
   def self.inherited(subclass); end
-  def self.memoized(key); end
+  def self.memoized(key, &block); end
   def self.memoized_attributes; end
   def self.options(mapping); end
   def self.options_for(key); end
@@ -348,7 +348,7 @@ class Faraday::RackBuilder
   def dup; end
   def handlers; end
   def handlers=(arg0); end
-  def initialize(handlers = nil); end
+  def initialize(handlers = nil, &block); end
   def insert(index, *args, &block); end
   def insert_after(index, *args, &block); end
   def insert_before(index, *args, &block); end
@@ -488,6 +488,8 @@ module Faraday::Deprecate
 end
 class Faraday::Error < StandardError
   def backtrace; end
+  def exc_msg_and_response!(exc, response = nil); end
+  def exc_msg_and_response(exc, response = nil); end
   def initialize(exc, response = nil); end
   def inspect; end
   def response; end
@@ -511,19 +513,23 @@ class Faraday::UnprocessableEntityError < Faraday::ClientError
 end
 class Faraday::ServerError < Faraday::Error
 end
-class Faraday::TimeoutError < Faraday::ServerError
+class Faraday::TimeoutError < Faraday::ClientError
   def initialize(exc = nil, response = nil); end
 end
 class Faraday::NilStatusError < Faraday::ServerError
-  def initialize(_exc, response: nil); end
+  def _deprecated_unwrap_resp(resp); end
+  def initialize(exc, response = nil); end
+  def unwrap_resp!(resp); end
+  def unwrap_resp(*args, &block); end
+  extend Faraday::Deprecate
 end
-class Faraday::ConnectionFailed < Faraday::Error
+class Faraday::ConnectionFailed < Faraday::ClientError
 end
-class Faraday::SSLError < Faraday::Error
+class Faraday::SSLError < Faraday::ClientError
 end
-class Faraday::ParsingError < Faraday::Error
+class Faraday::ParsingError < Faraday::ClientError
 end
-class Faraday::RetriableResponse < Faraday::Error
+class Faraday::RetriableResponse < Faraday::ClientError
 end
 class Faraday::Error::ClientError < Faraday::ClientError
   def self.===(other); end

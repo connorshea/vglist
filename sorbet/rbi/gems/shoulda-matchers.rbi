@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/shoulda-matchers/all/shoulda-matchers.rbi
 #
-# shoulda-matchers-4.1.2
+# shoulda-matchers-4.2.0
 module Shoulda
 end
 module Shoulda::Matchers
@@ -303,7 +303,6 @@ class Shoulda::Matchers::Integrations::TestFrameworks::TestUnit
   def validate!; end
 end
 module Shoulda::Matchers::RailsShim
-  def self.action_pack_gte_4_1?; end
   def self.action_pack_gte_5?; end
   def self.action_pack_lt_5?; end
   def self.action_pack_version; end
@@ -322,7 +321,6 @@ module Shoulda::Matchers::RailsShim
   def self.simply_generate_validation_message(attribute, type, model_name, options); end
   def self.supports_full_attributes_api?(model); end
   def self.tables_and_views(connection); end
-  def self.type_cast_default_for(model, column); end
   def self.validation_message_key_for_association_required_option; end
   def self.verb_for_update; end
 end
@@ -1313,7 +1311,7 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def model_class(*args, &block); end
   def name; end
   def option_verifier; end
-  def optional; end
+  def optional(optional = nil); end
   def options; end
   def order(order); end
   def polymorphic?(*args, &block); end
