@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.1.11
+### Fixed
+- Fix a CORS issue that prevented sending API requests from other websites. ([#960])
+
 ## v2019.12.22
 ### Added
 - Add Stores to the Library Edit Bar. ([#917])
@@ -642,3 +646,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#897]: https://github.com/connorshea/VideoGameList/pull/897
 [#917]: https://github.com/connorshea/VideoGameList/pull/917
 [#918]: https://github.com/connorshea/VideoGameList/pull/918
+[#960]: https://github.com/connorshea/VideoGameList/pull/960
