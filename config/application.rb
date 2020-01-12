@@ -32,6 +32,14 @@ module VideoGameList
 
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
+    # Allow cross-origin requests to GraphQL.
+    config.middleware.insert_before 0, Rack::Cors do
+      T.unsafe(self).allow do
+        T.unsafe(self).origins '*'
+        T.unsafe(self).resource '/graphql', headers: :any, methods: [:post, :options]
+      end
+    end
+
     # Customize what the rails generate command creates.
     config.generators do |generate|
       # Disable helper generation

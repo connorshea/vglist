@@ -12376,8 +12376,6 @@ class Net::HTTP::Persistent::TimedStackMulti
   def self.hash_of_arrays(); end
 end
 
-Net::HTTP::ProxyMod = Net::HTTP::ProxyDelta
-
 class Net::HTTPAlreadyReported
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -12411,9 +12409,13 @@ end
 class Net::HTTPGatewayTimeout
 end
 
-Net::HTTPInformation::EXCEPTION_TYPE = Net::HTTPError
+class Net::HTTPInformation
+end
 
-Net::HTTPInformationCode = Net::HTTPInformation
+Net::HTTPInformationCode::EXCEPTION_TYPE = Net::HTTPError
+
+class Net::HTTPInformation
+end
 
 class Net::HTTPLoopDetected
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12490,7 +12492,15 @@ Net::HTTPServerErrorCode::EXCEPTION_TYPE = Net::HTTPFatalError
 class Net::HTTPServerError
 end
 
-Net::HTTPSession = Net::HTTP
+class Net::HTTP
+end
+
+Net::HTTPSession::ProxyDelta = Net::HTTP::ProxyDelta
+
+Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
+
+class Net::HTTP
+end
 
 class Net::HTTPSuccess
 end
@@ -19533,6 +19543,31 @@ class Rack::ContentType
 end
 
 class Rack::ContentType
+end
+
+class Rack::Cors
+  CORS_SIMPLE_HEADERS = ::T.let(nil, ::T.untyped)
+  DEFAULT_VARY_HEADERS = ::T.let(nil, ::T.untyped)
+  ENV_KEY = ::T.let(nil, ::T.untyped)
+  HTTP_ACCESS_CONTROL_REQUEST_HEADERS = ::T.let(nil, ::T.untyped)
+  HTTP_ACCESS_CONTROL_REQUEST_METHOD = ::T.let(nil, ::T.untyped)
+  HTTP_ORIGIN = ::T.let(nil, ::T.untyped)
+  HTTP_X_ORIGIN = ::T.let(nil, ::T.untyped)
+  OPTIONS = ::T.let(nil, ::T.untyped)
+  PATH_INFO = ::T.let(nil, ::T.untyped)
+  RACK_CORS = ::T.let(nil, ::T.untyped)
+  RACK_LOGGER = ::T.let(nil, ::T.untyped)
+  REQUEST_METHOD = ::T.let(nil, ::T.untyped)
+  VARY = ::T.let(nil, ::T.untyped)
+end
+
+class Rack::Cors::Result
+  HEADER_KEY = ::T.let(nil, ::T.untyped)
+  MISS_DENY_HEADER = ::T.let(nil, ::T.untyped)
+  MISS_DENY_METHOD = ::T.let(nil, ::T.untyped)
+  MISS_NO_METHOD = ::T.let(nil, ::T.untyped)
+  MISS_NO_ORIGIN = ::T.let(nil, ::T.untyped)
+  MISS_NO_PATH = ::T.let(nil, ::T.untyped)
 end
 
 class Rack::Deflater
