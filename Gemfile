@@ -74,6 +74,9 @@ gem "doorkeeper", "~> 5.2"
 # SimpleTokenAuthentication for static API tokens
 gem 'simple_token_authentication', '~> 1.17'
 
+# Rack::Cors for handling CORS in API requests.
+gem "rack-cors", "~> 1.1"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -149,5 +152,3 @@ end
 
 # # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 # gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-gem "rack-cors", "~> 1.1"
