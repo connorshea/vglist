@@ -329,6 +329,20 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def reset_token_users_url(*args, **kwargs); end
 
+  # Sigs for route /users/:id/ban(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def ban_user_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def ban_user_url(*args, **kwargs); end
+
+  # Sigs for route /users/:id/unban(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def unban_user_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def unban_user_url(*args, **kwargs); end
+
   # Sigs for route /users/new(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def new_user_path(*args, **kwargs); end

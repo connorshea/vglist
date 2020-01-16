@@ -11,7 +11,7 @@ module Types
     field :privacy, UserPrivacyType, null: false, description: "The user's level of privacy."
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this user was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this user was last updated."
-    field :banned, Boolean, null: false, description: "When this user has been banned."
+    field :banned, Boolean, null: false, description: "Whether this user has been banned."
 
     # Associations
     field :game_purchases, GamePurchaseType.connection_type, null: true, description: "Games in this user's library."
