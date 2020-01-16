@@ -56,3 +56,16 @@ end
     privacy: :private_account
   )
 end
+
+# Create 2 banned accounts
+2.times do
+  User.create!(
+    email: Faker::Internet.unique.email,
+    # Make banned users with similar names
+    username: "banned_user#{Faker::Number.number(digits: 3)}",
+    # Passwords can be up to 128 characters, but we'll just do up to 20 here.
+    password: Faker::Internet.password(min_length: 8, max_length: 20),
+    bio: Faker::Lorem.sentence,
+    banned: true
+  )
+end
