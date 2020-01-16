@@ -20,6 +20,10 @@
       <% if user.private_account? %>
         <p class='has-text-weight-semibold'>This user's account is private.
       <% end %>
+
+      <% if user.banned? %>
+        <p class='has-text-weight-semibold'>This user has been banned.
+      <% end %>
     <% end %>
 
     <% if user.admin? %>

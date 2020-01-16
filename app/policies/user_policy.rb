@@ -107,7 +107,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
-  def ban_user?
+  def ban?
     # Let admins ban any users, and allow moderators to ban any users that
     # aren't moderators or admins. Admins can ban other admins, but I'm
     # sure that won't ever cause any problems. Also, users shouldn't be
@@ -116,7 +116,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
-  def unban_user?
+  def unban?
     # Let admins and moderators unban any users, except themselves.
     (current_user&.admin? || current_user&.moderator?) && !user_is_current_user?
   end

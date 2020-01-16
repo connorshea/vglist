@@ -350,7 +350,7 @@ class UsersController < ApplicationController
     sign_out(@user)
 
     if @user.save
-      redirect_to users_path, success: "#{@user.username} has been banned."
+      redirect_to users_path, success: "#{@user.username} was successfully banned."
     else
       redirect_to user_path(@user), error: "#{@user.username} could not be banned."
     end
@@ -364,7 +364,7 @@ class UsersController < ApplicationController
     @user.banned = false
 
     if @user.save
-      redirect_to users_path, success: "#{@user.username} has been unbanned."
+      redirect_to user_path(@user), success: "#{@user.username} was successfully unbanned."
     else
       redirect_to user_path(@user), error: "#{@user.username} could not be unbanned."
     end

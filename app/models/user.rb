@@ -113,8 +113,6 @@ class User < ApplicationRecord
     size: { less_than: 3.megabytes },
     aspect_ratio: :square
 
-  protected
-
   # Make sure the user isn't banned when logging in with Devise.
   sig { returns(T.nilable(T::Boolean)) }
   def active_for_authentication?
