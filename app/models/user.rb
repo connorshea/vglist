@@ -119,6 +119,11 @@ class User < ApplicationRecord
     super && !banned?
   end
 
+  sig { returns(Symbol) }
+  def inactive_message
+    banned? ? :account_banned : super
+  end
+
   private
 
   sig { void }

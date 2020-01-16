@@ -82,6 +82,6 @@ FactoryBot.define do
 
     factory :user_with_application,           traits: [:confirmed, :application]
 
-    factory :banned_user,                     traits: [:banned]
+    factory :banned_user,                     traits: [:confirmed, :banned]
   end
 end
