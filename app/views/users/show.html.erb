@@ -1,7 +1,6 @@
 <% content_for :title, @user.username %>
 <% content_for :description, "#{@user.username}'s user page on vglist" %>
 <% if @user.avatar.attached? %>
-  <%# This technically doesn't give us what we want because it won't be square, but oh well. %>
   <% content_for :opengraph_image, rails_blob_url(@user.avatar) %>
 <% else %>
   <% content_for :opengraph_image, image_url('default-avatar.png') %>
@@ -35,13 +34,13 @@
         <div class="dropdown-content">
           <% if policy(@user).update_role? && @user != current_user %>
             <% unless @user.role == "member" %>
-              <%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post", confirm: "Are you sure you want to make this user a member?" }, class: "dropdown-item" %>
+              <%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post", confirm: "Are you sure you want to make #{@user.username} a member?" }, class: "dropdown-item" %>
             <% end %>
             <% unless @user.role == "moderator" %>
-              <%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post", confirm: "Are you sure you want to make this user a moderator?" }, class: "dropdown-item" %>
+              <%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post", confirm: "Are you sure you want to make #{@user.username} a moderator?" }, class: "dropdown-item" %>
             <% end %>
             <% unless @user.role == "admin" %>
-              <%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post", confirm: "Are you sure you want to make this user an admin?" }, class: "dropdown-item" %>
+              <%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post", confirm: "Are you sure you want to make #{@user.username} an admin?" }, class: "dropdown-item" %>
             <% end %>
           <% end %>
 
