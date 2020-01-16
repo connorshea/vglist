@@ -119,6 +119,8 @@ class User < ApplicationRecord
     super && !banned?
   end
 
+  # If the user is determined to be inactive by `active_for_authentication?`,
+  # this is the name of the message that will be returned.
   sig { returns(Symbol) }
   def inactive_message
     banned? ? :account_banned : super
