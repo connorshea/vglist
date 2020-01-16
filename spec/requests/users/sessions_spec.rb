@@ -47,6 +47,23 @@ RSpec.describe "User Session", type: :request do
       delete destroy_user_session_path
       follow_redirect!
       expect(response.body).to include('Signed out successfully.')
+      expect(response.body).to include('Sign in')
+    end
+  end
+
+  describe "Ban checks" do
+    let(:user) { create(:confirmed_user) }
+
+    it "user is logged out if they're banned" do
+      sign_in(user)
+      get root_path
+      expect(response).to have_http_status(:success)
+      user.banned = true
+      user.save
+      get root_path
+      follow_redirect!
+      expect(response.body).to include('Sign in')
+      expect(response.body).not_to include('Sign out')
     end
   end
 end
