@@ -33,7 +33,9 @@ RSpec.describe UserPolicy, type: :policy do
           :connect_steam,
           :disconnect_steam,
           :reset_game_library,
-          :reset_token
+          :reset_token,
+          :ban,
+          :unban
         ]
       )
     end
@@ -68,13 +70,15 @@ RSpec.describe UserPolicy, type: :policy do
           :connect_steam,
           :disconnect_steam,
           :reset_game_library,
-          :reset_token
+          :reset_token,
+          :ban,
+          :unban
         ]
       )
     end
   end
 
-  describe 'A user that is an moderator' do
+  describe 'A user that is a moderator' do
     let(:current_user) { create(:moderator) }
     let(:user) { create(:user) }
 
@@ -89,7 +93,9 @@ RSpec.describe UserPolicy, type: :policy do
           :activity,
           :following,
           :followers,
-          :favorites
+          :favorites,
+          :ban,
+          :unban
         ]
       )
     end
@@ -125,7 +131,9 @@ RSpec.describe UserPolicy, type: :policy do
           :activity,
           :following,
           :followers,
-          :favorites
+          :favorites,
+          :ban,
+          :unban
         ]
       )
     end
@@ -141,6 +149,26 @@ RSpec.describe UserPolicy, type: :policy do
           :reset_token
         ]
       )
+    end
+  end
+
+  describe "A moderator looking at an admin's profile" do
+    let(:current_user) { create(:moderator) }
+    let(:user) { create(:admin) }
+
+    # It allows unbanning because banning a user revokes their role, so it
+    # shouldn't really ever occur that a user is both an admin _and_ banned.
+    it "does not permit banning" do
+      expect(user_policy).to forbid_actions([:ban])
+    end
+  end
+
+  describe "An admin looking at a moderator's profile" do
+    let(:current_user) { create(:admin) }
+    let(:user) { create(:moderator) }
+
+    it "permits banning and unbanning" do
+      expect(user_policy).to permit_actions([:ban, :unban])
     end
   end
 
@@ -169,7 +197,16 @@ RSpec.describe UserPolicy, type: :policy do
         ]
       )
     end
-    it { should_not permit_actions([:update_role]) }
+
+    it "does not permit actions" do
+      expect(user_policy).to forbid_actions(
+        [
+          :update_role,
+          :ban,
+          :unban
+        ]
+      )
+    end
   end
 
   describe 'A private user looking at their own profile' do
@@ -198,7 +235,15 @@ RSpec.describe UserPolicy, type: :policy do
       )
     end
 
-    it { should_not permit_actions([:update_role]) }
+    it "does not permit actions" do
+      expect(user_policy).to forbid_actions(
+        [
+          :update_role,
+          :ban,
+          :unban
+        ]
+      )
+    end
   end
 
   describe "An admin that is looking at a private user's profile" do
@@ -217,7 +262,9 @@ RSpec.describe UserPolicy, type: :policy do
           :activity,
           :following,
           :followers,
-          :favorites
+          :favorites,
+          :ban,
+          :unban
         ]
       )
     end
@@ -258,7 +305,9 @@ RSpec.describe UserPolicy, type: :policy do
           :activity,
           :following,
           :followers,
-          :favorites
+          :favorites,
+          :ban,
+          :unban
         ]
       )
     end
@@ -286,7 +335,9 @@ RSpec.describe UserPolicy, type: :policy do
           :activity,
           :following,
           :followers,
-          :favorites
+          :favorites,
+          :ban,
+          :unban
         ]
       )
     end
