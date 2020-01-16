@@ -4,7 +4,12 @@ class UsersController < ApplicationController
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   def index
-    @users = User.where(banned: false).order(:id).page helpers.page_param
+    # Hide banned users from users that aren't moderators or admins.
+    if current_user&.member? || current_user.nil?
+      @users = User.where(banned: false).order(:id).page helpers.page_param
+    elsif current_user&.moderator? || current_user&.admin?
+      @users = User.order(:id).page helpers.page_param
+    end
     skip_policy_scope
   end
 
