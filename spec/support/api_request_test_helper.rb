@@ -14,4 +14,9 @@ module ApiRequestTestHelper
     puts "ERRORS: #{response_body['errors'].inspect}" if ENV['DEBUG'] && response_body['errors']&.any?
     return response_body
   end
+
+  # Return an array of error messages from the GraphQL result object.
+  def api_result_errors(result)
+    return result['errors'].map { |item| item['message'] }
+  end
 end
