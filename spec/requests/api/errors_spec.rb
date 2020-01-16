@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe "API Errors", type: :request do
-  describe "Get " do
+  describe "API requests with invalid data" do
     let(:invalid_access_token) { instance_double("Doorkeeper::AccessToken", token: 'foo') }
     let(:banned_user) { create(:banned_user) }
     let(:application) { build(:application, owner: banned_user) }
