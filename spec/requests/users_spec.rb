@@ -447,7 +447,7 @@ RSpec.describe "Users", type: :request do
     it "bans user as admin" do
       sign_in(admin)
       post ban_user_path(user.id)
-      expect(response).to redirect_to(users_path)
+      expect(response).to redirect_to(user_path(user))
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
       expect(response.body).to include("#{user.username} was successfully banned.")
@@ -456,7 +456,7 @@ RSpec.describe "Users", type: :request do
     it "bans user as moderator" do
       sign_in(moderator)
       post ban_user_path(user.id)
-      expect(response).to redirect_to(users_path)
+      expect(response).to redirect_to(user_path(user))
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
       expect(response.body).to include("#{user.username} was successfully banned.")

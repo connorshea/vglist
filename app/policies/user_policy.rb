@@ -128,8 +128,11 @@ class UserPolicy < ApplicationPolicy
     current_user && user == current_user
   end
 
+  # User profiles are always visible to their own user and to admins. They are
+  # not visible to moderators or normal users if they're private or if they've
+  # been banned.
   sig { returns(T.nilable(T::Boolean)) }
   def user_profile_is_visible?
-    user&.public_account? || user_is_current_user? || current_user&.admin?
+    (user&.public_account? && !user&.banned?) || user_is_current_user? || current_user&.admin?
   end
 end
