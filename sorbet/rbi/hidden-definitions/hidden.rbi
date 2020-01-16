@@ -8909,8 +8909,6 @@ module GraphQL::Schema::CatchallMiddleware
   MESSAGE = ::T.let(nil, ::T.untyped)
 end
 
-GraphQL::Schema::Context = GraphQL::Query::Context
-
 class GraphQL::Schema::Directive
   ARGUMENT_DEFINITION = ::T.let(nil, ::T.untyped)
   DEFAULT_DEPRECATION_REASON = ::T.let(nil, ::T.untyped)
@@ -15412,6 +15410,216 @@ class PgSearch::Configuration
 end
 
 module PgSearch::Document::GeneratedAttributeMethods
+  def content(); end
+
+  def content=(value); end
+
+  def content?(*args); end
+
+  def content_before_last_save(*args); end
+
+  def content_before_type_cast(*args); end
+
+  def content_came_from_user?(*args); end
+
+  def content_change(*args); end
+
+  def content_change_to_be_saved(*args); end
+
+  def content_changed?(*args); end
+
+  def content_in_database(*args); end
+
+  def content_previous_change(*args); end
+
+  def content_previously_changed?(*args); end
+
+  def content_was(*args); end
+
+  def content_will_change!(*args); end
+
+  def created_at(); end
+
+  def created_at=(value); end
+
+  def created_at?(*args); end
+
+  def created_at_before_last_save(*args); end
+
+  def created_at_before_type_cast(*args); end
+
+  def created_at_came_from_user?(*args); end
+
+  def created_at_change(*args); end
+
+  def created_at_change_to_be_saved(*args); end
+
+  def created_at_changed?(*args); end
+
+  def created_at_in_database(*args); end
+
+  def created_at_previous_change(*args); end
+
+  def created_at_previously_changed?(*args); end
+
+  def created_at_was(*args); end
+
+  def created_at_will_change!(*args); end
+
+  def id_before_last_save(*args); end
+
+  def id_came_from_user?(*args); end
+
+  def id_change(*args); end
+
+  def id_change_to_be_saved(*args); end
+
+  def id_changed?(*args); end
+
+  def id_previous_change(*args); end
+
+  def id_previously_changed?(*args); end
+
+  def id_will_change!(*args); end
+
+  def restore_content!(*args); end
+
+  def restore_created_at!(*args); end
+
+  def restore_id!(*args); end
+
+  def restore_searchable_id!(*args); end
+
+  def restore_searchable_type!(*args); end
+
+  def restore_updated_at!(*args); end
+
+  def saved_change_to_content(*args); end
+
+  def saved_change_to_content?(*args); end
+
+  def saved_change_to_created_at(*args); end
+
+  def saved_change_to_created_at?(*args); end
+
+  def saved_change_to_id(*args); end
+
+  def saved_change_to_id?(*args); end
+
+  def saved_change_to_searchable_id(*args); end
+
+  def saved_change_to_searchable_id?(*args); end
+
+  def saved_change_to_searchable_type(*args); end
+
+  def saved_change_to_searchable_type?(*args); end
+
+  def saved_change_to_updated_at(*args); end
+
+  def saved_change_to_updated_at?(*args); end
+
+  def searchable_id(); end
+
+  def searchable_id=(value); end
+
+  def searchable_id?(*args); end
+
+  def searchable_id_before_last_save(*args); end
+
+  def searchable_id_before_type_cast(*args); end
+
+  def searchable_id_came_from_user?(*args); end
+
+  def searchable_id_change(*args); end
+
+  def searchable_id_change_to_be_saved(*args); end
+
+  def searchable_id_changed?(*args); end
+
+  def searchable_id_in_database(*args); end
+
+  def searchable_id_previous_change(*args); end
+
+  def searchable_id_previously_changed?(*args); end
+
+  def searchable_id_was(*args); end
+
+  def searchable_id_will_change!(*args); end
+
+  def searchable_type(); end
+
+  def searchable_type=(value); end
+
+  def searchable_type?(*args); end
+
+  def searchable_type_before_last_save(*args); end
+
+  def searchable_type_before_type_cast(*args); end
+
+  def searchable_type_came_from_user?(*args); end
+
+  def searchable_type_change(*args); end
+
+  def searchable_type_change_to_be_saved(*args); end
+
+  def searchable_type_changed?(*args); end
+
+  def searchable_type_in_database(*args); end
+
+  def searchable_type_previous_change(*args); end
+
+  def searchable_type_previously_changed?(*args); end
+
+  def searchable_type_was(*args); end
+
+  def searchable_type_will_change!(*args); end
+
+  def updated_at(); end
+
+  def updated_at=(value); end
+
+  def updated_at?(*args); end
+
+  def updated_at_before_last_save(*args); end
+
+  def updated_at_before_type_cast(*args); end
+
+  def updated_at_came_from_user?(*args); end
+
+  def updated_at_change(*args); end
+
+  def updated_at_change_to_be_saved(*args); end
+
+  def updated_at_changed?(*args); end
+
+  def updated_at_in_database(*args); end
+
+  def updated_at_previous_change(*args); end
+
+  def updated_at_previously_changed?(*args); end
+
+  def updated_at_was(*args); end
+
+  def updated_at_will_change!(*args); end
+
+  def will_save_change_to_content?(*args); end
+
+  def will_save_change_to_created_at?(*args); end
+
+  def will_save_change_to_id?(*args); end
+
+  def will_save_change_to_searchable_id?(*args); end
+
+  def will_save_change_to_searchable_type?(*args); end
+
+  def will_save_change_to_updated_at?(*args); end
+end
+
+module PgSearch::Document::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module PgSearch::Document::GeneratedRelationMethods
   extend ::Mutex_m
 end
 

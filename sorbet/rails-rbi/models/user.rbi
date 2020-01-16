@@ -2092,6 +2092,15 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def authentication_token?; end
 
+  sig { returns(T::Boolean) }
+  def banned; end
+
+  sig { params(value: T::Boolean).void }
+  def banned=(value); end
+
+  sig { returns(T::Boolean) }
+  def banned?; end
+
   sig { returns(String) }
   def bio; end
 
@@ -3324,6 +3333,51 @@ module User::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def authentication_token_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_banned?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_banned(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_banned?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def banned_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def banned_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_banned!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def banned_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def banned_came_from_user?(*args); end
 end
 
 module User::GeneratedAssociationMethods

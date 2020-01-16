@@ -4,7 +4,12 @@ class UsersController < ApplicationController
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   def index
-    @users = User.order(:id).page helpers.page_param
+    # Hide banned users from users that aren't moderators or admins.
+    if current_user&.member? || current_user.nil?
+      @users = User.where(banned: false).order(:id).page helpers.page_param
+    elsif current_user&.moderator? || current_user&.admin?
+      @users = User.order(:id).page helpers.page_param
+    end
     skip_policy_scope
   end
 
@@ -78,7 +83,7 @@ class UsersController < ApplicationController
     raise if steam_account.nil?
 
     steam_api_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&steamid=#{steam_account[:steam_id]}&include_appinfo=1&include_played_free_games=1"
-    json = JSON.parse(T.must(URI.open(steam_api_url)).read)
+    json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
 
     steam_games = json.dig('response', 'games')
 
@@ -142,7 +147,7 @@ class UsersController < ApplicationController
 
     # Resolve the numerical Steam ID based on the provided username.
     steam_api_url = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{params[:steam_username]}"
-    json = JSON.parse(T.must(URI.open(steam_api_url)).read)
+    json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
 
     steam_id = json.dig("response", "steamid")
 
@@ -330,12 +335,46 @@ class UsersController < ApplicationController
     @user = current_user
     authorize @user
 
-    @user.authentication_token = Devise.friendly_token
+    @user&.authentication_token = Devise.friendly_token
 
-    if @user.save
+    if @user&.save
       redirect_to oauth_applications_path, success: "API token successfully reset."
     else
       redirect_to oauth_applications_path, error: "Unable to reset API token."
+    end
+  end
+
+  def ban
+    @user = User.find(params[:id])
+
+    authorize @user
+
+    @user.banned = true
+    # Revoke any special roles from the banned user.
+    @user.role = :member unless @user.member?
+
+    # Note: There's no good way to destroy sessions of users besides the
+    # current user, but there's a before_action method run on every request,
+    # so banned users will get logged out if they do anything.
+
+    if @user.save
+      redirect_to user_path(@user), success: "#{@user.username} was successfully banned."
+    else
+      redirect_to user_path(@user), error: "#{@user.username} could not be banned."
+    end
+  end
+
+  def unban
+    @user = User.find(params[:id])
+
+    authorize @user
+
+    @user.banned = false
+
+    if @user.save
+      redirect_to user_path(@user), success: "#{@user.username} was successfully unbanned."
+    else
+      redirect_to user_path(@user), error: "#{@user.username} could not be unbanned."
     end
   end
 

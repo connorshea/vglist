@@ -4161,192 +4161,6 @@ class ActiveRecord::SuppressorRegistry
   def suppressed; end
   extend ActiveSupport::PerThreadRegistry
 end
-class ActiveRecord::Associations::CollectionProxy < ActiveRecord::Relation
-  def <<(*records); end
-  def ==(other); end
-  def _select!(*args, &block); end
-  def annotate!(*args, &block); end
-  def annotate(*args, &block); end
-  def annotate_values(*args, &block); end
-  def annotate_values=(arg); end
-  def append(*records); end
-  def arel(*args, &block); end
-  def build(attributes = nil, &block); end
-  def calculate(operation, column_name); end
-  def clear; end
-  def concat(*records); end
-  def construct_join_dependency(*args, &block); end
-  def create!(attributes = nil, &block); end
-  def create(attributes = nil, &block); end
-  def create_with!(*args, &block); end
-  def create_with(*args, &block); end
-  def create_with_value(*args, &block); end
-  def create_with_value=(arg); end
-  def delete(*records); end
-  def delete_all(dependent = nil); end
-  def destroy(*records); end
-  def destroy_all; end
-  def distinct!(*args, &block); end
-  def distinct(*args, &block); end
-  def distinct_value(*args, &block); end
-  def distinct_value=(arg); end
-  def eager_load!(*args, &block); end
-  def eager_load(*args, &block); end
-  def eager_load_values(*args, &block); end
-  def eager_load_values=(arg); end
-  def empty?; end
-  def except(*args, &block); end
-  def exec_queries; end
-  def extending!(*args, &block); end
-  def extending(*args, &block); end
-  def extending_values(*args, &block); end
-  def extending_values=(arg); end
-  def extensions(*args, &block); end
-  def extract_associated(*args, &block); end
-  def find(*args); end
-  def find_from_target?; end
-  def find_nth_from_last(index); end
-  def find_nth_with_limit(index, limit); end
-  def from!(*args, &block); end
-  def from(*args, &block); end
-  def from_clause(*args, &block); end
-  def from_clause=(arg); end
-  def group!(*args, &block); end
-  def group(*args, &block); end
-  def group_values(*args, &block); end
-  def group_values=(arg); end
-  def having!(*args, &block); end
-  def having(*args, &block); end
-  def having_clause(*args, &block); end
-  def having_clause=(arg); end
-  def include?(record); end
-  def includes!(*args, &block); end
-  def includes(*args, &block); end
-  def includes_values(*args, &block); end
-  def includes_values=(arg); end
-  def initialize(klass, association); end
-  def joins!(*args, &block); end
-  def joins(*args, &block); end
-  def joins_values(*args, &block); end
-  def joins_values=(arg); end
-  def last(limit = nil); end
-  def left_joins(*args, &block); end
-  def left_outer_joins!(*args, &block); end
-  def left_outer_joins(*args, &block); end
-  def left_outer_joins_values(*args, &block); end
-  def left_outer_joins_values=(arg); end
-  def limit!(*args, &block); end
-  def limit(*args, &block); end
-  def limit_value(*args, &block); end
-  def limit_value=(arg); end
-  def load_target; end
-  def loaded?; end
-  def lock!(*args, &block); end
-  def lock(*args, &block); end
-  def lock_value(*args, &block); end
-  def lock_value=(arg); end
-  def merge!(*args, &block); end
-  def merge(*args, &block); end
-  def new(attributes = nil, &block); end
-  def none!(*args, &block); end
-  def none(*args, &block); end
-  def null_scope?; end
-  def offset!(*args, &block); end
-  def offset(*args, &block); end
-  def offset_value(*args, &block); end
-  def offset_value=(arg); end
-  def only(*args, &block); end
-  def optimizer_hints!(*args, &block); end
-  def optimizer_hints(*args, &block); end
-  def optimizer_hints_values(*args, &block); end
-  def optimizer_hints_values=(arg); end
-  def or!(*args, &block); end
-  def or(*args, &block); end
-  def order!(*args, &block); end
-  def order(*args, &block); end
-  def order_values(*args, &block); end
-  def order_values=(arg); end
-  def pluck(*column_names); end
-  def preload!(*args, &block); end
-  def preload(*args, &block); end
-  def preload_values(*args, &block); end
-  def preload_values=(arg); end
-  def prepend(*args); end
-  def proxy_association; end
-  def push(*records); end
-  def readonly!(*args, &block); end
-  def readonly(*args, &block); end
-  def readonly_value(*args, &block); end
-  def readonly_value=(arg); end
-  def records; end
-  def references!(*args, &block); end
-  def references(*args, &block); end
-  def references_values(*args, &block); end
-  def references_values=(arg); end
-  def reload; end
-  def reorder!(*args, &block); end
-  def reorder(*args, &block); end
-  def reordering_value(*args, &block); end
-  def reordering_value=(arg); end
-  def replace(other_array); end
-  def reselect!(*args, &block); end
-  def reselect(*args, &block); end
-  def reset; end
-  def reset_scope; end
-  def reverse_order!(*args, &block); end
-  def reverse_order(*args, &block); end
-  def reverse_order_value(*args, &block); end
-  def reverse_order_value=(arg); end
-  def rewhere(*args, &block); end
-  def scope; end
-  def scoping(*args, &block); end
-  def select_values(*args, &block); end
-  def select_values=(arg); end
-  def size; end
-  def skip_preloading!(*args, &block); end
-  def skip_query_cache!(*args, &block); end
-  def skip_query_cache_value(*args, &block); end
-  def skip_query_cache_value=(arg); end
-  def spawn(*args, &block); end
-  def take(limit = nil); end
-  def target; end
-  def unscope!(*args, &block); end
-  def unscope(*args, &block); end
-  def unscope_values(*args, &block); end
-  def unscope_values=(arg); end
-  def values(*args, &block); end
-  def where!(*args, &block); end
-  def where(*args, &block); end
-  def where_clause(*args, &block); end
-  def where_clause=(arg); end
-end
-class ActiveRecord::AssociationRelation < ActiveRecord::Relation
-  def ==(other); end
-  def build(attributes = nil, &block); end
-  def create!(attributes = nil, &block); end
-  def create(attributes = nil, &block); end
-  def exec_queries; end
-  def initialize(klass, association); end
-  def new(attributes = nil, &block); end
-  def proxy_association; end
-end
-class ActiveRecord::Associations::Builder::SingularAssociation < ActiveRecord::Associations::Builder::Association
-  def self.define_accessors(model, reflection); end
-  def self.define_constructors(mixin, name); end
-  def self.valid_options(options); end
-end
-class ActiveRecord::Associations::Builder::BelongsTo < ActiveRecord::Associations::Builder::SingularAssociation
-  def self.add_counter_cache_callbacks(model, reflection); end
-  def self.add_default_callbacks(model, reflection); end
-  def self.add_destroy_callbacks(model, reflection); end
-  def self.add_touch_callbacks(model, reflection); end
-  def self.define_callbacks(model, reflection); end
-  def self.define_validations(model, reflection); end
-  def self.macro; end
-  def self.touch_record(o, changes, foreign_key, name, touch, touch_method); end
-  def self.valid_dependent_options; end
-  def self.valid_options(options); end
-end
 class ActiveRecord::Base
   def __callbacks; end
   def __callbacks?; end
@@ -5551,6 +5365,192 @@ module ActiveRecord::Railties::CollectionCacheAssociationLoading
   def collection_without_template(*arg0); end
   def relation_from_options(cached: nil, partial: nil, collection: nil, **_); end
   def setup(context, options, as, block); end
+end
+class ActiveRecord::Associations::CollectionProxy < ActiveRecord::Relation
+  def <<(*records); end
+  def ==(other); end
+  def _select!(*args, &block); end
+  def annotate!(*args, &block); end
+  def annotate(*args, &block); end
+  def annotate_values(*args, &block); end
+  def annotate_values=(arg); end
+  def append(*records); end
+  def arel(*args, &block); end
+  def build(attributes = nil, &block); end
+  def calculate(operation, column_name); end
+  def clear; end
+  def concat(*records); end
+  def construct_join_dependency(*args, &block); end
+  def create!(attributes = nil, &block); end
+  def create(attributes = nil, &block); end
+  def create_with!(*args, &block); end
+  def create_with(*args, &block); end
+  def create_with_value(*args, &block); end
+  def create_with_value=(arg); end
+  def delete(*records); end
+  def delete_all(dependent = nil); end
+  def destroy(*records); end
+  def destroy_all; end
+  def distinct!(*args, &block); end
+  def distinct(*args, &block); end
+  def distinct_value(*args, &block); end
+  def distinct_value=(arg); end
+  def eager_load!(*args, &block); end
+  def eager_load(*args, &block); end
+  def eager_load_values(*args, &block); end
+  def eager_load_values=(arg); end
+  def empty?; end
+  def except(*args, &block); end
+  def exec_queries; end
+  def extending!(*args, &block); end
+  def extending(*args, &block); end
+  def extending_values(*args, &block); end
+  def extending_values=(arg); end
+  def extensions(*args, &block); end
+  def extract_associated(*args, &block); end
+  def find(*args); end
+  def find_from_target?; end
+  def find_nth_from_last(index); end
+  def find_nth_with_limit(index, limit); end
+  def from!(*args, &block); end
+  def from(*args, &block); end
+  def from_clause(*args, &block); end
+  def from_clause=(arg); end
+  def group!(*args, &block); end
+  def group(*args, &block); end
+  def group_values(*args, &block); end
+  def group_values=(arg); end
+  def having!(*args, &block); end
+  def having(*args, &block); end
+  def having_clause(*args, &block); end
+  def having_clause=(arg); end
+  def include?(record); end
+  def includes!(*args, &block); end
+  def includes(*args, &block); end
+  def includes_values(*args, &block); end
+  def includes_values=(arg); end
+  def initialize(klass, association); end
+  def joins!(*args, &block); end
+  def joins(*args, &block); end
+  def joins_values(*args, &block); end
+  def joins_values=(arg); end
+  def last(limit = nil); end
+  def left_joins(*args, &block); end
+  def left_outer_joins!(*args, &block); end
+  def left_outer_joins(*args, &block); end
+  def left_outer_joins_values(*args, &block); end
+  def left_outer_joins_values=(arg); end
+  def limit!(*args, &block); end
+  def limit(*args, &block); end
+  def limit_value(*args, &block); end
+  def limit_value=(arg); end
+  def load_target; end
+  def loaded?; end
+  def lock!(*args, &block); end
+  def lock(*args, &block); end
+  def lock_value(*args, &block); end
+  def lock_value=(arg); end
+  def merge!(*args, &block); end
+  def merge(*args, &block); end
+  def new(attributes = nil, &block); end
+  def none!(*args, &block); end
+  def none(*args, &block); end
+  def null_scope?; end
+  def offset!(*args, &block); end
+  def offset(*args, &block); end
+  def offset_value(*args, &block); end
+  def offset_value=(arg); end
+  def only(*args, &block); end
+  def optimizer_hints!(*args, &block); end
+  def optimizer_hints(*args, &block); end
+  def optimizer_hints_values(*args, &block); end
+  def optimizer_hints_values=(arg); end
+  def or!(*args, &block); end
+  def or(*args, &block); end
+  def order!(*args, &block); end
+  def order(*args, &block); end
+  def order_values(*args, &block); end
+  def order_values=(arg); end
+  def pluck(*column_names); end
+  def preload!(*args, &block); end
+  def preload(*args, &block); end
+  def preload_values(*args, &block); end
+  def preload_values=(arg); end
+  def prepend(*args); end
+  def proxy_association; end
+  def push(*records); end
+  def readonly!(*args, &block); end
+  def readonly(*args, &block); end
+  def readonly_value(*args, &block); end
+  def readonly_value=(arg); end
+  def records; end
+  def references!(*args, &block); end
+  def references(*args, &block); end
+  def references_values(*args, &block); end
+  def references_values=(arg); end
+  def reload; end
+  def reorder!(*args, &block); end
+  def reorder(*args, &block); end
+  def reordering_value(*args, &block); end
+  def reordering_value=(arg); end
+  def replace(other_array); end
+  def reselect!(*args, &block); end
+  def reselect(*args, &block); end
+  def reset; end
+  def reset_scope; end
+  def reverse_order!(*args, &block); end
+  def reverse_order(*args, &block); end
+  def reverse_order_value(*args, &block); end
+  def reverse_order_value=(arg); end
+  def rewhere(*args, &block); end
+  def scope; end
+  def scoping(*args, &block); end
+  def select_values(*args, &block); end
+  def select_values=(arg); end
+  def size; end
+  def skip_preloading!(*args, &block); end
+  def skip_query_cache!(*args, &block); end
+  def skip_query_cache_value(*args, &block); end
+  def skip_query_cache_value=(arg); end
+  def spawn(*args, &block); end
+  def take(limit = nil); end
+  def target; end
+  def unscope!(*args, &block); end
+  def unscope(*args, &block); end
+  def unscope_values(*args, &block); end
+  def unscope_values=(arg); end
+  def values(*args, &block); end
+  def where!(*args, &block); end
+  def where(*args, &block); end
+  def where_clause(*args, &block); end
+  def where_clause=(arg); end
+end
+class ActiveRecord::AssociationRelation < ActiveRecord::Relation
+  def ==(other); end
+  def build(attributes = nil, &block); end
+  def create!(attributes = nil, &block); end
+  def create(attributes = nil, &block); end
+  def exec_queries; end
+  def initialize(klass, association); end
+  def new(attributes = nil, &block); end
+  def proxy_association; end
+end
+class ActiveRecord::Associations::Builder::SingularAssociation < ActiveRecord::Associations::Builder::Association
+  def self.define_accessors(model, reflection); end
+  def self.define_constructors(mixin, name); end
+  def self.valid_options(options); end
+end
+class ActiveRecord::Associations::Builder::BelongsTo < ActiveRecord::Associations::Builder::SingularAssociation
+  def self.add_counter_cache_callbacks(model, reflection); end
+  def self.add_default_callbacks(model, reflection); end
+  def self.add_destroy_callbacks(model, reflection); end
+  def self.add_touch_callbacks(model, reflection); end
+  def self.define_callbacks(model, reflection); end
+  def self.define_validations(model, reflection); end
+  def self.macro; end
+  def self.touch_record(o, changes, foreign_key, name, touch, touch_method); end
+  def self.valid_dependent_options; end
+  def self.valid_options(options); end
 end
 class ActiveRecord::Associations::Builder::CollectionAssociation < ActiveRecord::Associations::Builder::Association
   def self.define_callback(model, callback_name, name, options); end

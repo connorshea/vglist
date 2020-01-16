@@ -8,7 +8,7 @@
 
     <%# Only display the user's bio if it's a public account or the current
         user has access for some other reason. %>
-    <% if user.public_account? || policy(user).show? %>
+    <% if policy(user).show? %>
       <% if !user.bio.blank? %>
         <h2 class="subtitle"><%= user.bio %></h2>
       <% else %>
@@ -20,6 +20,10 @@
       <% if user.private_account? %>
         <p class='has-text-weight-semibold'>This user's account is private.
       <% end %>
+
+      <% if user.banned? %>
+        <p class='tag is-medium has-text-weight-bold is-danger'>This user has been banned.
+      <% end %>
     <% end %>
 
     <% if user.admin? %>
@@ -30,7 +34,7 @@
   </div>
 </div>
 
-<% if user.public_account? || policy(user).show? %>
+<% if policy(user).show? %>
   <div class="tabs">
     <ul>
       <li class="<%= 'is-active' if current_page?(user_path(user)) %>">

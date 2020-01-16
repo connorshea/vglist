@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
 
   # In devise-related pages, permit a username parameter.
   before_action :configure_permitted_parameters, if: :devise_controller?
+  # If the user has been banned, sign them out.
+  before_action :sign_out_banned_users
   # Send context with error messages to Sentry.
   before_action :set_raven_context
 
@@ -19,6 +21,14 @@ class ApplicationController < ActionController::Base
   add_flash_types :success, :error
 
   protected
+
+  # Sign out the current user if they've been banned.
+  def sign_out_banned_users
+    return unless current_user&.banned?
+
+    sign_out
+    redirect_to root_path
+  end
 
   # Add username as an accepted key during sign up.
   def configure_permitted_parameters

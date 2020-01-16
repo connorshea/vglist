@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.0.pre3
+# graphql-1.10.0.pre4
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
   def self.parse_file(filename); end
@@ -56,7 +56,7 @@ module GraphQL::Define::AssignObjectField
 end
 class GraphQL::Define::DefinedObjectProxy
   def initialize(target); end
-  def method_missing(name, *args, &block); end
+  def method_missing(name, *args, **kwargs, &block); end
   def respond_to_missing?(name, include_private = nil); end
   def target; end
   def types; end
@@ -285,7 +285,7 @@ class GraphQL::NonNullType < GraphQL::BaseType
   include GraphQL::BaseType::ModifiesAnotherType
 end
 class GraphQL::UnionType < GraphQL::BaseType
-  def add_possible_types(types, options); end
+  def add_possible_types(types, **options); end
   def get_possible_type(type_name, ctx); end
   def include?(child_type_defn, ctx = nil); end
   def initialize; end
@@ -303,6 +303,9 @@ class GraphQL::UnionType < GraphQL::BaseType
   def type_membership_class=(arg0); end
   def type_memberships; end
   def type_memberships=(type_memberships); end
+end
+class GraphQL::UnionType::AcceptPossibleTypesDefinition
+  def self.call(target, possible_types, options = nil); end
 end
 class GraphQL::Argument
   def as; end
@@ -1395,6 +1398,7 @@ class GraphQL::Tracing::PlatformTracing
   def initialize(options = nil); end
   def instrument(type, field); end
   def options; end
+  def platform_key_cache(ctx); end
   def self.platform_keys; end
   def self.platform_keys=(arg0); end
   def self.use(schema_defn, options = nil); end
@@ -1402,38 +1406,50 @@ class GraphQL::Tracing::PlatformTracing
   def trace_field(type, field); end
 end
 class GraphQL::Tracing::AppsignalTracing < GraphQL::Tracing::PlatformTracing
+  def platform_authorized_key(type); end
   def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
   def platform_trace(platform_key, key, data); end
 end
 class GraphQL::Tracing::DataDogTracing < GraphQL::Tracing::PlatformTracing
   def analytics_available?; end
   def analytics_enabled?; end
   def analytics_sample_rate; end
+  def platform_authorized_key(type); end
   def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
   def platform_trace(platform_key, key, data); end
   def service_name; end
   def tracer; end
 end
 class GraphQL::Tracing::NewRelicTracing < GraphQL::Tracing::PlatformTracing
   def initialize(options = nil); end
+  def platform_authorized_key(type); end
   def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
   def platform_trace(platform_key, key, data); end
 end
 class GraphQL::Tracing::ScoutTracing < GraphQL::Tracing::PlatformTracing
   def initialize(options = nil); end
+  def platform_authorized_key(type); end
   def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
   def platform_trace(platform_key, key, data); end
 end
 class GraphQL::Tracing::SkylightTracing < GraphQL::Tracing::PlatformTracing
   def initialize(options = nil); end
+  def platform_authorized_key(type); end
   def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
   def platform_trace(platform_key, key, data); end
 end
 class GraphQL::Tracing::PrometheusTracing < GraphQL::Tracing::PlatformTracing
   def initialize(opts = nil); end
   def instrument_execution(platform_key, key, data, &block); end
   def observe(platform_key, key, duration); end
+  def platform_authorized_key(type); end
   def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
   def platform_trace(platform_key, key, data, &block); end
 end
 module GraphQL::Tracing::Traceable
@@ -1514,9 +1530,10 @@ class GraphQL::Execution::Interpreter::HashResponse
 end
 class GraphQL::Execution::Interpreter::Runtime
   def add_dead_path(path); end
-  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: nil); end
+  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: nil, trace: nil); end
   def arg_to_value(graphql_object, arg_type, ast_value, already_arguments:); end
   def arguments(graphql_object, arg_owner, ast_node_or_hash); end
+  def authorized_new(type, value, context, path); end
   def context; end
   def continue_field(path, value, field, type, ast_node, next_selections, is_non_null, owner_object, arguments); end
   def continue_value(path, value, field, is_non_null, ast_node); end
@@ -1530,6 +1547,7 @@ class GraphQL::Execution::Interpreter::Runtime
   def initialize(query:, response:); end
   def inspect; end
   def query; end
+  def resolve_type(type, value, path); end
   def resolve_with_directives(object, ast_node); end
   def run_directive(object, ast_node, idx); end
   def run_eager; end
@@ -1629,7 +1647,7 @@ class GraphQL::Execution::Multiplex
   def self.begin_query(query, multiplex); end
   def self.finish_query(data_result, query, multiplex); end
   def self.instrument_and_analyze(multiplex); end
-  def self.run_all(schema, query_options, *args); end
+  def self.run_all(schema, query_options, **kwargs); end
   def self.run_as_multiplex(multiplex); end
   def self.run_one_legacy(schema, query); end
   def self.run_queries(schema, queries, context: nil, max_complexity: nil); end
@@ -1686,6 +1704,12 @@ class GraphQL::Schema
   def disable_introspection_entry_points; end
   def disable_introspection_entry_points=(arg0); end
   def disable_introspection_entry_points?; end
+  def disable_schema_introspection_entry_point; end
+  def disable_schema_introspection_entry_point=(arg0); end
+  def disable_schema_introspection_entry_point?; end
+  def disable_type_introspection_entry_point; end
+  def disable_type_introspection_entry_point=(arg0); end
+  def disable_type_introspection_entry_point?; end
   def error_bubbling; end
   def error_bubbling=(arg0); end
   def error_handler(*args, &block); end
@@ -1778,6 +1802,10 @@ class GraphQL::Schema
   def self.directives(new_directives = nil); end
   def self.disable_introspection_entry_points; end
   def self.disable_introspection_entry_points?; end
+  def self.disable_schema_introspection_entry_point; end
+  def self.disable_schema_introspection_entry_point?; end
+  def self.disable_type_introspection_entry_point; end
+  def self.disable_type_introspection_entry_point?; end
   def self.error_bubbling(new_error_bubbling = nil); end
   def self.error_bubbling=(arg0); end
   def self.error_handler; end
@@ -1869,7 +1897,7 @@ class GraphQL::Schema
   def self.unauthorized_object(unauthorized_error); end
   def self.union_memberships(type = nil); end
   def self.update_type_owner(owner, type); end
-  def self.use(plugin, options = nil); end
+  def self.use(plugin, **kwargs); end
   def self.using_ast_analysis?; end
   def self.validate(*args, &block); end
   def self.visible?(member, ctx); end
@@ -1882,7 +1910,7 @@ class GraphQL::Schema
   def subscriptions=(arg0); end
   def sync_lazy(value); end
   def to_definition(only: nil, except: nil, context: nil); end
-  def to_document; end
+  def to_document(only: nil, except: nil, context: nil); end
   def to_json(*args); end
   def tracers; end
   def type_error(err, ctx); end
@@ -2278,6 +2306,7 @@ end
 class GraphQL::Schema::List < GraphQL::Schema::Wrapper
   def coerce_input(value, ctx); end
   def coerce_result(value, ctx); end
+  def ensure_array(value); end
   def graphql_name; end
   def kind; end
   def list?; end
@@ -2340,6 +2369,7 @@ class GraphQL::Schema::EnumValue < GraphQL::Schema::Member
   def visible?(_ctx); end
   extend GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
   include GraphQL::Schema::Member::AcceptsDefinition
+  include GraphQL::Schema::Member::CachedGraphQLDefinition
   include GraphQL::Schema::Member::HasAstNode
   include GraphQL::Schema::Member::HasPath
 end
@@ -2558,7 +2588,7 @@ class GraphQL::Schema::Directive::Transform < GraphQL::Schema::Directive
 end
 class GraphQL::Schema::TypeMembership
   def abstract_type; end
-  def initialize(abstract_type, object_type, options); end
+  def initialize(abstract_type, object_type, **options); end
   def object_type; end
   def object_type=(arg0); end
   def visible?(_ctx); end
@@ -2603,7 +2633,7 @@ module GraphQL::Schema::Resolver::HasPayloadType
   def type_expr(new_payload_type = nil); end
 end
 class GraphQL::Schema::Mutation < GraphQL::Schema::Resolver
-  def self.field(*args, &block); end
+  def self.field(*args, **kwargs, &block); end
   def self.generate_payload_type; end
   def self.visible?(context); end
   extend GraphQL::Schema::Member::HasFields
@@ -2626,8 +2656,8 @@ class GraphQL::Schema::Subscription < GraphQL::Schema::Resolver
   def initialize(object:, context:, field:); end
   def load_application_object_failed(err); end
   def resolve(**args); end
-  def resolve_subscribe(args); end
-  def resolve_update(args); end
+  def resolve_subscribe(**args); end
+  def resolve_update(**args); end
   def self.field_options; end
   def self.subscription_scope(new_scope = nil); end
   def subscribe(args = nil); end
@@ -2759,7 +2789,7 @@ class GraphQL::Query::Context
   def execution_strategy; end
   def execution_strategy=(new_strategy); end
   def fetch(*args, &block); end
-  def initialize(query:, values:, object:); end
+  def initialize(query:, values:, object:, schema: nil); end
   def inspect; end
   def interpreter=(arg0); end
   def interpreter?(*args, &block); end
@@ -2984,6 +3014,7 @@ class GraphQL::Directive
   def on_fragment?; end
   def on_operation?; end
   def to_s; end
+  def type_class; end
   extend GraphQL::Define::InstanceDefinable::ClassMethods
   include GraphQL::Define::InstanceDefinable
 end

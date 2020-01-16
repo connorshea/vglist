@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.14.0
+# rouge-3.15.0
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
   def self.reload!; end
@@ -402,6 +402,8 @@ class Rouge::Lexers::Batchfile < Rouge::RegexLexer
   def self.operator_words; end
   def self.other_commands; end
 end
+class Rouge::Lexers::GHCCore < Rouge::RegexLexer
+end
 class Rouge::Lexers::Xojo < Rouge::RegexLexer
 end
 class Rouge::Lexers::M68k < Rouge::RegexLexer
@@ -624,6 +626,9 @@ class Rouge::Lexers::Nasm < Rouge::RegexLexer
   def self.reserved; end
 end
 class Rouge::Lexers::LLVM < Rouge::RegexLexer
+  def self.instructions; end
+  def self.keywords; end
+  def self.types; end
 end
 class Rouge::Lexers::Gradle < Rouge::Lexers::Groovy
   def self.keywords; end
@@ -733,6 +738,13 @@ class Rouge::Lexers::Nim < Rouge::RegexLexer
   def self.underscorize(words); end
 end
 class Rouge::Lexers::Dart < Rouge::RegexLexer
+end
+class Rouge::Lexers::FreeFEM < Rouge::Lexers::Cpp
+  def self.attributes; end
+  def self.builtins; end
+  def self.keywords; end
+  def self.keywords_type; end
+  def self.reserved; end
 end
 class Rouge::Lexers::D < Rouge::RegexLexer
 end
@@ -915,10 +927,14 @@ class Rouge::Lexers::GDScript < Rouge::RegexLexer
   def self.keywords; end
   def self.keywords_reserved; end
 end
+module Rouge::Lexers::ObjectiveCCommon
+  def at_builtins; end
+  def at_keywords; end
+  def builtins; end
+  def self.extended(base); end
+end
 class Rouge::Lexers::ObjectiveC < Rouge::Lexers::C
-  def self.at_builtins; end
-  def self.at_keywords; end
-  def self.builtins; end
+  extend Rouge::Lexers::ObjectiveCCommon
 end
 class Rouge::Lexers::Conf < Rouge::RegexLexer
 end
@@ -1075,6 +1091,9 @@ class Rouge::Lexers::SML < Rouge::RegexLexer
   def token_for_final_id(id); end
   def token_for_id(id); end
   def token_for_id_with_dot(id); end
+end
+class Rouge::Lexers::ObjectiveCpp < Rouge::Lexers::Cpp
+  extend Rouge::Lexers::ObjectiveCCommon
 end
 class Rouge::Lexers::BPF < Rouge::RegexLexer
 end

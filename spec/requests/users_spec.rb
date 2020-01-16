@@ -3,7 +3,23 @@ require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
   describe "GET users_path" do
+    let(:users) { create_list(:user, 10) }
+    let(:banned_user) { create(:banned_user) }
+
     it "returns http success" do
+      get users_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when there are users" do
+      users
+      get users_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when there are users and a banned user" do
+      users
+      banned_user
       get users_path
       expect(response).to have_http_status(:success)
     end
@@ -15,6 +31,7 @@ RSpec.describe "Users", type: :request do
     let(:user_with_game_purchase) { create(:user_with_game_purchase) }
     let(:user_with_favorite_game) { create(:user_with_favorite_game) }
     let(:private_user) { create(:private_user) }
+    let(:banned_user) { create(:banned_user) }
 
     it "returns http success" do
       get user_path(id: user.id)
@@ -38,6 +55,11 @@ RSpec.describe "Users", type: :request do
 
     it "returns http success for user with private account" do
       get user_path(id: private_user.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success for user that has been banned" do
+      get user_path(id: banned_user.id)
       expect(response).to have_http_status(:success)
     end
   end
@@ -414,6 +436,54 @@ RSpec.describe "Users", type: :request do
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
       expect(response.body).to include("Successfully reset game library.")
+    end
+  end
+
+  describe "POST ban_user_path" do
+    let(:admin) { create(:confirmed_admin) }
+    let(:moderator) { create(:confirmed_moderator) }
+    let(:user) { create(:confirmed_user) }
+
+    it "bans user as admin" do
+      sign_in(admin)
+      post ban_user_path(user.id)
+      expect(response).to redirect_to(user_path(user))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("#{user.username} was successfully banned.")
+    end
+
+    it "bans user as moderator" do
+      sign_in(moderator)
+      post ban_user_path(user.id)
+      expect(response).to redirect_to(user_path(user))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("#{user.username} was successfully banned.")
+    end
+  end
+
+  describe "POST unban_user_path" do
+    let(:admin) { create(:confirmed_admin) }
+    let(:moderator) { create(:confirmed_moderator) }
+    let(:user) { create(:banned_user) }
+
+    it "unbans user as admin" do
+      sign_in(admin)
+      post unban_user_path(user.id)
+      expect(response).to redirect_to(user_path(user))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("#{user.username} was successfully unbanned.")
+    end
+
+    it "unbans user as moderator" do
+      sign_in(moderator)
+      post unban_user_path(user.id)
+      expect(response).to redirect_to(user_path(user))
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("#{user.username} was successfully unbanned.")
     end
   end
 end

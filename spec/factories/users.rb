@@ -48,6 +48,10 @@ FactoryBot.define do
       role { :moderator }
     end
 
+    trait :banned do
+      banned { true }
+    end
+
     trait :admin do
       role { :admin }
     end
@@ -77,5 +81,7 @@ FactoryBot.define do
     factory :user_with_favorite_game,         traits: [:favorite_game]
 
     factory :user_with_application,           traits: [:confirmed, :application]
+
+    factory :banned_user,                     traits: [:confirmed, :banned]
   end
 end

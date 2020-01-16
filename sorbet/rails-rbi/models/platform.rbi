@@ -1417,10 +1417,10 @@ module Platform::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
-  sig { returns(T.nilable(::PgSearch::Document)) }
+  sig { returns(T.nilable(T.untyped)) }
   def pg_search_document; end
 
-  sig { params(value: T.nilable(::PgSearch::Document)).void }
+  sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
   sig { returns(T.untyped) }

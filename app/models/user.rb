@@ -113,6 +113,19 @@ class User < ApplicationRecord
     size: { less_than: 3.megabytes },
     aspect_ratio: :square
 
+  # Make sure the user isn't banned when logging in with Devise.
+  sig { returns(T.nilable(T::Boolean)) }
+  def active_for_authentication?
+    super && !banned?
+  end
+
+  # If the user is determined to be inactive by `active_for_authentication?`,
+  # this is the name of the message that will be returned.
+  sig { returns(Symbol) }
+  def inactive_message
+    banned? ? :account_banned : super
+  end
+
   private
 
   sig { void }

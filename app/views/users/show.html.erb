@@ -1,7 +1,6 @@
 <% content_for :title, @user.username %>
 <% content_for :description, "#{@user.username}'s user page on vglist" %>
 <% if @user.avatar.attached? %>
-  <%# This technically doesn't give us what we want because it won't be square, but oh well. %>
   <% content_for :opengraph_image, rails_blob_url(@user.avatar) %>
 <% else %>
   <% content_for :opengraph_image, image_url('default-avatar.png') %>
@@ -9,8 +8,8 @@
 
 <%= render 'user_header', user: @user %>
 
-<%# Display a message if the user's account is private, and hide everything else. %>
-<% if @user.public_account? || policy(@user).show? %>
+<%# Display a message if the user's account is private or has been banned, and hide everything else. %>
+<% if policy(@user).show? %>
   <% if current_user && @user != current_user %>
     <% if current_user_following?(@user) %>
       <%= link_to 'Unfollow', user_unfollow_path(user_id: @user.id), method: :delete, class: "is-danger button is-fullwidth-mobile mr-5 mr-0-mobile mt-10" %>
@@ -35,13 +34,13 @@
         <div class="dropdown-content">
           <% if policy(@user).update_role? && @user != current_user %>
             <% unless @user.role == "member" %>
-              <%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post", confirm: "Are you sure you want to make this user a member?" }, class: "dropdown-item" %>
+              <%= link_to "Make member", update_role_user_path(id: @user.id, role: "member"), data: { method: "post", confirm: "Are you sure you want to make #{@user.username} a member?" }, class: "dropdown-item" %>
             <% end %>
             <% unless @user.role == "moderator" %>
-              <%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post", confirm: "Are you sure you want to make this user a moderator?" }, class: "dropdown-item" %>
+              <%= link_to "Make moderator", update_role_user_path(id: @user.id, role: "moderator"), data: { method: "post", confirm: "Are you sure you want to make #{@user.username} a moderator?" }, class: "dropdown-item" %>
             <% end %>
             <% unless @user.role == "admin" %>
-              <%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post", confirm: "Are you sure you want to make this user an admin?" }, class: "dropdown-item" %>
+              <%= link_to "Make admin", update_role_user_path(id: @user.id, role: "admin"), data: { method: "post", confirm: "Are you sure you want to make #{@user.username} an admin?" }, class: "dropdown-item" %>
             <% end %>
           <% end %>
 
@@ -50,7 +49,21 @@
                 remove_avatar_user_path(@user.id),
                 method: :delete,
                 data: { confirm: "Are you sure you want to remove #{@user.username}'s avatar?" },
-                class: "dropdown-item has-text-danger" %></p>
+                class: "dropdown-item has-text-danger" %>
+          <% end %>
+
+          <% if policy(@user).ban? && !@user.banned? %>
+            <%= link_to "Ban user",
+                ban_user_path(@user.id),
+                method: :post,
+                data: { confirm: "Are you sure you want to ban #{@user.username}?" },
+                class: "dropdown-item has-text-danger" %>
+          <% elsif policy(@user).unban? && @user.banned? %>
+            <%= link_to "Unban user",
+                unban_user_path(@user.id),
+                method: :post,
+                data: { confirm: "Are you sure you want to unban #{@user.username}?" },
+                class: "dropdown-item has-text-danger" %>
           <% end %>
         </div>
       </div>
@@ -79,6 +92,8 @@
       }.to_json
     %>"
   ></div>
+<% elsif @user.banned? %>
+  <h2 class='subtitle has-text-centered has-text-weight-semibold mt-30'>This user's account has been banned.</h2>
 <% else %>
   <h2 class='subtitle has-text-centered has-text-weight-semibold mt-30'>This user's account is private.</h2>
 <% end %>

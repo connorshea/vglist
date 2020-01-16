@@ -223,7 +223,8 @@ module Types
     end
 
     def users
-      User.all
+      # Exclude banned users from the results.
+      User.all.where(banned: false)
     end
 
     def game_purchase(id:)
