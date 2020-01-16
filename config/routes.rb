@@ -47,6 +47,8 @@ Rails.application.routes.draw do
     post :follow, to: 'relationships#create'
     delete :unfollow, to: 'relationships#destroy'
     post :reset_token, on: :collection
+    post :ban, on: :member
+    post :unban, on: :member
   end
 
   namespace :activity do

@@ -106,6 +106,21 @@ class UserPolicy < ApplicationPolicy
     user_profile_is_visible?
   end
 
+  sig { returns(T.nilable(T::Boolean)) }
+  def ban_user?
+    # Let admins ban any users, and allow moderators to ban any users that
+    # aren't moderators or admins. Admins can ban other admins, but I'm
+    # sure that won't ever cause any problems. Also, users shouldn't be
+    # able to ban themselves.
+    (current_user&.admin? || (current_user&.moderator? && !user&.admin? && !user&.moderator?)) && !user_is_current_user?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def unban_user?
+    # Let admins and moderators unban any users, except themselves.
+    (current_user&.admin? || current_user&.moderator?) && !user_is_current_user?
+  end
+
   private
 
   sig { returns(T.nilable(T::Boolean)) }
