@@ -14,7 +14,8 @@
     <% @followers.each do |follower| %>
       <%= render 'shared/user_card', user: follower %>
     <% end %>
-
+  </div>
+  <div class="ml-50 mr-50 mr-0-mobile">
     <%= paginate @followers %>
   </div>
 <% else %>
