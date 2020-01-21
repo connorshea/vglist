@@ -2,6 +2,8 @@
 
 <h1 class="title">Users</h1>
 
+<%= inline_svg_pack_tag('media/icons/star.svg') %>
+
 <div class="user-card-list mt-20">
   <% @users.each do |user| %>
     <%= render 'shared/user_card', user: user %>

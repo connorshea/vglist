@@ -19,6 +19,8 @@ import '../src/vue-loader';
 import '../src/toggleable-buttons';
 import '../src/bulma';
 import '../src/settings';
+// @ts-ignore
+require.context('../icons', true)
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({ dsn: process.env.SENTRY_DSN_JS });
