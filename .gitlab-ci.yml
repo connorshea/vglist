@@ -31,6 +31,9 @@ before_script:
   - bundle exec rails db:create
   - bundle exec rails db:migrate --trace
 
+after_script:
+  - bundle clean --force
+
 .no_db_template:
   before_script: &no_db_necessary
     - ruby -v
