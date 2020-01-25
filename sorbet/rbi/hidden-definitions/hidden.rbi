@@ -7772,13 +7772,13 @@ class File::Stat
 end
 
 class File
-  def self.empty?(_); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -10494,6 +10494,14 @@ module IRB
   def self.start(ap_path=T.unsafe(nil)); end
 
   def self.version(); end
+end
+
+module InlineSvg
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class InlineSvg::AssetFile
+  UNREADABLE_PATH = ::T.let(nil, ::T.untyped)
 end
 
 class Integer
@@ -21207,6 +21215,10 @@ module Relationship::GeneratedAttributeMethods
 end
 
 module Relationship::GeneratedRelationMethods
+  def name(*args, &block); end
+end
+
+module Relationship::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
@@ -29715,7 +29727,10 @@ class Zip::ExtraField::OldUnix
 end
 
 class Zip::ExtraField::UniversalTime
+  ATIME_MASK = ::T.let(nil, ::T.untyped)
+  CTIME_MASK = ::T.let(nil, ::T.untyped)
   HEADER_ID = ::T.let(nil, ::T.untyped)
+  MTIME_MASK = ::T.let(nil, ::T.untyped)
 end
 
 class Zip::ExtraField::Zip64
@@ -29729,6 +29744,7 @@ end
 class Zip::File
   CREATE = ::T.let(nil, ::T.untyped)
   DATA_BUFFER_SIZE = ::T.let(nil, ::T.untyped)
+  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
   IO_METHODS = ::T.let(nil, ::T.untyped)
   MAX_SEGMENT_SIZE = ::T.let(nil, ::T.untyped)
   MIN_SEGMENT_SIZE = ::T.let(nil, ::T.untyped)

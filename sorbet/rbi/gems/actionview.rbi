@@ -568,6 +568,14 @@ module ActionView::Helpers::TranslationHelper
   extend ActiveSupport::Concern
   include ActionView::Helpers::TagHelper
 end
+module ActionView::Context
+  def _layout_for(name = nil); end
+  def _prepare_context; end
+  def output_buffer; end
+  def output_buffer=(arg0); end
+  def view_flow; end
+  def view_flow=(arg0); end
+end
 module ActionView::ViewPaths
   def _prefixes; end
   def any_templates?(*args, &block); end
@@ -625,14 +633,6 @@ module ActionView::Rendering::ClassMethods
   def view_context_class; end
 end
 class ActionView::LogSubscriber < ActiveSupport::LogSubscriber
-end
-module ActionView::Context
-  def _layout_for(name = nil); end
-  def _prepare_context; end
-  def output_buffer; end
-  def output_buffer=(arg0); end
-  def view_flow; end
-  def view_flow=(arg0); end
 end
 class ActionView::Template
   def compile!(view); end
@@ -1138,6 +1138,7 @@ class ActionView::Base
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::UrlHelper
+  include InlineSvg::ActionView::Helpers
   include Kaminari::Helpers::HelperMethods
 end
 class ActionView::CacheExpiry

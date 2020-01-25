@@ -70,7 +70,9 @@ namespace :sorbet do
     desc "Update Sorbet and Sorbet Rails RBIs."
     task all: :environment do
       Bundler.with_clean_env do
-        system('SRB_YES=true bundle exec srb rbi update')
+        # Run with CI=true so it doesn't try to pull down external images when
+        # running the seed files.
+        system('SRB_YES=true CI=true bundle exec srb rbi update')
         # Delete a Makefile created by a Ruby file in node_modules.
         FileUtils.rm('Makefile') if File.exist?('Makefile')
         system('bundle exec rake rails_rbi:all')
@@ -80,7 +82,9 @@ namespace :sorbet do
     desc "Update Sorbet RBIs."
     task quick: :environment do
       Bundler.with_clean_env do
-        system('SRB_YES=true bundle exec srb rbi update')
+        # Run with CI=true so it doesn't try to pull down external images when
+        # running the seed files.
+        system('SRB_YES=true CI=true bundle exec srb rbi update')
         # Delete a Makefile created by a Ruby file in node_modules.
         FileUtils.rm('Makefile') if File.exist?('Makefile')
       end
