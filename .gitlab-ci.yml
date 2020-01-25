@@ -48,6 +48,10 @@ cacher:
   script:
     - bundle clean --force
   cache:
+    key: '$BUNDLER_VERSION'
+    paths:
+      - vendor/bundle
+      - node_modules
     policy: pull-push
 
 sorbet:tc:
