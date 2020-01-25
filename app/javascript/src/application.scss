@@ -631,3 +631,18 @@ nav.navbar {
     box-shadow: none;
   }
 }
+
+// Toggles the display of icon-1 and icon-2 child elements when hovering on this element.
+.toggle-icon-on-hover {
+  &:hover > .svg-icon.icon-1 {
+    display: none;
+  }
+
+  > .svg-icon.icon-2 {
+    display: none;
+  }
+
+  &:hover > .svg-icon.icon-2 {
+    display: initial;
+  }
+}

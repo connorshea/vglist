@@ -102,12 +102,15 @@ module ApplicationHelper
       icon: String,
       height: T.nilable(Integer),
       fill: T.nilable(String),
+      css_class: T.nilable(String),
       options: T::Hash[Symbol, T.untyped]
     ).returns(T.untyped)
   end
-  def svg_icon(icon, height: nil, fill: nil, options: {})
+  def svg_icon(icon, height: nil, fill: nil, css_class: nil, options: {})
     options[:height] = height.nil? ? "20px" : "#{height}px"
     options[:style] = "fill: #{fill};" unless fill.nil?
+    options[:class] = "svg-icon "
+    options[:class] += css_class unless css_class.nil?
     return inline_svg_pack_tag("media/icons/#{icon}.svg", options)
   end
 end
