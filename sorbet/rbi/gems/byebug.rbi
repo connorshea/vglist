@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/byebug/all/byebug.rbi
 #
-# byebug-11.0.1
+# byebug-11.1.1
 module Byebug
   def add_catchpoint(arg0); end
   def breakpoints; end
@@ -135,7 +135,7 @@ class Byebug::Context
   include Byebug::Helpers::FileHelper
 end
 class Byebug::DebugThread < Thread
-  def self.inherited(arg0); end
+  def self.inherited; end
 end
 class Byebug::Breakpoint
   def enabled=(arg0); end

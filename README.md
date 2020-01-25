@@ -24,6 +24,7 @@ This is a Rails application for tracking your video game library.
 1. `bin/rails db:setup`
    - This is the equivalent of running `bin/rails db:create && bin/rails db:schema:load && bin/rails db:seed`, so it will create the databases, seed them with fake data, and create a user with the email `admin@example.com` and the password `password`.
    - If you would like more control, run only `bin/rails db:create` and `bin/rails db:schema:load`.
+1. Run `bundle exec rake assets:precompile` to get the SVG icons to load.
 1. `bin/rails server` to start the server.
 1. Visit <http://localhost:3000> in your browser and you should see the base application.
 1. In a separate terminal window, run `bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.

@@ -5,42 +5,49 @@ module ActivityHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
 end
 
 module ApplicationHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
 end
 
 module GamesHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
 end
 
 module SettingsHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
 end
 
 module UsersHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
 end
 
 module Doorkeeper::DashboardHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
 end
 
 module DeviseHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
 end
 
 module ActionController::Helpers

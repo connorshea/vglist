@@ -12,7 +12,8 @@ SorbetRails.configure do |config|
   ]
   # Include the Devise Controller Helpers in helpers.rbi.
   config.extra_helper_includes = [
-    'Devise::Controllers::Helpers'
+    'Devise::Controllers::Helpers',
+    'InlineSvg::ActionView::Helpers'
   ]
 end
 

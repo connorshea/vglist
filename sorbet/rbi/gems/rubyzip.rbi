@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubyzip/all/rubyzip.rbi
 #
-# rubyzip-2.0.0
+# rubyzip-2.1.0
 module Zip
   def case_insensitive_match; end
   def case_insensitive_match=(arg0); end
@@ -35,6 +35,7 @@ module Zip
 end
 class Zip::DOSTime < Time
   def dos_equals(other); end
+  def self.from_time(time); end
   def self.parse_binary_dos_format(binaryDosDate, binaryDosTime); end
   def to_binary_dos_date; end
   def to_binary_dos_time; end
@@ -155,7 +156,7 @@ class Zip::Entry
   def set_extra_attributes_on_path(dest_path); end
   def set_ftype_from_c_dir_entry; end
   def set_time(binary_dos_date, binary_dos_time); end
-  def set_unix_permissions_on_path(dest_path); end
+  def set_unix_attributes_on_path(dest_path); end
   def size; end
   def size=(arg0); end
   def symlink?; end
@@ -188,15 +189,14 @@ end
 class Zip::ExtraField::UniversalTime < Zip::ExtraField::Generic
   def ==(other); end
   def atime; end
-  def atime=(arg0); end
+  def atime=(time); end
   def ctime; end
-  def ctime=(arg0); end
+  def ctime=(time); end
   def flag; end
-  def flag=(arg0); end
   def initialize(binstr = nil); end
   def merge(binstr); end
   def mtime; end
-  def mtime=(arg0); end
+  def mtime=(time); end
   def pack_for_c_dir; end
   def pack_for_local; end
 end
@@ -360,7 +360,7 @@ class Zip::File < Zip::CentralDirectory
   def self.get_partial_zip_file_name(zip_file_name, partial_zip_file_name); end
   def self.get_segment_count_for_split(zip_file_size, segment_size); end
   def self.get_segment_size_for_split(segment_size); end
-  def self.open(file_name, create = nil); end
+  def self.open(file_name, create = nil, options = nil); end
   def self.open_buffer(io, options = nil); end
   def self.put_split_signature(szip_file, segment_size); end
   def self.save_splited_part(zip_file, partial_zip_file_name, zip_file_size, szip_file_index, segment_size, segment_count); end

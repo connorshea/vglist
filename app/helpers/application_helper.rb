@@ -96,4 +96,18 @@ module ApplicationHelper
   def page_param(param: :page)
     return T.cast(params[param].to_i, T.nilable(Integer))
   end
+
+  sig do
+    params(
+      icon: String,
+      height: T.nilable(Integer),
+      fill: T.nilable(String),
+      options: T::Hash[Symbol, T.untyped]
+    ).returns(T.untyped)
+  end
+  def svg_icon(icon, height: nil, fill: nil, options: {})
+    options[:height] = height.nil? ? "20px" : "#{height}px"
+    options[:style] = "fill: #{fill};" unless fill.nil?
+    return inline_svg_pack_tag("media/icons/#{icon}.svg", options)
+  end
 end
