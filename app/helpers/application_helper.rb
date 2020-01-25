@@ -97,17 +97,36 @@ module ApplicationHelper
     return T.cast(params[param].to_i, T.nilable(Integer))
   end
 
+  # Embeds an SVG icon.
+  #
+  # @param [String] icon The name of the SVG in `app/javascript/icons/`.
+  # @param [Integer] height Height in pixels, defaults to 20.
+  # @param [Integer] width Width in pixels, optional.
+  # @param [String] fill The name or color value for the , e.g. 'red' or '#fff'.
+  # @param [String] css_class CSS class names for the `svg` element, will always include `svg-icon`
+  # @param [Boolean] aria Whether to include ARIA information for accessibility purposes. If `false`, aria-hidden is set.
+  # @param [String] title The ARIA title for the element.
+  # @param [Hash] options A hash of options to pass inline_svg_pack_tag.
+  #
+  # @return [any] An inline svg pack tag.
   sig do
     params(
       icon: String,
-      height: T.nilable(Integer),
+      height: Integer,
+      width: T.nilable(Integer),
       fill: T.nilable(String),
       css_class: T.nilable(String),
+      aria: T::Boolean,
+      title: String,
       options: T::Hash[Symbol, T.untyped]
     ).returns(T.untyped)
   end
-  def svg_icon(icon, height: nil, fill: nil, css_class: nil, options: {})
-    options[:height] = height.nil? ? "20px" : "#{height}px"
+  def svg_icon(icon, height: 20, width: nil, fill: nil, css_class: nil, aria: true, title: "Icon", options: {})
+    options[:aria] = aria
+    options[:aria_hidden] = true unless aria
+    options[:title] = title if aria
+    options[:height] = "#{height}px"
+    options[:width] = "#{width}px" unless width.nil?
     options[:style] = "fill: #{fill};" unless fill.nil?
     options[:class] = "svg-icon "
     options[:class] += css_class unless css_class.nil?
