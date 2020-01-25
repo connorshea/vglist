@@ -21,6 +21,8 @@ cache:
   paths:
     - vendor/bundle
     - node_modules
+  # By default, only pull. We don't need every job to update the cache.
+  policy: pull
 
 before_script:
   - ruby -v
@@ -31,15 +33,22 @@ before_script:
   - bundle exec rails db:create
   - bundle exec rails db:migrate --trace
 
-after_script:
-  - bundle clean --force
-
 .no_db_template:
   before_script: &no_db_necessary
     - ruby -v
     - gem install bundler:$BUNDLER_VERSION
     - bundle install -j $(nproc)
     - yarn install --frozen-lockfile
+
+# A simple hack to make it so the package cache is updated independently of any
+# other jobs, to prevent unnecessary time spent pushing the cache for more than
+# one job.
+cacher:
+  before_script: *no_db_necessary
+  script:
+    - bundle clean --force
+  cache:
+    policy: pull-push
 
 sorbet:tc:
   before_script: *no_db_necessary
