@@ -2,8 +2,8 @@
 
 <h1 class="title">Users</h1>
 
-<%= inline_svg_pack_tag('media/icons/star.svg', { height: '20px', style: 'fill: red;' }) %>
-<%= inline_svg_pack_tag('media/icons/star-half.svg', { height: '20px' }) %>
+<%= svg_icon('star', height: 20, fill: 'red') %>
+<%= svg_icon('star-half', height: 20) %>
 
 <div class="user-card-list mt-20">
   <% @users.each do |user| %>
