@@ -46,6 +46,11 @@ sorbet:tc:
   script:
     - bundle exec srb tc . --ignore=vendor/
 
+typescript:tsc:
+  before_script: *no_db_necessary
+  script:
+    - yarn run tsc
+
 rubocop:
   before_script: *no_db_necessary
   script:
