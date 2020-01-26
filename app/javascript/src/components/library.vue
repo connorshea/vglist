@@ -13,6 +13,7 @@
       :isEditable="isEditable"
       :gamePurchasesUrl="gamePurchasesUrl"
       :isLoading="isLoading"
+      :chevronDownIcon="this.chevronDownIcon"
       @loaded="libraryLoaded"
       @edit="activateModal"
       @delete="refreshLibrary"
@@ -20,7 +21,6 @@
       @openEditBar="activateEditBar"
       @selectedGamePurchasesChanged="selectedGamePurchasesChanged"
       @deactivateEditBar="deactivateEditBar"
-      :chevronDownIcon="chevronDownIcon"
     ></library-table>
 
     <game-modal
