@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.1.25
+### Added
+- Add icons to the search bar, various buttons, dropdowns, etc. ([#987], [#989], [#990])
+
 ## v2020.1.15
 ### Added
 - Add the ability for moderators and admins to ban and unban users. ([#971])
@@ -652,3 +656,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#918]: https://github.com/connorshea/VideoGameList/pull/918
 [#960]: https://github.com/connorshea/VideoGameList/pull/960
 [#971]: https://github.com/connorshea/VideoGameList/pull/971
+[#987]: https://github.com/connorshea/VideoGameList/pull/987
+[#989]: https://github.com/connorshea/VideoGameList/pull/989
+[#990]: https://github.com/connorshea/VideoGameList/pull/990
