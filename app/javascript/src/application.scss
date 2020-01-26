@@ -648,7 +648,14 @@ nav.navbar {
   }
 }
 
-// Taken from bulma for use in the 
-// .has-fill-danger {
-//   fill: #f14668 !important;
-// }
+// Styling for the navbar search field, mostly the icon.
+.navbar-search-input {
+  + span.icon {
+    fill: $grey-light;
+    transition: fill 250ms;
+  }
+  
+  &:focus + span.icon {
+    fill: darken($grey-light, 30%);
+  }
+}
