@@ -1,7 +1,7 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <%= link_to(root_path, class: "navbar-item has-text-weight-semibold") do %>
-      <%= image_tag('vglist-logo.svg', width: '80px', class: 'mt-5') %>
+    <%= link_to(root_path, class: "navbar-item has-text-weight-semibold", title: 'vglist Home') do %>
+      <%= image_tag('vglist-logo.svg', width: '80px', class: 'mt-5', aria: { hidden: true }) %>
     <% end %>
     <%# Hamburger menu for mobile %>
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
