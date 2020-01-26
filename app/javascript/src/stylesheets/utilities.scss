@@ -1,0 +1,23 @@
+/**
+ * This creates fill classes for use on SVG icons, from Bulma's SCSS colors
+ * variable.
+ * 
+ * .has-fill-danger: Bulma's danger color.
+ * .has-fill-danger-hoverable: Bulma's danger color, which darkens on hover.
+ */
+@each $name, $pair in $colors {
+  $color: nth($pair, 1);
+
+  .has-fill-#{$name} {
+    fill: $color !important;
+  }
+
+  .has-fill-#{$name}-hoverable {
+    fill: $color !important;
+
+    &:hover,
+    &:focus {
+      fill: darken($color, 15%) !important;
+    }
+  }
+}

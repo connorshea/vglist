@@ -1,7 +1,7 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <%= link_to(root_path, class: "navbar-item has-text-weight-semibold") do %>
-      <%= image_tag('vglist-logo.svg', width: '80px', class: 'mt-5') %>
+    <%= link_to(root_path, class: "navbar-item has-text-weight-semibold", title: 'vglist Home') do %>
+      <%= image_tag('vglist-logo.svg', width: '80px', class: 'mt-5', aria: { hidden: true }) %>
     <% end %>
     <%# Hamburger menu for mobile %>
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
@@ -14,9 +14,23 @@
   <div class="navbar-menu is-shadowless" id="navMenu">
     <div class="navbar-start">
       <%# Placeholder search input until the Vue component loads. %>
-      <div class="navbar-item has-dropdown field mt-10" data-vue-component="search">
+      <div class="navbar-item has-dropdown field mt-10"
+        data-vue-component="search"
+        data-vue-props="<%=
+          {
+            searchIcon: svg_icon('search', height: 16, aria: false)
+          }.to_json
+        %>"
+      >
         <p class="control">
-          <input type="search" placeholder="Search" class="input">
+          <div class="field mb-0">
+            <p class="control has-icons-left">
+              <input type="search" placeholder="Search" class="input navbar-search-input">
+              <span class="icon is-small is-left">
+                <%= svg_icon('search', height: 16, aria: false) %>
+              </span>
+            </p>
+          </div>
         </p>
       </div>
 

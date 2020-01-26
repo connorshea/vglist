@@ -16,9 +16,11 @@
             <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
           </span>
           <% if policy(event).destroy? %>
-            <%= link_to "Delete", event_path(event.id),
+            <%= link_to event_path(event.id),
               data: { confirm: "Are you sure you want to delete this event?" },
-              method: :delete, class: 'has-text-danger' %>
+              method: :delete, class: 'ml-5' do %>
+              <%= svg_icon('trash', css_class: 'has-fill-danger-hoverable', title: 'Delete', options: { style: 'vertical-align: text-top;' }) %>
+            <% end %>
           <% end %>
         </p>
       </div>

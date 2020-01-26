@@ -1,6 +1,7 @@
 @import './stylesheets/bulma-variables.scss';
 @import '~bulma/bulma.sass';
 @import './stylesheets/padding-and-margins.scss';
+@import './stylesheets/utilities.scss';
 @import './stylesheets/home.scss';
 
 nav.navbar {
@@ -84,19 +85,18 @@ nav.navbar {
 // Based on https://github.com/jgthms/bulma/pull/2142
 // Don't apply these styles to vue-select dropdowns.
 .dropdown:not(.v-select) {
-  button::after {
-    @extend %arrow;
-    border-color: $dropdown-content-arrow;
-    right: 0.75rem;
+  button > .icon {
+    fill: $dropdown-content-arrow;
     z-index: 4;
+    transition: transform 150ms;
+    margin-top: 2px;
   }
 
   &.is-active {
-    button::after {
-      @extend %arrow;
-      border-color: $dropdown-content-arrow;
-      transform: rotate(135deg);
-      top: 1.4em;
+    button > .icon {
+      fill: $dropdown-content-arrow;
+      transform: rotate(-180deg);
+      margin-top: 0;
     }
   }
 
@@ -126,8 +126,6 @@ nav.navbar {
   }
 
   button {
-    padding-right: 2rem;
-
     &.is-fullwidth-mobile {
       @include touch {
         display: flex;
@@ -629,5 +627,32 @@ nav.navbar {
 
   @include touch {
     box-shadow: none;
+  }
+}
+
+// Toggles the display of icon-1 and icon-2 child elements when hovering on this element.
+.toggle-icon-on-hover {
+  &:hover > .svg-icon.icon-1 {
+    display: none;
+  }
+
+  > .svg-icon.icon-2 {
+    display: none;
+  }
+
+  &:hover > .svg-icon.icon-2 {
+    display: initial;
+  }
+}
+
+// Styling for the navbar search field, mostly the icon.
+.navbar-search-input {
+  + span.icon {
+    fill: $grey-light;
+    transition: fill 250ms;
+  }
+  
+  &:focus + span.icon {
+    fill: darken($grey-light, 30%);
   }
 }

@@ -28,6 +28,9 @@
       <div class="dropdown-trigger is-fullwidth-mobile">
         <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>Actions</span>
+          <span class="icon">
+            <%= svg_icon('chevron-down', height: 15, aria: false) %>
+          </span>
         </button>
       </div>
       <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">
@@ -88,7 +91,8 @@
       {
         gamePurchasesUrl: game_purchases_path(user_id: @user.id, format: :json),
         isEditable: policy(@user).add_game_to_library?,
-        userId: @user.id
+        userId: @user.id,
+        chevronDownIcon: svg_icon('chevron-down', height: 15, aria: false)
       }.to_json
     %>"
   ></div>

@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/connorshea/inline_svg
+  revision: ca98c394bba7377336c07a2a89f07dcbc2e41e3a
+  branch: webpacker-dev-server
+  specs:
+    inline_svg (1.6.0)
+      activesupport (>= 3.0)
+      nokogiri (>= 1.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -155,9 +164,6 @@ GEM
     highline (2.0.3)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
-    inline_svg (1.6.0)
-      activesupport (>= 3.0)
-      nokogiri (>= 1.6)
     jaro_winkler (1.5.4)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
@@ -409,7 +415,7 @@ DEPENDENCIES
   graphiql-rails (~> 1.7.0)
   graphql (~> 1.10.0)
   graphql-rails_logger (~> 1.2.2)
-  inline_svg (~> 1.6)
+  inline_svg!
   jbuilder (~> 2.9)
   kaminari (~> 1.1)
   launchy (~> 2.4)

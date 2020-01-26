@@ -16,8 +16,24 @@
 
 <div class="field buttons mt-5 mt-20-mobile">
   <% if policy(@game).favorite? || policy(@game).unfavorite? %>
-    <%= link_to 'Favorite', favorite_game_path(@game.id, format: :json), method: :post, class: "button is-fullwidth-mobile mr-5 mr-0-mobile js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }", remote: :true, data: { toggle_partner: 'favorite-off' } %>
-    <%= link_to 'Unfavorite', unfavorite_game_path(@game.id, format: :json), method: :delete, class: "button is-fullwidth-mobile mr-5 mr-0-mobile js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }", remote: :true, data: { toggle_partner: 'favorite-on' } %>
+    <%= link_to favorite_game_path(@game.id, format: :json),
+      method: :post,
+      class: "button is-fullwidth-mobile mr-5 mr-0-mobile toggle-icon-on-hover js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }",
+      remote: :true,
+      data: { toggle_partner: 'favorite-off' } do %>
+      <%= svg_icon('heart', fill: 'red', height: 16, aria: false, css_class: 'icon-1') %>
+      <%= svg_icon('heart-full', fill: 'red', height: 16, aria: false, css_class: 'icon-2') %>
+      <span class='ml-5'>Favorite</span>
+    <% end %>
+    <%= link_to unfavorite_game_path(@game.id, format: :json),
+      method: :delete,
+      class: "button is-fullwidth-mobile mr-5 mr-0-mobile toggle-icon-on-hover js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }",
+      remote: :true,
+      data: { toggle_partner: 'favorite-on' } do %>
+      <%= svg_icon('heart-full', fill: 'red', height: 16, aria: false, css_class: 'icon-1') %>
+      <%= svg_icon('heart-broken', fill: 'red', height: 16, aria: false, css_class: 'icon-2') %>
+      <span class='ml-5'>Unfavorite</span>
+    <% end %>
   <% end %>
 
   <% if policy(current_user).add_game_to_library? || policy(current_user).remove_game_from_library? %>
@@ -37,6 +53,9 @@
       <div class="dropdown-trigger is-fullwidth-mobile">
         <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>Actions</span>
+          <span class="icon">
+            <%= svg_icon('chevron-down', height: 15, aria: false) %>
+          </span>
         </button>
       </div>
       <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">

@@ -78,7 +78,7 @@ gem 'simple_token_authentication', '~> 1.17'
 gem "rack-cors", "~> 1.1"
 
 # Render SVGs inline using Webpacker.
-gem 'inline_svg', '~> 1.6'
+gem 'inline_svg', git: 'https://github.com/connorshea/inline_svg', branch: 'webpacker-dev-server'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

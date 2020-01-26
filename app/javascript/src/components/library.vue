@@ -20,6 +20,7 @@
       @openEditBar="activateEditBar"
       @selectedGamePurchasesChanged="selectedGamePurchasesChanged"
       @deactivateEditBar="deactivateEditBar"
+      :chevronDownIcon="chevronDownIcon"
     ></library-table>
 
     <game-modal
@@ -59,6 +60,10 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    chevronDownIcon: {
+      type: String,
+      required: true
     }
   },
   data: function() {
