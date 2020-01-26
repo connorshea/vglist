@@ -21,8 +21,8 @@
       class: "button is-fullwidth-mobile mr-5 mr-0-mobile toggle-icon-on-hover js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }",
       remote: :true,
       data: { toggle_partner: 'favorite-off' } do %>
-      <%= svg_icon('heart', fill: 'red', aria: false, css_class: 'icon-1') %>
-      <%= svg_icon('heart-full', fill: 'red', aria: false, css_class: 'icon-2') %>
+      <%= svg_icon('heart', fill: 'red', height: 16, aria: false, css_class: 'icon-1') %>
+      <%= svg_icon('heart-full', fill: 'red', height: 16, aria: false, css_class: 'icon-2') %>
       <span class='ml-5'>Favorite</span>
     <% end %>
     <%= link_to unfavorite_game_path(@game.id, format: :json),
@@ -30,8 +30,8 @@
       class: "button is-fullwidth-mobile mr-5 mr-0-mobile toggle-icon-on-hover js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }",
       remote: :true,
       data: { toggle_partner: 'favorite-on' } do %>
-      <%= svg_icon('heart-full', fill: 'red', aria: false, css_class: 'icon-1') %>
-      <%= svg_icon('heart-broken', fill: 'red', aria: false, css_class: 'icon-2') %>
+      <%= svg_icon('heart-full', fill: 'red', height: 16, aria: false, css_class: 'icon-1') %>
+      <%= svg_icon('heart-broken', fill: 'red', height: 16, aria: false, css_class: 'icon-2') %>
       <span class='ml-5'>Unfavorite</span>
     <% end %>
   <% end %>
