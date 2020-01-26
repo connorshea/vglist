@@ -29,6 +29,7 @@
             aria-controls="dropdown-menu"
           >
             <span>Display columns</span>
+            <span class="icon" v-html="this.chevronDownIcon"></span>
           </button>
         </div>
         <div class="dropdown-menu is-fullwidth-mobile" role="menu">
@@ -112,6 +113,10 @@ export default {
     },
     isLoading: {
       type: Boolean,
+      required: true
+    },
+    chevronDownIcon: {
+      type: String,
       required: true
     }
   },

@@ -85,19 +85,18 @@ nav.navbar {
 // Based on https://github.com/jgthms/bulma/pull/2142
 // Don't apply these styles to vue-select dropdowns.
 .dropdown:not(.v-select) {
-  button::after {
-    @extend %arrow;
-    border-color: $dropdown-content-arrow;
-    right: 0.75rem;
+  button > .icon {
+    fill: $dropdown-content-arrow;
     z-index: 4;
+    transition: transform 150ms;
+    margin-top: 2px;
   }
 
   &.is-active {
-    button::after {
-      @extend %arrow;
-      border-color: $dropdown-content-arrow;
-      transform: rotate(135deg);
-      top: 1.4em;
+    button > .icon {
+      fill: $dropdown-content-arrow;
+      transform: rotate(-180deg);
+      margin-top: 0;
     }
   }
 
@@ -127,8 +126,6 @@ nav.navbar {
   }
 
   button {
-    padding-right: 2rem;
-
     &.is-fullwidth-mobile {
       @include touch {
         display: flex;
