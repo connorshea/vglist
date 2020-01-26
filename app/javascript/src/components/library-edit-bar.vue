@@ -29,7 +29,7 @@
         @click="$emit('closeEditBar')"
       >Cancel</button>
       <button
-        class="button is-fullwidth-mobile mr-5 mr-0-mobile"
+        class="button is-fullwidth-mobile is-primary mr-5 mr-0-mobile"
         :disabled="!updateButtonActive"
         @click="updateGames"
       >Update</button>
