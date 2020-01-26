@@ -102,7 +102,7 @@ module ApplicationHelper
   # @param [String] icon The name of the SVG in `app/javascript/icons/`.
   # @param [Integer] height Height in pixels, defaults to 20.
   # @param [Integer] width Width in pixels, optional.
-  # @param [String] fill The name or color value for the , e.g. 'red' or '#fff'.
+  # @param [String, Symbol] fill The name or color value for the , e.g. `'red'`, `:red`, or `'#fff'`.
   # @param [String] css_class CSS class names for the `svg` element, will always include `svg-icon`
   # @param [Boolean] aria Whether to include ARIA information for accessibility purposes. If `false`, aria-hidden is set.
   # @param [String] title The ARIA title for the element.
@@ -114,7 +114,7 @@ module ApplicationHelper
       icon: String,
       height: Integer,
       width: T.nilable(Integer),
-      fill: T.nilable(String),
+      fill: T.nilable(T.any(String, Symbol)),
       css_class: T.nilable(String),
       aria: T::Boolean,
       title: String,

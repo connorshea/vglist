@@ -12,15 +12,28 @@
 <% if policy(@user).show? %>
   <% if current_user && @user != current_user %>
     <% if current_user_following?(@user) %>
-      <%= link_to 'Unfollow', user_unfollow_path(user_id: @user.id), method: :delete, class: "is-danger button is-fullwidth-mobile mr-5 mr-0-mobile mt-10" %>
+      <%= link_to user_unfollow_path(user_id: @user.id), method: :delete, class: "is-danger button is-fullwidth-mobile mr-5 mr-0-mobile mt-10" do %>
+        <span class="icon pl-5 mr-5">
+          <%= svg_icon('user-minus', fill: :white, height: 15, aria: false) %>
+        </span>
+        <span>Unfollow</span>
+      <% end %>
     <% else %>
-      <%= link_to 'Follow', user_follow_path(user_id: @user.id), method: :post, class: "is-primary button is-fullwidth-mobile mr-5 mr-0-mobile mt-10" %>
+      <%= link_to user_follow_path(user_id: @user.id), method: :post, class: "is-primary button is-fullwidth-mobile mr-5 mr-0-mobile mt-10" do %>
+        <span class="icon pl-5 mr-5">
+          <%= svg_icon('user-plus', fill: :white, height: 15, aria: false) %>
+        </span>
+        <span>Follow</span>
+      <% end %>
     <% end %>
 
-    <%= link_to "Compare with your library",
-      compare_users_path(user_id: current_user.slug, other_user_id: @user.slug),
-      class: 'button is-fullwidth-mobile mr-5 mr-0-mobile mt-10'
-    %>
+    <%= link_to compare_users_path(user_id: current_user.slug, other_user_id: @user.slug),
+      class: 'button is-fullwidth-mobile mr-5 mr-0-mobile mt-10' do %>
+      <span class="icon pl-5 mr-5">
+        <%= svg_icon('balance-scale-left', height: 15, aria: false, css_class: 'has-fill-grey') %>
+      </span>
+      <span>Compare with your library</span>
+    <% end %>
   <% end %>
 
   <% if (policy(@user).update_role? || policy(@user).remove_avatar?) && @user != current_user %>
