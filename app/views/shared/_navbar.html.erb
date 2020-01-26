@@ -18,7 +18,7 @@
         data-vue-component="search"
         data-vue-props="<%=
           {
-            searchIcon: svg_icon('search', height: 16)
+            searchIcon: svg_icon('search', height: 16, aria: false)
           }.to_json
         %>"
       >
@@ -27,7 +27,7 @@
             <p class="control has-icons-left">
               <input type="search" placeholder="Search" class="input navbar-search-input">
               <span class="icon is-small is-left">
-                <%= svg_icon('search', height: 16) %>
+                <%= svg_icon('search', height: 16, aria: false) %>
               </span>
             </p>
           </div>
