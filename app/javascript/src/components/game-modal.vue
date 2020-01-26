@@ -98,7 +98,7 @@
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button @click="onSave" class="button is-success js-submit-button">Save changes</button>
+        <button @click="onSave" class="button is-primary js-submit-button">Save changes</button>
         <button @click="onClose" class="button">Cancel</button>
       </footer>
     </div>

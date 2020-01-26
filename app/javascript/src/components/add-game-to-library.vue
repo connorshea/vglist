@@ -3,18 +3,27 @@
     <button
       v-if="gamePurchaseExists"
       @click="editGameInLibrary()"
-      class="button is-fullwidth-mobile mr-5 mr-0-mobile"
-    >Edit game in library</button>
+      class="button is-fullwidth-mobile is-primary mr-5 mr-0-mobile"
+    >
+      <span class="icon" v-html="this.pencilIcon"></span>
+      <span>Edit game in library</span>
+    </button>
     <button
       v-if="gamePurchaseExists"
       @click="removeGameFromLibrary()"
-      class="button is-fullwidth-mobile mr-5 mr-0-mobile is-danger"
-    >Remove from library</button>
+      class="button is-fullwidth-mobile is-danger mr-5 mr-0-mobile"
+    >
+      <span class="icon" v-html="this.removeIcon"></span>
+      <span>Remove from library</span>
+    </button>
     <button
       v-if="!gamePurchaseExists"
       @click="addGameToLibrary()"
-      class="button is-fullwidth-mobile mr-5 mr-0-mobile"
-    >Add to library</button>
+      class="button is-fullwidth-mobile is-primary mr-5 mr-0-mobile"
+    >
+      <span class="icon" v-html="this.plusIcon"></span>
+      <span>Add to library</span>
+    </button>
 
     <game-modal
       v-if="isModalActive"
@@ -55,6 +64,18 @@ export default {
     gamePurchaseId: {
       type: Number,
       required: false
+    },
+    pencilIcon: {
+      type: String,
+      required: true
+    },
+    plusIcon: {
+      type: String,
+      required: true
+    },
+    removeIcon: {
+      type: String,
+      required: true
     }
   },
   data: function() {
