@@ -102,6 +102,13 @@ class Game < ApplicationRecord
     format: /\A\d{4}\-\d+\z/,
     length: { maximum: 100 }
 
+  validates :epic_games_store_id,
+    uniqueness: true,
+    allow_nil: true,
+    format: /\A[a-zA-Z0-9_]*\z/,
+    # Allow up to 300 characters just in case there's some game with an incredibly long name.
+    length: { maximum: 300 }
+
   validate :wikidata_id_not_blocklisted
 
   # Include games in global search.
