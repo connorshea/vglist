@@ -12,6 +12,7 @@ namespace :import do
       "import:steam",
       "import:pcgamingwiki",
       "import:giantbomb",
+      "import:epic_games",
       "import:mobygames",
       "import:update:series",
       "import:update:platforms",
