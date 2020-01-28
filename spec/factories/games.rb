@@ -54,7 +54,7 @@ FactoryBot.define do
     end
 
     trait :epic_games_store_id do
-      epic_games_store_id { Faker::Lorem.words(number: rand(1..3)).map(&:downcase).join('-') }
+      epic_games_store_id { Faker::Lorem.unique.words(number: rand(1..3)).map(&:downcase).join('-') }
     end
 
     trait :release_date do
