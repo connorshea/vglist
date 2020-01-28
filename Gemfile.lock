@@ -101,7 +101,7 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.1)
-    capybara (3.30.0)
+    capybara (3.31.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -404,7 +404,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   bullet (~> 6.1)
   byebug
-  capybara (~> 3.30)
+  capybara (~> 3.31)
   database_cleaner (~> 1.7)
   devise (~> 4.7)
   doorkeeper (~> 5.2)
