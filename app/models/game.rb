@@ -105,7 +105,7 @@ class Game < ApplicationRecord
   validates :epic_games_store_id,
     uniqueness: true,
     allow_nil: true,
-    format: /\A[a-zA-Z0-9_]*\z/,
+    format: /\A[a-zA-Z0-9_-]*\z/,
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 

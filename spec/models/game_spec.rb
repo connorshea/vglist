@@ -94,7 +94,8 @@ RSpec.describe Game, type: :model do
       expect(game).to allow_values(
         'superliminal',
         'darksiders3',
-        'hades'
+        'hades',
+        'little-inferno'
       ).for(:epic_games_store_id)
     end
 
