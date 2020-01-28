@@ -86,6 +86,25 @@ RSpec.describe Game, type: :model do
         '1234-'
       ).for(:giantbomb_id)
     end
+
+    it { should validate_uniqueness_of(:epic_games_store_id).allow_nil }
+    it { should validate_length_of(:epic_games_store_id).is_at_most(300) }
+
+    it 'allows valid Epic Games Store IDs' do
+      expect(game).to allow_values(
+        'superliminal',
+        'darksiders3',
+        'hades',
+        'little-inferno'
+      ).for(:epic_games_store_id)
+    end
+
+    it 'disallows invalid Epic Games Store IDs' do
+      expect(game).not_to allow_values(
+        'Game with spaces in name',
+        '<script></script>'
+      ).for(:epic_games_store_id)
+    end
   end
 
   describe 'Custom Validations' do

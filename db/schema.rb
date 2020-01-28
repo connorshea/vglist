@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_16_030201) do
+ActiveRecord::Schema.define(version: 2020_01_28_045830) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -195,6 +195,8 @@ ActiveRecord::Schema.define(version: 2020_01_16_030201) do
     t.text "mobygames_id"
     t.date "release_date"
     t.text "giantbomb_id"
+    t.text "epic_games_store_id"
+    t.index ["epic_games_store_id"], name: "index_games_on_epic_games_store_id", unique: true
     t.index ["giantbomb_id"], name: "index_games_on_giantbomb_id", unique: true
     t.index ["mobygames_id"], name: "index_games_on_mobygames_id", unique: true
     t.index ["series_id"], name: "index_games_on_series_id"
