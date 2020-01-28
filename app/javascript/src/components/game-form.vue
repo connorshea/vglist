@@ -82,6 +82,13 @@
 
     <text-field
       :form-class="formData.class"
+      :attribute="formData.epicGamesStoreId.attribute"
+      :label="formData.epicGamesStoreId.label"
+      v-model="game.epicGamesStoreId"
+    ></text-field>
+
+    <text-field
+      :form-class="formData.class"
       :attribute="formData.pcgamingwikiId.attribute"
       :label="formData.pcgamingwikiId.label"
       v-model="game.pcgamingwikiId"
@@ -196,6 +203,10 @@ export default {
         return [];
       }
     },
+    epicGamesStoreId: {
+      type: String,
+      required: false
+    },
     wikidataId: {
       type: Number,
       required: false
@@ -246,6 +257,7 @@ export default {
         platforms: this.$props.platforms,
         series: this.$props.series,
         steamAppIds: this.$props.steamAppIds,
+        epicGamesStoreId: this.$props.epicGamesStoreId,
         wikidataId: this.$props.wikidataId,
         pcgamingwikiId: this.$props.pcgamingwikiId,
         mobygamesId: this.$props.mobygamesId,
@@ -287,6 +299,10 @@ export default {
         steamAppIds: {
           label: 'Steam Application IDs',
           attribute: 'steam_app_ids'
+        },
+        epicGamesStoreId: {
+          label: 'Epic Games Store ID',
+          attribute: 'epic_games_store_id'
         },
         wikidataId: {
           label: 'Wikidata ID',
@@ -374,6 +390,7 @@ export default {
           publisher_ids: publisherIds,
           platform_ids: platformIds,
           steam_app_ids_attributes: steamAppIds,
+          epic_games_store_id: this.game.epicGamesStoreId,
           wikidata_id: this.game.wikidataId,
           pcgamingwiki_id: this.game.pcgamingwikiId,
           mobygames_id: this.game.mobygamesId,

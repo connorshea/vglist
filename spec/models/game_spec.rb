@@ -100,7 +100,8 @@ RSpec.describe Game, type: :model do
 
     it 'disallows invalid Epic Games Store IDs' do
       expect(game).not_to allow_values(
-        'Game with spaces in name'
+        'Game with spaces in name',
+        '<script></script>'
       ).for(:epic_games_store_id)
     end
   end
