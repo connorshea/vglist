@@ -10,7 +10,6 @@ require 'capybara/rails'
 require 'selenium/webdriver'
 require 'webdrivers'
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'active_storage_validations/matchers'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -64,9 +63,6 @@ RSpec.configure do |config|
 
   # Add FactoryBot support to Rspec tests.
   config.include FactoryBot::Syntax::Methods
-
-  # Add ActiveStorageValidations matchers to Rspec tests.
-  config.include ActiveStorageValidations::Matchers, type: :model
 
   # Add Devise helpers to controller and view tests.
   config.include Devise::Test::ControllerHelpers, type: :controller

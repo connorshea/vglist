@@ -22,9 +22,10 @@ SimpleCov.start :rails do
   # No need to include this in the coverage tracking.
   add_filter "lib/cursed_rbi_plugin.rb"
 end
-require "pundit/rspec"
+require 'pundit/rspec'
 require 'pundit/matchers'
 require 'capybara/rspec'
+require 'active_storage_validations/matchers'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -103,4 +104,7 @@ RSpec.configure do |config|
   #   - http://www.teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/
   #   - http://rspec.info/blog/2014/05/notable-changes-in-rspec-3/#zero-monkey-patching-mode
   config.disable_monkey_patching!
+
+  # Add ActiveStorageValidations matchers to Rspec tests.
+  config.include ActiveStorageValidations::Matchers, type: :model
 end
