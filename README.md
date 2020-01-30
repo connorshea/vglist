@@ -3,7 +3,7 @@
 [![pipeline status](https://gitlab.com/connorshea/videogamelist/badges/master/pipeline.svg)](https://gitlab.com/connorshea/videogamelist/commits/master)
 [![coverage report](https://gitlab.com/connorshea/videogamelist/badges/master/coverage.svg?job=rspec)](https://gitlab.com/connorshea/videogamelist/commits/master)
 
-This is a Rails application for tracking your video game library.
+This is a Rails application for tracking your video game library. If you just want to use the site, visit [vglist.co](https://vglist.co)!
 
 ## Getting set up
 
@@ -33,6 +33,27 @@ This is a Rails application for tracking your video game library.
 #### Extras
 
 - If you want to test the Steam import functionality, you'll need to [generate a Steam Web API Key](https://steamcommunity.com/dev/registerkey) and set it as an environment variable, `STEAM_WEB_API_KEY`.
+
+### Libraries
+
+This is a list of libraries used for various functionality across the app. It's not guaranteed to be comprehensive or up-to-date, but I'll try my best to keep it updated.
+
+- [Ruby on Rails](https://rubyonrails.org): Web application framework.
+  - [ActiveRecord](https://guides.rubyonrails.org/active_record_basics.html): Used for SQL queries, migrations, and maintaining the database structure.
+  - [ActiveStorage](https://guides.rubyonrails.org/active_storage_overview.html): Used for image storage.
+  - [Webpacker](https://github.com/rails/webpacker): JavaScript / SCSS bundler, essentially [Webpack](https://webpack.js.org) with Rails integration.
+- [Sorbet](https://sorbet.org): Gradual static typing for Ruby.
+- [Postgres](https://www.postgresql.org/): Database engine that the application uses.
+- [PgSearch](https://github.com/Casecommons/pg_search): Powers search for games, companies, series', etc.
+- [Devise](https://github.com/heartcombo/devise): Authentication framework, for logging in and other user authentication things.
+- [Pundit](https://github.com/varvet/pundit): Authorization framework, used for making sure users are actually authorized to perform a given action in the application.
+- [Doorkeeper](https://github.com/doorkeeper-gem/doorkeeper): OAuth authentication handler, for creating tokens used by the API.
+- [RSpec](https://rspec.info/): Ruby testing framework used for unit tests, request specs, feature specs, model specs, etc.
+- [FactoryBot](https://github.com/thoughtbot/factory_bot): Factories for seeding the database and writing tests.
+- [GraphQL](https://graphql.org) via [graphql-ruby](https://graphql-ruby.org): GraphQL is a query language that is used for the vglist API.
+- [TypeScript](https://www.typescriptlang.org): Dialect of JavaScript with static types, most of the JavaScript in the application is written in TypeScript.
+- [Vue.js](https://vuejs.org): JavaScript framework for dynamic webpages, used for various complex pages and elements, e.g. the search bar, library table, etc.
+- [Font Awesome](https://fontawesome.com): Icons used in the application mostly come from Font Awesome.
 
 ### Running in production locally with Docker
 
