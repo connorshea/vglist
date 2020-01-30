@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
-# capybara-3.30.0
+# capybara-3.31.0
 module Capybara
   def self.HTML(html); end
   def self.add_selector(name, **options, &block); end
@@ -288,7 +288,7 @@ module Capybara::SessionMatchers
   def make_predicate(options); end
 end
 class Capybara::Session
-  def _find_frame(*args); end
+  def _find_frame(*args, **kw_args); end
   def _switch_to_window(window = nil, **options, &window_locator); end
   def _switch_to_window_by_locator; end
   def accept_alert(text = nil, **options, &blk); end
@@ -412,10 +412,10 @@ class Capybara::Session
   def visit(visit_uri); end
   def window_opened_by(**options); end
   def windows; end
-  def within(*args); end
-  def within_element(*args); end
+  def within(*args, **kw_args); end
+  def within_element(*args, **kw_args); end
   def within_fieldset(locator); end
-  def within_frame(*args); end
+  def within_frame(*args, **kw_args); end
   def within_table(locator); end
   def within_window(window_or_proc); end
   include Capybara::SessionMatchers
@@ -671,6 +671,8 @@ class Capybara::Selector::Definition
 end
 class Capybara::Result
   def [](*args); end
+  def add_to_cache(elem); end
+  def allow_reload!; end
   def at(*args); end
   def compare_count; end
   def each(&block); end
@@ -852,11 +854,11 @@ end
 module Capybara::Node
 end
 module Capybara::Node::Finders
-  def all(*args, **options, &optional_filter_block); end
+  def all(*args, allow_reload: nil, **options, &optional_filter_block); end
   def ambiguous?(query, result); end
   def ancestor(*args, **options, &optional_filter_block); end
   def find(*args, **options, &optional_filter_block); end
-  def find_all(*args, **options, &optional_filter_block); end
+  def find_all(*args, allow_reload: nil, **options, &optional_filter_block); end
   def find_button(locator = nil, **options, &optional_filter_block); end
   def find_by_id(id, **options, &optional_filter_block); end
   def find_field(locator = nil, **options, &optional_filter_block); end
@@ -870,7 +872,7 @@ module Capybara::Node::Finders
 end
 module Capybara::Node::Matchers
   def ==(other); end
-  def _set_query_session_options(*query_args, **query_options); end
+  def _set_query_session_options(*query_args); end
   def _verify_match_result(query_args, optional_filter_block); end
   def _verify_multiple(*args, wait: nil, **options); end
   def _verify_selector_result(query_args, optional_filter_block, query_type = nil); end
@@ -883,13 +885,13 @@ module Capybara::Node::Matchers
   def assert_no_ancestor(*args, &optional_filter_block); end
   def assert_no_selector(*args, &optional_filter_block); end
   def assert_no_sibling(*args, &optional_filter_block); end
-  def assert_no_text(*args); end
+  def assert_no_text(type_or_text, *args, **opts); end
   def assert_none_of_selectors(*args, **options, &optional_filter_block); end
   def assert_not_matches_selector(*args, &optional_filter_block); end
   def assert_selector(*args, &optional_filter_block); end
   def assert_sibling(*args, &optional_filter_block); end
   def assert_style(styles, **options); end
-  def assert_text(*args); end
+  def assert_text(type_or_text, *args, **opts); end
   def extract_selector(args); end
   def has_ancestor?(*args, **options, &optional_filter_block); end
   def has_button?(locator = nil, **options, &optional_filter_block); end
@@ -957,7 +959,7 @@ module Capybara::Node::DocumentMatchers
 end
 class Capybara::Node::Simple
   def [](name); end
-  def allow_reload!; end
+  def allow_reload!(*arg0); end
   def checked?; end
   def disabled?; end
   def find_css(css, **_options); end
@@ -1000,7 +1002,7 @@ class Capybara::Node::Base
 end
 class Capybara::Node::Element < Capybara::Node::Base
   def [](attribute); end
-  def allow_reload!; end
+  def allow_reload!(idx = nil); end
   def checked?; end
   def click(*keys, **options); end
   def disabled?; end
@@ -1177,6 +1179,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def link?; end
   def path(*args); end
   def radio?; end
+  def range?; end
   def select_node; end
   def select_option(*args); end
   def selected?(*args); end
@@ -1184,6 +1187,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def set_checkbox(value); end
   def set_input(value); end
   def set_radio(_value); end
+  def set_range(value); end
   def stale_check; end
   def string_node; end
   def style(*args); end
@@ -1191,7 +1195,7 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
   def tag_name(*args); end
   def text_or_password?; end
   def textarea?; end
-  def toggle_details; end
+  def toggle_details(details = nil); end
   def type; end
   def unchecked_all_text; end
   def unchecked_checked?; end
@@ -1305,7 +1309,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def content_editable?; end
   def disabled?; end
   def double_click(keys = nil, **options); end
-  def drag_to(element, **arg1); end
+  def drag_to(element, drop_modifiers: nil, **arg2); end
   def drop(*_); end
   def each_key(keys); end
   def find_context; end
@@ -1313,6 +1317,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def modifiers_down(actions, keys); end
   def modifiers_up(actions, keys); end
   def multiple?; end
+  def normalize_keys(keys); end
   def obscured?(x: nil, y: nil); end
   def path; end
   def readonly?; end
@@ -1330,6 +1335,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def set_date(value); end
   def set_datetime_local(value); end
   def set_file(value); end
+  def set_range(value); end
   def set_text(value, clear: nil, **_unused); end
   def set_time(value); end
   def sibling_index(parent, node, selector); end
@@ -1364,10 +1370,10 @@ class Capybara::Selenium::Node::ClickOptions
   def options; end
 end
 module Capybara::Selenium::Node::Html5Drag
-  def drag_to(element, html5: nil, delay: nil); end
+  def drag_to(element, html5: nil, delay: nil, drop_modifiers: nil); end
   def html5_drop(*args); end
-  def perform_html5_drag(element, delay); end
-  def perform_legacy_drag(element); end
+  def perform_html5_drag(element, delay, drop_modifiers); end
+  def perform_legacy_drag(element, drop_modifiers); end
 end
 module Capybara::Selenium::Node::FileInputClickEmulation
   def attaching_file?; end
@@ -1386,7 +1392,7 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   def drop(*args); end
   def file_errors; end
   def native_displayed?; end
-  def perform_legacy_drag(element); end
+  def perform_legacy_drag(element, drop_modifiers); end
   def select_option; end
   def set_file(value); end
   def set_text(value, clear: nil, **_unused); end
@@ -1714,49 +1720,49 @@ module Capybara::DSL
 end
 module Capybara::RSpecMatchers
   def become_closed(**options); end
-  def have_all_of_selectors(*args, &optional_filter_block); end
-  def have_ancestor(*args, &optional_filter_block); end
-  def have_any_of_selectors(*args, &optional_filter_block); end
+  def have_all_of_selectors(*args, **kw_args, &optional_filter_block); end
+  def have_ancestor(*args, **kw_args, &optional_filter_block); end
+  def have_any_of_selectors(*args, **kw_args, &optional_filter_block); end
   def have_button(locator = nil, **options, &optional_filter_block); end
   def have_checked_field(locator = nil, **options, &optional_filter_block); end
-  def have_content(*args); end
+  def have_content(text_or_type, *args, **options); end
   def have_css(expr, **options, &optional_filter_block); end
   def have_current_path(path, **options); end
   def have_field(locator = nil, **options, &optional_filter_block); end
   def have_link(locator = nil, **options, &optional_filter_block); end
-  def have_no_ancestor(*args, &optional_filter_block); end
-  def have_no_button(*args, &optional_filter_block); end
-  def have_no_checked_field(*args, &optional_filter_block); end
-  def have_no_content(*args, &optional_filter_block); end
-  def have_no_css(*args, &optional_filter_block); end
-  def have_no_current_path(*args, &optional_filter_block); end
-  def have_no_field(*args, &optional_filter_block); end
-  def have_no_link(*args, &optional_filter_block); end
-  def have_no_select(*args, &optional_filter_block); end
-  def have_no_selector(*args, &optional_filter_block); end
-  def have_no_sibling(*args, &optional_filter_block); end
-  def have_no_table(*args, &optional_filter_block); end
-  def have_no_text(*args, &optional_filter_block); end
-  def have_no_title(*args, &optional_filter_block); end
-  def have_no_unchecked_field(*args, &optional_filter_block); end
-  def have_no_xpath(*args, &optional_filter_block); end
-  def have_none_of_selectors(*args, &optional_filter_block); end
+  def have_no_ancestor(*args, **kw_args, &optional_filter_block); end
+  def have_no_button(*args, **kw_args, &optional_filter_block); end
+  def have_no_checked_field(*args, **kw_args, &optional_filter_block); end
+  def have_no_content(*args, **kw_args, &optional_filter_block); end
+  def have_no_css(*args, **kw_args, &optional_filter_block); end
+  def have_no_current_path(*args, **kw_args, &optional_filter_block); end
+  def have_no_field(*args, **kw_args, &optional_filter_block); end
+  def have_no_link(*args, **kw_args, &optional_filter_block); end
+  def have_no_select(*args, **kw_args, &optional_filter_block); end
+  def have_no_selector(*args, **kw_args, &optional_filter_block); end
+  def have_no_sibling(*args, **kw_args, &optional_filter_block); end
+  def have_no_table(*args, **kw_args, &optional_filter_block); end
+  def have_no_text(*args, **kw_args, &optional_filter_block); end
+  def have_no_title(*args, **kw_args, &optional_filter_block); end
+  def have_no_unchecked_field(*args, **kw_args, &optional_filter_block); end
+  def have_no_xpath(*args, **kw_args, &optional_filter_block); end
+  def have_none_of_selectors(*args, **kw_args, &optional_filter_block); end
   def have_select(locator = nil, **options, &optional_filter_block); end
-  def have_selector(*args, &optional_filter_block); end
-  def have_sibling(*args, &optional_filter_block); end
+  def have_selector(*args, **kw_args, &optional_filter_block); end
+  def have_sibling(*args, **kw_args, &optional_filter_block); end
   def have_style(styles, **options); end
   def have_table(locator = nil, **options, &optional_filter_block); end
-  def have_text(*args); end
+  def have_text(text_or_type, *args, **options); end
   def have_title(title, **options); end
   def have_unchecked_field(locator = nil, **options, &optional_filter_block); end
   def have_xpath(expr, **options, &optional_filter_block); end
   def match_css(expr, **options, &optional_filter_block); end
-  def match_selector(*args, &optional_filter_block); end
+  def match_selector(*args, **kw_args, &optional_filter_block); end
   def match_style(styles, **options); end
   def match_xpath(expr, **options, &optional_filter_block); end
-  def not_match_css(*args, &optional_filter_block); end
-  def not_match_selector(*args, &optional_filter_block); end
-  def not_match_xpath(*args, &optional_filter_block); end
+  def not_match_css(*args, **kw_args, &optional_filter_block); end
+  def not_match_selector(*args, **kw_args, &optional_filter_block); end
+  def not_match_xpath(*args, **kw_args, &optional_filter_block); end
 end
 module Capybara::RSpecMatchers::Matchers
 end
@@ -1804,9 +1810,10 @@ end
 class Capybara::RSpecMatchers::Matchers::Base
   def failure_message; end
   def failure_message_when_negated; end
-  def initialize(*args, &filter_block); end
+  def initialize(*args, **kw_args, &filter_block); end
   def session_options; end
   def session_query_args; end
+  def session_query_options; end
   include Capybara::RSpecMatchers::Matchers::Compound
 end
 class Capybara::RSpecMatchers::Matchers::WrappedElementMatcher < Capybara::RSpecMatchers::Matchers::Base
@@ -1831,6 +1838,7 @@ class Capybara::RSpecMatchers::Matchers::HaveSelector < Capybara::RSpecMatchers:
   def description; end
   def element_does_not_match?(el); end
   def element_matches?(el); end
+  def initialize(*args, **kw_args, &filter_block); end
   def query; end
 end
 class Capybara::RSpecMatchers::Matchers::HaveAllSelectors < Capybara::RSpecMatchers::Matchers::WrappedElementMatcher
@@ -1878,7 +1886,7 @@ class Capybara::RSpecMatchers::Matchers::MatchStyle < Capybara::RSpecMatchers::M
   def element_matches?(el); end
 end
 class Capybara::RSpecMatchers::Matchers::HaveStyle < Capybara::RSpecMatchers::Matchers::MatchStyle
-  def initialize(*args, &filter_block); end
+  def initialize(*args, **kw_args, &filter_block); end
 end
 class Capybara::RSpecMatchers::Matchers::HaveText < Capybara::RSpecMatchers::Matchers::CountableWrappedElementMatcher
   def description; end
