@@ -117,7 +117,7 @@ GEM
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
     crass (1.0.6)
-    database_cleaner (1.7.0)
+    database_cleaner (1.8.0)
     debug_inspector (0.0.3)
     devise (4.7.1)
       bcrypt (~> 3.0)
@@ -403,7 +403,7 @@ DEPENDENCIES
   bullet (~> 6.1)
   byebug
   capybara (~> 3.31)
-  database_cleaner (~> 1.7)
+  database_cleaner (~> 1.8)
   devise (~> 4.7)
   doorkeeper (~> 5.3)
   factory_bot_rails (~> 5.1)
