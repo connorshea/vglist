@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.0
+# graphql-1.10.1
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
   def self.parse_file(filename); end
@@ -56,11 +56,12 @@ module GraphQL::Define::AssignObjectField
 end
 class GraphQL::Define::DefinedObjectProxy
   def initialize(target); end
-  def method_missing(name, *args, **kwargs, &block); end
+  def method_missing(name, *args, &block); end
   def respond_to_missing?(name, include_private = nil); end
   def target; end
   def types; end
   def use(plugin, **kwargs); end
+  extend GraphQL::Ruby2Keywords
 end
 module GraphQL::Define::InstanceDefinable
   def define(**kwargs, &block); end
@@ -90,8 +91,9 @@ class GraphQL::Define::InstanceDefinable::AssignMetadataKey
   def initialize(key); end
 end
 class GraphQL::Define::InstanceDefinable::AssignAttribute
-  def call(defn, value); end
+  def call(defn, *value); end
   def initialize(attr_name); end
+  extend GraphQL::Ruby2Keywords
 end
 class GraphQL::Define::NoDefinitionError < GraphQL::Error
 end
@@ -1315,23 +1317,25 @@ class GraphQL::Analysis::AST::FieldUsage < GraphQL::Analysis::AST::Analyzer
   def result; end
 end
 class GraphQL::Analysis::AST::QueryComplexity < GraphQL::Analysis::AST::Analyzer
-  def get_complexity(ast_node, field_defn, child_complexity, visitor); end
   def initialize(query); end
   def max_possible_complexity; end
   def on_enter_field(node, parent, visitor); end
   def on_leave_field(node, parent, visitor); end
   def result; end
-  def selection_key(response_path, query); end
 end
-class GraphQL::Analysis::AST::QueryComplexity::AbstractTypeComplexity
-  def initialize; end
-  def max_possible_complexity; end
-  def merge(type_defn, key, complexity); end
+class GraphQL::Analysis::AST::QueryComplexity::ScopedTypeComplexity
+  def initialize(node, field_definition, query); end
+  def own_complexity(child_complexity); end
+  def scoped_children; end
+  def terminal?; end
 end
-class GraphQL::Analysis::AST::QueryComplexity::ConcreteTypeComplexity
-  def initialize; end
-  def max_possible_complexity; end
-  def merge(complexity); end
+module GraphQL::Analysis::AST::QueryComplexity::ComplexityMergeFunctions
+  def applies_to?(query, left_scope, right_scope); end
+  def merged_max_complexity(query, children_for_scope); end
+  def merged_max_complexity_for_scopes(query, scoped_children_hashes); end
+  def self.applies_to?(query, left_scope, right_scope); end
+  def self.merged_max_complexity(query, children_for_scope); end
+  def self.merged_max_complexity_for_scopes(query, scoped_children_hashes); end
 end
 class GraphQL::Analysis::AST::MaxQueryComplexity < GraphQL::Analysis::AST::QueryComplexity
   def result; end
@@ -1617,6 +1621,7 @@ class GraphQL::Execution::Lookahead
   def selection(field_name, selected_type: nil, arguments: nil); end
   def selections(arguments: nil); end
   def selects?(field_name, arguments: nil); end
+  def skipped_by_directive?(ast_selection); end
 end
 class GraphQL::Execution::Lookahead::NullLookahead < GraphQL::Execution::Lookahead
   def initialize; end
@@ -1627,11 +1632,11 @@ class GraphQL::Execution::Lookahead::NullLookahead < GraphQL::Execution::Lookahe
   def selects?(*arg0); end
 end
 module GraphQL::Execution::Lookahead::ArgumentHelpers
-  def arg_to_value(query, graphql_object, arg_type, ast_value); end
-  def arguments(query, graphql_object, arg_owner, ast_node); end
+  def arg_to_value(query, arg_type, ast_value); end
+  def arguments(query, arg_owner, ast_node); end
   def flatten_ast_value(query, v); end
-  def self.arg_to_value(query, graphql_object, arg_type, ast_value); end
-  def self.arguments(query, graphql_object, arg_owner, ast_node); end
+  def self.arg_to_value(query, arg_type, ast_value); end
+  def self.arguments(query, arg_owner, ast_node); end
   def self.flatten_ast_value(query, v); end
 end
 module GraphQL::Execution::Lookahead::FieldHelpers
@@ -2560,12 +2565,13 @@ class GraphQL::Schema::Directive < GraphQL::Schema::Member
   def self.default_directive(new_default_directive = nil); end
   def self.default_directive?; end
   def self.default_graphql_name; end
-  def self.include?(_object, _arguments, _context); end
+  def self.include?(_object, arguments, context); end
   def self.locations(*new_locations); end
   def self.on_field?; end
   def self.on_fragment?; end
   def self.on_operation?; end
   def self.resolve(object, arguments, context); end
+  def self.static_include?(_arguments, _context); end
   def self.to_graphql; end
   extend GraphQL::Schema::Member::HasArguments
   extend GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor
@@ -2574,10 +2580,10 @@ end
 class GraphQL::Schema::Directive::Deprecated < GraphQL::Schema::Directive
 end
 class GraphQL::Schema::Directive::Include < GraphQL::Schema::Directive
-  def self.include?(obj, args, ctx); end
+  def self.static_include?(args, ctx); end
 end
 class GraphQL::Schema::Directive::Skip < GraphQL::Schema::Directive
-  def self.include?(obj, args, ctx); end
+  def self.static_include?(args, ctx); end
 end
 class GraphQL::Schema::Directive::Feature < GraphQL::Schema::Directive
   def self.enabled?(flag_name, object, context); end
@@ -4347,6 +4353,7 @@ class GraphQL::Pagination::RelationConnection < GraphQL::Pagination::Connection
   def cursor_for(item); end
   def has_next_page; end
   def has_previous_page; end
+  def limited_nodes; end
   def load_nodes; end
   def nodes; end
   def null_relation(relation); end
@@ -4356,6 +4363,7 @@ class GraphQL::Pagination::RelationConnection < GraphQL::Pagination::Connection
   def relation_offset(relation); end
   def set_limit(relation, limit_value); end
   def set_offset(relation, offset_value); end
+  def sliced_nodes; end
 end
 class GraphQL::Pagination::ActiveRecordRelationConnection < GraphQL::Pagination::RelationConnection
   def null_relation(relation); end
@@ -4384,6 +4392,9 @@ class GraphQL::Pagination::SequelDatasetConnection < GraphQL::Pagination::Relati
   def relation_count(relation); end
   def relation_limit(relation); end
   def relation_offset(relation); end
+end
+module GraphQL::Ruby2Keywords
+  def ruby2_keywords(*arg0); end
 end
 class GraphQL::Error < StandardError
 end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/mimemagic/all/mimemagic.rbi
 #
-# mimemagic-0.3.3
+# mimemagic-0.3.4
 class MimeMagic
   def ==(other); end
   def audio?; end

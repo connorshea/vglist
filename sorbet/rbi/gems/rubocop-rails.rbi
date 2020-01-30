@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.4.1
+# rubocop-rails-2.4.2
 module RuboCop
 end
 module RuboCop::Rails
@@ -406,7 +406,7 @@ class RuboCop::Cop::Rails::Present < RuboCop::Cop::Cop
   def unless_condition(node, method_call); end
 end
 class RuboCop::Cop::Rails::RakeEnvironment < RuboCop::Cop::Cop
-  def on_send(node); end
+  def on_block(node); end
   def task_definition?(node = nil); end
   def task_name(node); end
   def with_dependencies?(node); end
@@ -516,6 +516,7 @@ class RuboCop::Cop::Rails::SaveBang < RuboCop::Cop::Cop
   def call_to_persisted?(node); end
   def check_assignment(assignment); end
   def check_used_in_condition_or_compound_boolean(node); end
+  def checked_immediately?(node); end
   def conditional?(parent); end
   def const_matches?(const, allowed_const); end
   def expected_signature?(node); end

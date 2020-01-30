@@ -105,6 +105,12 @@ RSpec.describe Game, type: :model do
         '<script></script>'
       ).for(:epic_games_store_id)
     end
+
+    it 'has an optional cover' do
+      expect(game).not_to validate_attached_of(:cover)
+      expect(game).to validate_content_type_of(:cover).allowing('image/png', 'image/jpg', 'image/jpeg')
+      expect(game).to validate_size_of(:cover).less_than(4.megabytes)
+    end
   end
 
   describe 'Custom Validations' do

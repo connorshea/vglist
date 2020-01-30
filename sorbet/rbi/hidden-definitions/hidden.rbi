@@ -7772,13 +7772,13 @@ class File::Stat
 end
 
 class File
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -8727,6 +8727,10 @@ module GraphQL
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::Analysis::AST::QueryComplexity::ScopedTypeComplexity
+  HASH_CHILDREN = ::T.let(nil, ::T.untyped)
+end
+
 class GraphQL::Argument
   NO_DEFAULT_VALUE = ::T.let(nil, ::T.untyped)
 end
@@ -9201,6 +9205,8 @@ class Hash
 end
 
 class Hash
+  def self.from_trusted_xml(xml); end
+
   def self.try_convert(_); end
 end
 
@@ -27374,6 +27380,11 @@ module SimpleCov
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+module SimpleCov::Configuration
+  DEFAULT_COVERAGE_CRITERION = ::T.let(nil, ::T.untyped)
+  SUPPORTED_COVERAGE_CRITERIA = ::T.let(nil, ::T.untyped)
+end
+
 module SimpleCov::ExitCodes
   EXCEPTION = ::T.let(nil, ::T.untyped)
   MAXIMUM_COVERAGE_DROP = ::T.let(nil, ::T.untyped)
@@ -27391,6 +27402,10 @@ class SimpleCov::LinesClassifier
   RELEVANT = ::T.let(nil, ::T.untyped)
   WHITESPACE_LINE = ::T.let(nil, ::T.untyped)
   WHITESPACE_OR_COMMENT_LINE = ::T.let(nil, ::T.untyped)
+end
+
+module SimpleCov::UselessResultsRemover
+  ROOT_REGX = ::T.let(nil, ::T.untyped)
 end
 
 class SimpleDelegator

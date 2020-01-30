@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rack/all/rack.rbi
 #
-# rack-2.1.1
+# rack-2.1.2
 module Rack
   def self.release; end
   def self.version; end
@@ -408,7 +408,6 @@ class Rack::Session::Abstract::SessionHash
   def store(key, value); end
   def stringify_keys(other); end
   def to_hash; end
-  def transform_keys(&block); end
   def update(hash); end
   def values; end
   include Enumerable

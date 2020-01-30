@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/inline_svg/all/inline_svg.rbi
 #
-# inline_svg-1.6.0
+# inline_svg-ca98c394bba7
 module InlineSvg
   def self.configuration; end
   def self.configure; end

@@ -16,6 +16,7 @@ module ::Anonymous_Delegator_45; end
 module ::Anonymous_Delegator_46; end
 module ::Anonymous_Delegator_7; end
 module ActiveRecord::CollectionCacheKey; end
+module ActiveStorageValidations::Matchers; end
 module Addressable::Template; end
 module Anonymous_Module_28::Anonymous_Module_29; end
 module Anonymous_Module_28::Anonymous_Module_29; end
