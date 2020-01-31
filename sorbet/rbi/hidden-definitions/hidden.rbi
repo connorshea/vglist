@@ -5934,6 +5934,14 @@ end
 module DRb::DRbUndumped
 end
 
+module DatabaseCleaner
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+module DatabaseCleaner::ActiveRecord
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
 class DatabaseCleaner::Safeguard
   CHECKS = ::T.let(nil, ::T.untyped)
 end
@@ -10584,7 +10592,7 @@ module Kaminari::Activerecord
 end
 
 module Kaminari::Helpers
-  PARAM_KEY_BLACKLIST = ::T.let(nil, ::T.untyped)
+  PARAM_KEY_EXCEPT_LIST = ::T.let(nil, ::T.untyped)
 end
 
 class Kaminari::PaginatableArray

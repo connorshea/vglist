@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/kaminari-actionview/all/kaminari-actionview.rbi
 #
-# kaminari-actionview-1.1.1
+# kaminari-actionview-1.2.0
 module Kaminari
 end
 module Kaminari::Actionview

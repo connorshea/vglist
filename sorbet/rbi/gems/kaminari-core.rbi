@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/kaminari-core/all/kaminari-core.rbi
 #
-# kaminari-core-1.1.1
+# kaminari-core-1.2.0
 module Kaminari
   def self.config; end
   def self.configure; end
@@ -129,7 +129,7 @@ module Kaminari::PageScopeMethods
   def total_pages; end
 end
 module Kaminari::ConfigurationMethods
-  def self.included(base); end
+  extend ActiveSupport::Concern
 end
 module Kaminari::ConfigurationMethods::ClassMethods
   def default_per_page; end
@@ -156,13 +156,26 @@ class Kaminari::Railtie < Rails::Railtie
 end
 class Kaminari::Engine < Rails::Engine
 end
+module Kaminari::Helpers::UrlHelper
+  def next_page_path(scope, options = nil); end
+  def next_page_url(scope, options = nil); end
+  def path_to_next_page(scope, options = nil); end
+  def path_to_next_url(scope, options = nil); end
+  def path_to_prev_page(scope, options = nil); end
+  def path_to_previous_page(scope, options = nil); end
+  def prev_page_path(scope, options = nil); end
+  def prev_page_url(scope, options = nil); end
+  def previous_page_path(scope, options = nil); end
+  def previous_page_url(scope, options = nil); end
+  def url_to_prev_page(scope, options = nil); end
+  def url_to_previous_page(scope, options = nil); end
+end
 module Kaminari::Helpers::HelperMethods
   def link_to_next_page(scope, name, **options); end
   def link_to_prev_page(scope, name, **options); end
   def link_to_previous_page(scope, name, **options); end
   def page_entries_info(collection, entry_name: nil); end
   def paginate(scope, paginator_class: nil, template: nil, **options); end
-  def path_to_next_page(scope, options = nil); end
-  def path_to_prev_page(scope, options = nil); end
   def rel_next_prev_link_tags(scope, options = nil); end
+  include Kaminari::Helpers::UrlHelper
 end
