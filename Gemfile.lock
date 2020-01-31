@@ -325,7 +325,7 @@ GEM
       actionmailer (>= 3.2.6, < 7)
       actionpack (>= 3.2.6, < 7)
       devise (>= 3.2, < 6)
-    simplecov (0.18.0)
+    simplecov (0.18.1)
       docile (~> 1.1)
       simplecov-html (~> 0.11.0)
     simplecov-html (0.11.0)
