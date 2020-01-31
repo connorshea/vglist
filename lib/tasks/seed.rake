@@ -1,3 +1,4 @@
+# typed: false
 namespace :db do
   namespace :seed do
     Dir[Rails.root.join('db/seeds/*.rb')].each do |filename|

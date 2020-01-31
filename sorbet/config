@@ -1,2 +1,8 @@
 --dir
 .
+--allowed-extension
+.rake
+--allowed-extension
+.rb
+--allowed-extension
+.rbi

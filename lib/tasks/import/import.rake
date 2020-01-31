@@ -1,3 +1,4 @@
+# typed: false
 namespace :import do
   require 'net/http'
 

@@ -1,3 +1,4 @@
+# typed: ignore
 namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'

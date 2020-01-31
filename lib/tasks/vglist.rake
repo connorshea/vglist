@@ -1,3 +1,4 @@
+# typed: ignore
 task stats: "vglist:stats"
 
 namespace :vglist do

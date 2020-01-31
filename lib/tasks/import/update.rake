@@ -1,3 +1,4 @@
+# typed: ignore
 namespace :import do
   require 'net/http'
   require 'sparql/client'
