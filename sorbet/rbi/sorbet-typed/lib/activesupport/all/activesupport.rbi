@@ -196,7 +196,7 @@ class String
   sig { returns(T.untyped) }
   def safe_constantize; end
 
-  sig { params(locale: Symbol).returns(T.nilable(String)) }
+  sig { params(locale: Symbol).returns(String) }
   def singularize(locale = :en); end
 
   sig { returns(T.untyped) }
@@ -557,6 +557,16 @@ end
 class Date
   sig { params(options: T::Hash[Symbol, Integer]).returns(Date) }
   def advance(options); end
+
+  # these are the sigs for Date- in the stdlib
+  # https://github.com/sorbet/sorbet/blob/3910f6cfd9935c9b42e2135e32e15ab8a6e5b9be/rbi/stdlib/date.rbi#L373
+  # note that if more sigs are added to sorbet you should replicate them here
+  # check sorbet master: https://github.com/sorbet/sorbet/blob/master/rbi/stdlib/date.rbi
+  sig {params(arg0: Numeric).returns(T.self_type)}
+  sig {params(arg0: Date).returns(Rational)}
+  # these sigs are added for activesupport users
+  sig {params(arg0: ActiveSupport::Duration).returns(T.self_type)}
+  def -(arg0); end
 end
 
 # defines some of the methods at https://github.com/rails/rails/blob/v6.0.0/activesupport/lib/active_support/core_ext/time
@@ -598,6 +608,26 @@ class Time
   # https://github.com/rails/rails/blob/v6.0.0/activesupport/lib/active_support/core_ext/date_and_time/zones.rb
   sig { params(zone: String).returns(T.any(Time, ActiveSupport::TimeWithZone)) }
   def in_time_zone(zone = ::Time.zone); end
+
+  # these are the sigs for Time- in the stdlib
+  # https://github.com/sorbet/sorbet/blob/c3691753e4ce545e1eb66cbd3e55de67d8879b98/rbi/core/time.rbi#L347
+  # note that if more sigs are added to sorbet you should replicate them here
+  # check sorbet master: https://github.com/sorbet/sorbet/blob/master/rbi/core/time.rbi#L347
+  sig do
+    params(
+        arg0: Time,
+    )
+    .returns(Float)
+  end
+  sig do
+    params(
+        arg0: Numeric,
+    )
+    .returns(Time)
+  end
+  # these sigs are added for activesupport users
+  sig {params(arg0: ActiveSupport::Duration).returns(Time)}
+  def -(arg0); end
 end
 
 # defines some of the methods at https://github.com/rails/rails/tree/v6.0.0/activesupport/lib/active_support/core_ext/hash
@@ -818,4 +848,11 @@ class ActiveSupport::Duration
   # The `precision` parameter can be used to limit seconds' precision of duration.
   sig { params(precision: T.nilable(Integer)).returns(String) }
   def iso8601(precision: nil); end
+end
+
+module Benchmark
+  extend T::Sig
+
+  sig { params(block: T.proc.void).returns(Float) }
+  def self.ms(&block); end
 end

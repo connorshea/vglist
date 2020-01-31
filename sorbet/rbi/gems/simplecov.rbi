@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/simplecov/all/simplecov.rbi
 #
-# simplecov-0.18.0
+# simplecov-0.18.1
 module SimpleCov
   def self.adapt_coverage_result; end
   def self.add_not_loaded_files(result); end

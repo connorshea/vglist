@@ -7,9 +7,10 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/doorkeeper/all/doorkeeper.rbi
 #
-# doorkeeper-5.2.3
+# doorkeeper-5.3.0
 module Doorkeeper
   def self.authenticate(request, methods = nil); end
+  def self.config; end
   def self.configuration; end
   def self.configure(&block); end
   def self.gem_version; end
@@ -22,9 +23,13 @@ end
 class Doorkeeper::Engine < Rails::Engine
 end
 class Doorkeeper::Config
+  def access_grant_class(*_args); end
+  def access_grant_model; end
+  def access_token_class(*_args); end
   def access_token_expires_in(*_args); end
   def access_token_generator(*_args); end
   def access_token_methods; end
+  def access_token_model; end
   def active_record_options(*_args); end
   def after_successful_authorization(*_args); end
   def after_successful_strategy_response(*_args); end
@@ -34,6 +39,8 @@ class Doorkeeper::Config
   def allow_grant_flow_for_client?(grant_flow, client); end
   def allow_token_introspection(*_args); end
   def api_only; end
+  def application_class(*_args); end
+  def application_model; end
   def application_secret_fallback_strategy; end
   def application_secret_strategy; end
   def authenticate_admin(*_args); end
@@ -70,6 +77,7 @@ class Doorkeeper::Config
   def resolve_controller(name); end
   def resource_owner_from_credentials(*_args); end
   def reuse_access_token; end
+  def revoke_previous_client_credentials_token; end
   def scopes; end
   def scopes_by_grant_type; end
   def skip_authorization(*_args); end
@@ -90,6 +98,8 @@ class Doorkeeper::MissingConfiguration < StandardError
   def initialize; end
 end
 class Doorkeeper::Config::Builder
+  def access_grant_class(*args, &block); end
+  def access_token_class(*args, &block); end
   def access_token_expires_in(*args, &block); end
   def access_token_generator(*args, &block); end
   def access_token_methods(*methods); end
@@ -101,6 +111,7 @@ class Doorkeeper::Config::Builder
   def allow_grant_flow_for_client(*args, &block); end
   def allow_token_introspection(*args, &block); end
   def api_only; end
+  def application_class(*args, &block); end
   def authorization_code_expires_in(*args, &block); end
   def base_controller(*args, &block); end
   def base_metal_controller(*args, &block); end
@@ -131,6 +142,7 @@ class Doorkeeper::Config::Builder
   def resource_owner_authenticator(*args, &block); end
   def resource_owner_from_credentials(*args, &block); end
   def reuse_access_token; end
+  def revoke_previous_client_credentials_token; end
   def scopes_by_grant_type(hash = nil); end
   def skip_authorization(*args, &block); end
   def token_reuse_limit(percentage); end
@@ -318,8 +330,8 @@ module Doorkeeper::OAuth::Helpers::URIChecker
   def self.valid_scheme?(uri); end
 end
 module Doorkeeper::OAuth::Helpers::UniqueToken
+  def self.default_generator_method; end
   def self.generate(options = nil); end
-  def self.generator_method; end
 end
 class Doorkeeper::OAuth::Scopes
   def &(other); end
@@ -437,6 +449,7 @@ class Doorkeeper::OAuth::BaseRequest
   def find_or_create_access_token(client, resource_owner_id, scopes, server); end
   def grant_type; end
   def scopes; end
+  def server_config; end
   def valid?; end
   extend Doorkeeper::Validations::ClassMethods
   include Doorkeeper::Validations
@@ -449,6 +462,7 @@ class Doorkeeper::OAuth::AuthorizationCodeRequest < Doorkeeper::OAuth::BaseReque
   def client=(arg0); end
   def code_verifier; end
   def code_verifier=(arg0); end
+  def generate_code_challenge(code_verifier); end
   def grant; end
   def grant=(arg0); end
   def initialize(server, grant, client, parameters = nil); end
@@ -527,7 +541,7 @@ class Doorkeeper::OAuth::ClientCredentialsRequest < Doorkeeper::OAuth::BaseReque
   def server=(arg0); end
   def valid?; end
 end
-class Doorkeeper::OAuth::ClientCredentialsRequest::Validation
+class Doorkeeper::OAuth::ClientCredentialsRequest::Validator
   def initialize(server, request); end
   def validate_client; end
   def validate_client_supports_grant_flow; end
@@ -538,18 +552,20 @@ class Doorkeeper::OAuth::ClientCredentialsRequest::Validation
 end
 class Doorkeeper::OAuth::ClientCredentialsRequest::Creator
   def call(client, scopes, attributes = nil); end
-  def existing_token_for(client, scopes); end
+  def find_existing_token_for(client, scopes); end
+  def lookup_existing_token?; end
+  def server_config; end
 end
 class Doorkeeper::OAuth::ClientCredentialsRequest::Issuer
   def create(client, scopes, creator = nil); end
   def create_token(client, scopes, creator); end
   def error; end
   def error=(arg0); end
-  def initialize(server, validation); end
+  def initialize(server, validator); end
   def token; end
   def token=(arg0); end
-  def validation; end
-  def validation=(arg0); end
+  def validator; end
+  def validator=(arg0); end
 end
 class Doorkeeper::OAuth::Client
   def application; end
@@ -704,10 +720,7 @@ module Doorkeeper::Models::Reusable
   def reusable?; end
 end
 module Doorkeeper::Models::Revocable
-  def old_refresh_token; end
-  def refresh_token_revoked_on_use?; end
   def revoke(clock = nil); end
-  def revoke_previous_refresh_token!; end
   def revoked?; end
 end
 module Doorkeeper::Models::Accessible
@@ -751,8 +764,10 @@ module Doorkeeper::AccessTokenMixin
   def as_json(_options = nil); end
   def generate_refresh_token; end
   def generate_token; end
+  def old_refresh_token; end
   def plaintext_refresh_token; end
   def plaintext_token; end
+  def revoke_previous_refresh_token!; end
   def same_credential?(access_token); end
   def token_generator; end
   def token_type; end
@@ -769,6 +784,7 @@ module Doorkeeper::AccessTokenMixin
 end
 module Doorkeeper::AccessTokenMixin::ClassMethods
   def authorized_tokens_for(application_id, resource_owner_id); end
+  def by_previous_refresh_token(previous_refresh_token); end
   def by_refresh_token(refresh_token); end
   def by_token(token); end
   def fallback_secret_strategy; end
@@ -885,6 +901,11 @@ class Doorkeeper::Orm::ActiveRecord::StaleRecordsCleaner
   def clean_revoked; end
   def initialize(base_scope); end
 end
+module Doorkeeper::Orm::ActiveRecord::Mixins
+end
+module Doorkeeper::Orm::ActiveRecord::Mixins::AccessGrant
+  extend ActiveSupport::Concern
+end
 module Doorkeeper::AccessGrant::GeneratedAttributeMethods
 end
 class Doorkeeper::AccessGrant < ActiveRecord::Base
@@ -906,6 +927,7 @@ class Doorkeeper::AccessGrant < ActiveRecord::Base
   include Doorkeeper::AccessGrantMixin
   include Doorkeeper::Models::Orderable
   include Doorkeeper::Models::SecretStorable
+  include Doorkeeper::Orm::ActiveRecord::Mixins::AccessGrant
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
 end
@@ -934,6 +956,13 @@ class Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation < ActiveRecord::
   include ActiveRecord::Delegation::ClassSpecificRelation
   include Doorkeeper::AccessGrant::GeneratedRelationMethods
 end
+module Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken
+  extend ActiveSupport::Concern
+end
+module Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken::ClassMethods
+  def active_for(resource_owner); end
+  def refresh_token_revoked_on_use?; end
+end
 module Doorkeeper::AccessToken::GeneratedAttributeMethods
 end
 class Doorkeeper::AccessToken < ActiveRecord::Base
@@ -941,21 +970,21 @@ class Doorkeeper::AccessToken < ActiveRecord::Base
   def self.__callbacks; end
   def self._reflections; end
   def self._validators; end
-  def self.active_for(resource_owner); end
   def self.attribute_type_decorations; end
   def self.defined_enums; end
   def self.page(num = nil); end
-  def self.refresh_token_revoked_on_use?; end
   def use_refresh_token=(arg0); end
   extend Doorkeeper::AccessTokenMixin::ClassMethods
   extend Doorkeeper::Models::Orderable::ClassMethods
   extend Doorkeeper::Models::SecretStorable::ClassMethods
+  extend Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken::ClassMethods
   extend Kaminari::ConfigurationMethods::ClassMethods
   include Doorkeeper::AccessToken::GeneratedAssociationMethods
   include Doorkeeper::AccessToken::GeneratedAttributeMethods
   include Doorkeeper::AccessTokenMixin
   include Doorkeeper::Models::Orderable
   include Doorkeeper::Models::SecretStorable
+  include Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
 end
@@ -992,6 +1021,13 @@ class Doorkeeper::RedirectUriValidator < ActiveModel::EachValidator
   def unspecified_scheme?(uri); end
   def validate_each(record, attribute, value); end
 end
+module Doorkeeper::Orm::ActiveRecord::Mixins::Application
+  extend ActiveSupport::Concern
+end
+module Doorkeeper::Orm::ActiveRecord::Mixins::Application::ClassMethods
+  def authorized_for(resource_owner); end
+  def revoke_tokens_and_grants_for(id, resource_owner); end
+end
 module Doorkeeper::Application::GeneratedAttributeMethods
 end
 class Doorkeeper::Application < ActiveRecord::Base
@@ -1019,6 +1055,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   def after_remove_for_authorized_tokens; end
   def after_remove_for_authorized_tokens=(val); end
   def after_remove_for_authorized_tokens?; end
+  def as_json(options = nil); end
   def autosave_associated_records_for_access_grants(*args); end
   def autosave_associated_records_for_access_tokens(*args); end
   def autosave_associated_records_for_authorized_applications(*args); end
@@ -1081,7 +1118,6 @@ class Doorkeeper::Application < ActiveRecord::Base
   def self.after_remove_for_authorized_tokens=(val); end
   def self.after_remove_for_authorized_tokens?; end
   def self.attribute_type_decorations; end
-  def self.authorized_for(resource_owner); end
   def self.before_add_for_access_grants; end
   def self.before_add_for_access_grants=(val); end
   def self.before_add_for_access_grants?; end
@@ -1108,8 +1144,6 @@ class Doorkeeper::Application < ActiveRecord::Base
   def self.before_remove_for_authorized_tokens?; end
   def self.defined_enums; end
   def self.page(num = nil); end
-  def self.revoke_tokens_and_grants_for(id, resource_owner); end
-  def to_json(options = nil); end
   def validate_associated_records_for_access_grants(*args); end
   def validate_associated_records_for_access_tokens(*args); end
   def validate_associated_records_for_authorized_applications(*args); end
@@ -1117,12 +1151,14 @@ class Doorkeeper::Application < ActiveRecord::Base
   extend Doorkeeper::ApplicationMixin::ClassMethods
   extend Doorkeeper::Models::Orderable::ClassMethods
   extend Doorkeeper::Models::SecretStorable::ClassMethods
+  extend Doorkeeper::Orm::ActiveRecord::Mixins::Application::ClassMethods
   extend Kaminari::ConfigurationMethods::ClassMethods
   include Doorkeeper::Application::GeneratedAssociationMethods
   include Doorkeeper::Application::GeneratedAttributeMethods
   include Doorkeeper::ApplicationMixin
   include Doorkeeper::Models::Orderable
   include Doorkeeper::Models::SecretStorable
+  include Doorkeeper::Orm::ActiveRecord::Mixins::Application
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
 end

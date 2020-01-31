@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/kaminari-activerecord/all/kaminari-activerecord.rbi
 #
-# kaminari-activerecord-1.1.1
+# kaminari-activerecord-1.2.0
 module Kaminari
 end
 module Kaminari::Activerecord
@@ -23,6 +23,8 @@ module Kaminari::PaginatableWithoutCount
   def load; end
   def out_of_range?; end
   def total_count; end
+end
+module Kaminari::PaginatableWithoutCount::LimitValueSetter
 end
 module Kaminari::ActiveRecordModelExtension
   extend ActiveSupport::Concern
