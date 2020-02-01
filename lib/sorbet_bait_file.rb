@@ -3,3 +3,7 @@
 require 'sparql'
 require 'sparql/client'
 require 'graphql/rake_task'
+require 'selenium/webdriver'
+require 'rspec/expectations'
+require 'rdf'
+require 'rack'
