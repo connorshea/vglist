@@ -79,5 +79,10 @@ module VideoGameList
     # application is deployed.
     # https://brandonhilkert.com/blog/understanding-the-rails-cache-id-environment-variable/
     ENV['GIT_COMMIT_SHA'] = `git rev-parse --short HEAD`.strip
+
+    # This is a hack to get the Rails autoloader to include the sorbet bait
+    # file when running the Sorbet type generation task. It's 'baiting' Sorbet
+    # into loading some files it would otherwise ignore.
+    require Rails.root.join('lib/sorbet_bait_file') if ENV['SRB_YES']
   end
 end

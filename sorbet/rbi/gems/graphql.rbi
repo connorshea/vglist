@@ -4402,3 +4402,32 @@ class GraphQL::RequiredImplementationMissingError < GraphQL::Error
 end
 module GraphQL::StringDedupBackport
 end
+class GraphQL::RakeTask
+  def define_task; end
+  def dependencies; end
+  def dependencies=(arg0); end
+  def directory; end
+  def directory=(arg0); end
+  def except; end
+  def except=(arg0); end
+  def idl_outfile; end
+  def idl_outfile=(arg0); end
+  def idl_path; end
+  def initialize(options = nil); end
+  def json_outfile; end
+  def json_outfile=(arg0); end
+  def json_path; end
+  def load_context; end
+  def load_context=(arg0); end
+  def load_schema; end
+  def load_schema=(arg0); end
+  def namespace=(arg0); end
+  def only; end
+  def only=(arg0); end
+  def rake_namespace; end
+  def schema_name; end
+  def schema_name=(arg0); end
+  def write_outfile(method_name, file); end
+  extend Rake::DSL
+  include Rake::DSL
+end

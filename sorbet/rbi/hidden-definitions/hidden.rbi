@@ -3943,15 +3943,33 @@ end
 
 class Array
   include ::JSON::Ext::Generator::GeneratorMethods::Array
+  def aggregate?(); end
+
   def bsearch(); end
 
   def bsearch_index(); end
 
+  def c14nxl(options=T.unsafe(nil)); end
+
   def collect!(); end
+
+  def constant?(); end
 
   def dig(*_); end
 
+  def evaluatable?(); end
+
+  def evaluate(bindings, **options); end
+
+  def executable?(); end
+
+  def execute(queryable, **options); end
+
   def flatten!(*_); end
+
+  def ndvars(); end
+
+  def node?(); end
 
   def pack(*_); end
 
@@ -3959,10 +3977,25 @@ class Array
 
   def replace(_); end
 
+  def replace_aggregate!(&block); end
+
+  def replace_vars!(&block); end
+
   def shelljoin(); end
 
   def to_h(); end
 
+  def to_s_with_c14nxl(); end
+
+  def to_s_without_c14nxl(format=T.unsafe(nil)); end
+
+  def valid?(); end
+
+  def validate!(); end
+
+  def variable?(); end
+
+  def vars(); end
 end
 
 class Array
@@ -5653,8 +5686,6 @@ class CodeRay::Tokens
 
   def text_token(*_); end
 
-  def to_s(); end
-
   def tokens(*_); end
 end
 
@@ -5852,48 +5883,12 @@ module Concurrent::Utility::NativeInteger
 end
 
 class ConnectionPool
-  def available(); end
-
-  def checkin(); end
-
-  def checkout(options=T.unsafe(nil)); end
-
-  def initialize(options=T.unsafe(nil), &block); end
-
-  def shutdown(&block); end
-
-  def size(); end
-
-  def with(options=T.unsafe(nil)); end
   DEFAULTS = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
-class ConnectionPool::TimedStack
-  def <<(obj, options=T.unsafe(nil)); end
-
-  def empty?(); end
-
-  def initialize(size=T.unsafe(nil), &block); end
-
-  def length(); end
-
-  def max(); end
-
-  def pop(timeout=T.unsafe(nil), options=T.unsafe(nil)); end
-
-  def push(obj, options=T.unsafe(nil)); end
-
-  def shutdown(&block); end
-end
-
-class ConnectionPool::TimedStack
-end
-
-class ConnectionPool
-  def self.monotonic_time(); end
-
-  def self.wrap(options, &block); end
+class ConnectionPool::Wrapper
+  METHODS = ::T.let(nil, ::T.untyped)
 end
 
 module Coverage
@@ -6604,6 +6599,33 @@ module Doorkeeper::VERSION
   TINY = ::T.let(nil, ::T.untyped)
 end
 
+module EBNF::LL1::Parser
+  def add_prod_data(sym, *values); end
+
+  def add_prod_datum(sym, values); end
+
+  def debug(*args); end
+
+  def depth(); end
+
+  def error(node, message, **options); end
+
+  def lineno(); end
+
+  def parse(input=T.unsafe(nil), start=T.unsafe(nil), **options, &block); end
+
+  def prod_data(); end
+
+  def progress(node, *args, &block); end
+
+  def warn(node, message, **options); end
+  DEBUG_LEVEL = ::T.let(nil, ::T.untyped)
+end
+
+module EBNF::LL1::Parser
+  def self.included(base); end
+end
+
 class ERB
   def def_method(mod, methodname, fname=T.unsafe(nil)); end
 
@@ -6774,6 +6796,8 @@ module Enumerable
   def slice_when(); end
 
   def sum(identity=T.unsafe(nil), &block); end
+
+  def to_list(); end
 
   def to_set(klass=T.unsafe(nil), *args, &block); end
 
@@ -7780,7 +7804,7 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+  def self.empty?(_); end
 
   def self.exists?(_); end
 
@@ -8895,6 +8919,15 @@ module GraphQL::RailsLogger
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::RakeTask
+  include ::FileUtils::StreamUtils_
+  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
+end
+
+class GraphQL::RakeTask
+  extend ::FileUtils::StreamUtils_
+end
+
 module GraphQL::Relay
   PageInfo = ::T.let(nil, ::T.untyped)
 end
@@ -9213,8 +9246,6 @@ class Hash
 end
 
 class Hash
-  def self.from_trusted_xml(xml); end
-
   def self.try_convert(_); end
 end
 
@@ -9740,6 +9771,8 @@ class IO
   def raw!(*_); end
 
   def ready?(); end
+
+  def to_list(sep=T.unsafe(nil)); end
 
   def wait(*_); end
 
@@ -12313,87 +12346,7 @@ class Net::HTTP
 end
 
 class Net::HTTP::Persistent
-  def ca_path(); end
-
-  def ca_path=(path); end
-
-  def ciphers(); end
-
-  def ciphers=(ciphers); end
-
-  def max_version(); end
-
-  def max_version=(max_version); end
-
-  def min_version(); end
-
-  def min_version=(min_version); end
-
-  def pool(); end
-
-  def ssl_timeout(); end
-
-  def ssl_timeout=(ssl_timeout); end
-
-  def unescape(str); end
-
-  def verify_depth(); end
-
-  def verify_depth=(verify_depth); end
-
-  def write_timeout(); end
-
-  def write_timeout=(write_timeout); end
   DEFAULT_POOL_SIZE = ::T.let(nil, ::T.untyped)
-end
-
-class Net::HTTP::Persistent::Connection
-  def finish(); end
-
-  def http(); end
-
-  def http=(http); end
-
-  def initialize(http_class, http_args, ssl_generation); end
-
-  def last_use(); end
-
-  def last_use=(last_use); end
-
-  def requests(); end
-
-  def requests=(requests); end
-
-  def reset(); end
-
-  def ressl(ssl_generation); end
-
-  def ssl_generation(); end
-
-  def ssl_generation=(ssl_generation); end
-end
-
-class Net::HTTP::Persistent::Connection
-end
-
-class Net::HTTP::Persistent::Pool
-  def checkin(net_http_args); end
-
-  def checkout(net_http_args); end
-
-  def key(); end
-
-  def shutdown(); end
-end
-
-class Net::HTTP::Persistent::Pool
-end
-
-class Net::HTTP::Persistent::TimedStackMulti
-end
-
-class Net::HTTP::Persistent::TimedStackMulti
-  def self.hash_of_arrays(); end
 end
 
 class Net::HTTPAlreadyReported
@@ -12403,13 +12356,9 @@ end
 class Net::HTTPAlreadyReported
 end
 
-class Net::HTTPClientError
-end
+Net::HTTPClientError::EXCEPTION_TYPE = Net::HTTPServerException
 
-Net::HTTPClientErrorCode::EXCEPTION_TYPE = Net::HTTPServerException
-
-class Net::HTTPClientError
-end
+Net::HTTPClientErrorCode = Net::HTTPClientError
 
 Net::HTTPClientException = Net::HTTPServerException
 
@@ -12483,13 +12432,9 @@ end
 class Net::HTTPRangeNotSatisfiable
 end
 
-class Net::HTTPRedirection
-end
+Net::HTTPRedirection::EXCEPTION_TYPE = Net::HTTPRetriableError
 
-Net::HTTPRedirectionCode::EXCEPTION_TYPE = Net::HTTPRetriableError
-
-class Net::HTTPRedirection
-end
+Net::HTTPRedirectionCode = Net::HTTPRedirection
 
 class Net::HTTPRequestTimeout
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12504,13 +12449,9 @@ Net::HTTPResponceReceiver = Net::HTTPResponse
 
 Net::HTTPRetriableCode = Net::HTTPRedirection
 
-class Net::HTTPServerError
-end
+Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
-Net::HTTPServerErrorCode::EXCEPTION_TYPE = Net::HTTPFatalError
-
-class Net::HTTPServerError
-end
+Net::HTTPServerErrorCode = Net::HTTPServerError
 
 class Net::HTTP
 end
@@ -12522,13 +12463,9 @@ Net::HTTPSession::ProxyMod = Net::HTTP::ProxyDelta
 class Net::HTTP
 end
 
-class Net::HTTPSuccess
-end
+Net::HTTPSuccess::EXCEPTION_TYPE = Net::HTTPError
 
-Net::HTTPSuccessCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPSuccess
-end
+Net::HTTPSuccessCode = Net::HTTPSuccess
 
 class Net::HTTPURITooLong
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -12760,6 +12697,8 @@ end
 
 class NilClass
   include ::JSON::Ext::Generator::GeneratorMethods::NilClass
+  def evaluate(bindings, **options); end
+
   def to_d(); end
 
   def to_i(); end
@@ -12945,6 +12884,7 @@ module Nokogiri::XML
 end
 
 class Nokogiri::XML::Document
+  def doctype(); end
   IMPLIED_XPATH_CONTEXTS = ::T.let(nil, ::T.untyped)
   NCNAME_CHAR = ::T.let(nil, ::T.untyped)
   NCNAME_RE = ::T.let(nil, ::T.untyped)
@@ -12978,6 +12918,11 @@ class Nokogiri::XML::EntityDecl
 end
 
 class Nokogiri::XML::Node
+  def c14nxl(options=T.unsafe(nil)); end
+
+  def to_s_with_c14nxl(); end
+
+  def to_s_without_c14nxl(); end
   ATTRIBUTE_DECL = ::T.let(nil, ::T.untyped)
   ATTRIBUTE_NODE = ::T.let(nil, ::T.untyped)
   CDATA_SECTION_NODE = ::T.let(nil, ::T.untyped)
@@ -13003,6 +12948,11 @@ class Nokogiri::XML::Node
 end
 
 class Nokogiri::XML::NodeSet
+  def c14nxl(options=T.unsafe(nil)); end
+
+  def to_s_with_c14nxl(); end
+
+  def to_s_without_c14nxl(); end
   IMPLIED_XPATH_CONTEXTS = ::T.let(nil, ::T.untyped)
 end
 
@@ -13077,6 +13027,12 @@ class Object
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   def dclone(); end
+
+  def to_sse(); end
+
+  def to_sxp(); end
+
+  def to_sxp_bin(); end
 
   def to_yaml(options=T.unsafe(nil)); end
   ARGF = ::T.let(nil, ::T.untyped)
@@ -16778,6 +16734,1928 @@ module Pundit
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
+module RDF
+  RDF_N_REGEXP = ::T.let(nil, ::T.untyped)
+  VOCABS = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Changeset
+  include ::RDF::Util::Coercions
+  def <<(*statements); end
+
+  def >>(*statements); end
+
+  def apply(mutable, **options); end
+
+  def count(); end
+
+  def delete(*statements); end
+
+  def delete!(*statements); end
+
+  def deletes(); end
+
+  def empty?(); end
+
+  def initialize(insert: T.unsafe(nil), delete: T.unsafe(nil), &block); end
+
+  def insert(*statements); end
+
+  def insert!(*statements); end
+
+  def inserts(); end
+
+  def inspect!(); end
+
+  def mutable?(); end
+
+  def options(); end
+
+  def readable?(); end
+
+  def writable?(); end
+end
+
+class RDF::Changeset
+  def self.apply(mutable, **options, &block); end
+end
+
+class RDF::Countable::Enumerator
+  include ::RDF::Countable
+end
+
+class RDF::Countable::Enumerator
+end
+
+class RDF::Dataset
+  include ::RDF::Enumerable
+  include ::RDF::Durable
+  include ::RDF::Queryable
+  include ::Enumerable
+  include ::RDF::Countable
+  def each(&blk); end
+
+  def initialize(statements: T.unsafe(nil), **options, &block); end
+
+  def inspect!(); end
+
+  def isolation_level(); end
+  DEFAULT_GRAPH = ::T.let(nil, ::T.untyped)
+  ISOLATION_LEVELS = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Dataset
+end
+
+module RDF::Durable
+  def durable?(); end
+
+  def ephemeral?(*args, &block); end
+
+  def nondurable?(); end
+
+  def nonpersistent?(*args, &block); end
+
+  def persistent?(*args, &block); end
+
+  def transient?(*args, &block); end
+
+  def volatile?(*args, &block); end
+end
+
+module RDF::Durable
+  extend ::RDF::Util::Aliasing::LateBound
+end
+
+module RDF::Enumerable
+  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+end
+
+class RDF::Enumerable::Enumerator
+  include ::RDF::Queryable
+  include ::RDF::Enumerable
+  include ::RDF::Countable
+end
+
+class RDF::Enumerable::Enumerator
+end
+
+class RDF::Graph
+  include ::RDF::Value
+  include ::RDF::Durable
+  include ::RDF::Enumerable
+  include ::RDF::Queryable
+  include ::Enumerable
+  include ::RDF::Countable
+  include ::RDF::Mutable
+  include ::RDF::Readable
+  include ::RDF::Writable
+  include ::RDF::Util::Coercions
+  include ::RDF::Transactable
+  def ==(other); end
+
+  def clear_statements(); end
+
+  def count(); end
+
+  def data(); end
+
+  def data=(data); end
+
+  def each(&block); end
+
+  def graph_name(); end
+
+  def graph_name=(graph_name); end
+
+  def graphs(); end
+
+  def initialize(graph_name: T.unsafe(nil), data: T.unsafe(nil), **options, &block); end
+
+  def load!(*args); end
+
+  def name(); end
+
+  def name=(name); end
+
+  def named?(); end
+
+  def options(); end
+
+  def project_graph(graph_name, &block); end
+
+  def to_uri(); end
+
+  def unnamed?(); end
+end
+
+class RDF::Graph
+  def self.load(url, graph_name: T.unsafe(nil), **options, &block); end
+end
+
+RDF::IRI = RDF::URI
+
+module RDF::Indexable
+  def index!(); end
+
+  def indexed?(); end
+end
+
+module RDF::Indexable
+end
+
+class RDF::List
+  include ::RDF::Enumerable
+  include ::Enumerable
+  include ::RDF::Countable
+  include ::RDF::Value
+  include ::Comparable
+  def &(other); end
+
+  def *(int_or_str); end
+
+  def +(other); end
+
+  def -(other); end
+
+  def <<(value); end
+
+  def ==(other); end
+
+  def [](*args); end
+
+  def []=(*args); end
+
+  def at(index); end
+
+  def clear(); end
+
+  def each(&blk); end
+
+  def eighth(); end
+
+  def eql?(other); end
+
+  def fetch(index, default=T.unsafe(nil)); end
+
+  def fifth(); end
+
+  def first(); end
+
+  def first_subject(); end
+
+  def fourth(); end
+
+  def graph(); end
+
+  def index(value); end
+
+  def initialize(subject: T.unsafe(nil), graph: T.unsafe(nil), values: T.unsafe(nil), &block); end
+
+  def join(sep=T.unsafe(nil)); end
+
+  def last(); end
+
+  def last_subject(); end
+
+  def length(); end
+
+  def ninth(); end
+
+  def nth(index); end
+
+  def rest(); end
+
+  def rest_subject(); end
+
+  def reverse(); end
+
+  def second(); end
+
+  def seventh(); end
+
+  def shift(); end
+
+  def sixth(); end
+
+  def size(); end
+
+  def slice(*args); end
+
+  def slice_with_range(range); end
+
+  def slice_with_start_and_length(start, length); end
+
+  def sort(&block); end
+
+  def sort_by(&block); end
+
+  def subject(); end
+
+  def tail(); end
+
+  def tenth(); end
+
+  def third(); end
+
+  def to_rdf(&block); end
+
+  def unshift(value); end
+
+  def |(other); end
+  NIL = ::T.let(nil, ::T.untyped)
+  UNSET = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::List
+  def self.[](*values); end
+end
+
+class RDF::Literal
+  include ::RDF::Term
+  include ::RDF::Value
+  include ::Comparable
+  include ::SPARQL::Algebra::Expression
+  def ===(other); end
+
+  def comperable_datatype?(other); end
+
+  def datatype(); end
+
+  def datatype=(datatype); end
+
+  def datatype?(); end
+
+  def datatyped?(); end
+
+  def has_datatype?(); end
+
+  def has_language?(); end
+
+  def humanize(lang=T.unsafe(nil)); end
+
+  def initialize(value, language: T.unsafe(nil), datatype: T.unsafe(nil), lexical: T.unsafe(nil), validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
+
+  def language(); end
+
+  def language=(language); end
+
+  def language?(); end
+
+  def method_missing(name, *args); end
+
+  def object(); end
+
+  def plain?(); end
+
+  def simple?(); end
+
+  def squish(*other_string); end
+
+  def squish!(); end
+
+  def typed?(); end
+
+  def value(); end
+
+  def value_hash(); end
+  FALSE = ::T.let(nil, ::T.untyped)
+  TRUE = ::T.let(nil, ::T.untyped)
+  ZERO = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Boolean
+  def false?(); end
+
+  def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
+
+  def to_i(); end
+
+  def true?(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  FALSES = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+  TRUES = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Boolean
+end
+
+class RDF::Literal::Date
+  def has_timezone?(); end
+
+  def has_tz?(); end
+
+  def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
+
+  def tz(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  FORMAT = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Date
+end
+
+class RDF::Literal::DateTime
+  def has_milliseconds?(); end
+
+  def has_ms?(); end
+
+  def has_timezone?(); end
+
+  def has_tz?(); end
+
+  def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
+
+  def timezone(); end
+
+  def tz(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  FORMAT = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::DateTime
+end
+
+class RDF::Literal::Decimal
+  def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
+
+  def nonzero?(); end
+
+  def zero?(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Decimal
+end
+
+class RDF::Literal::Double
+  def finite?(); end
+
+  def infinite?(); end
+
+  def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
+
+  def nan?(); end
+
+  def nonzero?(); end
+
+  def zero?(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Double
+end
+
+class RDF::Literal::Integer
+  def even?(); end
+
+  def next(); end
+
+  def odd?(); end
+
+  def pred(); end
+
+  def succ(); end
+
+  def to_bn(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Integer
+end
+
+class RDF::Literal::Numeric
+  def *(other); end
+
+  def +(other); end
+
+  def +@(); end
+
+  def -(other); end
+
+  def -@(); end
+
+  def /(other); end
+
+  def abs(); end
+
+  def ceil(); end
+
+  def floor(); end
+
+  def ord(); end
+
+  def round(); end
+
+  def to_d(); end
+
+  def to_f(); end
+
+  def to_i(); end
+
+  def to_int(); end
+
+  def to_r(); end
+end
+
+class RDF::Literal::Numeric
+end
+
+class RDF::Literal::Time
+  def has_timezone?(); end
+
+  def has_tz?(); end
+
+  def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
+
+  def tz(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  FORMAT = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Time
+end
+
+class RDF::Literal::Token
+  def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
+
+  def to_sym(); end
+  DATATYPE = ::T.let(nil, ::T.untyped)
+  GRAMMAR = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Literal::Token
+end
+
+class RDF::Literal
+  def self.datatype_map(); end
+
+  def self.datatyped_class(uri); end
+
+  def self.inherited(child); end
+
+  def self.new(value, language: T.unsafe(nil), datatype: T.unsafe(nil), lexical: T.unsafe(nil), validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
+end
+
+module RDF::Mutable
+  include ::RDF::Readable
+  include ::RDF::Writable
+  include ::RDF::Util::Coercions
+  def <<(data); end
+
+  def apply_changeset(changeset); end
+
+  def clear(); end
+
+  def clear!(*args, &block); end
+
+  def delete(*statements); end
+
+  def delete!(*args, &block); end
+
+  def delete_insert(deletes, inserts); end
+
+  def delete_insert!(*args, &block); end
+
+  def delete_statement(statement); end
+
+  def delete_statements(statements); end
+
+  def immutable?(); end
+
+  def insert(*statements); end
+
+  def load(url, graph_name: T.unsafe(nil), **options); end
+
+  def load!(*args, &block); end
+
+  def method_missing(meth, *args); end
+
+  def mutable?(); end
+
+  def snapshot(); end
+
+  def update(*statements); end
+
+  def update!(*args, &block); end
+end
+
+module RDF::Mutable
+  extend ::RDF::Util::Aliasing::LateBound
+end
+
+module RDF::NQuads
+  include ::RDF::NTriples
+end
+
+class RDF::NQuads::Format
+end
+
+class RDF::NQuads::Format
+end
+
+class RDF::NQuads::Reader
+end
+
+class RDF::NQuads::Reader
+end
+
+class RDF::NQuads::Writer
+  def format_quad(subject, predicate, object, graph_name, **options); end
+
+  def write_quad(subject, predicate, object, graph_name); end
+end
+
+class RDF::NQuads::Writer
+end
+
+module RDF::NQuads
+  def self.serialize(value); end
+
+  def self.unserialize(data); end
+end
+
+class RDF::NTriples::Reader
+  def read_comment(); end
+
+  def read_eos(); end
+
+  def read_literal(); end
+
+  def read_node(); end
+
+  def read_uriref(intern: T.unsafe(nil), **options); end
+
+  def read_value(); end
+  BLANK_NODE_LABEL = ::T.let(nil, ::T.untyped)
+  COMMENT = ::T.let(nil, ::T.untyped)
+  DATATYPE_URI = ::T.let(nil, ::T.untyped)
+  ECHAR = ::T.let(nil, ::T.untyped)
+  END_OF_STATEMENT = ::T.let(nil, ::T.untyped)
+  ESCAPE_CHARS = ::T.let(nil, ::T.untyped)
+  ESCAPE_CHARS_ESCAPED = ::T.let(nil, ::T.untyped)
+  ESCAPE_CHARS_ESCAPED_REGEXP = ::T.let(nil, ::T.untyped)
+  IRIREF = ::T.let(nil, ::T.untyped)
+  IRI_RANGE = ::T.let(nil, ::T.untyped)
+  LANGTAG = ::T.let(nil, ::T.untyped)
+  LITERAL = ::T.let(nil, ::T.untyped)
+  LITERAL_PLAIN = ::T.let(nil, ::T.untyped)
+  LITERAL_WITH_DATATYPE = ::T.let(nil, ::T.untyped)
+  LITERAL_WITH_LANGUAGE = ::T.let(nil, ::T.untyped)
+  NODEID = ::T.let(nil, ::T.untyped)
+  OBJECT = ::T.let(nil, ::T.untyped)
+  PN_CHARS = ::T.let(nil, ::T.untyped)
+  PN_CHARS_BASE = ::T.let(nil, ::T.untyped)
+  PN_CHARS_U = ::T.let(nil, ::T.untyped)
+  PREDICATE = ::T.let(nil, ::T.untyped)
+  STRING_LITERAL_QUOTE = ::T.let(nil, ::T.untyped)
+  SUBJECT = ::T.let(nil, ::T.untyped)
+  UCHAR = ::T.let(nil, ::T.untyped)
+  UCHAR4 = ::T.let(nil, ::T.untyped)
+  UCHAR8 = ::T.let(nil, ::T.untyped)
+  URIREF = ::T.let(nil, ::T.untyped)
+  U_CHARS1 = ::T.let(nil, ::T.untyped)
+  U_CHARS2 = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::NTriples::Reader
+  def self.parse_literal(input, **options); end
+
+  def self.parse_node(input, **options); end
+
+  def self.parse_object(input, **options); end
+
+  def self.parse_predicate(input, **options); end
+
+  def self.parse_subject(input, **options); end
+
+  def self.parse_uri(input, intern: T.unsafe(nil), **options); end
+
+  def self.unescape(string); end
+
+  def self.unserialize(input, **options); end
+end
+
+class RDF::NTriples::Writer
+  def format_literal(literal, **options); end
+
+  def format_node(node, unique_bnodes: T.unsafe(nil), **options); end
+
+  def format_statement(statement, **options); end
+
+  def format_triple(subject, predicate, object, **options); end
+
+  def format_uri(uri, **options); end
+
+  def initialize(output=T.unsafe(nil), validate: T.unsafe(nil), **options, &block); end
+  ESCAPE_PLAIN = ::T.let(nil, ::T.untyped)
+  ESCAPE_PLAIN_U = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::NTriples::Writer
+  def self.escape(string, encoding=T.unsafe(nil)); end
+
+  def self.escape_ascii(u, encoding); end
+
+  def self.escape_unicode(u, encoding); end
+
+  def self.escape_utf16(u); end
+
+  def self.escape_utf32(u); end
+
+  def self.serialize(value); end
+end
+
+class RDF::Node
+  include ::RDF::Resource
+  include ::RDF::Term
+  include ::RDF::Value
+  include ::Comparable
+  include ::SPARQL::Algebra::Expression
+  def ===(other); end
+
+  def id(); end
+
+  def id=(id); end
+
+  def initialize(id=T.unsafe(nil)); end
+
+  def labeled?(); end
+
+  def make_unique!(); end
+
+  def original(); end
+
+  def original=(original); end
+
+  def to_sym(); end
+
+  def to_unique_base(); end
+
+  def unlabeled?(); end
+  CACHE_SIZE = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Node
+  def self.cache(); end
+
+  def self.intern(id); end
+
+  def self.uuid(format: T.unsafe(nil)); end
+end
+
+class RDF::Query
+  def ==(other); end
+
+  def executable?(); end
+
+  def ndvars(); end
+
+  def query_yields_boolean?(); end
+
+  def query_yields_solutions?(); end
+
+  def query_yields_statements?(); end
+
+  def rewrite(&block); end
+
+  def vars(); end
+end
+
+class RDF::Query::HashPatternNormalizer
+  def initialize(**options); end
+
+  def normalize!(hash_pattern); end
+
+  def options(); end
+end
+
+class RDF::Query::HashPatternNormalizer::Counter
+  def decrement!(); end
+
+  def increment(); end
+
+  def increment!(); end
+
+  def initialize(offset=T.unsafe(nil), increment=T.unsafe(nil)); end
+
+  def offset(); end
+
+  def to_f(); end
+
+  def to_i(); end
+end
+
+class RDF::Query::HashPatternNormalizer::Counter
+end
+
+class RDF::Query::HashPatternNormalizer
+  def self.normalize!(*args); end
+end
+
+class RDF::Query::Pattern
+  def arity(); end
+
+  def bind(solution); end
+
+  def binding_count(); end
+
+  def bindings(); end
+
+  def bindings?(); end
+
+  def bound?(); end
+
+  def bound_variables(); end
+
+  def cardinality(); end
+
+  def cost(); end
+
+  def cost=(cost); end
+
+  def execute(queryable, bindings=T.unsafe(nil), &block); end
+
+  def has_variables?(); end
+
+  def ndvars(); end
+
+  def optional?(); end
+
+  def solution(statement); end
+
+  def unbound?(); end
+
+  def unbound_variables(); end
+
+  def variable_count(); end
+
+  def variable_terms(name=T.unsafe(nil)); end
+
+  def variables(); end
+
+  def variables?(); end
+
+  def vars(); end
+end
+
+class RDF::Query::Pattern
+  def self.from(pattern, graph_name: T.unsafe(nil), **options); end
+end
+
+class RDF::Query::Solution
+  include ::Enumerable
+  def ==(other); end
+
+  def [](name); end
+
+  def []=(name, value); end
+
+  def __send(*_); end
+
+  def bindings(); end
+
+  def bound?(name); end
+
+  def compatible?(other); end
+
+  def disjoint?(other); end
+
+  def each(&block); end
+
+  def each_binding(&block); end
+
+  def each_key(&block); end
+
+  def each_name(&block); end
+
+  def each_value(&block); end
+
+  def each_variable(); end
+
+  def enum_binding(); end
+
+  def enum_for(method=T.unsafe(nil)); end
+
+  def enum_name(); end
+
+  def enum_value(); end
+
+  def enum_variable(); end
+
+  def eql?(other); end
+
+  def has_variables?(variables); end
+
+  def initialize(bindings=T.unsafe(nil), &block); end
+
+  def isomorphic_with?(other); end
+
+  def merge(other); end
+
+  def merge!(other); end
+
+  def method_missing(name, *args, &block); end
+
+  def to_a(); end
+
+  def to_enum(method=T.unsafe(nil)); end
+
+  def to_h(); end
+
+  def unbound?(name); end
+end
+
+class RDF::Query::Solution
+end
+
+class RDF::Query::Solutions
+  def filter_without_expression(criteria=T.unsafe(nil)); end
+end
+
+class RDF::Query::Variable
+  include ::RDF::Term
+  include ::RDF::Value
+  include ::Comparable
+  include ::SPARQL::Algebra::Expression
+  def ===(other); end
+
+  def bind(value); end
+
+  def bind!(value); end
+
+  def bindings(); end
+
+  def bound?(); end
+
+  def distinguished=(value); end
+
+  def distinguished?(); end
+
+  def evaluate(bindings, **options); end
+
+  def existential=(value); end
+
+  def existential?(); end
+
+  def initialize(name=T.unsafe(nil), value=T.unsafe(nil), distinguished: T.unsafe(nil), existential: T.unsafe(nil)); end
+
+  def name(); end
+
+  def name=(name); end
+
+  def named?(); end
+
+  def to_h(); end
+
+  def to_sym(); end
+
+  def unbind(); end
+
+  def unbind!(); end
+
+  def unbound?(); end
+
+  def value(); end
+
+  def value=(value); end
+
+  def variables(); end
+end
+
+class RDF::Query::Variable
+end
+
+module RDF::Queryable
+  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+  def query_without_sparql(pattern, **options, &block); end
+end
+
+class RDF::Queryable::Enumerator
+  include ::RDF::Queryable
+  include ::RDF::Enumerable
+  include ::RDF::Countable
+end
+
+class RDF::Queryable::Enumerator
+end
+
+module RDF::Readable
+  def readable?(); end
+end
+
+module RDF::Readable
+  extend ::RDF::Util::Aliasing::LateBound
+end
+
+class RDF::Reader
+  include ::RDF::Util::Logger
+  include ::RDF::Readable
+  include ::RDF::Enumerable
+  include ::Enumerable
+  include ::RDF::Countable
+  def base_uri(); end
+
+  def canonicalize?(); end
+
+  def close(); end
+
+  def close!(*args, &block); end
+
+  def each(*args, &block); end
+
+  def each_triple(&block); end
+
+  def encoding(); end
+
+  def fail_object(); end
+
+  def fail_predicate(); end
+
+  def fail_subject(); end
+
+  def initialize(input=T.unsafe(nil), encoding: T.unsafe(nil), validate: T.unsafe(nil), canonicalize: T.unsafe(nil), intern: T.unsafe(nil), prefixes: T.unsafe(nil), base_uri: T.unsafe(nil), **options, &block); end
+
+  def intern?(); end
+
+  def lineno(); end
+
+  def options(); end
+
+  def prefix(name, uri=T.unsafe(nil)); end
+
+  def prefix!(*args, &block); end
+
+  def prefixes(); end
+
+  def prefixes=(prefixes); end
+
+  def read_statement(); end
+
+  def read_triple(); end
+
+  def rewind(); end
+
+  def rewind!(*args, &block); end
+
+  def to_sym(); end
+
+  def validate?(); end
+end
+
+class RDF::Reader
+  extend ::Enumerable
+  extend ::RDF::Util::Aliasing::LateBound
+  def self.each(&block); end
+
+  def self.for(*arg, &block); end
+
+  def self.format(klass=T.unsafe(nil)); end
+
+  def self.format_class(klass=T.unsafe(nil)); end
+
+  def self.inherited(child); end
+
+  def self.open(filename, format: T.unsafe(nil), **options, &block); end
+
+  def self.options(); end
+
+  def self.to_sym(); end
+end
+
+class RDF::ReaderError
+  def initialize(message, token: T.unsafe(nil), lineno: T.unsafe(nil)); end
+
+  def lineno(); end
+
+  def token(); end
+end
+
+class RDF::ReaderError
+end
+
+class RDF::Repository
+  include ::RDF::Mutable
+  include ::RDF::Readable
+  include ::RDF::Writable
+  include ::RDF::Util::Coercions
+  include ::RDF::Transactable
+  def initialize(uri: T.unsafe(nil), title: T.unsafe(nil), **options, &block); end
+
+  def options(); end
+
+  def project_graph(graph_name, &block); end
+
+  def title(); end
+
+  def uri(); end
+
+  def url(); end
+end
+
+RDF::Repository::DEFAULT_TX_CLASS = RDF::Transaction
+
+module RDF::Repository::Implementation
+  def apply_changeset(changeset); end
+
+  def clear_statements(); end
+
+  def count(); end
+
+  def data(); end
+
+  def data=(hash); end
+
+  def delete_statement(statement); end
+
+  def each(&block); end
+
+  def each_graph(&block); end
+
+  def each_statement(&block); end
+
+  def graph_names(options=T.unsafe(nil), &block); end
+
+  def has_graph?(graph); end
+
+  def has_statement?(statement); end
+
+  def insert_statement(statement); end
+
+  def isolation_level(); end
+
+  def query_pattern(pattern, **options, &block); end
+
+  def snapshot(); end
+
+  def supports?(feature); end
+  DEFAULT_GRAPH = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::Repository::Implementation::SerializedTransaction
+  def initialize(*args, **options, &block); end
+end
+
+class RDF::Repository::Implementation::SerializedTransaction
+end
+
+module RDF::Repository::Implementation
+  def self.extend_object(obj); end
+end
+
+class RDF::Repository
+  def self.load(urls, **options, &block); end
+end
+
+module RDF::Resource
+  include ::RDF::Term
+  include ::RDF::Value
+  include ::Comparable
+  include ::SPARQL::Algebra::Expression
+  def resource?(); end
+end
+
+module RDF::Resource
+  def self.new(*args, &block); end
+end
+
+class RDF::Statement
+  include ::RDF::Value
+  def ==(other); end
+
+  def ===(other); end
+
+  def [](index); end
+
+  def []=(index, value); end
+
+  def asserted?(); end
+
+  def complete?(); end
+
+  def eql?(other); end
+
+  def graph_name(); end
+
+  def graph_name=(graph_name); end
+
+  def has_blank_nodes?(); end
+
+  def has_graph?(); end
+
+  def has_name?(); end
+
+  def has_object?(); end
+
+  def has_predicate?(); end
+
+  def has_subject?(); end
+
+  def id(); end
+
+  def id=(id); end
+
+  def incomplete?(); end
+
+  def inferred?(); end
+
+  def initialize(subject=T.unsafe(nil), predicate=T.unsafe(nil), object=T.unsafe(nil), options=T.unsafe(nil)); end
+
+  def initialize!(); end
+
+  def object(); end
+
+  def object=(object); end
+
+  def options(); end
+
+  def options=(options); end
+
+  def predicate(); end
+
+  def predicate=(predicate); end
+
+  def quoted?(); end
+
+  def reified(subject: T.unsafe(nil), id: T.unsafe(nil), graph_name: T.unsafe(nil)); end
+
+  def subject(); end
+
+  def subject=(subject); end
+
+  def to_a(); end
+
+  def to_h(subject_key=T.unsafe(nil), predicate_key=T.unsafe(nil), object_key=T.unsafe(nil), graph_key=T.unsafe(nil)); end
+
+  def to_quad(); end
+
+  def to_triple(); end
+end
+
+class RDF::Statement
+  def self.from(statement, graph_name: T.unsafe(nil), **options); end
+end
+
+class RDF::StrictVocabulary
+end
+
+class RDF::StrictVocabulary
+  def self.[](name); end
+
+  def self.method_missing(*_); end
+end
+
+module RDF::Term
+  include ::RDF::Value
+  include ::Comparable
+  include ::SPARQL::Algebra::Expression
+  def ==(other); end
+
+  def aggregate?(); end
+
+  def compatible?(other); end
+
+  def eql?(other); end
+
+  def escape(string); end
+
+  def evaluate(bindings, **options); end
+
+  def ndvars(); end
+
+  def term?(); end
+
+  def to_base(); end
+
+  def to_term(); end
+
+  def vars(); end
+end
+
+module RDF::Term
+end
+
+module RDF::Transactable
+  def begin_transaction(mutable: T.unsafe(nil), graph_name: T.unsafe(nil)); end
+
+  def commit_transaction(tx); end
+
+  def rollback_transaction(tx); end
+
+  def transact(mutable: T.unsafe(nil), &block); end
+
+  def transaction(mutable: T.unsafe(nil), &block); end
+end
+
+module RDF::Transactable
+end
+
+class RDF::Transaction
+  include ::RDF::Mutable
+  include ::RDF::Readable
+  include ::RDF::Writable
+  include ::RDF::Util::Coercions
+  include ::RDF::Enumerable
+  include ::RDF::Queryable
+  include ::Enumerable
+  include ::RDF::Countable
+  def changes(); end
+
+  def each(*args, &block); end
+
+  def execute(); end
+
+  def graph_name(); end
+
+  def initialize(repository, graph_name: T.unsafe(nil), mutable: T.unsafe(nil), **options, &block); end
+
+  def inspect!(); end
+
+  def isolation_level(); end
+
+  def mutated?(); end
+
+  def options(); end
+
+  def query_execute(*args, &block); end
+
+  def query_pattern(*args, &block); end
+
+  def repository(); end
+
+  def rollback(); end
+end
+
+class RDF::Transaction::TransactionError
+end
+
+class RDF::Transaction::TransactionError
+end
+
+class RDF::Transaction
+  def self.begin(repository, mutable: T.unsafe(nil), **options, &block); end
+end
+
+module RDF::TypeCheck
+  def type_error(message); end
+end
+
+module RDF::TypeCheck
+end
+
+class RDF::URI
+  include ::RDF::Resource
+  include ::RDF::Term
+  include ::RDF::Value
+  include ::Comparable
+  include ::SPARQL::Algebra::Expression
+  def +(other); end
+
+  def /(fragment); end
+
+  def ===(other); end
+
+  def =~(pattern); end
+
+  def _dump(level); end
+
+  def absolute?(); end
+
+  def authority(); end
+
+  def authority=(value); end
+
+  def end_with?(string); end
+
+  def ends_with?(string); end
+
+  def fragment(); end
+
+  def fragment=(value); end
+
+  def has_parent?(); end
+
+  def hier?(); end
+
+  def host(); end
+
+  def host=(value); end
+
+  def initialize(*args, validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
+
+  def join(*uris); end
+
+  def length(); end
+
+  def lexical(); end
+
+  def lexical=(value); end
+
+  def normalize(); end
+
+  def normalize!(); end
+
+  def normalized_authority(); end
+
+  def normalized_fragment(); end
+
+  def normalized_host(); end
+
+  def normalized_password(); end
+
+  def normalized_path(); end
+
+  def normalized_port(); end
+
+  def normalized_query(); end
+
+  def normalized_scheme(); end
+
+  def normalized_user(); end
+
+  def normalized_userinfo(); end
+
+  def object(); end
+
+  def parent(); end
+
+  def parse(value); end
+
+  def password(); end
+
+  def password=(value); end
+
+  def path(); end
+
+  def path=(value); end
+
+  def pname(); end
+
+  def port(); end
+
+  def port=(value); end
+
+  def qname(); end
+
+  def query(); end
+
+  def query=(value); end
+
+  def query_values(return_type=T.unsafe(nil)); end
+
+  def query_values=(value); end
+
+  def relative?(); end
+
+  def relativize(base_uri); end
+
+  def request_uri(); end
+
+  def root(); end
+
+  def root?(); end
+
+  def scheme(); end
+
+  def scheme=(value); end
+
+  def size(); end
+
+  def to_h(); end
+
+  def to_str(); end
+
+  def to_uri(); end
+
+  def url?(); end
+
+  def urn?(); end
+
+  def user(); end
+
+  def user=(value); end
+
+  def userinfo(); end
+
+  def userinfo=(value); end
+
+  def value(); end
+  CACHE_SIZE = ::T.let(nil, ::T.untyped)
+  GEN_DELIMS = ::T.let(nil, ::T.untyped)
+  HOST_FROM_AUTHORITY_RE = ::T.let(nil, ::T.untyped)
+  IAUTHORITY = ::T.let(nil, ::T.untyped)
+  IFRAGMENT = ::T.let(nil, ::T.untyped)
+  IHIER_PART = ::T.let(nil, ::T.untyped)
+  IHOST = ::T.let(nil, ::T.untyped)
+  IPATH_ABEMPTY = ::T.let(nil, ::T.untyped)
+  IPATH_ABSOLUTE = ::T.let(nil, ::T.untyped)
+  IPATH_EMPTY = ::T.let(nil, ::T.untyped)
+  IPATH_NOSCHEME = ::T.let(nil, ::T.untyped)
+  IPATH_ROOTLESS = ::T.let(nil, ::T.untyped)
+  IPCHAR = ::T.let(nil, ::T.untyped)
+  IPRIVATE = ::T.let(nil, ::T.untyped)
+  IP_literal = ::T.let(nil, ::T.untyped)
+  IQUERY = ::T.let(nil, ::T.untyped)
+  IREG_NAME = ::T.let(nil, ::T.untyped)
+  IRELATIVE_PART = ::T.let(nil, ::T.untyped)
+  IRELATIVE_REF = ::T.let(nil, ::T.untyped)
+  IRI = ::T.let(nil, ::T.untyped)
+  IRI_PARTS = ::T.let(nil, ::T.untyped)
+  ISEGMENT = ::T.let(nil, ::T.untyped)
+  ISEGMENT_NZ = ::T.let(nil, ::T.untyped)
+  ISEGMENT_NZ_NC = ::T.let(nil, ::T.untyped)
+  IUNRESERVED = ::T.let(nil, ::T.untyped)
+  IUSERINFO = ::T.let(nil, ::T.untyped)
+  NON_HIER_SCHEMES = ::T.let(nil, ::T.untyped)
+  PCT_ENCODED = ::T.let(nil, ::T.untyped)
+  PORT = ::T.let(nil, ::T.untyped)
+  PORT_FROM_AUTHORITY_RE = ::T.let(nil, ::T.untyped)
+  PORT_MAPPING = ::T.let(nil, ::T.untyped)
+  RDS_2A = ::T.let(nil, ::T.untyped)
+  RDS_2B1 = ::T.let(nil, ::T.untyped)
+  RDS_2B2 = ::T.let(nil, ::T.untyped)
+  RDS_2C1 = ::T.let(nil, ::T.untyped)
+  RDS_2C2 = ::T.let(nil, ::T.untyped)
+  RDS_2D = ::T.let(nil, ::T.untyped)
+  RDS_2E = ::T.let(nil, ::T.untyped)
+  RESERVED = ::T.let(nil, ::T.untyped)
+  SCHEME = ::T.let(nil, ::T.untyped)
+  SUB_DELIMS = ::T.let(nil, ::T.untyped)
+  UCSCHAR = ::T.let(nil, ::T.untyped)
+  UNRESERVED = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::URI
+  def self._load(data); end
+
+  def self.cache(); end
+
+  def self.decode(str); end
+
+  def self.encode(str, expr); end
+
+  def self.intern(str, *args, **options); end
+
+  def self.normalize_path(path); end
+
+  def self.parse(str); end
+end
+
+class RDF::Util::Cache
+  def has_capacity?(); end
+
+  def initialize(capacity=T.unsafe(nil)); end
+
+  def size(); end
+end
+
+class RDF::Util::Cache::ObjectSpaceCache
+  def [](key); end
+
+  def []=(key, value); end
+
+  def delete(key); end
+end
+
+class RDF::Util::Cache::ObjectSpaceCache
+end
+
+class RDF::Util::Cache::WeakRefCache
+  def [](key); end
+
+  def []=(key, value); end
+
+  def delete(key); end
+end
+
+class RDF::Util::Cache::WeakRefCache
+end
+
+class RDF::Util::Cache
+  def self.new(*args); end
+end
+
+module RDF::Util::Coercions
+  def coerce_statements(statements, query: T.unsafe(nil), constant: T.unsafe(nil), &block); end
+end
+
+module RDF::Util::Coercions
+end
+
+module RDF::Util::File
+end
+
+class RDF::Util::File::FaradayAdapter
+end
+
+class RDF::Util::File::FaradayAdapter
+  def self.conn(); end
+
+  def self.conn=(conn); end
+end
+
+class RDF::Util::File::HttpAdapter
+end
+
+class RDF::Util::File::HttpAdapter
+  def self.default_accept_header(); end
+
+  def self.default_user_agent(); end
+
+  def self.headers(headers: T.unsafe(nil)); end
+
+  def self.open_url(base_uri, proxy: T.unsafe(nil), headers: T.unsafe(nil), verify_none: T.unsafe(nil), **options); end
+end
+
+class RDF::Util::File::NetHttpAdapter
+end
+
+class RDF::Util::File::NetHttpAdapter
+end
+
+class RDF::Util::File::RemoteDocument
+  def base_uri(); end
+
+  def charset(); end
+
+  def code(); end
+
+  def content_encoding(); end
+
+  def content_type(); end
+
+  def etag(); end
+
+  def headers(); end
+
+  def initialize(body, options=T.unsafe(nil)); end
+
+  def last_modified(); end
+
+  def links(); end
+
+  def parameters(); end
+
+  def requested_url(); end
+end
+
+class RDF::Util::File::RemoteDocument
+end
+
+class RDF::Util::File::RestClientAdapter
+end
+
+class RDF::Util::File::RestClientAdapter
+end
+
+module RDF::Util::File
+  def self.http_adapter(use_net_http=T.unsafe(nil)); end
+
+  def self.http_adapter=(http_adapter); end
+
+  def self.open_file(filename_or_url, proxy: T.unsafe(nil), headers: T.unsafe(nil), verify_none: T.unsafe(nil), **options, &block); end
+end
+
+module RDF::Util::Logger
+  def log_debug(*args, level: T.unsafe(nil), **options, &block); end
+
+  def log_depth(**options, &block); end
+
+  def log_error(*args, level: T.unsafe(nil), **options, &block); end
+
+  def log_fatal(*args, level: T.unsafe(nil), **options, &block); end
+
+  def log_info(*args, level: T.unsafe(nil), **options, &block); end
+
+  def log_recover(*args, level: T.unsafe(nil), **options, &block); end
+
+  def log_recovering?(**options); end
+
+  def log_statistics(**options); end
+
+  def log_warn(*args, level: T.unsafe(nil), **options, &block); end
+
+  def logger(**options); end
+  LOGGER_COMMON_LEVELS = ::T.let(nil, ::T.untyped)
+  LOGGER_COMMON_LEVELS_REVERSE = ::T.let(nil, ::T.untyped)
+end
+
+module RDF::Util::Logger
+end
+
+module RDF::Util::UUID
+end
+
+module RDF::Util::UUID
+  def self.generate(format: T.unsafe(nil)); end
+end
+
+module RDF::VERSION
+  EXTRA = ::T.let(nil, ::T.untyped)
+  FILE = ::T.let(nil, ::T.untyped)
+  MAJOR = ::T.let(nil, ::T.untyped)
+  MINOR = ::T.let(nil, ::T.untyped)
+  STRING = ::T.let(nil, ::T.untyped)
+  TINY = ::T.let(nil, ::T.untyped)
+end
+
+module RDF::Value
+  def to_nquads(); end
+end
+
+class RDF::Vocabulary
+  def [](property); end
+
+  def initialize(uri); end
+
+  def method_missing(property, *args, &block); end
+
+  def to_iri(); end
+
+  def to_uri(); end
+end
+
+module RDF::Vocabulary::Term
+  include ::RDF::Resource
+  include ::RDF::Term
+  include ::RDF::Value
+  include ::Comparable
+  include ::SPARQL::Algebra::Expression
+  def attribute_value(prop); end
+
+  def attributes(); end
+
+  def class?(); end
+
+  def datatype?(); end
+
+  def domain_includes(); end
+
+  def dup(); end
+
+  def each_statement(); end
+
+  def enum_for(method=T.unsafe(nil), *args); end
+
+  def inspect(); end
+
+  def method_missing(method, *args, &block); end
+
+  def other?(); end
+
+  def properties(); end
+
+  def property?(); end
+
+  def range_includes(); end
+
+  def respond_to?(method, include_all=T.unsafe(nil)); end
+
+  def restriction?(); end
+
+  def to_enum(method=T.unsafe(nil), *args); end
+
+  def to_ruby(indent: T.unsafe(nil)); end
+
+  def valid?(); end
+
+  def vocab(); end
+end
+
+module RDF::Vocabulary::Term
+  def self.intern(str, *args, **options); end
+
+  def self.new(*args, vocab: T.unsafe(nil), attributes: T.unsafe(nil), **options); end
+end
+
+class RDF::Vocabulary
+  extend ::Enumerable
+  def self.[](property); end
+
+  def self.__imports__(); end
+
+  def self.__name__(); end
+
+  def self.__ontology__(*args); end
+
+  def self.__prefix__(); end
+
+  def self.__properties__(); end
+
+  def self.__property__(*args); end
+
+  def self.camelize(str); end
+
+  def self.create(uri); end
+
+  def self.each(&block); end
+
+  def self.each_statement(&block); end
+
+  def self.enum_for(method=T.unsafe(nil), *args); end
+
+  def self.expand_pname(pname); end
+
+  def self.find(uri); end
+
+  def self.find_term(uri); end
+
+  def self.from_graph(graph, url: T.unsafe(nil), class_name: T.unsafe(nil), extra: T.unsafe(nil)); end
+
+  def self.imported_from(); end
+
+  def self.imports(); end
+
+  def self.inherited(subclass); end
+
+  def self.list(*values); end
+
+  def self.method_missing(property, *args, &block); end
+
+  def self.ontology(*args); end
+
+  def self.properties(); end
+
+  def self.property(*args); end
+
+  def self.strict?(); end
+
+  def self.term(*args); end
+
+  def self.to_enum(method=T.unsafe(nil), *args); end
+
+  def self.to_iri(); end
+
+  def self.to_uri(); end
+end
+
+module RDF::Writable
+  include ::RDF::Util::Coercions
+  def <<(data); end
+
+  def insert(*statements); end
+
+  def insert!(*args, &block); end
+
+  def insert_graph(graph); end
+
+  def insert_reader(reader); end
+
+  def insert_statement(statement); end
+
+  def insert_statements(statements); end
+
+  def writable?(); end
+end
+
+module RDF::Writable
+  extend ::RDF::Util::Aliasing::LateBound
+end
+
+class RDF::Writer
+  include ::RDF::Util::Logger
+  include ::RDF::Writable
+  include ::RDF::Util::Coercions
+  def base_uri(); end
+
+  def canonicalize?(); end
+
+  def encoding(); end
+
+  def escaped(string); end
+
+  def flush(); end
+
+  def flush!(*args, &block); end
+
+  def format_list(value, **options); end
+
+  def format_literal(value, **options); end
+
+  def format_node(value, **options); end
+
+  def format_term(term, **options); end
+
+  def format_uri(value, **options); end
+
+  def initialize(output=T.unsafe(nil), **options, &block); end
+
+  def insert_statement(*args, &block); end
+
+  def node_id(); end
+
+  def options(); end
+
+  def prefix(name, uri=T.unsafe(nil)); end
+
+  def prefix!(*args, &block); end
+
+  def prefixes(); end
+
+  def prefixes=(prefixes); end
+
+  def puts(*args); end
+
+  def quoted(string); end
+
+  def to_sym(); end
+
+  def uri_for(term); end
+
+  def validate?(); end
+
+  def write_comment(text); end
+
+  def write_epilogue(); end
+
+  def write_prologue(); end
+
+  def write_statement(statement); end
+
+  def write_triple(subject, predicate, object); end
+
+  def write_triples(*triples); end
+end
+
+class RDF::Writer
+  extend ::Enumerable
+  extend ::RDF::Util::Aliasing::LateBound
+  def self.accept?(accept_params); end
+
+  def self.buffer(*args, **options, &block); end
+
+  def self.dump(data, io=T.unsafe(nil), **options); end
+
+  def self.each(&block); end
+
+  def self.for(*arg, &block); end
+
+  def self.format(klass=T.unsafe(nil)); end
+
+  def self.format_class(klass=T.unsafe(nil)); end
+
+  def self.inherited(child); end
+
+  def self.open(filename, format: T.unsafe(nil), **options, &block); end
+
+  def self.options(); end
+
+  def self.to_sym(); end
+end
+
+class RDF::WriterError
+end
+
+class RDF::WriterError
+end
+
 module REXML
   COPYRIGHT = ::T.let(nil, ::T.untyped)
   Copyright = ::T.let(nil, ::T.untyped)
@@ -17053,6 +18931,8 @@ class REXML::Element
   def attribute(name, namespace=T.unsafe(nil)); end
 
   def attributes(); end
+
+  def c14nxl(options=T.unsafe(nil)); end
 
   def cdatas(); end
 
@@ -26008,6 +27888,1736 @@ class RubyVM
   def self.stat(*_); end
 end
 
+module SPARQL
+  ERROR_MESSAGE = ::T.let(nil, ::T.untyped)
+end
+
+module SPARQL::Algebra
+  include ::RDF
+end
+
+module SPARQL::Algebra::Aggregate
+  def aggregate(solutions=T.unsafe(nil), **options); end
+
+  def apply(enum); end
+
+  def replace_aggregate!(&block); end
+
+  def replace_vars!(&block); end
+end
+
+module SPARQL::Algebra::Aggregate
+end
+
+module SPARQL::Algebra::Evaluatable
+  def apply(*operands); end
+
+  def evaluate(bindings, **options); end
+
+  def memoize(*operands); end
+
+  def replace_aggregate!(&block); end
+
+  def replace_vars!(&block); end
+end
+
+module SPARQL::Algebra::Evaluatable
+end
+
+module SPARQL::Algebra::Expression
+  def constant?(); end
+
+  def evaluate(bindings, options=T.unsafe(nil)); end
+
+  def invalid?(); end
+
+  def node?(); end
+
+  def optimize(); end
+
+  def to_sxp_bin(); end
+
+  def valid?(); end
+
+  def validate(); end
+
+  def validate!(); end
+
+  def variable?(); end
+end
+
+module SPARQL::Algebra::Expression
+  def self.[](*sse); end
+
+  def self.cast(datatype, value); end
+
+  def self.debug(*args); end
+
+  def self.extension(function, *args); end
+
+  def self.extensions(); end
+
+  def self.for(*sse); end
+
+  def self.new(sse, **options); end
+
+  def self.open(filename, **options, &block); end
+
+  def self.parse(sse, **options, &block); end
+
+  def self.register_extension(uri, &block); end
+end
+
+class SPARQL::Algebra::Operator
+  include ::SPARQL::Algebra::Expression
+  def ==(other); end
+
+  def aggregate?(); end
+
+  def base_uri(); end
+
+  def boolean(literal); end
+
+  def descendants(&block); end
+
+  def each(&block); end
+
+  def each_descendant(&block); end
+
+  def eql?(other); end
+
+  def evaluatable?(); end
+
+  def executable?(); end
+
+  def first_ancestor(klass); end
+
+  def initialize(*operands); end
+
+  def ndvars(); end
+
+  def operand(index=T.unsafe(nil)); end
+
+  def operands(); end
+
+  def parent(); end
+
+  def parent=(operator); end
+
+  def prefixes(); end
+
+  def rewrite(&block); end
+
+  def to_binary(klass, *expressions); end
+
+  def vars(); end
+  ARITY = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Abs
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Abs
+end
+
+class SPARQL::Algebra::Operator::Add
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Add
+end
+
+class SPARQL::Algebra::Operator::Alt
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Alt
+end
+
+class SPARQL::Algebra::Operator::And
+  include ::SPARQL::Algebra::Evaluatable
+  def initialize(left, right, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::And
+end
+
+class SPARQL::Algebra::Operator::Asc
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Asc
+end
+
+class SPARQL::Algebra::Operator::Ask
+  include ::SPARQL::Algebra::Query
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Ask
+end
+
+class SPARQL::Algebra::Operator::Avg
+  include ::SPARQL::Algebra::Aggregate
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Avg
+end
+
+class SPARQL::Algebra::Operator::BGP
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::BGP
+  def self.new(*patterns, &block); end
+end
+
+class SPARQL::Algebra::Operator::BNode
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(literal, bindings); end
+
+  def initialize(literal=T.unsafe(nil), **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::BNode
+end
+
+class SPARQL::Algebra::Operator::Base
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Base
+end
+
+class SPARQL::Algebra::Operator::Binary
+  def initialize(arg1, arg2, options=T.unsafe(nil)); end
+  ARITY = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Binary
+end
+
+class SPARQL::Algebra::Operator::Bound
+  include ::SPARQL::Algebra::Evaluatable
+  def initialize(var, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Bound
+end
+
+class SPARQL::Algebra::Operator::Ceil
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Ceil
+end
+
+class SPARQL::Algebra::Operator::Clear
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Clear
+end
+
+class SPARQL::Algebra::Operator::Coalesce
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Coalesce
+end
+
+class SPARQL::Algebra::Operator::Compare
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Compare
+end
+
+class SPARQL::Algebra::Operator::Concat
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Concat
+end
+
+class SPARQL::Algebra::Operator::Construct
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Construct
+end
+
+class SPARQL::Algebra::Operator::Contains
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Contains
+end
+
+class SPARQL::Algebra::Operator::Copy
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Copy
+end
+
+class SPARQL::Algebra::Operator::Count
+  include ::SPARQL::Algebra::Aggregate
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Count
+end
+
+class SPARQL::Algebra::Operator::Create
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Create
+end
+
+class SPARQL::Algebra::Operator::Dataset
+  include ::SPARQL::Algebra::Query
+  def execute(queryable, **options, &base); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Dataset
+end
+
+class SPARQL::Algebra::Operator::Datatype
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(literal); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Datatype
+end
+
+class SPARQL::Algebra::Operator::Day
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Day
+end
+
+class SPARQL::Algebra::Operator::Delete
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, solutions: T.unsafe(nil), **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Delete
+end
+
+class SPARQL::Algebra::Operator::DeleteData
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::DeleteData
+end
+
+class SPARQL::Algebra::Operator::DeleteWhere
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::DeleteWhere
+end
+
+class SPARQL::Algebra::Operator::Desc
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Desc
+end
+
+class SPARQL::Algebra::Operator::Describe
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Describe
+end
+
+class SPARQL::Algebra::Operator::Distinct
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Distinct
+end
+
+class SPARQL::Algebra::Operator::Divide
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Divide
+end
+
+class SPARQL::Algebra::Operator::Drop
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Drop
+end
+
+class SPARQL::Algebra::Operator::EncodeForURI
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::EncodeForURI
+end
+
+class SPARQL::Algebra::Operator::Equal
+  def apply(term1, term2); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Equal
+end
+
+class SPARQL::Algebra::Operator::Exists
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Exists
+end
+
+class SPARQL::Algebra::Operator::Exprlist
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Exprlist
+end
+
+class SPARQL::Algebra::Operator::Extend
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Extend
+end
+
+class SPARQL::Algebra::Operator::Filter
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Filter
+end
+
+class SPARQL::Algebra::Operator::Floor
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Floor
+end
+
+class SPARQL::Algebra::Operator::Graph
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Graph
+  def self.new(name, patterns, &block); end
+end
+
+class SPARQL::Algebra::Operator::GreaterThan
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::GreaterThan
+end
+
+class SPARQL::Algebra::Operator::GreaterThanOrEqual
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::GreaterThanOrEqual
+end
+
+class SPARQL::Algebra::Operator::Group
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Group
+end
+
+class SPARQL::Algebra::Operator::GroupConcat
+  include ::SPARQL::Algebra::Aggregate
+  def apply(enum, separator); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::GroupConcat
+end
+
+class SPARQL::Algebra::Operator::Hours
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Hours
+end
+
+class SPARQL::Algebra::Operator::IRI
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(literal); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::IRI
+end
+
+class SPARQL::Algebra::Operator::If
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::If
+end
+
+class SPARQL::Algebra::Operator::In
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::In
+end
+
+class SPARQL::Algebra::Operator::Insert
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, solutions: T.unsafe(nil), **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Insert
+end
+
+class SPARQL::Algebra::Operator::InsertData
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::InsertData
+end
+
+class SPARQL::Algebra::Operator::IsBlank
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(term); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::IsBlank
+end
+
+class SPARQL::Algebra::Operator::IsIRI
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(term); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::IsIRI
+end
+
+class SPARQL::Algebra::Operator::IsLiteral
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(term); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::IsLiteral
+end
+
+class SPARQL::Algebra::Operator::IsNumeric
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(term); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::IsNumeric
+end
+
+SPARQL::Algebra::Operator::IsURI = SPARQL::Algebra::Operator::IsIRI
+
+class SPARQL::Algebra::Operator::Join
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Join
+end
+
+class SPARQL::Algebra::Operator::LCase
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::LCase
+end
+
+class SPARQL::Algebra::Operator::Lang
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(literal); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Lang
+end
+
+class SPARQL::Algebra::Operator::LangMatches
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(language_tag, language_range); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::LangMatches
+end
+
+class SPARQL::Algebra::Operator::LeftJoin
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::LeftJoin
+end
+
+class SPARQL::Algebra::Operator::LessThan
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::LessThan
+end
+
+class SPARQL::Algebra::Operator::LessThanOrEqual
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::LessThanOrEqual
+end
+
+class SPARQL::Algebra::Operator::Load
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Load
+end
+
+class SPARQL::Algebra::Operator::MD5
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::MD5
+end
+
+class SPARQL::Algebra::Operator::Max
+  include ::SPARQL::Algebra::Aggregate
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Max
+end
+
+class SPARQL::Algebra::Operator::Min
+  include ::SPARQL::Algebra::Aggregate
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Min
+end
+
+class SPARQL::Algebra::Operator::Minus
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Minus
+end
+
+class SPARQL::Algebra::Operator::Minutes
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Minutes
+end
+
+class SPARQL::Algebra::Operator::Modify
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Modify
+end
+
+class SPARQL::Algebra::Operator::Month
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Month
+end
+
+class SPARQL::Algebra::Operator::Move
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Move
+end
+
+class SPARQL::Algebra::Operator::Multiply
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Multiply
+end
+
+class SPARQL::Algebra::Operator::Negate
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(term); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Negate
+end
+
+class SPARQL::Algebra::Operator::Not
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Not
+end
+
+class SPARQL::Algebra::Operator::NotEqual
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::NotEqual
+end
+
+class SPARQL::Algebra::Operator::NotExists
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::NotExists
+end
+
+class SPARQL::Algebra::Operator::NotIn
+  include ::SPARQL::Algebra::Evaluatable
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::NotIn
+end
+
+class SPARQL::Algebra::Operator::NotOneOf
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::NotOneOf
+end
+
+class SPARQL::Algebra::Operator::Now
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Now
+end
+
+class SPARQL::Algebra::Operator::Nullary
+  def initialize(options=T.unsafe(nil)); end
+  ARITY = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Nullary
+end
+
+class SPARQL::Algebra::Operator::Or
+  include ::SPARQL::Algebra::Evaluatable
+  def initialize(left, right, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Or
+end
+
+class SPARQL::Algebra::Operator::Order
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Order
+end
+
+class SPARQL::Algebra::Operator::Path
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Path
+end
+
+class SPARQL::Algebra::Operator::PathOpt
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::PathOpt
+end
+
+class SPARQL::Algebra::Operator::PathPlus
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::PathPlus
+end
+
+class SPARQL::Algebra::Operator::PathStar
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::PathStar
+end
+
+class SPARQL::Algebra::Operator::Plus
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right=T.unsafe(nil)); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Plus
+end
+
+class SPARQL::Algebra::Operator::Prefix
+  include ::SPARQL::Algebra::Query
+  def merge!(other); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Prefix
+end
+
+class SPARQL::Algebra::Operator::Project
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Project
+end
+
+class SPARQL::Algebra::Operator::Quaternary
+  def initialize(arg1, arg2, arg3, arg4, options=T.unsafe(nil)); end
+  ARITY = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Quaternary
+end
+
+class SPARQL::Algebra::Operator::Rand
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Rand
+end
+
+class SPARQL::Algebra::Operator::Reduced
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Reduced
+end
+
+class SPARQL::Algebra::Operator::Regex
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(text, pattern, flags=T.unsafe(nil)); end
+
+  def initialize(text, pattern, flags=T.unsafe(nil), **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Regex
+end
+
+class SPARQL::Algebra::Operator::Replace
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(text, pattern, replacement, flags=T.unsafe(nil)); end
+
+  def initialize(text, pattern, replacement, flags=T.unsafe(nil), **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Replace
+end
+
+class SPARQL::Algebra::Operator::Reverse
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Reverse
+end
+
+class SPARQL::Algebra::Operator::Round
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Round
+end
+
+class SPARQL::Algebra::Operator::SHA1
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::SHA1
+end
+
+class SPARQL::Algebra::Operator::SHA256
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::SHA256
+end
+
+class SPARQL::Algebra::Operator::SHA512
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::SHA512
+end
+
+class SPARQL::Algebra::Operator::SameTerm
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(term1, term2); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::SameTerm
+end
+
+class SPARQL::Algebra::Operator::Sample
+  include ::SPARQL::Algebra::Aggregate
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Sample
+end
+
+class SPARQL::Algebra::Operator::Seconds
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Seconds
+end
+
+class SPARQL::Algebra::Operator::Seq
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Seq
+end
+
+class SPARQL::Algebra::Operator::Sequence
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Sequence
+end
+
+class SPARQL::Algebra::Operator::Slice
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Slice
+end
+
+class SPARQL::Algebra::Operator::Str
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(term); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Str
+end
+
+class SPARQL::Algebra::Operator::StrAfter
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrAfter
+end
+
+class SPARQL::Algebra::Operator::StrBefore
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrBefore
+end
+
+class SPARQL::Algebra::Operator::StrDT
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(value, datatypeIRI); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrDT
+end
+
+class SPARQL::Algebra::Operator::StrEnds
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrEnds
+end
+
+class SPARQL::Algebra::Operator::StrLang
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(value, langTag); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrLang
+end
+
+class SPARQL::Algebra::Operator::StrLen
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrLen
+end
+
+class SPARQL::Algebra::Operator::StrStarts
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrStarts
+end
+
+class SPARQL::Algebra::Operator::StrUUID
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::StrUUID
+end
+
+class SPARQL::Algebra::Operator::SubStr
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(source, startingLoc, length); end
+
+  def initialize(source, startingLoc, length=T.unsafe(nil), **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::SubStr
+end
+
+class SPARQL::Algebra::Operator::Subtract
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(left, right); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Subtract
+end
+
+class SPARQL::Algebra::Operator::Sum
+  include ::SPARQL::Algebra::Aggregate
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Sum
+end
+
+class SPARQL::Algebra::Operator::TZ
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::TZ
+end
+
+class SPARQL::Algebra::Operator::Table
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Table
+end
+
+class SPARQL::Algebra::Operator::Ternary
+  def initialize(arg1, arg2, arg3, options=T.unsafe(nil)); end
+  ARITY = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Ternary
+end
+
+class SPARQL::Algebra::Operator::Timezone
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Timezone
+end
+
+class SPARQL::Algebra::Operator::UCase
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::UCase
+end
+
+class SPARQL::Algebra::Operator::UUID
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::UUID
+end
+
+class SPARQL::Algebra::Operator::Unary
+  def initialize(arg, options=T.unsafe(nil)); end
+  ARITY = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Unary
+end
+
+class SPARQL::Algebra::Operator::Union
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Union
+end
+
+class SPARQL::Algebra::Operator::Update
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Update
+end
+
+class SPARQL::Algebra::Operator::Using
+  include ::SPARQL::Algebra::Query
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Using
+end
+
+class SPARQL::Algebra::Operator::With
+  include ::SPARQL::Algebra::Update
+  def execute(queryable, **options); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::With
+end
+
+class SPARQL::Algebra::Operator::Year
+  include ::SPARQL::Algebra::Evaluatable
+  def apply(operand); end
+  NAME = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Algebra::Operator::Year
+end
+
+class SPARQL::Algebra::Operator
+  def self.arity(); end
+
+  def self.base_uri(); end
+
+  def self.base_uri=(uri); end
+
+  def self.evaluate(*operands); end
+
+  def self.for(name, arity=T.unsafe(nil)); end
+
+  def self.inherited(child); end
+
+  def self.prefixes(); end
+
+  def self.prefixes=(hash); end
+end
+
+module SPARQL::Algebra::Query
+  def each_solution(&block); end
+
+  def empty?(); end
+
+  def execute(queryable, **options, &block); end
+
+  def failed?(); end
+
+  def graph_name=(value); end
+
+  def matched?(); end
+
+  def query_yields_boolean?(); end
+
+  def query_yields_solutions?(); end
+
+  def query_yields_statements?(); end
+
+  def solutions(); end
+
+  def unshift(query); end
+
+  def variables(); end
+end
+
+module SPARQL::Algebra::Query
+end
+
+module SPARQL::Algebra::Update
+  def execute(queryable, **options, &block); end
+
+  def graph_name=(value); end
+
+  def unshift(query); end
+
+  def variables(); end
+end
+
+module SPARQL::Algebra::Update
+end
+
+SPARQL::Algebra::Variable = RDF::Query::Variable
+
+module SPARQL::Algebra
+  def self.Expr(*sse); end
+
+  def self.Expression(*sse); end
+
+  def self.Op(name, arity=T.unsafe(nil)); end
+
+  def self.Operator(name, arity=T.unsafe(nil)); end
+
+  def self.Var(name); end
+
+  def self.Variable(name); end
+
+  def self.open(sse, **options); end
+
+  def self.parse(sse, **options); end
+end
+
+class SPARQL::Client
+  ACCEPT_BRTR = ::T.let(nil, ::T.untyped)
+  ACCEPT_CSV = ::T.let(nil, ::T.untyped)
+  ACCEPT_GRAPH = ::T.let(nil, ::T.untyped)
+  ACCEPT_JSON = ::T.let(nil, ::T.untyped)
+  ACCEPT_RESULTS = ::T.let(nil, ::T.untyped)
+  ACCEPT_TSV = ::T.let(nil, ::T.untyped)
+  ACCEPT_XML = ::T.let(nil, ::T.untyped)
+  DEFAULT_METHOD = ::T.let(nil, ::T.untyped)
+  DEFAULT_PROTOCOL = ::T.let(nil, ::T.untyped)
+  GRAPH_ALL = ::T.let(nil, ::T.untyped)
+  RESULT_ALL = ::T.let(nil, ::T.untyped)
+  RESULT_BOOL = ::T.let(nil, ::T.untyped)
+  RESULT_BRTR = ::T.let(nil, ::T.untyped)
+  RESULT_CSV = ::T.let(nil, ::T.untyped)
+  RESULT_JSON = ::T.let(nil, ::T.untyped)
+  RESULT_TSV = ::T.let(nil, ::T.untyped)
+  RESULT_XML = ::T.let(nil, ::T.untyped)
+  XMLNS = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Client::Query
+  def asc(var); end
+
+  def ask(); end
+
+  def build_patterns(patterns); end
+
+  def construct(*patterns); end
+
+  def desc(var); end
+
+  def describe(*variables); end
+
+  def distinct(state=T.unsafe(nil)); end
+
+  def execute(); end
+
+  def expects_statements?(); end
+
+  def false?(); end
+
+  def filter(string); end
+
+  def form(); end
+
+  def from(uri); end
+
+  def graph(graph_uri_or_var); end
+
+  def group(*variables); end
+
+  def group_by(*variables); end
+
+  def initialize(form=T.unsafe(nil), **options, &block); end
+
+  def inspect!(); end
+
+  def limit(length); end
+
+  def minus(*patterns, &block); end
+
+  def offset(start); end
+
+  def optional(*patterns, &block); end
+
+  def order(*variables); end
+
+  def order_by(*variables); end
+
+  def prefix(val); end
+
+  def reduced(state=T.unsafe(nil)); end
+
+  def result(); end
+
+  def select(*variables); end
+
+  def slice(start, length); end
+
+  def to_s_ggp(); end
+
+  def true?(); end
+
+  def union(*patterns, &block); end
+
+  def values(*args); end
+
+  def where(*patterns_queries, &block); end
+
+  def whether(*patterns_queries, &block); end
+end
+
+class SPARQL::Client::Query::Filter
+end
+
+class SPARQL::Client::Query::Filter
+end
+
+class SPARQL::Client::Query::WhereDecorator
+  def select(*variables); end
+  RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Client::Query::WhereDecorator
+end
+
+class SPARQL::Client::Query
+  def self.ask(**options); end
+
+  def self.construct(*patterns, **options); end
+
+  def self.describe(*variables, **options); end
+
+  def self.select(*variables, **options); end
+end
+
+class SPARQL::Client::Repository
+  def clear_statements(); end
+
+  def client(); end
+
+  def each(&block); end
+
+  def each_object(&block); end
+
+  def each_predicate(&block); end
+
+  def each_subject(&block); end
+
+  def has_object?(object); end
+
+  def has_predicate?(predicate); end
+
+  def has_subject?(subject); end
+
+  def initialize(uri: T.unsafe(nil), **options, &block); end
+
+  def length(); end
+
+  def size(); end
+
+  def update_client(); end
+end
+
+class SPARQL::Client::Repository
+end
+
+module SPARQL::Client::Update
+end
+
+class SPARQL::Client::Update::Add
+end
+
+class SPARQL::Client::Update::Add
+end
+
+class SPARQL::Client::Update::Clear
+  def all(); end
+
+  def default(); end
+
+  def graph(uri); end
+
+  def named(); end
+
+  def uri(); end
+end
+
+class SPARQL::Client::Update::Clear
+end
+
+class SPARQL::Client::Update::Copy
+end
+
+class SPARQL::Client::Update::Copy
+end
+
+class SPARQL::Client::Update::Create
+  def initialize(uri, **options); end
+
+  def uri(); end
+end
+
+class SPARQL::Client::Update::Create
+end
+
+class SPARQL::Client::Update::DeleteData
+  def data(); end
+
+  def graph(uri); end
+
+  def initialize(data, **options); end
+end
+
+class SPARQL::Client::Update::DeleteData
+end
+
+class SPARQL::Client::Update::DeleteInsert
+  def delete_graph(); end
+
+  def graph(uri); end
+
+  def initialize(_delete_graph, _insert_graph=T.unsafe(nil), _where_graph=T.unsafe(nil), **options); end
+
+  def insert_graph(); end
+
+  def where_graph(); end
+end
+
+class SPARQL::Client::Update::DeleteInsert
+end
+
+class SPARQL::Client::Update::Drop
+end
+
+class SPARQL::Client::Update::Drop
+end
+
+class SPARQL::Client::Update::InsertData
+  def data(); end
+
+  def graph(uri); end
+
+  def initialize(data, **options); end
+end
+
+class SPARQL::Client::Update::InsertData
+end
+
+class SPARQL::Client::Update::Load
+  def from(); end
+
+  def initialize(from, into: T.unsafe(nil), **options); end
+
+  def into(uri); end
+end
+
+class SPARQL::Client::Update::Load
+end
+
+class SPARQL::Client::Update::Move
+end
+
+class SPARQL::Client::Update::Move
+end
+
+class SPARQL::Client::Update::Operation
+  def expects_statements?(); end
+
+  def initialize(*arguments, **options); end
+
+  def options(); end
+
+  def silent(); end
+end
+
+class SPARQL::Client::Update::Operation
+end
+
+module SPARQL::Client::Update
+  def self.clear(*arguments, **options); end
+
+  def self.create(*arguments, **options); end
+
+  def self.delete_data(*arguments, **options); end
+
+  def self.drop(*arguments, **options); end
+
+  def self.insert_data(*arguments, **options); end
+
+  def self.load(*arguments, **options); end
+end
+
+module SPARQL::Client::VERSION
+  EXTRA = ::T.let(nil, ::T.untyped)
+  FILE = ::T.let(nil, ::T.untyped)
+  MAJOR = ::T.let(nil, ::T.untyped)
+  MINOR = ::T.let(nil, ::T.untyped)
+  STRING = ::T.let(nil, ::T.untyped)
+  TINY = ::T.let(nil, ::T.untyped)
+end
+
+module SPARQL::Client::VERSION
+  def self.to_a(); end
+
+  def self.to_str(); end
+end
+
+module SPARQL::Grammar
+end
+
+module SPARQL::Grammar::Meta
+  BRANCH = ::T.let(nil, ::T.untyped)
+  CLEANUP = ::T.let(nil, ::T.untyped)
+  FIRST = ::T.let(nil, ::T.untyped)
+  FOLLOW = ::T.let(nil, ::T.untyped)
+  START = ::T.let(nil, ::T.untyped)
+  TERMINALS = ::T.let(nil, ::T.untyped)
+end
+
+module SPARQL::Grammar::Meta
+end
+
+class SPARQL::Grammar::Parser
+  include ::SPARQL::Grammar::Meta
+  include ::SPARQL::Grammar::Terminals
+  include ::EBNF::LL1::Parser
+  def initialize(input=T.unsafe(nil), **options, &block); end
+
+  def input(); end
+
+  def input=(input); end
+
+  def ll1_parse(input=T.unsafe(nil), start=T.unsafe(nil), **options, &block); end
+
+  def options(); end
+
+  def parse(prod=T.unsafe(nil)); end
+
+  def result(); end
+
+  def result=(result); end
+
+  def tokens(); end
+
+  def valid?(); end
+  AGGREGATE_RULES = ::T.let(nil, ::T.untyped)
+  BUILTINS = ::T.let(nil, ::T.untyped)
+  BUILTIN_RULES = ::T.let(nil, ::T.untyped)
+end
+
+class SPARQL::Grammar::Parser
+end
+
+module SPARQL::Grammar::Terminals
+  ANON = ::T.let(nil, ::T.untyped)
+  BLANK_NODE_LABEL = ::T.let(nil, ::T.untyped)
+  DECIMAL = ::T.let(nil, ::T.untyped)
+  DECIMAL_NEGATIVE = ::T.let(nil, ::T.untyped)
+  DECIMAL_POSITIVE = ::T.let(nil, ::T.untyped)
+  DOUBLE = ::T.let(nil, ::T.untyped)
+  DOUBLE_NEGATIVE = ::T.let(nil, ::T.untyped)
+  DOUBLE_POSITIVE = ::T.let(nil, ::T.untyped)
+  ECHAR = ::T.let(nil, ::T.untyped)
+  EXPONENT = ::T.let(nil, ::T.untyped)
+  INTEGER = ::T.let(nil, ::T.untyped)
+  INTEGER_NEGATIVE = ::T.let(nil, ::T.untyped)
+  INTEGER_POSITIVE = ::T.let(nil, ::T.untyped)
+  IRIREF = ::T.let(nil, ::T.untyped)
+  IRI_RANGE = ::T.let(nil, ::T.untyped)
+  LANGTAG = ::T.let(nil, ::T.untyped)
+  NIL = ::T.let(nil, ::T.untyped)
+  PERCENT = ::T.let(nil, ::T.untyped)
+  PLX = ::T.let(nil, ::T.untyped)
+  PNAME_LN = ::T.let(nil, ::T.untyped)
+  PNAME_NS = ::T.let(nil, ::T.untyped)
+  PN_CHARS = ::T.let(nil, ::T.untyped)
+  PN_CHARS_BASE = ::T.let(nil, ::T.untyped)
+  PN_CHARS_BODY = ::T.let(nil, ::T.untyped)
+  PN_CHARS_U = ::T.let(nil, ::T.untyped)
+  PN_LOCAL = ::T.let(nil, ::T.untyped)
+  PN_LOCAL_BODY = ::T.let(nil, ::T.untyped)
+  PN_LOCAL_ESC = ::T.let(nil, ::T.untyped)
+  PN_PREFIX = ::T.let(nil, ::T.untyped)
+  STRING_LITERAL1 = ::T.let(nil, ::T.untyped)
+  STRING_LITERAL2 = ::T.let(nil, ::T.untyped)
+  STRING_LITERAL_LONG1 = ::T.let(nil, ::T.untyped)
+  STRING_LITERAL_LONG2 = ::T.let(nil, ::T.untyped)
+  STR_EXPR = ::T.let(nil, ::T.untyped)
+  STR_MAP = ::T.let(nil, ::T.untyped)
+  UCHAR = ::T.let(nil, ::T.untyped)
+  U_CHARS1 = ::T.let(nil, ::T.untyped)
+  U_CHARS2 = ::T.let(nil, ::T.untyped)
+  VAR1 = ::T.let(nil, ::T.untyped)
+  VAR2 = ::T.let(nil, ::T.untyped)
+  VARNAME = ::T.let(nil, ::T.untyped)
+  WS = ::T.let(nil, ::T.untyped)
+end
+
+module SPARQL::Grammar::Terminals
+end
+
+module SPARQL::Grammar
+  def self.open(filename, **options, &block); end
+
+  def self.parse(query, **options, &block); end
+
+  def self.tokenize(query, **options, &block); end
+
+  def self.valid?(query, **options); end
+end
+
+module SPARQL::Results
+  MIME_TYPES = ::T.let(nil, ::T.untyped)
+end
+
+module SPARQL::VERSION
+  EXTRA = ::T.let(nil, ::T.untyped)
+  MAJOR = ::T.let(nil, ::T.untyped)
+  MINOR = ::T.let(nil, ::T.untyped)
+  STRING = ::T.let(nil, ::T.untyped)
+  TINY = ::T.let(nil, ::T.untyped)
+  VERSION_FILE = ::T.let(nil, ::T.untyped)
+end
+
+module SPARQL::VERSION
+  def self.to_a(); end
+
+  def self.to_str(); end
+end
+
 ScanError = StringScanner::Error
 
 module SecureRandom
@@ -28553,6 +32163,10 @@ Struct::Group = Etc::Group
 Struct::Passwd = Etc::Passwd
 
 Struct::Tms = Process::Tms
+
+class Symbol
+  def keyword?(); end
+end
 
 class Symbol
   def self.from_msgpack_ext(data); end
