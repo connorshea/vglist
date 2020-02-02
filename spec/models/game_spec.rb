@@ -106,6 +106,24 @@ RSpec.describe Game, type: :model do
       ).for(:epic_games_store_id)
     end
 
+    it { should validate_length_of(:gog_id).is_at_most(300) }
+
+    it 'allows valid GOG.com IDs' do
+      expect(game).to allow_values(
+        'divinity_2_developers_cut',
+        'deus_ex_invisible_war',
+        'toca_race_driver_3',
+        'samorost_3'
+      ).for(:gog_id)
+    end
+
+    it 'disallows invalid GOG.com IDs' do
+      expect(game).not_to allow_values(
+        'Game with spaces in name',
+        '<script></script>'
+      ).for(:gog_id)
+    end
+
     it 'has an optional cover' do
       expect(game).not_to validate_attached_of(:cover)
       expect(game).to validate_content_type_of(:cover).allowing('image/png', 'image/jpg', 'image/jpeg')

@@ -90,6 +90,8 @@ namespace 'import:wikidata' do
         pcgamingwiki_id = wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value')
         steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
         epic_games_store_id = wikidata_json.dig('P6278')&.first&.dig('mainsnak', 'datavalue', 'value')
+        # Remove the 'game/' prefix from the GOG.com IDs.
+        gog_id = wikidata_json.dig('P2725')&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', '')
         mobygames_id = wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value')
         giantbomb_id = wikidata_json.dig('P5247')&.first&.dig('mainsnak', 'datavalue', 'value')
 
@@ -120,6 +122,7 @@ namespace 'import:wikidata' do
 
         hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
         hash[:epic_games_store_id] = epic_games_store_id unless epic_games_store_id.nil?
+        hash[:gog_id] = gog_id unless gog_id.nil?
         hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
         hash[:giantbomb_id] = giantbomb_id unless giantbomb_id.nil?
         hash[:release_date] = release_date unless release_date.nil?

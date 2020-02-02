@@ -415,6 +415,14 @@ export default {
         }
       };
 
+      // If the attribute's value is an empty string, replace it with null so
+      // it's nullified when sent to the backend.
+      ['epic_games_store_id', 'gog_id', 'wikidata_id', 'pcgamingwiki_id', 'mobygames_id', 'giantbomb_id'].forEach(attr => {
+        if (submittableData['game'][attr] === '') {
+          submittableData['game'][attr] = null;
+        }
+      });
+
       if (this.game.series) {
         submittableData['game']['series_id'] = this.game.series.id;
       } else {
