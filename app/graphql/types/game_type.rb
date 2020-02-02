@@ -13,6 +13,7 @@ module Types
     field :mobygames_id, String, null: true, description: "Identifier for the MobyGames database."
     field :giantbomb_id, String, null: true, description: "Identifier for Giant Bomb."
     field :epic_games_store_id, String, null: true, description: "Identifier for the Epic Games Store."
+    field :gog_id, String, null: true, description: "Identifier for GOG.com."
     field :steam_app_ids, [Integer], null: true, description: "Identifier for Steam games. Games can have more than one Steam App ID, but most will only have one."
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this game was last updated."

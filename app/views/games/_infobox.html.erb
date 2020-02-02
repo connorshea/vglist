@@ -65,7 +65,15 @@
     </ul>
   <% end %>
 
-  <% unless [game.wikidata_id, game.pcgamingwiki_id, game.steam_app_ids, game.mobygames_id, game.giantbomb_id, game.epic_games_store_id].all?(&:blank?) %>
+  <% unless [
+    game.wikidata_id,
+    game.pcgamingwiki_id,
+    game.steam_app_ids,
+    game.mobygames_id,
+    game.giantbomb_id,
+    game.epic_games_store_id,
+    game.gog_id
+  ].all?(&:blank?) %>
     <p class="infobox-header has-text-weight-semibold">External links
     <ul>
       <% unless game.wikidata_id.blank? %>
@@ -81,6 +89,9 @@
       <% end %>
       <% unless game.epic_games_store_id.blank? %>
         <li><%= link_to 'Epic Games Store', "https://www.epicgames.com/product/#{game.epic_games_store_id}" %>
+      <% end %>
+      <% unless game.gog_id.blank? %>
+        <li><%= link_to 'GOG.com', "https://www.gog.com/game/#{game.gog_id}" %>
       <% end %>
       <% unless game.mobygames_id.blank? %>
         <li><%= link_to 'MobyGames', "https://www.mobygames.com/game/#{game.mobygames_id}" %>
