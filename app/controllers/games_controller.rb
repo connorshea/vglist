@@ -244,6 +244,7 @@ class GamesController < ApplicationController
       :mobygames_id,
       :giantbomb_id,
       :epic_games_store_id,
+      :gog_id,
       :series_id,
       :release_date,
       steam_app_ids_attributes: [

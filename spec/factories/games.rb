@@ -57,6 +57,10 @@ FactoryBot.define do
       epic_games_store_id { Faker::Lorem.unique.words(number: rand(1..3)).map(&:downcase).join('-') }
     end
 
+    trait :gog_id do
+      gog_id { Faker::Lorem.unique.words(number: rand(1..3)).map(&:downcase).join('_') }
+    end
+
     trait :release_date do
       release_date { Faker::Date.between(from: 25.years.ago, to: 2.years.from_now) }
     end
@@ -78,6 +82,7 @@ FactoryBot.define do
         :mobygames_id,
         :giantbomb_id,
         :epic_games_store_id,
+        :gog_id,
         :release_date
       ]
   end

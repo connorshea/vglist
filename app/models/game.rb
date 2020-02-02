@@ -109,6 +109,12 @@ class Game < ApplicationRecord
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 
+  validates :gog_id,
+    allow_nil: true,
+    format: /\A[a-z0-9_]+\z/,
+    # Allow up to 300 characters just in case there's some game with an incredibly long name.
+    length: { maximum: 300 }
+
   validate :wikidata_id_not_blocklisted
 
   # Include games in global search.

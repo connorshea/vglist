@@ -25,7 +25,7 @@ namespace :import do
 
     games.uniq! { |e| e[:wikidata_id] }
 
-    puts "Found #{games.count} games on Wikidata with a Epic Games Store ID."
+    puts "Found #{games.count} games on Wikidata with an Epic Games Store ID."
 
     epic_games_added_count = 0
 
@@ -66,7 +66,7 @@ namespace :import do
     sparql = <<-SPARQL
       SELECT ?item ?epicGamesStoreId WHERE {
         ?item wdt:P31 wd:Q7889; # Instances of video games
-              wdt:P6278 ?epicGamesStoreId. # Items with a Epic Games Store ID.
+              wdt:P6278 ?epicGamesStoreId. # Items with an Epic Games Store ID.
       }
     SPARQL
 

@@ -89,6 +89,13 @@
 
     <text-field
       :form-class="formData.class"
+      :attribute="formData.gogId.attribute"
+      :label="formData.gogId.label"
+      v-model="game.gogId"
+    ></text-field>
+
+    <text-field
+      :form-class="formData.class"
       :attribute="formData.pcgamingwikiId.attribute"
       :label="formData.pcgamingwikiId.label"
       v-model="game.pcgamingwikiId"
@@ -207,6 +214,10 @@ export default {
       type: String,
       required: false
     },
+    gogId: {
+      type: String,
+      required: false
+    },
     wikidataId: {
       type: Number,
       required: false
@@ -258,6 +269,7 @@ export default {
         series: this.$props.series,
         steamAppIds: this.$props.steamAppIds,
         epicGamesStoreId: this.$props.epicGamesStoreId,
+        gogId: this.$props.gogId,
         wikidataId: this.$props.wikidataId,
         pcgamingwikiId: this.$props.pcgamingwikiId,
         mobygamesId: this.$props.mobygamesId,
@@ -303,6 +315,10 @@ export default {
         epicGamesStoreId: {
           label: 'Epic Games Store ID',
           attribute: 'epic_games_store_id'
+        },
+        gogId: {
+          label: 'GOG.com ID',
+          attribute: 'gog_id'
         },
         wikidataId: {
           label: 'Wikidata ID',
@@ -391,12 +407,21 @@ export default {
           platform_ids: platformIds,
           steam_app_ids_attributes: steamAppIds,
           epic_games_store_id: this.game.epicGamesStoreId,
+          gog_id: this.game.gogId,
           wikidata_id: this.game.wikidataId,
           pcgamingwiki_id: this.game.pcgamingwikiId,
           mobygames_id: this.game.mobygamesId,
           giantbomb_id: this.game.giantbombId
         }
       };
+
+      // If the attribute's value is an empty string, replace it with null so
+      // it's nullified when sent to the backend.
+      ['epic_games_store_id', 'gog_id', 'wikidata_id', 'pcgamingwiki_id', 'mobygames_id', 'giantbomb_id'].forEach(attr => {
+        if (submittableData['game'][attr] === '') {
+          submittableData['game'][attr] = null;
+        }
+      });
 
       if (this.game.series) {
         submittableData['game']['series_id'] = this.game.series.id;

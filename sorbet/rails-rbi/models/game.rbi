@@ -2280,6 +2280,15 @@ module Game::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def giantbomb_id?; end
 
+  sig { returns(T.nilable(String)) }
+  def gog_id; end
+
+  sig { params(value: T.nilable(String)).void }
+  def gog_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def gog_id?; end
+
   sig { returns(Integer) }
   def id; end
 
@@ -2846,6 +2855,51 @@ module Game::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def epic_games_store_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_gog_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_gog_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_gog_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def gog_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def gog_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_gog_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def gog_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def gog_id_came_from_user?(*args); end
 end
 
 module Game::GeneratedAssociationMethods
