@@ -1,6 +1,8 @@
 # typed: true
 module Types
   class QueryType < Types::BaseObject
+    extend T::Sig
+
     description "Queries are GraphQL requests that can be used to request data from vglist's database."
 
     field :game, GameType, null: true do
@@ -122,6 +124,7 @@ module Types
       argument :feed_type, ActivityFeedType, required: false
     end
 
+    sig { params(id: T.nilable(T.any(String, Integer)), giantbomb_id: T.nilable(String)).returns(T.nilable(Game)) }
     def game(id: nil, giantbomb_id: nil)
       if !id.nil?
         Game.find(id)
@@ -132,86 +135,107 @@ module Types
       end
     end
 
+    sig { returns(Game::ActiveRecord_Relation) }
     def games
       Game.all
     end
 
+    sig { params(query: String).returns(Game::ActiveRecord_Relation) }
     def game_search(query:)
       Game.search(query)
     end
 
+    sig { params(id: T.any(String, Integer)).returns(Series) }
     def series(id:)
       Series.find(id)
     end
 
+    sig { returns(Series::ActiveRecord_Relation) }
     def series_list
       Series.all
     end
 
+    sig { params(query: String).returns(Series::ActiveRecord_Relation) }
     def series_search(query:)
       Series.search(query)
     end
 
+    sig { params(id: T.any(String, Integer)).returns(Company) }
     def company(id:)
       Company.find(id)
     end
 
+    sig { returns(Company::ActiveRecord_Relation) }
     def companies
       Company.all
     end
 
+    sig { params(query: String).returns(Company::ActiveRecord_Relation) }
     def company_search(query:)
       Company.search(query)
     end
 
+    sig { params(id: T.any(String, Integer)).returns(Platform) }
     def platform(id:)
       Platform.find(id)
     end
 
+    sig { returns(Platform::ActiveRecord_Relation) }
     def platforms
       Platform.all
     end
 
+    sig { params(query: String).returns(Platform::ActiveRecord_Relation) }
     def platform_search(query:)
       Platform.search(query)
     end
 
+    sig { params(id: T.any(String, Integer)).returns(Engine) }
     def engine(id:)
       Engine.find(id)
     end
 
+    sig { returns(Engine::ActiveRecord_Relation) }
     def engines
       Engine.all
     end
 
+    sig { params(query: String).returns(Engine::ActiveRecord_Relation) }
     def engine_search(query:)
       Engine.search(query)
     end
 
+    sig { params(id: T.any(String, Integer)).returns(Genre) }
     def genre(id:)
       Genre.find(id)
     end
 
+    sig { returns(Genre::ActiveRecord_Relation) }
     def genres
       Genre.all
     end
 
+    sig { params(query: String).returns(Genre::ActiveRecord_Relation) }
     def genre_search(query:)
       Genre.search(query)
     end
 
+    sig { params(id: T.any(String, Integer)).returns(Store) }
     def store(id:)
       Store.find(id)
     end
 
+    sig { returns(Store::ActiveRecord_Relation) }
     def stores
       Store.all
     end
 
+    sig { params(query: String).returns(Store::ActiveRecord_Relation) }
     def store_search(query:)
       Store.search(query)
     end
 
+    sig { params(id: T.nilable(T.any(String, Integer)), username: T.nilable(String)).returns(T.nilable(User)) }
     def user(id: nil, username: nil)
       if !id.nil?
         User.find(id)
@@ -222,15 +246,18 @@ module Types
       end
     end
 
+    sig { returns(User::ActiveRecord_Relation) }
     def users
       # Exclude banned users from the results.
       User.all.where(banned: false)
     end
 
+    sig { params(id: T.any(String, Integer)).returns(GamePurchase) }
     def game_purchase(id:)
       GamePurchase.find(id)
     end
 
+    sig { params(feed_type: String).returns(T.nilable(Event::ActiveRecord_Relation)) }
     def activity(feed_type: 'following')
       if feed_type == 'global'
         Event.recently_created
