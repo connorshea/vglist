@@ -3955,8 +3955,6 @@ class Array
 
   def pack(*_); end
 
-  def quote(); end
-
   def replace(_); end
 
   def shelljoin(); end
@@ -7780,13 +7778,13 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -11238,240 +11236,6 @@ module Mail::VERSION
   STRING = ::T.let(nil, ::T.untyped)
 end
 
-module MakeMakefile
-  def append_cflags(flags, *opts); end
-
-  def append_cppflags(flags, *opts); end
-
-  def append_ldflags(flags, *opts); end
-
-  def append_library(libs, lib); end
-
-  def arg_config(config, default=T.unsafe(nil), &block); end
-
-  def cc_command(opt=T.unsafe(nil)); end
-
-  def check_signedness(type, headers=T.unsafe(nil), opts=T.unsafe(nil), &b); end
-
-  def check_sizeof(type, headers=T.unsafe(nil), opts=T.unsafe(nil), &b); end
-
-  def checking_for(m, fmt=T.unsafe(nil)); end
-
-  def checking_message(target, place=T.unsafe(nil), opt=T.unsafe(nil)); end
-
-  def configuration(srcdir); end
-
-  def convertible_int(type, headers=T.unsafe(nil), opts=T.unsafe(nil), &b); end
-
-  def cpp_command(outfile, opt=T.unsafe(nil)); end
-
-  def cpp_include(header); end
-
-  def create_header(header=T.unsafe(nil)); end
-
-  def create_makefile(target, srcprefix=T.unsafe(nil)); end
-
-  def create_tmpsrc(src); end
-
-  def depend_rules(depend); end
-
-  def dir_config(target, idefault=T.unsafe(nil), ldefault=T.unsafe(nil)); end
-
-  def dummy_makefile(srcdir); end
-
-  def each_compile_rules(); end
-
-  def egrep_cpp(pat, src, opt=T.unsafe(nil), &b); end
-
-  def enable_config(config, default=T.unsafe(nil)); end
-
-  def find_executable(bin, path=T.unsafe(nil)); end
-
-  def find_executable0(bin, path=T.unsafe(nil)); end
-
-  def find_header(header, *paths); end
-
-  def find_library(lib, func, *paths, &b); end
-
-  def find_type(type, opt, *headers, &b); end
-
-  def have_const(const, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def have_devel?(); end
-
-  def have_framework(fw, &b); end
-
-  def have_func(func, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def have_header(header, preheaders=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def have_library(lib, func=T.unsafe(nil), headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def have_macro(macro, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def have_struct_member(type, member, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def have_type(type, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def have_typeof?(); end
-
-  def have_var(var, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def init_mkmf(config=T.unsafe(nil), rbconfig=T.unsafe(nil)); end
-
-  def install_dirs(target_prefix=T.unsafe(nil)); end
-
-  def install_files(mfile, ifiles, map=T.unsafe(nil), srcprefix=T.unsafe(nil)); end
-
-  def install_rb(mfile, dest, srcdir=T.unsafe(nil)); end
-
-  def libpath_env(); end
-
-  def libpathflag(libpath=T.unsafe(nil)); end
-
-  def link_command(ldflags, opt=T.unsafe(nil), libpath=T.unsafe(nil)); end
-
-  def log_src(src, heading=T.unsafe(nil)); end
-
-  def macro_defined?(macro, src, opt=T.unsafe(nil), &b); end
-
-  def map_dir(dir, map=T.unsafe(nil)); end
-
-  def merge_libs(*libs); end
-
-  def message(*s); end
-
-  def mkintpath(path); end
-
-  def mkmf_failed(path); end
-
-  def modified?(target, times); end
-
-  def pkg_config(pkg, option=T.unsafe(nil)); end
-
-  def relative_from(path, base); end
-
-  def scalar_ptr_type?(type, member=T.unsafe(nil), headers=T.unsafe(nil), &b); end
-
-  def scalar_type?(type, member=T.unsafe(nil), headers=T.unsafe(nil), &b); end
-
-  def split_libs(*strs); end
-
-  def timestamp_file(name, target_prefix=T.unsafe(nil)); end
-
-  def try_cflags(flags, opts=T.unsafe(nil)); end
-
-  def try_compile(src, opt=T.unsafe(nil), *opts, &b); end
-
-  def try_const(const, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def try_constant(const, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def try_cpp(src, opt=T.unsafe(nil), *opts, &b); end
-
-  def try_cppflags(flags, opts=T.unsafe(nil)); end
-
-  def try_do(src, command, *opts, &b); end
-
-  def try_func(func, libs, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def try_header(src, opt=T.unsafe(nil), *opts, &b); end
-
-  def try_ldflags(flags, opts=T.unsafe(nil)); end
-
-  def try_link(src, opt=T.unsafe(nil), *opts, &b); end
-
-  def try_link0(src, opt=T.unsafe(nil), *opts, &b); end
-
-  def try_run(src, opt=T.unsafe(nil), &b); end
-
-  def try_signedness(type, member, headers=T.unsafe(nil), opts=T.unsafe(nil)); end
-
-  def try_static_assert(expr, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def try_type(type, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def try_var(var, headers=T.unsafe(nil), opt=T.unsafe(nil), &b); end
-
-  def typedef_expr(type, headers); end
-
-  def what_type?(type, member=T.unsafe(nil), headers=T.unsafe(nil), &b); end
-
-  def winsep(s); end
-
-  def with_cflags(flags); end
-
-  def with_config(config, default=T.unsafe(nil)); end
-
-  def with_cppflags(flags); end
-
-  def with_destdir(dir); end
-
-  def with_ldflags(flags); end
-
-  def with_werror(opt, opts=T.unsafe(nil)); end
-
-  def xpopen(command, *mode, &block); end
-
-  def xsystem(command, opts=T.unsafe(nil)); end
-  ASSEMBLE_C = ::T.let(nil, ::T.untyped)
-  ASSEMBLE_CXX = ::T.let(nil, ::T.untyped)
-  CLEANINGS = ::T.let(nil, ::T.untyped)
-  COMMON_HEADERS = ::T.let(nil, ::T.untyped)
-  COMMON_LIBS = ::T.let(nil, ::T.untyped)
-  COMPILE_C = ::T.let(nil, ::T.untyped)
-  COMPILE_CXX = ::T.let(nil, ::T.untyped)
-  COMPILE_RULES = ::T.let(nil, ::T.untyped)
-  CONFIG = ::T.let(nil, ::T.untyped)
-  CONFTEST = ::T.let(nil, ::T.untyped)
-  CONFTEST_C = ::T.let(nil, ::T.untyped)
-  COUTFLAG = ::T.let(nil, ::T.untyped)
-  CPPOUTFILE = ::T.let(nil, ::T.untyped)
-  CSRCFLAG = ::T.let(nil, ::T.untyped)
-  CXX_EXT = ::T.let(nil, ::T.untyped)
-  C_EXT = ::T.let(nil, ::T.untyped)
-  EXPORT_PREFIX = ::T.let(nil, ::T.untyped)
-  FailedMessage = ::T.let(nil, ::T.untyped)
-  HDR_EXT = ::T.let(nil, ::T.untyped)
-  INSTALL_DIRS = ::T.let(nil, ::T.untyped)
-  LIBARG = ::T.let(nil, ::T.untyped)
-  LIBPATHFLAG = ::T.let(nil, ::T.untyped)
-  LINK_SO = ::T.let(nil, ::T.untyped)
-  MAIN_DOES_NOTHING = ::T.let(nil, ::T.untyped)
-  ORIG_LIBPATH = ::T.let(nil, ::T.untyped)
-  OUTFLAG = ::T.let(nil, ::T.untyped)
-  RPATHFLAG = ::T.let(nil, ::T.untyped)
-  RULE_SUBST = ::T.let(nil, ::T.untyped)
-  SRC_EXT = ::T.let(nil, ::T.untyped)
-  STRING_OR_FAILED_FORMAT = ::T.let(nil, ::T.untyped)
-  TRY_LINK = ::T.let(nil, ::T.untyped)
-  UNIVERSAL_INTS = ::T.let(nil, ::T.untyped)
-end
-
-module MakeMakefile::Logging
-end
-
-module MakeMakefile::Logging
-  def self.log_close(); end
-
-  def self.log_open(); end
-
-  def self.log_opened?(); end
-
-  def self.logfile(file); end
-
-  def self.open(); end
-
-  def self.postpone(); end
-
-  def self.quiet(); end
-
-  def self.quiet=(quiet); end
-end
-
-module MakeMakefile
-end
-
 module Marcel
   VERSION = ::T.let(nil, ::T.untyped)
 end
@@ -13073,7 +12837,6 @@ end
 class Object
   include ::JSON::Ext::Generator::GeneratorMethods::Object
   include ::PP::ObjectMixin
-  include ::MakeMakefile
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
   def dclone(); end
@@ -28385,15 +28148,9 @@ class String
 
   def encode!(*_); end
 
-  def funcall_style(); end
-
   def grapheme_clusters(); end
 
-  def quote(); end
-
   def reverse!(); end
-
-  def sans_arguments(); end
 
   def shellescape(); end
 
@@ -28402,8 +28159,6 @@ class String
   def succ!(); end
 
   def to_d(); end
-
-  def tr_cpp(); end
 
   def undump(); end
 
@@ -28414,8 +28169,6 @@ class String
   def unicode_normalized?(*_); end
 
   def unpack1(_); end
-
-  def unspace(); end
   BLANK_RE = ::T.let(nil, ::T.untyped)
   ENCODED_BLANKS = ::T.let(nil, ::T.untyped)
 end
