@@ -64,7 +64,7 @@ namespace 'import:wikidata' do
 
         label = wikidata_label.dig(wikidata_id, 'labels', 'en', 'value')
         if label.nil?
-          puts "No label. Skipping."
+          progress_bar.log "No label. Skipping."
           next
         end
 
@@ -129,9 +129,9 @@ namespace 'import:wikidata' do
 
         begin
           game = Game.create!(hash)
-          puts "Created #{hash[:name]}."
+          progress_bar.log "Created #{hash[:name]}."
         rescue ActiveRecord::RecordInvalid => e
-          puts "Record Invalid (#{hash[:name]}): #{e}"
+          progress_bar.log "Record Invalid (#{hash[:name]}): #{e}"
           next
         end
 
@@ -143,7 +143,7 @@ namespace 'import:wikidata' do
         end
 
         unless steam_app_id.nil?
-          puts 'Adding Steam App ID.' if ENV['DEBUG']
+          progress_bar.log 'Adding Steam App ID.' if ENV['DEBUG']
           SteamAppId.create(
             game_id: game.id,
             app_id: steam_app_id
@@ -151,7 +151,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:developers)
-          puts 'Adding developers.' if ENV['DEBUG']
+          progress_bar.log 'Adding developers.' if ENV['DEBUG']
           game_hash[:developers].each do |developer_id|
             company = Company.find_by(wikidata_id: developer_id)
             puts company.inspect if ENV['DEBUG']
@@ -165,10 +165,10 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:publishers)
-          puts 'Adding publishers.' if ENV['DEBUG']
+          progress_bar.log 'Adding publishers.' if ENV['DEBUG']
           game_hash[:publishers].each do |publisher_id|
             company = Company.find_by(wikidata_id: publisher_id)
-            puts company.inspect if ENV['DEBUG']
+            progress_bar.log company.inspect if ENV['DEBUG']
             next if company.nil?
 
             GamePublisher.create!(
@@ -179,10 +179,10 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:platforms)
-          puts 'Adding platforms.' if ENV['DEBUG']
+          progress_bar.log 'Adding platforms.' if ENV['DEBUG']
           game_hash[:platforms].each do |platform_id|
             platform = Platform.find_by(wikidata_id: platform_id)
-            puts platform.inspect if ENV['DEBUG']
+            progress_bar.log platform.inspect if ENV['DEBUG']
             next if platform.nil?
 
             GamePlatform.create!(
@@ -193,7 +193,7 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:engines)
-          puts 'Adding engines.' if ENV['DEBUG']
+          progress_bar.log 'Adding engines.' if ENV['DEBUG']
           game_hash[:engines].each do |engine_id|
             engine = Engine.find_by(wikidata_id: engine_id)
             puts engine.inspect if ENV['DEBUG']
@@ -207,10 +207,10 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:genres)
-          puts 'Adding genres.' if ENV['DEBUG']
+          progress_bar.log 'Adding genres.' if ENV['DEBUG']
           game_hash[:genres].each do |genre_id|
             genre = Genre.find_by(wikidata_id: genre_id)
-            puts genre.inspect if ENV['DEBUG']
+            progress_bar.log genre.inspect if ENV['DEBUG']
             next if genre.nil?
 
             GameGenre.create!(
@@ -221,10 +221,10 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:series)
-          puts 'Adding series.' if ENV['DEBUG']
+          progress_bar.log 'Adding series.' if ENV['DEBUG']
 
           series = Series.find_by(wikidata_id: game_hash[:series].first)
-          puts series.inspect if ENV['DEBUG']
+          progress_bar.log series.inspect if ENV['DEBUG']
           next if series.nil?
 
           Game.update(
