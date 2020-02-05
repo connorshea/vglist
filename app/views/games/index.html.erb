@@ -11,6 +11,9 @@
           <span>
             <%= params[:order_by].nil? ? "Sort" : "Sort by #{params[:order_by].titleize.downcase}" %>
           </span>
+          <span class="icon">
+            <%= svg_icon('chevron-down', height: 15, aria: false) %>
+          </span>
         </button>
       </div>
 
