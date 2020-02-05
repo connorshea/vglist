@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.2.2
+### Added
+- Add GOG.com IDs to Games. ([#1014])
+
 ## v2020.1.27
 ### Added
 - Add Epic Games Store IDs to Games. ([#996])
@@ -664,3 +668,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#989]: https://github.com/connorshea/VideoGameList/pull/989
 [#990]: https://github.com/connorshea/VideoGameList/pull/990
 [#996]: https://github.com/connorshea/VideoGameList/pull/996
+[#1014]: https://github.com/connorshea/VideoGameList/pull/1014
