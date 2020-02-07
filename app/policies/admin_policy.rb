@@ -19,4 +19,9 @@ class AdminPolicy < ApplicationPolicy
   def wikidata_blocklist?
     user.admin?
   end
+
+  sig { returns(T::Boolean) }
+  def remove_from_wikidata_blocklist?
+    user.admin?
+  end
 end

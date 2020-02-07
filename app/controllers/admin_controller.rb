@@ -42,4 +42,15 @@ class AdminController < ApplicationController
                                   .includes(:user)
                                   .page helpers.page_param
   end
+
+  def remove_from_wikidata_blocklist
+    authorize nil, policy_class: AdminPolicy
+    @blocklist_entry = WikidataBlocklist.find_by(wikidata_id: params[:wikidata_id])
+
+    @blocklist_entry.destroy
+    respond_to do |format|
+      format.html { redirect_to admin_wikidata_blocklist_path, notice: 'Wikidata ID successfully removed from blocklist.' }
+      format.json { head :no_content }
+    end
+  end
 end
