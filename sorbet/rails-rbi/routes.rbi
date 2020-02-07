@@ -385,6 +385,13 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def admin_wikidata_blocklist_url(*args, **kwargs); end
 
+  # Sigs for route /admin/wikidata/:wikidata_id/remove(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_remove_from_wikidata_blocklist_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_remove_from_wikidata_blocklist_url(*args, **kwargs); end
+
   # Sigs for route /events/:id(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def event_path(*args, **kwargs); end

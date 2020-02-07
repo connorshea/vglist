@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get :dashboard, as: '/', path: '/'
     get :wikidata_blocklist, path: 'wikidata'
+    delete :remove_from_wikidata_blocklist, path: 'wikidata/:wikidata_id/remove'
   end
 
   resources :events, only: :destroy
