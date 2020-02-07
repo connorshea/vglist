@@ -45,4 +45,36 @@ RSpec.describe "Admin", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "DELETE admin_remove_from_wikidata_blocklist_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:moderator) { create(:confirmed_moderator) }
+    let(:admin) { create(:confirmed_admin) }
+    let(:wikidata_blocklist) { create(:wikidata_blocklist) }
+
+    it "redirects if not signed in" do
+      delete admin_remove_from_wikidata_blocklist_path(wikidata_blocklist.wikidata_id)
+      expect(response).to redirect_to(new_user_session_path)
+    end
+
+    it "redirects if signed in as user" do
+      sign_in(user)
+      delete admin_remove_from_wikidata_blocklist_path(wikidata_blocklist.wikidata_id)
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "redirects if signed in as moderator" do
+      sign_in(moderator)
+      delete admin_remove_from_wikidata_blocklist_path(wikidata_blocklist.wikidata_id)
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "deletes a wikidata blocklist item if signed in as admin" do
+      sign_in(admin)
+      wikidata_blocklist
+      expect do
+        delete admin_remove_from_wikidata_blocklist_path(wikidata_blocklist.wikidata_id)
+      end.to change(WikidataBlocklist, :count).by(-1)
+    end
+  end
 end
