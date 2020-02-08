@@ -36,6 +36,9 @@ class Game < ApplicationRecord
   def self.by_year(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.highest_avg_rating(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.least_recently_updated(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -1656,6 +1659,9 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   def by_year(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def highest_avg_rating(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def least_recently_updated(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -1801,6 +1807,9 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def highest_avg_rating(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def least_recently_updated(*args); end
@@ -2024,6 +2033,9 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def highest_avg_rating(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def least_recently_updated(*args); end

@@ -37,6 +37,8 @@ class Game < ApplicationRecord
   scope :oldest, -> { order("created_at asc") }
   scope :recently_updated, -> { order("updated_at desc") }
   scope :least_recently_updated, -> { order("updated_at asc") }
+  # Sort by average rating.
+  scope :highest_avg_rating, -> { order("avg_rating desc nulls last") }
   # Sort by most favorites.
   scope :most_favorites, -> {
     left_joins(:favorites)
@@ -49,9 +51,11 @@ class Game < ApplicationRecord
       .group(:id)
       .order(Arel.sql('count(game_purchases.game_id) desc'))
   }
+  # Sort by recently released.
   scope :recently_released, -> {
     where("release_date < ?", 1.day.from_now).order("release_date desc")
   }
+
   # Find games available on a given platform.
   scope :on_platform, ->(platform_id) {
     joins(:game_platforms).where(game_platforms: { platform_id: platform_id })
