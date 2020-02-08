@@ -2253,6 +2253,15 @@ end
 module Game::GeneratedAttributeMethods
   extend T::Sig
 
+  sig { returns(T.nilable(Float)) }
+  def avg_rating; end
+
+  sig { params(value: T.nilable(T.any(Integer, Float, ActiveSupport::Duration))).void }
+  def avg_rating=(value); end
+
+  sig { returns(T::Boolean) }
+  def avg_rating?; end
+
   sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
@@ -2900,6 +2909,51 @@ module Game::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def gog_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_avg_rating?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_avg_rating(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_avg_rating?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def avg_rating_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def avg_rating_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_avg_rating!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def avg_rating_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def avg_rating_came_from_user?(*args); end
 end
 
 module Game::GeneratedAssociationMethods

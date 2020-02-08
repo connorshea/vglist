@@ -41,9 +41,6 @@ class GamesController < ApplicationController
     @owners = @game.purchasers.limit(10)
     @owners_count = @game.purchasers.count
 
-    @avg_rating = nil
-    @avg_rating = @game.game_purchases.average(:rating)&.truncate(1) if @owners_count > 0
-
     @favoriters = User.where(id: @game.favorites.limit(10).collect(&:user_id))
     @favoriters_count = @game.favorites.count
 
