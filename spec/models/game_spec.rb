@@ -283,6 +283,16 @@ RSpec.describe Game, type: :model do
       end
     end
 
+    context 'with three games with varying average ratings' do
+      let!(:game1) { create(:game, avg_rating: 10) }
+      let!(:game2) { create(:game, avg_rating: nil) }
+      let!(:game3) { create(:game, avg_rating: 20) }
+
+      it "return all three in proper order" do
+        expect(Game.highest_avg_rating).to eq([game3, game1, game2])
+      end
+    end
+
     context 'with three games where two have platforms and one does not' do
       let(:platform1) { create(:platform) }
       let(:platform2) { create(:platform) }

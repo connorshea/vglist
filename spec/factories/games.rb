@@ -65,6 +65,10 @@ FactoryBot.define do
       release_date { Faker::Date.between(from: 25.years.ago, to: 2.years.from_now) }
     end
 
+    trait :avg_rating do
+      avg_rating { rand(0..100) }
+    end
+
     factory :game_with_cover, traits: [:cover]
     factory :game_with_release_date, traits: [:release_date]
     factory :game_with_everything,
@@ -83,7 +87,8 @@ FactoryBot.define do
         :giantbomb_id,
         :epic_games_store_id,
         :gog_id,
-        :release_date
+        :release_date,
+        :avg_rating
       ]
   end
 end
