@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/database_cleaner/all/database_cleaner.rbi
 #
-# database_cleaner-1.8.1
+# database_cleaner-1.8.2
 module DatabaseCleaner
   def deprecate(message); end
   def self.[](*args, &block); end

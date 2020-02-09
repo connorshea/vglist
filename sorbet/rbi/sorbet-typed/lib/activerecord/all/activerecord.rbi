@@ -245,6 +245,10 @@ module ActiveRecord::Inheritance
   mixes_in_class_methods(ActiveRecord::Inheritance::ClassMethods)
 end
 
+module ActiveRecord::Transactions
+  mixes_in_class_methods(ActiveRecord::Transactions::ClassMethods)
+end
+
 class ActiveRecord::Base
   extend ActiveModel::Naming
 
@@ -467,13 +471,15 @@ class ActiveRecord::Base
     params(
       arg: T.nilable(Symbol),
       if: T.nilable(T.any(Symbol, Proc, T.proc.params(arg0: T.untyped).returns(T.nilable(T::Boolean)))),
-      unless: T.nilable(T.any(Symbol, Proc, T.proc.params(arg0: T.untyped).returns(T.nilable(T::Boolean))))
+      unless: T.nilable(T.any(Symbol, Proc, T.proc.params(arg0: T.untyped).returns(T.nilable(T::Boolean)))),
+      prepend: T::Boolean
     ).void
   end
   def self.before_destroy(
     arg = nil,
     if: nil,
-    unless: nil
+    unless: nil,
+    prepend: false
   ); end
 
   sig do
@@ -527,6 +533,16 @@ module ActiveRecord::Inheritance::ClassMethods
 
   sig { returns(T::Boolean) }
   def abstract_class; end
+end
+
+module ActiveRecord::Transactions::ClassMethods
+  sig do
+    params(
+      options: T.nilable(T::Hash[T.any(Symbol, String), T.untyped]),
+      block: T.proc.returns(T.untyped)
+    ).returns(T.untyped)
+  end
+  def transaction(options = {}, &block); end
 end
 
 module ActiveRecord::Persistence

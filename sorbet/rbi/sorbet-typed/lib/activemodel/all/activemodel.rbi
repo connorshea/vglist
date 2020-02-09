@@ -76,6 +76,7 @@ module ActiveModel::Validations
         strict: T::Boolean,
         uniqueness: T.any(T::Boolean, T::Hash[T.untyped, T.untyped]),
         unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
+        kwargs: T.any(T::Boolean, T::Hash[T.untyped, T.untyped])
       ).void
     end
     def validates(
@@ -96,7 +97,8 @@ module ActiveModel::Validations
       size: false,
       strict: false,
       uniqueness: false,
-      unless: :_
+      unless: :_,
+      **kwargs
     )
     end
   end

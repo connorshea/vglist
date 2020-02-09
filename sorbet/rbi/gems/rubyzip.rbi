@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubyzip/all/rubyzip.rbi
 #
-# rubyzip-2.1.0
+# rubyzip-2.2.0
 module Zip
   def case_insensitive_match; end
   def case_insensitive_match=(arg0); end
@@ -47,6 +47,8 @@ end
 module Zip::IOExtras::AbstractInputStream
   def each(a_sep_string = nil); end
   def each_line(a_sep_string = nil); end
+  def eof; end
+  def eof?; end
   def flush; end
   def gets(a_sep_string = nil, number_of_bytes = nil); end
   def initialize; end
@@ -97,6 +99,7 @@ class Zip::Entry
   def directory?; end
   def dirty; end
   def dirty=(arg0); end
+  def encrypted?; end
   def external_file_attributes; end
   def external_file_attributes=(arg0); end
   def extra; end
@@ -120,6 +123,7 @@ class Zip::Entry
   def gp_flags=(arg0); end
   def header_signature; end
   def header_signature=(arg0); end
+  def incomplete?; end
   def initialize(*args); end
   def internal_file_attributes; end
   def internal_file_attributes=(arg0); end
@@ -370,9 +374,8 @@ class Zip::File < Zip::CentralDirectory
 end
 class Zip::InputStream
   def close; end
-  def eof; end
-  def eof?; end
   def get_decompressor; end
+  def get_decrypted_io; end
   def get_io(io_or_file, offset = nil); end
   def get_next_entry; end
   def initialize(context, offset = nil, decrypter = nil); end
@@ -382,7 +385,7 @@ class Zip::InputStream
   def rewind; end
   def self.open(filename_or_io, offset = nil, decrypter = nil); end
   def self.open_buffer(filename_or_io, offset = nil); end
-  def sysread(number_of_bytes = nil, buf = nil); end
+  def sysread(length = nil, outbuf = nil); end
   include Zip::IOExtras::AbstractInputStream
 end
 class Zip::OutputStream
@@ -405,7 +408,12 @@ class Zip::OutputStream
   include Zip::IOExtras::AbstractOutputStream
 end
 class Zip::Decompressor
-  def initialize(input_stream); end
+  def decompressed_size; end
+  def initialize(input_stream, decompressed_size = nil); end
+  def input_stream; end
+  def self.decompressor_classes; end
+  def self.find_by_compression_method(compression_method); end
+  def self.register(compression_method, decompressor_class); end
 end
 class Zip::Compressor
   def finish; end
@@ -413,13 +421,9 @@ end
 module Zip::NullDecompressor
   def eof; end
   def eof?; end
-  def input_finished?; end
-  def produce_input; end
+  def read(_length = nil, _outbuf = nil); end
   def self.eof; end
-  def self.input_finished?; end
-  def self.produce_input; end
-  def self.sysread(_numberOfBytes = nil, _buf = nil); end
-  def sysread(_numberOfBytes = nil, _buf = nil); end
+  def self.read(_length = nil, _outbuf = nil); end
 end
 class Zip::NullCompressor < Zip::Compressor
   def <<(_data); end
@@ -444,10 +448,16 @@ end
 class Zip::PassThruDecompressor < Zip::Decompressor
   def eof; end
   def eof?; end
-  def initialize(input_stream, chars_to_read); end
+  def initialize(*args); end
+  def read(length = nil, outbuf = nil); end
+end
+class Zip::DecryptedIo
+  def buffer; end
+  def eof; end
+  def initialize(io, decrypter); end
   def input_finished?; end
   def produce_input; end
-  def sysread(number_of_bytes = nil, buf = nil); end
+  def read(length = nil, outbuf = nil); end
 end
 class Zip::Encrypter
 end
@@ -494,13 +504,10 @@ end
 class Zip::Inflater < Zip::Decompressor
   def eof; end
   def eof?; end
-  def initialize(input_stream, decrypter = nil); end
+  def initialize(*args); end
   def input_finished?; end
-  def internal_input_finished?; end
-  def internal_produce_input(buf = nil); end
   def produce_input; end
-  def sysread(number_of_bytes = nil, buf = nil); end
-  def value_when_finished; end
+  def read(length = nil, outbuf = nil); end
 end
 class Zip::Deflater < Zip::Compressor
   def <<(data); end
@@ -534,4 +541,6 @@ end
 class Zip::InternalError < Zip::Error
 end
 class Zip::GPFBit3Error < Zip::Error
+end
+class Zip::DecompressionError < Zip::Error
 end
