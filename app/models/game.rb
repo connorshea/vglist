@@ -69,7 +69,7 @@ class Game < ApplicationRecord
     presence: true,
     length: { maximum: 120 }
 
-  T.unsafe(self).validates :cover,
+  validates :cover,
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 4.megabytes }
