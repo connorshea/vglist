@@ -94,21 +94,57 @@ RSpec.describe GamePurchase, type: :model do
   end
 
   describe 'Callbacks' do
-    let(:game) { create(:game) }
-    let(:user) { create(:confirmed_user) }
-    let(:game_purchase) { create(:game_purchase, user: user, game: game) }
+    context 'with events' do
+      let(:game) { create(:game) }
+      let(:user) { create(:confirmed_user) }
+      let(:game_purchase) { create(:game_purchase, user: user, game: game) }
 
-    it 'Event should be created when GamePurchase is created' do
-      user
-      expect { game_purchase }.to change(Event, :count).by(1)
+      it 'Event should be created when GamePurchase is created' do
+        user
+        expect { game_purchase }.to change(Event, :count).by(1)
+      end
+
+      it 'Event should be created when GamePurchase is modified' do
+        game_purchase
+        expect do
+          game_purchase.completion_status = :dropped
+          game_purchase.save
+        end.to change(Event.where(eventable_type: 'GamePurchase'), :count).by(1)
+      end
     end
 
-    it 'Event should be created when GamePurchase is modified' do
-      game_purchase
-      expect do
-        game_purchase.completion_status = :dropped
-        game_purchase.save
-      end.to change(Event.where(eventable_type: 'GamePurchase'), :count).by(1)
+    context 'with game purchases' do
+      let(:game) { create(:game) }
+      let(:game_purchase1) { create(:game_purchase, game: game, rating: nil) }
+      let(:game_purchase2) { create(:game_purchase, game: game, rating: 15) }
+      let(:game_purchase3) { create(:game_purchase, game: game, rating: 5) }
+
+      it 'Average rating should be updated when GamePurchase is created' do
+        game_purchase1
+        game_purchase2
+        expect { game_purchase3 }.to change(game, :avg_rating).from(15).to(10)
+      end
+
+      it 'Average rating should be updated when GamePurchase is updated' do
+        game_purchase2
+        game_purchase3
+        expect do
+          game_purchase3.rating = 20
+          game_purchase3.save
+        end.to change(game, :avg_rating).from(10).to(17.5)
+      end
+
+      it 'Average rating should be updated when GamePurchase is deleted' do
+        game_purchase2
+        game_purchase3
+        expect { game_purchase3.destroy }.to change(game, :avg_rating).from(10).to(15)
+      end
+
+      it 'Average rating should be updated when GamePurchase is deleted and no others exist' do
+        game_purchase1
+        game_purchase2
+        expect { game_purchase2.destroy }.to change(game, :avg_rating).from(15).to(nil)
+      end
     end
   end
 end

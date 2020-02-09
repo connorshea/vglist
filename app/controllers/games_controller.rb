@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class GamesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -8,21 +8,19 @@ class GamesController < ApplicationController
     @games = @games.on_platform(params[:platform_filter]) if params[:platform_filter]
     @games = @games.by_year(params[:by_year]) if params[:by_year]
 
-    case T.cast(params[:order_by], T.nilable(String))&.to_sym
-    when :newest
-      @games = @games.newest
-    when :oldest
-      @games = @games.oldest
-    when :recently_updated
-      @games = @games.recently_updated
-    when :least_recently_updated
-      @games = @games.least_recently_updated
-    when :most_favorites
-      @games = @games.most_favorites
-    when :most_owners
-      @games = @games.most_owners
-    when :recently_released
-      @games = @games.recently_released
+    order_by_sym = T.cast(params[:order_by], T.nilable(String))&.to_sym
+    if !order_by_sym.nil? && [
+      :newest,
+      :oldest,
+      :recently_updated,
+      :least_recently_updated,
+      :most_favorites,
+      :most_owners,
+      :recently_released,
+      :highest_avg_rating
+    ].include?(order_by_sym)
+      # Call the scope dynamically.
+      @games = @games.public_send(order_by_sym)
     else
       @games = @games.order(:id)
     end
@@ -40,9 +38,6 @@ class GamesController < ApplicationController
 
     @owners = @game.purchasers.limit(10)
     @owners_count = @game.purchasers.count
-
-    @avg_rating = nil
-    @avg_rating = @game.game_purchases.average(:rating)&.truncate(1) if @owners_count > 0
 
     @favoriters = User.where(id: @game.favorites.limit(10).collect(&:user_id))
     @favoriters_count = @game.favorites.count

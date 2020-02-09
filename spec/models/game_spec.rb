@@ -13,6 +13,13 @@ RSpec.describe Game, type: :model do
 
     it { should validate_length_of(:name).is_at_most(120) }
 
+    it 'validates the avg_rating' do
+      expect(game).to validate_numericality_of(:avg_rating)
+        .allow_nil
+        .is_greater_than_or_equal_to(0)
+        .is_less_than_or_equal_to(100)
+    end
+
     it { should validate_uniqueness_of(:wikidata_id) }
     it 'validates numericality of wikidata_id' do
       expect(game).to validate_numericality_of(:wikidata_id)
@@ -273,6 +280,16 @@ RSpec.describe Game, type: :model do
 
       it "return all three in proper order" do
         expect(Game.recently_released).to eq([game2, game1, game3])
+      end
+    end
+
+    context 'with three games with varying average ratings' do
+      let!(:game1) { create(:game, avg_rating: 10) }
+      let!(:game2) { create(:game, avg_rating: nil) }
+      let!(:game3) { create(:game, avg_rating: 20) }
+
+      it "return all three in proper order" do
+        expect(Game.highest_avg_rating).to eq([game3, game1, game2])
       end
     end
 

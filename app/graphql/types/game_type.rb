@@ -8,6 +8,7 @@ module Types
     field :id, ID, null: false, description: "ID of the game."
     field :name, String, null: false, description: "Name of the game."
     field :release_date, GraphQL::Types::ISO8601Date, null: true, description: "The release date of the game."
+    field :avg_rating, Float, null: true, description: "The average rating from all users who own the game."
     field :wikidata_id, Integer, null: true, description: "Identifier for Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier for PCGamingWiki."
     field :mobygames_id, String, null: true, description: "Identifier for the MobyGames database."

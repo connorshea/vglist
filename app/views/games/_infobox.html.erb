@@ -1,9 +1,9 @@
 <div class="box infobox">
   <p class="infobox-header has-text-weight-semibold">Average Rating
-  <% if @avg_rating.nil? %>
+  <% if game.avg_rating.nil? %>
     <p>No average rating yet
   <% else %>
-    <p><span class="has-text-weight-medium"><%= @avg_rating %></span>/100
+    <p><span class="has-text-weight-medium"><%= game.avg_rating %></span>/100
   <% end %>
 
   <% unless game.release_date.nil? %>

@@ -1,3 +1,6 @@
 # Mark all sorbet files as generated files, to prevent GitHub from tracking them
 # for language statistics or showing them in diffs.
 sorbet/* linguist-generated
+
+# Mark the Rails-ERD graph as generated.
+app-visualization.svg linguist-generated

@@ -37,6 +37,8 @@ class Game < ApplicationRecord
   scope :oldest, -> { order("created_at asc") }
   scope :recently_updated, -> { order("updated_at desc") }
   scope :least_recently_updated, -> { order("updated_at asc") }
+  # Sort by average rating.
+  scope :highest_avg_rating, -> { order("avg_rating desc nulls last") }
   # Sort by most favorites.
   scope :most_favorites, -> {
     left_joins(:favorites)
@@ -49,9 +51,11 @@ class Game < ApplicationRecord
       .group(:id)
       .order(Arel.sql('count(game_purchases.game_id) desc'))
   }
+  # Sort by recently released.
   scope :recently_released, -> {
     where("release_date < ?", 1.day.from_now).order("release_date desc")
   }
+
   # Find games available on a given platform.
   scope :on_platform, ->(platform_id) {
     joins(:game_platforms).where(game_platforms: { platform_id: platform_id })
@@ -69,6 +73,13 @@ class Game < ApplicationRecord
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 4.megabytes }
+
+  validates :avg_rating,
+    numericality: {
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 100,
+      allow_nil: true
+    }
 
   validates :wikidata_id,
     uniqueness: true,
