@@ -8123,6 +8123,8 @@ end
 module Game::GeneratedRelationMethods
   def by_year(*args, &block); end
 
+  def highest_avg_rating(*args, &block); end
+
   def least_recently_updated(*args, &block); end
 
   def most_favorites(*args, &block); end
@@ -28674,6 +28676,11 @@ class Types::BaseObject
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 
+class Types::PageInfoType
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class Types::UserType
   def bio(); end
 
@@ -29432,6 +29439,26 @@ end
 module Zip
   CDIR_ENTRY_STATIC_HEADER_LENGTH = ::T.let(nil, ::T.untyped)
   CENTRAL_DIRECTORY_ENTRY_SIGNATURE = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHODS = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_AES = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_BZIP2 = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_DEFLATE = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_DEFLATE_64 = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_IBM_CMPSC = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_IBM_LZ77 = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_IBM_TERSE = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_IMPLODE = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_JPEG = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_LZMA = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_PKWARE_DCLI = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_PPMD = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_REDUCE_1 = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_REDUCE_2 = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_REDUCE_3 = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_REDUCE_4 = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_SHRINK = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_STORE = ::T.let(nil, ::T.untyped)
+  COMPRESSION_METHOD_WAVPACK = ::T.let(nil, ::T.untyped)
   FILE_TYPE_DIR = ::T.let(nil, ::T.untyped)
   FILE_TYPE_FILE = ::T.let(nil, ::T.untyped)
   FILE_TYPE_SYMLINK = ::T.let(nil, ::T.untyped)
@@ -29475,6 +29502,10 @@ class Zip::CentralDirectory
 end
 
 class Zip::Decompressor
+  CHUNK_SIZE = ::T.let(nil, ::T.untyped)
+end
+
+class Zip::DecryptedIo
   CHUNK_SIZE = ::T.let(nil, ::T.untyped)
 end
 
@@ -29535,6 +29566,10 @@ end
 
 module Zip::IOExtras::AbstractInputStream
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+end
+
+class Zip::InputStream
+  CHUNK_SIZE = ::T.let(nil, ::T.untyped)
 end
 
 module Zip::NullInputStream

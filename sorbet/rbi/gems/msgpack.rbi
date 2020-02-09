@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/msgpack/all/msgpack.rbi
 #
-# msgpack-1.3.1
+# msgpack-1.3.3
 module MessagePack
   def dump(v, *rest); end
   def load(src, param = nil); end

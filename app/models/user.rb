@@ -107,7 +107,7 @@ class User < ApplicationRecord
   validates :role,
     presence: true
 
-  T.unsafe(self).validates :avatar,
+  validates :avatar,
     attached: false,
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 3.megabytes },
