@@ -63,7 +63,7 @@ class GamePurchase < ApplicationRecord
   def game_purchase_update
     update_average_rating
 
-    return unless saved_changes.key?('completion_status') || saved_changes.key?('rating')
+    return unless saved_changes.key?('completion_status')
 
     Event.create!(
       eventable_id: id,
