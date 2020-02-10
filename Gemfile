@@ -19,7 +19,7 @@ gem 'webpacker', '~> 4.2.2'
 gem 'turbolinks', '~> 5'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.9'
+gem 'jbuilder', '~> 2.10'
 
 # Use devise for Users and authentication.
 gem 'devise', '~> 4.7'
