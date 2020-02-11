@@ -114,7 +114,7 @@ GEM
     coderay (1.1.2)
     commander (4.4.7)
       highline (~> 2.0.0)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     connection_pool (2.2.2)
     crass (1.0.6)
     database_cleaner (1.8.2)
