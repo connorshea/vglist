@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/mini_magick/all/mini_magick.rbi
 #
 # mini_magick-4.10.1
+
 module MiniMagick
   def self.cli_version; end
   def self.graphicsmagick?; end

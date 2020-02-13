@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/site_ruby/all/site_ruby.rbi
 #
 # site_ruby-2.6.0
+
 class Gem::Security::Policy
   def check_cert(signer, issuer, time); end
   def check_chain(chain, time); end

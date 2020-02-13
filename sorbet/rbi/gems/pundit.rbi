@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/pundit/all/pundit.rbi
 #
 # pundit-2.1.0
+
 module Pundit
   def authorize(record, query = nil, policy_class: nil); end
   def permitted_attributes(record, action = nil); end

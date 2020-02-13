@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/ruby-progressbar/all/ruby-progressbar.rbi
 #
 # ruby-progressbar-1.10.1
+
 class ProgressBar
   def self.create(*args); end
 end

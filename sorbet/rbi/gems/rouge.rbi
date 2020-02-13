@@ -7,7 +7,8 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.15.0
+# rouge-3.16.0
+
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
   def self.reload!; end
@@ -462,6 +463,11 @@ class Rouge::Lexers::Racket < Rouge::RegexLexer
 end
 class Rouge::Lexers::JSP < Rouge::TemplateLexer
   def initialize(*arg0); end
+end
+class Rouge::Lexers::Varnish < Rouge::RegexLexer
+  def self.functions; end
+  def self.keywords; end
+  def self.variables; end
 end
 class Rouge::Lexers::Haskell < Rouge::RegexLexer
   def self.detect?(text); end
@@ -1265,6 +1271,7 @@ class Rouge::Formatters::Terminal256 < Rouge::Formatter
   def escape_sequence(token); end
   def get_style(token); end
   def initialize(theme = nil); end
+  def make_escape_sequence(style); end
   def stream(tokens, &b); end
   def text_style; end
   def theme; end
@@ -1279,7 +1286,21 @@ class Rouge::Formatters::Terminal256::EscapeSequence
   def self.color_index(color); end
   def self.get_rgb(color); end
   def self.xterm_colors; end
+  def stream_value(val, &b); end
   def style; end
+  def style_string; end
+end
+class Rouge::Formatters::Terminal256::Unescape < Rouge::Formatters::Terminal256::EscapeSequence
+  def initialize(*arg0); end
+  def reset_string(*arg0); end
+  def stream_value(val); end
+  def style_string(*arg0); end
+end
+class Rouge::Formatters::TerminalTruecolor < Rouge::Formatters::Terminal256
+  def make_escape_sequence(style); end
+end
+class Rouge::Formatters::TerminalTruecolor::TruecolorEscapeSequence < Rouge::Formatters::Terminal256::EscapeSequence
+  def get_rgb(color); end
   def style_string; end
 end
 class Rouge::Formatters::Tex < Rouge::Formatter

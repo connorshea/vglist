@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/responders/all/responders.rbi
 #
 # responders-3.0.0
+
 module Responders
 end
 module Responders::ControllerMethod

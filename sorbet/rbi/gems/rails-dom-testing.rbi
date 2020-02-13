@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rails-dom-testing/all/rails-dom-testing.rbi
 #
 # rails-dom-testing-2.0.3
+
 module Rails
 end
 module Rails::Dom

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/ast/all/ast.rbi
 #
 # ast-2.4.0
+
 module AST
 end
 class AST::Node

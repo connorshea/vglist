@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/regexp_parser/all/regexp_parser.rbi
 #
 # regexp_parser-1.6.0
+
 class Regexp
 end
 class Regexp::Parser

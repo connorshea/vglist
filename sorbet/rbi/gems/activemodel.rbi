@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activemodel/all/activemodel.rbi
 #
 # activemodel-6.0.2.1
+
 module ActiveModel
   def self.eager_load!; end
   def self.gem_version; end

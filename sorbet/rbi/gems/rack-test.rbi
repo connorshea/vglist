@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rack-test/all/rack-test.rbi
 #
 # rack-test-1.1.0
+
 module Rack
 end
 class Rack::MockSession

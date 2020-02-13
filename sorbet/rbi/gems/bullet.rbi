@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/bullet/all/bullet.rbi
 #
 # bullet-6.1.0
+
 class Object < BasicObject
   def bullet_key; end
   def bullet_primary_key_value; end

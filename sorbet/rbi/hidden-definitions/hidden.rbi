@@ -5758,7 +5758,6 @@ class Complex
 end
 
 module Concurrent
-  AtExit = ::T.let(nil, ::T.untyped)
   NULL = ::T.let(nil, ::T.untyped)
   NULL_LOGGER = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
@@ -7882,174 +7881,12 @@ module FriendlyId
   UNFRIENDLY_CLASSES = ::T.let(nil, ::T.untyped)
 end
 
-module FriendlyId::History
-end
-
-module FriendlyId::History::Configuration
-  def dependent_value(); end
-end
-
-module FriendlyId::History::Configuration
-end
-
-module FriendlyId::History::FinderMethods
-  include ::FriendlyId::FinderMethods
-  def exists_by_friendly_id?(id); end
-end
-
-module FriendlyId::History::FinderMethods
-end
-
-module FriendlyId::History
-  def self.included(model_class); end
-
-  def self.setup(model_class); end
-end
-
-module FriendlyId::Scoped
-  def serialized_scope(); end
-
-  def should_generate_new_friendly_id?(); end
-end
-
-module FriendlyId::Scoped::Configuration
-  def scope(); end
-
-  def scope=(scope); end
-
-  def scope_columns(); end
-end
-
-module FriendlyId::Scoped::Configuration
-end
-
-module FriendlyId::Scoped
-  def self.included(model_class); end
-
-  def self.setup(model_class); end
-end
-
-module FriendlyId::SequentiallySlugged
-  def resolve_friendly_id_conflict(candidate_slugs); end
-end
-
-class FriendlyId::SequentiallySlugged::SequentialSlugCalculator
-  def initialize(scope, slug, slug_column, sequence_separator, base_class); end
-
-  def next_slug(); end
-
-  def scope(); end
-
-  def scope=(scope); end
-
-  def sequence_separator(); end
-
-  def sequence_separator=(sequence_separator); end
-
-  def slug(); end
-
-  def slug=(slug); end
-
-  def slug_column(); end
-
-  def slug_column=(slug_column); end
-end
-
-class FriendlyId::SequentiallySlugged::SequentialSlugCalculator
-end
-
-module FriendlyId::SequentiallySlugged
-  def self.setup(model_class); end
-end
-
-module FriendlyId::SimpleI18n
-end
-
-module FriendlyId::SimpleI18n::Configuration
-  def slug_column(); end
-end
-
-module FriendlyId::SimpleI18n::Configuration
-end
-
-module FriendlyId::SimpleI18n::Model
-  def set_friendly_id(text, locale=T.unsafe(nil)); end
-
-  def slug=(value); end
-end
-
-module FriendlyId::SimpleI18n::Model
-end
-
-module FriendlyId::SimpleI18n
-  def self.included(model_class); end
-
-  def self.setup(model_class); end
-end
-
-class FriendlyId::Slug
-  include ::FriendlyId::Slug::GeneratedAttributeMethods
-  include ::FriendlyId::Slug::GeneratedAssociationMethods
-  include ::Kaminari::ActiveRecordModelExtension
-  include ::Kaminari::ConfigurationMethods
-  def autosave_associated_records_for_sluggable(*args); end
-end
-
-class FriendlyId::Slug::ActiveRecord_AssociationRelation
-  include ::ActiveRecord::Delegation::ClassSpecificRelation
-  include ::FriendlyId::Slug::GeneratedRelationMethods
-end
-
-class FriendlyId::Slug::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
-class FriendlyId::Slug::ActiveRecord_Associations_CollectionProxy
-  include ::ActiveRecord::Delegation::ClassSpecificRelation
-  include ::FriendlyId::Slug::GeneratedRelationMethods
-end
-
-class FriendlyId::Slug::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
-class FriendlyId::Slug::ActiveRecord_Relation
-  include ::ActiveRecord::Delegation::ClassSpecificRelation
-  include ::FriendlyId::Slug::GeneratedRelationMethods
-end
-
-class FriendlyId::Slug::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
-module FriendlyId::Slug::GeneratedAssociationMethods
-  def reload_sluggable(); end
-
-  def sluggable(); end
-
-  def sluggable=(value); end
-end
-
-module FriendlyId::Slug::GeneratedAssociationMethods
-end
-
-module FriendlyId::Slug::GeneratedAttributeMethods
-end
-
 module FriendlyId::Slug::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 module FriendlyId::Slug::GeneratedRelationMethods
-end
-
-module FriendlyId::Slug::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class FriendlyId::Slug
-  extend ::Kaminari::ConfigurationMethods::ClassMethods
-  def self.page(num=T.unsafe(nil)); end
 end
 
 class Fuubar
@@ -9213,8 +9050,6 @@ class Hash
 end
 
 class Hash
-  def self.from_trusted_xml(xml); end
-
   def self.try_convert(_); end
 end
 
@@ -19267,11 +19102,13 @@ module Rack
   CONTENT_TYPE = ::T.let(nil, ::T.untyped)
   DELETE = ::T.let(nil, ::T.untyped)
   ETAG = ::T.let(nil, ::T.untyped)
+  EXPIRES = ::T.let(nil, ::T.untyped)
   GET = ::T.let(nil, ::T.untyped)
   HEAD = ::T.let(nil, ::T.untyped)
   HTTPS = ::T.let(nil, ::T.untyped)
   HTTP_COOKIE = ::T.let(nil, ::T.untyped)
   HTTP_HOST = ::T.let(nil, ::T.untyped)
+  HTTP_PORT = ::T.let(nil, ::T.untyped)
   HTTP_VERSION = ::T.let(nil, ::T.untyped)
   LINK = ::T.let(nil, ::T.untyped)
   OPTIONS = ::T.let(nil, ::T.untyped)
@@ -19311,7 +19148,6 @@ module Rack
   REQUEST_METHOD = ::T.let(nil, ::T.untyped)
   REQUEST_PATH = ::T.let(nil, ::T.untyped)
   SCRIPT_NAME = ::T.let(nil, ::T.untyped)
-  SERVER_ADDR = ::T.let(nil, ::T.untyped)
   SERVER_NAME = ::T.let(nil, ::T.untyped)
   SERVER_PORT = ::T.let(nil, ::T.untyped)
   SERVER_PROTOCOL = ::T.let(nil, ::T.untyped)
@@ -19489,7 +19325,7 @@ class Rack::Cascade
 
   def include?(app); end
 
-  def initialize(apps, catch=T.unsafe(nil)); end
+  def initialize(apps, cascade_for=T.unsafe(nil)); end
   NotFound = ::T.let(nil, ::T.untyped)
 end
 
@@ -19606,13 +19442,12 @@ class Rack::Directory
 
   def list_path(env, path, path_info, script_name); end
 
-  def path(); end
-
   def root(); end
 
-  def stat(node); end
+  def stat(path); end
   DIR_FILE = ::T.let(nil, ::T.untyped)
-  DIR_PAGE = ::T.let(nil, ::T.untyped)
+  DIR_PAGE_FOOTER = ::T.let(nil, ::T.untyped)
+  DIR_PAGE_HEADER = ::T.let(nil, ::T.untyped)
   FILESIZE_FORMAT = ::T.let(nil, ::T.untyped)
 end
 
@@ -19630,11 +19465,60 @@ class Rack::ETag
   ETAG_STRING = ::T.let(nil, ::T.untyped)
 end
 
+class Rack::Events
+  def call(env); end
+
+  def initialize(app, handlers); end
+end
+
+module Rack::Events::Abstract
+  def on_commit(req, res); end
+
+  def on_error(req, res, e); end
+
+  def on_finish(req, res); end
+
+  def on_send(req, res); end
+
+  def on_start(req, res); end
+end
+
+module Rack::Events::Abstract
+end
+
+class Rack::Events::BufferedResponse
+  def body(); end
+
+  def initialize(status, headers, body); end
+
+  def to_a(); end
+end
+
+class Rack::Events::BufferedResponse
+end
+
+class Rack::Events::EventedBodyProxy
+  def each(&blk); end
+
+  def initialize(body, request, response, handlers, &block); end
+
+  def request(); end
+
+  def response(); end
+end
+
+class Rack::Events::EventedBodyProxy
+end
+
+class Rack::Events
+end
+
 Rack::File = Rack::Files
 
 class Rack::Files
   ALLOWED_VERBS = ::T.let(nil, ::T.untyped)
   ALLOW_HEADER = ::T.let(nil, ::T.untyped)
+  MULTIPART_BOUNDARY = ::T.let(nil, ::T.untyped)
 end
 
 class Rack::ForwardRequest
@@ -19655,7 +19539,7 @@ class Rack::Handler::CGI
 end
 
 class Rack::Handler::CGI
-  def self.run(app, options=T.unsafe(nil)); end
+  def self.run(app, **options); end
 
   def self.send_body(body); end
 
@@ -19669,7 +19553,7 @@ class Rack::Handler::WEBrick
 end
 
 class Rack::Handler::WEBrick
-  def self.run(app, options=T.unsafe(nil)); end
+  def self.run(app, **options); end
 
   def self.shutdown(); end
 
@@ -19821,6 +19705,12 @@ class Rack::MediaType
   SPLIT_PATTERN = ::T.let(nil, ::T.untyped)
 end
 
+class Rack::MediaType
+  def self.params(content_type); end
+
+  def self.type(content_type); end
+end
+
 class Rack::MethodOverride
   ALLOWED_METHODS = ::T.let(nil, ::T.untyped)
   HTTP_METHODS = ::T.let(nil, ::T.untyped)
@@ -19830,6 +19720,12 @@ end
 
 module Rack::Mime
   MIME_TYPES = ::T.let(nil, ::T.untyped)
+end
+
+module Rack::Mime
+  def self.match?(value, matcher); end
+
+  def self.mime_type(ext, fallback=T.unsafe(nil)); end
 end
 
 class Rack::MockRequest
@@ -19897,6 +19793,7 @@ class Rack::MockResponse
 end
 
 class Rack::MockResponse
+  def self.[](*_); end
 end
 
 module Rack::Multipart
@@ -20037,7 +19934,7 @@ class Rack::Multipart::UploadedFile
 
   def content_type=(content_type); end
 
-  def initialize(path, content_type=T.unsafe(nil), binary=T.unsafe(nil)); end
+  def initialize(filepath=T.unsafe(nil), ct=T.unsafe(nil), bin=T.unsafe(nil), path: T.unsafe(nil), content_type: T.unsafe(nil), binary: T.unsafe(nil), filename: T.unsafe(nil), io: T.unsafe(nil)); end
 
   def local_path(); end
 
@@ -20172,6 +20069,7 @@ end
 module Rack::Request::Helpers
   DEFAULT_PORTS = ::T.let(nil, ::T.untyped)
   FORM_DATA_MEDIA_TYPES = ::T.let(nil, ::T.untyped)
+  HTTP_X_FORWARDED_FOR = ::T.let(nil, ::T.untyped)
   HTTP_X_FORWARDED_HOST = ::T.let(nil, ::T.untyped)
   HTTP_X_FORWARDED_PORT = ::T.let(nil, ::T.untyped)
   HTTP_X_FORWARDED_PROTO = ::T.let(nil, ::T.untyped)
@@ -20183,6 +20081,23 @@ end
 class Rack::Response
   CHUNKED = ::T.let(nil, ::T.untyped)
   STATUS_WITH_NO_ENTITY_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Rack::RewindableInput
+  def close(); end
+
+  def each(&block); end
+
+  def gets(); end
+
+  def initialize(io); end
+
+  def read(*args); end
+
+  def rewind(); end
+end
+
+class Rack::RewindableInput
 end
 
 class Rack::Runtime
@@ -20205,7 +20120,7 @@ class Rack::Server
 
   def server(); end
 
-  def start(&blk); end
+  def start(&block); end
 end
 
 class Rack::Server::Options
@@ -20335,8 +20250,6 @@ class Rack::URLMap
   def initialize(map=T.unsafe(nil)); end
 
   def remap(map); end
-  INFINITY = ::T.let(nil, ::T.untyped)
-  NEGATIVE_INFINITY = ::T.let(nil, ::T.untyped)
 end
 
 class Rack::URLMap
@@ -21755,6 +21668,12 @@ class Rouge::Lexers::TCL
   KEYWORDS = ::T.let(nil, ::T.untyped)
   NOT_CHARS = ::T.let(nil, ::T.untyped)
   OPEN = ::T.let(nil, ::T.untyped)
+end
+
+class Rouge::Lexers::Varnish
+  DNUM = ::T.let(nil, ::T.untyped)
+  LNUM = ::T.let(nil, ::T.untyped)
+  SPACE = ::T.let(nil, ::T.untyped)
 end
 
 class Rouge::Lexers::YAML
@@ -25800,81 +25719,9 @@ module Selenium::WebDriver::DriverExtensions::Rotatable
   ORIENTATIONS = ::T.let(nil, ::T.untyped)
 end
 
-module Selenium::WebDriver::Edge
-end
-
-module Selenium::WebDriver::Edge::Bridge
-  def commands(command); end
-
-  def maximize_window(handle=T.unsafe(nil)); end
-
-  def reposition_window(x, y, handle=T.unsafe(nil)); end
-
-  def resize_window(width, height, handle=T.unsafe(nil)); end
-
-  def send_keys_to_active_element(key); end
-
-  def window_handle(); end
-
-  def window_position(handle=T.unsafe(nil)); end
-
-  def window_size(handle=T.unsafe(nil)); end
-end
-
-module Selenium::WebDriver::Edge::Bridge
-end
-
-class Selenium::WebDriver::Edge::Driver
-  include ::Selenium::WebDriver::DriverExtensions::TakesScreenshot
-  def initialize(opts=T.unsafe(nil)); end
-end
-
-class Selenium::WebDriver::Edge::Driver
-end
-
-class Selenium::WebDriver::Edge::Options
-  def add_extension_path(path); end
-
-  def as_json(*_); end
-
-  def extension_paths(); end
-
-  def in_private(); end
-
-  def in_private=(in_private); end
-
-  def initialize(**opts); end
-
-  def start_page(); end
-
-  def start_page=(start_page); end
-end
-
-class Selenium::WebDriver::Edge::Options
-end
-
-class Selenium::WebDriver::Edge::Service
-end
-
-class Selenium::WebDriver::Edge::Service
-end
-
-module Selenium::WebDriver::Edge
-  def self.driver_path(); end
-
-  def self.driver_path=(path); end
-end
-
 module Selenium::WebDriver::Error
   DEPRECATED_ERRORS = ::T.let(nil, ::T.untyped)
   ERRORS = ::T.let(nil, ::T.untyped)
-end
-
-class Selenium::WebDriver::Error::ServerError
-  def initialize(response); end
-end
-
-class Selenium::WebDriver::Error::ServerError
 end
 
 module Selenium::WebDriver::Firefox
@@ -25977,807 +25824,47 @@ class Selenium::WebDriver::Proxy
   TYPES = ::T.let(nil, ::T.untyped)
 end
 
-module Selenium::WebDriver::Remote
-end
-
 class Selenium::WebDriver::Remote::Bridge
-  include ::Selenium::WebDriver::Atoms
-  include ::Selenium::WebDriver::BridgeHelper
-  def browser(); end
-
-  def capabilities(); end
-
-  def context(); end
-
-  def context=(context); end
-
-  def create_session(desired_capabilities, options=T.unsafe(nil)); end
-
-  def dialect(); end
-
-  def file_detector(); end
-
-  def file_detector=(file_detector); end
-
-  def http(); end
-
-  def http=(http); end
-
-  def initialize(opts=T.unsafe(nil)); end
-
-  def session_id(); end
   COMMANDS = ::T.let(nil, ::T.untyped)
   PORT = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::Bridge
-  def self.handshake(**opts); end
-end
-
 class Selenium::WebDriver::Remote::Capabilities
-  def ==(other); end
-
-  def [](key); end
-
-  def []=(key, value); end
-
-  def as_json(*_); end
-
-  def browser_name(); end
-
-  def browser_name=(value); end
-
-  def capabilities(); end
-
-  def css_selectors_enabled(); end
-
-  def css_selectors_enabled=(value); end
-
-  def css_selectors_enabled?(); end
-
-  def eql?(other); end
-
-  def firefox_profile(); end
-
-  def firefox_profile=(value); end
-
-  def initialize(opts=T.unsafe(nil)); end
-
-  def javascript_enabled(); end
-
-  def javascript_enabled=(value); end
-
-  def javascript_enabled?(); end
-
-  def merge!(other); end
-
-  def native_events(); end
-
-  def native_events=(value); end
-
-  def native_events?(); end
-
-  def platform(); end
-
-  def platform=(value); end
-
-  def proxy(); end
-
-  def proxy=(proxy); end
-
-  def rotatable(); end
-
-  def rotatable=(value); end
-
-  def rotatable?(); end
-
-  def takes_screenshot(); end
-
-  def takes_screenshot=(value); end
-
-  def takes_screenshot?(); end
-
-  def to_json(*_); end
-
-  def version(); end
-
-  def version=(value); end
   DEFAULTS = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::Capabilities
-  def self.chrome(opts=T.unsafe(nil)); end
-
-  def self.edge(opts=T.unsafe(nil)); end
-
-  def self.firefox(opts=T.unsafe(nil)); end
-
-  def self.firefox_legacy(opts=T.unsafe(nil)); end
-
-  def self.htmlunit(opts=T.unsafe(nil)); end
-
-  def self.htmlunitwithjs(opts=T.unsafe(nil)); end
-
-  def self.ie(opts=T.unsafe(nil)); end
-
-  def self.internet_explorer(opts=T.unsafe(nil)); end
-
-  def self.json_create(data); end
-
-  def self.phantomjs(opts=T.unsafe(nil)); end
-
-  def self.safari(opts=T.unsafe(nil)); end
-end
-
-class Selenium::WebDriver::Remote::Driver
-  include ::Selenium::WebDriver::DriverExtensions::UploadsFiles
-  include ::Selenium::WebDriver::DriverExtensions::TakesScreenshot
-  include ::Selenium::WebDriver::DriverExtensions::HasSessionId
-  include ::Selenium::WebDriver::DriverExtensions::Rotatable
-  include ::Selenium::WebDriver::DriverExtensions::HasRemoteStatus
-  include ::Selenium::WebDriver::DriverExtensions::HasWebStorage
-  def initialize(opts=T.unsafe(nil)); end
-end
-
-class Selenium::WebDriver::Remote::Driver
-end
-
-module Selenium::WebDriver::Remote::Http
-end
-
 class Selenium::WebDriver::Remote::Http::Common
-  def call(verb, url, command_hash); end
-
-  def close(); end
-
-  def quit_errors(); end
-
-  def server_url=(server_url); end
-
-  def timeout(); end
-
-  def timeout=(timeout); end
   CONTENT_TYPE = ::T.let(nil, ::T.untyped)
   DEFAULT_HEADERS = ::T.let(nil, ::T.untyped)
   MAX_REDIRECTS = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::Http::Common
-end
-
 class Selenium::WebDriver::Remote::Http::Default
-  def initialize(open_timeout: T.unsafe(nil), read_timeout: T.unsafe(nil)); end
-
-  def open_timeout(); end
-
-  def open_timeout=(open_timeout); end
-
-  def proxy=(proxy); end
-
-  def read_timeout(); end
-
-  def read_timeout=(read_timeout); end
-
-  def timeout=(value); end
   MAX_RETRIES = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::Http::Default
-end
-
-module Selenium::WebDriver::Remote::Http
-end
-
-module Selenium::WebDriver::Remote::OSS
-end
-
 class Selenium::WebDriver::Remote::OSS::Bridge
-  def accept_alert(); end
-
-  def action(); end
-
-  def active_element(); end
-
-  def add_cookie(cookie); end
-
-  def alert=(keys); end
-
-  def alert_text(); end
-
-  def authentication(credentials); end
-
-  def available_log_types(); end
-
-  def clear_element(element); end
-
-  def clear_local_storage(); end
-
-  def clear_session_storage(); end
-
-  def click(); end
-
-  def click_element(element); end
-
-  def close(); end
-
-  def context_click(); end
-
-  def cookies(); end
-
-  def delete_all_cookies(); end
-
-  def delete_cookie(name); end
-
-  def dismiss_alert(); end
-
-  def double_click(); end
-
-  def drag_element(element, right_by, down_by); end
-
-  def element_attribute(element, name); end
-
-  def element_displayed?(element); end
-
-  def element_enabled?(element); end
-
-  def element_location(element); end
-
-  def element_location_once_scrolled_into_view(element); end
-
-  def element_property(element, name); end
-
-  def element_rect(element); end
-
-  def element_selected?(element); end
-
-  def element_size(element); end
-
-  def element_tag_name(element); end
-
-  def element_text(element); end
-
-  def element_value(element); end
-
-  def element_value_of_css_property(element, prop); end
-
-  def execute_async_script(script, *args); end
-
-  def execute_script(script, *args); end
-
-  def find_element_by(how, what, parent=T.unsafe(nil)); end
-
-  def find_elements_by(how, what, parent=T.unsafe(nil)); end
-
-  def get(url); end
-
-  def go_back(); end
-
-  def go_forward(); end
-
-  def implicit_wait_timeout=(milliseconds); end
-
-  def initialize(capabilities, session_id, **opts); end
-
-  def keyboard(); end
-
-  def local_storage_item(key, value=T.unsafe(nil)); end
-
-  def local_storage_keys(); end
-
-  def local_storage_size(); end
-
-  def location(); end
-
-  def log(type); end
-
-  def manage(); end
-
-  def maximize_window(handle=T.unsafe(nil)); end
-
-  def mouse(); end
-
-  def mouse_down(); end
-
-  def mouse_move_to(element, x=T.unsafe(nil), y=T.unsafe(nil)); end
-
-  def mouse_up(); end
-
-  def network_connection(); end
-
-  def network_connection=(type); end
-
-  def page_source(); end
-
-  def quit(); end
-
-  def refresh(); end
-
-  def remove_local_storage_item(key); end
-
-  def remove_session_storage_item(key); end
-
-  def reposition_window(x, y, handle=T.unsafe(nil)); end
-
-  def resize_window(width, height, handle=T.unsafe(nil)); end
-
-  def screen_orientation(); end
-
-  def screen_orientation=(orientation); end
-
-  def screenshot(); end
-
-  def script_timeout=(milliseconds); end
-
-  def send_keys_to_active_element(key); end
-
-  def send_keys_to_element(element, keys); end
-
-  def session_capabilities(); end
-
-  def session_storage_item(key, value=T.unsafe(nil)); end
-
-  def session_storage_keys(); end
-
-  def session_storage_size(); end
-
-  def set_location(lat, lon, alt); end
-
-  def status(); end
-
-  def submit_element(element); end
-
-  def switch_to_active_element(); end
-
-  def switch_to_default_content(); end
-
-  def switch_to_frame(id); end
-
-  def switch_to_parent_frame(); end
-
-  def switch_to_window(name); end
-
-  def timeout(type, milliseconds); end
-
-  def title(); end
-
-  def touch_double_tap(element); end
-
-  def touch_down(x, y); end
-
-  def touch_element_flick(element, right_by, down_by, speed); end
-
-  def touch_flick(xspeed, yspeed); end
-
-  def touch_long_press(element); end
-
-  def touch_move(x, y); end
-
-  def touch_scroll(element, x, y); end
-
-  def touch_single_tap(element); end
-
-  def touch_up(x, y); end
-
-  def upload(local_file); end
-
-  def url(); end
-
-  def window_handle(); end
-
-  def window_handles(); end
-
-  def window_position(handle=T.unsafe(nil)); end
-
-  def window_size(handle=T.unsafe(nil)); end
   COMMANDS = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::OSS::Bridge
-end
-
-module Selenium::WebDriver::Remote::OSS
-end
-
 class Selenium::WebDriver::Remote::Response
-  def [](key); end
-
-  def code(); end
-
-  def error(); end
-
-  def error_message(); end
-
-  def initialize(code, payload=T.unsafe(nil)); end
-
-  def payload(); end
-
-  def payload=(payload); end
   STACKTRACE_KEY = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::Response
-end
-
-module Selenium::WebDriver::Remote::W3C
-end
-
 class Selenium::WebDriver::Remote::W3C::Bridge
-  def accept_alert(); end
-
-  def action(async=T.unsafe(nil)); end
-
-  def actions(async=T.unsafe(nil)); end
-
-  def active_element(); end
-
-  def add_cookie(cookie); end
-
-  def alert=(keys); end
-
-  def alert_text(); end
-
-  def clear_element(element); end
-
-  def clear_local_storage(); end
-
-  def clear_session_storage(); end
-
-  def click_element(element); end
-
-  def close(); end
-
-  def cookie(name); end
-
-  def cookies(); end
-
-  def delete_all_cookies(); end
-
-  def delete_cookie(name); end
-
-  def dismiss_alert(); end
-
-  def drag_element(element, right_by, down_by); end
-
-  def element_attribute(element, name); end
-
-  def element_displayed?(element); end
-
-  def element_enabled?(element); end
-
-  def element_location(element); end
-
-  def element_location_once_scrolled_into_view(element); end
-
-  def element_property(element, name); end
-
-  def element_rect(element); end
-
-  def element_selected?(element); end
-
-  def element_size(element); end
-
-  def element_tag_name(element); end
-
-  def element_text(element); end
-
-  def element_value(element); end
-
-  def element_value_of_css_property(element, prop); end
-
-  def execute_async_script(script, *args); end
-
-  def execute_script(script, *args); end
-
-  def find_element_by(how, what, parent=T.unsafe(nil)); end
-
-  def find_elements_by(how, what, parent=T.unsafe(nil)); end
-
-  def full_screen_window(); end
-
-  def get(url); end
-
-  def go_back(); end
-
-  def go_forward(); end
-
-  def implicit_wait_timeout=(milliseconds); end
-
-  def initialize(capabilities, session_id, **opts); end
-
-  def keyboard(); end
-
-  def local_storage_item(key, value=T.unsafe(nil)); end
-
-  def local_storage_keys(); end
-
-  def local_storage_size(); end
-
-  def location(); end
-
-  def manage(); end
-
-  def maximize_window(handle=T.unsafe(nil)); end
-
-  def minimize_window(); end
-
-  def mouse(); end
-
-  def network_connection(); end
-
-  def network_connection=(_type); end
-
-  def new_window(type); end
-
-  def page_source(); end
-
-  def quit(); end
-
-  def refresh(); end
-
-  def release_actions(); end
-
-  def remove_local_storage_item(key); end
-
-  def remove_session_storage_item(key); end
-
-  def reposition_window(x, y); end
-
-  def resize_window(width, height, handle=T.unsafe(nil)); end
-
-  def screen_orientation(); end
-
-  def screen_orientation=(orientation); end
-
-  def screenshot(); end
-
-  def script_timeout=(milliseconds); end
-
-  def send_actions(data); end
-
-  def send_keys_to_element(element, keys); end
-
-  def session_storage_item(key, value=T.unsafe(nil)); end
-
-  def session_storage_keys(); end
-
-  def session_storage_size(); end
-
-  def set_location(_lat, _lon, _alt); end
-
-  def set_window_rect(x: T.unsafe(nil), y: T.unsafe(nil), width: T.unsafe(nil), height: T.unsafe(nil)); end
-
-  def status(); end
-
-  def submit_element(element); end
-
-  def switch_to_active_element(); end
-
-  def switch_to_default_content(); end
-
-  def switch_to_frame(id); end
-
-  def switch_to_parent_frame(); end
-
-  def switch_to_window(name); end
-
-  def timeout(type, milliseconds); end
-
-  def title(); end
-
-  def touch_double_tap(element); end
-
-  def touch_down(x, y); end
-
-  def touch_element_flick(element, right_by, down_by, speed); end
-
-  def touch_flick(xspeed, yspeed); end
-
-  def touch_long_press(element); end
-
-  def touch_move(x, y); end
-
-  def touch_scroll(element, x, y); end
-
-  def touch_single_tap(element); end
-
-  def touch_up(x, y); end
-
-  def upload(local_file); end
-
-  def url(); end
-
-  def window_handle(); end
-
-  def window_handles(); end
-
-  def window_position(); end
-
-  def window_rect(); end
-
-  def window_size(handle=T.unsafe(nil)); end
   COMMANDS = ::T.let(nil, ::T.untyped)
   ESCAPE_CSS_REGEXP = ::T.let(nil, ::T.untyped)
   QUIT_ERRORS = ::T.let(nil, ::T.untyped)
   UNICODE_CODE_POINT = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::W3C::Bridge
-end
-
 class Selenium::WebDriver::Remote::W3C::Capabilities
-  def ==(other); end
-
-  def [](key); end
-
-  def []=(key, value); end
-
-  def accept_insecure_certs(); end
-
-  def accept_insecure_certs=(value); end
-
-  def accessibility_checks(); end
-
-  def accessibility_checks=(value); end
-
-  def as_json(*_); end
-
-  def browser_name(); end
-
-  def browser_name=(value); end
-
-  def browser_version(); end
-
-  def browser_version=(value); end
-
-  def capabilities(); end
-
-  def device(); end
-
-  def device=(value); end
-
-  def eql?(other); end
-
-  def implicit_timeout(); end
-
-  def implicit_timeout=(value); end
-
-  def initialize(opts=T.unsafe(nil)); end
-
-  def merge!(other); end
-
-  def page_load_strategy(); end
-
-  def page_load_strategy=(value); end
-
-  def page_load_timeout(); end
-
-  def page_load_timeout=(value); end
-
-  def platform(); end
-
-  def platform=(value); end
-
-  def platform_name(); end
-
-  def platform_name=(value); end
-
-  def proxy(); end
-
-  def proxy=(proxy); end
-
-  def remote_session_id(); end
-
-  def remote_session_id=(value); end
-
-  def script_timeout(); end
-
-  def script_timeout=(value); end
-
-  def set_window_rect(); end
-
-  def set_window_rect=(value); end
-
-  def strict_file_interactability(); end
-
-  def strict_file_interactability=(value); end
-
-  def timeouts(); end
-
-  def timeouts=(value); end
-
-  def to_json(*_); end
-
-  def unhandled_prompt_behavior(); end
-
-  def unhandled_prompt_behavior=(value); end
-
-  def version(); end
-
-  def version=(value); end
   EXTENSION_CAPABILITY_PATTERN = ::T.let(nil, ::T.untyped)
   KNOWN = ::T.let(nil, ::T.untyped)
 end
 
-class Selenium::WebDriver::Remote::W3C::Capabilities
-  def self.edge(opts=T.unsafe(nil)); end
-
-  def self.ff(opts=T.unsafe(nil)); end
-
-  def self.firefox(opts=T.unsafe(nil)); end
-
-  def self.from_oss(oss_capabilities); end
-
-  def self.json_create(data); end
-end
-
-module Selenium::WebDriver::Remote::W3C
-end
-
-module Selenium::WebDriver::Remote
-end
-
-module Selenium::WebDriver::Safari
-end
-
 module Selenium::WebDriver::Safari::Bridge
-  def attach_debugger(); end
-
-  def commands(command); end
-
-  def permissions(); end
-
-  def permissions=(permissions); end
   COMMANDS = ::T.let(nil, ::T.untyped)
-end
-
-module Selenium::WebDriver::Safari::Bridge
-end
-
-class Selenium::WebDriver::Safari::Driver
-  include ::Selenium::WebDriver::DriverExtensions::HasDebugger
-  include ::Selenium::WebDriver::DriverExtensions::HasPermissions
-  include ::Selenium::WebDriver::DriverExtensions::TakesScreenshot
-  def initialize(opts=T.unsafe(nil)); end
-end
-
-class Selenium::WebDriver::Safari::Driver
-end
-
-class Selenium::WebDriver::Safari::Options
-  def as_json(*_); end
-
-  def automatic_inspection(); end
-
-  def automatic_inspection=(automatic_inspection); end
-
-  def automatic_profiling(); end
-
-  def automatic_profiling=(automatic_profiling); end
-
-  def initialize(**opts); end
-end
-
-class Selenium::WebDriver::Safari::Options
-end
-
-class Selenium::WebDriver::Safari::Service
-end
-
-class Selenium::WebDriver::Safari::Service
-end
-
-module Selenium::WebDriver::Safari
-  def self.driver_path(); end
-
-  def self.driver_path=(path); end
-
-  def self.path(); end
-
-  def self.path=(path); end
-
-  def self.technology_preview(); end
-
-  def self.technology_preview!(); end
 end
 
 module Selenium::WebDriver::SearchContext
@@ -26796,79 +25883,7 @@ class Selenium::WebDriver::SocketPoller
   NOT_CONNECTED_ERRORS = ::T.let(nil, ::T.untyped)
 end
 
-module Selenium::WebDriver::Support
-end
-
-class Selenium::WebDriver::Support::AbstractEventListener
-  def after_change_value_of(element, driver); end
-
-  def after_click(element, driver); end
-
-  def after_close(driver); end
-
-  def after_execute_script(script, driver); end
-
-  def after_find(by, what, driver); end
-
-  def after_navigate_back(driver); end
-
-  def after_navigate_forward(driver); end
-
-  def after_navigate_to(url, driver); end
-
-  def after_quit(driver); end
-
-  def before_change_value_of(element, driver); end
-
-  def before_click(element, driver); end
-
-  def before_close(driver); end
-
-  def before_execute_script(script, driver); end
-
-  def before_find(by, what, driver); end
-
-  def before_navigate_back(driver); end
-
-  def before_navigate_forward(driver); end
-
-  def before_navigate_to(url, driver); end
-
-  def before_quit(driver); end
-end
-
-class Selenium::WebDriver::Support::AbstractEventListener
-end
-
-class Selenium::WebDriver::Support::BlockEventListener
-  def initialize(callback); end
-
-  def method_missing(meth, *args); end
-end
-
-class Selenium::WebDriver::Support::BlockEventListener
-end
-
 class Selenium::WebDriver::Support::Color
-  def ==(other); end
-
-  def alpha(); end
-
-  def blue(); end
-
-  def eql?(other); end
-
-  def green(); end
-
-  def hex(); end
-
-  def initialize(red, green, blue, alpha=T.unsafe(nil)); end
-
-  def red(); end
-
-  def rgb(); end
-
-  def rgba(); end
   HEX3_PATTERN = ::T.let(nil, ::T.untyped)
   HEX_PATTERN = ::T.let(nil, ::T.untyped)
   HSLA_PATTERN = ::T.let(nil, ::T.untyped)
@@ -26877,76 +25892,6 @@ class Selenium::WebDriver::Support::Color
   RGBA_PCT_PATTERN = ::T.let(nil, ::T.untyped)
   RGB_PATTERN = ::T.let(nil, ::T.untyped)
   RGB_PCT_PATTERN = ::T.let(nil, ::T.untyped)
-end
-
-class Selenium::WebDriver::Support::Color
-  def self.from_hsl(h, s, l, a); end
-
-  def self.from_string(str); end
-
-  def self.hue_to_rgb(lum1, lum2, hue); end
-end
-
-module Selenium::WebDriver::Support::Escaper
-end
-
-module Selenium::WebDriver::Support::Escaper
-  def self.escape(str); end
-end
-
-class Selenium::WebDriver::Support::EventFiringBridge
-  def clear_element(ref); end
-
-  def click_element(ref); end
-
-  def close(); end
-
-  def execute_script(script, *args); end
-
-  def find_element_by(how, what, parent=T.unsafe(nil)); end
-
-  def find_elements_by(how, what, parent=T.unsafe(nil)); end
-
-  def get(url); end
-
-  def go_back(); end
-
-  def go_forward(); end
-
-  def initialize(delegate, listener); end
-
-  def quit(); end
-
-  def send_keys_to_element(ref, keys); end
-end
-
-class Selenium::WebDriver::Support::EventFiringBridge
-end
-
-class Selenium::WebDriver::Support::Select
-  def deselect_all(); end
-
-  def deselect_by(how, what); end
-
-  def first_selected_option(); end
-
-  def initialize(element); end
-
-  def multiple?(); end
-
-  def options(); end
-
-  def select_all(); end
-
-  def select_by(how, what); end
-
-  def selected_options(); end
-end
-
-class Selenium::WebDriver::Support::Select
-end
-
-module Selenium::WebDriver::Support
 end
 
 class Selenium::WebDriver::TouchScreen

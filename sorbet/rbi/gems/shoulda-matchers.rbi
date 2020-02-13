@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/shoulda-matchers/all/shoulda-matchers.rbi
 #
 # shoulda-matchers-4.2.0
+
 module Shoulda
 end
 module Shoulda::Matchers

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
 # capybara-3.31.0
+
 module Capybara
   def self.HTML(html); end
   def self.add_selector(name, **options, &block); end

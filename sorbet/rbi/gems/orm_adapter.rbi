@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/orm_adapter/all/orm_adapter.rbi
 #
 # orm_adapter-0.5.0
+
 module OrmAdapter
   def self.adapters; end
 end

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/webpacker/all/webpacker.rbi
 #
 # webpacker-4.2.2
+
 class Webpacker::Instance
   def commands; end
   def compiler; end

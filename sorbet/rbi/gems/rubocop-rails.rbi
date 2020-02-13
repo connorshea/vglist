@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
 # rubocop-rails-2.4.2
+
 module RuboCop
 end
 module RuboCop::Rails

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/active_storage_validations/all/active_storage_validations.rbi
 #
 # active_storage_validations-0.8.7
+
 module ActiveStorageValidations
 end
 class ActiveStorageValidations::Railtie < Rails::Railtie

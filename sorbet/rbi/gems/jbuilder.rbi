@@ -7,7 +7,8 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/jbuilder/all/jbuilder.rbi
 #
-# jbuilder-2.9.1
+# jbuilder-2.10.0
+
 class Jbuilder < ActiveSupport::ProxyObject
   def _blank?(value = nil); end
   def _extract_hash_values(object, attributes); end
@@ -20,22 +21,22 @@ class Jbuilder < ActiveSupport::ProxyObject
   def _object_respond_to?(object, *methods); end
   def _scope; end
   def _set_value(key, value); end
-  def array!(collection = nil, *attributes); end
+  def array!(collection = nil, *attributes, &block); end
   def attributes!; end
-  def call(object, *attributes); end
+  def call(object, *attributes, &block); end
   def child!; end
   def extract!(object, *attributes); end
   def ignore_nil!(value = nil); end
   def initialize(options = nil); end
   def key_format!(*args); end
   def merge!(hash_or_array); end
-  def method_missing(*args); end
+  def method_missing(*args, &block); end
   def nil!; end
   def null!; end
   def self.encode(*args, &block); end
   def self.ignore_nil(value = nil); end
   def self.key_format(*args); end
-  def set!(key, value = nil, *args); end
+  def set!(key, value = nil, *args, &block); end
   def target!; end
 end
 class Jbuilder::Blank
@@ -71,7 +72,7 @@ class JbuilderTemplate < Jbuilder
   def _write_fragment_cache(key, options = nil); end
   def array!(collection = nil, *args); end
   def cache!(key = nil, options = nil); end
-  def cache_if!(condition, *args); end
+  def cache_if!(condition, *args, &block); end
   def cache_root!(key = nil, options = nil); end
   def initialize(context, *args); end
   def partial!(*args); end

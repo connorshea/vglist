@@ -7,7 +7,8 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/doorkeeper/all/doorkeeper.rbi
 #
-# doorkeeper-5.3.0
+# doorkeeper-5.3.1
+
 module Doorkeeper
   def self.authenticate(request, methods = nil); end
   def self.config; end
@@ -82,6 +83,7 @@ class Doorkeeper::Config
   def scopes_by_grant_type; end
   def skip_authorization(*_args); end
   def token_grant_types; end
+  def token_lookup_batch_size(*_args); end
   def token_reuse_limit; end
   def token_secret_fallback_strategy; end
   def token_secret_strategy; end
@@ -145,6 +147,7 @@ class Doorkeeper::Config::Builder
   def revoke_previous_client_credentials_token; end
   def scopes_by_grant_type(hash = nil); end
   def skip_authorization(*args, &block); end
+  def token_lookup_batch_size(*args, &block); end
   def token_reuse_limit(percentage); end
   def use_refresh_token(enabled = nil, &block); end
 end

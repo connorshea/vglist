@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/spring-watcher-listen/all/spring-watcher-listen.rbi
 #
 # spring-watcher-listen-2.0.1
+
 module Spring
 end
 module Spring::Watcher

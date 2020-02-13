@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/uniform_notifier/all/uniform_notifier.rbi
 #
 # uniform_notifier-1.13.0
+
 class UniformNotifier
   def self.active_notifiers; end
   def self.airbrake; end

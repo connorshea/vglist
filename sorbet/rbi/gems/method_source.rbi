@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/method_source/all/method_source.rbi
 #
 # method_source-0.9.2
+
 module MethodSource
   def self.comment_helper(source_location, name = nil); end
   def self.extract_code(source_location); end

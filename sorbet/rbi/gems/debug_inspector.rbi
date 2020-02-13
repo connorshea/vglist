@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/debug_inspector/all/debug_inspector.rbi
 #
 # debug_inspector-0.0.3
+
 class RubyVM::DebugInspector
   def backtrace_locations; end
   def frame_binding(arg0); end
