@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/turbolinks-source/all/turbolinks-source.rbi
 #
 # turbolinks-source-5.2.0
+
 module Turbolinks
 end
 module Turbolinks::Source

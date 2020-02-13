@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rack-cors/all/rack-cors.rbi
 #
 # rack-cors-1.1.1
+
 module Rack
 end
 class Rack::Cors

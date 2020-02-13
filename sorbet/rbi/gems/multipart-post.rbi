@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/multipart-post/all/multipart-post.rbi
 #
 # multipart-post-2.1.1
+
 class CompositeReadIO
   def advance_io; end
   def current_io; end

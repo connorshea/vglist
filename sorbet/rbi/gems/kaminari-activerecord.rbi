@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/kaminari-activerecord/all/kaminari-activerecord.rbi
 #
 # kaminari-activerecord-1.2.0
+
 module Kaminari
 end
 module Kaminari::Activerecord

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/globalid/all/globalid.rbi
 #
 # globalid-0.4.2
+
 module URI
 end
 class URI::GID < URI::Generic

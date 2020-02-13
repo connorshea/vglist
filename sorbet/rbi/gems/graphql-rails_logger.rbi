@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql-rails_logger/all/graphql-rails_logger.rbi
 #
 # graphql-rails_logger-1.2.2
+
 module GraphQL
 end
 module GraphQL::RailsLogger

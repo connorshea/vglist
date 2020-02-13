@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-expectations/all/rspec-expectations.rbi
 #
 # rspec-expectations-3.9.0
+
 module RSpec
 end
 module RSpec::Matchers

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/spring/all/spring.rbi
 #
 # spring-2.1.0
+
 module Spring
   def self.after_fork(&block); end
   def self.after_fork_callbacks; end

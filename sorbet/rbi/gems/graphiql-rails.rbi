@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphiql-rails/all/graphiql-rails.rbi
 #
 # graphiql-rails-1.7.0
+
 module GraphiQL
 end
 module GraphiQL::Rails

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/warden/all/warden.rbi
 #
 # warden-1.2.8
+
 module Warden
   def self.test_mode!; end
 end

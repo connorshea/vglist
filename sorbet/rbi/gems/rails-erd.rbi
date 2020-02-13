@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rails-erd/all/rails-erd.rbi
 #
 # rails-erd-1.6.0
+
 module RailsERD
   def self.default_options; end
   def self.load_tasks; end

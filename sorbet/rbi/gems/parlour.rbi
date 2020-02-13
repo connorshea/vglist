@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parlour/all/parlour.rbi
 #
 # parlour-1.0.0
+
 module Parlour
 end
 module Parlour::Debugging

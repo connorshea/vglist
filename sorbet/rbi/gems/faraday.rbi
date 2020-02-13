@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faraday/all/faraday.rbi
 #
 # faraday-0.17.3
+
 module Faraday
   def self.const_missing(name); end
   def self.default_adapter; end

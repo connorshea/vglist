@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/erubi/all/erubi.rbi
 #
 # erubi-1.9.0
+
 module Erubi
   def self.h(value); end
 end

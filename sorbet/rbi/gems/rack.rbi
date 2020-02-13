@@ -7,7 +7,8 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rack/all/rack.rbi
 #
-# rack-2.1.2
+# rack-2.2.2
+
 module Rack
   def self.release; end
   def self.version; end
@@ -17,8 +18,6 @@ end
 module Rack::Auth::Digest
 end
 module Rack::Session
-end
-module Rack::RegexpExtensions
 end
 class Rack::QueryParser
   def initialize(params_class, key_space_limit, param_depth_limit); end
@@ -124,6 +123,7 @@ end
 class Rack::Utils::HeaderHash < Hash
   def [](k); end
   def []=(k, v); end
+  def clear; end
   def delete(k); end
   def each; end
   def has_key?(k); end
@@ -136,12 +136,8 @@ class Rack::Utils::HeaderHash < Hash
   def merge(other); end
   def names; end
   def replace(other); end
+  def self.[](headers); end
   def to_hash; end
-end
-class Rack::MediaType
-  def self.params(content_type); end
-  def self.strip_doublequotes(str); end
-  def self.type(content_type); end
 end
 class Rack::Request
   def delete_param(k); end
@@ -183,15 +179,19 @@ module Rack::Request::Helpers
   def default_session; end
   def delete?; end
   def delete_param(k); end
-  def extract_port(uri); end
   def extract_proto_header(header); end
   def form_data?; end
+  def forwarded_authority; end
+  def forwarded_for; end
+  def forwarded_port; end
   def forwarded_scheme; end
   def fullpath; end
   def get?; end
   def head?; end
   def host; end
-  def host_with_port; end
+  def host_authority; end
+  def host_with_port(authority = nil); end
+  def hostname; end
   def ip; end
   def link?; end
   def logger; end
@@ -220,11 +220,14 @@ module Rack::Request::Helpers
   def scheme; end
   def script_name; end
   def script_name=(s); end
+  def server_authority; end
+  def server_name; end
+  def server_port; end
   def session; end
   def session_options; end
-  def split_ip_addresses(ip_addresses); end
+  def split_authority(authority); end
+  def split_header(value); end
   def ssl?; end
-  def strip_port(ip_address); end
   def trace?; end
   def trusted_proxy?(ip); end
   def unlink?; end
@@ -232,15 +235,8 @@ module Rack::Request::Helpers
   def url; end
   def user_agent; end
   def values_at(*keys); end
+  def wrap_ipv6(host); end
   def xhr?; end
-end
-class Rack::BodyProxy
-  def close; end
-  def closed?; end
-  def each; end
-  def initialize(body, &block); end
-  def method_missing(method_name, *args, &block); end
-  def respond_to?(method_name, include_all = nil); end
 end
 class Rack::Response
   def [](key); end
@@ -257,10 +253,11 @@ class Rack::Response
   def has_header?(key); end
   def header; end
   def headers; end
-  def initialize(body = nil, status = nil, header = nil); end
+  def initialize(body = nil, status = nil, headers = nil); end
   def length; end
   def length=(arg0); end
   def redirect(target, status = nil); end
+  def self.[](status, headers, body); end
   def set_header(key, v); end
   def status; end
   def status=(arg0); end
@@ -274,13 +271,16 @@ module Rack::Response::Helpers
   def append(chunk); end
   def bad_request?; end
   def buffered_body!; end
+  def cache!(duration = nil, directive: nil); end
   def cache_control; end
   def cache_control=(v); end
   def client_error?; end
   def content_length; end
   def content_type; end
+  def content_type=(content_type); end
   def created?; end
   def delete_cookie(key, value = nil); end
+  def do_not_cache!; end
   def etag; end
   def etag=(v); end
   def forbidden?; end
@@ -322,35 +322,12 @@ class Rack::Runtime
   def call(env); end
   def initialize(app, name = nil); end
 end
-module Rack::Mime
-  def match?(value, matcher); end
-  def mime_type(ext, fallback = nil); end
-  def self.match?(value, matcher); end
-  def self.mime_type(ext, fallback = nil); end
-end
-class Rack::Head
-  def call(env); end
-  def initialize(app); end
-end
-class Rack::Files
-  def call(env); end
-  def fail(status, body, headers = nil); end
-  def filesize(path); end
-  def get(env); end
-  def initialize(root, headers = nil, default_mime = nil); end
-  def make_body(request, path, range); end
-  def mime_type(path, default_mime); end
-  def response_body; end
-  def root; end
-  def serving(request, path); end
-end
-class Rack::Files::Iterator
+class Rack::BodyProxy
   def close; end
-  def each; end
-  def initialize(path, range); end
-  def path; end
-  def range; end
-  def to_path; end
+  def closed?; end
+  def initialize(body, &block); end
+  def method_missing(method_name, *args, &block); end
+  def respond_to_missing?(method_name, include_all = nil); end
 end
 class Rack::Sendfile
   def call(env); end
@@ -383,6 +360,7 @@ class Rack::Session::Abstract::SessionHash
   def clear; end
   def delete(key); end
   def destroy; end
+  def dig(key, *keys); end
   def each(&block); end
   def empty?; end
   def exists?; end
@@ -492,6 +470,10 @@ class Rack::Session::Cookie::SessionId < Anonymous_Delegator_7
   def cookie_value; end
   def initialize(session_id, cookie_value); end
 end
+class Rack::Head
+  def call(env); end
+  def initialize(app); end
+end
 class Rack::ConditionalGet
   def call(env); end
   def etag_matches?(none_match, headers); end
@@ -512,6 +494,32 @@ class Rack::TempfileReaper
   def call(env); end
   def initialize(app); end
 end
+class Rack::Files
+  def call(env); end
+  def fail(status, body, headers = nil); end
+  def filesize(path); end
+  def get(env); end
+  def initialize(root, headers = nil, default_mime = nil); end
+  def mime_type(path, default_mime); end
+  def root; end
+  def self.method_added(name); end
+  def serving(request, path); end
+end
+class Rack::Files::BaseIterator
+  def bytesize; end
+  def close; end
+  def each; end
+  def each_range_part(file, range); end
+  def initialize(path, ranges, options); end
+  def multipart?; end
+  def multipart_heading(range); end
+  def options; end
+  def path; end
+  def ranges; end
+end
+class Rack::Files::Iterator < Rack::Files::BaseIterator
+  def to_path; end
+end
 class Rack::Chunked
   def call(env); end
   def chunkable_version?(ver); end
@@ -522,9 +530,8 @@ class Rack::Chunked::Body
   def close; end
   def each(&block); end
   def initialize(body); end
-  def insert_trailers(&block); end
-  include Rack::Utils
+  def yield_trailers; end
 end
 class Rack::Chunked::TrailerBody < Rack::Chunked::Body
-  def insert_trailers(&block); end
+  def yield_trailers; end
 end

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/kaminari-core/all/kaminari-core.rbi
 #
 # kaminari-core-1.2.0
+
 module Kaminari
   def self.config; end
   def self.configure; end

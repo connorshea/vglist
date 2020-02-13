@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/launchy/all/launchy.rbi
 #
 # launchy-2.4.3
+
 module Launchy
   def self.app_for_uri(uri); end
   def self.app_for_uri_string(s); end

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/xpath/all/xpath.rbi
 #
 # xpath-3.2.0
+
 module XPath
   def self.generate; end
   extend XPath::DSL

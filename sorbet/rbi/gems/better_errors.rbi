@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/better_errors/all/better_errors.rbi
 #
 # better_errors-2.5.1
+
 module BetterErrors
   def self.application_root; end
   def self.application_root=(arg0); end

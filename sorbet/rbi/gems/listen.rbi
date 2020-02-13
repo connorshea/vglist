@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/listen/all/listen.rbi
 #
 # listen-3.2.1
+
 module Listen
   def self.logger; end
   def self.logger=(logger); end

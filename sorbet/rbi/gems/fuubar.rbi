@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/fuubar/all/fuubar.rbi
 #
 # fuubar-2.5.0
+
 class Fuubar < RSpec::Core::Formatters::BaseTextFormatter
   def close(_notification); end
   def color_code_for(*args); end

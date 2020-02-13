@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/simple_token_authentication/all/simple_token_authentication.rbi
 #
 # simple_token_authentication-1.17.0
+
 module SimpleTokenAuthentication
   def self.adapter_dependency_fulfilled?(adapter_short_name); end
   def self.ensure_controllers_can_act_as_token_authentication_handlers(controller_adapters); end

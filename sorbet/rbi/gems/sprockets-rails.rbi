@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sprockets-rails/all/sprockets-rails.rbi
 #
 # sprockets-rails-3.2.1
+
 module Sprockets
 end
 module Sprockets::Rails

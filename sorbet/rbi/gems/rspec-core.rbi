@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-core/all/rspec-core.rbi
 #
 # rspec-core-3.9.1
+
 module RSpec
   def self.clear_examples; end
   def self.configuration; end

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/coderay/all/coderay.rbi
 #
 # coderay-1.1.2
+
 module CodeRay
   def self.coderay_path(*path); end
   def self.encode(code, lang, format, options = nil); end

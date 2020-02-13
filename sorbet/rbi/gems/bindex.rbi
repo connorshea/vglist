@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/bindex/all/bindex.rbi
 #
 # bindex-0.8.1
+
 module Skiptrace
   def self.current_bindings; end
 end

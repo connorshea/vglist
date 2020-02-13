@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/childprocess/all/childprocess.rbi
 #
 # childprocess-3.0.0
+
 module ChildProcess
   def self.arch; end
   def self.build(*args); end

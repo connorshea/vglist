@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/mail/all/mail.rbi
 #
 # mail-2.7.1
+
 module Mail
   def self.all(*args, &block); end
   def self.connection(&block); end

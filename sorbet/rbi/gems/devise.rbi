@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/devise/all/devise.rbi
 #
 # devise-4.7.1
+
 module Devise
   def allow_unconfirmed_access_for; end
   def allow_unconfirmed_access_for=(obj); end

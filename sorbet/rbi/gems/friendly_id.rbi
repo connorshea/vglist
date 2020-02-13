@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/friendly_id/all/friendly_id.rbi
 #
 # friendly_id-5.3.0
+
 module FriendlyId
   def self.defaults(&block); end
   def self.extended(model_class); end
@@ -141,4 +142,109 @@ module FriendlyId::Finders
   def self.setup(model_class); end
 end
 module FriendlyId::Finders::ClassMethods
+end
+module FriendlyId::History
+  def create_slug; end
+  def history_is_up_to_date?; end
+  def scope_for_slug_generator; end
+  def self.included(model_class); end
+  def self.setup(model_class); end
+end
+module FriendlyId::History::Configuration
+  def dependent_value; end
+end
+module FriendlyId::History::FinderMethods
+  def exists_by_friendly_id?(id); end
+  def first_by_friendly_id(id); end
+  def slug_history_clause(id); end
+  def slug_table_record(id); end
+  include FriendlyId::FinderMethods
+end
+module FriendlyId::Slug::GeneratedAttributeMethods
+end
+class FriendlyId::Slug < ActiveRecord::Base
+  def autosave_associated_records_for_sluggable(*args); end
+  def self.__callbacks; end
+  def self._reflections; end
+  def self._validators; end
+  def self.attribute_type_decorations; end
+  def self.defined_enums; end
+  def self.page(num = nil); end
+  def sluggable; end
+  def to_param; end
+  extend Kaminari::ConfigurationMethods::ClassMethods
+  include FriendlyId::Slug::GeneratedAssociationMethods
+  include FriendlyId::Slug::GeneratedAttributeMethods
+  include Kaminari::ActiveRecordModelExtension
+  include Kaminari::ConfigurationMethods
+end
+module FriendlyId::Slug::GeneratedAssociationMethods
+  def reload_sluggable; end
+  def sluggable; end
+  def sluggable=(value); end
+end
+class FriendlyId::Slug::ActiveRecord_Relation < ActiveRecord::Relation
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include FriendlyId::Slug::GeneratedRelationMethods
+end
+module FriendlyId::Slug::GeneratedRelationMethods
+end
+class FriendlyId::Slug::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include FriendlyId::Slug::GeneratedRelationMethods
+end
+class FriendlyId::Slug::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include FriendlyId::Slug::GeneratedRelationMethods
+end
+module FriendlyId::SimpleI18n
+  def self.included(model_class); end
+  def self.setup(model_class); end
+end
+module FriendlyId::SimpleI18n::Model
+  def set_friendly_id(text, locale = nil); end
+  def slug=(value); end
+end
+module FriendlyId::SimpleI18n::Configuration
+  def slug_column; end
+end
+module FriendlyId::Scoped
+  def scope_for_slug_generator; end
+  def self.included(model_class); end
+  def self.setup(model_class); end
+  def serialized_scope; end
+  def should_generate_new_friendly_id?; end
+  def slug_generator; end
+end
+module FriendlyId::Scoped::Configuration
+  def reflection_foreign_key(scope); end
+  def scope; end
+  def scope=(arg0); end
+  def scope_columns; end
+end
+module FriendlyId::SequentiallySlugged
+  def resolve_friendly_id_conflict(candidate_slugs); end
+  def self.setup(model_class); end
+  def slug_base_class; end
+end
+class FriendlyId::SequentiallySlugged::SequentialSlugCalculator
+  def conflict_query; end
+  def initialize(scope, slug, slug_column, sequence_separator, base_class); end
+  def last_sequence_number; end
+  def next_sequence_number; end
+  def next_slug; end
+  def ordering_query; end
+  def scope; end
+  def scope=(arg0); end
+  def sequence_separator; end
+  def sequence_separator=(arg0); end
+  def sequential_slug_matcher; end
+  def slug; end
+  def slug=(arg0); end
+  def slug_column; end
+  def slug_column=(arg0); end
+  def slug_conflicts; end
 end

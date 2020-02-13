@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/pundit-matchers/all/pundit-matchers.rbi
 #
 # pundit-matchers-1.6.0
+
 module Pundit
 end
 module Pundit::Matchers

@@ -8,6 +8,7 @@
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop/all/rubocop.rbi
 #
 # rubocop-0.79.0
+
 module RuboCop
 end
 module RuboCop::Version
