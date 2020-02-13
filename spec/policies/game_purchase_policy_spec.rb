@@ -22,7 +22,7 @@ RSpec.describe GamePurchasePolicy, type: :policy do
     end
   end
 
-  describe 'A logged-in user' do
+  describe 'A second logged-in user' do
     let(:user) { create(:user) }
     let(:another_user) { create(:user) }
     let(:game_purchase) { create(:game_purchase, user: another_user) }
