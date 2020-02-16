@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import Rails from '@rails/ujs';
+import VglistUtils from '../utils';
 import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
@@ -106,16 +106,11 @@ export default {
         delete updateData['stores'];
       }
 
-      fetch('/game_purchases/bulk_update.json', {
-        method: 'POST',
-        body: JSON.stringify(updateData),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      }).then(response => {
+      VglistUtils.rawAuthenticatedFetch(
+        '/game_purchases/bulk_update.json',
+        'POST',
+        JSON.stringify(updateData)
+      ).then(response => {
         if (response.ok) {
           // Redirects to self.
           Turbolinks.visit(window.location.href);
