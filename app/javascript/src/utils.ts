@@ -51,6 +51,7 @@ export default class VglistUtils {
    * @return {Promise<any>} A promise that resolves to the JSON object after its been parsed.
    */
   static async authenticatedFetch(route: string, method: string, body: string|null = null): Promise<any> {
+    // https://stackoverflow.com/questions/50041257/how-can-i-pass-json-body-of-fetch-response-to-throw-error-with-then
     return this.rawAuthenticatedFetch(route, method, body)
       .then(response => {
         return response.json().then(json => {
