@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     delete :remove_cover, on: :member
     post :favorite, on: :member
     delete :unfavorite, on: :member
+    get :favorited, on: :member
 
     post :add_to_wikidata_blocklist, on: :member
   end

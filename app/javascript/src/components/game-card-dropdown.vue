@@ -36,14 +36,42 @@ export default {
   data: function() {
     return {
       isActive: false,
-      favorited: false
+      favorited: false,
+      hasCheckedFavorited: false
     };
   },
   methods: {
     onClick(event) {
-      // TODO: Figure out the best way to determine whether the game has been favorited.
-      this.isActive = true;
-      this.closeDropdownOnClick();
+      if (!this.hasCheckedFavorited) {
+        // Check whether the user has favorited the game before rendering the
+        // dropdown buttons.
+        fetch(`games/${this.gameId}/favorited.json`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': Rails.csrfToken(),
+            Accept: 'application/json'
+          },
+          credentials: 'same-origin'
+        }).then(response => {
+          return response.json().then(json => {
+            if (response.ok) {
+              return Promise.resolve(json);
+            }
+            return Promise.reject(json);
+          }).then(json => {
+            if (json === true || json === false) {
+              this.favorited = json;
+            }
+            this.isActive = true;
+            this.closeDropdownOnClick();
+            this.hasCheckedFavorited = true;
+          });
+        });
+      } else {
+        this.isActive = true;
+        this.closeDropdownOnClick();
+      }
     },
     closeDropdownOnClick() {
       // Close the dropdown if the user clicks outside the dropdown.
