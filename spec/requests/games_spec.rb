@@ -277,4 +277,24 @@ RSpec.describe "Games", type: :request do
       end.to change(user.favorite_games, :count).by(0)
     end
   end
+
+  describe "GET favorited_game_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:game) { create(:game) }
+
+    it 'returns true when the game has been favorited' do
+      create(:favorite_game, user: user, game: game)
+      sign_in(user)
+
+      get favorited_game_path(game.id, format: :json)
+      expect(response.body).to eq("true")
+    end
+
+    it 'returns false when the game has not been favorited' do
+      sign_in(user)
+
+      get favorited_game_path(game.id, format: :json)
+      expect(response.body).to eq("false")
+    end
+  end
 end
