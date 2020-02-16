@@ -9,6 +9,7 @@ variables:
   POSTGRES_DB: ci_test
   POSTGRES_USER: runner
   POSTGRES_PASSWORD: ""
+  POSTGRES_HOST_AUTH_METHOD: trust
   RAILS_ENV: test
   RACK_ENV: test
   NODE_ENV: test
