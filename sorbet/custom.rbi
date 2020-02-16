@@ -47,3 +47,18 @@ class Doorkeeper::AuthorizationsController < ApplicationController; end
 # class Types::QueryType < Types::BaseObject
 #   extend GraphQL::Schema::Member::HasArguments
 # end
+
+# Add types for custom Faker methods defined in `config/initializers/faker.rb`.
+class Faker::Game
+  sig { returns(String) }
+  def company; end
+
+  sig { returns(String) }
+  def engine; end
+
+  sig { returns(String) }
+  def series; end
+
+  sig { returns(String) }
+  def store; end
+end
