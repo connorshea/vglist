@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import Rails from '@rails/ujs';
+import VglistUtils from '../utils';
 
 export default {
   name: 'game-card-dropdown',
@@ -45,28 +45,16 @@ export default {
       if (!this.hasCheckedFavorited) {
         // Check whether the user has favorited the game before rendering the
         // dropdown buttons.
-        fetch(`games/${this.gameId}/favorited.json`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': Rails.csrfToken(),
-            Accept: 'application/json'
-          },
-          credentials: 'same-origin'
-        }).then(response => {
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          }).then(json => {
-            if (json === true || json === false) {
-              this.favorited = json;
-            }
-            this.isActive = true;
-            this.closeDropdownOnClick();
-            this.hasCheckedFavorited = true;
-          });
+        VglistUtils.authenticatedFetch(
+          `games/${this.gameId}/favorited.json`,
+          'GET'
+        ).then(parsedJson => {
+          if (parsedJson === true || parsedJson === false) {
+            this.favorited = parsedJson;
+          }
+          this.isActive = true;
+          this.closeDropdownOnClick();
+          this.hasCheckedFavorited = true;
         });
       } else {
         this.isActive = true;
@@ -88,30 +76,20 @@ export default {
       });
     },
     favoriteGame() {
-      fetch(`games/${this.gameId}/favorite.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      }).then(response => {
+      VglistUtils.rawAuthenticatedFetch(
+        `games/${this.gameId}/favorite.json`,
+        'POST'
+      ).then(response => {
         if (response.ok) {
           this.favorited = true;
         }
       });
     },
     unfavoriteGame() {
-      fetch(`games/${this.gameId}/unfavorite.json`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      }).then(response => {
+      VglistUtils.rawAuthenticatedFetch(
+        `games/${this.gameId}/unfavorite.json`,
+        'DELETE'
+      ).then(response => {
         if (response.ok) {
           this.favorited = false;
         }
