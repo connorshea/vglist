@@ -280,6 +280,12 @@ nav.navbar {
   }
 }
 
+.game-card-dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 // Remove the radius and modify padding on notifications so they can be used
 // for Rails flashes.
 .notification.flash-notification {

@@ -4,9 +4,42 @@
       <%= game_cover(game, 300, 500) %>
     </figure>
     <div class="card-content">
-      <p class="title is-4"><%= game.name %></p>
+      <p class="title is-4 mr-10"><%= game.name %></p>
       <p class="subtitle is-6"><%= summarize(game.platforms.pluck(:name)) %></p>
       <p class="subtitle is-6"><%= summarize(game.developers.pluck(:name), limit: 2) %></p>
+    </div>
+  <% end %>
+  <% if current_user %>
+    <div class="dropdown game-card-dropdown is-right">
+      <div class="dropdown-trigger">
+        <button class="button is-white" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span class="icon">
+            <%= svg_icon('chevron-down', height: 15, aria: false) %>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <%= link_to favorite_game_path(id: game.id, format: :json),
+            method: :post,
+            remote: true,
+            class: "dropdown-item toggle-icon-on-hover js-is-toggleable favorite-on-#{game.id} #{ game_in_user_favorites?(game) ? 'is-hidden' : '' }",
+            data: { toggle_partner: "favorite-off-#{game.id}" } do %>
+            <%= svg_icon('heart', fill: :red, height: 16, aria: false, css_class: 'icon-1') %>
+            <%= svg_icon('heart-full', fill: :red, height: 16, aria: false, css_class: 'icon-2') %>
+            <span class='ml-5'>Favorite</span>
+          <% end %>
+          <%= link_to unfavorite_game_path(id: game.id, format: :json),
+            method: :delete,
+            remote: true,
+            class: "dropdown-item toggle-icon-on-hover js-is-toggleable favorite-off-#{game.id} #{ game_in_user_favorites?(game) ? '' : 'is-hidden' }",
+            data: { toggle_partner: "favorite-on-#{game.id}" } do %>
+            <%= svg_icon('heart-full', fill: :red, height: 16, aria: false, css_class: 'icon-1') %>
+            <%= svg_icon('heart-broken', fill: :red, height: 16, aria: false, css_class: 'icon-2') %>
+            <span class='ml-5'>Unfavorite</span>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
