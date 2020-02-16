@@ -35,7 +35,7 @@ let initBulma = () => {
   }
 
   // Dropdowns
-  let $dropdowns = getAll('.dropdown:not(.is-hoverable)');
+  let $dropdowns = getAll('.dropdown:not(.is-hoverable):not(.dropdown-dynamic)');
 
   if ($dropdowns.length > 0) {
     $dropdowns.forEach(function($el) {
@@ -49,7 +49,7 @@ let initBulma = () => {
         return;
       }
       // If the user clicks on the dropdown itself, don't close the dropdown.
-      if ((event.target as Element).closest('.dropdown:not(.is-hoverable)')) {
+      if ((event.target as Element).closest('.dropdown:not(.is-hoverable):not(.dropdown-dynamic)')) {
         return;
       }
       closeDropdowns();
