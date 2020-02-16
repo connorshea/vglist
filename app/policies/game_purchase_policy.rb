@@ -1,7 +1,5 @@
 # typed: strict
 class GamePurchasePolicy < ApplicationPolicy
-  extend T::Sig
-
   sig { returns(T.nilable(User)) }
   attr_reader :user
   sig { returns(T.nilable(GamePurchase)) }

@@ -1,7 +1,5 @@
 # typed: strong
 class SettingsPolicy < ApplicationPolicy
-  extend T::Sig
-
   sig { returns(T.nilable(User)) }
   attr_reader :current_user, :user
 

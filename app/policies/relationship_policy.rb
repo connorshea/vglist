@@ -1,7 +1,5 @@
 # typed: strong
 class RelationshipPolicy < ApplicationPolicy
-  extend T::Sig
-
   sig { returns(T.nilable(User)) }
   attr_reader :follower
   sig { returns(User) }

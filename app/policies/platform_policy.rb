@@ -1,7 +1,5 @@
 # typed: strict
 class PlatformPolicy < ApplicationPolicy
-  extend T::Sig
-
   sig { returns(T.nilable(User)) }
   attr_reader :user
   sig { returns(T.nilable(T.any(Platform::ActiveRecord_Relation, Platform))) }
