@@ -21,10 +21,11 @@ export default class VglistUtils {
    * 
    * @param {string} route The URL path to send the request to.
    * @param {string} method The HTTP method to send the request with, e.g. 'GET', 'PUT', 'POST', 'DELETE'.
+   * @param {string?} body The body of the request, optional.
    * @return {Promise<Response>} A promise that resolves to the response.
    */
-  static async rawAuthenticatedFetch(route: string, method: string): Promise<Response> {
-    return fetch(route, {
+  static async rawAuthenticatedFetch(route: string, method: string, body: string|null = null): Promise<Response> {
+    let requestBody : RequestInit = {
       method: method,
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +33,13 @@ export default class VglistUtils {
         Accept: 'application/json'
       },
       credentials: 'same-origin'
-    });
+    };
+
+    if (body !== null) {
+      requestBody.body = body;
+    }
+
+    return fetch(route, requestBody);
   }
 
   /**
@@ -40,10 +47,11 @@ export default class VglistUtils {
    * 
    * @param {string} route The URL path to send the request to.
    * @param {string} method The HTTP method to send the request with, e.g. 'GET', 'PUT', 'POST', 'DELETE'.
+   * @param {string?} body The body of the request, optional.
    * @return {Promise<any>} A promise that resolves to the JSON object after its been parsed.
    */
-  static async authenticatedFetch(route: string, method: string): Promise<any> {
-    return this.rawAuthenticatedFetch(route, method)
+  static async authenticatedFetch(route: string, method: string, body: string|null = null): Promise<any> {
+    return this.rawAuthenticatedFetch(route, method, body)
       .then(response => {
         return response.json().then(json => {
           if (response.ok) {
