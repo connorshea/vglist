@@ -46,7 +46,7 @@ export default {
         // Check whether the user has favorited the game before rendering the
         // dropdown buttons.
         VglistUtils.authenticatedFetch(
-          `games/${this.gameId}/favorited.json`,
+          `/games/${this.gameId}/favorited.json`,
           'GET'
         ).then(parsedJson => {
           if (parsedJson === true || parsedJson === false) {
@@ -77,7 +77,7 @@ export default {
     },
     favoriteGame() {
       VglistUtils.rawAuthenticatedFetch(
-        `games/${this.gameId}/favorite.json`,
+        `/games/${this.gameId}/favorite.json`,
         'POST'
       ).then(response => {
         if (response.ok) {
@@ -87,7 +87,7 @@ export default {
     },
     unfavoriteGame() {
       VglistUtils.rawAuthenticatedFetch(
-        `games/${this.gameId}/unfavorite.json`,
+        `/games/${this.gameId}/unfavorite.json`,
         'DELETE'
       ).then(response => {
         if (response.ok) {
