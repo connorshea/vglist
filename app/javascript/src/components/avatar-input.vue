@@ -45,7 +45,6 @@
 
 <script lang="ts">
 import FileSelect from './fields/file-select.vue';
-import Rails from '@rails/ujs';
 import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
