@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.2.16
+### Added
+- Add a dropdown to game cards, currently just used for favoriting games. ([#1044])
+
 ## v2020.2.8
 ### Added
 - Add sorting by average rating to Games. ([#1021])
@@ -674,3 +678,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#996]: https://github.com/connorshea/VideoGameList/pull/996
 [#1014]: https://github.com/connorshea/VideoGameList/pull/1014
 [#1021]: https://github.com/connorshea/VideoGameList/pull/1021
+[#1044]: https://github.com/connorshea/VideoGameList/pull/1044
