@@ -134,7 +134,7 @@ import MultiSelect from './fields/multi-select.vue';
 import MultiSelectGeneric from './fields/multi-select-generic.vue';
 import FileSelect from './fields/file-select.vue';
 import DateField from './fields/date-field.vue';
-import Rails from '@rails/ujs';
+import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
 import * as _ from 'lodash';
@@ -433,26 +433,11 @@ export default {
         submittableData['game']['cover'] = this.game.coverBlob;
       }
 
-      fetch(this.submitPath, {
-        method: this.create ? 'POST' : 'PUT',
-        body: JSON.stringify(submittableData),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      })
-        .then(response => {
-          // https://stackoverflow.com/questions/50041257/how-can-i-pass-json-body-of-fetch-response-to-throw-error-with-then
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          });
-        })
-        .then(game => {
+      VglistUtils.authenticatedFetch(
+        this.submitPath,
+        this.create ? 'POST' : 'PUT',
+        JSON.stringify(submittableData)
+      ).then(game => {
           if (this.create) {
             Turbolinks.visit(`${window.location.origin}/games/${game.id}`);
           } else {
