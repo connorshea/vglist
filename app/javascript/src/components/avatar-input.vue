@@ -46,6 +46,7 @@
 <script lang="ts">
 import FileSelect from './fields/file-select.vue';
 import Rails from '@rails/ujs';
+import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
 
@@ -112,60 +113,30 @@ export default {
         submittableData['user']['avatar'] = this.avatarBlob;
       }
 
-      fetch(this.submitPath, {
-        method: 'PUT',
-        body: JSON.stringify(submittableData),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      })
-        .then(response => {
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          });
-        })
-        .then(game => {
-          Turbolinks.visit(`${window.location.origin}/settings`);
-        })
-        .catch(errors => {
-          this.errors = errors;
-          let submitButton = document.querySelector('.js-submit-button');
-          submitButton.classList.add('js-submit-button-error');
-          setTimeout(() => {
-            submitButton.classList.remove('js-submit-button-error');
-          }, 2000);
-        });
+      VglistUtils.authenticatedFetch(
+        this.submitPath,
+        'PUT',
+        JSON.stringify(submittableData)
+      ).then(game => {
+        Turbolinks.visit(`${window.location.origin}/settings`);
+      }).catch(errors => {
+        this.errors = errors;
+        let submitButton = document.querySelector('.js-submit-button');
+        submitButton.classList.add('js-submit-button-error');
+        setTimeout(() => {
+          submitButton.classList.remove('js-submit-button-error');
+        }, 2000);
+      });
     },
     onDelete() {
-      fetch(this.deletePath, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      })
-        .then(response => {
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          });
-        })
-        .then(game => {
-          Turbolinks.visit(`${window.location.origin}/settings`);
-        })
-        .catch(errors => {
-          this.errors = errors;
-        });
+      VglistUtils.authenticatedFetch(
+        this.deletePath,
+        'DELETE'
+      ).then(game => {
+        Turbolinks.visit(`${window.location.origin}/settings`);
+      }).catch(errors => {
+        this.errors = errors;
+      });
     },
     // Reload the page on cancel.
     onCancel() {

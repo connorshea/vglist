@@ -21,7 +21,8 @@ RSpec.describe GamePolicy, type: :policy do
           :search,
           :remove_cover,
           :favorite,
-          :unfavorite
+          :unfavorite,
+          :favorited
         ]
       )
     end
@@ -44,7 +45,8 @@ RSpec.describe GamePolicy, type: :policy do
           :search,
           :remove_cover,
           :favorite,
-          :unfavorite
+          :unfavorite,
+          :favorited
         ]
       )
     end
@@ -67,7 +69,8 @@ RSpec.describe GamePolicy, type: :policy do
           :search,
           :remove_cover,
           :favorite,
-          :unfavorite
+          :unfavorite,
+          :favorited
         ]
       )
     end
@@ -90,7 +93,8 @@ RSpec.describe GamePolicy, type: :policy do
           :search,
           :remove_cover,
           :favorite,
-          :unfavorite
+          :unfavorite,
+          :favorited
         ]
       )
     end

@@ -113,7 +113,7 @@ import DateField from './fields/date-field.vue';
 import SingleSelect from './fields/single-select.vue';
 import MultiSelect from './fields/multi-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
-import Rails from '@rails/ujs';
+import VglistUtils from '../utils';
 
 export default {
   name: 'game-modal',
@@ -345,25 +345,11 @@ export default {
         method = 'PUT';
       }
 
-      fetch(this.gamePurchasesSubmitUrl, {
-        method: method,
-        body: JSON.stringify(submittableData),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      })
-        .then(response => {
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          });
-        })
-        .then(gamePurchase => {
+      VglistUtils.authenticatedFetch(
+        this.gamePurchasesSubmitUrl,
+        method,
+        JSON.stringify(submittableData)
+      ).then(gamePurchase => {
           this.$emit('create', gamePurchase);
           this.$emit('closeAndRefresh');
         })

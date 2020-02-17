@@ -4,9 +4,18 @@
       <%= game_cover(game, 300, 500) %>
     </figure>
     <div class="card-content">
-      <p class="title is-4"><%= game.name %></p>
+      <p class="title is-4 mr-10"><%= game.name %></p>
       <p class="subtitle is-6"><%= summarize(game.platforms.pluck(:name)) %></p>
       <p class="subtitle is-6"><%= summarize(game.developers.pluck(:name), limit: 2) %></p>
     </div>
+  <% end %>
+  <% if current_user %>
+    <div data-vue-component="game-card-dropdown"
+      data-vue-props="<%=
+        {
+          gameId: game.id,
+          chevronDownIcon: svg_icon('chevron-down', height: 15, aria: false)
+        }.to_json
+      %>"></div>
   <% end %>
 </div>

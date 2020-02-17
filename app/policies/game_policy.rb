@@ -56,6 +56,11 @@ class GamePolicy < ApplicationPolicy
     user.present?
   end
 
+  sig { returns(T::Boolean) }
+  def favorited?
+    user.present?
+  end
+
   sig { returns(T.nilable(T::Boolean)) }
   def add_to_wikidata_blocklist?
     user&.admin?

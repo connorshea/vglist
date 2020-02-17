@@ -228,6 +228,17 @@ class GamesController < ApplicationController
     end
   end
 
+  # Check whether a game has been favorited by the user, and return either
+  # true or false.
+  def favorited
+    @game = Game.find(params[:id])
+    authorize @game
+
+    respond_to do |format|
+      format.json { render json: helpers.game_in_user_favorites?(@game) }
+    end
+  end
+
   private
 
   def game_params
