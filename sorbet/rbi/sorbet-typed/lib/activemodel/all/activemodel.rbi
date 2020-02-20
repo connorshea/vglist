@@ -31,7 +31,7 @@ module ActiveModel::Validations
       params(
         names: T.any(Symbol, String),
         if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-        on: T.any(Symbol, String),
+        on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
         prepend: T::Boolean,
         unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       ).void
@@ -104,8 +104,28 @@ module ActiveModel::Validations
   end
 end
 
-class ActiveModel::Type::Boolean
+class ActiveModel::Type::Value
+  extend T::Sig
+
+  sig { params(precision: T.untyped, limit: T.untyped, scale: T.untyped).void }
+  def initialize(precision: nil, limit: nil, scale: nil); end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def cast(value); end
+end
+
+class ActiveModel::Type::Boolean < ActiveModel::Type::Value
   sig { params(arg0: T.untyped).returns(T.nilable(T::Boolean))}
+  def cast(arg0); end
+end
+
+class ActiveModel::Type::ImmutableString < ActiveModel::Type::Value
+  sig { params(arg0: T.untyped).returns(T.nilable(String))}
+  def cast(arg0); end
+end
+
+class ActiveModel::Type::String < ActiveModel::Type::ImmutableString
+  sig { params(arg0: T.untyped).returns(T.nilable(String))}
   def cast(arg0); end
 end
 
@@ -116,7 +136,7 @@ module ActiveModel::Validations::HelperMethods
       message: String,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -140,7 +160,7 @@ module ActiveModel::Validations::HelperMethods
       accept: T.untyped,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -165,7 +185,7 @@ module ActiveModel::Validations::HelperMethods
       case_sensitive: T::Boolean,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -205,7 +225,7 @@ module ActiveModel::Validations::HelperMethods
       within: InWithinType,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -233,7 +253,7 @@ module ActiveModel::Validations::HelperMethods
       multiline: T.untyped,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -261,7 +281,7 @@ module ActiveModel::Validations::HelperMethods
       within: InWithinType,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -294,7 +314,7 @@ module ActiveModel::Validations::HelperMethods
       wrong_length: String,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -334,7 +354,7 @@ module ActiveModel::Validations::HelperMethods
       wrong_length: String,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -376,7 +396,7 @@ module ActiveModel::Validations::HelperMethods
       even: T::Boolean,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean
@@ -408,7 +428,7 @@ module ActiveModel::Validations::HelperMethods
       message: String,
       if: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
       unless: T.any(Symbol, String, T.proc.params(arg0: T.untyped).returns(T::Boolean)),
-      on: T.any(Symbol, String),
+      on: T.any(Symbol, String, T::Array[T.any(Symbol, String)]),
       allow_nil: T::Boolean,
       allow_blank: T::Boolean,
       strict: T::Boolean

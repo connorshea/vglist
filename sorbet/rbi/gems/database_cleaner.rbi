@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/database_cleaner/all/database_cleaner.rbi
 #
-# database_cleaner-1.8.2
+# database_cleaner-1.8.3
 
 module DatabaseCleaner
   def deprecate(message); end
@@ -89,6 +89,7 @@ class DatabaseCleaner::ORMAutodetector
 end
 class DatabaseCleaner::Base
   def <=>(other); end
+  def adapter_loaded?(orm); end
   def auto_detected?; end
   def autodetect_orm; end
   def called_externally?(caller); end
@@ -101,6 +102,7 @@ class DatabaseCleaner::Base
   def db; end
   def db=(desired_db); end
   def initialize(desired_orm = nil, opts = nil); end
+  def load_adapter(orm); end
   def orm; end
   def orm=(desired_orm); end
   def orm_module; end

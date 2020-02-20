@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.2
+# graphql-1.10.3
 
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
@@ -611,6 +611,7 @@ module GraphQL::Language::Nodes
 end
 class GraphQL::Language::Nodes::AbstractNode
   def children; end
+  def children_method_name; end
   def col; end
   def delete_child(previous_child); end
   def eql?(other); end
@@ -628,53 +629,56 @@ class GraphQL::Language::Nodes::AbstractNode
   def self.inherited(child_class); end
   def self.scalar_methods(*method_names); end
   def to_query_string(printer: nil); end
-  def visit_method; end
 end
 module GraphQL::Language::Nodes::AbstractNode::DefinitionNode
   def definition_line; end
   def initialize(options = nil); end
 end
 class GraphQL::Language::Nodes::WrapperType < GraphQL::Language::Nodes::AbstractNode
-  def children_method_name; end
   def initialize_node(of_type: nil); end
   def of_type; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::NameOnlyNode < GraphQL::Language::Nodes::AbstractNode
-  def children_method_name; end
   def initialize_node(name: nil); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::Argument < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def initialize_node(name: nil, value: nil); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def value; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::Directive < GraphQL::Language::Nodes::AbstractNode
   def arguments; end
   def children; end
-  def children_method_name; end
   def initialize_node(name: nil, arguments: nil); end
   def merge_argument(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::DirectiveLocation < GraphQL::Language::Nodes::NameOnlyNode
-  def children_method_name; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::DirectiveDefinition < GraphQL::Language::Nodes::AbstractNode
   def arguments; end
   def children; end
-  def children_method_name; end
   def description; end
   def initialize_node(name: nil, description: nil, locations: nil, arguments: nil); end
   def locations; end
@@ -682,30 +686,34 @@ class GraphQL::Language::Nodes::DirectiveDefinition < GraphQL::Language::Nodes::
   def merge_location(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::Document < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def definitions; end
   def initialize_node(definitions: nil); end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def slice_definition(name); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::Enum < GraphQL::Language::Nodes::NameOnlyNode
-  def children_method_name; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::NullValue < GraphQL::Language::Nodes::NameOnlyNode
-  def children_method_name; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::Field < GraphQL::Language::Nodes::AbstractNode
   def alias; end
   def arguments; end
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(attributes); end
   def merge_argument(node_opts); end
@@ -714,11 +722,12 @@ class GraphQL::Language::Nodes::Field < GraphQL::Language::Nodes::AbstractNode
   def name; end
   def scalars; end
   def selections; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::FragmentDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(name: nil, type: nil, directives: nil, selections: nil); end
   def merge_directive(node_opts); end
@@ -726,61 +735,68 @@ class GraphQL::Language::Nodes::FragmentDefinition < GraphQL::Language::Nodes::A
   def name; end
   def scalars; end
   def selections; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def type; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::FragmentSpread < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(name: nil, directives: nil); end
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::InlineFragment < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(type: nil, selections: nil, directives: nil); end
   def merge_directive(node_opts); end
   def merge_selection(node_opts); end
   def scalars; end
   def selections; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def type; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::InputObject < GraphQL::Language::Nodes::AbstractNode
   def arguments; end
   def children; end
-  def children_method_name; end
   def initialize_node(arguments: nil); end
   def merge_argument(node_opts); end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def serialize_value_for_hash(value); end
   def to_h(options = nil); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::ListType < GraphQL::Language::Nodes::WrapperType
-  def children_method_name; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::NonNullType < GraphQL::Language::Nodes::WrapperType
-  def children_method_name; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::VariableDefinition < GraphQL::Language::Nodes::AbstractNode
-  def children_method_name; end
   def default_value; end
   def initialize_node(name: nil, type: nil, default_value: nil); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def type; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::OperationDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(operation_type: nil, name: nil, variables: nil, selections: nil, directives: nil); end
   def merge_directive(node_opts); end
@@ -790,67 +806,74 @@ class GraphQL::Language::Nodes::OperationDefinition < GraphQL::Language::Nodes::
   def operation_type; end
   def scalars; end
   def selections; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def variables; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::TypeName < GraphQL::Language::Nodes::NameOnlyNode
-  def children_method_name; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::VariableIdentifier < GraphQL::Language::Nodes::NameOnlyNode
-  def children_method_name; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::SchemaDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(query: nil, mutation: nil, subscription: nil, directives: nil); end
   def merge_directive(node_opts); end
   def mutation; end
   def query; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def subscription; end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::SchemaExtension < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(query: nil, mutation: nil, subscription: nil, directives: nil); end
   def merge_directive(node_opts); end
   def mutation; end
   def query; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def subscription; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::ScalarTypeDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def initialize_node(name: nil, description: nil, directives: nil); end
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::ScalarTypeExtension < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(name: nil, directives: nil); end
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::InputValueDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def default_value; end
   def description; end
   def directives; end
@@ -858,6 +881,8 @@ class GraphQL::Language::Nodes::InputValueDefinition < GraphQL::Language::Nodes:
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def type; end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
@@ -865,7 +890,6 @@ end
 class GraphQL::Language::Nodes::FieldDefinition < GraphQL::Language::Nodes::AbstractNode
   def arguments; end
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def fields; end
@@ -875,13 +899,14 @@ class GraphQL::Language::Nodes::FieldDefinition < GraphQL::Language::Nodes::Abst
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def type; end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::ObjectTypeDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def fields; end
@@ -891,12 +916,13 @@ class GraphQL::Language::Nodes::ObjectTypeDefinition < GraphQL::Language::Nodes:
   def merge_field(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::ObjectTypeExtension < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def fields; end
   def initialize_node(name: nil, interfaces: nil, directives: nil, fields: nil); end
@@ -905,11 +931,12 @@ class GraphQL::Language::Nodes::ObjectTypeExtension < GraphQL::Language::Nodes::
   def merge_field(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::InterfaceTypeDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def fields; end
@@ -918,12 +945,13 @@ class GraphQL::Language::Nodes::InterfaceTypeDefinition < GraphQL::Language::Nod
   def merge_field(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::InterfaceTypeExtension < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def fields; end
   def initialize_node(name: nil, directives: nil, fields: nil); end
@@ -931,47 +959,51 @@ class GraphQL::Language::Nodes::InterfaceTypeExtension < GraphQL::Language::Node
   def merge_field(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::UnionTypeDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def initialize_node(name: nil, types: nil, description: nil, directives: nil); end
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def types; end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::UnionTypeExtension < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(name: nil, types: nil, directives: nil); end
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def types; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::EnumValueDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def initialize_node(name: nil, description: nil, directives: nil); end
   def merge_directive(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::EnumTypeDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def initialize_node(name: nil, description: nil, directives: nil, values: nil); end
@@ -979,25 +1011,27 @@ class GraphQL::Language::Nodes::EnumTypeDefinition < GraphQL::Language::Nodes::A
   def merge_value(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def values; end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::EnumTypeExtension < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def initialize_node(name: nil, directives: nil, values: nil); end
   def merge_directive(node_opts); end
   def merge_value(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def values; end
   def visit_method; end
 end
 class GraphQL::Language::Nodes::InputObjectTypeDefinition < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def description; end
   def directives; end
   def fields; end
@@ -1006,12 +1040,13 @@ class GraphQL::Language::Nodes::InputObjectTypeDefinition < GraphQL::Language::N
   def merge_field(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
   include GraphQL::Language::Nodes::AbstractNode::DefinitionNode
 end
 class GraphQL::Language::Nodes::InputObjectTypeExtension < GraphQL::Language::Nodes::AbstractNode
   def children; end
-  def children_method_name; end
   def directives; end
   def fields; end
   def initialize_node(name: nil, directives: nil, fields: nil); end
@@ -1019,6 +1054,8 @@ class GraphQL::Language::Nodes::InputObjectTypeExtension < GraphQL::Language::No
   def merge_field(node_opts); end
   def name; end
   def scalars; end
+  def self.children_method_name; end
+  def self.children_method_name=(arg0); end
   def visit_method; end
 end
 class GraphQL::Language::Parser < Racc::Parser
@@ -1536,7 +1573,6 @@ end
 class GraphQL::Execution::Interpreter::Runtime
   def add_dead_path(path); end
   def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: nil, trace: nil); end
-  def arg_to_value(graphql_object, arg_type, ast_value, already_arguments:); end
   def arguments(graphql_object, arg_owner, ast_node_or_hash); end
   def authorized_new(type, value, context, path); end
   def context; end
@@ -1544,13 +1580,12 @@ class GraphQL::Execution::Interpreter::Runtime
   def continue_value(path, value, field, is_non_null, ast_node); end
   def dead_path?(path); end
   def directives_include?(node, graphql_object, parent_type); end
-  def each_argument_pair(ast_args_or_hash); end
   def evaluate_selections(path, scoped_context, owner_object, owner_type, selections, root_operation_type: nil); end
   def final_value; end
-  def flatten_ast_value(v); end
   def gather_selections(owner_object, owner_type, selections, selections_by_name); end
   def initialize(query:, response:); end
   def inspect; end
+  def prepare_args_hash(ast_arg_or_hash_or_value); end
   def query; end
   def resolve_type(type, value, path); end
   def resolve_with_directives(object, ast_node); end
@@ -1566,6 +1601,13 @@ end
 module GraphQL::Execution::Interpreter::Resolve
   def self.resolve(results); end
   def self.resolve_all(results); end
+end
+class GraphQL::Execution::Interpreter::RawValue
+  def initialize(obj = nil); end
+  def resolve; end
+end
+module GraphQL::Execution::Interpreter::HandlesRawValue
+  def raw_value(obj); end
 end
 class GraphQL::Execution::Lazy
   def field; end
@@ -2249,6 +2291,7 @@ module GraphQL::Schema::Member::HasArguments
   def argument(*args, **kwargs, &block); end
   def argument_class(new_arg_class = nil); end
   def arguments; end
+  def coerce_arguments(parent_object, values, context); end
   def own_arguments; end
   def self.extended(cls); end
   def self.included(cls); end
@@ -2257,7 +2300,7 @@ module GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor
   def argument_class(new_arg_class = nil); end
 end
 module GraphQL::Schema::Member::HasArguments::ArgumentObjectLoader
-  def load_application_object(argument, lookup_as_type, id); end
+  def load_application_object(argument, lookup_as_type, id, context); end
   def load_application_object_failed(err); end
   def object_from_id(type, id, context); end
 end
@@ -2494,6 +2537,7 @@ class GraphQL::Schema::InputObject < GraphQL::Schema::Member
   extend GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
   extend GraphQL::Schema::Member::HasArguments
   extend GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor
+  extend GraphQL::Schema::Member::HasArguments::ArgumentObjectLoader
   extend GraphQL::Schema::Member::ValidatesInput
   include GraphQL::Dig
   include GraphQL::Schema::Member::HasArguments::ArgumentObjectLoader
@@ -2896,10 +2940,12 @@ end
 class GraphQL::Query::NullContext
   def [](key); end
   def initialize; end
+  def interpreter?; end
   def query; end
   def schema; end
   def self.[](key); end
   def self.instance; end
+  def self.interpreter?(*args, &block); end
   def self.query(*args, &block); end
   def self.schema(*args, &block); end
   def self.warden(*args, &block); end
@@ -4375,10 +4421,12 @@ end
 class GraphQL::Pagination::Connections
   def add(nodes_class, implementation); end
   def add_default; end
+  def all_wrappers; end
   def delete(nodes_class); end
-  def initialize; end
+  def initialize(schema:); end
   def self.use(schema_defn); end
-  def wrap(field, object, arguments, context); end
+  def wrap(field, object, arguments, context, wrappers: nil); end
+  def wrappers; end
 end
 class GraphQL::Pagination::Connections::ImplementationMissingError < GraphQL::Error
 end
