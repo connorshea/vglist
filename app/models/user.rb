@@ -66,7 +66,7 @@ class User < ApplicationRecord
   # other external account types are added later.
   has_one :external_account, dependent: :destroy
 
-  T.unsafe(self).has_one_attached :avatar
+  has_one_attached :avatar
 
   friendly_id :username, use: [:slugged, :finders]
 

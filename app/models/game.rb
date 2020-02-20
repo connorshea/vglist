@@ -31,7 +31,7 @@ class Game < ApplicationRecord
 
   belongs_to :series, optional: true
 
-  T.unsafe(self).has_one_attached :cover
+  has_one_attached :cover
 
   scope :newest, -> { order("created_at desc") }
   scope :oldest, -> { order("created_at asc") }
