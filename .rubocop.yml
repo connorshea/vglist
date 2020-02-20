@@ -93,9 +93,6 @@ Style/BlockDelimiters:
   Exclude:
     - 'spec/requests/**/*_spec.rb'
 
-Style/BracesAroundHashParameters:
-  Enabled: false
-
 Style/ClassAndModuleChildren:
   Enabled: false
 
@@ -110,6 +107,15 @@ Style/ExpandPathArguments:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
 
 Style/Lambda:
   Enabled: false

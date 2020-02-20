@@ -71,7 +71,7 @@ namespace 'import:wikidata' do
         game_hash = { wikidata_id: wikidata_id.delete('Q'), name: label }
 
         # Create attributes for each property.
-        properties.keys.each do |key|
+        properties.each_key do |key|
           game_hash[key] = []
         end
 
@@ -136,7 +136,7 @@ namespace 'import:wikidata' do
         end
 
         keys = []
-        game_hash.keys.each do |key|
+        game_hash.each_key do |key|
           next if key == :name || key == :wikidata_id || game_hash[key].nil? || game_hash[key] == []
 
           keys << key
