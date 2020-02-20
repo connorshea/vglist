@@ -969,7 +969,6 @@ class RSpec::Core::OutputWrapper
   def as_json(*args, &block); end
   def autoclose=(*args, &block); end
   def autoclose?(*args, &block); end
-  def beep(*args, &block); end
   def binmode(*args, &block); end
   def binmode?(*args, &block); end
   def bytes(*args, &block); end
@@ -981,17 +980,11 @@ class RSpec::Core::OutputWrapper
   def close_write(*args, &block); end
   def closed?(*args, &block); end
   def codepoints(*args, &block); end
-  def cooked!(*args, &block); end
-  def cooked(*args, &block); end
-  def cursor(*args, &block); end
-  def cursor=(*args, &block); end
   def each(*args, &block); end
   def each_byte(*args, &block); end
   def each_char(*args, &block); end
   def each_codepoint(*args, &block); end
   def each_line(*args, &block); end
-  def echo=(*args, &block); end
-  def echo?(*args, &block); end
   def eof(*args, &block); end
   def eof?(*args, &block); end
   def external_encoding(*args, &block); end
@@ -1002,27 +995,20 @@ class RSpec::Core::OutputWrapper
   def fsync(*args, &block); end
   def getbyte(*args, &block); end
   def getc(*args, &block); end
-  def getch(*args, &block); end
-  def getpass(*args, &block); end
   def gets(*args, &block); end
-  def goto(*args, &block); end
-  def iflush(*args, &block); end
   def initialize(output); end
   def inspect(*args, &block); end
   def internal_encoding(*args, &block); end
   def ioctl(*args, &block); end
-  def ioflush(*args, &block); end
   def isatty(*args, &block); end
   def lineno(*args, &block); end
   def lineno=(*args, &block); end
   def lines(*args, &block); end
   def method_missing(name, *args, &block); end
-  def noecho(*args, &block); end
   def nonblock(*args, &block); end
   def nonblock=(*args, &block); end
   def nonblock?(*args, &block); end
   def nread(*args, &block); end
-  def oflush(*args, &block); end
   def output; end
   def output=(arg0); end
   def pathconf(*args, &block); end
@@ -1030,14 +1016,11 @@ class RSpec::Core::OutputWrapper
   def pos(*args, &block); end
   def pos=(*args, &block); end
   def pread(*args, &block); end
-  def pressed?(*args, &block); end
   def print(*args, &block); end
   def printf(*args, &block); end
   def putc(*args, &block); end
   def puts(*args, &block); end
   def pwrite(*args, &block); end
-  def raw!(*args, &block); end
-  def raw(*args, &block); end
   def read(*args, &block); end
   def read_nonblock(*args, &block); end
   def readbyte(*args, &block); end
@@ -1066,8 +1049,6 @@ class RSpec::Core::OutputWrapper
   def wait(*args, &block); end
   def wait_readable(*args, &block); end
   def wait_writable(*args, &block); end
-  def winsize(*args, &block); end
-  def winsize=(*args, &block); end
   def write(*args, &block); end
   def write_nonblock(*args, &block); end
 end

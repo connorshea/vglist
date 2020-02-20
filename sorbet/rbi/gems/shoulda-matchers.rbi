@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/shoulda-matchers/all/shoulda-matchers.rbi
 #
-# shoulda-matchers-4.2.0
+# shoulda-matchers-4.3.0
 
 module Shoulda
 end
@@ -1263,6 +1263,7 @@ module Shoulda::Matchers::ActiveRecord
   def have_many(name); end
   def have_one(name); end
   def have_readonly_attribute(value); end
+  def have_rich_text(rich_text_attribute); end
   def have_secure_token(token_attribute = nil); end
   def serialize(name); end
   def validate_uniqueness_of(attr); end
@@ -1588,6 +1589,20 @@ class Shoulda::Matchers::ActiveRecord::HaveReadonlyAttributeMatcher
   def initialize(attribute); end
   def matches?(subject); end
   def readonly_attributes; end
+end
+class Shoulda::Matchers::ActiveRecord::HaveRichText
+  def description; end
+  def error; end
+  def error_description; end
+  def failure_message; end
+  def failure_message_when_negated; end
+  def has_attribute?; end
+  def has_expected_action_text?; end
+  def initialize(rich_text_attribute); end
+  def matches?(subject); end
+  def rich_text_attribute; end
+  def run_checks; end
+  def subject; end
 end
 class Shoulda::Matchers::ActiveRecord::HaveSecureTokenMatcher
   def description; end

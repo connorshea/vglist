@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 class Company < ApplicationRecord
   include PgSearch::Model
 

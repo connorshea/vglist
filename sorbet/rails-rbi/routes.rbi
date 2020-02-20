@@ -154,6 +154,13 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def unfavorite_game_url(*args, **kwargs); end
 
+  # Sigs for route /games/:id/favorited(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def favorited_game_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def favorited_game_url(*args, **kwargs); end
+
   # Sigs for route /games/:id/add_to_wikidata_blocklist(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def add_to_wikidata_blocklist_game_path(*args, **kwargs); end

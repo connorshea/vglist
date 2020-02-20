@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 class Genre < ApplicationRecord
   include PgSearch::Model
 

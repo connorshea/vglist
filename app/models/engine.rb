@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 class Engine < ApplicationRecord
   include PgSearch::Model
 

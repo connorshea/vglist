@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/simplecov/all/simplecov.rbi
 #
-# simplecov-0.18.1
+# simplecov-0.18.2
 
 module SimpleCov
   def self.adapt_coverage_result; end
@@ -100,7 +100,7 @@ module SimpleCov::Configuration
   def use_merging(use = nil); end
 end
 class SimpleCov::CoverageStatistics
-  def compute_percent(covered, total); end
+  def compute_percent(covered, missed, total); end
   def compute_strength(total_strength, total); end
   def covered; end
   def initialize(covered:, missed:, total_strength: nil); end

@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 class Store < ApplicationRecord
   include PgSearch::Model
 
