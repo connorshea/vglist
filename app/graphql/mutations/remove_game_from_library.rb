@@ -23,7 +23,7 @@ class Mutations::RemoveGameFromLibrary < Mutations::BaseMutation
       )
     end
 
-    raise GraphQL::ExecutionError, game_purchase&.errors&.full_messages&.join(", ") unless game_purchase&.destroy
+    raise GraphQL::ExecutionError, T.must(game_purchase).errors.full_messages.join(", ") unless game_purchase&.destroy
 
     {
       game: game
