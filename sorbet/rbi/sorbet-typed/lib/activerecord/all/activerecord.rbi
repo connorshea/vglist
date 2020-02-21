@@ -277,7 +277,8 @@ class ActiveRecord::Base
   include ActiveRecord::AttributeAssignment
   include ActiveModel::Conversion
   include ActiveRecord::Integration
-  include ActiveRecord::Validations
+  include ActiveModel::Validations
+  include ActiveModel::Validations::HelperMethods
   include ActiveRecord::CounterCache
   include ActiveRecord::Attributes
   include ActiveRecord::AttributeDecorators
@@ -916,12 +917,6 @@ module ActiveRecord::Associations
   mixes_in_class_methods(ActiveRecord::Associations::ClassMethods)
 end
 
-module ActiveRecord::Validations
-  include ActiveModel::Validations
-
-  mixes_in_class_methods(ActiveModel::Validations::ClassMethods)
-end
-
 # Represents the schema of an SQL table in an abstract way. This class
 # provides methods for manipulating the schema representation.
 #
@@ -1422,4 +1417,32 @@ end
 class ActiveRecord::Relation
   sig { returns(Integer) }
   def delete_all; end
+
+  # Returns size of the records.
+  sig { returns(Integer) }
+  def size; end
+
+  # Returns true if relation is blank.
+  sig { returns(T::Boolean) }
+  def blank?; end
+
+  # Returns true if there are no records.
+  sig { returns(T::Boolean) }
+  def empty?; end
+
+  # Returns true if there are no records.
+  sig { returns(T::Boolean) }
+  def none?; end
+
+  # Returns true if there are any records.
+  sig { returns(T::Boolean) }
+  def any?; end
+
+  # Returns true if there is exactly one record.
+  sig { returns(T::Boolean) }
+  def one?; end
+
+  # Returns true if there is more than one record.
+  sig { returns(T::Boolean) }
+  def many?; end
 end

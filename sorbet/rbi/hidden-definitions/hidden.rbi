@@ -10574,7 +10574,7 @@ class Hash
 end
 
 class Hash
-  def self.try_convert(_); end
+  def self.from_trusted_xml(xml); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -21419,6 +21419,10 @@ end
 
 module Relationship::GeneratedAttributeMethods
   extend ::Mutex_m
+end
+
+module Relationship::GeneratedRelationMethods
+  def name(*args, &block); end
 end
 
 module Relationship::GeneratedRelationMethods
