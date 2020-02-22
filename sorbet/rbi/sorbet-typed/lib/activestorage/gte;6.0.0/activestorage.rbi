@@ -3,7 +3,7 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activestorage/>=6.0.0/activestorage.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activestorage/gte;6.0.0/activestorage.rbi
 #
 # typed: strong
 

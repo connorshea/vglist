@@ -3,7 +3,7 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activesupport/>=6.0.0.rc1/activesupport.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activesupport/gte;6.0.0.rc1/activesupport.rbi
 #
 # typed: strong
 

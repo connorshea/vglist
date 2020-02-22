@@ -3,7 +3,7 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/>=5.2/activerecord.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/gte;5.2/activerecord.rbi
 #
 # typed: strong
 
