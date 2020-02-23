@@ -325,12 +325,12 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.1)
-    sorbet (0.5.5365)
-      sorbet-static (= 0.5.5365)
+    sorbet (0.5.5390)
+      sorbet-static (= 0.5.5390)
     sorbet-rails (0.5.9.1)
       parlour (~> 1.0)
-    sorbet-runtime (0.5.5365)
-    sorbet-static (0.5.5365-universal-darwin-14)
+    sorbet-runtime (0.5.5390)
+    sorbet-static (0.5.5390-universal-darwin-14)
     sparql (3.1.0)
       builder (~> 3.2)
       ebnf (~> 1.2)
@@ -449,4 +449,4 @@ RUBY VERSION
    ruby 2.6.2p47
 
 BUNDLED WITH
-   2.0.2
+   2.1.0
