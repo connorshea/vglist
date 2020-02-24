@@ -7643,10 +7643,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vue-good-table@^2.18.1:
-  version "2.18.1"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.18.1.tgz#1d8f19bd82e04bf43822c980c30cde0515640641"
-  integrity sha512-W9D5M87GgzgQowtWVARqxSwSvHx0MKnKV5d9Zlz5Fx3XfuJWm4lufZUpWlTwKTbLWoG4cLjHd6N0m55S9Ild3Q==
+vue-good-table@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.19.0.tgz#20f028e98424a5d4a336578ca240787035f54280"
+  integrity sha512-ua8WNV+b9XuFXqDA0wFMp43bMjkRIQ93P24V64MgQKp7GcYg2xp7S/gej7BYYLZiSZpH9lkDMq7w4IuVg1p7Pg==
   dependencies:
     date-fns "^2.0.0-beta.4"
     diacriticless "1.0.1"
@@ -7655,6 +7655,7 @@ vue-good-table@^2.18.1:
     lodash.filter "^4.6.0"
     lodash.foreach "^4.5.0"
     lodash.isequal "^4.5.0"
+    vue-select "^3.1.0"
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
@@ -7677,7 +7678,7 @@ vue-resize@^0.4.5:
   resolved "https://registry.yarnpkg.com/vue-resize/-/vue-resize-0.4.5.tgz#4777a23042e3c05620d9cbda01c0b3cc5e32dcea"
   integrity sha512-bhP7MlgJQ8TIkZJXAfDf78uJO+mEI3CaLABLjv0WNzr4CcGRGPIAItyWYnP6LsPA4Oq0WE+suidNs6dgpO4RHg==
 
-vue-select@^3.4.0:
+vue-select@^3.1.0, vue-select@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.4.0.tgz#e56b0612845d13d10162cd8df81bfb46af2083ac"
   integrity sha512-UHd0fiUjPgRmHIGhI6yUKtnJsHOdvzD00QUGUtD+FaxWWZRWF2AAb7KPZRj0j/egVfZQvey6M6woHn78GbTogA==
