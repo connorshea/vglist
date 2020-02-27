@@ -206,7 +206,7 @@ GEM
       commander (~> 4.4.0)
       rainbow (~> 3.0.0)
       sorbet-runtime
-    parser (2.7.0.2)
+    parser (2.7.0.3)
       ast (~> 2.4.0)
     pg (1.2.2)
     pg_search (2.3.2)
