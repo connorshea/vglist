@@ -324,7 +324,7 @@ GEM
     simplecov (0.18.5)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
-    simplecov-html (0.12.1)
+    simplecov-html (0.12.2)
     sorbet (0.5.5390)
       sorbet-static (= 0.5.5390)
     sorbet-rails (0.5.9.1)
