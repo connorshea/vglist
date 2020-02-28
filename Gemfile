@@ -135,7 +135,7 @@ group :development do
   # For more useful BetterError error pages.
   gem 'binding_of_caller', '~> 0.8'
   # Open screenshots when they're taken with capybara.
-  gem 'launchy', '~> 2.4'
+  gem 'launchy', '~> 2.5'
   # Generate a graph of the app structure.
   gem 'rails-erd', '~> 1.6'
   # GraphiQL IDE
