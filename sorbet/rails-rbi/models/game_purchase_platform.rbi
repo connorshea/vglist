@@ -130,51 +130,6 @@ class GamePurchasePlatform < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(GamePurchasePlatform)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchasePlatform) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(GamePurchasePlatform)) }
-  def self.first; end
-
-  sig { returns(GamePurchasePlatform) }
-  def self.first!; end
-
-  sig { returns(T.nilable(GamePurchasePlatform)) }
-  def self.second; end
-
-  sig { returns(GamePurchasePlatform) }
-  def self.second!; end
-
-  sig { returns(T.nilable(GamePurchasePlatform)) }
-  def self.third; end
-
-  sig { returns(GamePurchasePlatform) }
-  def self.third!; end
-
-  sig { returns(T.nilable(GamePurchasePlatform)) }
-  def self.third_to_last; end
-
-  sig { returns(GamePurchasePlatform) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(GamePurchasePlatform)) }
-  def self.second_to_last; end
-
-  sig { returns(GamePurchasePlatform) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(GamePurchasePlatform)) }
-  def self.last; end
-
-  sig { returns(GamePurchasePlatform) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -189,15 +144,6 @@ class GamePurchasePlatform < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePurchasePlatform) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePurchasePlatform) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePurchasePlatform) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_game_purchase(*args); end
@@ -400,6 +346,21 @@ class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -525,6 +486,15 @@ class GamePurchasePlatform::ActiveRecord_AssociationRelation < ActiveRecord::Ass
 
   sig { params(args: T.untyped).returns(GamePurchasePlatform) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchasePlatform).void)).returns(GamePurchasePlatform) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchasePlatform).void)).returns(GamePurchasePlatform) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchasePlatform).void)).returns(GamePurchasePlatform) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(GamePurchasePlatform)) }
   def first; end
@@ -718,6 +688,15 @@ class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRe
 
   sig { params(args: T.untyped).returns(GamePurchasePlatform) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchasePlatform).void)).returns(GamePurchasePlatform) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchasePlatform).void)).returns(GamePurchasePlatform) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchasePlatform).void)).returns(GamePurchasePlatform) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(GamePurchasePlatform)) }
   def first; end

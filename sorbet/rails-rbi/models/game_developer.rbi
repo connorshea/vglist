@@ -130,51 +130,6 @@ class GameDeveloper < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameDeveloper::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(GameDeveloper) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(GameDeveloper)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(GameDeveloper) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(GameDeveloper)) }
-  def self.first; end
-
-  sig { returns(GameDeveloper) }
-  def self.first!; end
-
-  sig { returns(T.nilable(GameDeveloper)) }
-  def self.second; end
-
-  sig { returns(GameDeveloper) }
-  def self.second!; end
-
-  sig { returns(T.nilable(GameDeveloper)) }
-  def self.third; end
-
-  sig { returns(GameDeveloper) }
-  def self.third!; end
-
-  sig { returns(T.nilable(GameDeveloper)) }
-  def self.third_to_last; end
-
-  sig { returns(GameDeveloper) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(GameDeveloper)) }
-  def self.second_to_last; end
-
-  sig { returns(GameDeveloper) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(GameDeveloper)) }
-  def self.last; end
-
-  sig { returns(GameDeveloper) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -189,15 +144,6 @@ class GameDeveloper < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GameDeveloper) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GameDeveloper) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GameDeveloper) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_game(*args); end
@@ -400,6 +346,21 @@ class GameDeveloper::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameDeveloper::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(GameDeveloper::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -525,6 +486,15 @@ class GameDeveloper::ActiveRecord_AssociationRelation < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(GameDeveloper) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GameDeveloper).void)).returns(GameDeveloper) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GameDeveloper).void)).returns(GameDeveloper) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GameDeveloper).void)).returns(GameDeveloper) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(GameDeveloper)) }
   def first; end
@@ -718,6 +688,15 @@ class GameDeveloper::ActiveRecord_Associations_CollectionProxy < ActiveRecord::A
 
   sig { params(args: T.untyped).returns(GameDeveloper) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GameDeveloper).void)).returns(GameDeveloper) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GameDeveloper).void)).returns(GameDeveloper) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GameDeveloper).void)).returns(GameDeveloper) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(GameDeveloper)) }
   def first; end

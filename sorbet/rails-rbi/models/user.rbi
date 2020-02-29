@@ -41,6 +41,23 @@ module User::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
+class User::Privacy < T::Enum
+  enums do
+    PublicAccount = new('public_account')
+    PrivateAccount = new('private_account')
+  end
+
+end
+
+class User::Role < T::Enum
+  enums do
+    Member = new('member')
+    Moderator = new('moderator')
+    Admin = new('admin')
+  end
+
+end
+
 module User::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[User]) }
   def first_n(limit); end
@@ -204,50 +221,17 @@ class User < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(User::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(User) }
-  def self.find(*args); end
+  sig { returns(User::Privacy) }
+  def typed_privacy; end
 
-  sig { params(args: T.untyped).returns(T.nilable(User)) }
-  def self.find_by(*args); end
+  sig { params(value: User::Privacy).void }
+  def typed_privacy=(value); end
 
-  sig { params(args: T.untyped).returns(User) }
-  def self.find_by!(*args); end
+  sig { returns(User::Role) }
+  def typed_role; end
 
-  sig { returns(T.nilable(User)) }
-  def self.first; end
-
-  sig { returns(User) }
-  def self.first!; end
-
-  sig { returns(T.nilable(User)) }
-  def self.second; end
-
-  sig { returns(User) }
-  def self.second!; end
-
-  sig { returns(T.nilable(User)) }
-  def self.third; end
-
-  sig { returns(User) }
-  def self.third!; end
-
-  sig { returns(T.nilable(User)) }
-  def self.third_to_last; end
-
-  sig { returns(User) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(User)) }
-  def self.second_to_last; end
-
-  sig { returns(User) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(User)) }
-  def self.last; end
-
-  sig { returns(User) }
-  def self.last!; end
+  sig { params(value: User::Role).void }
+  def typed_role=(value); end
 
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
@@ -263,15 +247,6 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(User) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(User) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(User) }
-  def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchases; end
@@ -1596,6 +1571,21 @@ class User::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(User::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(User::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -1757,6 +1747,15 @@ class User::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
 
   sig { params(args: T.untyped).returns(User) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: User).void)).returns(User) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: User).void)).returns(User) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: User).void)).returns(User) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(User)) }
   def first; end
@@ -1986,6 +1985,15 @@ class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(User) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: User).void)).returns(User) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: User).void)).returns(User) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: User).void)).returns(User) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(User)) }
   def first; end

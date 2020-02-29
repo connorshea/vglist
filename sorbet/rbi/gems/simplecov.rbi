@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/simplecov/all/simplecov.rbi
 #
-# simplecov-0.18.3
+# simplecov-0.18.5
 
 module SimpleCov
   def self.adapt_coverage_result; end
@@ -17,6 +17,9 @@ module SimpleCov
   def self.collate(result_filenames, profile = nil, &block); end
   def self.exit_exception; end
   def self.exit_status_from_exception; end
+  def self.external_at_exit; end
+  def self.external_at_exit=(arg0); end
+  def self.external_at_exit?; end
   def self.filtered(files); end
   def self.final_result_process?; end
   def self.grouped(files); end

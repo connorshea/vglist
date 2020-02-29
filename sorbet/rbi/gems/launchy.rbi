@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/launchy/all/launchy.rbi
 #
-# launchy-2.4.3
+# launchy-2.5.0
 
 module Launchy
   def self.app_for_uri(uri); end
@@ -24,6 +24,8 @@ module Launchy
   def self.host_os=(host_os); end
   def self.log(msg); end
   def self.open(uri_s, options = nil, &error_block); end
+  def self.path; end
+  def self.path=(path); end
   def self.reset_global_options; end
   def self.ruby_engine; end
   def self.ruby_engine=(ruby_engine); end

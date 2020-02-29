@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.5.9.1
+# sorbet-rails-0.6.0
 
 module SorbetRails
   def self.config(&blk); end
@@ -99,6 +99,7 @@ end
 class SorbetRails::ModelPlugins::ActiveRecordAttribute < SorbetRails::ModelPlugins::Base
   def active_record_type_to_sorbet_type(*args, &blk); end
   def generate(*args, &blk); end
+  def generate_enum_methods(*args, &blk); end
   def time_zone_aware_column?(*args, &blk); end
   def type_for_column_def(*args, &blk); end
   def value_type_for_attr_writer(*args, &blk); end
@@ -120,12 +121,6 @@ end
 class SorbetRails::ModelPlugins::ActiveRecordFinderMethods < SorbetRails::ModelPlugins::Base
   def create_finder_method_pair(*args, &blk); end
   def create_finder_methods_for(*args, &blk); end
-  def generate(*args, &blk); end
-  extend T::Private::Methods::MethodHooks
-  extend T::Private::Methods::SingletonMethodHooks
-end
-class SorbetRails::ModelPlugins::ActiveRecordFactoryMethods < SorbetRails::ModelPlugins::Base
-  def add_factory_method(*args, &blk); end
   def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
@@ -215,8 +210,34 @@ class ActiveRecordOverrides
   extend Singleton::SingletonClassMethods
   include Singleton
 end
+class SorbetRails::TypedEnumConfig < T::Struct
+  def class_name; end
+  def self.inherited(s); end
+  def strict_mode; end
+  extend T::Props::ClassMethods
+  extend T::Props::Plugin::ClassMethods
+  extend T::Props::Plugin::ClassMethods
+  extend T::Props::Plugin::ClassMethods
+  extend T::Props::Plugin::ClassMethods
+  extend T::Props::Plugin::ClassMethods
+  extend T::Props::Serializable::ClassMethods
+end
 module ActiveRecord::Enum
+  def _define_enum(*args, &blk); end
+  def _define_typed_enum(*args, &blk); end
+  def extract_enum_values(*args, &blk); end
+  def gen_typed_enum_values(*args, &blk); end
   def old_enum(definitions); end
+  def typed_enum(*args, &blk); end
+  def typed_enum_reflections(*args, &blk); end
+  extend T::Private::Methods::MethodHooks
+  extend T::Private::Methods::SingletonMethodHooks
+  extend T::Sig
+  include Kernel
+end
+class ActiveRecord::Enum::MultipleEnumsDefinedError < StandardError
+end
+class ActiveRecord::Enum::ConflictTypedEnumNameError < StandardError
 end
 module SorbetRails::CustomFinderMethods
   def find_by_id!(id); end
@@ -256,4 +277,29 @@ module SorbetRails::CustomParamsMethods
   extend T::Private::Methods::SingletonMethodHooks
   extend T::Sig
   include Kernel
+end
+module GeneratedUrlHelpers
+  def default_url_options=(obj); end
+  def self._routes; end
+  def self.default_url_options=(obj); end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_38
+end
+module Anonymous_Module_38
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_29
+  extend Anonymous_Module_30
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_29
+  include Anonymous_Module_30
 end

@@ -169,51 +169,6 @@ class ActiveRecord::InternalMetadata < ActiveRecord::Base
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(ActiveRecord::InternalMetadata) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(ActiveRecord::InternalMetadata) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def self.first; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def self.first!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def self.second; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def self.second!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def self.third; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def self.third!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def self.third_to_last; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def self.second_to_last; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
-  def self.last; end
-
-  sig { returns(ActiveRecord::InternalMetadata) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -228,15 +183,6 @@ class ActiveRecord::InternalMetadata < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveRecord::InternalMetadata) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveRecord::InternalMetadata) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveRecord::InternalMetadata) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -354,6 +300,21 @@ class ActiveRecord::InternalMetadata::ActiveRecord_Relation < ActiveRecord::Rela
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def extending(*args, &block); end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -480,6 +441,15 @@ class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation < ActiveR
 
   sig { params(args: T.untyped).returns(ActiveRecord::InternalMetadata) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveRecord::InternalMetadata).void)).returns(ActiveRecord::InternalMetadata) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveRecord::InternalMetadata).void)).returns(ActiveRecord::InternalMetadata) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveRecord::InternalMetadata).void)).returns(ActiveRecord::InternalMetadata) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
   def first; end
@@ -673,6 +643,15 @@ class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy 
 
   sig { params(args: T.untyped).returns(ActiveRecord::InternalMetadata) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveRecord::InternalMetadata).void)).returns(ActiveRecord::InternalMetadata) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveRecord::InternalMetadata).void)).returns(ActiveRecord::InternalMetadata) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveRecord::InternalMetadata).void)).returns(ActiveRecord::InternalMetadata) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(ActiveRecord::InternalMetadata)) }
   def first; end
