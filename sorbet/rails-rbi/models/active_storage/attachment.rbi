@@ -130,51 +130,6 @@ class ActiveStorage::Attachment < ActiveRecord::Base
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(ActiveStorage::Attachment) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(ActiveStorage::Attachment)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(ActiveStorage::Attachment) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def self.first; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def self.first!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def self.second; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def self.second!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def self.third; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def self.third!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def self.third_to_last; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def self.second_to_last; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(ActiveStorage::Attachment)) }
-  def self.last; end
-
-  sig { returns(ActiveStorage::Attachment) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -189,15 +144,6 @@ class ActiveStorage::Attachment < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Attachment) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Attachment) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ActiveStorage::Attachment) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_record(*args); end
@@ -400,6 +346,21 @@ class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -525,6 +486,15 @@ class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord
 
   sig { params(args: T.untyped).returns(ActiveStorage::Attachment) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveStorage::Attachment).void)).returns(ActiveStorage::Attachment) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveStorage::Attachment).void)).returns(ActiveStorage::Attachment) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveStorage::Attachment).void)).returns(ActiveStorage::Attachment) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(ActiveStorage::Attachment)) }
   def first; end
@@ -718,6 +688,15 @@ class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < Act
 
   sig { params(args: T.untyped).returns(ActiveStorage::Attachment) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveStorage::Attachment).void)).returns(ActiveStorage::Attachment) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveStorage::Attachment).void)).returns(ActiveStorage::Attachment) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ActiveStorage::Attachment).void)).returns(ActiveStorage::Attachment) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(ActiveStorage::Attachment)) }
   def first; end

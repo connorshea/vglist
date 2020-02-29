@@ -12,14 +12,16 @@ module ::Anonymous_Delegator_19; end
 module ::Anonymous_Delegator_2; end
 module ::Anonymous_Delegator_20; end
 module ::Anonymous_Delegator_3; end
-module ::Anonymous_Delegator_45; end
 module ::Anonymous_Delegator_46; end
+module ::Anonymous_Delegator_47; end
 module ::Anonymous_Delegator_7; end
 module ActiveRecord::CollectionCacheKey; end
 module Addressable::Template; end
 module Anonymous_Module_28::Anonymous_Module_29; end
 module Anonymous_Module_28::Anonymous_Module_30; end
 module Anonymous_Module_31::Anonymous_Module_29; end
+module Anonymous_Module_38::Anonymous_Module_29; end
+module Anonymous_Module_38::Anonymous_Module_30; end
 module Doorkeeper::Helpers::Controller; end
 module Doorkeeper::Models::Ownership; end
 module Doorkeeper::Rails::Helpers; end
@@ -29,3 +31,4 @@ module T::InterfaceWrapper::Helpers; end
 module T::Private::Abstract::Hooks; end
 module T::Private::Methods::MethodHooks; end
 module T::Private::Methods::SingletonMethodHooks; end
+module T::Props::Plugin::ClassMethods; end

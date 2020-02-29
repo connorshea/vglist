@@ -2178,6 +2178,10 @@ module ActiveRecord::ConnectionHandling
   RAILS_ENV = ::T.let(nil, ::T.untyped)
 end
 
+module ActiveRecord::Enum
+  SR_ENUM_KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
 class ActiveRecord::ExplainSubscriber
   EXPLAINED_SQLS = ::T.let(nil, ::T.untyped)
   IGNORED_PAYLOADS = ::T.let(nil, ::T.untyped)
@@ -9278,13 +9282,13 @@ class File::Stat
 end
 
 class File
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -10021,6 +10025,26 @@ module Gem
   def self.suffix_regexp(); end
 end
 
+module GeneratedUrlHelpers
+  def _routes(); end
+
+  def rails_info_path(*args); end
+
+  def rails_info_properties_path(*args); end
+
+  def rails_info_properties_url(*args); end
+
+  def rails_info_routes_path(*args); end
+
+  def rails_info_routes_url(*args); end
+
+  def rails_info_url(*args); end
+
+  def rails_mailers_path(*args); end
+
+  def rails_mailers_url(*args); end
+end
+
 class Genre
   include ::PgSearch::Multisearchable
   def pg_search_multisearchable_options(); end
@@ -10574,7 +10598,7 @@ class Hash
 end
 
 class Hash
-  def self.from_trusted_xml(xml); end
+  def self.try_convert(_); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -13530,13 +13554,7 @@ end
 class Net::HTTPGatewayTimeout
 end
 
-class Net::HTTPInformation
-end
-
-Net::HTTPInformationCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPInformation
-end
+Net::HTTPInformationCode = Net::HTTPInformation
 
 class Net::HTTPLoopDetected
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -16421,6 +16439,72 @@ end
 
 ParseError = Racc::ParseError
 
+module Parser
+  MESSAGES = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+Parser::CurrentRuby = Parser::Ruby26
+
+class Parser::Diagnostic
+  LEVELS = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Lexer
+  ESCAPES = ::T.let(nil, ::T.untyped)
+  KEYWORDS = ::T.let(nil, ::T.untyped)
+  KEYWORDS_BEGIN = ::T.let(nil, ::T.untyped)
+  LEX_STATES = ::T.let(nil, ::T.untyped)
+  PUNCTUATION = ::T.let(nil, ::T.untyped)
+  PUNCTUATION_BEGIN = ::T.let(nil, ::T.untyped)
+  REGEXP_META_CHARACTERS = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Lexer::Dedenter
+  TAB_WIDTH = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Lexer::Literal
+  DELIMITERS = ::T.let(nil, ::T.untyped)
+  TYPES = ::T.let(nil, ::T.untyped)
+end
+
+module Parser::Meta
+  NODE_TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Rewriter
+  DEPRECATION_WARNING = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Ruby26
+  Racc_arg = ::T.let(nil, ::T.untyped)
+  Racc_debug_parser = ::T.let(nil, ::T.untyped)
+  Racc_token_to_s_table = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Source::Buffer
+  ENCODING_RE = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Source::Comment::Associator
+  MAGIC_COMMENT_RE = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Source::Rewriter
+  DEPRECATION_WARNING = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::Source::TreeRewriter
+  ACTIONS = ::T.let(nil, ::T.untyped)
+  DEPRECATION_WARNING = ::T.let(nil, ::T.untyped)
+  POLICY_TO_LEVEL = ::T.let(nil, ::T.untyped)
+end
+
+class Parser::StaticEnvironment
+  FORWARD_ARGS = ::T.let(nil, ::T.untyped)
+end
+
 class Pathname
   def empty?(); end
 
@@ -16717,6 +16801,10 @@ class Platform
   def self.pg_search_multisearchable_options?(); end
 
   def self.search(*args); end
+end
+
+module Polyfill
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 class Proc
@@ -17685,6 +17773,7 @@ module Puma::Const
   HTTP_CONNECTION = ::T.let(nil, ::T.untyped)
   HTTP_EXPECT = ::T.let(nil, ::T.untyped)
   HTTP_HOST = ::T.let(nil, ::T.untyped)
+  HTTP_INJECTION_REGEX = ::T.let(nil, ::T.untyped)
   HTTP_VERSION = ::T.let(nil, ::T.untyped)
   HTTP_X_FORWARDED_FOR = ::T.let(nil, ::T.untyped)
   HTTP_X_FORWARDED_PROTO = ::T.let(nil, ::T.untyped)
@@ -21140,7 +21229,6 @@ module Readline
 end
 
 class Regexp
-  def match?(*_); end
   TOKEN_KEYS = ::T.let(nil, ::T.untyped)
 end
 
@@ -24635,6 +24723,14 @@ end
 
 module Turbolinks::Source
   VERSION = ::T.let(nil, ::T.untyped)
+end
+
+module TypeCoerce::Configuration
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class TypeCoerce::Private::Converter
+  PRIMITIVE_TYPES = ::T.let(nil, ::T.untyped)
 end
 
 module Types::BaseInterface::DefinitionMethods

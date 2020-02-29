@@ -164,51 +164,6 @@ class Game < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(Game) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Game)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Game) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(Game)) }
-  def self.first; end
-
-  sig { returns(Game) }
-  def self.first!; end
-
-  sig { returns(T.nilable(Game)) }
-  def self.second; end
-
-  sig { returns(Game) }
-  def self.second!; end
-
-  sig { returns(T.nilable(Game)) }
-  def self.third; end
-
-  sig { returns(Game) }
-  def self.third!; end
-
-  sig { returns(T.nilable(Game)) }
-  def self.third_to_last; end
-
-  sig { returns(Game) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(Game)) }
-  def self.second_to_last; end
-
-  sig { returns(Game) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(Game)) }
-  def self.last; end
-
-  sig { returns(Game) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -223,15 +178,6 @@ class Game < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Game) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Game) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Game) }
-  def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchases; end
@@ -1787,6 +1733,21 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Game::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -1945,6 +1906,15 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
 
   sig { params(args: T.untyped).returns(Game) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Game)) }
   def first; end
@@ -2171,6 +2141,15 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(Game) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Game)) }
   def first; end

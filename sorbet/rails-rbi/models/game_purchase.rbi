@@ -53,6 +53,19 @@ module GamePurchase::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
+class GamePurchase::CompletionStatus < T::Enum
+  enums do
+    Unplayed = new('unplayed')
+    InProgress = new('in_progress')
+    Dropped = new('dropped')
+    Completed = new('completed')
+    FullyCompleted = new('fully_completed')
+    NotApplicable = new('not_applicable')
+    Paused = new('paused')
+  end
+
+end
+
 module GamePurchase::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[GamePurchase]) }
   def first_n(limit); end
@@ -222,50 +235,11 @@ class GamePurchase < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(GamePurchase) }
-  def self.find(*args); end
+  sig { returns(T.nilable(GamePurchase::CompletionStatus)) }
+  def typed_completion_status; end
 
-  sig { params(args: T.untyped).returns(T.nilable(GamePurchase)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def self.first; end
-
-  sig { returns(GamePurchase) }
-  def self.first!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def self.second; end
-
-  sig { returns(GamePurchase) }
-  def self.second!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def self.third; end
-
-  sig { returns(GamePurchase) }
-  def self.third!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def self.third_to_last; end
-
-  sig { returns(GamePurchase) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def self.second_to_last; end
-
-  sig { returns(GamePurchase) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(GamePurchase)) }
-  def self.last; end
-
-  sig { returns(GamePurchase) }
-  def self.last!; end
+  sig { params(value: T.nilable(GamePurchase::CompletionStatus)).void }
+  def typed_completion_status=(value); end
 
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
@@ -281,15 +255,6 @@ class GamePurchase < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePurchase) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePurchase) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(GamePurchase) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_game(*args); end
@@ -924,6 +889,21 @@ class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -1091,6 +1071,15 @@ class GamePurchase::ActiveRecord_AssociationRelation < ActiveRecord::Association
 
   sig { params(args: T.untyped).returns(GamePurchase) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchase).void)).returns(GamePurchase) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchase).void)).returns(GamePurchase) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchase).void)).returns(GamePurchase) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(GamePurchase)) }
   def first; end
@@ -1326,6 +1315,15 @@ class GamePurchase::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(args: T.untyped).returns(GamePurchase) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchase).void)).returns(GamePurchase) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchase).void)).returns(GamePurchase) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: GamePurchase).void)).returns(GamePurchase) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(GamePurchase)) }
   def first; end

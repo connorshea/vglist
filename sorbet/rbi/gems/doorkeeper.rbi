@@ -1217,10 +1217,10 @@ class Doorkeeper::ApplicationController < ApplicationController
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_39
+  include Anonymous_Module_40
   include Doorkeeper::Helpers::Controller
 end
-module Anonymous_Module_39
+module Anonymous_Module_40
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1259,9 +1259,9 @@ class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def show; end
   def update; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_40
+  include Anonymous_Module_41
 end
-module Anonymous_Module_40
+module Anonymous_Module_41
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1303,9 +1303,9 @@ class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
   def self.middleware_stack; end
   def strategy; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_41
+  include Anonymous_Module_42
 end
-module Anonymous_Module_41
+module Anonymous_Module_42
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1334,9 +1334,9 @@ class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationCont
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_42
+  include Anonymous_Module_43
 end
-module Anonymous_Module_42
+module Anonymous_Module_43
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end

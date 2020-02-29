@@ -130,51 +130,6 @@ class Relationship < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Relationship::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(Relationship) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Relationship)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Relationship) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(Relationship)) }
-  def self.first; end
-
-  sig { returns(Relationship) }
-  def self.first!; end
-
-  sig { returns(T.nilable(Relationship)) }
-  def self.second; end
-
-  sig { returns(Relationship) }
-  def self.second!; end
-
-  sig { returns(T.nilable(Relationship)) }
-  def self.third; end
-
-  sig { returns(Relationship) }
-  def self.third!; end
-
-  sig { returns(T.nilable(Relationship)) }
-  def self.third_to_last; end
-
-  sig { returns(Relationship) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(Relationship)) }
-  def self.second_to_last; end
-
-  sig { returns(Relationship) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(Relationship)) }
-  def self.last; end
-
-  sig { returns(Relationship) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -189,15 +144,6 @@ class Relationship < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Relationship) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Relationship) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Relationship) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_follower(*args); end
@@ -478,6 +424,21 @@ class Relationship::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Relationship::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -603,6 +564,15 @@ class Relationship::ActiveRecord_AssociationRelation < ActiveRecord::Association
 
   sig { params(args: T.untyped).returns(Relationship) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Relationship).void)).returns(Relationship) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Relationship).void)).returns(Relationship) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Relationship).void)).returns(Relationship) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Relationship)) }
   def first; end
@@ -796,6 +766,15 @@ class Relationship::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(args: T.untyped).returns(Relationship) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Relationship).void)).returns(Relationship) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Relationship).void)).returns(Relationship) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Relationship).void)).returns(Relationship) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Relationship)) }
   def first; end

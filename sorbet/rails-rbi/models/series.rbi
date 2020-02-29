@@ -131,51 +131,6 @@ class Series < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Series::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(Series) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Series)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Series) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(Series)) }
-  def self.first; end
-
-  sig { returns(Series) }
-  def self.first!; end
-
-  sig { returns(T.nilable(Series)) }
-  def self.second; end
-
-  sig { returns(Series) }
-  def self.second!; end
-
-  sig { returns(T.nilable(Series)) }
-  def self.third; end
-
-  sig { returns(Series) }
-  def self.third!; end
-
-  sig { returns(T.nilable(Series)) }
-  def self.third_to_last; end
-
-  sig { returns(Series) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(Series)) }
-  def self.second_to_last; end
-
-  sig { returns(Series) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(Series)) }
-  def self.last; end
-
-  sig { returns(Series) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -190,15 +145,6 @@ class Series < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Series) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Series) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Series) }
-  def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
   def self.after_add_for_games; end
@@ -473,6 +419,21 @@ class Series::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Series::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Series::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -598,6 +559,15 @@ class Series::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelati
 
   sig { params(args: T.untyped).returns(Series) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Series).void)).returns(Series) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Series).void)).returns(Series) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Series).void)).returns(Series) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Series)) }
   def first; end
@@ -791,6 +761,15 @@ class Series::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associat
 
   sig { params(args: T.untyped).returns(Series) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Series).void)).returns(Series) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Series).void)).returns(Series) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Series).void)).returns(Series) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Series)) }
   def first; end

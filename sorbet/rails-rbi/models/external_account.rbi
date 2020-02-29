@@ -17,6 +17,13 @@ module ExternalAccount::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
+class ExternalAccount::AccountType < T::Enum
+  enums do
+    Steam = new('steam')
+  end
+
+end
+
 module ExternalAccount::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[ExternalAccount]) }
   def first_n(limit); end
@@ -150,50 +157,11 @@ class ExternalAccount < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(ExternalAccount) }
-  def self.find(*args); end
+  sig { returns(ExternalAccount::AccountType) }
+  def typed_account_type; end
 
-  sig { params(args: T.untyped).returns(T.nilable(ExternalAccount)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def self.first; end
-
-  sig { returns(ExternalAccount) }
-  def self.first!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def self.second; end
-
-  sig { returns(ExternalAccount) }
-  def self.second!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def self.third; end
-
-  sig { returns(ExternalAccount) }
-  def self.third!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def self.third_to_last; end
-
-  sig { returns(ExternalAccount) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def self.second_to_last; end
-
-  sig { returns(ExternalAccount) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def self.last; end
-
-  sig { returns(ExternalAccount) }
-  def self.last!; end
+  sig { params(value: ExternalAccount::AccountType).void }
+  def typed_account_type=(value); end
 
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
@@ -209,15 +177,6 @@ class ExternalAccount < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ExternalAccount) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ExternalAccount) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(ExternalAccount) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_user(*args); end
@@ -347,6 +306,21 @@ class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
   def extending(*args, &block); end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -479,6 +453,15 @@ class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::Associat
 
   sig { params(args: T.untyped).returns(ExternalAccount) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(ExternalAccount)) }
   def first; end
@@ -678,6 +661,15 @@ class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord:
 
   sig { params(args: T.untyped).returns(ExternalAccount) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(ExternalAccount)) }
   def first; end

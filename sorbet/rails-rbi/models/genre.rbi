@@ -131,51 +131,6 @@ class Genre < ApplicationRecord
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(Genre) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Genre)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Genre) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(Genre)) }
-  def self.first; end
-
-  sig { returns(Genre) }
-  def self.first!; end
-
-  sig { returns(T.nilable(Genre)) }
-  def self.second; end
-
-  sig { returns(Genre) }
-  def self.second!; end
-
-  sig { returns(T.nilable(Genre)) }
-  def self.third; end
-
-  sig { returns(Genre) }
-  def self.third!; end
-
-  sig { returns(T.nilable(Genre)) }
-  def self.third_to_last; end
-
-  sig { returns(Genre) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(Genre)) }
-  def self.second_to_last; end
-
-  sig { returns(Genre) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(Genre)) }
-  def self.last; end
-
-  sig { returns(Genre) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -190,15 +145,6 @@ class Genre < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Genre) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Genre) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Genre) }
-  def self.new(attributes = nil, &block); end
 
   sig { returns(T.untyped) }
   def self.after_add_for_game_genres; end
@@ -551,6 +497,21 @@ class Genre::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Genre::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Genre::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -676,6 +637,15 @@ class Genre::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
 
   sig { params(args: T.untyped).returns(Genre) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Genre).void)).returns(Genre) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Genre).void)).returns(Genre) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Genre).void)).returns(Genre) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Genre)) }
   def first; end
@@ -869,6 +839,15 @@ class Genre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
 
   sig { params(args: T.untyped).returns(Genre) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Genre).void)).returns(Genre) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Genre).void)).returns(Genre) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Genre).void)).returns(Genre) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Genre)) }
   def first; end

@@ -130,51 +130,6 @@ class Doorkeeper::AccessGrant < ActiveRecord::Base
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def self.extending(*args, &block); end
 
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessGrant) }
-  def self.find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def self.find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessGrant) }
-  def self.find_by!(*args); end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def self.first; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def self.first!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def self.second; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def self.second!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def self.third; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def self.third!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def self.third_to_last; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def self.third_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def self.second_to_last; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def self.second_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
-  def self.last; end
-
-  sig { returns(Doorkeeper::AccessGrant) }
-  def self.last!; end
-
   sig { params(conditions: T.untyped).returns(T::Boolean) }
   def self.exists?(conditions = nil); end
 
@@ -189,15 +144,6 @@ class Doorkeeper::AccessGrant < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Doorkeeper::AccessGrant) }
-  def self.create(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Doorkeeper::AccessGrant) }
-  def self.create!(attributes = nil, &block); end
-
-  sig { params(attributes: T.untyped, block: T.untyped).returns(Doorkeeper::AccessGrant) }
-  def self.new(attributes = nil, &block); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_application(*args); end
@@ -321,6 +267,21 @@ class Doorkeeper::AccessGrant::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def extending(*args, &block); end
+
+  sig { params(conditions: T.untyped).returns(T::Boolean) }
+  def exists?(conditions = nil); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def any?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def many?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def none?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def one?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -447,6 +408,15 @@ class Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation < ActiveRecord::
 
   sig { params(args: T.untyped).returns(Doorkeeper::AccessGrant) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessGrant).void)).returns(Doorkeeper::AccessGrant) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessGrant).void)).returns(Doorkeeper::AccessGrant) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessGrant).void)).returns(Doorkeeper::AccessGrant) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
   def first; end
@@ -640,6 +610,15 @@ class Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy < Activ
 
   sig { params(args: T.untyped).returns(Doorkeeper::AccessGrant) }
   def find_by!(*args); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessGrant).void)).returns(Doorkeeper::AccessGrant) }
+  def find_or_initialize_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessGrant).void)).returns(Doorkeeper::AccessGrant) }
+  def find_or_create_by(attributes, &block); end
+
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessGrant).void)).returns(Doorkeeper::AccessGrant) }
+  def find_or_create_by!(attributes, &block); end
 
   sig { returns(T.nilable(Doorkeeper::AccessGrant)) }
   def first; end
