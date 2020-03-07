@@ -301,6 +301,8 @@ class Parlour::TypeParser::NodePath
   extend T::Sig
 end
 class Parlour::TypeParser::IntermediateSig < T::Struct
+  def __t_props_generated_deserialize(*args); end
+  def __t_props_generated_serialize(*args); end
   def abstract; end
   def abstract=(val); end
   def final; end

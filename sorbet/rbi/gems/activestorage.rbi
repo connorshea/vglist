@@ -220,6 +220,88 @@ class ActiveStorage::Attached
   def name; end
   def record; end
 end
+class ActiveStorage::Attached::Changes::CreateOne
+  def attachable; end
+  def attachment; end
+  def blob; end
+  def build_attachment; end
+  def find_attachment; end
+  def find_or_build_attachment; end
+  def find_or_build_blob; end
+  def initialize(name, record, attachable); end
+  def name; end
+  def record; end
+  def save; end
+  def upload; end
+end
+class ActiveStorage::Attached::Changes::CreateMany
+  def assign_associated_attachments; end
+  def attachables; end
+  def attachments; end
+  def blobs; end
+  def build_subchange_from(attachable); end
+  def initialize(name, record, attachables); end
+  def name; end
+  def record; end
+  def reset_associated_blobs; end
+  def save; end
+  def subchanges; end
+  def upload; end
+end
+class ActiveStorage::Attached::Changes::CreateOneOfMany < ActiveStorage::Attached::Changes::CreateOne
+  def find_attachment; end
+end
+class ActiveStorage::Attached::Changes::DeleteOne
+  def attachment; end
+  def initialize(name, record); end
+  def name; end
+  def record; end
+  def save; end
+end
+class ActiveStorage::Attached::Changes::DeleteMany
+  def attachables; end
+  def attachments; end
+  def blobs; end
+  def initialize(name, record); end
+  def name; end
+  def record; end
+  def save; end
+end
+class ActiveStorage::LogSubscriber < ActiveSupport::LogSubscriber
+end
+class ActiveStorage::Service
+  def content_disposition_with(filename:, type: nil); end
+  def delete(key); end
+  def delete_prefixed(prefix); end
+  def download(key); end
+  def download_chunk(key, range); end
+  def exist?(key); end
+  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
+  def instrument(operation, payload = nil, &block); end
+  def open(*args, &block); end
+  def self.build(configurator:, service: nil, **service_config); end
+  def self.configure(service_name, configurations); end
+  def service_name; end
+  def update_metadata(key, **metadata); end
+  def upload(key, io, checksum: nil, **options); end
+  def url(key, expires_in:, disposition:, filename:, content_type:); end
+  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
+  extend ActiveSupport::Autoload
+end
+class ActiveStorage::Service::Configurator
+  def build(service_name); end
+  def config_for(name); end
+  def configurations; end
+  def initialize(configurations); end
+  def resolve(class_name); end
+  def self.build(service_name, configurations); end
+end
+class ActiveStorage::Transformers::Transformer
+  def initialize(transformations); end
+  def process(file, format:); end
+  def transform(file, format:); end
+  def transformations; end
+end
 module ActiveStorage::Attachment::GeneratedAttributeMethods
 end
 class ActiveStorage::Attachment < ActiveRecord::Base
@@ -273,20 +355,6 @@ class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord
   include ActiveRecord::Delegation::ClassSpecificRelation
   include ActiveStorage::Attachment::GeneratedRelationMethods
 end
-class ActiveStorage::Attached::Changes::CreateOne
-  def attachable; end
-  def attachment; end
-  def blob; end
-  def build_attachment; end
-  def find_attachment; end
-  def find_or_build_attachment; end
-  def find_or_build_blob; end
-  def initialize(name, record, attachable); end
-  def name; end
-  def record; end
-  def save; end
-  def upload; end
-end
 class ActiveStorage::Downloader
   def download(key, file); end
   def initialize(service); end
@@ -322,35 +390,6 @@ module ActiveStorage::Blob::Representable
   def variable?; end
   def variant(transformations); end
   extend ActiveSupport::Concern
-end
-class ActiveStorage::LogSubscriber < ActiveSupport::LogSubscriber
-end
-class ActiveStorage::Service
-  def content_disposition_with(filename:, type: nil); end
-  def delete(key); end
-  def delete_prefixed(prefix); end
-  def download(key); end
-  def download_chunk(key, range); end
-  def exist?(key); end
-  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
-  def instrument(operation, payload = nil, &block); end
-  def open(*args, &block); end
-  def self.build(configurator:, service: nil, **service_config); end
-  def self.configure(service_name, configurations); end
-  def service_name; end
-  def update_metadata(key, **metadata); end
-  def upload(key, io, checksum: nil, **options); end
-  def url(key, expires_in:, disposition:, filename:, content_type:); end
-  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
-  extend ActiveSupport::Autoload
-end
-class ActiveStorage::Service::Configurator
-  def build(service_name); end
-  def config_for(name); end
-  def configurations; end
-  def initialize(configurations); end
-  def resolve(class_name); end
-  def self.build(service_name, configurations); end
 end
 class ActiveStorage::Service::DiskService < ActiveStorage::Service
   def current_host; end
@@ -458,7 +497,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   include ActiveStorage::Blob::GeneratedAttributeMethods
   include ActiveStorage::Blob::Identifiable
   include ActiveStorage::Blob::Representable
-  include Anonymous_Module_21
+  include Anonymous_Module_27
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
 end
@@ -498,7 +537,7 @@ class ActiveStorage::Blob::ActiveRecord_AssociationRelation < ActiveRecord::Asso
   include ActiveRecord::Delegation::ClassSpecificRelation
   include ActiveStorage::Blob::GeneratedRelationMethods
 end
-module Anonymous_Module_21
+module Anonymous_Module_27
   def analyzed; end
   def analyzed=(value); end
   def analyzed_before_last_save; end
@@ -529,20 +568,6 @@ class ActiveStorage::Filename
   def to_json; end
   def to_s; end
   include Comparable
-end
-class ActiveStorage::Attached::Changes::CreateMany
-  def assign_associated_attachments; end
-  def attachables; end
-  def attachments; end
-  def blobs; end
-  def build_subchange_from(attachable); end
-  def initialize(name, record, attachables); end
-  def name; end
-  def record; end
-  def reset_associated_blobs; end
-  def save; end
-  def subchanges; end
-  def upload; end
 end
 class ActiveStorage::BaseJob < ActiveJob::Base
 end

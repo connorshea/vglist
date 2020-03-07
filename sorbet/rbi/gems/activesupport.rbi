@@ -36,8 +36,8 @@ class Hash
   def reverse_merge!(other_hash); end
   def reverse_merge(other_hash); end
   def reverse_update(other_hash); end
-  def self.from_trusted_xml(xml); end
   def self.from_xml(xml, disallowed_types = nil); end
+  def self.try_convert(arg0); end
   def slice!(*keys); end
   def stringify_keys!; end
   def stringify_keys; end
@@ -2192,8 +2192,8 @@ module ActiveSupport::NumericWithFormat
   def to_s(format = nil, options = nil); end
 end
 class File < IO
+  def self.atomic_write(file_name, temp_dir = nil); end
   def self.empty?(arg0); end
-  def self.probe_stat_in(dir); end
 end
 module Digest
 end
@@ -2298,6 +2298,162 @@ class ActiveSupport::Digest
   def self.hash_digest_class=(klass); end
   def self.hexdigest(arg); end
 end
+module ActiveSupport::Testing
+end
+module ActiveSupport::Testing::TaggedLogging
+  def before_setup; end
+  def tagged_logger; end
+  def tagged_logger=(arg0); end
+end
+module ActiveSupport::Testing::SetupAndTeardown
+  def after_teardown; end
+  def before_setup; end
+  def self.prepended(klass); end
+end
+module ActiveSupport::Testing::SetupAndTeardown::ClassMethods
+  def setup(*args, &block); end
+  def teardown(*args, &block); end
+end
+module ActiveSupport::Testing::Assertions
+  def assert_changes(expression, message = nil, from: nil, to: nil, &block); end
+  def assert_difference(expression, *args, &block); end
+  def assert_no_changes(expression, message = nil, &block); end
+  def assert_no_difference(expression, message = nil, &block); end
+  def assert_not(object, message = nil); end
+  def assert_nothing_raised; end
+end
+module ActiveSupport::Testing::Deprecation
+  def assert_deprecated(match = nil, deprecator = nil, &block); end
+  def assert_not_deprecated(deprecator = nil, &block); end
+  def collect_deprecations(deprecator = nil); end
+end
+module ActiveSupport::Testing::Declarative
+  def test(name, &block); end
+end
+module ActiveSupport::Testing::Isolation
+  def run; end
+  def self.forking_env?; end
+  def self.included(klass); end
+  include ActiveSupport::Testing::Isolation::Forking
+end
+module ActiveSupport::Testing::Isolation::Forking
+  def run_in_isolation(&blk); end
+end
+module ActiveSupport::Testing::Isolation::Subprocess
+  def run_in_isolation(&blk); end
+end
+module ActiveSupport::Testing::ConstantLookup
+  extend ActiveSupport::Concern
+end
+module ActiveSupport::Testing::ConstantLookup::ClassMethods
+  def determine_constant_from_test_name(test_name); end
+end
+class ActiveSupport::Testing::SimpleStubs
+  def initialize; end
+  def stub_object(object, method_name, &block); end
+  def stubbing(object, method_name); end
+  def unstub_all!; end
+  def unstub_object(stub); end
+end
+class ActiveSupport::Testing::SimpleStubs::Stub < Struct
+  def method_name; end
+  def method_name=(_); end
+  def object; end
+  def object=(_); end
+  def original_method; end
+  def original_method=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+module ActiveSupport::Testing::TimeHelpers
+  def after_teardown; end
+  def freeze_time(&block); end
+  def simple_stubs; end
+  def travel(duration, &block); end
+  def travel_back; end
+  def travel_to(date_or_time); end
+  def unfreeze_time; end
+end
+module ActiveSupport::Testing::FileFixtures
+  def file_fixture(fixture_name); end
+  extend ActiveSupport::Concern
+end
+class ActiveSupport::Testing::Parallelization
+  def <<(work); end
+  def add_setup_exception(result, setup_exception); end
+  def after_fork(worker); end
+  def after_fork_hooks; end
+  def initialize(queue_size); end
+  def run_cleanup(worker); end
+  def run_cleanup_hooks; end
+  def self.after_fork_hook(&blk); end
+  def self.after_fork_hooks; end
+  def self.run_cleanup_hook(&blk); end
+  def self.run_cleanup_hooks; end
+  def shutdown; end
+  def start; end
+end
+class ActiveSupport::Testing::Parallelization::Server
+  def <<(o); end
+  def initialize; end
+  def length; end
+  def pop; end
+  def record(reporter, result); end
+  include DRb::DRbUndumped
+end
+class ActiveSupport::TestCase < Minitest::Test
+  def __callbacks; end
+  def __callbacks?; end
+  def _run_setup_callbacks(&block); end
+  def _run_teardown_callbacks(&block); end
+  def _setup_callbacks; end
+  def _teardown_callbacks; end
+  def assert_no_match(matcher, obj, msg = nil); end
+  def assert_not_empty(obj, msg = nil); end
+  def assert_not_equal(exp, act, msg = nil); end
+  def assert_not_in_delta(exp, act, delta = nil, msg = nil); end
+  def assert_not_in_epsilon(a, b, epsilon = nil, msg = nil); end
+  def assert_not_includes(collection, obj, msg = nil); end
+  def assert_not_instance_of(cls, obj, msg = nil); end
+  def assert_not_kind_of(cls, obj, msg = nil); end
+  def assert_not_nil(obj, msg = nil); end
+  def assert_not_operator(o1, op, o2 = nil, msg = nil); end
+  def assert_not_predicate(o1, op, msg = nil); end
+  def assert_not_respond_to(obj, meth, msg = nil); end
+  def assert_not_same(exp, act, msg = nil); end
+  def assert_raise(*exp); end
+  def file_fixture_path; end
+  def file_fixture_path?; end
+  def method_name; end
+  def self.__callbacks; end
+  def self.__callbacks=(val); end
+  def self.__callbacks?; end
+  def self._setup_callbacks; end
+  def self._setup_callbacks=(value); end
+  def self._teardown_callbacks; end
+  def self._teardown_callbacks=(value); end
+  def self.file_fixture_path; end
+  def self.file_fixture_path=(val); end
+  def self.file_fixture_path?; end
+  def self.parallelize(workers: nil, with: nil); end
+  def self.parallelize_setup(&block); end
+  def self.parallelize_teardown(&block); end
+  def self.test_order; end
+  def self.test_order=(new_order); end
+  extend ActiveSupport::Callbacks::ClassMethods
+  extend ActiveSupport::DescendantsTracker
+  extend ActiveSupport::Testing::Declarative
+  extend ActiveSupport::Testing::SetupAndTeardown::ClassMethods
+  extend Rails::LineFiltering
+  include ActiveSupport::Callbacks
+  include ActiveSupport::Testing::Assertions
+  include ActiveSupport::Testing::Deprecation
+  include ActiveSupport::Testing::FileFixtures
+  include ActiveSupport::Testing::TaggedLogging
+  include ActiveSupport::Testing::TimeHelpers
+end
 class ActiveSupport::CurrentAttributes
   def __callbacks; end
   def __callbacks?; end
@@ -2330,4 +2486,156 @@ class ActiveSupport::CurrentAttributes
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   include ActiveSupport::Callbacks
+end
+class ActiveSupport::Cache::FileStore < ActiveSupport::Cache::Store
+  def cache_path; end
+  def cleanup(options = nil); end
+  def clear(options = nil); end
+  def decrement(name, amount = nil, options = nil); end
+  def delete_empty_directories(dir); end
+  def delete_entry(key, options); end
+  def delete_matched(matcher, options = nil); end
+  def ensure_cache_path(path); end
+  def file_path_key(path); end
+  def increment(name, amount = nil, options = nil); end
+  def initialize(cache_path, options = nil); end
+  def lock_file(file_name, &block); end
+  def modify_value(name, amount, options); end
+  def normalize_key(key, options); end
+  def read_entry(key, options); end
+  def search_dir(dir, &callback); end
+  def self.supports_cache_versioning?; end
+  def write_entry(key, entry, options); end
+end
+module ActiveSupport::Gzip
+  def self.compress(source, level = nil, strategy = nil); end
+  def self.decompress(source); end
+end
+class ActiveSupport::Gzip::Stream < StringIO
+  def close; end
+  def initialize(*arg0); end
+end
+class ActiveSupport::NumberHelper::NumberConverter
+  def default_format_options; end
+  def default_value(key); end
+  def execute; end
+  def format_options; end
+  def i18n_format_options; end
+  def initialize(number, options); end
+  def namespace; end
+  def namespace=(val); end
+  def namespace?; end
+  def number; end
+  def options; end
+  def opts; end
+  def self.convert(number, options); end
+  def self.namespace; end
+  def self.namespace=(val); end
+  def self.namespace?; end
+  def self.validate_float; end
+  def self.validate_float=(val); end
+  def self.validate_float?; end
+  def translate_in_locale(key, i18n_options = nil); end
+  def translate_number_value_with_default(key, i18n_options = nil); end
+  def valid_float?; end
+  def validate_float; end
+  def validate_float=(val); end
+  def validate_float?; end
+end
+class ActiveSupport::NumberHelper::RoundingHelper
+  def absolute_number(number); end
+  def convert_to_decimal(number); end
+  def digit_count(number); end
+  def initialize(options); end
+  def options; end
+  def precision; end
+  def round(number); end
+  def round_significant(number); end
+  def round_without_significant(number); end
+  def significant; end
+end
+class ActiveSupport::NumberHelper::NumberToRoundedConverter < ActiveSupport::NumberHelper::NumberConverter
+  def convert; end
+  def format_number(number); end
+  def self.namespace; end
+  def self.validate_float; end
+  def strip_insignificant_zeros; end
+end
+class ActiveSupport::NumberHelper::NumberToDelimitedConverter < ActiveSupport::NumberHelper::NumberConverter
+  def convert; end
+  def delimiter_pattern; end
+  def parts; end
+  def self.validate_float; end
+end
+class ActiveSupport::NumberHelper::NumberToHumanConverter < ActiveSupport::NumberHelper::NumberConverter
+  def calculate_exponent(units); end
+  def convert; end
+  def determine_unit(units, exponent); end
+  def format; end
+  def self.namespace; end
+  def self.validate_float; end
+  def unit_exponents(units); end
+end
+class ActiveSupport::NumberHelper::NumberToHumanSizeConverter < ActiveSupport::NumberHelper::NumberConverter
+  def base; end
+  def conversion_format; end
+  def convert; end
+  def exponent; end
+  def self.namespace; end
+  def self.validate_float; end
+  def smaller_than_base?; end
+  def storage_unit_key; end
+  def unit; end
+end
+class ActiveSupport::NumberHelper::NumberToPhoneConverter < ActiveSupport::NumberHelper::NumberConverter
+  def convert; end
+  def convert_to_phone_number(number); end
+  def convert_with_area_code(number); end
+  def convert_without_area_code(number); end
+  def country_code(code); end
+  def delimiter; end
+  def phone_ext(ext); end
+  def regexp_pattern(default_pattern); end
+  def start_with_delimiter?(number); end
+end
+class ActiveSupport::NumberHelper::NumberToCurrencyConverter < ActiveSupport::NumberHelper::NumberConverter
+  def absolute_value(number); end
+  def convert; end
+  def i18n_opts; end
+  def options; end
+  def self.namespace; end
+end
+class ActiveSupport::NumberHelper::NumberToPercentageConverter < ActiveSupport::NumberHelper::NumberConverter
+  def convert; end
+  def self.namespace; end
+end
+class ActiveSupport::OrderedHash < Hash
+  def encode_with(coder); end
+  def extractable_options?; end
+  def nested_under_indifferent_access; end
+  def reject(*args, &block); end
+  def select(*args, &block); end
+  def to_yaml_type; end
+end
+class ActiveSupport::Duration::ISO8601Parser
+  def finished?; end
+  def initialize(string); end
+  def mode; end
+  def mode=(arg0); end
+  def number; end
+  def parse!; end
+  def parts; end
+  def raise_parsing_error(reason = nil); end
+  def scan(pattern); end
+  def scanner; end
+  def sign; end
+  def sign=(arg0); end
+  def validate!; end
+end
+class ActiveSupport::Duration::ISO8601Parser::ParsingError < ArgumentError
+end
+class ActiveSupport::Duration::ISO8601Serializer
+  def initialize(duration, precision: nil); end
+  def normalize; end
+  def serialize; end
 end

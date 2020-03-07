@@ -372,6 +372,7 @@ class Zip::File < Zip::CentralDirectory
   def self.split(zip_file_name, segment_size = nil, delete_zip_file = nil, partial_zip_file_name = nil); end
   def to_s; end
   def write_buffer(io = nil); end
+  include Zip::FileSystem
 end
 class Zip::InputStream
   def close; end
@@ -517,7 +518,7 @@ class Zip::Deflater < Zip::Compressor
   def initialize(output_stream, level = nil, encrypter = nil); end
   def size; end
 end
-class Zip::StreamableStream < Anonymous_Delegator_46
+class Zip::StreamableStream < Anonymous_Delegator_462
   def clean_up; end
   def get_input_stream; end
   def get_output_stream; end
@@ -544,4 +545,154 @@ end
 class Zip::GPFBit3Error < Zip::Error
 end
 class Zip::DecompressionError < Zip::Error
+end
+module Zip::FileSystem
+  def dir; end
+  def file; end
+  def initialize; end
+end
+class Zip::FileSystem::ZipFsFile
+  def atime(fileName); end
+  def basename(fileName); end
+  def blockdev?(_filename); end
+  def chardev?(_filename); end
+  def chmod(modeInt, *filenames); end
+  def chown(ownerInt, groupInt, *filenames); end
+  def ctime(fileName); end
+  def delete(*args); end
+  def dir=(arg0); end
+  def directory?(fileName); end
+  def dirname(fileName); end
+  def executable?(fileName); end
+  def executable_real?(fileName); end
+  def exist?(fileName); end
+  def exists?(fileName); end
+  def expand_path(aPath); end
+  def file?(fileName); end
+  def foreach(fileName, aSep = nil, &aProc); end
+  def ftype(fileName); end
+  def get_entry(fileName); end
+  def grpowned?(fileName); end
+  def initialize(mappedZip); end
+  def join(*fragments); end
+  def link(_fileName, _symlinkName); end
+  def lstat(fileName); end
+  def mtime(fileName); end
+  def new(fileName, openMode = nil); end
+  def open(fileName, openMode = nil, permissionInt = nil, &block); end
+  def owned?(fileName); end
+  def pipe; end
+  def pipe?(_filename); end
+  def popen(*args, &aProc); end
+  def read(fileName); end
+  def readable?(fileName); end
+  def readable_real?(fileName); end
+  def readlines(fileName); end
+  def readlink(_fileName); end
+  def rename(fileToRename, newName); end
+  def setgid?(fileName); end
+  def setuid?(fileName); end
+  def size(fileName); end
+  def size?(fileName); end
+  def socket?(_fileName); end
+  def split(fileName); end
+  def stat(fileName); end
+  def sticky?(fileName); end
+  def symlink(_fileName, _symlinkName); end
+  def symlink?(_fileName); end
+  def truncate(_fileName, _len); end
+  def umask(*args); end
+  def unix_mode_cmp(fileName, mode); end
+  def unlink(*args); end
+  def utime(modifiedTime, *fileNames); end
+  def writable?(fileName); end
+  def writable_real?(fileName); end
+  def zero?(fileName); end
+end
+class Zip::FileSystem::ZipFsFile::ZipFsStat
+  def atime; end
+  def blksize; end
+  def blockdev?; end
+  def blocks; end
+  def chardev?; end
+  def ctime; end
+  def dev; end
+  def directory?; end
+  def executable?; end
+  def executable_real?; end
+  def file?; end
+  def ftype; end
+  def get_entry; end
+  def gid; end
+  def grpowned?; end
+  def initialize(zipFsFile, entryName); end
+  def ino; end
+  def kind_of?(t); end
+  def mode; end
+  def mtime; end
+  def nlink; end
+  def owned?; end
+  def pipe?; end
+  def rdev; end
+  def rdev_major; end
+  def rdev_minor; end
+  def readable?; end
+  def readable_real?; end
+  def self.delegate_to_fs_file(*methods); end
+  def setgid?; end
+  def setuid?; end
+  def size; end
+  def size?; end
+  def socket?; end
+  def sticky?; end
+  def symlink?; end
+  def uid; end
+  def writable?; end
+  def writable_real?; end
+  def zero?; end
+end
+class Zip::FileSystem::ZipFsDir
+  def chdir(aDirectoryName); end
+  def chroot(*_args); end
+  def delete(entryName); end
+  def entries(aDirectoryName); end
+  def file=(arg0); end
+  def foreach(aDirectoryName); end
+  def getwd; end
+  def glob(*args, &block); end
+  def initialize(mappedZip); end
+  def mkdir(entryName, permissionInt = nil); end
+  def new(aDirectoryName); end
+  def open(aDirectoryName); end
+  def pwd; end
+  def rmdir(entryName); end
+  def unlink(entryName); end
+end
+class Zip::FileSystem::ZipFsDirIterator
+  def close; end
+  def each(&aProc); end
+  def initialize(arrayOfFileNames); end
+  def read; end
+  def rewind; end
+  def seek(anIntegerPosition); end
+  def tell; end
+  include Enumerable
+end
+class Zip::FileSystem::ZipFileNameMapper
+  def each; end
+  def expand_path(aPath); end
+  def expand_to_entry(aPath); end
+  def find_entry(fileName); end
+  def get_entry(fileName); end
+  def get_input_stream(fileName, &aProc); end
+  def get_output_stream(fileName, permissionInt = nil, &aProc); end
+  def glob(pattern, *flags, &block); end
+  def initialize(zipFile); end
+  def mkdir(fileName, permissionInt = nil); end
+  def pwd; end
+  def pwd=(arg0); end
+  def read(fileName); end
+  def remove(fileName); end
+  def rename(fileName, newName, &continueOnExistsProc); end
+  include Enumerable
 end

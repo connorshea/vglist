@@ -814,7 +814,277 @@ module RSpec::Mocks::Matchers
 end
 module RSpec::Mocks::Matchers::Matcher
 end
+module RSpec::Mocks::AnyInstance
+  def self.error_generator; end
+end
+class RSpec::Mocks::AnyInstance::Chain
+  def constrained_to_any_of?(*constraints); end
+  def expectation_fulfilled!; end
+  def initialize(recorder, *args, &block); end
+  def last_message; end
+  def matches_args?(*args); end
+  def messages; end
+  def negated?; end
+  def never; end
+  def playback!(instance); end
+  def record(rspec_method_name, *args, &block); end
+  def with(*args, &block); end
+  include RSpec::Mocks::AnyInstance::Chain::Customizations
+end
+module RSpec::Mocks::AnyInstance::Chain::Customizations
+  def and_call_original(*args, &block); end
+  def and_raise(*args, &block); end
+  def and_return(*args, &block); end
+  def and_throw(*args, &block); end
+  def and_wrap_original(*args, &block); end
+  def and_yield(*args, &block); end
+  def at_least(*args, &block); end
+  def at_most(*args, &block); end
+  def exactly(*args, &block); end
+  def never(*args, &block); end
+  def once(*args, &block); end
+  def self.record(method_name); end
+  def thrice(*args, &block); end
+  def time(*args, &block); end
+  def times(*args, &block); end
+  def twice(*args, &block); end
+  def with(*args, &block); end
+end
+class RSpec::Mocks::AnyInstance::ErrorGenerator < RSpec::Mocks::ErrorGenerator
+  def raise_does_not_implement_error(klass, method_name); end
+  def raise_message_already_received_by_other_instance_error(method_name, object_inspect, invoked_instance); end
+  def raise_not_supported_with_prepend_error(method_name, problem_mod); end
+  def raise_second_instance_received_message_error(unfulfilled_expectations); end
+end
+class RSpec::Mocks::AnyInstance::StubChain < RSpec::Mocks::AnyInstance::Chain
+  def create_message_expectation_on(instance); end
+  def expectation_fulfilled?; end
+  def invocation_order; end
+  def verify_invocation_order(rspec_method_name, *_args, &_block); end
+end
+class RSpec::Mocks::AnyInstance::StubChainChain < RSpec::Mocks::AnyInstance::StubChain
+  def create_message_expectation_on(instance); end
+  def initialize(*args); end
+  def invocation_order; end
+end
+class RSpec::Mocks::AnyInstance::ExpectChainChain < RSpec::Mocks::AnyInstance::StubChain
+  def create_message_expectation_on(instance); end
+  def expectation_fulfilled?; end
+  def initialize(*args); end
+  def invocation_order; end
+  def playback!(instance); end
+end
+class RSpec::Mocks::AnyInstance::ExpectationChain < RSpec::Mocks::AnyInstance::Chain
+  def expectation_fulfilled?; end
+  def initialize(*args, &block); end
+  def verify_invocation_order(_rspec_method_name, *_args, &_block); end
+end
+class RSpec::Mocks::AnyInstance::PositiveExpectationChain < RSpec::Mocks::AnyInstance::ExpectationChain
+  def create_message_expectation_on(instance); end
+  def invocation_order; end
+end
+class RSpec::Mocks::AnyInstance::MessageChains
+  def [](method_name); end
+  def add(method_name, chain); end
+  def all_expectations_fulfilled?; end
+  def each_unfulfilled_expectation_matching(method_name, *args); end
+  def has_expectation?(method_name); end
+  def initialize; end
+  def playback!(instance, method_name); end
+  def raise_if_second_instance_to_receive_message(instance); end
+  def received_expected_message!(method_name); end
+  def remove_stub_chains_for!(method_name); end
+  def unfulfilled_expectations; end
+end
+class RSpec::Mocks::AnyInstance::Recorder
+  def allow_no_prepended_module_definition_of(method_name); end
+  def already_observing?(method_name); end
+  def ancestor_is_an_observer?(method_name); end
+  def backup_method!(method_name); end
+  def build_alias_method_name(method_name); end
+  def expect_chain(*method_names_and_optional_return_values, &block); end
+  def initialize(klass); end
+  def instance_that_received(method_name); end
+  def klass; end
+  def mark_invoked!(method_name); end
+  def message_chains; end
+  def normalize_chain(*args); end
+  def notify_received_message(_object, message, args, _blk); end
+  def observe!(method_name); end
+  def playback!(instance, method_name); end
+  def public_protected_or_private_method_defined?(method_name); end
+  def received_expected_message!(method_name); end
+  def remove_dummy_method!(method_name); end
+  def restore_method!(method_name); end
+  def restore_original_method!(method_name); end
+  def should_not_receive(method_name, &block); end
+  def should_receive(method_name, &block); end
+  def stop_all_observation!; end
+  def stop_observing!(method_name); end
+  def stub(method_name, &block); end
+  def stub_chain(*method_names_and_optional_return_values, &block); end
+  def stubs; end
+  def super_class_observers_for(method_name); end
+  def super_class_observing?(method_name); end
+  def unstub(method_name); end
+  def verify; end
+end
+class RSpec::Mocks::AnyInstance::Proxy
+  def expect_chain(*chain, &block); end
+  def initialize(recorder, target_proxies); end
+  def klass; end
+  def perform_proxying(method_name, args, block, &target_proxy_block); end
+  def should_not_receive(method_name, &block); end
+  def should_receive(method_name, &block); end
+  def stub(method_name_or_method_map, &block); end
+  def stub_chain(*chain, &block); end
+  def unstub(method_name); end
+end
+class RSpec::Mocks::AnyInstance::FluentInterfaceProxy
+  def initialize(targets); end
+  def method_missing(*args, &block); end
+  def respond_to_missing?(method_name, include_private = nil); end
+end
+class RSpec::Mocks::MessageChain
+  def block; end
+  def chain; end
+  def chain_on(object, *chain, &block); end
+  def find_matching_expectation; end
+  def find_matching_stub; end
+  def format_chain(*chain, &blk); end
+  def initialize(object, *chain, &blk); end
+  def object; end
+  def setup_chain; end
+end
+class RSpec::Mocks::ExpectChain < RSpec::Mocks::MessageChain
+  def expectation(object, message, &return_block); end
+  def self.expect_chain_on(object, *chain, &blk); end
+end
+class RSpec::Mocks::StubChain < RSpec::Mocks::MessageChain
+  def expectation(object, message, &return_block); end
+  def self.stub_chain_on(object, *chain, &blk); end
+end
 class RSpec::Mocks::MarshalExtension
   def self.patch!; end
   def self.unpatch!; end
+end
+class RSpec::Mocks::Matchers::HaveReceived
+  def apply_constraints_to(expectation); end
+  def at_least(*args); end
+  def at_most(*args); end
+  def capture_failure_message; end
+  def count_constraint; end
+  def description; end
+  def disallow(type, reason = nil); end
+  def does_not_match?(subject); end
+  def ensure_count_unconstrained; end
+  def exactly(*args); end
+  def expect; end
+  def expected_messages_received_in_order?; end
+  def failure_message; end
+  def failure_message_when_negated; end
+  def initialize(method_name, &block); end
+  def matches?(subject, &block); end
+  def mock_proxy; end
+  def name; end
+  def notify_failure_message; end
+  def once(*args); end
+  def ordered(*args); end
+  def setup_allowance(_subject, &_block); end
+  def setup_any_instance_allowance(_subject, &_block); end
+  def setup_any_instance_expectation(_subject, &_block); end
+  def setup_any_instance_negative_expectation(_subject, &_block); end
+  def setup_expectation(subject, &block); end
+  def setup_negative_expectation(subject, &block); end
+  def thrice(*args); end
+  def time(*args); end
+  def times(*args); end
+  def twice(*args); end
+  def with(*args); end
+  include RSpec::Mocks::Matchers::Matcher
+end
+class RSpec::Mocks::Matchers::ExpectationCustomization
+  def block; end
+  def block=(arg0); end
+  def initialize(method_name, args, block); end
+  def playback_onto(expectation); end
+end
+class RSpec::Mocks::Matchers::Receive
+  def and_call_original(*args, &block); end
+  def and_raise(*args, &block); end
+  def and_return(*args, &block); end
+  def and_throw(*args, &block); end
+  def and_wrap_original(*args, &block); end
+  def and_yield(*args, &block); end
+  def at_least(*args, &block); end
+  def at_most(*args, &block); end
+  def describable; end
+  def description; end
+  def does_not_match?(subject, &block); end
+  def exactly(*args, &block); end
+  def initialize(message, block); end
+  def matches?(subject, &block); end
+  def move_block_to_last_customization(block); end
+  def name; end
+  def never(*args, &block); end
+  def once(*args, &block); end
+  def ordered(*args, &block); end
+  def setup_allowance(subject, &block); end
+  def setup_any_instance_allowance(subject, &block); end
+  def setup_any_instance_expectation(subject, &block); end
+  def setup_any_instance_method_substitute(subject, method, block); end
+  def setup_any_instance_negative_expectation(subject, &block); end
+  def setup_expectation(subject, &block); end
+  def setup_method_substitute(host, method, block, *args); end
+  def setup_mock_proxy_method_substitute(subject, method, block); end
+  def setup_negative_expectation(subject, &block); end
+  def thrice(*args, &block); end
+  def time(*args, &block); end
+  def times(*args, &block); end
+  def twice(*args, &block); end
+  def warn_if_any_instance(expression, subject); end
+  def with(*args, &block); end
+  include RSpec::Mocks::Matchers::Matcher
+end
+class RSpec::Mocks::Matchers::Receive::DefaultDescribable
+  def description_for(verb); end
+  def initialize(message); end
+end
+class RSpec::Mocks::Matchers::ReceiveMessageChain
+  def and_call_original(*args, &block); end
+  def and_raise(*args, &block); end
+  def and_return(*args, &block); end
+  def and_throw(*args, &block); end
+  def and_yield(*args, &block); end
+  def description; end
+  def does_not_match?(*_args); end
+  def formatted_chain; end
+  def initialize(chain, &block); end
+  def matches?(subject, &block); end
+  def name; end
+  def replay_customizations(chain); end
+  def setup_allowance(subject, &block); end
+  def setup_any_instance_allowance(subject, &block); end
+  def setup_any_instance_expectation(subject, &block); end
+  def setup_expectation(subject, &block); end
+  def setup_negative_expectation(*_args); end
+  def with(*args, &block); end
+  include RSpec::Mocks::Matchers::Matcher
+end
+class RSpec::Mocks::Matchers::ReceiveMessages
+  def any_instance_of(subject); end
+  def description; end
+  def does_not_match?(_subject); end
+  def each_message_on(host); end
+  def initialize(message_return_value_hash); end
+  def matches?(subject); end
+  def name; end
+  def proxy_on(subject); end
+  def setup_allowance(subject); end
+  def setup_any_instance_allowance(subject); end
+  def setup_any_instance_expectation(subject); end
+  def setup_expectation(subject); end
+  def setup_negative_expectation(_subject); end
+  def warn_about_block; end
+  include RSpec::Mocks::Matchers::Matcher
 end

@@ -269,3 +269,41 @@ class RSpec::Support::LooseSignatureVerifier::SignatureWithKeywordArgumentsMatch
   def non_kw_args_arity_description; end
   def valid_non_kw_args?(*args); end
 end
+class RSpec::Support::HunkGenerator
+  def actual_lines; end
+  def build_hunk(piece); end
+  def context_lines; end
+  def diffs; end
+  def expected_lines; end
+  def hunks; end
+  def initialize(actual, expected); end
+end
+class RSpec::Support::Differ
+  def add_old_hunk_to_hunk(hunk, oldhunk); end
+  def add_to_output(output, string); end
+  def all_strings?(*args); end
+  def any_multiline_strings?(*args); end
+  def blue(text); end
+  def build_hunks(actual, expected); end
+  def coerce_to_string(string_or_array); end
+  def color(text, color_code); end
+  def color?; end
+  def color_diff(diff); end
+  def diff(actual, expected); end
+  def diff_as_object(actual, expected); end
+  def diff_as_string(actual, expected); end
+  def diffably_stringify(array); end
+  def finalize_output(output, final_line); end
+  def format_type; end
+  def green(text); end
+  def handle_encoding_errors(actual, expected); end
+  def hash_to_string(hash); end
+  def initialize(opts = nil); end
+  def multiline?(string); end
+  def no_numbers?(*args); end
+  def no_procs?(*args); end
+  def normal(text); end
+  def object_to_string(object); end
+  def red(text); end
+  def safely_flatten(array); end
+end

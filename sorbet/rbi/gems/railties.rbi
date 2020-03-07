@@ -372,7 +372,7 @@ class Rails::SourceAnnotationExtractor
   def self.enumerate(tag = nil, options = nil); end
   def tag; end
 end
-class Anonymous_Struct_1 < Struct
+class Anonymous_Struct_2 < Struct
   def line; end
   def line=(_); end
   def self.[](*arg0); end
@@ -384,7 +384,7 @@ class Anonymous_Struct_1 < Struct
   def text; end
   def text=(_); end
 end
-class Rails::SourceAnnotationExtractor::Annotation < Anonymous_Struct_1
+class Rails::SourceAnnotationExtractor::Annotation < Anonymous_Struct_2
   def self.directories; end
   def self.extensions; end
   def self.notes_task_deprecation_warning; end

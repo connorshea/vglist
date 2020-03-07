@@ -1217,10 +1217,10 @@ class Doorkeeper::ApplicationController < ApplicationController
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_40
+  include Anonymous_Module_44
   include Doorkeeper::Helpers::Controller
 end
-module Anonymous_Module_40
+module Anonymous_Module_44
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1232,11 +1232,11 @@ module Anonymous_Module_40
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_29
-  extend Anonymous_Module_30
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_29
-  include Anonymous_Module_30
+  include Anonymous_Module_25
+  include Anonymous_Module_26
 end
 class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
@@ -1259,9 +1259,9 @@ class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def show; end
   def update; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_41
+  include Anonymous_Module_45
 end
-module Anonymous_Module_41
+module Anonymous_Module_45
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1273,11 +1273,11 @@ module Anonymous_Module_41
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_29
-  extend Anonymous_Module_30
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_29
-  include Anonymous_Module_30
+  include Anonymous_Module_25
+  include Anonymous_Module_26
 end
 class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
@@ -1303,9 +1303,9 @@ class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
   def self.middleware_stack; end
   def strategy; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_42
+  include Anonymous_Module_46
 end
-module Anonymous_Module_42
+module Anonymous_Module_46
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1317,11 +1317,11 @@ module Anonymous_Module_42
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_29
-  extend Anonymous_Module_30
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_29
-  include Anonymous_Module_30
+  include Anonymous_Module_25
+  include Anonymous_Module_26
 end
 class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationController
   def _layout(lookup_context, formats); end
@@ -1334,9 +1334,9 @@ class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationCont
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_43
+  include Anonymous_Module_47
 end
-module Anonymous_Module_43
+module Anonymous_Module_47
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1348,9 +1348,9 @@ module Anonymous_Module_43
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_29
-  extend Anonymous_Module_30
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_29
-  include Anonymous_Module_30
+  include Anonymous_Module_25
+  include Anonymous_Module_26
 end
