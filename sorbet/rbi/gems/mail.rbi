@@ -506,7 +506,7 @@ class Mail::Header
   include Mail::Constants
   include Mail::Utilities
 end
-class Mail::PartsList < Anonymous_Delegator_47
+class Mail::PartsList < Anonymous_Delegator_53
   def attachments; end
   def collect!; end
   def collect; end
@@ -1050,112 +1050,10 @@ class Mail::Matchers::AttachmentFilenameMatcher
   def filename; end
   def initialize(filename); end
 end
-module Mail::CheckDeliveryParams
-  def self.check(mail); end
-  def self.check_addr(addr_name, addr); end
-  def self.check_from(addr); end
-  def self.check_message(message); end
-  def self.check_to(addrs); end
-  def self.validate_smtp_addr(addr); end
-end
-class Mail::TestMailer
-  def deliver!(mail); end
-  def initialize(values); end
-  def self.deliveries; end
-  def self.deliveries=(val); end
-  def settings; end
-  def settings=(arg0); end
-end
-class Mail::SMTP
-  def build_smtp_session; end
-  def deliver!(mail); end
-  def initialize(values); end
-  def settings; end
-  def settings=(arg0); end
-  def ssl_context; end
-  def start_smtp_session(&block); end
-end
-class Mail::FileDelivery
-  def deliver!(mail); end
-  def initialize(values); end
-  def settings; end
-  def settings=(arg0); end
-end
-class Mail::Sendmail
-  def deliver!(mail); end
-  def initialize(values); end
-  def self.call(path, arguments, destinations, encoded_message); end
-  def self.popen(command, &block); end
-  def self.shellquote(address); end
-  def settings; end
-  def settings=(arg0); end
-end
 module Mail::ParserTools
   def chars(data, from_bytes, to_bytes); end
 end
 module Mail::Parsers
-end
-module Mail::Parsers::AddressListsParser
-  def self._eof_actions; end
-  def self._eof_actions=(arg0); end
-  def self._index_offsets; end
-  def self._index_offsets=(arg0); end
-  def self._indicies; end
-  def self._indicies=(arg0); end
-  def self._key_spans; end
-  def self._key_spans=(arg0); end
-  def self._trans_actions; end
-  def self._trans_actions=(arg0); end
-  def self._trans_keys; end
-  def self._trans_keys=(arg0); end
-  def self._trans_targs; end
-  def self._trans_targs=(arg0); end
-  def self.en_comment_tail; end
-  def self.en_comment_tail=(arg0); end
-  def self.en_main; end
-  def self.en_main=(arg0); end
-  def self.error; end
-  def self.error=(arg0); end
-  def self.first_final; end
-  def self.first_final=(arg0); end
-  def self.parse(data); end
-  def self.start; end
-  def self.start=(arg0); end
-  extend Mail::ParserTools
-end
-class Mail::Parsers::AddressListsParser::AddressListStruct < Struct
-  def addresses; end
-  def addresses=(_); end
-  def error; end
-  def error=(_); end
-  def group_names; end
-  def group_names=(_); end
-  def self.[](*arg0); end
-  def self.inspect; end
-  def self.members; end
-  def self.new(*arg0); end
-end
-class Mail::Parsers::AddressListsParser::AddressStruct < Struct
-  def comments; end
-  def comments=(_); end
-  def display_name; end
-  def display_name=(_); end
-  def domain; end
-  def domain=(_); end
-  def error; end
-  def error=(_); end
-  def group; end
-  def group=(_); end
-  def local; end
-  def local=(_); end
-  def obs_domain_list; end
-  def obs_domain_list=(_); end
-  def raw; end
-  def raw=(_); end
-  def self.[](*arg0); end
-  def self.inspect; end
-  def self.members; end
-  def self.new(*arg0); end
 end
 module Mail::Parsers::ContentDispositionParser
   def self._eof_actions; end
@@ -1272,6 +1170,48 @@ class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruc
   def self.inspect; end
   def self.members; end
   def self.new(*arg0); end
+end
+module Mail::Parsers::ContentTypeParser
+  def self._eof_actions; end
+  def self._eof_actions=(arg0); end
+  def self._index_offsets; end
+  def self._index_offsets=(arg0); end
+  def self._indicies; end
+  def self._indicies=(arg0); end
+  def self._key_spans; end
+  def self._key_spans=(arg0); end
+  def self._trans_actions; end
+  def self._trans_actions=(arg0); end
+  def self._trans_keys; end
+  def self._trans_keys=(arg0); end
+  def self._trans_targs; end
+  def self._trans_targs=(arg0); end
+  def self.en_comment_tail; end
+  def self.en_comment_tail=(arg0); end
+  def self.en_main; end
+  def self.en_main=(arg0); end
+  def self.error; end
+  def self.error=(arg0); end
+  def self.first_final; end
+  def self.first_final=(arg0); end
+  def self.parse(data); end
+  def self.start; end
+  def self.start=(arg0); end
+  extend Mail::ParserTools
+end
+class Mail::Parsers::ContentTypeParser::ContentTypeStruct < Struct
+  def error; end
+  def error=(_); end
+  def main_type; end
+  def main_type=(_); end
+  def parameters; end
+  def parameters=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+  def sub_type; end
+  def sub_type=(_); end
 end
 module Mail::Parsers::DateTimeParser
   def self._eof_actions; end
@@ -1511,7 +1451,7 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < Struct
   def time; end
   def time=(_); end
 end
-module Mail::Parsers::ContentTypeParser
+module Mail::Parsers::AddressListsParser
   def self._eof_actions; end
   def self._eof_actions=(arg0); end
   def self._index_offsets; end
@@ -1539,36 +1479,39 @@ module Mail::Parsers::ContentTypeParser
   def self.start=(arg0); end
   extend Mail::ParserTools
 end
-class Mail::Parsers::ContentTypeParser::ContentTypeStruct < Struct
+class Mail::Parsers::AddressListsParser::AddressListStruct < Struct
+  def addresses; end
+  def addresses=(_); end
   def error; end
   def error=(_); end
-  def main_type; end
-  def main_type=(_); end
-  def parameters; end
-  def parameters=(_); end
+  def group_names; end
+  def group_names=(_); end
   def self.[](*arg0); end
   def self.inspect; end
   def self.members; end
   def self.new(*arg0); end
-  def sub_type; end
-  def sub_type=(_); end
 end
-class Mail::ContentTypeElement
-  def cleaned(string); end
-  def initialize(string); end
-  def main_type; end
-  def parameters; end
-  def sub_type; end
-end
-class Mail::ContentTransferEncodingElement
-  def encoding; end
-  def initialize(string); end
-end
-class Mail::AddressList
-  def addresses; end
-  def addresses_grouped_by_group; end
-  def group_names; end
-  def initialize(string); end
+class Mail::Parsers::AddressListsParser::AddressStruct < Struct
+  def comments; end
+  def comments=(_); end
+  def display_name; end
+  def display_name=(_); end
+  def domain; end
+  def domain=(_); end
+  def error; end
+  def error=(_); end
+  def group; end
+  def group=(_); end
+  def local; end
+  def local=(_); end
+  def obs_domain_list; end
+  def obs_domain_list=(_); end
+  def raw; end
+  def raw=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
 end
 class Mail::Address
   def address(output_type = nil); end
@@ -1597,6 +1540,63 @@ class Mail::Address
   def strip_domain_comments(value); end
   def to_s; end
   include Mail::Utilities
+end
+module Mail::CheckDeliveryParams
+  def self.check(mail); end
+  def self.check_addr(addr_name, addr); end
+  def self.check_from(addr); end
+  def self.check_message(message); end
+  def self.check_to(addrs); end
+  def self.validate_smtp_addr(addr); end
+end
+class Mail::TestMailer
+  def deliver!(mail); end
+  def initialize(values); end
+  def self.deliveries; end
+  def self.deliveries=(val); end
+  def settings; end
+  def settings=(arg0); end
+end
+class Mail::SMTP
+  def build_smtp_session; end
+  def deliver!(mail); end
+  def initialize(values); end
+  def settings; end
+  def settings=(arg0); end
+  def ssl_context; end
+  def start_smtp_session(&block); end
+end
+class Mail::FileDelivery
+  def deliver!(mail); end
+  def initialize(values); end
+  def settings; end
+  def settings=(arg0); end
+end
+class Mail::Sendmail
+  def deliver!(mail); end
+  def initialize(values); end
+  def self.call(path, arguments, destinations, encoded_message); end
+  def self.popen(command, &block); end
+  def self.shellquote(address); end
+  def settings; end
+  def settings=(arg0); end
+end
+class Mail::ContentTypeElement
+  def cleaned(string); end
+  def initialize(string); end
+  def main_type; end
+  def parameters; end
+  def sub_type; end
+end
+class Mail::ContentTransferEncodingElement
+  def encoding; end
+  def initialize(string); end
+end
+class Mail::AddressList
+  def addresses; end
+  def addresses_grouped_by_group; end
+  def group_names; end
+  def initialize(string); end
 end
 class Mail::MessageIdsElement
   def clean_msg_id(val); end

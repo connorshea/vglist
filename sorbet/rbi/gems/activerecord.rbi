@@ -147,7 +147,7 @@ end
 module Arel::Attributes
   def self.for(column); end
 end
-class Anonymous_Struct_11 < Struct
+class Anonymous_Struct_14 < Struct
   def name; end
   def name=(_); end
   def relation; end
@@ -157,7 +157,7 @@ class Anonymous_Struct_11 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Arel::Attributes::Attribute < Anonymous_Struct_11
+class Arel::Attributes::Attribute < Anonymous_Struct_14
   def able_to_type_cast?; end
   def lower; end
   def type_cast_for_database(value); end
@@ -636,7 +636,7 @@ class Arel::Visitors::Dot::Node
   def name; end
   def name=(arg0); end
 end
-class Anonymous_Struct_12 < Struct
+class Anonymous_Struct_15 < Struct
   def from; end
   def from=(_); end
   def name; end
@@ -648,7 +648,7 @@ class Anonymous_Struct_12 < Struct
   def to; end
   def to=(_); end
 end
-class Arel::Visitors::Dot::Edge < Anonymous_Struct_12
+class Arel::Visitors::Dot::Edge < Anonymous_Struct_15
 end
 class Arel::Visitors::IBM_DB < Arel::Visitors::ToSql
   def collect_optimizer_hints(o, collector); end
@@ -3167,7 +3167,7 @@ class ActiveRecord::Type::Time < ActiveModel::Type::Time
   def serialize(value); end
   include ActiveRecord::Type::Internal::Timezone
 end
-class ActiveRecord::Type::Time::Value < Anonymous_Delegator_13
+class ActiveRecord::Type::Time::Value < Anonymous_Delegator_16
 end
 class ActiveRecord::Type::Text < ActiveModel::Type::String
   def type; end
@@ -3176,7 +3176,7 @@ class ActiveRecord::Type::UnsignedInteger < ActiveModel::Type::Integer
   def max_value; end
   def min_value; end
 end
-class ActiveRecord::Type::Serialized < Anonymous_Delegator_14
+class ActiveRecord::Type::Serialized < Anonymous_Delegator_17
   def accessor; end
   def assert_valid_value(value); end
   def changed_in_place?(raw_old_value, value); end
@@ -3318,7 +3318,7 @@ module ActiveRecord::Core::ClassMethods
   def table_metadata; end
   def type_caster; end
 end
-class ActiveRecord::Core::InspectionMask < Anonymous_Delegator_15
+class ActiveRecord::Core::InspectionMask < Anonymous_Delegator_18
   def pretty_print(pp); end
 end
 class ActiveRecord::ConnectionTimeoutError < ActiveRecord::ConnectionNotEstablished
@@ -3758,7 +3758,7 @@ module ActiveRecord::Locking::Optimistic::ClassMethods
   def reset_locking_column; end
   def update_counters(id, counters); end
 end
-class ActiveRecord::Locking::LockingType < Anonymous_Delegator_16
+class ActiveRecord::Locking::LockingType < Anonymous_Delegator_19
   def deserialize(value); end
   def encode_with(coder); end
   def init_with(coder); end
@@ -3823,7 +3823,7 @@ end
 module ActiveRecord::AttributeMethods::TimeZoneConversion
   extend ActiveSupport::Concern
 end
-class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_17
+class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter < Anonymous_Delegator_20
   def cast(value); end
   def convert_time_to_time_zone(value); end
   def deserialize(value); end
@@ -5224,7 +5224,7 @@ module ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaStatements
   def validate_constraint(table_name, constraint_name); end
   def validate_foreign_key(from_table, to_table = nil, **options); end
 end
-class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_18
+class ActiveRecord::ConnectionAdapters::PostgreSQL::TypeMetadata < Anonymous_Delegator_21
   def ==(other); end
   def eql?(other); end
   def fmod; end
@@ -5885,6 +5885,10 @@ class ActiveRecord::TableMetadata
   def type(column_name); end
   def types; end
 end
+class ActiveRecord::Schema < ActiveRecord::Migration::Current
+  def define(info, &block); end
+  def self.define(info = nil, &block); end
+end
 module ActiveRecord::Migration::Compatibility
   def self.find(version); end
 end
@@ -6043,7 +6047,7 @@ module ActiveRecord::ConnectionAdapters::MySQL::SchemaStatements
   def type_with_size_to_sql(type, size); end
   def update_table_definition(table_name, base); end
 end
-class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_19
+class ActiveRecord::ConnectionAdapters::MySQL::TypeMetadata < Anonymous_Delegator_22
   def ==(other); end
   def eql?(other); end
   def extra; end

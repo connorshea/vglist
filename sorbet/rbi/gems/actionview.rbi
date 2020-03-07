@@ -743,7 +743,7 @@ class ActionView::Template::Handlers::Builder
   def self.default_format=(val); end
   def self.default_format?; end
 end
-class ActionView::Template::LegacyTemplate < Anonymous_Delegator_20
+class ActionView::Template::LegacyTemplate < Anonymous_Delegator_23
   def initialize(template, source); end
   def source; end
 end
@@ -1185,17 +1185,251 @@ module ActionView::RoutingUrlFor
   def url_for(options = nil); end
   def url_options; end
 end
+class ActionView::Digestor
+  def self.digest(name:, finder:, format: nil, dependencies: nil); end
+  def self.find_template(finder, name, prefixes, partial, keys); end
+  def self.logger; end
+  def self.tree(name, finder, partial = nil, seen = nil); end
+end
+class ActionView::Digestor::Node
+  def children; end
+  def dependency_digest(finder, stack); end
+  def digest(finder, stack = nil); end
+  def initialize(name, logical_name, template, children = nil); end
+  def logical_name; end
+  def name; end
+  def self.create(name, logical_name, template, partial); end
+  def template; end
+  def to_dep_map; end
+end
+class ActionView::Digestor::Partial < ActionView::Digestor::Node
+end
+class ActionView::Digestor::Missing < ActionView::Digestor::Node
+  def digest(finder, _ = nil); end
+end
+class ActionView::Digestor::Injected < ActionView::Digestor::Node
+  def digest(finder, _ = nil); end
+end
+class ActionView::Digestor::NullLogger
+  def self.debug(_); end
+  def self.error(_); end
+end
+class ActionView::ActionViewError < StandardError
+end
+class ActionView::EncodingError < StandardError
+end
+class ActionView::WrongEncodingError < ActionView::EncodingError
+  def initialize(string, encoding); end
+  def message; end
+end
+class ActionView::MissingTemplate < ActionView::ActionViewError
+  def initialize(paths, path, prefixes, partial, details, *arg5); end
+  def path; end
+end
+class ActionView::Template::Error < ActionView::ActionViewError
+  def annotated_source_code; end
+  def cause; end
+  def file_name; end
+  def formatted_code_for(source_code, line_counter, indent, output); end
+  def initialize(template); end
+  def line_number; end
+  def source_extract(indentation = nil, output = nil); end
+  def source_location; end
+  def sub_template_message; end
+  def sub_template_of(template_path); end
+end
+class ActionView::SyntaxErrorInTemplate < ActionView::Template::Error
+  def annotated_source_code; end
+  def initialize(template, offending_code_string); end
+  def message; end
+end
+class ActionView::Template::RawFile
+  def format; end
+  def format=(arg0); end
+  def formats(*args, &block); end
+  def identifier; end
+  def initialize(filename); end
+  def render(*args); end
+  def type; end
+  def type=(arg0); end
+end
+class ActionView::Template::HTML
+  def format; end
+  def formats(*args, &block); end
+  def identifier; end
+  def initialize(string, type = nil); end
+  def inspect; end
+  def render(*args); end
+  def to_str; end
+  def type; end
+end
+class ActionView::Template::Inline < ActionView::Template
+  def compile(mod); end
+end
 module ActionView::Template::Sources
   extend ActiveSupport::Autoload
 end
-class ActionView::Template::Sources::File
-  def initialize(filename); end
-  def to_s; end
+class ActionView::Template::Text
+  def format; end
+  def formats(*args, &block); end
+  def identifier; end
+  def initialize(string); end
+  def inspect; end
+  def render(*args); end
+  def to_str; end
+  def type; end
+  def type=(arg0); end
 end
 class ActionView::UnboundTemplate
   def bind_locals(locals); end
   def build_template(locals); end
   def initialize(source, identifer, handler, options); end
+end
+class ActionView::TestCase < ActiveSupport::TestCase
+  def _helper_methods; end
+  def _helper_methods=(val); end
+  def _helper_methods?; end
+  def _helpers; end
+  def _helpers=(val); end
+  def _helpers?; end
+  def debug_missing_translation; end
+  def debug_missing_translation=(obj); end
+  def self.__callbacks; end
+  def self._helper_methods; end
+  def self._helper_methods=(val); end
+  def self._helper_methods?; end
+  def self._helpers; end
+  def self._helpers=(val); end
+  def self._helpers?; end
+  def self.debug_missing_translation; end
+  def self.debug_missing_translation=(obj); end
+  extend AbstractController::Helpers::ClassMethods
+  extend ActionView::Helpers::SanitizeHelper::ClassMethods
+  extend ActionView::Helpers::SanitizeHelper::ClassMethods
+  extend ActionView::Helpers::UrlHelper::ClassMethods
+  extend ActionView::TestCase::Behavior::ClassMethods
+  extend ActiveSupport::Testing::ConstantLookup::ClassMethods
+  include AbstractController::Helpers
+  include ActionDispatch::Assertions
+  include ActionView::Helpers
+  include ActionView::Helpers::AssetTagHelper
+  include ActionView::Helpers::FormHelper
+  include ActionView::Helpers::FormTagHelper
+  include ActionView::Helpers::FormTagHelper
+  include ActionView::Helpers::SanitizeHelper
+  include ActionView::Helpers::SanitizeHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::TranslationHelper
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::UrlHelper
+  include ActionView::TestCase::Behavior
+  include ActiveSupport::Testing::ConstantLookup
+  include Rails::Dom::Testing::Assertions
+  include Rails::Dom::Testing::Assertions
+end
+class ActionView::TestCase::TestController < ActionController::Base
+  def _layout(lookup_context, formats); end
+  def controller_path=(path); end
+  def initialize; end
+  def params; end
+  def params=(arg0); end
+  def request; end
+  def request=(arg0); end
+  def response; end
+  def response=(arg0); end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.controller_path=(arg0); end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  include ActionDispatch::Routing::UrlFor
+  include ActionDispatch::TestProcess
+  include Anonymous_Module_24
+end
+module Anonymous_Module_24
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_25
+  include Anonymous_Module_26
+end
+module ActionView::TestCase::Behavior
+  def _routes; end
+  def _user_defined_ivars; end
+  def _view; end
+  def config; end
+  def controller; end
+  def controller=(arg0); end
+  def document_root_element; end
+  def lookup_context(*args, &block); end
+  def make_test_case_available_to_view!; end
+  def method_missing(selector, *args); end
+  def output_buffer; end
+  def output_buffer=(arg0); end
+  def render(options = nil, local_assigns = nil, &block); end
+  def rendered; end
+  def rendered=(arg0); end
+  def rendered_views; end
+  def respond_to_missing?(name, include_private = nil); end
+  def say_no_to_protect_against_forgery!; end
+  def setup_with_controller; end
+  def view; end
+  def view_assigns; end
+  extend ActiveSupport::Concern
+  include AbstractController::Helpers
+  include ActionController::TemplateAssertions
+  include ActionDispatch::Assertions
+  include ActionDispatch::Routing::PolymorphicRoutes
+  include ActionView::Context
+  include ActionView::Helpers
+  include ActionView::RecordIdentifier
+  include ActionView::RoutingUrlFor
+  include ActiveSupport::Testing::ConstantLookup
+  include Rails::Dom::Testing::Assertions
+end
+module ActionView::TestCase::Behavior::ClassMethods
+  def determine_default_helper_class(name); end
+  def helper_class; end
+  def helper_class=(arg0); end
+  def helper_method(*methods); end
+  def include_helper_modules!; end
+  def new(*arg0); end
+  def tests(helper_class); end
+end
+class ActionView::TestCase::Behavior::RenderedViewsCollection
+  def add(view, locals); end
+  def initialize; end
+  def locals_for(view); end
+  def rendered_views; end
+  def view_rendered?(view, expected_locals); end
+end
+module ActionView::TestCase::Behavior::Locals
+  def render(options = nil, local_assigns = nil); end
+  def rendered_views; end
+  def rendered_views=(arg0); end
+end
+class ActionView::Template::Sources::File
+  def initialize(filename); end
+  def to_s; end
 end
 class ActionView::Renderer
   def cache_hits; end

@@ -145,3 +145,55 @@ class Addressable::URI::InvalidURIError < StandardError
 end
 module Addressable::URI::CharacterClasses
 end
+class Addressable::Template
+  def ==(template); end
+  def eql?(template); end
+  def expand(mapping, processor = nil, normalize_values = nil); end
+  def extract(uri, processor = nil); end
+  def freeze; end
+  def generate(params = nil, recall = nil, options = nil); end
+  def initialize(pattern); end
+  def inspect; end
+  def join_values(operator, return_value); end
+  def keys; end
+  def match(uri, processor = nil); end
+  def named_captures; end
+  def names; end
+  def normalize_keys(mapping); end
+  def normalize_value(value); end
+  def ordered_variable_defaults; end
+  def parse_template_pattern(pattern, processor = nil); end
+  def partial_expand(mapping, processor = nil, normalize_values = nil); end
+  def pattern; end
+  def source; end
+  def to_regexp; end
+  def transform_capture(mapping, capture, processor = nil, normalize_values = nil); end
+  def transform_partial_capture(mapping, capture, processor = nil, normalize_values = nil); end
+  def variable_defaults; end
+  def variables; end
+end
+class Addressable::Template::InvalidTemplateValueError < StandardError
+end
+class Addressable::Template::InvalidTemplateOperatorError < StandardError
+end
+class Addressable::Template::TemplateOperatorAbortedError < StandardError
+end
+class Addressable::Template::MatchData
+  def [](key, len = nil); end
+  def captures; end
+  def initialize(uri, template, mapping); end
+  def inspect; end
+  def keys; end
+  def mapping; end
+  def names; end
+  def post_match; end
+  def pre_match; end
+  def string; end
+  def template; end
+  def to_a; end
+  def to_s; end
+  def uri; end
+  def values; end
+  def values_at(*indexes); end
+  def variables; end
+end

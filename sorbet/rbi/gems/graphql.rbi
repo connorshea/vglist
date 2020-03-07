@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.3
+# graphql-1.10.4
 
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
@@ -521,6 +521,21 @@ class GraphQL::Language::Printer
   def print_union_type_definition(union_type); end
   def print_variable_definition(variable_definition); end
   def print_variable_identifier(variable_identifier); end
+end
+class GraphQL::Language::SanitizedPrinter < GraphQL::Language::Printer
+  def initialize(query); end
+  def print_argument(argument); end
+  def print_directive(directive); end
+  def print_field(field, indent: nil); end
+  def print_fragment_definition(fragment_def, indent: nil); end
+  def print_inline_fragment(inline_fragment, indent: nil); end
+  def print_list_type(list_type); end
+  def print_node(node, indent: nil); end
+  def print_operation_definition(operation_definition, indent: nil); end
+  def print_variable_identifier(variable_id); end
+  def query; end
+  def sanitized_query_string; end
+  def value_to_ast(value, type); end
 end
 class GraphQL::Language::DocumentFromSchemaDefinition
   def always_include_schema; end
@@ -1447,6 +1462,22 @@ class GraphQL::Tracing::PlatformTracing
   def trace(key, data); end
   def trace_field(type, field); end
 end
+class GraphQL::Tracing::AppOpticsTracing < GraphQL::Tracing::PlatformTracing
+  def gql_config; end
+  def graphql_context(context, layer); end
+  def graphql_multiplex(data); end
+  def graphql_query(query); end
+  def graphql_query_string(query_string); end
+  def metadata(data, layer); end
+  def multiplex_transaction_name(names); end
+  def platform_field_key(type, field); end
+  def platform_trace(platform_key, _key, data); end
+  def remove_comments(query); end
+  def sanitize(query); end
+  def self.version; end
+  def span_name(key); end
+  def transaction_name(query); end
+end
 class GraphQL::Tracing::AppsignalTracing < GraphQL::Tracing::PlatformTracing
   def platform_authorized_key(type); end
   def platform_field_key(type, field); end
@@ -1560,6 +1591,11 @@ class GraphQL::Execution::Interpreter
   def self.use(schema_class); end
   def sync_lazies(query: nil, multiplex: nil); end
 end
+class GraphQL::Execution::Interpreter::ArgumentsCache
+  def fetch(ast_node, argument_owner, parent_object); end
+  def initialize(query); end
+  def prepare_args_hash(ast_arg_or_hash_or_value); end
+end
 class GraphQL::Execution::Interpreter::ExecutionErrors
   def add(err_or_msg); end
   def initialize(ctx, ast_node, path); end
@@ -1573,7 +1609,7 @@ end
 class GraphQL::Execution::Interpreter::Runtime
   def add_dead_path(path); end
   def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: nil, trace: nil); end
-  def arguments(graphql_object, arg_owner, ast_node_or_hash); end
+  def arguments(graphql_object, arg_owner, ast_node); end
   def authorized_new(type, value, context, path); end
   def context; end
   def continue_field(path, value, field, type, ast_node, next_selections, is_non_null, owner_object, arguments); end
@@ -1585,7 +1621,6 @@ class GraphQL::Execution::Interpreter::Runtime
   def gather_selections(owner_object, owner_type, selections, selections_by_name); end
   def initialize(query:, response:); end
   def inspect; end
-  def prepare_args_hash(ast_arg_or_hash_or_value); end
   def query; end
   def resolve_type(type, value, path); end
   def resolve_with_directives(object, ast_node); end
@@ -1829,7 +1864,7 @@ class GraphQL::Schema
   def root_type_for_operation(operation); end
   def root_types; end
   def self.accessible?(member, ctx); end
-  def self.add_type(type, owner:, late_types:); end
+  def self.add_type(type, owner:, late_types:, path:); end
   def self.add_type_and_traverse(t, root:); end
   def self.after_lazy(value); end
   def self.all_middleware; end
@@ -2166,7 +2201,7 @@ class GraphQL::Schema::Warden
   def visible_type?(type_defn); end
 end
 module GraphQL::Schema::BuildFromDefinition
-  def self.from_definition(definition_string, default_resolve:, using: nil, interpreter: nil, parser: nil); end
+  def self.from_definition(definition_string, default_resolve:, using: nil, relay: nil, interpreter: nil, parser: nil); end
 end
 class GraphQL::Schema::BuildFromDefinition::ResolveMap
   def call(type, field, obj, args, ctx); end
@@ -2181,11 +2216,8 @@ end
 module GraphQL::Schema::BuildFromDefinition::ResolveMap::NullScalarCoerce
   def self.call(val, _ctx); end
 end
-module GraphQL::Schema::BuildFromDefinition::DefaultResolve
-  def self.call(type, field, obj, args, ctx); end
-end
 module GraphQL::Schema::BuildFromDefinition::Builder
-  def build(document, default_resolve: nil, using: nil, interpreter: nil); end
+  def build(document, default_resolve:, relay:, using: nil, interpreter: nil); end
   def build_arguments(type_class, arguments, type_resolver); end
   def build_default_value(default_value); end
   def build_deprecation_reason(directives); end
@@ -2723,13 +2755,16 @@ class GraphQL::Schema::Subscription::UnsubscribedError < GraphQL::Schema::Subscr
 end
 class GraphQL::Schema::Subscription::NoUpdateError < GraphQL::Schema::Subscription::EarlyTerminationError
 end
+class GraphQL::Schema::DuplicateTypeNamesError < GraphQL::Error
+  def initialize(type_name:, first_definition:, second_definition:, path:); end
+end
 class GraphQL::Schema::UnresolvedLateBoundTypeError < GraphQL::Error
   def initialize(type:); end
   def type; end
 end
 class GraphQL::Schema::InvalidDocumentError < GraphQL::Error
 end
-module InvalidName___Class_0x00___ResolveTypeWithType_39
+module InvalidName___Class_0x00___ResolveTypeWithType_43
   def resolve_type(type, obj, ctx); end
 end
 class GraphQL::Schema::CyclicalDefinitionError < GraphQL::Error
@@ -2738,7 +2773,7 @@ class GraphQL::Query
   def analysis_errors; end
   def analysis_errors=(arg0); end
   def analyzers(*args, &block); end
-  def arguments_for(irep_or_ast_node, definition); end
+  def arguments_for(ast_node, definition, parent_object: nil); end
   def ast_analyzers(*args, &block); end
   def context; end
   def document; end
@@ -2773,6 +2808,7 @@ class GraphQL::Query
   def root_type_for_operation(*args, &block); end
   def root_value; end
   def root_value=(arg0); end
+  def sanitized_query_string; end
   def schema; end
   def selected_operation; end
   def selected_operation_name; end

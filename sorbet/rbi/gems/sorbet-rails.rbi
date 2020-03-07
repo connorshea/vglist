@@ -211,6 +211,8 @@ class ActiveRecordOverrides
   include Singleton
 end
 class SorbetRails::TypedEnumConfig < T::Struct
+  def __t_props_generated_deserialize(*args); end
+  def __t_props_generated_serialize(*args); end
   def class_name; end
   def self.inherited(s); end
   def strict_mode; end
@@ -283,9 +285,9 @@ module GeneratedUrlHelpers
   def self._routes; end
   def self.default_url_options=(obj); end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_38
+  include Anonymous_Module_42
 end
-module Anonymous_Module_38
+module Anonymous_Module_42
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -297,9 +299,9 @@ module Anonymous_Module_38
   def self.url_for(options); end
   def self.url_options; end
   extend ActiveSupport::Concern
-  extend Anonymous_Module_29
-  extend Anonymous_Module_30
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_29
-  include Anonymous_Module_30
+  include Anonymous_Module_25
+  include Anonymous_Module_26
 end

@@ -1619,7 +1619,7 @@ class ActionDispatch::Response
   include MonitorMixin
   include Rack::Response::Helpers
 end
-class ActionDispatch::Response::Header < Anonymous_Delegator_2
+class ActionDispatch::Response::Header < Anonymous_Delegator_3
   def []=(k, v); end
   def initialize(response, header); end
   def merge(other); end
@@ -1746,6 +1746,7 @@ class ActionController::Metal < AbstractController::Base
   def status=(arg); end
   def to_a; end
   def url_for(string); end
+  include ActionController::Testing::Functional
 end
 class ActionController::LogSubscriber < ActiveSupport::LogSubscriber
 end
@@ -2172,7 +2173,7 @@ class ActionDispatch::Session::CookieStore < ActionDispatch::Session::AbstractSe
   def unpacked_cookie_data(req); end
   def write_session(req, sid, session_data, options); end
 end
-class ActionDispatch::Session::CookieStore::SessionId < Anonymous_Delegator_3
+class ActionDispatch::Session::CookieStore::SessionId < Anonymous_Delegator_4
   def cookie_value; end
   def initialize(session_id, cookie_value = nil); end
 end
@@ -2234,7 +2235,7 @@ module ActionController::ParamsWrapper
   def process_action(*args); end
   extend ActiveSupport::Concern
 end
-class Anonymous_Struct_4 < Struct
+class Anonymous_Struct_5 < Struct
   def exclude; end
   def exclude=(_); end
   def format; end
@@ -2252,7 +2253,7 @@ class Anonymous_Struct_4 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class ActionController::ParamsWrapper::Options < Anonymous_Struct_4
+class ActionController::ParamsWrapper::Options < Anonymous_Struct_5
   def _default_wrap_model; end
   def include; end
   def initialize(name, format, include, exclude, klass, model); end
@@ -2919,7 +2920,7 @@ class ActionController::API < ActionController::Metal
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   extend ActiveSupport::Rescuable::ClassMethods
-  extend Anonymous_Module_5
+  extend Anonymous_Module_6
   extend Devise::Controllers::Helpers::ClassMethods
   include AbstractController::Callbacks
   include AbstractController::Callbacks
@@ -3176,7 +3177,7 @@ class ActionController::Base < ActionController::Metal
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   extend ActiveSupport::Rescuable::ClassMethods
-  extend Anonymous_Module_6
+  extend Anonymous_Module_7
   extend Devise::Controllers::Helpers::ClassMethods
   extend Responders::ControllerMethod
   extend Responders::ControllerMethod
@@ -3248,7 +3249,7 @@ class ActionController::Base < ActionController::Metal
   include Turbolinks::Controller
   include Turbolinks::Redirection
 end
-module Anonymous_Module_5
+module Anonymous_Module_6
   def inherited(klass); end
 end
 module ActionView::RoutingUrlFor
@@ -3257,8 +3258,114 @@ module ActionView::RoutingUrlFor
   include ActionDispatch::Routing::UrlFor
   include ActionDispatch::Routing::UrlFor
 end
-module Anonymous_Module_6
+module Anonymous_Module_7
   def inherited(klass); end
+end
+class ActionDispatch::TestRequest < ActionDispatch::Request
+  def accept=(mime_types); end
+  def action=(action_name); end
+  def host=(host); end
+  def if_modified_since=(last_modified); end
+  def if_none_match=(etag); end
+  def path=(path); end
+  def port=(number); end
+  def remote_addr=(addr); end
+  def request_method=(method); end
+  def request_uri=(uri); end
+  def self.create(env = nil); end
+  def self.default_env; end
+  def user_agent=(user_agent); end
+end
+module ActionController::TemplateAssertions
+  def assert_template(options = nil, message = nil); end
+end
+module ActionController::Testing
+  extend ActiveSupport::Concern
+end
+module ActionController::Testing::Functional
+  def recycle!; end
+end
+module ActionDispatch::TestProcess
+  def assigns(key = nil); end
+  def cookies; end
+  def flash; end
+  def redirect_to_url; end
+  def session; end
+  include ActionDispatch::TestProcess::FixtureFile
+end
+module ActionDispatch::TestProcess::FixtureFile
+  def fixture_file_upload(path, mime_type = nil, binary = nil); end
+end
+class ActionController::TestRequest < ActionDispatch::TestRequest
+  def assign_parameters(routes, controller_path, action, parameters, generated_path, query_string_keys); end
+  def content_type=(type); end
+  def controller_class; end
+  def initialize(env, session, controller_class); end
+  def params_parsers; end
+  def query_string=(string); end
+  def self.create(controller_class); end
+  def self.default_env; end
+  def self.new_session; end
+end
+class ActionController::LiveTestResponse < ActionController::Live::Response
+  def error?; end
+  def missing?; end
+  def success?; end
+end
+class ActionController::TestSession < Rack::Session::Abstract::SessionHash
+  def destroy; end
+  def exists?; end
+  def fetch(key, *args, &block); end
+  def initialize(session = nil); end
+  def keys; end
+  def load!; end
+  def values; end
+end
+class ActionController::TestCase < ActiveSupport::TestCase
+  def _controller_class; end
+  def _controller_class=(val); end
+  def _controller_class?; end
+  def self.__callbacks; end
+  def self._controller_class; end
+  def self._controller_class=(val); end
+  def self._controller_class?; end
+  extend ActionController::TestCase::Behavior::ClassMethods
+  extend ActiveSupport::Testing::ConstantLookup::ClassMethods
+  include ActionController::TemplateAssertions
+  include ActionController::TestCase::Behavior
+  include ActionDispatch::Assertions
+  include ActiveSupport::Testing::ConstantLookup
+  include Rails::Dom::Testing::Assertions
+  include Rails::Dom::Testing::Assertions
+end
+module ActionController::TestCase::Behavior
+  def build_response(klass); end
+  def check_required_ivars; end
+  def controller_class_name; end
+  def delete(action, **args); end
+  def document_root_element; end
+  def generated_path(generated_extras); end
+  def get(action, **args); end
+  def head(action, **args); end
+  def patch(action, **args); end
+  def post(action, **args); end
+  def process(action, method: nil, params: nil, session: nil, body: nil, flash: nil, format: nil, xhr: nil, as: nil); end
+  def put(action, **args); end
+  def query_parameter_names(generated_extras); end
+  def request; end
+  def response; end
+  def scrub_env!(env); end
+  def setup_controller_request_and_response; end
+  extend ActiveSupport::Concern
+  include ActionDispatch::TestProcess
+  include ActiveSupport::Testing::ConstantLookup
+  include Rails::Dom::Testing::Assertions
+end
+module ActionController::TestCase::Behavior::ClassMethods
+  def controller_class; end
+  def controller_class=(new_class); end
+  def determine_default_controller_class(name); end
+  def tests(controller_class); end
 end
 class ActionDispatch::Routing::RoutesProxy
   def _routes; end
