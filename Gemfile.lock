@@ -103,7 +103,7 @@ GEM
     childprocess (3.0.0)
     choice (0.2.0)
     coderay (1.1.2)
-    commander (4.5.0)
+    commander (4.5.1)
       highline (~> 2.0.0)
     concurrent-ruby (1.1.6)
     connection_pool (2.2.2)
