@@ -18,7 +18,7 @@
     "vue": "^2.6.11",
     "vue-good-table": "^2.19.1",
     "vue-loader": "^15.9",
-    "vue-select": "^3.7.1",
+    "vue-select": "^3.9.0",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.42"
   },
