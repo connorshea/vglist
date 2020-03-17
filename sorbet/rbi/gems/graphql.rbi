@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.4
+# graphql-1.10.5
 
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
@@ -1370,25 +1370,24 @@ class GraphQL::Analysis::AST::FieldUsage < GraphQL::Analysis::AST::Analyzer
   def result; end
 end
 class GraphQL::Analysis::AST::QueryComplexity < GraphQL::Analysis::AST::Analyzer
+  def applies_to?(query, left_scope, right_scope); end
+  def field_complexity(scoped_type_complexity, max_complexity:, child_complexity: nil); end
   def initialize(query); end
   def max_possible_complexity; end
+  def merged_max_complexity(query, children_for_scope); end
+  def merged_max_complexity_for_scopes(query, scoped_children_hashes); end
   def on_enter_field(node, parent, visitor); end
   def on_leave_field(node, parent, visitor); end
   def result; end
 end
 class GraphQL::Analysis::AST::QueryComplexity::ScopedTypeComplexity
-  def initialize(node, field_definition, query); end
+  def field_definition; end
+  def initialize(node, field_definition, query, response_path); end
   def own_complexity(child_complexity); end
+  def query; end
+  def response_path; end
   def scoped_children; end
   def terminal?; end
-end
-module GraphQL::Analysis::AST::QueryComplexity::ComplexityMergeFunctions
-  def applies_to?(query, left_scope, right_scope); end
-  def merged_max_complexity(query, children_for_scope); end
-  def merged_max_complexity_for_scopes(query, scoped_children_hashes); end
-  def self.applies_to?(query, left_scope, right_scope); end
-  def self.merged_max_complexity(query, children_for_scope); end
-  def self.merged_max_complexity_for_scopes(query, scoped_children_hashes); end
 end
 class GraphQL::Analysis::AST::MaxQueryComplexity < GraphQL::Analysis::AST::QueryComplexity
   def result; end
@@ -1689,6 +1688,7 @@ class GraphQL::Execution::Lookahead
   def field; end
   def find_selected_nodes(node, field_name, field_defn, arguments:, matches:); end
   def find_selections(subselections_by_type, selections_on_type, selected_type, ast_selections, arguments); end
+  def get_class_based_field(type, name); end
   def initialize(query:, ast_nodes:, field: nil, root_type: nil, owner_type: nil); end
   def inspect; end
   def name; end
@@ -1708,18 +1708,6 @@ class GraphQL::Execution::Lookahead::NullLookahead < GraphQL::Execution::Lookahe
   def selection(*arg0); end
   def selections(*arg0); end
   def selects?(*arg0); end
-end
-module GraphQL::Execution::Lookahead::ArgumentHelpers
-  def arg_to_value(query, arg_type, ast_value); end
-  def arguments(query, arg_owner, ast_node); end
-  def flatten_ast_value(query, v); end
-  def self.arg_to_value(query, arg_type, ast_value); end
-  def self.arguments(query, arg_owner, ast_node); end
-  def self.flatten_ast_value(query, v); end
-end
-module GraphQL::Execution::Lookahead::FieldHelpers
-  def get_field(schema, owner_type, field_name); end
-  def self.get_field(schema, owner_type, field_name); end
 end
 class GraphQL::Execution::Multiplex
   def context; end
@@ -3051,7 +3039,8 @@ class GraphQL::Query::Variables
   extend Forwardable
 end
 class GraphQL::Query::InputValidationResult
-  def add_problem(explanation, path = nil); end
+  def add_problem(explanation, path = nil, extensions: nil, message: nil); end
+  def initialize(valid: nil, problems: nil); end
   def merge_result!(path, inner_result); end
   def problems; end
   def problems=(arg0); end
@@ -3226,12 +3215,12 @@ class GraphQL::Relay::BaseConnection
   def end_cursor; end
   def field; end
   def first; end
-  def get_limited_arg(arg_name); end
   def has_next_page; end
   def has_previous_page; end
   def initialize(nodes, arguments, field: nil, max_page_size: nil, parent: nil, context: nil); end
   def inspect; end
   def last; end
+  def limit_pagination_argument(argument, max_page_size); end
   def max_page_size; end
   def nodes; end
   def page_info; end
@@ -3419,10 +3408,6 @@ class GraphQL::CoercionError < GraphQL::Error
   def extensions; end
   def extensions=(arg0); end
   def initialize(message, extensions: nil); end
-end
-class GraphQL::LiteralValidationError < GraphQL::Error
-  def ast_value; end
-  def ast_value=(arg0); end
 end
 class GraphQL::RuntimeTypeError < GraphQL::Error
 end
@@ -3641,7 +3626,7 @@ class GraphQL::StaticValidation::ValidationContext
   def query; end
   def schema(*args, &block); end
   def type_definition(*args, &block); end
-  def valid_literal?(ast_value, type); end
+  def validate_literal(ast_value, type); end
   def visitor; end
   def warden(*args, &block); end
   extend Forwardable
@@ -3651,7 +3636,9 @@ class GraphQL::StaticValidation::LiteralValidator
   def ensure_array(value); end
   def initialize(context:); end
   def maybe_raise_if_invalid(ast_value); end
+  def merge_results(results_list); end
   def present_input_field_values_are_valid(type, ast_node); end
+  def recursively_validate(ast_value, type); end
   def required_input_fields_are_present(type, ast_node); end
   def validate(ast_value, type); end
 end
@@ -3709,7 +3696,7 @@ end
 class GraphQL::StaticValidation::ArgumentLiteralsAreCompatibleError < GraphQL::StaticValidation::Error
   def argument_name; end
   def code; end
-  def initialize(message, type:, path: nil, nodes: nil, argument: nil, extensions: nil); end
+  def initialize(message, type:, path: nil, nodes: nil, argument: nil, extensions: nil, coerce_extensions: nil); end
   def to_h; end
   def type_name; end
 end
@@ -3722,6 +3709,7 @@ end
 module GraphQL::StaticValidation::ArgumentsAreDefined
   def node_type(parent); end
   def on_argument(node, parent); end
+  def parent_definition(parent); end
   def parent_name(parent, type_defn); end
 end
 module GraphQL::StaticValidation::FieldsWillMerge
@@ -4018,9 +4006,7 @@ class GraphQL::StaticValidation::VariableUsagesAreAllowedError < GraphQL::Static
   def variable_name; end
 end
 module GraphQL::StaticValidation::ArgumentLiteralsAreCompatible
-  def node_type(parent); end
   def on_argument(node, parent); end
-  def parent_name(parent, type_defn); end
 end
 class GraphQL::StaticValidation::VariableDefaultValuesAreCorrectlyTypedError < GraphQL::StaticValidation::Error
   def code; end
@@ -4396,6 +4382,7 @@ class GraphQL::Pagination::Connection
   def decode(cursor); end
   def edge_nodes; end
   def edges; end
+  def encode(cursor); end
   def end_cursor; end
   def first; end
   def first=(arg0); end

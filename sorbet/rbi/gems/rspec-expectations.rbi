@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-expectations/all/rspec-expectations.rbi
 #
-# rspec-expectations-3.9.0
+# rspec-expectations-3.9.1
 
 module RSpec
 end
@@ -1012,11 +1012,13 @@ class RSpec::Matchers::BuiltIn::RespondTo < RSpec::Matchers::BuiltIn::BaseMatche
   def failure_message; end
   def failure_message_when_negated; end
   def find_failing_method_names(actual, filter_method); end
+  def ignoring_method_signature_failure!; end
   def initialize(*names); end
   def matches?(actual); end
   def matches_arity?(actual, name); end
   def method_signature_for(actual, name); end
   def pp_names; end
+  def setup_method_signature_expectation; end
   def with(n); end
   def with_any_keywords; end
   def with_arity; end
