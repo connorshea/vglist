@@ -1770,7 +1770,6 @@ class ActiveRecord::InternalMetadata
   include ::ActiveRecord::InternalMetadata::GeneratedAssociationMethods
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation
@@ -2136,10 +2135,6 @@ class ActiveRecord::Relation::WhereClause
   ARRAY_WITH_EMPTY_STRING = ::T.let(nil, ::T.untyped)
 end
 
-class ActiveRecord::SchemaMigration
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 module ActiveRecord::SchemaMigration::GeneratedAttributeMethods
   extend ::Mutex_m
 end
@@ -2433,10 +2428,6 @@ module ActiveRecord::VERSION
   TINY = ::T.let(nil, ::T.untyped)
 end
 
-class ActiveStorage::Attachment
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 module ActiveStorage::Attachment::GeneratedAttributeMethods
   extend ::Mutex_m
 end
@@ -2450,10 +2441,6 @@ class ActiveStorage::BaseController
 end
 
 class ActiveStorage::BaseController
-end
-
-class ActiveStorage::Blob
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 module ActiveStorage::Blob::GeneratedAttributeMethods
@@ -7170,7 +7157,6 @@ class Company
   def pg_search_multisearchable_options=(val); end
 
   def pg_search_multisearchable_options?(); end
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Company::ActiveRecord_AssociationRelation
@@ -8225,20 +8211,12 @@ class Docile::FallbackContextProxy
   NON_PROXIED_METHODS = ::T.let(nil, ::T.untyped)
 end
 
-class Doorkeeper::AccessGrant
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 module Doorkeeper::AccessGrant::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class Doorkeeper::AccessToken
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 module Doorkeeper::AccessToken::GeneratedAttributeMethods
@@ -8251,7 +8229,6 @@ end
 
 class Doorkeeper::Application
   include ::Doorkeeper::Models::Ownership
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 module Doorkeeper::Application::GeneratedAttributeMethods
@@ -8451,7 +8428,6 @@ class Engine
   def pg_search_multisearchable_options=(val); end
 
   def pg_search_multisearchable_options?(); end
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Engine::ActiveRecord_AssociationRelation
@@ -8791,10 +8767,6 @@ class Etc::Passwd
   def self.members(); end
 end
 
-class Event
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 class Event::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Event::GeneratedRelationMethods
@@ -8941,10 +8913,6 @@ class ExitCalledError
 end
 
 class ExitCalledError
-end
-
-class ExternalAccount
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class ExternalAccount::ActiveRecord_AssociationRelation
@@ -9639,10 +9607,6 @@ class Faraday::Utils::Headers
   KeyMap = ::T.let(nil, ::T.untyped)
 end
 
-class FavoriteGame
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 class FavoriteGame::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::FavoriteGame::GeneratedRelationMethods
@@ -9881,7 +9845,6 @@ class Game
   def pg_search_multisearchable_options=(val); end
 
   def pg_search_multisearchable_options?(); end
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Game::ActiveRecord_AssociationRelation
@@ -9959,10 +9922,6 @@ class Game
   def self.search(*args); end
 end
 
-class GameDeveloper
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 class GameDeveloper::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameDeveloper::GeneratedRelationMethods
@@ -9999,10 +9958,6 @@ end
 
 module GameDeveloper::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class GameEngine
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class GameEngine::ActiveRecord_AssociationRelation
@@ -10043,10 +9998,6 @@ module GameEngine::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class GameGenre
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 class GameGenre::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameGenre::GeneratedRelationMethods
@@ -10083,10 +10034,6 @@ end
 
 module GameGenre::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class GamePlatform
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class GamePlatform::ActiveRecord_AssociationRelation
@@ -10127,10 +10074,6 @@ module GamePlatform::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class GamePublisher
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 class GamePublisher::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePublisher::GeneratedRelationMethods
@@ -10167,10 +10110,6 @@ end
 
 module GamePublisher::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class GamePurchase
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class GamePurchase::ActiveRecord_AssociationRelation
@@ -10238,10 +10177,6 @@ module GamePurchase::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class GamePurchasePlatform
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 class GamePurchasePlatform::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePurchasePlatform::GeneratedRelationMethods
@@ -10278,10 +10213,6 @@ end
 
 module GamePurchasePlatform::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class GamePurchaseStore
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class GamePurchaseStore::ActiveRecord_AssociationRelation
@@ -10543,7 +10474,6 @@ class Genre
   def pg_search_multisearchable_options=(val); end
 
   def pg_search_multisearchable_options?(); end
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Genre::ActiveRecord_AssociationRelation
@@ -16828,7 +16758,6 @@ class Platform
   def pg_search_multisearchable_options=(val); end
 
   def pg_search_multisearchable_options?(); end
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Platform::ActiveRecord_AssociationRelation
@@ -19795,10 +19724,6 @@ module Regexp::Syntax::Token::UnicodeProperty::Category
   Punctuation = ::T.let(nil, ::T.untyped)
   Separator = ::T.let(nil, ::T.untyped)
   Symbol = ::T.let(nil, ::T.untyped)
-end
-
-class Relationship
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Relationship::ActiveRecord_AssociationRelation
@@ -25062,7 +24987,6 @@ class Series
   def pg_search_multisearchable_options=(val); end
 
   def pg_search_multisearchable_options?(); end
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Series::ActiveRecord_AssociationRelation
@@ -25750,10 +25674,6 @@ module Sprockets
   extend ::Sprockets::DigestUtils
 end
 
-class SteamAppId
-  RelationType = ::T.let(nil, ::T.untyped)
-end
-
 class SteamAppId::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::SteamAppId::GeneratedRelationMethods
@@ -25794,10 +25714,6 @@ end
 
 class StopIteration
   def result(); end
-end
-
-class Store
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class Store::ActiveRecord_AssociationRelation
@@ -26660,7 +26576,6 @@ class User
   def password_confirmation(); end
 
   def password_confirmation=(password_confirmation); end
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class User::ActiveRecord_AssociationRelation
@@ -27480,10 +27395,6 @@ end
 
 class Webpacker::Env
   DEFAULT = ::T.let(nil, ::T.untyped)
-end
-
-class WikidataBlocklist
-  RelationType = ::T.let(nil, ::T.untyped)
 end
 
 class WikidataBlocklist::ActiveRecord_AssociationRelation
