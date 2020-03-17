@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubyzip/all/rubyzip.rbi
 #
-# rubyzip-2.2.0
+# rubyzip-2.3.0
 
 module Zip
   def case_insensitive_match; end
@@ -37,7 +37,7 @@ end
 class Zip::DOSTime < Time
   def dos_equals(other); end
   def self.from_time(time); end
-  def self.parse_binary_dos_format(binaryDosDate, binaryDosTime); end
+  def self.parse_binary_dos_format(bin_dos_date, bin_dos_time); end
   def to_binary_dos_date; end
   def to_binary_dos_time; end
 end
@@ -272,8 +272,8 @@ class Zip::ExtraField < Hash
   def c_dir_size; end
   def create(name); end
   def create_unknown_item; end
-  def extra_field_type_exist(binstr, id, len, i); end
-  def extra_field_type_unknown(binstr, len, i); end
+  def extra_field_type_exist(binstr, id, len, index); end
+  def extra_field_type_unknown(binstr, len, index); end
   def initialize(binstr = nil); end
   def length; end
   def local_size; end
@@ -310,7 +310,7 @@ end
 class Zip::CentralDirectory
   def ==(other); end
   def comment; end
-  def each(&proc); end
+  def each(&a_proc); end
   def entries; end
   def get_64_e_o_c_d(buf); end
   def get_e_o_c_d(buf); end
@@ -332,28 +332,28 @@ end
 class Zip::File < Zip::CentralDirectory
   def add(entry, src_path, &continue_on_exists_proc); end
   def add_stored(entry, src_path, &continue_on_exists_proc); end
-  def check_entry_exists(entryName, continue_on_exists_proc, procedureName); end
+  def check_entry_exists(entry_name, continue_on_exists_proc, proc_name); end
   def check_file(path); end
   def close; end
   def comment; end
   def comment=(arg0); end
   def commit; end
   def commit_required?; end
-  def directory?(newEntry, srcPath); end
+  def directory?(new_entry, src_path); end
   def extract(entry, dest_path, &block); end
   def find_entry(entry_name); end
   def get_entry(entry); end
-  def get_input_stream(entry, &aProc); end
-  def get_output_stream(entry, permission_int = nil, comment = nil, extra = nil, compressed_size = nil, crc = nil, compression_method = nil, size = nil, time = nil, &aProc); end
+  def get_input_stream(entry, &a_proc); end
+  def get_output_stream(entry, permission_int = nil, comment = nil, extra = nil, compressed_size = nil, crc = nil, compression_method = nil, size = nil, time = nil, &a_proc); end
   def glob(*args, &block); end
   def initialize(path_or_io, create = nil, buffer = nil, options = nil); end
-  def mkdir(entryName, permissionInt = nil); end
+  def mkdir(entry_name, permission = nil); end
   def name; end
   def on_success_replace; end
   def read(entry); end
   def remove(entry); end
   def rename(entry, new_name, &continue_on_exists_proc); end
-  def replace(entry, srcPath); end
+  def replace(entry, src_path); end
   def restore_ownership; end
   def restore_ownership=(arg0); end
   def restore_permissions; end
@@ -361,7 +361,7 @@ class Zip::File < Zip::CentralDirectory
   def restore_times; end
   def restore_times=(arg0); end
   def self.add_buffer; end
-  def self.foreach(aZipFileName, &block); end
+  def self.foreach(zip_file_name, &block); end
   def self.get_partial_zip_file_name(zip_file_name, partial_zip_file_name); end
   def self.get_segment_count_for_split(zip_file_size, segment_size); end
   def self.get_segment_size_for_split(segment_size); end
@@ -444,7 +444,7 @@ end
 class Zip::PassThruCompressor < Zip::Compressor
   def <<(data); end
   def crc; end
-  def initialize(outputStream); end
+  def initialize(output_stream); end
   def size; end
 end
 class Zip::PassThruDecompressor < Zip::Decompressor
@@ -487,18 +487,18 @@ module Zip::TraditionalEncryption
   def header_bytesize; end
   def initialize(password); end
   def reset_keys!; end
-  def update_keys(n); end
+  def update_keys(num); end
 end
 class Zip::TraditionalEncrypter < Zip::Encrypter
   def data_descriptor(crc32, compressed_size, uncomprssed_size); end
-  def encode(n); end
+  def encode(num); end
   def encrypt(data); end
   def header(mtime); end
   def reset!; end
   include Zip::TraditionalEncryption
 end
 class Zip::TraditionalDecrypter < Zip::Decrypter
-  def decode(n); end
+  def decode(num); end
   def decrypt(data); end
   def reset!(header); end
   include Zip::TraditionalEncryption
@@ -523,10 +523,10 @@ class Zip::StreamableStream < Anonymous_Delegator_462
   def get_input_stream; end
   def get_output_stream; end
   def initialize(entry); end
-  def write_to_zip_output_stream(aZipOutputStream); end
+  def write_to_zip_output_stream(output_stream); end
 end
 class Zip::StreamableDirectory < Zip::Entry
-  def initialize(zipfile, entry, srcPath = nil, permissionInt = nil); end
+  def initialize(zipfile, entry, src_path = nil, permission = nil); end
 end
 class Zip::Error < StandardError
 end
@@ -552,62 +552,62 @@ module Zip::FileSystem
   def initialize; end
 end
 class Zip::FileSystem::ZipFsFile
-  def atime(fileName); end
-  def basename(fileName); end
+  def atime(filename); end
+  def basename(filename); end
   def blockdev?(_filename); end
   def chardev?(_filename); end
-  def chmod(modeInt, *filenames); end
-  def chown(ownerInt, groupInt, *filenames); end
-  def ctime(fileName); end
+  def chmod(mode, *filenames); end
+  def chown(owner, group, *filenames); end
+  def ctime(filename); end
   def delete(*args); end
   def dir=(arg0); end
-  def directory?(fileName); end
-  def dirname(fileName); end
-  def executable?(fileName); end
-  def executable_real?(fileName); end
-  def exist?(fileName); end
-  def exists?(fileName); end
-  def expand_path(aPath); end
-  def file?(fileName); end
-  def foreach(fileName, aSep = nil, &aProc); end
-  def ftype(fileName); end
-  def get_entry(fileName); end
-  def grpowned?(fileName); end
-  def initialize(mappedZip); end
+  def directory?(filename); end
+  def dirname(filename); end
+  def executable?(filename); end
+  def executable_real?(filename); end
+  def exist?(filename); end
+  def exists?(filename); end
+  def expand_path(path); end
+  def file?(filename); end
+  def foreach(filename, sep = nil, &a_proc); end
+  def ftype(filename); end
+  def get_entry(filename); end
+  def grpowned?(filename); end
+  def initialize(mapped_zip); end
   def join(*fragments); end
-  def link(_fileName, _symlinkName); end
-  def lstat(fileName); end
-  def mtime(fileName); end
-  def new(fileName, openMode = nil); end
-  def open(fileName, openMode = nil, permissionInt = nil, &block); end
-  def owned?(fileName); end
+  def link(_filename, _symlink_name); end
+  def lstat(filename); end
+  def mtime(filename); end
+  def new(filename, mode = nil); end
+  def open(filename, mode = nil, permissions = nil, &block); end
+  def owned?(filename); end
   def pipe; end
   def pipe?(_filename); end
-  def popen(*args, &aProc); end
-  def read(fileName); end
-  def readable?(fileName); end
-  def readable_real?(fileName); end
-  def readlines(fileName); end
-  def readlink(_fileName); end
-  def rename(fileToRename, newName); end
-  def setgid?(fileName); end
-  def setuid?(fileName); end
-  def size(fileName); end
-  def size?(fileName); end
-  def socket?(_fileName); end
-  def split(fileName); end
-  def stat(fileName); end
-  def sticky?(fileName); end
-  def symlink(_fileName, _symlinkName); end
-  def symlink?(_fileName); end
-  def truncate(_fileName, _len); end
+  def popen(*args, &a_proc); end
+  def read(filename); end
+  def readable?(filename); end
+  def readable_real?(filename); end
+  def readlines(filename); end
+  def readlink(_filename); end
+  def rename(file_to_rename, new_name); end
+  def setgid?(filename); end
+  def setuid?(filename); end
+  def size(filename); end
+  def size?(filename); end
+  def socket?(_filename); end
+  def split(filename); end
+  def stat(filename); end
+  def sticky?(filename); end
+  def symlink(_filename, _symlink_name); end
+  def symlink?(_filename); end
+  def truncate(_filename, _len); end
   def umask(*args); end
-  def unix_mode_cmp(fileName, mode); end
+  def unix_mode_cmp(filename, mode); end
   def unlink(*args); end
-  def utime(modifiedTime, *fileNames); end
-  def writable?(fileName); end
-  def writable_real?(fileName); end
-  def zero?(fileName); end
+  def utime(modified_time, *filenames); end
+  def writable?(filename); end
+  def writable_real?(filename); end
+  def zero?(filename); end
 end
 class Zip::FileSystem::ZipFsFile::ZipFsStat
   def atime; end
@@ -625,9 +625,9 @@ class Zip::FileSystem::ZipFsFile::ZipFsStat
   def get_entry; end
   def gid; end
   def grpowned?; end
-  def initialize(zipFsFile, entryName); end
+  def initialize(zip_fs_file, entry_name); end
   def ino; end
-  def kind_of?(t); end
+  def kind_of?(type); end
   def mode; end
   def mtime; end
   def nlink; end
@@ -652,47 +652,47 @@ class Zip::FileSystem::ZipFsFile::ZipFsStat
   def zero?; end
 end
 class Zip::FileSystem::ZipFsDir
-  def chdir(aDirectoryName); end
+  def chdir(directory_name); end
   def chroot(*_args); end
-  def delete(entryName); end
-  def entries(aDirectoryName); end
+  def delete(entry_name); end
+  def entries(directory_name); end
   def file=(arg0); end
-  def foreach(aDirectoryName); end
+  def foreach(directory_name); end
   def getwd; end
   def glob(*args, &block); end
-  def initialize(mappedZip); end
-  def mkdir(entryName, permissionInt = nil); end
-  def new(aDirectoryName); end
-  def open(aDirectoryName); end
+  def initialize(mapped_zip); end
+  def mkdir(entry_name, permissions = nil); end
+  def new(directory_name); end
+  def open(directory_name); end
   def pwd; end
-  def rmdir(entryName); end
-  def unlink(entryName); end
+  def rmdir(entry_name); end
+  def unlink(entry_name); end
 end
 class Zip::FileSystem::ZipFsDirIterator
   def close; end
-  def each(&aProc); end
-  def initialize(arrayOfFileNames); end
+  def each(&a_proc); end
+  def initialize(filenames); end
   def read; end
   def rewind; end
-  def seek(anIntegerPosition); end
+  def seek(position); end
   def tell; end
   include Enumerable
 end
 class Zip::FileSystem::ZipFileNameMapper
   def each; end
-  def expand_path(aPath); end
-  def expand_to_entry(aPath); end
-  def find_entry(fileName); end
-  def get_entry(fileName); end
-  def get_input_stream(fileName, &aProc); end
-  def get_output_stream(fileName, permissionInt = nil, &aProc); end
+  def expand_path(path); end
+  def expand_to_entry(path); end
+  def find_entry(filename); end
+  def get_entry(filename); end
+  def get_input_stream(filename, &a_proc); end
+  def get_output_stream(filename, permissions = nil, &a_proc); end
   def glob(pattern, *flags, &block); end
-  def initialize(zipFile); end
-  def mkdir(fileName, permissionInt = nil); end
+  def initialize(zip_file); end
+  def mkdir(filename, permissions = nil); end
   def pwd; end
   def pwd=(arg0); end
-  def read(fileName); end
-  def remove(fileName); end
-  def rename(fileName, newName, &continueOnExistsProc); end
+  def read(filename); end
+  def remove(filename); end
+  def rename(filename, new_name, &continue_on_exists_proc); end
   include Enumerable
 end

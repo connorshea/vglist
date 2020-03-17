@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-rails/all/rspec-rails.rbi
 #
-# rspec-rails-3.9.0
+# rspec-rails-3.9.1
 
 module RSpec
 end
