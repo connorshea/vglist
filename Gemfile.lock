@@ -209,7 +209,7 @@ GEM
       sorbet-runtime (>= 0.5)
     parser (2.7.0.4)
       ast (~> 2.4.0)
-    pg (1.2.2)
+    pg (1.2.3)
     pg_search (2.3.2)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
