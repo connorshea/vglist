@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activesupport/all/activesupport.rbi
 #
-# activesupport-6.0.2.1
+# activesupport-6.0.2.2
 
 class Hash
   def _deep_transform_keys_in_object!(object, &block); end
@@ -36,8 +36,8 @@ class Hash
   def reverse_merge!(other_hash); end
   def reverse_merge(other_hash); end
   def reverse_update(other_hash); end
+  def self.from_trusted_xml(xml); end
   def self.from_xml(xml, disallowed_types = nil); end
-  def self.try_convert(arg0); end
   def slice!(*keys); end
   def stringify_keys!; end
   def stringify_keys; end

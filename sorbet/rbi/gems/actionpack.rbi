@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionpack/all/actionpack.rbi
 #
-# actionpack-6.0.2.1
+# actionpack-6.0.2.2
 
 module ActionPack
   def self.gem_version; end

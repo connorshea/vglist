@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/inline_svg/all/inline_svg.rbi
 #
-# inline_svg-1.7.0
+# inline_svg-1.7.1
 
 module InlineSvg
   def self.configuration; end
@@ -53,6 +53,8 @@ class InlineSvg::StaticAssetFinder
   def self.find_asset(filename); end
 end
 class InlineSvg::WebpackAssetFinder
+  def dev_server_asset(file_path); end
+  def fetch_from_dev_server(file_path); end
   def initialize(filename); end
   def pathname; end
   def self.find_asset(filename); end
