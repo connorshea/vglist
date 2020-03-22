@@ -20,6 +20,7 @@ update_configs:
       - match:
           update_type: "all"
     # These AWS and Sorbet gems are updated too often, so we skip them to avoid obnoxious PRs.
+    # Ignore webpacker because the Ruby gem and npm package need to be updated simultaneously.
     ignored_updates:
       - match:
           dependency_name: "aws-sdk-core"
@@ -33,6 +34,8 @@ update_configs:
           dependency_name: "sorbet"
       - match:
           dependency_name: "sorbet-runtime"
+      - match:
+          dependency_name: "webpacker"
 
   - package_manager: "javascript"
     directory: "/"
@@ -51,7 +54,7 @@ update_configs:
           update_type: security
           dependency_type: indirect
     # Disallow updates past 4.x for webpack and 3.x for webpack-dev-server.
-    # Webpacker 4.x only supports webpack 4.x.
+    # Webpacker 5.x only supports webpack 4.x.
     ignored_updates:
       - match:
           dependency_name: "webpack"
@@ -61,6 +64,9 @@ update_configs:
           version_requirement: "4.x"
       - match:
           dependency_name: "@types/node"
+      # Ignore webpacker because the Ruby gem and npm package need to be updated simultaneously.
+      - match:
+          dependency_name: "@rails/webpacker"
 
   # Checks for Dockerfile updates weekly.
   # Dependabot will automatically detect any files with "Dockerfile" in the name.
