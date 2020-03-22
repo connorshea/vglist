@@ -202,7 +202,7 @@ GEM
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
     parallel (1.19.1)
-    parlour (2.0.0)
+    parlour (2.1.0)
       commander (~> 4.5)
       parser
       rainbow (~> 3.0)
