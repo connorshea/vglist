@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/webpacker/all/webpacker.rbi
 #
-# webpacker-4.2.2
+# webpacker-5.0.0
 
 class Webpacker::Instance
   def commands; end
@@ -71,7 +71,7 @@ class Webpacker::Manifest
   def dev_server(*args, &block); end
   def find(name); end
   def full_pack_name(name, pack_type); end
-  def handle_missing_entry(name); end
+  def handle_missing_entry(name, pack_type); end
   def initialize(webpacker); end
   def load; end
   def lookup!(name, pack_type = nil); end
@@ -111,7 +111,7 @@ class Webpacker::Compiler
 end
 class Webpacker::Commands
   def bootstrap; end
-  def clean(count = nil); end
+  def clean(count = nil, age = nil); end
   def clobber; end
   def compile; end
   def compiler(*args, &block); end

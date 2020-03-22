@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parlour/all/parlour.rbi
 #
-# parlour-2.0.0
+# parlour-2.1.0
 
 module Parlour
 end
@@ -316,6 +316,8 @@ class Parlour::TypeParser::IntermediateSig < T::Struct
   def return_type; end
   def return_type=(val); end
   def self.inherited(s); end
+  def type_parameters; end
+  def type_parameters=(val); end
   extend T::Props::ClassMethods
   extend T::Props::Plugin::ClassMethods
   extend T::Props::Plugin::ClassMethods

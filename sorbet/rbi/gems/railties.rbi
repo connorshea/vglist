@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/railties/all/railties.rbi
 #
-# railties-6.0.2.1
+# railties-6.0.2.2
 
 module Rails
   def self.app_class; end

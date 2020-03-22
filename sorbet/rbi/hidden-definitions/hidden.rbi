@@ -4032,24 +4032,10 @@ BasicObject::BasicObject = BasicObject
 
 class Benchmark::Job
   def initialize(width); end
-
-  def item(label=T.unsafe(nil), &blk); end
-
-  def list(); end
-
-  def report(label=T.unsafe(nil), &blk); end
-
-  def width(); end
 end
 
 class Benchmark::Report
   def initialize(width=T.unsafe(nil), format=T.unsafe(nil)); end
-
-  def item(label=T.unsafe(nil), *format, &blk); end
-
-  def list(); end
-
-  def report(label=T.unsafe(nil), *format, &blk); end
 end
 
 class Benchmark::Tms
@@ -4114,7 +4100,6 @@ class BigDecimal
 
   def to_digits(); end
   EXCEPTION_NaN = ::T.let(nil, ::T.untyped)
-  SIGN_NaN = ::T.let(nil, ::T.untyped)
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
@@ -4890,6 +4875,10 @@ class Bundler::RubygemsIntegration
   def find_name(name); end
 
   def gem_remote_fetcher(); end
+
+  def plain_specs(); end
+
+  def plain_specs=(specs); end
 
   def stub_rubygems(specs); end
 
@@ -11117,7 +11106,7 @@ class Hash
 end
 
 class Hash
-  def self.from_trusted_xml(xml); end
+  def self.try_convert(_); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -24978,6 +24967,48 @@ end
 
 module Selenium::WebDriver::Zipper
   EXTENSIONS = ::T.let(nil, ::T.untyped)
+end
+
+module SemanticRange
+  ANY = ::T.let(nil, ::T.untyped)
+  BUILD = ::T.let(nil, ::T.untyped)
+  BUILDIDENTIFIER = ::T.let(nil, ::T.untyped)
+  CARET = ::T.let(nil, ::T.untyped)
+  CARETLOOSE = ::T.let(nil, ::T.untyped)
+  CARETTRIM = ::T.let(nil, ::T.untyped)
+  COMPARATOR = ::T.let(nil, ::T.untyped)
+  COMPARATORLOOSE = ::T.let(nil, ::T.untyped)
+  COMPARATORTRIM = ::T.let(nil, ::T.untyped)
+  FULL = ::T.let(nil, ::T.untyped)
+  FULLPLAIN = ::T.let(nil, ::T.untyped)
+  GTLT = ::T.let(nil, ::T.untyped)
+  HYPHENRANGE = ::T.let(nil, ::T.untyped)
+  HYPHENRANGELOOSE = ::T.let(nil, ::T.untyped)
+  LONECARET = ::T.let(nil, ::T.untyped)
+  LONETILDE = ::T.let(nil, ::T.untyped)
+  LOOSE = ::T.let(nil, ::T.untyped)
+  LOOSEPLAIN = ::T.let(nil, ::T.untyped)
+  MAINVERSION = ::T.let(nil, ::T.untyped)
+  MAINVERSIONLOOSE = ::T.let(nil, ::T.untyped)
+  MAX_LENGTH = ::T.let(nil, ::T.untyped)
+  NONNUMERICIDENTIFIER = ::T.let(nil, ::T.untyped)
+  NUMERICIDENTIFIER = ::T.let(nil, ::T.untyped)
+  NUMERICIDENTIFIERLOOSE = ::T.let(nil, ::T.untyped)
+  PRERELEASE = ::T.let(nil, ::T.untyped)
+  PRERELEASEIDENTIFIER = ::T.let(nil, ::T.untyped)
+  PRERELEASEIDENTIFIERLOOSE = ::T.let(nil, ::T.untyped)
+  PRERELEASELOOSE = ::T.let(nil, ::T.untyped)
+  STAR = ::T.let(nil, ::T.untyped)
+  TILDE = ::T.let(nil, ::T.untyped)
+  TILDELOOSE = ::T.let(nil, ::T.untyped)
+  TILDETRIM = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+  XRANGE = ::T.let(nil, ::T.untyped)
+  XRANGEIDENTIFIER = ::T.let(nil, ::T.untyped)
+  XRANGEIDENTIFIERLOOSE = ::T.let(nil, ::T.untyped)
+  XRANGELOOSE = ::T.let(nil, ::T.untyped)
+  XRANGEPLAIN = ::T.let(nil, ::T.untyped)
+  XRANGEPLAINLOOSE = ::T.let(nil, ::T.untyped)
 end
 
 class Series
