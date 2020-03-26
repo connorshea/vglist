@@ -7,7 +7,7 @@
     "@rails/webpacker": "5.0.0",
     "@sentry/browser": "5.15.0",
     "@types/node": "^13.5.0",
-    "bulma": "^0.8.1",
+    "bulma": "0.8.0",
     "fork-ts-checker-webpack-plugin": "^4.1.1",
     "lodash": "^4.17.15",
     "resolve-url-loader": "^3.1.1",
