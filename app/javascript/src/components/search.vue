@@ -39,7 +39,7 @@
               <img :src="result.cover_url" width='48px' height='48px' class="game-cover">
             </figure>
             <div class="media-content">
-              <p v-if="type === 'Game'"><strong>{{ result.content }}</strong></p>
+              <p v-if="type === 'Game'" class="has-text-weight-semibold">{{ result.content }}</p>
               <p v-else>{{ result.content }}</p>
               <p v-if="type === 'Game'">
                 <!-- Outputs "2009 · Nintendo", "Nintendo", or "2009" depending on what data it has. -->
