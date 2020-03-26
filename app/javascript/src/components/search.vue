@@ -33,8 +33,24 @@
               activeSearchResult !== -1 &&
               flattenedSearchResults[activeSearchResult].searchable_id ===
                 result.searchable_id
-          }"
-        >{{ result.content }}</a>
+          }">
+          <div class="media">
+            <figure class="media-left image is-48x48" v-if="type === 'Game'">
+              <img :src="result.cover_url" width='48px' height='48px' class="game-cover">
+            </figure>
+            <div class="media-content">
+              <p v-if="type === 'Game'"><strong>{{ result.content }}</strong></p>
+              <p v-else>{{ result.content }}</p>
+              <p v-if="type === 'Game'">
+                <!-- Outputs "2009 · Nintendo", "Nintendo", or "2009" depending on what data it has. -->
+                {{ [
+                    result.release_date === null ? '' : result.release_date.slice(0, 4),
+                    result.developer === null ? '' : result.developer
+                  ].filter(x => x !== '').join(' · ') }}
+              </p>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </div>
