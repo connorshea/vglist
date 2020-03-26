@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.3.25
+### Added
+- Include the game cover and other metadata in game search results. ([#1123])
+
 ## v2020.2.16
 ### Added
 - Add a dropdown to game cards, currently just used for favoriting games. ([#1044])
@@ -679,3 +683,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1014]: https://github.com/connorshea/VideoGameList/pull/1014
 [#1021]: https://github.com/connorshea/VideoGameList/pull/1021
 [#1044]: https://github.com/connorshea/VideoGameList/pull/1044
+[#1123]: https://github.com/connorshea/VideoGameList/pull/1123
