@@ -4,7 +4,7 @@
   "dependencies": {
     "@rails/activestorage": "^6.0.2",
     "@rails/ujs": "^6.0.2",
-    "@rails/webpacker": "5.0.0",
+    "@rails/webpacker": "5.0.1",
     "@sentry/browser": "5.15.4",
     "@types/node": "^13.5.0",
     "bulma": "0.8.0",
