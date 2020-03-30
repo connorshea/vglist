@@ -86,6 +86,10 @@ Rails/HelperInstanceVariable:
 Rails/BulkChangeTable:
   Enabled: false
 
+# This has some failures on older migrations.
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
 #################### Style ###############################
 
 Style/BlockDelimiters:
