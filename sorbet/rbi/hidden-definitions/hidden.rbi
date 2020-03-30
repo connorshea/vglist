@@ -22374,9 +22374,10 @@ class RuboCop::Cop::Rails::ReflectionClassName
 end
 
 class RuboCop::Cop::Rails::RefuteMethods
+  ASSERT_NOT_METHODS = ::T.let(nil, ::T.untyped)
   CORRECTIONS = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
-  OFFENSIVE_METHODS = ::T.let(nil, ::T.untyped)
+  REFUTE_METHODS = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Rails::RelativeDateConstant
@@ -22430,6 +22431,10 @@ class RuboCop::Cop::Rails::UniqBeforePluck
   MSG = ::T.let(nil, ::T.untyped)
   NEWLINE = ::T.let(nil, ::T.untyped)
   PATTERN = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::UniqueValidationWithoutIndex
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Rails::UnknownEnv

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.10.2
+# faker-2.11.0
 
 module Faker
 end
@@ -523,6 +523,7 @@ class Faker::IndustrySegments < Faker::Base
   def self.super_sector; end
 end
 class Faker::Internet < Faker::Base
+  def self.base64(length: nil, padding: nil, urlsafe: nil); end
   def self.device_token; end
   def self.domain_name(legacy_subdomain = nil, subdomain: nil, domain: nil); end
   def self.domain_suffix; end
@@ -1141,6 +1142,18 @@ end
 class Faker::Music::UmphreysMcgee < Faker::Base
   def self.song; end
 end
+class Faker::Quotes
+end
+class Faker::Quotes::Chiquito < Faker::Base
+  def self.expression; end
+  def self.expressions; end
+  def self.joke; end
+  def self.jokes; end
+  def self.sentence; end
+  def self.sentences; end
+  def self.term; end
+  def self.terms; end
+end
 class Faker::Quote < Faker::Base
   def self.famous_last_words; end
   def self.matz; end
@@ -1149,7 +1162,8 @@ class Faker::Quote < Faker::Base
   def self.singular_siegler; end
   def self.yoda; end
 end
-class Faker::Quotes
+class Faker::Quotes::Rajnikanth < Faker::Base
+  def self.joke; end
 end
 class Faker::Quotes::Shakespeare < Faker::Base
   def self.as_you_like_it; end

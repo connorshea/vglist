@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faraday/all/faraday.rbi
 #
-# faraday-1.0.0
+# faraday-1.0.1
 
 module Faraday
   def self.default_adapter; end
@@ -51,6 +51,7 @@ module Faraday::Utils
   def deep_merge!(target, hash); end
   def deep_merge(source, hash); end
   def default_params_encoder; end
+  def default_space_encoding; end
   def default_uri_parser; end
   def default_uri_parser=(parser); end
   def escape(str); end
@@ -64,6 +65,8 @@ module Faraday::Utils
   def self.deep_merge(source, hash); end
   def self.default_params_encoder; end
   def self.default_params_encoder=(arg0); end
+  def self.default_space_encoding; end
+  def self.default_space_encoding=(arg0); end
   def self.default_uri_parser; end
   def self.default_uri_parser=(parser); end
   def self.escape(str); end
