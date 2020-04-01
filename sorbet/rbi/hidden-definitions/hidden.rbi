@@ -2527,9 +2527,6 @@ class ActiveStorage::PurgeJob
   def perform(blob); end
 end
 
-class ActiveStorage::PurgeJob
-end
-
 class ActiveStorage::RepresentationsController
   include ::ActiveStorage::SetBlob
   def show(); end
