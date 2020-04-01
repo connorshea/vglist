@@ -146,6 +146,9 @@ class GameDeveloper < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_game(*args); end
 
@@ -362,6 +365,9 @@ class GameDeveloper::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(GameDeveloper::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -547,6 +553,9 @@ class GameDeveloper::ActiveRecord_AssociationRelation < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: GameDeveloper).void).returns(T::Array[GameDeveloper]) }
   def each(&block); end
@@ -749,6 +758,9 @@ class GameDeveloper::ActiveRecord_Associations_CollectionProxy < ActiveRecord::A
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: GameDeveloper).void).returns(T::Array[GameDeveloper]) }
   def each(&block); end

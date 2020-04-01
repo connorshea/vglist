@@ -179,6 +179,9 @@ class ExternalAccount < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_user(*args); end
 
@@ -322,6 +325,9 @@ class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -514,6 +520,9 @@ class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::Associat
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: ExternalAccount).void).returns(T::Array[ExternalAccount]) }
   def each(&block); end
@@ -722,6 +731,9 @@ class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord:
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: ExternalAccount).void).returns(T::Array[ExternalAccount]) }
   def each(&block); end
