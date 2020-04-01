@@ -146,6 +146,9 @@ class SteamAppId < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_game(*args); end
 
@@ -283,6 +286,9 @@ class SteamAppId::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -469,6 +475,9 @@ class SteamAppId::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRe
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: SteamAppId).void).returns(T::Array[SteamAppId]) }
   def each(&block); end
@@ -671,6 +680,9 @@ class SteamAppId::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Asso
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: SteamAppId).void).returns(T::Array[SteamAppId]) }
   def each(&block); end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
-# capybara-3.31.0
+# capybara-3.32.0
 
 module Capybara
   def self.HTML(html); end
@@ -1304,9 +1304,9 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def browser; end
   def browser_action; end
   def build_node(native_node, initial_cache = nil); end
+  def capabilities; end
   def checked?; end
   def click(keys = nil, **options); end
-  def click_with_options(click_options); end
   def content_editable?; end
   def disabled?; end
   def double_click(keys = nil, **options); end
@@ -1321,6 +1321,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def normalize_keys(keys); end
   def obscured?(x: nil, y: nil); end
   def path; end
+  def perform_with_options(click_options, &block); end
   def readonly?; end
   def rect; end
   def right_click(keys = nil, **options); end
@@ -1337,7 +1338,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def set_datetime_local(value); end
   def set_file(value); end
   def set_range(value); end
-  def set_text(value, clear: nil, **_unused); end
+  def set_text(value, clear: nil, rapid: nil, **_unused); end
   def set_time(value); end
   def sibling_index(parent, node, selector); end
   def style(styles); end
@@ -1347,6 +1348,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def value; end
   def visible?; end
   def visible_text; end
+  def w3c?; end
   def with_file_detector; end
   include Capybara::Selenium::Find
   include Capybara::Selenium::Scroll
@@ -1365,6 +1367,7 @@ class Capybara::Selenium::Node::ClickOptions
   def center_offset?; end
   def coords; end
   def coords?; end
+  def delay; end
   def empty?; end
   def initialize(keys, options); end
   def keys; end
@@ -1384,7 +1387,6 @@ module Capybara::Selenium::Node::FileInputClickEmulation
 end
 class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   def browser_version(to_float = nil); end
-  def capabilities; end
   def chromedriver_fixed_actions_key_state?; end
   def chromedriver_supports_displayed_endpoint?; end
   def chromedriver_version; end
@@ -1398,7 +1400,6 @@ class Capybara::Selenium::ChromeNode < Capybara::Selenium::Node
   def set_file(value); end
   def set_text(value, clear: nil, **_unused); end
   def visible?; end
-  def w3c?; end
   include Capybara::Selenium::Node::FileInputClickEmulation
   include Capybara::Selenium::Node::Html5Drag
 end
@@ -1427,11 +1428,11 @@ class Capybara::Selenium::FirefoxNode < Capybara::Selenium::Node
   def _send_keys(keys, actions = nil, down_keys = nil); end
   def browser_version; end
   def click(keys = nil, **options); end
-  def click_with_options(click_options); end
   def disabled?; end
   def drop(*args); end
   def hover; end
   def native_displayed?; end
+  def perform_with_options(click_options); end
   def select_option; end
   def send_keys(*args); end
   def set_file(value); end
@@ -1924,8 +1925,8 @@ end
 class Module
 end
 module Capybara::RSpecMatcherProxies
-  def all(*args, &block); end
-  def within(*args, &block); end
+  def all(*args, **kwargs, &block); end
+  def within(*args, **kwargs, &block); end
 end
 module Capybara::DSLRSpecProxyInstaller
   def self.prepended(base); end

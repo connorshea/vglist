@@ -147,6 +147,9 @@ class Engine < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { returns(T.untyped) }
   def self.after_add_for_game_engines; end
 
@@ -513,6 +516,9 @@ class Engine::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -698,6 +704,9 @@ class Engine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelati
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Engine).void).returns(T::Array[Engine]) }
   def each(&block); end
@@ -900,6 +909,9 @@ class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associat
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Engine).void).returns(T::Array[Engine]) }
   def each(&block); end

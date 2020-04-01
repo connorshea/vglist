@@ -146,6 +146,9 @@ class Doorkeeper::AccessGrant < ActiveRecord::Base
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_application(*args); end
 
@@ -283,6 +286,9 @@ class Doorkeeper::AccessGrant::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -469,6 +475,9 @@ class Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation < ActiveRecord::
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Doorkeeper::AccessGrant).void).returns(T::Array[Doorkeeper::AccessGrant]) }
   def each(&block); end
@@ -671,6 +680,9 @@ class Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy < Activ
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Doorkeeper::AccessGrant).void).returns(T::Array[Doorkeeper::AccessGrant]) }
   def each(&block); end

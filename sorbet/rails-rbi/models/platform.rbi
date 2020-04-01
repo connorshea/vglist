@@ -147,6 +147,9 @@ class Platform < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { returns(T.untyped) }
   def self.after_add_for_game_platforms; end
 
@@ -669,6 +672,9 @@ class Platform::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Platform::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -854,6 +860,9 @@ class Platform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRela
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Platform).void).returns(T::Array[Platform]) }
   def each(&block); end
@@ -1056,6 +1065,9 @@ class Platform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associ
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Platform).void).returns(T::Array[Platform]) }
   def each(&block); end

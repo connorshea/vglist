@@ -146,6 +146,9 @@ class WikidataBlocklist < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_user(*args); end
 
@@ -283,6 +286,9 @@ class WikidataBlocklist::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(WikidataBlocklist::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -469,6 +475,9 @@ class WikidataBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::Associ
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: WikidataBlocklist).void).returns(T::Array[WikidataBlocklist]) }
   def each(&block); end
@@ -671,6 +680,9 @@ class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy < ActiveRecor
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: WikidataBlocklist).void).returns(T::Array[WikidataBlocklist]) }
   def each(&block); end

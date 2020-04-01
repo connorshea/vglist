@@ -146,6 +146,9 @@ class Relationship < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_follower(*args); end
 
@@ -440,6 +443,9 @@ class Relationship::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -625,6 +631,9 @@ class Relationship::ActiveRecord_AssociationRelation < ActiveRecord::Association
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Relationship).void).returns(T::Array[Relationship]) }
   def each(&block); end
@@ -827,6 +836,9 @@ class Relationship::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Relationship).void).returns(T::Array[Relationship]) }
   def each(&block); end

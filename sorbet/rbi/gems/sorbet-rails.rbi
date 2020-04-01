@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.6.1
+# sorbet-rails-0.6.2
 
 module SorbetRails
   def self.config(&blk); end
@@ -189,6 +189,8 @@ module ITypeAssert
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
   extend T::Sig
+end
+module TypeAssertImpl
 end
 class TA
   def assert(*args, &blk); end

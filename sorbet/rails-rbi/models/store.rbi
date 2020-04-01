@@ -147,6 +147,9 @@ class Store < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchase_stores; end
 
@@ -435,6 +438,9 @@ class Store::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Store::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -620,6 +626,9 @@ class Store::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Store).void).returns(T::Array[Store]) }
   def each(&block); end
@@ -822,6 +831,9 @@ class Store::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Store).void).returns(T::Array[Store]) }
   def each(&block); end

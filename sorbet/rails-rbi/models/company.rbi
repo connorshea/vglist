@@ -147,6 +147,9 @@ class Company < ApplicationRecord
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { returns(T.untyped) }
   def self.after_add_for_game_developers; end
 
@@ -669,6 +672,9 @@ class Company::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Company::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -854,6 +860,9 @@ class Company::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelat
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Company).void).returns(T::Array[Company]) }
   def each(&block); end
@@ -1056,6 +1065,9 @@ class Company::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associa
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: Company).void).returns(T::Array[Company]) }
   def each(&block); end

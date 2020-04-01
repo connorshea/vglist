@@ -158,6 +158,9 @@ class ActiveRecord::SchemaMigration < ActiveRecord::Base
   sig { params(args: T.untyped).returns(T::Boolean) }
   def self.one?(*args); end
 
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def self.empty?(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def self.page(num = nil); end
 
@@ -289,6 +292,9 @@ class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relat
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -475,6 +481,9 @@ class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRe
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: ActiveRecord::SchemaMigration).void).returns(T::Array[ActiveRecord::SchemaMigration]) }
   def each(&block); end
@@ -677,6 +686,9 @@ class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy <
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def one?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def empty?(*args); end
 
   sig { override.params(block: T.proc.params(e: ActiveRecord::SchemaMigration).void).returns(T::Array[ActiveRecord::SchemaMigration]) }
   def each(&block); end
