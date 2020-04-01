@@ -59,6 +59,8 @@ sorbet:tc:
   before_script: *no_db_necessary
   script:
     - bundle exec srb tc . --ignore=vendor/
+    - bundle exec rake sorbet:stats
+  coverage: '/sends_percentage_typed:\ (\d+.\d+\%)/'
 
 typescript:tsc:
   before_script: *no_db_necessary
