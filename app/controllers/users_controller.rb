@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class UsersController < ApplicationController
   # Skip bullet on activity to avoid errors.
   around_action :skip_bullet, if: -> { defined?(Bullet) }
