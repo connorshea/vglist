@@ -333,7 +333,7 @@ GEM
     simplecov-html (0.12.2)
     sorbet (0.5.5478)
       sorbet-static (= 0.5.5478)
-    sorbet-coerce (0.2.4)
+    sorbet-coerce (0.2.5)
       polyfill (~> 1.8)
       safe_type (~> 1.1, >= 1.1.1)
       sorbet (>= 0.4.4704)
