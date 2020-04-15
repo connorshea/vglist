@@ -150,7 +150,7 @@ group :test do
   gem 'capybara', '~> 3.32'
   gem 'selenium-webdriver', '~> 3.142'
   # Easy installation and use of WebDriver clients for various browsers.
-  gem 'webdrivers', '~> 4.2'
+  gem 'webdrivers', '~> 4.3'
 end
 
 # # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
