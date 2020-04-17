@@ -7,16 +7,14 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.17.0
+# rouge-3.18.0
 
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
+  def self.load_file(path); end
+  def self.load_lexers; end
   def self.reload!; end
   def self.version; end
-end
-class Object < BasicObject
-  def lexer_dir(path = nil); end
-  def load_relative(path); end
 end
 class Rouge::InheritableHash < Hash
   def [](k); end
@@ -342,6 +340,18 @@ class Rouge::Lexers::Scheme < Rouge::RegexLexer
   def self.builtins; end
   def self.keywords; end
 end
+class Rouge::Lexers::YANG < Rouge::RegexLexer
+  def self.body_stmts_keywords; end
+  def self.constants_keywords; end
+  def self.data_def_stmts_keywords; end
+  def self.linkage_stmts_keywords; end
+  def self.list_stmts_keywords; end
+  def self.meta_stmts_keywords; end
+  def self.module_header_stmts_keywords; end
+  def self.top_stmts_keywords; end
+  def self.type_stmts_keywords; end
+  def self.types; end
+end
 class Rouge::Lexers::Clojure < Rouge::RegexLexer
   def name_token(name); end
   def self.builtins; end
@@ -355,6 +365,11 @@ class Rouge::Lexers::Haxe < Rouge::RegexLexer
   def self.imports; end
   def self.keywords; end
   def self.reserved; end
+end
+class Rouge::Lexers::Cypher < Rouge::RegexLexer
+  def self.functions; end
+  def self.keywords; end
+  def self.predicates; end
 end
 class Rouge::Lexers::Brainfuck < Rouge::RegexLexer
 end
@@ -508,6 +523,8 @@ class Rouge::Lexers::RobotFramework < Rouge::RegexLexer
   def self.settings_with_args; end
   def self.settings_with_keywords; end
 end
+class Rouge::Lexers::GHCCmm < Rouge::RegexLexer
+end
 class Rouge::Lexers::HTTP < Rouge::RegexLexer
   def content_lexer; end
   def self.http_methods; end
@@ -520,6 +537,8 @@ class Rouge::Lexers::Actionscript < Rouge::RegexLexer
   def self.reserved; end
 end
 class Rouge::Lexers::Swift < Rouge::RegexLexer
+end
+class Rouge::Lexers::Rego < Rouge::RegexLexer
 end
 class Rouge::Lexers::Puppet < Rouge::RegexLexer
   def self.constants; end
@@ -576,11 +595,18 @@ class Rouge::Lexers::Factor < Rouge::RegexLexer
   def self.detect?(text); end
 end
 class Rouge::Lexers::Python < Rouge::RegexLexer
+  def current_string; end
   def self.builtins; end
   def self.builtins_pseudo; end
   def self.detect?(text); end
   def self.exceptions; end
   def self.keywords; end
+end
+class Rouge::Lexers::Python::StringRegister < Array
+  def delim?(delim); end
+  def register(type: nil, delim: nil); end
+  def remove; end
+  def type?(type); end
 end
 class Rouge::Lexers::Go < Rouge::RegexLexer
 end
@@ -626,6 +652,13 @@ end
 class Rouge::Lexers::Vala < Rouge::RegexLexer
 end
 class Rouge::Lexers::Nasm < Rouge::RegexLexer
+end
+class Rouge::Lexers::ISBL < Rouge::RegexLexer
+  def self.builtins; end
+  def self.constants; end
+  def self.globals; end
+  def self.interfaces; end
+  def self.keywords; end
 end
 class Rouge::Lexers::LLVM < Rouge::RegexLexer
   def self.instructions; end
@@ -766,6 +799,7 @@ class Rouge::Lexers::ConsoleLexer < Rouge::Lexer
   def allow_comments?; end
   def comment_regex; end
   def end_chars; end
+  def error_regex; end
   def initialize(*arg0); end
   def lang_lexer; end
   def line_regex; end
@@ -878,6 +912,9 @@ class Rouge::Lexers::Moonscript < Rouge::RegexLexer
 end
 class Rouge::Lexers::Perl < Rouge::RegexLexer
   def self.detect?(text); end
+end
+class Rouge::Lexers::Datastudio < Rouge::RegexLexer
+  def self.sql_keywords; end
 end
 module Rouge::Lexers::TypescriptCommon
   def self.builtins; end
@@ -1037,6 +1074,14 @@ class Rouge::Lexers::XQuery < Rouge::Lexers::XPath
   def self.keywords; end
 end
 class Rouge::Lexers::Properties < Rouge::RegexLexer
+end
+class Rouge::Lexers::Solidity < Rouge::RegexLexer
+  def self.builtins; end
+  def self.constants; end
+  def self.detect?(text); end
+  def self.keywords; end
+  def self.keywords_type; end
+  def self.reserved; end
 end
 class Rouge::Lexers::ReasonML < Rouge::Lexers::OCamlCommon
   def self.keywords; end

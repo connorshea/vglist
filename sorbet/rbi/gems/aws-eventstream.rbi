@@ -7,50 +7,32 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/aws-eventstream/all/aws-eventstream.rbi
 #
-# aws-eventstream-1.0.3
+# aws-eventstream-1.1.0
 
 module Aws
 end
 module Aws::EventStream
 end
 class Aws::EventStream::Decoder
-  def context(io, total_len, headers_len, prelude_buffer); end
   def decode(io, &block); end
   def decode_chunk(chunk = nil); end
-  def decode_io(io); end
-  def decode_message(io); end
+  def decode_context(content, header_length); end
+  def decode_message(raw_message); end
+  def decode_prelude(prelude); end
   def extract_headers(buffer); end
-  def extract_payload(buffer); end
+  def extract_payload(encoded); end
   def initialize(options = nil); end
   def message_buffer; end
-  def payload_stringio(buffer); end
-  def payload_tempfile(buffer); end
-  def prelude(io); end
-  def unpack_uint16(buffer); end
-  def unpack_uint32(buffer); end
-  def unpack_uint8(buffer); end
+  def payload_stringio(encoded); end
+  def payload_tempfile(encoded); end
+  def wrap_as_enumerator(decoded_message); end
   include Enumerable
 end
 class Aws::EventStream::Encoder
   def encode(message, io = nil); end
-  def encode_headers(msg); end
+  def encode_headers(message); end
   def encode_message(message); end
-  def pack_uint16(val); end
-  def pack_uint32(val); end
-  def pack_uint8(val); end
-  def prelude(total_len, headers_len); end
-end
-class Aws::EventStream::BytesBuffer
-  def <<(bytes); end
-  def bytesize; end
-  def clear!; end
-  def eof?; end
-  def initialize(data); end
-  def read(len = nil, offset = nil); end
-  def readbyte; end
-  def rewind; end
-  def tell; end
-  def write(bytes); end
+  def encode_prelude(total_length, headers_length); end
 end
 class Aws::EventStream::Message
   def headers; end

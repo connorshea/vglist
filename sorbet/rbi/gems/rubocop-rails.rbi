@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.5.0
+# rubocop-rails-2.5.2
 
 module RuboCop
 end
@@ -27,7 +27,10 @@ module RuboCop::Rails::SchemaLoader
   extend RuboCop::Rails::SchemaLoader
 end
 class RuboCop::Rails::SchemaLoader::Schema
+  def add_indicies; end
+  def add_indicies_by(table_name:); end
   def build!(ast); end
+  def each_add_index(ast); end
   def each_table(ast); end
   def initialize(ast); end
   def table_by(name:); end
@@ -52,20 +55,26 @@ class RuboCop::Rails::SchemaLoader::Column
 end
 class RuboCop::Rails::SchemaLoader::Index
   def analyze_keywords!(node); end
-  def build_columns_or_expr(node); end
+  def build_columns_or_expr(columns); end
   def columns; end
   def expression; end
   def initialize(node); end
   def name; end
   def unique; end
 end
+class RuboCop::Rails::SchemaLoader::AddIndex < RuboCop::Rails::SchemaLoader::Index
+  def initialize(node); end
+  def table_name; end
+end
 module RuboCop::Cop
 end
 module RuboCop::Cop::ActiveRecordHelper
+  def external_dependency_checksum; end
   def find_belongs_to(node0); end
   def find_set_table_name(node0); end
   def foreign_key_of(belongs_to); end
   def resolve_relation_into_column(name:, class_node:, table:); end
+  def schema; end
   def table_name(class_node); end
   extend RuboCop::NodePattern::Macros
 end
@@ -704,9 +713,10 @@ class RuboCop::Cop::Rails::UniqueValidationWithoutIndex < RuboCop::Cop::Cop
   def class_node(node); end
   def column_names(node); end
   def column_names_from_scope(node); end
+  def condition_part?(node); end
   def find_scope(pairs); end
+  def include_column_names_in_expression_index?(index, column_names); end
   def on_send(node); end
-  def schema; end
   def uniqueness_part(node); end
   def with_index?(node); end
   include RuboCop::Cop::ActiveRecordHelper

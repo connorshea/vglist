@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/public_suffix/all/public_suffix.rbi
 #
-# public_suffix-4.0.3
+# public_suffix-4.0.4
 
 module PublicSuffix
   def self.decompose(name, rule); end

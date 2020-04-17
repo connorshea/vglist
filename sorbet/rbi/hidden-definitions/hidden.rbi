@@ -3097,12 +3097,6 @@ class Aws::EndpointCache::Endpoint
   CACHE_PERIOD = ::T.let(nil, ::T.untyped)
 end
 
-class Aws::EventStream::Decoder
-  ONE_MEGABYTE = ::T.let(nil, ::T.untyped)
-  OVERHEAD_LENGTH = ::T.let(nil, ::T.untyped)
-  PRELUDE_LENGTH = ::T.let(nil, ::T.untyped)
-end
-
 class Aws::EventStream::Encoder
   MAX_HEADERS_LENGTH = ::T.let(nil, ::T.untyped)
   MAX_PAYLOAD_LENGTH = ::T.let(nil, ::T.untyped)
@@ -6945,6 +6939,7 @@ end
 class Capybara::Selenium::Node
   GET_XPATH_SCRIPT = ::T.let(nil, ::T.untyped)
   OBSCURED_OR_OFFSET_SCRIPT = ::T.let(nil, ::T.untyped)
+  RAPID_SET_TEXT = ::T.let(nil, ::T.untyped)
 end
 
 module Capybara::Selenium::Node::Html5Drag
@@ -7299,14 +7294,6 @@ end
 
 class ConnectionPool::Wrapper
   METHODS = ::T.let(nil, ::T.untyped)
-end
-
-module Coverage
-  def self.line_stub(file); end
-
-  def self.peek_result(); end
-
-  def self.running?(); end
 end
 
 class Crass::Parser
@@ -9686,13 +9673,13 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -10788,7 +10775,6 @@ module GraphQL::Schema::Interface
 end
 
 module GraphQL::Schema::Loader
-  NullResolveType = ::T.let(nil, ::T.untyped)
   NullScalarCoerce = ::T.let(nil, ::T.untyped)
 end
 
@@ -20332,6 +20318,10 @@ module Responders::LocationResponder
   def self.included(_base); end
 end
 
+module Rouge
+  LIB_DIR = ::T.let(nil, ::T.untyped)
+end
+
 class Rouge::Formatter
   REGISTRY = ::T.let(nil, ::T.untyped)
 end
@@ -20359,6 +20349,10 @@ end
 module Rouge::Guessers::Util::SourceNormalizer
   UTF8_BOM = ::T.let(nil, ::T.untyped)
   UTF8_BOM_RE = ::T.let(nil, ::T.untyped)
+end
+
+module Rouge::Lexers
+  BASE_DIR = ::T.let(nil, ::T.untyped)
 end
 
 class Rouge::Lexers::Ada
@@ -20697,6 +20691,7 @@ end
 class RuboCop::ConfigValidator
   COMMON_PARAMS = ::T.let(nil, ::T.untyped)
   INTERNAL_PARAMS = ::T.let(nil, ::T.untyped)
+  NEW_COPS_VALUES = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::Alignment
@@ -20802,7 +20797,8 @@ class RuboCop::Cop::Layout::ArgumentAlignment
 end
 
 class RuboCop::Cop::Layout::ArrayAlignment
-  MSG = ::T.let(nil, ::T.untyped)
+  ALIGN_ELEMENTS_MSG = ::T.let(nil, ::T.untyped)
+  FIXED_INDENT_MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Layout::AssignmentIndentation
@@ -20978,6 +20974,10 @@ class RuboCop::Cop::Layout::IndentationConsistency
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Layout::IndentationStyle
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::IndentationWidth
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -21089,6 +21089,10 @@ class RuboCop::Cop::Layout::SpaceAroundKeyword
   SAFE_NAVIGATION = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Layout::SpaceAroundMethodCallOperator
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::SpaceAroundOperators
   EXCESSIVE_SPACE = ::T.let(nil, ::T.untyped)
   IRREGULAR_METHODS = ::T.let(nil, ::T.untyped)
@@ -21150,10 +21154,6 @@ end
 class RuboCop::Cop::Layout::SpaceInsideStringInterpolation
   NO_SPACE_MSG = ::T.let(nil, ::T.untyped)
   SPACE_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::Tab
-  MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Layout::TrailingWhitespace
@@ -21237,10 +21237,6 @@ class RuboCop::Cop::Lint::EmptyInterpolation
 end
 
 class RuboCop::Cop::Lint::EmptyWhen
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::EndInMethod
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -21361,6 +21357,10 @@ class RuboCop::Cop::Lint::PercentSymbolArray
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::RaiseException
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::RandOne
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -21455,6 +21455,12 @@ end
 
 class RuboCop::Cop::Lint::ShadowingOuterLocalVariable
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::StructNewOverride
+  MSG = ::T.let(nil, ::T.untyped)
+  STRUCT_MEMBER_NAME_TYPES = ::T.let(nil, ::T.untyped)
+  STRUCT_METHOD_NAMES = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::SuppressedException
@@ -22634,6 +22640,10 @@ class RuboCop::Cop::Style::Dir
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::DisableCopsWithinSourceCodeDirective
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::Documentation
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -22863,6 +22873,7 @@ end
 
 class RuboCop::Cop::Style::ModuleFunction
   EXTEND_SELF_MSG = ::T.let(nil, ::T.untyped)
+  FORBIDDEN_MSG = ::T.let(nil, ::T.untyped)
   MODULE_FUNCTION_MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -23188,6 +23199,10 @@ class RuboCop::Cop::Style::TrailingBodyOnMethodDefinition
 end
 
 class RuboCop::Cop::Style::TrailingBodyOnModule
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::TrailingCommaInBlockArgs
   MSG = ::T.let(nil, ::T.untyped)
 end
 
