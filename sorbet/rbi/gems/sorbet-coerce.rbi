@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-coerce/all/sorbet-coerce.rbi
 #
-# sorbet-coerce-0.2.4
+# sorbet-coerce-0.2.5
 
 module TypeCoerce
   def self.[](type); end
@@ -16,7 +16,7 @@ module TypeCoerce::Configuration
   def self.raise_coercion_error(*args, &blk); end
   def self.raise_coercion_error=(arg0); end
 end
-module Polyfill::Module::M70283845422720
+module Polyfill::Module::M70341531175480
 end
 module TypeCoerce::Private
 end

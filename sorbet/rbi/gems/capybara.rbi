@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
-# capybara-3.32.0
+# capybara-3.32.1
 
 module Capybara
   def self.HTML(html); end
@@ -1299,6 +1299,7 @@ class Capybara::Selenium::Node < Capybara::Driver::Node
   def action_with_modifiers(click_options); end
   def all_text; end
   def attrs(*attr_names); end
+  def auto_rapid_set_length; end
   def boolean_attr(val); end
   def bridge; end
   def browser; end

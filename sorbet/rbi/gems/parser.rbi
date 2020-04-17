@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.7.0.5
+# parser-2.7.1.1
 
 module Parser
   def self.warn_syntax_deviation(feature, version); end
@@ -173,7 +173,9 @@ class Parser::Source::Range
   def empty?; end
   def end; end
   def end_pos; end
+  def eql?(arg0); end
   def first_line; end
+  def hash; end
   def initialize(source_buffer, begin_pos, end_pos); end
   def inspect; end
   def intersect(other); end
@@ -274,10 +276,12 @@ class Parser::Source::Rewriter::Action
   include Comparable
 end
 class Parser::Source::TreeRewriter
+  def action_root; end
   def check_policy_validity; end
   def check_range_validity(range); end
   def combine(range, attributes); end
   def diagnostics; end
+  def empty?; end
   def enforce_policy(event); end
   def in_transaction?; end
   def initialize(source_buffer, crossing_deletions: nil, different_replacements: nil, swallowed_insertions: nil); end
@@ -285,6 +289,8 @@ class Parser::Source::TreeRewriter
   def insert_after_multi(range, text); end
   def insert_before(range, content); end
   def insert_before_multi(range, text); end
+  def merge!(with); end
+  def merge(with); end
   def process; end
   def remove(range); end
   def replace(range, content); end
@@ -296,8 +302,11 @@ class Parser::Source::TreeRewriter
 end
 class Parser::Source::TreeRewriter::Action
   def call_enforcer_for_merge(action); end
+  def children; end
   def combine(action); end
+  def combine_children(more_children); end
   def do_combine(action); end
+  def empty?; end
   def fuse_deletions(action, fusible, other_sibblings); end
   def initialize(range, enforcer, insert_before: nil, replacement: nil, insert_after: nil, children: nil); end
   def insert_after; end
@@ -310,7 +319,7 @@ class Parser::Source::TreeRewriter::Action
   def relationship_with(action); end
   def replacement; end
   def swallow(children); end
-  def with(range: nil, children: nil, insert_before: nil, replacement: nil, insert_after: nil); end
+  def with(range: nil, enforcer: nil, children: nil, insert_before: nil, replacement: nil, insert_after: nil); end
 end
 class Parser::Source::Map
   def ==(other); end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/unicode-display_width/all/unicode-display_width.rbi
 #
-# unicode-display_width-1.6.1
+# unicode-display_width-1.7.0
 
 module Unicode
 end
