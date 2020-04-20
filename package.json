@@ -23,7 +23,7 @@
     "webpack": "^4.42"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149",
+    "@types/lodash": "^4.14.150",
     "@types/turbolinks": "^5.2.0",
     "@types/vue-select": "^2.5.0",
     "graphql-schema-linter": "^0.2.6",
