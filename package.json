@@ -5,7 +5,7 @@
     "@rails/activestorage": "^6.0.2",
     "@rails/ujs": "^6.0.2",
     "@rails/webpacker": "5.0.1",
-    "@sentry/browser": "5.15.4",
+    "@sentry/browser": "5.15.5",
     "@types/node": "^13.5.0",
     "bulma": "0.8.2",
     "fork-ts-checker-webpack-plugin": "^4.1.3",
