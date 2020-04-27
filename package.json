@@ -20,7 +20,7 @@
     "vue-loader": "^15.9",
     "vue-select": "^3.10.2",
     "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.42"
+    "webpack": "^4.43"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.150",
