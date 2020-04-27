@@ -27,7 +27,7 @@
     "@types/turbolinks": "^5.2.0",
     "@types/vue-select": "^2.5.0",
     "graphql-schema-linter": "^0.2.6",
-    "prettier": "2.0.4",
+    "prettier": "2.0.5",
     "webpack-dev-server": "^3.10"
   },
   "scripts": {
