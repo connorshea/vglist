@@ -87,45 +87,25 @@ namespace 'import:wikidata' do
           game_hash[name].uniq!
         end
 
-        pcgamingwiki_id = wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value')
-        steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
-        epic_games_store_id = wikidata_json.dig('P6278')&.first&.dig('mainsnak', 'datavalue', 'value')
-        # Remove the 'game/' prefix from the GOG.com IDs.
-        gog_id = wikidata_json.dig('P2725')&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', '')
-        mobygames_id = wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value')
-        giantbomb_id = wikidata_json.dig('P5247')&.first&.dig('mainsnak', 'datavalue', 'value')
-
-        release_dates = wikidata_json.dig('P577')&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
-        release_dates&.map! do |time|
-          if time.nil?
-            nil
-          else
-            begin
-              Time.parse(time).to_date
-            rescue ArgumentError
-              nil
-            end
-          end
-        end
-        # Set release date equal to nil, or the earliest release date if
-        # all of the release dates above resolved to a proper date. It's done
-        # this way to prevent bad release dates from being used if Wikidata
-        # returns a date like "June 2019", which is represented as "2019-06-00",
-        # an invalid date.
-        release_date = nil
-        release_date = release_dates&.min unless release_dates&.any? { |date| date.nil? }
+        release_date = wikidata_json.dig('P577')&.map do |date|
+          date.dig('mainsnak', 'datavalue', 'value', 'time')
+        end&.reject(&:nil?)&.map do |time|
+          Time.parse(time).to_date
+                       rescue ArgumentError
+                         nil
+        end&.reject(&:nil?)&.min
 
         hash = {
           name: game_hash[:name],
-          wikidata_id: game_hash[:wikidata_id]
-        }
-
-        hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
-        hash[:epic_games_store_id] = epic_games_store_id unless epic_games_store_id.nil?
-        hash[:gog_id] = gog_id unless gog_id.nil?
-        hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
-        hash[:giantbomb_id] = giantbomb_id unless giantbomb_id.nil?
-        hash[:release_date] = release_date unless release_date.nil?
+          wikidata_id: game_hash[:wikidata_id],
+          pcgamingwiki_id: wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value'),
+          epic_games_store_id: wikidata_json.dig('P6278')&.first&.dig('mainsnak', 'datavalue', 'value'),
+          # remove the game prefix
+          gog_id: wikidata_json.dig('P2725')&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', ''),
+          mobygames_id: wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value'),
+          giantbomb_id: wikidata_json.dig('P5247')&.first&.dig('mainsnak', 'datavalue', 'value'),
+          release_date: release_date
+        }.reject { |_, v| v.nil? }
 
         begin
           game = Game.create!(hash)
@@ -142,6 +122,7 @@ namespace 'import:wikidata' do
           keys << key
         end
 
+        steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
         unless steam_app_id.nil?
           progress_bar.log 'Adding Steam App ID.' if ENV['DEBUG']
           SteamAppId.create(
@@ -152,72 +133,37 @@ namespace 'import:wikidata' do
 
         if keys.include?(:developers)
           progress_bar.log 'Adding developers.' if ENV['DEBUG']
-          game_hash[:developers].each do |developer_id|
-            company = Company.find_by(wikidata_id: developer_id)
-            puts company.inspect if ENV['DEBUG']
-            next if company.nil?
-
-            GameDeveloper.create!(
-              game_id: game.id,
-              company_id: company.id
-            )
-          end
+          Company.where(wikidata_id: game_hash[:developers]).pluck(:id).map do |company_id|
+            { company_id: company_id, game_id: game.id }
+          end.tap { |attrs| GameDeveloper.insert_all(attrs) if attrs.any? }
         end
 
         if keys.include?(:publishers)
           progress_bar.log 'Adding publishers.' if ENV['DEBUG']
-          game_hash[:publishers].each do |publisher_id|
-            company = Company.find_by(wikidata_id: publisher_id)
-            progress_bar.log company.inspect if ENV['DEBUG']
-            next if company.nil?
-
-            GamePublisher.create!(
-              game_id: game.id,
-              company_id: company.id
-            )
-          end
+          Company.where(wikidata_id: game_hash[:publishers]).pluck(:id).map do |publisher_id|
+            { company_id: publisher_id, game_id: game.id }
+          end.tap { |attrs| GamePublisher.insert_all(attrs) if attrs.any? }
         end
 
         if keys.include?(:platforms)
           progress_bar.log 'Adding platforms.' if ENV['DEBUG']
-          game_hash[:platforms].each do |platform_id|
-            platform = Platform.find_by(wikidata_id: platform_id)
-            progress_bar.log platform.inspect if ENV['DEBUG']
-            next if platform.nil?
-
-            GamePlatform.create!(
-              game_id: game.id,
-              platform_id: platform.id
-            )
-          end
+          Platform.where(wikidata_id: game_hash[:platforms]).pluck(:id).map do |platform_id|
+            { platform_id: platform_id, game_id: game_id }
+          end.tap { |attrs| GamePlatform.insert_all(attrs) if attrs.any? }
         end
 
         if keys.include?(:engines)
           progress_bar.log 'Adding engines.' if ENV['DEBUG']
-          game_hash[:engines].each do |engine_id|
-            engine = Engine.find_by(wikidata_id: engine_id)
-            puts engine.inspect if ENV['DEBUG']
-            next if engine.nil?
-
-            GameEngine.create!(
-              game_id: game.id,
-              engine_id: engine.id
-            )
-          end
+          Engine.where(wikidata_id: game_hash[:engines]).pluck(:id).map do |engine_id|
+            { engine_id: engine_id, game_id: game.id }
+          end.tap { |attrs| GameEngine.insert_all(attrs) if attrs.any? }
         end
 
         if keys.include?(:genres)
           progress_bar.log 'Adding genres.' if ENV['DEBUG']
-          game_hash[:genres].each do |genre_id|
-            genre = Genre.find_by(wikidata_id: genre_id)
-            progress_bar.log genre.inspect if ENV['DEBUG']
-            next if genre.nil?
-
-            GameGenre.create!(
-              game_id: game.id,
-              genre_id: genre.id
-            )
-          end
+          Genre.where(wikidata_id: game_hash[:genres]).pluck(:id).map do |genre_id|
+            { genre_id: genre_id, game_id: game.id }
+          end.tap { |attrs| GameGenre.insert_all(attrs) if attrs.any? }
         end
 
         if keys.include?(:series)
@@ -327,20 +273,18 @@ namespace 'import:wikidata' do
 
   # The SPARQL query for getting all video games with English labels on Wikidata.
   def games_query
-    sparql = <<-SPARQL
+    <<-SPARQL
       SELECT ?item WHERE {
         VALUES ?videoGameTypes { wd:Q7889 wd:Q21125433 }.
         ?item wdt:P31 ?videoGameTypes; # Instances of 'video games' or 'free or open source video games'.
               rdfs:label ?label filter(lang(?label) = "en"). # with a label
       }
     SPARQL
-
-    return sparql
   end
 
   # Return the formatting to use for the progress bar.
   def formatting
-    return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end
 # rubocop:enable Rails/TimeZone

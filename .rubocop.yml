@@ -156,6 +156,9 @@ Style/SymbolProc:
 Style/WordArray:
   Enabled: false
 
+Style/MultilineBlockChain:
+  Enabled: false
+
 #################### RSpec ###############################
 
 RSpec/ExampleLength:
