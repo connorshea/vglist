@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_08_220808) do
+ActiveRecord::Schema.define(version: 2020_04_29_023641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -181,6 +180,7 @@ ActiveRecord::Schema.define(version: 2020_02_08_220808) do
     t.date "start_date"
     t.date "completion_date"
     t.decimal "hours_played", precision: 10, scale: 1
+    t.index ["game_id", "user_id"], name: "index_game_purchases_on_game_id_and_user_id", unique: true
     t.index ["game_id"], name: "index_game_purchases_on_game_id"
     t.index ["user_id"], name: "index_game_purchases_on_user_id"
   end
