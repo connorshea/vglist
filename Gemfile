@@ -84,11 +84,9 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
-  gem 'irb'
-
-  gem 'pry'
-
-  gem 'pry-rails'
+  # Pry for debugging.
+  gem 'pry', '~> 0.13'
+  gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
   gem 'rubocop', '~> 0.82', require: false
@@ -149,8 +147,8 @@ group :development do
   # Improve the formatting of GraphQL requests in the logs.
   # https://github.com/jetruby/graphql-rails_logger
   gem 'graphql-rails_logger', '~> 1.2.2'
-
-  gem 'dotenv-rails'
+  # Enable dotenv for local environment variables.
+  gem 'dotenv-rails', '~> 2.7'
 end
 
 group :test do
