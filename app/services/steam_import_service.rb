@@ -39,6 +39,8 @@ class SteamImportService
       T::Set[Integer]
     )
 
+    create_time = Time.current
+
     attrs =
       games.each
            .lazy
@@ -48,13 +50,17 @@ class SteamImportService
         {
           hours_played: hours_played,
           game_id: stored_id_hash[game_info['appid']],
-          user_id: user.id
+          user_id: user.id,
+          created_at: create_time,
+          updated_at: create_time
         }
       end
-    GamePurchase.upsert_all(attrs.to_a)
+    attrs.to_a.tap do |attrs_|
+      GamePurchase.upsert_all(attrs_) if attrs_.any?
+    end
 
-    unmatched = missing_ids.to_a.take(50).map do |id|
-      game = games.find { |g| g['appid'] = id }
+    unmatched = missing_ids.to_a.map do |id|
+      game = games.find { |g| g['appid'] == id }
 
       next unless game
 
@@ -62,19 +68,23 @@ class SteamImportService
     end.compact
 
     Result.new(
-      added: @user.game_purchases.where('created_at > ?', start_time),
+      added: @user.game_purchases.where(GamePurchase.arel_table[:created_at].gt(start_time)),
       unmatched: unmatched
     )
   end
 
   class Unmatched < T::Struct
     const :name, String
-    const :steam_id, String
+    const :steam_id, Integer
   end
 
   class Result < T::Struct
     const :added, GamePurchase::ActiveRecord_AssociationRelation
     const :unmatched, T::Array[Unmatched]
+
+    def added_games
+      Game.joins(:game_purchases).merge(added)
+    end
   end
 
   attr_reader :user
@@ -85,12 +95,11 @@ class SteamImportService
   end
 
   def steam_account_id
-    steam_account.try(:[], :steam_account_id)
+    steam_account.try(:[], :steam_id)
   end
 
   sig { returns(T.nilable(ExternalAccount)) }
   def steam_account
-    @steam_account ||=
-      ExternalAccount.find_by(user: user, account_type: :steam)
+    @steam_account ||= user.external_account
   end
 end

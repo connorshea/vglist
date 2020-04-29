@@ -4,7 +4,7 @@
   <section>
     <h2>Some games could not be imported</h2>
     <ul>
-      <% @result.umatched.each do |unmatched| %>
+      <% @result.unmatched.each do |unmatched| %>
         <li><%= unmatched.name %> with id <%= unmatched.steam_id %></li>
       <% end %>
     </ul>
@@ -13,7 +13,7 @@
 
 <section>
   <h2>Imported games</h2>
-  <%= @result.added.each do |added| %>
-    <%= render partial: 'shared/game_card', locals: { game: added.game } %>
+  <% @result.added_games.with_attached_cover.includes(:platforms, :publishers, :developers).find_each do |game| %>
+    <%= render partial: 'shared/game_card', locals: { game: game } %>
   <% end %>
 </section>
