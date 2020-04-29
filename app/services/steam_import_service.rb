@@ -14,7 +14,7 @@ class SteamImportService
 
   sig { returns(Result) }
   def call
-    raise Error, 'no steam account' if steam_account.nil?
+    raise Error, 'No Steam account.' if steam_account.nil?
 
     start_time = Time.current
 
@@ -73,7 +73,7 @@ class SteamImportService
   end
 
   class Result < T::Struct
-    const :added, GamePurchase::RelationType
+    const :added, GamePurchase::ActiveRecord_AssociationRelation
     const :unmatched, T::Array[Unmatched]
   end
 
