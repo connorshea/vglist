@@ -12,10 +12,11 @@ class SteamImportService
   class Error < StandardError; end
   class NoGamesError < Error; end
 
+  sig { returns(Result) }
   def call
     raise Error, 'no steam account' if steam_account.nil?
 
-    games_before = user.games.count
+    start_time = Time.current
 
     json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
 
@@ -25,12 +26,18 @@ class SteamImportService
 
     games.reject! { |game| game['img_logo_url'].blank? }
 
-    steam_ids = games.map { |g| g['appid'] }.uniq
+    steam_ids = T.cast(
+      games.map { |g| g['appid'].to_i }.uniq,
+      T::Array[Integer]
+    )
     stored_ids = T.cast(SteamAppId.where(app_id: steam_ids).pluck(:app_id, :game_id), T::Array[[Integer, Integer]])
     stored_id_hash = stored_ids.each_with_object({}) do |(app_id, game_id), hash|
       hash[app_id] = game_id
     end
-    missing_ids = steam_ids.to_set - stored_ids.map(&:first).to_set
+    missing_ids = T.cast(
+      steam_ids.to_set - stored_ids.map(&:first).to_set,
+      T::Set[Integer]
+    )
 
     attrs =
       games.each
@@ -44,8 +51,6 @@ class SteamImportService
           user_id: user.id
         }
       end
-    games_after = @user.games.count
-
     GamePurchase.upsert_all(attrs.to_a)
 
     unmatched = missing_ids.to_a.take(50).map do |id|
@@ -53,13 +58,24 @@ class SteamImportService
 
       next unless game
 
-      { name: game['name'], steam_id: game['appid'] }
+      Unmatched.new(name: game['name'], steam_id: game['appid'])
     end.compact
 
-    Result.new(games_after - games_before, unmatched)
+    Result.new(
+      added: @user.game_purchases.where('created_at > ?', start_time),
+      unmatched: unmatched
+    )
   end
 
-  Result = Struct.new(:added, :unmatched)
+  class Unmatched < T::Struct
+    const :name, String
+    const :steam_id, String
+  end
+
+  class Result < T::Struct
+    const :added, GamePurchase::RelationType
+    const :unmatched, T::Array[Unmatched]
+  end
 
   attr_reader :user
 

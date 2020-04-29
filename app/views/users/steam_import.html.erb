@@ -1,0 +1,19 @@
+<h1>Congrats you imported</h1>
+
+<% if @result.unmatched.any? %>
+  <section>
+    <h2>Some games could not be imported</h2>
+    <ul>
+      <% @result.umatched.each do |unmatched| %>
+        <li><%= unmatched.name %> with id <%= unmatched.steam_id %></li>
+      <% end %>
+    </ul>
+  </section>
+<% end %>
+
+<section>
+  <h2>Imported games</h2>
+  <%= @result.added.each do |added| %>
+    <%= render partial: 'shared/game_card', locals: { game: added.game } %>
+  <% end %>
+</section>

@@ -77,66 +77,18 @@ class UsersController < ApplicationController
     @user = User.friendly.find(params[:id])
     authorize @user
 
-    user_games_count_before = @user.games.count
-
-    steam_account = ExternalAccount.find_by(user_id: @user.id, account_type: :steam)
-    raise if steam_account.nil?
-
-    steam_api_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&steamid=#{steam_account[:steam_id]}&include_appinfo=1&include_played_free_games=1"
-    json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
-
-    steam_games = json.dig('response', 'games')
-
-    # If no games are returned, return an error message.
-    if steam_games.nil?
-      respond_to do |format|
-        format.html do
-          flash[:error] = "Unable to find any games in your Steam library. Are you sure it's public and that you've connected the correct account?"
-          redirect_to settings_import_path
-          return
-        end
-      end
-    end
-
-    # Ignore games without logo URLs, this filters out most DLC, which we don't want to import.
-    steam_games.reject! { |game| game['img_logo_url'] == "" }
-    unmatched_games = []
-    matched_games_count = 0
-
-    steam_games&.each do |steam_game|
-      steam_app_id_record = SteamAppId.find_by(app_id: steam_game['appid'])
-      if steam_app_id_record.nil?
-        unmatched_games << steam_game
-        next
-      end
-      game = steam_app_id_record.game
-      # Convert playtime from minutes to hours, rounded to one decimal place.
-      hours_played = (steam_game['playtime_forever'].to_f / 60).round(1)
-
-      # Find by game id and user id, add hours played if it gets created.
-      GamePurchase.create_with(hours_played: hours_played).find_or_create_by(
-        game_id: game.id,
-        user_id: @user.id
-      )
-
-      matched_games_count += 1
-    end
-
-    unmatched_games_count = unmatched_games.count
-
-    T.must(unmatched_games).map! { |game| { name: game['name'], steam_id: game['appid'] } }
-
-    user_games_count_diff = @user.games.count - user_games_count_before
-
-    # Limit to the first 50 games because of cookie size limits.
-    # Sample 50 at random to make sure the same games aren't always
-    # displayed every time the user runs an import.
-    cookies[:unmatched_games] = JSON.generate(unmatched_games.sample(50))
+    @result = SteamImportService.new(@user).call
 
     respond_to do |format|
+      format.html
+    end
+  rescue SteamImportService::NoGamesError
+    # If no games are returned, return an error message.
+    respond_to do |format|
       format.html do
-        flash[:success] = "Added #{user_games_count_diff} games. #{unmatched_games_count} games weren't found in the vglist database."
+        flash[:error] = "Unable to find any games in your Steam library. Are you sure it's public and that you've connected the correct account?"
         redirect_to settings_import_path
+        return
       end
     end
   end
