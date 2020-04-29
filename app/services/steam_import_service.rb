@@ -16,8 +16,6 @@ class SteamImportService
   def call
     raise Error, 'No Steam account.' if steam_account.nil?
 
-    start_time = Time.current
-
     json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
 
     games = json.dig('response', 'games')
@@ -55,9 +53,14 @@ class SteamImportService
           updated_at: create_time
         }
       end
-    attrs.to_a.tap do |attrs_|
-      GamePurchase.upsert_all(attrs_) if attrs_.any?
-    end
+    attrs = attrs.to_a
+    added_purchases =
+      if attrs.any?
+        inserted = GamePurchase.insert_all(attrs, unique_by: [:game_id, :user_id])
+        GamePurchase.where(id: inserted.map { |e| e['id'] })
+      else
+        GamePurchase.none
+      end
 
     unmatched = missing_ids.to_a.map do |id|
       game = games.find { |g| g['appid'] == id }
@@ -68,7 +71,7 @@ class SteamImportService
     end.compact
 
     Result.new(
-      added: @user.game_purchases.where(GamePurchase.arel_table[:created_at].gt(start_time)),
+      added: added_purchases,
       unmatched: unmatched
     )
   end
