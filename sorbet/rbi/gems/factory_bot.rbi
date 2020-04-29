@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/factory_bot/all/factory_bot.rbi
 #
-# factory_bot-5.1.2
+# factory_bot-5.2.0
 
 module FactoryBot
   def self.aliases; end
@@ -17,7 +17,7 @@ module FactoryBot
   def self.allow_class_lookup=(*args, &block); end
   def self.callback_names(*args, &block); end
   def self.callbacks(*args, &block); end
-  def self.configuration; end
+  def self.configuration(*args, &block); end
   def self.constructor(*args, &block); end
   def self.definition_file_paths; end
   def self.definition_file_paths=(arg0); end
@@ -34,7 +34,7 @@ module FactoryBot
   def self.register_strategy(*args, &block); end
   def self.register_trait(*args, &block); end
   def self.reload; end
-  def self.reset_configuration; end
+  def self.reset_configuration(*args, &block); end
   def self.rewind_sequences(*args, &block); end
   def self.sequence_by_name(*args, &block); end
   def self.sequences(*args, &block); end
@@ -48,14 +48,45 @@ module FactoryBot
   def self.use_parent_strategy=(obj); end
   extend FactoryBot::Syntax::Default
 end
+module FactoryBot::Internal
+  def self.after(*args, &block); end
+  def self.before(*args, &block); end
+  def self.callback_names(*args, &block); end
+  def self.callbacks(*args, &block); end
+  def self.configuration; end
+  def self.constructor(*args, &block); end
+  def self.factories(*args, &block); end
+  def self.factory_by_name(name); end
+  def self.initialize_with(*args, &block); end
+  def self.inline_sequences(*args, &block); end
+  def self.register_callback(name); end
+  def self.register_default_callbacks; end
+  def self.register_default_strategies; end
+  def self.register_factory(factory); end
+  def self.register_inline_sequence(sequence); end
+  def self.register_sequence(sequence); end
+  def self.register_strategy(strategy_name, strategy_class); end
+  def self.register_trait(trait); end
+  def self.reset_configuration; end
+  def self.rewind_inline_sequences; end
+  def self.rewind_sequences; end
+  def self.sequence_by_name(name); end
+  def self.sequences(*args, &block); end
+  def self.skip_create(*args, &block); end
+  def self.strategies(*args, &block); end
+  def self.strategy_by_name(name); end
+  def self.to_create(*args, &block); end
+  def self.trait_by_name(name); end
+  def self.traits(*args, &block); end
+end
 class FactoryBot::DefinitionHierarchy
-  def callbacks; end
-  def constructor; end
+  def callbacks(*args, &block); end
+  def constructor(*args, &block); end
   def self.add_callbacks(callbacks); end
   def self.build_constructor(&block); end
   def self.build_from_definition(definition); end
   def self.build_to_create(&block); end
-  def to_create; end
+  def to_create(*args, &block); end
 end
 class FactoryBot::Configuration
   def after(*args, &block); end
@@ -101,6 +132,7 @@ class FactoryBot::StrategySyntaxMethodRegistrar
   def define_strategy_methods; end
   def define_syntax_method(name, &block); end
   def initialize(strategy_name); end
+  def self.with_index(block, index); end
 end
 class FactoryBot::StrategyCalculator
   def initialize(name_or_object); end
@@ -445,13 +477,12 @@ class FactoryBot::Syntax::Default::DSL
   def after(*args, &block); end
   def before(*args, &block); end
   def callback(*args, &block); end
-  def configuration; end
   def factory(name, options = nil, &block); end
-  def initialize_with(&block); end
+  def initialize_with(*args, &block); end
   def self.run(block); end
   def sequence(name, *args, &block); end
-  def skip_create; end
-  def to_create(&block); end
+  def skip_create(*args, &block); end
+  def to_create(*args, &block); end
   def trait(name, &block); end
 end
 class FactoryBot::Syntax::Default::ModifyDSL
@@ -506,28 +537,4 @@ end
 class FactoryBot::Linter::FactoryTraitError < FactoryBot::Linter::FactoryError
   def initialize(wrapped_error, factory, trait_name); end
   def location; end
-end
-module FactoryBot::Internal
-  def self.callback_names(*args, &block); end
-  def self.configuration; end
-  def self.factories(*args, &block); end
-  def self.factory_by_name(name); end
-  def self.inline_sequences(*args, &block); end
-  def self.register_callback(name); end
-  def self.register_default_callbacks; end
-  def self.register_default_strategies; end
-  def self.register_factory(factory); end
-  def self.register_inline_sequence(sequence); end
-  def self.register_sequence(sequence); end
-  def self.register_strategy(strategy_name, strategy_class); end
-  def self.register_trait(trait); end
-  def self.reset_configuration; end
-  def self.rewind_inline_sequences; end
-  def self.rewind_sequences; end
-  def self.sequence_by_name(name); end
-  def self.sequences(*args, &block); end
-  def self.strategies(*args, &block); end
-  def self.strategy_by_name(name); end
-  def self.trait_by_name(name); end
-  def self.traits(*args, &block); end
 end

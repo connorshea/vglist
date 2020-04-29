@@ -1038,6 +1038,7 @@ end
 class RDF::Util::Logger::IOWrapper < Delegator
   def <<(*args, &block); end
   def <=>(*args, &block); end
+  def __binding__(*args, &block); end
   def __getobj__; end
   def __setobj__(obj); end
   def acts_like?(*args, &block); end
@@ -1177,6 +1178,7 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def pretty_print_instance_variables(*args, &block); end
   def print(*args, &block); end
   def printf(*args, &block); end
+  def pry(*args, &block); end
   def putc(*args, &block); end
   def puts(*args, &block); end
   def pwrite(*args, &block); end

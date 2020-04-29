@@ -7038,6 +7038,10 @@ module CodeRay::Encoders::HTML::Output
   TABLE = ::T.let(nil, ::T.untyped)
 end
 
+class CodeRay::Encoders::Terminal
+  TOKEN_COLORS = ::T.let(nil, ::T.untyped)
+end
+
 module CodeRay::FileType
   TypeFromExt = ::T.let(nil, ::T.untyped)
   TypeFromName = ::T.let(nil, ::T.untyped)
@@ -8264,6 +8268,10 @@ module Doorkeeper::VERSION
   TINY = ::T.let(nil, ::T.untyped)
 end
 
+class Dotenv::Parser
+  LINE = ::T.let(nil, ::T.untyped)
+end
+
 class EBNF::LL1::Lexer
   ECHAR = ::T.let(nil, ::T.untyped)
   ESCAPE_CHAR4 = ::T.let(nil, ::T.untyped)
@@ -9152,11 +9160,6 @@ class FactoryBot::Evaluation
   include ::Observable
 end
 
-module FactoryBot::Internal
-  DEFAULT_CALLBACKS = ::T.let(nil, ::T.untyped)
-  DEFAULT_STRATEGIES = ::T.let(nil, ::T.untyped)
-end
-
 class FactoryBot::Strategy::Stub
   DISABLED_PERSISTENCE_METHODS = ::T.let(nil, ::T.untyped)
 end
@@ -9673,13 +9676,13 @@ class File::Stat
 end
 
 class File
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -16887,6 +16890,126 @@ end
 
 class ProgressBar::Time
   TIME_MOCKING_LIBRARY_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class Pry
+  BINDING_METHOD_IMPL = ::T.let(nil, ::T.untyped)
+  Commands = ::T.let(nil, ::T.untyped)
+  EMPTY_COMPLETIONS = ::T.let(nil, ::T.untyped)
+  HAS_SAFE_LEVEL = ::T.let(nil, ::T.untyped)
+  LOCAL_RC_FILE = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::BasicObject
+  ENV = ::T.let(nil, ::T.untyped)
+end
+
+Pry::BasicObject::Dir = Dir
+
+Pry::BasicObject::File = File
+
+Pry::BasicObject::Kernel = Kernel
+
+Pry::BasicObject::LoadError = LoadError
+
+Pry::BasicObject::Pry = Pry
+
+class Pry::Code
+  extend ::MethodSource::CodeHelpers
+end
+
+class Pry::CodeFile
+  DEFAULT_EXT = ::T.let(nil, ::T.untyped)
+  EXTENSIONS = ::T.let(nil, ::T.untyped)
+  FILES = ::T.let(nil, ::T.untyped)
+  INITIAL_PWD = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Command
+  VOID_VALUE = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Command::Ls
+  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Command::Ls::Constants
+  DEPRECATED_CONSTANTS = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Command::Ls::Globals
+  BUILTIN_GLOBALS = ::T.let(nil, ::T.untyped)
+  PSEUDO_GLOBALS = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Command::Wtf
+  RUBY_FRAME_PATTERN = ::T.let(nil, ::T.untyped)
+end
+
+module Pry::Helpers::DocumentationHelpers
+  YARD_TAGS = ::T.let(nil, ::T.untyped)
+end
+
+module Pry::Helpers::Text
+  COLORS = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Indent
+  IGNORE_TOKENS = ::T.let(nil, ::T.untyped)
+  MIDWAY_TOKENS = ::T.let(nil, ::T.untyped)
+  OPEN_TOKENS = ::T.let(nil, ::T.untyped)
+  OPTIONAL_DO_TOKENS = ::T.let(nil, ::T.untyped)
+  SINGLELINE_TOKENS = ::T.let(nil, ::T.untyped)
+  SPACES = ::T.let(nil, ::T.untyped)
+  STATEMENT_END_TOKENS = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::InputCompleter
+  ARRAY_REGEXP = ::T.let(nil, ::T.untyped)
+  CONSTANT_OR_METHOD_REGEXP = ::T.let(nil, ::T.untyped)
+  CONSTANT_REGEXP = ::T.let(nil, ::T.untyped)
+  GLOBALVARIABLE_REGEXP = ::T.let(nil, ::T.untyped)
+  HEX_REGEXP = ::T.let(nil, ::T.untyped)
+  NUMERIC_REGEXP = ::T.let(nil, ::T.untyped)
+  PROC_OR_HASH_REGEXP = ::T.let(nil, ::T.untyped)
+  REGEX_REGEXP = ::T.let(nil, ::T.untyped)
+  RESERVED_WORDS = ::T.let(nil, ::T.untyped)
+  SYMBOL_METHOD_CALL_REGEXP = ::T.let(nil, ::T.untyped)
+  SYMBOL_REGEXP = ::T.let(nil, ::T.untyped)
+  TOPLEVEL_LOOKUP_REGEXP = ::T.let(nil, ::T.untyped)
+  VARIABLE_REGEXP = ::T.let(nil, ::T.untyped)
+  WORD_ESCAPE_STR = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Inspector
+  MAP = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::ObjectPath
+  SPECIAL_TERMS = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Output
+  DEFAULT_SIZE = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::PluginManager
+  PRY_PLUGIN_PREFIX = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Slop
+  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Pry::Slop::Option
+  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
+end
+
+module PryRails
+  Commands = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module Psych
@@ -25758,6 +25881,19 @@ end
 
 module SteamAppId::GeneratedRelationMethods
   extend ::Mutex_m
+end
+
+class SteamImportService::Result
+  def self.inherited(s); end
+end
+
+class SteamImportService::Unmatched
+  def self.inherited(s); end
+end
+
+class SteamImportService
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 class StopIteration

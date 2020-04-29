@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.7
+# graphql-1.10.8
 
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
@@ -1528,8 +1528,8 @@ class GraphQL::Tracing::PrometheusTracing < GraphQL::Tracing::PlatformTracing
   def platform_trace(platform_key, key, data, &block); end
 end
 module GraphQL::Tracing::Traceable
-  def call_tracers(idx, key, metadata); end
-  def trace(key, metadata); end
+  def call_tracers(idx, key, metadata, &block); end
+  def trace(key, metadata, &block); end
 end
 module GraphQL::Tracing::NullTracer
   def self.trace(k, v); end
@@ -1593,6 +1593,25 @@ class GraphQL::Execution::Interpreter
   def self.use(schema_class); end
   def sync_lazies(query: nil, multiplex: nil); end
 end
+class GraphQL::Execution::Interpreter::ArgumentValue
+  def default_used?; end
+  def definition; end
+  def initialize(definition:, value:, default_used:); end
+  def value; end
+end
+class GraphQL::Execution::Interpreter::Arguments
+  def [](*args, &block); end
+  def argument_values; end
+  def each(*args, &block); end
+  def each_value; end
+  def initialize(keyword_arguments:, argument_values:); end
+  def inspect; end
+  def key?(*args, &block); end
+  def keys(*args, &block); end
+  def keyword_arguments; end
+  def values(*args, &block); end
+  extend Forwardable
+end
 class GraphQL::Execution::Interpreter::ArgumentsCache
   def fetch(ast_node, argument_owner, parent_object); end
   def initialize(query); end
@@ -1610,7 +1629,7 @@ class GraphQL::Execution::Interpreter::HashResponse
 end
 class GraphQL::Execution::Interpreter::Runtime
   def add_dead_path(path); end
-  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: nil, trace: nil); end
+  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: nil, trace: nil, &block); end
   def arguments(graphql_object, arg_owner, ast_node); end
   def authorized_new(type, value, context, path); end
   def context; end
@@ -1625,8 +1644,8 @@ class GraphQL::Execution::Interpreter::Runtime
   def inspect; end
   def query; end
   def resolve_type(type, value, path); end
-  def resolve_with_directives(object, ast_node); end
-  def run_directive(object, ast_node, idx); end
+  def resolve_with_directives(object, ast_node, &block); end
+  def run_directive(object, ast_node, idx, &block); end
   def run_eager; end
   def schema; end
   def set_type_at_path(path, type); end
@@ -1957,7 +1976,7 @@ class GraphQL::Schema
   def self.to_definition(only: nil, except: nil, context: nil); end
   def self.to_document; end
   def self.to_graphql; end
-  def self.to_json(*args); end
+  def self.to_json(**args); end
   def self.tracer(new_tracer); end
   def self.tracers; end
   def self.type_error(type_err, ctx); end
@@ -2486,6 +2505,7 @@ class GraphQL::Schema::Field
   def graphql_name; end
   def has_max_page_size?; end
   def initialize(*args, **kwargs, &block); end
+  def introspection?; end
   def max_page_size; end
   def method_conflict_warning?; end
   def method_str; end
@@ -2541,7 +2561,7 @@ class GraphQL::Schema::InputObject < GraphQL::Schema::Member
   def context; end
   def each(*args, &block); end
   def empty?(*args, &block); end
-  def initialize(values = nil, context:, defaults_used:, ruby_kwargs: nil); end
+  def initialize(arguments = nil, context:, defaults_used:, ruby_kwargs: nil); end
   def key?(key); end
   def keys(*args, &block); end
   def map(*args, &block); end
@@ -2843,7 +2863,7 @@ class GraphQL::Schema::UnresolvedLateBoundTypeError < GraphQL::Error
 end
 module GraphQL::Schema::LazyHandlingMethods
   def after_any_lazies(maybe_lazies); end
-  def after_lazy(value); end
+  def after_lazy(value, &block); end
   def lazy?(obj); end
   def lazy_method_name(obj); end
   def sync_lazy(value); end
@@ -3517,13 +3537,13 @@ module GraphQL::InternalRepresentation::Rewrite
 end
 class GraphQL::InternalRepresentation::Scope
   def concrete_types; end
-  def each; end
+  def each(&block); end
   def enter(other_type_defn); end
   def initialize(query, type_defn); end
 end
 module GraphQL::InternalRepresentation::Visit
-  def each_node(node); end
-  def self.each_node(node); end
+  def each_node(node, &block); end
+  def self.each_node(node, &block); end
   def self.visit_each_node(operations, handlers); end
   def visit_each_node(operations, handlers); end
 end
@@ -4165,7 +4185,7 @@ module GraphQL::Compatibility::ExecutionSpecification::SpecificationSchema
   def self.build(execution_strategy); end
 end
 class GraphQL::Compatibility::ExecutionSpecification::SpecificationSchema::CustomCollection
-  def each; end
+  def each(&block); end
   def initialize(storage); end
 end
 module GraphQL::Compatibility::ExecutionSpecification::SpecificationSchema::TestMiddleware

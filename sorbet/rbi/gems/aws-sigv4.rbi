@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/aws-sigv4/all/aws-sigv4.rbi
 #
-# aws-sigv4-1.1.1
+# aws-sigv4-1.1.3
 
 module Aws
 end
@@ -23,6 +23,7 @@ end
 class Aws::Sigv4::StaticCredentialsProvider
   def credentials; end
   def initialize(options = nil); end
+  def set?; end
 end
 module Aws::Sigv4::Errors
 end
@@ -51,6 +52,7 @@ class Aws::Sigv4::Signer
   def credential(credentials, date); end
   def credential_scope(date); end
   def credentials_provider; end
+  def credentials_set?(credentials); end
   def downcase_headers(headers); end
   def event_signature(secret_access_key, date, string_to_sign); end
   def event_string_to_sign(datetime, headers, payload, prior_signature, encoder); end
