@@ -31,9 +31,9 @@ class GamePolicy < ApplicationPolicy
     user.present?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
-    user.present?
+    user&.moderator? || user&.admin?
   end
 
   sig { returns(T::Boolean) }
