@@ -5,7 +5,7 @@
     <h2>Some games could not be imported</h2>
     <ul>
       <% @result.unmatched.each do |unmatched| %>
-        <li><%= unmatched.name %> with id <%= unmatched.steam_id %></li>
+        <li><%= unmatched.name %> (<%= unmatched.steam_id %>)</li>
       <% end %>
     </ul>
   </section>
