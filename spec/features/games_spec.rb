@@ -107,19 +107,6 @@ RSpec.describe "Games", type: :feature do
     let(:moderator) { create(:confirmed_moderator) }
     let(:user) { create(:confirmed_user) }
 
-    it "lets user delete it" do
-      sign_in(user)
-      visit(game_path(game))
-
-      find('#actions-dropdown').click
-      accept_alert do
-        click_link 'Delete'
-      end
-
-      expect(page).to have_current_path(games_path)
-      expect(page).to have_no_content(game.name)
-    end
-
     it "lets moderator delete it" do
       sign_in(moderator)
       visit(game_path(game))

@@ -114,10 +114,18 @@ RSpec.describe "Games", type: :request do
 
   describe "DELETE game_path" do
     let(:user) { create(:confirmed_user) }
+    let(:moderator) { create(:confirmed_moderator) }
     let!(:game) { create(:game) }
 
-    it "deletes a game" do
+    it "does not delete the game" do
       sign_in(user)
+      expect do
+        delete game_path(id: game.id)
+      end.to change(Game, :count).by(0)
+    end
+
+    it "deletes the game" do
+      sign_in(moderator)
       expect do
         delete game_path(id: game.id)
       end.to change(Game, :count).by(-1)
