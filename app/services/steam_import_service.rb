@@ -79,7 +79,7 @@ class SteamImportService
   end
 
   class Result < T::Struct
-    const :added, GamePurchase::ActiveRecord_AssociationRelation
+    const :added, GamePurchase::RelationType
     const :unmatched, T::Array[Unmatched]
 
     def added_games
