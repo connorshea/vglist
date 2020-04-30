@@ -4,18 +4,21 @@
       <%= user_avatar(user.id, 80) %>
     </figure>
     <div class="card-content">
-      <p class="title is-4 mb-5"><%= user.username %></p>
-      <% if user.admin? %>
-        <p><span class="tag is-primary has-text-weight-semibold">Admin</span>
-      <% elsif user.moderator? %>
-        <p><span class="tag is-primary has-text-weight-semibold">Moderator</span>
-      <% end %>
-      <% if user.private_account? %>
-        <p><span class="tag is-light has-text-weight-semibold">Private</span>
-      <% end %>
-      <% if user.banned? %>
-        <p><span class="tag is-danger has-text-weight-semibold">Banned</span>
-      <% end %>
+      <p class="title is-4 mb-5 is-vertical-align-middle">
+        <%= user.username %>
+        <% if user.admin? %>
+          <span class="tag is-primary has-text-weight-semibold ml-5">Admin</span>
+        <% elsif user.moderator? %>
+          <span class="tag is-primary has-text-weight-semibold ml-5">Moderator</span>
+        <% end %>
+        <% if user.private_account? %>
+          <span class="tag is-light has-text-weight-semibold ml-5">Private</span>
+        <% end %>
+        <% if user.banned? %>
+          <span class="tag is-danger has-text-weight-semibold ml-5">Banned</span>
+        <% end %>
+      </p>
+      <p class="has-text-black"><%= user.games.size %> <%= "Games".pluralize(user.games.size) %></p>
     </div>
   <% end %>
 </div>
