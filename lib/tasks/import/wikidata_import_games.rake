@@ -1,5 +1,4 @@
 # typed: ignore
-# rubocop:disable Rails/TimeZone
 namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'
@@ -90,7 +89,7 @@ namespace 'import:wikidata' do
         release_date = wikidata_json.dig('P577')&.map do |date|
           date.dig('mainsnak', 'datavalue', 'value', 'time')
         end&.reject(&:nil?)&.map do |time|
-          Time.parse(time).to_date
+          Time.zone.parse(time).to_date
                        rescue ArgumentError
                          nil
         end&.reject(&:nil?)&.min
@@ -243,7 +242,7 @@ namespace 'import:wikidata' do
         # bad data like '2019-06-00', which isn't a valid date. We just
         # skip these entirely to avoid bad data.
         begin
-          release_dates << Time.parse(release_date_hash['time']).to_date unless release_date_hash.nil?
+          release_dates << Time.zone.parse(release_date_hash['time']).to_date unless release_date_hash.nil?
         rescue ArgumentError
           progress_bar.log "Bad datetime, skipping. (#{release_date_hash['time']})"
           # Break out of the loop to prevent incorrect release dates, in case a
@@ -287,4 +286,3 @@ namespace 'import:wikidata' do
     "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end
-# rubocop:enable Rails/TimeZone
