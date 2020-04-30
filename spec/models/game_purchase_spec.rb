@@ -25,6 +25,12 @@ RSpec.describe GamePurchase, type: :model do
         .is_less_than_or_equal_to(100)
     end
 
+    it 'validates the replay_count' do
+      expect(game_purchase).to validate_numericality_of(:replay_count)
+        .is_greater_than_or_equal_to(0)
+        .allow_nil
+    end
+
     it 'validates the hours_played' do
       expect(game_purchase).to validate_numericality_of(:hours_played)
         .allow_nil

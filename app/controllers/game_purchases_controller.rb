@@ -99,6 +99,7 @@ class GamePurchasesController < ApplicationController
       :start_date,
       :completion_date,
       :hours_played,
+      :replay_count,
       platform_ids: [],
       store_ids: []
     )
