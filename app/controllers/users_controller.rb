@@ -81,7 +81,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html do
-        flash[:success] = "Added #{@result.added_games.count} games. #{@result.unmatched.count} games weren't found in the vglist database."
+        flash[:success] = "Added #{@result.added_games.count} #{'game'.pluralize(@result.added_games.count)}. #{@result.unmatched.count} games weren't found in the vglist database."
         render
       end
     end
