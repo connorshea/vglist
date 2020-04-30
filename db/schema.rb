@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_030034) do
+ActiveRecord::Schema.define(version: 2020_04_30_041735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -182,6 +182,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_030034) do
     t.date "start_date"
     t.date "completion_date"
     t.decimal "hours_played", precision: 10, scale: 1
+    t.integer "replay_count", default: 0, null: false
     t.index ["game_id", "user_id"], name: "index_game_purchases_on_game_id_and_user_id", unique: true
     t.index ["game_id"], name: "index_game_purchases_on_game_id"
     t.index ["user_id"], name: "index_game_purchases_on_user_id"
