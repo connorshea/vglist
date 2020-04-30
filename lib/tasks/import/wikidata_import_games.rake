@@ -86,6 +86,7 @@ namespace 'import:wikidata' do
           game_hash[name].uniq!
         end
 
+        # Grab the earliest release date that we can actually parse
         release_date = wikidata_json.dig('P577')&.map do |date|
           date.dig('mainsnak', 'datavalue', 'value', 'time')
         end&.reject(&:nil?)&.map do |time|
