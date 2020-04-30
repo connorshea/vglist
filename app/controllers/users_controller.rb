@@ -10,6 +10,7 @@ class UsersController < ApplicationController
     elsif current_user&.moderator? || current_user&.admin?
       @users = User.order(:id).page helpers.page_param
     end
+
     skip_policy_scope
   end
 
