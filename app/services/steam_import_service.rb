@@ -85,6 +85,7 @@ class SteamImportService
     const :added, GamePurchase::RelationType
     const :unmatched, T::Array[Unmatched]
 
+    sig { returns(Game::RelationType) }
     def added_games
       Game.joins(:game_purchases).merge(added)
     end
