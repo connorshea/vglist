@@ -80,7 +80,10 @@ class UsersController < ApplicationController
     @result = SteamImportService.new(@user).call
 
     respond_to do |format|
-      format.html
+      format.html do
+        flash[:success] = "Added #{@result.added_games.count} games. #{@result.unmatched.count} games weren't found in the vglist database."
+        render
+      end
     end
   rescue SteamImportService::NoGamesError
     # If no games are returned, return an error message.
