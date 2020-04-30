@@ -8,7 +8,7 @@ RSpec.describe GamePolicy, type: :policy do
     let(:user) { create(:user) }
     let(:game) { create(:game) }
 
-    it 'can do everything except delete games' do
+    it 'can do everything except delete games and covers' do
       expect(game_policy).to permit_actions(
         [
           :index,
@@ -18,7 +18,6 @@ RSpec.describe GamePolicy, type: :policy do
           :edit,
           :update,
           :search,
-          :remove_cover,
           :favorite,
           :unfavorite,
           :favorited
@@ -26,10 +25,11 @@ RSpec.describe GamePolicy, type: :policy do
       )
     end
 
-    it 'cannot delete games' do
+    it 'cannot delete games or remove covers' do
       expect(game_policy).to forbid_actions(
         [
-          :destroy
+          :destroy,
+          :remove_cover
         ]
       )
     end
