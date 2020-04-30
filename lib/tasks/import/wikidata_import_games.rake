@@ -100,7 +100,7 @@ namespace 'import:wikidata' do
           wikidata_id: game_hash[:wikidata_id],
           pcgamingwiki_id: wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value'),
           epic_games_store_id: wikidata_json.dig('P6278')&.first&.dig('mainsnak', 'datavalue', 'value'),
-          # remove the game prefix
+          # Remove the 'game/' prefix from the GOG.com IDs.
           gog_id: wikidata_json.dig('P2725')&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', ''),
           mobygames_id: wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value'),
           giantbomb_id: wikidata_json.dig('P5247')&.first&.dig('mainsnak', 'datavalue', 'value'),
