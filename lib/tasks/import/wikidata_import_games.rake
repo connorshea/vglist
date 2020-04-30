@@ -148,7 +148,7 @@ namespace 'import:wikidata' do
         if keys.include?(:platforms)
           progress_bar.log 'Adding platforms.' if ENV['DEBUG']
           Platform.where(wikidata_id: game_hash[:platforms]).pluck(:id).map do |platform_id|
-            { platform_id: platform_id, game_id: game_id }
+            { platform_id: platform_id, game_id: game.id }
           end.tap { |attrs| GamePlatform.insert_all(attrs) if attrs.any? }
         end
 
