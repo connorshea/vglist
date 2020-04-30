@@ -82,6 +82,8 @@ class SteamImportService
   end
 
   class Result < T::Struct
+    extend T::Sig
+
     const :added, GamePurchase::RelationType
     const :unmatched, T::Array[Unmatched]
 
