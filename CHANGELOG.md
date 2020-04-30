@@ -5,12 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2020.4.29
+### Added
+- Add a game count to user cards. ([#1182])
+
 ### Changed
+- Rebuilt the Steam importer as a service to move code out of the controller and to make it run faster (Thanks @AnthonySuper!). ([#1174])
 - Made it so only moderators and admins can remove game covers. ([#1181])
 
 ## v2020.4.28
 ### Added
-- Added database indices to enforce uniqueness.
+- Add database indices to enforce uniqueness.
 
 ### Changed
 - Made it so only moderators and admins can delete games.
@@ -695,4 +699,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1021]: https://github.com/connorshea/VideoGameList/pull/1021
 [#1044]: https://github.com/connorshea/VideoGameList/pull/1044
 [#1123]: https://github.com/connorshea/VideoGameList/pull/1123
+[#1174]: https://github.com/connorshea/VideoGameList/pull/1174
 [#1181]: https://github.com/connorshea/VideoGameList/pull/1181
+[#1182]: https://github.com/connorshea/VideoGameList/pull/1182
