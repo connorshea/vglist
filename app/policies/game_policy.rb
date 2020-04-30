@@ -41,9 +41,9 @@ class GamePolicy < ApplicationPolicy
     user.present?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def remove_cover?
-    user.present?
+    user&.moderator? || user&.admin?
   end
 
   sig { returns(T::Boolean) }

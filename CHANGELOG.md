@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.4.29
+### Changed
+- Made it so only moderators and admins can remove game covers. ([#1181])
+
 ## v2020.4.28
 ### Added
 - Added database indices to enforce uniqueness.
@@ -691,3 +695,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1021]: https://github.com/connorshea/VideoGameList/pull/1021
 [#1044]: https://github.com/connorshea/VideoGameList/pull/1044
 [#1123]: https://github.com/connorshea/VideoGameList/pull/1123
+[#1181]: https://github.com/connorshea/VideoGameList/pull/1181

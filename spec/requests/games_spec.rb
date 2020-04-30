@@ -227,11 +227,11 @@ RSpec.describe "Games", type: :request do
   end
 
   describe "DELETE remove_cover_game_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:moderator) { create(:confirmed_moderator) }
     let(:game_with_cover) { create(:game_with_cover) }
 
     it "removes the cover from a game" do
-      sign_in(user)
+      sign_in(moderator)
       delete remove_cover_game_path(game_with_cover.id),
         params: { id: game_with_cover.id }
       expect(response).to redirect_to(game_url(game_with_cover))
