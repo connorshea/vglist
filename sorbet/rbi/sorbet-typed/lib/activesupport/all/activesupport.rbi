@@ -200,7 +200,7 @@ class String
   sig { params(locale: Symbol).returns(String) }
   def singularize(locale = :en); end
 
-  sig { returns(T.untyped) }
+  sig { returns(String) }
   def squish!; end
 
   sig { returns(String) }
@@ -551,10 +551,46 @@ class ActiveSupport::TimeWithZone
   sig { returns(ActiveSupport::TimeWithZone) }
   def at_end_of_day; end
 
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def end_of_year; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def at_end_of_year; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def beginning_of_year; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def at_beginning_of_year; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def end_of_month; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def at_end_of_month; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def beginning_of_month; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def at_beginning_of_month; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def end_of_hour; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def at_end_of_hour; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def beginning_of_hour; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def at_beginning_of_hour; end
+
   # Returns a `Time` instance that represents the time in `time_zone`.
   sig { returns(Time) }
   def time; end
-  
+
   # Returns a `Time` instance of the simultaneous time in the UTC timezone.
   sig { returns(Time) }
   def utc; end
@@ -1368,6 +1404,12 @@ class ActiveSupport::Duration
   # The `precision` parameter can be used to limit seconds' precision of duration.
   sig { params(precision: T.nilable(Integer)).returns(String) }
   def iso8601(precision: nil); end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def from_now; end
+
+  sig { returns(ActiveSupport::TimeWithZone) }
+  def ago; end
 end
 
 module Benchmark

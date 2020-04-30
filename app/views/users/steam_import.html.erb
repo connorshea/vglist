@@ -1,0 +1,47 @@
+<div class="columns">
+  <div class="column is-3-desktop">
+    <div class="box">
+      <%= render 'settings/nav' %>
+    </div>
+  </div>
+
+  <div class="column">
+    <h1 class="title">Import</h1>
+
+    <% if @result.added_games.any? %>
+      <section>
+        <p class="has-text-weight-bold">
+          Imported games:
+        </p>
+        <div class="game-card-list mt-20">
+          <% @result.added_games.with_attached_cover.includes(:platforms, :publishers, :developers).find_each do |game| %>
+            <%= render 'shared/game_card', game: game %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% if @result.added_games.any? && @result.unmatched.any? %>
+      <hr>
+    <% end %>
+
+    <% if @result.unmatched.any? %>
+      <div class="content">
+        <p class="has-text-weight-bold">
+          Unable to find the following games in the database:
+        </p>
+        <div class="notification is-warning">
+          <p><strong>Note:</strong> This list usually includes alternate
+          versions of games already in the vglist database, e.g.
+          'Game of the Year' editions. These Steam IDs should be added
+          to the existing games. DLC should not be added to the database.
+        </div>
+        <ul>
+          <% @result.unmatched.each do |unmatched| %>
+            <li><%= unmatched.name %> (<%= link_to 'Create', new_game_path(name: unmatched.name, steam_app_id: unmatched.steam_id), target: "_blank" %>)</li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>

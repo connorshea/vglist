@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/better_errors/all/better_errors.rbi
 #
-# better_errors-2.6.0
+# better_errors-2.7.0
 
 module BetterErrors
   def self.application_root; end
@@ -18,6 +18,8 @@ module BetterErrors
   def self.default_editor; end
   def self.editor; end
   def self.editor=(editor); end
+  def self.ignored_classes; end
+  def self.ignored_classes=(arg0); end
   def self.ignored_instance_variables; end
   def self.ignored_instance_variables=(arg0); end
   def self.logger; end

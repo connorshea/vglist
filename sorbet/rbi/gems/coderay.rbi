@@ -22,6 +22,74 @@ module CodeRay
   def self.scan_file(filename, lang = nil, options = nil, &block); end
   def self.scanner(lang, options = nil, &block); end
 end
+module CodeRay::PluginHost
+  def [](id, *args, &blk); end
+  def all_plugins; end
+  def const_missing(const); end
+  def default(id = nil); end
+  def list; end
+  def load(id, *args, &blk); end
+  def load_all; end
+  def load_plugin_map; end
+  def make_plugin_hash; end
+  def map(hash); end
+  def path_to(plugin_id); end
+  def plugin_hash; end
+  def plugin_path(*args); end
+  def register(plugin, id); end
+  def self.extended(mod); end
+  def validate_id(id); end
+end
+class CodeRay::PluginHost::PluginNotFound < LoadError
+end
+class CodeRay::PluginHost::HostNotFound < LoadError
+end
+module CodeRay::Encoders
+  extend CodeRay::PluginHost
+end
+module CodeRay::Plugin
+  def aliases; end
+  def plugin_host(host = nil); end
+  def plugin_id; end
+  def register_for(id); end
+  def title(title = nil); end
+end
+class CodeRay::Encoders::Encoder
+  def <<(token); end
+  def begin_group(kind); end
+  def begin_line(kind); end
+  def compile(tokens, options = nil); end
+  def encode(code, lang, options = nil); end
+  def encode_tokens(tokens, options = nil); end
+  def end_group(kind); end
+  def end_line(kind); end
+  def file_extension; end
+  def finish(options); end
+  def get_output(options); end
+  def highlight(code, lang, options = nil); end
+  def initialize(options = nil); end
+  def options; end
+  def options=(arg0); end
+  def output(data); end
+  def scanner; end
+  def scanner=(arg0); end
+  def self.const_missing(sym); end
+  def self.file_extension; end
+  def setup(options); end
+  def text_token(text, kind); end
+  def token(content, kind); end
+  def tokens(tokens, options = nil); end
+  extend CodeRay::Plugin
+end
+class CodeRay::Encoders::Terminal < CodeRay::Encoders::Encoder
+  def begin_group(kind); end
+  def begin_line(kind); end
+  def end_group(kind); end
+  def end_line(kind); end
+  def open_token(kind); end
+  def setup(options); end
+  def text_token(text, kind); end
+end
 module CodeRay::FileType
   def self.[](filename, read_shebang = nil); end
   def self.fetch(filename, default = nil, read_shebang = nil); end
@@ -59,35 +127,6 @@ class CodeRay::TokensProxy
   def options=(arg0); end
   def scanner; end
   def tokens; end
-end
-module CodeRay::PluginHost
-  def [](id, *args, &blk); end
-  def all_plugins; end
-  def const_missing(const); end
-  def default(id = nil); end
-  def list; end
-  def load(id, *args, &blk); end
-  def load_all; end
-  def load_plugin_map; end
-  def make_plugin_hash; end
-  def map(hash); end
-  def path_to(plugin_id); end
-  def plugin_hash; end
-  def plugin_path(*args); end
-  def register(plugin, id); end
-  def self.extended(mod); end
-  def validate_id(id); end
-end
-class CodeRay::PluginHost::PluginNotFound < LoadError
-end
-class CodeRay::PluginHost::HostNotFound < LoadError
-end
-module CodeRay::Plugin
-  def aliases; end
-  def plugin_host(host = nil); end
-  def plugin_id; end
-  def register_for(id); end
-  def title(title = nil); end
 end
 module CodeRay::Scanners
   extend CodeRay::PluginHost
@@ -149,7 +188,7 @@ class CodeRay::Scanners::Ruby < CodeRay::Scanners::Scanner
 end
 module CodeRay::Scanners::Ruby::Patterns
 end
-class Anonymous_Struct_52 < Struct
+class Anonymous_Struct_48 < Struct
   def delim; end
   def delim=(_); end
   def heredoc; end
@@ -171,40 +210,10 @@ class Anonymous_Struct_52 < Struct
   def type; end
   def type=(_); end
 end
-class CodeRay::Scanners::Ruby::StringState < Anonymous_Struct_52
+class CodeRay::Scanners::Ruby::StringState < Anonymous_Struct_48
   def heredoc_pattern(delim, interpreted, indented); end
   def initialize(kind, interpreted, delim, heredoc = nil); end
   def self.simple_key_pattern(delim); end
-end
-module CodeRay::Encoders
-  extend CodeRay::PluginHost
-end
-class CodeRay::Encoders::Encoder
-  def <<(token); end
-  def begin_group(kind); end
-  def begin_line(kind); end
-  def compile(tokens, options = nil); end
-  def encode(code, lang, options = nil); end
-  def encode_tokens(tokens, options = nil); end
-  def end_group(kind); end
-  def end_line(kind); end
-  def file_extension; end
-  def finish(options); end
-  def get_output(options); end
-  def highlight(code, lang, options = nil); end
-  def initialize(options = nil); end
-  def options; end
-  def options=(arg0); end
-  def output(data); end
-  def scanner; end
-  def scanner=(arg0); end
-  def self.const_missing(sym); end
-  def self.file_extension; end
-  def setup(options); end
-  def text_token(text, kind); end
-  def token(content, kind); end
-  def tokens(tokens, options = nil); end
-  extend CodeRay::Plugin
 end
 class CodeRay::Encoders::HTML < CodeRay::Encoders::Encoder
   def begin_group(kind); end
