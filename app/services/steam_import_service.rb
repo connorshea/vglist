@@ -56,7 +56,7 @@ class SteamImportService
     attrs = attrs.to_a
     added_purchases =
       if attrs.any?
-        inserted = GamePurchase.insert_all(attrs, unique_by: [:game_id, :user_id])
+        inserted = attrs.all { |attr| GamePurchase.find_or_create_by(attr) }
         GamePurchase.where(id: inserted.map { |e| e['id'] })
       else
         GamePurchase.none
