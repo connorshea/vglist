@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.4.28
+### Added
+- Added database indices to enforce uniqueness.
+
+### Changed
+- Made it so only moderators and admins can delete games.
+
 ## v2020.3.25
 ### Added
 - Include the game cover and other metadata in game search results. ([#1123])
