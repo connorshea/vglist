@@ -9676,13 +9676,13 @@ class File::Stat
 end
 
 class File
-  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
-
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -25598,6 +25598,10 @@ module Socket::Constants
 end
 
 module SorbetRails
+  TypeAssertDeprecation = ::T.let(nil, ::T.untyped)
+end
+
+module SorbetRails
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 
@@ -25884,6 +25888,8 @@ module SteamAppId::GeneratedRelationMethods
 end
 
 class SteamImportService::Result
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
   def self.inherited(s); end
 end
 

@@ -29,159 +29,8 @@ class Game < ApplicationRecord
   include Game::GeneratedAssociationMethods
   extend Game::CustomFinderMethods
   extend PgSearch::Model::ClassMethods
-  extend T::Sig
-  extend T::Generic
+  extend Game::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(Game::ActiveRecord_Relation, Game::ActiveRecord_Associations_CollectionProxy, Game::ActiveRecord_AssociationRelation) }
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.by_year(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.highest_avg_rating(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.least_recently_updated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.most_favorites(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.most_owners(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.newest(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.oldest(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.on_platform(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.recently_released(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.recently_updated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.with_attached_cover(*args); end
-
-  sig { returns(Game::ActiveRecord_Relation) }
-  def self.all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_Relation) }
-  def self.unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.select(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.order(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.group(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.limit(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.offset(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.where(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.preload(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.includes(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.from(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.lock(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.or(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.having(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.references(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.none(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.merge(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.except(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
-  def self.only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_Relation) }
-  def self.extending(*args, &block); end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def self.exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.empty?(*args); end
 
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchases; end
@@ -1586,25 +1435,9 @@ class Game < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_pg_search_document(*args); end
-
-  sig { params(num: T.nilable(Integer)).returns(Game::ActiveRecord_Relation) }
-  def self.page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Game::ActiveRecord_Relation) }
-  def self.per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Game::ActiveRecord_Relation) }
-  def self.padding(num); end
 end
 
-class Game::ActiveRecord_Relation < ActiveRecord::Relation
-  include Game::ActiveRelation_WhereNot
-  include Game::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Game)
-
+module Game::QueryMethodsReturningRelation
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def by_year(*args); end
 
@@ -1737,24 +1570,6 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
   sig { params(num: T.nilable(Integer)).returns(Game::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -1765,498 +1580,164 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   def padding(num); end
 end
 
+module Game::QueryMethodsReturningAssociationRelation
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def highest_avg_rating(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def least_recently_updated(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def most_favorites(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def most_owners(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def newest(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def oldest(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def on_platform(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def recently_released(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def recently_updated(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def with_attached_cover(*args); end
+
+  sig { returns(Game::ActiveRecord_AssociationRelation) }
+  def all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_Relation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def select(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def reselect(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def order(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def reorder(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def group(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def limit(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def offset(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def joins(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def left_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def left_outer_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def where(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def rewhere(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def preload(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def extract_associated(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def eager_load(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def includes(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def from(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def lock(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def readonly(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def or(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def having(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def create_with(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def distinct(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def references(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def none(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def unscope(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def optimizer_hints(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def merge(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def except(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def only(*args); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_AssociationRelation) }
+  def extending(*args, &block); end
+
+  sig { params(num: T.nilable(Integer)).returns(Game::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Game::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Game::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class Game::ActiveRecord_Relation < ActiveRecord::Relation
+  include Game::ActiveRelation_WhereNot
+  include Game::CustomFinderMethods
+  include Game::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Game)
+end
+
 class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include Game::ActiveRelation_WhereNot
   include Game::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
+  include Game::QueryMethodsReturningAssociationRelation
   Elem = type_member(fixed: Game)
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def by_year(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def highest_avg_rating(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def least_recently_updated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def most_favorites(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def most_owners(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def newest(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def oldest(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def on_platform(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def recently_released(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def recently_updated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def with_attached_cover(*args); end
-
-  sig { returns(Game::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Game) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Game)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Game) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Game)) }
-  def first; end
-
-  sig { returns(Game) }
-  def first!; end
-
-  sig { returns(T.nilable(Game)) }
-  def second; end
-
-  sig { returns(Game) }
-  def second!; end
-
-  sig { returns(T.nilable(Game)) }
-  def third; end
-
-  sig { returns(Game) }
-  def third!; end
-
-  sig { returns(T.nilable(Game)) }
-  def third_to_last; end
-
-  sig { returns(Game) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Game)) }
-  def second_to_last; end
-
-  sig { returns(Game) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Game)) }
-  def last; end
-
-  sig { returns(Game) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Game).void).returns(T::Array[Game]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Game]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Game]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(num: T.nilable(Integer)).returns(Game::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Game::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Game::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Game::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Game)
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def by_year(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def highest_avg_rating(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def least_recently_updated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def most_favorites(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def most_owners(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def newest(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def oldest(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def on_platform(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def recently_released(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def recently_updated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def with_attached_cover(*args); end
-
-  sig { returns(Game::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Game::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Game) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Game)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Game) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Game).void)).returns(Game) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Game)) }
-  def first; end
-
-  sig { returns(Game) }
-  def first!; end
-
-  sig { returns(T.nilable(Game)) }
-  def second; end
-
-  sig { returns(Game) }
-  def second!; end
-
-  sig { returns(T.nilable(Game)) }
-  def third; end
-
-  sig { returns(Game) }
-  def third!; end
-
-  sig { returns(T.nilable(Game)) }
-  def third_to_last; end
-
-  sig { returns(Game) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Game)) }
-  def second_to_last; end
-
-  sig { returns(Game) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Game)) }
-  def last; end
-
-  sig { returns(Game) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Game).void).returns(T::Array[Game]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Game]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Game]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
-  def concat(*records); end
-
-  sig { params(num: T.nilable(Integer)).returns(Game::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Game::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Game::ActiveRecord_AssociationRelation) }
-  def padding(num); end
 end
 
 module Game::GeneratedAttributeMethods
-  extend T::Sig
-
   sig { returns(T.nilable(Float)) }
   def avg_rating; end
 
@@ -2961,8 +2442,6 @@ module Game::GeneratedAttributeMethods
 end
 
 module Game::GeneratedAssociationMethods
-  extend T::Sig
-
   sig { returns(T.nilable(::ActiveStorage::Attachment)) }
   def cover_attachment; end
 
@@ -3077,86 +2556,44 @@ module Game::GeneratedAssociationMethods
   sig { params(attachable: T.untyped).returns(T.untyped) }
   def cover=(attachable); end
 
-  sig { returns(T.untyped) }
-  def game_purchase_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_purchase_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def purchaser_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def purchaser_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def game_developer_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_developer_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def developer_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def developer_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def game_publisher_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_publisher_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def publisher_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def publisher_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def game_platform_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_platform_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def platform_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def platform_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def game_genre_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_genre_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def genre_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def genre_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def game_engine_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_engine_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def engine_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def engine_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def steam_app_id_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def steam_app_id_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def favorite_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def favorite_ids=(ids); end
@@ -3220,4 +2657,22 @@ module Game::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end
+end
+
+class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Game::CustomFinderMethods
+  include Game::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Game)
+
+  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Game, T::Array[Game])).returns(T.self_type) }
+  def concat(*records); end
 end

@@ -1,3 +1,4 @@
+# typed: true
 class EnforceUniquenessAtDatabaseLevel < ActiveRecord::Migration[6.0]
   def change
     remove_index :games, :wikidata_id

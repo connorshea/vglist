@@ -3,8 +3,6 @@
 
 # typed: strong
 module ExternalAccount::EnumInstanceMethods
-  extend T::Sig
-
   sig { returns(T::Boolean) }
   def steam?; end
 
@@ -19,7 +17,7 @@ end
 
 class ExternalAccount::AccountType < T::Enum
   enums do
-    Steam = new('steam')
+    Steam = new(%q{steam})
   end
 
 end
@@ -46,117 +44,11 @@ class ExternalAccount < ApplicationRecord
   include ExternalAccount::GeneratedAttributeMethods
   include ExternalAccount::GeneratedAssociationMethods
   extend ExternalAccount::CustomFinderMethods
-  extend T::Sig
-  extend T::Generic
+  extend ExternalAccount::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(ExternalAccount::ActiveRecord_Relation, ExternalAccount::ActiveRecord_Associations_CollectionProxy, ExternalAccount::ActiveRecord_AssociationRelation) }
 
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.account_types; end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.not_steam(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.steam(*args); end
-
-  sig { returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.select(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.reselect(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.order(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.reorder(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.group(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.limit(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.offset(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.where(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.preload(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.includes(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.from(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.lock(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.readonly(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.or(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.having(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.create_with(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.distinct(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.references(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.none(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.unscope(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.merge(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.except(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.extending(*args, &block); end
 
   sig { returns(ExternalAccount::AccountType) }
   def typed_account_type; end
@@ -164,48 +56,14 @@ class ExternalAccount < ApplicationRecord
   sig { params(value: ExternalAccount::AccountType).void }
   def typed_account_type=(value); end
 
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def self.exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.empty?(*args); end
-
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_user(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_user(*args); end
-
-  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
-  def self.padding(num); end
 end
 
-class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
-  include ExternalAccount::ActiveRelation_WhereNot
-  include ExternalAccount::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: ExternalAccount)
-
+module ExternalAccount::QueryMethodsReturningRelation
   sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
   def not_steam(*args); end
 
@@ -311,24 +169,6 @@ class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
   sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -339,444 +179,137 @@ class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
   def padding(num); end
 end
 
+module ExternalAccount::QueryMethodsReturningAssociationRelation
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def not_steam(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def steam(*args); end
+
+  sig { returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def select(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def reselect(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def order(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def reorder(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def group(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def limit(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def offset(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def joins(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def left_joins(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def left_outer_joins(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def where(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def rewhere(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def preload(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def extract_associated(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def eager_load(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def includes(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def from(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def lock(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def readonly(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def or(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def having(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def create_with(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def distinct(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def references(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def none(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def unscope(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def optimizer_hints(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def merge(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def except(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def only(*args); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def extending(*args, &block); end
+
+  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
+  include ExternalAccount::ActiveRelation_WhereNot
+  include ExternalAccount::CustomFinderMethods
+  include ExternalAccount::QueryMethodsReturningRelation
+  Elem = type_member(fixed: ExternalAccount)
+end
+
 class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include ExternalAccount::ActiveRelation_WhereNot
   include ExternalAccount::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
+  include ExternalAccount::QueryMethodsReturningAssociationRelation
   Elem = type_member(fixed: ExternalAccount)
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def not_steam(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def steam(*args); end
-
-  sig { returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(ExternalAccount)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def first; end
-
-  sig { returns(ExternalAccount) }
-  def first!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def second; end
-
-  sig { returns(ExternalAccount) }
-  def second!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def third; end
-
-  sig { returns(ExternalAccount) }
-  def third!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def third_to_last; end
-
-  sig { returns(ExternalAccount) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def second_to_last; end
-
-  sig { returns(ExternalAccount) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def last; end
-
-  sig { returns(ExternalAccount) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: ExternalAccount).void).returns(T::Array[ExternalAccount]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[ExternalAccount]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[ExternalAccount]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include ExternalAccount::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: ExternalAccount)
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def not_steam(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def steam(*args); end
-
-  sig { returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(ExternalAccount)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ExternalAccount).void)).returns(ExternalAccount) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def first; end
-
-  sig { returns(ExternalAccount) }
-  def first!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def second; end
-
-  sig { returns(ExternalAccount) }
-  def second!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def third; end
-
-  sig { returns(ExternalAccount) }
-  def third!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def third_to_last; end
-
-  sig { returns(ExternalAccount) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def second_to_last; end
-
-  sig { returns(ExternalAccount) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  def last; end
-
-  sig { returns(ExternalAccount) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: ExternalAccount).void).returns(T::Array[ExternalAccount]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[ExternalAccount]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[ExternalAccount]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def concat(*records); end
-
-  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def padding(num); end
 end
 
 module ExternalAccount::GeneratedAttributeMethods
-  extend T::Sig
-
   sig { returns(String) }
   def account_type; end
 
@@ -1157,8 +690,6 @@ module ExternalAccount::GeneratedAttributeMethods
 end
 
 module ExternalAccount::GeneratedAssociationMethods
-  extend T::Sig
-
   sig { returns(::User) }
   def user; end
 
@@ -1176,4 +707,22 @@ module ExternalAccount::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_user; end
+end
+
+class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include ExternalAccount::CustomFinderMethods
+  include ExternalAccount::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: ExternalAccount)
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def concat(*records); end
 end

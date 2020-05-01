@@ -3,8 +3,6 @@
 
 # typed: strong
 module Event::EnumInstanceMethods
-  extend T::Sig
-
   sig { returns(T::Boolean) }
   def add_to_library?; end
 
@@ -43,11 +41,11 @@ end
 
 class Event::EventCategory < T::Enum
   enums do
-    AddToLibrary = new('add_to_library')
-    ChangeCompletionStatus = new('change_completion_status')
-    FavoriteGame = new('favorite_game')
-    NewUser = new('new_user')
-    Following = new('following')
+    AddToLibrary = new(%q{add_to_library})
+    ChangeCompletionStatus = new(%q{change_completion_status})
+    FavoriteGame = new(%q{favorite_game})
+    NewUser = new(%q{new_user})
+    Following = new(%q{following})
   end
 
 end
@@ -74,180 +72,17 @@ class Event < ApplicationRecord
   include Event::GeneratedAttributeMethods
   include Event::GeneratedAssociationMethods
   extend Event::CustomFinderMethods
-  extend T::Sig
-  extend T::Generic
+  extend Event::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(Event::ActiveRecord_Relation, Event::ActiveRecord_Associations_CollectionProxy, Event::ActiveRecord_AssociationRelation) }
 
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.event_categories; end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.favorite_games(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.game_purchases(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.not_add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.not_change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.not_favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.not_following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.not_new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.recently_created(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.relationships(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.users(*args); end
-
-  sig { returns(Event::ActiveRecord_Relation) }
-  def self.all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_Relation) }
-  def self.unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.select(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.order(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.group(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.limit(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.offset(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.where(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.preload(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.includes(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.from(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.lock(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.or(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.having(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.references(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.none(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.merge(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.except(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
-  def self.only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_Relation) }
-  def self.extending(*args, &block); end
 
   sig { returns(Event::EventCategory) }
   def typed_event_category; end
 
   sig { params(value: Event::EventCategory).void }
   def typed_event_category=(value); end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def self.exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.empty?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_eventable(*args); end
@@ -332,25 +167,9 @@ class Event < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_user(*args); end
-
-  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
-  def self.page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
-  def self.per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Event::ActiveRecord_Relation) }
-  def self.padding(num); end
 end
 
-class Event::ActiveRecord_Relation < ActiveRecord::Relation
-  include Event::ActiveRelation_WhereNot
-  include Event::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Event)
-
+module Event::QueryMethodsReturningRelation
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def add_to_library(*args); end
 
@@ -495,24 +314,6 @@ class Event::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
   sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -523,522 +324,176 @@ class Event::ActiveRecord_Relation < ActiveRecord::Relation
   def padding(num); end
 end
 
+module Event::QueryMethodsReturningAssociationRelation
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def favorite_games(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def game_purchases(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def users(*args); end
+
+  sig { returns(Event::ActiveRecord_AssociationRelation) }
+  def all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_Relation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def select(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def reselect(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def order(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def reorder(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def group(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def limit(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def offset(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def joins(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def left_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def left_outer_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def where(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def rewhere(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def preload(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def extract_associated(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def eager_load(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def includes(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def from(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def lock(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def readonly(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def or(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def having(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def create_with(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def distinct(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def references(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def none(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def unscope(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def optimizer_hints(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def merge(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def except(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def only(*args); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_AssociationRelation) }
+  def extending(*args, &block); end
+
+  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class Event::ActiveRecord_Relation < ActiveRecord::Relation
+  include Event::ActiveRelation_WhereNot
+  include Event::CustomFinderMethods
+  include Event::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Event)
+end
+
 class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include Event::ActiveRelation_WhereNot
   include Event::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
+  include Event::QueryMethodsReturningAssociationRelation
   Elem = type_member(fixed: Event)
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def favorite_games(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def game_purchases(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def recently_created(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def relationships(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def users(*args); end
-
-  sig { returns(Event::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Event) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Event)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Event) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Event).void)).returns(Event) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Event).void)).returns(Event) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Event).void)).returns(Event) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Event)) }
-  def first; end
-
-  sig { returns(Event) }
-  def first!; end
-
-  sig { returns(T.nilable(Event)) }
-  def second; end
-
-  sig { returns(Event) }
-  def second!; end
-
-  sig { returns(T.nilable(Event)) }
-  def third; end
-
-  sig { returns(Event) }
-  def third!; end
-
-  sig { returns(T.nilable(Event)) }
-  def third_to_last; end
-
-  sig { returns(Event) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Event)) }
-  def second_to_last; end
-
-  sig { returns(Event) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Event)) }
-  def last; end
-
-  sig { returns(Event) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Event).void).returns(T::Array[Event]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Event]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Event]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Event::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Event)
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def favorite_games(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def game_purchases(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def recently_created(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def relationships(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def users(*args); end
-
-  sig { returns(Event::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Event) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Event)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Event) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Event).void)).returns(Event) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Event).void)).returns(Event) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Event).void)).returns(Event) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Event)) }
-  def first; end
-
-  sig { returns(Event) }
-  def first!; end
-
-  sig { returns(T.nilable(Event)) }
-  def second; end
-
-  sig { returns(Event) }
-  def second!; end
-
-  sig { returns(T.nilable(Event)) }
-  def third; end
-
-  sig { returns(Event) }
-  def third!; end
-
-  sig { returns(T.nilable(Event)) }
-  def third_to_last; end
-
-  sig { returns(Event) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Event)) }
-  def second_to_last; end
-
-  sig { returns(Event) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Event)) }
-  def last; end
-
-  sig { returns(Event) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Event).void).returns(T::Array[Event]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Event]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Event]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def concat(*records); end
-
-  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
-  def padding(num); end
 end
 
 module Event::GeneratedAttributeMethods
-  extend T::Sig
-
   sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
@@ -1473,8 +928,6 @@ module Event::GeneratedAttributeMethods
 end
 
 module Event::GeneratedAssociationMethods
-  extend T::Sig
-
   sig { returns(T.untyped) }
   def eventable; end
 
@@ -1516,4 +969,22 @@ module Event::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def user_ids=(ids); end
+end
+
+class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Event::CustomFinderMethods
+  include Event::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Event)
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def concat(*records); end
 end

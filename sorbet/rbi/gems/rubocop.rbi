@@ -203,11 +203,13 @@ class RuboCop::AST::Node < Parser::AST::Node
   def csend_type?; end
   def cvar_type?; end
   def cvasgn_type?; end
+  def def_e_type?; end
   def def_type?; end
   def defined_module0(node = nil); end
   def defined_module; end
   def defined_module_name; end
   def defined_type?; end
+  def defs_e_type?; end
   def defs_type?; end
   def descendants; end
   def dstr_type?; end
