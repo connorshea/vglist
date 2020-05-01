@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.7.1.1
+# parser-2.7.1.2
 
 module Parser
   def self.warn_syntax_deviation(feature, version); end
@@ -51,8 +51,10 @@ class Parser::AST::Processor < AST::Processor
   def on_cvar(node); end
   def on_cvasgn(node); end
   def on_def(node); end
+  def on_def_e(node); end
   def on_defined?(node); end
   def on_defs(node); end
+  def on_defs_e(node); end
   def on_dstr(node); end
   def on_dsym(node); end
   def on_eflipflop(node); end
@@ -301,7 +303,10 @@ class Parser::Source::TreeRewriter
   extend Parser::Deprecation
 end
 class Parser::Source::TreeRewriter::Action
+  def analyse_hierarchy(action); end
+  def bsearch_child_index(from = nil); end
   def call_enforcer_for_merge(action); end
+  def check_fusible(action, *fusible); end
   def children; end
   def combine(action); end
   def combine_children(more_children); end
@@ -316,7 +321,6 @@ class Parser::Source::TreeRewriter::Action
   def ordered_replacements; end
   def place_in_hierarchy(action); end
   def range; end
-  def relationship_with(action); end
   def replacement; end
   def swallow(children); end
   def with(range: nil, enforcer: nil, children: nil, insert_before: nil, replacement: nil, insert_after: nil); end
@@ -371,6 +375,13 @@ end
 class Parser::Source::Map::Definition < Parser::Source::Map
   def end; end
   def initialize(keyword_l, operator_l, name_l, end_l); end
+  def keyword; end
+  def name; end
+  def operator; end
+end
+class Parser::Source::Map::EndlessDefinition < Parser::Source::Map
+  def assignment; end
+  def initialize(keyword_l, operator_l, name_l, assignment_l, body_l); end
   def keyword; end
   def name; end
   def operator; end
@@ -696,6 +707,8 @@ class Parser::Builders::Default
   def cvar(token); end
   def dedent_string(node, dedent_level); end
   def def_class(class_t, name, lt_t, superclass, body, end_t); end
+  def def_endless_method(def_t, name_t, args, assignment_t, body); end
+  def def_endless_singleton(def_t, definee, dot_t, name_t, args, assignment_t, body); end
   def def_method(def_t, name_t, args, body, end_t); end
   def def_module(module_t, name, body, end_t); end
   def def_sclass(class_t, lshft_t, expr, body, end_t); end
@@ -706,6 +719,7 @@ class Parser::Builders::Default
   def eh_keyword_map(compstmt_e, keyword_t, body_es, else_t, else_e); end
   def emit_file_line_as_literals; end
   def emit_file_line_as_literals=(arg0); end
+  def endless_definition_map(keyword_t, operator_t, name_t, assignment_t, body_e); end
   def expr_map(loc); end
   def false(false_t); end
   def float(float_t); end
@@ -830,6 +844,7 @@ class Parser::Builders::Default
   def undef_method(undef_t, names); end
   def unless_guard(unless_t, unless_body); end
   def unquoted_map(token); end
+  def validate_definee(definee); end
   def value(token); end
   def var_send_map(variable_e); end
   def variable_map(name_t); end

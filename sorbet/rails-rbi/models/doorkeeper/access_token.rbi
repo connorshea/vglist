@@ -28,151 +28,17 @@ class Doorkeeper::AccessToken < ActiveRecord::Base
   include Doorkeeper::AccessToken::GeneratedAttributeMethods
   include Doorkeeper::AccessToken::GeneratedAssociationMethods
   extend Doorkeeper::AccessToken::CustomFinderMethods
-  extend T::Sig
-  extend T::Generic
+  extend Doorkeeper::AccessToken::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(Doorkeeper::AccessToken::ActiveRecord_Relation, Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy, Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-
-  sig { returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.select(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.order(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.group(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.limit(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.offset(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.where(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.preload(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.includes(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.from(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.lock(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.or(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.having(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.references(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.none(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.merge(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.except(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.extending(*args, &block); end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def self.exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.empty?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_application(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_application(*args); end
-
-  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def self.padding(num); end
 end
 
-class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
-  include Doorkeeper::AccessToken::ActiveRelation_WhereNot
-  include Doorkeeper::AccessToken::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Doorkeeper::AccessToken)
-
+module Doorkeeper::AccessToken::QueryMethodsReturningRelation
   sig { returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
   def all; end
 
@@ -272,24 +138,6 @@ class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -300,432 +148,131 @@ class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
   def padding(num); end
 end
 
+module Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
+  sig { returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def select(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def reselect(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def order(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def reorder(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def group(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def limit(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def offset(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def joins(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def left_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def left_outer_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def where(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def rewhere(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def preload(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def extract_associated(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def eager_load(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def includes(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def from(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def lock(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def readonly(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def or(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def having(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def create_with(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def distinct(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def references(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def none(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def unscope(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def optimizer_hints(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def merge(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def except(*args); end
+
+  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def only(*args); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def extending(*args, &block); end
+
+  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
+  include Doorkeeper::AccessToken::ActiveRelation_WhereNot
+  include Doorkeeper::AccessToken::CustomFinderMethods
+  include Doorkeeper::AccessToken::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Doorkeeper::AccessToken)
+end
+
 class Doorkeeper::AccessToken::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include Doorkeeper::AccessToken::ActiveRelation_WhereNot
   include Doorkeeper::AccessToken::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
+  include Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
   Elem = type_member(fixed: Doorkeeper::AccessToken)
-
-  sig { returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Doorkeeper::AccessToken)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessToken).void)).returns(Doorkeeper::AccessToken) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessToken).void)).returns(Doorkeeper::AccessToken) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessToken).void)).returns(Doorkeeper::AccessToken) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def first; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def first!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def second; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def second!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def third; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def third!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def third_to_last; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def second_to_last; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def last; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Doorkeeper::AccessToken).void).returns(T::Array[Doorkeeper::AccessToken]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Doorkeeper::AccessToken]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Doorkeeper::AccessToken]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Doorkeeper::AccessToken::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Doorkeeper::AccessToken)
-
-  sig { returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Doorkeeper::AccessToken)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Doorkeeper::AccessToken) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessToken).void)).returns(Doorkeeper::AccessToken) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessToken).void)).returns(Doorkeeper::AccessToken) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Doorkeeper::AccessToken).void)).returns(Doorkeeper::AccessToken) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def first; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def first!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def second; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def second!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def third; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def third!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def third_to_last; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def second_to_last; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Doorkeeper::AccessToken)) }
-  def last; end
-
-  sig { returns(Doorkeeper::AccessToken) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Doorkeeper::AccessToken).void).returns(T::Array[Doorkeeper::AccessToken]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Doorkeeper::AccessToken]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Doorkeeper::AccessToken]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
-  def concat(*records); end
-
-  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
-  def padding(num); end
 end
 
 module Doorkeeper::AccessToken::GeneratedAttributeMethods
-  extend T::Sig
-
   sig { returns(Integer) }
   def application_id; end
 
@@ -1268,8 +815,6 @@ module Doorkeeper::AccessToken::GeneratedAttributeMethods
 end
 
 module Doorkeeper::AccessToken::GeneratedAssociationMethods
-  extend T::Sig
-
   sig { returns(::Doorkeeper::Application) }
   def application; end
 
@@ -1287,4 +832,22 @@ module Doorkeeper::AccessToken::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_application; end
+end
+
+class Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Doorkeeper::AccessToken::CustomFinderMethods
+  include Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Doorkeeper::AccessToken)
+
+  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
+  def concat(*records); end
 end

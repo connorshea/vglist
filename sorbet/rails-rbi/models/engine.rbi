@@ -29,126 +29,8 @@ class Engine < ApplicationRecord
   include Engine::GeneratedAssociationMethods
   extend Engine::CustomFinderMethods
   extend PgSearch::Model::ClassMethods
-  extend T::Sig
-  extend T::Generic
+  extend Engine::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(Engine::ActiveRecord_Relation, Engine::ActiveRecord_Associations_CollectionProxy, Engine::ActiveRecord_AssociationRelation) }
-
-  sig { returns(Engine::ActiveRecord_Relation) }
-  def self.all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_Relation) }
-  def self.unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.select(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.order(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.group(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.limit(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.offset(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.where(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.preload(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.includes(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.from(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.lock(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.or(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.having(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.references(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.none(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.merge(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.except(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_Relation) }
-  def self.only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_Relation) }
-  def self.extending(*args, &block); end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def self.exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def self.empty?(*args); end
 
   sig { returns(T.untyped) }
   def self.after_add_for_game_engines; end
@@ -383,25 +265,9 @@ class Engine < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_pg_search_document(*args); end
-
-  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
-  def self.page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
-  def self.per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Engine::ActiveRecord_Relation) }
-  def self.padding(num); end
 end
 
-class Engine::ActiveRecord_Relation < ActiveRecord::Relation
-  include Engine::ActiveRelation_WhereNot
-  include Engine::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Engine)
-
+module Engine::QueryMethodsReturningRelation
   sig { returns(Engine::ActiveRecord_Relation) }
   def all; end
 
@@ -501,24 +367,6 @@ class Engine::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
   sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -529,432 +377,131 @@ class Engine::ActiveRecord_Relation < ActiveRecord::Relation
   def padding(num); end
 end
 
+module Engine::QueryMethodsReturningAssociationRelation
+  sig { returns(Engine::ActiveRecord_AssociationRelation) }
+  def all; end
+
+  sig { params(block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_Relation) }
+  def unscoped(&block); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def select(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def reselect(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def order(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def reorder(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def group(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def limit(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def offset(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def joins(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def left_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def left_outer_joins(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def where(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def rewhere(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def preload(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def extract_associated(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def eager_load(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def includes(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def from(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def lock(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def readonly(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def or(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def having(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def create_with(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def distinct(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def references(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def none(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def unscope(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def optimizer_hints(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def merge(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def except(*args); end
+
+  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
+  def only(*args); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_AssociationRelation) }
+  def extending(*args, &block); end
+
+  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Engine::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class Engine::ActiveRecord_Relation < ActiveRecord::Relation
+  include Engine::ActiveRelation_WhereNot
+  include Engine::CustomFinderMethods
+  include Engine::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Engine)
+end
+
 class Engine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include Engine::ActiveRelation_WhereNot
   include Engine::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
+  include Engine::QueryMethodsReturningAssociationRelation
   Elem = type_member(fixed: Engine)
-
-  sig { returns(Engine::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Engine) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Engine)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Engine) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Engine).void)).returns(Engine) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Engine).void)).returns(Engine) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Engine).void)).returns(Engine) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Engine)) }
-  def first; end
-
-  sig { returns(Engine) }
-  def first!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def second; end
-
-  sig { returns(Engine) }
-  def second!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def third; end
-
-  sig { returns(Engine) }
-  def third!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def third_to_last; end
-
-  sig { returns(Engine) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def second_to_last; end
-
-  sig { returns(Engine) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def last; end
-
-  sig { returns(Engine) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Engine).void).returns(T::Array[Engine]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Engine]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Engine]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Engine::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Engine::CustomFinderMethods
-  include Enumerable
-  extend T::Sig
-  extend T::Generic
-  Elem = type_member(fixed: Engine)
-
-  sig { returns(Engine::ActiveRecord_AssociationRelation) }
-  def all; end
-
-  sig { params(block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def unscoped(&block); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def reselect(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def order(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def reorder(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def group(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def limit(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def offset(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def left_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def left_outer_joins(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def where(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def rewhere(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def preload(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def extract_associated(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def eager_load(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def includes(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def from(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def lock(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def readonly(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def or(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def having(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def create_with(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def distinct(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def references(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def none(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def unscope(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def optimizer_hints(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def merge(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def except(*args); end
-
-  sig { params(args: T.untyped).returns(Engine::ActiveRecord_AssociationRelation) }
-  def only(*args); end
-
-  sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def extending(*args, &block); end
-
-  sig { params(args: T.untyped).returns(Engine) }
-  def find(*args); end
-
-  sig { params(args: T.untyped).returns(T.nilable(Engine)) }
-  def find_by(*args); end
-
-  sig { params(args: T.untyped).returns(Engine) }
-  def find_by!(*args); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Engine).void)).returns(Engine) }
-  def find_or_initialize_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Engine).void)).returns(Engine) }
-  def find_or_create_by(attributes, &block); end
-
-  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Engine).void)).returns(Engine) }
-  def find_or_create_by!(attributes, &block); end
-
-  sig { returns(T.nilable(Engine)) }
-  def first; end
-
-  sig { returns(Engine) }
-  def first!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def second; end
-
-  sig { returns(Engine) }
-  def second!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def third; end
-
-  sig { returns(Engine) }
-  def third!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def third_to_last; end
-
-  sig { returns(Engine) }
-  def third_to_last!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def second_to_last; end
-
-  sig { returns(Engine) }
-  def second_to_last!; end
-
-  sig { returns(T.nilable(Engine)) }
-  def last; end
-
-  sig { returns(Engine) }
-  def last!; end
-
-  sig { params(conditions: T.untyped).returns(T::Boolean) }
-  def exists?(conditions = nil); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def any?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def many?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def none?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def one?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def empty?(*args); end
-
-  sig { override.params(block: T.proc.params(e: Engine).void).returns(T::Array[Engine]) }
-  def each(&block); end
-
-  sig { params(level: T.nilable(Integer)).returns(T::Array[Engine]) }
-  def flatten(level); end
-
-  sig { returns(T::Array[Engine]) }
-  def to_a; end
-
-  sig do
-    type_parameters(:U).params(
-        blk: T.proc.params(arg0: Elem).returns(T.type_parameter(:U)),
-    )
-    .returns(T::Array[T.type_parameter(:U)])
-  end
-  def map(&blk); end
-
-  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
-  def concat(*records); end
-
-  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Engine::ActiveRecord_AssociationRelation) }
-  def padding(num); end
 end
 
 module Engine::GeneratedAttributeMethods
-  extend T::Sig
-
   sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
@@ -1227,8 +774,6 @@ module Engine::GeneratedAttributeMethods
 end
 
 module Engine::GeneratedAssociationMethods
-  extend T::Sig
-
   sig { returns(::GameEngine::ActiveRecord_Associations_CollectionProxy) }
   def game_engines; end
 
@@ -1247,14 +792,8 @@ module Engine::GeneratedAssociationMethods
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
-  sig { returns(T.untyped) }
-  def game_engine_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_engine_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def game_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_ids=(ids); end
@@ -1276,4 +815,22 @@ module Engine::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end
+end
+
+class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Engine::CustomFinderMethods
+  include Engine::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Engine)
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
+  def concat(*records); end
 end

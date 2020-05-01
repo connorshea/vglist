@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.6.2
+# sorbet-rails-0.6.4
 
 module SorbetRails
   def self.config(&blk); end
@@ -33,11 +33,14 @@ module SorbetRails::ModelUtils
   def add_relation_query_method(*args, &blk); end
   def exists_class_method?(*args, &blk); end
   def exists_instance_method?(*args, &blk); end
+  def habtm_class?(*args, &blk); end
   def model_assoc_proxy_class_name(*args, &blk); end
   def model_assoc_relation_class_name(*args, &blk); end
   def model_class(*args, &blk); end
   def model_class_name(*args, &blk); end
   def model_module_name(*args, &blk); end
+  def model_query_methods_returning_assoc_relation_module_name(*args, &blk); end
+  def model_query_methods_returning_relation_module_name(*args, &blk); end
   def model_relation_class_name(*args, &blk); end
   def model_relation_type_alias(*args, &blk); end
   def model_relation_type_class_name(*args, &blk); end
@@ -60,6 +63,7 @@ module SorbetRails::ModelPlugins
   include Kernel
 end
 class SorbetRails::ModelPlugins::Base < Parlour::Plugin
+  def attribute_has_unconditional_presence_validation?(*args, &blk); end
   def available_classes(*args, &blk); end
   def initialize(*args, &blk); end
   def model_class(*args, &blk); end
@@ -102,6 +106,7 @@ class SorbetRails::ModelPlugins::ActiveRecordAttribute < SorbetRails::ModelPlugi
   def active_record_type_to_sorbet_type(*args, &blk); end
   def generate(*args, &blk); end
   def generate_enum_methods(*args, &blk); end
+  def nilable_column?(*args, &blk); end
   def time_zone_aware_column?(*args, &blk); end
   def type_for_column_def(*args, &blk); end
   def value_type_for_attr_writer(*args, &blk); end
@@ -131,18 +136,12 @@ class SorbetRails::ModelPlugins::ActiveRecordAssoc < SorbetRails::ModelPlugins::
   def assoc_should_be_untyped?(*args, &blk); end
   def belongs_to_and_required?(*args, &blk); end
   def generate(*args, &blk); end
+  def has_one_and_required?(*args, &blk); end
   def initialize(*args, &blk); end
   def polymorphic_assoc?(*args, &blk); end
   def populate_collection_assoc_getter_setter(*args, &blk); end
   def populate_single_assoc_getter_setter(*args, &blk); end
   def relation_should_be_untyped?(*args, &blk); end
-  extend T::Private::Methods::MethodHooks
-  extend T::Private::Methods::SingletonMethodHooks
-end
-class SorbetRails::ModelPlugins::ActiveRecordFinderMethods < SorbetRails::ModelPlugins::Base
-  def create_finder_method_pair(*args, &blk); end
-  def create_finder_methods_for(*args, &blk); end
-  def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
 end
@@ -152,7 +151,6 @@ class SorbetRails::ModelPlugins::CustomFinderMethods < SorbetRails::ModelPlugins
   extend T::Private::Methods::SingletonMethodHooks
 end
 class SorbetRails::ModelPlugins::EnumerableCollections < SorbetRails::ModelPlugins::Base
-  def create_enumerable_methods_for(*args, &blk); end
   def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks
