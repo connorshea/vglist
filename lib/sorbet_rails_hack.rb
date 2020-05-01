@@ -12,9 +12,8 @@ module SorbetRailsHack
     val = require(key)
     type_assert.assert(val)
   rescue TypeError
-    raise ActionController::BadRequest.new(
+    raise ActionController::BadRequest,
       "Expected parameter #{key} to be an instance of type #{type_assert.get_type}, got `#{val}`"
-    )
   end
 
   # This is a disgusting hack to make `params.require` less verbose for its
