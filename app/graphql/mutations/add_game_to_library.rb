@@ -6,6 +6,7 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
   argument :completion_status, Types::GamePurchaseCompletionStatusType, required: false, description: "How far the user has gotten in the game."
   argument :rating, Integer, required: false, description: "The game rating (out of 100)."
   argument :hours_played, Float, required: false, description: "The number of hours a game has been played."
+  argument :replay_count, Integer, required: false, description: "The number of times a game has been replayed."
   argument :comments, String, required: false, description: "Comments about the game."
   argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user started the game."
   argument :completion_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user completed the game."
@@ -20,6 +21,7 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
       completion_status: T.nilable(T.untyped),
       rating: T.nilable(Integer),
       hours_played: T.nilable(Float),
+      replay_count: Integer,
       comments: String,
       start_date: T.nilable(Date),
       completion_date: T.nilable(Date),
@@ -32,6 +34,7 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
     completion_status: nil,
     rating: nil,
     hours_played: nil,
+    replay_count: 0,
     comments: "",
     start_date: nil,
     completion_date: nil,
@@ -46,6 +49,7 @@ class Mutations::AddGameToLibrary < Mutations::BaseMutation
       completion_status: completion_status,
       rating: rating,
       hours_played: hours_played,
+      replay_count: replay_count,
       comments: comments,
       start_date: start_date,
       completion_date: completion_date,

@@ -45,6 +45,7 @@ puts "Creating Game Purchases for admin..."
     completion_date: Faker::Date.between(from: 1.month.ago, to: 1.day.ago),
     comments: Faker::Lorem.sentence,
     hours_played: rand(0..100),
+    replay_count: rand(0..3),
     platforms: platforms,
     stores: stores
   )
