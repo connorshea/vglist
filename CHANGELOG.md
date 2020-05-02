@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2020.5.2
+### Added
+- Add replay counts for games in user libraries, for tracking the number of times a user has replayed a given game (Thanks @AnthonySuper!). ([#1185], [#1198])
+
 ### Fixed
 - Fix game covers extending outside of their intended boundary and covering other elements. ([#1197])
 
@@ -706,4 +709,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1174]: https://github.com/connorshea/VideoGameList/pull/1174
 [#1181]: https://github.com/connorshea/VideoGameList/pull/1181
 [#1182]: https://github.com/connorshea/VideoGameList/pull/1182
+[#1185]: https://github.com/connorshea/VideoGameList/pull/1185
 [#1197]: https://github.com/connorshea/VideoGameList/pull/1197
+[#1198]: https://github.com/connorshea/VideoGameList/pull/1198
