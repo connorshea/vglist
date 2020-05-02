@@ -348,7 +348,7 @@ export default {
       }
 
       // If any of these properties are undefined, set them to null.
-      ['comments', 'rating', 'hours_played', 'replay_count', 'completion_status', 'start_date', 'completion_date'].forEach((property) => {
+      ['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'].forEach((property) => {
         // Set it to a blank string if the property is comments, and null otherwise.
         let value = property === 'comments' ? "" : null;
 
@@ -356,6 +356,11 @@ export default {
           submittableData['game_purchase'][property] = value;
         }
       });
+
+      // Set replay_count to 0 if it's undefined.
+      if (submittableData['game_purchase']['replay_count'] === undefined) {
+        submittableData['game_purchase']['replay_count'] = 0;
+      }
 
       let method;
       if (
