@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.5.2
+### Fixed
+- Fix game covers extending outside of their intended boundary and covering other elements. ([#1197])
+
 ## v2020.4.29
 ### Added
 - Add a game count to user cards. ([#1182])
@@ -702,3 +706,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1174]: https://github.com/connorshea/VideoGameList/pull/1174
 [#1181]: https://github.com/connorshea/VideoGameList/pull/1181
 [#1182]: https://github.com/connorshea/VideoGameList/pull/1182
+[#1197]: https://github.com/connorshea/VideoGameList/pull/1197
