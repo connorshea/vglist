@@ -6,7 +6,7 @@ class GamePurchasesController < ApplicationController
 
   def index
     @game_purchases = GamePurchase.where(user_id: params[:user_id])
-                                  .includes(:game, :platforms)
+                                  .includes(:game, :platforms, :stores)
     skip_policy_scope
   end
 

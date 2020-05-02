@@ -28,6 +28,10 @@ FactoryBot.define do
       hours_played { Faker::Number.decimal(l_digits: 3, r_digits: 1) }
     end
 
+    trait :replay_count do
+      replay_count { Faker::Number.between(from: 0, to: 5) }
+    end
+
     trait :platforms do
       after(:create) { |game_purchase| create(:game_purchase_platform, game_purchase: game_purchase) }
     end
@@ -39,7 +43,16 @@ FactoryBot.define do
     factory :game_purchase_with_comments_and_rating, traits: [:comments, :rating]
     factory :game_purchase_with_platform, traits: [:platforms]
     factory :game_purchase_with_store, traits: [:stores]
-    factory :game_purchase_with_everything,
-      traits: [:comments, :rating, :completion_status, :start_date, :completion_date, :hours_played, :platforms]
+    factory :game_purchase_with_everything, traits: [
+      :comments,
+      :rating,
+      :completion_status,
+      :start_date,
+      :completion_date,
+      :hours_played,
+      :replay_count,
+      :platforms,
+      :stores
+    ]
   end
 end

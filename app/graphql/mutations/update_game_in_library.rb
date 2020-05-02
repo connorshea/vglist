@@ -6,6 +6,7 @@ class Mutations::UpdateGameInLibrary < Mutations::BaseMutation
   argument :completion_status, Types::GamePurchaseCompletionStatusType, required: false, description: "How far the user has gotten in the game."
   argument :rating, Integer, required: false, description: "The game rating (out of 100)."
   argument :hours_played, Float, required: false, description: "The number of hours a game has been played."
+  argument :replay_count, Integer, required: false, description: "The number of times a game has been replayed."
   argument :comments, String, required: false, description: "Comments about the game."
   argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user started the game."
   argument :completion_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user completed the game."

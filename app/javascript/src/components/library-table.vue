@@ -128,7 +128,7 @@ export default {
         field: 'after',
         width: '140px',
         hideable: false,
-        index: 8
+        index: 10
       });
     }
   },
@@ -165,13 +165,21 @@ export default {
           index: 3
         },
         {
+          label: 'Replay Count',
+          field: 'replay_count',
+          type: 'number',
+          hidden: true,
+          sortable: true,
+          index: 4
+        },
+        {
           label: 'Start Date',
           field: 'start_date',
           type: 'date',
           dateInputFormat: 'yyyy-MM-dd',
           dateOutputFormat: 'MMMM d, yyyy',
           hidden: true,
-          index: 4
+          index: 5
         },
         {
           label: 'Completion Date',
@@ -180,7 +188,7 @@ export default {
           dateInputFormat: 'yyyy-MM-dd',
           dateOutputFormat: 'MMMM d, yyyy',
           hidden: true,
-          index: 5
+          index: 6
         },
         {
           label: 'Platforms',
@@ -189,7 +197,7 @@ export default {
           hidden: true,
           sortable: true,
           sortFn: this.sortMultiselectColumn,
-          index: 6
+          index: 7
         },
         {
           label: 'Stores',
@@ -198,14 +206,14 @@ export default {
           hidden: true,
           sortable: true,
           sortFn: this.sortMultiselectColumn,
-          index: 7
+          index: 8
         },
         {
           label: 'Comments',
           field: 'comments',
           type: 'text',
           hidden: false,
-          index: 8
+          index: 9
         }
       ],
       completionStatuses: [

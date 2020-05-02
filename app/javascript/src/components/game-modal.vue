@@ -50,6 +50,14 @@
             v-model="gamePurchase.hours_played"
           ></number-field>
 
+          <number-field
+            :form-class="formData.class"
+            :attribute="formData.replayCount.attribute"
+            :label="formData.replayCount.label"
+            :required="false"
+            v-model="gamePurchase.replay_count"
+          ></number-field>
+
           <text-area
             :form-class="formData.class"
             :attribute="formData.comments.attribute"
@@ -141,6 +149,11 @@ export default {
       required: false,
       default: ''
     },
+    replay_count: {
+      type: [Number, String],
+      required: true,
+      default: 0
+    },
     completion_status: {
       type: Object,
       required: false
@@ -204,6 +217,7 @@ export default {
         completion_status: this.$props.completion_status,
         start_date: this.$props.start_date,
         hours_played: parseFloat(this.$props.hours_played),
+        replay_count: this.$props.replay_count,
         completion_date: this.$props.completion_date,
         platforms: this.$props.platforms,
         stores: this.$props.stores
@@ -221,6 +235,10 @@ export default {
         hoursPlayed: {
           label: 'Hours Played',
           attribute: 'hours_played'
+        },
+        replayCount: {
+          label: 'Replay Count',
+          attribute: 'replay_count'
         },
         completionStatus: {
           label: 'Completion Status'
@@ -283,6 +301,10 @@ export default {
         ] = this.gamePurchase.hours_played;
       }
 
+      if (this.gamePurchase.replay_count !== '') {
+        submittableData['game_purchase']['replay_count'] = this.gamePurchase.replay_count;
+      }
+
       if (
         this.gamePurchase.completion_status !== null &&
         this.gamePurchase.completion_status !== '' &&
@@ -326,7 +348,7 @@ export default {
       }
 
       // If any of these properties are undefined, set them to null.
-      ['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'].forEach((property) => {
+      ['comments', 'rating', 'hours_played', 'replay_count', 'completion_status', 'start_date', 'completion_date'].forEach((property) => {
         // Set it to a blank string if the property is comments, and null otherwise.
         let value = property === 'comments' ? "" : null;
 
