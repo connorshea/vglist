@@ -90,9 +90,9 @@ RSpec.describe "Settings", type: :request do
       sign_in(user)
       get settings_export_as_json_path(format: :json)
       json = JSON.parse(response.body)
-      expect(json.first['id']).to eq(game_purchase.id)
-      expect(json.first['game']['id']).to eq(game_purchase.game.id)
-      expect(json.first['hours_played']).to eq(game_purchase.hours_played)
+      expect(json['games'].first['id']).to eq(game_purchase.id)
+      expect(json['games'].first['game']['id']).to eq(game_purchase.game.id)
+      expect(json['games'].first['hours_played']).to eq(game_purchase.hours_played)
     end
 
     it "redirects for users who aren't logged in" do
