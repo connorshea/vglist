@@ -190,6 +190,11 @@ nav.navbar {
       max-width: 100%;
       object-fit: contain;
       object-position: top left;
+      
+      @include touch {
+        object-position: top center;
+        max-height: 300px;
+      }
     }
 
     &.hero-image-150 {
@@ -207,6 +212,7 @@ nav.navbar {
 
   .game-cover {
     flex: 1 1 300px;
+    display: inline-flex;
     height: auto;
     max-height: 360px;
     width: 240px;
