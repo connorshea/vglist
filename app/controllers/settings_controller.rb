@@ -34,13 +34,22 @@ class SettingsController < ApplicationController
 
   # Send a JSON file so the user can download their library as JSON.
   def export_as_json
-    @user = current_user
+    @user = T.must(current_user)
     authorize @user, policy_class: SettingsPolicy
 
-    @games = GamePurchase.where(user_id: @user&.id).includes(:game)
+    @games = GamePurchase.where(user_id: @user.id).includes(:game, :platforms, :stores)
 
     respond_to do |format|
-      format.json { send_data JSON.pretty_generate(@games.as_json(include: :game)), disposition: :json, filename: 'vglist.json' }
+      format.json do
+        export_data = {
+          user: {
+            id: @user.id,
+            username: @user.username
+          },
+          games: @games.as_json(include: [:game, :platforms, :stores])
+        }
+        send_data JSON.pretty_generate(export_data), disposition: :json, filename: 'vglist.json'
+      end
     end
   end
 
