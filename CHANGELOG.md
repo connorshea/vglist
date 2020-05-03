@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add a user count to the "Followers" and "Following" tabs on the User Profile. ([#1202])
 
+### Changed
+- Change the 'highest average rating' filter in the games list to only include games with at least 5 owners. ([#1212])
+
 ## v2020.5.2
 ### Added
 - Add replay counts for games in user libraries, for tracking the number of times a user has replayed a given game (Thanks @AnthonySuper!). ([#1185], [#1198])
@@ -717,3 +720,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1197]: https://github.com/connorshea/VideoGameList/pull/1197
 [#1198]: https://github.com/connorshea/VideoGameList/pull/1198
 [#1202]: https://github.com/connorshea/VideoGameList/pull/1202
+[#1212]: https://github.com/connorshea/VideoGameList/pull/1212

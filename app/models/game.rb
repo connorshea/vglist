@@ -38,7 +38,13 @@ class Game < ApplicationRecord
   scope :recently_updated, -> { order("updated_at desc") }
   scope :least_recently_updated, -> { order("updated_at asc") }
   # Sort by average rating.
-  scope :highest_avg_rating, -> { order("avg_rating desc nulls last") }
+  # Must have at least 5 owners to be included.
+  scope :highest_avg_rating, -> {
+    joins(:game_purchases)
+      .group('games.id')
+      .having("count(game_purchases.id) >= ?", 5)
+      .order("avg_rating desc nulls last")
+  }
   # Sort by most favorites.
   scope :most_favorites, -> {
     left_joins(:favorites)
