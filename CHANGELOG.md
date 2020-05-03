@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add a user count to the "Followers" and "Following" tabs on the User Profile. ([#1202])
 
 ### Changed
-- Change the 'highest average rating' filter in the games list to only include games with at least 5 owners. ([#1212])
+- Change the 'highest average rating' filter in the games list to only include games with at least 5 owners. ([#1212], [#1213])
 
 ## v2020.5.2
 ### Added
@@ -721,3 +721,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1198]: https://github.com/connorshea/VideoGameList/pull/1198
 [#1202]: https://github.com/connorshea/VideoGameList/pull/1202
 [#1212]: https://github.com/connorshea/VideoGameList/pull/1212
+[#1213]: https://github.com/connorshea/VideoGameList/pull/1213
