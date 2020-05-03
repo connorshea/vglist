@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.5.3
+### Added
+- Add a user count to the "Followers" and "Following" tabs on the User Profile. ([#1202])
+
 ## v2020.5.2
 ### Added
 - Add replay counts for games in user libraries, for tracking the number of times a user has replayed a given game (Thanks @AnthonySuper!). ([#1185], [#1198])
@@ -712,3 +716,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1185]: https://github.com/connorshea/VideoGameList/pull/1185
 [#1197]: https://github.com/connorshea/VideoGameList/pull/1197
 [#1198]: https://github.com/connorshea/VideoGameList/pull/1198
+[#1202]: https://github.com/connorshea/VideoGameList/pull/1202
