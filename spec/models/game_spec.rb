@@ -289,19 +289,13 @@ RSpec.describe Game, type: :model do
       let!(:game3) { create(:game) }
       # rubocop:disable RSpec/LetSetup
       # These are necessary because the average rating scope depends on there
-      # being at least 5 owners of the game.
-      let!(:game_purchases1) { create_list(:game_purchase, 5, game: game1) }
-      let!(:game_purchases2) { create_list(:game_purchase, 5, game: game2) }
-      let!(:game_purchases3) { create_list(:game_purchase, 5, game: game3) }
+      # being at least 5 owners of the game with an actual rating.
+      let!(:game_purchases1) { create_list(:game_purchase, 5, game: game1, rating: 30) }
+      let!(:game_purchases2) { create_list(:game_purchase, 5, game: game2, rating: 10) }
+      let!(:game_purchases3) { create_list(:game_purchase, 5, game: game3, rating: 50) }
       # rubocop:enable RSpec/LetSetup
 
       it "return all three in proper order" do
-        # Update the games' average ratings since creating the game purchases
-        # will cause them to change.
-        game1.update(avg_rating: 10)
-        game2.update(avg_rating: nil)
-        game3.update(avg_rating: 20)
-
         expect(Game.highest_avg_rating).to eq([game3, game1, game2])
       end
     end

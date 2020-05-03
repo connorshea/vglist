@@ -41,6 +41,7 @@ class Game < ApplicationRecord
   # Must have at least 5 owners to be included.
   scope :highest_avg_rating, -> {
     joins(:game_purchases)
+      .where.not('game_purchases.rating': nil)
       .group('games.id')
       .having("count(game_purchases.id) >= ?", 5)
       .order("avg_rating desc nulls last")
