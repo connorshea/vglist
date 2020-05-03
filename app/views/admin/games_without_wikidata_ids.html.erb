@@ -1,0 +1,13 @@
+<% content_for :title, "Games Without Wikidata IDs - Admin" %>
+
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+  <%= render 'admin_header' %>
+
+  <div class="game-card-list mt-20">
+    <% @games.each do |game| %>
+      <%= render 'shared/game_card', game: game %>
+    <% end %>
+  </div>
+
+  <%= paginate @games %>
+</div>

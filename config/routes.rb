@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     get :dashboard, as: '/', path: '/'
     get :wikidata_blocklist, path: 'wikidata'
     delete :remove_from_wikidata_blocklist, path: 'wikidata/:wikidata_id/remove'
+    get :games_without_wikidata_ids
   end
 
   resources :events, only: :destroy
