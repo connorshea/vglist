@@ -44,7 +44,7 @@ class Game < ApplicationRecord
       .where.not('game_purchases.rating': nil)
       .group('games.id')
       .having("count(game_purchases.id) >= ?", 5)
-      .order("avg_rating desc nulls last")
+      .order("avg_rating desc")
   }
   # Sort by most favorites.
   scope :most_favorites, -> {
