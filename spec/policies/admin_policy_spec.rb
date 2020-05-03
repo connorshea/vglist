@@ -10,7 +10,12 @@ RSpec.describe AdminPolicy, type: :policy do
 
     it 'defaults to disallowing everything' do
       expect(admin_policy).to forbid_actions(
-        [:dashboard, :wikidata_blocklist, :remove_from_wikidata_blocklist]
+        [
+          :dashboard,
+          :wikidata_blocklist,
+          :remove_from_wikidata_blocklist,
+          :games_without_wikidata_ids
+        ]
       )
     end
   end
@@ -21,7 +26,12 @@ RSpec.describe AdminPolicy, type: :policy do
 
     it 'defaults to disallowing everything' do
       expect(admin_policy).to forbid_actions(
-        [:dashboard, :wikidata_blocklist, :remove_from_wikidata_blocklist]
+        [
+          :dashboard,
+          :wikidata_blocklist,
+          :remove_from_wikidata_blocklist,
+          :games_without_wikidata_ids
+        ]
       )
     end
   end
@@ -32,7 +42,12 @@ RSpec.describe AdminPolicy, type: :policy do
 
     it 'defaults to disallowing everything' do
       expect(admin_policy).to forbid_actions(
-        [:dashboard, :wikidata_blocklist, :remove_from_wikidata_blocklist]
+        [
+          :dashboard,
+          :wikidata_blocklist,
+          :remove_from_wikidata_blocklist,
+          :games_without_wikidata_ids
+        ]
       )
     end
   end
@@ -43,7 +58,12 @@ RSpec.describe AdminPolicy, type: :policy do
 
     it 'allows everything' do
       expect(admin_policy).to permit_actions(
-        [:dashboard, :wikidata_blocklist, :remove_from_wikidata_blocklist]
+        [
+          :dashboard,
+          :wikidata_blocklist,
+          :remove_from_wikidata_blocklist,
+          :games_without_wikidata_ids
+        ]
       )
     end
   end

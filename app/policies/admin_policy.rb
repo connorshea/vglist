@@ -24,4 +24,9 @@ class AdminPolicy < ApplicationPolicy
   def remove_from_wikidata_blocklist?
     user&.admin?
   end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def games_without_wikidata_ids?
+    user&.admin?
+  end
 end

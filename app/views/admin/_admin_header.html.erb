@@ -6,5 +6,8 @@
     <li class="<%= 'is-active' if current_page?(admin_wikidata_blocklist_path) %>">
       <%= link_to 'Wikidata Blocklist', admin_wikidata_blocklist_path %>
     </li>
+    <li class="<%= 'is-active' if current_page?(admin_games_without_wikidata_ids_path) %>">
+      <%= link_to 'Games Without Wikidata IDs', admin_games_without_wikidata_ids_path %>
+    </li>
   </ul>
 </div>

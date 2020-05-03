@@ -54,4 +54,12 @@ class AdminController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def games_without_wikidata_ids
+    authorize nil, policy_class: AdminPolicy
+
+    @games = Game.where(wikidata_id: nil)
+                 .with_attached_cover
+                 .page helpers.page_param
+  end
 end
