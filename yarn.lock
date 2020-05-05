@@ -3432,24 +3432,22 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.2
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.3.tgz#4a12ff1b60376ef09862c2093edd908328be8423"
   integrity sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
 
-graphql-schema-linter@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-0.2.6.tgz#7c4224e138bcc4d9c5870a76d9ad150df4853624"
-  integrity sha512-3KNchi1yqo8OiglBT17SN2aukgijSrwrWO/SGtMAd4dUpQJ0pzm+/0SomemqStyagEckF1cVibRY5wUdS4X1Bw==
+graphql-schema-linter@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-0.3.0.tgz#a24f28322047670cb49bfb0c81a622785cbe1a68"
+  integrity sha512-+7i0zJdfU+zLuSF8vvfewTadWDQDRYuyUOk9NOO40Ss9lN+gdHqpuwZKdHMdtMA5Fsbh3PB+ZPlfI57iEEWj0w==
   dependencies:
     chalk "^2.0.1"
     columnify "^1.5.4"
     commander "^3.0.0"
     cosmiconfig "^5.2.1"
     glob "^7.1.2"
-    graphql "^14.0.0"
+    graphql "^15.0.0"
 
-graphql@^14.0.0:
-  version "14.5.8"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.5.8.tgz#504f3d3114cb9a0a3f359bbbcf38d9e5bf6a6b3c"
-  integrity sha512-MMwmi0zlVLQKLdGiMfWkgQD7dY/TUKt4L+zgJ/aR0Howebod3aNgP5JkgvAULiR2HPVZaP2VEElqtdidHweLkg==
-  dependencies:
-    iterall "^1.2.2"
+graphql@^15.0.0:
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.0.0.tgz#042a5eb5e2506a2e2111ce41eb446a8e570b8be9"
+  integrity sha512-ZyVO1xIF9F+4cxfkdhOJINM+51B06Friuv4M66W7HzUOeFd+vNzUn4vtswYINPi6sysjf1M2Ri/rwZALqgwbaQ==
 
 handle-thing@^2.0.0:
   version "2.0.0"
@@ -4146,11 +4144,6 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
-
-iterall@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.2.2.tgz#92d70deb8028e0c39ff3164fdbf4d8b088130cd7"
-  integrity sha512-yynBb1g+RFUPY64fTrFv7nsjRrENBQJaX2UL+2Szc9REFrSNm1rpSXHGzhmAy7a9uv3vlvgBlXnf9RqmPH1/DA==
 
 jest-worker@^25.1.0:
   version "25.2.1"
