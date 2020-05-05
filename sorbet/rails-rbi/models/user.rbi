@@ -1281,6 +1281,12 @@ module User::QueryMethodsReturningRelation
   def moderator(*args); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
+  def most_followers(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
+  def most_games(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
   def not_admin(*args); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
@@ -1425,6 +1431,12 @@ module User::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
   def moderator(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
+  def most_followers(*args); end
+
+  sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
+  def most_games(*args); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
   def not_admin(*args); end

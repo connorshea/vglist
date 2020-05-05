@@ -6,10 +6,23 @@ class UsersController < ApplicationController
   def index
     # Hide banned users from users that aren't moderators or admins.
     if current_user&.member? || current_user.nil?
-      @users = User.where(banned: false).order(:id).page helpers.page_param
+      @users = User.where(banned: false)
     elsif current_user&.moderator? || current_user&.admin?
-      @users = User.order(:id).page helpers.page_param
+      @users = User.all
     end
+
+    order_by_sym = T.cast(params[:order_by], T.nilable(String))&.to_sym
+    if !order_by_sym.nil? && [
+      :most_games,
+      :most_followers
+    ].include?(order_by_sym)
+      # Call the scope dynamically.
+      @users = @users.public_send(order_by_sym)
+    else
+      @users = @users.order(:id)
+    end
+
+    @users = @users.page helpers.page_param
 
     skip_policy_scope
   end

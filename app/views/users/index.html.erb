@@ -2,6 +2,27 @@
 
 <h1 class="title">Users</h1>
 
+<div class="dropdown is-fullwidth mr-0-mobile">
+  <div class="dropdown-trigger is-fullwidth-mobile">
+    <button class="button is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu">
+      <span>
+        <%= params[:order_by].nil? ? "Sort" : "Sort by #{params[:order_by].titleize.downcase}" %>
+      </span>
+      <span class="icon">
+        <%= svg_icon('chevron-down', height: 15, aria: false) %>
+      </span>
+    </button>
+  </div>
+
+  <div class="dropdown-menu is-fullwidth" id="sort-dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      <%= sort_dropdown_link(nil, 'Default') %>
+      <%= sort_dropdown_link(:most_followers, 'Most Followers') %>
+      <%= sort_dropdown_link(:most_games, 'Most Games') %>
+    </div>
+  </div>
+</div>
+
 <div class="user-card-list mt-20">
   <% @users.each do |user| %>
     <%= render 'shared/user_card', user: user %>

@@ -70,6 +70,20 @@ class User < ApplicationRecord
 
   friendly_id :username, use: [:slugged, :finders]
 
+  # Sort by most games owned.
+  scope :most_games, -> {
+    left_joins(:game_purchases)
+      .group(:id)
+      .order(Arel.sql('count(game_purchases.user_id) desc nulls last'))
+  }
+
+  # Sort by most followers.
+  scope :most_followers, -> {
+    left_joins(:passive_relationships)
+      .group(:id)
+      .order(Arel.sql('count(relationships.followed_id) desc nulls last'))
+  }
+
   # Users have roles that can be used to define what actions they're allowed
   # to perform. Default should be 'member'.
   enum role: {
