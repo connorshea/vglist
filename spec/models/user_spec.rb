@@ -125,6 +125,32 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'Scopes' do
+    context 'with most followers' do
+      let(:user2) { create(:user, id: 1) }
+      let(:user1) { create(:user) }
+
+      it "returns users with most followers first" do
+        expect(User.most_followers).to eq([user2, user1])
+      end
+    end
+
+    context 'with most games' do
+      let(:user1) { create(:user) }
+      let(:user2) { create(:user) }
+      let(:user3) { create(:user) }
+      # rubocop:disable RSpec/LetSetup
+      let!(:game_purchases1) { create_list(:game_purchase, 5, user_id: user1.id) }
+      let!(:game_purchases2) { create_list(:game_purchase, 2, user_id: user2.id) }
+      let!(:game_purchases3) { create_list(:game_purchase, 4, user_id: user3.id) }
+      # rubocop:enable RSpec/LetSetup
+
+      it "returns users with most games first" do
+        expect(User.most_games).to eq([user1, user3, user2])
+      end
+    end
+  end
+
   describe 'Destructions' do
     let(:user_with_favorite_game) { create(:user_with_favorite_game) }
     let(:user_with_game_purchase) { create(:user_with_game_purchase) }

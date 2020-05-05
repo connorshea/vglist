@@ -964,6 +964,15 @@ module GamePurchase::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def rating?; end
 
+  sig { returns(Integer) }
+  def replay_count; end
+
+  sig { params(value: T.any(Numeric, ActiveSupport::Duration)).void }
+  def replay_count=(value); end
+
+  sig { returns(T::Boolean) }
+  def replay_count?; end
+
   sig { returns(T.nilable(Date)) }
   def start_date; end
 
@@ -1485,6 +1494,51 @@ module GamePurchase::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def hours_played_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_replay_count?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_replay_count(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_replay_count?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def replay_count_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def replay_count_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_replay_count!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def replay_count_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def replay_count_came_from_user?(*args); end
 end
 
 module GamePurchase::GeneratedAssociationMethods

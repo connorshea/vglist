@@ -1,4 +1,4 @@
-# typed: strong
+# typed: true
 module TypedParams
   extend T::Generic
 
