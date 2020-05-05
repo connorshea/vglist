@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.5.4
+### Added
+- Add sorting by most followers and most games to the users page. ([#1218])
+
 ## v2020.5.3
 ### Added
 - Add a user count to the "Followers" and "Following" tabs on the User Profile. ([#1202])
@@ -722,3 +726,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1202]: https://github.com/connorshea/VideoGameList/pull/1202
 [#1212]: https://github.com/connorshea/VideoGameList/pull/1212
 [#1213]: https://github.com/connorshea/VideoGameList/pull/1213
+[#1218]: https://github.com/connorshea/VideoGameList/pull/1218
