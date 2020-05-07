@@ -3432,10 +3432,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.2
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.3.tgz#4a12ff1b60376ef09862c2093edd908328be8423"
   integrity sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
 
-graphql-schema-linter@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-0.3.0.tgz#a24f28322047670cb49bfb0c81a622785cbe1a68"
-  integrity sha512-+7i0zJdfU+zLuSF8vvfewTadWDQDRYuyUOk9NOO40Ss9lN+gdHqpuwZKdHMdtMA5Fsbh3PB+ZPlfI57iEEWj0w==
+graphql-schema-linter@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-0.4.0.tgz#3fa099ea45cba6fd239130cdf0387e36cb1cc3b7"
+  integrity sha512-3aTKlMJKA+xjjRROG5d9wqNzWFJNcqfZI4/Oo58wR6kembBPJEARsMu6l0QH/2spZNQSLdqUUaN+/m4FyJ2bOQ==
   dependencies:
     chalk "^2.0.1"
     columnify "^1.5.4"
