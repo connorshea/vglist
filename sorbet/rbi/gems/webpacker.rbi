@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/webpacker/all/webpacker.rbi
 #
-# webpacker-5.0.1
+# webpacker-5.1.1
 
 class Webpacker::Instance
   def commands; end
@@ -38,7 +38,6 @@ class Webpacker::Configuration
   def cache_manifest?; end
   def cache_path; end
   def check_yarn_integrity=(value); end
-  def check_yarn_integrity?; end
   def compile?; end
   def config_path; end
   def data; end

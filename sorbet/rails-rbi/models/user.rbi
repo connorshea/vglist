@@ -2890,17 +2890,26 @@ module User::GeneratedAssociationMethods
   sig { returns(::Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy) }
   def access_grants; end
 
+  sig { returns(T::Array[Integer]) }
+  def access_grant_ids; end
+
   sig { params(value: T::Enumerable[::Doorkeeper::AccessGrant]).void }
   def access_grants=(value); end
 
   sig { returns(::Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy) }
   def access_tokens; end
 
+  sig { returns(T::Array[Integer]) }
+  def access_token_ids; end
+
   sig { params(value: T::Enumerable[::Doorkeeper::AccessToken]).void }
   def access_tokens=(value); end
 
   sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
   def active_relationships; end
+
+  sig { returns(T::Array[Integer]) }
+  def active_relationship_ids; end
 
   sig { params(value: T::Enumerable[::Relationship]).void }
   def active_relationships=(value); end
@@ -2920,6 +2929,9 @@ module User::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
+  sig { returns(T::Array[Integer]) }
+  def event_ids; end
+
   sig { params(value: T::Enumerable[::Event]).void }
   def events=(value); end
 
@@ -2932,11 +2944,17 @@ module User::GeneratedAssociationMethods
   sig { returns(::FavoriteGame::ActiveRecord_Associations_CollectionProxy) }
   def favorite_games; end
 
+  sig { returns(T::Array[Integer]) }
+  def favorite_game_ids; end
+
   sig { params(value: T::Enumerable[::FavoriteGame]).void }
   def favorite_games=(value); end
 
   sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
   def followers; end
+
+  sig { returns(T::Array[Integer]) }
+  def follower_ids; end
 
   sig { params(value: T::Enumerable[::User]).void }
   def followers=(value); end
@@ -2944,11 +2962,17 @@ module User::GeneratedAssociationMethods
   sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
   def following; end
 
+  sig { returns(T::Array[Integer]) }
+  def following_ids; end
+
   sig { params(value: T::Enumerable[::User]).void }
   def following=(value); end
 
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_ids; end
 
   sig { params(value: T::Enumerable[::GamePurchase]).void }
   def game_purchases=(value); end
@@ -2956,11 +2980,17 @@ module User::GeneratedAssociationMethods
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_ids; end
+
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
   sig { returns(::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy) }
   def oauth_applications; end
+
+  sig { returns(T::Array[Integer]) }
+  def oauth_application_ids; end
 
   sig { params(value: T::Enumerable[::Doorkeeper::Application]).void }
   def oauth_applications=(value); end
@@ -2968,11 +2998,17 @@ module User::GeneratedAssociationMethods
   sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }
   def passive_relationships; end
 
+  sig { returns(T::Array[Integer]) }
+  def passive_relationship_ids; end
+
   sig { params(value: T::Enumerable[::Relationship]).void }
   def passive_relationships=(value); end
 
   sig { returns(::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy) }
   def wikidata_blocklists; end
+
+  sig { returns(T::Array[Integer]) }
+  def wikidata_blocklist_ids; end
 
   sig { params(value: T::Enumerable[::WikidataBlocklist]).void }
   def wikidata_blocklists=(value); end
@@ -3031,9 +3067,6 @@ module User::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_external_account; end
 
-  sig { returns(T.untyped) }
-  def external_account_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def external_account_ids=(ids); end
 
@@ -3049,14 +3082,8 @@ module User::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_avatar_attachment; end
 
-  sig { returns(T.untyped) }
-  def avatar_attachment_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def avatar_attachment_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def avatar_blob_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def avatar_blob_ids=(ids); end

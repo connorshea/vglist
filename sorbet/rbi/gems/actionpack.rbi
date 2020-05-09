@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionpack/all/actionpack.rbi
 #
-# actionpack-6.0.2.2
+# actionpack-6.0.3
 
 module ActionPack
   def self.gem_version; end
@@ -25,6 +25,8 @@ module ActionDispatch
   extend ActiveSupport::Autoload
 end
 class ActionDispatch::IllegalStateError < StandardError
+end
+class ActionDispatch::MissingController < NameError
 end
 module ActionDispatch::Http
   extend ActiveSupport::Autoload
@@ -2294,10 +2296,10 @@ module AbstractController::Rendering
   include ActionView::ViewPaths
 end
 module AbstractController::Translation
-  def l(*args); end
-  def localize(*args); end
-  def t(key, options = nil); end
-  def translate(key, options = nil); end
+  def l(object, **options); end
+  def localize(object, **options); end
+  def t(key, **options); end
+  def translate(key, **options); end
 end
 module AbstractController::AssetPaths
   extend ActiveSupport::Concern
@@ -3312,8 +3314,9 @@ class ActionController::LiveTestResponse < ActionController::Live::Response
   def missing?; end
   def success?; end
 end
-class ActionController::TestSession < Rack::Session::Abstract::SessionHash
+class ActionController::TestSession < Rack::Session::Abstract::PersistedSecure::SecureSessionHash
   def destroy; end
+  def dig(*keys); end
   def exists?; end
   def fetch(key, *args, &block); end
   def initialize(session = nil); end

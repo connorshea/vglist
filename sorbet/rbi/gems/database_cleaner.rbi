@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/database_cleaner/all/database_cleaner.rbi
 #
-# database_cleaner-1.8.4
+# database_cleaner-1.8.5
 
 module DatabaseCleaner
   def called_externally?(file, caller); end

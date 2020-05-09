@@ -659,9 +659,6 @@ module GamePurchaseStore::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_store; end
 
-  sig { returns(T.untyped) }
-  def store_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def store_ids=(ids); end
 end

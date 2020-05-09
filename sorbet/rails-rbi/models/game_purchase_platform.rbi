@@ -659,9 +659,6 @@ module GamePurchasePlatform::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_platform; end
 
-  sig { returns(T.untyped) }
-  def platform_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def platform_ids=(ids); end
 end

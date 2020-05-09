@@ -777,11 +777,17 @@ module Engine::GeneratedAssociationMethods
   sig { returns(::GameEngine::ActiveRecord_Associations_CollectionProxy) }
   def game_engines; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_engine_ids; end
+
   sig { params(value: T::Enumerable[::GameEngine]).void }
   def game_engines=(value); end
 
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_ids; end
 
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
@@ -809,9 +815,6 @@ module Engine::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end
-
-  sig { returns(T.untyped) }
-  def pg_search_document_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

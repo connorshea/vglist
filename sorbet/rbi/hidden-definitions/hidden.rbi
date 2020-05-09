@@ -339,7 +339,7 @@ module ActionDispatch::Integration::RequestHelpers
 
   def get(path, **args); end
 
-  def head(path, *args); end
+  def head(path, **args); end
 
   def patch(path, **args); end
 
@@ -362,11 +362,15 @@ module ActionDispatch::Integration::Runner
   include ::Turbolinks::Assertions
   def app(); end
 
-  def assigns(*args); end
+  def assertions(); end
+
+  def assertions=(assertions); end
+
+  def assigns(*args, **options); end
 
   def before_setup(); end
 
-  def cookies(*args); end
+  def cookies(*args, **options); end
 
   def copy_session_variables!(); end
 
@@ -376,13 +380,13 @@ module ActionDispatch::Integration::Runner
 
   def default_url_options=(options); end
 
-  def delete(*args); end
+  def delete(*args, **options); end
 
-  def follow_redirect!(*args); end
+  def follow_redirect!(*args, **options); end
 
-  def get(*args); end
+  def get(*args, **options); end
 
-  def head(*args); end
+  def head(*args, **options); end
 
   def initialize(*args, &blk); end
 
@@ -390,15 +394,19 @@ module ActionDispatch::Integration::Runner
 
   def open_session(); end
 
-  def patch(*args); end
+  def patch(*args, **options); end
 
-  def post(*args); end
+  def post(*args, **options); end
 
-  def put(*args); end
+  def put(*args, **options); end
 
   def remove!(); end
 
   def reset!(); end
+
+  def root_session(); end
+
+  def root_session=(root_session); end
   APP_SESSIONS = ::T.let(nil, ::T.untyped)
 end
 
@@ -527,7 +535,7 @@ module ActionDispatch::IntegrationTest::Behavior::ClassMethods
 
   def app=(app); end
 
-  def register_encoder(*args); end
+  def register_encoder(*args, **options); end
 end
 
 module ActionDispatch::IntegrationTest::Behavior::ClassMethods
@@ -1485,6 +1493,63 @@ class ActiveModel::Validations::LengthValidator
   RESERVED_OPTIONS = ::T.let(nil, ::T.untyped)
 end
 
+class ActiveRecord::AdvisoryLockBase
+  include ::ActiveRecord::AdvisoryLockBase::GeneratedAttributeMethods
+  include ::ActiveRecord::AdvisoryLockBase::GeneratedAssociationMethods
+  include ::Kaminari::ActiveRecordModelExtension
+  include ::Kaminari::ConfigurationMethods
+  RelationType = ::T.let(nil, ::T.untyped)
+end
+
+class ActiveRecord::AdvisoryLockBase::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::AdvisoryLockBase::GeneratedRelationMethods
+end
+
+class ActiveRecord::AdvisoryLockBase::ActiveRecord_AssociationRelation
+end
+
+class ActiveRecord::AdvisoryLockBase::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::AdvisoryLockBase::GeneratedRelationMethods
+end
+
+class ActiveRecord::AdvisoryLockBase::ActiveRecord_Associations_CollectionProxy
+end
+
+class ActiveRecord::AdvisoryLockBase::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::AdvisoryLockBase::GeneratedRelationMethods
+end
+
+class ActiveRecord::AdvisoryLockBase::ActiveRecord_Relation
+end
+
+module ActiveRecord::AdvisoryLockBase::GeneratedAssociationMethods
+end
+
+module ActiveRecord::AdvisoryLockBase::GeneratedAssociationMethods
+end
+
+module ActiveRecord::AdvisoryLockBase::GeneratedAttributeMethods
+end
+
+module ActiveRecord::AdvisoryLockBase::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module ActiveRecord::AdvisoryLockBase::GeneratedRelationMethods
+end
+
+module ActiveRecord::AdvisoryLockBase::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
+class ActiveRecord::AdvisoryLockBase
+  extend ::Kaminari::ConfigurationMethods::ClassMethods
+  def self.page(num=T.unsafe(nil)); end
+end
+
 class ActiveRecord::Associations::AssociationScope
   INSTANCE = ::T.let(nil, ::T.untyped)
 end
@@ -1589,14 +1654,6 @@ module ActiveRecord::AttributeMethods
   RESTRICTED_CLASS_METHODS = ::T.let(nil, ::T.untyped)
 end
 
-module ActiveRecord::AttributeMethods::PrimaryKey::ClassMethods
-  ID_ATTRIBUTE_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
-  RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
-end
-
 class ActiveRecord::Base
   include ::GlobalID::Identification
   include ::ActiveStorage::Attached::Model
@@ -1661,6 +1718,7 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   include ::ActiveRecord::Migration::JoinTable
   include ::ActiveRecord::ConnectionAdapters::DatabaseStatements
   ADAPTER_NAME = ::T.let(nil, ::T.untyped)
+  COMMENT_REGEX = ::T.let(nil, ::T.untyped)
   SIMPLE_INT = ::T.let(nil, ::T.untyped)
 end
 
@@ -1777,26 +1835,14 @@ class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation
   include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
 end
 
-class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
 end
 
-class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class ActiveRecord::InternalMetadata::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
-end
-
-class ActiveRecord::InternalMetadata::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module ActiveRecord::InternalMetadata::GeneratedAssociationMethods
@@ -1825,6 +1871,8 @@ class ActiveRecord::InternalMetadata
   def self.create_table(); end
 
   def self.drop_table(); end
+
+  def self.page(num=T.unsafe(nil)); end
 end
 
 module ActiveRecord::LegacyYamlAdapter
@@ -1942,7 +1990,7 @@ class ActiveRecord::Migration::CommandRecorder
 
   def change_column_null(*args, &block); end
 
-  def change_table(table_name, options=T.unsafe(nil)); end
+  def change_table(table_name, **options); end
 
   def change_table_comment(*args, &block); end
 
@@ -2015,6 +2063,8 @@ end
 module ActiveRecord::Migration::CommandRecorder::StraightReversions
   def invert_add_column(args, &block); end
 
+  def invert_add_foreign_key(args, &block); end
+
   def invert_add_reference(args, &block); end
 
   def invert_add_timestamps(args, &block); end
@@ -2034,6 +2084,8 @@ module ActiveRecord::Migration::CommandRecorder::StraightReversions
   def invert_execute_block(args, &block); end
 
   def invert_remove_column(args, &block); end
+
+  def invert_remove_foreign_key(args, &block); end
 
   def invert_remove_reference(args, &block); end
 
@@ -2436,52 +2488,12 @@ module ActiveStorage::Attachment::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class ActiveStorage::BaseController
-  include ::ActiveStorage::SetCurrent
-end
-
-class ActiveStorage::BaseController
-end
-
 module ActiveStorage::Blob::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 module ActiveStorage::Blob::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class ActiveStorage::BlobsController
-  include ::ActiveStorage::SetBlob
-  def show(); end
-end
-
-class ActiveStorage::BlobsController
-end
-
-class ActiveStorage::Current
-end
-
-class ActiveStorage::Current
-  def self.host(); end
-
-  def self.host=(attribute); end
-end
-
-class ActiveStorage::DirectUploadsController
-  def create(); end
-end
-
-class ActiveStorage::DirectUploadsController
-end
-
-class ActiveStorage::DiskController
-  def show(); end
-
-  def update(); end
-end
-
-class ActiveStorage::DiskController
 end
 
 class ActiveStorage::LogSubscriber
@@ -2500,55 +2512,6 @@ class ActiveStorage::LogSubscriber
   def service_url(event); end
 end
 
-class ActiveStorage::Preview
-  def blob(); end
-
-  def image(); end
-
-  def initialize(blob, variation_or_variation_key); end
-
-  def processed(); end
-
-  def service_url(**options); end
-
-  def variation(); end
-end
-
-class ActiveStorage::Preview::UnprocessedError
-end
-
-class ActiveStorage::Preview::UnprocessedError
-end
-
-class ActiveStorage::Preview
-end
-
-class ActiveStorage::PurgeJob
-  def perform(blob); end
-end
-
-class ActiveStorage::RepresentationsController
-  include ::ActiveStorage::SetBlob
-  def show(); end
-end
-
-class ActiveStorage::RepresentationsController
-end
-
-module ActiveStorage::SetBlob
-end
-
-module ActiveStorage::SetBlob
-  extend ::ActiveSupport::Concern
-end
-
-module ActiveStorage::SetCurrent
-end
-
-module ActiveStorage::SetCurrent
-  extend ::ActiveSupport::Concern
-end
-
 class ActiveStorage::Transformers::MiniMagickTransformer
 end
 
@@ -2564,55 +2527,7 @@ module ActiveStorage::VERSION
 end
 
 class ActiveStorage::Variant
-  def blob(); end
-
-  def content_type(*args, &block); end
-
-  def filename(*args, &block); end
-
-  def format(*args, &block); end
-
-  def image(); end
-
-  def initialize(blob, variation_or_variation_key); end
-
-  def key(); end
-
-  def processed(); end
-
-  def service(*args, &block); end
-
-  def service_url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
-
-  def variation(); end
   WEB_IMAGE_CONTENT_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveStorage::Variant::Specification
-end
-
-class ActiveStorage::Variant::Specification
-end
-
-class ActiveStorage::Variant
-end
-
-class ActiveStorage::Variation
-  def initialize(transformations); end
-
-  def key(); end
-
-  def transform(file, format: T.unsafe(nil), &block); end
-
-  def transformations(); end
-end
-
-class ActiveStorage::Variation
-  def self.decode(key); end
-
-  def self.encode(transformations); end
-
-  def self.wrap(variator); end
 end
 
 class ActiveStorageValidations::AspectRatioValidator
@@ -2989,7 +2904,6 @@ class ApplicationRecord::ActiveRecord_AssociationRelation
 end
 
 class ApplicationRecord::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 class ApplicationRecord::ActiveRecord_Associations_CollectionProxy
@@ -2998,7 +2912,6 @@ class ApplicationRecord::ActiveRecord_Associations_CollectionProxy
 end
 
 class ApplicationRecord::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 class ApplicationRecord::ActiveRecord_Relation
@@ -3007,7 +2920,6 @@ class ApplicationRecord::ActiveRecord_Relation
 end
 
 class ApplicationRecord::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module ApplicationRecord::GeneratedAssociationMethods
@@ -7149,26 +7061,14 @@ class Company::ActiveRecord_AssociationRelation
   include ::Company::GeneratedRelationMethods
 end
 
-class Company::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Company::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Company::GeneratedRelationMethods
 end
 
-class Company::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Company::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Company::GeneratedRelationMethods
-end
-
-class Company::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Company::GeneratedAttributeMethods
@@ -7756,18 +7656,6 @@ module Devise
   URL_HELPERS = ::T.let(nil, ::T.untyped)
 end
 
-class Devise::ConfirmationsController
-  def after_confirmation_path_for(resource_name, resource); end
-
-  def after_resending_confirmation_instructions_path_for(resource_name); end
-
-  def create(); end
-
-  def new(); end
-
-  def show(); end
-end
-
 module Devise::Controllers::Helpers
   def authenticate_user!(opts=T.unsafe(nil)); end
 
@@ -7922,21 +7810,6 @@ module Devise::Models::Validatable
   VALIDATIONS = ::T.let(nil, ::T.untyped)
 end
 
-class Devise::OmniauthCallbacksController
-  def after_omniauth_failure_path_for(scope); end
-
-  def failed_strategy(); end
-
-  def failure(); end
-
-  def failure_message(); end
-
-  def passthru(); end
-end
-
-class Devise::OmniauthCallbacksController
-end
-
 class Devise::ParameterFilter
   def filter(conditions); end
 
@@ -7960,72 +7833,6 @@ class Devise::ParameterSanitizer
 end
 
 class Devise::ParameterSanitizer
-end
-
-class Devise::PasswordsController
-  def after_resetting_password_path_for(resource); end
-
-  def after_sending_reset_password_instructions_path_for(resource_name); end
-
-  def assert_reset_token_passed(); end
-
-  def create(); end
-
-  def edit(); end
-
-  def new(); end
-
-  def unlockable?(resource); end
-
-  def update(); end
-end
-
-class Devise::RegistrationsController
-  def account_update_params(); end
-
-  def after_inactive_sign_up_path_for(resource); end
-
-  def after_sign_up_path_for(resource); end
-
-  def after_update_path_for(resource); end
-
-  def authenticate_scope!(); end
-
-  def build_resource(hash=T.unsafe(nil)); end
-
-  def cancel(); end
-
-  def create(); end
-
-  def destroy(); end
-
-  def edit(); end
-
-  def new(); end
-
-  def sign_up(resource_name, resource); end
-
-  def sign_up_params(); end
-
-  def update(); end
-
-  def update_needs_confirmation?(resource, previous); end
-
-  def update_resource(resource, params); end
-end
-
-class Devise::SessionsController
-  def auth_options(); end
-
-  def create(); end
-
-  def destroy(); end
-
-  def new(); end
-
-  def serialize_options(resource); end
-
-  def sign_in_params(); end
 end
 
 module Devise::Test::ControllerHelpers
@@ -8077,66 +7884,6 @@ class Devise::TimeInflector
   def self.instance(); end
 
   def self.time_ago_in_words(*args, &block); end
-end
-
-class Devise::UnlocksController
-  def after_sending_unlock_instructions_path_for(resource); end
-
-  def after_unlock_path_for(resource); end
-
-  def create(); end
-
-  def new(); end
-
-  def show(); end
-end
-
-class Devise::UnlocksController
-end
-
-class DeviseController
-  include ::Devise::Controllers::ScopedViews
-  def assert_is_devise_resource!(); end
-
-  def clean_up_passwords(object); end
-
-  def devise_i18n_options(options); end
-
-  def devise_mapping(); end
-
-  def find_message(kind, options=T.unsafe(nil)); end
-
-  def navigational_formats(); end
-
-  def require_no_authentication(); end
-
-  def resource(); end
-
-  def resource=(new_resource); end
-
-  def resource_class(); end
-
-  def resource_name(); end
-
-  def resource_params(); end
-
-  def respond_with_navigational(*args, &block); end
-
-  def scope_name(); end
-
-  def set_flash_message(key, kind, options=T.unsafe(nil)); end
-
-  def set_flash_message!(key, kind, options=T.unsafe(nil)); end
-
-  def set_minimum_password_length(); end
-
-  def signed_in_resource(); end
-
-  def successfully_sent?(resource); end
-
-  def translation_scope(); end
-
-  def unknown_action!(msg); end
 end
 
 module Diff::LCS
@@ -8216,13 +7963,6 @@ module Doorkeeper::Application::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class Doorkeeper::ApplicationMetalController
-  include ::Doorkeeper::Helpers::Controller
-end
-
-class Doorkeeper::ApplicationMetalController
-end
-
 module Doorkeeper::OAuth
   AUTHORIZATION_CODE = ::T.let(nil, ::T.untyped)
   CLIENT_CREDENTIALS = ::T.let(nil, ::T.untyped)
@@ -8240,24 +7980,6 @@ end
 
 class Doorkeeper::StaleRecordsCleaner
   CLEANER_CLASS = ::T.let(nil, ::T.untyped)
-end
-
-class Doorkeeper::TokenInfoController
-  def show(); end
-end
-
-class Doorkeeper::TokenInfoController
-end
-
-class Doorkeeper::TokensController
-  def create(); end
-
-  def introspect(); end
-
-  def revoke(); end
-end
-
-class Doorkeeper::TokensController
 end
 
 module Doorkeeper::VERSION
@@ -8416,26 +8138,14 @@ class Engine::ActiveRecord_AssociationRelation
   include ::Engine::GeneratedRelationMethods
 end
 
-class Engine::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Engine::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Engine::GeneratedRelationMethods
 end
 
-class Engine::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Engine::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Engine::GeneratedRelationMethods
-end
-
-class Engine::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Engine::GeneratedAttributeMethods
@@ -8753,26 +8463,14 @@ class Event::ActiveRecord_AssociationRelation
   include ::Event::GeneratedRelationMethods
 end
 
-class Event::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Event::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Event::GeneratedRelationMethods
 end
 
-class Event::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Event::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Event::GeneratedRelationMethods
-end
-
-class Event::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Event::GeneratedAttributeMethods
@@ -8813,6 +8511,38 @@ end
 
 module Event::GeneratedRelationMethods
   extend ::Mutex_m
+end
+
+class Event
+  def self.add_to_library(*args); end
+
+  def self.change_completion_status(*args); end
+
+  def self.favorite_game(*args); end
+
+  def self.favorite_games(*args); end
+
+  def self.following(*args); end
+
+  def self.game_purchases(*args); end
+
+  def self.new_user(*args); end
+
+  def self.not_add_to_library(*args); end
+
+  def self.not_change_completion_status(*args); end
+
+  def self.not_favorite_game(*args); end
+
+  def self.not_following(*args); end
+
+  def self.not_new_user(*args); end
+
+  def self.recently_created(*args); end
+
+  def self.relationships(*args); end
+
+  def self.users(*args); end
 end
 
 class Exception
@@ -8901,26 +8631,14 @@ class ExternalAccount::ActiveRecord_AssociationRelation
   include ::ExternalAccount::GeneratedRelationMethods
 end
 
-class ExternalAccount::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class ExternalAccount::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::ExternalAccount::GeneratedRelationMethods
 end
 
-class ExternalAccount::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class ExternalAccount::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::ExternalAccount::GeneratedRelationMethods
-end
-
-class ExternalAccount::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module ExternalAccount::GeneratedAttributeMethods
@@ -8935,6 +8653,12 @@ end
 
 module ExternalAccount::GeneratedRelationMethods
   extend ::Mutex_m
+end
+
+class ExternalAccount
+  def self.not_steam(*args); end
+
+  def self.steam(*args); end
 end
 
 module FFI
@@ -9588,26 +9312,14 @@ class FavoriteGame::ActiveRecord_AssociationRelation
   include ::FavoriteGame::GeneratedRelationMethods
 end
 
-class FavoriteGame::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class FavoriteGame::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::FavoriteGame::GeneratedRelationMethods
 end
 
-class FavoriteGame::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class FavoriteGame::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::FavoriteGame::GeneratedRelationMethods
-end
-
-class FavoriteGame::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module FavoriteGame::GeneratedAttributeMethods
@@ -9676,13 +9388,13 @@ class File::Stat
 end
 
 class File
+  def self.atomic_write(file_name, temp_dir=T.unsafe(nil)); end
+
   def self.exists?(_); end
 
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
-
-  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -9828,26 +9540,14 @@ class Game::ActiveRecord_AssociationRelation
   include ::Game::GeneratedRelationMethods
 end
 
-class Game::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Game::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Game::GeneratedRelationMethods
 end
 
-class Game::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Game::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Game::GeneratedRelationMethods
-end
-
-class Game::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Game::GeneratedAssociationMethods
@@ -9889,13 +9589,35 @@ module Game::GeneratedRelationMethods
 end
 
 class Game
+  def self.by_year(*args); end
+
+  def self.highest_avg_rating(*args); end
+
+  def self.least_recently_updated(*args); end
+
+  def self.most_favorites(*args); end
+
+  def self.most_owners(*args); end
+
+  def self.newest(*args); end
+
+  def self.oldest(*args); end
+
+  def self.on_platform(*args); end
+
   def self.pg_search_multisearchable_options(); end
 
   def self.pg_search_multisearchable_options=(val); end
 
   def self.pg_search_multisearchable_options?(); end
 
+  def self.recently_released(*args); end
+
+  def self.recently_updated(*args); end
+
   def self.search(*args); end
+
+  def self.with_attached_cover(*args); end
 end
 
 class GameDeveloper::ActiveRecord_AssociationRelation
@@ -9903,26 +9625,14 @@ class GameDeveloper::ActiveRecord_AssociationRelation
   include ::GameDeveloper::GeneratedRelationMethods
 end
 
-class GameDeveloper::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GameDeveloper::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameDeveloper::GeneratedRelationMethods
 end
 
-class GameDeveloper::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GameDeveloper::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameDeveloper::GeneratedRelationMethods
-end
-
-class GameDeveloper::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GameDeveloper::GeneratedAttributeMethods
@@ -9941,26 +9651,14 @@ class GameEngine::ActiveRecord_AssociationRelation
   include ::GameEngine::GeneratedRelationMethods
 end
 
-class GameEngine::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GameEngine::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameEngine::GeneratedRelationMethods
 end
 
-class GameEngine::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GameEngine::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameEngine::GeneratedRelationMethods
-end
-
-class GameEngine::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GameEngine::GeneratedAttributeMethods
@@ -9979,26 +9677,14 @@ class GameGenre::ActiveRecord_AssociationRelation
   include ::GameGenre::GeneratedRelationMethods
 end
 
-class GameGenre::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GameGenre::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameGenre::GeneratedRelationMethods
 end
 
-class GameGenre::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GameGenre::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GameGenre::GeneratedRelationMethods
-end
-
-class GameGenre::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GameGenre::GeneratedAttributeMethods
@@ -10017,26 +9703,14 @@ class GamePlatform::ActiveRecord_AssociationRelation
   include ::GamePlatform::GeneratedRelationMethods
 end
 
-class GamePlatform::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePlatform::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePlatform::GeneratedRelationMethods
 end
 
-class GamePlatform::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePlatform::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePlatform::GeneratedRelationMethods
-end
-
-class GamePlatform::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePlatform::GeneratedAttributeMethods
@@ -10055,26 +9729,14 @@ class GamePublisher::ActiveRecord_AssociationRelation
   include ::GamePublisher::GeneratedRelationMethods
 end
 
-class GamePublisher::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePublisher::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePublisher::GeneratedRelationMethods
 end
 
-class GamePublisher::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePublisher::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePublisher::GeneratedRelationMethods
-end
-
-class GamePublisher::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePublisher::GeneratedAttributeMethods
@@ -10093,26 +9755,14 @@ class GamePurchase::ActiveRecord_AssociationRelation
   include ::GamePurchase::GeneratedRelationMethods
 end
 
-class GamePurchase::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePurchase::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePurchase::GeneratedRelationMethods
 end
 
-class GamePurchase::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePurchase::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePurchase::GeneratedRelationMethods
-end
-
-class GamePurchase::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePurchase::GeneratedAttributeMethods
@@ -10153,13 +9803,39 @@ module GamePurchase::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class GamePurchasePlatform::ActiveRecord_AssociationRelation
-  include ::ActiveRecord::Delegation::ClassSpecificRelation
-  include ::GamePurchasePlatform::GeneratedRelationMethods
+class GamePurchase
+  def self.completed(*args); end
+
+  def self.dropped(*args); end
+
+  def self.fully_completed(*args); end
+
+  def self.in_progress(*args); end
+
+  def self.not_applicable(*args); end
+
+  def self.not_completed(*args); end
+
+  def self.not_dropped(*args); end
+
+  def self.not_fully_completed(*args); end
+
+  def self.not_in_progress(*args); end
+
+  def self.not_not_applicable(*args); end
+
+  def self.not_paused(*args); end
+
+  def self.not_unplayed(*args); end
+
+  def self.paused(*args); end
+
+  def self.unplayed(*args); end
 end
 
 class GamePurchasePlatform::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::GamePurchasePlatform::GeneratedRelationMethods
 end
 
 class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy
@@ -10167,17 +9843,9 @@ class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy
   include ::GamePurchasePlatform::GeneratedRelationMethods
 end
 
-class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePurchasePlatform::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePurchasePlatform::GeneratedRelationMethods
-end
-
-class GamePurchasePlatform::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePurchasePlatform::GeneratedAttributeMethods
@@ -10196,26 +9864,14 @@ class GamePurchaseStore::ActiveRecord_AssociationRelation
   include ::GamePurchaseStore::GeneratedRelationMethods
 end
 
-class GamePurchaseStore::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePurchaseStore::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePurchaseStore::GeneratedRelationMethods
 end
 
-class GamePurchaseStore::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class GamePurchaseStore::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePurchaseStore::GeneratedRelationMethods
-end
-
-class GamePurchaseStore::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module GamePurchaseStore::GeneratedAttributeMethods
@@ -10420,6 +10076,8 @@ module Gem
 
   def self.source_date_epoch(); end
 
+  def self.source_date_epoch_string(); end
+
   def self.suffix_regexp(); end
 end
 
@@ -10457,26 +10115,14 @@ class Genre::ActiveRecord_AssociationRelation
   include ::Genre::GeneratedRelationMethods
 end
 
-class Genre::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Genre::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Genre::GeneratedRelationMethods
 end
 
-class Genre::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Genre::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Genre::GeneratedRelationMethods
-end
-
-class Genre::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Genre::GeneratedAttributeMethods
@@ -10988,15 +10634,6 @@ end
 class GraphiQL::Rails::Config
   CSRF_TOKEN_HEADER = ::T.let(nil, ::T.untyped)
   DEFAULT_HEADERS = ::T.let(nil, ::T.untyped)
-end
-
-class GraphiQL::Rails::EditorsController
-  def graphql_endpoint_path(); end
-
-  def show(); end
-end
-
-class GraphiQL::Rails::EditorsController
 end
 
 class GraphqlController
@@ -13341,6 +12978,8 @@ class Mutations::AddGameToLibrary
 
   def load_rating(value); end
 
+  def load_replay_count(value); end
+
   def load_start_date(value); end
 
   def load_stores(value); end
@@ -13387,6 +13026,8 @@ class Mutations::UpdateGameInLibrary
   def load_platforms(value); end
 
   def load_rating(value); end
+
+  def load_replay_count(value); end
 
   def load_start_date(value); end
 
@@ -16740,26 +16381,14 @@ class Platform::ActiveRecord_AssociationRelation
   include ::Platform::GeneratedRelationMethods
 end
 
-class Platform::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Platform::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Platform::GeneratedRelationMethods
 end
 
-class Platform::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Platform::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Platform::GeneratedRelationMethods
-end
-
-class Platform::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Platform::GeneratedAttributeMethods
@@ -18797,7 +18426,9 @@ class RSpec::Support::MethodSignature
   INFINITY = ::T.let(nil, ::T.untyped)
 end
 
-RSpec::Support::Mutex = Thread::Mutex
+class RSpec::Support::Mutex
+  NEW_MUTEX_METHOD = ::T.let(nil, ::T.untyped)
+end
 
 class RSpec::Support::ObjectFormatter
   ELLIPSIS = ::T.let(nil, ::T.untyped)
@@ -19826,26 +19457,14 @@ class Relationship::ActiveRecord_AssociationRelation
   include ::Relationship::GeneratedRelationMethods
 end
 
-class Relationship::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Relationship::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Relationship::GeneratedRelationMethods
 end
 
-class Relationship::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Relationship::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Relationship::GeneratedRelationMethods
-end
-
-class Relationship::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Relationship::GeneratedAttributeMethods
@@ -21937,6 +21556,11 @@ class RuboCop::Cop::RSpec::Capybara::FeatureMethods
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::RSpec::Capybara::VisibilityMatcher
+  MSG_FALSE = ::T.let(nil, ::T.untyped)
+  MSG_TRUE = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::RSpec::ContextMethod
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -21976,6 +21600,10 @@ class RuboCop::Cop::RSpec::Dialect
 end
 
 class RuboCop::Cop::RSpec::EmptyExampleGroup
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::RSpec::EmptyHook
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -25165,26 +24793,14 @@ class Series::ActiveRecord_AssociationRelation
   include ::Series::GeneratedRelationMethods
 end
 
-class Series::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Series::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Series::GeneratedRelationMethods
 end
 
-class Series::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Series::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Series::GeneratedRelationMethods
-end
-
-class Series::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Series::GeneratedAttributeMethods
@@ -25854,26 +25470,14 @@ class SteamAppId::ActiveRecord_AssociationRelation
   include ::SteamAppId::GeneratedRelationMethods
 end
 
-class SteamAppId::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class SteamAppId::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::SteamAppId::GeneratedRelationMethods
 end
 
-class SteamAppId::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class SteamAppId::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::SteamAppId::GeneratedRelationMethods
-end
-
-class SteamAppId::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module SteamAppId::GeneratedAttributeMethods
@@ -25911,26 +25515,14 @@ class Store::ActiveRecord_AssociationRelation
   include ::Store::GeneratedRelationMethods
 end
 
-class Store::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Store::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Store::GeneratedRelationMethods
 end
 
-class Store::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class Store::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::Store::GeneratedRelationMethods
-end
-
-class Store::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module Store::GeneratedAttributeMethods
@@ -26774,27 +26366,15 @@ class User::ActiveRecord_AssociationRelation
   include ::FriendlyId::FinderMethods
 end
 
-class User::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class User::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::User::GeneratedRelationMethods
-end
-
-class User::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 class User::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::User::GeneratedRelationMethods
   include ::FriendlyId::FinderMethods
-end
-
-class User::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module User::GeneratedAssociationMethods
@@ -26813,6 +26393,10 @@ module User::GeneratedRelationMethods
   def member(*args, &block); end
 
   def moderator(*args, &block); end
+
+  def most_followers(*args, &block); end
+
+  def most_games(*args, &block); end
 
   def name(*args, &block); end
 
@@ -26850,11 +26434,37 @@ class User
   extend ::FriendlyId::Finders::ClassMethods
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
+  def self.admin(*args); end
+
   def self.devise_modules(); end
 
   def self.devise_modules=(val); end
 
   def self.devise_modules?(); end
+
+  def self.member(*args); end
+
+  def self.moderator(*args); end
+
+  def self.most_followers(*args); end
+
+  def self.most_games(*args); end
+
+  def self.not_admin(*args); end
+
+  def self.not_member(*args); end
+
+  def self.not_moderator(*args); end
+
+  def self.not_private_account(*args); end
+
+  def self.not_public_account(*args); end
+
+  def self.private_account(*args); end
+
+  def self.public_account(*args); end
+
+  def self.with_attached_avatar(*args); end
 end
 
 module UsersHelper
@@ -27259,6 +26869,8 @@ class WebConsole::View
   def render_inlined_string(template); end
 
   def render_javascript(template); end
+
+  def t(key, options=T.unsafe(nil)); end
 end
 
 class WebConsole::View
@@ -27592,26 +27204,14 @@ class WikidataBlocklist::ActiveRecord_AssociationRelation
   include ::WikidataBlocklist::GeneratedRelationMethods
 end
 
-class WikidataBlocklist::ActiveRecord_AssociationRelation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::WikidataBlocklist::GeneratedRelationMethods
 end
 
-class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-end
-
 class WikidataBlocklist::ActiveRecord_Relation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::WikidataBlocklist::GeneratedRelationMethods
-end
-
-class WikidataBlocklist::ActiveRecord_Relation
-  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
 end
 
 module WikidataBlocklist::GeneratedAttributeMethods

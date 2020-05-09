@@ -506,7 +506,7 @@ class Mail::Header
   include Mail::Constants
   include Mail::Utilities
 end
-class Mail::PartsList < Anonymous_Delegator_53
+class Mail::PartsList < Anonymous_Delegator_74
   def attachments; end
   def collect!; end
   def collect; end
@@ -1050,6 +1050,46 @@ class Mail::Matchers::AttachmentFilenameMatcher
   def filename; end
   def initialize(filename); end
 end
+module Mail::CheckDeliveryParams
+  def self.check(mail); end
+  def self.check_addr(addr_name, addr); end
+  def self.check_from(addr); end
+  def self.check_message(message); end
+  def self.check_to(addrs); end
+  def self.validate_smtp_addr(addr); end
+end
+class Mail::TestMailer
+  def deliver!(mail); end
+  def initialize(values); end
+  def self.deliveries; end
+  def self.deliveries=(val); end
+  def settings; end
+  def settings=(arg0); end
+end
+class Mail::SMTP
+  def build_smtp_session; end
+  def deliver!(mail); end
+  def initialize(values); end
+  def settings; end
+  def settings=(arg0); end
+  def ssl_context; end
+  def start_smtp_session(&block); end
+end
+class Mail::FileDelivery
+  def deliver!(mail); end
+  def initialize(values); end
+  def settings; end
+  def settings=(arg0); end
+end
+class Mail::Sendmail
+  def deliver!(mail); end
+  def initialize(values); end
+  def self.call(path, arguments, destinations, encoded_message); end
+  def self.popen(command, &block); end
+  def self.shellquote(address); end
+  def settings; end
+  def settings=(arg0); end
+end
 module Mail::ParserTools
   def chars(data, from_bytes, to_bytes); end
 end
@@ -1540,46 +1580,6 @@ class Mail::Address
   def strip_domain_comments(value); end
   def to_s; end
   include Mail::Utilities
-end
-module Mail::CheckDeliveryParams
-  def self.check(mail); end
-  def self.check_addr(addr_name, addr); end
-  def self.check_from(addr); end
-  def self.check_message(message); end
-  def self.check_to(addrs); end
-  def self.validate_smtp_addr(addr); end
-end
-class Mail::TestMailer
-  def deliver!(mail); end
-  def initialize(values); end
-  def self.deliveries; end
-  def self.deliveries=(val); end
-  def settings; end
-  def settings=(arg0); end
-end
-class Mail::SMTP
-  def build_smtp_session; end
-  def deliver!(mail); end
-  def initialize(values); end
-  def settings; end
-  def settings=(arg0); end
-  def ssl_context; end
-  def start_smtp_session(&block); end
-end
-class Mail::FileDelivery
-  def deliver!(mail); end
-  def initialize(values); end
-  def settings; end
-  def settings=(arg0); end
-end
-class Mail::Sendmail
-  def deliver!(mail); end
-  def initialize(values); end
-  def self.call(path, arguments, destinations, encoded_message); end
-  def self.popen(command, &block); end
-  def self.shellquote(address); end
-  def settings; end
-  def settings=(arg0); end
 end
 class Mail::ContentTypeElement
   def cleaned(string); end

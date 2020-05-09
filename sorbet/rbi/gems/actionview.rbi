@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionview/all/actionview.rbi
 #
-# actionview-6.0.2.2
+# actionview-6.0.3
 
 module ActionView
   def self.eager_load!; end
@@ -120,7 +120,7 @@ class ActionView::Helpers::TagHelper::TagBuilder
   def boolean_tag_option(key); end
   def content_tag_string(name, content, options, escape = nil); end
   def initialize(view_context); end
-  def method_missing(called, *args, &block); end
+  def method_missing(called, *args, **options, &block); end
   def prefix_tag_option(prefix, key, value, escape); end
   def respond_to_missing?(*args); end
   def tag_option(key, value, escape); end
@@ -561,11 +561,11 @@ module ActionView::Helpers::RenderingHelper
 end
 module ActionView::Helpers::TranslationHelper
   def html_safe_translation_key?(key); end
-  def l(*args); end
-  def localize(*args); end
+  def l(object, **options); end
+  def localize(object, **options); end
   def scope_key_by_partial(key); end
-  def t(key, options = nil); end
-  def translate(key, options = nil); end
+  def t(key, **options); end
+  def translate(key, **options); end
   extend ActiveSupport::Concern
   include ActionView::Helpers::TagHelper
 end
@@ -1230,10 +1230,10 @@ class ActionView::Template::Error < ActionView::ActionViewError
   def annotated_source_code; end
   def cause; end
   def file_name; end
-  def formatted_code_for(source_code, line_counter, indent, output); end
+  def formatted_code_for(source_code, line_counter, indent); end
   def initialize(template); end
   def line_number; end
-  def source_extract(indentation = nil, output = nil); end
+  def source_extract(indentation = nil); end
   def source_location; end
   def sub_template_message; end
   def sub_template_of(template_path); end

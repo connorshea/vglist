@@ -659,9 +659,6 @@ module GamePublisher::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_company; end
 
-  sig { returns(T.untyped) }
-  def company_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def company_ids=(ids); end
 end

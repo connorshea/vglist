@@ -704,6 +704,9 @@ module FavoriteGame::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
+  sig { returns(T::Array[Integer]) }
+  def event_ids; end
+
   sig { params(value: T::Enumerable[::Event]).void }
   def events=(value); end
 
@@ -742,9 +745,6 @@ module FavoriteGame::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_user; end
-
-  sig { returns(T.untyped) }
-  def user_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def user_ids=(ids); end

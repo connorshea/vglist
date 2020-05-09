@@ -2457,11 +2457,17 @@ module Game::GeneratedAssociationMethods
   sig { returns(::Company::ActiveRecord_Associations_CollectionProxy) }
   def developers; end
 
+  sig { returns(T::Array[Integer]) }
+  def developer_ids; end
+
   sig { params(value: T::Enumerable[::Company]).void }
   def developers=(value); end
 
   sig { returns(::Engine::ActiveRecord_Associations_CollectionProxy) }
   def engines; end
+
+  sig { returns(T::Array[Integer]) }
+  def engine_ids; end
 
   sig { params(value: T::Enumerable[::Engine]).void }
   def engines=(value); end
@@ -2469,11 +2475,17 @@ module Game::GeneratedAssociationMethods
   sig { returns(::FavoriteGame::ActiveRecord_Associations_CollectionProxy) }
   def favorites; end
 
+  sig { returns(T::Array[Integer]) }
+  def favorite_ids; end
+
   sig { params(value: T::Enumerable[::FavoriteGame]).void }
   def favorites=(value); end
 
   sig { returns(::GameDeveloper::ActiveRecord_Associations_CollectionProxy) }
   def game_developers; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_developer_ids; end
 
   sig { params(value: T::Enumerable[::GameDeveloper]).void }
   def game_developers=(value); end
@@ -2481,11 +2493,17 @@ module Game::GeneratedAssociationMethods
   sig { returns(::GameEngine::ActiveRecord_Associations_CollectionProxy) }
   def game_engines; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_engine_ids; end
+
   sig { params(value: T::Enumerable[::GameEngine]).void }
   def game_engines=(value); end
 
   sig { returns(::GameGenre::ActiveRecord_Associations_CollectionProxy) }
   def game_genres; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_genre_ids; end
 
   sig { params(value: T::Enumerable[::GameGenre]).void }
   def game_genres=(value); end
@@ -2493,11 +2511,17 @@ module Game::GeneratedAssociationMethods
   sig { returns(::GamePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_platforms; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_platform_ids; end
+
   sig { params(value: T::Enumerable[::GamePlatform]).void }
   def game_platforms=(value); end
 
   sig { returns(::GamePublisher::ActiveRecord_Associations_CollectionProxy) }
   def game_publishers; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_publisher_ids; end
 
   sig { params(value: T::Enumerable[::GamePublisher]).void }
   def game_publishers=(value); end
@@ -2505,11 +2529,17 @@ module Game::GeneratedAssociationMethods
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_ids; end
+
   sig { params(value: T::Enumerable[::GamePurchase]).void }
   def game_purchases=(value); end
 
   sig { returns(::Genre::ActiveRecord_Associations_CollectionProxy) }
   def genres; end
+
+  sig { returns(T::Array[Integer]) }
+  def genre_ids; end
 
   sig { params(value: T::Enumerable[::Genre]).void }
   def genres=(value); end
@@ -2523,17 +2553,26 @@ module Game::GeneratedAssociationMethods
   sig { returns(::Platform::ActiveRecord_Associations_CollectionProxy) }
   def platforms; end
 
+  sig { returns(T::Array[Integer]) }
+  def platform_ids; end
+
   sig { params(value: T::Enumerable[::Platform]).void }
   def platforms=(value); end
 
   sig { returns(::Company::ActiveRecord_Associations_CollectionProxy) }
   def publishers; end
 
+  sig { returns(T::Array[Integer]) }
+  def publisher_ids; end
+
   sig { params(value: T::Enumerable[::Company]).void }
   def publishers=(value); end
 
   sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
   def purchasers; end
+
+  sig { returns(T::Array[Integer]) }
+  def purchaser_ids; end
 
   sig { params(value: T::Enumerable[::User]).void }
   def purchasers=(value); end
@@ -2546,6 +2585,9 @@ module Game::GeneratedAssociationMethods
 
   sig { returns(::SteamAppId::ActiveRecord_Associations_CollectionProxy) }
   def steam_app_ids; end
+
+  sig { returns(T::Array[Integer]) }
+  def steam_app_id_ids; end
 
   sig { params(value: T::Enumerable[::SteamAppId]).void }
   def steam_app_ids=(value); end
@@ -2610,9 +2652,6 @@ module Game::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_series; end
 
-  sig { returns(T.untyped) }
-  def series_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def series_ids=(ids); end
 
@@ -2628,14 +2667,8 @@ module Game::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_cover_attachment; end
 
-  sig { returns(T.untyped) }
-  def cover_attachment_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def cover_attachment_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def cover_blob_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def cover_blob_ids=(ids); end
@@ -2651,9 +2684,6 @@ module Game::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end
-
-  sig { returns(T.untyped) }
-  def pg_search_document_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

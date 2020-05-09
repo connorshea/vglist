@@ -1545,6 +1545,9 @@ module GamePurchase::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
+  sig { returns(T::Array[Integer]) }
+  def event_ids; end
+
   sig { params(value: T::Enumerable[::Event]).void }
   def events=(value); end
 
@@ -1557,11 +1560,17 @@ module GamePurchase::GeneratedAssociationMethods
   sig { returns(::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_platforms; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_platform_ids; end
+
   sig { params(value: T::Enumerable[::GamePurchasePlatform]).void }
   def game_purchase_platforms=(value); end
 
   sig { returns(::GamePurchaseStore::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_stores; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_store_ids; end
 
   sig { params(value: T::Enumerable[::GamePurchaseStore]).void }
   def game_purchase_stores=(value); end
@@ -1569,11 +1578,17 @@ module GamePurchase::GeneratedAssociationMethods
   sig { returns(::Platform::ActiveRecord_Associations_CollectionProxy) }
   def platforms; end
 
+  sig { returns(T::Array[Integer]) }
+  def platform_ids; end
+
   sig { params(value: T::Enumerable[::Platform]).void }
   def platforms=(value); end
 
   sig { returns(::Store::ActiveRecord_Associations_CollectionProxy) }
   def stores; end
+
+  sig { returns(T::Array[Integer]) }
+  def store_ids; end
 
   sig { params(value: T::Enumerable[::Store]).void }
   def stores=(value); end
@@ -1607,9 +1622,6 @@ module GamePurchase::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_user; end
-
-  sig { returns(T.untyped) }
-  def user_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def user_ids=(ids); end

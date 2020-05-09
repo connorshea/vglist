@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activestorage/all/activestorage.rbi
 #
-# activestorage-6.0.2.2
+# activestorage-6.0.3
 
 module ActiveStorage
   def analyzers; end
@@ -121,9 +121,10 @@ class ActiveStorage::Previewer::MuPDFPreviewer < ActiveStorage::Previewer
 end
 class ActiveStorage::Previewer::VideoPreviewer < ActiveStorage::Previewer
   def draw_relevant_frame_from(file, &block); end
-  def ffmpeg_path; end
   def preview; end
   def self.accept?(blob); end
+  def self.ffmpeg_exists?; end
+  def self.ffmpeg_path; end
 end
 class ActiveStorage::Analyzer
   def blob; end
@@ -181,8 +182,13 @@ module ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods
 end
 class ActiveStorage::Engine < Rails::Engine
 end
+module Anonymous_Module_27
+end
+module Anonymous_Module_28
+end
 module ActiveStorage::Attached::Model
   def attachment_changes; end
+  def changed_for_autosave?; end
   def reload(*arg0); end
   extend ActiveSupport::Concern
 end
@@ -220,140 +226,203 @@ class ActiveStorage::Attached
   def name; end
   def record; end
 end
-class ActiveStorage::Attached::Changes::CreateOne
-  def attachable; end
-  def attachment; end
-  def blob; end
-  def build_attachment; end
-  def find_attachment; end
-  def find_or_build_attachment; end
-  def find_or_build_blob; end
-  def initialize(name, record, attachable); end
-  def name; end
-  def record; end
-  def save; end
-  def upload; end
+module ActiveStorage::SetCurrent
+  extend ActiveSupport::Concern
 end
-class ActiveStorage::Attached::Changes::CreateMany
-  def assign_associated_attachments; end
-  def attachables; end
-  def attachments; end
-  def blobs; end
-  def build_subchange_from(attachable); end
-  def initialize(name, record, attachables); end
-  def name; end
-  def record; end
-  def reset_associated_blobs; end
-  def save; end
-  def subchanges; end
-  def upload; end
-end
-class ActiveStorage::Attached::Changes::CreateOneOfMany < ActiveStorage::Attached::Changes::CreateOne
-  def find_attachment; end
-end
-class ActiveStorage::Attached::Changes::DeleteOne
-  def attachment; end
-  def initialize(name, record); end
-  def name; end
-  def record; end
-  def save; end
-end
-class ActiveStorage::Attached::Changes::DeleteMany
-  def attachables; end
-  def attachments; end
-  def blobs; end
-  def initialize(name, record); end
-  def name; end
-  def record; end
-  def save; end
-end
-class ActiveStorage::LogSubscriber < ActiveSupport::LogSubscriber
-end
-class ActiveStorage::Service
-  def content_disposition_with(filename:, type: nil); end
-  def delete(key); end
-  def delete_prefixed(prefix); end
-  def download(key); end
-  def download_chunk(key, range); end
-  def exist?(key); end
-  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
-  def instrument(operation, payload = nil, &block); end
-  def open(*args, &block); end
-  def self.build(configurator:, service: nil, **service_config); end
-  def self.configure(service_name, configurations); end
-  def service_name; end
-  def update_metadata(key, **metadata); end
-  def upload(key, io, checksum: nil, **options); end
-  def url(key, expires_in:, disposition:, filename:, content_type:); end
-  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
-  extend ActiveSupport::Autoload
-end
-class ActiveStorage::Service::Configurator
-  def build(service_name); end
-  def config_for(name); end
-  def configurations; end
-  def initialize(configurations); end
-  def resolve(class_name); end
-  def self.build(service_name, configurations); end
-end
-class ActiveStorage::Transformers::Transformer
-  def initialize(transformations); end
-  def process(file, format:); end
-  def transform(file, format:); end
-  def transformations; end
-end
-module ActiveStorage::Attachment::GeneratedAttributeMethods
-end
-class ActiveStorage::Attachment < ActiveRecord::Base
-  def analyze_blob_later; end
-  def autosave_associated_records_for_blob(*args); end
-  def autosave_associated_records_for_record(*args); end
-  def dependent; end
-  def identify_blob; end
-  def method_missing(method, *args, &block); end
-  def purge; end
-  def purge_dependent_blob_later; end
-  def purge_later; end
-  def respond_to_missing?(name, include_private = nil); end
+class ActiveStorage::BaseController < ActionController::Base
+  def _layout(lookup_context, formats); end
   def self.__callbacks; end
-  def self._reflections; end
-  def self._validators; end
-  def self.attribute_type_decorations; end
-  def self.defined_enums; end
-  def self.page(num = nil); end
-  extend Kaminari::ConfigurationMethods::ClassMethods
-  include ActiveStorage::Attachment::GeneratedAssociationMethods
-  include ActiveStorage::Attachment::GeneratedAttributeMethods
-  include Kaminari::ActiveRecordModelExtension
-  include Kaminari::ConfigurationMethods
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  include ActionDispatch::Routing::UrlFor
+  include ActiveStorage::SetCurrent
+  include Anonymous_Module_29
 end
-module ActiveStorage::Attachment::GeneratedAssociationMethods
+module Anonymous_Module_29
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+class ActiveStorage::DirectUploadsController < ActiveStorage::BaseController
+  def _layout(lookup_context, formats); end
+  def blob_args; end
+  def create; end
+  def direct_upload_json(blob); end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_30
+end
+module Anonymous_Module_30
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+module ActiveStorage::SetBlob
+  def set_blob; end
+  extend ActiveSupport::Concern
+end
+class ActiveStorage::BlobsController < ActiveStorage::BaseController
+  def _layout(lookup_context, formats); end
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  def show; end
+  include ActionDispatch::Routing::UrlFor
+  include ActiveStorage::SetBlob
+  include Anonymous_Module_31
+end
+module Anonymous_Module_31
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+class ActiveStorage::RepresentationsController < ActiveStorage::BaseController
+  def _layout(lookup_context, formats); end
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  def show; end
+  include ActionDispatch::Routing::UrlFor
+  include ActiveStorage::SetBlob
+  include Anonymous_Module_32
+end
+module Anonymous_Module_32
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+class ActiveStorage::DiskController < ActiveStorage::BaseController
+  def _layout(lookup_context, formats); end
+  def acceptable_content?(token); end
+  def decode_verified_key; end
+  def decode_verified_token; end
+  def disk_service; end
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  def serve_file(path, content_type:, disposition:); end
+  def show; end
+  def update; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_33
+end
+module Anonymous_Module_33
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_27
+  extend Anonymous_Module_28
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_27
+  include Anonymous_Module_28
+end
+class ActiveStorage::BaseJob < ActiveJob::Base
+end
+class ActiveStorage::AnalyzeJob < ActiveStorage::BaseJob
+  def perform(blob); end
+  def self.queue_name; end
+  def self.rescue_handlers; end
+end
+class ActiveStorage::PurgeJob < ActiveStorage::BaseJob
+  def perform(blob); end
+  def self.queue_name; end
+  def self.rescue_handlers; end
+end
+class ActiveStorage::Variant
   def blob; end
-  def blob=(value); end
-  def build_blob(*args, &block); end
-  def create_blob!(*args, &block); end
-  def create_blob(*args, &block); end
-  def record; end
-  def record=(value); end
-  def reload_blob; end
-  def reload_record; end
+  def content_type(*args, &block); end
+  def filename(*args, &block); end
+  def format(*args, &block); end
+  def image; end
+  def initialize(blob, variation_or_variation_key); end
+  def key; end
+  def process; end
+  def processed; end
+  def processed?; end
+  def service(*args, &block); end
+  def service_url(expires_in: nil, disposition: nil); end
+  def specification; end
+  def transform(image, &block); end
+  def upload(file); end
+  def variation; end
 end
-class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveStorage::Attachment::GeneratedRelationMethods
-end
-module ActiveStorage::Attachment::GeneratedRelationMethods
-end
-class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveStorage::Attachment::GeneratedRelationMethods
-end
-class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
-  include ActiveRecord::Delegation::ClassSpecificRelation
-  include ActiveStorage::Attachment::GeneratedRelationMethods
+class ActiveStorage::Variant::Specification < OpenStruct
 end
 class ActiveStorage::Downloader
   def download(key, file); end
@@ -390,6 +459,35 @@ module ActiveStorage::Blob::Representable
   def variable?; end
   def variant(transformations); end
   extend ActiveSupport::Concern
+end
+class ActiveStorage::LogSubscriber < ActiveSupport::LogSubscriber
+end
+class ActiveStorage::Service
+  def content_disposition_with(filename:, type: nil); end
+  def delete(key); end
+  def delete_prefixed(prefix); end
+  def download(key); end
+  def download_chunk(key, range); end
+  def exist?(key); end
+  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
+  def instrument(operation, payload = nil, &block); end
+  def open(*args, **options, &block); end
+  def self.build(configurator:, service: nil, **service_config); end
+  def self.configure(service_name, configurations); end
+  def service_name; end
+  def update_metadata(key, **metadata); end
+  def upload(key, io, checksum: nil, **options); end
+  def url(key, expires_in:, disposition:, filename:, content_type:); end
+  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
+  extend ActiveSupport::Autoload
+end
+class ActiveStorage::Service::Configurator
+  def build(service_name); end
+  def config_for(name); end
+  def configurations; end
+  def initialize(configurations); end
+  def resolve(class_name); end
+  def self.build(service_name, configurations); end
 end
 class ActiveStorage::Service::DiskService < ActiveStorage::Service
   def current_host; end
@@ -497,7 +595,7 @@ class ActiveStorage::Blob < ActiveRecord::Base
   include ActiveStorage::Blob::GeneratedAttributeMethods
   include ActiveStorage::Blob::Identifiable
   include ActiveStorage::Blob::Representable
-  include Anonymous_Module_27
+  include Anonymous_Module_34
   include Kaminari::ActiveRecordModelExtension
   include Kaminari::ConfigurationMethods
 end
@@ -537,7 +635,7 @@ class ActiveStorage::Blob::ActiveRecord_AssociationRelation < ActiveRecord::Asso
   include ActiveRecord::Delegation::ClassSpecificRelation
   include ActiveStorage::Blob::GeneratedRelationMethods
 end
-module Anonymous_Module_27
+module Anonymous_Module_34
   def analyzed; end
   def analyzed=(value); end
   def analyzed_before_last_save; end
@@ -569,10 +667,143 @@ class ActiveStorage::Filename
   def to_s; end
   include Comparable
 end
-class ActiveStorage::BaseJob < ActiveJob::Base
+class ActiveStorage::Variation
+  def initialize(transformations); end
+  def key; end
+  def self.decode(key); end
+  def self.encode(transformations); end
+  def self.wrap(variator); end
+  def transform(file, format: nil, &block); end
+  def transformations; end
+  def transformer; end
 end
-class ActiveStorage::AnalyzeJob < ActiveStorage::BaseJob
-  def perform(blob); end
-  def self.queue_name; end
-  def self.rescue_handlers; end
+module ActiveStorage::Attachment::GeneratedAttributeMethods
+end
+class ActiveStorage::Attachment < ActiveRecord::Base
+  def analyze_blob_later; end
+  def autosave_associated_records_for_blob(*args); end
+  def autosave_associated_records_for_record(*args); end
+  def dependent; end
+  def identify_blob; end
+  def method_missing(method, *args, &block); end
+  def purge; end
+  def purge_dependent_blob_later; end
+  def purge_later; end
+  def respond_to_missing?(name, include_private = nil); end
+  def self.__callbacks; end
+  def self._reflections; end
+  def self._validators; end
+  def self.attribute_type_decorations; end
+  def self.defined_enums; end
+  def self.page(num = nil); end
+  extend Kaminari::ConfigurationMethods::ClassMethods
+  include ActiveStorage::Attachment::GeneratedAssociationMethods
+  include ActiveStorage::Attachment::GeneratedAttributeMethods
+  include Kaminari::ActiveRecordModelExtension
+  include Kaminari::ConfigurationMethods
+end
+module ActiveStorage::Attachment::GeneratedAssociationMethods
+  def blob; end
+  def blob=(value); end
+  def build_blob(*args, &block); end
+  def create_blob!(*args, &block); end
+  def create_blob(*args, &block); end
+  def record; end
+  def record=(value); end
+  def reload_blob; end
+  def reload_record; end
+end
+class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include ActiveStorage::Attachment::GeneratedRelationMethods
+end
+module ActiveStorage::Attachment::GeneratedRelationMethods
+end
+class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include ActiveStorage::Attachment::GeneratedRelationMethods
+end
+class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  extend ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+  include ActiveRecord::Delegation::ClassSpecificRelation
+  include ActiveStorage::Attachment::GeneratedRelationMethods
+end
+class ActiveStorage::Current < ActiveSupport::CurrentAttributes
+  def self.host; end
+  def self.host=(attribute); end
+  include Anonymous_Module_35
+end
+module Anonymous_Module_35
+  def host; end
+  def host=(attribute); end
+end
+class ActiveStorage::Preview
+  def blob; end
+  def image; end
+  def initialize(blob, variation_or_variation_key); end
+  def previewer; end
+  def previewer_class; end
+  def process; end
+  def processed; end
+  def processed?; end
+  def service_url(**options); end
+  def variant; end
+  def variation; end
+end
+class ActiveStorage::Preview::UnprocessedError < StandardError
+end
+class ActiveStorage::Attached::Changes::CreateOne
+  def attachable; end
+  def attachment; end
+  def blob; end
+  def build_attachment; end
+  def find_attachment; end
+  def find_or_build_attachment; end
+  def find_or_build_blob; end
+  def initialize(name, record, attachable); end
+  def name; end
+  def record; end
+  def save; end
+  def upload; end
+end
+class ActiveStorage::Attached::Changes::CreateMany
+  def assign_associated_attachments; end
+  def attachables; end
+  def attachments; end
+  def blobs; end
+  def build_subchange_from(attachable); end
+  def initialize(name, record, attachables); end
+  def name; end
+  def record; end
+  def reset_associated_blobs; end
+  def save; end
+  def subchanges; end
+  def upload; end
+end
+class ActiveStorage::Attached::Changes::CreateOneOfMany < ActiveStorage::Attached::Changes::CreateOne
+  def find_attachment; end
+end
+class ActiveStorage::Attached::Changes::DeleteOne
+  def attachment; end
+  def initialize(name, record); end
+  def name; end
+  def record; end
+  def save; end
+end
+class ActiveStorage::Attached::Changes::DeleteMany
+  def attachables; end
+  def attachments; end
+  def blobs; end
+  def initialize(name, record); end
+  def name; end
+  def record; end
+  def save; end
+end
+class ActiveStorage::Transformers::Transformer
+  def initialize(transformations); end
+  def process(file, format:); end
+  def transform(file, format:); end
+  def transformations; end
 end

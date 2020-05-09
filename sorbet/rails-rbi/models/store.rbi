@@ -645,11 +645,17 @@ module Store::GeneratedAssociationMethods
   sig { returns(::GamePurchaseStore::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_stores; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_store_ids; end
+
   sig { params(value: T::Enumerable[::GamePurchaseStore]).void }
   def game_purchase_stores=(value); end
 
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_ids; end
 
   sig { params(value: T::Enumerable[::GamePurchase]).void }
   def game_purchases=(value); end

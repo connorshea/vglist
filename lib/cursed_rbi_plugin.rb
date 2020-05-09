@@ -56,12 +56,6 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
       end
 
       if has_many_through_reflections.include?(reflection.class)
-        # def user_ids(); end
-        assoc_module_rbi.create_method(
-          "#{assoc_name.to_s.singularize}_ids",
-          return_type: 'T.untyped'
-        )
-
         # def user_ids=(ids); end
         assoc_module_rbi.create_method(
           "#{assoc_name.to_s.singularize}_ids=",

@@ -933,11 +933,17 @@ module Platform::GeneratedAssociationMethods
   sig { returns(::GamePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_platforms; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_platform_ids; end
+
   sig { params(value: T::Enumerable[::GamePlatform]).void }
   def game_platforms=(value); end
 
   sig { returns(::GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy) }
   def game_purchase_platforms; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_platform_ids; end
 
   sig { params(value: T::Enumerable[::GamePurchasePlatform]).void }
   def game_purchase_platforms=(value); end
@@ -945,11 +951,17 @@ module Platform::GeneratedAssociationMethods
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_purchase_ids; end
+
   sig { params(value: T::Enumerable[::GamePurchase]).void }
   def game_purchases=(value); end
 
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
+
+  sig { returns(T::Array[Integer]) }
+  def game_ids; end
 
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
@@ -983,9 +995,6 @@ module Platform::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end
-
-  sig { returns(T.untyped) }
-  def pg_search_document_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

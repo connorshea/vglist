@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.8
+# graphql-1.10.9
 
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
@@ -1535,6 +1535,9 @@ module GraphQL::Tracing::NullTracer
   def self.trace(k, v); end
   def trace(k, v); end
 end
+module GraphQL::Dig
+  def dig(own_key, *rest_keys); end
+end
 module GraphQL::Execution
 end
 module GraphQL::Execution::DirectiveChecks
@@ -1611,6 +1614,7 @@ class GraphQL::Execution::Interpreter::Arguments
   def keyword_arguments; end
   def values(*args, &block); end
   extend Forwardable
+  include GraphQL::Dig
 end
 class GraphQL::Execution::Interpreter::ArgumentsCache
   def fetch(ast_node, argument_owner, parent_object); end
@@ -1760,9 +1764,6 @@ class GraphQL::Execution::Errors
 end
 class GraphQL::Execution::Errors::NullErrorHandler
   def self.with_error_handling(_ctx); end
-end
-module GraphQL::Dig
-  def dig(own_key, *rest_keys); end
 end
 module Base64Bp
   def self.urlsafe_decode64(str); end
@@ -2870,7 +2871,7 @@ module GraphQL::Schema::LazyHandlingMethods
 end
 class GraphQL::Schema::InvalidDocumentError < GraphQL::Error
 end
-module InvalidName___Class_0x00___ResolveTypeWithType_43
+module InvalidName___Class_0x00___ResolveTypeWithType_58
   def resolve_type(type, obj, ctx); end
 end
 class GraphQL::Schema::CyclicalDefinitionError < GraphQL::Error
