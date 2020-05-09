@@ -74,8 +74,7 @@ namespace :sorbet do
         # Run with CI=true so it doesn't try to pull down external images when
         # running the seed files.
         system('SRB_YES=true CI=true bundle exec srb rbi update')
-        # Delete a Makefile created by a Ruby file in node_modules.
-        FileUtils.rm('Makefile') if File.exist?('Makefile')
+        # Generate Sorbet Rails RBIs.
         system('bundle exec rake rails_rbi:all')
       end
     end
@@ -86,8 +85,6 @@ namespace :sorbet do
         # Run with CI=true so it doesn't try to pull down external images when
         # running the seed files.
         system('SRB_YES=true CI=true bundle exec srb rbi update')
-        # Delete a Makefile created by a Ruby file in node_modules.
-        FileUtils.rm('Makefile') if File.exist?('Makefile')
       end
     end
 
@@ -102,8 +99,6 @@ namespace :sorbet do
     task hidden: :environment do
       Bundler.with_unbundled_env do
         system('bundle exec srb rbi hidden-definitions')
-        # Delete a Makefile created by a Ruby file in node_modules.
-        FileUtils.rm('Makefile') if File.exist?('Makefile')
       end
     end
 
