@@ -306,9 +306,9 @@ module GeneratedUrlHelpers
   def self._routes; end
   def self.default_url_options=(obj); end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_42
+  include Anonymous_Module_57
 end
-module Anonymous_Module_42
+module Anonymous_Module_57
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end

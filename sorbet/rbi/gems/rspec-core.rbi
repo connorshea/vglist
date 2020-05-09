@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-core/all/rspec-core.rbi
 #
-# rspec-core-3.9.1
+# rspec-core-3.9.2
 
 module RSpec
   def self.clear_examples; end
@@ -838,6 +838,7 @@ class RSpec::Core::World
   def descending_declaration_line_numbers_by_file; end
   def everything_filtered_message; end
   def example_count(groups = nil); end
+  def example_group_counts_by_spec_file; end
   def example_groups; end
   def exclusion_filter; end
   def fail_if_config_and_cli_options_invalid; end

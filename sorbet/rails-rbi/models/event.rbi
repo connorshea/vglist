@@ -964,9 +964,6 @@ module Event::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_user; end
 
-  sig { returns(T.untyped) }
-  def user_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def user_ids=(ids); end
 end

@@ -699,6 +699,9 @@ module Series::GeneratedAssociationMethods
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def games; end
 
+  sig { returns(T::Array[Integer]) }
+  def game_ids; end
+
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
@@ -722,9 +725,6 @@ module Series::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end
-
-  sig { returns(T.untyped) }
-  def pg_search_document_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

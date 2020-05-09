@@ -33,7 +33,7 @@ module ActiveRecord::ModelSchema::ClassMethods
   def inheritance_column
   end
 
-  sig { params(value: String).void }
+  sig { params(value: T.nilable(String)).void }
   def inheritance_column=(value)
   end
 

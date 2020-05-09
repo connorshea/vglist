@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/doorkeeper/all/doorkeeper.rbi
 #
-# doorkeeper-5.3.1
+# doorkeeper-5.3.3
 
 module Doorkeeper
   def self.authenticate(request, methods = nil); end
@@ -1059,6 +1059,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   def after_remove_for_authorized_tokens=(val); end
   def after_remove_for_authorized_tokens?; end
   def as_json(options = nil); end
+  def authorized_for_resource_owner?(resource_owner); end
   def autosave_associated_records_for_access_grants(*args); end
   def autosave_associated_records_for_access_tokens(*args); end
   def autosave_associated_records_for_authorized_applications(*args); end
@@ -1088,9 +1089,11 @@ class Doorkeeper::Application < ActiveRecord::Base
   def before_remove_for_authorized_tokens=(val); end
   def before_remove_for_authorized_tokens?; end
   def enforce_scopes?; end
+  def extract_serializable_attributes(options = nil); end
   def generate_secret; end
   def generate_uid; end
   def plaintext_secret; end
+  def read_attribute_for_serialization(key); end
   def renew_secret; end
   def scopes_match_configured; end
   def self.__callbacks; end
@@ -1147,6 +1150,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   def self.before_remove_for_authorized_tokens?; end
   def self.defined_enums; end
   def self.page(num = nil); end
+  def serializable_attributes; end
   def validate_associated_records_for_access_grants(*args); end
   def validate_associated_records_for_access_tokens(*args); end
   def validate_associated_records_for_authorized_applications(*args); end
@@ -1217,10 +1221,10 @@ class Doorkeeper::ApplicationController < ApplicationController
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_44
+  include Anonymous_Module_59
   include Doorkeeper::Helpers::Controller
 end
-module Anonymous_Module_44
+module Anonymous_Module_59
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1259,9 +1263,9 @@ class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def show; end
   def update; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_45
+  include Anonymous_Module_60
 end
-module Anonymous_Module_45
+module Anonymous_Module_60
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1303,9 +1307,9 @@ class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
   def self.middleware_stack; end
   def strategy; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_46
+  include Anonymous_Module_61
 end
-module Anonymous_Module_46
+module Anonymous_Module_61
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1334,9 +1338,104 @@ class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationCont
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_47
+  include Anonymous_Module_62
 end
-module Anonymous_Module_47
+module Anonymous_Module_62
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_25
+  include Anonymous_Module_26
+end
+class Doorkeeper::ApplicationMetalController < ActionController::API
+  def self.__callbacks; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_63
+  include Doorkeeper::Helpers::Controller
+end
+module Anonymous_Module_63
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_25
+  include Anonymous_Module_26
+end
+class Doorkeeper::TokensController < Doorkeeper::ApplicationMetalController
+  def after_successful_authorization; end
+  def authorize_response; end
+  def authorized?; end
+  def before_successful_authorization; end
+  def create; end
+  def introspect; end
+  def revocation_error_response; end
+  def revoke; end
+  def revoke_token; end
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  def strategy; end
+  def token; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_64
+end
+module Anonymous_Module_64
+  def _generate_paths_by_default; end
+  def _routes; end
+  def self._routes; end
+  def self.full_url_for(options); end
+  def self.optimize_routes_generation?; end
+  def self.polymorphic_path(record_or_hash_or_array, options = nil); end
+  def self.polymorphic_url(record_or_hash_or_array, options = nil); end
+  def self.route_for(name, *args); end
+  def self.url_for(options); end
+  def self.url_options; end
+  extend ActiveSupport::Concern
+  extend Anonymous_Module_25
+  extend Anonymous_Module_26
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_25
+  include Anonymous_Module_26
+end
+class Doorkeeper::TokenInfoController < Doorkeeper::ApplicationMetalController
+  def self._helpers; end
+  def self._routes; end
+  def self._wrapper_options; end
+  def self.helpers_path; end
+  def self.middleware_stack; end
+  def show; end
+  include ActionDispatch::Routing::UrlFor
+  include Anonymous_Module_65
+end
+module Anonymous_Module_65
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end

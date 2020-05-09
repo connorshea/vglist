@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-support/all/rspec-support.rbi
 #
-# rspec-support-3.9.2
+# rspec-support-3.9.3
 
 module RSpec
   extend RSpec::Support::Warnings
@@ -58,6 +58,8 @@ module RSpec::Support::Ruby
   def self.mri?; end
   def self.non_mri?; end
   def self.rbx?; end
+  def self.truffleruby?; end
+  def truffleruby?; end
 end
 module RSpec::Support::RubyFeatures
   def caller_locations_supported?; end
@@ -118,11 +120,80 @@ class RSpec::Support::ReentrantMutex
   def initialize; end
   def synchronize; end
 end
+class RSpec::Support::Mutex < Thread::Mutex
+  def self.new; end
+end
 class RSpec::Support::DirectoryMaker
   def self.directory_exists?(dirname); end
   def self.generate_path(stack, part); end
   def self.generate_stack(path); end
   def self.mkdir_p(path); end
+end
+class RSpec::Support::MethodSignature
+  def arbitrary_kw_args?; end
+  def classify_arity(arity = nil); end
+  def classify_parameters; end
+  def could_contain_kw_args?(args); end
+  def description; end
+  def has_kw_args_in?(args); end
+  def initialize(method); end
+  def invalid_kw_args_from(given_kw_args); end
+  def max_non_kw_args; end
+  def min_non_kw_args; end
+  def missing_kw_args_from(given_kw_args); end
+  def non_kw_args_arity_description; end
+  def optional_kw_args; end
+  def required_kw_args; end
+  def unlimited_args?; end
+  def valid_non_kw_args?(positional_arg_count, optional_max_arg_count = nil); end
+end
+class RSpec::Support::MethodSignatureExpectation
+  def empty?; end
+  def expect_arbitrary_keywords; end
+  def expect_arbitrary_keywords=(arg0); end
+  def expect_unlimited_arguments; end
+  def expect_unlimited_arguments=(arg0); end
+  def initialize; end
+  def keywords; end
+  def keywords=(values); end
+  def max_count; end
+  def max_count=(number); end
+  def min_count; end
+  def min_count=(number); end
+end
+class RSpec::Support::BlockSignature < RSpec::Support::MethodSignature
+  def classify_parameters; end
+end
+class RSpec::Support::MethodSignatureVerifier
+  def arbitrary_kw_args?; end
+  def error_message; end
+  def initialize(signature, args = nil); end
+  def invalid_kw_args; end
+  def kw_args; end
+  def max_non_kw_args; end
+  def min_non_kw_args; end
+  def missing_kw_args; end
+  def non_kw_args; end
+  def split_args(*args); end
+  def unlimited_args?; end
+  def valid?; end
+  def valid_non_kw_args?; end
+  def with_expectation(expectation); end
+end
+class RSpec::Support::LooseSignatureVerifier < RSpec::Support::MethodSignatureVerifier
+  def split_args(*args); end
+end
+class RSpec::Support::LooseSignatureVerifier::SignatureWithKeywordArgumentsMatcher
+  def has_kw_args_in?(args); end
+  def initialize(signature); end
+  def invalid_kw_args_from(_kw_args); end
+  def missing_kw_args_from(_kw_args); end
+  def non_kw_args_arity_description; end
+  def valid_non_kw_args?(*args); end
+end
+module RSpec::Support::WithKeywordsWhenNeeded
+  def class_exec(klass, *args, &block); end
+  def self.class_exec(klass, *args, &block); end
 end
 module RSpec::Support::RecursiveConstMethods
   def const_defined_on?(mod, const_name); end
@@ -206,68 +277,6 @@ module RSpec::Support::FuzzyMatcher
   def self.arrays_match?(expected_list, actual_list); end
   def self.hashes_match?(expected_hash, actual_hash); end
   def self.values_match?(expected, actual); end
-end
-class RSpec::Support::MethodSignature
-  def arbitrary_kw_args?; end
-  def classify_arity(arity = nil); end
-  def classify_parameters; end
-  def could_contain_kw_args?(args); end
-  def description; end
-  def has_kw_args_in?(args); end
-  def initialize(method); end
-  def invalid_kw_args_from(given_kw_args); end
-  def max_non_kw_args; end
-  def min_non_kw_args; end
-  def missing_kw_args_from(given_kw_args); end
-  def non_kw_args_arity_description; end
-  def optional_kw_args; end
-  def required_kw_args; end
-  def unlimited_args?; end
-  def valid_non_kw_args?(positional_arg_count, optional_max_arg_count = nil); end
-end
-class RSpec::Support::MethodSignatureExpectation
-  def empty?; end
-  def expect_arbitrary_keywords; end
-  def expect_arbitrary_keywords=(arg0); end
-  def expect_unlimited_arguments; end
-  def expect_unlimited_arguments=(arg0); end
-  def initialize; end
-  def keywords; end
-  def keywords=(values); end
-  def max_count; end
-  def max_count=(number); end
-  def min_count; end
-  def min_count=(number); end
-end
-class RSpec::Support::BlockSignature < RSpec::Support::MethodSignature
-  def classify_parameters; end
-end
-class RSpec::Support::MethodSignatureVerifier
-  def arbitrary_kw_args?; end
-  def error_message; end
-  def initialize(signature, args = nil); end
-  def invalid_kw_args; end
-  def kw_args; end
-  def max_non_kw_args; end
-  def min_non_kw_args; end
-  def missing_kw_args; end
-  def non_kw_args; end
-  def split_args(*args); end
-  def unlimited_args?; end
-  def valid?; end
-  def valid_non_kw_args?; end
-  def with_expectation(expectation); end
-end
-class RSpec::Support::LooseSignatureVerifier < RSpec::Support::MethodSignatureVerifier
-  def split_args(*args); end
-end
-class RSpec::Support::LooseSignatureVerifier::SignatureWithKeywordArgumentsMatcher
-  def has_kw_args_in?(args); end
-  def initialize(signature); end
-  def invalid_kw_args_from(_kw_args); end
-  def missing_kw_args_from(_kw_args); end
-  def non_kw_args_arity_description; end
-  def valid_non_kw_args?(*args); end
 end
 class RSpec::Support::HunkGenerator
   def actual_lines; end

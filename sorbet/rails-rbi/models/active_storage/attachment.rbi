@@ -713,9 +713,6 @@ module ActiveStorage::Attachment::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_blob; end
 
-  sig { returns(T.untyped) }
-  def blob_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def blob_ids=(ids); end
 end

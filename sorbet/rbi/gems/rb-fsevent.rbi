@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rb-fsevent/all/rb-fsevent.rbi
 #
-# rb-fsevent-0.10.3
+# rb-fsevent-0.10.4
 
 module OTNetstring
   def self.encode(obj, string_sep = nil); end

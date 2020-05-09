@@ -8,10 +8,11 @@ class ActionMailer::MailDeliveryJob
       mail_method: T.untyped,
       delivery_method: T.untyped,
       args: T.untyped,
+      kwargs: T.untyped,
       params: T.untyped
     ).void
   end
-  def self.perform_later(mailer, mail_method, delivery_method, args:, params: nil); end
+  def self.perform_later(mailer, mail_method, delivery_method, args:, kwargs: nil, params: nil); end
 
   sig do
     params(
@@ -19,10 +20,11 @@ class ActionMailer::MailDeliveryJob
       mail_method: T.untyped,
       delivery_method: T.untyped,
       args: T.untyped,
+      kwargs: T.untyped,
       params: T.untyped
     ).void
   end
-  def self.perform_now(mailer, mail_method, delivery_method, args:, params: nil); end
+  def self.perform_now(mailer, mail_method, delivery_method, args:, kwargs: nil, params: nil); end
 
   sig do
     params(

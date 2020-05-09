@@ -659,9 +659,6 @@ module GameEngine::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_engine; end
 
-  sig { returns(T.untyped) }
-  def engine_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def engine_ids=(ids); end
 end

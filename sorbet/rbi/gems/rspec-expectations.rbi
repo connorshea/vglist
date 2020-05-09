@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-expectations/all/rspec-expectations.rbi
 #
-# rspec-expectations-3.9.1
+# rspec-expectations-3.9.2
 
 module RSpec
 end
@@ -345,7 +345,7 @@ end
 module RSpec::Expectations::Configuration::NullBacktraceFormatter
   def self.format_backtrace(backtrace); end
 end
-class InvalidName___Class_0x00___Differ_50
+class InvalidName___Class_0x00___Differ_68
 end
 module RSpec::Expectations::ExpectationHelper
   def self.check_message(msg); end
@@ -796,7 +796,7 @@ class RSpec::Matchers::BuiltIn::Exist < RSpec::Matchers::BuiltIn::BaseMatcher
   def initialize(*expected); end
   def matches?(actual); end
 end
-class Anonymous_Struct_51 < Struct
+class Anonymous_Struct_69 < Struct
   def actual; end
   def actual=(_); end
   def expected; end
@@ -806,7 +806,7 @@ class Anonymous_Struct_51 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class RSpec::Matchers::BuiltIn::Exist::ExistenceTest < Anonymous_Struct_51
+class RSpec::Matchers::BuiltIn::Exist::ExistenceTest < Anonymous_Struct_69
   def actual_exists?; end
   def deprecated(predicate, actual); end
   def existence_values; end
@@ -959,7 +959,7 @@ module RSpec::Matchers::BuiltIn::CaptureStderr
   def self.capture(block); end
   def self.name; end
 end
-class Anonymous_Struct_52 < Struct
+class Anonymous_Struct_70 < Struct
   def name; end
   def name=(_); end
   def self.[](*arg0); end
@@ -969,7 +969,7 @@ class Anonymous_Struct_52 < Struct
   def stream; end
   def stream=(_); end
 end
-class RSpec::Matchers::BuiltIn::CaptureStreamToTempfile < Anonymous_Struct_52
+class RSpec::Matchers::BuiltIn::CaptureStreamToTempfile < Anonymous_Struct_70
   def capture(block); end
 end
 class RSpec::Matchers::BuiltIn::RaiseError
@@ -1069,6 +1069,7 @@ end
 class RSpec::Matchers::BuiltIn::YieldControl < RSpec::Matchers::BuiltIn::BaseMatcher
   def at_least(number); end
   def at_most(number); end
+  def count_constraint_to_number(n); end
   def does_not_match?(block); end
   def exactly(number); end
   def failure_message; end

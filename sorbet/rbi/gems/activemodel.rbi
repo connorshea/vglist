@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activemodel/all/activemodel.rbi
 #
-# activemodel-6.0.2.2
+# activemodel-6.0.3
 
 module ActiveModel
   def self.eager_load!; end
@@ -397,7 +397,7 @@ class ActiveModel::Type::Integer < ActiveModel::Type::Value
   def cast_value(value); end
   def deserialize(value); end
   def ensure_in_range(value); end
-  def initialize(*arg0); end
+  def initialize(*arg0, **arg1); end
   def max_value; end
   def min_value; end
   def range; end
@@ -504,7 +504,7 @@ end
 class ActiveModel::Type::Registry
   def find_registration(symbol, *args); end
   def initialize; end
-  def lookup(symbol, *args); end
+  def lookup(symbol, *args, **kwargs); end
   def register(type_name, klass = nil, **options, &block); end
   def registration_klass; end
   def registrations; end

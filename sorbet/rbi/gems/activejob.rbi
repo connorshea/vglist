@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activejob/all/activejob.rbi
 #
-# activejob-6.0.2.2
+# activejob-6.0.3
 
 module ActiveJob
   def self.gem_version; end
@@ -172,6 +172,11 @@ module ActiveJob::Arguments
   def serialized_global_id?(hash); end
   def transform_symbol_keys(hash, symbol_keys); end
   extend ActiveJob::Arguments
+end
+class Hash
+  def self._ruby2_keywords_hash(*args); end
+  def self.ruby2_keywords_hash(hash); end
+  def self.ruby2_keywords_hash?(hash); end
 end
 module ActiveJob::Enqueuing
   def enqueue(options = nil); end

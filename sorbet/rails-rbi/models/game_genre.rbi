@@ -659,9 +659,6 @@ module GameGenre::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def reload_genre; end
 
-  sig { returns(T.untyped) }
-  def genre_ids; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def genre_ids=(ids); end
 end

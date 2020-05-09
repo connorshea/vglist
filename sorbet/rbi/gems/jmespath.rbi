@@ -379,7 +379,7 @@ class JMESPath::Runtime
   def parser; end
   def search(expression, data); end
 end
-class Anonymous_Struct_84 < Struct
+class Anonymous_Struct_105 < Struct
   def binding_power; end
   def binding_power=(_); end
   def position; end
@@ -393,7 +393,7 @@ class Anonymous_Struct_84 < Struct
   def value; end
   def value=(_); end
 end
-class JMESPath::Token < Anonymous_Struct_84
+class JMESPath::Token < Anonymous_Struct_105
   def initialize(type, value, position); end
 end
 class JMESPath::TokenStream

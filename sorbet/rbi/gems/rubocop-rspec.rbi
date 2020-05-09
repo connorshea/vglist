@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rspec/all/rubocop-rspec.rbi
 #
-# rubocop-rspec-1.38.1
+# rubocop-rspec-1.39.0
 
 module RuboCop
 end
@@ -43,16 +43,13 @@ class RuboCop::RSpec::Wording
   def text; end
   def uppercase?(word); end
 end
-module RuboCop::RSpec::Util
-  def one(array); end
-end
-class RuboCop::RSpec::Util::SizeError < IndexError
-end
 module RuboCop::RSpec::Language
 end
 class RuboCop::RSpec::Language::SelectorSet
   def +(other); end
   def ==(other); end
+  def block_or_block_pass_pattern; end
+  def block_pass_pattern; end
   def block_pattern; end
   def include?(selector); end
   def initialize(selectors); end
@@ -213,6 +210,21 @@ module RuboCop::RSpec::BlankLineSeparation
   include RuboCop::Cop::RangeHelp
   include RuboCop::RSpec::FinalEndLocation
 end
+module RuboCop::RSpec::Corrector
+end
+class RuboCop::RSpec::Corrector::MoveNode
+  def corrector; end
+  def initialize(node, corrector, processed_source); end
+  def move_after(other); end
+  def move_before(other); end
+  def node_range(node); end
+  def node_range_with_surrounding_space(node); end
+  def original; end
+  def processed_source; end
+  def source(node); end
+  include RuboCop::Cop::RangeHelp
+  include RuboCop::RSpec::FinalEndLocation
+end
 module RuboCop::Cop::RSpec::Capybara
 end
 class RuboCop::Cop::RSpec::Capybara::CurrentPathExpectation < RuboCop::Cop::RSpec::Cop
@@ -235,6 +247,11 @@ class RuboCop::Cop::RSpec::Capybara::FeatureMethods < RuboCop::Cop::RSpec::Cop
   def root_node?(node); end
   def root_with_siblings?(node); end
   def spec?(node = nil); end
+end
+class RuboCop::Cop::RSpec::Capybara::VisibilityMatcher < RuboCop::Cop::RSpec::Cop
+  def on_send(node); end
+  def visible_false?(node = nil); end
+  def visible_true?(node = nil); end
 end
 module RuboCop::Cop::RSpec::FactoryBot
 end
@@ -372,16 +389,16 @@ class RuboCop::Cop::RSpec::ContextWording < RuboCop::Cop::RSpec::Cop
 end
 class RuboCop::Cop::RSpec::DescribeClass < RuboCop::Cop::RSpec::Cop
   def describe_with_rails_metadata?(node = nil); end
-  def on_top_level_describe(node, args); end
+  def on_top_level_describe(node, arg1); end
   def rails_metadata?(node = nil); end
   def shared_group?(node = nil); end
+  def string_constant_describe?(described_value); end
   def valid_describe?(node = nil); end
   include RuboCop::RSpec::TopLevelDescribe
 end
 class RuboCop::Cop::RSpec::DescribeMethod < RuboCop::Cop::RSpec::Cop
   def on_top_level_describe(_node, arg1); end
   include RuboCop::RSpec::TopLevelDescribe
-  include RuboCop::RSpec::Util
 end
 class RuboCop::Cop::RSpec::DescribeSymbol < RuboCop::Cop::RSpec::Cop
   def describe_symbol?(node = nil); end
@@ -424,6 +441,12 @@ class RuboCop::Cop::RSpec::EmptyExampleGroup < RuboCop::Cop::RSpec::Cop
   def custom_include?(method_name); end
   def custom_include_methods; end
   def on_block(node); end
+end
+class RuboCop::Cop::RSpec::EmptyHook < RuboCop::Cop::RSpec::Cop
+  def autocorrect(node); end
+  def empty_hook?(node = nil); end
+  def on_block(node); end
+  include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::RSpec::EmptyLineAfterExample < RuboCop::Cop::RSpec::Cop
   def allow_consecutive_one_liners?; end
@@ -542,12 +565,7 @@ class RuboCop::Cop::RSpec::HooksBeforeExamples < RuboCop::Cop::RSpec::Cop
   def example_or_group?(node = nil); end
   def find_first_example(node); end
   def multiline_block?(block); end
-  def node_range(node); end
-  def node_range_with_surrounding_space(node); end
   def on_block(node); end
-  def source(node); end
-  include RuboCop::Cop::RangeHelp
-  include RuboCop::RSpec::FinalEndLocation
 end
 class RuboCop::Cop::RSpec::ImplicitBlockExpectation < RuboCop::Cop::RSpec::Cop
   def find_subject(block_node); end
@@ -617,10 +635,8 @@ class RuboCop::Cop::RSpec::LeadingSubject < RuboCop::Cop::RSpec::Cop
   def check_previous_nodes(node); end
   def find_first_offending_node(node); end
   def in_spec_block?(node); end
-  def node_range(node); end
   def offending?(node); end
   def on_block(node); end
-  include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::RSpec::LeakyConstantDeclaration < RuboCop::Cop::RSpec::Cop
   def in_example_or_shared_group?(node = nil); end
@@ -635,12 +651,7 @@ class RuboCop::Cop::RSpec::LetBeforeExamples < RuboCop::Cop::RSpec::Cop
   def example_or_group?(node = nil); end
   def find_first_example(node); end
   def multiline_block?(block); end
-  def node_range(node); end
-  def node_range_with_surrounding_space(node); end
   def on_block(node); end
-  def source(node); end
-  include RuboCop::Cop::RangeHelp
-  include RuboCop::RSpec::FinalEndLocation
 end
 class RuboCop::Cop::RSpec::LetSetup < RuboCop::Cop::RSpec::Cop
   def let_bang(node0); end
@@ -855,7 +866,9 @@ class RuboCop::Cop::RSpec::ReturnFromStub::BlockBodyCorrector
   def node; end
 end
 class RuboCop::Cop::RSpec::ScatteredLet < RuboCop::Cop::RSpec::Cop
+  def autocorrect(node); end
   def check_let_declarations(body); end
+  def find_first_let(node); end
   def on_block(node); end
 end
 class RuboCop::Cop::RSpec::ScatteredSetup < RuboCop::Cop::RSpec::Cop

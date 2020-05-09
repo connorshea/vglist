@@ -123,13 +123,13 @@ module Polyfill::V2_4::Enumerable
   def sum(init = nil); end
   def uniq; end
 end
-module Polyfill::Module::M70283873295760
+module Polyfill::Module::M70092549018040
 end
 module Polyfill::V2_4::Array
   def concat(*others); end
   def sum(init = nil); end
 end
-module Polyfill::Module::M70283869563260
+module Polyfill::Module::M70092551602820
 end
 module Polyfill::V2_4::Comparable
   def clamp(min, max); end
@@ -145,7 +145,7 @@ module Polyfill::V2_4::Enumerator::Lazy
   def chunk_while; end
   def uniq; end
 end
-module Polyfill::Module::M70283870006960
+module Polyfill::Module::M70092557813600
 end
 module Polyfill::V2_4::File
 end
@@ -257,7 +257,7 @@ module Polyfill::V2_5::Integer
   def round(*arg0); end
   def truncate(*arg0); end
 end
-module Polyfill::Module::M70283873935200
+module Polyfill::Module::M70092558551300
 end
 module Polyfill::V2_5::Integer::ClassMethods
   def sqrt(n); end
@@ -317,7 +317,7 @@ module Polyfill::V2_6::Kernel
   def Rational(*args, exception: nil); end
   def then; end
 end
-module Polyfill::Module::M70283871017800
+module Polyfill::Module::M70092552255240
 end
 module Polyfill::V2_6::OpenStruct
   def to_h; end

@@ -878,6 +878,9 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
   sig { returns(::ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy) }
   def attachments; end
 
+  sig { returns(T::Array[Integer]) }
+  def attachment_ids; end
+
   sig { params(value: T::Enumerable[::ActiveStorage::Attachment]).void }
   def attachments=(value); end
 
@@ -910,9 +913,6 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_preview_image_attachment; end
-
-  sig { returns(T.untyped) }
-  def preview_image_blob_ids; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def preview_image_blob_ids=(ids); end

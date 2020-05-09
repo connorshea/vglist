@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionmailer/all/actionmailer.rbi
 #
-# actionmailer-6.0.2.2
+# actionmailer-6.0.3
 
 module ActionMailer
   def self.eager_load!; end
@@ -59,7 +59,6 @@ end
 class ActionMailer::MessageDelivery < Delegator
   def __getobj__; end
   def __setobj__(mail_message); end
-  def arguments_for(delivery_job, delivery_method); end
   def deliver_later!(options = nil); end
   def deliver_later(options = nil); end
   def deliver_now!; end
@@ -85,7 +84,6 @@ class ActionMailer::Parameterized::DeliveryJob < ActionMailer::DeliveryJob
   def perform(mailer, mail_method, delivery_method, params, *args); end
 end
 class ActionMailer::Parameterized::MessageDelivery < ActionMailer::MessageDelivery
-  def arguments_for(delivery_job, delivery_method); end
   def delivery_job_class; end
   def enqueue_delivery(delivery_method, options = nil); end
   def initialize(mailer_class, action, params, *args); end
@@ -137,7 +135,7 @@ end
 class ActionMailer::MailDeliveryJob < ActiveJob::Base
   def handle_exception_with_mailer_class(exception); end
   def mailer_class; end
-  def perform(mailer, mail_method, delivery_method, args:, params: nil); end
+  def perform(mailer, mail_method, delivery_method, args:, kwargs: nil, params: nil); end
   def self.queue_name; end
   def self.rescue_handlers; end
 end
@@ -364,7 +362,7 @@ class ActionMailer::Base < AbstractController::Base
   extend ActiveSupport::Callbacks::ClassMethods
   extend ActiveSupport::DescendantsTracker
   extend ActiveSupport::Rescuable::ClassMethods
-  extend Anonymous_Module_28
+  extend Anonymous_Module_36
   include AbstractController::AssetPaths
   include AbstractController::Caching
   include AbstractController::Caching::Fragments
@@ -400,6 +398,6 @@ class ActionMailer::Base::LateAttachmentsProxy < SimpleDelegator
   def _raise_error; end
   def inline; end
 end
-module Anonymous_Module_28
+module Anonymous_Module_36
   def inherited(klass); end
 end
