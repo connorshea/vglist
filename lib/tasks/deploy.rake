@@ -2,7 +2,7 @@
 namespace :deploy do
   desc "Deploys the latest code from the master branch into production"
   task production: :environment do
-    Bundler.with_clean_env do
+    Bundler.with_unbundled_env do
       # Pull down latest code.
       puts
       puts "Pulling down the latest code from master..."
