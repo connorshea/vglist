@@ -1,4 +1,4 @@
-image: "registry.gitlab.com/connorshea/videogamelist:latest"
+image: "registry.gitlab.com/connorshea/vglist:latest"
 
 services:
   - postgres:11

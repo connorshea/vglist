@@ -90,9 +90,9 @@ Docker isn't currently used for development, you can just run the application "n
 To update the Docker container used by GitLab CI:
 
 - Log into the GitLab CI Docker registry with `docker login registry.gitlab.com` (you'll need to use a Personal Access Token as your password).
-- Build the container with `docker build -f Dockerfile.ci -t registry.gitlab.com/connorshea/videogamelist .`
+- Build the container with `docker build -f Dockerfile.ci -t registry.gitlab.com/connorshea/vglist .`
   - You may want to add `--no-cache` to fully rebuild the container from scratch.
-- Then use `docker push registry.gitlab.com/connorshea/videogamelist` to push the container to the GitLab Container Registry.
+- Then use `docker push registry.gitlab.com/connorshea/vglist` to push the container to the GitLab Container Registry.
 
 ## Design Document
 
