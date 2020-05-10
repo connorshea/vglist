@@ -86,7 +86,10 @@ namespace 'import:wikidata' do
           game_hash[name].uniq!
         end
 
-        # Grab the earliest release date that we can actually parse
+        # Grab the earliest release date that we can actually parse. It's done
+        # this way to prevent bad release dates from being used if Wikidata
+        # returns a date like "June 2019", which is represented as "2019-06-00",
+        # an invalid date.
         release_date = wikidata_json.dig('P577')&.map do |date|
           date.dig('mainsnak', 'datavalue', 'value', 'time')
         end&.reject(&:nil?)&.map do |time|
