@@ -307,20 +307,18 @@ namespace 'import:wikidata' do
   # Query based off the query used for https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games/Statistics/Platform
   # The first row is the total count of games with no associations of this type.
   def query(property)
-    sparql = <<-SPARQL
+    <<-SPARQL
       SELECT ?item (COUNT(?game) as ?count) WHERE {
         ?game wdt:P31 wd:Q7889. # Instance of video game
         OPTIONAL { ?game wdt:#{property} ?item. }
       } GROUP BY ?item
       ORDER BY DESC(?count)
     SPARQL
-
-    return sparql
   end
 
   # Return the formatting to use for the progress bar.
   def formatting
-    return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 
   # Convenience method for getting rows from SPARQL.
