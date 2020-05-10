@@ -37,7 +37,7 @@ puts "Creating Games..."
   next unless rand(0..4) != 0
 
   # Add a cover for most games.
-  game&.cover&.attach(
+  game.cover&.attach(
     io: cover_fetcher,
     filename: "#{n}_faker_cover.jpg"
   )
