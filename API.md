@@ -57,7 +57,7 @@ vglist's GraphQL endpoint is available at `https://vglist.co/graphql` (queries m
 
 ## 'Scraping' the vglist Database
 
-If you just want to scrape the database to create something yourself, it'd be much easier (and much nicer for me) if you'd instead just get the data from [Wikidata](https://www.wikidata.org), which is where the vast majority (>95%) of vglist's data originally came from. The Wikidata import scripts I built for vglist are all open source and are available in [the vglist GitHub repository](https://github.com/connorshea/VideoGameList/tree/master/lib/tasks/import). Game covers were mostly retrieved from the kind folks at [PCGamingWiki](https://www.pcgamingwiki.com) and [MobyGames](https://www.mobygames.com/).
+If you just want to scrape the database to create something yourself, it'd be much easier (and much nicer for me) if you'd instead just get the data from [Wikidata](https://www.wikidata.org), which is where the vast majority (>95%) of vglist's data originally came from. The Wikidata import scripts I built for vglist are all open source and are available in [the vglist GitHub repository](https://github.com/connorshea/vglist/tree/master/lib/tasks/import). Game covers were mostly retrieved from the kind folks at [PCGamingWiki](https://www.pcgamingwiki.com) and [MobyGames](https://www.mobygames.com/).
 
 ## Authentication
 
@@ -211,7 +211,7 @@ I intend to add a GraphiQL editor interface to the website for testing API queri
 
 For writing GraphQL queries, the [GraphQL website](https://graphql.org/) should be a sufficient introduction.
 
-You can also find a lot of example queries inside vglist's API test suite, in [`spec/requests/api/`](https://github.com/connorshea/VideoGameList/tree/master/spec/requests/api). Queries are stored in "HEREDOCs" that look like this:
+You can also find a lot of example queries inside vglist's API test suite, in [`spec/requests/api/`](https://github.com/connorshea/vglist/tree/master/spec/requests/api). Queries are stored in "HEREDOCs" that look like this:
 
 ```ruby
 query_string = <<-GRAPHQL
