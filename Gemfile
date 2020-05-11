@@ -69,7 +69,7 @@ gem "sorbet-rails", '~> 0.6'
 gem 'graphql', '~> 1.10.9'
 
 # Doorkeeper for OAuth API tokens
-gem "doorkeeper", "~> 5.3"
+gem "doorkeeper", "~> 5.4"
 
 # SimpleTokenAuthentication for static API tokens
 gem 'simple_token_authentication', '~> 1.17'
