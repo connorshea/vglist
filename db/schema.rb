@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_30_041735) do
+ActiveRecord::Schema.define(version: 2020_05_14_050743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -295,6 +294,32 @@ ActiveRecord::Schema.define(version: 2020_04_30_041735) do
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
     t.index ["wikidata_id"], name: "index_series_on_wikidata_id", unique: true
+  end
+
+  create_table "statistics", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "users", null: false
+    t.integer "games", null: false
+    t.integer "platforms", null: false
+    t.integer "series", null: false
+    t.integer "engines", null: false
+    t.integer "companies", null: false
+    t.integer "genres", null: false
+    t.integer "stores", null: false
+    t.integer "events", null: false
+    t.integer "game_purchases", null: false
+    t.integer "relationships", null: false
+    t.integer "games_with_covers", null: false
+    t.integer "games_with_release_dates", null: false
+    t.integer "banned_users", null: false
+    t.integer "mobygames_ids", null: false
+    t.integer "pcgamingwiki_ids", null: false
+    t.integer "wikidata_ids", null: false
+    t.integer "giantbomb_ids", null: false
+    t.integer "steam_app_ids", null: false
+    t.integer "epic_games_store_ids", null: false
+    t.integer "gog_ids", null: false
   end
 
   create_table "steam_app_ids", force: :cascade do |t|
