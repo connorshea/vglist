@@ -53,6 +53,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def search
+    if params[:query].present?
+      @users = User.search(params[:query]).page(helpers.page_param)
+    else
+      @users = User.none.page(helpers.page_param)
+    end
+
+    authorize nil, policy_class: UserPolicy
+
+    respond_to do |format|
+      format.json { render json: @users }
+    end
+  end
+
   def update_role
     @user = User.friendly.find(params[:id])
     role = params.fetch(:role).to_sym

@@ -199,5 +199,28 @@ RSpec.describe "Users API", type: :request do
         }
       )
     end
+
+    it "returns data for a user when searching" do
+      user
+      query_string = <<-GRAPHQL
+        query($query: String!) {
+          userSearch(query: $query) {
+            nodes {
+              id
+              username
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { query: user.username }, token: access_token)
+
+      expect(result["data"]["userSearch"]["nodes"]).to eq(
+        [{
+          "id" => user.id.to_s,
+          "username" => user.username
+        }]
+      )
+    end
   end
 end

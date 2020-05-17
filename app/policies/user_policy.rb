@@ -24,6 +24,11 @@ class UserPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
+  sig { returns(T::Boolean) }
+  def search?
+    true
+  end
+
   # Rules for updating roles:
   # - The user updating the role must be an admin.
   # - The user can't update their own role.

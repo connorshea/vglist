@@ -31,6 +31,7 @@ Rails.application.routes.draw do
 
   resources :users do
     get :index, on: :collection
+    get :search, on: :collection
     get :show, on: :member
     get :statistics, on: :member
     get :activity, on: :member

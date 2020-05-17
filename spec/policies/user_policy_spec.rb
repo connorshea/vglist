@@ -13,6 +13,7 @@ RSpec.describe UserPolicy, type: :policy do
         [
           :index,
           :show,
+          :search,
           :statistics,
           :compare,
           :activity,
@@ -50,6 +51,7 @@ RSpec.describe UserPolicy, type: :policy do
         [
           :index,
           :show,
+          :search,
           :statistics,
           :compare,
           :activity,
@@ -87,6 +89,7 @@ RSpec.describe UserPolicy, type: :policy do
         [
           :index,
           :show,
+          :search,
           :remove_avatar,
           :statistics,
           :compare,
@@ -124,6 +127,7 @@ RSpec.describe UserPolicy, type: :policy do
         [
           :index,
           :show,
+          :search,
           :update_role,
           :remove_avatar,
           :statistics,
@@ -182,6 +186,7 @@ RSpec.describe UserPolicy, type: :policy do
           :index,
           :show,
           :update,
+          :search,
           :remove_avatar,
           :steam_import,
           :connect_steam,
@@ -219,6 +224,7 @@ RSpec.describe UserPolicy, type: :policy do
           :index,
           :show,
           :update,
+          :search,
           :remove_avatar,
           :steam_import,
           :connect_steam,
@@ -255,6 +261,7 @@ RSpec.describe UserPolicy, type: :policy do
         [
           :index,
           :show,
+          :search,
           :update_role,
           :remove_avatar,
           :statistics,
@@ -287,16 +294,16 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { create(:user) }
     let(:user) { create(:private_user) }
 
-    it { should permit_actions([:index]) }
+    it { should permit_actions([:index, :search]) }
     it "does not permit actions" do
       expect(user_policy).to forbid_actions(
         [
           :show,
+          :update,
           :update_role,
           :remove_avatar,
           :statistics,
           :compare,
-          :update,
           :steam_import,
           :connect_steam,
           :disconnect_steam,
@@ -317,7 +324,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { nil }
     let(:user) { create(:private_user) }
 
-    it { should permit_actions([:index]) }
+    it { should permit_actions([:index, :search]) }
     it "does not permit actions" do
       expect(user_policy).to forbid_actions(
         [
