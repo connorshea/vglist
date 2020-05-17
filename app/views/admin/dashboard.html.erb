@@ -42,4 +42,84 @@
       <% end %>
     </nav>
   </div>
+
+  <h3 class="has-text-centered mt-25 mb-10 has-text-weight-bold">Statistics Over Time</h3>
+  <div class="table-container">
+    <table class="table is-striped is-narrow is-bordered is-fullwidth">
+      <thead>
+        <tr>
+          <th style="min-width: 250px;">Date</th>
+          <th>Users</th>
+          <th>Games</th>
+          <th>Platforms</th>
+          <th>Series</th>
+          <th>Engines</th>
+          <th>Companies</th>
+          <th>Genres</th>
+          <th>Stores</th>
+          <th>Events</th>
+          <th>Game Purchases</th>
+          <th>Relationships</th>
+          <th>Games with covers</th>
+          <th>Games with release dates</th>
+          <th>Banned users</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @statistics.each do |statistic| %>
+          <tr>
+            <td><%= statistic.created_at.strftime("%b %e, %Y %l:%M:%S %p") %></td>
+            <td><%= statistic.users %></td>
+            <td><%= statistic.games %></td>
+            <td><%= statistic.platforms %></td>
+            <td><%= statistic.series %></td>
+            <td><%= statistic.engines %></td>
+            <td><%= statistic.companies %></td>
+            <td><%= statistic.genres %></td>
+            <td><%= statistic.stores %></td>
+            <td><%= statistic.events %></td>
+            <td><%= statistic.game_purchases %></td>
+            <td><%= statistic.relationships %></td>
+            <td><%= statistic.games_with_covers %></td>
+            <td><%= statistic.games_with_release_dates %></td>
+            <td><%= statistic.banned_users %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="has-text-centered mt-15 mb-10 has-text-weight-bold">External IDs Over Time</h3>
+  <div class="table-container">
+    <table class="table is-striped is-narrow is-bordered is-fullwidth">
+      <thead>
+        <tr>
+          <th style="min-width: 250px;">Date</th>
+          <th>MobyGames IDs</th>
+          <th>PCGamingWiki IDs</th>
+          <th>Wikidata IDs</th>
+          <th>GiantBomb IDs</th>
+          <th>Steam App IDs</th>
+          <th>Epic Games Store IDs</th>
+          <th>GOG IDs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @statistics.each do |statistic| %>
+          <tr>
+            <td><%= statistic.created_at.strftime("%b %e, %Y %l:%M:%S %p") %></td>
+            <td><%= statistic.mobygames_ids %></td>
+            <td><%= statistic.pcgamingwiki_ids %></td>
+            <td><%= statistic.wikidata_ids %></td>
+            <td><%= statistic.giantbomb_ids %></td>
+            <td><%= statistic.steam_app_ids %></td>
+            <td><%= statistic.epic_games_store_ids %></td>
+            <td><%= statistic.gog_ids %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= paginate @statistics %>
 </div>

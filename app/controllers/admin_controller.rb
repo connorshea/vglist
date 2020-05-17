@@ -32,6 +32,8 @@ class AdminController < ApplicationController
       epic_games_store_ids: Game.where.not(epic_games_store_id: nil).count,
       gog_ids: Game.where.not(gog_id: nil).count
     }
+
+    @statistics = Statistic.all.reverse_order.page helpers.page_param
   end
 
   def wikidata_blocklist
