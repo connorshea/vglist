@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.18.0
+# rouge-3.19.0
 
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
@@ -613,8 +613,6 @@ end
 class Rouge::Lexers::CSVS < Rouge::RegexLexer
 end
 class Rouge::Lexers::VimL < Rouge::RegexLexer
-  def find_likely_mapping(mapping, word); end
-  def mapping_contains?(mapping, word); end
   def self.keywords; end
 end
 class Rouge::Lexers::CSS < Rouge::RegexLexer
@@ -873,8 +871,10 @@ class Rouge::Lexers::Hack < Rouge::Lexers::PHP
   def self.keywords; end
 end
 class Rouge::Lexers::Apache < Rouge::RegexLexer
-  def name_for_token(token, kwtype, tktype); end
-  def self.keywords; end
+  def name_for_token(token, tktype); end
+  def self.directives; end
+  def self.sections; end
+  def self.values; end
 end
 class Rouge::Lexers::JSX < Rouge::Lexers::Javascript
   def start_embed!; end
