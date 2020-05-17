@@ -23,7 +23,8 @@ FriendlyId.defaults do |config|
                              sign_out sign_up sign_in update_role
                              activity following followers series company
                              companies engine engines user users
-                             favorite favorites platform platforms]
+                             favorite favorites platform platforms
+                             search compare]
 
   # This adds an option to treat reserved words as conflicts rather than exceptions.
   # When there is no good candidate, a UUID will be appended, matching the existing

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.5.17
+### Added
+- Add User search. ([#1249])
+
 ## v2020.5.4
 ### Added
 - Add sorting by most followers and most games to the users page. ([#1218])
@@ -727,3 +731,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1212]: https://github.com/connorshea/vglist/pull/1212
 [#1213]: https://github.com/connorshea/vglist/pull/1213
 [#1218]: https://github.com/connorshea/vglist/pull/1218
+[#1249]: https://github.com/connorshea/vglist/pull/1249

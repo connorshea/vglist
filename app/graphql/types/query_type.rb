@@ -114,6 +114,11 @@ module Types
       description "List all users."
     end
 
+    field :user_search, UserType.connection_type, null: true do
+      description "Find a user by searching based on its username."
+      argument :query, String, required: true, description: "Username to search by."
+    end
+
     field :game_purchase, GamePurchaseType, null: true do
       description "Find a game purchase by ID."
       argument :id, ID, required: true
@@ -135,12 +140,12 @@ module Types
       end
     end
 
-    sig { returns(Game::ActiveRecord_Relation) }
+    sig { returns(Game::RelationType) }
     def games
       Game.all
     end
 
-    sig { params(query: String).returns(Game::ActiveRecord_Relation) }
+    sig { params(query: String).returns(Game::RelationType) }
     def game_search(query:)
       Game.search(query)
     end
@@ -150,12 +155,12 @@ module Types
       Series.find(id)
     end
 
-    sig { returns(Series::ActiveRecord_Relation) }
+    sig { returns(Series::RelationType) }
     def series_list
       Series.all
     end
 
-    sig { params(query: String).returns(Series::ActiveRecord_Relation) }
+    sig { params(query: String).returns(Series::RelationType) }
     def series_search(query:)
       Series.search(query)
     end
@@ -165,12 +170,12 @@ module Types
       Company.find(id)
     end
 
-    sig { returns(Company::ActiveRecord_Relation) }
+    sig { returns(Company::RelationType) }
     def companies
       Company.all
     end
 
-    sig { params(query: String).returns(Company::ActiveRecord_Relation) }
+    sig { params(query: String).returns(Company::RelationType) }
     def company_search(query:)
       Company.search(query)
     end
@@ -180,12 +185,12 @@ module Types
       Platform.find(id)
     end
 
-    sig { returns(Platform::ActiveRecord_Relation) }
+    sig { returns(Platform::RelationType) }
     def platforms
       Platform.all
     end
 
-    sig { params(query: String).returns(Platform::ActiveRecord_Relation) }
+    sig { params(query: String).returns(Platform::RelationType) }
     def platform_search(query:)
       Platform.search(query)
     end
@@ -195,12 +200,12 @@ module Types
       Engine.find(id)
     end
 
-    sig { returns(Engine::ActiveRecord_Relation) }
+    sig { returns(Engine::RelationType) }
     def engines
       Engine.all
     end
 
-    sig { params(query: String).returns(Engine::ActiveRecord_Relation) }
+    sig { params(query: String).returns(Engine::RelationType) }
     def engine_search(query:)
       Engine.search(query)
     end
@@ -210,12 +215,12 @@ module Types
       Genre.find(id)
     end
 
-    sig { returns(Genre::ActiveRecord_Relation) }
+    sig { returns(Genre::RelationType) }
     def genres
       Genre.all
     end
 
-    sig { params(query: String).returns(Genre::ActiveRecord_Relation) }
+    sig { params(query: String).returns(Genre::RelationType) }
     def genre_search(query:)
       Genre.search(query)
     end
@@ -225,12 +230,12 @@ module Types
       Store.find(id)
     end
 
-    sig { returns(Store::ActiveRecord_Relation) }
+    sig { returns(Store::RelationType) }
     def stores
       Store.all
     end
 
-    sig { params(query: String).returns(Store::ActiveRecord_Relation) }
+    sig { params(query: String).returns(Store::RelationType) }
     def store_search(query:)
       Store.search(query)
     end
@@ -246,10 +251,15 @@ module Types
       end
     end
 
-    sig { returns(User::ActiveRecord_Relation) }
+    sig { returns(User::RelationType) }
     def users
       # Exclude banned users from the results.
       User.all.where(banned: false)
+    end
+
+    sig { params(query: String).returns(User::RelationType) }
+    def user_search(query:)
+      User.search(query)
     end
 
     sig { params(id: T.any(String, Integer)).returns(GamePurchase) }
@@ -257,7 +267,7 @@ module Types
       GamePurchase.find(id)
     end
 
-    sig { params(feed_type: String).returns(T.nilable(Event::ActiveRecord_Relation)) }
+    sig { params(feed_type: String).returns(T.nilable(Event::RelationType)) }
     def activity(feed_type: 'following')
       if feed_type == 'global'
         Event.recently_created

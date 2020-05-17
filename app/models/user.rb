@@ -2,6 +2,7 @@
 class User < ApplicationRecord
   extend T::Sig
   extend FriendlyId
+  include PgSearch::Model
 
   after_create :on_user_creation
 
@@ -126,6 +127,16 @@ class User < ApplicationRecord
     content_type: ['image/png', 'image/jpg', 'image/jpeg'],
     size: { less_than: 3.megabytes },
     aspect_ratio: :square
+
+  # Include users in global search.
+  multisearchable against: [:username]
+
+  # Search scope specific to users.
+  pg_search_scope :search,
+    against: [:username],
+    using: {
+      tsearch: { prefix: true }
+    }
 
   # Make sure the user isn't banned when logging in with Devise.
   sig { returns(T.nilable(T::Boolean)) }

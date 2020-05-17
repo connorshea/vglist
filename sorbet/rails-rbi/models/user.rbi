@@ -78,6 +78,7 @@ class User < ApplicationRecord
   include User::GeneratedAttributeMethods
   include User::GeneratedAssociationMethods
   extend User::CustomFinderMethods
+  extend PgSearch::Model::ClassMethods
   extend User::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(User::ActiveRecord_Relation, User::ActiveRecord_Associations_CollectionProxy, User::ActiveRecord_AssociationRelation) }
 
@@ -1268,6 +1269,84 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_avatar_blob(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_pg_search_document=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_pg_search_document; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_pg_search_document?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_pg_search_document=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_pg_search_document(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_pg_search_document(*args); end
 end
 
 module User::QueryMethodsReturningRelation
@@ -3004,6 +3083,12 @@ module User::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::Relationship]).void }
   def passive_relationships=(value); end
 
+  sig { returns(T.nilable(T.untyped)) }
+  def pg_search_document; end
+
+  sig { params(value: T.nilable(T.untyped)).void }
+  def pg_search_document=(value); end
+
   sig { returns(::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy) }
   def wikidata_blocklists; end
 
@@ -3087,6 +3172,21 @@ module User::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def avatar_blob_ids=(ids); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def build_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  def create_pg_search_document!(*args, &block); end
+
+  sig { returns(T.untyped) }
+  def reload_pg_search_document; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def pg_search_document_ids=(ids); end
 end
 
 class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy

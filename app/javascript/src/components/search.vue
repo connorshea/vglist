@@ -35,8 +35,8 @@
                 result.searchable_id
           }">
           <div class="media">
-            <figure class="media-left image is-48x48" v-if="type === 'Game'">
-              <img :src="result.cover_url" width='48px' height='48px' class="game-cover">
+            <figure class="media-left image is-48x48" v-if="type === 'Game' || type === 'User'">
+              <img :src="result.image_url" width='48px' height='48px' class="game-cover">
             </figure>
             <div class="media-content">
               <p v-if="type === 'Game'" class="has-text-weight-semibold">{{ result.content }}</p>
@@ -78,7 +78,8 @@ export default {
         Company: 'companies',
         Platform: 'platforms',
         Engine: 'engines',
-        Genre: 'genres'
+        Genre: 'genres',
+        User: 'users'
       },
       activeSearchResult: -1
     };
@@ -162,9 +163,9 @@ export default {
           return true;
         }
         betterSearchResults[key].map(result => {
-          result.url = `/${this.plurals[result.searchable_type]}/${
-            result.searchable_id
-          }`;
+          // Use the username in the URL if it's a user.
+          let url_key = result.searchable_type === 'User' ? result.content : result.searchable_id;
+          result.url = `/${this.plurals[result.searchable_type]}/${url_key}`;
           return result;
         });
       });

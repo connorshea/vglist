@@ -486,4 +486,27 @@ RSpec.describe "Users", type: :request do
       expect(response.body).to include("#{user.username} was successfully unbanned.")
     end
   end
+
+  describe "GET search_users_path" do
+    let(:user1) { create(:confirmed_user) }
+    let(:user2) { create(:confirmed_user) }
+
+    it "returns the given user" do
+      sign_in(user1)
+      get search_users_path(query: user2.username, format: :json)
+      expect(JSON.parse(response.body).first.to_json).to eq(user2.to_json)
+    end
+
+    it "returns no user" do
+      sign_in(user1)
+      get search_users_path(query: SecureRandom.alphanumeric(8), format: :json)
+      expect(response.body).to eq("[]")
+    end
+
+    it "returns no user when no query is given" do
+      sign_in(user1)
+      get search_users_path(format: :json)
+      expect(response.body).to eq("[]")
+    end
+  end
 end

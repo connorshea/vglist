@@ -11161,6 +11161,10 @@ class Hash
   def update(*_); end
 end
 
+class Hash
+  def self.try_convert(_); end
+end
+
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
 
 module I18n
@@ -26203,6 +26207,7 @@ class User
   include ::Devise::Models::Trackable
   include ::FriendlyId::Slugged
   include ::FriendlyId::Finders
+  include ::PgSearch::Multisearchable
   def current_password(); end
 
   def devise_modules(); end
@@ -26214,6 +26219,12 @@ class User
   def password_confirmation(); end
 
   def password_confirmation=(password_confirmation); end
+
+  def pg_search_multisearchable_options(); end
+
+  def pg_search_multisearchable_options=(val); end
+
+  def pg_search_multisearchable_options?(); end
 end
 
 class User::ActiveRecord_AssociationRelation
@@ -26316,9 +26327,17 @@ class User
 
   def self.not_public_account(*args); end
 
+  def self.pg_search_multisearchable_options(); end
+
+  def self.pg_search_multisearchable_options=(val); end
+
+  def self.pg_search_multisearchable_options?(); end
+
   def self.private_account(*args); end
 
   def self.public_account(*args); end
+
+  def self.search(*args); end
 
   def self.with_attached_avatar(*args); end
 end
