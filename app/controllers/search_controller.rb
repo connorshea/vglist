@@ -6,7 +6,7 @@ class SearchController < ApplicationController
     # A list of the types of records which can be returned in the multisearch.
     # Intentionally ordered so the most important types come first.
     @searchable_types = %w[
-      Game Series Company Platform Engine Genre
+      Game Series Company Platform Engine Genre User
     ]
   end
 end
