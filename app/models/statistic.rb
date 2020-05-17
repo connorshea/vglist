@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 class Statistic < ApplicationRecord
   validates :users, numericality: true
   validates :games, numericality: true

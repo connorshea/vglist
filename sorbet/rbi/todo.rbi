@@ -38,6 +38,7 @@ module Anonymous_Module_50::Anonymous_Module_25; end
 module Anonymous_Module_57::Anonymous_Module_25; end
 module Anonymous_Module_57::Anonymous_Module_26; end
 module Doorkeeper::Models::Ownership; end
+module Doorkeeper::OAuth::Helpers; end
 module Doorkeeper::Rails::Helpers; end
 module Doorkeeper::Rails::Routes::Helper; end
 module OrmAdapter::ActiveRecord::ToAdapter; end

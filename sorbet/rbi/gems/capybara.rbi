@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
-# capybara-3.32.1
+# capybara-3.32.2
 
 module Capybara
   def self.HTML(html); end
