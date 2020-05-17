@@ -11,19 +11,19 @@ RSpec.describe "Search", type: :request do
       expect(JSON.parse(response.body)['Series'].first).to include(expected_response)
     end
 
-    it "returns no series" do
+    it "returns no item when given a random string" do
       get search_path(query: SecureRandom.alphanumeric(8), format: :json)
       expected_response = {}
-      %w[Game Series Company Platform Engine Genre].each do |type|
+      %w[Game Series Company Platform Engine Genre User].each do |type|
         expected_response[type] = []
       end
       expect(response.body).to eq(expected_response.to_json)
     end
 
-    it "returns no series when no query is given" do
+    it "returns no items when no query is given" do
       get search_path(format: :json)
       expected_response = {}
-      %w[Game Series Company Platform Engine Genre].each do |type|
+      %w[Game Series Company Platform Engine Genre User].each do |type|
         expected_response[type] = []
       end
       expect(response.body).to eq(expected_response.to_json)
