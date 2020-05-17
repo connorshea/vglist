@@ -10532,10 +10532,6 @@ module GeneratedUrlHelpers
   def rails_mailers_path(*args); end
 
   def rails_mailers_url(*args); end
-
-  def search_users_path(*args); end
-
-  def search_users_url(*args); end
 end
 
 class Genre
