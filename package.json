@@ -8,7 +8,7 @@
     "@rails/webpacker": "5.1.1",
     "@sentry/browser": "5.15.5",
     "@types/node": "^13.5.0",
-    "babel-preset-typescript-vue": "^1.0.4",
+    "babel-preset-typescript-vue": "^1.1.1",
     "bulma": "0.8.2",
     "lodash": "^4.17.15",
     "resolve-url-loader": "^3.1.1",
