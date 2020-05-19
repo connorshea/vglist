@@ -114,6 +114,15 @@ class GamePurchasePlatform < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_platform(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 module GamePurchasePlatform::QueryMethodsReturningRelation
@@ -216,14 +225,17 @@ module GamePurchasePlatform::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: GamePurchasePlatform::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[GamePurchasePlatform::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module GamePurchasePlatform::QueryMethodsReturningAssociationRelation
@@ -326,6 +338,41 @@ module GamePurchasePlatform::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: GamePurchasePlatform::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[GamePurchasePlatform::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
+  include GamePurchasePlatform::ActiveRelation_WhereNot
+  include GamePurchasePlatform::CustomFinderMethods
+  include GamePurchasePlatform::QueryMethodsReturningRelation
+  Elem = type_member(fixed: GamePurchasePlatform)
+
+  sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class GamePurchasePlatform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include GamePurchasePlatform::ActiveRelation_WhereNot
+  include GamePurchasePlatform::CustomFinderMethods
+  include GamePurchasePlatform::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: GamePurchasePlatform)
+
   sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -334,20 +381,6 @@ module GamePurchasePlatform::QueryMethodsReturningAssociationRelation
 
   sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
   def padding(num); end
-end
-
-class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
-  include GamePurchasePlatform::ActiveRelation_WhereNot
-  include GamePurchasePlatform::CustomFinderMethods
-  include GamePurchasePlatform::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GamePurchasePlatform)
-end
-
-class GamePurchasePlatform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include GamePurchasePlatform::ActiveRelation_WhereNot
-  include GamePurchasePlatform::CustomFinderMethods
-  include GamePurchasePlatform::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchasePlatform)
 end
 
 module GamePurchasePlatform::GeneratedAttributeMethods
@@ -679,4 +712,13 @@ class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRe
 
   sig { params(records: T.any(GamePurchasePlatform, T::Array[GamePurchasePlatform])).returns(T.self_type) }
   def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end

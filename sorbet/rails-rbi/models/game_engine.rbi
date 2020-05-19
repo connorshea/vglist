@@ -114,6 +114,15 @@ class GameEngine < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_engine(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(GameEngine::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GameEngine::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GameEngine::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 module GameEngine::QueryMethodsReturningRelation
@@ -216,14 +225,17 @@ module GameEngine::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameEngine::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(GameEngine::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GameEngine::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(GameEngine::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: GameEngine::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[GameEngine::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module GameEngine::QueryMethodsReturningAssociationRelation
@@ -326,6 +338,41 @@ module GameEngine::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameEngine::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: GameEngine::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[GameEngine::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+class GameEngine::ActiveRecord_Relation < ActiveRecord::Relation
+  include GameEngine::ActiveRelation_WhereNot
+  include GameEngine::CustomFinderMethods
+  include GameEngine::QueryMethodsReturningRelation
+  Elem = type_member(fixed: GameEngine)
+
+  sig { params(num: T.nilable(Integer)).returns(GameEngine::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GameEngine::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GameEngine::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class GameEngine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include GameEngine::ActiveRelation_WhereNot
+  include GameEngine::CustomFinderMethods
+  include GameEngine::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: GameEngine)
+
   sig { params(num: T.nilable(Integer)).returns(GameEngine::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -334,20 +381,6 @@ module GameEngine::QueryMethodsReturningAssociationRelation
 
   sig { params(num: Integer).returns(GameEngine::ActiveRecord_AssociationRelation) }
   def padding(num); end
-end
-
-class GameEngine::ActiveRecord_Relation < ActiveRecord::Relation
-  include GameEngine::ActiveRelation_WhereNot
-  include GameEngine::CustomFinderMethods
-  include GameEngine::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GameEngine)
-end
-
-class GameEngine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include GameEngine::ActiveRelation_WhereNot
-  include GameEngine::CustomFinderMethods
-  include GameEngine::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GameEngine)
 end
 
 module GameEngine::GeneratedAttributeMethods
@@ -679,4 +712,13 @@ class GameEngine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Asso
 
   sig { params(records: T.any(GameEngine, T::Array[GameEngine])).returns(T.self_type) }
   def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(GameEngine::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GameEngine::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GameEngine::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end

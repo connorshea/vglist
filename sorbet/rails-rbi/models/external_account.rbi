@@ -50,6 +50,12 @@ class ExternalAccount < ApplicationRecord
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.account_types; end
 
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
+  def self.not_steam(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
+  def self.steam(*args); end
+
   sig { returns(ExternalAccount::AccountType) }
   def typed_account_type; end
 
@@ -61,15 +67,95 @@ class ExternalAccount < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_user(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
-module ExternalAccount::QueryMethodsReturningRelation
+class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
+  include ExternalAccount::ActiveRelation_WhereNot
+  include ExternalAccount::CustomFinderMethods
+  include ExternalAccount::QueryMethodsReturningRelation
+  Elem = type_member(fixed: ExternalAccount)
+
   sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
   def not_steam(*args); end
 
   sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
   def steam(*args); end
 
+  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include ExternalAccount::ActiveRelation_WhereNot
+  include ExternalAccount::CustomFinderMethods
+  include ExternalAccount::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: ExternalAccount)
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def not_steam(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def steam(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include ExternalAccount::CustomFinderMethods
+  include ExternalAccount::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: ExternalAccount)
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def not_steam(*args); end
+
+  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def steam(*args); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
+  def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+module ExternalAccount::QueryMethodsReturningRelation
   sig { returns(ExternalAccount::ActiveRecord_Relation) }
   def all; end
 
@@ -169,23 +255,20 @@ module ExternalAccount::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: ExternalAccount::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[ExternalAccount::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module ExternalAccount::QueryMethodsReturningAssociationRelation
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def not_steam(*args); end
-
-  sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def steam(*args); end
-
   sig { returns(ExternalAccount::ActiveRecord_AssociationRelation) }
   def all; end
 
@@ -285,28 +368,17 @@ module ExternalAccount::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
-  include ExternalAccount::ActiveRelation_WhereNot
-  include ExternalAccount::CustomFinderMethods
-  include ExternalAccount::QueryMethodsReturningRelation
-  Elem = type_member(fixed: ExternalAccount)
-end
-
-class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include ExternalAccount::ActiveRelation_WhereNot
-  include ExternalAccount::CustomFinderMethods
-  include ExternalAccount::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ExternalAccount)
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: ExternalAccount::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[ExternalAccount::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module ExternalAccount::GeneratedAttributeMethods
@@ -707,22 +779,4 @@ module ExternalAccount::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_user; end
-end
-
-class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include ExternalAccount::CustomFinderMethods
-  include ExternalAccount::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ExternalAccount)
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(ExternalAccount, T::Array[ExternalAccount])).returns(T.self_type) }
-  def concat(*records); end
 end

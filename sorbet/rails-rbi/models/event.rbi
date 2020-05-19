@@ -78,6 +78,51 @@ class Event < ApplicationRecord
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.event_categories; end
 
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.favorite_games(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.game_purchases(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.not_add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.not_change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.not_favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.not_new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
+  def self.users(*args); end
+
   sig { returns(Event::EventCategory) }
   def typed_event_category; end
 
@@ -167,9 +212,23 @@ class Event < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_user(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Event::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
-module Event::QueryMethodsReturningRelation
+class Event::ActiveRecord_Relation < ActiveRecord::Relation
+  include Event::ActiveRelation_WhereNot
+  include Event::CustomFinderMethods
+  include Event::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Event)
+
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def add_to_library(*args); end
 
@@ -215,6 +274,150 @@ module Event::QueryMethodsReturningRelation
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def users(*args); end
 
+  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Event::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include Event::ActiveRelation_WhereNot
+  include Event::CustomFinderMethods
+  include Event::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Event)
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def favorite_games(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def game_purchases(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def users(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Event::CustomFinderMethods
+  include Event::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Event)
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def favorite_games(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def game_purchases(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_add_to_library(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_change_completion_status(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_favorite_game(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_following(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def not_new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def recently_created(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def relationships(*args); end
+
+  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
+  def users(*args); end
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
+  def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+module Event::QueryMethodsReturningRelation
   sig { returns(Event::ActiveRecord_Relation) }
   def all; end
 
@@ -314,62 +517,20 @@ module Event::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Event::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Event::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[Event::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module Event::QueryMethodsReturningAssociationRelation
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def favorite_games(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def game_purchases(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_add_to_library(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_change_completion_status(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_favorite_game(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_following(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def not_new_user(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def recently_created(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def relationships(*args); end
-
-  sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
-  def users(*args); end
-
   sig { returns(Event::ActiveRecord_AssociationRelation) }
   def all; end
 
@@ -469,28 +630,17 @@ module Event::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Event::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Event::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class Event::ActiveRecord_Relation < ActiveRecord::Relation
-  include Event::ActiveRelation_WhereNot
-  include Event::CustomFinderMethods
-  include Event::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Event)
-end
-
-class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include Event::ActiveRelation_WhereNot
-  include Event::CustomFinderMethods
-  include Event::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Event)
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Event::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[Event::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module Event::GeneratedAttributeMethods
@@ -966,22 +1116,4 @@ module Event::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def user_ids=(ids); end
-end
-
-class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Event::CustomFinderMethods
-  include Event::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Event)
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(Event, T::Array[Event])).returns(T.self_type) }
-  def concat(*records); end
 end

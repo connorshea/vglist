@@ -40,6 +40,15 @@ class ActiveRecord::SchemaMigration < ActiveRecord::Base
   extend ActiveRecord::SchemaMigration::CustomFinderMethods
   extend ActiveRecord::SchemaMigration::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(ActiveRecord::SchemaMigration::ActiveRecord_Relation, ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy, ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
+
+  sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 module ActiveRecord::SchemaMigration::QueryMethodsReturningRelation
@@ -142,14 +151,17 @@ module ActiveRecord::SchemaMigration::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: ActiveRecord::SchemaMigration::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[ActiveRecord::SchemaMigration::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
@@ -252,6 +264,41 @@ module ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relation
+  include ActiveRecord::SchemaMigration::ActiveRelation_WhereNot
+  include ActiveRecord::SchemaMigration::CustomFinderMethods
+  include ActiveRecord::SchemaMigration::QueryMethodsReturningRelation
+  Elem = type_member(fixed: ActiveRecord::SchemaMigration)
+
+  sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include ActiveRecord::SchemaMigration::ActiveRelation_WhereNot
+  include ActiveRecord::SchemaMigration::CustomFinderMethods
+  include ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: ActiveRecord::SchemaMigration)
+
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -260,20 +307,6 @@ module ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
 
   sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def padding(num); end
-end
-
-class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relation
-  include ActiveRecord::SchemaMigration::ActiveRelation_WhereNot
-  include ActiveRecord::SchemaMigration::CustomFinderMethods
-  include ActiveRecord::SchemaMigration::QueryMethodsReturningRelation
-  Elem = type_member(fixed: ActiveRecord::SchemaMigration)
-end
-
-class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include ActiveRecord::SchemaMigration::ActiveRelation_WhereNot
-  include ActiveRecord::SchemaMigration::CustomFinderMethods
-  include ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ActiveRecord::SchemaMigration)
 end
 
 class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -292,4 +325,13 @@ class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy <
 
   sig { params(records: T.any(ActiveRecord::SchemaMigration, T::Array[ActiveRecord::SchemaMigration])).returns(T.self_type) }
   def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end

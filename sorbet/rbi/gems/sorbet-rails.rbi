@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-rails/all/sorbet-rails.rbi
 #
-# sorbet-rails-0.6.4
+# sorbet-rails-0.6.5
 
 module SorbetRails
   def self.config(&blk); end
@@ -88,6 +88,7 @@ class SorbetRails::ModelPlugins::ActiveRecordEnum < SorbetRails::ModelPlugins::B
   extend T::Private::Methods::SingletonMethodHooks
 end
 class SorbetRails::ModelPlugins::ActiveRecordQuerying < SorbetRails::ModelPlugins::Base
+  def create_in_batches_method(*args, &blk); end
   def generate(*args, &blk); end
   extend T::Private::Methods::MethodHooks
   extend T::Private::Methods::SingletonMethodHooks

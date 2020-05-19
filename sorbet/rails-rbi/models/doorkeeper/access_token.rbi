@@ -36,6 +36,15 @@ class Doorkeeper::AccessToken < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_application(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 module Doorkeeper::AccessToken::QueryMethodsReturningRelation
@@ -138,14 +147,17 @@ module Doorkeeper::AccessToken::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Doorkeeper::AccessToken::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[Doorkeeper::AccessToken::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
@@ -248,6 +260,41 @@ module Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Doorkeeper::AccessToken::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[Doorkeeper::AccessToken::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
+  include Doorkeeper::AccessToken::ActiveRelation_WhereNot
+  include Doorkeeper::AccessToken::CustomFinderMethods
+  include Doorkeeper::AccessToken::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Doorkeeper::AccessToken)
+
+  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class Doorkeeper::AccessToken::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include Doorkeeper::AccessToken::ActiveRelation_WhereNot
+  include Doorkeeper::AccessToken::CustomFinderMethods
+  include Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Doorkeeper::AccessToken)
+
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -256,20 +303,6 @@ module Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
 
   sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
   def padding(num); end
-end
-
-class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
-  include Doorkeeper::AccessToken::ActiveRelation_WhereNot
-  include Doorkeeper::AccessToken::CustomFinderMethods
-  include Doorkeeper::AccessToken::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Doorkeeper::AccessToken)
-end
-
-class Doorkeeper::AccessToken::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include Doorkeeper::AccessToken::ActiveRelation_WhereNot
-  include Doorkeeper::AccessToken::CustomFinderMethods
-  include Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Doorkeeper::AccessToken)
 end
 
 module Doorkeeper::AccessToken::GeneratedAttributeMethods
@@ -850,4 +883,13 @@ class Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy < Activ
 
   sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
   def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end

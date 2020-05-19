@@ -247,6 +247,15 @@ class Statistic < ApplicationRecord
   extend Statistic::CustomFinderMethods
   extend Statistic::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(Statistic::ActiveRecord_Relation, Statistic::ActiveRecord_Associations_CollectionProxy, Statistic::ActiveRecord_AssociationRelation) }
+
+  sig { params(num: T.nilable(Integer)).returns(Statistic::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Statistic::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Statistic::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 module Statistic::QueryMethodsReturningRelation
@@ -349,14 +358,17 @@ module Statistic::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Statistic::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(Statistic::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Statistic::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Statistic::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Statistic::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[Statistic::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module Statistic::QueryMethodsReturningAssociationRelation
@@ -459,6 +471,41 @@ module Statistic::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Statistic::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Statistic::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[Statistic::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+class Statistic::ActiveRecord_Relation < ActiveRecord::Relation
+  include Statistic::ActiveRelation_WhereNot
+  include Statistic::CustomFinderMethods
+  include Statistic::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Statistic)
+
+  sig { params(num: T.nilable(Integer)).returns(Statistic::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Statistic::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Statistic::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class Statistic::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include Statistic::ActiveRelation_WhereNot
+  include Statistic::CustomFinderMethods
+  include Statistic::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Statistic)
+
   sig { params(num: T.nilable(Integer)).returns(Statistic::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -467,20 +514,6 @@ module Statistic::QueryMethodsReturningAssociationRelation
 
   sig { params(num: Integer).returns(Statistic::ActiveRecord_AssociationRelation) }
   def padding(num); end
-end
-
-class Statistic::ActiveRecord_Relation < ActiveRecord::Relation
-  include Statistic::ActiveRelation_WhereNot
-  include Statistic::CustomFinderMethods
-  include Statistic::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Statistic)
-end
-
-class Statistic::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include Statistic::ActiveRelation_WhereNot
-  include Statistic::CustomFinderMethods
-  include Statistic::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Statistic)
 end
 
 class Statistic::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -499,4 +532,13 @@ class Statistic::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Assoc
 
   sig { params(records: T.any(Statistic, T::Array[Statistic])).returns(T.self_type) }
   def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(Statistic::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Statistic::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Statistic::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end

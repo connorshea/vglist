@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actionpack/all/actionpack.rbi
 #
-# actionpack-6.0.3
+# actionpack-6.0.3.1
 
 module ActionPack
   def self.gem_version; end
@@ -2534,12 +2534,16 @@ class ActionController::InvalidCrossOriginRequest < ActionController::ActionCont
 end
 module ActionController::RequestForgeryProtection
   def any_authenticity_token_valid?; end
+  def compare_with_global_token(token, session); end
   def compare_with_real_token(token, session); end
+  def csrf_token_hmac(session, identifier); end
   def form_authenticity_param; end
   def form_authenticity_token(form_options: nil); end
+  def global_csrf_token(session); end
   def handle_unverified_request; end
   def mark_for_same_origin_verification!; end
   def marked_for_same_origin_verification?; end
+  def mask_token(raw_token); end
   def masked_authenticity_token(session, form_options: nil); end
   def non_xhr_javascript_response?; end
   def normalize_action_path(action_path); end
