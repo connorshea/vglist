@@ -92,6 +92,48 @@ class GamePurchase < ApplicationRecord
   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
   def self.completion_statuses; end
 
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.dropped(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.fully_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.in_progress(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_applicable(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_dropped(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_fully_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_in_progress(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_not_applicable(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_paused(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.not_unplayed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.paused(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.unplayed(*args); end
+
   sig { returns(T.nilable(GamePurchase::CompletionStatus)) }
   def typed_completion_status; end
 
@@ -571,9 +613,23 @@ class GamePurchase < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_events(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
-module GamePurchase::QueryMethodsReturningRelation
+class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
+  include GamePurchase::ActiveRelation_WhereNot
+  include GamePurchase::CustomFinderMethods
+  include GamePurchase::QueryMethodsReturningRelation
+  Elem = type_member(fixed: GamePurchase)
+
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
   def completed(*args); end
 
@@ -616,6 +672,144 @@ module GamePurchase::QueryMethodsReturningRelation
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
   def unplayed(*args); end
 
+  sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class GamePurchase::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include GamePurchase::ActiveRelation_WhereNot
+  include GamePurchase::CustomFinderMethods
+  include GamePurchase::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: GamePurchase)
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def dropped(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def fully_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def in_progress(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_applicable(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_dropped(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_fully_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_in_progress(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_not_applicable(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_paused(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_unplayed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def paused(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def unplayed(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+class GamePurchase::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include GamePurchase::CustomFinderMethods
+  include GamePurchase::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: GamePurchase)
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def dropped(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def fully_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def in_progress(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_applicable(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_dropped(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_fully_completed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_in_progress(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_not_applicable(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_paused(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def not_unplayed(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def paused(*args); end
+
+  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def unplayed(*args); end
+
+  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
+  def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+end
+
+module GamePurchase::QueryMethodsReturningRelation
   sig { returns(GamePurchase::ActiveRecord_Relation) }
   def all; end
 
@@ -715,59 +909,20 @@ module GamePurchase::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: GamePurchase::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[GamePurchase::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module GamePurchase::QueryMethodsReturningAssociationRelation
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def completed(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def dropped(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def fully_completed(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def in_progress(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_applicable(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_completed(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_dropped(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_fully_completed(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_in_progress(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_not_applicable(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_paused(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def not_unplayed(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def paused(*args); end
-
-  sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def unplayed(*args); end
-
   sig { returns(GamePurchase::ActiveRecord_AssociationRelation) }
   def all; end
 
@@ -867,28 +1022,17 @@ module GamePurchase::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(GamePurchase::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-end
-
-class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
-  include GamePurchase::ActiveRelation_WhereNot
-  include GamePurchase::CustomFinderMethods
-  include GamePurchase::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GamePurchase)
-end
-
-class GamePurchase::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include GamePurchase::ActiveRelation_WhereNot
-  include GamePurchase::CustomFinderMethods
-  include GamePurchase::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchase)
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: GamePurchase::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[GamePurchase::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module GamePurchase::GeneratedAttributeMethods
@@ -1640,22 +1784,4 @@ module GamePurchase::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def event_ids=(ids); end
-end
-
-class GamePurchase::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include GamePurchase::CustomFinderMethods
-  include GamePurchase::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchase)
-
-  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(GamePurchase, T::Array[GamePurchase])).returns(T.self_type) }
-  def concat(*records); end
 end

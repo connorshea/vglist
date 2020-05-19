@@ -265,6 +265,15 @@ class Engine < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_pg_search_document(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Engine::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 module Engine::QueryMethodsReturningRelation
@@ -367,14 +376,17 @@ module Engine::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(Engine::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Engine::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[Engine::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module Engine::QueryMethodsReturningAssociationRelation
@@ -477,6 +489,41 @@ module Engine::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: Engine::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[Engine::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+class Engine::ActiveRecord_Relation < ActiveRecord::Relation
+  include Engine::ActiveRelation_WhereNot
+  include Engine::CustomFinderMethods
+  include Engine::QueryMethodsReturningRelation
+  Elem = type_member(fixed: Engine)
+
+  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Engine::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class Engine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include Engine::ActiveRelation_WhereNot
+  include Engine::CustomFinderMethods
+  include Engine::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: Engine)
+
   sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -485,20 +532,6 @@ module Engine::QueryMethodsReturningAssociationRelation
 
   sig { params(num: Integer).returns(Engine::ActiveRecord_AssociationRelation) }
   def padding(num); end
-end
-
-class Engine::ActiveRecord_Relation < ActiveRecord::Relation
-  include Engine::ActiveRelation_WhereNot
-  include Engine::CustomFinderMethods
-  include Engine::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Engine)
-end
-
-class Engine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include Engine::ActiveRelation_WhereNot
-  include Engine::CustomFinderMethods
-  include Engine::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Engine)
 end
 
 module Engine::GeneratedAttributeMethods
@@ -836,4 +869,13 @@ class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associat
 
   sig { params(records: T.any(Engine, T::Array[Engine])).returns(T.self_type) }
   def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(Engine::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(Engine::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end

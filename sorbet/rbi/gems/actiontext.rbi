@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/actiontext/all/actiontext.rbi
 #
-# actiontext-6.0.3
+# actiontext-6.0.3.1
 
 module ActionText
   def self.railtie_helpers_paths; end

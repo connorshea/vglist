@@ -81,7 +81,7 @@ class ActiveRecord::Relation
   def first_or_initialize(attributes = nil, &block); end
 
   sig do
-    override.params(
+    params(
       start: T.nilable(Integer),
       finish: T.nilable(Integer),
       batch_size: T.nilable(Integer),
@@ -92,7 +92,7 @@ class ActiveRecord::Relation
   def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, &block); end
 
   sig do
-    override.params(
+    params(
       start: T.nilable(Integer),
       finish: T.nilable(Integer),
       batch_size: T.nilable(Integer),
@@ -136,17 +136,17 @@ end
 class ActiveRecord::AssociationRelation < ActiveRecord::Relation
   Elem = type_member(fixed: T.untyped)
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
-  def new(*args, &block); end
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
+  def new(attributes = nil, &block); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
-  def build(*args, &block); end
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
+  def build(attributes = nil, &block); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
-  def create(*args, &block); end
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
+  def create(attributes = nil, &block); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
-  def create!(*args, &block); end
+  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Elem).void)).returns(Elem) }
+  def create!(attributes = nil, &block); end
 end
 
 class ActiveRecord::Associations::CollectionProxy < ActiveRecord::Relation

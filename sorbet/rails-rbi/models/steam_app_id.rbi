@@ -36,6 +36,15 @@ class SteamAppId < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_game(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
+  def self.page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
+  def self.per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(SteamAppId::ActiveRecord_Relation) }
+  def self.padding(num); end
 end
 
 module SteamAppId::QueryMethodsReturningRelation
@@ -138,14 +147,17 @@ module SteamAppId::QueryMethodsReturningRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(SteamAppId::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
-  sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(SteamAppId::ActiveRecord_Relation) }
-  def padding(num); end
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: SteamAppId::ActiveRecord_Relation).void)
+    ).returns(T::Enumerable[SteamAppId::ActiveRecord_Relation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
 module SteamAppId::QueryMethodsReturningAssociationRelation
@@ -248,6 +260,41 @@ module SteamAppId::QueryMethodsReturningAssociationRelation
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
+  sig do
+    params(
+      of: T.nilable(Integer),
+      start: T.nilable(Integer),
+      finish: T.nilable(Integer),
+      load: T.nilable(T::Boolean),
+      error_on_ignore: T.nilable(T::Boolean),
+      block: T.nilable(T.proc.params(e: SteamAppId::ActiveRecord_AssociationRelation).void)
+    ).returns(T::Enumerable[SteamAppId::ActiveRecord_AssociationRelation])
+  end
+  def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+class SteamAppId::ActiveRecord_Relation < ActiveRecord::Relation
+  include SteamAppId::ActiveRelation_WhereNot
+  include SteamAppId::CustomFinderMethods
+  include SteamAppId::QueryMethodsReturningRelation
+  Elem = type_member(fixed: SteamAppId)
+
+  sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(SteamAppId::ActiveRecord_Relation) }
+  def padding(num); end
+end
+
+class SteamAppId::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include SteamAppId::ActiveRelation_WhereNot
+  include SteamAppId::CustomFinderMethods
+  include SteamAppId::QueryMethodsReturningAssociationRelation
+  Elem = type_member(fixed: SteamAppId)
+
   sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -256,20 +303,6 @@ module SteamAppId::QueryMethodsReturningAssociationRelation
 
   sig { params(num: Integer).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def padding(num); end
-end
-
-class SteamAppId::ActiveRecord_Relation < ActiveRecord::Relation
-  include SteamAppId::ActiveRelation_WhereNot
-  include SteamAppId::CustomFinderMethods
-  include SteamAppId::QueryMethodsReturningRelation
-  Elem = type_member(fixed: SteamAppId)
-end
-
-class SteamAppId::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include SteamAppId::ActiveRelation_WhereNot
-  include SteamAppId::CustomFinderMethods
-  include SteamAppId::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: SteamAppId)
 end
 
 module SteamAppId::GeneratedAttributeMethods
@@ -472,4 +505,13 @@ class SteamAppId::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Asso
 
   sig { params(records: T.any(SteamAppId, T::Array[SteamAppId])).returns(T.self_type) }
   def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(SteamAppId::ActiveRecord_AssociationRelation) }
+  def padding(num); end
 end
