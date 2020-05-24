@@ -13,9 +13,9 @@ environment.loaders.get('sass').use.splice(-1, 0, {
 environment.config.merge({
   resolve:{
     alias: {
-      'react': resolve('app/javascript/vendor/react-16.13.1'),
-      'react-dom': resolve('app/javascript/vendor/react-dom-16.13.1'),
-      'graphiql': resolve('app/javascript/vendor/graphiql-1.0.0-alpha.10')
+      'react': resolve('app/javascript/src/vendor/react-16.13.1'),
+      'react-dom': resolve('app/javascript/src/vendor/react-dom-16.13.1'),
+      'graphiql': resolve('app/javascript/src/vendor/graphiql-1.0.0-alpha.10')
     }
   }
 });

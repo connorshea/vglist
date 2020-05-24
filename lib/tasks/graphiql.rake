@@ -16,7 +16,6 @@ namespace :graphiql do
     end
 
     VGLIST_DIR = Dir.pwd
-    puts Dir.pwd.inspect
     Dir.mktmpdir do |dir|
       puts "My new temp dir: #{dir}"
       FileUtils.cd(dir) do
@@ -30,8 +29,8 @@ namespace :graphiql do
 
           puts "Copying GraphiQL #{new_version}"
           # sh('ls ./dist/')
-          FileUtils.cp("./graphiql.js", "#{VGLIST_DIR}/app/javascript/vendor/graphiql-#{new_version}.js")
-          FileUtils.cp("./graphiql.css", "#{VGLIST_DIR}/app/javascript/vendor/graphiql-#{new_version}.css")
+          FileUtils.cp("./graphiql.js", "#{VGLIST_DIR}/app/javascript/src/vendor/graphiql-#{new_version}.static.js")
+          FileUtils.cp("./graphiql.css", "#{VGLIST_DIR}/app/javascript/src/vendor/graphiql-#{new_version}.css")
         end
 
         FileUtils.cd("./node_modules/react") do
@@ -39,7 +38,7 @@ namespace :graphiql do
           new_js_versions["react"] = new_version
 
           puts "Copying React #{new_version}"
-          FileUtils.cp("./umd/react.development.js", "#{VGLIST_DIR}/app/javascript/vendor/react-#{new_version}.js")
+          FileUtils.cp("./umd/react.development.js", "#{VGLIST_DIR}/app/javascript/src/vendor/react-#{new_version}.static.js")
         end
 
         FileUtils.cd("./node_modules/react-dom") do
@@ -47,7 +46,7 @@ namespace :graphiql do
           new_js_versions["react-dom"] = new_version
 
           puts "Copying ReactDOM #{new_version}"
-          FileUtils.cp("./umd/react-dom.development.js", "#{VGLIST_DIR}/app/javascript/vendor/react-dom-#{new_version}.js")
+          FileUtils.cp("./umd/react-dom.development.js", "#{VGLIST_DIR}/app/javascript/src/vendor/react-dom-#{new_version}.static.js")
         end
       end
     end
