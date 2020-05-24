@@ -3,6 +3,10 @@ class GraphqlController < ApplicationController
   # Skip bullet on GraphQL queries to avoid errors.
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
+  # If the user isn't logged in and hasn't provided any token, return a
+  # specific error message.
+  before_action :handle_user_not_logged_in, if: -> { current_user.nil? && !user_using_oauth? && !request.headers.key?('X-User-Email') }
+
   # Allow bypassing authorization if the user is logged in, to
   # enable GraphiQL.
   before_action :authorize_api_user, if: -> { current_user.nil? && user_using_oauth? }
@@ -99,6 +103,10 @@ class GraphqlController < ApplicationController
 
   def authorize_api_user
     doorkeeper_authorize!
+  end
+
+  def handle_user_not_logged_in
+    render json: { error: { message: 'You must either be logged in or provide a valid token to use the GraphQL API.' } }, status: :unauthorized
   end
 
   def skip_bullet
