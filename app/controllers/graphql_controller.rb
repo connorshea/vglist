@@ -106,7 +106,7 @@ class GraphqlController < ApplicationController
   end
 
   def handle_user_not_logged_in
-    render json: { error: { message: 'You must either be logged in or provide a valid token to use the GraphQL API.' } }, status: :internal_server_error
+    render json: { error: { message: 'You must either be logged in or provide a valid token to use the GraphQL API.' } }, status: :unauthorized
   end
 
   def skip_bullet
