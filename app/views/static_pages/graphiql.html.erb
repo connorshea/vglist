@@ -4,6 +4,13 @@
 
 <script src="<%= asset_pack_path 'graphiql.js' %>" type="application/javascript"></script>
 
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+
 <%= javascript_tag nonce: true do %>
   let graphQLFetcher = (graphQLParams) => {
     return fetch(window.location.origin + '/graphql', {
