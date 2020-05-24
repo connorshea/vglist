@@ -1,0 +1,20 @@
+<% content_for :title, "GraphiQL" %>
+
+<div id="graphiql-injection-point" style="height: 100vh; width: 100vw; margin: 0;"></div>
+
+<script src="<%= asset_pack_path 'graphiql.js' %>" type="application/javascript"></script>
+
+<%= javascript_tag nonce: true do %>
+  let graphQLFetcher = (graphQLParams) => {
+    return fetch(window.location.origin + '/graphql', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(graphQLParams),
+    }).then(response => response.json());
+  }
+
+  ReactDOM.render(
+    React.createElement(GraphiQL, { fetcher: graphQLFetcher }),
+    document.getElementById("graphiql-injection-point")
+  );
+<% end %>
