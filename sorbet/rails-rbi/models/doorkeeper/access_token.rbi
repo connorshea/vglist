@@ -155,7 +155,7 @@ module Doorkeeper::AccessToken::QueryMethodsReturningRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: Doorkeeper::AccessToken::ActiveRecord_Relation).void)
-    ).returns(T::Enumerable[Doorkeeper::AccessToken::ActiveRecord_Relation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
@@ -268,7 +268,7 @@ module Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: Doorkeeper::AccessToken::ActiveRecord_AssociationRelation).void)
-    ).returns(T::Enumerable[Doorkeeper::AccessToken::ActiveRecord_AssociationRelation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end

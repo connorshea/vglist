@@ -76,7 +76,7 @@ module RuboCop::Cop::ActiveRecordHelper
   def resolve_relation_into_column(name:, class_node:, table:); end
   def schema; end
   def table_name(class_node); end
-  extend RuboCop::NodePattern::Macros
+  extend RuboCop::AST::NodePattern::Macros
 end
 module RuboCop::Cop::IndexMethod
   def autocorrect(node); end

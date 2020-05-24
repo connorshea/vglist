@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.10.9
+# graphql-1.10.10
 
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
