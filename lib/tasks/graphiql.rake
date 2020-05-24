@@ -38,7 +38,7 @@ namespace :graphiql do
           new_js_versions["react"] = new_version
 
           puts "Copying React #{new_version}"
-          FileUtils.cp("./umd/react.production.js", "#{VGLIST_DIR}/app/javascript/src/vendor/react-#{new_version}.static.js")
+          FileUtils.cp("./umd/react.production.min.js", "#{VGLIST_DIR}/app/javascript/src/vendor/react-#{new_version}.static.js")
         end
 
         FileUtils.cd("./node_modules/react-dom") do
@@ -46,7 +46,7 @@ namespace :graphiql do
           new_js_versions["react-dom"] = new_version
 
           puts "Copying ReactDOM #{new_version}"
-          FileUtils.cp("./umd/react-dom.production.js", "#{VGLIST_DIR}/app/javascript/src/vendor/react-dom-#{new_version}.static.js")
+          FileUtils.cp("./umd/react-dom.production.min.js", "#{VGLIST_DIR}/app/javascript/src/vendor/react-dom-#{new_version}.static.js")
         end
       end
     end
