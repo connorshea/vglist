@@ -4,3 +4,6 @@
 // that code so it'll be compiled.
 
 import '../src/vendor/graphiql-1.0.0-alpha.10.css';
+import '../src/vendor/react-16.13.1.static.js';
+import '../src/vendor/react-dom-16.13.1.static.js';
+import '../src/vendor/graphiql-1.0.0-alpha.10.static.js';
