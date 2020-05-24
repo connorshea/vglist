@@ -32,7 +32,7 @@ default: &default
     - .ttf
     - .woff
     - .woff2
-    - .static.js
+    - .production.min.js
 
   extensions:
     - .tsx
