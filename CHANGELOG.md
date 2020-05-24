@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.5.24
+### Added
+- Upgrade GraphiQL and enable it in production. It's available at `/graphiql`. ([#1262])
+
 ## v2020.5.17
 ### Added
 - Add User search. ([#1249])
@@ -732,3 +736,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1213]: https://github.com/connorshea/vglist/pull/1213
 [#1218]: https://github.com/connorshea/vglist/pull/1218
 [#1249]: https://github.com/connorshea/vglist/pull/1249
+[#1262]: https://github.com/connorshea/vglist/pull/1262
