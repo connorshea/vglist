@@ -25,14 +25,8 @@ class GraphqlController < ApplicationController
       current_user: current_user || api_user || doorkeeper_user,
       pundit: self,
       doorkeeper_scopes: doorkeeper_token&.scopes&.to_a,
-      graphiql_override: false,
       token_auth: !user_using_oauth?
     }
-
-    # Set graphiql_override to true if in development mode and the request
-    # has the GraphiQL Request header. This is used to allow GraphiQL
-    # requests to skip the Doorkeeper token checks.
-    context[:graphiql_override] = true if Rails.env.development? && request.headers['X-GraphiQL-Request'] == 'true'
 
     result = VideoGameListSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result

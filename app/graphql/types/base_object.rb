@@ -13,11 +13,9 @@ module Types
       raise GraphQL::ExecutionError, "The user that owns this token has been banned." if context[:current_user].banned?
 
       # Make sure the doorkeeper scopes include read.
-      # Skip this check if the user is using token authentication or
-      # if the request comes from GraphiQL.
+      # Skip this check if the user is using token authentication.
       raise GraphQL::ExecutionError, "Your token must have the 'read' scope to perform a query." if !context[:token_auth] &&
-                                                                                                    !context[:doorkeeper_scopes]&.include?('read') &&
-                                                                                                    !context[:graphiql_override]
+                                                                                                    !context[:doorkeeper_scopes]&.include?('read')
 
       return true
     end
