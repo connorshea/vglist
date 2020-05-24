@@ -33,7 +33,6 @@ before_script:
   - cp config/database.yml.ci config/database.yml
   - bundle exec rails db:create
   - bundle exec rails db:migrate --trace
-  - bundle exec rake assets:precompile
 
 .no_db_template:
   before_script: &no_db_necessary
@@ -77,6 +76,7 @@ factory_bot_lint:
 
 rspec:
   script:
+    - bundle exec rake assets:precompile
     - bundle exec rspec
   coverage: '/\(\d+.\d+\%\) covered/'
 
