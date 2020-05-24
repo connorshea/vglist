@@ -19,7 +19,7 @@
     "typescript": "^3.9.2",
     "v-tooltip": "2.0.2",
     "vue": "^2.6.11",
-    "vue-good-table": "^2.19.2",
+    "vue-good-table": "^2.19.3",
     "vue-loader": "^15.9",
     "vue-select": "^3.10.3",
     "vue-template-compiler": "^2.6.11",
