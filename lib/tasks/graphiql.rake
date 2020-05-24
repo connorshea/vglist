@@ -1,7 +1,7 @@
 # typed: false
 
 namespace :graphiql do
-  desc "Deploys the latest code from the master branch into production"
+  desc "Generate vendored files for use with GraphiQL"
   task generate: :environment do
     require 'tmpdir'
     require 'fileutils'
