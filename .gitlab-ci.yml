@@ -76,6 +76,7 @@ factory_bot_lint:
 
 rspec:
   script:
+    - bundle exec rake assets:precompile
     - bundle exec rspec
   coverage: '/\(\d+.\d+\%\) covered/'
 
