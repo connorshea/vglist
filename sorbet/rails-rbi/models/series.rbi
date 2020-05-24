@@ -306,7 +306,7 @@ module Series::QueryMethodsReturningRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: Series::ActiveRecord_Relation).void)
-    ).returns(T::Enumerable[Series::ActiveRecord_Relation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
@@ -419,7 +419,7 @@ module Series::QueryMethodsReturningAssociationRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: Series::ActiveRecord_AssociationRelation).void)
-    ).returns(T::Enumerable[Series::ActiveRecord_AssociationRelation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end

@@ -770,12 +770,12 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def about_url(*args, **kwargs); end
 
-  # Sigs for route /graphiql
+  # Sigs for route /graphiql(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def graphiql_rails_path(*args, **kwargs); end
+  def graphiql_path(*args, **kwargs); end
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
-  def graphiql_rails_url(*args, **kwargs); end
+  def graphiql_url(*args, **kwargs); end
 
   # Sigs for route /graphql(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
@@ -818,7 +818,4 @@ module GeneratedUrlHelpers
 
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def rails_direct_uploads_url(*args, **kwargs); end
-end
-
-module GeneratedUrlHelpers
 end

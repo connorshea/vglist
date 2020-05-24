@@ -28,7 +28,7 @@ module RuboCop::RSpec::TopLevelDescribe
   def single_top_level_describe?; end
   def top_level_describe?(node); end
   def top_level_nodes; end
-  extend RuboCop::NodePattern::Macros
+  extend RuboCop::AST::NodePattern::Macros
 end
 class RuboCop::RSpec::Wording
   def append_suffix(word, suffix); end
@@ -85,7 +85,7 @@ module RuboCop::RSpec::Language::NodePattern
   def hook?(node = nil); end
   def let?(node = nil); end
   def subject?(node = nil); end
-  extend RuboCop::NodePattern::Macros
+  extend RuboCop::AST::NodePattern::Macros
 end
 class RuboCop::RSpec::Concept
   def ==(other); end
@@ -94,7 +94,7 @@ class RuboCop::RSpec::Concept
   def initialize(node); end
   def node; end
   def to_node; end
-  extend RuboCop::NodePattern::Macros
+  extend RuboCop::AST::NodePattern::Macros
   include RuboCop::RSpec::Language
   include RuboCop::RSpec::Language::NodePattern
 end
@@ -760,7 +760,7 @@ module RuboCop::Cop::RSpec::InflectedHelper
   def rewrite_matcher(corrector, predicate, matcher); end
   def to_predicate_matcher(name); end
   def true?(to_symbol, matcher); end
-  extend RuboCop::NodePattern::Macros
+  extend RuboCop::AST::NodePattern::Macros
   include RuboCop::RSpec::Language
 end
 module RuboCop::Cop::RSpec::ExplicitHelper
@@ -777,7 +777,7 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   def predicate_matcher_name?(name); end
   def replacement_matcher(node); end
   def to_predicate_method(matcher); end
-  extend RuboCop::NodePattern::Macros
+  extend RuboCop::AST::NodePattern::Macros
   include RuboCop::RSpec::Language
 end
 class RuboCop::Cop::RSpec::PredicateMatcher < RuboCop::Cop::RSpec::Cop

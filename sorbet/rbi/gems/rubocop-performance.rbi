@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.5.2
+# rubocop-performance-1.6.0
 
 module RuboCop
 end
@@ -20,7 +20,23 @@ module RuboCop::Performance::Inject
 end
 module RuboCop::Cop
 end
+module RuboCop::Cop::RegexpMetacharacter
+  def drop_end_metacharacter(regexp_string); end
+  def drop_start_metacharacter(regexp_string); end
+  def literal_at_end?(regex_str); end
+  def literal_at_start?(regex_str); end
+end
 module RuboCop::Cop::Performance
+end
+class RuboCop::Cop::Performance::BindCall < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def bind_with_call_method?(node = nil); end
+  def build_call_args(call_args_node); end
+  def correction_range(receiver, node); end
+  def message(bind_arg, call_args); end
+  def on_send(node); end
+  extend RuboCop::Cop::TargetRubyVersion
+  include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Performance::Caller < RuboCop::Cop::Cop
   def caller_with_scope_method?(node = nil); end
@@ -74,6 +90,20 @@ class RuboCop::Cop::Performance::Count < RuboCop::Cop::Cop
   def source_starting_at(node); end
   include RuboCop::Cop::RangeHelp
 end
+class RuboCop::Cop::Performance::DeletePrefix < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def gsub_method?(node = nil); end
+  def on_send(node); end
+  extend RuboCop::Cop::TargetRubyVersion
+  include RuboCop::Cop::RegexpMetacharacter
+end
+class RuboCop::Cop::Performance::DeleteSuffix < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def gsub_method?(node = nil); end
+  def on_send(node); end
+  extend RuboCop::Cop::TargetRubyVersion
+  include RuboCop::Cop::RegexpMetacharacter
+end
 class RuboCop::Cop::Performance::Detect < RuboCop::Cop::Cop
   def accept_first_call?(receiver, body); end
   def autocorrect(node); end
@@ -95,10 +125,10 @@ class RuboCop::Cop::Performance::DoubleStartEndWith < RuboCop::Cop::Cop
 end
 class RuboCop::Cop::Performance::EndWith < RuboCop::Cop::Cop
   def autocorrect(node); end
-  def literal_at_end?(regex_str); end
   def on_match_with_lvasgn(node); end
   def on_send(node); end
   def redundant_regex?(node = nil); end
+  include RuboCop::Cop::RegexpMetacharacter
 end
 class RuboCop::Cop::Performance::FixedSize < RuboCop::Cop::Cop
   def allowed_argument?(arg); end
@@ -182,7 +212,7 @@ class RuboCop::Cop::Performance::RedundantMerge::EachWithObjectInspector
   def second_argument; end
   def unwind(receiver); end
   def value_used?; end
-  extend RuboCop::NodePattern::Macros
+  extend RuboCop::AST::NodePattern::Macros
 end
 class RuboCop::Cop::Performance::RegexpMatch < RuboCop::Cop::Cop
   def autocorrect(node); end
@@ -205,11 +235,11 @@ class RuboCop::Cop::Performance::RegexpMatch < RuboCop::Cop::Cop
   def on_case(node); end
   def on_if(node); end
   def range_to_search_for_last_matches(match_node, body, scope_root); end
+  def replace_with_match_predicate_method(corrector, recv, arg, op_range); end
   def scope_body(node); end
   def scope_root(node); end
   def search_match_nodes(node0); end
   def swap_receiver_and_arg(corrector, recv, arg); end
-  extend RuboCop::Cop::TargetRubyVersion
 end
 class RuboCop::Cop::Performance::ReverseEach < RuboCop::Cop::Cop
   def autocorrect(node); end
@@ -228,10 +258,10 @@ class RuboCop::Cop::Performance::Size < RuboCop::Cop::Cop
 end
 class RuboCop::Cop::Performance::StartWith < RuboCop::Cop::Cop
   def autocorrect(node); end
-  def literal_at_start?(regex_str); end
   def on_match_with_lvasgn(node); end
   def on_send(node); end
   def redundant_regex?(node = nil); end
+  include RuboCop::Cop::RegexpMetacharacter
 end
 class RuboCop::Cop::Performance::StringReplacement < RuboCop::Cop::Cop
   def accept_first_param?(first_param); end
@@ -263,7 +293,6 @@ class RuboCop::Cop::Performance::UnfreezeString < RuboCop::Cop::Cop
   def dup_string?(node = nil); end
   def on_send(node); end
   def string_new?(node = nil); end
-  extend RuboCop::Cop::TargetRubyVersion
 end
 class RuboCop::Cop::Performance::UriDefaultParser < RuboCop::Cop::Cop
   def autocorrect(node); end

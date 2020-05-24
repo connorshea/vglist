@@ -155,7 +155,7 @@ module SteamAppId::QueryMethodsReturningRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: SteamAppId::ActiveRecord_Relation).void)
-    ).returns(T::Enumerable[SteamAppId::ActiveRecord_Relation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
@@ -268,7 +268,7 @@ module SteamAppId::QueryMethodsReturningAssociationRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: SteamAppId::ActiveRecord_AssociationRelation).void)
-    ).returns(T::Enumerable[SteamAppId::ActiveRecord_AssociationRelation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end

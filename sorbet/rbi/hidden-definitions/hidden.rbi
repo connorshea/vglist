@@ -715,11 +715,7 @@ class ActionDispatch::Routing::RouteSet::Generator
 end
 
 module ActionDispatch::Routing::RouteSet::MountedHelpers
-  def _graphiql_rails(); end
-
   def _main_app(); end
-
-  def graphiql_rails(); end
 
   def main_app(); end
 end
@@ -1871,8 +1867,6 @@ class ActiveRecord::InternalMetadata
   def self.create_table(); end
 
   def self.drop_table(); end
-
-  def self.page(num=T.unsafe(nil)); end
 end
 
 module ActiveRecord::LegacyYamlAdapter
@@ -8996,38 +8990,6 @@ module Event::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
-class Event
-  def self.add_to_library(*args); end
-
-  def self.change_completion_status(*args); end
-
-  def self.favorite_game(*args); end
-
-  def self.favorite_games(*args); end
-
-  def self.following(*args); end
-
-  def self.game_purchases(*args); end
-
-  def self.new_user(*args); end
-
-  def self.not_add_to_library(*args); end
-
-  def self.not_change_completion_status(*args); end
-
-  def self.not_favorite_game(*args); end
-
-  def self.not_following(*args); end
-
-  def self.not_new_user(*args); end
-
-  def self.recently_created(*args); end
-
-  def self.relationships(*args); end
-
-  def self.users(*args); end
-end
-
 class Exception
   include ::BetterErrors::ExceptionExtension
   def full_message(*_); end
@@ -9136,12 +9098,6 @@ end
 
 module ExternalAccount::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class ExternalAccount
-  def self.not_steam(*args); end
-
-  def self.steam(*args); end
 end
 
 module FFI
@@ -9849,6 +9805,8 @@ class File
   def self.lutime(*_); end
 
   def self.mkfifo(*_); end
+
+  def self.probe_stat_in(dir); end
 end
 
 FileList = Rake::FileList
@@ -10022,35 +9980,13 @@ module Game::GeneratedRelationMethods
 end
 
 class Game
-  def self.by_year(*args); end
-
-  def self.highest_avg_rating(*args); end
-
-  def self.least_recently_updated(*args); end
-
-  def self.most_favorites(*args); end
-
-  def self.most_owners(*args); end
-
-  def self.newest(*args); end
-
-  def self.oldest(*args); end
-
-  def self.on_platform(*args); end
-
   def self.pg_search_multisearchable_options(); end
 
   def self.pg_search_multisearchable_options=(val); end
 
   def self.pg_search_multisearchable_options?(); end
 
-  def self.recently_released(*args); end
-
-  def self.recently_updated(*args); end
-
   def self.search(*args); end
-
-  def self.with_attached_cover(*args); end
 end
 
 class GameDeveloper::ActiveRecord_AssociationRelation
@@ -10234,36 +10170,6 @@ end
 
 module GamePurchase::GeneratedRelationMethods
   extend ::Mutex_m
-end
-
-class GamePurchase
-  def self.completed(*args); end
-
-  def self.dropped(*args); end
-
-  def self.fully_completed(*args); end
-
-  def self.in_progress(*args); end
-
-  def self.not_applicable(*args); end
-
-  def self.not_completed(*args); end
-
-  def self.not_dropped(*args); end
-
-  def self.not_fully_completed(*args); end
-
-  def self.not_in_progress(*args); end
-
-  def self.not_not_applicable(*args); end
-
-  def self.not_paused(*args); end
-
-  def self.not_unplayed(*args); end
-
-  def self.paused(*args); end
-
-  def self.unplayed(*args); end
 end
 
 class GamePurchasePlatform::ActiveRecord_AssociationRelation
@@ -11058,15 +10964,6 @@ class GraphViz::Types::SplineType
   SPLINE_MASK = ::T.let(nil, ::T.untyped)
   STARTP_MASK = ::T.let(nil, ::T.untyped)
   TRIPLE_MASK = ::T.let(nil, ::T.untyped)
-end
-
-module GraphiQL::Rails
-  VERSION = ::T.let(nil, ::T.untyped)
-end
-
-class GraphiQL::Rails::Config
-  CSRF_TOKEN_HEADER = ::T.let(nil, ::T.untyped)
-  DEFAULT_HEADERS = ::T.let(nil, ::T.untyped)
 end
 
 class GraphqlController
@@ -20288,6 +20185,10 @@ module RuboCop::AST::PredicateOperatorNode
   SEMANTIC_OR = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::AST::ProcessedSource
+  STRING_SOURCE_NAME = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::AST::RegexpNode
   OPTIONS = ::T.let(nil, ::T.untyped)
 end
@@ -20297,6 +20198,10 @@ module RuboCop::AST::Traversal
   NO_CHILD_NODES = ::T.let(nil, ::T.untyped)
   ONE_CHILD_NODE = ::T.let(nil, ::T.untyped)
   SECOND_CHILD_ONLY = ::T.let(nil, ::T.untyped)
+end
+
+module RuboCop::AST::Version
+  STRING = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::CLI
@@ -20868,6 +20773,10 @@ class RuboCop::Cop::Lint::DeprecatedClassMethods
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::DeprecatedOpenSSLConstant
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::DisjunctiveAssignmentInConstructor
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -21318,6 +21227,10 @@ class RuboCop::Cop::Offense
   COMPARISON_ATTRIBUTES = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Performance::BindCall
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Performance::Caller
   MSG_BRACE = ::T.let(nil, ::T.untyped)
   MSG_FIRST = ::T.let(nil, ::T.untyped)
@@ -21349,6 +21262,16 @@ class RuboCop::Cop::Performance::Count
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Performance::DeletePrefix
+  MSG = ::T.let(nil, ::T.untyped)
+  PREFERRED_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Performance::DeleteSuffix
+  MSG = ::T.let(nil, ::T.untyped)
+  PREFERRED_METHODS = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Performance::Detect
   MSG = ::T.let(nil, ::T.untyped)
   REVERSE_MSG = ::T.let(nil, ::T.untyped)
@@ -21360,7 +21283,6 @@ end
 
 class RuboCop::Cop::Performance::EndWith
   MSG = ::T.let(nil, ::T.untyped)
-  SINGLE_QUOTE = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Performance::FixedSize
@@ -21415,7 +21337,6 @@ end
 
 class RuboCop::Cop::Performance::StartWith
   MSG = ::T.let(nil, ::T.untyped)
-  SINGLE_QUOTE = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Performance::StringReplacement
@@ -21423,7 +21344,6 @@ class RuboCop::Cop::Performance::StringReplacement
   DELETE = ::T.let(nil, ::T.untyped)
   DETERMINISTIC_REGEX = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
-  SINGLE_QUOTE = ::T.let(nil, ::T.untyped)
   TR = ::T.let(nil, ::T.untyped)
 end
 
@@ -23032,7 +22952,7 @@ end
 
 class RuboCop::Cop::WorkaroundCop
   extend ::RuboCop::AST::Sexp
-  extend ::RuboCop::NodePattern::Macros
+  extend ::RuboCop::AST::NodePattern::Macros
   def self.all(); end
 
   def self.autocorrect_incompatible_with(); end
@@ -23112,6 +23032,8 @@ class RuboCop::MagicComment::VimComment
   SEPARATOR = ::T.let(nil, ::T.untyped)
 end
 
+RuboCop::NodePattern = RuboCop::AST::NodePattern
+
 class RuboCop::Options
   DEFAULT_MAXIMUM_EXCLUSION_ITEMS = ::T.let(nil, ::T.untyped)
   EXITING_OPTIONS = ::T.let(nil, ::T.untyped)
@@ -23132,9 +23054,7 @@ module RuboCop::Performance::Version
   STRING = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::ProcessedSource
-  STRING_SOURCE_NAME = ::T.let(nil, ::T.untyped)
-end
+RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
 module RuboCop::RSpec
   CONFIG = ::T.let(nil, ::T.untyped)
@@ -23181,6 +23101,8 @@ end
 class RuboCop::TargetRuby::RubyVersionFile
   FILENAME = ::T.let(nil, ::T.untyped)
 end
+
+RuboCop::Token = RuboCop::AST::Token
 
 module RuboCop::Version
   MSG = ::T.let(nil, ::T.untyped)
@@ -26301,31 +26223,11 @@ class User
   extend ::FriendlyId::Finders::ClassMethods
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
-  def self.admin(*args); end
-
   def self.devise_modules(); end
 
   def self.devise_modules=(val); end
 
   def self.devise_modules?(); end
-
-  def self.member(*args); end
-
-  def self.moderator(*args); end
-
-  def self.most_followers(*args); end
-
-  def self.most_games(*args); end
-
-  def self.not_admin(*args); end
-
-  def self.not_member(*args); end
-
-  def self.not_moderator(*args); end
-
-  def self.not_private_account(*args); end
-
-  def self.not_public_account(*args); end
 
   def self.pg_search_multisearchable_options(); end
 
@@ -26333,13 +26235,7 @@ class User
 
   def self.pg_search_multisearchable_options?(); end
 
-  def self.private_account(*args); end
-
-  def self.public_account(*args); end
-
   def self.search(*args); end
-
-  def self.with_attached_avatar(*args); end
 end
 
 module UsersHelper

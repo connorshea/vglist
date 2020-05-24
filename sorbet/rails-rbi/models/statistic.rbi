@@ -366,7 +366,7 @@ module Statistic::QueryMethodsReturningRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: Statistic::ActiveRecord_Relation).void)
-    ).returns(T::Enumerable[Statistic::ActiveRecord_Relation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
@@ -479,7 +479,7 @@ module Statistic::QueryMethodsReturningAssociationRelation
       load: T.nilable(T::Boolean),
       error_on_ignore: T.nilable(T::Boolean),
       block: T.nilable(T.proc.params(e: Statistic::ActiveRecord_AssociationRelation).void)
-    ).returns(T::Enumerable[Statistic::ActiveRecord_AssociationRelation])
+    ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
