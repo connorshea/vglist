@@ -207,7 +207,7 @@ Each type of mutation has different parameters. The specific parameters are docu
 
 ## Documentation
 
-I intend to add a GraphiQL editor interface to the website for testing API queries and viewing documentation, but I have not done so in production yet. You should be able to get API documentation for now using a tool like [Insomnia](https://insomnia.rest/).
+You can get documentation and test queries in the GraphiQL editor that's hosted alongside vglist, at [https://vglist.co/graphiql](vglist.co/graphiql). You should also be able to get API documentation using a tool like [Insomnia](https://insomnia.rest/).
 
 For writing GraphQL queries, the [GraphQL website](https://graphql.org/) should be a sufficient introduction.
 
