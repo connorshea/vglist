@@ -232,6 +232,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def match_with_trailing_comma_type?; end
   def mlhs_type?; end
   def module_type?; end
+  def mrasgn_type?; end
   def multiline?; end
   def mutable_literal?; end
   def new_class_or_module_block?(node = nil); end
@@ -267,6 +268,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def procarg0_type?; end
   def pure?; end
   def range_type?; end
+  def rasgn_type?; end
   def rational_type?; end
   def receiver(node = nil); end
   def recursive_basic_literal?; end

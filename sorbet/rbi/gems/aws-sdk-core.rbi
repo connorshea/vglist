@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/aws-sdk-core/all/aws-sdk-core.rbi
 #
-# aws-sdk-core-3.89.1
+# aws-sdk-core-3.96.1
 
 module Seahorse
 end
@@ -125,7 +125,7 @@ class Seahorse::Client::Plugin
   def self.options; end
   extend Seahorse::Client::HandlerBuilder
 end
-class InvalidName___Class_0x00___CodeLiteral_72 < String
+class InvalidName___Class_0x00___CodeLiteral_71 < String
   def inspect; end
 end
 class Seahorse::Client::Plugin::PluginOption
@@ -204,7 +204,7 @@ class Seahorse::Client::Response < Delegator
   def error; end
   def error=(arg0); end
   def initialize(options = nil); end
-  def on(range, &block); end
+  def on(range, &_block); end
   def on_complete(&block); end
   def on_success(&block); end
   def successful?; end
@@ -722,9 +722,9 @@ end
 class Aws::CredentialProviderChain
   def assume_role_credentials(options); end
   def assume_role_web_identity_credentials(options); end
-  def assume_role_with_profile(options); end
+  def assume_role_with_profile(options, profile_name); end
   def determine_profile_name(options); end
-  def env_credentials(options); end
+  def env_credentials(_options); end
   def envar(keys); end
   def initialize(config = nil); end
   def instance_profile_credentials(options); end
@@ -733,6 +733,10 @@ class Aws::CredentialProviderChain
   def resolve; end
   def shared_credentials(options); end
   def static_credentials(options); end
+  def static_profile_assume_role_credentials(options); end
+  def static_profile_assume_role_web_identity_credentials(options); end
+  def static_profile_credentials(options); end
+  def static_profile_process_credentials(options); end
 end
 class Aws::ECSCredentials
   def backoff(backoff); end
@@ -838,8 +842,10 @@ class Aws::Errors::ServiceError < RuntimeError
   def context; end
   def data; end
   def initialize(context, message, data = nil); end
+  def retryable?; end
   def self.code; end
   def self.code=(arg0); end
+  def throttling?; end
 end
 class Aws::Errors::MetadataParserError < RuntimeError
   def initialize(*args); end
@@ -902,6 +908,9 @@ class Aws::Errors::NoSuchEndpointError < RuntimeError
   def initialize(options = nil); end
   def original_error; end
   def possible_regions; end
+end
+class Aws::Errors::RetryCapacityNotAvailableError < RuntimeError
+  def initialize(*args); end
 end
 module Aws::Errors::DynamicErrors
   def const_missing(constant); end
@@ -980,21 +989,22 @@ class Aws::ParamValidator
   include Seahorse::Model::Shapes
 end
 class Aws::SharedConfig
+  def adaptive_retry_wait_to_fill(opts = nil); end
   def assume_role_credentials_from_config(opts = nil); end
   def assume_role_from_profile(cfg, profile, opts, chain_config); end
   def assume_role_process_credentials_from_config(profile); end
-  def assume_role_web_identity_credentials_from_config(profile); end
+  def assume_role_web_identity_credentials_from_config(opts = nil); end
   def config_enabled?; end
   def config_path; end
+  def correct_clock_skew(opts = nil); end
+  def credential_process(opts = nil); end
   def credentials(opts = nil); end
-  def credentials_complete(creds); end
-  def credentials_from_config(profile, opts); end
+  def credentials_from_config(profile, _opts); end
   def credentials_from_profile(prof_config); end
-  def credentials_from_shared(profile, opts); end
+  def credentials_from_shared(profile, _opts); end
   def credentials_from_source(credential_source, config); end
   def credentials_path; end
   def credentials_present?; end
-  def credentials_process(profile); end
   def csm_client_id(opts = nil); end
   def csm_enabled(opts = nil); end
   def csm_host(opts = nil); end
@@ -1003,17 +1013,21 @@ class Aws::SharedConfig
   def determine_config_path; end
   def determine_credentials_path; end
   def determine_profile(options); end
-  def endpoint_discovery(opts = nil); end
+  def endpoint_discovery_enabled(opts = nil); end
   def fresh(options = nil); end
+  def get_config_value(key, opts); end
   def initialize(options = nil); end
   def load_config_file; end
   def load_credentials_file; end
   def loadable?(path); end
+  def max_attempts(opts = nil); end
   def profile_name; end
   def region(opts = nil); end
-  def resolve_source_profile(profile); end
+  def resolve_source_profile(profile, opts = nil); end
+  def retry_mode(opts = nil); end
   def s3_us_east_1_regional_endpoint(opts = nil); end
   def s3_use_arn_region(opts = nil); end
+  def self.config_reader(*attrs); end
   def sts_regional_endpoints(opts = nil); end
   def validate_profile_exists(profile); end
 end
@@ -1044,6 +1058,7 @@ module Aws::Util
   def self.deep_copy(obj); end
   def self.deep_merge(left, right); end
   def self.monotonic_milliseconds; end
+  def self.monotonic_seconds; end
   def self.str_2_bool(str); end
 end
 module Aws::Resources
@@ -1649,7 +1664,7 @@ module Aws::STS
 end
 module Aws::STS::Types
 end
-class Anonymous_Struct_73 < Struct
+class Anonymous_Struct_72 < Struct
   def duration_seconds; end
   def duration_seconds=(_); end
   def external_id; end
@@ -1675,10 +1690,10 @@ class Anonymous_Struct_73 < Struct
   def transitive_tag_keys; end
   def transitive_tag_keys=(_); end
 end
-class Aws::STS::Types::AssumeRoleRequest < Anonymous_Struct_73
+class Aws::STS::Types::AssumeRoleRequest < Anonymous_Struct_72
   include Aws::Structure
 end
-class Anonymous_Struct_74 < Struct
+class Anonymous_Struct_73 < Struct
   def assumed_role_user; end
   def assumed_role_user=(_); end
   def credentials; end
@@ -1690,10 +1705,10 @@ class Anonymous_Struct_74 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::AssumeRoleResponse < Anonymous_Struct_74
+class Aws::STS::Types::AssumeRoleResponse < Anonymous_Struct_73
   include Aws::Structure
 end
-class Anonymous_Struct_75 < Struct
+class Anonymous_Struct_74 < Struct
   def duration_seconds; end
   def duration_seconds=(_); end
   def policy; end
@@ -1711,10 +1726,10 @@ class Anonymous_Struct_75 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::AssumeRoleWithSAMLRequest < Anonymous_Struct_75
+class Aws::STS::Types::AssumeRoleWithSAMLRequest < Anonymous_Struct_74
   include Aws::Structure
 end
-class Anonymous_Struct_76 < Struct
+class Anonymous_Struct_75 < Struct
   def assumed_role_user; end
   def assumed_role_user=(_); end
   def audience; end
@@ -1736,10 +1751,10 @@ class Anonymous_Struct_76 < Struct
   def subject_type; end
   def subject_type=(_); end
 end
-class Aws::STS::Types::AssumeRoleWithSAMLResponse < Anonymous_Struct_76
+class Aws::STS::Types::AssumeRoleWithSAMLResponse < Anonymous_Struct_75
   include Aws::Structure
 end
-class Anonymous_Struct_77 < Struct
+class Anonymous_Struct_76 < Struct
   def duration_seconds; end
   def duration_seconds=(_); end
   def policy; end
@@ -1759,10 +1774,10 @@ class Anonymous_Struct_77 < Struct
   def web_identity_token; end
   def web_identity_token=(_); end
 end
-class Aws::STS::Types::AssumeRoleWithWebIdentityRequest < Anonymous_Struct_77
+class Aws::STS::Types::AssumeRoleWithWebIdentityRequest < Anonymous_Struct_76
   include Aws::Structure
 end
-class Anonymous_Struct_78 < Struct
+class Anonymous_Struct_77 < Struct
   def assumed_role_user; end
   def assumed_role_user=(_); end
   def audience; end
@@ -1780,10 +1795,10 @@ class Anonymous_Struct_78 < Struct
   def subject_from_web_identity_token; end
   def subject_from_web_identity_token=(_); end
 end
-class Aws::STS::Types::AssumeRoleWithWebIdentityResponse < Anonymous_Struct_78
+class Aws::STS::Types::AssumeRoleWithWebIdentityResponse < Anonymous_Struct_77
   include Aws::Structure
 end
-class Anonymous_Struct_79 < Struct
+class Anonymous_Struct_78 < Struct
   def arn; end
   def arn=(_); end
   def assumed_role_id; end
@@ -1793,10 +1808,10 @@ class Anonymous_Struct_79 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::AssumedRoleUser < Anonymous_Struct_79
+class Aws::STS::Types::AssumedRoleUser < Anonymous_Struct_78
   include Aws::Structure
 end
-class Anonymous_Struct_80 < Struct
+class Anonymous_Struct_79 < Struct
   def access_key_id; end
   def access_key_id=(_); end
   def expiration; end
@@ -1810,10 +1825,10 @@ class Anonymous_Struct_80 < Struct
   def session_token; end
   def session_token=(_); end
 end
-class Aws::STS::Types::Credentials < Anonymous_Struct_80
+class Aws::STS::Types::Credentials < Anonymous_Struct_79
   include Aws::Structure
 end
-class Anonymous_Struct_81 < Struct
+class Anonymous_Struct_80 < Struct
   def encoded_message; end
   def encoded_message=(_); end
   def self.[](*arg0); end
@@ -1821,10 +1836,10 @@ class Anonymous_Struct_81 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::DecodeAuthorizationMessageRequest < Anonymous_Struct_81
+class Aws::STS::Types::DecodeAuthorizationMessageRequest < Anonymous_Struct_80
   include Aws::Structure
 end
-class Anonymous_Struct_82 < Struct
+class Anonymous_Struct_81 < Struct
   def decoded_message; end
   def decoded_message=(_); end
   def self.[](*arg0); end
@@ -1832,10 +1847,10 @@ class Anonymous_Struct_82 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::DecodeAuthorizationMessageResponse < Anonymous_Struct_82
+class Aws::STS::Types::DecodeAuthorizationMessageResponse < Anonymous_Struct_81
   include Aws::Structure
 end
-class Anonymous_Struct_83 < Struct
+class Anonymous_Struct_82 < Struct
   def message; end
   def message=(_); end
   def self.[](*arg0); end
@@ -1843,10 +1858,10 @@ class Anonymous_Struct_83 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::ExpiredTokenException < Anonymous_Struct_83
+class Aws::STS::Types::ExpiredTokenException < Anonymous_Struct_82
   include Aws::Structure
 end
-class Anonymous_Struct_84 < Struct
+class Anonymous_Struct_83 < Struct
   def arn; end
   def arn=(_); end
   def federated_user_id; end
@@ -1856,10 +1871,10 @@ class Anonymous_Struct_84 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::FederatedUser < Anonymous_Struct_84
+class Aws::STS::Types::FederatedUser < Anonymous_Struct_83
   include Aws::Structure
 end
-class Anonymous_Struct_85 < Struct
+class Anonymous_Struct_84 < Struct
   def access_key_id; end
   def access_key_id=(_); end
   def self.[](*arg0); end
@@ -1867,10 +1882,10 @@ class Anonymous_Struct_85 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::GetAccessKeyInfoRequest < Anonymous_Struct_85
+class Aws::STS::Types::GetAccessKeyInfoRequest < Anonymous_Struct_84
   include Aws::Structure
 end
-class Anonymous_Struct_86 < Struct
+class Anonymous_Struct_85 < Struct
   def account; end
   def account=(_); end
   def self.[](*arg0); end
@@ -1878,12 +1893,12 @@ class Anonymous_Struct_86 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::GetAccessKeyInfoResponse < Anonymous_Struct_86
+class Aws::STS::Types::GetAccessKeyInfoResponse < Anonymous_Struct_85
   include Aws::Structure
 end
 class Aws::STS::Types::GetCallerIdentityRequest < Aws::EmptyStructure
 end
-class Anonymous_Struct_87 < Struct
+class Anonymous_Struct_86 < Struct
   def account; end
   def account=(_); end
   def arn; end
@@ -1895,10 +1910,10 @@ class Anonymous_Struct_87 < Struct
   def user_id; end
   def user_id=(_); end
 end
-class Aws::STS::Types::GetCallerIdentityResponse < Anonymous_Struct_87
+class Aws::STS::Types::GetCallerIdentityResponse < Anonymous_Struct_86
   include Aws::Structure
 end
-class Anonymous_Struct_88 < Struct
+class Anonymous_Struct_87 < Struct
   def duration_seconds; end
   def duration_seconds=(_); end
   def name; end
@@ -1914,10 +1929,10 @@ class Anonymous_Struct_88 < Struct
   def tags; end
   def tags=(_); end
 end
-class Aws::STS::Types::GetFederationTokenRequest < Anonymous_Struct_88
+class Aws::STS::Types::GetFederationTokenRequest < Anonymous_Struct_87
   include Aws::Structure
 end
-class Anonymous_Struct_89 < Struct
+class Anonymous_Struct_88 < Struct
   def credentials; end
   def credentials=(_); end
   def federated_user; end
@@ -1929,10 +1944,10 @@ class Anonymous_Struct_89 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::GetFederationTokenResponse < Anonymous_Struct_89
+class Aws::STS::Types::GetFederationTokenResponse < Anonymous_Struct_88
   include Aws::Structure
 end
-class Anonymous_Struct_90 < Struct
+class Anonymous_Struct_89 < Struct
   def duration_seconds; end
   def duration_seconds=(_); end
   def self.[](*arg0); end
@@ -1944,10 +1959,10 @@ class Anonymous_Struct_90 < Struct
   def token_code; end
   def token_code=(_); end
 end
-class Aws::STS::Types::GetSessionTokenRequest < Anonymous_Struct_90
+class Aws::STS::Types::GetSessionTokenRequest < Anonymous_Struct_89
   include Aws::Structure
 end
-class Anonymous_Struct_91 < Struct
+class Anonymous_Struct_90 < Struct
   def credentials; end
   def credentials=(_); end
   def self.[](*arg0); end
@@ -1955,7 +1970,18 @@ class Anonymous_Struct_91 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::GetSessionTokenResponse < Anonymous_Struct_91
+class Aws::STS::Types::GetSessionTokenResponse < Anonymous_Struct_90
+  include Aws::Structure
+end
+class Anonymous_Struct_91 < Struct
+  def message; end
+  def message=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::STS::Types::IDPCommunicationErrorException < Anonymous_Struct_91
   include Aws::Structure
 end
 class Anonymous_Struct_92 < Struct
@@ -1966,7 +1992,7 @@ class Anonymous_Struct_92 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::IDPCommunicationErrorException < Anonymous_Struct_92
+class Aws::STS::Types::IDPRejectedClaimException < Anonymous_Struct_92
   include Aws::Structure
 end
 class Anonymous_Struct_93 < Struct
@@ -1977,7 +2003,7 @@ class Anonymous_Struct_93 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::IDPRejectedClaimException < Anonymous_Struct_93
+class Aws::STS::Types::InvalidAuthorizationMessageException < Anonymous_Struct_93
   include Aws::Structure
 end
 class Anonymous_Struct_94 < Struct
@@ -1988,7 +2014,7 @@ class Anonymous_Struct_94 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::InvalidAuthorizationMessageException < Anonymous_Struct_94
+class Aws::STS::Types::InvalidIdentityTokenException < Anonymous_Struct_94
   include Aws::Structure
 end
 class Anonymous_Struct_95 < Struct
@@ -1999,7 +2025,7 @@ class Anonymous_Struct_95 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::InvalidIdentityTokenException < Anonymous_Struct_95
+class Aws::STS::Types::MalformedPolicyDocumentException < Anonymous_Struct_95
   include Aws::Structure
 end
 class Anonymous_Struct_96 < Struct
@@ -2010,21 +2036,10 @@ class Anonymous_Struct_96 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::MalformedPolicyDocumentException < Anonymous_Struct_96
+class Aws::STS::Types::PackedPolicyTooLargeException < Anonymous_Struct_96
   include Aws::Structure
 end
 class Anonymous_Struct_97 < Struct
-  def message; end
-  def message=(_); end
-  def self.[](*arg0); end
-  def self.inspect; end
-  def self.members; end
-  def self.new(*arg0); end
-end
-class Aws::STS::Types::PackedPolicyTooLargeException < Anonymous_Struct_97
-  include Aws::Structure
-end
-class Anonymous_Struct_98 < Struct
   def arn; end
   def arn=(_); end
   def self.[](*arg0); end
@@ -2032,10 +2047,10 @@ class Anonymous_Struct_98 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::PolicyDescriptorType < Anonymous_Struct_98
+class Aws::STS::Types::PolicyDescriptorType < Anonymous_Struct_97
   include Aws::Structure
 end
-class Anonymous_Struct_99 < Struct
+class Anonymous_Struct_98 < Struct
   def message; end
   def message=(_); end
   def self.[](*arg0); end
@@ -2043,10 +2058,10 @@ class Anonymous_Struct_99 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class Aws::STS::Types::RegionDisabledException < Anonymous_Struct_99
+class Aws::STS::Types::RegionDisabledException < Anonymous_Struct_98
   include Aws::Structure
 end
-class Anonymous_Struct_100 < Struct
+class Anonymous_Struct_99 < Struct
   def key; end
   def key=(_); end
   def self.[](*arg0); end
@@ -2056,7 +2071,7 @@ class Anonymous_Struct_100 < Struct
   def value; end
   def value=(_); end
 end
-class Aws::STS::Types::Tag < Anonymous_Struct_100
+class Aws::STS::Types::Tag < Anonymous_Struct_99
   include Aws::Structure
 end
 module Aws::STS::ClientApi
@@ -2099,27 +2114,72 @@ class Aws::Plugins::HelpfulSocketErrors::Handler < Seahorse::Client::Handler
   def no_such_endpoint_error(context, error); end
   def socket_endpoint_error?(error); end
 end
-class Aws::Plugins::RetryErrors < Seahorse::Client::Plugin
-  def add_handlers(handlers, config); end
+module Aws::Plugins::Retries
 end
-class Aws::Plugins::RetryErrors::ErrorInspector
+class Aws::Plugins::Retries::ErrorInspector
   def checksum?; end
+  def clock_skew?(context); end
   def endpoint_discovery?(context); end
   def expired_credentials?; end
   def extract_name(error); end
   def initialize(error, http_status_code); end
+  def modeled_retryable?; end
+  def modeled_throttling?; end
   def networking?; end
   def refreshable_credentials?(context); end
   def retryable?(context); end
   def server?; end
   def throttling_error?; end
 end
+class Aws::Plugins::Retries::RetryQuota
+  def checkout_capacity(error_inspector); end
+  def initialize(opts = nil); end
+  def release(capacity_amount); end
+end
+class Aws::Plugins::Retries::ClientRateLimiter
+  def calculate_time_window; end
+  def cubic_success(timestamp); end
+  def cubic_throttle(rate_to_use); end
+  def enable_token_bucket; end
+  def initialize; end
+  def token_bucket_acquire(amount, wait_to_fill = nil); end
+  def token_bucket_refill; end
+  def token_bucket_update_rate(new_rps); end
+  def update_measured_rate; end
+  def update_sending_rate(is_throttling_error); end
+end
+class Aws::Plugins::Retries::ClockSkew
+  def clock_correction(endpoint); end
+  def clock_skewed?(context); end
+  def estimated_skew(endpoint); end
+  def initialize; end
+  def server_time(response); end
+  def set_clock_correction(endpoint, correction); end
+  def update_clock_correction(context); end
+  def update_estimated_skew(context); end
+end
+class Aws::Plugins::RetryErrors < Seahorse::Client::Plugin
+  def add_handlers(handlers, config); end
+  def self.resolve_adaptive_retry_wait_to_fill(cfg); end
+  def self.resolve_correct_clock_skew(cfg); end
+  def self.resolve_max_attempts(cfg); end
+  def self.resolve_retry_mode(cfg); end
+end
 class Aws::Plugins::RetryErrors::Handler < Seahorse::Client::Handler
+  def add_retry_headers(context); end
+  def call(context); end
+  def compute_request_ttl(context); end
+  def exponential_backoff(retries); end
+  def get_send_token(config); end
+  def request_bookkeeping(context, response, error_inspector); end
+  def retry_request(context, error); end
+  def retryable?(context, response, error_inspector); end
+end
+class Aws::Plugins::RetryErrors::LegacyHandler < Seahorse::Client::Handler
   def call(context); end
   def delay_retry(context); end
-  def error_for(response); end
   def response_truncatable?(context); end
-  def retry_if_possible(response); end
+  def retry_if_possible(response, error_inspector); end
   def retry_limit(context); end
   def retry_request(context, error); end
   def should_retry?(context, error); end
@@ -2332,10 +2392,10 @@ class Aws::STS::Client < Seahorse::Client::Base
   def self.errors_module; end
   def self.identifier; end
   def waiter_names; end
-  include Anonymous_Module_101
+  include Anonymous_Module_100
   include Aws::ClientStubs
 end
-module Anonymous_Module_101
+module Anonymous_Module_100
   def assume_role(*args, &block); end
   def assume_role_with_saml(*args, &block); end
   def assume_role_with_web_identity(*args, &block); end

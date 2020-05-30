@@ -7,10 +7,13 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.7.1.2
+# parser-2.7.1.3
 
 module Parser
   def self.warn_syntax_deviation(feature, version); end
+end
+module Parser::Messages
+  def self.compile(reason, arguments); end
 end
 module Parser::Deprecation
   def warn_of_deprecation; end
@@ -93,6 +96,7 @@ class Parser::AST::Processor < AST::Processor
   def on_match_with_lvasgn(node); end
   def on_mlhs(node); end
   def on_module(node); end
+  def on_mrasgn(node); end
   def on_next(node); end
   def on_not(node); end
   def on_nth_ref(node); end
@@ -106,6 +110,7 @@ class Parser::AST::Processor < AST::Processor
   def on_postexe(node); end
   def on_preexe(node); end
   def on_procarg0(node); end
+  def on_rasgn(node); end
   def on_redo(node); end
   def on_regexp(node); end
   def on_resbody(node); end
@@ -143,7 +148,7 @@ class Parser::Source::Buffer
   def column_for_position(position); end
   def decompose_position(position); end
   def first_line; end
-  def initialize(name, first_line = nil); end
+  def initialize(name, first_line = nil, source: nil); end
   def last_line; end
   def line_begins; end
   def line_for(position); end
@@ -194,6 +199,7 @@ class Parser::Source::Range
   def source_buffer; end
   def source_line; end
   def to_a; end
+  def to_range; end
   def to_s; end
   def with(begin_pos: nil, end_pos: nil); end
   include Comparable
@@ -217,6 +223,7 @@ class Parser::Source::Comment::Associator
   def associate; end
   def associate_and_advance_comment(node); end
   def associate_locations; end
+  def children_in_source_order(node); end
   def current_comment_before?(node); end
   def current_comment_before_end?(node); end
   def current_comment_decorates?(node); end
@@ -768,6 +775,7 @@ class Parser::Builders::Default
   def module_definition_map(keyword_t, name_e, operator_t, end_t); end
   def multi_assign(lhs, eql_t, rhs); end
   def multi_lhs(begin_t, items, end_t); end
+  def multi_rassign(lhs, assoc_t, rhs); end
   def n(type, children, source_map); end
   def n0(type, source_map); end
   def nil(nil_t); end
@@ -796,6 +804,7 @@ class Parser::Builders::Default
   def range_exclusive(lhs, dot3_t, rhs); end
   def range_inclusive(lhs, dot2_t, rhs); end
   def range_map(start_e, op_t, end_e); end
+  def rassign(lhs, assoc_t, rhs); end
   def rational(rational_t); end
   def regexp_compose(begin_t, parts, end_t, options); end
   def regexp_map(begin_t, end_t, options_e); end

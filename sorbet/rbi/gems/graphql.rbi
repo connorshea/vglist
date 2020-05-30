@@ -2871,7 +2871,7 @@ module GraphQL::Schema::LazyHandlingMethods
 end
 class GraphQL::Schema::InvalidDocumentError < GraphQL::Error
 end
-module InvalidName___Class_0x00___ResolveTypeWithType_58
+module InvalidName___Class_0x00___ResolveTypeWithType_57
   def resolve_type(type, obj, ctx); end
 end
 class GraphQL::Schema::CyclicalDefinitionError < GraphQL::Error

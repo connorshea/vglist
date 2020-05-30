@@ -12,8 +12,8 @@ module ::Anonymous_Delegator_22; end
 module ::Anonymous_Delegator_23; end
 module ::Anonymous_Delegator_3; end
 module ::Anonymous_Delegator_4; end
-module ::Anonymous_Delegator_480; end
-module ::Anonymous_Delegator_71; end
+module ::Anonymous_Delegator_479; end
+module ::Anonymous_Delegator_70; end
 module ::Anonymous_Delegator_8; end
 module ActiveRecord::CollectionCacheKey; end
 module Anonymous_Module_24::Anonymous_Module_25; end
@@ -35,12 +35,11 @@ module Anonymous_Module_48::Anonymous_Module_26; end
 module Anonymous_Module_49::Anonymous_Module_25; end
 module Anonymous_Module_49::Anonymous_Module_26; end
 module Anonymous_Module_50::Anonymous_Module_25; end
-module Anonymous_Module_57::Anonymous_Module_25; end
-module Anonymous_Module_57::Anonymous_Module_26; end
 module Doorkeeper::Models::Ownership; end
-module Doorkeeper::OAuth::Helpers; end
 module Doorkeeper::Rails::Helpers; end
 module Doorkeeper::Rails::Routes::Helper; end
+module GeneratedUrlHelpers::Anonymous_Module_25; end
+module GeneratedUrlHelpers::Anonymous_Module_26; end
 module OrmAdapter::ActiveRecord::ToAdapter; end
 module T::InterfaceWrapper::Helpers; end
 module T::Private::Abstract::Hooks; end

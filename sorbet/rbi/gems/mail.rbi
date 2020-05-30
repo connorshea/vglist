@@ -506,7 +506,7 @@ class Mail::Header
   include Mail::Constants
   include Mail::Utilities
 end
-class Mail::PartsList < Anonymous_Delegator_71
+class Mail::PartsList < Anonymous_Delegator_70
   def attachments; end
   def collect!; end
   def collect; end

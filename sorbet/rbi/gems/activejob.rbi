@@ -174,7 +174,7 @@ module ActiveJob::Arguments
   extend ActiveJob::Arguments
 end
 class Hash
-  def self._ruby2_keywords_hash(*args); end
+  def self.from_xml(xml, disallowed_types = nil); end
   def self.ruby2_keywords_hash(hash); end
   def self.ruby2_keywords_hash?(hash); end
 end
