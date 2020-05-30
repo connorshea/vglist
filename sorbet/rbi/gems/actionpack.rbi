@@ -161,8 +161,6 @@ class ActionController::Parameters
   def values_at(*keys); end
   def with_defaults!(other_hash); end
   def with_defaults(other_hash); end
-  include SorbetRails::CustomParamsMethods
-  include SorbetRails::CustomParamsMethods
   include SorbetRailsHack
   include SorbetRailsHack
 end

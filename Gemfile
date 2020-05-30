@@ -62,8 +62,9 @@ gem 'ruby-progressbar', '~> 1.10', require: false
 gem 'sentry-raven', '~> 3.0'
 
 # Sorbet runtime typechecker and Sorbet Rails.
-gem 'sorbet-runtime', '~> 0.5'
-gem "sorbet-rails", '~> 0.6'
+gem 'sorbet-runtime', '~> 0.5', '< 0.5.5713'
+gem 'sorbet-static', '~> 0.5', '< 0.5.5713'
+gem "sorbet-rails", '~> 0.7'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 1.10.10'
@@ -124,7 +125,7 @@ group :development, :test do
   gem 'bullet', '~> 6.1'
 
   # Sorbet typechecker
-  gem 'sorbet', '~> 0.5'
+  gem 'sorbet', '~> 0.5', '< 0.5.5713'
 end
 
 group :development do

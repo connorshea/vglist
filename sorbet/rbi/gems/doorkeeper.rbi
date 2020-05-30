@@ -14,6 +14,7 @@ module Doorkeeper
   def self.config; end
   def self.configuration; end
   def self.configure(&block); end
+  def self.gem_version; end
   def self.setup_application_owner; end
   def self.setup_orm_adapter; end
   def self.setup_orm_models; end
@@ -772,10 +773,10 @@ class Doorkeeper::ApplicationController < ApplicationController
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_59
+  include Anonymous_Module_58
   include Doorkeeper::Helpers::Controller
 end
-module Anonymous_Module_59
+module Anonymous_Module_58
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -814,9 +815,9 @@ class Doorkeeper::ApplicationsController < Doorkeeper::ApplicationController
   def show; end
   def update; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_60
+  include Anonymous_Module_59
 end
-module Anonymous_Module_60
+module Anonymous_Module_59
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -859,9 +860,9 @@ class Doorkeeper::AuthorizationsController < Doorkeeper::ApplicationController
   def self.middleware_stack; end
   def strategy; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_61
+  include Anonymous_Module_60
 end
-module Anonymous_Module_61
+module Anonymous_Module_60
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -890,9 +891,9 @@ class Doorkeeper::AuthorizedApplicationsController < Doorkeeper::ApplicationCont
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_62
+  include Anonymous_Module_61
 end
-module Anonymous_Module_62
+module Anonymous_Module_61
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -918,10 +919,10 @@ class Doorkeeper::ApplicationMetalController < ActionController::API
   def self.helpers_path; end
   def self.middleware_stack; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_63
+  include Anonymous_Module_62
   include Doorkeeper::Helpers::Controller
 end
-module Anonymous_Module_63
+module Anonymous_Module_62
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -958,9 +959,9 @@ class Doorkeeper::TokensController < Doorkeeper::ApplicationMetalController
   def strategy; end
   def token; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_64
+  include Anonymous_Module_63
 end
-module Anonymous_Module_64
+module Anonymous_Module_63
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -986,9 +987,9 @@ class Doorkeeper::TokenInfoController < Doorkeeper::ApplicationMetalController
   def self.middleware_stack; end
   def show; end
   include ActionDispatch::Routing::UrlFor
-  include Anonymous_Module_65
+  include Anonymous_Module_64
 end
-module Anonymous_Module_65
+module Anonymous_Module_64
   def _generate_paths_by_default; end
   def _routes; end
   def self._routes; end
@@ -1005,4 +1006,461 @@ module Anonymous_Module_65
   include ActionDispatch::Routing::UrlFor
   include Anonymous_Module_25
   include Anonymous_Module_26
+end
+module Doorkeeper::Errors
+end
+class Doorkeeper::Errors::DoorkeeperError < StandardError
+  def type; end
+end
+class Doorkeeper::Errors::InvalidGrantReuse < Doorkeeper::Errors::DoorkeeperError
+  def type; end
+end
+class Doorkeeper::Errors::InvalidTokenStrategy < Doorkeeper::Errors::DoorkeeperError
+  def type; end
+end
+class Doorkeeper::Errors::MissingRequiredParameter < Doorkeeper::Errors::DoorkeeperError
+  def initialize(missing_param); end
+  def missing_param; end
+  def type; end
+end
+class Doorkeeper::Errors::BaseResponseError < Doorkeeper::Errors::DoorkeeperError
+  def initialize(response); end
+  def response; end
+end
+class Doorkeeper::Errors::UnableToGenerateToken < Doorkeeper::Errors::DoorkeeperError
+end
+class Doorkeeper::Errors::TokenGeneratorNotFound < Doorkeeper::Errors::DoorkeeperError
+end
+class Doorkeeper::Errors::NoOrmCleaner < Doorkeeper::Errors::DoorkeeperError
+end
+class Doorkeeper::Errors::InvalidToken < Doorkeeper::Errors::BaseResponseError
+end
+class Doorkeeper::Errors::TokenExpired < Doorkeeper::Errors::InvalidToken
+end
+class Doorkeeper::Errors::TokenRevoked < Doorkeeper::Errors::InvalidToken
+end
+class Doorkeeper::Errors::TokenUnknown < Doorkeeper::Errors::InvalidToken
+end
+class Doorkeeper::Errors::TokenForbidden < Doorkeeper::Errors::InvalidToken
+end
+module Doorkeeper::Rake
+  def self.load_tasks; end
+end
+class Doorkeeper::Server
+  def authorization_request(strategy); end
+  def client; end
+  def context; end
+  def credentials; end
+  def current_resource_owner; end
+  def initialize(context); end
+  def parameters; end
+  def resource_owner; end
+  def token_request(strategy); end
+end
+class Doorkeeper::StaleRecordsCleaner
+  def self.configured_orm; end
+  def self.for(base_scope); end
+  def self.new(base_scope); end
+end
+module Doorkeeper::Validations
+  def error; end
+  def error=(arg0); end
+  def valid?; end
+  def validate; end
+  extend ActiveSupport::Concern
+end
+module Doorkeeper::Validations::ClassMethods
+  def validate(attribute, options = nil); end
+  def validations; end
+end
+module Doorkeeper::VERSION
+end
+class Doorkeeper::Request::Strategy
+  def authorize(*args, &block); end
+  def initialize(server); end
+  def request; end
+  def server; end
+end
+class Doorkeeper::Request::AuthorizationCode < Doorkeeper::Request::Strategy
+  def client(*args, &block); end
+  def grant; end
+  def parameters(*args, &block); end
+  def request; end
+end
+class Doorkeeper::Request::ClientCredentials < Doorkeeper::Request::Strategy
+  def client(*args, &block); end
+  def parameters(*args, &block); end
+  def request; end
+end
+class Doorkeeper::Request::Code < Doorkeeper::Request::Strategy
+  def current_resource_owner(*args, &block); end
+  def pre_auth; end
+  def request; end
+end
+class Doorkeeper::Request::Password < Doorkeeper::Request::Strategy
+  def client(*args, &block); end
+  def credentials(*args, &block); end
+  def parameters(*args, &block); end
+  def request; end
+  def resource_owner(*args, &block); end
+end
+class Doorkeeper::Request::RefreshToken < Doorkeeper::Request::Strategy
+  def credentials(*args, &block); end
+  def parameters(*args, &block); end
+  def refresh_token; end
+  def request; end
+end
+class Doorkeeper::Request::Token < Doorkeeper::Request::Strategy
+  def current_resource_owner(*args, &block); end
+  def pre_auth; end
+  def request; end
+end
+class Doorkeeper::OAuth::BaseRequest
+  def after_successful_response; end
+  def authorize; end
+  def before_successful_response; end
+  def build_scopes; end
+  def default_scopes(*args, &block); end
+  def find_or_create_access_token(client, resource_owner, scopes, server); end
+  def grant_type; end
+  def scopes; end
+  def server; end
+  def server_config; end
+  extend Doorkeeper::Validations::ClassMethods
+  include Doorkeeper::Validations
+end
+class Doorkeeper::OAuth::AuthorizationCodeRequest < Doorkeeper::OAuth::BaseRequest
+  def access_token; end
+  def before_successful_response; end
+  def client; end
+  def code_verifier; end
+  def generate_code_challenge(code_verifier); end
+  def grant; end
+  def initialize(server, grant, client, parameters = nil); end
+  def invalid_request_reason; end
+  def missing_param; end
+  def pkce_supported?; end
+  def redirect_uri; end
+  def validate_client; end
+  def validate_code_verifier; end
+  def validate_grant; end
+  def validate_params; end
+  def validate_pkce_support; end
+  def validate_redirect_uri; end
+end
+class Doorkeeper::OAuth::BaseResponse
+  def body; end
+  def description; end
+  def headers; end
+  def redirect_uri; end
+  def redirectable?; end
+  def status; end
+end
+class Doorkeeper::OAuth::CodeResponse < Doorkeeper::OAuth::BaseResponse
+  def auth; end
+  def initialize(pre_auth, auth, options = nil); end
+  def issued_token; end
+  def pre_auth; end
+  def redirect_uri; end
+  def redirectable?; end
+  def response_on_fragment; end
+  include Doorkeeper::OAuth::Helpers
+end
+class Doorkeeper::OAuth::ClientCredentialsRequest < Doorkeeper::OAuth::BaseRequest
+  def access_token; end
+  def client; end
+  def error(*args, &block); end
+  def error_response; end
+  def initialize(server, client, parameters = nil); end
+  def issuer; end
+  def original_scopes; end
+  def response; end
+  def valid?; end
+end
+class Doorkeeper::OAuth::CodeRequest
+  def authorize; end
+  def deny; end
+  def initialize(pre_auth, resource_owner); end
+  def pre_auth; end
+  def resource_owner; end
+end
+class Doorkeeper::OAuth::ErrorResponse < Doorkeeper::OAuth::BaseResponse
+  def authenticate_info; end
+  def body; end
+  def description(*args, &block); end
+  def exception_class; end
+  def headers; end
+  def initialize(attributes = nil); end
+  def name(*args, &block); end
+  def raise_exception!; end
+  def realm; end
+  def redirect_uri; end
+  def redirectable?; end
+  def self.from_request(request, attributes = nil); end
+  def state(*args, &block); end
+  def status; end
+  include Doorkeeper::OAuth::Helpers
+end
+class Doorkeeper::OAuth::Error < Struct
+  def description; end
+  def name; end
+  def name=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+  def state; end
+  def state=(_); end
+end
+class Doorkeeper::OAuth::InvalidTokenResponse < Doorkeeper::OAuth::ErrorResponse
+  def description; end
+  def errors_mapping; end
+  def exception_class; end
+  def initialize(attributes = nil); end
+  def reason; end
+  def self.from_access_token(access_token, attributes = nil); end
+  def status; end
+end
+class Doorkeeper::OAuth::InvalidRequestResponse < Doorkeeper::OAuth::ErrorResponse
+  def description; end
+  def initialize(attributes = nil); end
+  def reason; end
+  def redirectable?; end
+  def self.from_request(request, attributes = nil); end
+  def status; end
+end
+class Doorkeeper::OAuth::ForbiddenTokenResponse < Doorkeeper::OAuth::ErrorResponse
+  def description; end
+  def exception_class; end
+  def headers; end
+  def initialize(attributes = nil); end
+  def self.from_scopes(scopes, attributes = nil); end
+  def status; end
+end
+class Doorkeeper::OAuth::NonStandard
+end
+class Doorkeeper::OAuth::PasswordAccessTokenRequest < Doorkeeper::OAuth::BaseRequest
+  def access_token; end
+  def before_successful_response; end
+  def client; end
+  def initialize(server, client, resource_owner, parameters = nil); end
+  def parameters; end
+  def resource_owner; end
+  def validate_client; end
+  def validate_client_supports_grant_flow; end
+  def validate_resource_owner; end
+  def validate_scopes; end
+  include Doorkeeper::OAuth::Helpers
+end
+class Doorkeeper::OAuth::PreAuthorization
+  def as_json(_options = nil); end
+  def authorizable?; end
+  def build_scopes; end
+  def client; end
+  def client_id; end
+  def code_challenge; end
+  def code_challenge_method; end
+  def error_response; end
+  def grant_type; end
+  def initialize(server, parameters = nil, resource_owner = nil); end
+  def missing_param; end
+  def pre_auth_hash; end
+  def redirect_uri; end
+  def resource_owner; end
+  def response_on_fragment?; end
+  def response_type; end
+  def scope; end
+  def scopes; end
+  def server; end
+  def state; end
+  def validate_client; end
+  def validate_client_id; end
+  def validate_client_supports_grant_flow; end
+  def validate_code_challenge_method; end
+  def validate_params; end
+  def validate_redirect_uri; end
+  def validate_resource_owner_authorize_for_client; end
+  def validate_response_type; end
+  def validate_scopes; end
+  extend Doorkeeper::Validations::ClassMethods
+  include Doorkeeper::Validations
+end
+class Doorkeeper::OAuth::RefreshTokenRequest < Doorkeeper::OAuth::BaseRequest
+  def access_token; end
+  def before_successful_response; end
+  def client; end
+  def create_access_token; end
+  def credentials; end
+  def default_scopes; end
+  def initialize(server, refresh_token, credentials, parameters = nil); end
+  def load_client(credentials); end
+  def missing_param; end
+  def refresh_token; end
+  def refresh_token_revoked_on_use?; end
+  def validate_client; end
+  def validate_client_match; end
+  def validate_scope; end
+  def validate_token; end
+  def validate_token_presence; end
+  include Doorkeeper::OAuth::Helpers
+end
+class Doorkeeper::OAuth::Token
+  def self.authenticate(request, *methods); end
+  def self.decode_basic_credentials_token(encoded_header); end
+  def self.from_access_token_param(request); end
+  def self.from_basic_authorization(request); end
+  def self.from_bearer_authorization(request); end
+  def self.from_bearer_param(request); end
+  def self.from_request(request, *methods); end
+  def self.match?(header, pattern); end
+  def self.token_from_basic_header(header, pattern); end
+  def self.token_from_header(header, pattern); end
+end
+class Doorkeeper::OAuth::TokenIntrospection
+  def active?; end
+  def authorize!; end
+  def authorized?; end
+  def authorized_client; end
+  def authorized_token; end
+  def authorized_token_matches_introspected?; end
+  def customize_response(response); end
+  def error; end
+  def error_response; end
+  def failure_response; end
+  def initialize(server, token); end
+  def invalid_request_reason; end
+  def server; end
+  def success_response; end
+  def to_json(*arg0); end
+  def token; end
+  def token_introspection_allowed?(auth_client: nil, auth_token: nil); end
+  def valid_authorized_token?; end
+  def valid_token?; end
+end
+class Doorkeeper::OAuth::TokenRequest
+  def authorize; end
+  def deny; end
+  def initialize(pre_auth, resource_owner); end
+  def pre_auth; end
+  def resource_owner; end
+end
+class Doorkeeper::OAuth::TokenResponse
+  def body; end
+  def headers; end
+  def initialize(token); end
+  def status; end
+  def token; end
+end
+class Doorkeeper::OAuth::Authorization::Code
+  def access_grant_attributes; end
+  def authorization_code_expires_in; end
+  def initialize(pre_auth, resource_owner); end
+  def issue_token!; end
+  def oob_redirect; end
+  def pkce_attributes; end
+  def pkce_supported?; end
+  def pre_auth; end
+  def resource_owner; end
+  def token; end
+end
+class Doorkeeper::OAuth::Authorization::Context
+  def client; end
+  def grant_type; end
+  def initialize(client, grant_type, scopes); end
+  def scopes; end
+end
+class Doorkeeper::OAuth::Authorization::Token
+  def controller; end
+  def initialize(pre_auth, resource_owner); end
+  def issue_token!; end
+  def oob_redirect; end
+  def pre_auth; end
+  def resource_owner; end
+  def self.access_token_expires_in(configuration, context); end
+  def self.build_context(pre_auth_or_oauth_client, grant_type, scopes); end
+  def self.refresh_token_enabled?(server, context); end
+  def token; end
+end
+class Doorkeeper::OAuth::Authorization::URIBuilder
+  def self.build_query(parameters = nil); end
+  def self.uri_with_fragment(url, parameters = nil); end
+  def self.uri_with_query(url, parameters = nil); end
+end
+class Doorkeeper::OAuth::Client::Credentials < Struct
+  def blank?(*args, &block); end
+  def secret; end
+  def secret=(_); end
+  def self.[](*arg0); end
+  def self.from_basic(request); end
+  def self.from_params(request); end
+  def self.from_request(request, *credentials_methods); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+  def uid; end
+  def uid=(_); end
+end
+class Doorkeeper::OAuth::ClientCredentials::Validator
+  def initialize(server, request); end
+  def validate_client; end
+  def validate_client_supports_grant_flow; end
+  def validate_scopes; end
+  extend Doorkeeper::Validations::ClassMethods
+  include Doorkeeper::OAuth::Helpers
+  include Doorkeeper::Validations
+end
+class Doorkeeper::OAuth::ClientCredentials::Creator
+  def call(client, scopes, attributes = nil); end
+  def find_existing_token_for(client, scopes); end
+  def lookup_existing_token?; end
+  def server_config; end
+  def with_revocation(existing_token:); end
+end
+class Doorkeeper::OAuth::ClientCredentials::Issuer
+  def create(client, scopes, creator = nil); end
+  def create_token(client, scopes, creator); end
+  def error; end
+  def initialize(server, validator); end
+  def token; end
+  def validator; end
+end
+module Doorkeeper::OAuth::Helpers::ScopeChecker
+  def self.valid?(scope_str:, server_scopes:, app_scopes: nil, grant_type: nil); end
+end
+class Doorkeeper::OAuth::Helpers::ScopeChecker::Validator
+  def initialize(scope_str, server_scopes, app_scopes, grant_type); end
+  def parsed_scopes; end
+  def permitted_to_grant_type?; end
+  def scope_str; end
+  def valid?; end
+  def valid_scopes(server_scopes, app_scopes); end
+end
+module Doorkeeper::IPAddrLoopback
+  def loopback?; end
+end
+module Doorkeeper::OAuth::Helpers::URIChecker
+  def self.as_uri(url); end
+  def self.hypertext_scheme?(uri); end
+  def self.iff_host?(uri); end
+  def self.loopback_uri?(uri); end
+  def self.matches?(url, client_url); end
+  def self.oob_uri?(uri); end
+  def self.query_matches?(query, client_query); end
+  def self.valid?(url); end
+  def self.valid_for_authorization?(url, client_url); end
+  def self.valid_scheme?(uri); end
+end
+module Doorkeeper::OAuth::Helpers::UniqueToken
+  def self.default_generator_method; end
+  def self.generate(options = nil); end
+end
+class Doorkeeper::OAuth::Hooks::Context
+  def auth; end
+  def initialize(**attributes); end
+  def issued_token; end
+  def pre_auth; end
+end
+class Doorkeeper::SecretStoring::Sha256Hash < Doorkeeper::SecretStoring::Base
+  def self.allows_restoring_secrets?; end
+  def self.transform_secret(plain_secret); end
 end
