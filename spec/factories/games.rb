@@ -62,7 +62,7 @@ FactoryBot.define do
     end
 
     trait :release_date do
-      release_date { Faker::Date.between(from: 25.years.ago, to: 2.years.from_now) }
+      release_date { Faker::Date.between(from: 25.years.ago.to_date, to: 2.years.from_now.to_date) }
     end
 
     trait :avg_rating do

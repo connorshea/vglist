@@ -51,14 +51,14 @@ class Doorkeeper::AuthorizationsController < ApplicationController; end
 # Add types for custom Faker methods defined in `config/initializers/faker.rb`.
 class Faker::Game
   sig { returns(String) }
-  def company; end
+  def self.company; end
 
   sig { returns(String) }
-  def engine; end
+  def self.engine; end
 
   sig { returns(String) }
-  def series; end
+  def self.series; end
 
   sig { returns(String) }
-  def store; end
+  def self.store; end
 end
