@@ -2522,12 +2522,12 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codemirror-graphql@^0.12.0-alpha.8:
-  version "0.12.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-0.12.0-alpha.8.tgz#cd7653299baefcdff2349bc9c3def9549c78775c"
-  integrity sha512-leCFSjrwtdKQE70ROWIUoc1U6F8fy6i+cd9/0D1dRbEecoleCt5+zODdANETw9map50kxNPf3EcGW4BPYj14hw==
+codemirror-graphql@^0.12.0-alpha.9:
+  version "0.12.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-0.12.0-alpha.9.tgz#93304b627d83e45177b0b1e68b6a0e5eaf67bf28"
+  integrity sha512-dLSE1bS5DlKRco2/E9fgCZ/s3QWDK1M5FKsn7be+QY5L7Ph4ME2JRFZQ+1CbNgCmgl0taD5CVj2rAZlkO2mZVA==
   dependencies:
-    graphql-language-service-interface "^2.4.0-alpha.8"
+    graphql-language-service-interface "^2.4.0-alpha.9"
     graphql-language-service-parser "^1.6.0-alpha.4"
 
 codemirror@^5.52.2:
@@ -3408,12 +3408,7 @@ enhanced-resolve@^4.1.0:
     memory-fs "^0.5.0"
     tapable "^1.0.0"
 
-entities@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/entities/-/entities-2.0.0.tgz#68d6084cab1b079767540d80e56a39b423e4abf4"
-  integrity sha512-D9f7V0JSRwIxlRI2mjMqufDrRDnx8p+eEOz7aUM9SuvF8gsBzra0/6tbjl1m8eQHrZlYj6PxqE00hZ1SAIKPLw==
-
-entities@~2.0.0:
+entities@^2.0.0, entities@~2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.0.2.tgz#ac74db0bba8d33808bbf36809c3a5c3683531436"
   integrity sha512-dmD3AvJQBUjKpcNkoqr+x+IF0SdRtPz9Vk0uTy4yWqga9ibB6s4v++QFWNohjiUGoMlF552ZvNyXDxz5iW0qmw==
@@ -4127,19 +4122,19 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.2
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.3.tgz#4a12ff1b60376ef09862c2093edd908328be8423"
   integrity sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
 
-graphiql@1.0.0-alpha.10:
-  version "1.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.0.0-alpha.10.tgz#9b6b5e554c6586e9bc09ebc863df8bcfd844110d"
-  integrity sha512-fKyYXQQRjsxOQw0rZMvICA2+P7ieUjj8AyfMaYlQeXGsGkZo0FUvBXVsN6LTraAPRBvVFo2jH9MSH68ujDXoeQ==
+graphiql@1.0.0-alpha.11:
+  version "1.0.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.0.0-alpha.11.tgz#c27cc27c8e17625f9876a8af61bba9607c67536d"
+  integrity sha512-nezRM14u3FTxlkDcxAY5nF/3OcgRJX9FpX7pQ7Pp5vCTAjzqOby+Y/O+PWdq8R2PSGxh6gzH+rxFSvvcxrYilg==
   dependencies:
     "@emotion/core" "^10.0.28"
     "@mdx-js/react" "^1.5.2"
     codemirror "^5.52.2"
-    codemirror-graphql "^0.12.0-alpha.8"
+    codemirror-graphql "^0.12.0-alpha.9"
     copy-to-clipboard "^3.2.0"
     entities "^2.0.0"
     markdown-it "^10.0.0"
-    monaco-graphql "^0.1.1"
+    monaco-graphql "^0.1.2"
     regenerator-runtime "^0.13.5"
     theme-ui "^0.3.1"
 
@@ -4159,10 +4154,10 @@ graphql-config@3.0.0-rc.2:
     minimatch "3.0.4"
     tslib "^1.11.1"
 
-graphql-language-service-interface@^2.4.0-alpha.8:
-  version "2.4.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0-alpha.8.tgz#2f50b107c72be01796417bcfec2669d42f3b57c7"
-  integrity sha512-HT77H0GQk2jtpE9NAE+f8aNKvCkv5e7cZ32RZd+lCL23qNmuLJYpQcy+pbuRxxFKOWpiZLa5lc17T010gd64rQ==
+graphql-language-service-interface@^2.4.0-alpha.9:
+  version "2.4.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.4.0-alpha.9.tgz#0c3dce60054a243b9bfc39769aa7ee36155a209d"
+  integrity sha512-0XJ7uEg1JcvRn3w0pAuuiVic6Kiwf51OUV0jmrRNkeBMSvDf1T0DJypBNvjsDnS5MEt+H8GNdNOSXQGoqbHoRw==
   dependencies:
     graphql-language-service-parser "^1.6.0-alpha.4"
     graphql-language-service-types "^1.6.0-alpha.6"
@@ -4186,13 +4181,13 @@ graphql-language-service-utils@^2.4.0-alpha.7:
   dependencies:
     graphql-language-service-types "^1.6.0-alpha.6"
 
-graphql-language-service@^3.0.0-alpha.1:
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-3.0.0-alpha.1.tgz#dc04c0ca3f35ce322dc38548aaa023cde867ca1b"
-  integrity sha512-JkkONXR7+yYcm8Q4bohBJtRl6hLodgogt01lS0ROX8lcwkaihKaU+dyoSVgrRaNAibahjFrDLo0j7iAOarJ5ow==
+graphql-language-service@^3.0.0-alpha.2:
+  version "3.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-3.0.0-alpha.2.tgz#9ee6657275ed37813a7e01ab8b57d4f82f49c251"
+  integrity sha512-LQcZkAfneYjx0K7cKDAngqLI0MnXhGbxEkjTnZiYiYCzJKgXzeKwTkI0OL7Y1HuIUVZrnyaDiED44zP6sFPRvg==
   dependencies:
     graphql-config "3.0.0-rc.2"
-    graphql-language-service-interface "^2.4.0-alpha.8"
+    graphql-language-service-interface "^2.4.0-alpha.9"
     graphql-language-service-types "^1.6.0-alpha.6"
 
 graphql-schema-linter@^0.4.0:
@@ -5596,12 +5591,12 @@ monaco-editor@^0.20.0:
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.20.0.tgz#5d5009343a550124426cb4d965a4d27a348b4dea"
   integrity sha512-hkvf4EtPJRMQlPC3UbMoRs0vTAFAYdzFQ+gpMb8A+9znae1c43q8Mab9iVsgTcg/4PNiLGGn3SlDIa8uvK1FIQ==
 
-monaco-graphql@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/monaco-graphql/-/monaco-graphql-0.1.1.tgz#d74b03a14d60805841157efe99c3ddec6e8c1407"
-  integrity sha512-P6K03iP2hme9geA9TR2zYkSrdhVR0/YcMBQjAaTALGvI4dIILTieGxuBeElZAZFEhsj38CNZZKUF8pKXapA86Q==
+monaco-graphql@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/monaco-graphql/-/monaco-graphql-0.1.2.tgz#d60a1d7bb4e9c03abc0e37103303794524cbd875"
+  integrity sha512-DI+LBdujfuoCERqFsjVOF7tjG7HMv7csP3M1rAe+kQL0qRxVGWZhbtw7ISIyiyFa0P9pNw8ZlVUAnkxyJ33mIQ==
   dependencies:
-    graphql-language-service "^3.0.0-alpha.1"
+    graphql-language-service "^3.0.0-alpha.2"
     graphql-language-service-utils "^2.4.0-alpha.7"
     monaco-editor "^0.20.0"
 
