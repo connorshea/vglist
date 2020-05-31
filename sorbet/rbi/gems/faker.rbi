@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.11.0
+# faker-2.12.0
 
 module Faker
 end
@@ -169,7 +169,9 @@ class Faker::Avatar < Faker::Base
 end
 class Faker::Bank < Faker::Base
   def self.account_number(legacy_digits = nil, digits: nil); end
+  def self.bsb_number; end
   def self.checksum(num_string); end
+  def self.compile_bsb_number; end
   def self.compile_fraction(routing_num); end
   def self.compile_routing_number; end
   def self.iban(legacy_country_code = nil, country_code: nil); end
@@ -191,6 +193,11 @@ class Faker::Beer < Faker::Base
   def self.name; end
   def self.style; end
   def self.yeast; end
+end
+class Faker::Blood < Faker::Base
+  def self.group; end
+  def self.rh_factor; end
+  def self.type; end
 end
 class Faker::Boolean < Faker::Base
   def self.boolean(legacy_true_ratio = nil, true_ratio: nil); end
@@ -289,6 +296,8 @@ class Faker::Company < Faker::Base
   def self.french_siren_number; end
   def self.french_siret_number; end
   def self.industry; end
+  def self.inn_checksum(factor, number); end
+  def self.inn_number(region, type); end
   def self.logo; end
   def self.luhn_algorithm(number); end
   def self.mod11(number); end
@@ -297,6 +306,7 @@ class Faker::Company < Faker::Base
   def self.polish_register_of_national_economy(legacy_length = nil, length: nil); end
   def self.polish_taxpayer_identification_number; end
   def self.profession; end
+  def self.russian_tax_number(region: nil, type: nil); end
   def self.sic_code; end
   def self.south_african_close_corporation_registration_number; end
   def self.south_african_listed_company_registration_number; end
@@ -324,6 +334,12 @@ class Faker::Compass < Faker::Base
   def self.quarter_wind; end
   def self.quarter_wind_abbreviation; end
   def self.quarter_wind_azimuth; end
+end
+class Faker::Computer < Faker::Base
+  def self.os(platform: nil); end
+  def self.platform; end
+  def self.stack; end
+  def self.type; end
 end
 class Faker::Construction < Faker::Base
   def self.heavy_equipment; end
@@ -716,6 +732,7 @@ end
 class Faker::PhoneNumber < Faker::Base
   def self.area_code; end
   def self.cell_phone; end
+  def self.cell_phone_in_e164; end
   def self.cell_phone_with_country_code; end
   def self.country_code; end
   def self.exchange_code; end
@@ -886,7 +903,7 @@ class Faker::Vehicle < Faker::Base
   def self.fuel_type; end
   def self.kilometrage(legacy_min = nil, legacy_max = nil, min: nil, max: nil); end
   def self.last_eight(number); end
-  def self.license_plate(legacy_state_abreviation = nil, state_abreviation: nil); end
+  def self.license_plate(legacy_state_abreviation = nil, state_abbreviation: nil); end
   def self.make; end
   def self.make_and_model; end
   def self.manufacture; end
@@ -916,6 +933,22 @@ class Faker::WorldCup < Faker::Base
   def self.team; end
 end
 class Faker::Games
+end
+class Faker::Games::Control < Faker::Base
+  def self.altered_item; end
+  def self.altered_world_event; end
+  def self.character; end
+  def self.hiss; end
+  def self.location; end
+  def self.object_of_power; end
+  def self.quote; end
+  def self.the_board; end
+end
+class Faker::Games::DnD < Faker::Base
+  def self.alignment; end
+  def self.background; end
+  def self.klass; end
+  def self.species; end
 end
 class Faker::Games::Dota < Faker::Base
   def self.hero; end
@@ -995,6 +1028,13 @@ class Faker::Games::SuperSmashBros < Faker::Base
   def self.fighter; end
   def self.stage; end
 end
+class Faker::Games::WarhammerFantasy < Faker::Base
+  def self.creature; end
+  def self.faction; end
+  def self.hero; end
+  def self.location; end
+  def self.quote; end
+end
 class Faker::Games::Witcher < Faker::Base
   def self.character; end
   def self.location; end
@@ -1037,6 +1077,11 @@ end
 class Faker::Movies::BackToTheFuture < Faker::Base
   def self.character; end
   def self.date; end
+  def self.quote; end
+end
+class Faker::Movies::Departed < Faker::Base
+  def self.actor; end
+  def self.character; end
   def self.quote; end
 end
 class Faker::Movies::Ghostbusters < Faker::Base
@@ -1133,11 +1178,23 @@ class Faker::Music::Opera < Faker::Base
   def self.rossini; end
   def self.verdi; end
 end
+class Faker::Music::PearlJam < Faker::Base
+  def self.album; end
+  def self.musician; end
+  def self.song; end
+end
 class Faker::Music::Phish < Faker::Base
+  def self.album; end
+  def self.musician; end
   def self.song; end
 end
 class Faker::Music::RockBand < Faker::Base
   def self.name; end
+end
+class Faker::Show < Faker::Base
+  def self.adult_musical; end
+  def self.kids_musical; end
+  def self.play; end
 end
 class Faker::Music::UmphreysMcgee < Faker::Base
   def self.song; end
@@ -1317,6 +1374,10 @@ class Faker::TvShows::StrangerThings < Faker::Base
   def self.character; end
   def self.quote; end
 end
+class Faker::TvShows::Suits < Faker::Base
+  def self.character; end
+  def self.quote; end
+end
 class Faker::TvShows::TheExpanse < Faker::Base
   def self.character; end
   def self.location; end
@@ -1373,7 +1434,7 @@ class Faker::Base
   def self.regexify(reg); end
   def self.resolve(value); end
   def self.respond_to_missing?(method_name, include_private = nil); end
-  def self.sample(list); end
+  def self.sample(list, num = nil); end
   def self.shuffle(list); end
   def self.translate(*args, **opts); end
   def self.unique(max_retries = nil); end
