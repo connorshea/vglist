@@ -62,8 +62,11 @@ update_configs:
       - match:
           dependency_name: "webpack-dev-server"
           version_requirement: "4.x"
+      # Ignore types packages since they're updated so often.
       - match:
           dependency_name: "@types/node"
+      - match:
+          dependency_name: "@types/lodash"
       # Ignore webpacker because the Ruby gem and npm package need to be updated simultaneously.
       - match:
           dependency_name: "@rails/webpacker"
