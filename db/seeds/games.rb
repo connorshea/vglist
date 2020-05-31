@@ -31,7 +31,7 @@ puts "Creating Games..."
     genres: genres,
     engines: engines,
     series: Series.find(rand(1..Series.count)),
-    release_date: Faker::Date.between(from: 25.years.ago, to: 2.years.from_now)
+    release_date: Faker::Date.between(from: 25.years.ago.to_date, to: 2.years.from_now.to_date)
   )
 
   next unless rand(0..4) != 0
