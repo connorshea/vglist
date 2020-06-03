@@ -106,7 +106,7 @@ GEM
     commander (4.5.2)
       highline (~> 2.0.0)
     concurrent-ruby (1.1.6)
-    connection_pool (2.2.2)
+    connection_pool (2.2.3)
     crass (1.0.6)
     database_cleaner (1.8.5)
     debug_inspector (0.0.3)
