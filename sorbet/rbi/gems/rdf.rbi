@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rdf/all/rdf.rbi
 #
-# rdf-3.1.1
+# rdf-3.1.2
 
 module RDF
   def self.Graph(**options, &block); end
@@ -16,11 +16,10 @@ module RDF
   def self.Node(*args); end
   def self.Resource(*args); end
   def self.Statement(*args, **options); end
-  def self.StrictVocabulary(prefix); end
+  def self.StrictVocabulary(uri); end
   def self.URI(*args); end
   def self.Vocabulary(uri); end
   def self.[](property); end
-  def self.const_missing(constant); end
   def self.enum_for(method = nil, *args); end
   def self.method_missing(property, *args, &block); end
   def self.respond_to?(method, include_all = nil); end
@@ -594,6 +593,7 @@ class RDF::Statement
   def canonicalize!; end
   def canonicalize; end
   def complete?; end
+  def embedded?; end
   def eql?(other); end
   def graph_name; end
   def graph_name=(arg0); end
@@ -631,7 +631,7 @@ class RDF::Statement
   def to_triple; end
   def valid?; end
   def variable?; end
-  include RDF::Value
+  include RDF::Resource
 end
 class RDF::Vocabulary
   def [](property); end
@@ -654,10 +654,12 @@ class RDF::Vocabulary
   def self.find(uri); end
   def self.find_term(uri); end
   def self.from_graph(graph, url: nil, class_name: nil, extra: nil); end
+  def self.from_sym(sym); end
   def self.imported_from; end
   def self.imports; end
   def self.inherited(subclass); end
   def self.inspect; end
+  def self.limit_vocabs(*vocabs); end
   def self.list(*values); end
   def self.method_missing(property, *args, &block); end
   def self.ontology(*args); end
@@ -670,6 +672,7 @@ class RDF::Vocabulary
   def self.to_iri; end
   def self.to_s; end
   def self.to_uri; end
+  def self.vocab_map; end
   def to_iri; end
   def to_s; end
   def to_uri; end
@@ -897,6 +900,7 @@ class RDF::Query::Pattern < RDF::Statement
   def cardinality; end
   def cost; end
   def cost=(arg0); end
+  def eql?(other); end
   def execute(queryable, bindings = nil, &block); end
   def has_variables?; end
   def initialize!; end
@@ -1267,13 +1271,14 @@ class RDF::Reader
   def close; end
   def current_line; end
   def each(*args, &block); end
+  def each_pg_statement(statement, &block); end
   def each_statement(&block); end
   def each_triple(&block); end
   def encoding; end
   def fail_object; end
   def fail_predicate; end
   def fail_subject; end
-  def initialize(input = nil, encoding: nil, validate: nil, canonicalize: nil, intern: nil, prefixes: nil, base_uri: nil, **options, &block); end
+  def initialize(input = nil, base_uri: nil, canonicalize: nil, encoding: nil, intern: nil, prefixes: nil, rdfstar: nil, validate: nil, **options, &block); end
   def intern?; end
   def lineno; end
   def match(pattern); end
@@ -1320,6 +1325,7 @@ class RDF::Writer
   def format_list(value, **options); end
   def format_literal(value, **options); end
   def format_node(value, **options); end
+  def format_rdfstar(value, **options); end
   def format_term(term, **options); end
   def format_uri(value, **options); end
   def initialize(output = nil, **options, &block); end
@@ -1364,6 +1370,7 @@ class RDF::NTriples::Reader < RDF::Reader
   def read_eos; end
   def read_literal; end
   def read_node; end
+  def read_rdfstar; end
   def read_triple; end
   def read_uriref(intern: nil, **options); end
   def read_value; end
@@ -1381,6 +1388,7 @@ class RDF::NTriples::Writer < RDF::Writer
   def escaped(string); end
   def format_literal(literal, **options); end
   def format_node(node, unique_bnodes: nil, **options); end
+  def format_rdfstar(statement, **options); end
   def format_statement(statement, **options); end
   def format_triple(subject, predicate, object, **options); end
   def format_uri(uri, **options); end

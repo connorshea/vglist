@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/webdrivers/all/webdrivers.rbi
 #
-# webdrivers-4.3.0
+# webdrivers-4.4.1
 
 module Webdrivers
   def self.cache_time; end
@@ -66,10 +66,13 @@ class Webdrivers::System
   def self.exists?(file); end
   def self.install_dir; end
   def self.platform; end
+  def self.to_win32_path(path); end
+  def self.to_wsl_path(path); end
   def self.untarbz2_file(filename); end
   def self.untargz_file(source, target); end
   def self.unzip_file(filename, driver_name); end
   def self.valid_cache?(file_name); end
+  def self.wsl?; end
 end
 class Webdrivers::ConnectionError < StandardError
 end
@@ -91,7 +94,7 @@ class Webdrivers::Common
   def self.required_version=(arg0); end
   def self.sufficient_binary?; end
   def self.update; end
-  def self.with_cache(file_name); end
+  def self.with_cache(file_name, driver_build = nil, browser_build = nil); end
 end
 class Webdrivers::ChromeFinder
   def self.linux_location; end
@@ -103,17 +106,21 @@ class Webdrivers::ChromeFinder
   def self.version; end
   def self.win_location; end
   def self.win_version(location); end
+  def self.wsl_location; end
+  def self.wsl_version(location); end
 end
 class Webdrivers::Chromedriver < Webdrivers::Common
   def self.base_url; end
+  def self.browser_build_version; end
   def self.browser_version; end
+  def self.chrome_build_version; end
   def self.chrome_version; end
+  def self.current_build_version; end
   def self.current_version; end
   def self.download_url; end
   def self.file_name; end
   def self.latest_point_release(version); end
   def self.latest_version; end
-  def self.release_version; end
   def self.sufficient_binary?; end
 end
 class Webdrivers::Geckodriver < Webdrivers::Common

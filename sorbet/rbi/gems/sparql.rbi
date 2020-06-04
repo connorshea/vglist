@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sparql/all/sparql.rbi
 #
-# sparql-3.1.0
+# sparql-3.1.1
 
 module SPARQL
   def first_content_type(acceptable, available); end
@@ -41,19 +41,13 @@ class SPARQL::QueryRequestRefused < Exception
   def title; end
 end
 module SPARQL::Algebra
-  def Expr(*sse); end
   def Expression(*sse); end
-  def Op(name, arity = nil); end
   def Operator(name, arity = nil); end
-  def Var(name); end
   def Variable(name); end
   def open(sse, **options); end
   def parse(sse, **options); end
-  def self.Expr(*sse); end
   def self.Expression(*sse); end
-  def self.Op(name, arity = nil); end
   def self.Operator(name, arity = nil); end
-  def self.Var(name); end
   def self.Variable(name); end
   def self.open(sse, **options); end
   def self.parse(sse, **options); end
@@ -65,7 +59,8 @@ module SPARQL::Algebra::Expression
   def evaluate(bindings, options = nil); end
   def invalid?; end
   def node?; end
-  def optimize; end
+  def optimize!(**options); end
+  def optimize(**options); end
   def self.[](*sse); end
   def self.cast(datatype, value); end
   def self.debug(*args); end
@@ -86,18 +81,22 @@ class NilClass
   def evaluate(bindings, **options); end
 end
 class Object < BasicObject
+  def optimize(**options); end
   def to_sse; end
   def to_sxp_bin; end
 end
 class Array
   def aggregate?; end
+  def bind(solution); end
   def constant?; end
+  def dup; end
   def evaluatable?; end
   def evaluate(bindings, **options); end
   def executable?; end
   def execute(queryable, **options); end
   def ndvars; end
   def node?; end
+  def optimize(**options); end
   def replace_aggregate!(&block); end
   def replace_vars!(&block); end
   def to_sxp_bin; end
@@ -107,6 +106,7 @@ class Array
   def vars; end
 end
 class Hash
+  def optimize(**options); end
   def to_sxp; end
   def to_sxp_bin; end
 end
@@ -114,14 +114,17 @@ module RDF::Term
   def aggregate?; end
   def evaluate(bindings, **options); end
   def ndvars; end
+  def optimize(**options); end
   def vars; end
   include SPARQL::Algebra::Expression
 end
 class RDF::Statement
+  def optimize(**options); end
   def to_sxp_bin; end
 end
 class RDF::Query
   def ==(other); end
+  def bind(solution); end
   def executable?; end
   def ndvars; end
   def query_yields_boolean?; end
@@ -138,7 +141,12 @@ class RDF::Query::Pattern < RDF::Statement
 end
 class RDF::Query::Variable
   def evaluate(bindings, **options); end
+  def optimize(**options); end
   include SPARQL::Algebra::Expression
+end
+class RDF::Query::Solution
+  def to_sxp; end
+  def to_sxp_bin; end
 end
 module SPARQL::Algebra::Aggregate
   def aggregate(solutions = nil, **options); end
@@ -157,9 +165,11 @@ class SPARQL::Algebra::Operator
   def ==(other); end
   def aggregate?; end
   def base_uri; end
+  def bind(solution); end
   def boolean(literal); end
   def constant?; end
   def descendants(&block); end
+  def dup; end
   def each(&block); end
   def each_descendant(&block); end
   def eql?(other); end
@@ -172,7 +182,8 @@ class SPARQL::Algebra::Operator
   def node?; end
   def operand(index = nil); end
   def operands; end
-  def optimize; end
+  def optimize!(**options); end
+  def optimize(**options); end
   def parent; end
   def parent=(operator); end
   def prefixes; end
