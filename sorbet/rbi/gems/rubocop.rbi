@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop/all/rubocop.rbi
 #
-# rubocop-0.84.0
+# rubocop-0.85.0
 
 module RuboCop
 end
@@ -421,11 +421,8 @@ class RuboCop::Cop::Commissioner
   def on_yield(node); end
   def on_zsuper(node); end
   def prepare(processed_source); end
-  def remove_irrelevant_cops(filename); end
   def reset_callbacks; end
   def reset_errors; end
-  def support_target_rails_version?(cop); end
-  def support_target_ruby_version?(cop); end
   def trigger_responding_cops(callback, node); end
   def with_cop_error_handling(cop, node = nil); end
   include RuboCop::AST::Traversal
@@ -1236,6 +1233,9 @@ module RuboCop::Cop::RationalLiteral
   def rational_literal?(node = nil); end
   extend RuboCop::AST::NodePattern::Macros
 end
+module RuboCop::Cop::RegexpLiteralHelp
+  def freespace_mode_regexp?(node); end
+end
 module RuboCop::Cop::RescueNode
   def investigate(processed_source); end
   def rescue_modifier?(node); end
@@ -1570,13 +1570,17 @@ class RuboCop::Cop::Bundler::DuplicatedGem < RuboCop::Cop::Cop
   include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Bundler::GemComment < RuboCop::Cop::Cop
+  def checked_options_present?(node); end
   def commented?(node); end
+  def contains_checked_options?(node); end
   def gem_declaration?(node = nil); end
+  def gem_options(node); end
   def ignored_gem?(node); end
   def on_send(node); end
   def precede?(node1, node2); end
   def preceding_comment?(node1, node2); end
   def preceding_lines(node); end
+  def version_specified_gem?(node); end
   include RuboCop::Cop::DefNode
 end
 class RuboCop::Cop::Bundler::InsecureProtocolSource < RuboCop::Cop::Cop
@@ -2174,9 +2178,6 @@ class RuboCop::Cop::Layout::HeredocIndentation < RuboCop::Cop::Cop
   def adjust_squiggly(corrector, node); end
   def autocorrect(node); end
   def base_indent_level(node); end
-  def check_style!; end
-  def correct_by_library(node); end
-  def correct_by_squiggly(node); end
   def heredoc_body(node); end
   def heredoc_end(node); end
   def heredoc_indent_type(node); end
@@ -2184,17 +2185,14 @@ class RuboCop::Cop::Layout::HeredocIndentation < RuboCop::Cop::Cop
   def indentation_width; end
   def indented_body(node); end
   def indented_end(node); end
-  def library_message(indentation_width, method); end
   def line_too_long?(node); end
   def longest_line(lines); end
   def max_line_length; end
   def message(node); end
   def on_heredoc(node); end
-  def ruby23_message(indentation_width, current_indent_type); end
-  def ruby23_type_message(indentation_width, current_indent_type); end
-  def ruby23_width_message(indentation_width); end
+  def type_message(indentation_width, current_indent_type); end
   def unlimited_heredoc_length?; end
-  include RuboCop::Cop::ConfigurableEnforcedStyle
+  def width_message(indentation_width); end
   include RuboCop::Cop::Heredoc
 end
 class RuboCop::Cop::Layout::IndentationConsistency < RuboCop::Cop::Cop
@@ -3087,6 +3085,12 @@ class RuboCop::Cop::Lint::MissingCopEnableDirective < RuboCop::Cop::Cop
   def message(max_range:, cop:); end
   include RuboCop::Cop::RangeHelp
 end
+class RuboCop::Cop::Lint::MixedRegexpCaptureTypes < RuboCop::Cop::Cop
+  def contain_non_literal?(node); end
+  def named_capture?(tree); end
+  def numbered_capture?(tree); end
+  def on_regexp(node); end
+end
 class RuboCop::Cop::Lint::MultipleComparison < RuboCop::Cop::Cop
   def autocorrect(node); end
   def multiple_compare?(node = nil); end
@@ -3626,6 +3630,7 @@ end
 class RuboCop::Cop::Naming::FileName < RuboCop::Cop::Cop
   def allowed_acronyms; end
   def bad_filename_allowed?; end
+  def check_definition_path_hierarchy?; end
   def expect_matching_definition?; end
   def filename_good?(basename); end
   def find_class_or_module(node, namespace); end
@@ -3635,10 +3640,12 @@ class RuboCop::Cop::Naming::FileName < RuboCop::Cop::Cop
   def match?(expected); end
   def match_acronym?(expected, name); end
   def match_namespace(node, namespace, expected); end
+  def matching_class?(file_name); end
   def matching_definition?(file_path); end
   def no_definition_message(basename, file_path); end
   def other_message(basename); end
   def partial_matcher!(expected); end
+  def perform_class_and_module_naming_checks(file_path, basename); end
   def regex; end
   def to_module_name(basename); end
   def to_namespace(path); end
@@ -5231,6 +5238,26 @@ class RuboCop::Cop::Style::RedundantPercentQ < RuboCop::Cop::Cop
   def start_with_percent_q_variant?(string); end
   def string_literal?(node); end
 end
+class RuboCop::Cop::Style::RedundantRegexpCharacterClass < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def each_redundant_character_class(node); end
+  def on_regexp(node); end
+  def whitespace_in_free_space_mode?(node, loc); end
+  def without_character_class(loc); end
+  include RuboCop::Cop::MatchRange
+  include RuboCop::Cop::RegexpLiteralHelp
+end
+class RuboCop::Cop::Style::RedundantRegexpEscape < RuboCop::Cop::Cop
+  def allowed_escape?(node, char, within_character_class); end
+  def autocorrect(node); end
+  def each_escape(node); end
+  def escape_range_at_index(node, index); end
+  def on_regexp(node); end
+  def pattern_source(node); end
+  def slash_literal?(node); end
+  include RuboCop::Cop::RangeHelp
+  include RuboCop::Cop::RegexpLiteralHelp
+end
 class RuboCop::Cop::Style::RedundantReturn < RuboCop::Cop::Cop
   def add_braces(corrector, node); end
   def add_brackets(corrector, node); end
@@ -5818,11 +5845,16 @@ class RuboCop::Cop::Team
   def forces_for(cops); end
   def handle_error(error, location, cop); end
   def handle_warning(error, location); end
-  def initialize(cop_classes, config, options = nil); end
+  def initialize(cops, config = nil, options = nil); end
   def inspect_file(processed_source); end
   def investigate(cops, processed_source); end
   def offenses(processed_source); end
   def process_errors(file, errors); end
+  def roundup_relevant_cops(filename); end
+  def self.mobilize(cop_classes, config, options = nil); end
+  def self.mobilize_cops(cop_classes, config, options = nil); end
+  def support_target_rails_version?(cop); end
+  def support_target_ruby_version?(cop); end
   def updated_source_file; end
   def updated_source_file?; end
   def validate_config; end
@@ -5993,6 +6025,8 @@ class RuboCop::Formatter::JUnitFormatter < RuboCop::Formatter::BaseFormatter
   def file_finished(file, offenses); end
   def finished(_inspected_files); end
   def initialize(output, options = nil); end
+  def offenses_for_cop(all_offenses, cop); end
+  def relevant_for_output?(options, target_offenses); end
 end
 class RuboCop::Formatter::OffenseCountFormatter < RuboCop::Formatter::BaseFormatter
   def file_finished(_file, offenses); end
@@ -6203,6 +6237,8 @@ class RuboCop::ConfigObsoletion
 end
 class RuboCop::ConfigStore
   def for(file_or_dir); end
+  def for_dir(dir); end
+  def for_file(file); end
   def force_default_config!; end
   def initialize; end
   def options_config=(options_config); end
@@ -6490,6 +6526,7 @@ class RuboCop::OptionsValidator
   def validate_auto_gen_config; end
   def validate_compatibility; end
   def validate_cop_options; end
+  def validate_display_only_failed; end
   def validate_exclude_limit_option; end
   def validate_parallel; end
   def validate_parallel_with_combo_option; end

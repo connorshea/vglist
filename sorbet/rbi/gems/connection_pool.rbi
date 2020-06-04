@@ -7,24 +7,22 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/connection_pool/all/connection_pool.rbi
 #
-# connection_pool-2.2.2
+# connection_pool-2.2.3
 
 class ConnectionPool
   def available; end
   def checkin; end
   def checkout(options = nil); end
   def initialize(options = nil, &block); end
-  def self.monotonic_time; end
   def self.wrap(options, &block); end
   def shutdown(&block); end
   def size; end
   def with(options = nil); end
 end
-class ConnectionPool::PoolShuttingDownError < RuntimeError
-end
 class ConnectionPool::TimedStack
   def <<(obj, options = nil); end
   def connection_stored?(options = nil); end
+  def current_time; end
   def empty?; end
   def fetch_connection(options = nil); end
   def initialize(size = nil, &block); end
@@ -37,8 +35,6 @@ class ConnectionPool::TimedStack
   def store_connection(obj, options = nil); end
   def try_create(options = nil); end
 end
-class ConnectionPool::Error < RuntimeError
-end
 class ConnectionPool::Wrapper < BasicObject
   def initialize(options = nil, &block); end
   def method_missing(name, *args, &block); end
@@ -47,4 +43,11 @@ class ConnectionPool::Wrapper < BasicObject
   def pool_size; end
   def respond_to?(id, *args); end
   def with(&block); end
+  def wrapped_pool; end
+end
+class ConnectionPool::Error < RuntimeError
+end
+class ConnectionPool::PoolShuttingDownError < ConnectionPool::Error
+end
+class ConnectionPool::TimeoutError < Timeout::Error
 end
