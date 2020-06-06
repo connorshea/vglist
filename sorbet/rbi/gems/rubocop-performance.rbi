@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.6.0
+# rubocop-performance-1.6.1
 
 module RuboCop
 end
@@ -23,8 +23,13 @@ end
 module RuboCop::Cop::RegexpMetacharacter
   def drop_end_metacharacter(regexp_string); end
   def drop_start_metacharacter(regexp_string); end
-  def literal_at_end?(regex_str); end
-  def literal_at_start?(regex_str); end
+  def literal_at_end?(regexp); end
+  def literal_at_end_with_backslash_z?(regex_str); end
+  def literal_at_end_with_dollar?(regex_str); end
+  def literal_at_start?(regexp); end
+  def literal_at_start_with_backslash_a?(regex_str); end
+  def literal_at_start_with_caret?(regex_str); end
+  def safe_multiline?; end
 end
 module RuboCop::Cop::Performance
 end
@@ -92,14 +97,14 @@ class RuboCop::Cop::Performance::Count < RuboCop::Cop::Cop
 end
 class RuboCop::Cop::Performance::DeletePrefix < RuboCop::Cop::Cop
   def autocorrect(node); end
-  def gsub_method?(node = nil); end
+  def delete_prefix_candidate?(node = nil); end
   def on_send(node); end
   extend RuboCop::Cop::TargetRubyVersion
   include RuboCop::Cop::RegexpMetacharacter
 end
 class RuboCop::Cop::Performance::DeleteSuffix < RuboCop::Cop::Cop
   def autocorrect(node); end
-  def gsub_method?(node = nil); end
+  def delete_suffix_candidate?(node = nil); end
   def on_send(node); end
   extend RuboCop::Cop::TargetRubyVersion
   include RuboCop::Cop::RegexpMetacharacter

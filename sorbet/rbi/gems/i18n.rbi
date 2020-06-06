@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/i18n/all/i18n.rbi
 #
-# i18n-1.8.2
+# i18n-1.8.3
 
 module I18n
   def self.cache_key_digest; end
@@ -96,7 +96,7 @@ module I18n::Base
   def enforce_available_locales=(value); end
   def exception_handler; end
   def exception_handler=(value); end
-  def exists?(key, _locale = nil, locale: nil); end
+  def exists?(key, _locale = nil, locale: nil, **options); end
   def handle_exception(handling, exception, locale, key, options); end
   def l(object, locale: nil, format: nil, **options); end
   def load_path; end
@@ -165,7 +165,7 @@ module I18n::Backend::Base
   def default(locale, object, subject, options = nil); end
   def eager_load!; end
   def eager_loaded?; end
-  def exists?(locale, key); end
+  def exists?(locale, key, options = nil); end
   def interpolate(locale, subject, values = nil); end
   def load_file(filename); end
   def load_json(filename); end
@@ -246,7 +246,7 @@ module I18n::Backend::Chain::Implementation
   def backends; end
   def backends=(arg0); end
   def eager_load!; end
-  def exists?(locale, key); end
+  def exists?(locale, key, options = nil); end
   def init_translations; end
   def initialize(*backends); end
   def initialized?; end
@@ -259,8 +259,9 @@ module I18n::Backend::Chain::Implementation
   include I18n::Backend::Base
 end
 module I18n::Backend::Fallbacks
-  def exists?(locale, key); end
+  def exists?(locale, key, options = nil); end
   def extract_non_symbol_default!(options); end
+  def on_fallback(_original_locale, _fallback_locale, _key, _optoins); end
   def translate(locale, key, options = nil); end
 end
 module I18n::Backend::Flatten
