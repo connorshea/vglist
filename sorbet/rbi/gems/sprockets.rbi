@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sprockets/all/sprockets.rbi
 #
-# sprockets-4.0.0
+# sprockets-4.0.1
 
 module Sprockets
   extend Sprockets::Configuration
@@ -73,6 +73,7 @@ class Sprockets::Asset
   def digest; end
   def digest_path; end
   def each; end
+  def environment_version; end
   def eql?(other); end
   def etag; end
   def filename; end
@@ -426,7 +427,7 @@ class Sprockets::DoubleLinkError < Sprockets::Error
   def initialize(parent_filename:, logical_path:, last_filename:, filename:); end
 end
 class Sprockets::Base
-  def [](*args); end
+  def [](*args, **options); end
   def cache; end
   def cache=(cache); end
   def cached; end
