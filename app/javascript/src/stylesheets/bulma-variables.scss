@@ -41,3 +41,20 @@ $panel-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
 $box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
 $card-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
 $dropdown-content-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+
+// Customize the spacing values for Bulma so the margin and padding classes get created with the right values.
+$spacing-values: (
+  "0": 0,
+  "5": 5px,
+  "10": 10px,
+  "15": 15px,
+  "20": 20px,
+  "25": 25px,
+  "30": 30px,
+  "35": 35px,
+  "40": 40px,
+  "45": 45px,
+  "50": 50px,
+  "75": 75px,
+  "100": 100px 
+);
