@@ -1,0 +1,67 @@
+version: 2
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: daily
+    time: '12:00'
+  open-pull-requests-limit: 10
+  target-branch: master
+  assignees:
+  - connorshea
+  ignore:
+  - dependency-name: aws-partitions
+    versions:
+    - ">= 0"
+  - dependency-name: aws-sdk-core
+    versions:
+    - ">= 0"
+  - dependency-name: aws-sdk-kms
+    versions:
+    - ">= 0"
+  - dependency-name: aws-sdk-s3
+    versions:
+    - ">= 0"
+  - dependency-name: sorbet
+    versions:
+    - ">= 0"
+  - dependency-name: sorbet-runtime
+    versions:
+    - ">= 0"
+  - dependency-name: webpacker
+    versions:
+    - ">= 0"
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: '12:00'
+  open-pull-requests-limit: 10
+  target-branch: master
+  assignees:
+  - connorshea
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: '12:00'
+  open-pull-requests-limit: 10
+  target-branch: master
+  assignees:
+  - connorshea
+  ignore:
+  - dependency-name: "@rails/webpacker"
+    versions:
+    - ">= 0"
+  - dependency-name: "@types/lodash"
+    versions:
+    - ">= 0"
+  - dependency-name: "@types/node"
+    versions:
+    - ">= 0"
+  - dependency-name: webpack
+    versions:
+    - "~> 5.0"
+  - dependency-name: webpack-dev-server
+    versions:
+    - "~> 4.0"
