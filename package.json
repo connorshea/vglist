@@ -10,7 +10,7 @@
     "@types/node": "^14.0.0",
     "babel-preset-typescript-vue": "^1.1.1",
     "bulma": "0.9.0",
-    "graphiql": "1.0.0-alpha.11",
+    "graphiql": "1.0.0-alpha.13",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
