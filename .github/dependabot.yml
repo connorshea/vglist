@@ -9,6 +9,8 @@ updates:
   target-branch: master
   assignees:
   - connorshea
+  allow:
+  - dependency-type: "indirect"
   ignore:
   - dependency-name: aws-partitions
     versions:
