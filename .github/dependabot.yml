@@ -10,7 +10,7 @@ updates:
   assignees:
   - connorshea
   allow:
-  - dependency-type: "indirect"
+  - dependency-type: all
   ignore:
   - dependency-name: aws-partitions
     versions:
