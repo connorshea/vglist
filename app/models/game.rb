@@ -24,7 +24,6 @@ class Game < ApplicationRecord
   accepts_nested_attributes_for :steam_app_ids, allow_destroy: true
 
   has_many :favorites,
-    foreign_key: 'game_id',
     class_name: 'FavoriteGame',
     inverse_of: :user,
     dependent: :destroy
