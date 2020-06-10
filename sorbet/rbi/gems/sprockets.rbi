@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sprockets/all/sprockets.rbi
 #
-# sprockets-4.0.1
+# sprockets-4.0.2
 
 module Sprockets
   extend Sprockets::Configuration

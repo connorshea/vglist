@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/ffi/all/ffi.rbi
 #
-# ffi-1.13.0
+# ffi-1.13.1
 
 class FFI::Type
   def alignment; end

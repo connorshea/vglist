@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop/all/rubocop.rbi
 #
-# rubocop-0.85.0
+# rubocop-0.85.1
 
 module RuboCop
 end
@@ -212,31 +212,40 @@ class RuboCop::Cop::AmbiguousCopName < RuboCop::Error
 end
 class RuboCop::Cop::Registry
   def ==(other); end
+  def clear_enrollment_queue; end
   def contains_cop_matching?(names); end
   def cops; end
   def department_missing?(badge, name); end
   def departments; end
+  def dismiss(cop); end
   def each(&block); end
-  def enabled(config, only, only_safe = nil); end
+  def enabled(config, only = nil, only_safe = nil); end
   def enabled?(cop, config, only_safe); end
   def enabled_pending_cop?(cop_cfg, config); end
   def enlist(cop); end
   def find_by_cop_name(cop_name); end
   def initialize(cops = nil, options = nil); end
+  def initialize_copy(reg); end
   def length; end
   def names; end
+  def options; end
   def print_warning(name, path); end
   def qualified_cop_name(name, path, shall_warn = nil); end
   def qualify_badge(badge); end
   def registered?(badge); end
   def resolve_badge(given_badge, real_badge, source_path); end
   def select(&block); end
+  def self.all; end
+  def self.global; end
+  def self.qualified_cop_name(name, origin); end
+  def self.with_temporary_global(temp_global = nil); end
   def sort!; end
   def to_h; end
   def unqualified_cop_names; end
   def with(cops); end
   def with_department(department); end
   def without_department(department); end
+  include Enumerable
 end
 class RuboCop::Cop::Cop
   def add_offense(node, location: nil, message: nil, severity: nil); end
@@ -274,6 +283,7 @@ class RuboCop::Cop::Cop
   def self.badge; end
   def self.cop_name; end
   def self.department; end
+  def self.exclude_from_registry; end
   def self.inherited(subclass); end
   def self.lint?; end
   def self.match?(given_names); end
@@ -1375,8 +1385,10 @@ class RuboCop::Cop::Utils::FormatString
   def format_sequences; end
   def initialize(string); end
   def max_digit_dollar_num; end
+  def mixed_formats?; end
   def named_interpolation?; end
   def parse; end
+  def valid?; end
 end
 class RuboCop::Cop::Utils::FormatString::FormatSequence
   def annotated?; end
@@ -2982,7 +2994,9 @@ class RuboCop::Cop::Lint::FormatParameterMismatch < RuboCop::Cop::Cop
   def expected_fields_count(node); end
   def format?(node); end
   def format_method?(name, node); end
+  def format_string?(node); end
   def heredoc?(node); end
+  def invalid_format_string?(node); end
   def matched_arguments_count?(expected, passed); end
   def message(node); end
   def method_with_format_args?(node); end
@@ -5853,6 +5867,7 @@ class RuboCop::Cop::Team
   def roundup_relevant_cops(filename); end
   def self.mobilize(cop_classes, config, options = nil); end
   def self.mobilize_cops(cop_classes, config, options = nil); end
+  def self.new(cop_or_classes, config, options = nil); end
   def support_target_rails_version?(cop); end
   def support_target_ruby_version?(cop); end
   def updated_source_file; end

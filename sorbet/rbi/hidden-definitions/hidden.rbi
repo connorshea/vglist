@@ -739,7 +739,33 @@ class ActionDispatch::Routing::RouteWrapper
 end
 
 class ActionDispatch::Routing::RoutesProxy
-  def user_confirmation_url(*args); end
+  include ::ActionDispatch::Routing::UrlFor
+  include ::ActionDispatch::Routing::PolymorphicRoutes
+  def _routes(); end
+
+  def default_url_options(); end
+
+  def default_url_options=(val); end
+
+  def default_url_options?(); end
+
+  def initialize(routes, scope, helpers, script_namer=T.unsafe(nil)); end
+
+  def routes(); end
+
+  def routes=(routes); end
+
+  def scope(); end
+
+  def scope=(scope); end
+end
+
+class ActionDispatch::Routing::RoutesProxy
+  def self.default_url_options(); end
+
+  def self.default_url_options=(val); end
+
+  def self.default_url_options?(); end
 end
 
 class ActionDispatch::SSL
@@ -1173,6 +1199,34 @@ module ActionView::LookupContext::Accessors
   DEFAULT_PROCS = ::T.let(nil, ::T.untyped)
 end
 
+class ActionView::OutputBuffer
+  def append=(value); end
+
+  def initialize(*_); end
+
+  def safe_append=(value); end
+
+  def safe_expr_append=(val); end
+end
+
+class ActionView::OutputBuffer
+end
+
+class ActionView::OutputFlow
+  def append(key, value); end
+
+  def append!(key, value); end
+
+  def content(); end
+
+  def get(key); end
+
+  def set(key, value); end
+end
+
+class ActionView::OutputFlow
+end
+
 class ActionView::PartialRenderer
   include ::ActiveRecord::Railties::CollectionCacheAssociationLoading
   IDENTIFIER_ERROR_MESSAGE = ::T.let(nil, ::T.untyped)
@@ -1194,12 +1248,65 @@ module ActionView::RecordIdentifier
   NEW = ::T.let(nil, ::T.untyped)
 end
 
+class ActionView::Renderer
+  def cache_hits(); end
+
+  def initialize(lookup_context); end
+
+  def lookup_context(); end
+
+  def lookup_context=(lookup_context); end
+
+  def render(context, options); end
+
+  def render_body(context, options); end
+
+  def render_partial(context, options, &block); end
+
+  def render_partial_to_object(context, options, &block); end
+
+  def render_template(context, options); end
+
+  def render_template_to_object(context, options); end
+
+  def render_to_object(context, options); end
+end
+
+class ActionView::Renderer
+end
+
 class ActionView::Resolver::Cache
   KEY_BLOCK = ::T.let(nil, ::T.untyped)
   NAME_BLOCK = ::T.let(nil, ::T.untyped)
   NO_TEMPLATES = ::T.let(nil, ::T.untyped)
   PARTIAL_BLOCK = ::T.let(nil, ::T.untyped)
   PREFIX_BLOCK = ::T.let(nil, ::T.untyped)
+end
+
+class ActionView::StreamingBuffer
+  def <<(value); end
+
+  def append=(value); end
+
+  def concat(value); end
+
+  def html_safe(); end
+
+  def initialize(block); end
+
+  def safe_append=(value); end
+
+  def safe_concat(value); end
+end
+
+class ActionView::StreamingBuffer
+end
+
+class ActionView::StreamingFlow
+  def initialize(view, fiber); end
+end
+
+class ActionView::StreamingFlow
 end
 
 class ActionView::StreamingTemplateRenderer::Body
@@ -1228,6 +1335,13 @@ end
 
 class ActionView::Template::LegacyTemplate
   RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
+end
+
+class ActionView::Template::Sources::File
+  def initialize(filename); end
+end
+
+class ActionView::Template::Sources::File
 end
 
 class ActionView::Template::Types::Type
@@ -1586,6 +1700,13 @@ end
 class ActiveRecord::Associations::HasManyThroughAssociation
 end
 
+class ActiveRecord::Associations::HasOneThroughAssociation
+  include ::ActiveRecord::Associations::ThroughAssociation
+end
+
+class ActiveRecord::Associations::HasOneThroughAssociation
+end
+
 class ActiveRecord::Associations::JoinDependency::JoinAssociation
   def initialize(reflection, children); end
 
@@ -1644,6 +1765,13 @@ end
 
 class ActiveRecord::Associations::Preloader::ThroughAssociation
   PRELOADER = ::T.let(nil, ::T.untyped)
+end
+
+module ActiveRecord::Associations::ThroughAssociation
+  def source_reflection(*args, &block); end
+end
+
+module ActiveRecord::Associations::ThroughAssociation
 end
 
 module ActiveRecord::AttributeMethods
@@ -2191,16 +2319,6 @@ end
 
 class ActiveRecord::Scoping::ScopeRegistry
   VALID_SCOPE_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveRecord::Scoping::ScopeRegistry
-  def self.set_value_for(*args, &block); end
-
-  def self.value_for(*args, &block); end
-end
-
-class ActiveRecord::SuppressorRegistry
-  def self.suppressed(*args, &block); end
 end
 
 module ActiveRecord::Tasks::DatabaseTasks
@@ -9706,6 +9824,44 @@ module GlobalID::Locator
   DEFAULT_LOCATOR = ::T.let(nil, ::T.untyped)
 end
 
+class GlobalID::Locator::BaseLocator
+  def locate(gid); end
+
+  def locate_many(gids, options=T.unsafe(nil)); end
+end
+
+class GlobalID::Locator::BaseLocator
+end
+
+class GlobalID::Locator::BlockLocator
+  def initialize(block); end
+
+  def locate(gid); end
+
+  def locate_many(gids, options=T.unsafe(nil)); end
+end
+
+class GlobalID::Locator::BlockLocator
+end
+
+class GlobalID::Locator::UnscopedLocator
+end
+
+class GlobalID::Locator::UnscopedLocator
+end
+
+module GlobalID::Locator
+  def self.locate(gid, options=T.unsafe(nil)); end
+
+  def self.locate_many(gids, options=T.unsafe(nil)); end
+
+  def self.locate_many_signed(sgids, options=T.unsafe(nil)); end
+
+  def self.locate_signed(sgid, options=T.unsafe(nil)); end
+
+  def self.use(app, locator=T.unsafe(nil), &locator_block); end
+end
+
 module GraphQL
   BOOLEAN_TYPE = ::T.let(nil, ::T.untyped)
   FLOAT_TYPE = ::T.let(nil, ::T.untyped)
@@ -10233,8 +10389,6 @@ class Hash
 end
 
 class Hash
-  def self.ruby2_keywords_hash(hash); end
-
   def self.try_convert(_); end
 end
 
@@ -10947,6 +11101,19 @@ module Mail
   RANDOM_TAG = ::T.let(nil, ::T.untyped)
 end
 
+class Mail::AddressList
+  def addresses(); end
+
+  def addresses_grouped_by_group(); end
+
+  def group_names(); end
+
+  def initialize(string); end
+end
+
+class Mail::AddressList
+end
+
 class Mail::BccField
   CAPITALIZED_FIELD = ::T.let(nil, ::T.untyped)
   FIELD_NAME = ::T.let(nil, ::T.untyped)
@@ -11045,9 +11212,31 @@ class Mail::ContentLocationField
   FIELD_NAME = ::T.let(nil, ::T.untyped)
 end
 
+class Mail::ContentTransferEncodingElement
+  def encoding(); end
+
+  def initialize(string); end
+end
+
+class Mail::ContentTransferEncodingElement
+end
+
 class Mail::ContentTransferEncodingField
   CAPITALIZED_FIELD = ::T.let(nil, ::T.untyped)
   FIELD_NAME = ::T.let(nil, ::T.untyped)
+end
+
+class Mail::ContentTypeElement
+  def initialize(string); end
+
+  def main_type(); end
+
+  def parameters(); end
+
+  def sub_type(); end
+end
+
+class Mail::ContentTypeElement
 end
 
 class Mail::ContentTypeField
@@ -11058,6 +11247,17 @@ end
 class Mail::DateField
   CAPITALIZED_FIELD = ::T.let(nil, ::T.untyped)
   FIELD_NAME = ::T.let(nil, ::T.untyped)
+end
+
+class Mail::DateTimeElement
+  def date_string(); end
+
+  def initialize(string); end
+
+  def time_string(); end
+end
+
+class Mail::DateTimeElement
 end
 
 class Mail::Encodings::Base64
@@ -11182,6 +11382,28 @@ end
 class Mail::MessageIdField
   CAPITALIZED_FIELD = ::T.let(nil, ::T.untyped)
   FIELD_NAME = ::T.let(nil, ::T.untyped)
+end
+
+class Mail::MessageIdsElement
+  def initialize(string); end
+
+  def message_id(); end
+
+  def message_ids(); end
+end
+
+class Mail::MessageIdsElement
+end
+
+class Mail::MimeVersionElement
+  def initialize(string); end
+
+  def major(); end
+
+  def minor(); end
+end
+
+class Mail::MimeVersionElement
 end
 
 class Mail::MimeVersionField
@@ -11398,6 +11620,12 @@ end
 
 class Marcel::MimeType
   BINARY = ::T.let(nil, ::T.untyped)
+end
+
+class Marcel::MimeType
+  def self.extend(type, extensions: T.unsafe(nil), parents: T.unsafe(nil), magic: T.unsafe(nil)); end
+
+  def self.for(pathname_or_io=T.unsafe(nil), name: T.unsafe(nil), extension: T.unsafe(nil), declared_type: T.unsafe(nil)); end
 end
 
 module Marshal
@@ -11703,13 +11931,6 @@ class Mime::Type
   MIME_PARAMETER_KEY = ::T.let(nil, ::T.untyped)
   MIME_PARAMETER_VALUE = ::T.let(nil, ::T.untyped)
   MIME_REGEXP = ::T.let(nil, ::T.untyped)
-end
-
-class MimeMagic
-  EXTENSIONS = ::T.let(nil, ::T.untyped)
-  MAGIC = ::T.let(nil, ::T.untyped)
-  TYPES = ::T.let(nil, ::T.untyped)
-  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module MiniMagick::Configuration
@@ -17215,7 +17436,6 @@ module Relationship::GeneratedAttributeMethods
 end
 
 module Relationship::GeneratedRelationMethods
-  def name(*args, &block); end
 end
 
 module Relationship::GeneratedRelationMethods
@@ -17229,6 +17449,8 @@ end
 
 class Resolv::DNS
   def extract_resources(msg, name, typeclass); end
+
+  def getname(address); end
   RequestID = ::T.let(nil, ::T.untyped)
   RequestIDMutex = ::T.let(nil, ::T.untyped)
 end
@@ -17275,6 +17497,10 @@ end
 
 class Resolv::DNS::Resource
   ClassValue = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::Resource::LOC
+  def initialize(version, ssize, hprecision, vprecision, latitude, longitude, altitude); end
 end
 
 class Resolv::DNS
@@ -17553,3013 +17779,28 @@ class Rouge::Themes::Gruvbox
   C_neutral_yellow = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::AST::ArrayNode
-  PERCENT_LITERAL_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::AST::BlockNode
-  VOID_CONTEXT_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::AST::Builder
-  NODE_MAP = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::AST::CollectionNode
-  ARRAY_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::AST::KeywordSplatNode
-  DOUBLE_SPLAT = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::AST::MethodDispatchNode
-  ARITHMETIC_OPERATORS = ::T.let(nil, ::T.untyped)
-  SPECIAL_MODIFIERS = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::AST::MethodIdentifierPredicates
-  ENUMERATOR_METHODS = ::T.let(nil, ::T.untyped)
-  OPERATOR_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::AST::Node
-  ASSIGNMENTS = ::T.let(nil, ::T.untyped)
-  BASIC_CONDITIONALS = ::T.let(nil, ::T.untyped)
-  BASIC_LITERALS = ::T.let(nil, ::T.untyped)
-  COMPARISON_OPERATORS = ::T.let(nil, ::T.untyped)
-  COMPOSITE_LITERALS = ::T.let(nil, ::T.untyped)
-  CONDITIONALS = ::T.let(nil, ::T.untyped)
-  EQUALS_ASSIGNMENTS = ::T.let(nil, ::T.untyped)
-  FALSEY_LITERALS = ::T.let(nil, ::T.untyped)
-  IMMUTABLE_LITERALS = ::T.let(nil, ::T.untyped)
-  KEYWORDS = ::T.let(nil, ::T.untyped)
-  LITERALS = ::T.let(nil, ::T.untyped)
-  MUTABLE_LITERALS = ::T.let(nil, ::T.untyped)
-  OPERATOR_KEYWORDS = ::T.let(nil, ::T.untyped)
-  REFERENCES = ::T.let(nil, ::T.untyped)
-  SHORTHAND_ASSIGNMENTS = ::T.let(nil, ::T.untyped)
-  SPECIAL_KEYWORDS = ::T.let(nil, ::T.untyped)
-  TRUTHY_LITERALS = ::T.let(nil, ::T.untyped)
-  VARIABLES = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::AST::NumericNode
-  SIGN_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::AST::PairNode
-  COLON = ::T.let(nil, ::T.untyped)
-  HASH_ROCKET = ::T.let(nil, ::T.untyped)
-  SPACED_COLON = ::T.let(nil, ::T.untyped)
-  SPACED_HASH_ROCKET = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::AST::PredicateOperatorNode
-  LOGICAL_AND = ::T.let(nil, ::T.untyped)
-  LOGICAL_OR = ::T.let(nil, ::T.untyped)
-  SEMANTIC_AND = ::T.let(nil, ::T.untyped)
-  SEMANTIC_OR = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::AST::ProcessedSource
-  STRING_SOURCE_NAME = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::AST::RegexpNode
-  OPTIONS = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::AST::Traversal
-  MANY_CHILD_NODES = ::T.let(nil, ::T.untyped)
-  NO_CHILD_NODES = ::T.let(nil, ::T.untyped)
-  ONE_CHILD_NODE = ::T.let(nil, ::T.untyped)
-  SECOND_CHILD_ONLY = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::AST::Version
-  STRING = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::CLI
-  STATUS_ERROR = ::T.let(nil, ::T.untyped)
-  STATUS_INTERRUPTED = ::T.let(nil, ::T.untyped)
-  STATUS_OFFENSES = ::T.let(nil, ::T.untyped)
-  STATUS_SUCCESS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::CLI::Command::AutoGenerateConfig
-  PHASE_1 = ::T.let(nil, ::T.untyped)
-  PHASE_1_DISABLED = ::T.let(nil, ::T.untyped)
-  PHASE_1_OVERRIDDEN = ::T.let(nil, ::T.untyped)
-  PHASE_2 = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::CLI::Command::InitDotfile
-  DOTFILE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::CommentConfig
-  COMMENT_DIRECTIVE_REGEXP = ::T.let(nil, ::T.untyped)
-  COPS_PATTERN = ::T.let(nil, ::T.untyped)
-  COP_NAMES_PATTERN = ::T.let(nil, ::T.untyped)
-  COP_NAME_PATTERN = ::T.let(nil, ::T.untyped)
-  REDUNDANT_DISABLE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Config
-  DEFAULT_RAILS_VERSION = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::ConfigLoader
-  AUTO_GENERATED_FILE = ::T.let(nil, ::T.untyped)
-  DEFAULT_FILE = ::T.let(nil, ::T.untyped)
-  DOTFILE = ::T.let(nil, ::T.untyped)
-  RUBOCOP_HOME = ::T.let(nil, ::T.untyped)
-  XDG_CONFIG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::ConfigLoader
-  extend ::RuboCop::FileFinder
-end
-
-class RuboCop::ConfigObsoletion
-  MOVED_COPS = ::T.let(nil, ::T.untyped)
-  OBSOLETE_COPS = ::T.let(nil, ::T.untyped)
-  OBSOLETE_ENFORCED_STYLES = ::T.let(nil, ::T.untyped)
-  OBSOLETE_PARAMETERS = ::T.let(nil, ::T.untyped)
-  REMOVED_COPS = ::T.let(nil, ::T.untyped)
-  REMOVED_COPS_WITH_REASON = ::T.let(nil, ::T.untyped)
-  RENAMED_COPS = ::T.let(nil, ::T.untyped)
-  SPLIT_COPS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::ConfigValidator
-  COMMON_PARAMS = ::T.let(nil, ::T.untyped)
-  INTERNAL_PARAMS = ::T.let(nil, ::T.untyped)
-  NEW_COPS_VALUES = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::Alignment
-  SPACE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::AmbiguousCopName
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Badge::InvalidBadge
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Bundler::DuplicatedGem
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Bundler::GemComment
-  CHECKED_OPTIONS_CONFIG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  VERSION_SPECIFIERS_OPTION = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Bundler::InsecureProtocolSource
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Bundler::OrderedGems
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::ConfigurableNaming
-  FORMATS = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::ConfigurableNumbering
-  FORMATS = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::DefNode
-  NON_PUBLIC_MODIFIERS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::EachToForCorrector
-  CORRECTION_WITHOUT_ARGUMENTS = ::T.let(nil, ::T.untyped)
-  CORRECTION_WITH_ARGUMENTS = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::EndKeywordAlignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::ForToEachCorrector
-  CORRECTION = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::FrozenStringLiteral
-  FROZEN_STRING_LITERAL = ::T.let(nil, ::T.untyped)
-  FROZEN_STRING_LITERAL_ENABLED = ::T.let(nil, ::T.untyped)
-  FROZEN_STRING_LITERAL_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Gemspec::DuplicatedAssignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Gemspec::OrderedDependencies
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Gemspec::RequiredRubyVersion
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Gemspec::RubyVersionGlobalsUsage
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Generator
-  CONFIGURATION_ADDED_MESSAGE = ::T.let(nil, ::T.untyped)
-  SOURCE_TEMPLATE = ::T.let(nil, ::T.untyped)
-  SPEC_TEMPLATE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Generator::ConfigurationInjector
-  TEMPLATE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Generator::RequireFileInjector
-  REQUIRE_PATH = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::Heredoc
-  OPENING_DELIMITER = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::AccessModifierIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ArgumentAlignment
-  ALIGN_PARAMS_MSG = ::T.let(nil, ::T.untyped)
-  FIXED_INDENT_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ArrayAlignment
-  ALIGN_ELEMENTS_MSG = ::T.let(nil, ::T.untyped)
-  FIXED_INDENT_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::AssignmentIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::BlockAlignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::BlockEndNewline
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::CaseIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ClassStructure
-  HUMANIZED_NODE_TYPE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  VISIBILITY_SCOPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ClosingHeredocIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_ARG = ::T.let(nil, ::T.untyped)
-  SIMPLE_HEREDOC = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ClosingParenthesisIndentation
-  MSG_ALIGN = ::T.let(nil, ::T.untyped)
-  MSG_INDENT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::CommentIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ConditionPosition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::DefEndAlignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ElseAlignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyComment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLineAfterGuardClause
-  END_OF_HEREDOC_LINE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLineAfterMagicComment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLineBetweenDefs
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLines
-  LINE_OFFSET = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundAccessModifier
-  MSG_AFTER = ::T.let(nil, ::T.untyped)
-  MSG_AFTER_FOR_ONLY_BEFORE = ::T.let(nil, ::T.untyped)
-  MSG_BEFORE_AND_AFTER = ::T.let(nil, ::T.untyped)
-  MSG_BEFORE_FOR_ONLY_BEFORE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundArguments
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundAttributeAccessor
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundBeginBody
-  KIND = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundBlockBody
-  KIND = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::Layout::EmptyLinesAroundBody
-  MSG_DEFERRED = ::T.let(nil, ::T.untyped)
-  MSG_EXTRA = ::T.let(nil, ::T.untyped)
-  MSG_MISSING = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundClassBody
-  KIND = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundExceptionHandlingKeywords
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundMethodBody
-  KIND = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EmptyLinesAroundModuleBody
-  KIND = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::EndOfLine
-  MSG_DETECTED = ::T.let(nil, ::T.untyped)
-  MSG_MISSING = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ExtraSpacing
-  MSG_UNALIGNED_ASGN = ::T.let(nil, ::T.untyped)
-  MSG_UNNECESSARY = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstArgumentIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstArrayElementIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstArrayElementLineBreak
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstHashElementIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstHashElementLineBreak
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstMethodArgumentLineBreak
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstMethodParameterLineBreak
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::FirstParameterIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::HashAlignment
-  MESSAGES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::HeredocArgumentClosingParenthesis
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::HeredocIndentation
-  TYPE_MSG = ::T.let(nil, ::T.untyped)
-  WIDTH_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentationConsistency
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentationStyle
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::IndentationWidth
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::InitialIndentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::LeadingCommentSpace
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::LeadingEmptyLines
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::LineLength
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineArrayBraceLayout
-  ALWAYS_NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  ALWAYS_SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineArrayLineBreaks
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineAssignmentLayout
-  NEW_LINE_OFFENSE = ::T.let(nil, ::T.untyped)
-  SAME_LINE_OFFENSE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineBlockLayout
-  ARG_MSG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PIPE_SIZE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineHashBraceLayout
-  ALWAYS_NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  ALWAYS_SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineHashKeyLineBreaks
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineMethodArgumentLineBreaks
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineMethodCallBraceLayout
-  ALWAYS_NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  ALWAYS_SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::MultilineMethodDefinitionBraceLayout
-  ALWAYS_NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  ALWAYS_SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  NEW_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-  SAME_LINE_MESSAGE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::ParameterAlignment
-  ALIGN_PARAMS_MSG = ::T.let(nil, ::T.untyped)
-  FIXED_INDENT_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::RescueEnsureAlignment
-  ALTERNATIVE_ACCESS_MODIFIERS = ::T.let(nil, ::T.untyped)
-  ANCESTOR_TYPES = ::T.let(nil, ::T.untyped)
-  ANCESTOR_TYPES_WITH_ACCESS_MODIFIERS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  RUBY_2_5_ANCESTOR_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceAfterColon
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceAfterMethodName
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceAfterNot
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceAroundEqualsInParameterDefault
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceAroundKeyword
-  ACCEPT_LEFT_PAREN = ::T.let(nil, ::T.untyped)
-  ACCEPT_LEFT_SQUARE_BRACKET = ::T.let(nil, ::T.untyped)
-  ACCEPT_NAMESPACE_OPERATOR = ::T.let(nil, ::T.untyped)
-  DO = ::T.let(nil, ::T.untyped)
-  MSG_AFTER = ::T.let(nil, ::T.untyped)
-  MSG_BEFORE = ::T.let(nil, ::T.untyped)
-  NAMESPACE_OPERATOR = ::T.let(nil, ::T.untyped)
-  SAFE_NAVIGATION = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceAroundMethodCallOperator
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceAroundOperators
-  EXCESSIVE_SPACE = ::T.let(nil, ::T.untyped)
-  IRREGULAR_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceBeforeBlockBraces
-  DETECTED_MSG = ::T.let(nil, ::T.untyped)
-  MISSING_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceBeforeComment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceBeforeFirstArg
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInLambdaLiteral
-  MSG_REQUIRE_NO_SPACE = ::T.let(nil, ::T.untyped)
-  MSG_REQUIRE_SPACE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsideArrayLiteralBrackets
-  EMPTY_MSG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsideArrayPercentLiteral
-  MSG = ::T.let(nil, ::T.untyped)
-  MULTIPLE_SPACES_BETWEEN_ITEMS_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsideHashLiteralBraces
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsideParens
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_SPACE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsidePercentLiteralDelimiters
-  BEGIN_REGEX = ::T.let(nil, ::T.untyped)
-  END_REGEX = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsideRangeLiteral
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsideReferenceBrackets
-  BRACKET_METHODS = ::T.let(nil, ::T.untyped)
-  EMPTY_MSG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::SpaceInsideStringInterpolation
-  NO_SPACE_MSG = ::T.let(nil, ::T.untyped)
-  SPACE_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Layout::TrailingWhitespace
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::AmbiguousBlockAssociation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::AmbiguousOperator
-  AMBIGUITIES = ::T.let(nil, ::T.untyped)
-  MSG_FORMAT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::AmbiguousRegexpLiteral
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::AssignmentInCondition
-  ASGN_TYPES = ::T.let(nil, ::T.untyped)
-  MSG_WITHOUT_SAFE_ASSIGNMENT_ALLOWED = ::T.let(nil, ::T.untyped)
-  MSG_WITH_SAFE_ASSIGNMENT_ALLOWED = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::BigDecimalNew
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::BooleanSymbol
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::CircularArgumentReference
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::Debugger
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::DeprecatedClassMethods
-  DEPRECATED_METHODS_OBJECT = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::DeprecatedOpenSSLConstant
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::DisjunctiveAssignmentInConstructor
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::DuplicateCaseCondition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::DuplicateHashKey
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::DuplicateMethods
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::EachWithObjectArgument
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ElseLayout
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::EmptyEnsure
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::EmptyExpression
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::EmptyInterpolation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::EmptyWhen
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::EnsureReturn
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ErbNewArguments
-  MESSAGES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::FlipFlop
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::FloatOutOfRange
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
 class RuboCop::Cop::Lint::FormatParameterMismatch
-  KERNEL = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SHOVEL = ::T.let(nil, ::T.untyped)
-  STRING_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::HeredocMethodCallPosition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ImplicitStringConcatenation
-  FOR_ARRAY = ::T.let(nil, ::T.untyped)
-  FOR_METHOD = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::IneffectiveAccessModifier
-  ALTERNATIVE_PRIVATE = ::T.let(nil, ::T.untyped)
-  ALTERNATIVE_PROTECTED = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::InheritException
-  ILLEGAL_CLASSES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PREFERRED_BASE_CLASS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::InterpolationCheck
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::LiteralAsCondition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::LiteralInInterpolation
-  COMPOSITE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::Loop
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::MissingCopEnableDirective
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_BOUND = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::MixedRegexpCaptureTypes
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::MultipleComparison
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::NestedMethodDefinition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::NestedPercentLiteral
-  MSG = ::T.let(nil, ::T.untyped)
-  PERCENT_LITERAL_TYPES = ::T.let(nil, ::T.untyped)
-  REGEXES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::NextWithoutAccumulator
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::NonDeterministicRequireOrder
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::NonLocalExitFromIterator
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::NumberConversion
-  CONVERSION_METHOD_CLASS_MAPPING = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::OrderedMagicComments
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ParenthesesAsGroupedExpression
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::PercentStringArray
-  LEADING_QUOTE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  QUOTES_AND_COMMAS = ::T.let(nil, ::T.untyped)
-  TRAILING_QUOTE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::PercentSymbolArray
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RaiseException
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RandOne
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RedundantCopDisableDirective
-  COP_NAME = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RedundantCopEnableDirective
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RedundantRequireStatement
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RedundantSplatExpansion
-  ARRAY_PARAM_MSG = ::T.let(nil, ::T.untyped)
-  ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PERCENT_CAPITAL_I = ::T.let(nil, ::T.untyped)
-  PERCENT_CAPITAL_W = ::T.let(nil, ::T.untyped)
-  PERCENT_I = ::T.let(nil, ::T.untyped)
-  PERCENT_W = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RedundantStringCoercion
-  MSG_DEFAULT = ::T.let(nil, ::T.untyped)
-  MSG_SELF = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RedundantWithIndex
-  MSG_EACH_WITH_INDEX = ::T.let(nil, ::T.untyped)
-  MSG_WITH_INDEX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RedundantWithObject
-  MSG_EACH_WITH_OBJECT = ::T.let(nil, ::T.untyped)
-  MSG_WITH_OBJECT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RegexpAsCondition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RequireParentheses
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RescueException
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::RescueType
-  INVALID_TYPES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ReturnInVoidContext
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::SafeNavigationChain
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::SafeNavigationConsistency
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::SafeNavigationWithEmpty
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ScriptPermission
-  MSG = ::T.let(nil, ::T.untyped)
-  SHEBANG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::SendWithMixinArgument
-  MIXIN_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ShadowedArgument
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ShadowedException
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ShadowingOuterLocalVariable
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::StructNewOverride
-  MSG = ::T.let(nil, ::T.untyped)
-  STRUCT_MEMBER_NAME_TYPES = ::T.let(nil, ::T.untyped)
-  STRUCT_METHOD_NAMES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::SuppressedException
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::Syntax
-  ERROR_SOURCE_RANGE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::ToJSON
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UnderscorePrefixedVariableName
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UnifiedInteger
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UnreachableCode
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UriEscapeUnescape
-  ALTERNATE_METHODS_OF_URI_ESCAPE = ::T.let(nil, ::T.untyped)
-  ALTERNATE_METHODS_OF_URI_UNESCAPE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UriRegexp
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UselessAccessModifier
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UselessAssignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UselessComparison
-  MSG = ::T.let(nil, ::T.untyped)
-  OPS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UselessElseWithoutRescue
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::UselessSetterCall
-  ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Lint::Void
-  BINARY_OPERATORS = ::T.let(nil, ::T.untyped)
-  DEFINED_MSG = ::T.let(nil, ::T.untyped)
-  LIT_MSG = ::T.let(nil, ::T.untyped)
-  NONMUTATING_METHODS = ::T.let(nil, ::T.untyped)
-  NONMUTATING_MSG = ::T.let(nil, ::T.untyped)
-  OPERATORS = ::T.let(nil, ::T.untyped)
-  OP_MSG = ::T.let(nil, ::T.untyped)
-  SELF_MSG = ::T.let(nil, ::T.untyped)
-  UNARY_OPERATORS = ::T.let(nil, ::T.untyped)
-  VAR_MSG = ::T.let(nil, ::T.untyped)
-  VOID_CONTEXT_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::AbcSize
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::BlockLength
-  LABEL = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::BlockNesting
-  NESTING_BLOCKS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::CyclomaticComplexity
-  COUNTED_NODES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::MethodLength
-  LABEL = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::ParameterLists
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::PerceivedComplexity
-  COUNTED_NODES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Metrics::Utils::AbcSizeCalculator
-  BRANCH_NODES = ::T.let(nil, ::T.untyped)
-  CONDITION_NODES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Migration::DepartmentName
-  DISABLE_COMMENT_FORMAT = ::T.let(nil, ::T.untyped)
-  DISABLING_COPS_CONTENT_TOKEN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::MultilineExpressionIndentation
-  ASSIGNMENT_MESSAGE_TAIL = ::T.let(nil, ::T.untyped)
-  DEFAULT_MESSAGE_TAIL = ::T.let(nil, ::T.untyped)
-  KEYWORD_ANCESTOR_TYPES = ::T.let(nil, ::T.untyped)
-  KEYWORD_MESSAGE_TAIL = ::T.let(nil, ::T.untyped)
-  UNALIGNED_RHS_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::AccessorMethodName
-  MSG_READER = ::T.let(nil, ::T.untyped)
-  MSG_WRITER = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::AsciiIdentifiers
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::BinaryOperatorParameterName
-  BLACKLISTED = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  OP_LIKE_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::ClassAndModuleCamelCase
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::ConstantName
-  MSG = ::T.let(nil, ::T.untyped)
-  SNAKE_CASE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::FileName
-  MSG_NO_DEFINITION = ::T.let(nil, ::T.untyped)
-  MSG_REGEX = ::T.let(nil, ::T.untyped)
-  MSG_SNAKE_CASE = ::T.let(nil, ::T.untyped)
-  SNAKE_CASE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::HeredocDelimiterCase
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::HeredocDelimiterNaming
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::MemoizedInstanceVariableName
-  MSG = ::T.let(nil, ::T.untyped)
-  UNDERSCORE_REQUIRED = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::MethodName
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::RescuedExceptionsVariableName
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::VariableName
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Naming::VariableNumber
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::NegativeConditional
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Offense
-  COMPARISON_ATTRIBUTES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::BindCall
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::Caller
-  MSG_BRACE = ::T.let(nil, ::T.untyped)
-  MSG_FIRST = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::CaseWhenSplat
-  ARRAY_MSG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::Casecmp
-  CASE_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::ChainArrayAllocation
-  ALWAYS_RETURNS_NEW_ARRAY = ::T.let(nil, ::T.untyped)
-  HAS_MUTATION_ALTERNATIVE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  RETURNS_NEW_ARRAY_WHEN_NO_BLOCK = ::T.let(nil, ::T.untyped)
-  RETURN_NEW_ARRAY_WHEN_ARGS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::CompareWithBlock
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::Count
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::DeletePrefix
-  MSG = ::T.let(nil, ::T.untyped)
-  PREFERRED_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::DeleteSuffix
-  MSG = ::T.let(nil, ::T.untyped)
-  PREFERRED_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::Detect
-  MSG = ::T.let(nil, ::T.untyped)
-  REVERSE_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::DoubleStartEndWith
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::EndWith
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::FixedSize
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::FlatMap
-  FLATTEN_MULTIPLE_LEVELS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::OpenStruct
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::RangeInclude
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::RedundantBlockCall
-  CLOSE_PAREN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  OPEN_PAREN = ::T.let(nil, ::T.untyped)
-  SPACE = ::T.let(nil, ::T.untyped)
-  YIELD = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::RedundantMatch
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::RedundantMerge
-  AREF_ASGN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  WITH_MODIFIER_CORRECTION = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::RegexpMatch
-  MATCH_NODE_PATTERN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  TYPES_IMPLEMENTING_MATCH = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::ReverseEach
-  MSG = ::T.let(nil, ::T.untyped)
-  UNDERSCORE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::Size
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::StartWith
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::StringReplacement
-  BANG = ::T.let(nil, ::T.untyped)
-  DELETE = ::T.let(nil, ::T.untyped)
-  DETERMINISTIC_REGEX = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  TR = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::TimesMap
-  MESSAGE = ::T.let(nil, ::T.untyped)
-  MESSAGE_ONLY_IF = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::UnfreezeString
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Performance::UriDefaultParser
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::PreferredDelimiters
-  PERCENT_LITERAL_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::AlignLeftLetBrace
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::AlignRightLetBrace
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::AnyInstance
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::AroundBlock
-  MSG_NO_ARG = ::T.let(nil, ::T.untyped)
-  MSG_UNUSED_ARG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Be
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::BeEql
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::BeforeAfterAll
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Capybara::CurrentPathExpectation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Capybara::FeatureMethods
-  MAP = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Capybara::VisibilityMatcher
-  MSG_FALSE = ::T.let(nil, ::T.untyped)
-  MSG_TRUE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ContextMethod
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ContextWording
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Cop
-  DEFAULT_CONFIGURATION = ::T.let(nil, ::T.untyped)
-  DEFAULT_PATTERN_RE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::DescribeClass
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::DescribeMethod
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::DescribeSymbol
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::DescribedClass
-  DESCRIBED_CLASS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::DescribedClassModuleWrapping
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Dialect
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::EmptyExampleGroup
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::EmptyHook
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::EmptyLineAfterExample
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::EmptyLineAfterExampleGroup
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::EmptyLineAfterFinalLet
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::EmptyLineAfterHook
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::EmptyLineAfterSubject
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ExampleLength
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ExampleWithoutDescription
-  MSG_ADD_DESCRIPTION = ::T.let(nil, ::T.untyped)
-  MSG_DEFAULT_ARGUMENT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ExampleWording
-  IT_PREFIX = ::T.let(nil, ::T.untyped)
-  MSG_IT = ::T.let(nil, ::T.untyped)
-  MSG_SHOULD = ::T.let(nil, ::T.untyped)
-  SHOULD_PREFIX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ExpectActual
-  COMPLEX_LITERALS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SIMPLE_LITERALS = ::T.let(nil, ::T.untyped)
-  SUPPORTED_MATCHERS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ExpectChange
-  MSG_BLOCK = ::T.let(nil, ::T.untyped)
-  MSG_CALL = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ExpectInHook
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ExpectOutput
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::RSpec::ExplicitHelper
-  BUILT_IN_MATCHERS = ::T.let(nil, ::T.untyped)
-  MSG_EXPLICIT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::FactoryBot::CreateList
-  MSG_CREATE_LIST = ::T.let(nil, ::T.untyped)
-  MSG_N_TIMES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::FactoryBot::FactoryClassName
-  ALLOWED_CONSTANTS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::FilePath
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Focus
-  FOCUSABLE_SELECTORS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::HookArgument
-  EXPLICIT_MSG = ::T.let(nil, ::T.untyped)
-  HOOKS = ::T.let(nil, ::T.untyped)
-  IMPLICIT_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::HooksBeforeExamples
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ImplicitBlockExpectation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ImplicitExpect
-  ENFORCED_REPLACEMENTS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ImplicitSubject
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::RSpec::InflectedHelper
-  MSG_INFLECTED = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::InstanceSpy
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::InstanceVariable
-  EXAMPLE_GROUP_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::InvalidPredicateMatcher
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ItBehavesLike
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::IteratedExpectation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::LeadingSubject
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::LeakyConstantDeclaration
-  MSG_CLASS = ::T.let(nil, ::T.untyped)
-  MSG_CONST = ::T.let(nil, ::T.untyped)
-  MSG_MODULE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::LetBeforeExamples
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::LetSetup
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::MessageChain
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::MessageExpectation
-  MSG = ::T.let(nil, ::T.untyped)
-  SUPPORTED_STYLES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::MessageSpies
-  MSG_HAVE_RECEIVED = ::T.let(nil, ::T.untyped)
-  MSG_RECEIVE = ::T.let(nil, ::T.untyped)
-  SUPPORTED_STYLES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::MissingExampleGroupArgument
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::MultipleDescribes
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::MultipleExpectations
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::MultipleSubjects
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::NamedSubject
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::NestedGroups
-  DEPRECATED_MAX_KEY = ::T.let(nil, ::T.untyped)
-  DEPRECATION_WARNING = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::NotToNot
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::OverwritingSetup
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Pending
-  MSG = ::T.let(nil, ::T.untyped)
-  PENDING = ::T.let(nil, ::T.untyped)
-  SKIPPABLE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker
-  ALLOWED_STATUSES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Rails::HttpStatus::SymbolicStyleChecker
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ReceiveCounts
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ReceiveNever
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::RepeatedDescription
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::RepeatedExample
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::RepeatedExampleGroupBody
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::RepeatedExampleGroupDescription
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ReturnFromStub
-  MSG_AND_RETURN = ::T.let(nil, ::T.untyped)
-  MSG_BLOCK = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ReturnFromStub::BlockBodyCorrector
-  NULL_BLOCK_BODY = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ScatteredLet
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::ScatteredSetup
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::SharedContext
-  MSG_CONTEXT = ::T.let(nil, ::T.untyped)
-  MSG_EXAMPLES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::SharedExamples::Checker
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::SingleArgumentMessageChain
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::SubjectStub
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::UnspecifiedException
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::VerifiedDoubles
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::VoidExpect
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::RSpec::Yield
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ActionFilter
-  ACTION_METHODS = ::T.let(nil, ::T.untyped)
-  FILTER_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ActiveRecordAliases
-  ALIASES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ActiveRecordOverride
-  ACTIVE_RECORD_CLASSES = ::T.let(nil, ::T.untyped)
-  BAD_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ActiveSupportAliases
-  ALIASES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ApplicationController
-  BASE_PATTERN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SUPERCLASS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ApplicationJob
-  BASE_PATTERN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SUPERCLASS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ApplicationMailer
-  BASE_PATTERN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SUPERCLASS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ApplicationRecord
-  BASE_PATTERN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SUPERCLASS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::AssertNot
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::BelongsTo
-  SUPERFLOUS_REQUIRE_FALSE_MSG = ::T.let(nil, ::T.untyped)
-  SUPERFLOUS_REQUIRE_TRUE_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Blank
-  MSG_NIL_OR_EMPTY = ::T.let(nil, ::T.untyped)
-  MSG_NOT_PRESENT = ::T.let(nil, ::T.untyped)
-  MSG_UNLESS_PRESENT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::BulkChangeTable
-  COMBINABLE_ALTER_METHODS = ::T.let(nil, ::T.untyped)
-  COMBINABLE_TRANSFORMATIONS = ::T.let(nil, ::T.untyped)
-  MIGRATION_METHODS = ::T.let(nil, ::T.untyped)
-  MSG_FOR_ALTER_METHODS = ::T.let(nil, ::T.untyped)
-  MSG_FOR_CHANGE_TABLE = ::T.let(nil, ::T.untyped)
-  MYSQL = ::T.let(nil, ::T.untyped)
-  MYSQL_COMBINABLE_ALTER_METHODS = ::T.let(nil, ::T.untyped)
-  MYSQL_COMBINABLE_TRANSFORMATIONS = ::T.let(nil, ::T.untyped)
-  POSTGRESQL = ::T.let(nil, ::T.untyped)
-  POSTGRESQL_COMBINABLE_ALTER_METHODS = ::T.let(nil, ::T.untyped)
-  POSTGRESQL_COMBINABLE_TRANSFORMATIONS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::CreateTableWithTimestamps
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Date
-  BAD_DAYS = ::T.let(nil, ::T.untyped)
-  DEPRECATED_METHODS = ::T.let(nil, ::T.untyped)
-  DEPRECATED_MSG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_SEND = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Delegate
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::DelegateAllowBlank
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::DynamicFindBy
-  METHOD_PATTERN = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::EnumHash
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::EnumUniqueness
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::EnvironmentComparison
-  MSG = ::T.let(nil, ::T.untyped)
-  SYM_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Exit
-  EXPLICIT_RECEIVERS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  TARGET_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::FilePath
-  MSG_ARGUMENTS = ::T.let(nil, ::T.untyped)
-  MSG_SLASHES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::FindBy
-  MSG = ::T.let(nil, ::T.untyped)
-  TARGET_SELECTORS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::FindEach
-  IGNORED_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SCOPE_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::HasAndBelongsToMany
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::HasManyOrHasOneDependent
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::HelperInstanceVariable
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::HttpPositionalArguments
-  HTTP_METHODS = ::T.let(nil, ::T.untyped)
-  KEYWORD_ARGS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::HttpStatus::NumericStyleChecker
-  DEFAULT_MSG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PERMITTED_STATUS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::HttpStatus::SymbolicStyleChecker
-  DEFAULT_MSG = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::IgnoredSkipActionFilterOption
-  FILTERS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::InverseOf
-  NIL_MSG = ::T.let(nil, ::T.untyped)
-  SPECIFY_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::LexicallyScopedActionFilter
-  FILTERS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::LinkToBlank
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::NotNullColumn
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Output
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::OutputSafety
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::PluralizationGrammar
-  MSG = ::T.let(nil, ::T.untyped)
-  PLURAL_DURATION_METHODS = ::T.let(nil, ::T.untyped)
-  SINGULAR_DURATION_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Presence
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Present
-  MSG_EXISTS_AND_NOT_EMPTY = ::T.let(nil, ::T.untyped)
-  MSG_NOT_BLANK = ::T.let(nil, ::T.untyped)
-  MSG_UNLESS_BLANK = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::RakeEnvironment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ReadWriteAttribute
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::RedundantAllowNil
-  MSG_ALLOW_NIL_FALSE = ::T.let(nil, ::T.untyped)
-  MSG_SAME = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::RedundantReceiverInWithOptions
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ReflectionClassName
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::RefuteMethods
-  ASSERT_NOT_METHODS = ::T.let(nil, ::T.untyped)
-  CORRECTIONS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  REFUTE_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::RelativeDateConstant
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::RequestReferer
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ReversibleMigration
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::SafeNavigation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::SafeNavigationWithBlank
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::SaveBang
-  CREATE_CONDITIONAL_MSG = ::T.let(nil, ::T.untyped)
-  CREATE_MSG = ::T.let(nil, ::T.untyped)
-  CREATE_PERSIST_METHODS = ::T.let(nil, ::T.untyped)
-  MODIFY_PERSIST_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PERSIST_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::ScopeArgs
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::SkipsModelValidations
-  METHODS_WITH_ARGUMENTS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::TimeZone
-  ACCEPTED_METHODS = ::T.let(nil, ::T.untyped)
-  DANGEROUS_METHODS = ::T.let(nil, ::T.untyped)
-  GOOD_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_ACCEPTABLE = ::T.let(nil, ::T.untyped)
-  MSG_LOCALTIME = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::UniqBeforePluck
-  MSG = ::T.let(nil, ::T.untyped)
-  NEWLINE = ::T.let(nil, ::T.untyped)
-  PATTERN = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::UniqueValidationWithoutIndex
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::UnknownEnv
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_SIMILAR = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Rails::Validation
-  ALLOWLIST = ::T.let(nil, ::T.untyped)
-  DENYLIST = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  TYPES = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::RangeHelp
-  BYTE_ORDER_MARK = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Security::Eval
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Security::JSONLoad
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Security::MarshalLoad
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Security::Open
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Security::YAMLLoad
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Severity
-  CODE_TABLE = ::T.let(nil, ::T.untyped)
-  NAMES = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::SpaceAfterPunctuation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::SpaceBeforePunctuation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::AccessModifierDeclarations
-  GROUP_STYLE_MESSAGE = ::T.let(nil, ::T.untyped)
-  INLINE_STYLE_MESSAGE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Alias
-  MSG_ALIAS = ::T.let(nil, ::T.untyped)
-  MSG_ALIAS_METHOD = ::T.let(nil, ::T.untyped)
-  MSG_SYMBOL_ARGS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::AndOr
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ArrayJoin
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::AsciiComments
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Attr
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::AutoResourceCleanup
-  MSG = ::T.let(nil, ::T.untyped)
-  TARGET_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::BarePercentLiterals
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::BeginBlock
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::BlockComments
-  BEGIN_LENGTH = ::T.let(nil, ::T.untyped)
-  END_LENGTH = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::BlockDelimiters
-  ALWAYS_BRACES_MESSAGE = ::T.let(nil, ::T.untyped)
-  BRACES_REQUIRED_MESSAGE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::CaseCorrector
-  extend ::RuboCop::Cop::Style::ConditionalAssignmentHelper
-  extend ::RuboCop::Cop::Style::ConditionalCorrectorHelper
-end
-
-class RuboCop::Cop::Style::CaseEquality
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::CharacterLiteral
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ClassAndModuleChildren
-  COMPACT_MSG = ::T.let(nil, ::T.untyped)
-  NESTED_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ClassCheck
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ClassMethods
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ClassVars
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::CollectionMethods
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ColonMethodCall
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ColonMethodDefinition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::CommandLiteral
-  MSG_USE_BACKTICKS = ::T.let(nil, ::T.untyped)
-  MSG_USE_PERCENT_X = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::CommentAnnotation
-  MISSING_NOTE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::CommentedKeyword
-  ALLOWED_COMMENTS = ::T.let(nil, ::T.untyped)
-  KEYWORDS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ConditionalAssignment
-  ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  ASSIGN_TO_CONDITION_MSG = ::T.let(nil, ::T.untyped)
-  ENABLED = ::T.let(nil, ::T.untyped)
-  INDENTATION_WIDTH = ::T.let(nil, ::T.untyped)
-  LINE_LENGTH = ::T.let(nil, ::T.untyped)
-  MAX = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  SINGLE_LINE_CONDITIONS_ONLY = ::T.let(nil, ::T.untyped)
-  VARIABLE_ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  WIDTH = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::Style::ConditionalAssignmentHelper
-  ALIGN_WITH = ::T.let(nil, ::T.untyped)
-  END_ALIGNMENT = ::T.let(nil, ::T.untyped)
-  EQUAL = ::T.let(nil, ::T.untyped)
-  KEYWORD = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ConstantVisibility
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Copyright
-  AUTOCORRECT_EMPTY_WARNING = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::DateTime
-  CLASS_MSG = ::T.let(nil, ::T.untyped)
-  COERCION_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::DefWithParentheses
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Dir
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::DisableCopsWithinSourceCodeDirective
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Documentation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::DocumentationMethod
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::DoubleCopDisableDirective
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::DoubleNegation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EachForSimpleLoop
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EachWithObject
-  METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EmptyBlockParameter
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EmptyCaseCondition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EmptyElse
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EmptyLambdaParameter
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EmptyLiteral
-  ARR_MSG = ::T.let(nil, ::T.untyped)
-  HASH_MSG = ::T.let(nil, ::T.untyped)
-  STR_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EmptyMethod
-  MSG_COMPACT = ::T.let(nil, ::T.untyped)
-  MSG_EXPANDED = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Encoding
-  ENCODING_PATTERN = ::T.let(nil, ::T.untyped)
-  MSG_UNNECESSARY = ::T.let(nil, ::T.untyped)
-  SHEBANG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EndBlock
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EvalWithLocation
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_INCORRECT_LINE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::EvenOdd
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ExpandPathArguments
-  MSG = ::T.let(nil, ::T.untyped)
-  PATHNAME_MSG = ::T.let(nil, ::T.untyped)
-  PATHNAME_NEW_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::For
-  EACH_LENGTH = ::T.let(nil, ::T.untyped)
-  PREFER_EACH = ::T.let(nil, ::T.untyped)
-  PREFER_FOR = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::FormatString
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::FrozenStringLiteralComment
-  MSG_DISABLED = ::T.let(nil, ::T.untyped)
-  MSG_MISSING = ::T.let(nil, ::T.untyped)
-  MSG_MISSING_TRUE = ::T.let(nil, ::T.untyped)
-  MSG_UNNECESSARY = ::T.let(nil, ::T.untyped)
-  SHEBANG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::GlobalVars
-  BUILT_IN_VARS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::GuardClause
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::HashEachMethods
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::HashSyntax
-  MSG_19 = ::T.let(nil, ::T.untyped)
-  MSG_HASH_ROCKETS = ::T.let(nil, ::T.untyped)
-  MSG_NO_MIXED_KEYS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::IdenticalConditionalBranches
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::IfCorrector
-  extend ::RuboCop::Cop::Style::ConditionalAssignmentHelper
-  extend ::RuboCop::Cop::Style::ConditionalCorrectorHelper
-end
-
-class RuboCop::Cop::Style::IfInsideElse
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::IfUnlessModifier
-  ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  MSG_USE_MODIFIER = ::T.let(nil, ::T.untyped)
-  MSG_USE_NORMAL = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::IfUnlessModifierOfIfUnless
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::IfWithSemicolon
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ImplicitRuntimeError
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::InfiniteLoop
-  LEADING_SPACE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::InlineComment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::InverseMethods
-  CAMEL_CASE = ::T.let(nil, ::T.untyped)
-  CLASS_COMPARISON_METHODS = ::T.let(nil, ::T.untyped)
-  EQUALITY_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  NEGATED_EQUALITY_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::IpAddresses
-  IPV6_MAX_SIZE = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Lambda
-  LITERAL_MESSAGE = ::T.let(nil, ::T.untyped)
-  METHOD_MESSAGE = ::T.let(nil, ::T.untyped)
-  OFFENDING_SELECTORS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::LineEndConcatenation
-  COMPLEX_STRING_BEGIN_TOKEN = ::T.let(nil, ::T.untyped)
-  COMPLEX_STRING_END_TOKEN = ::T.let(nil, ::T.untyped)
-  CONCAT_TOKEN_TYPES = ::T.let(nil, ::T.untyped)
-  HIGH_PRECEDENCE_OP_TOKEN_TYPES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  QUOTE_DELIMITERS = ::T.let(nil, ::T.untyped)
-  SIMPLE_STRING_TOKEN_TYPE = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::Style::MethodCallWithArgsParentheses::OmitParentheses
-  TRAILING_WHITESPACE_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MethodCallWithoutArgsParentheses
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MethodCalledOnDoEndBlock
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MethodDefParentheses
-  MSG_MISSING = ::T.let(nil, ::T.untyped)
-  MSG_PRESENT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MethodMissingSuper
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MinMax
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MissingElse
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_EMPTY = ::T.let(nil, ::T.untyped)
-  MSG_NIL = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MissingRespondToMissing
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MixinGrouping
-  MIXIN_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MixinUsage
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ModuleFunction
-  EXTEND_SELF_MSG = ::T.let(nil, ::T.untyped)
-  FORBIDDEN_MSG = ::T.let(nil, ::T.untyped)
-  MODULE_FUNCTION_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultilineBlockChain
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultilineIfModifier
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultilineIfThen
-  MSG = ::T.let(nil, ::T.untyped)
-  NON_MODIFIER_THEN = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultilineMemoization
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultilineMethodSignature
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultilineTernaryOperator
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultilineWhenThen
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MultipleComparison
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::MutableConstant
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::NestedModifier
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::NestedParenthesizedCalls
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::NestedTernaryOperator
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Next
-  EXIT_TYPES = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::NilComparison
-  EXPLICIT_MSG = ::T.let(nil, ::T.untyped)
-  PREDICATE_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Not
-  MSG = ::T.let(nil, ::T.untyped)
-  OPPOSITE_METHODS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::NumericLiteralPrefix
-  BINARY_MSG = ::T.let(nil, ::T.untyped)
-  BINARY_REGEX = ::T.let(nil, ::T.untyped)
-  DECIMAL_MSG = ::T.let(nil, ::T.untyped)
-  DECIMAL_REGEX = ::T.let(nil, ::T.untyped)
-  HEX_MSG = ::T.let(nil, ::T.untyped)
-  HEX_REGEX = ::T.let(nil, ::T.untyped)
-  OCTAL_MSG = ::T.let(nil, ::T.untyped)
-  OCTAL_REGEX = ::T.let(nil, ::T.untyped)
-  OCTAL_ZERO_ONLY_MSG = ::T.let(nil, ::T.untyped)
-  OCTAL_ZERO_ONLY_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::NumericLiterals
-  DELIMITER_REGEXP = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::NumericPredicate
-  MSG = ::T.let(nil, ::T.untyped)
-  REPLACEMENTS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::OneLineConditional
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::OptionHash
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::OptionalArguments
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::OrAssignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ParallelAssignment
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::PercentQLiterals
-  LOWER_CASE_Q_MSG = ::T.let(nil, ::T.untyped)
-  UPPER_CASE_Q_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::PerlBackrefs
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::PreferredHashMethods
-  MSG = ::T.let(nil, ::T.untyped)
-  OFFENDING_SELECTORS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Proc
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RaiseArgs
-  COMPACT_MSG = ::T.let(nil, ::T.untyped)
-  EXPLODED_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RandomWithOffset
-  MSG = ::T.let(nil, ::T.untyped)
+  MSG_INVALID = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Style::RedundantBegin
+class RuboCop::Cop::Rails::ContentTag
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Style::RedundantCapitalW
+class RuboCop::Cop::Rails::Pick
   MSG = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Style::RedundantCondition
+class RuboCop::Cop::Rails::RedundantForeignKey
   MSG = ::T.let(nil, ::T.untyped)
-  REDUNDANT_CONDITION = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::RedundantConditional
-  COMPARISON_OPERATORS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantException
-  MSG_1 = ::T.let(nil, ::T.untyped)
-  MSG_2 = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantFreeze
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantInterpolation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantPercentQ
-  DYNAMIC_MSG = ::T.let(nil, ::T.untyped)
-  EMPTY = ::T.let(nil, ::T.untyped)
-  ESCAPED_NON_BACKSLASH = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  PERCENT_CAPITAL_Q = ::T.let(nil, ::T.untyped)
-  PERCENT_Q = ::T.let(nil, ::T.untyped)
-  QUOTE = ::T.let(nil, ::T.untyped)
-  SINGLE_QUOTE = ::T.let(nil, ::T.untyped)
-  STRING_INTERPOLATION_REGEXP = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantRegexpCharacterClass
-  MSG_REDUNDANT_CHARACTER_CLASS = ::T.let(nil, ::T.untyped)
-  PATTERN = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantRegexpEscape
-  ALLOWED_ALWAYS_ESCAPES = ::T.let(nil, ::T.untyped)
-  ALLOWED_OUTSIDE_CHAR_CLASS_METACHAR_ESCAPES = ::T.let(nil, ::T.untyped)
-  ALLOWED_WITHIN_CHAR_CLASS_METACHAR_ESCAPES = ::T.let(nil, ::T.untyped)
-  MSG_REDUNDANT_ESCAPE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantReturn
-  MSG = ::T.let(nil, ::T.untyped)
-  MULTI_RETURN_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantSelf
-  KERNEL_METHODS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantSort
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RedundantSortBy
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RegexpLiteral
-  MSG_USE_PERCENT_R = ::T.let(nil, ::T.untyped)
-  MSG_USE_SLASHES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RescueModifier
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::RescueStandardError
-  MSG_EXPLICIT = ::T.let(nil, ::T.untyped)
-  MSG_IMPLICIT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ReturnNil
-  RETURN_MSG = ::T.let(nil, ::T.untyped)
-  RETURN_NIL_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SafeNavigation
-  LOGIC_JUMP_KEYWORDS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Sample
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SelfAssignment
-  MSG = ::T.let(nil, ::T.untyped)
-  OPS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Semicolon
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Send
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SignalException
-  FAIL_MSG = ::T.let(nil, ::T.untyped)
-  RAISE_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SingleLineBlockParams
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SingleLineMethods
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SlicingWithRange
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SpecialGlobalVars
-  ENGLISH_VARS = ::T.let(nil, ::T.untyped)
-  MSG_BOTH = ::T.let(nil, ::T.untyped)
-  MSG_ENGLISH = ::T.let(nil, ::T.untyped)
-  MSG_REGULAR = ::T.let(nil, ::T.untyped)
-  NON_ENGLISH_VARS = ::T.let(nil, ::T.untyped)
-  PERL_VARS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::StabbyLambdaParentheses
-  MSG_NO_REQUIRE = ::T.let(nil, ::T.untyped)
-  MSG_REQUIRE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::StderrPuts
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::StringHashKeys
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::StringLiterals
-  MSG_INCONSISTENT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::StringMethods
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::Strip
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::StructInheritance
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SymbolArray
-  ARRAY_MSG = ::T.let(nil, ::T.untyped)
-  PERCENT_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SymbolLiteral
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::SymbolProc
-  MSG = ::T.let(nil, ::T.untyped)
-  SUPER_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TernaryCorrector
-  extend ::RuboCop::Cop::Style::ConditionalAssignmentHelper
-  extend ::RuboCop::Cop::Style::ConditionalCorrectorHelper
-end
-
-class RuboCop::Cop::Style::TernaryParentheses
-  MSG = ::T.let(nil, ::T.untyped)
-  MSG_COMPLEX = ::T.let(nil, ::T.untyped)
-  NON_COMPLEX_TYPES = ::T.let(nil, ::T.untyped)
-  VARIABLE_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TrailingBodyOnClass
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TrailingBodyOnMethodDefinition
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TrailingBodyOnModule
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TrailingCommaInBlockArgs
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TrailingMethodEndStatement
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TrailingUnderscoreVariable
-  MSG = ::T.let(nil, ::T.untyped)
-  UNDERSCORE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::TrivialAccessors
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::UnlessElse
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::UnpackFirst
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::VariableInterpolation
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::WhenThen
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::WhileUntilDo
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::WhileUntilModifier
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::WordArray
-  ARRAY_MSG = ::T.let(nil, ::T.untyped)
-  PERCENT_MSG = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::YodaCondition
-  EQUALITY_OPERATORS = ::T.let(nil, ::T.untyped)
-  MSG = ::T.let(nil, ::T.untyped)
-  NONCOMMUTATIVE_OPERATORS = ::T.let(nil, ::T.untyped)
-  PROGRAM_NAMES = ::T.let(nil, ::T.untyped)
-  REVERSE_COMPARISON = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Style::ZeroLengthPredicate
-  NONZERO_MSG = ::T.let(nil, ::T.untyped)
-  ZERO_MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::SurroundingSpace
-  NO_SPACE_COMMAND = ::T.let(nil, ::T.untyped)
-  SINGLE_SPACE_REGEXP = ::T.let(nil, ::T.untyped)
-  SPACE_COMMAND = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Team
-  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::TooManyLines
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::TrailingComma
-  MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::UncommunicativeName
-  CASE_MSG = ::T.let(nil, ::T.untyped)
-  FORBIDDEN_MSG = ::T.let(nil, ::T.untyped)
-  LENGTH_MSG = ::T.let(nil, ::T.untyped)
-  NUM_MSG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::Util
-  LITERAL_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::Utils::FormatString
-  DIGIT_DOLLAR = ::T.let(nil, ::T.untyped)
-  FLAG = ::T.let(nil, ::T.untyped)
-  NAME = ::T.let(nil, ::T.untyped)
-  NUMBER = ::T.let(nil, ::T.untyped)
-  NUMBER_ARG = ::T.let(nil, ::T.untyped)
-  PRECISION = ::T.let(nil, ::T.untyped)
-  SEQUENCE = ::T.let(nil, ::T.untyped)
-  TEMPLATE_NAME = ::T.let(nil, ::T.untyped)
-  TYPE = ::T.let(nil, ::T.untyped)
-  WIDTH = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::VariableForce
-  ARGUMENT_DECLARATION_TYPES = ::T.let(nil, ::T.untyped)
-  LOGICAL_OPERATOR_ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  LOOP_TYPES = ::T.let(nil, ::T.untyped)
-  MULTIPLE_ASSIGNMENT_TYPE = ::T.let(nil, ::T.untyped)
-  OPERATOR_ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  POST_CONDITION_LOOP_TYPES = ::T.let(nil, ::T.untyped)
-  REGEXP_NAMED_CAPTURE_TYPE = ::T.let(nil, ::T.untyped)
-  RESCUE_TYPE = ::T.let(nil, ::T.untyped)
-  SCOPE_TYPES = ::T.let(nil, ::T.untyped)
-  SEND_TYPE = ::T.let(nil, ::T.untyped)
-  TWISTED_SCOPE_TYPES = ::T.let(nil, ::T.untyped)
-  VARIABLE_ASSIGNMENT_TYPE = ::T.let(nil, ::T.untyped)
-  VARIABLE_ASSIGNMENT_TYPES = ::T.let(nil, ::T.untyped)
-  VARIABLE_REFERENCE_TYPE = ::T.let(nil, ::T.untyped)
-  ZERO_ARITY_SUPER_TYPE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::VariableForce::Assignment
-  MULTIPLE_LEFT_HAND_SIDE_TYPE = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Cop::VariableForce::Branch
-  CLASSES_BY_TYPE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::VariableForce::Reference
-  VARIABLE_REFERENCE_TYPES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::VariableForce::Scope
-  OUTER_SCOPE_CHILD_INDICES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Cop::VariableForce::Variable
-  VARIABLE_DECLARATION_TYPES = ::T.let(nil, ::T.untyped)
+  COMPARISON_OPERATOR_MATCHER = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::WorkaroundCop
-  include ::RuboCop::AST::Sexp
-  include ::RuboCop::Cop::Util
-  include ::RuboCop::PathUtil
-  include ::RuboCop::Cop::IgnoredNode
-  include ::RuboCop::Cop::AutocorrectLogic
-end
-
-class RuboCop::Cop::WorkaroundCop
-  extend ::RuboCop::AST::Sexp
-  extend ::RuboCop::AST::NodePattern::Macros
-  def self.all(); end
-
-  def self.autocorrect_incompatible_with(); end
-
-  def self.badge(); end
-
-  def self.cop_name(); end
-
-  def self.department(); end
-
-  def self.inherited(*_); end
-
-  def self.lint?(); end
-
-  def self.match?(given_names); end
-
-  def self.qualified_cop_name(name, origin); end
-
-  def self.registry(); end
-end
-
-class RuboCop::Formatter::ClangStyleFormatter
-  ELLIPSES = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::DisabledConfigFormatter
-  HEADING = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::FormatterSet
-  BUILTIN_FORMATTERS_FOR_KEYS = ::T.let(nil, ::T.untyped)
-  FORMATTER_APIS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::FuubarStyleFormatter
-  RESET_SEQUENCE = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::HTMLFormatter
-  ELLIPSES = ::T.let(nil, ::T.untyped)
-  TEMPLATE_PATH = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::HTMLFormatter::ERBContext
-  LOGO_IMAGE_PATH = ::T.let(nil, ::T.untyped)
-  SEVERITY_COLORS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::PacmanFormatter
-  FALLBACK_TERMINAL_WIDTH = ::T.let(nil, ::T.untyped)
-  GHOST = ::T.let(nil, ::T.untyped)
-  PACDOT = ::T.let(nil, ::T.untyped)
-  PACMAN = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::ProgressFormatter
-  DOT = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Formatter::SimpleTextFormatter
-  COLOR_FOR_SEVERITY = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::MagicComment
-  TOKEN = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::MagicComment::EmacsComment
-  FORMAT = ::T.let(nil, ::T.untyped)
-  OPERATOR = ::T.let(nil, ::T.untyped)
-  SEPARATOR = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::MagicComment::VimComment
-  FORMAT = ::T.let(nil, ::T.untyped)
-  OPERATOR = ::T.let(nil, ::T.untyped)
-  SEPARATOR = ::T.let(nil, ::T.untyped)
-end
-
-RuboCop::NodePattern = RuboCop::AST::NodePattern
-
-class RuboCop::Options
-  DEFAULT_MAXIMUM_EXCLUSION_ITEMS = ::T.let(nil, ::T.untyped)
-  EXITING_OPTIONS = ::T.let(nil, ::T.untyped)
-  E_STDIN_NO_PATH = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::OptionsHelp
-  FORMATTER_OPTION_LIST = ::T.let(nil, ::T.untyped)
-  MAX_EXCL = ::T.let(nil, ::T.untyped)
-  TEXT = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Performance
-  CONFIG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Performance::Version
-  STRING = ::T.let(nil, ::T.untyped)
-end
-
-RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
-
-module RuboCop::RSpec
-  CONFIG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::RSpec::Language
-  ALL = ::T.let(nil, ::T.untyped)
-  RSPEC = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::RSpec::Version
-  STRING = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Rails
-  CONFIG = ::T.let(nil, ::T.untyped)
-end
-
-module RuboCop::Rails::Version
-  STRING = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::RemoteConfig
-  CACHE_LIFETIME = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::ResultCache
-  NON_CHANGING = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::Runner
-  MAX_ITERATIONS = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::StringInterpreter
-  STRING_ESCAPES = ::T.let(nil, ::T.untyped)
-  STRING_ESCAPE_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::TargetRuby
-  DEFAULT_VERSION = ::T.let(nil, ::T.untyped)
-end
-
-class RuboCop::TargetRuby::RubyVersionFile
-  FILENAME = ::T.let(nil, ::T.untyped)
-end
-
-RuboCop::Token = RuboCop::AST::Token
-
-module RuboCop::Version
-  MSG = ::T.let(nil, ::T.untyped)
-  STRING = ::T.let(nil, ::T.untyped)
+  def self.exclude_from_registry(); end
 end
 
 class RubyLex
@@ -23330,22 +20571,6 @@ module UnicodeNormalize
   VCOUNT = ::T.let(nil, ::T.untyped)
 end
 
-module UnicodeNormalize
-  def self.canonical_ordering_one(string); end
-
-  def self.hangul_comp_one(string); end
-
-  def self.hangul_decomp_one(target); end
-
-  def self.nfc_one(string); end
-
-  def self.nfd_one(string); end
-
-  def self.normalize(string, form=T.unsafe(nil)); end
-
-  def self.normalized?(string, form=T.unsafe(nil)); end
-end
-
 class UniformNotifier
   AVAILABLE_NOTIFIERS = ::T.let(nil, ::T.untyped)
   NOTIFIERS = ::T.let(nil, ::T.untyped)
@@ -23420,8 +20645,6 @@ end
 module User::GeneratedRelationMethods
   def admin(*args, &block); end
 
-  def friendly_id_config(*args, &block); end
-
   def member(*args, &block); end
 
   def moderator(*args, &block); end
@@ -23429,8 +20652,6 @@ module User::GeneratedRelationMethods
   def most_followers(*args, &block); end
 
   def most_games(*args, &block); end
-
-  def name(*args, &block); end
 
   def not_admin(*args, &block); end
 
