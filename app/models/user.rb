@@ -12,8 +12,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable
 
-  acts_as_token_authenticatable
-
   has_many :game_purchases
   has_many :games, through: :game_purchases
 
@@ -138,6 +136,18 @@ class User < ApplicationRecord
       tsearch: { prefix: true }
     }
 
+  sig { returns(T.nilable(String)) }
+  def api_token
+    return nil if encrypted_api_token.nil?
+
+    EncryptionService.decrypt(T.must(encrypted_api_token))
+  end
+
+  sig { params(value: String).void }
+  def api_token=(value)
+    self.encrypted_api_token = EncryptionService.encrypt(value)
+  end
+
   # Make sure the user isn't banned when logging in with Devise.
   sig { returns(T.nilable(T::Boolean)) }
   def active_for_authentication?
@@ -149,6 +159,13 @@ class User < ApplicationRecord
   sig { returns(Symbol) }
   def inactive_message
     banned? ? :account_banned : super
+  end
+
+  sig { params(token: String).returns(T::Boolean) }
+  def verify_api_token!(token)
+    return false if token.nil?
+
+    api_token == token
   end
 
   private

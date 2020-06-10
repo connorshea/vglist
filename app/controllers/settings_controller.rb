@@ -60,7 +60,7 @@ class SettingsController < ApplicationController
     authorize @user, policy_class: SettingsPolicy
 
     respond_to do |format|
-      format.json { render json: @user&.authentication_token.to_json }
+      format.json { render json: @user&.api_token.to_json }
     end
   end
 end

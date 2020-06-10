@@ -228,7 +228,7 @@ RSpec.describe "Settings", type: :request do
   end
 
   describe "GET settings_api_token_path" do
-    let(:user) { create(:confirmed_user, authentication_token: 'foo') }
+    let(:user) { create(:confirmed_user, api_token: 'foo') }
 
     it "returns http success for users that are logged in" do
       sign_in(user)

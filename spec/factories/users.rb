@@ -60,8 +60,10 @@ FactoryBot.define do
       privacy { :private_account }
     end
 
-    trait :authentication_token do
-      authentication_token { SecureRandom.alphanumeric(20) }
+    trait :api_token do
+      after(:create) do |user|
+        user.api_token = SecureRandom.alphanumeric(20)
+      end
     end
 
     factory :confirmed_user,                  traits: [:confirmed]
