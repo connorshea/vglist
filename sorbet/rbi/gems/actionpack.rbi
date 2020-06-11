@@ -3372,22 +3372,3 @@ module ActionController::TestCase::Behavior::ClassMethods
   def determine_default_controller_class(name); end
   def tests(controller_class); end
 end
-class ActionDispatch::Routing::RoutesProxy
-  def _routes; end
-  def default_url_options; end
-  def default_url_options=(val); end
-  def default_url_options?; end
-  def initialize(routes, scope, helpers, script_namer = nil); end
-  def merge_script_names(previous_script_name, new_script_name); end
-  def method_missing(method, *args); end
-  def respond_to_missing?(method, _); end
-  def routes; end
-  def routes=(arg0); end
-  def scope; end
-  def scope=(arg0); end
-  def self.default_url_options; end
-  def self.default_url_options=(val); end
-  def self.default_url_options?; end
-  def url_options; end
-  include ActionDispatch::Routing::UrlFor
-end

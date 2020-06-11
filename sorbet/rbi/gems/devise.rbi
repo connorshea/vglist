@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/devise/all/devise.rbi
 #
-# devise-4.7.1
+# devise-4.7.2
 
 module Devise
   def allow_unconfirmed_access_for; end
@@ -151,7 +151,6 @@ module Devise
   def self.password_length=(obj); end
   def self.pepper; end
   def self.pepper=(obj); end
-  def self.rails51?; end
   def self.reconfirmable; end
   def self.reconfirmable=(obj); end
   def self.ref(arg); end

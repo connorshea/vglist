@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/ast/all/ast.rbi
 #
-# ast-2.4.0
+# ast-2.4.1
 
 module AST
 end
