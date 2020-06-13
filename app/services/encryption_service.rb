@@ -1,5 +1,9 @@
 # typed: true
 
+# A service for encrypting/decrypting values.
+#
+# Based on this blog post:
+# https://pawelurbanek.com/rails-secure-encrypt-decrypt
 class EncryptionService
   extend T::Sig
 
