@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.6.13
+### Changed
+- Replace existing API token authentication system with an encrypted API token field. ([#1329])
+  - NOTE: This will require recreating your API tokens if you were using the API before this change.
+
 ## v2020.5.24
 ### Added
 - Upgrade GraphiQL and enable it in production. It's available at `/graphiql`. ([#1262])
@@ -737,3 +742,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1218]: https://github.com/connorshea/vglist/pull/1218
 [#1249]: https://github.com/connorshea/vglist/pull/1249
 [#1262]: https://github.com/connorshea/vglist/pull/1262
+[#1329]: https://github.com/connorshea/vglist/pull/1329
