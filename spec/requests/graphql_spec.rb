@@ -3,7 +3,8 @@ require 'rails_helper'
 
 RSpec.describe "GraphQL", type: :request do
   describe "POST graphql_path" do
-    let(:user) { create(:confirmed_user, :api_token) }
+    let(:token) { SecureRandom.alphanumeric(20) }
+    let(:user) { create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(token)) }
 
     it 'responds with http unauthorized if not authenticated' do
       post graphql_path(format: :json)
@@ -17,7 +18,8 @@ RSpec.describe "GraphQL", type: :request do
         'X-User-Token': user.api_token
       }
 
-      post graphql_path(format: :json, headers: headers)
+      expect(user.api_token).to eq(token)
+      post graphql_path(format: :json), headers: headers
       expect(response).to have_http_status(:success)
     end
 
@@ -33,7 +35,8 @@ RSpec.describe "GraphQL", type: :request do
         'X-User-Email': user.email,
         'X-User-Token': 'foo'
       }
-      post graphql_path(format: :json, headers: headers)
+
+      post graphql_path(format: :json), headers: headers
       expect(response).to have_http_status(:unauthorized)
     end
   end
