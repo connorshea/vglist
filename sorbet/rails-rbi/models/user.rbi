@@ -1812,15 +1812,6 @@ module User::QueryMethodsReturningAssociationRelation
 end
 
 module User::GeneratedAttributeMethods
-  sig { returns(T.nilable(String)) }
-  def authentication_token; end
-
-  sig { params(value: T.nilable(T.any(String, Symbol))).void }
-  def authentication_token=(value); end
-
-  sig { returns(T::Boolean) }
-  def authentication_token?; end
-
   sig { returns(T::Boolean) }
   def banned; end
 
@@ -1901,6 +1892,15 @@ module User::GeneratedAttributeMethods
 
   sig { returns(T::Boolean) }
   def email?; end
+
+  sig { returns(T.nilable(String)) }
+  def encrypted_api_token; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def encrypted_api_token=(value); end
+
+  sig { returns(T::Boolean) }
+  def encrypted_api_token?; end
 
   sig { returns(String) }
   def encrypted_password; end
@@ -3019,51 +3019,6 @@ module User::GeneratedAttributeMethods
   def privacy_came_from_user?(*args); end
 
   sig { params(args: T.untyped).returns(T::Boolean) }
-  def saved_change_to_authentication_token?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_authentication_token(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def will_save_change_to_authentication_token?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def authentication_token_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_was(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def authentication_token_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_authentication_token!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def authentication_token_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def authentication_token_came_from_user?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_banned?(*args); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
@@ -3107,6 +3062,51 @@ module User::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def banned_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_encrypted_api_token?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_encrypted_api_token(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_encrypted_api_token?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def encrypted_api_token_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def encrypted_api_token_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_encrypted_api_token!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def encrypted_api_token_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def encrypted_api_token_came_from_user?(*args); end
 end
 
 module User::GeneratedAssociationMethods

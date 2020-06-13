@@ -318,7 +318,7 @@ class UsersController < ApplicationController
     @user = current_user
     authorize @user
 
-    @user&.authentication_token = Devise.friendly_token
+    @user&.api_token = Devise.friendly_token
 
     if @user&.save
       redirect_to oauth_applications_path, success: "API token successfully reset."

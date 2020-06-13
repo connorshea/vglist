@@ -71,9 +71,6 @@ gem 'graphql', '~> 1.10.11'
 # Doorkeeper for OAuth API tokens
 gem "doorkeeper", "~> 5.4"
 
-# SimpleTokenAuthentication for static API tokens
-gem 'simple_token_authentication', '~> 1.17'
-
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 1.1"
 

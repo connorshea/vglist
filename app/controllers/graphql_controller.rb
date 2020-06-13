@@ -3,21 +3,19 @@ class GraphqlController < ApplicationController
   # Skip bullet on GraphQL queries to avoid errors.
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
-  # If the user isn't logged in and hasn't provided any token, return a
-  # specific error message.
-  before_action :handle_user_not_logged_in, if: -> { current_user.nil? && !user_using_oauth? && !request.headers.key?('X-User-Email') }
+  # If the user hasn't provided any token, return a specific error message.
+  before_action :handle_user_not_logged_in, if: -> { !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email') }
 
-  # Allow bypassing authorization if the user is logged in, to
-  # enable GraphiQL.
-  before_action :authorize_api_user, if: -> { current_user.nil? && user_using_oauth? }
+  # Authenticate with Doorkeeper if there's no X-User-Email header.
+  before_action :authorize_doorkeeper_user, if: -> { !request.headers.key?('X-User-Email') && user_using_oauth? }
+
+  # Authenticate with a user's authorization token if they're not using OAuth.
+  before_action :authorize_token_user, if: -> { !user_using_oauth? }
 
   # Disable CSRF protection for GraphQL because we don't want to have CSRF
   # protection on our API endpoint. The point is to let anyone send requests
   # to the API.
   skip_before_action :verify_authenticity_token
-
-  # Use SimpleTokenAuthentication if the user's request doesn't have an OAuth token.
-  acts_as_token_authentication_handler_for User, if: ->(controller) { !controller.user_using_oauth? }
 
   def execute
     skip_authorization
@@ -25,8 +23,14 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
+    graphql_current_user = api_user || doorkeeper_user
+    if graphql_current_user.nil?
+      handle_user_not_logged_in
+      return
+    end
+
     context = {
-      current_user: current_user || api_user || doorkeeper_user,
+      current_user: graphql_current_user,
       pundit: self,
       doorkeeper_scopes: doorkeeper_token&.scopes&.to_a,
       token_auth: !user_using_oauth?
@@ -77,7 +81,9 @@ class GraphqlController < ApplicationController
   # Define doorkeeper_user based on the doorkeeper token because Doorkeeper
   # token-based requests don't have a current_user variable.
   def doorkeeper_user
-    @doorkeeper_user ||= User.find(doorkeeper_token[:resource_owner_id])
+    return if doorkeeper_token.nil?
+
+    @doorkeeper_user ||= User.find_by(id: doorkeeper_token[:resource_owner_id])
   end
 
   def api_user
@@ -101,12 +107,16 @@ class GraphqlController < ApplicationController
     }
   end
 
-  def authorize_api_user
+  def authorize_doorkeeper_user
     doorkeeper_authorize!
   end
 
+  def authorize_token_user
+    handle_user_not_logged_in unless api_user&.verify_api_token!(request.headers['X-User-Token'])
+  end
+
   def handle_user_not_logged_in
-    render json: { error: { message: 'You must either be logged in or provide a valid token to use the GraphQL API.' } }, status: :unauthorized
+    render json: { error: { message: 'You must provide a valid email and token to use the GraphQL API.' } }, status: :unauthorized
   end
 
   def skip_bullet

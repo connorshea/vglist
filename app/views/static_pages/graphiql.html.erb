@@ -12,16 +12,20 @@
 </style>
 
 <%= javascript_tag nonce: true do %>
-  let graphQLFetcher = (graphQLParams) => {
+  let graphQLFetcher = (graphQLParams, opts = { headers: {} }) => {
     return fetch(window.location.origin + '/graphql', {
       method: 'post',
-      headers: { 'Content-Type': 'application/json' },
+      headers: Object.assign({ 'Content-Type': 'application/json', 'User-Agent': 'vglist.co GraphiQL' }, opts.headers),
       body: JSON.stringify(graphQLParams),
     }).then(response => response.json());
   }
 
   ReactDOM.render(
-    React.createElement(GraphiQL, { fetcher: graphQLFetcher }),
+    React.createElement(GraphiQL, {
+      fetcher: graphQLFetcher,
+      headerEditorEnabled: true,
+      headers: '{\n  "X-User-Email": "foo@example.com",\n  "X-User-Token": "API_TOKEN_HERE"\n}'
+    }),
     document.getElementById("graphiql-injection-point")
   );
 <% end %>
