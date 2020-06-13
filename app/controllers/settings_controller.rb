@@ -55,12 +55,21 @@ class SettingsController < ApplicationController
 
   # TODO: Make this require logging in again?
   def api_token
-    @user = current_user
+    @user = T.must(current_user)
 
     authorize @user, policy_class: SettingsPolicy
 
+    token = @user.api_token
+
+    # Create a token if the user doesn't already have one.
+    if token.nil?
+      @user.api_token = Devise.friendly_token
+      @user.save
+      token = @user.api_token
+    end
+
     respond_to do |format|
-      format.json { render json: @user&.api_token.to_json }
+      format.json { render json: token.to_json }
     end
   end
 end

@@ -230,12 +230,22 @@ RSpec.describe "Settings", type: :request do
   describe "GET settings_api_token_path" do
     let(:token) { SecureRandom.alphanumeric(20) }
     let(:user) { create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(token)) }
+    let(:user_with_no_token) { create(:confirmed_user) }
 
     it "returns http success for users that are logged in" do
       sign_in(user)
       get settings_api_token_path
       expect(response).to have_http_status(:success)
       expect(response.body).to eql(token.to_json)
+    end
+
+    it "creates a new token for users without a token" do
+      sign_in(user_with_no_token)
+      get settings_api_token_path
+      expect(response).to have_http_status(:success)
+      user_with_no_token.reload
+      expect(response.body).to eql(user_with_no_token.api_token.to_json)
+      expect(user_with_no_token.api_token).not_to be_nil
     end
 
     it "redirects for users who aren't logged in" do
