@@ -161,8 +161,13 @@ class User < ApplicationRecord
     banned? ? :account_banned : super
   end
 
-  sig { params(token: String).returns(T::Boolean) }
+  # Verify that the token passed into the application matches the user's
+  # actual token.
+  sig { params(token: T.nilable(String)).returns(T::Boolean) }
   def verify_api_token!(token)
+    # Return false if the user attempts to pass a nil token. This prevents
+    # other users from hijacking an account if the account doesn't have
+    # a token.
     return false if token.nil?
 
     api_token == token
