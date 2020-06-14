@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.6.14
+### Fixed
+- Fix the GraphiQL Docs Explorer sidebar by providing a static schema file. ([#1331])
+
 ## v2020.6.13
 ### Changed
 - Replace existing API token authentication system with an encrypted API token field. ([#1329])
@@ -743,3 +747,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1249]: https://github.com/connorshea/vglist/pull/1249
 [#1262]: https://github.com/connorshea/vglist/pull/1262
 [#1329]: https://github.com/connorshea/vglist/pull/1329
+[#1331]: https://github.com/connorshea/vglist/pull/1331
