@@ -1,6 +1,8 @@
 <% content_for :title, "GraphiQL" %>
 
-<div id="graphiql-injection-point" style="height: 100vh; width: 100vw; margin: 0;"></div>
+<div id="graphiql-injection-point" style="height: 100vh; width: 100vw; margin: 0;"
+     data-graphql-schema="<%= render plain: "#{render partial: 'static_pages/graphql_schema' }" %>"
+></div>
 
 <script src="<%= asset_pack_path 'graphiql.js' %>" type="application/javascript"></script>
 
@@ -20,12 +22,20 @@
     }).then(response => response.json());
   }
 
-  ReactDOM.render(
-    React.createElement(GraphiQL, {
-      fetcher: graphQLFetcher,
-      headerEditorEnabled: true,
-      headers: '{\n  "X-User-Email": "foo@example.com",\n  "X-User-Token": "API_TOKEN_HERE"\n}'
-    }),
-    document.getElementById("graphiql-injection-point")
-  );
+  let renderGraphiQL = async () => {
+    let schema = document.getElementById("graphiql-injection-point").dataset.graphqlSchema;
+    let graphQLSchema = buildSchema(schema);
+
+    ReactDOM.render(
+      React.createElement(GraphiQL, {
+        schema: graphQLSchema,
+        fetcher: graphQLFetcher,
+        headerEditorEnabled: true,
+        headers: '{\n  "X-User-Email": "user@example.com",\n  "X-User-Token": "API_TOKEN_HERE"\n}'
+      }),
+      document.getElementById("graphiql-injection-point")
+    );
+  };
+
+  renderGraphiQL();
 <% end %>
