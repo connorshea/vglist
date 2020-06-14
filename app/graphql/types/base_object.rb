@@ -9,8 +9,7 @@ module Types
     # User needs to be logged in to get anything from the API.
     sig { params(_object: T.untyped, context: GraphQL::Query::Context).returns(T::Boolean) }
     def self.authorized?(_object, context)
-      raise GraphQL::ExecutionError, "You must be logged in to use the API." if context[:current_user].nil? &&
-                                                                                !context[:introspection_override]
+      raise GraphQL::ExecutionError, "You must be logged in to use the API." if context[:current_user].nil?
       raise GraphQL::ExecutionError, "The user that owns this token has been banned." if context[:current_user]&.banned?
 
       # Make sure the doorkeeper scopes include read.

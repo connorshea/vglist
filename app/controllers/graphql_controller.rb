@@ -4,13 +4,13 @@ class GraphqlController < ApplicationController
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   # If the user hasn't provided any token, return a specific error message.
-  before_action :handle_user_not_logged_in, if: -> { !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email') }, only: :execute
+  before_action :handle_user_not_logged_in, if: -> { !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email') }
 
   # Authenticate with Doorkeeper if there's no X-User-Email header.
-  before_action :authorize_doorkeeper_user, if: -> { !request.headers.key?('X-User-Email') && user_using_oauth? }, only: :execute
+  before_action :authorize_doorkeeper_user, if: -> { !request.headers.key?('X-User-Email') && user_using_oauth? }
 
   # Authenticate with a user's authorization token if they're not using OAuth.
-  before_action :authorize_token_user, if: -> { !user_using_oauth? }, only: :execute
+  before_action :authorize_token_user, if: -> { !user_using_oauth? }
 
   # Disable CSRF protection for GraphQL because we don't want to have CSRF
   # protection on our API endpoint. The point is to let anyone send requests
