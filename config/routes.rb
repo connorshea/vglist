@@ -122,4 +122,7 @@ Rails.application.routes.draw do
   get '/graphiql', to: 'static_pages#graphiql'
   # Execute GraphQL queries posted to '/graphql'.
   post "/graphql", to: "graphql#execute"
+  # Return the schema from `/graphql/schema` so the docs explorer can be used
+  # without authentication.
+  get "/graphql/schema", to: "graphql#schema"
 end

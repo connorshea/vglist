@@ -20,12 +20,24 @@
     }).then(response => response.json());
   }
 
-  ReactDOM.render(
-    React.createElement(GraphiQL, {
-      fetcher: graphQLFetcher,
-      headerEditorEnabled: true,
-      headers: '{\n  "X-User-Email": "foo@example.com",\n  "X-User-Token": "API_TOKEN_HERE"\n}'
-    }),
-    document.getElementById("graphiql-injection-point")
-  );
+  let foo = async () => {
+    let schema = await fetch(window.location.origin + '/graphql/schema', {
+      method: 'get',
+      headers: { 'Content-Type': 'text/plain', 'User-Agent': 'vglist.co GraphiQL' },
+    }).then(response => response.text());
+
+    let graphQLSchema = buildSchema(schema);
+
+    ReactDOM.render(
+      React.createElement(GraphiQL, {
+        schema: graphQLSchema,
+        fetcher: graphQLFetcher,
+        headerEditorEnabled: true,
+        headers: '{\n  "X-User-Email": "foo@example.com",\n  "X-User-Token": "API_TOKEN_HERE"\n}'
+      }),
+      document.getElementById("graphiql-injection-point")
+    );
+  };
+
+  foo();
 <% end %>
