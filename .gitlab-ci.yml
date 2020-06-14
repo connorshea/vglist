@@ -80,6 +80,12 @@ rspec:
     - bundle exec rspec
   coverage: '/\(\d+.\d+\%\) covered/'
 
+# Ensure that the assets:precompile step works in production mode.
+assets:precompile:production:
+  before_script: *no_db_necessary
+  script:
+    - RAILS_ENV=production NODE_ENV=production bundle exec rake assets:precompile
+
 db:seed:
   script:
     - bundle exec rails db:seed
