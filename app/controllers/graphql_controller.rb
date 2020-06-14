@@ -44,14 +44,6 @@ class GraphqlController < ApplicationController
     handle_error_in_development(e)
   end
 
-  def schema
-    skip_authorization
-
-    schema = File.read(Rails.root.join('public/schema.graphql'))
-    puts schema.inspect
-    render plain: schema
-  end
-
   protected
 
   # Check whether the user is using OAuth based on whether an Authorization header is included.

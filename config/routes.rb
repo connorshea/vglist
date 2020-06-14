@@ -124,5 +124,5 @@ Rails.application.routes.draw do
   post "/graphql", to: "graphql#execute"
   # Return the schema from `/graphql/schema` so the docs explorer can be used
   # without authentication.
-  get "/graphql/schema", to: "graphql#schema"
+  get "/graphql/schema", to: "static_pages#graphql_schema"
 end
