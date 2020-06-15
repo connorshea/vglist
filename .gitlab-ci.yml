@@ -84,7 +84,7 @@ rspec:
 assets:precompile:production:
   before_script: *no_db_necessary
   script:
-    - RAILS_ENV=production NODE_ENV=production bundle exec rake assets:precompile
+    - SECRET_KEY_BASE=`bin/rake secret` RAILS_ENV=production NODE_ENV=production bundle exec rake assets:precompile
 
 db:seed:
   script:
