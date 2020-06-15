@@ -4,11 +4,7 @@
 // that code so it'll be compiled.
 
 import 'graphiql/graphiql.min.css';
-import { GraphiQL } from 'graphiql';
-import { buildSchema } from 'graphql';
-
-window.GraphiQL = GraphiQL;
-window.buildSchema = buildSchema;
+import '../src/graphiql-loader';
 
 require.context('react/umd/', true);
 require.context('react-dom/umd/', true);
