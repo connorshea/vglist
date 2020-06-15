@@ -24,7 +24,7 @@
 
   let renderGraphiQL = async () => {
     let schema = document.getElementById("graphiql-injection-point").dataset.graphqlSchema;
-    let graphQLSchema = buildSchema(schema);
+    let graphQLSchema = window.buildSchema(schema);
 
     ReactDOM.render(
       React.createElement(GraphiQL, {
