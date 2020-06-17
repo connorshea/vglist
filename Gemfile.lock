@@ -458,7 +458,7 @@ DEPENDENCIES
   sorbet (~> 0.5)
   sorbet-rails (~> 0.7)
   sorbet-runtime (~> 0.5)
-  sparql (~> 3.1.1)
+  sparql (~> 3.1.2)
   spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
