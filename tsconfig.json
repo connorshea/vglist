@@ -12,7 +12,9 @@
     },
     "sourceMap": true,
     "target": "esNext",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "jsx": "react"
   },
   "exclude": [
     "**/*.spec.ts",
