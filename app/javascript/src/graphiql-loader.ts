@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { GraphiQL } from 'graphiql';
 import { buildSchema } from 'graphql';
 
