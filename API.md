@@ -207,7 +207,7 @@ Each type of mutation has different parameters. The specific parameters are docu
 
 ## Documentation
 
-You can get documentation and test queries in the GraphiQL editor that's hosted alongside vglist, at [https://vglist.co/graphiql](vglist.co/graphiql). You need to use API Token authentication in the GraphiQL header editor tab. See [#api-tokens] for information on accessing your token.
+You can get documentation and test queries in the GraphiQL editor that's hosted alongside vglist, at [vglist.co/graphiql](https://vglist.co/graphiql). You need to use API Token authentication in the GraphiQL header editor tab. See [#api-tokens] for information on accessing your token.
 
 You should also be able to get API documentation using a tool like [Insomnia](https://insomnia.rest/).
 
