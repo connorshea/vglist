@@ -3884,10 +3884,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.2
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.3.tgz#4a12ff1b60376ef09862c2093edd908328be8423"
   integrity sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
 
-graphiql@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.0.0.tgz#3289b7a935a8f70d552b6452218de10a84f524ac"
-  integrity sha512-pFuz2JGo5n/7wXj7p6HyIYze55im7fVING9oqyoFmo5Ap/y11veuoSuv8iul6/aBt4xT344Hzxgkn35L4SF0rQ==
+graphiql@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.0.2.tgz#150e5df82954266f9b53ba4edbab37cb5df67c73"
+  integrity sha512-oNYFAd+sK1oSplBgEvIc3iG6e6iJNrrTwKucpk50Kg3TDdYxpc8CpbEjPYnzahx04VnQ7SQiAXusZ8zfawCuxQ==
   dependencies:
     "@emotion/core" "^10.0.28"
     "@mdx-js/react" "^1.5.2"
