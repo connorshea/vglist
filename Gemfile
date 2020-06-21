@@ -100,7 +100,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 4.0'
 
   # Factory Bot for creating factories.
-  gem 'factory_bot_rails', '~> 5.2'
+  gem 'factory_bot_rails', '~> 6.0'
 
   # Code coverage
   gem 'simplecov', '~> 0.18', require: false
