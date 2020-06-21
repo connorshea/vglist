@@ -14,7 +14,8 @@
     "target": "esNext",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "jsx": "react"
+    "jsx": "react",
+    "importsNotUsedAsValues": "preserve"
   },
   "exclude": [
     "**/*.spec.ts",
