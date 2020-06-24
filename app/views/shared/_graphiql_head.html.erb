@@ -27,5 +27,8 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
+  <script src="<%= asset_pack_path 'media/umd/react.production.min.js' %>"></script>
+  <script src="<%= asset_pack_path 'media/umd/react-dom.production.min.js' %>"></script>
+
   <%= stylesheet_pack_tag 'graphiql', media: 'all', 'data-turbolinks-track': 'reload' %>
 </head>

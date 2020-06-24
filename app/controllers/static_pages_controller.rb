@@ -7,6 +7,11 @@ class StaticPagesController < ApplicationController
   end
 
   def graphiql
+    @email = current_user&.email
+    @email ||= "user@example.com"
+    @token = current_user&.api_token
+    @token ||= "API_TOKEN_HERE"
+
     skip_authorization
   end
 

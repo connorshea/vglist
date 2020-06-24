@@ -4,4 +4,7 @@
 // that code so it'll be compiled.
 
 import 'graphiql/graphiql.min.css';
-import '../src/graphiql-loader';
+import 'graphiql/graphiql.min.js';
+
+require.context('react/umd/', true);
+require.context('react-dom/umd/', true);
