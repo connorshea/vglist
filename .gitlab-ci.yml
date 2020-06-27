@@ -88,5 +88,3 @@ graphql:lint:
   script:
     - bundle exec rake graphql:schema:idl
     - yarn graphql-schema-linter schema.graphql
-    # Make sure the static schema used by the GraphiQL Docs Explorer is up-to-date.
-    - bundle exec rake graphql:schema:partial:validate
