@@ -22,7 +22,7 @@
     "vue": "^2.6.11",
     "vue-good-table": "^2.19.5",
     "vue-loader": "^15.9",
-    "vue-select": "^3.10.3",
+    "vue-select": "^3.10.5",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43"
   },
