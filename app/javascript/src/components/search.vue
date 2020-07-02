@@ -51,6 +51,18 @@
             </div>
           </div>
         </a>
+        <!-- If there are a multiple of 15 games, we can potentially load another page of them. -->
+        <a class="navbar-item"
+           :class="{'is-active': activeSearchResult !== -1}"
+           v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0"
+           @click="onMoreGames"
+        >
+          <div class="media">
+            <div class="media-content">
+              <p>More...</p>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </div>
@@ -81,7 +93,8 @@ export default {
         Genre: 'genres',
         User: 'users'
       },
-      activeSearchResult: -1
+      activeSearchResult: -1,
+      currentPage: 1
     };
   },
   methods: {
@@ -133,6 +146,18 @@ export default {
         searchDropdown.scrollTop =
           activeItem.offsetTop - searchDropdown.offsetTop;
       }
+    },
+    // Load more games if the user selects "More...".
+    onMoreGames() {
+      this.currentPage += 1;
+      fetch(`${this.searchUrl}?query=${this.query}&page=${this.currentPage}&only_games=true`)
+          .then(response => {
+            return response.json();
+          })
+          .then(searchResults => {
+            this.searchResults['Game'] = this.searchResults['Game'].concat(searchResults['Game']);
+            this.activeSearchResult = -1;
+          });
     }
   },
   computed: {
@@ -162,6 +187,8 @@ export default {
           delete betterSearchResults[key];
           return true;
         }
+        console.log(`key: ${key}`);
+        console.log(betterSearchResults);
         betterSearchResults[key].map(result => {
           // Use the username in the URL if it's a user.
           let url_key = result.searchable_type === 'User' ? result.content : result.searchable_id;
