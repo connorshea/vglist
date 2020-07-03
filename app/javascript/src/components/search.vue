@@ -53,7 +53,7 @@
         </a>
         <!-- If there are a multiple of 15 games, we can potentially load another page of them. -->
         <a class="navbar-item"
-           v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0"
+           v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0 && !moreAlreadyLoaded"
            @click="onMoreGames"
         >
           <div class="media">
@@ -93,7 +93,8 @@ export default {
         User: 'users'
       },
       activeSearchResult: -1,
-      currentPage: 1
+      currentPage: 1,
+      moreAlreadyLoaded: false
     };
   },
   methods: {
@@ -156,6 +157,13 @@ export default {
           .then(searchResults => {
             this.searchResults['Game'] = this.searchResults['Game'].concat(searchResults['Game']);
             this.activeSearchResult = -1;
+            // If there are a multiple of 15 results and no new games are
+            // added, the component will still show a "More..." button. This
+            // sets 'moreAlreadyLoaded' to true to make sure the 'More...'
+            // button is hidden and handle this edge case.
+            if (searchResults['Game'].length === 0) {
+              this.moreAlreadyLoaded = true;
+            }
           });
     }
   },
@@ -186,8 +194,6 @@ export default {
           delete betterSearchResults[key];
           return true;
         }
-        console.log(`key: ${key}`);
-        console.log(betterSearchResults);
         betterSearchResults[key].map(result => {
           // Use the username in the URL if it's a user.
           let url_key = result.searchable_type === 'User' ? result.content : result.searchable_id;
