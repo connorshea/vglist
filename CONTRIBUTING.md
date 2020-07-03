@@ -6,7 +6,7 @@
 
 - Ruby 2.6
 - Postgres 11.x
-- A recent version of Node.js
+- Node.js 10.x
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
 
@@ -66,31 +66,12 @@ Rake tasks are Ruby code for running tasks. For vglist, most of these are for im
   - `rake sorbet:update:all` - Updates all the Sorbet type signatures based on current code.
   - `rake db:seed` - Creates fake data, mostly for development.
 
-## Running in production locally with Docker
-
-If you want to use Docker to test the application locally in production mode, you can do so by following these instructions:
-
-- Make sure you have Docker and Docker Compose installed, as well as Postgres.
-- Create a file called `prod.env` that passes environment variables into your container. It'll look something like this:
-
-```env
-SECRET_KEY_BASE=dumb
-DATABASE_URL=postgres://postgres@db
-DATABASE_PASSWORD=productionpassword
-```
-
-- Run `docker-compose up --build`.
-- In another terminal window, run `docker-compose exec web bundle exec rails db:create` and then `docker-compose exec web bundle exec rails db:migrate`.
-- You may also want to run `docker-compose exec --env DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true DATABASE_CLEANER_ALLOW_PRODUCTION=true web bundle exec rails db:seed` to get some data in the database (the environment variables are necessary because the remote database and production environment trip database_cleaner's safeguards). Note: **NEVER RUN THIS COMMAND IN PRODUCTION FOR REAL**
-
-Docker isn't currently used for development, you can just run the application "natively" as described in the previous section.
-
 ## GitLab CI
 
 To update the Docker container used by GitLab CI:
 
 - Log into the GitLab CI Docker registry with `docker login registry.gitlab.com` (you'll need to use a Personal Access Token as your password).
-- Build the container with `docker build -f Dockerfile.ci -t registry.gitlab.com/connorshea/vglist .`
+- Build the container with `docker build -f Dockerfile -t registry.gitlab.com/connorshea/vglist .`
   - You may want to add `--no-cache` to fully rebuild the container from scratch.
 - Then use `docker push registry.gitlab.com/connorshea/vglist` to push the container to the GitLab Container Registry.
 
