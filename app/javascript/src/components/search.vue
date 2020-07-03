@@ -51,6 +51,17 @@
             </div>
           </div>
         </a>
+        <!-- If there are a multiple of 15 games, we can potentially load another page of them. -->
+        <a class="navbar-item"
+           v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0 && !moreAlreadyLoaded"
+           @click="onMoreGames"
+        >
+          <div class="media">
+            <div class="media-content">
+              <p>More...</p>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </div>
@@ -81,7 +92,9 @@ export default {
         Genre: 'genres',
         User: 'users'
       },
-      activeSearchResult: -1
+      activeSearchResult: -1,
+      currentPage: 1,
+      moreAlreadyLoaded: false
     };
   },
   methods: {
@@ -133,6 +146,25 @@ export default {
         searchDropdown.scrollTop =
           activeItem.offsetTop - searchDropdown.offsetTop;
       }
+    },
+    // Load more games if the user selects "More...".
+    onMoreGames() {
+      this.currentPage += 1;
+      fetch(`${this.searchUrl}?query=${this.query}&page=${this.currentPage}&only_games=true`)
+          .then(response => {
+            return response.json();
+          })
+          .then(searchResults => {
+            this.searchResults['Game'] = this.searchResults['Game'].concat(searchResults['Game']);
+            this.activeSearchResult = -1;
+            // If there are a multiple of 15 results and no new games are
+            // added, the component will still show a "More..." button. This
+            // sets 'moreAlreadyLoaded' to true to make sure the 'More...'
+            // button is hidden and handle this edge case.
+            if (searchResults['Game'].length === 0) {
+              this.moreAlreadyLoaded = true;
+            }
+          });
     }
   },
   computed: {

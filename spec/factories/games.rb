@@ -69,6 +69,11 @@ FactoryBot.define do
       avg_rating { rand(0..100) }
     end
 
+    # Used for games where we want the names to be unique but sequential.
+    trait :sequential_name do
+      sequence(:name) { |n| "Game Name #{n}" }
+    end
+
     factory :game_with_cover, traits: [:cover]
     factory :game_with_release_date, traits: [:release_date]
     factory :game_with_everything,
