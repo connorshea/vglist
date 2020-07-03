@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.7.3
+### Added
+- Add a "More..." button to game results in the search bar, it can be used to show more games if your search doesn't return the game you're looking for on the first page. ([#1378])
+
 ## v2020.6.14
 ### Fixed
 - Fix the GraphiQL Docs Explorer sidebar by providing a static schema file. ([#1331])
@@ -748,3 +752,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1262]: https://github.com/connorshea/vglist/pull/1262
 [#1329]: https://github.com/connorshea/vglist/pull/1329
 [#1331]: https://github.com/connorshea/vglist/pull/1331
+[#1378]: https://github.com/connorshea/vglist/pull/1378

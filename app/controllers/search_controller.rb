@@ -1,6 +1,6 @@
 # typed: true
 class SearchController < ApplicationController
-  # Skip bullet on activity to avoid errors.
+  # Skip bullet on search results to avoid errors in tests.
   around_action :skip_bullet, if: -> { defined?(Bullet) }
 
   def index
