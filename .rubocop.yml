@@ -11,6 +11,8 @@ AllCops:
     - "node_modules/**/*"
     - "vendor/bundle/**/*"
     - "sorbet/**/*"
+    - "storage/**/*"
+    - "tmp/**/*"
 
 ###################### Bundler #############################
 
