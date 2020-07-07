@@ -116,7 +116,7 @@ class Game < ApplicationRecord
     uniqueness: true,
     allow_nil: true,
     # Validate that it's in a format like 3030-1539.
-    format: /\A\d{4}\-\d+\z/,
+    format: /\A\d{4}-\d+\z/,
     length: { maximum: 100 }
 
   validates :epic_games_store_id,

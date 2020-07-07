@@ -22,6 +22,9 @@ Bundler/OrderedGems:
 Layout/ArgumentAlignment:
   Enabled: false
 
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+
 Layout/LineLength:
   Enabled: false
 
@@ -91,6 +94,10 @@ Rails/UniqueValidationWithoutIndex:
   Enabled: false
 
 #################### Style ###############################
+
+# This doesn't work well with Sorbet type signatures, keep the attribute declarations separate.
+Style/AccessorGrouping:
+  Enabled: false
 
 Style/BlockDelimiters:
   Enabled: true
