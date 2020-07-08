@@ -119,7 +119,7 @@ RSpec.describe "Users", type: :request do
       create(:game_purchase, user: user, completion_status: :completed)
       get statistics_user_path(id: user.id, format: :json)
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response['percent_completed']).to eq(50)
+      expect(parsed_response['percent_completed']).to eq(100)
     end
 
     it "returns correct percentage completed with multiple game purchases 4" do
