@@ -212,12 +212,12 @@ class UsersController < ApplicationController
     total_time_played = game_purchases.sum(:hours_played)
     games_with_ratings = game_purchases.where.not(rating: nil).count
     # Get all game purchases that have a status besides not_applicable.
-    # TODO: Figure out what to do about dropped and paused statuses.
     games_with_completion_statuses = game_purchases.where.not(completion_status: [nil, :not_applicable]).count
 
     # Prevent division by zero.
     if games_with_completion_statuses.positive?
-      completed_games = game_purchases.where(completion_status: [:completed, :fully_completed]).count
+      # If a game is completed, fully_completed, or dropped, count it as completed.
+      completed_games = game_purchases.where(completion_status: [:completed, :fully_completed, :dropped]).count
       @stats[:percent_completed] = ((completed_games.to_f / games_with_completion_statuses).round(3) * 100).round(1)
     else
       @stats[:percent_completed] = nil

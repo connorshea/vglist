@@ -111,7 +111,7 @@ RSpec.describe "Users", type: :request do
       create(:game_purchase, user: user, completion_status: :completed)
       get statistics_user_path(id: user.id, format: :json)
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response['percent_completed']).to eq(50)
+      expect(parsed_response['percent_completed']).to eq(100)
     end
 
     it "returns correct percentage completed with multiple game purchases 3" do
@@ -137,6 +137,15 @@ RSpec.describe "Users", type: :request do
       get statistics_user_path(id: user.id, format: :json)
       parsed_response = JSON.parse(response.body)
       expect(parsed_response['percent_completed']).to eq(33.3)
+    end
+
+    it "returns correct percentage completed with multiple game purchases 6" do
+      create(:game_purchase, user: user, completion_status: nil)
+      create(:game_purchase, user: user, completion_status: :paused)
+      create(:game_purchase, user: user, completion_status: :completed)
+      get statistics_user_path(id: user.id, format: :json)
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['percent_completed']).to eq(50)
     end
 
     it "returns nil percentage completed when user has no game purchases" do
