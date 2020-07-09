@@ -54,7 +54,7 @@ namespace :import do
         next
       end
 
-      if blocklisted_steam_app_ids.include?(game[:steam_app_id].to_i)
+      if blocklisted_steam_app_ids.include?(game[:steam_app_id].to_s.to_i)
         progress_bar.increment
         next
       end
@@ -64,7 +64,9 @@ namespace :import do
       begin
         SteamAppId.create!(game_id: game_record.id, app_id: game[:steam_app_id].to_s)
       rescue ActiveRecord::RecordInvalid => e
-        puts "Record Invalid (#{game[:name]}): #{e}"
+        name = game[:name]
+        name ||= game_record.name
+        puts "Record Invalid (#{name}): #{e}"
         progress_bar.increment
         next
       end
