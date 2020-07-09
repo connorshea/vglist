@@ -26,6 +26,26 @@ class AdminPolicy < ApplicationPolicy
   end
 
   sig { returns(T.nilable(T::Boolean)) }
+  def steam_blocklist?
+    user&.admin?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def new_steam_blocklist?
+    user&.admin?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def add_to_steam_blocklist?
+    user&.admin?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def remove_from_steam_blocklist?
+    user&.admin?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
   def games_without_wikidata_ids?
     user&.admin?
   end

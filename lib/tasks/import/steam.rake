@@ -39,6 +39,7 @@ namespace :import do
 
     # Games with no Steam App IDs.
     games_without_steam_ids = Game.left_outer_joins(:steam_app_ids).where(steam_app_ids: { id: nil })
+    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
 
     valid_wikidata_ids = games_without_steam_ids.map { |game| game[:wikidata_id] }
     valid_wikidata_ids.reject! { |wikidata_id| wikidata_id.nil? }
@@ -53,15 +54,24 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Adding Steam App ID '#{game[:steam_app_id]}' to #{game_record.name}."
+      if blocklisted_steam_app_ids.include?(game[:steam_app_id].to_s.to_i)
+        progress_bar.increment
+        next
+      end
+
+      progress_bar.log "Adding Steam App ID '#{game[:steam_app_id]}' to #{game_record.name}." if ENV['DEBUG']
 
       begin
         SteamAppId.create!(game_id: game_record.id, app_id: game[:steam_app_id].to_s)
       rescue ActiveRecord::RecordInvalid => e
-        puts "Record Invalid (#{game[:name]}): #{e}"
+        name = game[:name]
+        name ||= game_record.name
+        puts "Record Invalid (#{name}): #{e}"
         progress_bar.increment
         next
       end
+
+      progress_bar.log "Added Steam App ID '#{game[:steam_app_id]}' to #{game_record.name}."
 
       steam_added_count += 1
       progress_bar.increment

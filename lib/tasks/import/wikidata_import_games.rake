@@ -20,14 +20,15 @@ namespace 'import:wikidata' do
     games = Game.where.not(wikidata_id: nil)
 
     existing_wikidata_ids = games.map { |game| game[:wikidata_id] }
-    blocklisted_ids = WikidataBlocklist.pluck(:wikidata_id)
+    blocklisted_wikidata_ids = WikidataBlocklist.pluck(:wikidata_id)
+    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
 
     # Filter to wikidata items that don't already exist in the database.
     # Also filter out blocklisted Wikidata items.
     rows = rows.reject do |row|
       url = row.to_h[:item].to_s
       wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '')
-      existing_wikidata_ids.include?(wikidata_id.to_i) || blocklisted_ids.include?(wikidata_id.to_i)
+      existing_wikidata_ids.include?(wikidata_id.to_i) || blocklisted_wikidata_ids.include?(wikidata_id.to_i)
     end
 
     properties = {
@@ -142,7 +143,7 @@ namespace 'import:wikidata' do
           keys << key
         end
 
-        unless steam_app_id.nil?
+        unless steam_app_id.nil? || blocklisted_steam_app_ids.include?(steam_app_id.to_i)
           progress_bar.log 'Adding Steam App ID.' if ENV['DEBUG']
           SteamAppId.create(
             game_id: game.id,

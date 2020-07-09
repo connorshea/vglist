@@ -22,6 +22,8 @@ class SteamImportService
 
     raise NoGamesError if games.nil?
 
+    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
+
     games.reject! { |game| game['img_logo_url'].blank? }
 
     steam_ids = T.cast(
@@ -66,6 +68,9 @@ class SteamImportService
       game = games.find { |g| g['appid'] == id }
 
       next unless game
+
+      # Exclude any games with Steam IDs that are blocklisted.
+      next if blocklisted_steam_app_ids.include?(game['appid'].to_i)
 
       Unmatched.new(name: game['name'], steam_id: game['appid'])
     end.compact

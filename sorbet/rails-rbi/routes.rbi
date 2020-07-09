@@ -406,6 +406,34 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def admin_remove_from_wikidata_blocklist_url(*args, **kwargs); end
 
+  # Sigs for route /admin/steam/new(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_new_steam_blocklist_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_new_steam_blocklist_url(*args, **kwargs); end
+
+  # Sigs for route /admin/steam(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_steam_blocklist_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_steam_blocklist_url(*args, **kwargs); end
+
+  # Sigs for route /admin/steam/:steam_app_id(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_add_to_steam_blocklist_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_add_to_steam_blocklist_url(*args, **kwargs); end
+
+  # Sigs for route /admin/steam/:steam_app_id/remove(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_remove_from_steam_blocklist_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_remove_from_steam_blocklist_url(*args, **kwargs); end
+
   # Sigs for route /admin/games_without_wikidata_ids(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def admin_games_without_wikidata_ids_path(*args, **kwargs); end

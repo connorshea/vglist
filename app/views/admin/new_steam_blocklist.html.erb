@@ -1,0 +1,26 @@
+<% content_for :title, "Create a new Steam Blocklist entry - Admin" %>
+
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+  <%= render 'admin_header' %>
+
+  <%= form_for @blocklist, url: admin_add_to_steam_blocklist_path do |f| %>
+    <div class="field">
+      <%= f.label :name, "Game name", class: "label" %>
+      <div class="control">
+        <%= f.text_field :name, value: @name, autocomplete: "off", class: "input" %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= f.label :steam_app_id, "Steam App ID", class: "label" %>
+      <div class="control">
+        <%= f.number_field :steam_app_id, value: @steam_app_id, class: "input" %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= f.submit "Submit", class: "button is-primary" %>
+      <%= link_to("Cancel", admin_steam_blocklist_path, class: "button") %>
+    </div>
+  <% end %>
+</div>

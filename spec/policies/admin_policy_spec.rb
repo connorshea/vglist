@@ -14,6 +14,10 @@ RSpec.describe AdminPolicy, type: :policy do
           :dashboard,
           :wikidata_blocklist,
           :remove_from_wikidata_blocklist,
+          :steam_blocklist,
+          :new_steam_blocklist,
+          :add_to_steam_blocklist,
+          :remove_from_steam_blocklist,
           :games_without_wikidata_ids
         ]
       )
@@ -30,6 +34,10 @@ RSpec.describe AdminPolicy, type: :policy do
           :dashboard,
           :wikidata_blocklist,
           :remove_from_wikidata_blocklist,
+          :steam_blocklist,
+          :new_steam_blocklist,
+          :add_to_steam_blocklist,
+          :remove_from_steam_blocklist,
           :games_without_wikidata_ids
         ]
       )
@@ -46,6 +54,10 @@ RSpec.describe AdminPolicy, type: :policy do
           :dashboard,
           :wikidata_blocklist,
           :remove_from_wikidata_blocklist,
+          :steam_blocklist,
+          :new_steam_blocklist,
+          :add_to_steam_blocklist,
+          :remove_from_steam_blocklist,
           :games_without_wikidata_ids
         ]
       )
@@ -62,6 +74,10 @@ RSpec.describe AdminPolicy, type: :policy do
           :dashboard,
           :wikidata_blocklist,
           :remove_from_wikidata_blocklist,
+          :steam_blocklist,
+          :new_steam_blocklist,
+          :add_to_steam_blocklist,
+          :remove_from_steam_blocklist,
           :games_without_wikidata_ids
         ]
       )

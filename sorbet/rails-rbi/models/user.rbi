@@ -842,6 +842,84 @@ class User < ApplicationRecord
   def validate_associated_records_for_wikidata_blocklists(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_steam_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_steam_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_steam_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_steam_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_steam_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_steam_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_steam_blocklists=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_steam_blocklists; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_steam_blocklists?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_steam_blocklists=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_steam_blocklists(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_steam_blocklists(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_access_grants; end
 
   sig { returns(T::Boolean) }
@@ -3233,6 +3311,15 @@ module User::GeneratedAssociationMethods
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
+  sig { returns(::SteamBlocklist::ActiveRecord_Associations_CollectionProxy) }
+  def steam_blocklists; end
+
+  sig { returns(T::Array[Integer]) }
+  def steam_blocklist_ids; end
+
+  sig { params(value: T::Enumerable[::SteamBlocklist]).void }
+  def steam_blocklists=(value); end
+
   sig { returns(::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy) }
   def wikidata_blocklists; end
 
@@ -3274,6 +3361,9 @@ module User::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def wikidata_blocklist_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def steam_blocklist_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def access_grant_ids=(ids); end
