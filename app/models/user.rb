@@ -40,9 +40,10 @@ class User < ApplicationRecord
   # Users have an event for their creation.
   has_many :events, as: :eventable, dependent: :destroy
 
-  # Users create wikidata blocklist entries.
+  # Users create wikidata and steam blocklist entries.
   # We want to keep the entry even if the user that created it is deleted.
   has_many :wikidata_blocklists, dependent: :nullify
+  has_many :steam_blocklists, dependent: :nullify
 
   # rubocop:disable Rails/InverseOf
   # Users have Doorkeeper access tokens and grants.

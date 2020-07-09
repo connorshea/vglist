@@ -57,6 +57,27 @@ class AdminController < ApplicationController
     end
   end
 
+  def steam_blocklist
+    # We don't have anything specific to validate, so just pass nil.
+    authorize nil, policy_class: AdminPolicy
+
+    @blocklist = SteamBlocklist.all
+                               .includes(:user)
+                               .page helpers.page_param
+  end
+
+  def remove_from_steam_blocklist
+    authorize nil, policy_class: AdminPolicy
+    @blocklist_entry = SteamBlocklist.find_by(steam_app_id: params[:steam_app_id])
+
+    @blocklist_entry&.destroy
+
+    respond_to do |format|
+      format.html { redirect_to admin_steam_blocklist_path, notice: 'Steam App ID successfully removed from blocklist.' }
+      format.json { head :no_content }
+    end
+  end
+
   def games_without_wikidata_ids
     authorize nil, policy_class: AdminPolicy
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_10_015353) do
+ActiveRecord::Schema.define(version: 2020_07_09_014503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -329,6 +329,16 @@ ActiveRecord::Schema.define(version: 2020_06_10_015353) do
     t.index ["game_id"], name: "index_steam_app_ids_on_game_id"
   end
 
+  create_table "steam_blocklist", force: :cascade do |t|
+    t.bigint "steam_app_id", null: false
+    t.text "name", null: false
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["steam_app_id"], name: "index_steam_blocklist_on_steam_app_id", unique: true
+    t.index ["user_id"], name: "index_steam_blocklist_on_user_id"
+  end
+
   create_table "stores", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -365,14 +375,14 @@ ActiveRecord::Schema.define(version: 2020_06_10_015353) do
     t.index ["slug"], name: "index_users_on_slug", unique: true
   end
 
-  create_table "wikidata_blocklists", force: :cascade do |t|
+  create_table "wikidata_blocklist", force: :cascade do |t|
     t.bigint "wikidata_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "name", null: false
     t.bigint "user_id"
-    t.index ["user_id"], name: "index_wikidata_blocklists_on_user_id"
-    t.index ["wikidata_id"], name: "index_wikidata_blocklists_on_wikidata_id", unique: true
+    t.index ["user_id"], name: "index_wikidata_blocklist_on_user_id"
+    t.index ["wikidata_id"], name: "index_wikidata_blocklist_on_wikidata_id", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -403,5 +413,6 @@ ActiveRecord::Schema.define(version: 2020_06_10_015353) do
   add_foreign_key "relationships", "users", column: "followed_id"
   add_foreign_key "relationships", "users", column: "follower_id"
   add_foreign_key "steam_app_ids", "games"
-  add_foreign_key "wikidata_blocklists", "users"
+  add_foreign_key "steam_blocklist", "users"
+  add_foreign_key "wikidata_blocklist", "users"
 end

@@ -1,4 +1,4 @@
-# typed: strong
+# typed: true
 # Be sure to restart your server when you modify this file.
 
 # Add new inflection rules using the following format. Inflections
@@ -15,3 +15,8 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym 'RESTful'
 # end
+
+# Don't try to pluralize blocklists.
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.uncountable %w[wikidata_blocklist steam_blocklist]
+end
