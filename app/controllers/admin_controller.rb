@@ -79,12 +79,17 @@ class AdminController < ApplicationController
     authorize nil, policy_class: AdminPolicy
 
     @blocklist = SteamBlocklist.new(steam_blocklist_params.merge({ user_id: current_user&.id }))
+    # If there is an existing SteamAppId with this ID, it needs to be deleted
+    # before it can be added to the blocklist.
+    @steam_app_id = SteamAppId.find_by(app_id: steam_blocklist_params[:steam_app_id])
+    @steam_app_id&.destroy
 
     respond_to do |format|
       if @blocklist.save
         format.html { redirect_to admin_steam_blocklist_path, success: "The Steam App ID for #{steam_blocklist_params[:name]} was successfully added to the blocklist." }
       else
         errors = @blocklist.errors.full_messages
+        format.html { redirect_to admin_steam_blocklist_path, error: errors.join(',') }
         format.json { render json: { errors: errors } }
       end
     end
