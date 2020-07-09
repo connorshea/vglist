@@ -63,7 +63,9 @@ Rails.application.routes.draw do
     get :wikidata_blocklist, path: 'wikidata'
     delete :remove_from_wikidata_blocklist, path: 'wikidata/:wikidata_id/remove'
 
+    get :new_steam_blocklist, path: 'steam/new'
     get :steam_blocklist, path: 'steam'
+    post :add_to_steam_blocklist, path: 'steam'
     delete :remove_from_steam_blocklist, path: 'steam/:steam_app_id/remove'
 
     get :games_without_wikidata_ids

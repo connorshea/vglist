@@ -38,7 +38,16 @@
         </div>
         <ul>
           <% @result.unmatched.each do |unmatched| %>
-            <li><%= unmatched.name %> (<%= link_to 'Create', new_game_path(name: unmatched.name, steam_app_id: unmatched.steam_id), target: "_blank" %>)</li>
+            <li>
+              <%= unmatched.name %>
+              <%# Add a blocklist link here only if the user is an admin. %>
+              <% if current_user.admin? %>
+                (<%= link_to 'Create', new_game_path(name: unmatched.name, steam_app_id: unmatched.steam_id), target: "_blank" %>,
+                <%= link_to 'Add to blocklist', admin_new_steam_blocklist_path(name: unmatched.name, steam_app_id: unmatched.steam_id), target: "_blank" %>)
+              <% else %>
+                (<%= link_to 'Create', new_game_path(name: unmatched.name, steam_app_id: unmatched.steam_id), target: "_blank" %>)
+              <% end %>
+            </li>
           <% end %>
         </ul>
       </div>

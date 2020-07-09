@@ -66,6 +66,30 @@ class AdminController < ApplicationController
                                .page helpers.page_param
   end
 
+  def new_steam_blocklist
+    @blocklist = SteamBlocklist.new
+    authorize nil, policy_class: AdminPolicy
+
+    # Allow the name and Steam App ID to be passed from the URL params, for prefilling the form.
+    @name = params[:name]
+    @steam_app_id = params[:steam_app_id].nil? ? nil : [params[:steam_app_id]]
+  end
+
+  def add_to_steam_blocklist
+    authorize nil, policy_class: AdminPolicy
+
+    @blocklist = SteamBlocklist.new(steam_blocklist_params.merge({ user_id: current_user&.id }))
+
+    respond_to do |format|
+      if @blocklist.save
+        format.html { redirect_to admin_steam_blocklist_path, success: "The Steam App ID for #{steam_blocklist_params[:name]} was successfully added to the blocklist." }
+      else
+        errors = @blocklist.errors.full_messages
+        format.json { render json: { errors: errors } }
+      end
+    end
+  end
+
   def remove_from_steam_blocklist
     authorize nil, policy_class: AdminPolicy
     @blocklist_entry = SteamBlocklist.find_by(steam_app_id: params[:steam_app_id])
@@ -84,5 +108,14 @@ class AdminController < ApplicationController
     @games = Game.where(wikidata_id: nil)
                  .with_attached_cover
                  .page helpers.page_param
+  end
+
+  private
+
+  def steam_blocklist_params
+    params.typed_require(:steam_blocklist).permit(
+      :name,
+      :steam_app_id
+    )
   end
 end
