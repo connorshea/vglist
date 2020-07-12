@@ -18,6 +18,9 @@ class GameMergeService
   # Merge the two games together.
   sig { returns(T::Boolean) }
   def merge!
+    # Cannot merge a game into itself, return early.
+    return false if @game_a.id == @game_b.id
+
     # Update all relevant game purchases and favorites, delete game purchases
     # and favorites if a user has both of these games owned/favorited.
     handle_purchases

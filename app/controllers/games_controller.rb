@@ -241,8 +241,10 @@ class GamesController < ApplicationController
 
   # Merge one game into another and update any associated records as necessary.
   def merge
-    @game_a = Game.find(params[:game_a_id])
+    @game_a = Game.find(params[:id])
     @game_b = Game.find(params[:game_b_id])
+
+    authorize @game_a
 
     respond_to do |format|
       if GameMergeService.new(@game_a, @game_b).merge!
