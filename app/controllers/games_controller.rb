@@ -239,6 +239,15 @@ class GamesController < ApplicationController
     end
   end
 
+  def merge
+    @game_a = Game.find(params[:game_a_id])
+    @game_b = Game.find(params[:game_b_id])
+
+    if GameMergeService.new(@game_a, @game_b).merge!
+      format.html { redirect_to @game_a, success: "#{@game_b.name} successfully merged into #{@game_a.name}." }
+    else
+  end
+
   private
 
   def game_params
