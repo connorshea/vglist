@@ -210,15 +210,13 @@ RSpec.describe "Games", type: :request do
       # Load the game purchase.
       game_purchase
       expect do
-        delete remove_game_from_library_game_path(game.id),
-          params: { id: game.id }
+        delete remove_game_from_library_game_path(game.id)
       end.to change(user_with_game.game_purchases.all, :count).by(-1)
     end
 
     it "doesn't remove a game from the user's library if none exist" do
       sign_in(user)
-      delete remove_game_from_library_game_path(game.id),
-        params: { id: game.id }
+      delete remove_game_from_library_game_path(game.id)
       expect(response).to redirect_to(game_url(game))
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
@@ -232,8 +230,7 @@ RSpec.describe "Games", type: :request do
 
     it "removes the cover from a game" do
       sign_in(moderator)
-      delete remove_cover_game_path(game_with_cover.id),
-        params: { id: game_with_cover.id }
+      delete remove_cover_game_path(game_with_cover.id)
       expect(response).to redirect_to(game_url(game_with_cover))
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
@@ -248,8 +245,7 @@ RSpec.describe "Games", type: :request do
     it "favorites a game successfully" do
       sign_in(user)
       expect do
-        post favorite_game_path(game.id, format: :json),
-          params: { id: game.id }
+        post favorite_game_path(game.id, format: :json)
       end.to change(user.favorite_games, :count).by(1)
     end
 
@@ -257,8 +253,7 @@ RSpec.describe "Games", type: :request do
       create(:favorite_game, user: user, game: game)
       sign_in(user)
       expect do
-        post favorite_game_path(game.id, format: :json),
-          params: { id: game.id }
+        post favorite_game_path(game.id, format: :json)
       end.to change(user.favorite_games, :count).by(0)
     end
   end
@@ -272,16 +267,14 @@ RSpec.describe "Games", type: :request do
 
       sign_in(user)
       expect do
-        delete unfavorite_game_path(game.id, format: :json),
-          params: { id: game.id }
+        delete unfavorite_game_path(game.id, format: :json)
       end.to change(user.favorite_games, :count).by(-1)
     end
 
     it "does not change anything if a game hasn't been favorited" do
       sign_in(user)
       expect do
-        delete unfavorite_game_path(game.id, format: :json),
-          params: { id: game.id }
+        delete unfavorite_game_path(game.id, format: :json)
       end.to change(user.favorite_games, :count).by(0)
     end
   end
@@ -303,6 +296,33 @@ RSpec.describe "Games", type: :request do
 
       get favorited_game_path(game.id, format: :json)
       expect(response.body).to eq("false")
+    end
+  end
+
+  describe "POST merge_game_path" do
+    let(:admin) { create(:confirmed_admin) }
+    let!(:game_a) { create(:game) }
+    let!(:game_b) { create(:game) }
+
+    it "merges a game successfully" do
+      sign_in(admin)
+      expect do
+        post merge_game_path(game_a.id, game_b_id: game_b.id, format: :json)
+      end.to change(Game, :count).by(-1)
+    end
+
+    it "merges a game successfully and redirects" do
+      sign_in(admin)
+      post merge_game_path(game_a.id, game_b_id: game_b.id, format: :json)
+      expect(response).to redirect_to(game_url(game_a))
+      follow_redirect!
+      expect(response.body).to include("#{game_b.name} successfully merged into #{game_a.name}.")
+    end
+
+    it "fails when attempting to merge a game with itself" do
+      sign_in(admin)
+      post merge_game_path(game_a.id, game_b_id: game_a.id, format: :json)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 end
