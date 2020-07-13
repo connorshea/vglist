@@ -8,7 +8,7 @@ RSpec.describe GamePolicy, type: :policy do
     let(:user) { create(:user) }
     let(:game) { create(:game) }
 
-    it 'can do everything except delete games and covers' do
+    it 'can do most things' do
       expect(game_policy).to permit_actions(
         [
           :index,
@@ -25,11 +25,12 @@ RSpec.describe GamePolicy, type: :policy do
       )
     end
 
-    it 'cannot delete games or remove covers' do
+    it 'cannot delete games, remove covers, or merge games' do
       expect(game_policy).to forbid_actions(
         [
           :destroy,
-          :remove_cover
+          :remove_cover,
+          :merge
         ]
       )
     end
@@ -39,7 +40,7 @@ RSpec.describe GamePolicy, type: :policy do
     let(:user) { create(:moderator) }
     let(:game) { create(:game) }
 
-    it "can do everything" do
+    it "can do almost everything" do
       expect(game_policy).to permit_actions(
         [
           :index,
@@ -56,6 +57,10 @@ RSpec.describe GamePolicy, type: :policy do
           :favorited
         ]
       )
+    end
+
+    it 'cannot merge games' do
+      expect(game_policy).to forbid_actions([:merge])
     end
   end
 
@@ -77,7 +82,8 @@ RSpec.describe GamePolicy, type: :policy do
           :remove_cover,
           :favorite,
           :unfavorite,
-          :favorited
+          :favorited,
+          :merge
         ]
       )
     end
@@ -101,7 +107,8 @@ RSpec.describe GamePolicy, type: :policy do
           :remove_cover,
           :favorite,
           :unfavorite,
-          :favorited
+          :favorited,
+          :merge
         ]
       )
     end
