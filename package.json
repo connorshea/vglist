@@ -30,7 +30,7 @@
     "@types/lodash": "^4.14.151",
     "@types/turbolinks": "^5.2.0",
     "@types/vue-select": "^2.5.0",
-    "fork-ts-checker-webpack-plugin": "^5.0.6",
+    "fork-ts-checker-webpack-plugin": "^5.0.7",
     "graphql-schema-linter": "^0.5.0",
     "prettier": "2.0.5",
     "webpack-dev-server": "^3.11"
