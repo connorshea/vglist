@@ -46,5 +46,13 @@ RSpec.describe GameMergeService, type: :service do
       # For whatever reason, be_destroyed doesn't work here.
       expect(FavoriteGame.exists?(game_b_favorite.id)).to eq(false)
     end
+
+    it 'returns false when merging a game into itself' do
+      expect(GameMergeService.new(game_a, game_a).merge!).to eq(false)
+    end
+
+    it 'does not delete the game when merging into itself' do
+      expect { GameMergeService.new(game_a, game_a).merge! }.to change(Game, :count).by(0)
+    end
   end
 end
