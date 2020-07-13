@@ -52,7 +52,7 @@
   <% end %>
 
   <% if policy(@game).update? || policy(@game).destroy? %>
-    <div id="actions-dropdown" class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile">
+    <div id="actions-dropdown" class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile js-no-close-on-click">
       <div class="dropdown-trigger is-fullwidth-mobile">
         <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>Actions</span>
@@ -73,7 +73,15 @@
             <%= link_to "Add to Wikidata Blocklist", add_to_wikidata_blocklist_game_path(@game.id), method: :post, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
           <% end %>
           <% if policy(@game).merge? %>
-            <%= link_to "Merge", merge_game_path(id: @game.id, game_b_id: @game.id), method: :post, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
+            <div data-vue-component="merge-games-button"
+              data-vue-props="<%=
+                {
+                  game: {
+                    id: @game.id,
+                    name: @game.name
+                  }
+                }.to_json
+              %>"></div>
           <% end %>
           <% if policy(@game).destroy? %>
             <%= link_to "Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>

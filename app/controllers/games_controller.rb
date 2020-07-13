@@ -248,9 +248,9 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       if GameMergeService.new(@game_a, @game_b).merge!
-        format.html { redirect_to @game_a, success: "#{@game_b.name} successfully merged into #{@game_a.name}." }
+        format.json { redirect_to game_path(@game_a), success: "#{@game_b.name} successfully merged into #{@game_a.name}." }
       else
-        format.html { redirect_to @game_a, error: "#{@game_b.name} couldn't be merged into #{@game_a.name} due to an error." }
+        format.json { render json: { errors: ["#{@game_b.name} couldn't be merged into #{@game_a.name} due to an error."] }, status: :unprocessable_entity }
       end
     end
   end
