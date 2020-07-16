@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.7.16
+### Added
+- Add the ability for admins to merge game entries together. This can be used to fix duplicate games and will update related game purchases and favorites so the data isn't lost. If a user has added both the original and duplicate games to their library, one of the entries will be deleted. ([#1403])
+
 ## v2020.7.8
 ### Added
 - Add Steam Blocklist, for preventing the creation of games for specific Steam IDs. This is mostly useful for soundtracks, test servers, software, and other non-game stuff on Steam. ([#1394])
@@ -762,3 +766,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1378]: https://github.com/connorshea/vglist/pull/1378
 [#1392]: https://github.com/connorshea/vglist/pull/1392
 [#1394]: https://github.com/connorshea/vglist/pull/1394
+[#1403]: https://github.com/connorshea/vglist/pull/1403
