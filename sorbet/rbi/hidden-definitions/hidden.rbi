@@ -9277,6 +9277,11 @@ module GameGenre::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
+class GameMergeService
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class GamePlatform::ActiveRecord_AssociationRelation
   include ::ActiveRecord::Delegation::ClassSpecificRelation
   include ::GamePlatform::GeneratedRelationMethods
@@ -10280,6 +10285,8 @@ class Hash
 end
 
 class Hash
+  def self.ruby2_keywords_hash(hash); end
+
   def self.try_convert(_); end
 end
 
