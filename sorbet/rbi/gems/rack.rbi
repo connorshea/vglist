@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rack/all/rack.rbi
 #
-# rack-2.2.2
+# rack-2.2.3
 
 module Rack
   def self.release; end
@@ -238,86 +238,6 @@ module Rack::Request::Helpers
   def wrap_ipv6(host); end
   def xhr?; end
 end
-class Rack::Response
-  def [](key); end
-  def []=(key, v); end
-  def body; end
-  def body=(arg0); end
-  def chunked?; end
-  def close; end
-  def delete_header(key); end
-  def each(&callback); end
-  def empty?; end
-  def finish(&block); end
-  def get_header(key); end
-  def has_header?(key); end
-  def header; end
-  def headers; end
-  def initialize(body = nil, status = nil, headers = nil); end
-  def length; end
-  def length=(arg0); end
-  def redirect(target, status = nil); end
-  def self.[](status, headers, body); end
-  def set_header(key, v); end
-  def status; end
-  def status=(arg0); end
-  def to_a(&block); end
-  def write(chunk); end
-  include Rack::Response::Helpers
-end
-module Rack::Response::Helpers
-  def accepted?; end
-  def add_header(key, v); end
-  def append(chunk); end
-  def bad_request?; end
-  def buffered_body!; end
-  def cache!(duration = nil, directive: nil); end
-  def cache_control; end
-  def cache_control=(v); end
-  def client_error?; end
-  def content_length; end
-  def content_type; end
-  def content_type=(content_type); end
-  def created?; end
-  def delete_cookie(key, value = nil); end
-  def do_not_cache!; end
-  def etag; end
-  def etag=(v); end
-  def forbidden?; end
-  def include?(header); end
-  def informational?; end
-  def invalid?; end
-  def location; end
-  def location=(location); end
-  def media_type; end
-  def media_type_params; end
-  def method_not_allowed?; end
-  def moved_permanently?; end
-  def no_content?; end
-  def not_found?; end
-  def ok?; end
-  def precondition_failed?; end
-  def redirect?; end
-  def redirection?; end
-  def server_error?; end
-  def set_cookie(key, value); end
-  def set_cookie_header; end
-  def set_cookie_header=(v); end
-  def successful?; end
-  def unauthorized?; end
-  def unprocessable?; end
-end
-class Rack::Response::Raw
-  def delete_header(key); end
-  def get_header(key); end
-  def has_header?(key); end
-  def headers; end
-  def initialize(status, headers); end
-  def set_header(key, v); end
-  def status; end
-  def status=(arg0); end
-  include Rack::Response::Helpers
-end
 class Rack::Runtime
   def call(env); end
   def initialize(app, name = nil); end
@@ -519,6 +439,86 @@ class Rack::Files::BaseIterator
 end
 class Rack::Files::Iterator < Rack::Files::BaseIterator
   def to_path; end
+end
+class Rack::Response
+  def [](key); end
+  def []=(key, v); end
+  def body; end
+  def body=(arg0); end
+  def chunked?; end
+  def close; end
+  def delete_header(key); end
+  def each(&callback); end
+  def empty?; end
+  def finish(&block); end
+  def get_header(key); end
+  def has_header?(key); end
+  def header; end
+  def headers; end
+  def initialize(body = nil, status = nil, headers = nil); end
+  def length; end
+  def length=(arg0); end
+  def redirect(target, status = nil); end
+  def self.[](status, headers, body); end
+  def set_header(key, v); end
+  def status; end
+  def status=(arg0); end
+  def to_a(&block); end
+  def write(chunk); end
+  include Rack::Response::Helpers
+end
+module Rack::Response::Helpers
+  def accepted?; end
+  def add_header(key, v); end
+  def append(chunk); end
+  def bad_request?; end
+  def buffered_body!; end
+  def cache!(duration = nil, directive: nil); end
+  def cache_control; end
+  def cache_control=(v); end
+  def client_error?; end
+  def content_length; end
+  def content_type; end
+  def content_type=(content_type); end
+  def created?; end
+  def delete_cookie(key, value = nil); end
+  def do_not_cache!; end
+  def etag; end
+  def etag=(v); end
+  def forbidden?; end
+  def include?(header); end
+  def informational?; end
+  def invalid?; end
+  def location; end
+  def location=(location); end
+  def media_type; end
+  def media_type_params; end
+  def method_not_allowed?; end
+  def moved_permanently?; end
+  def no_content?; end
+  def not_found?; end
+  def ok?; end
+  def precondition_failed?; end
+  def redirect?; end
+  def redirection?; end
+  def server_error?; end
+  def set_cookie(key, value); end
+  def set_cookie_header; end
+  def set_cookie_header=(v); end
+  def successful?; end
+  def unauthorized?; end
+  def unprocessable?; end
+end
+class Rack::Response::Raw
+  def delete_header(key); end
+  def get_header(key); end
+  def has_header?(key); end
+  def headers; end
+  def initialize(status, headers); end
+  def set_header(key, v); end
+  def status; end
+  def status=(arg0); end
+  include Rack::Response::Helpers
 end
 class Rack::Chunked
   def call(env); end

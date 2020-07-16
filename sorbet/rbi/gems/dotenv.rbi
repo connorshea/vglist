@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/dotenv/all/dotenv.rbi
 #
-# dotenv-2.7.5
+# dotenv-2.7.6
 
 module Dotenv
   def ignoring_nonexistent_files; end

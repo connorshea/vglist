@@ -123,6 +123,9 @@ class GameEngine < ApplicationRecord
 
   sig { params(num: Integer).returns(GameEngine::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module GameEngine::QueryMethodsReturningRelation
@@ -659,35 +662,35 @@ module GameEngine::GeneratedAssociationMethods
   sig { returns(::Engine) }
   def engine; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Engine).void)).returns(::Engine) }
+  def build_engine(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Engine).void)).returns(::Engine) }
+  def create_engine(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Engine).void)).returns(::Engine) }
+  def create_engine!(*args, &block); end
+
   sig { params(value: ::Engine).void }
   def engine=(value); end
 
   sig { returns(::Game) }
   def game; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def build_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game!(*args, &block); end
+
   sig { params(value: ::Game).void }
   def game=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_game; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_engine(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_engine(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_engine!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_engine; end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.20.0
+# rouge-3.21.0
 
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
@@ -357,6 +357,11 @@ class Rouge::Lexers::Clojure < Rouge::RegexLexer
   def self.builtins; end
   def self.keywords; end
 end
+class Rouge::Lexers::Janet < Rouge::RegexLexer
+  def name_token(name); end
+  def self.bundled; end
+  def self.specials; end
+end
 class Rouge::Lexers::Haxe < Rouge::RegexLexer
   def self.builtins; end
   def self.constants; end
@@ -427,6 +432,8 @@ end
 class Rouge::Lexers::GHCCore < Rouge::RegexLexer
 end
 class Rouge::Lexers::Xojo < Rouge::RegexLexer
+end
+class Rouge::Lexers::SSH < Rouge::RegexLexer
 end
 class Rouge::Lexers::M68k < Rouge::RegexLexer
   def self.builtins; end
@@ -547,6 +554,8 @@ end
 class Rouge::Lexers::Swift < Rouge::RegexLexer
 end
 class Rouge::Lexers::Rego < Rouge::RegexLexer
+  def self.constants; end
+  def self.operators; end
 end
 class Rouge::Lexers::Puppet < Rouge::RegexLexer
   def self.constants; end
@@ -640,6 +649,14 @@ class Rouge::Lexers::CSS < Rouge::RegexLexer
   def self.builtins; end
   def self.constants; end
   def self.vendor_prefixes; end
+end
+class Rouge::Lexers::Brightscript < Rouge::RegexLexer
+  def self.builtins; end
+  def self.keyword_reserved; end
+  def self.keyword_reserved_unsupported; end
+  def self.keyword_type; end
+  def self.name_builtin; end
+  def self.operator_word; end
 end
 class Rouge::Lexers::YAML < Rouge::RegexLexer
   def continue_indent(match); end

@@ -123,6 +123,9 @@ class GamePlatform < ApplicationRecord
 
   sig { params(num: Integer).returns(GamePlatform::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module GamePlatform::QueryMethodsReturningRelation
@@ -659,35 +662,35 @@ module GamePlatform::GeneratedAssociationMethods
   sig { returns(::Game) }
   def game; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def build_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game!(*args, &block); end
+
   sig { params(value: ::Game).void }
   def game=(value); end
 
   sig { returns(::Platform) }
   def platform; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Platform).void)).returns(::Platform) }
+  def build_platform(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Platform).void)).returns(::Platform) }
+  def create_platform(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Platform).void)).returns(::Platform) }
+  def create_platform!(*args, &block); end
+
   sig { params(value: ::Platform).void }
   def platform=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_game; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_platform(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_platform(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_platform!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_platform; end

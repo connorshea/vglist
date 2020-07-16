@@ -123,6 +123,9 @@ class GamePurchaseStore < ApplicationRecord
 
   sig { params(num: Integer).returns(GamePurchaseStore::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module GamePurchaseStore::QueryMethodsReturningRelation
@@ -659,35 +662,35 @@ module GamePurchaseStore::GeneratedAssociationMethods
   sig { returns(::GamePurchase) }
   def game_purchase; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::GamePurchase).void)).returns(::GamePurchase) }
+  def build_game_purchase(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::GamePurchase).void)).returns(::GamePurchase) }
+  def create_game_purchase(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::GamePurchase).void)).returns(::GamePurchase) }
+  def create_game_purchase!(*args, &block); end
+
   sig { params(value: ::GamePurchase).void }
   def game_purchase=(value); end
 
   sig { returns(::Store) }
   def store; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Store).void)).returns(::Store) }
+  def build_store(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Store).void)).returns(::Store) }
+  def create_store(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Store).void)).returns(::Store) }
+  def create_store!(*args, &block); end
+
   sig { params(value: ::Store).void }
   def store=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_game_purchase(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game_purchase(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game_purchase!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_game_purchase; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_store(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_store(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_store!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_store; end

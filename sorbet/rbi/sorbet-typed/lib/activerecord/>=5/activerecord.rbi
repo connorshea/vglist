@@ -47,4 +47,7 @@ class ActiveRecord::Base
     if: nil,
     unless: nil
   ); end
+
+  sig { params(attribute: T.any(Symbol, String)).void }
+  def self.has_secure_token(attribute); end
 end

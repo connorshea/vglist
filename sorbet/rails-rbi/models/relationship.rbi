@@ -201,6 +201,9 @@ class Relationship < ApplicationRecord
 
   sig { params(num: Integer).returns(Relationship::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module Relationship::QueryMethodsReturningRelation
@@ -737,7 +740,7 @@ module Relationship::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
-  sig { returns(T::Array[Integer]) }
+  sig { returns(T::Array[String]) }
   def event_ids; end
 
   sig { params(value: T::Enumerable[::Event]).void }
@@ -746,35 +749,35 @@ module Relationship::GeneratedAssociationMethods
   sig { returns(::User) }
   def followed; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def build_followed(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_followed(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_followed!(*args, &block); end
+
   sig { params(value: ::User).void }
   def followed=(value); end
 
   sig { returns(::User) }
   def follower; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def build_follower(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_follower(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_follower!(*args, &block); end
+
   sig { params(value: ::User).void }
   def follower=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_follower(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_follower(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_follower!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_follower; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_followed(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_followed(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_followed!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_followed; end

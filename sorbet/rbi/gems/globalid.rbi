@@ -97,3 +97,29 @@ class GlobalID::Verifier < ActiveSupport::MessageVerifier
   def decode(data); end
   def encode(data); end
 end
+module GlobalID::Locator
+  def self.find_allowed?(model_class, only = nil); end
+  def self.locate(gid, options = nil); end
+  def self.locate_many(gids, options = nil); end
+  def self.locate_many_signed(sgids, options = nil); end
+  def self.locate_signed(sgid, options = nil); end
+  def self.locator_for(gid); end
+  def self.normalize_app(app); end
+  def self.parse_allowed(gids, only = nil); end
+  def self.use(app, locator = nil, &locator_block); end
+end
+class GlobalID::Locator::BaseLocator
+  def find_records(model_class, ids, options); end
+  def locate(gid); end
+  def locate_many(gids, options = nil); end
+end
+class GlobalID::Locator::UnscopedLocator < GlobalID::Locator::BaseLocator
+  def find_records(model_class, ids, options); end
+  def locate(gid); end
+  def unscoped(model_class); end
+end
+class GlobalID::Locator::BlockLocator
+  def initialize(block); end
+  def locate(gid); end
+  def locate_many(gids, options = nil); end
+end

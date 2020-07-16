@@ -1474,6 +1474,9 @@ class User < ApplicationRecord
   sig { params(num: Integer).returns(User::ActiveRecord_Relation) }
   def self.padding(num); end
 
+  sig { returns(Integer) }
+  def self.default_per_page; end
+
   sig { returns(User::ActiveRecord_Relation) }
   def self.friendly; end
 end
@@ -3218,11 +3221,29 @@ module User::GeneratedAssociationMethods
   sig { returns(T.nilable(::ActiveStorage::Attachment)) }
   def avatar_attachment; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def build_avatar_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def create_avatar_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def create_avatar_attachment!(*args, &block); end
+
   sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
   def avatar_attachment=(value); end
 
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def avatar_blob; end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def build_avatar_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def create_avatar_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def create_avatar_blob!(*args, &block); end
 
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def avatar_blob=(value); end
@@ -3230,7 +3251,7 @@ module User::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
-  sig { returns(T::Array[Integer]) }
+  sig { returns(T::Array[String]) }
   def event_ids; end
 
   sig { params(value: T::Enumerable[::Event]).void }
@@ -3238,6 +3259,15 @@ module User::GeneratedAssociationMethods
 
   sig { returns(T.nilable(::ExternalAccount)) }
   def external_account; end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ExternalAccount).void)).returns(::ExternalAccount) }
+  def build_external_account(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ExternalAccount).void)).returns(::ExternalAccount) }
+  def create_external_account(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ExternalAccount).void)).returns(::ExternalAccount) }
+  def create_external_account!(*args, &block); end
 
   sig { params(value: T.nilable(::ExternalAccount)).void }
   def external_account=(value); end
@@ -3308,6 +3338,15 @@ module User::GeneratedAssociationMethods
   sig { returns(T.nilable(T.untyped)) }
   def pg_search_document; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def build_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_pg_search_document!(*args, &block); end
+
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
@@ -3374,29 +3413,11 @@ module User::GeneratedAssociationMethods
   sig { params(ids: T.untyped).returns(T.untyped) }
   def oauth_application_ids=(ids); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_external_account(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_external_account(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_external_account!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_external_account; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def external_account_ids=(ids); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_avatar_attachment(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_avatar_attachment(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_avatar_attachment!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_avatar_attachment; end
@@ -3406,15 +3427,6 @@ module User::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def avatar_blob_ids=(ids); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_pg_search_document(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_pg_search_document(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_pg_search_document!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end

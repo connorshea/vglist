@@ -196,6 +196,9 @@ class Store < ApplicationRecord
 
   sig { params(num: Integer).returns(Store::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module Store::QueryMethodsReturningRelation

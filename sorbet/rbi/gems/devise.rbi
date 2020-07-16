@@ -425,9 +425,6 @@ class Devise::Getter
   def get; end
   def initialize(name); end
 end
-class ActiveRecord::Base
-  extend Devise::Models
-end
 module Devise::Controllers::UrlHelpers
   def _devise_route_context; end
   def cancel_registration_path(resource_or_scope, *args); end

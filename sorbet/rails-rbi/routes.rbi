@@ -420,7 +420,7 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def admin_steam_blocklist_url(*args, **kwargs); end
 
-  # Sigs for route /admin/steam/:steam_app_id(.:format)
+  # Sigs for route /admin/steam(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def admin_add_to_steam_blocklist_path(*args, **kwargs); end
 

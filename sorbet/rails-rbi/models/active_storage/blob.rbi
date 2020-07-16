@@ -207,6 +207,9 @@ class ActiveStorage::Blob < ActiveRecord::Base
 
   sig { params(num: Integer).returns(ActiveStorage::Blob::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 class ActiveStorage::Blob::ActiveRecord_Relation < ActiveRecord::Relation
@@ -959,11 +962,29 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
   sig { returns(T.nilable(::ActiveStorage::Attachment)) }
   def preview_image_attachment; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def build_preview_image_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def create_preview_image_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def create_preview_image_attachment!(*args, &block); end
+
   sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
   def preview_image_attachment=(value); end
 
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def preview_image_blob; end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def build_preview_image_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def create_preview_image_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def create_preview_image_blob!(*args, &block); end
 
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def preview_image_blob=(value); end
@@ -973,15 +994,6 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
 
   sig { params(attachable: T.untyped).returns(T.untyped) }
   def preview_image=(attachable); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_preview_image_attachment(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_preview_image_attachment(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_preview_image_attachment!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_preview_image_attachment; end

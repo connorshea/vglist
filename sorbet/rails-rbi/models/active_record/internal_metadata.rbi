@@ -76,6 +76,9 @@ class ActiveRecord::InternalMetadata < ActiveRecord::Base
 
   sig { params(num: Integer).returns(ActiveRecord::InternalMetadata::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module ActiveRecord::InternalMetadata::QueryMethodsReturningRelation

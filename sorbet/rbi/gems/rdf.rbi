@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rdf/all/rdf.rbi
 #
-# rdf-3.1.2
+# rdf-3.1.4
 
 module RDF
   def self.Graph(**options, &block); end
@@ -666,6 +666,7 @@ class RDF::Vocabulary
   def self.properties; end
   def self.property(*args); end
   def self.props; end
+  def self.register(prefix, vocab, **params); end
   def self.strict?; end
   def self.term(*args); end
   def self.to_enum(method = nil, *args); end
@@ -1204,6 +1205,7 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def require_or_load(*args, &block); end
   def reverse_each(*args, &block); end
   def rewind(*args, &block); end
+  def scanf(*args, &block); end
   def seek(*args, &block); end
   def select(*args, &block); end
   def self.protected_instance_methods(all = nil); end
@@ -1438,6 +1440,7 @@ class RDF::Changeset
   def inspect; end
   def mutable?; end
   def options; end
+  def query(stmt); end
   def readable?; end
   def self.apply(mutable, **options, &block); end
   def writable?; end

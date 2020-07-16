@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sparql/all/sparql.rbi
 #
-# sparql-3.1.1
+# sparql-3.1.2
 
 module SPARQL
   def first_content_type(acceptable, available); end
@@ -89,7 +89,6 @@ class Array
   def aggregate?; end
   def bind(solution); end
   def constant?; end
-  def dup; end
   def evaluatable?; end
   def evaluate(bindings, **options); end
   def executable?; end
@@ -168,8 +167,8 @@ class SPARQL::Algebra::Operator
   def bind(solution); end
   def boolean(literal); end
   def constant?; end
+  def deep_dup; end
   def descendants(&block); end
-  def dup; end
   def each(&block); end
   def each_descendant(&block); end
   def eql?(other); end

@@ -201,6 +201,9 @@ class FavoriteGame < ApplicationRecord
 
   sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module FavoriteGame::QueryMethodsReturningRelation
@@ -737,7 +740,7 @@ module FavoriteGame::GeneratedAssociationMethods
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
 
-  sig { returns(T::Array[Integer]) }
+  sig { returns(T::Array[String]) }
   def event_ids; end
 
   sig { params(value: T::Enumerable[::Event]).void }
@@ -746,35 +749,35 @@ module FavoriteGame::GeneratedAssociationMethods
   sig { returns(::Game) }
   def game; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def build_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game!(*args, &block); end
+
   sig { params(value: ::Game).void }
   def game=(value); end
 
   sig { returns(::User) }
   def user; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def build_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_user!(*args, &block); end
+
   sig { params(value: ::User).void }
   def user=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_game; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_user(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_user(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_user!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_user; end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/capybara/all/capybara.rbi
 #
-# capybara-3.32.2
+# capybara-3.33.0
 
 module Capybara
   def self.HTML(html); end
@@ -48,6 +48,8 @@ module Capybara
   def self.drivers; end
   def self.enable_aria_label(*args, &block); end
   def self.enable_aria_label=(*args, &block); end
+  def self.enable_aria_role(*args, &block); end
+  def self.enable_aria_role=(*args, &block); end
   def self.exact(*args, &block); end
   def self.exact=(*args, &block); end
   def self.exact_text(*args, &block); end
@@ -97,7 +99,7 @@ module Capybara
   def self.threadsafe=(*args, &block); end
   def self.use_default_driver; end
   def self.using_driver(driver); end
-  def self.using_session(name_or_session); end
+  def self.using_session(name_or_session, &block); end
   def self.using_wait_time(seconds); end
   def self.visible_text_only(*args, &block); end
   def self.visible_text_only=(*args, &block); end
@@ -130,6 +132,8 @@ class Capybara::SessionConfig
   def disable_animation=(arg0); end
   def enable_aria_label; end
   def enable_aria_label=(arg0); end
+  def enable_aria_role; end
+  def enable_aria_role=(arg0); end
   def exact; end
   def exact=(arg0); end
   def exact_text; end
@@ -173,6 +177,7 @@ class Capybara::ReadOnlySessionConfig < SimpleDelegator
   def default_set_options=(_); end
   def disable_animation=(_); end
   def enable_aria_label=(_); end
+  def enable_aria_role=(_); end
   def exact=(_); end
   def exact_text=(_); end
   def ignore_hidden_elements=(_); end
@@ -220,6 +225,8 @@ class Capybara::Config
   def disable_animation=(*args, &block); end
   def enable_aria_label(*args, &block); end
   def enable_aria_label=(*args, &block); end
+  def enable_aria_role(*args, &block); end
+  def enable_aria_role=(*args, &block); end
   def exact(*args, &block); end
   def exact=(*args, &block); end
   def exact_text(*args, &block); end
@@ -259,6 +266,15 @@ class Capybara::Config
   def w3c_click_offset(*args, &block); end
   def w3c_click_offset=(*args, &block); end
   extend Forwardable
+end
+class Capybara::RegistrationContainer
+  def [](name); end
+  def []=(name, value); end
+  def initialize; end
+  def method_missing(method_name, *args, **options, &block); end
+  def names; end
+  def register(name, block); end
+  def respond_to_missing?(method_name, include_private = nil); end
 end
 module Capybara::Helpers
   def declension(singular, plural, count); end
@@ -504,6 +520,7 @@ class Capybara::Selector < SimpleDelegator
   def call(locator, **options); end
   def current_format; end
   def enable_aria_label; end
+  def enable_aria_role; end
   def errors; end
   def expression_for(name, locator, config: nil, format: nil, **options); end
   def find_by_attr(attribute, value); end
@@ -653,7 +670,7 @@ class Capybara::Selector::Definition
   def expressions; end
   def filter(*args, &block); end
   def filter_set(name, filters_to_use = nil); end
-  def handled_custom_keys(filter, keys); end
+  def handled_custom_options(filter, options); end
   def initialize(name, locator_type: nil, raw_locator: nil, supports_exact: nil, &block); end
   def label(label = nil); end
   def locator_filter(*types, **options, &block); end
@@ -738,7 +755,7 @@ class Capybara::Queries::SelectorQuery < Capybara::Queries::BaseQuery
   def find_nodes_by_selector_format(node, exact); end
   def find_selector(locator); end
   def first_try?; end
-  def initialize(*args, session_options:, enable_aria_label: nil, test_id: nil, selector_format: nil, order: nil, **options, &filter_block); end
+  def initialize(*args, session_options:, enable_aria_label: nil, enable_aria_role: nil, test_id: nil, selector_format: nil, order: nil, **options, &filter_block); end
   def label; end
   def locator; end
   def match; end
@@ -815,6 +832,7 @@ class Capybara::Queries::TextQuery < Capybara::Queries::BaseQuery
   def resolve_for(node); end
   def text(node: nil, query_type: nil); end
   def valid_keys; end
+  def valid_types; end
 end
 class Capybara::Queries::TitleQuery < Capybara::Queries::BaseQuery
   def failure_message; end

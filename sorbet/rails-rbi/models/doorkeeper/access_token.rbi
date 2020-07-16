@@ -45,6 +45,9 @@ class Doorkeeper::AccessToken < ActiveRecord::Base
 
   sig { params(num: Integer).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module Doorkeeper::AccessToken::QueryMethodsReturningRelation
@@ -851,17 +854,17 @@ module Doorkeeper::AccessToken::GeneratedAssociationMethods
   sig { returns(::Doorkeeper::Application) }
   def application; end
 
-  sig { params(value: ::Doorkeeper::Application).void }
-  def application=(value); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Doorkeeper::Application).void)).returns(::Doorkeeper::Application) }
   def build_application(*args, &block); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Doorkeeper::Application).void)).returns(::Doorkeeper::Application) }
   def create_application(*args, &block); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Doorkeeper::Application).void)).returns(::Doorkeeper::Application) }
   def create_application!(*args, &block); end
+
+  sig { params(value: ::Doorkeeper::Application).void }
+  def application=(value); end
 
   sig { returns(T.untyped) }
   def reload_application; end

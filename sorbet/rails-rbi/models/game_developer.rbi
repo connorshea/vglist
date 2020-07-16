@@ -123,6 +123,9 @@ class GameDeveloper < ApplicationRecord
 
   sig { params(num: Integer).returns(GameDeveloper::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module GameDeveloper::QueryMethodsReturningRelation
@@ -659,35 +662,35 @@ module GameDeveloper::GeneratedAssociationMethods
   sig { returns(::Company) }
   def company; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Company).void)).returns(::Company) }
+  def build_company(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Company).void)).returns(::Company) }
+  def create_company(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Company).void)).returns(::Company) }
+  def create_company!(*args, &block); end
+
   sig { params(value: ::Company).void }
   def company=(value); end
 
   sig { returns(::Game) }
   def game; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def build_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game!(*args, &block); end
+
   sig { params(value: ::Game).void }
   def game=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_game; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_company(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_company(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_company!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_company; end

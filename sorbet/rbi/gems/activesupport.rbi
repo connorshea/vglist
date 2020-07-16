@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activesupport/all/activesupport.rbi
 #
-# activesupport-6.0.3.1
+# activesupport-6.0.3.2
 
 class Hash
   def _deep_transform_keys_in_object!(object, &block); end
@@ -2039,52 +2039,6 @@ class ActiveSupport::LogSubscriber < ActiveSupport::Subscriber
   def self.logger; end
   def self.logger=(arg0); end
 end
-class ActiveSupport::BacktraceCleaner
-  def add_filter(&block); end
-  def add_gem_filter; end
-  def add_gem_silencer; end
-  def add_silencer(&block); end
-  def add_stdlib_silencer; end
-  def clean(backtrace, kind = nil); end
-  def filter(backtrace, kind = nil); end
-  def filter_backtrace(backtrace); end
-  def initialize; end
-  def noise(backtrace); end
-  def remove_filters!; end
-  def remove_silencers!; end
-  def silence(backtrace); end
-end
-module ActiveSupport::RangeWithFormat
-  def to_default_s(format = nil); end
-  def to_formatted_s(format = nil); end
-  def to_s(format = nil); end
-end
-module ActiveSupport::CompareWithRange
-  def ===(value); end
-  def cover?(value); end
-  def include?(value); end
-end
-module ActiveSupport::IncludeTimeWithZone
-  def include?(value); end
-end
-module ActiveSupport::EachTimeWithZone
-  def each(&block); end
-  def ensure_iteration_allowed; end
-  def step(n = nil, &block); end
-end
-module ActiveSupport::Configurable
-  def config; end
-  extend ActiveSupport::Concern
-end
-class ActiveSupport::Configurable::Configuration < ActiveSupport::InheritableOptions
-  def compile_methods!; end
-  def self.compile_methods!(keys); end
-end
-module ActiveSupport::Configurable::ClassMethods
-  def config; end
-  def config_accessor(*names, instance_reader: nil, instance_writer: nil, instance_accessor: nil); end
-  def configure; end
-end
 class ActiveSupport::ExecutionWrapper
   def __callbacks; end
   def __callbacks?; end
@@ -2201,6 +2155,24 @@ class File < IO
   def self.atomic_write(file_name, temp_dir = nil); end
   def self.probe_stat_in(dir); end
 end
+module ActiveSupport::RangeWithFormat
+  def to_default_s(format = nil); end
+  def to_formatted_s(format = nil); end
+  def to_s(format = nil); end
+end
+module ActiveSupport::CompareWithRange
+  def ===(value); end
+  def cover?(value); end
+  def include?(value); end
+end
+module ActiveSupport::IncludeTimeWithZone
+  def include?(value); end
+end
+module ActiveSupport::EachTimeWithZone
+  def each(&block); end
+  def ensure_iteration_allowed; end
+  def step(n = nil, &block); end
+end
 module Digest
 end
 module Digest::UUID
@@ -2269,6 +2241,21 @@ class ActiveSupport::Cache::Strategy::LocalCache::Middleware
   def name; end
   def new(app); end
 end
+class ActiveSupport::BacktraceCleaner
+  def add_filter(&block); end
+  def add_gem_filter; end
+  def add_gem_silencer; end
+  def add_silencer(&block); end
+  def add_stdlib_silencer; end
+  def clean(backtrace, kind = nil); end
+  def filter(backtrace, kind = nil); end
+  def filter_backtrace(backtrace); end
+  def initialize; end
+  def noise(backtrace); end
+  def remove_filters!; end
+  def remove_silencers!; end
+  def silence(backtrace); end
+end
 class ActiveSupport::Cache::MemoryStore < ActiveSupport::Cache::Store
   def cached_size(key, entry); end
   def cleanup(options = nil); end
@@ -2286,6 +2273,19 @@ class ActiveSupport::Cache::MemoryStore < ActiveSupport::Cache::Store
   def self.supports_cache_versioning?; end
   def synchronize(&block); end
   def write_entry(key, entry, **options); end
+end
+module ActiveSupport::Configurable
+  def config; end
+  extend ActiveSupport::Concern
+end
+class ActiveSupport::Configurable::Configuration < ActiveSupport::InheritableOptions
+  def compile_methods!; end
+  def self.compile_methods!(keys); end
+end
+module ActiveSupport::Configurable::ClassMethods
+  def config; end
+  def config_accessor(*names, instance_reader: nil, instance_writer: nil, instance_accessor: nil); end
+  def configure; end
 end
 module ActiveSupport::Rescuable
   def handler_for_rescue(exception); end

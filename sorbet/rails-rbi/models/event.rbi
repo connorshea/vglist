@@ -221,6 +221,9 @@ class Event < ApplicationRecord
 
   sig { params(num: Integer).returns(Event::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 class Event::ActiveRecord_Relation < ActiveRecord::Relation
@@ -689,10 +692,10 @@ module Event::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def eventable_type?; end
 
-  sig { returns(T.untyped) }
+  sig { returns(String) }
   def id; end
 
-  sig { params(value: T.untyped).void }
+  sig { params(value: T.any(String, Symbol)).void }
   def id=(value); end
 
   sig { returns(T::Boolean) }
@@ -1081,35 +1084,35 @@ module Event::GeneratedAssociationMethods
   sig { returns(T.untyped) }
   def eventable; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def build_eventable(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_eventable(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_eventable!(*args, &block); end
+
   sig { params(value: T.untyped).void }
   def eventable=(value); end
 
   sig { returns(::User) }
   def user; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def build_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_user!(*args, &block); end
+
   sig { params(value: ::User).void }
   def user=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_eventable(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_eventable(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_eventable!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_eventable; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_user(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_user(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_user!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_user; end

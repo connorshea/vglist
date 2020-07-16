@@ -429,6 +429,9 @@ class Doorkeeper::Application < ActiveRecord::Base
 
   sig { params(num: Integer).returns(Doorkeeper::Application::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module Doorkeeper::Application::QueryMethodsReturningRelation
@@ -1325,6 +1328,15 @@ module Doorkeeper::Application::GeneratedAssociationMethods
   sig { returns(T.nilable(T.untyped)) }
   def owner; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def build_owner(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_owner(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_owner!(*args, &block); end
+
   sig { params(value: T.nilable(T.untyped)).void }
   def owner=(value); end
 
@@ -1339,15 +1351,6 @@ module Doorkeeper::Application::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def authorized_application_ids=(ids); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_owner(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_owner(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_owner!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_owner; end
