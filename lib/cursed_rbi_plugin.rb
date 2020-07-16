@@ -21,33 +21,6 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     @model_class.reflections.each do |assoc_name, reflection|
       # puts "assoc_name: #{assoc_name}, reflection: #{reflection}"
       if singular_associations.include?(reflection.class)
-        # def build_user(*args, &block); end
-        assoc_module_rbi.create_method(
-          "build_#{assoc_name}",
-          parameters: [
-            Parlour::RbiGenerator::Parameter.new("*args", type: 'T.untyped'),
-            Parlour::RbiGenerator::Parameter.new("&block", type: 'T.untyped')
-          ],
-          return_type: 'T.untyped'
-        )
-        # def create_user(*args, &block); end
-        assoc_module_rbi.create_method(
-          "create_#{assoc_name}",
-          parameters: [
-            Parlour::RbiGenerator::Parameter.new("*args", type: 'T.untyped'),
-            Parlour::RbiGenerator::Parameter.new("&block", type: 'T.untyped')
-          ],
-          return_type: 'T.untyped'
-        )
-        # def create_user!(*args, &block); end
-        assoc_module_rbi.create_method(
-          "create_#{assoc_name}!",
-          parameters: [
-            Parlour::RbiGenerator::Parameter.new("*args", type: 'T.untyped'),
-            Parlour::RbiGenerator::Parameter.new("&block", type: 'T.untyped')
-          ],
-          return_type: 'T.untyped'
-        )
         # def reload_user(); end
         assoc_module_rbi.create_method(
           "reload_#{assoc_name}",
