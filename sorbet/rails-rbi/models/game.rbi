@@ -1477,6 +1477,9 @@ class Game < ApplicationRecord
 
   sig { params(num: Integer).returns(Game::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 class Game::ActiveRecord_Relation < ActiveRecord::Relation
@@ -2571,11 +2574,29 @@ module Game::GeneratedAssociationMethods
   sig { returns(T.nilable(::ActiveStorage::Attachment)) }
   def cover_attachment; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def build_cover_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def create_cover_attachment(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Attachment).void)).returns(::ActiveStorage::Attachment) }
+  def create_cover_attachment!(*args, &block); end
+
   sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
   def cover_attachment=(value); end
 
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def cover_blob; end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def build_cover_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def create_cover_blob(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)).returns(::ActiveStorage::Blob) }
+  def create_cover_blob!(*args, &block); end
 
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def cover_blob=(value); end
@@ -2673,6 +2694,15 @@ module Game::GeneratedAssociationMethods
   sig { returns(T.nilable(T.untyped)) }
   def pg_search_document; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def build_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_pg_search_document!(*args, &block); end
+
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
@@ -2705,6 +2735,15 @@ module Game::GeneratedAssociationMethods
 
   sig { returns(T.nilable(::Series)) }
   def series; end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Series).void)).returns(::Series) }
+  def build_series(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Series).void)).returns(::Series) }
+  def create_series(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Series).void)).returns(::Series) }
+  def create_series!(*args, &block); end
 
   sig { params(value: T.nilable(::Series)).void }
   def series=(value); end
@@ -2766,29 +2805,11 @@ module Game::GeneratedAssociationMethods
   sig { params(ids: T.untyped).returns(T.untyped) }
   def favorite_ids=(ids); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_series(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_series(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_series!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_series; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def series_ids=(ids); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_cover_attachment(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_cover_attachment(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_cover_attachment!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_cover_attachment; end
@@ -2798,15 +2819,6 @@ module Game::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def cover_blob_ids=(ids); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_pg_search_document(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_pg_search_document(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_pg_search_document!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end

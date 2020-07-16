@@ -123,6 +123,9 @@ class GameGenre < ApplicationRecord
 
   sig { params(num: Integer).returns(GameGenre::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module GameGenre::QueryMethodsReturningRelation
@@ -659,35 +662,35 @@ module GameGenre::GeneratedAssociationMethods
   sig { returns(::Game) }
   def game; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def build_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
+  def create_game!(*args, &block); end
+
   sig { params(value: ::Game).void }
   def game=(value); end
 
   sig { returns(::Genre) }
   def genre; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Genre).void)).returns(::Genre) }
+  def build_genre(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Genre).void)).returns(::Genre) }
+  def create_genre(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Genre).void)).returns(::Genre) }
+  def create_genre!(*args, &block); end
+
   sig { params(value: ::Genre).void }
   def genre=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_game; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_genre(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_genre(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_genre!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_genre; end

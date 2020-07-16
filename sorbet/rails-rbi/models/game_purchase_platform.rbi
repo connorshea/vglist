@@ -123,6 +123,9 @@ class GamePurchasePlatform < ApplicationRecord
 
   sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module GamePurchasePlatform::QueryMethodsReturningRelation
@@ -659,35 +662,35 @@ module GamePurchasePlatform::GeneratedAssociationMethods
   sig { returns(::GamePurchase) }
   def game_purchase; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::GamePurchase).void)).returns(::GamePurchase) }
+  def build_game_purchase(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::GamePurchase).void)).returns(::GamePurchase) }
+  def create_game_purchase(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::GamePurchase).void)).returns(::GamePurchase) }
+  def create_game_purchase!(*args, &block); end
+
   sig { params(value: ::GamePurchase).void }
   def game_purchase=(value); end
 
   sig { returns(::Platform) }
   def platform; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Platform).void)).returns(::Platform) }
+  def build_platform(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Platform).void)).returns(::Platform) }
+  def create_platform(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Platform).void)).returns(::Platform) }
+  def create_platform!(*args, &block); end
+
   sig { params(value: ::Platform).void }
   def platform=(value); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_game_purchase(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game_purchase(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_game_purchase!(*args, &block); end
-
   sig { returns(T.untyped) }
   def reload_game_purchase; end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_platform(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_platform(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_platform!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_platform; end

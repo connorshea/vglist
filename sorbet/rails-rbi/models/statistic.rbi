@@ -256,6 +256,9 @@ class Statistic < ApplicationRecord
 
   sig { params(num: Integer).returns(Statistic::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module Statistic::QueryMethodsReturningRelation

@@ -430,6 +430,9 @@ class Platform < ApplicationRecord
 
   sig { params(num: Integer).returns(Platform::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 module Platform::QueryMethodsReturningRelation
@@ -1002,6 +1005,15 @@ module Platform::GeneratedAssociationMethods
   sig { returns(T.nilable(T.untyped)) }
   def pg_search_document; end
 
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def build_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_pg_search_document(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
+  def create_pg_search_document!(*args, &block); end
+
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
@@ -1016,15 +1028,6 @@ module Platform::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_purchase_ids=(ids); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def build_pg_search_document(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_pg_search_document(*args, &block); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
-  def create_pg_search_document!(*args, &block); end
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end

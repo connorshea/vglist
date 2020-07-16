@@ -76,6 +76,9 @@ class ExternalAccount < ApplicationRecord
 
   sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
   def self.padding(num); end
+
+  sig { returns(Integer) }
+  def self.default_per_page; end
 end
 
 class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
@@ -765,17 +768,17 @@ module ExternalAccount::GeneratedAssociationMethods
   sig { returns(::User) }
   def user; end
 
-  sig { params(value: ::User).void }
-  def user=(value); end
-
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
   def build_user(*args, &block); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
   def create_user(*args, &block); end
 
-  sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
   def create_user!(*args, &block); end
+
+  sig { params(value: ::User).void }
+  def user=(value); end
 
   sig { returns(T.untyped) }
   def reload_user; end
