@@ -371,8 +371,7 @@ RSpec.describe "Users", type: :request do
 
     it "removes the avatar from the current user" do
       sign_in(user)
-      delete remove_avatar_user_path(user.id),
-        params: { id: user.id }
+      delete remove_avatar_user_path(user.id)
       expect(response).to redirect_to(user_url(user))
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
@@ -381,8 +380,7 @@ RSpec.describe "Users", type: :request do
 
     it "doesn't let a user remove the avatar from a different user" do
       sign_in(another_user)
-      delete remove_avatar_user_path(user.id),
-        params: { id: user.id }
+      delete remove_avatar_user_path(user.id)
       expect(response).to redirect_to(root_path)
       expect(user.reload.avatar).to be_attached
     end
@@ -394,8 +392,7 @@ RSpec.describe "Users", type: :request do
 
     it "removes the Steam account from the current user" do
       sign_in(user_with_external_account)
-      delete disconnect_steam_user_path(user_with_external_account.id),
-        params: { id: user_with_external_account.id }
+      delete disconnect_steam_user_path(user_with_external_account.id)
       expect(response).to redirect_to(settings_import_path)
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
@@ -404,8 +401,7 @@ RSpec.describe "Users", type: :request do
 
     it "does not remove the Steam account from the current user if they have no Steam account connected" do
       sign_in(user)
-      delete disconnect_steam_user_path(user.id),
-        params: { id: user.id }
+      delete disconnect_steam_user_path(user.id)
       expect(response).to redirect_to(settings_import_path)
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
@@ -419,8 +415,7 @@ RSpec.describe "Users", type: :request do
 
     it "removes game purchases from the current user" do
       sign_in(user_with_game_purchase)
-      delete reset_game_library_user_path(user_with_game_purchase.id),
-        params: { id: user_with_game_purchase.id }
+      delete reset_game_library_user_path(user_with_game_purchase.id)
       expect(response).to redirect_to(user_path(user_with_game_purchase))
       # Need to follow redirect for the flash message to show up.
       follow_redirect!
@@ -430,8 +425,7 @@ RSpec.describe "Users", type: :request do
     it "removes all game purchases from the current user" do
       sign_in(user_with_game_purchase)
       expect do
-        delete reset_game_library_user_path(user_with_game_purchase.id),
-          params: { id: user_with_game_purchase.id }
+        delete reset_game_library_user_path(user_with_game_purchase.id)
       end.to change(GamePurchase, :count).by(-1)
 
       expect(GamePurchase.find_by(user_id: user_with_game_purchase.id)).to be(nil)
@@ -439,8 +433,7 @@ RSpec.describe "Users", type: :request do
 
     it "removes game purchases from the current user even if they don't have any game purchases" do
       sign_in(user)
-      delete reset_game_library_user_path(user.id),
-        params: { id: user.id }
+      delete reset_game_library_user_path(user.id)
       expect(response).to redirect_to(user_path(user))
       # Need to follow redirect for the flash message to show up.
       follow_redirect!

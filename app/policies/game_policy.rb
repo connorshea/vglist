@@ -65,4 +65,9 @@ class GamePolicy < ApplicationPolicy
   def add_to_wikidata_blocklist?
     user&.admin?
   end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def merge?
+    user&.admin?
+  end
 end

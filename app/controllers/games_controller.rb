@@ -239,6 +239,22 @@ class GamesController < ApplicationController
     end
   end
 
+  # Merge one game into another and update any associated records as necessary.
+  def merge
+    @game_a = Game.find(params[:id])
+    @game_b = Game.find(params[:game_b_id])
+
+    authorize @game_a
+
+    respond_to do |format|
+      if GameMergeService.new(@game_a, @game_b).merge!
+        format.json { redirect_to game_path(@game_a), success: "#{@game_b.name} successfully merged into #{@game_a.name}." }
+      else
+        format.json { render json: { errors: ["#{@game_b.name} couldn't be merged into #{@game_a.name} due to an error."] }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
   def game_params
