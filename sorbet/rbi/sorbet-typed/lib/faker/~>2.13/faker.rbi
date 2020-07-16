@@ -3,7 +3,7 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/faker/~>2.12.0/faker.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/faker/~>2.13/faker.rbi
 #
 # typed: strong
 

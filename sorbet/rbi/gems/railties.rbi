@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/railties/all/railties.rbi
 #
-# railties-6.0.3.1
+# railties-6.0.3.2
 
 module Rails
   def self.app_class; end
@@ -567,10 +567,10 @@ class Rails::Application::RoutesReloader
   def updated?(*args, &block); end
   def updater; end
 end
+class Rails::Rack::Logger < ActiveSupport::LogSubscriber
+end
 class Rails::BacktraceCleaner < ActiveSupport::BacktraceCleaner
   def initialize; end
-end
-class Rails::Rack::Logger < ActiveSupport::LogSubscriber
 end
 class Rails::Application::DefaultMiddlewareStack
   def app; end

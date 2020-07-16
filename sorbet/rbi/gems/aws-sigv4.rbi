@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/aws-sigv4/all/aws-sigv4.rbi
 #
-# aws-sigv4-1.1.4
+# aws-sigv4-1.2.1
 
 module Aws
 end

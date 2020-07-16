@@ -7,13 +7,14 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/dotenv-rails/all/dotenv-rails.rbi
 #
-# dotenv-rails-2.7.5
+# dotenv-rails-2.7.6
 
 module Dotenv
 end
 class Dotenv::Railtie < Rails::Railtie
   def dotenv_files; end
   def load; end
+  def overload; end
   def root; end
   def self.load; end
 end

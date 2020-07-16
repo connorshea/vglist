@@ -7,43 +7,24 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/factory_bot/all/factory_bot.rbi
 #
-# factory_bot-5.2.0
+# factory_bot-6.1.0
 
 module FactoryBot
   def self.aliases; end
   def self.aliases=(arg0); end
   def self.aliases_for(attribute); end
-  def self.allow_class_lookup(*args, &block); end
-  def self.allow_class_lookup=(*args, &block); end
-  def self.callback_names(*args, &block); end
-  def self.callbacks(*args, &block); end
-  def self.configuration(*args, &block); end
-  def self.constructor(*args, &block); end
+  def self.automatically_define_enum_traits; end
+  def self.automatically_define_enum_traits=(obj); end
+  def self.build_stubbed_starting_id=(starting_id); end
   def self.definition_file_paths; end
   def self.definition_file_paths=(arg0); end
   def self.factories(*args, &block); end
-  def self.factory_by_name(*args, &block); end
   def self.find_definitions; end
-  def self.initialize_with(*args, &block); end
   def self.lint(*args); end
-  def self.register_callback(*args, &block); end
-  def self.register_default_callbacks(*args, &block); end
-  def self.register_default_strategies(*args, &block); end
-  def self.register_factory(*args, &block); end
-  def self.register_sequence(*args, &block); end
   def self.register_strategy(*args, &block); end
-  def self.register_trait(*args, &block); end
   def self.reload; end
-  def self.reset_configuration(*args, &block); end
   def self.rewind_sequences(*args, &block); end
-  def self.sequence_by_name(*args, &block); end
-  def self.sequences(*args, &block); end
-  def self.skip_create(*args, &block); end
-  def self.strategies(*args, &block); end
   def self.strategy_by_name(*args, &block); end
-  def self.to_create(*args, &block); end
-  def self.trait_by_name(*args, &block); end
-  def self.traits(*args, &block); end
   def self.use_parent_strategy; end
   def self.use_parent_strategy=(obj); end
   extend FactoryBot::Syntax::Default
@@ -51,7 +32,6 @@ end
 module FactoryBot::Internal
   def self.after(*args, &block); end
   def self.before(*args, &block); end
-  def self.callback_names(*args, &block); end
   def self.callbacks(*args, &block); end
   def self.configuration; end
   def self.constructor(*args, &block); end
@@ -59,8 +39,6 @@ module FactoryBot::Internal
   def self.factory_by_name(name); end
   def self.initialize_with(*args, &block); end
   def self.inline_sequences(*args, &block); end
-  def self.register_callback(name); end
-  def self.register_default_callbacks; end
   def self.register_default_strategies; end
   def self.register_factory(factory); end
   def self.register_inline_sequence(sequence); end
@@ -162,6 +140,7 @@ class FactoryBot::Strategy::Stub
   def missing_updated_at?(result_instance); end
   def next_id; end
   def result(evaluation); end
+  def self.next_id=(id); end
   def set_timestamps(result_instance); end
   def stub_database_interaction_on_result(result_instance); end
 end
@@ -197,8 +176,7 @@ end
 class FactoryBot::NullObject < BasicObject
   def initialize(methods_to_respond_to); end
   def method_missing(name, *args, &block); end
-  def respond_to?(method, _include_private = nil); end
-  def respond_to_missing?(*arg0); end
+  def respond_to?(method); end
 end
 class FactoryBot::Evaluation
   def create(result_instance); end
@@ -269,7 +247,8 @@ class FactoryBot::Evaluator
   def attribute_lists?; end
   def increment_sequence(sequence); end
   def initialize(build_strategy, overrides = nil); end
-  def instance=(object_instance); end
+  def instance; end
+  def instance=(arg0); end
   def method_missing(method_name, *args, &block); end
   def respond_to_missing?(method_name, _include_private = nil); end
   def self.attribute_list; end
@@ -307,7 +286,6 @@ end
 class FactoryBot::Callback
   def ==(other); end
   def block; end
-  def ensure_valid_callback_name!; end
   def initialize(name, block); end
   def name; end
   def run(instance, evaluator); end
@@ -344,9 +322,12 @@ end
 class FactoryBot::Declaration::Association < FactoryBot::Declaration
   def ==(other); end
   def build; end
-  def ensure_factory_is_not_a_declaration!; end
+  def factory_name; end
   def initialize(name, *options); end
   def options; end
+  def overrides; end
+  def raise_if_arguments_are_declarations!; end
+  def traits; end
 end
 class FactoryBot::Declaration::Implicit < FactoryBot::Declaration
   def ==(other); end
@@ -399,6 +380,12 @@ class FactoryBot::Trait
   def names; end
   def to_create(*args, &block); end
 end
+class FactoryBot::Enum
+  def build_trait(trait_name, attribute_name, value); end
+  def build_traits(klass); end
+  def enum_values(klass); end
+  def initialize(attribute_name, values = nil); end
+end
 class FactoryBot::Definition
   def add_callback(callback); end
   def additional_traits; end
@@ -406,22 +393,27 @@ class FactoryBot::Definition
   def aggregate_from_traits_and_self(method_name, &block); end
   def append_traits(new_traits); end
   def attributes; end
+  def automatically_register_defined_enums(klass); end
+  def automatically_register_defined_enums?(klass); end
   def base_traits; end
   def before(*names, &block); end
   def callback(*names, &block); end
   def callbacks; end
-  def compile; end
+  def compile(klass = nil); end
   def constructor; end
   def declarations; end
   def declare_attribute(*args, &block); end
   def define_constructor(&block); end
   def define_trait(trait); end
   def defined_traits; end
+  def expand_enum_traits(klass); end
   def inherit_traits(new_traits); end
   def initialize(name, base_traits = nil); end
   def initialize_copy(source); end
   def name; end
   def overridable; end
+  def register_enum(enum); end
+  def registered_enums; end
   def skip_create; end
   def to_create(&block); end
   def trait_by_name(name); end
@@ -445,6 +437,7 @@ class FactoryBot::DefinitionProxy
   def skip_create; end
   def to_create(&block); end
   def trait(name, &block); end
+  def traits_for_enum(attribute_name, values = nil); end
   def transient(&block); end
 end
 module FactoryBot::Syntax

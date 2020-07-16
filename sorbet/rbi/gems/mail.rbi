@@ -1581,3 +1581,36 @@ class Mail::Address
   def to_s; end
   include Mail::Utilities
 end
+class Mail::ContentTypeElement
+  def cleaned(string); end
+  def initialize(string); end
+  def main_type; end
+  def parameters; end
+  def sub_type; end
+end
+class Mail::ContentTransferEncodingElement
+  def encoding; end
+  def initialize(string); end
+end
+class Mail::AddressList
+  def addresses; end
+  def addresses_grouped_by_group; end
+  def group_names; end
+  def initialize(string); end
+end
+class Mail::MessageIdsElement
+  def clean_msg_id(val); end
+  def initialize(string); end
+  def message_id; end
+  def message_ids; end
+end
+class Mail::MimeVersionElement
+  def initialize(string); end
+  def major; end
+  def minor; end
+end
+class Mail::DateTimeElement
+  def date_string; end
+  def initialize(string); end
+  def time_string; end
+end

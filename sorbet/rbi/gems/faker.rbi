@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.12.0
+# faker-2.13.0
 
 module Faker
 end
@@ -127,6 +127,7 @@ class Faker::Address < Faker::Base
   def self.country_code_long; end
   def self.country_name_to_code(legacy_name = nil, name: nil); end
   def self.full_address; end
+  def self.full_address_as_hash(*attrs, **attrs_params); end
   def self.latitude; end
   def self.longitude; end
   def self.mail_box; end
@@ -540,6 +541,7 @@ class Faker::IndustrySegments < Faker::Base
 end
 class Faker::Internet < Faker::Base
   def self.base64(length: nil, padding: nil, urlsafe: nil); end
+  def self.construct_email(local_part, domain_name); end
   def self.device_token; end
   def self.domain_name(legacy_subdomain = nil, subdomain: nil, domain: nil); end
   def self.domain_suffix; end
@@ -560,12 +562,16 @@ class Faker::Internet < Faker::Base
   def self.reserved_net_checker; end
   def self.reserved_nets_regex; end
   def self.safe_email(legacy_name = nil, name: nil); end
+  def self.sanitize_email_local_part(local_part); end
   def self.slug(legacy_words = nil, legacy_glue = nil, words: nil, glue: nil); end
   def self.url(legacy_host = nil, legacy_path = nil, legacy_scheme = nil, host: nil, path: nil, scheme: nil); end
   def self.user_agent(legacy_vendor = nil, vendor: nil); end
   def self.user_name(legacy_specifier = nil, legacy_separators = nil, specifier: nil, separators: nil); end
   def self.username(legacy_specifier = nil, legacy_separators = nil, specifier: nil, separators: nil); end
   def self.uuid; end
+end
+class Faker::Internet::HTTP < Faker::Base
+  def self.status_code(group: nil); end
 end
 class Faker::Invoice < Faker::Base
   def self.amount_between(legacy_from = nil, legacy_to = nil, from: nil, to: nil); end
@@ -667,7 +673,9 @@ class Faker::Name < Faker::Base
   def self.feminine_name; end
   def self.first_name; end
   def self.first_name_men; end
+  def self.first_name_neutral; end
   def self.first_name_women; end
+  def self.gender_neutral_first_name; end
   def self.initials(legacy_number = nil, number: nil); end
   def self.last_name; end
   def self.male_first_name; end
@@ -675,6 +683,7 @@ class Faker::Name < Faker::Base
   def self.middle_name; end
   def self.name; end
   def self.name_with_middle; end
+  def self.neutral_first_name; end
   def self.prefix; end
   def self.suffix; end
 end
@@ -991,6 +1000,7 @@ end
 class Faker::Games::HeroesOfTheStorm < Faker::Base
   def self.battleground; end
   def self.class; end
+  def self.class_name; end
   def self.hero; end
   def self.quote; end
 end
@@ -1001,6 +1011,11 @@ class Faker::Games::LeagueOfLegends < Faker::Base
   def self.quote; end
   def self.rank; end
   def self.summoner_spell; end
+end
+class Faker::Games::Minecraft < Faker::Base
+  def self.block; end
+  def self.item; end
+  def self.mob; end
 end
 class Faker::Games::Myst < Faker::Base
   def self.age; end
@@ -1124,6 +1139,7 @@ class Faker::Movies::LordOfTheRings < Faker::Base
 end
 class Faker::Movie < Faker::Base
   def self.quote; end
+  def self.title; end
 end
 class Faker::Movies::PrincessBride < Faker::Base
   def self.character; end
@@ -1188,8 +1204,18 @@ class Faker::Music::Phish < Faker::Base
   def self.musician; end
   def self.song; end
 end
+class Faker::Music::Prince < Faker::Base
+  def self.album; end
+  def self.band; end
+  def self.lyric; end
+  def self.song; end
+end
 class Faker::Music::RockBand < Faker::Base
   def self.name; end
+end
+class Faker::Music::Rush < Faker::Base
+  def self.album; end
+  def self.player; end
 end
 class Faker::Show < Faker::Base
   def self.adult_musical; end
@@ -1251,6 +1277,11 @@ class Faker::TvShows
 end
 class Faker::TvShows::AquaTeenHungerForce < Faker::Base
   def self.character; end
+  def self.quote; end
+end
+class Faker::TvShows::BigBangTheory < Faker::Base
+  def self.character; end
+  def self.quote; end
 end
 class Faker::TvShows::BojackHorseman < Faker::Base
   def self.character; end
@@ -1294,6 +1325,12 @@ class Faker::TvShows::FamilyGuy < Faker::Base
 end
 class Faker::TvShows::Friends < Faker::Base
   def self.character; end
+  def self.location; end
+  def self.quote; end
+end
+class Faker::TvShows::Futurama < Faker::Base
+  def self.character; end
+  def self.hermes_catchphrase; end
   def self.location; end
   def self.quote; end
 end
@@ -1352,6 +1389,7 @@ class Faker::TvShows::SiliconValley < Faker::Base
 end
 class Faker::TvShows::Simpsons < Faker::Base
   def self.character; end
+  def self.episode_title; end
   def self.location; end
   def self.quote; end
 end

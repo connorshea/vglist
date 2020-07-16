@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-ast/all/rubocop-ast.rbi
 #
-# rubocop-ast-0.0.3
+# rubocop-ast-0.1.0
 
 module RuboCop
 end
@@ -19,7 +19,7 @@ class RuboCop::AST::NodePattern
   def initialize(str); end
   def marshal_dump; end
   def marshal_load(pattern); end
-  def match(*args); end
+  def match(*args, **rest); end
   def pattern; end
   def self.descend(element, &block); end
   def to_s; end
@@ -36,12 +36,14 @@ class RuboCop::AST::NodePattern::Compiler
   def compile_ascend; end
   def compile_capture; end
   def compile_captured_ellipsis; end
+  def compile_const(const); end
   def compile_descend; end
   def compile_ellipsis; end
   def compile_expr(token = nil); end
   def compile_funcall(method); end
   def compile_guard_clause; end
   def compile_intersect; end
+  def compile_keyword(keyword); end
   def compile_literal(literal); end
   def compile_negation; end
   def compile_nodetype(type); end
@@ -51,13 +53,21 @@ class RuboCop::AST::NodePattern::Compiler
   def compile_seq; end
   def compile_union; end
   def compile_wildcard(name); end
+  def def_helper(base, method_name, **defaults); end
+  def def_node_matcher(base, method_name, **defaults); end
+  def def_node_search(base, method_name, **defaults); end
+  def emit_keyword_list(forwarding: nil); end
   def emit_method_code; end
+  def emit_node_search(method_name); end
+  def emit_node_search_body(method_name, prelude:, on_match:); end
   def emit_param_list; end
   def emit_retval; end
-  def emit_trailing_params; end
+  def emit_trailing_params(forwarding: nil); end
   def emit_yield_capture(when_no_capture = nil); end
   def fail_due_to(message); end
   def forbid_unification(*names); end
+  def get_const(const); end
+  def get_keyword(name); end
   def get_param(number); end
   def initialize(str, node_var = nil); end
   def insure_same_captures(enum, what); end
@@ -99,12 +109,8 @@ class RuboCop::AST::NodePattern::Compiler::Sequence < SimpleDelegator
   def variadic_term_min_arity; end
 end
 module RuboCop::AST::NodePattern::Macros
-  def def_node_matcher(method_name, pattern_str); end
-  def def_node_search(method_name, pattern_str); end
-  def node_search(method_name, compiler, on_match, prelude, called_from); end
-  def node_search_all(method_name, compiler, called_from); end
-  def node_search_body(method_name, trailing_params, prelude, match_code, on_match); end
-  def node_search_first(method_name, compiler, called_from); end
+  def def_node_matcher(method_name, pattern_str, **keyword_defaults); end
+  def def_node_search(method_name, pattern_str, **keyword_defaults); end
 end
 module RuboCop::AST::Sexp
   def s(type, *children); end
@@ -121,6 +127,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def arg_type?; end
   def args_type?; end
   def argument?; end
+  def argument_type?; end
   def array_pattern_type?; end
   def array_pattern_with_tail_type?; end
   def array_type?; end
@@ -180,10 +187,12 @@ class RuboCop::AST::Node < Parser::AST::Node
   def erange_type?; end
   def false_type?; end
   def falsey_literal?; end
+  def find_pattern_type?; end
   def first_line; end
   def float_type?; end
   def for_type?; end
   def for_value_used?; end
+  def forward_arg_type?; end
   def forward_args_type?; end
   def forwarded_args_type?; end
   def guard_clause?; end
@@ -218,6 +227,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def last_line; end
   def line_count; end
   def literal?; end
+  def loop_keyword?; end
   def lvar_type?; end
   def lvasgn_type?; end
   def masgn_type?; end
@@ -262,6 +272,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def parent_module_name_part(node); end
   def parenthesized_call?; end
   def pin_type?; end
+  def post_condition_loop?; end
   def postexe_type?; end
   def preexe_type?; end
   def proc?(node = nil); end
@@ -327,9 +338,16 @@ module RuboCop::AST::MethodIdentifierPredicates
   def camel_case_method?; end
   def comparison_method?; end
   def const_receiver?; end
+  def enumerable_method?; end
   def enumerator_method?; end
   def method?(name); end
   def negation_method?; end
+  def nonmutating_array_method?; end
+  def nonmutating_binary_operator_method?; end
+  def nonmutating_hash_method?; end
+  def nonmutating_operator_method?; end
+  def nonmutating_string_method?; end
+  def nonmutating_unary_operator_method?; end
   def operator_method?; end
   def predicate_method?; end
   def prefix_bang?; end
@@ -714,6 +732,22 @@ class RuboCop::AST::IfNode < RuboCop::AST::Node
   include RuboCop::AST::ConditionalNode
   include RuboCop::AST::ModifierNode
 end
+class RuboCop::AST::IndexNode < RuboCop::AST::Node
+  def arguments; end
+  def assignment_method?; end
+  def attribute_accessor?; end
+  def method_name; end
+  include RuboCop::AST::MethodDispatchNode
+  include RuboCop::AST::ParameterizedNode
+end
+class RuboCop::AST::IndexasgnNode < RuboCop::AST::Node
+  def arguments; end
+  def assignment_method?; end
+  def attribute_accessor?; end
+  def method_name; end
+  include RuboCop::AST::MethodDispatchNode
+  include RuboCop::AST::ParameterizedNode
+end
 class RuboCop::AST::IntNode < RuboCop::AST::Node
   include RuboCop::AST::NumericNode
 end
@@ -723,6 +757,16 @@ class RuboCop::AST::KeywordSplatNode < RuboCop::AST::Node
   def node_parts; end
   def operator; end
   include RuboCop::AST::HashElementNode
+end
+class RuboCop::AST::LambdaNode < RuboCop::AST::Node
+  def arguments; end
+  def assignment_method?; end
+  def attribute_accessor?; end
+  def lambda?; end
+  def lambda_literal?; end
+  def method_name; end
+  include RuboCop::AST::MethodDispatchNode
+  include RuboCop::AST::ParameterizedNode
 end
 class RuboCop::AST::ModuleNode < RuboCop::AST::Node
   def body; end
@@ -748,7 +792,18 @@ class RuboCop::AST::RangeNode < RuboCop::AST::Node
 end
 class RuboCop::AST::RegexpNode < RuboCop::AST::Node
   def content; end
+  def delimiter?(char); end
+  def delimiters; end
+  def extended?; end
+  def ignore_case?; end
+  def interpolation?; end
+  def multiline_mode?; end
+  def no_encoding?; end
+  def percent_r_literal?; end
   def regopt; end
+  def regopt_include?(option); end
+  def single_interpolation?; end
+  def slash_literal?; end
   def to_regexp; end
 end
 class RuboCop::AST::ResbodyNode < RuboCop::AST::Node
@@ -883,6 +938,7 @@ class RuboCop::AST::Token
   def type; end
 end
 module RuboCop::AST::Traversal
+  def on___ENCODING__(node); end
   def on_alias(node); end
   def on_and(node); end
   def on_and_asgn(node); end
@@ -921,6 +977,7 @@ module RuboCop::AST::Traversal
   def on_false(node); end
   def on_float(node); end
   def on_for(node); end
+  def on_forward_arg(node); end
   def on_forward_args(node); end
   def on_forwarded_args(node); end
   def on_gvar(node); end
@@ -932,6 +989,8 @@ module RuboCop::AST::Traversal
   def on_iflipflop(node); end
   def on_in_match(node); end
   def on_in_pattern(node); end
+  def on_index(node); end
+  def on_indexasgn(node); end
   def on_int(node); end
   def on_irange(node); end
   def on_ivar(node); end
@@ -968,6 +1027,7 @@ module RuboCop::AST::Traversal
   def on_pin(node); end
   def on_postexe(node); end
   def on_preexe(node); end
+  def on_procarg0(node); end
   def on_rational(node); end
   def on_redo(node); end
   def on_regexp(node); end

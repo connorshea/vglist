@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/factory_bot_rails/all/factory_bot_rails.rbi
 #
-# factory_bot_rails-5.2.0
+# factory_bot_rails-6.1.0
 
 module FactoryBotRails
 end
@@ -46,8 +46,7 @@ end
 class FactoryBotRails::Reloader
   def app; end
   def build_reloader; end
-  def config; end
-  def initialize(app, config); end
+  def initialize(app); end
   def register_reloader(reloader); end
   def reloader_class; end
   def run; end

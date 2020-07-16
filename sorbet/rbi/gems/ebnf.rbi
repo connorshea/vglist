@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/ebnf/all/ebnf.rbi
 #
-# ebnf-1.2.0
+# ebnf-2.1.0
 
 module EBNF
   def self.parse(input, **options); end
@@ -27,8 +27,9 @@ module EBNF::LL1
   def pass; end
   def start; end
   def terminals; end
+  def to_ruby_ll1(output, **options); end
 end
-module EBNF::Parser
+module EBNF::Native
   def alt(s); end
   def diff(s); end
   def eachRule(scanner); end
@@ -38,6 +39,10 @@ module EBNF::Parser
   def ruleParts(rule); end
   def seq(s); end
   def terminal(s); end
+end
+module EBNF::PEG
+  def make_peg; end
+  def to_ruby_peg(output, **options); end
 end
 class EBNF::Base
   def ast; end
@@ -51,14 +56,18 @@ class EBNF::Base
   def find_rule(sym); end
   def initialize(input, format: nil, **options); end
   def progress(*args, **options); end
-  def to_html; end
-  def to_ruby(output = nil, grammarFile: nil, mod_name: nil); end
-  def to_s; end
+  def renumber!; end
+  def to_html(format: nil); end
+  def to_ruby(output = nil, grammarFile: nil, mod_name: nil, **options); end
+  def to_s(format: nil); end
   def to_sxp; end
   def to_ttl(prefix = nil, ns = nil); end
+  def valid?; end
+  def validate!; end
   include EBNF::BNF
   include EBNF::LL1
-  include EBNF::Parser
+  include EBNF::Native
+  include EBNF::PEG
 end
 class EBNF::LL1::Lexer
   def each(&block); end
@@ -115,7 +124,7 @@ module EBNF::LL1::Parser
   def accept(type_or_value); end
   def add_prod_data(sym, *values); end
   def add_prod_datum(sym, values); end
-  def debug(*args); end
+  def debug(*args, &block); end
   def depth; end
   def error(node, message, **options); end
   def first_include?(production, token); end
@@ -155,11 +164,15 @@ class EBNF::LL1::Scanner < StringScanner
   def feed_me; end
   def initialize(input, **options); end
   def input; end
+  def lineno; end
+  def lineno=(arg0); end
   def rest; end
   def scan(pattern); end
-  def self.new(input, **options); end
+  def scan_until(pattern); end
   def skip(pattern); end
+  def skip_until(pattern); end
   def terminate; end
+  def unscan; end
 end
 class EBNF::Rule
   def <=>(other); end
@@ -173,7 +186,7 @@ class EBNF::Rule
   def cleanup=(arg0); end
   def comp; end
   def comp=(arg0); end
-  def equivalent?(other); end
+  def eql?(other); end
   def expr; end
   def expr=(arg0); end
   def first; end
@@ -187,11 +200,10 @@ class EBNF::Rule
   def kind; end
   def kind=(arg0); end
   def make_sym_id(variation = nil); end
-  def non_terminals(ast); end
+  def non_terminals(ast, expr = nil); end
   def orig; end
   def orig=(arg0); end
   def pass?; end
-  def rewrite(src_rule, dst_rule); end
   def rule?; end
   def self.from_sxp(sxp); end
   def seq?; end
@@ -200,25 +212,109 @@ class EBNF::Rule
   def starts_with?(sym); end
   def sym; end
   def sym=(arg0); end
+  def symbols(expr = nil); end
   def terminal?; end
-  def terminals(ast); end
+  def terminals(ast, expr = nil); end
   def to_bnf; end
+  def to_peg; end
+  def to_regexp; end
+  def to_ruby; end
   def to_s; end
   def to_sxp; end
   def to_ttl; end
+  def translate_codepoints(str); end
   def ttl_expr(expr, pfx, depth, is_obj = nil); end
+  def valid?(ast); end
+  def validate!(ast, expr = nil); end
+end
+module EBNF::PEG::Rule
+  def eat_whitespace(input); end
+  def parse(input); end
+  def parser; end
+  def parser=(arg0); end
+  def rept(input, min, max, prod); end
+end
+module EBNFMeta
+end
+module EBNF::PEG::Parser
+  def clear_packrat; end
+  def debug(*args, &block); end
+  def depth; end
+  def error(node, message, **options); end
+  def find_rule(sym); end
+  def find_terminal_regexp(sym); end
+  def onFinish(result); end
+  def onStart(prod); end
+  def onTerminal(prod, value); end
+  def packrat; end
+  def parse(input = nil, start = nil, rules = nil, **options, &block); end
+  def prod_data; end
+  def progress(node, *args, &block); end
+  def scanner; end
+  def self.included(base); end
+  def update_furthest_failure(pos, lineno, token); end
+  def warn(node, message, **options); end
+  def whitespace; end
+end
+module EBNF::PEG::Parser::ClassMethods
+  def eval_with_binding(object); end
+  def method_missing(method, *args, &block); end
+  def production(term, clear_packrat: nil, &block); end
+  def production_handlers; end
+  def start_handlers; end
+  def start_options; end
+  def start_production(term, **options, &block); end
+  def terminal(term, regexp = nil, **options, &block); end
+  def terminal_handlers; end
+  def terminal_regexps; end
+end
+class Anonymous_Struct_479 < Struct
+  def expecting; end
+  def expecting=(_); end
+  def lineno; end
+  def lineno=(_); end
+  def pos; end
+  def pos=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class EBNF::PEG::Parser::Unmatched < Anonymous_Struct_479
+  def to_s; end
+end
+class EBNF::PEG::Parser::Error < StandardError
+  def initialize(message, **options); end
+  def lineno; end
+  def production; end
+  def rest; end
+end
+module EBNF::Terminals
+end
+class EBNF::Parser
+  def ast; end
+  def initialize(input, **options, &block); end
+  extend EBNF::PEG::Parser::ClassMethods
+  include EBNF::PEG::Parser
+  include EBNF::Terminals
 end
 class EBNF::Writer
-  def escape(string, quote = nil); end
-  def escape_hex(u); end
-  def format(expr, sep = nil); end
-  def format_char(c); end
-  def format_range(string); end
-  def initialize(rules, out: nil, html: nil, **options); end
-  def self.html(*rules); end
-  def self.print(*rules); end
-  def self.string(*rules); end
-  def self.write(out, *rules); end
+  def escape_abnf_hex(u); end
+  def escape_ebnf_hex(u); end
+  def format_abnf(expr, sep: nil, embedded: nil, sensitive: nil); end
+  def format_abnf_char(c); end
+  def format_abnf_range(string); end
+  def format_ebnf(expr, sep: nil, embedded: nil); end
+  def format_ebnf_char(c); end
+  def format_ebnf_range(string); end
+  def format_ebnf_string(string, quote = nil); end
+  def format_isoebnf(expr, sep: nil, embedded: nil); end
+  def format_isoebnf_range(string); end
+  def initialize(rules, out: nil, html: nil, format: nil, **options); end
+  def self.html(*rules, format: nil); end
+  def self.print(*rules, format: nil); end
+  def self.string(*rules, format: nil); end
+  def self.write(out, *rules, format: nil); end
 end
 module EBNF::VERSION
   def self.to_a; end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.6.1
+# rubocop-performance-1.7.0
 
 module RuboCop
 end
@@ -31,7 +31,25 @@ module RuboCop::Cop::RegexpMetacharacter
   def literal_at_start_with_caret?(regex_str); end
   def safe_multiline?; end
 end
+module RuboCop::Cop::SortBlock
+  def replaceable_body?(node = nil, param1, param2); end
+  def sort_range(send, node); end
+  def sort_with_block?(node = nil); end
+  extend RuboCop::AST::NodePattern::Macros
+  include RuboCop::Cop::RangeHelp
+end
 module RuboCop::Cop::Performance
+end
+class RuboCop::Cop::Performance::AncestorsInclude < RuboCop::Cop::Cop
+  def ancestors_include_candidate?(node = nil); end
+  def autocorrect(node); end
+  def on_send(node); end
+  include RuboCop::Cop::RangeHelp
+end
+class RuboCop::Cop::Performance::BigDecimalWithNumericArgument < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def big_decimal_with_numeric_argument?(node = nil); end
+  def on_send(node); end
 end
 class RuboCop::Cop::Performance::BindCall < RuboCop::Cop::Cop
   def autocorrect(node); end
@@ -174,6 +192,20 @@ class RuboCop::Cop::Performance::RangeInclude < RuboCop::Cop::Cop
   def on_send(node); end
   def range_include(node = nil); end
 end
+class RuboCop::Cop::Performance::IoReadlines < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def build_bad_method(enumerable_call); end
+  def build_call_args(call_args_node); end
+  def build_good_method(enumerable_call); end
+  def correction_range(enumerable_call, readlines_call); end
+  def enumerable_method?(node); end
+  def offense(node, enumerable_call, readlines_call); end
+  def offense_range(enumerable_call, readlines_call); end
+  def on_send(node); end
+  def readlines_on_class?(node = nil); end
+  def readlines_on_instance?(node = nil); end
+  include RuboCop::Cop::RangeHelp
+end
 class RuboCop::Cop::Performance::RedundantBlockCall < RuboCop::Cop::Cop
   def args_include_block_pass?(blockcall); end
   def autocorrect(node); end
@@ -219,6 +251,25 @@ class RuboCop::Cop::Performance::RedundantMerge::EachWithObjectInspector
   def value_used?; end
   extend RuboCop::AST::NodePattern::Macros
 end
+class RuboCop::Cop::Performance::RedundantSortBlock < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def message(var_a, var_b); end
+  def on_block(node); end
+  include RuboCop::Cop::SortBlock
+end
+class RuboCop::Cop::Performance::RedundantStringChars < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def build_bad_method(method, args); end
+  def build_call_args(call_args_node); end
+  def build_good_method(method, args); end
+  def build_message(method, args); end
+  def correction_range(receiver, node); end
+  def offense_range(receiver, node); end
+  def on_send(node); end
+  def redundant_chars_call?(node = nil); end
+  def replaceable_method?(method_name); end
+  include RuboCop::Cop::RangeHelp
+end
 class RuboCop::Cop::Performance::RegexpMatch < RuboCop::Cop::Cop
   def autocorrect(node); end
   def check_condition(cond); end
@@ -252,14 +303,34 @@ class RuboCop::Cop::Performance::ReverseEach < RuboCop::Cop::Cop
   def reverse_each?(node = nil); end
   include RuboCop::Cop::RangeHelp
 end
-class RuboCop::Cop::Performance::Size < RuboCop::Cop::Cop
-  def allowed_parent?(node); end
-  def array?(node); end
+class RuboCop::Cop::Performance::ReverseFirst < RuboCop::Cop::Cop
   def autocorrect(node); end
-  def eligible_node?(node); end
-  def eligible_receiver?(node); end
-  def hash?(node); end
+  def build_bad_method(node); end
+  def build_good_method(node); end
+  def build_message(node); end
+  def correction_range(receiver, node); end
   def on_send(node); end
+  def reverse_first_candidate?(node = nil); end
+  include RuboCop::Cop::RangeHelp
+end
+class RuboCop::Cop::Performance::Size < RuboCop::Cop::Cop
+  def array?(node = nil); end
+  def autocorrect(node); end
+  def count?(node = nil); end
+  def hash?(node = nil); end
+  def on_send(node); end
+end
+class RuboCop::Cop::Performance::SortReverse < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def message(var_a, var_b); end
+  def on_block(node); end
+  include RuboCop::Cop::SortBlock
+end
+class RuboCop::Cop::Performance::Squeeze < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def on_send(node); end
+  def repeating_literal?(regex_str); end
+  def squeeze_candidate?(node = nil); end
 end
 class RuboCop::Cop::Performance::StartWith < RuboCop::Cop::Cop
   def autocorrect(node); end
@@ -267,6 +338,13 @@ class RuboCop::Cop::Performance::StartWith < RuboCop::Cop::Cop
   def on_send(node); end
   def redundant_regex?(node = nil); end
   include RuboCop::Cop::RegexpMetacharacter
+end
+class RuboCop::Cop::Performance::StringInclude < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def literal?(regex_str); end
+  def on_match_with_lvasgn(node); end
+  def on_send(node); end
+  def redundant_regex?(node = nil); end
 end
 class RuboCop::Cop::Performance::StringReplacement < RuboCop::Cop::Cop
   def accept_first_param?(first_param); end

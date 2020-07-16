@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parallel/all/parallel.rbi
 #
-# parallel-1.19.1
+# parallel-1.19.2
 
 module Parallel
   def self.add_progress_bar!(job_factory, options); end
