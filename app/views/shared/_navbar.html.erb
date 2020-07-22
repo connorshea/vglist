@@ -77,54 +77,35 @@
           </a>
 
           <div class="navbar-dropdown is-right">
-            <%= link_to("Profile", user_path(current_user.slug), class: "navbar-item") %>
-            <% if current_user.admin? %>
-              <%= link_to("Admin", admin_path, class: "navbar-item") %>
+            <% navbar_items.each do |navbar_item| %>
+              <% if navbar_item[:title].nil? %>
+                <hr class="navbar-divider">
+              <% else %>
+                <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item") %>
+              <% end %>
             <% end %>
-            <%= link_to("Settings", settings_path, class: "navbar-item") %>
-            <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item") %>
-            <hr class="navbar-divider">
-            <%= link_to("About", about_path, class: "navbar-item") %>
-            <%= link_to("Changelog", 'https://github.com/connorshea/vglist/blob/master/CHANGELOG.md', class: "navbar-item") %>
-            <%= link_to("GitHub", 'https://github.com/connorshea/vglist', class: "navbar-item") %>
-            <%= link_to("API Docs", 'https://github.com/connorshea/vglist/blob/master/API.md', class: "navbar-item") %>
-            <%= link_to("GraphiQL", graphiql_path, class: "navbar-item") %>
-            <%= link_to("Discord", 'https://discord.gg/Ma8Ztcc', class: "navbar-item") %>
           </div>
         </div>
 
-        <%= link_to(current_user.username, user_path(current_user.id), class: "navbar-item is-hidden-desktop") %>
-        <% if current_user.admin? %>
-          <%= link_to("Admin", admin_path, class: "navbar-item is-hidden-desktop") %>
+        <% navbar_items.each do |navbar_item| %>
+          <% unless navbar_item[:title].nil? %>
+            <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item is-hidden-desktop") %>
+          <% end %>
         <% end %>
-        <%= link_to("Settings", settings_path, class: "navbar-item is-hidden-desktop") %>
-        <%= link_to('Sign out', destroy_user_session_path, method: :delete, class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("About", about_path, class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("Changelog", 'https://github.com/connorshea/vglist/blob/master/CHANGELOG.md', class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("GitHub", 'https://github.com/connorshea/vglist', class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("API Docs", 'https://github.com/connorshea/vglist/blob/master/API.md', class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("GraphiQL", graphiql_path, class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("Discord", 'https://discord.gg/Ma8Ztcc', class: "navbar-item is-hidden-desktop") %>
       <% else %>
         <%= link_to('Sign up', new_user_registration_path, class: "navbar-item")  %>
         <%= link_to('Sign in', new_user_session_path, class: "navbar-item") %>
-        <%= link_to("About", about_path, class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("Changelog", 'https://github.com/connorshea/vglist/blob/master/CHANGELOG.md', class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("GitHub", 'https://github.com/connorshea/vglist', class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("API Docs", 'https://github.com/connorshea/vglist/blob/master/API.md', class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("GraphiQL", graphiql_path, class: "navbar-item is-hidden-desktop") %>
-        <%= link_to("Discord", 'https://discord.gg/Ma8Ztcc', class: "navbar-item is-hidden-desktop") %>
+        <% navbar_items.each do |navbar_item| %>
+          <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item is-hidden-desktop") %>
+        <% end %>
         
         <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
           <a class="navbar-link">More</a>
 
           <div class="navbar-dropdown is-right">
-            <%= link_to("About", about_path, class: "navbar-item") %>
-            <%= link_to("Changelog", 'https://github.com/connorshea/vglist/blob/master/CHANGELOG.md', class: "navbar-item") %>
-            <%= link_to("GitHub", 'https://github.com/connorshea/vglist', class: "navbar-item") %>
-            <%= link_to("API Docs", 'https://github.com/connorshea/vglist/blob/master/API.md', class: "navbar-item") %>
-            <%= link_to("GraphiQL", graphiql_path, class: "navbar-item") %>
-            <%= link_to("Discord", 'https://discord.gg/Ma8Ztcc', class: "navbar-item") %>
+            <% navbar_items.each do |navbar_item| %>
+              <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item") %>
+            <% end %>
           </div>
         </div>
       <% end %>
