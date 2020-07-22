@@ -132,4 +132,77 @@ module ApplicationHelper
     options[:class] += css_class unless css_class.nil?
     return inline_svg_pack_tag("media/icons/#{icon}.svg", options)
   end
+
+  # Return titles and paths for each item that should be displayed in the
+  # navbar. A `nil` value means that the item can either be ignored or
+  # should be a divider.
+  sig { returns(T::Array[T::Hash[Symbol, T.nilable(String)]]) }
+  def navbar_items
+    items = []
+
+    # Include profile, admin, settings, and sign out if the user is logged in.
+    if user_signed_in?
+      items << {
+        title: 'Profile',
+        path: user_path(current_user&.slug)
+      }
+
+      if current_user&.admin?
+        items << {
+          title: 'Admin',
+          path: admin_path
+        }
+      end
+
+      items = items.concat(
+        [
+          {
+            title: 'Settings',
+            path: settings_path
+          },
+          {
+            title: 'Sign out',
+            path: destroy_user_session_path
+          },
+          {
+            title: nil,
+            path: nil
+          }
+        ]
+      )
+    end
+
+    # Always provide the links to extra information no matter if the user is
+    # logged in or not.
+    items = items.concat(
+      [
+        {
+          title: 'About',
+          path: about_path
+        },
+        {
+          title: 'Changelog',
+          path: 'https://github.com/connorshea/vglist/blob/master/CHANGELOG.md'
+        },
+        {
+          title: 'GitHub',
+          path: 'https://github.com/connorshea/vglist'
+        },
+        {
+          title: 'API Docs',
+          path: 'https://github.com/connorshea/vglist/blob/master/API.md'
+        },
+        {
+          title: 'GraphiQL',
+          path: graphiql_path
+        },
+        {
+          title: 'Discord',
+          path: 'https://discord.gg/Ma8Ztcc'
+        }
+      ]
+    )
+
+    return items
+  end
 end
