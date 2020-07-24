@@ -21,6 +21,8 @@ module TZInfo::RubyCoreSupport
   def self.time_supports_64bit; end
   def self.time_supports_negative; end
 end
+module TZInfo::RubyCoreSupport::UntaintExt
+end
 module TZInfo::OffsetRationals
   def rational_for_offset(offset); end
   def self.rational_for_offset(offset); end

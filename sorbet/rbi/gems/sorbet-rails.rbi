@@ -270,7 +270,6 @@ class ActiveRecordOverrides
   def get_enum_call(klass, enum_sym); end
   def initialize; end
   def self.allocate; end
-  def self.instance; end
   def self.new(*arg0); end
   def store_enum_call(klass, kwargs); end
   extend Singleton::SingletonClassMethods

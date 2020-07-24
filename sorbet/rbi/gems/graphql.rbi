@@ -109,7 +109,6 @@ class GraphQL::Define::TypeDefiner
   def String; end
   def [](type); end
   def self.allocate; end
-  def self.instance; end
   def self.new(*arg0); end
   extend Singleton::SingletonClassMethods
   include Singleton
@@ -4590,7 +4589,6 @@ class GraphQL::Pagination::SequelDatasetConnection < GraphQL::Pagination::Relati
   def relation_offset(relation); end
 end
 module GraphQL::Ruby2Keywords
-  def ruby2_keywords(*arg0); end
 end
 class GraphQL::Error < StandardError
 end

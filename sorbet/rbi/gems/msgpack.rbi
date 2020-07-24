@@ -122,7 +122,7 @@ class MessagePack::ExtensionValue < Struct
   include MessagePack::CoreExt
 end
 class Symbol
-  def self.all_symbols; end
+  def self.from_msgpack_ext(data); end
   def to_msgpack_ext; end
   def to_msgpack_with_packer(packer); end
   include MessagePack::CoreExt

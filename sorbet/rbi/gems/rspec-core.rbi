@@ -578,6 +578,7 @@ module RSpec::Core::HashImitatable
   def compare_by_identity?(*args, &block); end
   def count(*args, &block); end
   def cycle(*args, &block); end
+  def deconstruct_keys(*args, &block); end
   def deep_merge!(*args, &block); end
   def deep_merge(*args, &block); end
   def deep_stringify_keys!(*args, &block); end
@@ -619,6 +620,7 @@ module RSpec::Core::HashImitatable
   def fetch_values(*args, &block); end
   def filter!(*args, &block); end
   def filter(*args, &block); end
+  def filter_map(*args, &block); end
   def find(*args, &block); end
   def find_all(*args, &block); end
   def find_index(*args, &block); end
@@ -693,6 +695,7 @@ module RSpec::Core::HashImitatable
   def symbolize_keys(*args, &block); end
   def take(*args, &block); end
   def take_while(*args, &block); end
+  def tally(*args, &block); end
   def to_a(*args, &block); end
   def to_h; end
   def to_hash(*args, &block); end
@@ -1035,6 +1038,7 @@ class RSpec::Core::OutputWrapper
   def rewind(*args, &block); end
   def seek(*args, &block); end
   def set_encoding(*args, &block); end
+  def set_encoding_by_bom(*args, &block); end
   def stat(*args, &block); end
   def sync(*args, &block); end
   def sync=(*args, &block); end
@@ -1502,6 +1506,7 @@ class RSpec::Core::Example::Procsy
   def pending?(*a, &b); end
   def reporter(*a, &b); end
   def rerun_argument(*a, &b); end
+  def ruby2_keywords(*a, &b); end
   def run(*args, &block); end
   def skip(*a, &b); end
   def skipped?(*a, &b); end
@@ -1679,7 +1684,7 @@ module RSpec::Support
   def self.require_rspec_core(f); end
 end
 class RSpec::Core::Time
-  def self.now; end
+  def self.now(*arg0); end
 end
 class Module
 end

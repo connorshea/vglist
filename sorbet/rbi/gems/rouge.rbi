@@ -135,49 +135,49 @@ class Rouge::Token::Tokens::Name < Rouge::Token
 end
 class Rouge::Token::Tokens::Literal::Date < Rouge::Token::Tokens::Literal
 end
-class Rouge::Token::Tokens::Str::Affix < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Affix < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Backtick < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Backtick < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Char < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Char < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Delimiter < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Delimiter < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Doc < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Doc < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Double < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Double < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Escape < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Escape < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Heredoc < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Heredoc < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Interpol < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Interpol < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Other < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Other < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Regex < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Regex < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Single < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Single < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str::Symbol < Rouge::Token::Tokens::Str
+class Rouge::Token::Tokens::Literal::String::Symbol < Rouge::Token::Tokens::Literal::String
 end
-class Rouge::Token::Tokens::Str < Rouge::Token::Tokens::Literal
+class Rouge::Token::Tokens::Literal::String < Rouge::Token::Tokens::Literal
 end
-class Rouge::Token::Tokens::Num::Bin < Rouge::Token::Tokens::Num
+class Rouge::Token::Tokens::Literal::Number::Bin < Rouge::Token::Tokens::Literal::Number
 end
-class Rouge::Token::Tokens::Num::Float < Rouge::Token::Tokens::Num
+class Rouge::Token::Tokens::Literal::Number::Float < Rouge::Token::Tokens::Literal::Number
 end
-class Rouge::Token::Tokens::Num::Hex < Rouge::Token::Tokens::Num
+class Rouge::Token::Tokens::Literal::Number::Hex < Rouge::Token::Tokens::Literal::Number
 end
-class Rouge::Token::Tokens::Num::Integer::Long < Rouge::Token::Tokens::Num::Integer
+class Rouge::Token::Tokens::Literal::Number::Integer::Long < Rouge::Token::Tokens::Literal::Number::Integer
 end
-class Rouge::Token::Tokens::Num::Integer < Rouge::Token::Tokens::Num
+class Rouge::Token::Tokens::Literal::Number::Integer < Rouge::Token::Tokens::Literal::Number
 end
-class Rouge::Token::Tokens::Num::Oct < Rouge::Token::Tokens::Num
+class Rouge::Token::Tokens::Literal::Number::Oct < Rouge::Token::Tokens::Literal::Number
 end
-class Rouge::Token::Tokens::Num::Other < Rouge::Token::Tokens::Num
+class Rouge::Token::Tokens::Literal::Number::Other < Rouge::Token::Tokens::Literal::Number
 end
-class Rouge::Token::Tokens::Num < Rouge::Token::Tokens::Literal
+class Rouge::Token::Tokens::Literal::Number < Rouge::Token::Tokens::Literal
 end
 class Rouge::Token::Tokens::Literal < Rouge::Token
 end

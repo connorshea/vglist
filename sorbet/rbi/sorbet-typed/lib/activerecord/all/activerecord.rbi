@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/all/activerecord.rbi
 #
-# typed: false
+# typed: strong
 
 VariadicUntypedFunction = T.type_alias { Proc }
 AssociationCallback = T.type_alias do
@@ -126,7 +126,7 @@ module ActiveRecord::Associations::ClassMethods
       scope: T.nilable(T.proc.void),
       autosave: T.nilable(T::Boolean),
       class_name: T.nilable(T.any(Symbol, String)),
-      counter_cache: T.nilable(T::Boolean),
+      counter_cache: T.nilable(T.any(Symbol, String, T::Boolean)),
       dependent: T.nilable(T.any(Symbol, String)),
       foreign_key: T.nilable(T.any(Symbol, String)),
       foreign_type: T.nilable(T.any(Symbol, String)),

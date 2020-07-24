@@ -431,7 +431,6 @@ class Zip::NullCompressor < Zip::Compressor
   def <<(_data); end
   def compressed_size; end
   def self.allocate; end
-  def self.instance; end
   def self.new(*arg0); end
   def size; end
   extend Singleton::SingletonClassMethods

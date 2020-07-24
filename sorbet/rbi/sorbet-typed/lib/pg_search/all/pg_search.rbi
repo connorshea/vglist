@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/pg_search/all/pg_search.rbi
 #
-# typed: false
+# typed: strong
 
 module PgSearch::Model
   mixes_in_class_methods(PgSearch::Model::ClassMethods)

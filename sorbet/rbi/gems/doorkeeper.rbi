@@ -173,14 +173,14 @@ module Doorkeeper::OAuth
 end
 class Doorkeeper::OAuth::Client
   def application; end
-  def id(*args, &block); end
+  def id(**, &&); end
   def initialize(application); end
-  def name(*args, &block); end
-  def redirect_uri(*args, &block); end
-  def scopes(*args, &block); end
+  def name(**, &&); end
+  def redirect_uri(**, &&); end
+  def scopes(**, &&); end
   def self.authenticate(credentials, method = nil); end
   def self.find(uid, method = nil); end
-  def uid(*args, &block); end
+  def uid(**, &&); end
 end
 module Doorkeeper::Helpers
 end
@@ -221,8 +221,8 @@ class Doorkeeper::OAuth::Scopes
   def <=>(other); end
   def add(*scopes); end
   def all; end
-  def each(*args, &block); end
-  def empty?(*args, &block); end
+  def each(**, &&); end
+  def empty?(**, &&); end
   def exists?(scope); end
   def has_scopes?(scopes); end
   def initialize; end
@@ -274,15 +274,15 @@ module Doorkeeper::Models::Orderable::ClassMethods
   def ordered_by(attribute, direction = nil); end
 end
 module Doorkeeper::Models::SecretStorable
-  def fallback_secret_strategy(*args, &block); end
-  def secret_strategy(*args, &block); end
+  def fallback_secret_strategy(**, &&); end
+  def secret_strategy(**, &&); end
   extend ActiveSupport::Concern
 end
 module Doorkeeper::Models::SecretStorable::ClassMethods
   def fallback_secret_strategy; end
   def find_by_fallback_token(attr, plain_secret); end
   def find_by_plaintext_token(attr, token); end
-  def secret_matches?(*args, &block); end
+  def secret_matches?(**, &&); end
   def secret_strategy; end
   def upgrade_fallback_value(instance, attr, plain_secret); end
 end
@@ -1076,42 +1076,42 @@ end
 module Doorkeeper::VERSION
 end
 class Doorkeeper::Request::Strategy
-  def authorize(*args, &block); end
+  def authorize(**, &&); end
   def initialize(server); end
   def request; end
   def server; end
 end
 class Doorkeeper::Request::AuthorizationCode < Doorkeeper::Request::Strategy
-  def client(*args, &block); end
+  def client(**, &&); end
   def grant; end
-  def parameters(*args, &block); end
+  def parameters(**, &&); end
   def request; end
 end
 class Doorkeeper::Request::ClientCredentials < Doorkeeper::Request::Strategy
-  def client(*args, &block); end
-  def parameters(*args, &block); end
+  def client(**, &&); end
+  def parameters(**, &&); end
   def request; end
 end
 class Doorkeeper::Request::Code < Doorkeeper::Request::Strategy
-  def current_resource_owner(*args, &block); end
+  def current_resource_owner(**, &&); end
   def pre_auth; end
   def request; end
 end
 class Doorkeeper::Request::Password < Doorkeeper::Request::Strategy
-  def client(*args, &block); end
-  def credentials(*args, &block); end
-  def parameters(*args, &block); end
+  def client(**, &&); end
+  def credentials(**, &&); end
+  def parameters(**, &&); end
   def request; end
-  def resource_owner(*args, &block); end
+  def resource_owner(**, &&); end
 end
 class Doorkeeper::Request::RefreshToken < Doorkeeper::Request::Strategy
-  def credentials(*args, &block); end
-  def parameters(*args, &block); end
+  def credentials(**, &&); end
+  def parameters(**, &&); end
   def refresh_token; end
   def request; end
 end
 class Doorkeeper::Request::Token < Doorkeeper::Request::Strategy
-  def current_resource_owner(*args, &block); end
+  def current_resource_owner(**, &&); end
   def pre_auth; end
   def request; end
 end
@@ -1120,7 +1120,7 @@ class Doorkeeper::OAuth::BaseRequest
   def authorize; end
   def before_successful_response; end
   def build_scopes; end
-  def default_scopes(*args, &block); end
+  def default_scopes(**, &&); end
   def find_or_create_access_token(client, resource_owner, scopes, server); end
   def grant_type; end
   def scopes; end
@@ -1169,7 +1169,7 @@ end
 class Doorkeeper::OAuth::ClientCredentialsRequest < Doorkeeper::OAuth::BaseRequest
   def access_token; end
   def client; end
-  def error(*args, &block); end
+  def error(**, &&); end
   def error_response; end
   def initialize(server, client, parameters = nil); end
   def issuer; end
@@ -1187,17 +1187,17 @@ end
 class Doorkeeper::OAuth::ErrorResponse < Doorkeeper::OAuth::BaseResponse
   def authenticate_info; end
   def body; end
-  def description(*args, &block); end
+  def description(**, &&); end
   def exception_class; end
   def headers; end
   def initialize(attributes = nil); end
-  def name(*args, &block); end
+  def name(**, &&); end
   def raise_exception!; end
   def realm; end
   def redirect_uri; end
   def redirectable?; end
   def self.from_request(request, attributes = nil); end
-  def state(*args, &block); end
+  def state(**, &&); end
   def status; end
   include Doorkeeper::OAuth::Helpers
 end
@@ -1387,7 +1387,7 @@ class Doorkeeper::OAuth::Authorization::URIBuilder
   def self.uri_with_query(url, parameters = nil); end
 end
 class Doorkeeper::OAuth::Client::Credentials < Struct
-  def blank?(*args, &block); end
+  def blank?(**, &&); end
   def secret; end
   def secret=(_); end
   def self.[](*arg0); end

@@ -1064,9 +1064,11 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def bytes(*args, &block); end
   def chain(*args, &block); end
   def chars(*args, &block); end
+  def check_winsize_changed(*args, &block); end
   def chunk(*args, &block); end
   def chunk_while(*args, &block); end
   def class_eval(*args, &block); end
+  def clear_screen(*args, &block); end
   def close(*args, &block); end
   def close_on_exec=(*args, &block); end
   def close_on_exec?(*args, &block); end
@@ -1076,11 +1078,17 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def codepoints(*args, &block); end
   def collect(*args, &block); end
   def collect_concat(*args, &block); end
+  def console_mode(*args, &block); end
+  def console_mode=(*args, &block); end
   def cooked!(*args, &block); end
   def cooked(*args, &block); end
   def count(*args, &block); end
   def cursor(*args, &block); end
   def cursor=(*args, &block); end
+  def cursor_down(*args, &block); end
+  def cursor_left(*args, &block); end
+  def cursor_right(*args, &block); end
+  def cursor_up(*args, &block); end
   def cycle(*args, &block); end
   def debugger(*args, &block); end
   def deep_dup(*args, &block); end
@@ -1103,6 +1111,8 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def entries(*args, &block); end
   def eof(*args, &block); end
   def eof?(*args, &block); end
+  def erase_line(*args, &block); end
+  def erase_screen(*args, &block); end
   def exclude?(*args, &block); end
   def excluding(*args, &block); end
   def exit(*args, &block); end
@@ -1111,6 +1121,7 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def fdatasync(*args, &block); end
   def fileno(*args, &block); end
   def filter(*args, &block); end
+  def filter_map(*args, &block); end
   def find(*args, &block); end
   def find_all(*args, &block); end
   def find_index(*args, &block); end
@@ -1125,6 +1136,7 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def getpass(*args, &block); end
   def gets(*args, &block); end
   def goto(*args, &block); end
+  def goto_column(*args, &block); end
   def grep(*args, &block); end
   def grep_v(*args, &block); end
   def group_by(*args, &block); end
@@ -1206,11 +1218,14 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def reverse_each(*args, &block); end
   def rewind(*args, &block); end
   def scanf(*args, &block); end
+  def scroll_backward(*args, &block); end
+  def scroll_forward(*args, &block); end
   def seek(*args, &block); end
   def select(*args, &block); end
   def self.protected_instance_methods(all = nil); end
   def self.public_instance_methods(all = nil); end
   def set_encoding(*args, &block); end
+  def set_encoding_by_bom(*args, &block); end
   def should(*args, &block); end
   def should_not(*args, &block); end
   def slice_after(*args, &block); end
@@ -1227,6 +1242,7 @@ class RDF::Util::Logger::IOWrapper < Delegator
   def syswrite(*args, &block); end
   def take(*args, &block); end
   def take_while(*args, &block); end
+  def tally(*args, &block); end
   def tell(*args, &block); end
   def to_a(*args, &block); end
   def to_h(*args, &block); end

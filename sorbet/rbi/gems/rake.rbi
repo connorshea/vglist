@@ -120,6 +120,7 @@ class Rake::FileList
   def concat(*args, &block); end
   def count(*args, &block); end
   def cycle(*args, &block); end
+  def deconstruct(*args, &block); end
   def delete(*args, &block); end
   def delete_at(*args, &block); end
   def delete_if(*args, &block); end
@@ -152,6 +153,7 @@ class Rake::FileList
   def fill(*args, &block); end
   def filter!(*args, &block); end
   def filter(*args, &block); end
+  def filter_map(*args, &block); end
   def find(*args, &block); end
   def find_all(*args, &block); end
   def find_index(*args, &block); end
@@ -178,6 +180,7 @@ class Rake::FileList
   def inject(*args, &block); end
   def insert(*args, &block); end
   def inspect(*args, &block); end
+  def intersection(*args, &block); end
   def is_a?(klass); end
   def join(*args, &block); end
   def keep_if(*args, &block); end
@@ -248,6 +251,7 @@ class Rake::FileList
   def sum(*args, &block); end
   def take(*args, &block); end
   def take_while(*args, &block); end
+  def tally(*args, &block); end
   def third(*args, &block); end
   def third_to_last(*args, &block); end
   def to(*args, &block); end
@@ -571,7 +575,6 @@ end
 class Rake::EarlyTime
   def <=>(other); end
   def self.allocate; end
-  def self.instance; end
   def self.new(*arg0); end
   def to_s; end
   extend Singleton::SingletonClassMethods
@@ -649,7 +652,6 @@ end
 class Rake::LateTime
   def <=>(other); end
   def self.allocate; end
-  def self.instance; end
   def self.new(*arg0); end
   def to_s; end
   extend Singleton::SingletonClassMethods
