@@ -37,10 +37,13 @@ class Game < ApplicationRecord
   scope :recently_updated, -> { order("updated_at desc") }
   scope :least_recently_updated, -> { order("updated_at asc") }
   # Sort by average rating.
-  # Must have at least 5 owners to be included.
+  # Must have at least 5 owners w/ ratings to be included.
+  # Also check that the avg_rating column isn't nil to preven[t weirdness in
+  # certain cases where the game record becomes invalid.
   scope :highest_avg_rating, -> {
     joins(:game_purchases)
       .where.not('game_purchases.rating': nil)
+      .where.not('games.avg_rating': nil)
       .group('games.id')
       .having("count(game_purchases.id) >= ?", 5)
       .order("avg_rating desc")

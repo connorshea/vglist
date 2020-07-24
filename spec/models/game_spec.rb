@@ -300,6 +300,23 @@ RSpec.describe Game, type: :model do
       end
     end
 
+    context 'when sorting by average rating with three games where one has no ratings' do
+      let!(:game1) { create(:game) }
+      let!(:game2) { create(:game) }
+      let!(:game3) { create(:game) }
+      # rubocop:disable RSpec/LetSetup
+      # These are necessary because the average rating scope depends on there
+      # being at least 5 owners of the game with an actual rating.
+      let!(:game_purchases1) { create_list(:game_purchase, 5, game: game1, rating: 30) }
+      let!(:game_purchases2) { create_list(:game_purchase, 5, game: game2, rating: 60) }
+      let!(:game_purchases3) { create_list(:game_purchase, 5, game: game3, rating: nil) }
+      # rubocop:enable RSpec/LetSetup
+
+      it "return the two non-nil games in proper order" do
+        expect(Game.highest_avg_rating).to eq([game2, game1])
+      end
+    end
+
     context 'with three games where two have platforms and one does not' do
       let(:platform1) { create(:platform) }
       let(:platform2) { create(:platform) }
