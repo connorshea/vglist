@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/i18n/all/i18n.rbi
 #
-# i18n-1.8.3
+# i18n-1.8.5
 
 module I18n
   def self.cache_key_digest; end

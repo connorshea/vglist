@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-ast/all/rubocop-ast.rbi
 #
-# rubocop-ast-0.1.0
+# rubocop-ast-0.2.0
 
 module RuboCop
 end
@@ -28,31 +28,29 @@ class RuboCop::AST::NodePattern::Invalid < StandardError
 end
 class RuboCop::AST::NodePattern::Compiler
   def access_unify(name); end
+  def atom_to_expr(atom); end
   def auto_use_temp_node?(code); end
   def captures; end
   def compile_any_order(capture_all = nil); end
-  def compile_arg(token); end
-  def compile_args(tokens); end
+  def compile_arg; end
+  def compile_args; end
   def compile_ascend; end
+  def compile_atom(token); end
   def compile_capture; end
   def compile_captured_ellipsis; end
-  def compile_const(const); end
   def compile_descend; end
   def compile_ellipsis; end
   def compile_expr(token = nil); end
   def compile_funcall(method); end
   def compile_guard_clause; end
   def compile_intersect; end
-  def compile_keyword(keyword); end
-  def compile_literal(literal); end
   def compile_negation; end
+  def compile_new_wildcard(name); end
   def compile_nodetype(type); end
-  def compile_param(number); end
   def compile_predicate(predicate); end
   def compile_repeated_expr(token); end
   def compile_seq; end
   def compile_union; end
-  def compile_wildcard(name); end
   def def_helper(base, method_name, **defaults); end
   def def_node_matcher(base, method_name, **defaults); end
   def def_node_search(base, method_name, **defaults); end
@@ -61,15 +59,16 @@ class RuboCop::AST::NodePattern::Compiler
   def emit_node_search(method_name); end
   def emit_node_search_body(method_name, prelude:, on_match:); end
   def emit_param_list; end
+  def emit_params(*first, forwarding: nil); end
   def emit_retval; end
-  def emit_trailing_params(forwarding: nil); end
   def emit_yield_capture(when_no_capture = nil); end
+  def expr_to_atom(expr); end
   def fail_due_to(message); end
   def forbid_unification(*names); end
   def get_const(const); end
   def get_keyword(name); end
   def get_param(number); end
-  def initialize(str, node_var = nil); end
+  def initialize(str, root = nil, node_var = nil); end
   def insure_same_captures(enum, what); end
   def match_code; end
   def next_capture; end
@@ -77,7 +76,7 @@ class RuboCop::AST::NodePattern::Compiler
   def next_temp_variable(name); end
   def parse_repetition_token; end
   def repeated_generator(expr, captured, accumulate); end
-  def run(node_var); end
+  def run; end
   def self.tokens(pattern); end
   def substitute_cur_node(code, cur_node, first_cur_node: nil); end
   def tokens; end
@@ -89,15 +88,18 @@ class RuboCop::AST::NodePattern::Compiler
   def with_seq_head_context(code); end
   def with_temp_node(cur_node); end
   def with_temp_variables(&block); end
+  def wrapping_block(method_name, **defaults); end
 end
-class RuboCop::AST::NodePattern::Compiler::Sequence < SimpleDelegator
+class RuboCop::AST::NodePattern::Compiler::Sequence
   def compile; end
   def compile_child_nb_guard; end
   def compile_first_terms; end
+  def compile_guard_clause(*args, &block); end
   def compile_last_terms; end
   def compile_seq_head; end
   def compile_terms(index_range, start); end
   def compile_variadic_term; end
+  def fail_due_to(*args, &block); end
   def first_terms_arity; end
   def first_terms_range; end
   def initialize(compiler, *arity_term_list); end
@@ -107,10 +109,17 @@ class RuboCop::AST::NodePattern::Compiler::Sequence < SimpleDelegator
   def term(index, range); end
   def variadic_arity; end
   def variadic_term_min_arity; end
+  def with_child_context(*args, &block); end
+  def with_seq_head_context(*args, &block); end
+  extend Forwardable
 end
 module RuboCop::AST::NodePattern::Macros
   def def_node_matcher(method_name, pattern_str, **keyword_defaults); end
   def def_node_search(method_name, pattern_str, **keyword_defaults); end
+end
+class RuboCop::AST::NodePattern::Matcher
+  def ===(compare); end
+  def initialize(&block); end
 end
 module RuboCop::AST::Sexp
   def s(type, *children); end
@@ -153,6 +162,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def chained?; end
   def child_nodes; end
   def class_constructor?(node = nil); end
+  def class_definition?(node = nil); end
   def class_type?; end
   def complete!; end
   def complete?; end
@@ -195,6 +205,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def forward_arg_type?; end
   def forward_args_type?; end
   def forwarded_args_type?; end
+  def global_const?(node = nil, param1); end
   def guard_clause?; end
   def gvar_type?; end
   def gvasgn_type?; end
@@ -241,6 +252,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def match_with_lvasgn_type?; end
   def match_with_trailing_comma_type?; end
   def mlhs_type?; end
+  def module_definition?(node = nil); end
   def module_type?; end
   def mrasgn_type?; end
   def multiline?; end
@@ -309,6 +321,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def splat_type?; end
   def str_content(node = nil); end
   def str_type?; end
+  def struct_constructor?(node = nil); end
   def super_type?; end
   def sym_type?; end
   def true_type?; end
@@ -672,7 +685,6 @@ class RuboCop::AST::DefNode < RuboCop::AST::Node
   def arguments; end
   def body; end
   def method_name; end
-  def node_parts; end
   def receiver; end
   def void_context?; end
   include RuboCop::AST::MethodIdentifierPredicates
@@ -883,6 +895,7 @@ class RuboCop::AST::ProcessedSource
   def commented?(source_range); end
   def comments; end
   def comments_before_line(line); end
+  def contains_comment?(source_range); end
   def create_parser(ruby_version); end
   def current_line(token); end
   def diagnostics; end
@@ -894,6 +907,7 @@ class RuboCop::AST::ProcessedSource
   def following_line(token); end
   def initialize(source, ruby_version, path = nil); end
   def line_indentation(line_number); end
+  def line_with_comment?(line); end
   def lines; end
   def parse(source, ruby_version); end
   def parser_class(ruby_version); end
@@ -975,6 +989,7 @@ module RuboCop::AST::Traversal
   def on_ensure(node); end
   def on_erange(node); end
   def on_false(node); end
+  def on_find_pattern(node); end
   def on_float(node); end
   def on_for(node); end
   def on_forward_arg(node); end
