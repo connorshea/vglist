@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/bootsnap/all/bootsnap.rbi
 #
-# bootsnap-1.4.6
+# bootsnap-1.4.7
 
 module Bootsnap
   def bundler?; end
@@ -31,6 +31,7 @@ module Bootsnap::LoadPathCache
 end
 module Bootsnap::LoadPathCache::PathScanner
   def self.call(path); end
+  def self.walk(absolute_dir_path, relative_dir_path, &block); end
 end
 class Bootsnap::LoadPathCache::Path
   def entries_and_dirs(store); end

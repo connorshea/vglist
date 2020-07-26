@@ -3920,6 +3920,7 @@ end
 
 class BCrypt::Engine
   DEFAULT_COST = ::T.let(nil, ::T.untyped)
+  MAX_COST = ::T.let(nil, ::T.untyped)
   MAX_SALT_LENGTH = ::T.let(nil, ::T.untyped)
   MIN_COST = ::T.let(nil, ::T.untyped)
 end
@@ -4017,7 +4018,6 @@ class Bootsnap::LoadPathCache::Path
 end
 
 module Bootsnap::LoadPathCache::PathScanner
-  ALL_FILES = ::T.let(nil, ::T.untyped)
   ALTERNATIVE_NATIVE_EXTENSIONS_PATTERN = ::T.let(nil, ::T.untyped)
   BUNDLE_PATH = ::T.let(nil, ::T.untyped)
   NORMALIZE_NATIVE_EXTENSIONS = ::T.let(nil, ::T.untyped)
@@ -7827,6 +7827,7 @@ class EBNF::Writer
   ASCII_ESCAPE_NAMES = ::T.let(nil, ::T.untyped)
   ERB_DESC = ::T.let(nil, ::T.untyped)
   LINE_LENGTH = ::T.let(nil, ::T.untyped)
+  LINE_LENGTH_HTML = ::T.let(nil, ::T.untyped)
 end
 
 module EBNFMeta
@@ -17714,6 +17715,10 @@ class RuboCop::CLI::Command::AutoGenerateConfig
   AUTO_GENERATED_FILE = ::T.let(nil, ::T.untyped)
 end
 
+module RuboCop::Cop::ActiveRecordHelper
+  WHERE_METHODS = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::SpaceAroundMethodCallOperator
   SPACES_REGEXP = ::T.let(nil, ::T.untyped)
 end
@@ -17803,7 +17808,38 @@ class RuboCop::Cop::RSpec::VariableName
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Rails::ActiveRecordCallbacksOrder
+  CALLBACKS_IN_ORDER = ::T.let(nil, ::T.untyped)
+  CALLBACKS_ORDER_MAP = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Rails::ContentTag
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::DefaultScope
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::FindById
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::Inquiry
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::MailerName
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::MatchRoute
+  HTTP_METHODS = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::NegateInclude
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -17811,7 +17847,36 @@ class RuboCop::Cop::Rails::Pick
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Rails::Pluck
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::PluckId
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::PluckInWhere
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Rails::RedundantForeignKey
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::RenderInline
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::RenderPlainText
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::ShortI18n
+  MSG = ::T.let(nil, ::T.untyped)
+  PREFERRED_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::WhereExists
   MSG = ::T.let(nil, ::T.untyped)
 end
 

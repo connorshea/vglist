@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.7.0
+# rubocop-performance-1.7.1
 
 module RuboCop
 end
@@ -50,6 +50,7 @@ class RuboCop::Cop::Performance::BigDecimalWithNumericArgument < RuboCop::Cop::C
   def autocorrect(node); end
   def big_decimal_with_numeric_argument?(node = nil); end
   def on_send(node); end
+  def specifies_precision?(node); end
 end
 class RuboCop::Cop::Performance::BindCall < RuboCop::Cop::Cop
   def autocorrect(node); end

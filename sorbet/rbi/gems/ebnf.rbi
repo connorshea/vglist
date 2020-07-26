@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/ebnf/all/ebnf.rbi
 #
-# ebnf-2.1.0
+# ebnf-2.1.1
 
 module EBNF
   def self.parse(input, **options); end
