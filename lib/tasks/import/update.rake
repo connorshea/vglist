@@ -237,7 +237,7 @@ namespace :import do
       progress_bar.log "Adding #{property_name.pluralize}." if ENV['DEBUG']
 
       # Get the Wikidata IDs for the game's property.
-      wikidata_ids = hash[:game].public_send(property_name.pluralize).map { |prop| prop[:wikidata_id] }
+      wikidata_ids = hash[:game].public_send(property_name.pluralize).pluck(:wikidata_id)
 
       # Filter props down to just the ones not already represented by
       # an associated game join model, e.g. GamePlatform.

@@ -13,7 +13,8 @@
         json.content pg_search.content
         json.searchable_type pg_search.searchable_type
         json.searchable_id pg_search.searchable_id
-        if type == 'Game'
+        case type
+        when 'Game'
           if pg_search.searchable.cover.attached?
             json.image_url rails_blob_path(pg_search.searchable.cover, disposition: "attachment")
           else
@@ -21,7 +22,7 @@
           end
           json.developer pg_search.searchable.developers&.first&.name
           json.release_date pg_search.searchable.release_date
-        elsif type == 'User'
+        when 'User'
           if pg_search.searchable.avatar.attached?
             json.image_url rails_blob_path(pg_search.searchable.avatar, disposition: "attachment")
           else

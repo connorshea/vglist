@@ -34,7 +34,7 @@ class ActiveStorageStfuLogFormatter
       # These three types we would like to hide.
       @suppress << uuid
       return nil
-    elsif !@suppress.include?(uuid)
+    elsif @suppress.exclude?(uuid)
       # All messages, which are not suppressed, print. New line must be added here.
       return "#{message}\n"
     end
