@@ -19,7 +19,7 @@ namespace 'import:wikidata' do
     # Get every game in the database that has a Wikidata ID.
     games = Game.where.not(wikidata_id: nil)
 
-    existing_wikidata_ids = games.map { |game| game[:wikidata_id] }
+    existing_wikidata_ids = games.pluck(:wikidata_id)
     blocklisted_wikidata_ids = WikidataBlocklist.pluck(:wikidata_id)
     blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
 
@@ -88,15 +88,15 @@ namespace 'import:wikidata' do
           game_hash[name].uniq!
         end
 
-        pcgamingwiki_id = wikidata_json.dig('P6337')&.first&.dig('mainsnak', 'datavalue', 'value')
-        steam_app_id = wikidata_json.dig('P1733')&.first&.dig('mainsnak', 'datavalue', 'value')
-        epic_games_store_id = wikidata_json.dig('P6278')&.first&.dig('mainsnak', 'datavalue', 'value')
+        pcgamingwiki_id = wikidata_json['P6337']&.first&.dig('mainsnak', 'datavalue', 'value')
+        steam_app_id = wikidata_json['P1733']&.first&.dig('mainsnak', 'datavalue', 'value')
+        epic_games_store_id = wikidata_json['P6278']&.first&.dig('mainsnak', 'datavalue', 'value')
         # Remove the 'game/' prefix from the GOG.com IDs.
-        gog_id = wikidata_json.dig('P2725')&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', '')
-        mobygames_id = wikidata_json.dig('P1933')&.first&.dig('mainsnak', 'datavalue', 'value')
-        giantbomb_id = wikidata_json.dig('P5247')&.first&.dig('mainsnak', 'datavalue', 'value')
+        gog_id = wikidata_json['P2725']&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', '')
+        mobygames_id = wikidata_json['P1933']&.first&.dig('mainsnak', 'datavalue', 'value')
+        giantbomb_id = wikidata_json['P5247']&.first&.dig('mainsnak', 'datavalue', 'value')
 
-        release_dates = wikidata_json.dig('P577')&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
+        release_dates = wikidata_json['P577']&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
         release_dates&.map! do |time|
           if time.nil?
             nil
@@ -255,7 +255,7 @@ namespace 'import:wikidata' do
     # Get every game in the database that has a Wikidata ID and no release date.
     games = Game.where.not(wikidata_id: nil).where(release_date: nil)
 
-    existing_wikidata_ids = games.map { |game| game[:wikidata_id] }
+    existing_wikidata_ids = games.pluck(:wikidata_id)
 
     # Filter to wikidata items that already exist in the database.
     rows = rows.select do |row|

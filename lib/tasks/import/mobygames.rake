@@ -115,7 +115,7 @@ namespace :import do
       end
       json = JSON.parse(res.body)
 
-      mobygames_games = json.dig('games')
+      mobygames_games = json['games']
 
       # Move on if no games are returned by the search.
       unless mobygames_games&.length&.positive?
@@ -127,8 +127,8 @@ namespace :import do
 
       # Find the first game that matches the mobygames_id we're looking for.
       current_game = mobygames_games.find do |mobygames_game|
-        progress_bar.log "moby_url: #{mobygames_game.dig('moby_url')}"
-        moby_url = mobygames_game.dig('moby_url')
+        progress_bar.log "moby_url: #{mobygames_game['moby_url']}"
+        moby_url = mobygames_game['moby_url']
         moby_url.gsub('http://www.mobygames.com/game/', '') == game[:mobygames_id]
       end
 

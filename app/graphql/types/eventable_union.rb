@@ -7,13 +7,14 @@ class Types::EventableUnion < Types::BaseUnion
                  Types::FavoriteGameType
 
   def self.resolve_type(object, _context)
-    if object.is_a?(User)
+    case object
+    when User
       Types::UserType
-    elsif object.is_a?(GamePurchase)
+    when GamePurchase
       Types::GamePurchaseType
-    elsif object.is_a?(Relationship)
+    when Relationship
       Types::RelationshipType
-    elsif object.is_a?(FavoriteGame)
+    when FavoriteGame
       Types::FavoriteGameType
     end
   end

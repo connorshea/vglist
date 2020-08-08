@@ -60,10 +60,12 @@ module ApplicationHelper
     end
   end
 
+  # rubocop:disable Style/StringConcatenation
   sig { params(title: String).returns(String) }
   def meta_title(title)
     return (title + " | " if title.present?).to_s + "vglist"
   end
+  # rubocop:enable Style/StringConcatenation
 
   sig { params(description: String).returns(String) }
   def meta_description(description)

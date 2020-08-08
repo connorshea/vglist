@@ -269,11 +269,12 @@ module Types
 
     sig { params(feed_type: String).returns(T.nilable(Event::RelationType)) }
     def activity(feed_type: 'following')
-      if feed_type == 'global'
+      case feed_type
+      when 'global'
         Event.recently_created
              .joins(:user)
              .where(users: { privacy: :public_account })
-      elsif feed_type == 'following'
+      when 'following'
         user_ids = @context[:current_user]&.following&.map { |u| u.id }
         # Include the user's own activity in the feed.
         user_ids << @context[:current_user].id

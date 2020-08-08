@@ -10,8 +10,8 @@ class Mutations::UpdateGameInLibrary < Mutations::BaseMutation
   argument :comments, String, required: false, description: "Comments about the game."
   argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user started the game."
   argument :completion_date, GraphQL::Types::ISO8601Date, required: false, description: "The date on which the user completed the game."
-  argument :platforms, [ID, null: true], required: false, description: "The IDs of platforms that the game is owned on."
-  argument :stores, [ID, null: true], required: false, description: "The IDs of stores that the game is owned on."
+  argument :platforms, [ID, { null: true }], required: false, description: "The IDs of platforms that the game is owned on."
+  argument :stores, [ID, { null: true }], required: false, description: "The IDs of stores that the game is owned on."
 
   field :game_purchase, Types::GamePurchaseType, null: true, description: "The game purchase being updated in the user's library."
 

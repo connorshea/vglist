@@ -78,11 +78,12 @@ class UsersController < ApplicationController
       redirect_to(user_path(@user.id)) && return
     end
 
-    if role == :member
+    case role
+    when :member
       @user.role = :member
-    elsif role == :moderator
+    when :moderator
       @user.role = :moderator
-    elsif role == :admin
+    when :admin
       @user.role = :admin
     end
 
