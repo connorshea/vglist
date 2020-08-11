@@ -15,8 +15,8 @@ puts "Creating Users..."
 30.times do |n|
   user = User.create!(
     email: Faker::Internet.unique.email,
-    # Usernames must be between (inclusive) 4 and 20 characters.
-    username: Faker::Internet.unique.username(specifier: 4..20),
+    # Usernames must be between (inclusive) 3 and 20 characters.
+    username: Faker::Internet.unique.username(specifier: 3..20),
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(min_length: 8, max_length: 20),
     bio: Faker::Lorem.sentence
@@ -35,8 +35,8 @@ end
 4.times do
   User.create!(
     email: Faker::Internet.unique.email,
-    # Usernames must be between (inclusive) 4 and 20 characters.
-    username: Faker::Internet.unique.username(specifier: 4..20),
+    # Usernames must be between (inclusive) 3 and 20 characters.
+    username: Faker::Internet.unique.username(specifier: 3..20),
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(min_length: 8, max_length: 20),
     bio: Faker::Lorem.sentence,
