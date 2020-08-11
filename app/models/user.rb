@@ -106,7 +106,7 @@ class User < ApplicationRecord
     # Allow letters, numbers, disallow _ and . at the start or end,
     # disallow _ or . next to each other or themselves.
     # Based on https://stackoverflow.com/a/51937085/7143763
-    format: /\A(?=.{4,20}\z)[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*\z/,
+    format: /\A(?=.{3,20}\z)[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*\z/,
     uniqueness: true
 
   validates :slug,
