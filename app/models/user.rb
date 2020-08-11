@@ -101,8 +101,8 @@ class User < ApplicationRecord
   validates :username,
     # Username is required
     presence: true,
-    # Must be between 4 and 20 characters
-    length: { minimum: 4, maximum: 20 },
+    # Must be between 3 and 20 characters
+    length: { minimum: 3, maximum: 20 },
     # Allow letters, numbers, disallow _ and . at the start or end,
     # disallow _ or . next to each other or themselves.
     # Based on https://stackoverflow.com/a/51937085/7143763
