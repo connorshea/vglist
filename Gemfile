@@ -103,7 +103,7 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.1'
 
   # Code coverage
-  gem 'simplecov', '~> 0.18', require: false
+  gem 'simplecov', '~> 0.19', require: false
 
   # Shoulda-matchers for writing better tests on models.
   gem 'shoulda-matchers', '4.3.0'
