@@ -250,7 +250,7 @@ namespace 'import:wikidata' do
     )
 
     rows = []
-    rows.concat(client.query(games_query))
+    rows.concat(client.query(release_dates_query))
 
     # Get every game in the database that has a Wikidata ID and no release date.
     games = Game.where.not(wikidata_id: nil).where(release_date: nil)
@@ -328,20 +328,34 @@ namespace 'import:wikidata' do
 
   # The SPARQL query for getting all video games with English labels on Wikidata.
   def games_query
-    sparql = <<-SPARQL
+    <<-SPARQL
       SELECT ?item WHERE {
         VALUES ?videoGameTypes { wd:Q7889 wd:Q21125433 }.
         ?item wdt:P31 ?videoGameTypes; # Instances of 'video games' or 'free or open source video games'.
               rdfs:label ?label filter(lang(?label) = "en"). # with a label
       }
     SPARQL
+  end
 
-    return sparql
+  # SPARQL query for getting all video games that have English labels and
+  # release dates with 'valid' dates (e.g. 2020-01-01 rather than 2020-00-00).
+  def release_dates_query
+    <<-SPARQL
+      SELECT DISTINCT ?item {
+        VALUES ?videoGameTypes { wd:Q7889 wd:Q21125433 }.
+        ?item wdt:P31 ?videoGameTypes; # items that are video games
+              p:P577 ?releaseDateStatement; # items with a publication date.
+              rdfs:label ?label filter(lang(?label) = "en"). # with a label
+        ?releaseDateStatement a wikibase:BestRank; # ... of best rank (instead of wdt:P577)
+            psv:P577 / wikibase:timePrecision 11 . # Precision is "day" (encoded as integer 11)
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+    SPARQL
   end
 
   # Return the formatting to use for the progress bar.
   def formatting
-    return "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    "\e[0;32m%c/%C |%b>%i| %e\e[0m"
   end
 end
 # rubocop:enable Rails/TimeZone
