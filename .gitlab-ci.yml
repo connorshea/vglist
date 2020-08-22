@@ -27,6 +27,7 @@ cache:
 
 before_script:
   - ruby -v
+  - node -v
   - gem install bundler:$BUNDLER_VERSION
   - bundle install -j $(nproc)
   - yarn install --frozen-lockfile
