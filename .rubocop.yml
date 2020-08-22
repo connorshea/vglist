@@ -194,6 +194,9 @@ RSpec/DescribedClass:
 RSpec/EmptyLineAfterExample:
   Enabled: false
 
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
 ###################### Extras ##############################
 
 ### These are enabled to make rubocop stop complaining. These will be
