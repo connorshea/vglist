@@ -114,6 +114,10 @@
   .modal-close::after {
     background-color: var(--white);
   }
+
+  .modal-background {
+    --modal-background-background-color: rgba(10.2, 10.2, 10.2, 0.86);
+  }
 }
 
 html {

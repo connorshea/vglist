@@ -1,5 +1,6 @@
 <template>
   <vue-good-table
+    :theme="theme"
     :columns="columns"
     :rows="rows"
     :sort-options="{
@@ -268,6 +269,9 @@ export default {
     },
     user2Link: function() {
       return `/users/${this.user2.slug}`;
+    },
+    theme: function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? "nocturnal" : "default";
     }
   }
 };
