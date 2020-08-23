@@ -759,10 +759,12 @@ nav.navbar {
 
 // Styling for the navbar search field, mostly the icon.
 .navbar-search-input {
+  --input-color: #fff;
+
   background-color: rgba(255, 255, 255, 0.25);
   border: 0;
   border-radius: 3px;
-  transition: background-color 250ms;
+  transition: background-color 250ms, color 250ms;
 
   + span.icon {
     fill: rgba(255, 255, 255, 0.5);
@@ -770,6 +772,8 @@ nav.navbar {
   }
 
   &:focus {
+    --input-color: #000;
+
     background-color: rgba(255, 255, 255, 1);
 
     + span.icon {
