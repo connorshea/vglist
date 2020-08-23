@@ -19,15 +19,19 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --white: #fff;
+    --white-rgb: 255, 255, 255;
+
     --card-background-color: #333;
-    --text: #fff;
+    --text: var(--white);
     --scheme-main: #333;
-    --custom-card-drop-shadow-color: #fff;
-    --custom-card-drop-shadow-color-rgb: 255, 255, 255;
-    --dropdown-link-no-highlight: #fff;
+    --scheme-invert-rgb: 255, 255, 255;
+    --custom-card-drop-shadow-color: var(--white);
+    --custom-card-drop-shadow-color-rgb: var(--white-rgb);
+    --dropdown-link-no-highlight: var(--white);
     --home-section-background-color: #333;
     --home-section-background-brightness: 75%;
-    --navbar-dropdown-item-color: #fff;
+    --navbar-dropdown-item-color: var(--white);
     --navbar-item-background-hover: #444;
   }
 
@@ -40,17 +44,18 @@
   }
 
   .table {
-    --table-color: #fff;
+    --table-color: var(--white);
     --table-head-cell-color: var(--table-color);
     --table-foot-cell-color: var(--table-color);
+    --table-striped-row-even-background-color: var(--table-body-background-color);
   }
 
   .box {
-    --box-shadow: 0 2px 3px rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1)
+    --box-shadow: 0 2px 3px rgba(var(--white-rgb), 0.1), 0 0 0 1px rgba(var(--white-rgb), 0.1)
   }
 
   .title {
-    --title-color: #fff;
+    --title-color: var(--white);
   }
 
   body {
@@ -62,7 +67,7 @@
   }
 
   .label {
-    --label-color: #fff;
+    --label-color: var(--white);
   }
 
   .notification {
@@ -70,16 +75,17 @@
   }
 
   a:hover {
-    color: #fff;
+    color: var(--white);
   }
 
   .button {
     background-color: #444;
-    color: #fff;
+    color: var(--white);
+    border-color: #afafaf;
 
     &:hover {
       background-color: #333;
-      color: #fff;
+      color: var(--white);
     }
   }
 
@@ -89,8 +95,24 @@
   }
 
   .tabs {
-    --tabs-link-hover-border-bottom-color: #fff;
-    --tabs-link-hover-color: #fff;
+    --tabs-link-hover-border-bottom-color: var(--white);
+    --tabs-link-hover-color: var(--white);
+  }
+
+  .menu {
+    --menu-item-hover-background-color: rgba(var(--white-rgb), 90%)
+  }
+
+  .modal {
+    --modal-card-head-background-color: #333;
+    --modal-card-title-color: var(--white);
+  }
+
+  .delete::before,
+  .modal-close::before,
+  .delete::after,
+  .modal-close::after {
+    background-color: var(--white);
   }
 }
 
