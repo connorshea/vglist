@@ -4,8 +4,86 @@
 @import './stylesheets/utilities.scss';
 @import './stylesheets/home.scss';
 
+:root {
+  --vglist-theme: #5856d6;
+
+  --home-page-subtitle-text: #fff;
+  --custom-card-drop-shadow-color: #000;
+  --custom-card-drop-shadow-color-rgb: 10, 10, 10;
+  --dropdown-link-no-highlight: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card-background-color: #333;
+    --text: #fff;
+    --scheme-main: #333;
+    --custom-card-drop-shadow-color: #fff;
+    --custom-card-drop-shadow-color-rgb: 255, 255, 255;
+    --dropdown-link-no-highlight: #fff;
+  }
+
+  .table {
+    --table-color: #fff;
+    --table-head-cell-color: var(--table-color);
+    --table-foot-cell-color: var(--table-color);
+  }
+
+  .box {
+    --box-shadow: 0 2px 3px rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1)
+  }
+
+  .title {
+    --title-color: #fff;
+  }
+
+  body {
+    color: var(--text);
+  }
+
+  code {
+    background-color: #222;
+  }
+
+  .label {
+    --label-color: #fff;
+  }
+
+  .notification {
+    --notification-background-color: #444;
+  }
+
+  a:hover {
+    color: #fff;
+  }
+
+  .button {
+    background-color: #444;
+    color: #fff;
+
+    &:hover {
+      background-color: #333;
+      color: #fff;
+    }
+  }
+
+  .button[disabled],
+  fieldset[disabled] .button {
+    background-color: transparent;
+  }
+
+  .tabs {
+    --tabs-link-hover-border-bottom-color: #fff;
+    --tabs-link-hover-color: #fff;
+  }
+}
+
+html {
+  background-color: var(--scheme-main, #fff);
+}
+
 nav.navbar {
-  background: #5856d6;
+  background: var(--vglist-theme);
   // Subtle box-shadow for nav bar.
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
   padding: 0 20px;
@@ -114,7 +192,7 @@ nav.navbar {
   }
 
   .dropdown-item.no-link-highlight a {
-    color: #000;
+    color: var(--dropdown-link-no-highlight);
   }
 }
 
@@ -236,8 +314,8 @@ nav.navbar {
 }
 
 .custom-card {
-  background-color: #fff;
-  box-shadow: 0 2px 3px rgba(#000, 0.1), 0 0 0 1px rgba(#000, 0.1);
+  background-color: var(--card-background-color, #fff);
+  box-shadow: 0 2px 3px rgba(var(--custom-card-drop-shadow-color-rgb), 0.1), 0 0 0 1px rgba(var(--custom-card-drop-shadow-color-rgb), 0.1);
   color: hsl(0, 0%, 21%);
   width: auto;
   position: relative;
@@ -669,11 +747,6 @@ nav.navbar {
   border: 0;
   border-radius: 3px;
   transition: background-color 250ms;
-
-  &::placeholder {
-    color: #fff;
-    transition: color 250ms;
-  }
 
   + span.icon {
     fill: rgba(255, 255, 255, 0.5);
