@@ -766,6 +766,10 @@ nav.navbar {
   border-radius: 3px;
   transition: background-color 250ms, color 250ms;
 
+  &::placeholder {
+    color: #fff;
+  }
+
   + span.icon {
     fill: rgba(255, 255, 255, 0.5);
     transition: fill 250ms;
