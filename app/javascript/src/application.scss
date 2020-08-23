@@ -6,11 +6,15 @@
 
 :root {
   --vglist-theme: #5856d6;
-
   --home-page-subtitle-text: #fff;
+  --home-section-background-color: var(--vglist-theme);
+  --home-section-background-brightness: 85%;
+
   --custom-card-drop-shadow-color: #000;
   --custom-card-drop-shadow-color-rgb: 10, 10, 10;
   --dropdown-link-no-highlight: #000;
+  --navbar-dropdown-item-color: #333;
+  --navbar-item-background-hover: #eeeded;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,6 +25,18 @@
     --custom-card-drop-shadow-color: #fff;
     --custom-card-drop-shadow-color-rgb: 255, 255, 255;
     --dropdown-link-no-highlight: #fff;
+    --home-section-background-color: #333;
+    --home-section-background-brightness: 75%;
+    --navbar-dropdown-item-color: #fff;
+    --navbar-item-background-hover: #444;
+  }
+
+  .navbar-dropdown {
+    --navbar-dropdown-background-color: #333;
+  }
+
+  .navbar-divider {
+    --navbar-divider-background-color: #afafaf;
   }
 
   .table {
@@ -114,7 +130,7 @@ nav.navbar {
         transition: background-color 200ms;
         transition: color 0ms;
         border-bottom: 0;
-        color: #333;
+        color: var(--navbar-dropdown-item-color);
 
         &:hover {
           border-bottom: 0;
@@ -122,7 +138,7 @@ nav.navbar {
       }
 
       a.navbar-item:hover {
-        background-color: #eeeded;
+        background-color: var(--navbar-item-background-hover);
       }
 
       a.navbar-item.is-active {
