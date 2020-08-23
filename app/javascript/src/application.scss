@@ -665,13 +665,30 @@ nav.navbar {
 
 // Styling for the navbar search field, mostly the icon.
 .navbar-search-input {
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 0;
+  transition: background-color 250ms;
+
+  &::placeholder {
+    color: #fff;
+    transition: color 250ms;
+  }
+
   + span.icon {
-    fill: $grey-light;
+    fill: rgba(255, 255, 255, 0.5);
     transition: fill 250ms;
   }
-  
-  &:focus + span.icon {
-    fill: darken($grey-light, 30%);
+
+  &:focus {
+    background-color: rgba(255, 255, 255, 1);
+
+    + span.icon {
+      fill: darken($grey-light, 30%);
+    }
+
+    &::placeholder {
+      color: #333;
+    }
   }
 }
 
