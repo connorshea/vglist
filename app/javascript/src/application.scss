@@ -15,6 +15,7 @@
   --dropdown-link-no-highlight: #000;
   --navbar-dropdown-item-color: #333;
   --navbar-item-background-hover: #eeeded;
+  --library-edit-bar-border: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,6 +36,7 @@
     --navbar-dropdown-item-color: var(--white);
     --navbar-item-background-hover: var(--scheme-secondary);
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
+    --library-edit-bar-border: #435169;
   }
 
   .navbar {
@@ -719,8 +721,8 @@ nav.navbar {
   position: sticky;
   top: 0;
   width: 100%;
-  background-color: #fff;
-  border: 1px solid #dcdfe6;
+  background-color: var(--scheme-main, #fff);
+  border: 1px solid var(--library-edit-bar-border);
   margin-bottom: 5px;
   // Modal overlay is 40, make sure to stay below it.
   z-index: 39;
