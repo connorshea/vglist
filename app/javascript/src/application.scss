@@ -22,21 +22,27 @@
     --white: #fff;
     --white-rgb: 255, 255, 255;
 
-    --card-background-color: #333;
     --text: var(--white);
-    --scheme-main: #333;
+    --scheme-main: #2c394f;
+    --scheme-alt: #324057;
+    --scheme-secondary: #445168;
     --scheme-invert-rgb: 255, 255, 255;
-    --custom-card-drop-shadow-color: var(--white);
-    --custom-card-drop-shadow-color-rgb: var(--white-rgb);
+
+    --card-background-color: var(--scheme-main);
     --dropdown-link-no-highlight: var(--white);
-    --home-section-background-color: #333;
+    --home-section-background-color: var(--scheme-main);
     --home-section-background-brightness: 75%;
     --navbar-dropdown-item-color: var(--white);
-    --navbar-item-background-hover: #444;
+    --navbar-item-background-hover: var(--scheme-secondary);
+    --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
+  }
+
+  .navbar {
+    --navbar-shadow-color: rgba(10.2, 10.2, 10.2, 0.1);
   }
 
   .navbar-dropdown {
-    --navbar-dropdown-background-color: #333;
+    --navbar-dropdown-background-color: var(--scheme-alt);
   }
 
   .navbar-divider {
@@ -51,7 +57,13 @@
   }
 
   .box {
-    --box-shadow: 0 2px 3px rgba(var(--white-rgb), 0.1), 0 0 0 1px rgba(var(--white-rgb), 0.1)
+    --box-background-color: var(--scheme-alt);
+    --box-shadow: var(--vglist-shadow);
+  }
+
+  .card {
+    --card-background-color: var(--scheme-alt);
+    --card-shadow: var(--vglist-shadow);
   }
 
   .title {
@@ -71,7 +83,7 @@
   }
 
   .notification {
-    --notification-background-color: #444;
+    --notification-background-color: var(--scheme-alt);
   }
 
   a:hover {
@@ -79,19 +91,21 @@
   }
 
   .button {
-    background-color: #444;
+    background-color: var(--scheme-alt);
     color: var(--white);
-    border-color: #afafaf;
-
+    border-color: transparent;
+    
     &:hover {
-      background-color: #333;
+      background-color: var(--scheme-secondary);
       color: var(--white);
+      border-color: transparent;
     }
   }
 
   .button[disabled],
   fieldset[disabled] .button {
-    background-color: transparent;
+    background-color: var(--scheme-alt);
+    border-color: transparent;
   }
 
   .tabs {
@@ -100,11 +114,12 @@
   }
 
   .menu {
-    --menu-item-hover-background-color: rgba(var(--white-rgb), 90%)
+    --menu-item-hover-background-color: rgba(var(--white-rgb), 90%);
+    --menu-label-color: var(--white);
   }
 
   .modal {
-    --modal-card-head-background-color: #333;
+    --modal-card-head-background-color: var(--scheme-main);
     --modal-card-title-color: var(--white);
   }
 
@@ -117,6 +132,12 @@
 
   .modal-background {
     --modal-background-background-color: rgba(10.2, 10.2, 10.2, 0.86);
+  }
+
+  .dropdown {
+    --dropdown-content-background-color: var(--scheme-alt);
+    --dropdown-item-hover-background-color: var(--scheme-secondary);
+    --dropdown-item-hover-color: var(--white);
   }
 }
 
@@ -357,7 +378,7 @@ nav.navbar {
 
 .custom-card {
   background-color: var(--card-background-color, #fff);
-  box-shadow: 0 2px 3px rgba(var(--custom-card-drop-shadow-color-rgb), 0.1), 0 0 0 1px rgba(var(--custom-card-drop-shadow-color-rgb), 0.1);
+  box-shadow: var(--vglist-shadow);
   color: hsl(0, 0%, 21%);
   width: auto;
   position: relative;
