@@ -37,6 +37,7 @@
     --navbar-item-background-hover: var(--scheme-secondary);
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
     --library-edit-bar-border: #435169;
+    --input-color: var(--white);
   }
 
   .navbar {
@@ -93,21 +94,12 @@
   }
 
   .button {
-    background-color: var(--scheme-alt);
-    color: var(--white);
-    border-color: transparent;
-    
-    &:hover {
-      background-color: var(--scheme-secondary);
-      color: var(--white);
-      border-color: transparent;
-    }
-  }
-
-  .button[disabled],
-  fieldset[disabled] .button {
-    background-color: var(--scheme-alt);
-    border-color: transparent;
+    --button-color: var(--white);
+    --button-hover-color: var(--white);
+    --button-active-color: var(--white);
+    --button-focus-color: var(--white);
+    --button-active-border-color: var(--white);
+    --button-focus-border-color: var(--white);
   }
 
   .tabs {
