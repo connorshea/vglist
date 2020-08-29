@@ -16,6 +16,13 @@
   --navbar-dropdown-item-color: #333;
   --navbar-item-background-hover: #eeeded;
   --library-edit-bar-border: #fff;
+  --input-radius: 4px;
+  --scheme-alt: #fff;
+  --input-placeholder-color: #333;
+
+  --dropdown-icon-fill: $dropdown-content-arrow;
+
+  --vglist-default-fill: #585858;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,6 +45,17 @@
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
     --library-edit-bar-border: #435169;
     --input-color: var(--white);
+    --input-disabled-color: rgba(255, 255, 255, 0.5);
+    --input-border-color: transparent;
+    --input-placeholder-color: var(--white);
+    --input-hover-border-color: transparent;
+    --input-focus-border-color: #dbdbdb;
+    --input-disabled-border-color: transparent;
+    --input-background-color: #445168;
+    --input-disabled-background-color: #445168;
+
+    --vglist-default-fill: var(--white);
+    --dropdown-icon-fill: var(--vglist-default-fill);
   }
 
   .navbar {
@@ -227,7 +245,7 @@ nav.navbar {
 // Don't apply these styles to vue-select dropdowns.
 .dropdown:not(.v-select) {
   button > .icon {
-    fill: $dropdown-content-arrow;
+    fill: var(--dropdown-icon-fill);
     z-index: 4;
     transition: transform 150ms;
     margin-top: 2px;
@@ -235,7 +253,7 @@ nav.navbar {
 
   &.is-active {
     button > .icon {
-      fill: $dropdown-content-arrow;
+      fill: var(--dropdown-icon-fill);
       transform: rotate(-180deg);
       margin-top: 0;
     }
@@ -476,7 +494,7 @@ nav.navbar {
 
 // Make input placeholder text darker by default.
 .input::placeholder {
-  color: #333;
+  color: var(--input-placeholder-color);
   opacity: 0.5;
 }
 
@@ -837,4 +855,67 @@ nav.navbar {
 
 .is-borderless {
   border: 0px;
+}
+
+.v-select {
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--input-radius);
+  background-color: var(--input-background-color);
+
+  &:hover {
+    border: 1px solid var(--input-hover-border-color);
+  }
+
+  &:focus,
+  &.vs--open {
+    border: 1px solid var(--input-focus-border-color);
+  }
+
+  .vs__search {
+    color: var(--input-color);
+
+    &:focus {
+      color: var(--input-focus-color);
+    }
+  }
+
+  .vs__dropdown-menu {
+    background-color: var(--scheme-alt);
+    color: var(--text-color);
+  }
+
+  .vs__selected {
+    color: var(--text-color);
+  }
+
+  &:not(.vs--single) .vs__selected-options .vs__selected {
+    color: var(--text-color);
+    background-color: var(--scheme-alt);
+  }
+
+  .vs__dropdown-option {
+    color: var(--text-color);
+  }
+
+  // Set the fill of the icons in v-select inputs.
+  .vs__open-indicator,
+  .vs__clear,
+  .vs__spinner,
+  .vs__deselect {
+    fill: var(--vglist-default-fill);
+  }
+
+  &.vs--disabled {
+    background-color: var(--input-disabled-background-color);
+    border-color: var(--input-disabled-border-color);
+  }
+
+  &.vs--disabled .vs__clear,
+  &.vs--disabled .vs__dropdown-toggle,
+  &.vs--disabled .vs__open-indicator,
+  &.vs--disabled .vs__search,
+  &.vs--disabled .vs__selected {
+    color: var(--input-disabled-color);
+    background-color: transparent;
+  }
 }
