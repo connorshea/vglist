@@ -138,7 +138,8 @@
   }
 
   .menu {
-    --menu-item-hover-background-color: rgba(var(--white-rgb), 90%);
+    --menu-item-hover-background-color: var(--scheme-secondary);
+    --menu-item-hover-color: var(--white);
     --menu-label-color: var(--white);
   }
 
