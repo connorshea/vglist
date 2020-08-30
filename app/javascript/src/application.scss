@@ -60,6 +60,9 @@
 
     --vglist-default-fill: var(--white);
     --dropdown-icon-fill: var(--vglist-default-fill);
+
+    // This is used in code blocks, flash messages, and a few other places.
+    --background: var(--scheme-secondary);
   }
 
   .navbar {
@@ -104,10 +107,6 @@
     color: var(--text);
   }
 
-  code {
-    background-color: #222;
-  }
-
   .label {
     --label-color: var(--white);
   }
@@ -127,6 +126,10 @@
     --button-focus-color: var(--white);
     --button-active-border-color: var(--white);
     --button-focus-border-color: var(--white);
+  }
+
+  code {
+    color: var(--white);
   }
 
   .tabs {
