@@ -22,6 +22,8 @@
 
   --dropdown-icon-fill: $dropdown-content-arrow;
 
+  --text-muted: var(--grey, #7a7a7a);
+
   --vglist-default-fill: #585858;
 }
 
@@ -53,6 +55,8 @@
     --input-disabled-border-color: transparent;
     --input-background-color: #445168;
     --input-disabled-background-color: #445168;
+
+    --text-muted: var(--grey-lighter, #dbdbdb);
 
     --vglist-default-fill: var(--white);
     --dropdown-icon-fill: var(--vglist-default-fill);
@@ -857,6 +861,7 @@ nav.navbar {
   border: 0px;
 }
 
+// Custom vue-select styles.
 .v-select {
   border: 1px solid var(--input-border-color);
   border-radius: var(--input-radius);
@@ -881,20 +886,20 @@ nav.navbar {
 
   .vs__dropdown-menu {
     background-color: var(--scheme-alt);
-    color: var(--text-color);
+    color: var(--text);
   }
 
   .vs__selected {
-    color: var(--text-color);
+    color: var(--text);
   }
 
   &:not(.vs--single) .vs__selected-options .vs__selected {
-    color: var(--text-color);
+    color: var(--text);
     background-color: var(--scheme-alt);
   }
 
   .vs__dropdown-option {
-    color: var(--text-color);
+    color: var(--text);
   }
 
   // Set the fill of the icons in v-select inputs.
@@ -918,4 +923,10 @@ nav.navbar {
     color: var(--input-disabled-color);
     background-color: transparent;
   }
+}
+
+// For text that should have a more muted color, e.g. extra information in
+// a card.
+.has-text-muted {
+  color: var(--text-muted);
 }
