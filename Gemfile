@@ -86,7 +86,7 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
-  gem 'rubocop', '~> 0.89', require: false
+  gem 'rubocop', '~> 0.90', require: false
 
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.7', require: false
