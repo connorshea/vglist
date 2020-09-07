@@ -80,6 +80,8 @@
             <% navbar_items.each do |navbar_item| %>
               <% if navbar_item[:title].nil? %>
                 <hr class="navbar-divider">
+              <% elsif !navbar_item[:method].nil? %>
+                <%= link_to(navbar_item[:title], navbar_item[:path], method: navbar_item[:method], class: "navbar-item") %>
               <% else %>
                 <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item") %>
               <% end %>
@@ -89,7 +91,11 @@
 
         <% navbar_items.each do |navbar_item| %>
           <% unless navbar_item[:title].nil? %>
-            <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item is-hidden-desktop") %>
+            <% if navbar_item[:method].nil? %>
+              <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item is-hidden-desktop") %>
+            <% else %>
+              <%= link_to(navbar_item[:title], navbar_item[:path], method: navbar_item[:method], class: "navbar-item is-hidden-desktop") %>
+            <% end %>
           <% end %>
         <% end %>
       <% else %>

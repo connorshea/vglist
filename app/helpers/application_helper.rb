@@ -164,6 +164,7 @@ module ApplicationHelper
           },
           {
             title: 'Sign out',
+            method: :delete,
             path: destroy_user_session_path
           },
           {
