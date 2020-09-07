@@ -1829,7 +1829,7 @@ builtin-status-codes@^3.0.0:
 
 "bulma@https://github.com/connorshea/bulma#css-variables-with-fallback":
   version "0.9.0"
-  resolved "https://github.com/connorshea/bulma#ff889b39fd84f0706b1c007a7b3481b8eb44ccee"
+  resolved "https://github.com/connorshea/bulma#e5f59ff306c7a2fbdfced5cfff0b06422ec03999"
   dependencies:
     metalsmith "^2.3.0"
     metalsmith-filter "^1.0.2"

@@ -33,6 +33,7 @@
     --white-rgb: 255, 255, 255;
 
     --text: var(--white);
+    --text-strong: var(--text);
     --scheme-main: #2c394f;
     --scheme-alt: #324057;
     --scheme-secondary: #445168;
@@ -55,13 +56,16 @@
     --input-disabled-border-color: transparent;
     --input-background-color: #445168;
     --input-disabled-background-color: #445168;
+    --code-background: var(--scheme-secondary);
+    --code: var(--white);
+    --link-hover: var(--white);
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
     --vglist-default-fill: var(--white);
     --dropdown-icon-fill: var(--vglist-default-fill);
 
-    // This is used in code blocks, flash messages, and a few other places.
+    // This is used in flash messages and a few other places.
     --background: var(--scheme-secondary);
   }
 
@@ -115,10 +119,6 @@
     --notification-background-color: var(--scheme-alt);
   }
 
-  a:hover {
-    color: var(--white);
-  }
-
   .button {
     --button-color: var(--white);
     --button-hover-color: var(--white);
@@ -126,10 +126,6 @@
     --button-focus-color: var(--white);
     --button-active-border-color: var(--white);
     --button-focus-border-color: var(--white);
-  }
-
-  code {
-    color: var(--white);
   }
 
   .tabs {
