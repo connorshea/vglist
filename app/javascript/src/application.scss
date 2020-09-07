@@ -200,7 +200,7 @@ nav.navbar {
         border-bottom: 0;
         color: var(--navbar-dropdown-item-color);
 
-        &:hover {
+        &:hover, &:focus {
           border-bottom: 0;
         }
       }
