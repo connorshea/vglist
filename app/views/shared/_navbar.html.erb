@@ -53,9 +53,9 @@
 
       <%# Hide these behind a dropdown on desktop. %>
       <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
-        <a class="navbar-link">More</a>
+        <a class="navbar-link" aria-haspopup="menu" aria-controls="navbar-dropdown-more-mobile">More</a>
 
-        <div class="navbar-dropdown is-right">
+        <div id="navbar-dropdown-more-mobile" class="navbar-dropdown is-right">
           <%= link_to("Platforms", platforms_path, class: "navbar-item") %>
           <%= link_to("Genres", genres_path, class: "navbar-item") %>
           <%= link_to("Companies", companies_path, class: "navbar-item") %>
@@ -100,9 +100,9 @@
         <% end %>
         
         <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
-          <a class="navbar-link">More</a>
+          <a class="navbar-link" aria-haspopup="menu" aria-controls="navbar-dropdown-more-desktop">More</a>
 
-          <div class="navbar-dropdown is-right">
+          <div id="navbar-dropdown-more-desktop" class="navbar-dropdown is-right">
             <% navbar_items.each do |navbar_item| %>
               <%= link_to(navbar_item[:title], navbar_item[:path], class: "navbar-item") %>
             <% end %>
