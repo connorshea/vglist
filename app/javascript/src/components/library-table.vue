@@ -1,5 +1,6 @@
 <template>
   <vue-good-table
+    :theme="theme"
     ref="game-library-table"
     :columns="columns"
     :rows="rows"
@@ -347,6 +348,11 @@ export default {
           this.$data.columns[index].hidden = !value;
         }
       });
+    }
+  },
+  computed: {
+    theme: function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? "nocturnal" : "default";
     }
   }
 };

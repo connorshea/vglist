@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown dropdown-dynamic game-card-dropdown is-right" :class="{ 'is-active': isActive }">
     <div class="dropdown-trigger">
-      <button class="button is-white" aria-haspopup="true" aria-controls="dropdown-menu" @click="onClick">
+      <button class="button is-borderless is-shadowless" aria-haspopup="true" aria-controls="dropdown-menu" @click="onClick">
         <span class="icon" v-html="this.chevronDownIcon"></span>
       </button>
     </div>

@@ -30,7 +30,7 @@
     <%= link_to compare_users_path(user_id: current_user.slug, other_user_id: @user.slug),
       class: 'button is-fullwidth-mobile mr-5 mr-0-mobile mt-10' do %>
       <span class="icon pl-5 mr-5">
-        <%= svg_icon('balance-scale-left', height: 15, aria: false, css_class: 'has-fill-grey') %>
+        <%= svg_icon('balance-scale-left', height: 15, aria: false, css_class: 'has-fill-text-color') %>
       </span>
       <span>Compare with your library</span>
     <% end %>

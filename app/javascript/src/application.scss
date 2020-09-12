@@ -4,8 +4,178 @@
 @import './stylesheets/utilities.scss';
 @import './stylesheets/home.scss';
 
+:root {
+  --vglist-theme: #5856d6;
+  --home-page-subtitle-text: #fff;
+  --home-section-background-color: var(--vglist-theme);
+  --home-section-background-brightness: 85%;
+
+  --vglist-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --custom-card-drop-shadow-color: #000;
+  --custom-card-drop-shadow-color-rgb: 10, 10, 10;
+  --dropdown-link-no-highlight: #000;
+  --navbar-dropdown-item-color: #333;
+  --navbar-item-background-hover: #eeeded;
+  --library-edit-bar-border: #dcdfe6;
+  --input-radius: 4px;
+  --scheme-alt: #fff;
+  --input-placeholder-color: #333;
+
+  --dropdown-icon-fill: $dropdown-content-arrow;
+
+  --text-muted: var(--grey, #7a7a7a);
+
+  --vglist-default-fill: #585858;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --white: #fff;
+    --white-rgb: 255, 255, 255;
+
+    --text: var(--white);
+    --text-strong: var(--text);
+    --scheme-main: #2c394f;
+    --scheme-alt: #324057;
+    --scheme-secondary: #445168;
+    --scheme-invert-rgb: 255, 255, 255;
+
+    --card-background-color: var(--scheme-alt);
+    --dropdown-link-no-highlight: var(--white);
+    --home-section-background-color: var(--scheme-main);
+    --home-section-background-brightness: 75%;
+    --navbar-dropdown-item-color: var(--white);
+    --navbar-item-background-hover: var(--scheme-secondary);
+    --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
+    --library-edit-bar-border: #435169;
+    --input-color: var(--white);
+    --input-disabled-color: rgba(255, 255, 255, 0.5);
+    --input-border-color: transparent;
+    --input-placeholder-color: var(--white);
+    --input-hover-border-color: transparent;
+    --input-focus-border-color: #dbdbdb;
+    --input-disabled-border-color: transparent;
+    --input-background-color: #445168;
+    --input-disabled-background-color: #445168;
+    --code-background: var(--scheme-secondary);
+    --code: var(--white);
+    --link: #209ad9;
+    --link-hover: var(--white);
+
+    --text-muted: var(--grey-lighter, #dbdbdb);
+
+    --vglist-default-fill: var(--white);
+    --dropdown-icon-fill: var(--vglist-default-fill);
+
+    // This is used in flash messages and a few other places.
+    --background: var(--scheme-secondary);
+  }
+
+  .navbar {
+    --navbar-shadow-color: rgba(10.2, 10.2, 10.2, 0.1);
+    --navbar-dropdown-item-hover-background-color: #5178bc;
+  }
+
+  .navbar-dropdown {
+    --navbar-dropdown-background-color: var(--scheme-alt);
+  }
+
+  .navbar-divider {
+    --navbar-divider-background-color: #afafaf;
+  }
+
+  .table {
+    --table-color: var(--white);
+    --table-head-cell-color: var(--table-color);
+    --table-foot-cell-color: var(--table-color);
+    --table-striped-row-even-background-color: var(--table-body-background-color);
+  }
+
+  .box {
+    --box-background-color: var(--scheme-alt);
+    --box-shadow: var(--vglist-shadow);
+  }
+
+  .card {
+    --card-background-color: var(--scheme-alt);
+    --card-shadow: var(--vglist-shadow);
+  }
+
+  .title {
+    --title-color: var(--white);
+  }
+
+  .content {
+    --content-heading-color: var(--white);
+  }
+
+  body {
+    color: var(--text);
+  }
+
+  .label {
+    --label-color: var(--white);
+  }
+
+  .notification {
+    --notification-background-color: var(--scheme-alt);
+  }
+
+  .button {
+    --button-background-color: var(--scheme-alt);
+    --button-color: var(--white);
+    --button-hover-color: var(--white);
+    --button-active-color: var(--white);
+    --button-focus-color: var(--white);
+    --button-active-border-color: var(--white);
+    --button-focus-border-color: var(--white);
+    --button-border-color: rgba(var(--white-rgb), 0.25);
+
+    box-shadow: var(--vglist-shadow);
+  }
+
+  .tabs {
+    --tabs-link-hover-border-bottom-color: var(--white);
+    --tabs-link-hover-color: var(--white);
+  }
+
+  .menu {
+    --menu-item-hover-background-color: var(--scheme-secondary);
+    --menu-item-hover-color: var(--white);
+    --menu-label-color: var(--white);
+  }
+
+  .modal {
+    --modal-card-head-background-color: var(--scheme-main);
+    --modal-card-title-color: var(--white);
+  }
+
+  .delete::before,
+  .modal-close::before,
+  .delete::after,
+  .modal-close::after {
+    background-color: var(--white);
+  }
+
+  .modal-background {
+    --modal-background-background-color: rgba(10.2, 10.2, 10.2, 0.86);
+  }
+
+  .dropdown {
+    --dropdown-content-background-color: var(--scheme-alt);
+    --dropdown-item-hover-background-color: var(--scheme-secondary);
+    --dropdown-item-hover-color: var(--white);
+  }
+}
+
+html {
+  background-color: var(--scheme-main, #fff);
+}
+
 nav.navbar {
-  background: #5856d6;
+  --navbar-menu-background-color: var(--vglist-theme);
+
+  background: var(--vglist-theme);
   // Subtle box-shadow for nav bar.
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
   padding: 0 20px;
@@ -25,7 +195,7 @@ nav.navbar {
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;
 
-      &:hover {
+      &:hover, &:focus {
         border-bottom: 2px solid rgba(255, 255, 255, 0.8);
       }
     }
@@ -36,15 +206,15 @@ nav.navbar {
         transition: background-color 200ms;
         transition: color 0ms;
         border-bottom: 0;
-        color: #333;
+        color: var(--navbar-dropdown-item-color);
 
-        &:hover {
+        &:hover, &:focus {
           border-bottom: 0;
         }
       }
 
       a.navbar-item:hover {
-        background-color: #eeeded;
+        background-color: var(--navbar-item-background-hover);
       }
 
       a.navbar-item.is-active {
@@ -92,7 +262,7 @@ nav.navbar {
 // Don't apply these styles to vue-select dropdowns.
 .dropdown:not(.v-select) {
   button > .icon {
-    fill: $dropdown-content-arrow;
+    fill: var(--dropdown-icon-fill);
     z-index: 4;
     transition: transform 150ms;
     margin-top: 2px;
@@ -100,7 +270,7 @@ nav.navbar {
 
   &.is-active {
     button > .icon {
-      fill: $dropdown-content-arrow;
+      fill: var(--dropdown-icon-fill);
       transform: rotate(-180deg);
       margin-top: 0;
     }
@@ -114,7 +284,7 @@ nav.navbar {
   }
 
   .dropdown-item.no-link-highlight a {
-    color: #000;
+    color: var(--dropdown-link-no-highlight);
   }
 }
 
@@ -236,8 +406,11 @@ nav.navbar {
 }
 
 .custom-card {
-  background-color: #fff;
-  box-shadow: 0 2px 3px rgba(#000, 0.1), 0 0 0 1px rgba(#000, 0.1);
+  --card-radius: var(--radius);
+
+  background-color: var(--card-background-color, #fff);
+  box-shadow: var(--vglist-shadow);
+  border-radius: var(--card-radius);
   color: hsl(0, 0%, 21%);
   width: auto;
   position: relative;
@@ -341,7 +514,7 @@ nav.navbar {
 
 // Make input placeholder text darker by default.
 .input::placeholder {
-  color: #333;
+  color: var(--input-placeholder-color);
   opacity: 0.5;
 }
 
@@ -442,7 +615,6 @@ nav.navbar {
   width: 100%;
   border-radius: 4px;
   overflow: hidden;
-  // background-color: #d1cfcf;
 
   .percentage-bar-portion {
     display: inline-block;
@@ -578,8 +750,8 @@ nav.navbar {
   position: sticky;
   top: 0;
   width: 100%;
-  background-color: #fff;
-  border: 1px solid #dcdfe6;
+  background-color: var(--scheme-main, #fff);
+  border: 1px solid var(--library-edit-bar-border);
   margin-bottom: 5px;
   // Modal overlay is 40, make sure to stay below it.
   z-index: 39;
@@ -665,14 +837,15 @@ nav.navbar {
 
 // Styling for the navbar search field, mostly the icon.
 .navbar-search-input {
+  --input-color: #fff;
+
   background-color: rgba(255, 255, 255, 0.25);
   border: 0;
   border-radius: 3px;
-  transition: background-color 250ms;
+  transition: background-color 250ms, color 250ms;
 
   &::placeholder {
     color: #fff;
-    transition: color 250ms;
   }
 
   + span.icon {
@@ -681,6 +854,8 @@ nav.navbar {
   }
 
   &:focus {
+    --input-color: #000;
+
     background-color: rgba(255, 255, 255, 1);
 
     + span.icon {
@@ -695,4 +870,104 @@ nav.navbar {
 
 .is-vertical-align-middle {
   vertical-align: middle;
+}
+
+.is-borderless {
+  border: 0px;
+}
+
+// Custom vue-select styles.
+.v-select {
+  background-color: var(--input-background-color);
+
+  .vs__search {
+    color: var(--input-color);
+
+    &:focus {
+      color: var(--input-focus-color);
+    }
+  }
+
+  .vs__dropdown-menu {
+    background-color: var(--scheme-alt);
+    color: var(--text);
+  }
+
+  .vs__dropdown-toggle {
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--input-radius);
+
+    &:hover {
+      border: 1px solid var(--input-hover-border-color);
+    }
+
+    &:focus,
+    &.vs--open {
+      border: 1px solid var(--input-focus-border-color);
+    }
+  }
+
+  .vs__selected {
+    color: var(--text);
+  }
+
+  &:not(.vs--single) .vs__selected-options .vs__selected {
+    color: var(--text);
+    background-color: var(--scheme-alt);
+  }
+
+  .vs__dropdown-option {
+    color: var(--text);
+
+    // When highlighted, it should have white text since it always has a blue
+    // background.
+    &.vs__dropdown-option--highlight {
+      color: var(--white);
+    }
+  }
+
+  // Set the fill of the icons in v-select inputs.
+  .vs__open-indicator,
+  .vs__clear,
+  .vs__spinner,
+  .vs__deselect {
+    fill: var(--vglist-default-fill);
+  }
+
+  &.vs--disabled {
+    background-color: var(--input-disabled-background-color);
+    border-color: var(--input-disabled-border-color);
+  }
+
+  &.vs--disabled .vs__clear,
+  &.vs--disabled .vs__dropdown-toggle,
+  &.vs--disabled .vs__open-indicator,
+  &.vs--disabled .vs__search,
+  &.vs--disabled .vs__selected {
+    color: var(--input-disabled-color);
+    background-color: transparent;
+  }
+}
+
+// For text that should have a more muted color, e.g. extra information in
+// a card.
+.has-text-muted {
+  color: var(--text-muted);
+}
+
+.box {
+  --box-radius: var(--radius);
+}
+
+.card {
+  --card-radius: var(--radius);
+}
+
+// FIXME: A temporary hack until the vue-good-table dark theme styling is
+// fixed. Without this, it'll try to use a light grey background for the
+// headers on the compare library page.
+.vgt-table th.vgt-row-header {
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--scheme-main) !important;
+  }
 }

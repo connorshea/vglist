@@ -12,7 +12,7 @@
         <p><%= event_text(event) %>
 
         <p>
-          <span class="has-text-grey" title="<%= event.created_at %>">
+          <span class="has-text-muted" title="<%= event.created_at %>">
             <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
           </span>
           <% if policy(event).destroy? %>

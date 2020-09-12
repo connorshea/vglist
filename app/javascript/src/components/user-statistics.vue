@@ -15,21 +15,21 @@
       <div class="level-item has-text-centered">
         <div>
           <p v-if="completionRateExists" class="title">{{ statistics.percent_completed }}%</p>
-          <p v-else class="title has-text-grey-light">N/A%</p>
+          <p v-else class="title has-text-muted">N/A%</p>
           <p class="heading">Completed</p>
         </div>
       </div>
       <div class="level-item has-text-centered">
         <div>
           <p v-if="averageRatingExists" class="title">{{ statistics.average_rating }}</p>
-          <p v-else class="title has-text-grey-light">N/A</p>
+          <p v-else class="title has-text-muted">N/A</p>
           <p class="heading">Average Rating</p>
         </div>
       </div>
       <div class="level-item has-text-centered">
         <div>
           <p v-if="daysPlayedIsPositive" class="title">{{ statistics.total_days_played }}</p>
-          <p v-else class="title has-text-grey-light">N/A</p>
+          <p v-else class="title has-text-muted">N/A</p>
           <p class="heading">Days Played</p>
         </div>
       </div>
