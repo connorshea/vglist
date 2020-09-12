@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sprockets-rails/all/sprockets-rails.rbi
 #
-# sprockets-rails-3.2.1
+# sprockets-rails-3.2.2
 
 module Sprockets
 end
@@ -48,6 +48,8 @@ end
 class Sprockets::Rails::Helper::AssetNotFound < StandardError
 end
 class Sprockets::Rails::Helper::AssetNotPrecompiled < StandardError
+end
+class Sprockets::Rails::Helper::AssetNotPrecompiledError < Sprockets::Rails::Helper::AssetNotPrecompiled
   def initialize(source); end
   include Sprockets::Rails::Utils
 end

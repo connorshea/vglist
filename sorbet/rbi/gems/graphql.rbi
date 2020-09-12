@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.11.1
+# graphql-1.11.4
 
 module GraphQL
   def self.parse(graphql_string, tracer: nil); end
@@ -232,6 +232,7 @@ class GraphQL::InputObjectType < GraphQL::BaseType
   def arguments_class=(arg0); end
   def coerce_non_null_input(value, ctx); end
   def coerce_result(value, ctx = nil); end
+  def get_argument(argument_name); end
   def initialize; end
   def initialize_copy(other); end
   def input_fields; end
@@ -368,6 +369,7 @@ class GraphQL::Field
   def edges?; end
   def function; end
   def function=(arg0); end
+  def get_argument(argument_name); end
   def graphql_definition; end
   def graphql_name; end
   def hash_key; end
@@ -1470,7 +1472,9 @@ class GraphQL::Tracing::AppOpticsTracing < GraphQL::Tracing::PlatformTracing
   def graphql_query_string(query_string); end
   def metadata(data, layer); end
   def multiplex_transaction_name(names); end
+  def platform_authorized_key(type); end
   def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
   def platform_trace(platform_key, _key, data); end
   def remove_comments(query); end
   def sanitize(query); end
@@ -1642,8 +1646,8 @@ class GraphQL::Execution::Interpreter::Runtime
   def arguments(graphql_object, arg_owner, ast_node); end
   def authorized_new(type, value, context, path); end
   def context; end
-  def continue_field(path, value, field, type, ast_node, next_selections, is_non_null, owner_object, arguments); end
-  def continue_value(path, value, field, is_non_null, ast_node); end
+  def continue_field(path, value, owner_type, field, current_type, ast_node, next_selections, is_non_null, owner_object, arguments); end
+  def continue_value(path, value, parent_type, field, is_non_null, ast_node); end
   def dead_path?(path); end
   def directives_include?(node, graphql_object, parent_type); end
   def evaluate_selections(path, scoped_context, owner_object, owner_type, selections, root_operation_type: nil); end
@@ -1920,7 +1924,7 @@ class GraphQL::Schema
   def self.default_mask(new_mask = nil); end
   def self.default_max_page_size(new_default_max_page_size = nil); end
   def self.directive(new_directive); end
-  def self.directives(new_directives = nil); end
+  def self.directives(*new_directives); end
   def self.disable_introspection_entry_points; end
   def self.disable_introspection_entry_points?; end
   def self.disable_schema_introspection_entry_point; end
@@ -1989,6 +1993,7 @@ class GraphQL::Schema
   def self.query_analyzer(new_analyzer); end
   def self.query_analyzers; end
   def self.query_execution_strategy(new_query_execution_strategy = nil); end
+  def self.query_stack_error(query, err); end
   def self.redefine(*args, &block); end
   def self.references_to(to_type = nil, from: nil); end
   def self.remove_handler(*args, &block); end
@@ -2217,6 +2222,7 @@ class GraphQL::Schema::Warden
   def enum_values(enum_defn); end
   def field_on_visible_interface?(field_defn, type_defn); end
   def fields(type_defn); end
+  def get_argument(parent_type, argument_name); end
   def get_field(parent_type, field_name); end
   def get_type(type_name); end
   def initialize(filter, context:, schema:); end
@@ -2368,6 +2374,7 @@ module GraphQL::Schema::Member::HasArguments
   def arguments; end
   def arguments_statically_coercible?; end
   def coerce_arguments(parent_object, values, context); end
+  def get_argument(argument_name); end
   def own_arguments; end
   def self.extended(cls); end
   def self.included(cls); end
@@ -2381,7 +2388,8 @@ module GraphQL::Schema::Member::HasArguments::ArgumentObjectLoader
   def object_from_id(type, id, context); end
 end
 module GraphQL::Schema::Member::HasFields
-  def add_field(field_defn); end
+  def add_field(field_defn, method_conflict_warning: nil); end
+  def conflict_field_name_warning(field_defn); end
   def field(*args, **kwargs, &block); end
   def field_class(new_field_class = nil); end
   def fields; end
@@ -2769,6 +2777,8 @@ class GraphQL::Schema::Object < GraphQL::Schema::Member
   extend GraphQL::Schema::Member::HasFields
 end
 class GraphQL::Schema::Union < GraphQL::Schema::Member
+  def self.assert_valid_union_member(type_defn); end
+  def self.assign_type_membership_object_type(object_type); end
   def self.inherited(child_class); end
   def self.kind; end
   def self.possible_types(*types, context: nil, **options); end
@@ -2818,6 +2828,7 @@ class GraphQL::Schema::TypeMembership
   def visible?(_ctx); end
 end
 class GraphQL::Schema::Resolver
+  def arguments; end
   def authorized?(**inputs); end
   def context; end
   def field; end
@@ -2859,6 +2870,7 @@ module GraphQL::Schema::Resolver::HasPayloadType
   def type_expr(new_payload_type = nil); end
 end
 class GraphQL::Schema::Mutation < GraphQL::Schema::Resolver
+  def self.conflict_field_name_warning(field_defn); end
   def self.field(*args, **kwargs, &block); end
   def self.generate_payload_type; end
   def self.visible?(context); end
@@ -2891,12 +2903,6 @@ class GraphQL::Schema::Subscription < GraphQL::Schema::Resolver
   def update(args = nil); end
   extend GraphQL::Schema::Member::HasFields
   extend GraphQL::Schema::Resolver::HasPayloadType
-end
-class GraphQL::Schema::Subscription::EarlyTerminationError < StandardError
-end
-class GraphQL::Schema::Subscription::UnsubscribedError < GraphQL::Schema::Subscription::EarlyTerminationError
-end
-class GraphQL::Schema::Subscription::NoUpdateError < GraphQL::Schema::Subscription::EarlyTerminationError
 end
 class GraphQL::Schema::DuplicateTypeNamesError < GraphQL::Error
   def initialize(type_name:, first_definition:, second_definition:, path:); end
@@ -2961,11 +2967,11 @@ class GraphQL::Query::Context
   def [](key); end
   def []=(*args, &block); end
   def ast_node; end
-  def dig(*args, &block); end
+  def dig(key, *other_keys); end
   def errors; end
   def execution_strategy; end
   def execution_strategy=(new_strategy); end
-  def fetch(*args, &block); end
+  def fetch(key, default = nil); end
   def initialize(query:, values:, object:, schema: nil); end
   def inspect; end
   def interpreter=(arg0); end
@@ -3166,6 +3172,7 @@ class GraphQL::Directive
   def default_directive?; end
   def description; end
   def description=(arg0); end
+  def get_argument(argument_name); end
   def graphql_definition; end
   def graphql_name; end
   def initialize; end
@@ -3255,9 +3262,9 @@ class GraphQL::Types::Relay::BaseConnection < GraphQL::Types::Relay::BaseObject
   def parent(*args, &block); end
   def self.accessible?(ctx); end
   def self.authorized?(obj, ctx); end
-  def self.define_nodes_field; end
+  def self.define_nodes_field(nullable = nil); end
   def self.edge_class; end
-  def self.edge_type(edge_type_class, edge_class: nil, node_type: nil, nodes_field: nil); end
+  def self.edge_type(edge_type_class, edge_class: nil, node_type: nil, nodes_field: nil, node_nullable: nil); end
   def self.node_type; end
   def self.nodes_field; end
   def self.scope_items(items, context); end
@@ -3435,6 +3442,7 @@ module GraphQL::Schema::Loader
   def load(introspection_result); end
   def self.build_arguments(arg_owner, args, type_resolver); end
   def self.build_fields(type_defn, fields, type_resolver); end
+  def self.define_directive(directive, type_resolver); end
   def self.define_type(type, type_resolver); end
   def self.extract_default_value(default_value_str, input_value_ast); end
   def self.resolve_type(types, type); end
@@ -4498,6 +4506,8 @@ class GraphQL::Pagination::Connection
   def context=(arg0); end
   def cursor_for(item); end
   def decode(cursor); end
+  def edge_class; end
+  def edge_class=(arg0); end
   def edge_nodes; end
   def edges; end
   def encode(cursor); end
@@ -4509,7 +4519,7 @@ class GraphQL::Pagination::Connection
   def has_max_page_size_override?; end
   def has_next_page; end
   def has_previous_page; end
-  def initialize(items, parent: nil, context: nil, first: nil, after: nil, max_page_size: nil, last: nil, before: nil); end
+  def initialize(items, parent: nil, context: nil, first: nil, after: nil, max_page_size: nil, last: nil, before: nil, edge_class: nil); end
   def items; end
   def last; end
   def last=(arg0); end
@@ -4522,7 +4532,6 @@ class GraphQL::Pagination::Connection
   def page_info; end
   def parent; end
   def parent=(arg0); end
-  def self.edge_class; end
   def start_cursor; end
 end
 class GraphQL::Pagination::Connection::PaginationImplementationMissingError < GraphQL::Error
@@ -4570,6 +4579,7 @@ class GraphQL::Pagination::Connections
   def add_default; end
   def all_wrappers; end
   def delete(nodes_class); end
+  def edge_class_for_field(field); end
   def initialize(schema:); end
   def self.use(schema_defn); end
   def wrap(field, parent, items, arguments, context, wrappers: nil); end

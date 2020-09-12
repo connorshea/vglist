@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/activestorage/all/activestorage.rbi
 #
-# activestorage-6.0.3.2
+# activestorage-6.0.3.3
 
 module ActiveStorage
   def analyzers; end

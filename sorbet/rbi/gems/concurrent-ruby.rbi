@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/concurrent-ruby/all/concurrent-ruby.rbi
 #
-# concurrent-ruby-1.1.6
+# concurrent-ruby-1.1.7
 
 module Concurrent
   def abort_transaction; end
@@ -466,6 +466,7 @@ class Concurrent::RubyThreadPoolExecutor < Concurrent::RubyExecutorService
   def remaining_capacity; end
   def remove_busy_worker(worker); end
   def scheduled_task_count; end
+  def synchronous; end
   def worker_died(worker); end
   def worker_not_old_enough(worker); end
   def worker_task_completed; end
@@ -592,6 +593,8 @@ class Concurrent::RubyThreadLocalVar < Concurrent::AbstractThreadLocalVar
   def allocate_storage; end
   def get_default; end
   def get_threadlocal_array(thread = nil); end
+  def next_index; end
+  def self.semi_sync(&block); end
   def self.thread_finalizer(id); end
   def self.thread_local_finalizer(index); end
   def set_threadlocal_array(array, thread = nil); end
@@ -941,6 +944,7 @@ class Concurrent::Async::AsyncDelegator < Concurrent::Synchronization::LockableO
   def initialize(delegate); end
   def method_missing(method, *args, &block); end
   def perform; end
+  def reset_if_forked; end
   def respond_to_missing?(method, include_private = nil); end
 end
 class Concurrent::Async::AwaitDelegator

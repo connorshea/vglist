@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/bcrypt/all/bcrypt.rbi
 #
-# bcrypt-3.1.15
+# bcrypt-3.1.16
 
 class BCrypt::Engine
   def self.__bc_crypt(arg0, arg1); end

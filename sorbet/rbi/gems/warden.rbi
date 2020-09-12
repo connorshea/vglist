@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/warden/all/warden.rbi
 #
-# warden-1.2.8
+# warden-1.2.9
 
 module Warden
   def self.test_mode!; end
@@ -29,6 +29,7 @@ class Warden::Proxy
   def _perform_authentication(*args); end
   def _retrieve_scope_and_opts(args); end
   def _run_strategies_for(scope, args); end
+  def _update_winning_strategy(strategy, scope); end
   def asset_request?; end
   def authenticate!(*args); end
   def authenticate(*args); end
