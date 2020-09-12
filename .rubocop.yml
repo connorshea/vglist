@@ -319,7 +319,13 @@ Performance/Squeeze:
 Performance/StringInclude:
   Enabled: true
 
+Performance/Sum:
+  Enabled: true
+
 Rails/ActiveRecordCallbacksOrder:
+  Enabled: true
+
+Rails/AfterCommitOverride:
   Enabled: true
 
 Rails/FindById:
@@ -352,5 +358,36 @@ Rails/RenderPlainText:
 Rails/ShortI18n:
   Enabled: true
 
+Rails/SquishedSQLHeredocs:
+  Enabled: true
+
 Rails/WhereExists:
+  Enabled: true
+
+Rails/WhereNot:
+  Enabled: true
+
+Lint/DuplicateRequire:
+  Enabled: true
+
+Lint/EmptyFile:
+  Enabled: true
+
+Lint/TrailingCommaInAttributeDeclaration:
+  Enabled: true
+
+Lint/UselessMethodDefinition:
+  Enabled: true
+
+Style/CombinableLoops:
+  Enabled: true
+
+# This one is dumb so I'm disabling it.
+Style/KeywordParametersOrder:
+  Enabled: false
+
+Style/RedundantSelfAssignment:
+  Enabled: true
+
+Style/SoleNestedConditional:
   Enabled: true

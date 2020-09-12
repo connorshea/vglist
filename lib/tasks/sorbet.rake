@@ -55,9 +55,13 @@ namespace :sorbet do
     sigil_total = 0
     sigils.each { |sigil| sigil_total += output_hash[sigil] }
 
+    # This has to be done after the sigil total is fully calculated, otherwise
+    # it won't work correctly.
+    # rubocop:disable Style/CombinableLoops
     sigils.each do |sigil|
       output_hash[sigil] = "#{output_hash[sigil]} (#{(output_hash[sigil].fdiv(sigil_total) * 100).round(2)}%)"
     end
+    # rubocop:enable Style/CombinableLoops
 
     output_hash[:sends_percentage_typed] = \
       "#{(metrics_hash[key_map[:sends_typed]].fdiv(metrics_hash[key_map[:sends]]) * 100).round(2)}%"
