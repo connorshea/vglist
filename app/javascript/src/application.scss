@@ -10,12 +10,13 @@
   --home-section-background-color: var(--vglist-theme);
   --home-section-background-brightness: 85%;
 
+  --vglist-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
   --custom-card-drop-shadow-color: #000;
   --custom-card-drop-shadow-color-rgb: 10, 10, 10;
   --dropdown-link-no-highlight: #000;
   --navbar-dropdown-item-color: #333;
   --navbar-item-background-hover: #eeeded;
-  --library-edit-bar-border: #fff;
+  --library-edit-bar-border: #dcdfe6;
   --input-radius: 4px;
   --scheme-alt: #fff;
   --input-placeholder-color: #333;
@@ -39,7 +40,7 @@
     --scheme-secondary: #445168;
     --scheme-invert-rgb: 255, 255, 255;
 
-    --card-background-color: var(--scheme-main);
+    --card-background-color: var(--scheme-alt);
     --dropdown-link-no-highlight: var(--white);
     --home-section-background-color: var(--scheme-main);
     --home-section-background-brightness: 75%;
@@ -58,6 +59,7 @@
     --input-disabled-background-color: #445168;
     --code-background: var(--scheme-secondary);
     --code: var(--white);
+    --link: #209ad9;
     --link-hover: var(--white);
 
     --text-muted: var(--grey-lighter, #dbdbdb);
@@ -120,12 +122,16 @@
   }
 
   .button {
+    --button-background-color: var(--scheme-alt);
     --button-color: var(--white);
     --button-hover-color: var(--white);
     --button-active-color: var(--white);
     --button-focus-color: var(--white);
     --button-active-border-color: var(--white);
     --button-focus-border-color: var(--white);
+    --button-border-color: rgba(var(--white-rgb), 0.25);
+
+    box-shadow: var(--vglist-shadow);
   }
 
   .tabs {
@@ -398,8 +404,11 @@ nav.navbar {
 }
 
 .custom-card {
+  --card-radius: var(--radius-large);
+
   background-color: var(--card-background-color, #fff);
   box-shadow: var(--vglist-shadow);
+  border-radius: var(--card-radius);
   color: hsl(0, 0%, 21%);
   width: auto;
   position: relative;
@@ -933,4 +942,12 @@ nav.navbar {
 // a card.
 .has-text-muted {
   color: var(--text-muted);
+}
+
+.box {
+  --box-radius: var(--radius-large);
+}
+
+.card {
+  --card-radius: var(--radius-large);
 }
