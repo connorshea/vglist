@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/active_storage_validations/all/active_storage_validations.rbi
 #
-# active_storage_validations-0.8.9
+# active_storage_validations-0.9.0
 
 module ActiveStorageValidations
 end

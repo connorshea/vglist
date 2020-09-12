@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/jbuilder/all/jbuilder.rbi
 #
-# jbuilder-2.10.0
+# jbuilder-2.10.1
 
 class Jbuilder < ActiveSupport::ProxyObject
   def _blank?(value = nil); end

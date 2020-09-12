@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/shoulda-matchers/all/shoulda-matchers.rbi
 #
-# shoulda-matchers-4.3.0
+# shoulda-matchers-4.4.1
 
 module Shoulda
 end
@@ -182,14 +182,6 @@ class Shoulda::Matchers::Independent::DelegateMethodMatcher
   def with_arguments(*arguments); end
   def with_prefix(prefix = nil); end
 end
-class Shoulda::Matchers::Independent::DelegateMethodMatcher::StubbedTarget
-  def has_received_arguments?(*args); end
-  def has_received_method?; end
-  def initialize(method); end
-  def received_arguments; end
-  def received_method; end
-  def stub_method(method); end
-end
 class Shoulda::Matchers::Independent::DelegateMethodMatcher::DelegateObjectNotSpecified < StandardError
   def message; end
 end
@@ -308,6 +300,7 @@ module Shoulda::Matchers::RailsShim
   def self.action_pack_lt_5?; end
   def self.action_pack_version; end
   def self.active_record_gte_5?; end
+  def self.active_record_gte_6?; end
   def self.active_record_version; end
   def self.attribute_serialization_coder_for(model, attribute_name); end
   def self.attribute_type_for(model, attribute_name); end
@@ -691,9 +684,13 @@ module Shoulda::Matchers::ActiveModel::Qualifiers::IgnoringInterferenceByWriter
   def initialize(*args); end
 end
 class Shoulda::Matchers::ActiveModel::ValidationMatcher
+  def allow_blank; end
+  def allow_blank_does_not_match?; end
+  def allow_blank_matches?; end
   def allow_value_matcher(value, message = nil, &block); end
   def allows_value_of(value, message = nil, &block); end
   def attribute; end
+  def blank_values; end
   def build_allow_or_disallow_value_matcher(args); end
   def context; end
   def description; end
@@ -702,6 +699,7 @@ class Shoulda::Matchers::ActiveModel::ValidationMatcher
   def does_not_match?(subject); end
   def expects_custom_validation_message?; end
   def expects_strict?; end
+  def expects_to_allow_blank?; end
   def failure_message; end
   def failure_message_when_negated; end
   def failure_reason; end
@@ -711,6 +709,7 @@ class Shoulda::Matchers::ActiveModel::ValidationMatcher
   def matches?(subject); end
   def model; end
   def on(context); end
+  def options; end
   def overall_failure_message; end
   def overall_failure_message_when_negated; end
   def run_allow_or_disallow_matcher(matcher); end
@@ -970,11 +969,9 @@ class Shoulda::Matchers::ActiveModel::ValidateLengthOfMatcher < Shoulda::Matcher
   include Shoulda::Matchers::ActiveModel::Helpers
 end
 class Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher < Shoulda::Matchers::ActiveModel::ValidationMatcher
-  def allow_blank; end
   def allow_nil; end
   def allows_all_values_in_array?; end
   def allows_any_value_outside_of_array?; end
-  def allows_blank_value?; end
   def allows_higher_value; end
   def allows_lower_value; end
   def allows_maximum_value; end
@@ -987,7 +984,6 @@ class Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher < Shoulda::Matc
   def column_type_to_attribute_type(type); end
   def disallows_all_values_outside_of_array?; end
   def disallows_any_values_in_array?; end
-  def disallows_blank_value?; end
   def disallows_higher_value; end
   def disallows_lower_value; end
   def disallows_maximum_value; end
@@ -996,7 +992,6 @@ class Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher < Shoulda::Matc
   def does_not_match?(subject); end
   def does_not_match_for_array?; end
   def does_not_match_for_range?; end
-  def expects_to_allow_blank?; end
   def expects_to_allow_nil?; end
   def in_array(array); end
   def in_range(range); end
@@ -1130,6 +1125,7 @@ class Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher
   def is_greater_than_or_equal_to(value); end
   def is_less_than(value); end
   def is_less_than_or_equal_to(value); end
+  def is_other_than(value); end
   def matches?(subject); end
   def matches_or_does_not_match?(subject); end
   def model; end
@@ -1260,8 +1256,11 @@ module Shoulda::Matchers::ActiveRecord
   def have_and_belong_to_many(name); end
   def have_db_column(column); end
   def have_db_index(columns); end
+  def have_implicit_order_column(column_name); end
   def have_many(name); end
+  def have_many_attached(name); end
   def have_one(name); end
+  def have_one_attached(name); end
   def have_readonly_attribute(value); end
   def have_rich_text(rich_text_attribute); end
   def have_secure_token(token_attribute = nil); end
@@ -1333,6 +1332,7 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def touch_correct?; end
   def validate(validate = nil); end
   def validate_correct?; end
+  def validate_inverse_of_through_association; end
   def with_foreign_key(foreign_key); end
   def with_primary_key(primary_key); end
   def without_validating_presence; end
@@ -1480,10 +1480,11 @@ end
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector
   def associated_class(*args, &block); end
   def association_foreign_key(*args, &block); end
-  def association_relation(*args, &block); end
+  def association_relation; end
   def build_relation_with_clause(name, value); end
   def extract_relation_clause_from(relation, name); end
   def foreign_key(*args, &block); end
+  def has_and_belongs_to_many_name(*args, &block); end
   def initialize(subject, name); end
   def join_table_name(*args, &block); end
   def model_class; end
@@ -1493,12 +1494,13 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector
   def reflection; end
   def subject; end
   def through?(*args, &block); end
+  def validate_inverse_of_through_association!(*args, &block); end
   def value_as_sql(value); end
 end
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflection < SimpleDelegator
   def associated_class; end
   def association_foreign_key; end
-  def association_relation; end
+  def association_relation(related_instance); end
   def foreign_key; end
   def has_and_belongs_to_many_name; end
   def has_and_belongs_to_many_name_table_name; end
@@ -1509,6 +1511,7 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflection < Si
   def reflection; end
   def subject; end
   def through?; end
+  def validate_inverse_of_through_association!; end
 end
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier
   def actual_value_for(name); end
@@ -1581,6 +1584,23 @@ class Shoulda::Matchers::ActiveRecord::HaveDbIndexMatcher
   def table_name; end
   def unique(unique = nil); end
 end
+class Shoulda::Matchers::ActiveRecord::HaveImplicitOrderColumnMatcher
+  def check_column_exists!; end
+  def check_implicit_order_column_matches!; end
+  def column_name; end
+  def description; end
+  def expectation; end
+  def failure_message; end
+  def failure_message_when_negated; end
+  def initialize(column_name); end
+  def matches?(subject); end
+  def model; end
+  def subject; end
+end
+class Shoulda::Matchers::ActiveRecord::HaveImplicitOrderColumnMatcher::SecondaryCheckFailedError < StandardError
+end
+class Shoulda::Matchers::ActiveRecord::HaveImplicitOrderColumnMatcher::PrimaryCheckFailedError < StandardError
+end
 class Shoulda::Matchers::ActiveRecord::HaveReadonlyAttributeMatcher
   def class_name; end
   def description; end
@@ -1611,6 +1631,7 @@ class Shoulda::Matchers::ActiveRecord::HaveSecureTokenMatcher
   def has_expected_db_column?; end
   def has_expected_db_index?; end
   def has_expected_instance_methods?; end
+  def ignoring_check_for_db_index; end
   def initialize(token_attribute); end
   def matches?(subject); end
   def run_checks; end
@@ -1839,6 +1860,27 @@ class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher::ExistingReco
   def underlying_exception; end
   def underlying_exception=(arg0); end
   include Shoulda::Matchers::ActiveModel::Helpers
+end
+class Shoulda::Matchers::ActiveRecord::HaveAttachedMatcher
+  def attachments_association_exists?; end
+  def attachments_association_matcher; end
+  def attachments_association_name; end
+  def blobs_association_exists?; end
+  def blobs_association_matcher; end
+  def blobs_association_name; end
+  def description; end
+  def eager_loading_scope_exists?; end
+  def expectation; end
+  def failure_message; end
+  def failure_message_when_negated; end
+  def initialize(macro, name); end
+  def macro; end
+  def matches?(subject); end
+  def model_class; end
+  def name; end
+  def reader_attribute_exists?; end
+  def subject; end
+  def writer_attribute_exists?; end
 end
 module Shoulda::Matchers::Routing
   def route(method, path, port: nil); end

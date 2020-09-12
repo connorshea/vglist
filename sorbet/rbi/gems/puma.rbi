@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-4.3.5
+# puma-4.3.6
 
 module Puma
   def self.jruby?; end

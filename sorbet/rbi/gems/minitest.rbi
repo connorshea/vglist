@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/minitest/all/minitest.rbi
 #
-# minitest-5.14.1
+# minitest-5.14.2
 
 module Minitest
   def self.__run(reporter, options); end

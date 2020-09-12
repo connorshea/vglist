@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rdf/all/rdf.rbi
 #
-# rdf-3.1.4
+# rdf-3.1.6
 
 module RDF
   def self.Graph(**options, &block); end
@@ -446,7 +446,9 @@ class RDF::Literal
   include RDF::Term
 end
 class RDF::Literal::Numeric < RDF::Literal
+  def %(other); end
   def *(other); end
+  def **(other); end
   def +(other); end
   def +@; end
   def -(other); end
@@ -914,6 +916,7 @@ class RDF::Query::Pattern < RDF::Statement
   def unbound?; end
   def unbound_variables; end
   def valid?; end
+  def var_values(var, statement); end
   def variable_count; end
   def variable_terms(name = nil); end
   def variables; end
@@ -936,6 +939,7 @@ class RDF::Query::Variable
   def name; end
   def name=(arg0); end
   def named?; end
+  def to_base; end
   def to_h; end
   def to_s; end
   def to_sym; end
@@ -944,6 +948,7 @@ class RDF::Query::Variable
   def unbound?; end
   def value; end
   def value=(arg0); end
+  def var_values(var, term); end
   def variable?; end
   def variables; end
   include RDF::Term

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sentry-raven/all/sentry-raven.rbi
 #
-# sentry-raven-3.0.0
+# sentry-raven-3.0.4
 
 module Raven
   def self.annotate(*args, &block); end
@@ -42,6 +42,31 @@ module Raven
   def self.sys_command(command); end
   def self.tags_context(*args, &block); end
   def self.user_context(*args, &block); end
+end
+class Object < BasicObject
+end
+class NilClass
+end
+class FalseClass
+end
+class TrueClass
+end
+class Symbol
+end
+class Numeric
+end
+class BigDecimal < Numeric
+  def duplicable?; end
+end
+class Method
+end
+class Complex < Numeric
+end
+class Rational < Numeric
+end
+class Array
+end
+class Hash
 end
 class Raven::Backtrace
   def ==(other); end
@@ -104,18 +129,22 @@ class Raven::Processor
   def process(_data); end
 end
 class Raven::Processor::SanitizeData < Raven::Processor
-  def fields_re; end
   def initialize(client); end
   def matches_regexes?(k, v); end
   def parse_json_or_nil(string); end
   def process(value, key = nil); end
+  def sanitize_array_value(key, value); end
   def sanitize_credit_cards; end
   def sanitize_credit_cards=(arg0); end
   def sanitize_fields; end
   def sanitize_fields=(arg0); end
   def sanitize_fields_excluded; end
   def sanitize_fields_excluded=(arg0); end
+  def sanitize_hash_value(key, value); end
   def sanitize_query_string(query_string); end
+  def sanitize_sensitive_string_content(value); end
+  def sanitize_string_value(key, value); end
+  def sensitive_fields; end
   def special_characters?(string); end
   def use_boundary?(string); end
   def utf8_processor; end
@@ -128,6 +157,7 @@ class Raven::Processor::UTF8Conversion < Raven::Processor
   def remove_invalid_bytes(string); end
 end
 class Raven::Processor::Cookies < Raven::Processor
+  def generate_masked_cookies(cookies); end
   def process(data); end
   def process_if_string_keys(data); end
   def process_if_symbol_keys(data); end
@@ -173,6 +203,7 @@ class Raven::Configuration
   def detect_release_from_git; end
   def detect_release_from_heroku; end
   def dsn=(value); end
+  def enabled_in_current_env?; end
   def encoding; end
   def encoding=(encoding); end
   def environments; end
@@ -287,6 +318,37 @@ class Raven::Context
   def transaction=(arg0); end
   def user; end
   def user=(arg0); end
+end
+module Raven::Transports
+end
+class Raven::Transports::Dummy < Raven::Transports::Transport
+  def events; end
+  def events=(arg0); end
+  def initialize(*arg0); end
+  def send_event(auth_header, data, options = nil); end
+end
+class Raven::Transports::HTTP < Raven::Transports::Transport
+  def adapter; end
+  def adapter=(arg0); end
+  def conn; end
+  def conn=(arg0); end
+  def faraday_opts; end
+  def initialize(*args); end
+  def send_event(auth_header, data, options = nil); end
+  def set_conn; end
+  def ssl_configuration; end
+end
+class Raven::Transports::Stdout < Raven::Transports::Transport
+  def events; end
+  def events=(arg0); end
+  def initialize(*arg0); end
+  def send_event(_auth_header, data, _options = nil); end
+end
+class Raven::Transports::Transport
+  def configuration; end
+  def configuration=(arg0); end
+  def initialize(configuration); end
+  def send_event; end
 end
 class Raven::Client
   def configuration; end
@@ -474,25 +536,6 @@ class Raven::HttpInterface < Raven::Interface
   def url; end
   def url=(arg0); end
   include Raven::RackInterface
-end
-module Raven::Transports
-end
-class Raven::Transports::Transport
-  def configuration; end
-  def configuration=(arg0); end
-  def initialize(configuration); end
-  def send_event; end
-end
-class Raven::Transports::HTTP < Raven::Transports::Transport
-  def adapter; end
-  def adapter=(arg0); end
-  def conn; end
-  def conn=(arg0); end
-  def faraday_opts; end
-  def initialize(*args); end
-  def send_event(auth_header, data, options = nil); end
-  def set_conn; end
-  def ssl_configuration; end
 end
 module Raven::Utils
 end

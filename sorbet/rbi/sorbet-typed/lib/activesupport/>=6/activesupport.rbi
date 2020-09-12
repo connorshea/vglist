@@ -3,9 +3,9 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activesupport/>=6.0.0.rc1/activesupport.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activesupport/>=6/activesupport.rbi
 #
-# typed: strong
+# typed: false
 
 class Array
   sig { params(elements: T.untyped).returns(T::Array[T.untyped]) }
@@ -20,4 +20,17 @@ class Array
 
   sig { params(elements: T.untyped).returns(T::Array[T.untyped]) }
   def including(*elements); end
+end
+
+module Enumerable
+  # https://github.com/rails/rails/blob/v6.0.0/activesupport/lib/active_support/core_ext/enumerable.rb#L70..L82
+  # the case where a block isn't given isn't handled - that seems like an unlikely case
+  sig do
+    type_parameters(:key).params(
+      block: T.proc.params(o: Enumerable::Elem).returns(T.type_parameter(:key))
+    ).returns(
+      T::Hash[Enumerable::Elem, T.type_parameter(:key)]
+    )
+  end
+  def index_with(&block); end
 end

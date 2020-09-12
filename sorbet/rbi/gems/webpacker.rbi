@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/webpacker/all/webpacker.rbi
 #
-# webpacker-5.1.1
+# webpacker-5.2.1
 
 class Webpacker::Instance
   def commands; end
@@ -35,6 +35,8 @@ class Webpacker::Env
   def self.inquire(webpacker); end
 end
 class Webpacker::Configuration
+  def additional_paths; end
+  def additional_paths_globbed; end
   def cache_manifest?; end
   def cache_path; end
   def check_yarn_integrity=(value); end
@@ -54,7 +56,6 @@ class Webpacker::Configuration
   def public_output_path; end
   def public_path; end
   def resolved_paths; end
-  def resolved_paths_globbed; end
   def root_path; end
   def source_entry_path; end
   def source_path; end

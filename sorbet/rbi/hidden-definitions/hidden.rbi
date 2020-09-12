@@ -7109,6 +7109,7 @@ class Concurrent::RubyThreadPoolExecutor
   DEFAULT_MAX_POOL_SIZE = ::T.let(nil, ::T.untyped)
   DEFAULT_MAX_QUEUE_SIZE = ::T.let(nil, ::T.untyped)
   DEFAULT_MIN_POOL_SIZE = ::T.let(nil, ::T.untyped)
+  DEFAULT_SYNCHRONOUS = ::T.let(nil, ::T.untyped)
   DEFAULT_THREAD_IDLETIMEOUT = ::T.let(nil, ::T.untyped)
 end
 
@@ -7669,7 +7670,6 @@ end
 
 class Dir
   def self.exists?(_); end
-
 end
 
 module Docile
@@ -7838,7 +7838,6 @@ class ERB
   def def_method(mod, methodname, fname=T.unsafe(nil)); end
 
   def def_module(methodname=T.unsafe(nil)); end
-
 end
 
 class ERB::Compiler::Scanner
@@ -8237,7 +8236,6 @@ end
 
 module Exception2MessageMapper
   def bind(cl); end
-
 end
 
 Exception2MessageMapper::E2MM = Exception2MessageMapper
@@ -9939,6 +9937,10 @@ class GraphQL::Query::Arguments
   NULL_ARGUMENT_VALUE = ::T.let(nil, ::T.untyped)
 end
 
+class GraphQL::Query::Context
+  UNSPECIFIED_FETCH_DEFAULT = ::T.let(nil, ::T.untyped)
+end
+
 module GraphQL::RailsLogger
   VERSION = ::T.let(nil, ::T.untyped)
 end
@@ -10140,8 +10142,11 @@ end
 
 module GraphQL::Subscriptions::Serialize
   GLOBALID_KEY = ::T.let(nil, ::T.untyped)
+  OPEN_STRUCT_KEY = ::T.let(nil, ::T.untyped)
   SYMBOL_KEY = ::T.let(nil, ::T.untyped)
   SYMBOL_KEYS_KEY = ::T.let(nil, ::T.untyped)
+  TIMESTAMP_FORMAT = ::T.let(nil, ::T.untyped)
+  TIMESTAMP_KEY = ::T.let(nil, ::T.untyped)
 end
 
 module GraphQL::Tracing::ActiveSupportNotificationsTracing
@@ -10283,12 +10288,6 @@ end
 
 class Hash
   include ::JSON::Ext::Generator::GeneratorMethods::Hash
-end
-
-class Hash
-  def self.ruby2_keywords_hash(hash); end
-
-  def self.try_convert(_); end
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
@@ -10978,6 +10977,7 @@ end
 module Loofah::HTML5::Scrub
   CONTROL_CHARACTERS = ::T.let(nil, ::T.untyped)
   CRASS_SEMICOLON = ::T.let(nil, ::T.untyped)
+  CSS_IMPORTANT = ::T.let(nil, ::T.untyped)
   CSS_KEYWORDISH = ::T.let(nil, ::T.untyped)
 end
 
@@ -12009,8 +12009,6 @@ Net::HTTPClientError::EXCEPTION_TYPE = Net::HTTPServerException
 
 Net::HTTPClientErrorCode = Net::HTTPClientError
 
-Net::HTTPClientException = Net::HTTPServerException
-
 class Net::HTTPEarlyHints
   HAS_BODY = ::T.let(nil, ::T.untyped)
 end
@@ -12019,13 +12017,6 @@ class Net::HTTPEarlyHints
 end
 
 Net::HTTPFatalErrorCode = Net::HTTPClientError
-
-class Net::HTTPGatewayTimeout
-  HAS_BODY = ::T.let(nil, ::T.untyped)
-end
-
-class Net::HTTPGatewayTimeout
-end
 
 class Net::HTTPInformation
 end
@@ -12085,13 +12076,6 @@ Net::HTTPRedirection::EXCEPTION_TYPE = Net::HTTPRetriableError
 
 Net::HTTPRedirectionCode = Net::HTTPRedirection
 
-class Net::HTTPRequestTimeout
-  HAS_BODY = ::T.let(nil, ::T.untyped)
-end
-
-class Net::HTTPRequestTimeout
-end
-
 Net::HTTPRequestURITooLarge = Net::HTTPURITooLong
 
 Net::HTTPResponceReceiver = Net::HTTPResponse
@@ -12126,7 +12110,6 @@ end
 
 class Net::IMAP
   def open_timeout(); end
-
   RESPONSE_ERRORS = ::T.let(nil, ::T.untyped)
 end
 
@@ -12858,6 +12841,16 @@ module OpenURI
   def self.redirectable?(uri1, uri2); end
 
   def self.scan_open_optional_arguments(*rest); end
+end
+
+class OptionParser
+  def args(); end
+
+  def args=(value); end
+
+  def options(); end
+
+  def options=(value); end
 end
 
 module OrmAdapter
@@ -15550,6 +15543,64 @@ module RDF
   VOCABS = ::T.let(nil, ::T.untyped)
 end
 
+class RDF::CLI
+  COMMANDS = ::T.let(nil, ::T.untyped)
+  OPTIONS = ::T.let(nil, ::T.untyped)
+end
+
+class RDF::CLI::Option
+  def call(arg, options=T.unsafe(nil)); end
+
+  def control(); end
+
+  def datatype(); end
+
+  def default(); end
+
+  def description(); end
+
+  def initialize(symbol: T.unsafe(nil), on: T.unsafe(nil), datatype: T.unsafe(nil), control: T.unsafe(nil), description: T.unsafe(nil), use: T.unsafe(nil), default: T.unsafe(nil), **options, &block); end
+
+  def on(); end
+
+  def symbol(); end
+
+  def to_hash(); end
+
+  def use(); end
+
+  def use=(use); end
+end
+
+class RDF::CLI::Option
+end
+
+class RDF::CLI
+  def self.abort(msg); end
+
+  def self.add_command(command, **options, &block); end
+
+  def self.basename(); end
+
+  def self.commands(format: T.unsafe(nil), **options); end
+
+  def self.exec(args, output: T.unsafe(nil), option_parser: T.unsafe(nil), messages: T.unsafe(nil), **options); end
+
+  def self.formats(reader: T.unsafe(nil), writer: T.unsafe(nil)); end
+
+  def self.load_commands(); end
+
+  def self.options(argv, format: T.unsafe(nil)); end
+
+  def self.parse(files, evaluate: T.unsafe(nil), format: T.unsafe(nil), encoding: T.unsafe(nil), **options, &block); end
+
+  def self.repository(); end
+
+  def self.repository=(repository); end
+
+  def self.usage(options, cmd_opts: T.unsafe(nil), banner: T.unsafe(nil)); end
+end
+
 class RDF::Dataset
   DEFAULT_GRAPH = ::T.let(nil, ::T.untyped)
   ISOLATION_LEVELS = ::T.let(nil, ::T.untyped)
@@ -16979,6 +17030,10 @@ class Raven::Processor::HTTPHeaders
   DEFAULT_FIELDS = ::T.let(nil, ::T.untyped)
 end
 
+class Raven::Processor::RemoveCircularReferences
+  ELISION_STRING = ::T.let(nil, ::T.untyped)
+end
+
 class Raven::Processor::SanitizeData
   CREDIT_CARD_RE = ::T.let(nil, ::T.untyped)
   DEFAULT_FIELDS = ::T.let(nil, ::T.untyped)
@@ -17719,25 +17774,121 @@ module RuboCop::Cop::ActiveRecordHelper
   WHERE_METHODS = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Base
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+module RuboCop::Cop::CodeLength
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Gemspec::RequiredRubyVersion
+  MISSING_MSG = ::T.let(nil, ::T.untyped)
+  NOT_EQUAL_MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Layout::EmptyLineAfterMultilineCondition
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::SpaceAroundMethodCallOperator
   SPACES_REGEXP = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::BinaryOperatorWithIdenticalOperands
+  MATH_OPERATORS = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::ConstantResolution
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::Debugger
+  DEBUGGER_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::DeprecatedClassMethods
+  DEPRECATED_METHODS = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::DuplicateElsifCondition
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::DuplicateMethods
+  METHOD_DEF_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::DuplicateRequire
+  MSG = ::T.let(nil, ::T.untyped)
+  REQUIRE_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::DuplicateRescueException
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::EmptyConditionalBody
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::EmptyFile
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::FloatComparison
+  EQUALITY_METHODS = ::T.let(nil, ::T.untyped)
+  FLOAT_INSTANCE_METHODS = ::T.let(nil, ::T.untyped)
+  FLOAT_RETURNING_METHODS = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::FormatParameterMismatch
+  FORMAT_METHODS = ::T.let(nil, ::T.untyped)
   MSG_INVALID = ::T.let(nil, ::T.untyped)
 end
 
-class RuboCop::Cop::Metrics::Utils::CodeLengthCalculator
-  CLASSISH_TYPES = ::T.let(nil, ::T.untyped)
-  FOLDABLE_TYPES = ::T.let(nil, ::T.untyped)
+class RuboCop::Cop::Lint::MissingSuper
+  CALLBACKS = ::T.let(nil, ::T.untyped)
+  CALLBACK_MSG = ::T.let(nil, ::T.untyped)
+  CLASS_LIFECYCLE_CALLBACKS = ::T.let(nil, ::T.untyped)
+  CONSTRUCTOR_MSG = ::T.let(nil, ::T.untyped)
+  METHOD_LIFECYCLE_CALLBACKS = ::T.let(nil, ::T.untyped)
+  OBJECT_LIFECYCLE_CALLBACKS = ::T.let(nil, ::T.untyped)
+  STATELESS_CLASSES = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::OutOfRangeRegexpRef
+  MSG = ::T.let(nil, ::T.untyped)
+  REGEXP_ARGUMENT_METHODS = ::T.let(nil, ::T.untyped)
+  REGEXP_CAPTURE_METHODS = ::T.let(nil, ::T.untyped)
+  REGEXP_RECEIVER_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::SelfAssignment
+  ASSIGNMENT_TYPE_TO_RHS_TYPE = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::TopLevelReturnWithArgument
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::TrailingCommaInAttributeDeclaration
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::UnreachableLoop
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::UriRegexp
+  URI_CONSTANTS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::UselessMethodDefinition
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::Metrics::Utils::IteratingBlock
@@ -17763,6 +17914,17 @@ end
 
 class RuboCop::Cop::Performance::BigDecimalWithNumericArgument
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Performance::CollectionLiteralInLoop
+  ARRAY_METHODS = ::T.let(nil, ::T.untyped)
+  ENUMERABLE_METHOD_NAMES = ::T.let(nil, ::T.untyped)
+  HASH_METHODS = ::T.let(nil, ::T.untyped)
+  LOOP_TYPES = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  NONMUTATING_ARRAY_METHODS = ::T.let(nil, ::T.untyped)
+  NONMUTATING_HASH_METHODS = ::T.let(nil, ::T.untyped)
+  POST_CONDITION_LOOP_TYPES = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Performance::IoReadlines
@@ -17796,8 +17958,26 @@ class RuboCop::Cop::Performance::StringInclude
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Performance::Sum
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::RSpec::Base
+  DEFAULT_CONFIGURATION = ::T.let(nil, ::T.untyped)
+  DEFAULT_PATTERN_RE = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::RSpec::Capybara::VisibilityMatcher
   CAPYBARA_MATCHER_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::RSpec::MultipleExpectations
+  ANYTHING = ::T.let(nil, ::T.untyped)
+  TRUE = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::RSpec::MultipleMemoizedHelpers
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::RSpec::VariableDefinition
@@ -17811,6 +17991,11 @@ end
 class RuboCop::Cop::Rails::ActiveRecordCallbacksOrder
   CALLBACKS_IN_ORDER = ::T.let(nil, ::T.untyped)
   CALLBACKS_ORDER_MAP = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::AfterCommitOverride
+  AFTER_COMMIT_CALLBACKS = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -17840,6 +18025,10 @@ class RuboCop::Cop::Rails::MatchRoute
 end
 
 class RuboCop::Cop::Rails::NegateInclude
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::OrderById
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -17876,8 +18065,27 @@ class RuboCop::Cop::Rails::ShortI18n
   PREFERRED_METHODS = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Rails::SquishedSQLHeredocs
+  MSG = ::T.let(nil, ::T.untyped)
+  SQL = ::T.let(nil, ::T.untyped)
+  SQUISH = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Rails::WhereExists
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Rails::WhereNot
+  IS_NOT_NULL_RE = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+  NOT_EQ_ANONYMOUS_RE = ::T.let(nil, ::T.untyped)
+  NOT_EQ_NAMED_RE = ::T.let(nil, ::T.untyped)
+  NOT_IN_ANONYMOUS_RE = ::T.let(nil, ::T.untyped)
+  NOT_IN_NAMED_RE = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::AccessModifierDeclarations
+  ACCESS_MODIFIERS = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::AccessorGrouping
@@ -17899,9 +18107,25 @@ class RuboCop::Cop::Style::CaseLikeIf
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::ClassMethodsDefinitions
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::CombinableLoops
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::CommentedKeyword
   ALLOWED_COMMENT_REGEXES = ::T.let(nil, ::T.untyped)
   KEYWORD_REGEXES = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::EvalWithLocation
+  EVAL_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::ExplicitBlockArgument
+  MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::ExponentialNotation
@@ -17912,7 +18136,34 @@ class RuboCop::Cop::Style::FloatDivision
   MESSAGES = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::FormatString
+  FORMAT_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::GlobalStdStream
+  MSG = ::T.let(nil, ::T.untyped)
+  STD_STREAMS = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::HashLikeCase
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::KeywordParametersOrder
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::MultilineMemoization
+  BRACES_MSG = ::T.let(nil, ::T.untyped)
+  KEYWORD_MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::NumericPredicate
+  COMPARISON_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::OptionalBooleanParameter
+  BOOLEAN_TYPES = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -17922,6 +18173,10 @@ end
 
 class RuboCop::Cop::Style::RedundantConditional
   COMPARISON_OPERATOR_MATCHER = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RedundantException
+  RAISE_METHODS = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::RedundantFetchBlock
@@ -17934,6 +18189,32 @@ end
 
 class RuboCop::Cop::Style::RedundantSelf
   KEYWORDS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RedundantSelfAssignment
+  ASSIGNMENT_TYPE_TO_RECEIVER_TYPE = ::T.let(nil, ::T.untyped)
+  METHODS_RETURNING_SELF = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RedundantSort
+  SORT_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::SingleArgumentDig
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::SoleNestedConditional
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::StringConcatenation
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::ZeroLengthPredicate
+  LENGTH_METHODS = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::VisibilityHelp
@@ -19609,6 +19890,10 @@ class Shoulda::Matchers::Text
   LIST_ITEM_REGEXP = ::T.let(nil, ::T.untyped)
 end
 
+module Shoulda::Matchers::Util
+  MAXIMUM_LENGTH_OF_VALUE_TO_DISPLAY = ::T.let(nil, ::T.untyped)
+end
+
 module Shoulda::Matchers::WordWrap
   TERMINAL_WIDTH = ::T.let(nil, ::T.untyped)
 end
@@ -19644,10 +19929,6 @@ end
 class SimpleCov::SourceFile
   RUBY_FILE_ENCODING_MAGIC_COMMENT_REGEX = ::T.let(nil, ::T.untyped)
   SHEBANG_REGEX = ::T.let(nil, ::T.untyped)
-end
-
-module SimpleCov::UselessResultsRemover
-  ROOT_REGX = ::T.let(nil, ::T.untyped)
 end
 
 class SimpleDelegator

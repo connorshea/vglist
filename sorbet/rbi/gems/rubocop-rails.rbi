@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.7.1
+# rubocop-rails-2.8.0
 
 module RuboCop
 end
@@ -40,7 +40,7 @@ class RuboCop::Rails::SchemaLoader::Table
   def build_columns(node); end
   def build_indices(node); end
   def columns; end
-  def each_content(node); end
+  def each_content(node, &block); end
   def indices; end
   def initialize(node); end
   def name; end
@@ -88,6 +88,7 @@ module RuboCop::Cop::IndexMethod
   def on_bad_each_with_object(_node); end
   def on_bad_hash_brackets_map(_node); end
   def on_bad_map_to_h(_node); end
+  def on_bad_to_h(_node); end
   def on_block(node); end
   def on_csend(node); end
   def on_send(node); end
@@ -115,6 +116,7 @@ class RuboCop::Cop::IndexMethod::Autocorrection < Struct
   def self.from_each_with_object(node, match); end
   def self.from_hash_brackets_map(node, match); end
   def self.from_map_to_h(node, match); end
+  def self.from_to_h(node, match); end
   def self.inspect; end
   def self.members; end
   def self.new(*arg0); end
@@ -175,6 +177,12 @@ class RuboCop::Cop::Rails::ActiveSupportAliases < RuboCop::Cop::Cop
   def prepend(node = nil); end
   def register_offense(node, method_name); end
   def starts_with?(node = nil); end
+end
+class RuboCop::Cop::Rails::AfterCommitOverride < RuboCop::Cop::Cop
+  def after_commit_callback?(node); end
+  def class_send_nodes(class_node); end
+  def each_after_commit_callback(class_node); end
+  def on_class(class_node); end
 end
 class RuboCop::Cop::Rails::ApplicationController < RuboCop::Cop::Cop
   def autocorrect(node); end
@@ -466,6 +474,7 @@ class RuboCop::Cop::Rails::IndexBy < RuboCop::Cop::Cop
   def on_bad_each_with_object(node = nil); end
   def on_bad_hash_brackets_map(node = nil); end
   def on_bad_map_to_h(node = nil); end
+  def on_bad_to_h(node = nil); end
   include RuboCop::Cop::IndexMethod
 end
 class RuboCop::Cop::Rails::IndexWith < RuboCop::Cop::Cop
@@ -473,6 +482,7 @@ class RuboCop::Cop::Rails::IndexWith < RuboCop::Cop::Cop
   def on_bad_each_with_object(node = nil); end
   def on_bad_hash_brackets_map(node = nil); end
   def on_bad_map_to_h(node = nil); end
+  def on_bad_to_h(node = nil); end
   extend RuboCop::Cop::TargetRailsVersion
   include RuboCop::Cop::IndexMethod
 end
@@ -550,6 +560,12 @@ class RuboCop::Cop::Rails::NotNullColumn < RuboCop::Cop::Cop
   def null_false?(node = nil); end
   def on_send(node); end
 end
+class RuboCop::Cop::Rails::OrderById < RuboCop::Cop::Base
+  def offense_range(node); end
+  def on_send(node); end
+  def order_by_id?(node = nil); end
+  include RuboCop::Cop::RangeHelp
+end
 class RuboCop::Cop::Rails::Output < RuboCop::Cop::Cop
   def io_output?(node = nil); end
   def match_gvar?(sym); end
@@ -590,7 +606,9 @@ end
 class RuboCop::Cop::Rails::PluckInWhere < RuboCop::Cop::Cop
   def autocorrect(node); end
   def on_send(node); end
+  def root_receiver(node); end
   include RuboCop::Cop::ActiveRecordHelper
+  include RuboCop::Cop::ConfigurableEnforcedStyle
 end
 class RuboCop::Cop::Rails::PluralizationGrammar < RuboCop::Cop::Cop
   def autocorrect(node); end
@@ -695,6 +713,7 @@ class RuboCop::Cop::Rails::RefuteMethods < RuboCop::Cop::Cop
 end
 class RuboCop::Cop::Rails::RelativeDateConstant < RuboCop::Cop::Cop
   def autocorrect(node); end
+  def offense_range(name, value); end
   def on_casgn(node); end
   def on_masgn(node); end
   def on_or_asgn(node); end
@@ -731,14 +750,18 @@ class RuboCop::Cop::Rails::ReversibleMigration < RuboCop::Cop::Cop
   def check_drop_table_node(node); end
   def check_irreversible_schema_statement_node(node); end
   def check_remove_column_node(node); end
+  def check_remove_columns_node(node); end
   def check_remove_foreign_key_node(node); end
+  def check_remove_index_node(node); end
   def check_reversible_hash_node(node); end
   def drop_table_call(node = nil); end
   def irreversible_schema_statement_call(node = nil); end
   def on_block(node); end
   def on_send(node); end
   def remove_column_call(node = nil); end
+  def remove_columns_call(node = nil); end
   def remove_foreign_key_call(node = nil); end
+  def remove_index_call(node = nil); end
   def reversible_change_table_call?(node); end
   def within_change_method?(node); end
   def within_reversible_or_up_only_block?(node); end
@@ -807,6 +830,15 @@ class RuboCop::Cop::Rails::SkipsModelValidations < RuboCop::Cop::Cop
   def on_csend(node); end
   def on_send(node); end
 end
+class RuboCop::Cop::Rails::SquishedSQLHeredocs < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def message(node); end
+  def offense_detected?(node); end
+  def on_heredoc(node); end
+  def sql_heredoc?(node); end
+  def using_squish?(node); end
+  include RuboCop::Cop::Heredoc
+end
 class RuboCop::Cop::Rails::TimeZone < RuboCop::Cop::Cop
   def acceptable_methods(klass, method_name, node); end
   def autocorrect(node); end
@@ -845,11 +877,13 @@ class RuboCop::Cop::Rails::UniqueValidationWithoutIndex < RuboCop::Cop::Cop
   def column_names(node); end
   def column_names_from_scope(node); end
   def condition_part?(node); end
+  def find_schema_information(node); end
   def find_scope(pairs); end
   def include_column_names_in_expression_index?(index, column_names); end
   def on_send(node); end
+  def unfreeze_scope(scope); end
   def uniqueness_part(node); end
-  def with_index?(node); end
+  def with_index?(klass, table, names); end
   include RuboCop::Cop::ActiveRecordHelper
 end
 class RuboCop::Cop::Rails::UnknownEnv < RuboCop::Cop::Cop
@@ -878,8 +912,24 @@ end
 class RuboCop::Cop::Rails::WhereExists < RuboCop::Cop::Cop
   def autocorrect(node); end
   def build_good_method(args); end
+  def build_good_method_exists(args); end
+  def build_good_method_where(args); end
   def convertable_args?(args); end
   def correction_range(node); end
+  def exists_style?; end
+  def exists_with_args?(node = nil); end
+  def find_offenses(node, &block); end
   def on_send(node); end
   def where_exists_call?(node = nil); end
+  def where_style?; end
+  include RuboCop::Cop::ConfigurableEnforcedStyle
+end
+class RuboCop::Cop::Rails::WhereNot < RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def build_good_method(column, value); end
+  def extract_column_and_value(template_node, value_node); end
+  def offense_range(node); end
+  def on_send(node); end
+  def where_method_call?(node = nil); end
+  include RuboCop::Cop::RangeHelp
 end
