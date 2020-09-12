@@ -962,3 +962,10 @@ nav.navbar {
 .card {
   --card-radius: var(--radius);
 }
+
+// FIXME: A temporary hack until the vue-good-table dark theme styling is
+// fixed. Without this, it'll try to use a light grey background for the
+// headers on the compare library page.
+.vgt-table th.vgt-row-header {
+  background-color: var(--scheme-main) !important;
+}
