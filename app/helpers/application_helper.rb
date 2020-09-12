@@ -156,7 +156,7 @@ module ApplicationHelper
         }
       end
 
-      items = items.concat(
+      items.concat(
         [
           {
             title: 'Settings',
@@ -177,7 +177,7 @@ module ApplicationHelper
 
     # Always provide the links to extra information no matter if the user is
     # logged in or not.
-    items = items.concat(
+    items.concat(
       [
         {
           title: 'About',

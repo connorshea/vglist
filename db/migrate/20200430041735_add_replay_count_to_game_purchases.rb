@@ -1,4 +1,5 @@
 # typed: true
+# rubocop:disable Rails/SquishedSQLHeredocs
 class AddReplayCountToGamePurchases < ActiveRecord::Migration[6.0]
   def change
     add_column :game_purchases, :replay_count, :integer, null: false, default: 0
@@ -19,3 +20,4 @@ class AddReplayCountToGamePurchases < ActiveRecord::Migration[6.0]
     end
   end
 end
+# rubocop:enable Rails/SquishedSQLHeredocs
