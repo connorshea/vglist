@@ -4,7 +4,6 @@
     <div class="control">
       <v-select
         :options="options"
-        :maxHeight="maxHeight"
         :disabled="disabled"
         label="label"
         :placeholder="placeholder"
@@ -48,13 +47,6 @@ export default {
       type: String,
       required: false,
       default: 'field'
-    },
-    // TODO: Replace this with a CSS change when vue-select 3.0.0 comes out.
-    // https://github.com/sagalbot/vue-select/pull/759
-    maxHeight: {
-      type: String,
-      required: false,
-      default: '400px'
     },
     disabled: {
       type: Boolean,

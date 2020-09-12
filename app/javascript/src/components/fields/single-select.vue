@@ -4,7 +4,6 @@
     <div :class="parentClass">
       <v-select
         :options="options"
-        :maxHeight="maxHeight"
         :disabled="disabled"
         @search="onSearch"
         label="name"
@@ -35,13 +34,6 @@ export default {
     value: {
       type: Object,
       required: false
-    },
-    // TODO: Replace this with a CSS change when vue-select 3.0.0 comes out.
-    // https://github.com/sagalbot/vue-select/pull/759
-    maxHeight: {
-      type: String,
-      required: false,
-      default: '400px'
     },
     disabled: {
       type: Boolean,
