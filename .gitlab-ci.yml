@@ -64,7 +64,7 @@ sorbet:tc:
 typescript:tsc:
   before_script: *no_db_necessary
   script:
-    - yarn run tsc
+    - yarn run tsc --noEmit
 
 rubocop:
   before_script: *no_db_necessary
