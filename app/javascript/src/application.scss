@@ -173,6 +173,8 @@ html {
 }
 
 nav.navbar {
+  --navbar-menu-background-color: var(--vglist-theme);
+
   background: var(--vglist-theme);
   // Subtle box-shadow for nav bar.
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
@@ -404,7 +406,7 @@ nav.navbar {
 }
 
 .custom-card {
-  --card-radius: var(--radius-large);
+  --card-radius: var(--radius);
 
   background-color: var(--card-background-color, #fff);
   box-shadow: var(--vglist-shadow);
@@ -876,18 +878,7 @@ nav.navbar {
 
 // Custom vue-select styles.
 .v-select {
-  border: 1px solid var(--input-border-color);
-  border-radius: var(--input-radius);
   background-color: var(--input-background-color);
-
-  &:hover {
-    border: 1px solid var(--input-hover-border-color);
-  }
-
-  &:focus,
-  &.vs--open {
-    border: 1px solid var(--input-focus-border-color);
-  }
 
   .vs__search {
     color: var(--input-color);
@@ -902,6 +893,20 @@ nav.navbar {
     color: var(--text);
   }
 
+  .vs__dropdown-toggle {
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--input-radius);
+
+    &:hover {
+      border: 1px solid var(--input-hover-border-color);
+    }
+
+    &:focus,
+    &.vs--open {
+      border: 1px solid var(--input-focus-border-color);
+    }
+  }
+
   .vs__selected {
     color: var(--text);
   }
@@ -913,6 +918,12 @@ nav.navbar {
 
   .vs__dropdown-option {
     color: var(--text);
+
+    // When highlighted, it should have white text since it always has a blue
+    // background.
+    &.vs__dropdown-option--highlight {
+      color: var(--white);
+    }
   }
 
   // Set the fill of the icons in v-select inputs.
@@ -945,9 +956,9 @@ nav.navbar {
 }
 
 .box {
-  --box-radius: var(--radius-large);
+  --box-radius: var(--radius);
 }
 
 .card {
-  --card-radius: var(--radius-large);
+  --card-radius: var(--radius);
 }
