@@ -18,7 +18,8 @@ document.addEventListener('turbolinks:load', () => {
           viewTokenButton.disabled = true;
         })
         .catch(errors => {
-          this.errors = errors;
+          // TODO: Actually handle the errors here somehow.
+          console.log(errors);
         });
     });
   }
