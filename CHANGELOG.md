@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.9.12
+### Added
+- Add a dark mode. This is controlled by the `prefers-color-scheme` media query, which means it's determined by browsers. Some browsers let you specify whether you want a dark or light mode for websites, and some just use the theme value from the operating system. ([#1501])
+
 ## v2020.9.7
 ### Fixed
 - Fix the "Sign out" button which broke after a refactor a few weeks ago. ([#1488])
@@ -772,3 +776,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1394]: https://github.com/connorshea/vglist/pull/1394
 [#1403]: https://github.com/connorshea/vglist/pull/1403
 [#1488]: https://github.com/connorshea/vglist/pull/1488
+[#1501]: https://github.com/connorshea/vglist/pull/1501
