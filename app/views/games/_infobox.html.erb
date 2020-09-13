@@ -1,68 +1,84 @@
 <div class="box infobox">
-  <p class="infobox-header has-text-weight-semibold">Average Rating
-  <% if game.avg_rating.nil? %>
-    <p>No average rating yet
-  <% else %>
-    <p><span class="has-text-weight-medium"><%= game.avg_rating %></span>/100
-  <% end %>
+  <div class="infobox-section">
+    <p class="infobox-header has-text-weight-semibold">Average Rating
+    <% if game.avg_rating.nil? %>
+      <p>No average rating yet
+    <% else %>
+      <p><span class="has-text-weight-medium"><%= game.avg_rating %></span>/100
+    <% end %>
+  </div>
 
   <% unless game.release_date.nil? %>
-    <p class="infobox-header has-text-weight-semibold">Release Date
-    <ul>
-      <li><%= game.release_date.strftime("%B %-d, %Y") %>
-    </ul>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold">Release Date
+      <ul>
+        <li><%= game.release_date.strftime("%B %-d, %Y") %>
+      </ul>
+    </div>
   <% end %>
 
   <% unless game.developers.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Developer".pluralize(game.developers.count) %>
-    <ul>
-      <% game.developers.each do |developer| %>
-        <li><%= link_to(developer.name, company_path(developer.id)) %>
-      <% end %>
-    </ul>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold"><%= "Developer".pluralize(game.developers.count) %>
+      <ul>
+        <% game.developers.each do |developer| %>
+          <li><%= link_to(developer.name, company_path(developer.id)) %>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 
   <% unless game.publishers.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Publisher".pluralize(game.publishers.count) %>
-    <ul>
-      <% game.publishers.each do |publisher| %>
-        <li><%= link_to(publisher.name, company_path(publisher.id)) %>
-      <% end %>
-    </ul>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold"><%= "Publisher".pluralize(game.publishers.count) %>
+      <ul>
+        <% game.publishers.each do |publisher| %>
+          <li><%= link_to(publisher.name, company_path(publisher.id)) %>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 
   <% unless game.platforms.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Platform".pluralize(game.platforms.count) %>
-    <ul>
-      <% game.platforms.each do |platform| %>
-        <li><%= link_to(platform.name, platform_path(platform.id)) %>
-      <% end %>
-    </ul>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold"><%= "Platform".pluralize(game.platforms.count) %>
+      <ul>
+        <% game.platforms.each do |platform| %>
+          <li><%= link_to(platform.name, platform_path(platform.id)) %>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 
   <% unless game.series.blank? %>
-    <p class="infobox-header has-text-weight-semibold">Series
-    <ul>
-      <li><%= link_to(game.series.name, series_path(game.series.id)) %>
-    </ul>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold">Series
+      <ul>
+        <li><%= link_to(game.series.name, series_path(game.series.id)) %>
+      </ul>
+    </div>
   <% end %>
 
   <% unless game.genres.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Genre".pluralize(game.genres.count) %>
-    <ul>
-      <% game.genres.each do |genre| %>
-        <li><%= link_to(genre.name, genre_path(genre.id)) %>
-      <% end %>
-    </ul>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold"><%= "Genre".pluralize(game.genres.count) %>
+      <ul>
+        <% game.genres.each do |genre| %>
+          <li><%= link_to(genre.name, genre_path(genre.id)) %>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 
   <% unless game.engines.blank? %>
-    <p class="infobox-header has-text-weight-semibold"><%= "Engine".pluralize(game.engines.count) %>
-    <ul>
-      <% game.engines.each do |engine| %>
-        <li><%= link_to(engine.name, engine_path(engine.id)) %>
-      <% end %>
-    </ul>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold"><%= "Engine".pluralize(game.engines.count) %>
+      <ul>
+        <% game.engines.each do |engine| %>
+          <li><%= link_to(engine.name, engine_path(engine.id)) %>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 
   <% unless [
@@ -74,31 +90,33 @@
     game.epic_games_store_id,
     game.gog_id
   ].all?(&:blank?) %>
-    <p class="infobox-header has-text-weight-semibold">External links
-    <ul>
-      <% unless game.wikidata_id.blank? %>
-        <li><%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{game.wikidata_id}" %>
-      <% end %>
-      <% unless game.pcgamingwiki_id.blank? %>
-        <li><%= link_to 'PCGamingWiki', "https://pcgamingwiki.com/wiki/#{game.pcgamingwiki_id}" %>
-      <% end %>
-      <% unless game.steam_app_ids.blank? %>
-        <% game.steam_app_ids.each_with_index do |steam_app_id, index| %>
-          <li><%= link_to "#{index == 0 ? 'Steam' : 'Steam (alt)'}", "https://store.steampowered.com/app/#{steam_app_id.app_id}" %>
+    <div class="infobox-section">
+      <p class="infobox-header has-text-weight-semibold">External links
+      <ul>
+        <% unless game.wikidata_id.blank? %>
+          <li><%= link_to 'Wikidata', "https://www.wikidata.org/wiki/Q#{game.wikidata_id}" %>
         <% end %>
-      <% end %>
-      <% unless game.epic_games_store_id.blank? %>
-        <li><%= link_to 'Epic Games Store', "https://www.epicgames.com/product/#{game.epic_games_store_id}" %>
-      <% end %>
-      <% unless game.gog_id.blank? %>
-        <li><%= link_to 'GOG.com', "https://www.gog.com/game/#{game.gog_id}" %>
-      <% end %>
-      <% unless game.mobygames_id.blank? %>
-        <li><%= link_to 'MobyGames', "https://www.mobygames.com/game/#{game.mobygames_id}" %>
-      <% end %>
-      <% unless game.giantbomb_id.blank? %>
-        <li><%= link_to 'GiantBomb', "https://www.giantbomb.com/wd/#{game.giantbomb_id}" %>
-      <% end %>
-    </ul>
+        <% unless game.pcgamingwiki_id.blank? %>
+          <li><%= link_to 'PCGamingWiki', "https://pcgamingwiki.com/wiki/#{game.pcgamingwiki_id}" %>
+        <% end %>
+        <% unless game.steam_app_ids.blank? %>
+          <% game.steam_app_ids.each_with_index do |steam_app_id, index| %>
+            <li><%= link_to "#{index == 0 ? 'Steam' : 'Steam (alt)'}", "https://store.steampowered.com/app/#{steam_app_id.app_id}" %>
+          <% end %>
+        <% end %>
+        <% unless game.epic_games_store_id.blank? %>
+          <li><%= link_to 'Epic Games Store', "https://www.epicgames.com/product/#{game.epic_games_store_id}" %>
+        <% end %>
+        <% unless game.gog_id.blank? %>
+          <li><%= link_to 'GOG.com', "https://www.gog.com/game/#{game.gog_id}" %>
+        <% end %>
+        <% unless game.mobygames_id.blank? %>
+          <li><%= link_to 'MobyGames', "https://www.mobygames.com/game/#{game.mobygames_id}" %>
+        <% end %>
+        <% unless game.giantbomb_id.blank? %>
+          <li><%= link_to 'GiantBomb', "https://www.giantbomb.com/wd/#{game.giantbomb_id}" %>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 </div>

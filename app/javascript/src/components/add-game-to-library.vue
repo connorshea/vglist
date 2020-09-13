@@ -1,9 +1,9 @@
 <template>
-  <div class="is-fullwidth-mobile">
+  <div class="is-fullwidth">
     <button
       v-if="gamePurchaseExists"
       @click="editGameInLibrary()"
-      class="button is-fullwidth-mobile is-primary mr-5 mr-0-mobile"
+      class="button is-fullwidth is-primary mr-5 mr-0-mobile"
     >
       <span class="icon" v-html="this.pencilIcon"></span>
       <span>Edit game in library</span>
@@ -11,7 +11,7 @@
     <button
       v-if="gamePurchaseExists"
       @click="removeGameFromLibrary()"
-      class="button is-fullwidth-mobile is-danger mr-5 mr-0-mobile"
+      class="button is-fullwidth is-danger mr-5 mr-0-mobile"
     >
       <span class="icon" v-html="this.removeIcon"></span>
       <span>Remove from library</span>
@@ -19,7 +19,7 @@
     <button
       v-if="!gamePurchaseExists"
       @click="addGameToLibrary()"
-      class="button is-fullwidth-mobile is-primary mr-5 mr-0-mobile"
+      class="button is-fullwidth is-primary mr-5 mr-0-mobile"
     >
       <span class="icon" v-html="this.plusIcon"></span>
       <span>Add to library</span>

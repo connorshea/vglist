@@ -292,9 +292,18 @@ nav.navbar {
 
 .buttons {
   align-items: initial;
+
+  &.buttons-vertical {
+    flex-direction: column;
+  }
 }
 
 .dropdown-trigger {
+  &.is-fullwidth {
+    display: flex;
+    width: 100%;
+  }
+
   &.is-fullwidth-mobile {
     @include touch {
       display: flex;
@@ -304,6 +313,11 @@ nav.navbar {
   }
 
   button {
+    &.is-fullwidth {
+      display: flex;
+      width: 100%;
+    }
+
     &.is-fullwidth-mobile {
       @include touch {
         display: flex;
@@ -313,9 +327,15 @@ nav.navbar {
   }
 }
 
-.dropdown-menu.is-fullwidth-mobile {
-  @include touch {
+.dropdown-menu {
+  &.is-fullwidth {
     width: 100%;
+  }
+
+  &.is-fullwidth-mobile {
+    @include touch {
+      width: 100%;
+    }
   }
 }
 
@@ -355,7 +375,7 @@ nav.navbar {
   }
 
   .hero-image {
-    flex: 1 1 150px;
+    flex: 1 1 200px;
 
     img {
       max-height: 100%;
@@ -371,7 +391,7 @@ nav.navbar {
 
     &.hero-image-150 {
       img {
-        height: 150px;
+        height: 200px;
         width: auto;
         max-width: 100%;
       }
@@ -383,11 +403,11 @@ nav.navbar {
   }
 
   .game-cover {
-    flex: 1 1 300px;
+    flex: 1 1 400px;
     display: inline-flex;
     height: auto;
-    max-height: 360px;
-    width: 240px;
+    max-height: 480px;
+    width: 400px;
 
     // On mobile, don't force a flex-basis.
     @include touch {
@@ -520,10 +540,22 @@ nav.navbar {
   opacity: 0.5;
 }
 
-// Limit width of infobox.
 .infobox {
-  max-width: 400px;
   width: 100%;
+
+  column-count: 3;
+  column-width: 250px;
+  column-gap: 20px;
+  column-fill: balance;
+
+  // Make it so the infobox sections aren't split between columns.
+  .infobox-section {
+    break-inside: avoid;
+  }
+
+  @include touch {
+    column-count: 1;
+  }
 }
 
 .stats-card {
