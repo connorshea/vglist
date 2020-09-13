@@ -5,6 +5,8 @@
 @import './stylesheets/home.scss';
 
 :root {
+  color-scheme: light dark;
+
   --vglist-theme: #5856d6;
   --home-page-subtitle-text: #fff;
   --home-section-background-color: var(--vglist-theme);
