@@ -498,6 +498,14 @@ nav.navbar {
 .notification.flash-notification {
   border-radius: 0;
   padding: 1rem 2.5rem 1rem 1.5rem;
+  display: flex;
+
+  // Make sure it wraps so the user can always see the notification text
+  // without it running over the 'close' button.
+  > p {
+    flex-grow: 1;
+    white-space: normal;
+  }
 
   // Reset the positioning of the delete element within the
   // notification container.
