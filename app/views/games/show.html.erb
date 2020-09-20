@@ -4,137 +4,140 @@
   <% content_for :opengraph_image, rails_blob_url(@game.cover) %>
 <% end %>
 
-<div class="hero-area">
-  <div class="hero-image game-cover mb-5">
-    <%= game_cover(@game, 300, 500) %>
+<div class="columns">
+  <div class="game-sidebar column is-3-desktop is-5-tablet is-12-mobile">
+    <div class="hero-image game-cover mb-5">
+      <%= game_cover(@game, 500, 800) %>
+    </div>
+
+    <div class="field buttons buttons-vertical">
+      <% if policy(@game).favorite? || policy(@game).unfavorite? %>
+        <%= link_to favorite_game_path(@game.id, format: :json),
+          method: :post,
+          class: "button is-fullwidth toggle-icon-on-hover js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }",
+          remote: :true,
+          data: { toggle_partner: 'favorite-off' } do %>
+          <%= svg_icon('heart', fill: :red, height: 16, aria: false, css_class: 'icon-1') %>
+          <%= svg_icon('heart-full', fill: :red, height: 16, aria: false, css_class: 'icon-2') %>
+          <span class='ml-5'>Favorite</span>
+        <% end %>
+        <%= link_to unfavorite_game_path(@game.id, format: :json),
+          method: :delete,
+          class: "button is-fullwidth toggle-icon-on-hover js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }",
+          remote: :true,
+          data: { toggle_partner: 'favorite-on' } do %>
+          <%= svg_icon('heart-full', fill: :red, height: 16, aria: false, css_class: 'icon-1') %>
+          <%= svg_icon('heart-broken', fill: :red, height: 16, aria: false, css_class: 'icon-2') %>
+          <span class='ml-5'>Unfavorite</span>
+        <% end %>
+      <% end %>
+
+      <% if policy(current_user).add_game_to_library? || policy(current_user).remove_game_from_library? %>
+        <div data-vue-component="add-game-to-library"
+          data-vue-props="<%=
+            {
+              gamePurchaseExists: game_in_user_library?(@game),
+              gamePurchaseId: @game_purchase&.id,
+              userId: current_user.id,
+              gameId: @game.id,
+              pencilIcon: svg_icon('pencil', fill: :white, height: 15, aria: false),
+              plusIcon: svg_icon('plus', fill: :white, height: 15, aria: false),
+              removeIcon: svg_icon('remove', fill: :white, height: 15, aria: false),
+            }.to_json
+          %>"></div>
+      <% end %>
+
+      <% if policy(@game).update? || policy(@game).destroy? %>
+        <div id="actions-dropdown" class="dropdown is-right is-fullwidth js-no-close-on-click">
+          <div class="dropdown-trigger is-fullwidth">
+            <button class="button is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>Actions</span>
+              <span class="icon">
+                <%= svg_icon('chevron-down', height: 15, aria: false) %>
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu is-fullwidth" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <% if policy(@game).update? %>
+                <%= link_to("Edit", edit_game_path(@game.id), class: "dropdown-item") %>
+              <% end %>
+              <% if @game.cover.attached? && policy(@game).remove_cover? %>
+                <%= link_to "Remove cover", remove_cover_game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
+              <% end %>
+              <% if policy(@game).add_to_wikidata_blocklist? && !@game.wikidata_id.nil? %>
+                <%= link_to "Add to Wikidata Blocklist", add_to_wikidata_blocklist_game_path(@game.id), method: :post, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
+              <% end %>
+              <% if policy(@game).merge? %>
+                <div data-vue-component="merge-games-button"
+                  data-vue-props="<%=
+                    {
+                      game: {
+                        id: @game.id,
+                        name: @game.name
+                      }
+                    }.to_json
+                  %>"></div>
+              <% end %>
+              <% if policy(@game).destroy? %>
+                <%= link_to "Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 
-  <div class="text-block">
-    <h1 class="title"><%= @game.name %></h1>
-  </div>
-</div>
+  <div class="column">
+    <div class="text-block mb-10-mobile">
+      <h1 class="title"><%= @game.name %></h1>
+      <%= render 'infobox', game: @game %>
+    </div>
 
-<div class="field buttons mt-5 mt-20-mobile">
-  <% if policy(@game).favorite? || policy(@game).unfavorite? %>
-    <%= link_to favorite_game_path(@game.id, format: :json),
-      method: :post,
-      class: "button is-fullwidth-mobile mr-5 mr-0-mobile toggle-icon-on-hover js-is-toggleable favorite-on #{ game_in_user_favorites?(@game) ? 'is-hidden' : '' }",
-      remote: :true,
-      data: { toggle_partner: 'favorite-off' } do %>
-      <%= svg_icon('heart', fill: :red, height: 16, aria: false, css_class: 'icon-1') %>
-      <%= svg_icon('heart-full', fill: :red, height: 16, aria: false, css_class: 'icon-2') %>
-      <span class='ml-5'>Favorite</span>
+    <% if @owners_count.positive? %>
+      <h3 class="title is-5 mb-5 mt-15">Owners (<%= @owners_count %>)</h3>
+      <ul>
+        <% @owners.each do |owner| %>
+          <li><%= link_to(owner.username, user_path(owner)) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <h3 class="title is-5 mb-5 mt-15">Owners</h3>
+      <p>No one has this game in their library yet.</p>
     <% end %>
-    <%= link_to unfavorite_game_path(@game.id, format: :json),
-      method: :delete,
-      class: "button is-fullwidth-mobile mr-5 mr-0-mobile toggle-icon-on-hover js-is-toggleable favorite-off #{ game_in_user_favorites?(@game) ? '' : 'is-hidden' }",
-      remote: :true,
-      data: { toggle_partner: 'favorite-on' } do %>
-      <%= svg_icon('heart-full', fill: :red, height: 16, aria: false, css_class: 'icon-1') %>
-      <%= svg_icon('heart-broken', fill: :red, height: 16, aria: false, css_class: 'icon-2') %>
-      <span class='ml-5'>Unfavorite</span>
+
+    <% if @favoriters_count.positive? %>
+      <h3 class="title is-5 mb-5 mt-15">Favorites (<%= @favoriters_count %>)</h3>
+      <ul>
+        <% @favoriters.each do |favoriter| %>
+          <li><%= link_to(favoriter.username, user_path(favoriter)) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <h3 class="title is-5 mb-5 mt-15">Favorites</h3>
+      <p>No one has favorited this game yet.</p>
     <% end %>
-  <% end %>
 
-  <% if policy(current_user).add_game_to_library? || policy(current_user).remove_game_from_library? %>
-    <div data-vue-component="add-game-to-library"
-      data-vue-props="<%=
-        {
-          gamePurchaseExists: game_in_user_library?(@game),
-          gamePurchaseId: @game_purchase&.id,
-          userId: current_user.id,
-          gameId: @game.id,
-          pencilIcon: svg_icon('pencil', fill: :white, height: 15, aria: false),
-          plusIcon: svg_icon('plus', fill: :white, height: 15, aria: false),
-          removeIcon: svg_icon('remove', fill: :white, height: 15, aria: false),
-        }.to_json
-      %>"></div>
-  <% end %>
+    <% if @games_in_series && @games_in_series.count.positive? %>
+      <div class="card more-from-this-series-card mt-15">
+        <div class="card-content">
+          <h3 class="title is-5 mb-15">
+            <%= link_to 'More from this series', series_path(@game.series) %>
+          </h3>
 
-  <% if policy(@game).update? || policy(@game).destroy? %>
-    <div id="actions-dropdown" class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile js-no-close-on-click">
-      <div class="dropdown-trigger is-fullwidth-mobile">
-        <button class="button is-fullwidth-mobile" aria-haspopup="true" aria-controls="dropdown-menu">
-          <span>Actions</span>
-          <span class="icon">
-            <%= svg_icon('chevron-down', height: 15, aria: false) %>
-          </span>
-        </button>
-      </div>
-      <div class="dropdown-menu is-fullwidth-mobile" id="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <% if policy(@game).update? %>
-            <%= link_to("Edit", edit_game_path(@game.id), class: "dropdown-item") %>
-          <% end %>
-          <% if @game.cover.attached? && policy(@game).remove_cover? %>
-            <%= link_to "Remove cover", remove_cover_game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
-          <% end %>
-          <% if policy(@game).add_to_wikidata_blocklist? && !@game.wikidata_id.nil? %>
-            <%= link_to "Add to Wikidata Blocklist", add_to_wikidata_blocklist_game_path(@game.id), method: :post, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
-          <% end %>
-          <% if policy(@game).merge? %>
-            <div data-vue-component="merge-games-button"
-              data-vue-props="<%=
-                {
-                  game: {
-                    id: @game.id,
-                    name: @game.name
-                  }
-                }.to_json
-              %>"></div>
-          <% end %>
-          <% if policy(@game).destroy? %>
-            <%= link_to "Delete", game_path(@game.id), method: :delete, data: { confirm: "You sure?" }, class: "dropdown-item has-text-danger" %>
-          <% end %>
+          <div class="games">
+            <% @games_in_series.each do |game| %>
+              <%= link_to(game_path(game.id)) do %>
+                <figure class="game-cover">
+                  <%= game_cover(game, 300, 500) %>
+                  <p><%= game.name %></p>
+                </figure>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
-</div>
-
-<%= render 'infobox', game: @game %>
-
-<% if @owners_count.positive? %>
-  <h3 class="title is-5 mb-5 mt-15">Owners (<%= @owners_count %>)</h3>
-  <ul>
-    <% @owners.each do |owner| %>
-      <li><%= link_to(owner.username, user_path(owner)) %></li>
     <% end %>
-  </ul>
-<% else %>
-  <h3 class="title is-5 mb-5 mt-15">Owners</h3>
-  <p>No one has this game in their library yet.</p>
-<% end %>
-
-<% if @favoriters_count.positive? %>
-  <h3 class="title is-5 mb-5 mt-15">Favorites (<%= @favoriters_count %>)</h3>
-  <ul>
-    <% @favoriters.each do |favoriter| %>
-      <li><%= link_to(favoriter.username, user_path(favoriter)) %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <h3 class="title is-5 mb-5 mt-15">Favorites</h3>
-  <p>No one has favorited this game yet.</p>
-<% end %>
-
-<% if @games_in_series && @games_in_series.count.positive? %>
-  <div class="card more-from-this-series-card mt-15">
-    <div class="card-content">
-      <h3 class="title is-5 mb-15">
-        <%= link_to 'More from this series', series_path(@game.series) %>
-      </h3>
-
-      <div class="games">
-        <% @games_in_series.each do |game| %>
-          <%= link_to(game_path(game.id)) do %>
-            <figure class="game-cover">
-              <%= game_cover(game, 300, 500) %>
-              <p><%= game.name %></p>
-            </figure>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
   </div>
-<% end %>
+</div>
