@@ -12,7 +12,7 @@
       <% if !user.bio.blank? %>
         <h2 class="subtitle"><%= user.bio %></h2>
       <% else %>
-        <h2 class="subtitle">
+        <h2 class="subtitle has-text-muted">
           <%= user == current_user ? "You haven't added a bio yet." : "This user hasn't added a bio yet." %>
         </h2>
       <% end %>
