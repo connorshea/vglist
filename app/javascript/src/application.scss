@@ -521,12 +521,15 @@ nav.navbar {
 
   // When the modal card title is too long, make sure it
   // gets a trailing ellipsis instead of causing horizontal scrolling.
+  // Also add bottom padding to prevent characters that go below the baseline
+  // from being clipped (e.g. the letter 'g').
   .modal-card-title {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: calc(100% - 20px);
     padding-right: 10px;
+    padding-bottom: 4px;
   }
 }
 
