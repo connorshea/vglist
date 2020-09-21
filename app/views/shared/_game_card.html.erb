@@ -5,8 +5,22 @@
     </figure>
     <div class="card-content">
       <p class="title is-4 mr-10"><%= game.name %></p>
-      <p class="subtitle is-6"><%= summarize(game.platforms.pluck(:name)) %></p>
-      <p class="subtitle is-6"><%= summarize(game.developers.pluck(:name), limit: 2) %></p>
+      <% if game.platforms.any? %>
+        <div class="mb-10">
+          <%= svg_icon('hdd', height: 16, width: 16, css_class: 'is-vertical-align-middle has-fill-link', aria: false) %>
+          <p class="subtitle is-6 ml-5 is-inline is-vertical-align-middle">
+            <%= summarize(game.platforms.pluck(:name)) %>
+          </p>
+        </div>
+      <% end %>
+      <% if game.developers.any? %>
+        <div class="mb-10">
+          <%= svg_icon('building', height: 16, width: 16, css_class: 'is-vertical-align-middle has-fill-link', aria: false) %>
+          <p class="subtitle is-6 ml-5 is-inline is-vertical-align-middle">
+            <%= summarize(game.developers.pluck(:name), limit: 2) %>
+          </p>
+        </div>
+      <% end %>
     </div>
   <% end %>
   <% if current_user %>

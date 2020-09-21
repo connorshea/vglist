@@ -434,6 +434,7 @@ nav.navbar {
   box-shadow: var(--vglist-shadow);
   border-radius: var(--card-radius);
   color: hsl(0, 0%, 21%);
+  fill: var(--text);
   width: auto;
   position: relative;
   overflow: hidden;
@@ -998,6 +999,14 @@ nav.navbar {
 // a card.
 .has-text-muted {
   color: var(--text-muted);
+}
+
+.has-fill-muted {
+  fill: var(--text-muted);
+}
+
+.has-fill-link {
+  fill: var(--link) !important;
 }
 
 .box {
