@@ -48,6 +48,8 @@
         </div>
       </div>
 
+      <%= f.invisible_captcha :honey, nonce: true %>
+
       <div class="field">
         <%= f.submit "Update", class: "button is-primary" %>
       </div>

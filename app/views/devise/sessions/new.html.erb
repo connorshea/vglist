@@ -18,6 +18,8 @@
       </div>
     </div>
 
+    <%= f.invisible_captcha :honey, nonce: true %>
+
     <% if devise_mapping.rememberable? -%>
       <div class="field">
         <%= f.label :remember_me, class: 'checkbox' do %>
