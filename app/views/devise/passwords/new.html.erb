@@ -13,6 +13,8 @@
       </div>
     </div>
 
+    <%= f.invisible_captcha :honey, nonce: true %>
+
     <div class="field has-text-centered">
       <%= f.submit "Send password reset email", class: "button is-primary mb-20 is-fullwidth" %>
     </div>

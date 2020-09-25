@@ -77,6 +77,10 @@ gem "rack-cors", "~> 1.1"
 # Render SVGs inline using Webpacker.
 gem 'inline_svg', '~> 1.7'
 
+# Honeypot for spambots that doesn't require the user to actually do any
+# captcha and doesn't use google stuff.
+gem 'invisible_captcha', '~> 1.1.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

@@ -21,6 +21,8 @@
     </div>
   </div>
 
+  <%= f.invisible_captcha :honey, nonce: true %>
+
   <div class="field">
     <%= f.submit "Change my password", class: "button is-primary" %>
   </div>

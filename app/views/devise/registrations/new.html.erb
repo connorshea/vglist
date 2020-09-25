@@ -38,6 +38,8 @@
       </div>
     </div>
 
+    <%= f.invisible_captcha :honey, nonce: true %>
+
     <div class="field has-text-centered">
       <%= f.submit "Sign up", class: "button is-primary mb-20 is-fullwidth" %>
     </div>
