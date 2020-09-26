@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/devise/all/devise.rbi
 #
-# devise-4.7.2
+# devise-4.7.3
 
 module Devise
   def allow_unconfirmed_access_for; end

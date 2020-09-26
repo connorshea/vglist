@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/regexp_parser/all/regexp_parser.rbi
 #
-# regexp_parser-1.7.1
+# regexp_parser-1.8.0
 
 class Regexp
 end
@@ -29,6 +29,7 @@ class Regexp::Parser
   def count_captured_group; end
   def decrease_nesting; end
   def escape(token); end
+  def extract_options(input, options); end
   def free_space(token); end
   def group(token); end
   def intersection(token); end
@@ -44,11 +45,10 @@ class Regexp::Parser
   def node=(arg0); end
   def open_group(token); end
   def open_set(token); end
-  def options_from_input(input); end
   def options_group(token); end
   def options_stack; end
   def options_stack=(arg0); end
-  def parse(input, syntax = nil, &block); end
+  def parse(input, syntax = nil, options: nil, &block); end
   def parse_token(token); end
   def posixclass(token); end
   def property(token); end
@@ -56,7 +56,7 @@ class Regexp::Parser
   def range(token); end
   def root; end
   def root=(arg0); end
-  def self.parse(input, syntax = nil, &block); end
+  def self.parse(input, syntax = nil, options: nil, &block); end
   def sequence_operation(klass, token); end
   def set(token); end
   def switching_options; end
@@ -109,15 +109,16 @@ class Regexp::Scanner
   def emit_options(text, ts, te); end
   def free_spacing; end
   def free_spacing=(arg0); end
+  def free_spacing?(input_object, options); end
   def group_depth; end
   def group_depth=(arg0); end
   def in_group?; end
   def in_set?; end
   def literal; end
   def literal=(arg0); end
-  def scan(input_object, &block); end
+  def scan(input_object, options: nil, &block); end
   def self.long_prop_map; end
-  def self.scan(input_object, &block); end
+  def self.scan(input_object, options: nil, &block); end
   def self.short_prop_map; end
   def set_depth; end
   def set_depth=(arg0); end
@@ -296,12 +297,12 @@ class Regexp::Lexer
   def conditional_nesting; end
   def conditional_nesting=(arg0); end
   def descend(type, token); end
-  def lex(input, syntax = nil, &block); end
+  def lex(input, syntax = nil, options: nil, &block); end
   def merge_condition(current); end
   def nesting; end
   def nesting=(arg0); end
-  def self.lex(input, syntax = nil, &block); end
-  def self.scan(input, syntax = nil, &block); end
+  def self.lex(input, syntax = nil, options: nil, &block); end
+  def self.scan(input, syntax = nil, options: nil, &block); end
   def set_nesting; end
   def set_nesting=(arg0); end
   def shift; end

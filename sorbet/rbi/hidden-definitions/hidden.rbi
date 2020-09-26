@@ -3950,6 +3950,7 @@ end
 
 class BetterErrors::Middleware
   ALLOWED_IPS = ::T.let(nil, ::T.untyped)
+  CSRF_TOKEN_COOKIE_NAME = ::T.let(nil, ::T.untyped)
 end
 
 module BetterErrors::REPL
@@ -10290,6 +10291,10 @@ class Hash
   include ::JSON::Ext::Generator::GeneratorMethods::Hash
 end
 
+class Hash
+  def self.try_convert(_); end
+end
+
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
 
 module I18n
@@ -10688,6 +10693,10 @@ class Integer
   include ::ActiveSupport::NumericWithFormat
   def to_bn(); end
   GMP_VERSION = ::T.let(nil, ::T.untyped)
+end
+
+module InvisibleCaptcha
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module JMESPath
@@ -12018,13 +12027,7 @@ end
 
 Net::HTTPFatalErrorCode = Net::HTTPClientError
 
-class Net::HTTPInformation
-end
-
-Net::HTTPInformationCode::EXCEPTION_TYPE = Net::HTTPError
-
-class Net::HTTPInformation
-end
+Net::HTTPInformationCode = Net::HTTPInformation
 
 class Net::HTTPLoopDetected
   HAS_BODY = ::T.let(nil, ::T.untyped)
@@ -15378,6 +15381,7 @@ class PublicSuffix::List
 end
 
 module Puma
+  HAS_SSL = ::T.let(nil, ::T.untyped)
   HTTP_STATUS_CODES = ::T.let(nil, ::T.untyped)
   IS_JRUBY = ::T.let(nil, ::T.untyped)
   IS_WINDOWS = ::T.let(nil, ::T.untyped)
@@ -15444,7 +15448,6 @@ module Puma::Const
   KEEP_ALIVE = ::T.let(nil, ::T.untyped)
   LINE_END = ::T.let(nil, ::T.untyped)
   LOCALHOST = ::T.let(nil, ::T.untyped)
-  LOCALHOST_ADDR = ::T.let(nil, ::T.untyped)
   LOCALHOST_IP = ::T.let(nil, ::T.untyped)
   MAX_BODY = ::T.let(nil, ::T.untyped)
   MAX_FAST_INLINE = ::T.let(nil, ::T.untyped)
@@ -15482,6 +15485,10 @@ module Puma::Const
   WRITE_TIMEOUT = ::T.let(nil, ::T.untyped)
 end
 
+class Puma::ErrorLogger
+  REQUEST_FORMAT = ::T.let(nil, ::T.untyped)
+end
+
 class Puma::Events
   DEFAULT = ::T.let(nil, ::T.untyped)
 end
@@ -15497,6 +15504,7 @@ class Puma::Launcher
 end
 
 module Puma::MiniSSL
+  HAS_TLS1_3 = ::T.let(nil, ::T.untyped)
   OPENSSL_LIBRARY_VERSION = ::T.let(nil, ::T.untyped)
   OPENSSL_NO_SSL3 = ::T.let(nil, ::T.untyped)
   OPENSSL_NO_TLS1 = ::T.let(nil, ::T.untyped)
@@ -15522,6 +15530,7 @@ class Puma::Reactor
 end
 
 class Puma::Server
+  STAT_METHODS = ::T.let(nil, ::T.untyped)
   ThreadLocalKey = ::T.let(nil, ::T.untyped)
 end
 
@@ -17003,15 +17012,18 @@ class Raven::Client
 end
 
 class Raven::Configuration
+  AVAILABLE_BREADCRUMBS_LOGGERS = ::T.let(nil, ::T.untyped)
   DEFAULT_PROCESSORS = ::T.let(nil, ::T.untyped)
   HEROKU_DYNO_METADATA_MESSAGE = ::T.let(nil, ::T.untyped)
   IGNORE_DEFAULT = ::T.let(nil, ::T.untyped)
   LOG_PREFIX = ::T.let(nil, ::T.untyped)
   MODULE_SEPARATOR = ::T.let(nil, ::T.untyped)
+  RACK_ENV_WHITELIST_DEFAULT = ::T.let(nil, ::T.untyped)
 end
 
 class Raven::Event
   MAX_MESSAGE_SIZE_IN_BYTES = ::T.let(nil, ::T.untyped)
+  REQUIRED_OPTION_KEYS = ::T.let(nil, ::T.untyped)
   SDK = ::T.let(nil, ::T.untyped)
 end
 
@@ -17045,8 +17057,17 @@ class Raven::Processor::UTF8Conversion
   REPLACE = ::T.let(nil, ::T.untyped)
 end
 
+module Raven::RackInterface
+  REQUEST_ID_HEADERS = ::T.let(nil, ::T.untyped)
+end
+
 module Raven::Rails::ActiveJobExtensions
   ALREADY_SUPPORTED_SENTRY_ADAPTERS = ::T.let(nil, ::T.untyped)
+end
+
+class Raven::Rails::BacktraceCleaner
+  APP_DIRS_PATTERN = ::T.let(nil, ::T.untyped)
+  RENDER_TEMPLATE_PATTERN = ::T.let(nil, ::T.untyped)
 end
 
 class Raven::Utils::RealIp
@@ -17770,11 +17791,29 @@ class RuboCop::CLI::Command::AutoGenerateConfig
   AUTO_GENERATED_FILE = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::CLI::Command::ExecuteRunner
+  INTEGRATION_FORMATTERS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::ConfigRegeneration
+  AUTO_GENERATED_FILE = ::T.let(nil, ::T.untyped)
+  COMMAND_REGEX = ::T.let(nil, ::T.untyped)
+  DEFAULT_OPTIONS = ::T.let(nil, ::T.untyped)
+end
+
 module RuboCop::Cop::ActiveRecordHelper
   WHERE_METHODS = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Base
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Bundler::GemComment
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Bundler::InsecureProtocolSource
   RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
@@ -17787,6 +17826,14 @@ class RuboCop::Cop::Gemspec::RequiredRubyVersion
   NOT_EQUAL_MSG = ::T.let(nil, ::T.untyped)
 end
 
+module RuboCop::Cop::HashTransformMethod
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Layout::BeginEndAlignment
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Layout::EmptyLineAfterMultilineCondition
   MSG = ::T.let(nil, ::T.untyped)
 end
@@ -17795,8 +17842,20 @@ class RuboCop::Cop::Layout::SpaceAroundMethodCallOperator
   SPACES_REGEXP = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Layout::SpaceInsideReferenceBrackets
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::BigDecimalNew
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::BinaryOperatorWithIdenticalOperands
   MATH_OPERATORS = ::T.let(nil, ::T.untyped)
+  MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::ConstantDefinitionInBlock
   MSG = ::T.let(nil, ::T.untyped)
 end
 
@@ -17805,11 +17864,11 @@ class RuboCop::Cop::Lint::ConstantResolution
 end
 
 class RuboCop::Cop::Lint::Debugger
-  DEBUGGER_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::DeprecatedClassMethods
-  DEPRECATED_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::DuplicateElsifCondition
@@ -17817,16 +17876,21 @@ class RuboCop::Cop::Lint::DuplicateElsifCondition
 end
 
 class RuboCop::Cop::Lint::DuplicateMethods
-  METHOD_DEF_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::DuplicateRequire
   MSG = ::T.let(nil, ::T.untyped)
   REQUIRE_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::DuplicateRescueException
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::EachWithObjectArgument
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::EmptyConditionalBody
@@ -17837,16 +17901,30 @@ class RuboCop::Cop::Lint::EmptyFile
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::ErbNewArguments
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::FloatComparison
   EQUALITY_METHODS = ::T.let(nil, ::T.untyped)
   FLOAT_INSTANCE_METHODS = ::T.let(nil, ::T.untyped)
   FLOAT_RETURNING_METHODS = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::FormatParameterMismatch
-  FORMAT_METHODS = ::T.let(nil, ::T.untyped)
   MSG_INVALID = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::IdentityComparison
+  MSG = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::InheritException
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::MissingSuper
@@ -17859,16 +17937,47 @@ class RuboCop::Cop::Lint::MissingSuper
   STATELESS_CLASSES = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::MultipleComparison
+  COMPARISON_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::NumberConversion
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::OutOfRangeRegexpRef
   MSG = ::T.let(nil, ::T.untyped)
   REGEXP_ARGUMENT_METHODS = ::T.let(nil, ::T.untyped)
   REGEXP_CAPTURE_METHODS = ::T.let(nil, ::T.untyped)
   REGEXP_RECEIVER_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::RaiseException
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::RandOne
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::RedundantRequireStatement
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::SelfAssignment
   ASSIGNMENT_TYPE_TO_RHS_TYPE = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::SendWithMixinArgument
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+  SEND_METHODS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::StructNewOverride
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::TopLevelReturnWithArgument
@@ -17883,12 +17992,23 @@ class RuboCop::Cop::Lint::UnreachableLoop
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Lint::UriEscapeUnescape
+  METHOD_NAMES = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Lint::UriRegexp
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
   URI_CONSTANTS = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Lint::UselessMethodDefinition
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Lint::UselessTimes
+  MSG = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::Metrics::Utils::IteratingBlock
@@ -17925,6 +18045,12 @@ class RuboCop::Cop::Performance::CollectionLiteralInLoop
   NONMUTATING_ARRAY_METHODS = ::T.let(nil, ::T.untyped)
   NONMUTATING_HASH_METHODS = ::T.let(nil, ::T.untyped)
   POST_CONDITION_LOOP_TYPES = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Performance::Detect
+  CANDIDATE_METHODS = ::T.let(nil, ::T.untyped)
+  INDEX_MSG = ::T.let(nil, ::T.untyped)
+  INDEX_REVERSE_MSG = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Performance::IoReadlines
@@ -18084,8 +18210,28 @@ class RuboCop::Cop::Rails::WhereNot
   NOT_IN_NAMED_RE = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Security::Eval
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Security::JSONLoad
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Security::MarshalLoad
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Security::Open
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Security::YAMLLoad
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::AccessModifierDeclarations
-  ACCESS_MODIFIERS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::AccessorGrouping
@@ -18094,21 +18240,50 @@ class RuboCop::Cop::Style::AccessorGrouping
   SEPARATED_MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::Alias
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::ArrayCoercion
   CHECK_MSG = ::T.let(nil, ::T.untyped)
   SPLAT_MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::ArrayJoin
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::Attr
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::AutoResourceCleanup
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::BisectedAttrAccessor
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::CaseEquality
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::CaseLikeIf
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::ClassCheck
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::ClassMethodsDefinitions
   MSG = ::T.let(nil, ::T.untyped)
+  MSG_SCLASS = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::ClassVars
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::CombinableLoops
@@ -18120,8 +18295,28 @@ class RuboCop::Cop::Style::CommentedKeyword
   KEYWORD_REGEXES = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::Dir
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::DoubleNegation
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::EmptyLiteral
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::EvalWithLocation
-  EVAL_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::EvenOdd
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::ExpandPathArguments
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::ExplicitBlockArgument
@@ -18134,10 +18329,11 @@ end
 
 class RuboCop::Cop::Style::FloatDivision
   MESSAGES = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::FormatString
-  FORMAT_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::GlobalStdStream
@@ -18149,8 +18345,20 @@ class RuboCop::Cop::Style::HashLikeCase
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::ImplicitRuntimeError
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::KeywordParametersOrder
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::LambdaCall
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::MixinUsage
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::MultilineMemoization
@@ -18158,13 +18366,37 @@ class RuboCop::Cop::Style::MultilineMemoization
   KEYWORD_MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::NilComparison
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::NonNilCheck
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::Not
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::NumericPredicate
-  COMPARISON_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::OptionalBooleanParameter
   BOOLEAN_TYPES = ::T.let(nil, ::T.untyped)
   MSG = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::PreferredHashMethods
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RaiseArgs
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RandomWithOffset
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::RedundantAssignment
@@ -18176,7 +18408,7 @@ class RuboCop::Cop::Style::RedundantConditional
 end
 
 class RuboCop::Cop::Style::RedundantException
-  RAISE_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::RedundantFetchBlock
@@ -18185,6 +18417,11 @@ end
 
 class RuboCop::Cop::Style::RedundantFileExtensionInRequire
   MSG = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::RedundantFreeze
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::RedundantSelf
@@ -18198,23 +18435,53 @@ class RuboCop::Cop::Style::RedundantSelfAssignment
 end
 
 class RuboCop::Cop::Style::RedundantSort
-  SORT_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::Sample
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::Send
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::SignalException
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::SingleArgumentDig
   MSG = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::SlicingWithRange
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::SoleNestedConditional
   MSG = ::T.let(nil, ::T.untyped)
 end
 
+class RuboCop::Cop::Style::StderrPuts
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
 class RuboCop::Cop::Style::StringConcatenation
   MSG = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::Strip
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
+end
+
+class RuboCop::Cop::Style::UnpackFirst
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 class RuboCop::Cop::Style::ZeroLengthPredicate
-  LENGTH_METHODS = ::T.let(nil, ::T.untyped)
+  RESTRICT_ON_SEND = ::T.let(nil, ::T.untyped)
 end
 
 module RuboCop::Cop::VisibilityHelp
@@ -18224,6 +18491,10 @@ end
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
+
+class RuboCop::TargetFinder
+  HIDDEN_PATH_SUBSTRING = ::T.let(nil, ::T.untyped)
+end
 
 RuboCop::Token = RuboCop::AST::Token
 

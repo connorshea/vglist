@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.7.1.4
+# parser-2.7.1.5
 
 module Parser
   def self.warn_syntax_deviation(feature, version); end
@@ -54,10 +54,8 @@ class Parser::AST::Processor < AST::Processor
   def on_cvar(node); end
   def on_cvasgn(node); end
   def on_def(node); end
-  def on_def_e(node); end
   def on_defined?(node); end
   def on_defs(node); end
-  def on_defs_e(node); end
   def on_dstr(node); end
   def on_dsym(node); end
   def on_eflipflop(node); end
@@ -98,7 +96,6 @@ class Parser::AST::Processor < AST::Processor
   def on_match_with_lvasgn(node); end
   def on_mlhs(node); end
   def on_module(node); end
-  def on_mrasgn(node); end
   def on_next(node); end
   def on_not(node); end
   def on_nth_ref(node); end
@@ -112,7 +109,6 @@ class Parser::AST::Processor < AST::Processor
   def on_postexe(node); end
   def on_preexe(node); end
   def on_procarg0(node); end
-  def on_rasgn(node); end
   def on_redo(node); end
   def on_regexp(node); end
   def on_resbody(node); end
@@ -394,9 +390,10 @@ class Parser::Source::Map::Definition < Parser::Source::Map
   def name; end
   def operator; end
 end
-class Parser::Source::Map::EndlessDefinition < Parser::Source::Map
+class Parser::Source::Map::MethodDefinition < Parser::Source::Map
   def assignment; end
-  def initialize(keyword_l, operator_l, name_l, assignment_l, body_l); end
+  def end; end
+  def initialize(keyword_l, operator_l, name_l, end_l, assignment_l, body_l); end
   def keyword; end
   def name; end
   def operator; end
@@ -699,13 +696,14 @@ class Parser::Builders::Default
   def case(case_t, expr, when_bodies, else_t, else_body, end_t); end
   def case_match(case_t, expr, in_bodies, else_t, else_body, end_t); end
   def character(char_t); end
-  def check_assignment_to_numparam(node); end
+  def check_assignment_to_numparam(name, loc); end
   def check_condition(cond); end
   def check_duplicate_arg(this_arg, map = nil); end
   def check_duplicate_args(args, map = nil); end
   def check_duplicate_pattern_key(name, loc); end
   def check_duplicate_pattern_variable(name, loc); end
   def check_lvar_name(name, loc); end
+  def check_reserved_for_numparam(name, loc); end
   def collapse_string_parts?(parts); end
   def collection_map(begin_t, parts, end_t); end
   def complex(complex_t); end

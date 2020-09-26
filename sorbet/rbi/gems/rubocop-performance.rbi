@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-performance/all/rubocop-performance.rbi
 #
-# rubocop-performance-1.8.0
+# rubocop-performance-1.8.1
 
 module RuboCop
 end
@@ -148,12 +148,14 @@ class RuboCop::Cop::Performance::DeleteSuffix < RuboCop::Cop::Base
 end
 class RuboCop::Cop::Performance::Detect < RuboCop::Cop::Base
   def accept_first_call?(receiver, body); end
-  def autocorrect(corrector, node); end
+  def autocorrect(corrector, node, replacement); end
   def detect_candidate?(node = nil); end
   def lazy?(node); end
+  def message_for_method(method, index); end
   def on_send(node); end
   def preferred_method; end
-  def register_offense(node, receiver, second_method); end
+  def register_offense(node, receiver, second_method, index); end
+  def replacement(method, index); end
   extend RuboCop::Cop::AutoCorrector
 end
 class RuboCop::Cop::Performance::DoubleStartEndWith < RuboCop::Cop::Base
@@ -397,8 +399,8 @@ class RuboCop::Cop::Performance::Sum < RuboCop::Cop::Base
   def build_block_bad_method(method, init, var_acc, var_elem, body); end
   def build_block_message(send, init, var_acc, var_elem, body); end
   def build_good_method(init); end
-  def build_method_bad_method(init, method); end
-  def build_method_message(method, init); end
+  def build_method_bad_method(init, method, operation); end
+  def build_method_message(method, init, operation); end
   def elem_plus_acc?(node = nil, param1, param2); end
   def on_block(node); end
   def on_send(node); end

@@ -174,9 +174,9 @@ module ActiveJob::Arguments
   extend ActiveJob::Arguments
 end
 class Hash
+  def self.[](*arg0); end
   def self.ruby2_keywords_hash(hash); end
   def self.ruby2_keywords_hash?(hash); end
-  def self.try_convert(arg0); end
 end
 module ActiveJob::Enqueuing
   def enqueue(options = nil); end

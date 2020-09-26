@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faker/all/faker.rbi
 #
-# faker-2.13.0
+# faker-2.14.0
 
 module Faker
 end
@@ -184,6 +184,20 @@ class Faker::Bank < Faker::Base
   def self.swift_bic; end
   def self.valid_checksum?(routing_number, checksum); end
   def self.valid_routing_number; end
+end
+class Faker::Barcode < Faker::Base
+  def self.ean(length = nil); end
+  def self.ean_with_composite_symbology(length = nil); end
+  def self.generate_barcode(key); end
+  def self.generate_check_digit(odd_sum, even_sum); end
+  def self.isbn; end
+  def self.ismn; end
+  def self.issn; end
+  def self.sum_even_odd(fake_num); end
+  def self.upc_a; end
+  def self.upc_a_with_composite_symbology; end
+  def self.upc_e; end
+  def self.upc_e_with_composite_symbology; end
 end
 class Faker::Beer < Faker::Base
   def self.alcohol; end
@@ -425,6 +439,37 @@ class Faker::DrivingLicence < Faker::Base
   def self.northern_irish_driving_licence; end
   def self.random_gender; end
   def self.uk_driving_licence(*args); end
+  def self.usa_driving_licence(state = nil); end
+end
+class Faker::InvalidStatePassed < StandardError
+  def initialize(msg = nil); end
+end
+class Faker::Drone < Faker::Base
+  def self.battery_capacity; end
+  def self.battery_type; end
+  def self.battery_voltage; end
+  def self.battery_weight; end
+  def self.charging_temperature; end
+  def self.flight_time; end
+  def self.iso; end
+  def self.max_altitude; end
+  def self.max_angular_velocity; end
+  def self.max_ascent_speed; end
+  def self.max_charging_power; end
+  def self.max_descent_speed; end
+  def self.max_flight_distance; end
+  def self.max_resolution; end
+  def self.max_shutter_speed; end
+  def self.max_speed; end
+  def self.max_tilt_angle; end
+  def self.max_wind_resistance; end
+  def self.min_shutter_speed; end
+  def self.name; end
+  def self.operating_temperature; end
+  def self.photo_format; end
+  def self.shutter_speed_range; end
+  def self.video_format; end
+  def self.weight; end
 end
 class Faker::Educator < Faker::Base
   def self.campus; end
@@ -956,7 +1001,13 @@ end
 class Faker::Games::DnD < Faker::Base
   def self.alignment; end
   def self.background; end
+  def self.city; end
   def self.klass; end
+  def self.language; end
+  def self.melee_weapon; end
+  def self.monster; end
+  def self.race; end
+  def self.ranged_weapon; end
   def self.species; end
 end
 class Faker::Games::Dota < Faker::Base
@@ -1038,6 +1089,12 @@ class Faker::Games::SonicTheHedgehog < Faker::Base
   def self.character; end
   def self.game; end
   def self.zone; end
+end
+class Faker::Games::StreetFighter < Faker::Base
+  def self.character; end
+  def self.move; end
+  def self.quote; end
+  def self.stage; end
 end
 class Faker::Games::SuperSmashBros < Faker::Base
   def self.fighter; end
