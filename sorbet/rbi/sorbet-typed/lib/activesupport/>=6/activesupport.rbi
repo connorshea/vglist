@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/activesupport/>=6/activesupport.rbi
 #
-# typed: strict
+# typed: strong
 
 class Array
   sig { params(elements: T.untyped).returns(T::Array[T.untyped]) }

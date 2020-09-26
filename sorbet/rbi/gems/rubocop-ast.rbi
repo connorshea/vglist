@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-ast/all/rubocop-ast.rbi
 #
-# rubocop-ast-0.4.0
+# rubocop-ast-0.5.0
 
 module RuboCop
 end
@@ -182,13 +182,11 @@ class RuboCop::AST::Node < Parser::AST::Node
   def csend_type?; end
   def cvar_type?; end
   def cvasgn_type?; end
-  def def_e_type?; end
   def def_type?; end
   def defined_module0(node = nil); end
   def defined_module; end
   def defined_module_name; end
   def defined_type?; end
-  def defs_e_type?; end
   def defs_type?; end
   def descendants; end
   def dstr_type?; end
@@ -264,7 +262,6 @@ class RuboCop::AST::Node < Parser::AST::Node
   def mlhs_type?; end
   def module_definition?(node = nil); end
   def module_type?; end
-  def mrasgn_type?; end
   def multiline?; end
   def mutable_literal?; end
   def new_class_or_module_block?(node = nil); end
@@ -288,6 +285,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def pair_type?; end
   def parent; end
   def parent=(node); end
+  def parent?; end
   def parent_module_name; end
   def parent_module_name_for_block(ancestor); end
   def parent_module_name_for_sclass(sclass_node); end
@@ -301,7 +299,6 @@ class RuboCop::AST::Node < Parser::AST::Node
   def procarg0_type?; end
   def pure?; end
   def range_type?; end
-  def rasgn_type?; end
   def rational_type?; end
   def receiver(node = nil); end
   def recursive_basic_literal?; end
@@ -318,7 +315,7 @@ class RuboCop::AST::Node < Parser::AST::Node
   def return_type?; end
   def right_sibling; end
   def right_siblings; end
-  def root_type?; end
+  def root?; end
   def sclass_type?; end
   def self_type?; end
   def send_type?; end

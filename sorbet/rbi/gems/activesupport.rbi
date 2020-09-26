@@ -2011,6 +2011,21 @@ class ActiveSupport::Cache::Entry
   def value; end
   def version; end
 end
+class ActiveSupport::BacktraceCleaner
+  def add_filter(&block); end
+  def add_gem_filter; end
+  def add_gem_silencer; end
+  def add_silencer(&block); end
+  def add_stdlib_silencer; end
+  def clean(backtrace, kind = nil); end
+  def filter(backtrace, kind = nil); end
+  def filter_backtrace(backtrace); end
+  def initialize; end
+  def noise(backtrace); end
+  def remove_filters!; end
+  def remove_silencers!; end
+  def silence(backtrace); end
+end
 class ActiveSupport::Subscriber
   def self.add_event_subscriber(event); end
   def self.attach_to(namespace, subscriber = nil, notifier = nil); end
@@ -2240,21 +2255,6 @@ class ActiveSupport::Cache::Strategy::LocalCache::Middleware
   def local_cache_key; end
   def name; end
   def new(app); end
-end
-class ActiveSupport::BacktraceCleaner
-  def add_filter(&block); end
-  def add_gem_filter; end
-  def add_gem_silencer; end
-  def add_silencer(&block); end
-  def add_stdlib_silencer; end
-  def clean(backtrace, kind = nil); end
-  def filter(backtrace, kind = nil); end
-  def filter_backtrace(backtrace); end
-  def initialize; end
-  def noise(backtrace); end
-  def remove_filters!; end
-  def remove_silencers!; end
-  def silence(backtrace); end
 end
 class ActiveSupport::Cache::MemoryStore < ActiveSupport::Cache::Store
   def cached_size(key, entry); end

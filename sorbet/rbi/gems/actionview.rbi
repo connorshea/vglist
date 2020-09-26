@@ -318,6 +318,7 @@ class ActionView::Helpers::FormBuilder
   def url_field(method, options = nil); end
   def week_field(method, options = nil); end
   include ActionView::ModelNaming
+  include InvisibleCaptcha::FormHelpers
 end
 module ActionView::Helpers::DebugHelper
   def debug(object); end
@@ -1140,6 +1141,7 @@ class ActionView::Base
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::UrlHelper
   include InlineSvg::ActionView::Helpers
+  include InvisibleCaptcha::ViewHelpers
   include Kaminari::Helpers::HelperMethods
 end
 class ActionView::CacheExpiry

@@ -2926,6 +2926,7 @@ class ActionController::API < ActionController::Metal
   extend ActiveSupport::Rescuable::ClassMethods
   extend Anonymous_Module_6
   extend Devise::Controllers::Helpers::ClassMethods
+  extend InvisibleCaptcha::ControllerExt::ClassMethods
   include AbstractController::Callbacks
   include AbstractController::Callbacks
   include AbstractController::Helpers
@@ -2966,6 +2967,7 @@ class ActionController::API < ActionController::Metal
   include Devise::Controllers::Helpers
   include Devise::Controllers::UrlHelpers
   include Doorkeeper::Rails::Helpers
+  include InvisibleCaptcha::ControllerExt
   include Raven::Rails::ControllerMethods
   include Raven::Rails::ControllerTransaction
   include Turbolinks::Controller
@@ -3183,6 +3185,7 @@ class ActionController::Base < ActionController::Metal
   extend ActiveSupport::Rescuable::ClassMethods
   extend Anonymous_Module_7
   extend Devise::Controllers::Helpers::ClassMethods
+  extend InvisibleCaptcha::ControllerExt::ClassMethods
   extend Responders::ControllerMethod
   extend Responders::ControllerMethod
   include AbstractController::AssetPaths
@@ -3248,6 +3251,7 @@ class ActionController::Base < ActionController::Metal
   include Devise::Controllers::Helpers
   include Devise::Controllers::UrlHelpers
   include Doorkeeper::Rails::Helpers
+  include InvisibleCaptcha::ControllerExt
   include Raven::Rails::ControllerMethods
   include Raven::Rails::ControllerTransaction
   include Turbolinks::Controller

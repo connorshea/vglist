@@ -7,9 +7,13 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop/all/rubocop.rbi
 #
-# rubocop-0.90.0
+# rubocop-0.92.0
 
 module RuboCop
+end
+module RuboCop::Version
+  def self.document_version; end
+  def self.version(debug: nil); end
 end
 module RuboCop::Ext
 end
@@ -20,9 +24,6 @@ module RuboCop::Ext::RegexpNode
 end
 class RuboCop::AST::RegexpNode < RuboCop::AST::Node
   include RuboCop::Ext::RegexpNode
-end
-module RuboCop::Version
-  def self.version(debug: nil); end
 end
 class String
 end
@@ -88,18 +89,6 @@ class RuboCop::ErrorWithAnalyzedFileLocation < RuboCop::Error
 end
 class RuboCop::Warning < StandardError
 end
-module RuboCop::TokensUtil
-  def fast_index_of_first_token(node); end
-  def fast_index_of_last_token(node); end
-  def fast_tokens(node); end
-  def index_of_first_token(node); end
-  def index_of_last_token(node); end
-  def self.index_of_first_token(node); end
-  def self.index_of_last_token(node); end
-  def self.tokens(node); end
-  def sorted_tokens?(tokens); end
-  def tokens(node); end
-end
 module RuboCop::Cop
 end
 module RuboCop::Cop::Util
@@ -141,7 +130,6 @@ module RuboCop::Cop::Util
   def to_supported_styles(enforced_style); end
   def trim_string_interporation_escape_character(str); end
   include RuboCop::PathUtil
-  include RuboCop::TokensUtil
 end
 class RuboCop::Cop::Offense
   def <=>(other); end
@@ -487,7 +475,6 @@ class RuboCop::Cop::Commissioner
   def on_match_with_trailing_comma(node); end
   def on_mlhs(node); end
   def on_module(node); end
-  def on_mrasgn(node); end
   def on_next(node); end
   def on_nil(node); end
   def on_not(node); end
@@ -502,7 +489,6 @@ class RuboCop::Cop::Commissioner
   def on_postexe(node); end
   def on_preexe(node); end
   def on_procarg0(node); end
-  def on_rasgn(node); end
   def on_rational(node); end
   def on_redo(node); end
   def on_regexp(node); end
@@ -1061,6 +1047,7 @@ module RuboCop::Cop::EndKeywordAlignment
   def check_end_kw_in_node(node); end
   def line_break_before_keyword?(whole_expression, rhs); end
   def matching_ranges(end_loc, align_ranges); end
+  def start_line_range(node); end
   def style_parameter_name; end
   def variable_alignment?(whole_expression, rhs, end_alignment_style); end
   include RuboCop::Cop::ConfigurableEnforcedStyle
@@ -1117,6 +1104,7 @@ class RuboCop::Cop::HashAlignmentStyles::SeparatorAlignment
   include RuboCop::Cop::HashAlignmentStyles::ValueAlignment
 end
 module RuboCop::Cop::HashTransformMethod
+  def array_receiver?(node = nil); end
   def execute_correction(corrector, node, correction); end
   def extract_captures(_match); end
   def handle_possible_offense(node, match, match_desc); end
@@ -1129,6 +1117,7 @@ module RuboCop::Cop::HashTransformMethod
   def on_csend(node); end
   def on_send(node); end
   def prepare_correction(node); end
+  extend RuboCop::AST::NodePattern::Macros
 end
 class RuboCop::Cop::HashTransformMethod::Captures < Struct
   def noop_transformation?; end
@@ -1430,6 +1419,7 @@ module RuboCop::Cop::SurroundingSpace
   include RuboCop::Cop::RangeHelp
 end
 module RuboCop::Cop::StatementModifier
+  def comment_disables_cop?(comment); end
   def first_line_comment(node); end
   def length_in_modifier_form(node); end
   def max_line_length; end
@@ -1513,10 +1503,7 @@ end
 module RuboCop::Cop::VisibilityHelp
   def find_visibility_end(node); end
   def find_visibility_start(node); end
-  def left_siblings_of(node); end
   def node_visibility(node); end
-  def right_siblings_of(node); end
-  def siblings_of(node); end
   def visibility_block?(node = nil); end
   extend RuboCop::AST::NodePattern::Macros
 end
@@ -1729,6 +1716,7 @@ end
 module RuboCop::Cop::Bundler
 end
 class RuboCop::Cop::Bundler::DuplicatedGem < RuboCop::Cop::Cop
+  def condition?(nodes); end
   def duplicated_gem_nodes; end
   def gem_declarations(node0); end
   def investigate(processed_source); end
@@ -1840,6 +1828,15 @@ class RuboCop::Cop::Layout::AssignmentIndentation < RuboCop::Cop::Cop
   include RuboCop::Cop::Alignment
   include RuboCop::Cop::CheckAssignment
 end
+class RuboCop::Cop::Layout::BeginEndAlignment < RuboCop::Cop::Base
+  def alignment_node(node); end
+  def autocorrect(corrector, node); end
+  def check_begin_alignment(node); end
+  def on_kwbegin(node); end
+  extend RuboCop::Cop::AutoCorrector
+  include RuboCop::Cop::EndKeywordAlignment
+  include RuboCop::Cop::RangeHelp
+end
 class RuboCop::Cop::Layout::BlockAlignment < RuboCop::Cop::Base
   def add_space_before(corrector, loc, delta); end
   def alt_start_msg(start_loc, source_line_column); end
@@ -1874,7 +1871,6 @@ class RuboCop::Cop::Layout::CaseIndentation < RuboCop::Cop::Base
   def base_column(case_node, base); end
   def check_when(when_node); end
   def detect_incorrect_style(when_node); end
-  def find_message(*arg0); end
   def incorrect_style(when_node); end
   def indent_one_step?; end
   def indentation_width; end
@@ -2044,7 +2040,6 @@ class RuboCop::Cop::Layout::EmptyLineAfterMultilineCondition < RuboCop::Cop::Bas
   def multiline_rescue_exceptions?(exception_nodes); end
   def multiline_when_condition?(when_node); end
   def next_line_empty?(line); end
-  def next_sibling_empty?(node); end
   def on_case(node); end
   def on_if(node); end
   def on_rescue(node); end
@@ -2054,7 +2049,6 @@ class RuboCop::Cop::Layout::EmptyLineAfterMultilineCondition < RuboCop::Cop::Bas
   def on_while_post(node); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
-  include RuboCop::Cop::RescueNode
 end
 class RuboCop::Cop::Layout::EmptyLineBetweenDefs < RuboCop::Cop::Base
   def autocorrect(corrector, prev_def, node); end
@@ -2095,6 +2089,7 @@ class RuboCop::Cop::Layout::EmptyLinesAroundAccessModifier < RuboCop::Cop::Base
   def on_send(node); end
   def previous_line_empty?(send_line); end
   def previous_line_ignoring_comments(processed_source, send_line); end
+  def register_offense?(node); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::ConfigurableEnforcedStyle
   include RuboCop::Cop::RangeHelp
@@ -2187,7 +2182,6 @@ class RuboCop::Cop::Layout::EndAlignment < RuboCop::Cop::Base
   def on_module(node); end
   def on_until(node); end
   def on_while(node); end
-  def start_line_range(node); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::CheckAssignment
   include RuboCop::Cop::EndKeywordAlignment
@@ -2636,11 +2630,13 @@ end
 class RuboCop::Cop::Layout::RescueEnsureAlignment < RuboCop::Cop::Base
   def access_modifier?(node); end
   def access_modifier_node(node); end
+  def alignment_location(alignment_node); end
   def alignment_node(node); end
   def alignment_source(node, starting_loc); end
   def ancestor_node(node); end
   def assignment_node(node); end
-  def autocorrect(corrector, node, alignment_node); end
+  def autocorrect(corrector, node, alignment_location); end
+  def begin_end_alignment_style; end
   def check(node); end
   def format_message(alignment_node, alignment_loc, kw_loc); end
   def modifier?(node); end
@@ -2649,6 +2645,7 @@ class RuboCop::Cop::Layout::RescueEnsureAlignment < RuboCop::Cop::Base
   def on_resbody(node); end
   def whitespace_range(node); end
   extend RuboCop::Cop::AutoCorrector
+  include RuboCop::Cop::EndKeywordAlignment
   include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Layout::SpaceAfterColon < RuboCop::Cop::Base
@@ -2915,7 +2912,6 @@ class RuboCop::Cop::Layout::SpaceInsideHashLiteralBraces < RuboCop::Cop::Base
   def autocorrect(corrector, range); end
   def check(token1, token2); end
   def expect_space?(token1, token2); end
-  def hash_literal_with_braces(node); end
   def incorrect_style_detected(token1, token2, expect_space, is_empty_braces); end
   def message(brace, is_empty_braces, expect_space); end
   def offense?(token1, expect_space); end
@@ -2958,7 +2954,6 @@ class RuboCop::Cop::Layout::SpaceInsideRangeLiteral < RuboCop::Cop::Base
 end
 class RuboCop::Cop::Layout::SpaceInsideReferenceBrackets < RuboCop::Cop::Base
   def autocorrect(corrector, node); end
-  def bracket_method?(node); end
   def closing_bracket(tokens, opening_bracket); end
   def empty_config; end
   def left_ref_bracket(node, tokens); end
@@ -3049,6 +3044,13 @@ class RuboCop::Cop::Lint::CircularArgumentReference < RuboCop::Cop::Base
   def check_for_circular_argument_references(arg_name, arg_value); end
   def on_kwoptarg(node); end
   def on_optarg(node); end
+end
+class RuboCop::Cop::Lint::ConstantDefinitionInBlock < RuboCop::Cop::Base
+  def constant_assigned_in_block?(node = nil); end
+  def module_defined_in_block?(node = nil); end
+  def on_casgn(node); end
+  def on_class(node); end
+  def on_module(node); end
 end
 class RuboCop::Cop::Lint::ConstantResolution < RuboCop::Cop::Base
   def allowed_names; end
@@ -3251,6 +3253,12 @@ class RuboCop::Cop::Lint::HeredocMethodCallPosition < RuboCop::Cop::Base
   def trailing_comma?(call_source, call_line_source); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
+end
+class RuboCop::Cop::Lint::IdentityComparison < RuboCop::Cop::Base
+  def compare_between_object_id_by_double_equal?(node); end
+  def object_id_method?(node); end
+  def on_send(node); end
+  extend RuboCop::Cop::AutoCorrector
 end
 class RuboCop::Cop::Lint::ImplicitStringConcatenation < RuboCop::Cop::Base
   def display_str(node); end
@@ -3482,6 +3490,7 @@ class RuboCop::Cop::Lint::RedundantCopDisableDirective < RuboCop::Cop::Base
   def offenses_to_check; end
   def offenses_to_check=(arg0); end
   def on_new_investigation; end
+  def previous_line_blank?(range); end
   def trailing_range?(ranges, range); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
@@ -3494,6 +3503,7 @@ class RuboCop::Cop::Lint::RedundantCopEnableDirective < RuboCop::Cop::Base
   def range_of_offense(comment, name); end
   def range_to_remove(begin_pos, end_pos, comma_pos, comment); end
   def range_with_comma(comment, name); end
+  def register_offense(comment, cop_names); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
   include RuboCop::Cop::SurroundingSpace
@@ -3563,7 +3573,6 @@ class RuboCop::Cop::Lint::RescueType < RuboCop::Cop::Base
   def on_resbody(node); end
   def valid_exceptions(exceptions); end
   extend RuboCop::Cop::AutoCorrector
-  include RuboCop::Cop::RescueNode
 end
 class RuboCop::Cop::Lint::ReturnInVoidContext < RuboCop::Cop::Base
   def method_name(context_node); end
@@ -3637,7 +3646,7 @@ end
 class RuboCop::Cop::Lint::ShadowedException < RuboCop::Cop::Base
   def compare_exceptions(exception, other_exception); end
   def contains_multiple_levels_of_exceptions?(group); end
-  def evaluate_exceptions(rescue_group); end
+  def evaluate_exceptions(group); end
   def find_shadowing_rescue(rescues); end
   def offense_range(rescues); end
   def on_rescue(node); end
@@ -3706,7 +3715,6 @@ class RuboCop::Cop::Lint::UnreachableLoop < RuboCop::Cop::Base
   def check(node); end
   def check_case(node); end
   def check_if(node); end
-  def left_siblings_of(node); end
   def loop_method?(node); end
   def on_block(node); end
   def on_for(node); end
@@ -3795,11 +3803,10 @@ class RuboCop::Cop::Lint::UselessElseWithoutRescue < RuboCop::Cop::Base
   def on_new_investigation; end
 end
 class RuboCop::Cop::Lint::UselessMethodDefinition < RuboCop::Cop::Base
-  def constructor?(node); end
   def delegating?(node, def_node); end
-  def empty_constructor?(node); end
   def on_def(node); end
   def on_defs(node); end
+  def optional_args?(node); end
   extend RuboCop::Cop::AutoCorrector
 end
 class RuboCop::Cop::Lint::UselessSetterCall < RuboCop::Cop::Base
@@ -3818,6 +3825,20 @@ class RuboCop::Cop::Lint::UselessSetterCall::MethodVariableTracker
   def process_logical_operator_assignment(asgn_node); end
   def process_multiple_assignment(masgn_node); end
   def scan(node, &block); end
+end
+class RuboCop::Cop::Lint::UselessTimes < RuboCop::Cop::Base
+  def autocorrect_block(corrector, node); end
+  def autocorrect_block_pass(corrector, node, proc_name); end
+  def block_arg(node = nil); end
+  def block_reassigns_arg?(node0, param1); end
+  def fix_indentation(source, range); end
+  def never_process?(count, node); end
+  def on_send(node); end
+  def own_line?(node); end
+  def remove_node(corrector, node); end
+  def times_call?(node = nil); end
+  extend RuboCop::Cop::AutoCorrector
+  include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Lint::Void < RuboCop::Cop::Base
   def check_begin(node); end
@@ -3848,10 +3869,10 @@ end
 class RuboCop::Cop::Metrics::Utils::AbcSizeCalculator
   def argument?(node); end
   def assignment?(node); end
-  def assignment_doubled_in_ast?(node); end
   def branch?(node); end
   def calculate; end
   def capturing_variable?(name); end
+  def compound_assignment(node); end
   def condition?(node); end
   def else_branch?(node); end
   def evaluate_branch_nodes(node); end
@@ -4084,13 +4105,11 @@ class RuboCop::Cop::Naming::VariableNumber < RuboCop::Cop::Base
   include RuboCop::Cop::ConfigurableNumbering
 end
 class RuboCop::Cop::Style::AccessModifierDeclarations < RuboCop::Cop::Base
-  def access_modifier?(node); end
   def access_modifier_is_inlined?(node); end
   def access_modifier_is_not_inlined?(node); end
   def access_modifier_with_symbol?(node = nil); end
   def group_style?; end
   def inline_style?; end
-  def maybe_access_modifier?(node); end
   def message(range); end
   def offense?(node); end
   def on_send(node); end
@@ -4322,7 +4341,6 @@ class RuboCop::Cop::Style::ClassAndModuleChildren < RuboCop::Cop::Base
   include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Style::ClassCheck < RuboCop::Cop::Base
-  def class_check?(node = nil); end
   def message(node); end
   def on_send(node); end
   extend RuboCop::Cop::AutoCorrector
@@ -4335,16 +4353,19 @@ class RuboCop::Cop::Style::ClassMethods < RuboCop::Cop::Base
   extend RuboCop::Cop::AutoCorrector
 end
 class RuboCop::Cop::Style::ClassMethodsDefinitions < RuboCop::Cop::Base
-  def contains_non_public_methods?(sclass_node); end
+  def all_methods_public?(sclass_node); end
+  def autocorrect_sclass(node, corrector); end
   def def_nodes(sclass_node); end
   def def_self_style?; end
-  def extract_def_from_sclass(def_node, sclass_node, corrector); end
-  def indent(node); end
+  def extract_def_from_sclass(def_node, sclass_node); end
+  def indentation_diff(node1, node2); end
   def on_defs(node); end
   def on_sclass(node); end
+  def sclass_only_has_methods?(node); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::CommentsHelp
   include RuboCop::Cop::ConfigurableEnforcedStyle
+  include RuboCop::Cop::RangeHelp
   include RuboCop::Cop::VisibilityHelp
 end
 class RuboCop::Cop::Style::ClassVars < RuboCop::Cop::Base
@@ -4371,7 +4392,6 @@ class RuboCop::Cop::Style::ColonMethodDefinition < RuboCop::Cop::Base
 end
 class RuboCop::Cop::Style::CombinableLoops < RuboCop::Cop::Base
   def collection_looping_method?(node); end
-  def left_sibling_of(node); end
   def on_block(node); end
   def on_for(node); end
   def same_collection_looping?(node, sibling); end
@@ -4407,11 +4427,10 @@ class RuboCop::Cop::Style::CommentAnnotation < RuboCop::Cop::Base
   include RuboCop::Cop::RangeHelp
   include RuboCop::Cop::Style::AnnotationComment
 end
-class RuboCop::Cop::Style::CommentedKeyword < RuboCop::Cop::Cop
-  def investigate(processed_source); end
+class RuboCop::Cop::Style::CommentedKeyword < RuboCop::Cop::Base
   def line(comment); end
-  def message(comment); end
   def offensive?(comment); end
+  def on_new_investigation; end
 end
 module RuboCop::Cop::Style::ConditionalAssignmentHelper
   def assignment_rhs_exist?(node); end
@@ -4427,14 +4446,14 @@ module RuboCop::Cop::Style::ConditionalAssignmentHelper
   def tail(branch); end
   extend RuboCop::AST::NodePattern::Macros
 end
-class RuboCop::Cop::Style::ConditionalAssignment < RuboCop::Cop::Cop
+class RuboCop::Cop::Style::ConditionalAssignment < RuboCop::Cop::Base
   def allowed_single_line?(branches); end
   def allowed_statements?(branches); end
   def allowed_ternary?(assignment); end
   def assignment_node(node); end
   def assignment_type?(node = nil); end
   def assignment_types_match?(*nodes); end
-  def autocorrect(node); end
+  def autocorrect(corrector, node); end
   def candidate_condition?(node = nil); end
   def candidate_node?(node); end
   def check_assignment_to_condition(node); end
@@ -4447,8 +4466,8 @@ class RuboCop::Cop::Style::ConditionalAssignment < RuboCop::Cop::Cop
   def longest_line(node, assignment); end
   def longest_line_exceeds_line_limit?(node, assignment); end
   def max_line_length; end
-  def move_assignment_inside_condition(node); end
-  def move_assignment_outside_condition(node); end
+  def move_assignment_inside_condition(corrector, node); end
+  def move_assignment_outside_condition(corrector, node); end
   def on_and_asgn(node); end
   def on_case(node); end
   def on_casgn(node); end
@@ -4463,6 +4482,7 @@ class RuboCop::Cop::Style::ConditionalAssignment < RuboCop::Cop::Cop
   def on_send(node); end
   def single_line_conditions_only?; end
   def ternary_condition?(node); end
+  extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::ConfigurableEnforcedStyle
   include RuboCop::Cop::IgnoredNode
   include RuboCop::Cop::Style::ConditionalAssignmentHelper
@@ -4476,26 +4496,26 @@ module RuboCop::Cop::Style::ConditionalCorrectorHelper
   def white_space_range(node, column); end
 end
 class RuboCop::Cop::Style::TernaryCorrector
-  def self.correct(node); end
+  def self.correct(corrector, node); end
   def self.correction(node); end
   def self.element_assignment?(node); end
   def self.extract_branches(node); end
-  def self.move_assignment_inside_condition(node); end
+  def self.move_assignment_inside_condition(corrector, node); end
   def self.move_branch_inside_condition(corrector, branch, assignment); end
   def self.remove_parentheses(corrector, node); end
   def self.ternary(node); end
 end
 class RuboCop::Cop::Style::IfCorrector
-  def self.correct(cop, node); end
+  def self.correct(corrector, cop, node); end
   def self.extract_tail_branches(node); end
-  def self.move_assignment_inside_condition(node); end
+  def self.move_assignment_inside_condition(corrector, node); end
   def self.move_branch_inside_condition(corrector, branch, condition, assignment, column); end
 end
 class RuboCop::Cop::Style::CaseCorrector
-  def self.correct(cop, node); end
+  def self.correct(corrector, cop, node); end
   def self.extract_branches(case_node); end
   def self.extract_tail_branches(node); end
-  def self.move_assignment_inside_condition(node); end
+  def self.move_assignment_inside_condition(corrector, node); end
   def self.move_branch_inside_condition(corrector, branch, condition, assignment, column); end
 end
 class RuboCop::Cop::Style::ConstantVisibility < RuboCop::Cop::Base
@@ -4520,11 +4540,13 @@ class RuboCop::Cop::Style::Copyright < RuboCop::Cop::Base
   include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Style::DateTime < RuboCop::Cop::Base
+  def autocorrect(corrector, node); end
   def date_time?(node = nil); end
   def disallow_coercion?; end
   def historic_date?(node = nil); end
   def on_send(node); end
   def to_datetime?(node = nil); end
+  extend RuboCop::Cop::AutoCorrector
 end
 class RuboCop::Cop::Style::DefWithParentheses < RuboCop::Cop::Base
   def on_def(node); end
@@ -4833,7 +4855,9 @@ class RuboCop::Cop::Style::HashAsLastArrayItem < RuboCop::Cop::Base
   def braces_style?; end
   def check_braces(node); end
   def check_no_braces(node); end
-  def last_array_item?(node); end
+  def containing_array(hash_node); end
+  def explicit_array?(array); end
+  def last_array_item?(array, node); end
   def on_hash(node); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::ConfigurableEnforcedStyle
@@ -4917,7 +4941,6 @@ end
 class RuboCop::Cop::Style::IfUnlessModifier < RuboCop::Cop::Base
   def another_statement_on_same_line?(node); end
   def autocorrect(corrector, node); end
-  def first_line_comment(node); end
   def ignored_patterns; end
   def line_length_enabled_at_line?(line); end
   def named_capture_in_condition?(node); end
@@ -5008,7 +5031,6 @@ end
 class RuboCop::Cop::Style::KeywordParametersOrder < RuboCop::Cop::Base
   def on_kwoptarg(node); end
   def remove_kwargs(kwarg_nodes, corrector); end
-  def right_siblings_of(node); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
 end
@@ -5080,8 +5102,6 @@ class RuboCop::Cop::Style::RedundantAssignment < RuboCop::Cop::Base
   def on_def(node); end
   def on_defs(node); end
   def redundant_assignment?(node = nil); end
-  def right_sibling_of(node); end
-  def siblings_of(node); end
   extend RuboCop::Cop::AutoCorrector
 end
 class RuboCop::Cop::Style::RedundantFetchBlock < RuboCop::Cop::Base
@@ -5229,12 +5249,9 @@ class RuboCop::Cop::Style::MixinGrouping < RuboCop::Cop::Base
   include RuboCop::Cop::ConfigurableEnforcedStyle
 end
 class RuboCop::Cop::Style::MixinUsage < RuboCop::Cop::Base
-  def accepted_include?(node); end
-  def ascend_macro_scope?(ancestor); end
-  def belongs_to_class_or_module?(node); end
+  def in_top_level_scope?(node = nil); end
   def include_statement(node = nil); end
   def on_send(node); end
-  def wrapped_macro_scope?(node = nil); end
 end
 class RuboCop::Cop::Style::ModuleFunction < RuboCop::Cop::Base
   def check_extend_self(nodes); end
@@ -5249,7 +5266,7 @@ class RuboCop::Cop::Style::ModuleFunction < RuboCop::Cop::Base
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::ConfigurableEnforcedStyle
 end
-class RuboCop::Cop::Style::MultilineBlockChain < RuboCop::Cop::Cop
+class RuboCop::Cop::Style::MultilineBlockChain < RuboCop::Cop::Base
   def on_block(node); end
   include RuboCop::Cop::RangeHelp
 end
@@ -5290,6 +5307,7 @@ class RuboCop::Cop::Style::MultilineMemoization < RuboCop::Cop::Base
   include RuboCop::Cop::ConfigurableEnforcedStyle
 end
 class RuboCop::Cop::Style::MultilineTernaryOperator < RuboCop::Cop::Base
+  def offense?(node); end
   def on_if(node); end
   extend RuboCop::Cop::AutoCorrector
 end
@@ -5542,6 +5560,7 @@ end
 class RuboCop::Cop::Style::OptionalBooleanParameter < RuboCop::Cop::Base
   def on_def(node); end
   def on_defs(node); end
+  include RuboCop::Cop::AllowedMethods
 end
 class RuboCop::Cop::Style::ParallelAssignment < RuboCop::Cop::Base
   def add_self_to_getters(right_elements); end
@@ -5708,8 +5727,7 @@ class RuboCop::Cop::Style::RedundantCondition < RuboCop::Cop::Base
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
 end
-class RuboCop::Cop::Style::RedundantConditional < RuboCop::Cop::Cop
-  def autocorrect(node); end
+class RuboCop::Cop::Style::RedundantConditional < RuboCop::Cop::Base
   def configured_indentation_width; end
   def indented_else_node(expression, node); end
   def invert_expression?(node); end
@@ -5719,6 +5737,7 @@ class RuboCop::Cop::Style::RedundantConditional < RuboCop::Cop::Cop
   def redundant_condition?(node = nil); end
   def redundant_condition_inverted?(node = nil); end
   def replacement_condition(node); end
+  extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::Alignment
 end
 class RuboCop::Cop::Style::RedundantException < RuboCop::Cop::Base
@@ -5772,8 +5791,10 @@ class RuboCop::Cop::Style::RedundantParentheses < RuboCop::Cop::Base
   def first_super_argument?(node = nil); end
   def first_yield_argument?(node = nil); end
   def hash_element?(node); end
+  def ignore_syntax?(node); end
   def keyword_ancestor?(node); end
   def keyword_with_redundant_parentheses?(node); end
+  def like_method_argument_parentheses?(node); end
   def method_call_with_redundant_parentheses?(node); end
   def method_chain_begins_with_hash_literal?(node); end
   def method_node_and_args(node = nil); end
@@ -5790,11 +5811,10 @@ class RuboCop::Cop::Style::RedundantParentheses < RuboCop::Cop::Base
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::Parentheses
 end
-class RuboCop::Cop::Style::RedundantPercentQ < RuboCop::Cop::Cop
+class RuboCop::Cop::Style::RedundantPercentQ < RuboCop::Cop::Base
   def acceptable_capital_q?(node); end
   def acceptable_q?(node); end
   def allowed_percent_q?(node); end
-  def autocorrect(node); end
   def check(node); end
   def interpolated_quotes?(node); end
   def message(node); end
@@ -5802,6 +5822,7 @@ class RuboCop::Cop::Style::RedundantPercentQ < RuboCop::Cop::Cop
   def on_str(node); end
   def start_with_percent_q_variant?(string); end
   def string_literal?(node); end
+  extend RuboCop::Cop::AutoCorrector
 end
 class RuboCop::Cop::Style::RedundantRegexpCharacterClass < RuboCop::Cop::Base
   def each_redundant_character_class(node); end
@@ -5822,16 +5843,16 @@ class RuboCop::Cop::Style::RedundantRegexpEscape < RuboCop::Cop::Base
   include RuboCop::Cop::RangeHelp
   include RuboCop::Cop::RegexpLiteralHelp
 end
-class RuboCop::Cop::Style::RedundantReturn < RuboCop::Cop::Cop
+class RuboCop::Cop::Style::RedundantReturn < RuboCop::Cop::Base
   def add_braces(corrector, node); end
   def add_brackets(corrector, node); end
   def allow_multiple_return_values?; end
-  def autocorrect(node); end
   def check_begin_node(node); end
   def check_branch(node); end
   def check_case_node(node); end
   def check_ensure_node(node); end
   def check_if_node(node); end
+  def check_resbody_node(node); end
   def check_rescue_node(node); end
   def check_return_node(node); end
   def correct_with_arguments(return_node, corrector); end
@@ -5840,14 +5861,14 @@ class RuboCop::Cop::Style::RedundantReturn < RuboCop::Cop::Cop
   def message(node); end
   def on_def(node); end
   def on_defs(node); end
+  extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
 end
-class RuboCop::Cop::Style::RedundantSelf < RuboCop::Cop::Cop
+class RuboCop::Cop::Style::RedundantSelf < RuboCop::Cop::Base
   def add_lhs_to_local_variables_scopes(rhs, lhs); end
   def add_scope(node, local_variables = nil); end
   def allow_self(node); end
   def allowed_send_node?(node); end
-  def autocorrect(node); end
   def initialize(config = nil, options = nil); end
   def on_and_asgn(node); end
   def on_args(node); end
@@ -5863,27 +5884,28 @@ class RuboCop::Cop::Style::RedundantSelf < RuboCop::Cop::Cop
   def on_send(node); end
   def regular_method_call?(node); end
   def self.autocorrect_incompatible_with; end
+  extend RuboCop::Cop::AutoCorrector
 end
-class RuboCop::Cop::Style::RedundantSort < RuboCop::Cop::Cop
+class RuboCop::Cop::Style::RedundantSort < RuboCop::Cop::Base
   def accessor_start(node); end
   def arg_node(node); end
   def arg_value(node); end
-  def autocorrect(node); end
+  def autocorrect(corrector, node, sort_node, sorter, accessor); end
   def base(accessor, arg); end
   def message(node, sorter, accessor); end
   def offense_range(sort_node, ancestor); end
   def on_send(node); end
   def redundant_sort?(node = nil); end
-  def sort_method?(node); end
   def suffix(sorter); end
   def suggestion(sorter, accessor, arg); end
+  extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
 end
-class RuboCop::Cop::Style::RedundantSortBy < RuboCop::Cop::Cop
-  def autocorrect(node); end
+class RuboCop::Cop::Style::RedundantSortBy < RuboCop::Cop::Base
   def on_block(node); end
   def redundant_sort_by(node = nil); end
   def sort_by_range(send, node); end
+  extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::RangeHelp
 end
 class RuboCop::Cop::Style::RegexpLiteral < RuboCop::Cop::Base
@@ -5918,11 +5940,13 @@ class RuboCop::Cop::Style::RescueModifier < RuboCop::Cop::Cop
   include RuboCop::Cop::Alignment
   include RuboCop::Cop::RescueNode
 end
-class RuboCop::Cop::Style::RescueStandardError < RuboCop::Cop::Cop
-  def autocorrect(node); end
+class RuboCop::Cop::Style::RescueStandardError < RuboCop::Cop::Base
+  def offense_for_exlicit_enforced_style(node); end
+  def offense_for_implicit_enforced_style(node, error); end
   def on_resbody(node); end
   def rescue_standard_error?(node = nil); end
   def rescue_without_error_class?(node = nil); end
+  extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::ConfigurableEnforcedStyle
   include RuboCop::Cop::RangeHelp
   include RuboCop::Cop::RescueNode
@@ -6010,7 +6034,6 @@ end
 class RuboCop::Cop::Style::Send < RuboCop::Cop::Base
   def on_csend(node); end
   def on_send(node); end
-  def sending?(node = nil); end
 end
 class RuboCop::Cop::Style::SignalException < RuboCop::Cop::Base
   def allow(method_name, node); end
@@ -6102,6 +6125,7 @@ class RuboCop::Cop::Style::StringConcatenation < RuboCop::Cop::Base
   def replacement(parts); end
   def single_quoted?(str_node); end
   def string_concatenation?(node = nil); end
+  def uncorrectable?(part); end
   extend RuboCop::Cop::AutoCorrector
   include RuboCop::Cop::Util
 end
@@ -6531,6 +6555,8 @@ class RuboCop::Formatter::DisabledConfigFormatter < RuboCop::Formatter::BaseForm
   def self.detected_styles; end
   def self.detected_styles=(arg0); end
   def set_max(cfg, cop_name); end
+  def show_offense_counts?; end
+  def show_timestamp?; end
   def timestamp; end
 end
 class RuboCop::Formatter::EmacsStyleFormatter < RuboCop::Formatter::BaseFormatter
@@ -6871,6 +6897,13 @@ class RuboCop::TargetFinder
   def to_inspect?(file, hidden_files, base_dir_config); end
   def toplevel_dirs(base_dir, flags); end
 end
+class RuboCop::DirectiveComment
+  def comment; end
+  def cops; end
+  def initialize(comment); end
+  def match?(cop_names); end
+  def range; end
+end
 class RuboCop::CommentConfig
   def all_cop_names; end
   def analyze; end
@@ -6888,7 +6921,7 @@ class RuboCop::CommentConfig
   def each_mentioned_cop; end
   def enable_all?(comment); end
   def extra_enabled_comments; end
-  def extra_enabled_comments_with_names(extras, names); end
+  def extra_enabled_comments_with_names(extras:, names:); end
   def handle_enable_all(names, extras, comment); end
   def handle_switch(cop_names, names, disabled, extras, comment); end
   def initialize(processed_source); end
@@ -6940,8 +6973,10 @@ class RuboCop::ResultCache
   def file_checksum(file, config_store); end
   def initialize(file, team, options, config_store, cache_root = nil); end
   def load; end
+  def path; end
   def relevant_options_digest(options); end
   def rubocop_checksum; end
+  def rubocop_extra_features; end
   def save(offenses); end
   def self.allow_symlinks_in_cache_location?(config_store); end
   def self.cache_root(config_store); end
@@ -6951,6 +6986,8 @@ class RuboCop::ResultCache
   def self.remove_files(files, dirs, remove_count); end
   def self.remove_oldest_files(files, dirs, cache_root, verbose); end
   def self.requires_file_removal?(file_count, config_store); end
+  def self.rubocop_required_features; end
+  def self.rubocop_required_features=(arg0); end
   def self.source_checksum; end
   def self.source_checksum=(arg0); end
   def symlink_protection_triggered?(path); end
@@ -6963,7 +7000,7 @@ class RuboCop::Runner
   def add_redundant_disables(file, offenses, source); end
   def cached_result(file, team); end
   def cached_run?; end
-  def check_for_infinite_loop(processed_source, offenses); end
+  def check_for_infinite_loop(processed_source, offenses_by_iteration); end
   def check_for_redundant_disables?(source); end
   def considered_failure?(offense); end
   def do_inspection_loop(file); end
@@ -6981,7 +7018,7 @@ class RuboCop::Runner
   def initialize(options, config_store); end
   def inspect_file(processed_source, team = nil); end
   def inspect_files(files); end
-  def iterate_until_no_changes(source, offenses); end
+  def iterate_until_no_changes(source, offenses_by_iteration); end
   def list_files(paths); end
   def minimum_severity_to_fail; end
   def mobilize_team(processed_source); end
@@ -6997,7 +7034,7 @@ class RuboCop::Runner
   def warnings; end
 end
 class RuboCop::Runner::InfiniteCorrectionLoop < RuntimeError
-  def initialize(path, offenses); end
+  def initialize(path, offenses_by_iteration, loop_start: nil); end
   def offenses; end
 end
 class RuboCop::CLI
@@ -7075,6 +7112,11 @@ end
 class RuboCop::CLI::Command::Version < RuboCop::CLI::Command::Base
   def run; end
 end
+class RuboCop::ConfigRegeneration
+  def generation_command; end
+  def options; end
+  def todo_exists?; end
+end
 class RuboCop::IncorrectCopNameError < StandardError
 end
 class RuboCop::OptionArgumentError < StandardError
@@ -7083,6 +7125,7 @@ class RuboCop::Options
   def add_aliases(opts); end
   def add_auto_gen_options(opts); end
   def add_boolean_flags(opts); end
+  def add_cache_options(opts); end
   def add_configuration_options(opts); end
   def add_cop_selection_csv_option(option, opts); end
   def add_flags_with_optional_args(opts); end
@@ -7109,6 +7152,7 @@ class RuboCop::OptionsValidator
   def self.validate_cop_list(names); end
   def validate_auto_correct; end
   def validate_auto_gen_config; end
+  def validate_cache_enabled_for_cache_root; end
   def validate_compatibility; end
   def validate_cop_options; end
   def validate_display_only_failed; end

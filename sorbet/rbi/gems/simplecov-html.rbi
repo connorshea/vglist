@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/simplecov-html/all/simplecov-html.rbi
 #
-# simplecov-html-0.12.2
+# simplecov-html-0.12.3
 
 module SimpleCov
 end

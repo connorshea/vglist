@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sentry-raven/all/sentry-raven.rbi
 #
-# sentry-raven-3.0.4
+# sentry-raven-3.1.1
 
 module Raven
   def self.annotate(*args, &block); end
@@ -42,6 +42,10 @@ module Raven
   def self.sys_command(command); end
   def self.tags_context(*args, &block); end
   def self.user_context(*args, &block); end
+end
+module DeprecationHelper
+  def self.deprecate_dasherized_filename(correct_filename); end
+  def self.deprecate_old_breadcrumbs_configuration(logger); end
 end
 class Object < BasicObject
 end
@@ -186,8 +190,12 @@ class Raven::Configuration
   def async; end
   def async=(value); end
   def async?; end
+  def backtrace_cleanup_callback; end
+  def backtrace_cleanup_callback=(arg0); end
   def before_send; end
   def before_send=(value); end
+  def breadcrumbs_logger; end
+  def breadcrumbs_logger=(logger); end
   def capture_allowed?(message_or_exc = nil); end
   def capture_allowed_by_callback?(message_or_exc); end
   def capture_in_current_environment?; end
@@ -202,6 +210,7 @@ class Raven::Configuration
   def detect_release_from_env; end
   def detect_release_from_git; end
   def detect_release_from_heroku; end
+  def dsn; end
   def dsn=(value); end
   def enabled_in_current_env?; end
   def encoding; end
@@ -249,8 +258,10 @@ class Raven::Configuration
   def public_key; end
   def public_key=(arg0); end
   def qualified_const_get(x); end
+  def rack_env_whitelist; end
+  def rack_env_whitelist=(arg0); end
   def rails_activesupport_breadcrumbs; end
-  def rails_activesupport_breadcrumbs=(arg0); end
+  def rails_activesupport_breadcrumbs=(val); end
   def rails_report_rescued_exceptions; end
   def rails_report_rescued_exceptions=(arg0); end
   def release; end
@@ -388,7 +399,6 @@ class Raven::Event
   def configuration=(arg0); end
   def context; end
   def context=(arg0); end
-  def copy_initial_state; end
   def environment; end
   def environment=(arg0); end
   def event_id; end
@@ -398,7 +408,7 @@ class Raven::Event
   def fingerprint=(arg0); end
   def id; end
   def id=(arg0); end
-  def initialize(init = nil); end
+  def initialize(options); end
   def interface(name, value = nil, &block); end
   def level; end
   def level=(new_level); end
@@ -601,6 +611,9 @@ end
 module Raven::Rails::ControllerTransaction
   def self.included(base); end
 end
+class Raven::Rails::BacktraceCleaner < ActiveSupport::BacktraceCleaner
+  def initialize; end
+end
 class Raven::Rack
   def call(env); end
   def initialize(app); end
@@ -613,6 +626,7 @@ module Raven::RackInterface
   def format_headers_for_sentry(env_hash); end
   def from_rack(env_hash); end
   def read_data_from(request); end
+  def read_request_id_from(env_hash); end
 end
 class Raven::CLI
   def self.test(dsn = nil, silent = nil, config = nil); end

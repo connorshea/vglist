@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rubocop-rails/all/rubocop-rails.rbi
 #
-# rubocop-rails-2.8.0
+# rubocop-rails-2.8.1
 
 module RuboCop
 end
@@ -182,6 +182,7 @@ class RuboCop::Cop::Rails::AfterCommitOverride < RuboCop::Cop::Cop
   def after_commit_callback?(node); end
   def class_send_nodes(class_node); end
   def each_after_commit_callback(class_node); end
+  def named_callback?(node); end
   def on_class(class_node); end
 end
 class RuboCop::Cop::Rails::ApplicationController < RuboCop::Cop::Cop
@@ -429,6 +430,7 @@ class RuboCop::Cop::Rails::HttpPositionalArguments < RuboCop::Cop::Cop
   def correction_template(node); end
   def format_arg?(node); end
   def http_request?(node = nil); end
+  def kwsplat_hash?(node = nil); end
   def needs_conversion?(data); end
   def on_send(node); end
   def special_keyword_arg?(node); end
