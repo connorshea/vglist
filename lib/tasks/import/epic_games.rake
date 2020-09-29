@@ -57,7 +57,7 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Added Epic Games Store ID '#{game[:epic_games_store_id]}' to #{game_record.name}."
+      progress_bar.log "Added Epic Games Store ID '#{game[:epic_games_store_id]}' to #{game[:name]}."
 
       epic_games_added_count += 1
       progress_bar.increment

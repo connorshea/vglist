@@ -71,7 +71,7 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Added Steam App ID '#{game[:steam_app_id]}' to #{game_record.name}."
+      progress_bar.log "Added Steam App ID '#{game[:steam_app_id]}' to #{game[:name]}."
 
       steam_added_count += 1
       progress_bar.increment

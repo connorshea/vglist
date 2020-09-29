@@ -57,7 +57,7 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Added PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}."
+      progress_bar.log "Added PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game[:name]}."
 
       pcgamingwiki_added_count += 1
       progress_bar.increment
