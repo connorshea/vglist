@@ -52,7 +52,7 @@ namespace :import do
       rescue ActiveRecord::RecordInvalid => e
         name = game[:name]
         name ||= game_record.name
-        progress_bar.log "Record Invalid | #{name.ljust(15)} | #{e}"
+        progress_bar.log "Invalid: #{name.ljust(30)} | #{e}"
         progress_bar.increment
         next
       end

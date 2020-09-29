@@ -132,7 +132,7 @@ namespace 'import:wikidata' do
           game = Game.create!(hash)
           progress_bar.log "Created #{hash[:name]}."
         rescue ActiveRecord::RecordInvalid => e
-          progress_bar.log "Record Invalid (#{hash[:name]}): #{e}"
+          progress_bar.log "Invalid: #{hash[:name].ljust(30)} | #{e}"
           next
         end
 
@@ -320,7 +320,7 @@ namespace 'import:wikidata' do
         game.update!(release_date: earliest_release_date)
         progress_bar.log "Added release date for #{game[:name]}."
       rescue ActiveRecord::RecordInvalid => e
-        progress_bar.log "Record Invalid | #{game[:name].ljust(15)} | #{e}"
+        progress_bar.log "Invalid: #{game[:name].ljust(30)} | #{e}"
         next
       end
     end
