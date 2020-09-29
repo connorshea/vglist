@@ -145,7 +145,7 @@ namespace 'import:wikidata' do
 
         unless steam_app_id.nil? || blocklisted_steam_app_ids.include?(steam_app_id.to_i)
           progress_bar.log 'Adding Steam App ID.' if ENV['DEBUG']
-          SteamAppId.create(
+          SteamAppId.create!(
             game_id: game.id,
             app_id: steam_app_id
           )
@@ -228,7 +228,7 @@ namespace 'import:wikidata' do
           progress_bar.log series.inspect if ENV['DEBUG']
           next if series.nil?
 
-          Game.update(
+          Game.update!(
             game.id,
             { series_id: series.id }
           )

@@ -47,7 +47,15 @@ namespace :import do
 
       progress_bar.log "Adding Epic Games Store ID '#{game[:epic_games_store_id]}' to #{game_record.name}."
 
-      Game.update(game_record.id, { epic_games_store_id: game[:epic_games_store_id] })
+      begin
+        Game.find(game_record.id).update!(epic_games_store_id: game[:epic_games_store_id])
+      rescue ActiveRecord::RecordInvalid => e
+        name = game[:name]
+        name ||= game_record.name
+        progress_bar.log "Record Invalid | #{name.ljust(15)} | #{e}"
+        progress_bar.increment
+        next
+      end
 
       epic_games_added_count += 1
       progress_bar.increment

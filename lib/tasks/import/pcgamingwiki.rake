@@ -47,7 +47,15 @@ namespace :import do
 
       progress_bar.log "Adding PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}."
 
-      Game.update(game_record.id, { pcgamingwiki_id: game[:pcgamingwiki_id] })
+      begin
+        Game.find(game_record.id).update!(pcgamingwiki_id: game[:pcgamingwiki_id])
+      rescue ActiveRecord::RecordInvalid => e
+        name = game[:name]
+        name ||= game_record.name
+        progress_bar.log "Record Invalid | #{name.ljust(15)} | #{e}"
+        progress_bar.increment
+        next
+      end
 
       pcgamingwiki_added_count += 1
       progress_bar.increment
