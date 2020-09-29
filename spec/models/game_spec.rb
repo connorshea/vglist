@@ -37,7 +37,8 @@ RSpec.describe Game, type: :model do
         'Battlefront_II',
         'Battlefront_II_(2018)',
         'Star_Wars:_Knights_of_the_Old_Republic_II_-_The_Sith_Lords',
-        '.hack//G.U._Last_Recode'
+        '.hack//G.U._Last_Recode',
+        'Z'
       ).for(:pcgamingwiki_id)
     end
 
@@ -63,7 +64,8 @@ RSpec.describe Game, type: :model do
         'borderlands-2',
         'star-wars-knights-of-the-old-republic-ii-the-sith-lords',
         'windows/disciples-ii-dark-prophecy',
-        'ps3/game-name'
+        'ps3/game-name',
+        'z'
       ).for(:mobygames_id)
     end
 
@@ -102,7 +104,8 @@ RSpec.describe Game, type: :model do
         'superliminal',
         'darksiders3',
         'hades',
-        'little-inferno'
+        'little-inferno',
+        'z'
       ).for(:epic_games_store_id)
     end
 
@@ -120,7 +123,8 @@ RSpec.describe Game, type: :model do
         'divinity_2_developers_cut',
         'deus_ex_invisible_war',
         'toca_race_driver_3',
-        'samorost_3'
+        'samorost_3',
+        'z'
       ).for(:gog_id)
     end
 
