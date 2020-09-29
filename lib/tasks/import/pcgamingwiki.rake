@@ -45,7 +45,7 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Adding PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}."
+      progress_bar.log "Adding PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}." if ENV['DEBUG']
 
       begin
         Game.find(game_record.id).update!(pcgamingwiki_id: game[:pcgamingwiki_id])
@@ -56,6 +56,8 @@ namespace :import do
         progress_bar.increment
         next
       end
+
+      progress_bar.log "Added PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}."
 
       pcgamingwiki_added_count += 1
       progress_bar.increment

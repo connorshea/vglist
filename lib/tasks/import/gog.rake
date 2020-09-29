@@ -49,7 +49,7 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Adding GOG.com ID '#{game[:gog_id]}' to #{game_record.name}."
+      progress_bar.log "Adding GOG.com ID '#{game[:gog_id]}' to #{game_record.name}." if ENV['DEBUG']
 
       begin
         Game.find(game_record.id).update!(gog_id: game[:gog_id])
@@ -60,6 +60,8 @@ namespace :import do
         progress_bar.increment
         next
       end
+
+      progress_bar.log "Added GOG.com ID '#{game[:gog_id]}' to #{game_record.name}."
 
       gog_added_count += 1
       progress_bar.increment

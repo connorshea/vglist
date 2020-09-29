@@ -45,7 +45,7 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Adding Epic Games Store ID '#{game[:epic_games_store_id]}' to #{game_record.name}."
+      progress_bar.log "Adding Epic Games Store ID '#{game[:epic_games_store_id]}' to #{game_record.name}." if ENV['DEBUG']
 
       begin
         Game.find(game_record.id).update!(epic_games_store_id: game[:epic_games_store_id])
@@ -56,6 +56,8 @@ namespace :import do
         progress_bar.increment
         next
       end
+
+      progress_bar.log "Added Epic Games Store ID '#{game[:epic_games_store_id]}' to #{game_record.name}."
 
       epic_games_added_count += 1
       progress_bar.increment

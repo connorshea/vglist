@@ -45,7 +45,7 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Adding Giant Bomb ID '#{game[:giantbomb_id]}' to #{game_record.name}."
+      progress_bar.log "Adding Giant Bomb ID '#{game[:giantbomb_id]}' to #{game_record.name}." if ENV['DEBUG']
 
       begin
         Game.find(game_record.id).update!(giantbomb_id: game[:giantbomb_id])
@@ -56,6 +56,8 @@ namespace :import do
         progress_bar.increment
         next
       end
+
+      progress_bar.log "Added Giant Bomb ID '#{game[:giantbomb_id]}' to #{game_record.name}."
 
       giantbomb_added_count += 1
       progress_bar.increment
