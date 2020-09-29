@@ -49,9 +49,19 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Adding GOG.com ID '#{game[:gog_id]}' to #{game_record.name}."
+      progress_bar.log "Adding GOG.com ID '#{game[:gog_id]}' to #{game_record.name}." if ENV['DEBUG']
 
-      Game.update(game_record.id, { gog_id: game[:gog_id] })
+      begin
+        Game.find(game_record.id).update!(gog_id: game[:gog_id])
+      rescue ActiveRecord::RecordInvalid => e
+        name = game[:name]
+        name ||= game_record.name
+        progress_bar.log "Record Invalid | #{name.ljust(15)} | #{e}"
+        progress_bar.increment
+        next
+      end
+
+      progress_bar.log "Added GOG.com ID '#{game[:gog_id]}' to #{game[:name]}."
 
       gog_added_count += 1
       progress_bar.increment

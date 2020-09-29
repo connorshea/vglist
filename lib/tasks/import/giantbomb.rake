@@ -45,9 +45,19 @@ namespace :import do
         next
       end
 
-      progress_bar.log "Adding Giant Bomb ID '#{game[:giantbomb_id]}' to #{game_record.name}."
+      progress_bar.log "Adding Giant Bomb ID '#{game[:giantbomb_id]}' to #{game_record.name}." if ENV['DEBUG']
 
-      Game.update(game_record.id, { giantbomb_id: game[:giantbomb_id] })
+      begin
+        Game.find(game_record.id).update!(giantbomb_id: game[:giantbomb_id])
+      rescue ActiveRecord::RecordInvalid => e
+        name = game[:name]
+        name ||= game_record.name
+        progress_bar.log "Record Invalid | #{name.ljust(15)} | #{e}"
+        progress_bar.increment
+        next
+      end
+
+      progress_bar.log "Added Giant Bomb ID '#{game[:giantbomb_id]}' to #{game[:name]}."
 
       giantbomb_added_count += 1
       progress_bar.increment

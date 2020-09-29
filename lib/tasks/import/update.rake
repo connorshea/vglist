@@ -79,7 +79,7 @@ namespace :import do
         progress_bar.log "Adding series ID to #{hash[:game].name}."
 
         # Update the game to include the missing series ID.
-        Game.update(
+        Game.update!(
           hash[:game].id,
           { series_id: series.id }
         )
