@@ -24,6 +24,7 @@
             :search-path-identifier="'games'"
             :max-height="'150px'"
             @input="selectGame"
+            :customOptionFunc="customOptionLabel"
           ></single-select>
         </div>
       </section>
@@ -96,6 +97,12 @@ export default {
     },
     selectGame() {
       this.gameSelected = true;
+    },
+    // Include the vglist ID in the dropdown to help distinguish between games
+    // that have the same name.
+    customOptionLabel(item) {
+      item.name = `${item.name} (${item.id})`;
+      return item;
     }
   }
 };

@@ -57,6 +57,12 @@ export default {
     placeholder: {
       type: String,
       required: false
+    },
+    // Can be used to rename labels in the component dropdown or make other
+    // modifications to options.
+    customOptionFunc: {
+      type: Function,
+      required: false
     }
   },
   data: function() {
@@ -84,6 +90,10 @@ export default {
           return response.json();
         })
         .then(items => {
+          // Apply the customOptionFunc if it exists.
+          if (this.customOptionFunc) {
+            items = items.map(this.customOptionFunc);
+          }
           this.options = items;
           loading(false);
         });
