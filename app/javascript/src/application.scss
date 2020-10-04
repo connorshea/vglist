@@ -242,6 +242,7 @@ nav.navbar {
     font-weight: 700;
   }
 
+  // For game covers in the search dropdown.
   img.game-cover {
     max-height: 48px;
     overflow: clip;
@@ -401,19 +402,6 @@ nav.navbar {
       margin: auto;
     }
   }
-
-  .game-cover {
-    flex: 1 1 400px;
-    display: inline-flex;
-    height: auto;
-    max-height: 480px;
-    width: 400px;
-
-    // On mobile, don't force a flex-basis.
-    @include touch {
-      flex: 1 1 auto;
-    }
-  }
 }
 
 .game-card-list,
@@ -491,6 +479,12 @@ nav.navbar {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+// Center the game cover if the sidebar is full-width (specifically useful for mobile).
+.game-sidebar .game-cover img {
+  display: block;
+  margin: auto;
 }
 
 // Remove the radius and modify padding on notifications so they can be used
