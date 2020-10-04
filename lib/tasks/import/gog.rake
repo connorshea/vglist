@@ -54,14 +54,12 @@ namespace :import do
       begin
         Game.find(game_record.id).update!(gog_id: game[:gog_id])
       rescue ActiveRecord::RecordInvalid => e
-        name = game[:name]
-        name ||= game_record.name
-        progress_bar.log "Invalid: #{name.ljust(30)} | #{e}"
+        progress_bar.log "Invalid: #{game_record.name.ljust(30)} | #{e}"
         progress_bar.increment
         next
       end
 
-      progress_bar.log "Added GOG.com ID '#{game[:gog_id]}' to #{game[:name]}."
+      progress_bar.log "Added GOG.com ID '#{game[:gog_id]}' to #{game_record.name}."
 
       gog_added_count += 1
       progress_bar.increment

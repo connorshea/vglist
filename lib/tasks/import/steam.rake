@@ -64,14 +64,12 @@ namespace :import do
       begin
         SteamAppId.create!(game_id: game_record.id, app_id: game[:steam_app_id].to_s)
       rescue ActiveRecord::RecordInvalid => e
-        name = game[:name]
-        name ||= game_record.name
-        progress_bar.log "Invalid: #{name.ljust(30)} | #{e}"
+        progress_bar.log "Invalid: #{game_record.name.ljust(30)} | #{e}"
         progress_bar.increment
         next
       end
 
-      progress_bar.log "Added Steam App ID '#{game[:steam_app_id]}' to #{game[:name]}."
+      progress_bar.log "Added Steam App ID '#{game[:steam_app_id]}' to #{game_record.name}."
 
       steam_added_count += 1
       progress_bar.increment

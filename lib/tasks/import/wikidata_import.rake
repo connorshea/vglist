@@ -17,6 +17,10 @@ namespace 'import:wikidata' do
       total: nil,
       format: formatting
     )
+
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     companies = wikidata_item_filter(rows: rows, progress_bar: progress_bar_for_filter)
     companies.uniq! { |company| company&.dig(:wikidata_id) }
 
@@ -59,6 +63,10 @@ namespace 'import:wikidata' do
       total: nil,
       format: formatting
     )
+
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     platforms = wikidata_item_filter(rows: rows, count_limit: 80, progress_bar: progress_bar_for_filter)
     platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
 
@@ -101,6 +109,10 @@ namespace 'import:wikidata' do
       total: nil,
       format: formatting
     )
+
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     genres = wikidata_item_filter(rows: rows, count_limit: 50, progress_bar: progress_bar_for_filter)
     genres.uniq! { |genre| genre&.dig(:wikidata_id) }
 
@@ -144,6 +156,10 @@ namespace 'import:wikidata' do
       total: nil,
       format: formatting
     )
+
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     series = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     series.uniq! { |s| s&.dig(:wikidata_id) }
 
@@ -186,6 +202,10 @@ namespace 'import:wikidata' do
       total: nil,
       format: formatting
     )
+
+    # Limit logging in production to allow the progress bar to work.
+    Rails.logger.level = 2 if Rails.env.production?
+
     engines = wikidata_item_filter(rows: rows, count_limit: 1, progress_bar: progress_bar_for_filter)
     engines.uniq! { |engine| engine&.dig(:wikidata_id) }
 
