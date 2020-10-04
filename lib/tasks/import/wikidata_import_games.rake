@@ -155,7 +155,7 @@ namespace 'import:wikidata' do
           progress_bar.log 'Adding developers.' if ENV['DEBUG']
           game_hash[:developers].each do |developer_id|
             company = Company.find_by(wikidata_id: developer_id)
-            puts company.inspect if ENV['DEBUG']
+            progress_bar.log company.inspect if ENV['DEBUG']
             next if company.nil?
 
             GameDeveloper.create!(
@@ -197,7 +197,7 @@ namespace 'import:wikidata' do
           progress_bar.log 'Adding engines.' if ENV['DEBUG']
           game_hash[:engines].each do |engine_id|
             engine = Engine.find_by(wikidata_id: engine_id)
-            puts engine.inspect if ENV['DEBUG']
+            progress_bar.log engine.inspect if ENV['DEBUG']
             next if engine.nil?
 
             GameEngine.create!(
@@ -228,10 +228,7 @@ namespace 'import:wikidata' do
           progress_bar.log series.inspect if ENV['DEBUG']
           next if series.nil?
 
-          Game.update!(
-            game.id,
-            { series_id: series.id }
-          )
+          Game.find(game.id).update!(series_id: series.id)
         end
       end
     end
