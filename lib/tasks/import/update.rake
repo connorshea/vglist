@@ -17,11 +17,11 @@ namespace :import do
       "import:gog",
       "import:mobygames",
       "import:update:series",
-      "import:update:platforms",
       "import:update:genres",
       "import:update:engines",
       "import:update:developers",
-      "import:update:publishers"
+      "import:update:publishers",
+      "import:update:platforms"
     ]
 
     import_tasks.each do |task|
