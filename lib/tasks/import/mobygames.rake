@@ -29,10 +29,6 @@ namespace :import do
 
     mobygames_added_count = 0
 
-    # Filter down to just the wikidata IDs where the MobyGames ID on vglist is nil.
-    vglist_game_wikidata_ids = Game.where.not(wikidata_id: nil).where(mobygames_id: nil).pluck(:wikidata_id)
-    games.select! { |game| vglist_game_wikidata_ids.include?(game[:wikidata_id]) }
-
     progress_bar = ProgressBar.create(
       total: games.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
