@@ -8,7 +8,7 @@ namespace :deploy do
       puts "Pulling down the latest code from master..."
       system('git pull')
 
-      # Create Sentry release
+      # Create Sentry release.
       puts
       puts "Creating Sentry release..."
       version = `sentry-cli releases propose-version`.strip
@@ -37,7 +37,7 @@ namespace :deploy do
       puts "Precompiling assets..."
       system('bundle exec rails assets:precompile')
 
-      # Finalize Sentry release
+      # Finalize Sentry release.
       puts
       puts "Finalizing Sentry release..."
       system("sentry-cli releases finalize #{version}")
