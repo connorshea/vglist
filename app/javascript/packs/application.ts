@@ -14,7 +14,8 @@ import VTooltip from 'v-tooltip';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import * as Sentry from '@sentry/browser';
-import * as _ from "lodash";
+import { Vue as VueIntegration } from '@sentry/integrations';
+import _ from "lodash";
 import '../src/vue-loader';
 import '../src/toggleable-buttons';
 import '../src/bulma';
@@ -25,7 +26,13 @@ import '../src/settings';
 require.context('../icons', true);
 
 if (process.env.NODE_ENV === 'production') {
-  Sentry.init({ dsn: process.env.SENTRY_DSN_JS });
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN_JS,
+    integrations: [
+      new VueIntegration({ Vue })
+    ],
+    environment: process.env.NODE_ENV
+  });
 }
 
 Vue.use(TurbolinksAdapter);

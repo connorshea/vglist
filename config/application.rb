@@ -51,10 +51,19 @@ module VideoGameList
       generate.controller_specs false
     end
 
-    if Rails.env.production?
-      Raven.configure do |config|
-        config.dsn = ENV['SENTRY_DSN']
-      end
+    # Get the current commit SHA for the Rails app. This will surely have some
+    # sort of negative side-effect I haven't figured out yet. This is used for
+    # caching to make sure the cache is busted when a new version of the
+    # application is deployed.
+    # https://brandonhilkert.com/blog/understanding-the-rails-cache-id-environment-variable/
+    ENV['GIT_COMMIT_SHA'] = `git rev-parse --short HEAD`.strip
+
+    # Configure Sentry.
+    Raven.configure do |config|
+      config.dsn = ENV['SENTRY_DSN_RAILS']
+      # Only run in production.
+      config.environments = ['production']
+      config.release = ENV['GIT_COMMIT_SHA']
     end
 
     config.to_prepare do
@@ -72,12 +81,5 @@ module VideoGameList
     config.annotations.register_directories("spec")
     # Add .vue files to the file extensions picked up by 'rails notes'.
     config.annotations.register_extensions("vue") { |annotation| %r{//\s*(#{annotation}):?\s*(.*)$} }
-
-    # Get the current commit SHA for the Rails app. This will surely have some
-    # sort of negative side-effect I haven't figured out yet. This is used for
-    # caching to make sure the cache is busted when a new version of the
-    # application is deployed.
-    # https://brandonhilkert.com/blog/understanding-the-rails-cache-id-environment-variable/
-    ENV['GIT_COMMIT_SHA'] = `git rev-parse --short HEAD`.strip
   end
 end
