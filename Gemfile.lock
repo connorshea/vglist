@@ -137,8 +137,9 @@ GEM
       railties (>= 5.0.0)
     faker (2.14.0)
       i18n (>= 1.6, < 2)
-    faraday (1.0.1)
+    faraday (1.1.0)
       multipart-post (>= 1.2, < 3)
+      ruby2_keywords
     ffi (1.13.1)
     friendly_id (5.4.0)
       activerecord (>= 4.0.0)
@@ -327,6 +328,7 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.10.1)
+    ruby2_keywords (0.0.2)
     rubyzip (2.3.0)
     safe_type (1.1.1)
     scanf (1.0.0)
