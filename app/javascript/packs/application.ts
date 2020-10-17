@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: process.env.SENTRY_DSN_JS,
     integrations: [
-      new VueIntegration({ Vue })
+      new VueIntegration({ Vue, attachProps: true })
     ],
     environment: process.env.NODE_ENV
   });
