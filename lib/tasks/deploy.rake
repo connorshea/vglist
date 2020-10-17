@@ -11,7 +11,7 @@ namespace :deploy do
       puts
       puts "Creating Sentry release..."
       version = `sentry-cli releases propose-version`.strip
-      system("sentry-cli releases new -p vglist-backend -p vglist-frontend #{version}")
+      system("sentry-cli releases new --org vglist -p vglist-backend -p vglist-frontend #{version}")
       system("sentry-cli releases set-commits --auto #{version}")
       # Install dependencies with Bundler.
       puts
