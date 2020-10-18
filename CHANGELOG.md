@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.10.17
+### Changed
+- Update Sentry configuration to use Releases and to split the frontend and backend error tracking projects, so errors are easier to discover and fix. ([#1568])
+
 ## v2020.9.12
 ### Added
 - Add a dark mode. This is controlled by the `prefers-color-scheme` media query, which means it's determined by browsers. Some browsers let you specify whether you want a dark or light mode for websites, and some just use the theme value from the operating system. ([#1501])
@@ -777,3 +781,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1403]: https://github.com/connorshea/vglist/pull/1403
 [#1488]: https://github.com/connorshea/vglist/pull/1488
 [#1501]: https://github.com/connorshea/vglist/pull/1501
+[#1568]: https://github.com/connorshea/vglist/pull/1568
