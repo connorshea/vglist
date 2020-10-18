@@ -41,6 +41,7 @@ namespace :deploy do
       puts
       puts "Finalizing Sentry release..."
       system("sentry-cli releases finalize #{version}")
+      system("sentry-cli releases deploys #{version} new -e #{ENV['RAILS_ENV']}")
 
       puts
       puts "Deploy successful!"
