@@ -956,13 +956,13 @@
     "@sentry/utils" "5.26.0"
     tslib "^1.9.3"
 
-"@sentry/integrations@^5.26.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-5.26.0.tgz#cf90005359862c5b1df4df0f1ce8be5e56c9e1ad"
-  integrity sha512-XBMPm3wWW+3EJvWFHdVcl0PSWjjNEzmQxjjWeMv9vLWAC1zhS8gcpk/LyDIFWojJBzhASD8f1mLv2ZdKZtA1ZQ==
+"@sentry/integrations@^5.27.1":
+  version "5.27.1"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-5.27.1.tgz#130e01d53b7df76e09f17fd7f8d79355c41ad5be"
+  integrity sha512-7E3ZHQvT1YuUvv8PMk8PUjBhlYo87k2hzsuvgup1+CxO8DwxsNr0C06/x5D3e5Tk93K1LXTj5R/553a84wZESQ==
   dependencies:
-    "@sentry/types" "5.26.0"
-    "@sentry/utils" "5.26.0"
+    "@sentry/types" "5.27.1"
+    "@sentry/utils" "5.27.1"
     localforage "1.8.1"
     tslib "^1.9.3"
 
@@ -980,12 +980,25 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.26.0.tgz#b0cbacb0b24cd86620fb296b46cf7277bb004a3e"
   integrity sha512-ugpa1ePOhK55pjsyutAsa2tiJVQEyGYCaOXzaheg/3+EvhMdoW+owiZ8wupfvPhtZFIU3+FPOVz0d5k9K5d1rw==
 
+"@sentry/types@5.27.1":
+  version "5.27.1"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.27.1.tgz#031480a4cf8f0b6e6337fb03ee884deedcef6f40"
+  integrity sha512-g1aX0V0fz5BTo0mjgSVY9XmPLGZ6p+8OEzq3ubKzDUf59VHl+Vt8viZ8VXw/vsNtfAjBHn7BzSuzJo7cXJJBtA==
+
 "@sentry/utils@5.26.0":
   version "5.26.0"
   resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.26.0.tgz#09a3d01d91747f38f796cafeb24f8fd86e4fa05f"
   integrity sha512-F2gnHIAWbjiowcAgxz3VpKxY/NQ39NTujEd/NPnRTWlRynLFg3bAV+UvZFXljhYJeN3b/zRlScNDcpCWTrtZGw==
   dependencies:
     "@sentry/types" "5.26.0"
+    tslib "^1.9.3"
+
+"@sentry/utils@5.27.1":
+  version "5.27.1"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.27.1.tgz#0ed9d9685aae6f4ef9eb6b9ebb81e361fd1c5452"
+  integrity sha512-VIzK8utuvFO9EogZcKJPgmLnlJtYbaPQ0jCw7od9HRw1ckrSBc84sA0uuuY6pB6KSM+7k6EjJ5IdIBaCz5ep/A==
+  dependencies:
+    "@sentry/types" "5.27.1"
     tslib "^1.9.3"
 
 "@types/glob@^7.1.1":
