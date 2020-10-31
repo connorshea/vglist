@@ -29,18 +29,30 @@ before_script:
   - ruby -v
   - node -v
   - gem install bundler:$BUNDLER_VERSION
+  - echo -e "section_start:`date +%s`:bundle_install[collapsed=true]\r\e[0Kbundle install"
   - bundle install -j $(nproc)
+  - echo -e "section_end:`date +%s`:bundle_install\r\e[0K"
+  - echo -e "section_start:`date +%s`:yarn_install[collapsed=true]\r\e[0Kyarn install"
   - yarn install --frozen-lockfile
+  - echo -e "section_end:`date +%s`:yarn_install\r\e[0K"
   - cp config/database.yml.ci config/database.yml
+  - echo -e "section_start:`date +%s`:db_create[collapsed=true]\r\e[0Kbundle exec rails db:create"
   - bundle exec rails db:create
+  - echo -e "section_end:`date +%s`:db_create\r\e[0K"
+  - echo -e "section_start:`date +%s`:db_migration[collapsed=true]\r\e[0Kbundle exec rails db:migrate"
   - bundle exec rails db:migrate --trace
+  - echo -e "section_end:`date +%s`:db_migration\r\e[0K"
 
 .no_db_template:
   before_script: &no_db_necessary
     - ruby -v
     - gem install bundler:$BUNDLER_VERSION
+    - echo -e "section_start:`date +%s`:bundle_install[collapsed=true]\r\e[0Kbundle install"
     - bundle install -j $(nproc)
+    - echo -e "section_end:`date +%s`:bundle_install\r\e[0K"
+    - echo -e "section_start:`date +%s`:yarn_install[collapsed=true]\r\e[0Kyarn install"
     - yarn install --frozen-lockfile
+    - echo -e "section_end:`date +%s`:yarn_install\r\e[0K"
 
 # A simple hack to make it so the package cache is updated independently of any
 # other jobs, to prevent unnecessary time spent pushing the cache for more than
