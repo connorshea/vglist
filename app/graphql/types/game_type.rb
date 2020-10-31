@@ -43,7 +43,7 @@ module Types
     # Get the Steam App ID values as an array.
     sig { returns(T::Array[Integer]) }
     def steam_app_ids
-      @object.steam_app_ids.map { |app_id_record| app_id_record.app_id }
+      @object.steam_app_ids.map(&:app_id)
     end
   end
 end

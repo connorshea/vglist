@@ -10,6 +10,7 @@ RSpec.describe "Games API", type: :request do
     let(:game2) { create(:game) }
     let(:game_with_cover) { create(:game_with_cover) }
     let(:game_with_release_date) { create(:game_with_release_date) }
+    let(:game_with_steam_app_ids) { create(:game_with_steam_app_id) }
 
     it "returns basic data for game" do
       game
@@ -28,6 +29,29 @@ RSpec.describe "Games API", type: :request do
         {
           "id" => game.id.to_s,
           "name" => game.name
+        }
+      )
+    end
+
+    it "returns data for game with steam app id" do
+      game_with_steam_app_ids
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          game(id: $id) {
+            id
+            name
+            steamAppIds
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: game_with_steam_app_ids.id }, token: access_token)
+
+      expect(result["data"]["game"]).to eq(
+        {
+          "id" => game_with_steam_app_ids.id.to_s,
+          "name" => game_with_steam_app_ids.name,
+          "steamAppIds" => game_with_steam_app_ids.steam_app_ids.map(&:app_id)
         }
       )
     end

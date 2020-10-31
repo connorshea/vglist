@@ -76,6 +76,7 @@ FactoryBot.define do
 
     factory :game_with_cover, traits: [:cover]
     factory :game_with_release_date, traits: [:release_date]
+    factory :game_with_steam_app_id, traits: [:steam_app_id]
     factory :game_with_everything,
       traits: [
         :cover,
