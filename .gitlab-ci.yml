@@ -89,7 +89,9 @@ factory_bot_lint:
 
 rspec:
   script:
+    - echo -e "section_start:`date +%s`:assets_precompile[collapsed=true]\r\e[0Kbundle exec rake assets:precompile"
     - bundle exec rake assets:precompile
+    - echo -e "section_end:`date +%s`:assets_precompile\r\e[0K"
     - bundle exec rspec
   coverage: '/\(\d+.\d+\%\) covered/'
 
