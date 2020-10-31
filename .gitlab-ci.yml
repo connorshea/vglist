@@ -94,6 +94,13 @@ rspec:
     - echo -e "section_end:`date +%s`:assets_precompile\r\e[0K"
     - bundle exec rspec
   coverage: '/\(\d+.\d+\%\) covered/'
+  # Save the artifacts from simplecov's code coverage output.
+  artifacts:
+    when: always
+    paths:
+      - coverage
+    expire_in: 10 days
+    name: "Code Coverage Report"
 
 db:seed:
   script:
