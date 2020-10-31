@@ -109,6 +109,9 @@ group :development, :test do
   # Code coverage
   gem 'simplecov', '~> 0.19', require: false
 
+  # Output code coverage in Cobertura format for GitLab to parse.
+  gem 'simplecov-cobertura', '~> 1.4', require: false
+
   # Shoulda-matchers for writing better tests on models.
   gem 'shoulda-matchers', '4.4.1'
 

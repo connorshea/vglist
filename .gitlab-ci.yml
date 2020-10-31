@@ -94,6 +94,9 @@ rspec:
     - echo -e "section_end:`date +%s`:assets_precompile\r\e[0K"
     - bundle exec rspec
   coverage: '/\(\d+.\d+\%\) covered/'
+  artifacts:
+    reports:
+      cobertura: coverage/coverage.xml
 
 db:seed:
   script:
