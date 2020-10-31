@@ -17,6 +17,17 @@ RSpec.describe SteamAppId, type: :model do
     end
   end
 
+  describe 'Custom Validations' do
+    let!(:steam_blocklist) { create(:steam_blocklist, steam_app_id: 420) }
+    let!(:steam_app_id) { build(:steam_app_id, app_id: 420) }
+
+    it 'fails validation if Steam App ID is blocklisted' do
+      steam_blocklist
+      expect(steam_app_id).to be_invalid
+      expect(steam_app_id.errors[:app_id]).to include('is blocklisted')
+    end
+  end
+
   describe "Associations" do
     it { should belong_to(:game) }
   end

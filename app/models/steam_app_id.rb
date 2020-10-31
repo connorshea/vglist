@@ -19,6 +19,6 @@ class SteamAppId < ApplicationRecord
   def app_id_not_blocklisted
     return unless app_id.present? && SteamBlocklist.pluck(:steam_app_id).include?(app_id)
 
-    errors.add(:steam_app_id, "is blocklisted")
+    errors.add(:app_id, "is blocklisted")
   end
 end
