@@ -5,6 +5,7 @@ class CompaniesController < ApplicationController
   def index
     @companies = Company.order(:id).page(helpers.page_param)
     skip_policy_scope
+    'foo'
     respond_to do |format|
       format.html
       format.json { render json: @companies }
