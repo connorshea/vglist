@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/puma/all/puma.rbi
 #
-# puma-5.0.0
+# puma-5.0.4
 
 class Puma::HttpParser
   def body; end
@@ -236,7 +236,7 @@ class Puma::Events
   def self.null; end
   def self.stdio; end
   def self.strings; end
-  def ssl_error(error, peeraddr, peercert); end
+  def ssl_error(error, ssl_socket); end
   def stderr; end
   def stdout; end
   def unknown_error(error, req = nil, text = nil); end
@@ -271,6 +271,7 @@ class Puma::ThreadPool
   def wait_for_less_busy_worker(delay_s); end
   def wait_until_not_full; end
   def waiting; end
+  def with_force_shutdown; end
   def with_mutex(&block); end
 end
 class Puma::ThreadPool::ForceShutdown < RuntimeError
@@ -280,9 +281,65 @@ class Puma::ThreadPool::Automaton
   def start!; end
   def stop; end
 end
+class Puma::Reactor
+  def add(io); end
+  def initialize(&block); end
+  def register(io); end
+  def run(background = nil); end
+  def select_loop; end
+  def shutdown; end
+  def wakeup!(io); end
+end
+class IO
+end
+module IO::WaitReadable
+end
+class Puma::ConnectionError < RuntimeError
+end
+class Puma::Client
+  def body; end
+  def call; end
+  def can_close?; end
+  def close; end
+  def closed?(*args, &block); end
+  def decode_chunk(chunk); end
+  def eagerly_finish; end
+  def env; end
+  def finish(timeout); end
+  def hijacked; end
+  def in_data_phase; end
+  def initialize(io, env = nil); end
+  def inspect; end
+  def io; end
+  def io_ok?; end
+  def peerip; end
+  def peerip=(arg0); end
+  def read_body; end
+  def read_chunked_body; end
+  def ready; end
+  def remote_addr_header; end
+  def remote_addr_header=(arg0); end
+  def reset(fast_check = nil); end
+  def set_ready; end
+  def set_timeout(val); end
+  def setup_body; end
+  def setup_chunked_body(body); end
+  def tempfile; end
+  def timeout!; end
+  def timeout; end
+  def timeout_at; end
+  def to_io; end
+  def try_to_finish; end
+  def write_chunk(str); end
+  def write_error(status_code); end
+  extend Forwardable
+  include Puma::Const
+end
 module Puma::Util
+  def nakayoshi_gc(events); end
   def parse_query(qs, d = nil, &unescaper); end
   def pipe; end
+  def self.nakayoshi_gc(events); end
   def self.parse_query(qs, d = nil, &unescaper); end
   def self.pipe; end
   def self.unescape(s, encoding = nil); end
@@ -350,72 +407,11 @@ class Puma::MiniSSL::Server
   def initialize(socket, ctx); end
   def to_io; end
 end
-class Puma::Reactor
-  def add(c); end
-  def calculate_sleep; end
-  def clear!; end
-  def clear_monitor(mon); end
-  def initialize(server, app_pool); end
-  def run; end
-  def run_in_thread; end
-  def run_internal; end
-  def shutdown; end
-end
-class IO
-end
-module IO::WaitReadable
-end
-class Puma::ConnectionError < RuntimeError
-end
-class Puma::Client
-  def body; end
-  def call; end
-  def can_close?; end
-  def close; end
-  def closed?(*args, &block); end
-  def decode_chunk(chunk); end
-  def eagerly_finish; end
-  def env; end
-  def finish(timeout); end
-  def hijacked; end
-  def in_data_phase; end
-  def initialize(io, env = nil); end
-  def inspect; end
-  def io; end
-  def jruby_eagerly_finish; end
-  def peerip; end
-  def peerip=(arg0); end
-  def read_body; end
-  def read_chunked_body; end
-  def ready; end
-  def remote_addr_header; end
-  def remote_addr_header=(arg0); end
-  def reset(fast_check = nil); end
-  def set_ready; end
-  def set_timeout(val); end
-  def setup_body; end
-  def setup_chunked_body(body); end
-  def tempfile; end
-  def timeout_at; end
-  def to_io; end
-  def try_to_finish; end
-  def write_chunk(str); end
-  def write_error(status_code); end
-  extend Forwardable
-  include Puma::Const
-end
 class Puma::MiniSSL::ContextBuilder
   def context; end
   def events; end
   def initialize(params, events); end
   def params; end
-end
-module OpenSSL
-end
-module OpenSSL::SSL
-end
-class OpenSSL::SSL::SSLServer
-  def accept_nonblock; end
 end
 class Puma::Binder
   def activated_sockets; end
@@ -451,6 +447,18 @@ class Puma::IOBuffer < String
   def append(*args); end
   def reset; end
 end
+module Puma::Request
+  def default_server_port(env); end
+  def fast_write(io, str); end
+  def fetch_status_code(status); end
+  def handle_request(client, lines); end
+  def normalize_env(env, client); end
+  def possible_header_injection?(header_value); end
+  def req_env_post_parse(env); end
+  def str_early_hints(headers); end
+  def str_headers(env, status, headers, res_info, lines); end
+  include Puma::Const
+end
 class Puma::Server
   def add_ssl_listener(*args, &block); end
   def add_tcp_listener(*args, &block); end
@@ -463,21 +471,18 @@ class Puma::Server
   def begin_restart(sync = nil); end
   def binder; end
   def binder=(arg0); end
+  def client_error(e, client); end
   def closed_socket?(socket); end
   def connected_ports(*args, &block); end
   def cork_socket(socket); end
-  def default_server_port(env); end
   def early_hints; end
   def early_hints=(arg0); end
   def events; end
-  def fast_write(io, str); end
-  def fetch_status_code(status); end
   def first_data_timeout; end
   def first_data_timeout=(arg0); end
   def graceful_shutdown; end
   def halt(sync = nil); end
   def handle_check; end
-  def handle_request(req, lines); end
   def handle_servers; end
   def inherit_binder(bind); end
   def initialize(app, events = nil, options = nil); end
@@ -488,19 +493,19 @@ class Puma::Server
   def max_threads=(arg0); end
   def min_threads; end
   def min_threads=(arg0); end
-  def normalize_env(env, client); end
   def notify_safely(message); end
   def persistent_timeout; end
   def persistent_timeout=(arg0); end
   def pool_capacity; end
-  def possible_header_injection?(header_value); end
   def process_client(client, buffer); end
+  def reactor_wakeup(client); end
   def read_body(env, client, body, cl); end
   def reaping_time; end
   def reaping_time=(arg0); end
   def requests_count; end
   def run(background = nil); end
   def running; end
+  def self.closed_socket_supported?; end
   def self.current; end
   def self.tcp_cork_supported?; end
   def shutting_down?; end
@@ -508,8 +513,10 @@ class Puma::Server
   def stop(sync = nil); end
   def thread; end
   def uncork_socket(socket); end
+  def with_force_shutdown(client, &block); end
   extend Forwardable
   include Puma::Const
+  include Puma::Request
 end
 class Puma::Runner
   def app; end
@@ -536,7 +543,6 @@ class Puma::Cluster < Puma::Runner
   def fork_worker!; end
   def halt; end
   def initialize(cli, events); end
-  def nakayoshi_gc; end
   def next_worker_index; end
   def phased_restart; end
   def preload?; end
@@ -557,7 +563,7 @@ class Puma::Cluster < Puma::Runner
   def wakeup!; end
   def worker(index, master); end
 end
-class Puma::Cluster::Worker
+class Puma::Cluster::WorkerHandle
   def boot!; end
   def booted?; end
   def hup; end
@@ -577,6 +583,14 @@ class Puma::Cluster::Worker
   def term; end
   def term?; end
 end
+class Puma::Cluster::Worker < Puma::Runner
+  def index; end
+  def initialize(index:, master:, launcher:, pipes:, server: nil); end
+  def master; end
+  def run; end
+  def spawn_worker(idx); end
+  def wakeup!; end
+end
 class Puma::Single < Puma::Runner
   def halt; end
   def restart; end
@@ -592,10 +606,10 @@ class Puma::Launcher
   def config; end
   def connected_ports; end
   def delete_pidfile; end
-  def dependencies_and_files_to_require_after_prune; end
   def environment; end
   def events; end
   def extra_runtime_deps_directories; end
+  def files_to_require_after_prune; end
   def generate_restart_data; end
   def graceful_stop; end
   def halt; end

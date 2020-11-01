@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 class User < ApplicationRecord
   extend T::Sig
   extend FriendlyId

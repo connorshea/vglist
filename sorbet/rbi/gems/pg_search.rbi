@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/pg_search/all/pg_search.rbi
 #
-# pg_search-2.3.2
+# pg_search-2.3.4
 
 module PgSearch
   def multisearch_options; end
@@ -87,9 +87,9 @@ class PgSearch::Features::Feature
   def self.valid_options; end
 end
 class PgSearch::Features::DMetaphone
-  def conditions; end
+  def conditions(*args, &block); end
   def initialize(query, options, columns, model, normalizer); end
-  def rank; end
+  def rank(*args, &block); end
   def tsearch; end
 end
 class PgSearch::Features::DMetaphone::Normalizer
@@ -126,6 +126,7 @@ class PgSearch::Features::TSearch < PgSearch::Features::Feature
   def tsdocument; end
   def tsearch_rank; end
   def tsquery; end
+  def tsquery_expression(term_sql, negated:, prefix:); end
   def tsquery_for_term(unsanitized_term); end
 end
 module PgSearch::Model
@@ -138,7 +139,7 @@ module PgSearch::Model::ClassMethods
   def pg_search_scope(name, options); end
 end
 module PgSearch::Multisearch
-  def self.rebuild(model, clean_up = nil); end
+  def self.rebuild(model, deprecated_clean_up = nil, clean_up: nil); end
 end
 class PgSearch::Multisearch::Rebuilder
   def additional_attributes?; end
@@ -208,7 +209,7 @@ module PgSearch::ScopeOptions::WithPgSearchRank
 end
 module PgSearch::ScopeOptions::PgSearchRankTableAliasing
   def increment_counter; end
-  def pg_search_rank_table_alias(include_counter = nil); end
+  def pg_search_rank_table_alias(include_counter: nil); end
 end
 class PgSearch::Railtie < Rails::Railtie
 end

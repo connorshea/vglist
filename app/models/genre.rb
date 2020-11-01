@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 class Genre < ApplicationRecord
   include GlobalSearchable
   include Searchable

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/bootsnap/all/bootsnap.rbi
 #
-# bootsnap-1.4.8
+# bootsnap-1.4.9
 
 module Bootsnap
   def bundler?; end
@@ -175,29 +175,38 @@ end
 module Bootsnap::CompileCache::Native
   def compile_option_crc32=(arg0); end
   def coverage_running?; end
-  def fetch(arg0, arg1, arg2); end
+  def fetch(arg0, arg1, arg2, arg3); end
   def self.compile_option_crc32=(arg0); end
   def self.coverage_running?; end
-  def self.fetch(arg0, arg1, arg2); end
+  def self.fetch(arg0, arg1, arg2, arg3); end
 end
 module Bootsnap::CompileCache::ISeq
   def self.cache_dir; end
   def self.cache_dir=(arg0); end
   def self.compile_option_updated; end
-  def self.input_to_output(_); end
-  def self.input_to_storage(_, path); end
+  def self.input_to_output(_, _); end
+  def self.input_to_storage(_, path, _args); end
   def self.install!(cache_dir); end
-  def self.storage_to_output(binary); end
+  def self.storage_to_output(binary, _args); end
 end
 module Bootsnap::CompileCache::ISeq::InstructionSequenceMixin
   def compile_option=(hash); end
   def load_iseq(path); end
 end
 module Bootsnap::CompileCache::YAML
-  def self.input_to_output(data); end
-  def self.input_to_storage(contents, _); end
+  def self.cache_dir; end
+  def self.cache_dir=(arg0); end
+  def self.init!; end
+  def self.input_to_output(data, kwargs); end
+  def self.input_to_storage(contents, _, kwargs); end
   def self.install!(cache_dir); end
   def self.msgpack_factory; end
   def self.msgpack_factory=(arg0); end
-  def self.storage_to_output(data); end
+  def self.storage_to_output(data, kwargs); end
+  def self.supported_options; end
+  def self.supported_options=(arg0); end
+end
+module Bootsnap::CompileCache::YAML::Patch
+  def load_file(path, *args); end
+  extend Bootsnap::CompileCache::YAML::Patch
 end

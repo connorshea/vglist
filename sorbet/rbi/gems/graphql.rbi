@@ -7,9 +7,11 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/graphql/all/graphql.rbi
 #
-# graphql-1.11.4
+# graphql-1.11.6
 
 module GraphQL
+  def self.default_parser; end
+  def self.default_parser=(arg0); end
   def self.parse(graphql_string, tracer: nil); end
   def self.parse_file(filename); end
   def self.parse_with_racc(string, filename: nil, tracer: nil); end
@@ -43,7 +45,7 @@ module GraphQL::Define::AssignEnumValue
   def self.call(enum_type, name, desc = nil, deprecation_reason: nil, value: nil, &block); end
 end
 module GraphQL::Define::AssignGlobalIdField
-  def self.call(type_defn, field_name); end
+  def self.call(type_defn, field_name, **field_kwargs); end
 end
 module GraphQL::Define::AssignMutationFunction
   def self.call(target, function); end
@@ -321,6 +323,8 @@ class GraphQL::Argument
   def default_value; end
   def default_value=(new_default_value); end
   def default_value?; end
+  def deprecation_reason; end
+  def deprecation_reason=(arg0); end
   def description; end
   def description=(arg0); end
   def expose_as; end
@@ -478,7 +482,6 @@ module GraphQL::ScalarType::NoOpCoerce
   def self.call(val, ctx); end
 end
 class GraphQL::NameValidator
-  def self.valid?(name); end
   def self.validate!(name); end
 end
 module GraphQL::Language
@@ -527,17 +530,19 @@ class GraphQL::Language::Printer
   def print_variable_identifier(variable_identifier); end
 end
 class GraphQL::Language::SanitizedPrinter < GraphQL::Language::Printer
-  def initialize(query); end
+  def coerce_argument_value_to_list?(type, value); end
+  def initialize(query, inline_variables: nil); end
   def print_argument(argument); end
   def print_directive(directive); end
   def print_field(field, indent: nil); end
   def print_fragment_definition(fragment_def, indent: nil); end
   def print_inline_fragment(inline_fragment, indent: nil); end
-  def print_list_type(list_type); end
   def print_node(node, indent: nil); end
   def print_operation_definition(operation_definition, indent: nil); end
   def print_variable_identifier(variable_id); end
   def query; end
+  def redact_argument_value?(argument, value); end
+  def redacted_argument_value(argument); end
   def sanitized_query_string; end
   def value_to_ast(value, type); end
 end
@@ -1197,6 +1202,7 @@ class GraphQL::Language::Parser < Racc::Parser
   def on_error(parser_token_id, lexer_token, vstack); end
   def parse_document; end
   def self.parse(query_string, filename: nil, tracer: nil); end
+  def self.parse_file(filename, tracer: nil); end
 end
 class GraphQL::Language::Token
   def col; end
@@ -1616,6 +1622,7 @@ class GraphQL::Execution::Interpreter::Arguments
   def argument_values; end
   def each(*args, &block); end
   def each_value(*args, &block); end
+  def fetch(*args, &block); end
   def initialize(keyword_arguments:, argument_values:); end
   def inspect; end
   def key?(*args, &block); end
@@ -1649,6 +1656,7 @@ class GraphQL::Execution::Interpreter::Runtime
   def continue_field(path, value, owner_type, field, current_type, ast_node, next_selections, is_non_null, owner_object, arguments); end
   def continue_value(path, value, parent_type, field, is_non_null, ast_node); end
   def dead_path?(path); end
+  def delete_interpreter_context(key); end
   def directives_include?(node, graphql_object, parent_type); end
   def evaluate_selections(path, scoped_context, owner_object, owner_type, selections, root_operation_type: nil); end
   def final_value; end
@@ -1661,6 +1669,7 @@ class GraphQL::Execution::Interpreter::Runtime
   def run_directive(object, ast_node, idx, &block); end
   def run_eager; end
   def schema; end
+  def set_interpreter_context(key, value); end
   def set_type_at_path(path, type); end
   def type_at(path); end
   def write_execution_errors_in_response(path, errors); end
@@ -2162,7 +2171,7 @@ end
 class GraphQL::Schema::Timeout
   def handle_timeout(error, query); end
   def initialize(max_seconds:); end
-  def max_seconds; end
+  def max_seconds(query); end
   def self.use(schema, **options); end
   def trace(key, data); end
 end
@@ -2247,7 +2256,9 @@ class GraphQL::Schema::Warden
   def visible_type?(type_defn); end
 end
 module GraphQL::Schema::BuildFromDefinition
-  def self.from_definition(definition_string, default_resolve:, using: nil, relay: nil, interpreter: nil, parser: nil); end
+  def self.from_definition(definition_string, parser: nil, **kwargs); end
+  def self.from_definition_path(definition_path, parser: nil, **kwargs); end
+  def self.from_document(document, default_resolve:, using: nil, relay: nil, interpreter: nil); end
 end
 class GraphQL::Schema::BuildFromDefinition::ResolveMap
   def call(type, field, obj, args, ctx); end
@@ -2272,8 +2283,9 @@ module GraphQL::Schema::BuildFromDefinition::Builder
   def build_fields(owner, field_definitions, type_resolver, default_resolve:); end
   def build_input_object_type(input_object_type_definition, type_resolver); end
   def build_interface_type(interface_type_definition, type_resolver); end
-  def build_object_type(object_type_definition, type_resolver, default_resolve:); end
+  def build_object_type(object_type_definition, type_resolver); end
   def build_scalar_type(scalar_type_definition, type_resolver, default_resolve:); end
+  def build_scalar_type_coerce_method(scalar_class, method_name, default_definition_resolve); end
   def build_union_type(union_type_definition, type_resolver); end
   def resolve_type(types, ast_node); end
   def resolve_type_name(type); end
@@ -2394,7 +2406,7 @@ module GraphQL::Schema::Member::HasFields
   def field_class(new_field_class = nil); end
   def fields; end
   def get_field(field_name); end
-  def global_id_field(field_name); end
+  def global_id_field(field_name, **kwargs); end
   def own_fields; end
 end
 module GraphQL::Schema::Member::Instrumentation
@@ -2469,6 +2481,8 @@ class GraphQL::Schema::Argument
   def authorized_as_type?(obj, value, ctx, as_type:); end
   def default_value; end
   def default_value?; end
+  def deprecation_reason(text = nil); end
+  def deprecation_reason=(text = nil); end
   def description(text = nil); end
   def description=(arg0); end
   def from_resolver?; end
@@ -2483,7 +2497,9 @@ class GraphQL::Schema::Argument
   def statically_coercible?; end
   def to_graphql; end
   def type; end
-  def type=(arg0); end
+  def type=(new_type); end
+  def validate_deprecated_or_optional(null:, deprecation_reason:); end
+  def validate_input_type(input_type); end
   def visible?(context); end
   extend GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
   include GraphQL::Schema::Member::AcceptsDefinition
@@ -2717,7 +2733,7 @@ class GraphQL::Query
   def root_type_for_operation(*args, &block); end
   def root_value; end
   def root_value=(arg0); end
-  def sanitized_query_string; end
+  def sanitized_query_string(inline_variables: nil); end
   def schema; end
   def selected_operation; end
   def selected_operation_name; end
@@ -2967,6 +2983,7 @@ class GraphQL::Query::Context
   def [](key); end
   def []=(*args, &block); end
   def ast_node; end
+  def delete(key); end
   def dig(key, *other_keys); end
   def errors; end
   def execution_strategy; end
@@ -2999,7 +3016,7 @@ end
 module GraphQL::Query::Context::SharedMethods
   def add_error(error); end
   def backtrace; end
-  def delete(child_ctx); end
+  def delete_child(child_ctx); end
   def execution_errors; end
   def invalid_null?; end
   def lookahead; end
@@ -3461,6 +3478,7 @@ class GraphQL::Schema::Printer::IntrospectionPrinter < GraphQL::Language::Printe
   def print_schema_definition(schema); end
 end
 module GraphQL::Introspection
+  def self.query(include_deprecated_args: nil); end
 end
 class GraphQL::Introspection::BaseObject::InvalidNullError < GraphQL::InvalidNullError
 end
@@ -3471,6 +3489,7 @@ class GraphQL::Introspection::InputValueType::InvalidNullError < GraphQL::Invali
 end
 class GraphQL::Introspection::InputValueType < GraphQL::Introspection::BaseObject
   def default_value; end
+  def is_deprecated; end
   def serialize_default_value(value, type); end
 end
 class GraphQL::Introspection::EnumValueType::InvalidNullError < GraphQL::InvalidNullError
@@ -3488,7 +3507,7 @@ end
 class GraphQL::Introspection::TypeType < GraphQL::Introspection::BaseObject
   def enum_values(include_deprecated:); end
   def fields(include_deprecated:); end
-  def input_fields; end
+  def input_fields(include_deprecated:); end
   def interfaces; end
   def kind; end
   def name; end
@@ -3498,7 +3517,7 @@ end
 class GraphQL::Introspection::FieldType::InvalidNullError < GraphQL::InvalidNullError
 end
 class GraphQL::Introspection::FieldType < GraphQL::Introspection::BaseObject
-  def args; end
+  def args(include_deprecated:); end
   def is_deprecated; end
 end
 class GraphQL::Introspection::DirectiveLocationEnum::UnresolvedValueError < GraphQL::Schema::Enum::UnresolvedValueError
@@ -4395,6 +4414,17 @@ module GraphQL::Subscriptions::Serialize
   def self.load(str); end
   def self.load_value(value); end
 end
+class GraphQL::Subscriptions::ActionCableSubscriptions < GraphQL::Subscriptions
+  def delete_subscription(subscription_id); end
+  def deliver(subscription_id, result); end
+  def execute_all(event, object); end
+  def initialize(serializer: nil, namespace: nil, action_cable: nil, action_cable_coder: nil, **rest); end
+  def read_subscription(subscription_id); end
+  def setup_stream(channel, initial_event); end
+  def stream_event_name(event); end
+  def stream_subscription_name(subscription_id); end
+  def write_subscription(query, events); end
+end
 module GraphQL::Subscriptions::SubscriptionRoot
   def field(*args, extensions: nil, **rest, &block); end
   def self.extended(child_cls); end
@@ -4583,6 +4613,7 @@ class GraphQL::Pagination::Connections
   def initialize(schema:); end
   def self.use(schema_defn); end
   def wrap(field, parent, items, arguments, context, wrappers: nil); end
+  def wrapper_for(items, wrappers: nil); end
   def wrappers; end
 end
 class GraphQL::Pagination::Connections::ImplementationMissingError < GraphQL::Error
@@ -4607,4 +4638,6 @@ end
 class GraphQL::RequiredImplementationMissingError < GraphQL::Error
 end
 module GraphQL::StringDedupBackport
+end
+module GraphQL::StringMatchBackport
 end

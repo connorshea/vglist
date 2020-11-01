@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/faraday/all/faraday.rbi
 #
-# faraday-1.0.1
+# faraday-1.1.0
 
 module Faraday
   def self.default_adapter; end
@@ -298,8 +298,8 @@ class Faraday::Options < Struct
   def deep_dup; end
   def delete(key); end
   def each; end
-  def each_key; end
-  def each_value; end
+  def each_key(&block); end
+  def each_value(&block); end
   def empty?; end
   def fetch(key, *args); end
   def has_key?(key); end
@@ -442,6 +442,8 @@ module Faraday::DecodeMethods
 end
 module Faraday::NestedParamsEncoder
   def self.escape(*args, &block); end
+  def self.sort_params; end
+  def self.sort_params=(arg0); end
   def self.unescape(*args, &block); end
   extend Faraday::DecodeMethods
   extend Faraday::EncodeMethods
@@ -450,6 +452,8 @@ module Faraday::FlatParamsEncoder
   def self.decode(query); end
   def self.encode(params); end
   def self.escape(*args, &block); end
+  def self.sort_params; end
+  def self.sort_params=(arg0); end
   def self.unescape(*args, &block); end
 end
 class Faraday::Middleware
@@ -480,8 +484,8 @@ class Anonymous_Struct_56 < Struct
   def body=(_); end
   def headers; end
   def headers=(_); end
-  def method; end
-  def method=(_); end
+  def http_method; end
+  def http_method=(_); end
   def options; end
   def options=(_); end
   def params; end
@@ -499,6 +503,7 @@ class Faraday::Request < Anonymous_Struct_56
   def headers=(hash); end
   def marshal_dump; end
   def marshal_load(serialised); end
+  def method; end
   def params=(hash); end
   def self.create(request_method); end
   def to_env(connection); end
@@ -606,6 +611,7 @@ class Faraday::Request::Multipart < Faraday::Request::UrlEncoded
   def call(env); end
   def create_multipart(env, params); end
   def has_multipart?(obj); end
+  def initialize(app = nil, options = nil); end
   def part(boundary, key, value); end
   def process_params(params, prefix = nil, pieces = nil, &block); end
   def process_request?(env); end

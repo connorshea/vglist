@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 class Store < ApplicationRecord
   include Searchable
 
