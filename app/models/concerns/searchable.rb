@@ -4,7 +4,10 @@ module Searchable
   extend ActiveSupport::Concern
   include PgSearch::Model
 
-  class_methods do
+  module ClassMethods
+    extend T::Sig
+
+    sig { params(fields: Symbol).void }
     def searchable(*fields)
       pg_search_scope :search,
         against: fields,
