@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rspec-expectations/all/rspec-expectations.rbi
 #
-# rspec-expectations-3.9.2
+# rspec-expectations-3.10.0
 
 module RSpec
 end
@@ -337,6 +337,9 @@ class RSpec::Expectations::Configuration
   def on_potential_false_positives; end
   def on_potential_false_positives=(behavior); end
   def reset_syntaxes_to_default; end
+  def strict_predicate_matchers; end
+  def strict_predicate_matchers=(flag); end
+  def strict_predicate_matchers?; end
   def syntax; end
   def syntax=(values); end
   def warn_about_potential_false_positives=(boolean); end
@@ -354,14 +357,14 @@ module RSpec::Expectations::ExpectationHelper
   def self.with_matcher(handler, matcher, message); end
 end
 class RSpec::Expectations::PositiveExpectationHandler
-  def self.handle_matcher(actual, initial_matcher, message = nil, &block); end
+  def self.handle_matcher(actual, initial_matcher, custom_message = nil, &block); end
   def self.opposite_should_method; end
   def self.should_method; end
   def self.verb; end
 end
 class RSpec::Expectations::NegativeExpectationHandler
   def self.does_not_match?(matcher, actual, &block); end
-  def self.handle_matcher(actual, initial_matcher, message = nil, &block); end
+  def self.handle_matcher(actual, initial_matcher, custom_message = nil, &block); end
   def self.opposite_should_method; end
   def self.should_method; end
   def self.verb; end
@@ -388,12 +391,15 @@ class RSpec::Expectations::MultipleExpectationsNotMetError < RSpec::Expectations
   def aggregation_block_label; end
   def aggregation_metadata; end
   def all_exceptions; end
+  def backtrace_line(line); end
   def block_description; end
   def enumerated(exceptions, index_offset); end
   def enumerated_errors; end
   def enumerated_failures; end
   def exception_count_description; end
+  def exclusion_patterns; end
   def failures; end
+  def format_backtrace(backtrace); end
   def indentation; end
   def indented(failure_message, index); end
   def index_label(index); end
@@ -545,30 +551,43 @@ class RSpec::Matchers::BuiltIn::Be < RSpec::Matchers::BuiltIn::BaseMatcher
 end
 class RSpec::Matchers::BuiltIn::BeComparedTo < RSpec::Matchers::BuiltIn::BaseMatcher
   def description; end
+  def does_not_match?(actual); end
   def failure_message; end
   def failure_message_when_negated; end
   def initialize(operand, operator); end
   def matches?(actual); end
+  def perform_match(actual); end
   include RSpec::Matchers::BuiltIn::BeHelpers
 end
-class RSpec::Matchers::BuiltIn::BePredicate < RSpec::Matchers::BuiltIn::BaseMatcher
+class RSpec::Matchers::BuiltIn::DynamicPredicate < RSpec::Matchers::BuiltIn::BaseMatcher
   def description; end
   def does_not_match?(actual, &block); end
+  def expectation_of(value); end
   def failure_message; end
   def failure_message_expecting(value); end
   def failure_message_when_negated; end
-  def initialize(*args, &block); end
+  def failure_to_respond_explanation; end
+  def initialize(method_name, *args, &block); end
   def matches?(actual, &block); end
-  def parse_expected(expected); end
-  def predicate; end
+  def method_description; end
   def predicate_accessible?; end
-  def predicate_matches?; end
-  def prefix_and_expected(symbol); end
-  def prefix_to_sentence; end
-  def present_tense_predicate; end
+  def predicate_matches?(value = nil); end
+  def predicate_method_name; end
+  def predicate_result; end
   def private_predicate?; end
+  def root; end
   def validity_message; end
   include RSpec::Matchers::BuiltIn::BeHelpers
+end
+class RSpec::Matchers::BuiltIn::Has < RSpec::Matchers::BuiltIn::DynamicPredicate
+  def predicate; end
+end
+class RSpec::Matchers::BuiltIn::BePredicate < RSpec::Matchers::BuiltIn::DynamicPredicate
+  def failure_to_respond_explanation; end
+  def predicate; end
+  def predicate_accessible?; end
+  def predicate_method_name; end
+  def present_tense_predicate; end
 end
 class RSpec::Matchers::BuiltIn::BeWithin < RSpec::Matchers::BuiltIn::BaseMatcher
   def description; end
@@ -815,23 +834,6 @@ class RSpec::Matchers::BuiltIn::Exist::ExistenceTest < Anonymous_Struct_68
   def valid_test?; end
   def validity_message; end
 end
-class RSpec::Matchers::BuiltIn::Has < RSpec::Matchers::BuiltIn::BaseMatcher
-  def args_description; end
-  def description; end
-  def does_not_match?(actual, &block); end
-  def failure_message; end
-  def failure_message_args_description; end
-  def failure_message_when_negated; end
-  def initialize(method_name, *args, &block); end
-  def matches?(actual, &block); end
-  def method_description; end
-  def predicate; end
-  def predicate_accessible?; end
-  def predicate_exists?; end
-  def predicate_matches?; end
-  def private_predicate?; end
-  def validity_message; end
-end
 class RSpec::Matchers::BuiltIn::HaveAttributes < RSpec::Matchers::BuiltIn::BaseMatcher
   def actual; end
   def actual_has_attribute?(attribute_key, attribute_value); end
@@ -850,13 +852,40 @@ class RSpec::Matchers::BuiltIn::HaveAttributes < RSpec::Matchers::BuiltIn::BaseM
   def respond_to_failure_message_or; end
   def respond_to_matcher; end
 end
+module RSpec::Matchers::BuiltIn::CountExpectation
+  def at_least(number); end
+  def at_most(number); end
+  def count_constraint_to_number(n); end
+  def count_expectation_description; end
+  def count_expectation_type; end
+  def count_failure_reason(action); end
+  def cover?(count, number); end
+  def exactly(number); end
+  def expected_count; end
+  def expected_count_matches?(actual_count); end
+  def has_expected_count?; end
+  def human_readable_count(count); end
+  def human_readable_expectation_type; end
+  def once; end
+  def raise_impossible_count_expectation(count); end
+  def raise_unsupported_count_expectation; end
+  def set_expected_count(relativity, n); end
+  def thrice; end
+  def times; end
+  def twice; end
+  def unsupported_count_expectation?(relativity); end
+end
 class RSpec::Matchers::BuiltIn::Include < RSpec::Matchers::BuiltIn::BaseMatcher
   def actual_collection_includes?(expected_item); end
   def actual_hash_has_key?(expected_key); end
   def actual_hash_includes?(expected_key, expected_value); end
+  def check_actual?(actual); end
+  def check_expected_count?; end
   def comparing_hash_keys?(expected_item); end
   def comparing_hash_to_a_subset?(expected_item); end
   def convert_to_hash?(obj); end
+  def count_enumerable(expected_item); end
+  def count_inclusions; end
   def description; end
   def diff_would_wrongly_highlight_matched_item?; end
   def diffable?; end
@@ -869,8 +898,9 @@ class RSpec::Matchers::BuiltIn::Include < RSpec::Matchers::BuiltIn::BaseMatcher
   def format_failure_message(preposition); end
   def initialize(*expecteds); end
   def matches?(actual); end
-  def perform_match(actual, &block); end
+  def perform_match(&block); end
   def readable_list_of(items); end
+  include RSpec::Matchers::BuiltIn::CountExpectation
 end
 class RSpec::Matchers::BuiltIn::All < RSpec::Matchers::BuiltIn::BaseMatcher
   def add_new_line_if_needed(message); end
@@ -987,17 +1017,19 @@ class RSpec::Matchers::BuiltIn::RaiseError
   def format_backtrace(backtrace); end
   def given_error; end
   def handle_warning(message); end
-  def initialize(expected_error_or_message = nil, expected_message = nil, &block); end
+  def initialize(expected_error_or_message, expected_message, &block); end
   def matches?(given_proc, negative_expectation = nil, &block); end
   def raise_message_already_set; end
   def ready_to_eval_block?; end
   def supports_block_expectations?; end
   def verify_message; end
-  def warn_about_bare_error; end
-  def warn_about_negative_false_positive(expression); end
-  def warn_for_false_positives; end
+  def warn_about_bare_error!; end
+  def warn_about_bare_error?; end
+  def warn_about_negative_false_positive!(expression); end
+  def warn_about_nil_error!; end
+  def warn_about_nil_error?; end
+  def warn_for_negative_false_positives!; end
   def warning; end
-  def warning_about_bare_error; end
   def with_message(expected_message); end
   include RSpec::Matchers::Composable
 end
@@ -1016,9 +1048,7 @@ class RSpec::Matchers::BuiltIn::RespondTo < RSpec::Matchers::BuiltIn::BaseMatche
   def initialize(*names); end
   def matches?(actual); end
   def matches_arity?(actual, name); end
-  def method_signature_for(actual, name); end
   def pp_names; end
-  def setup_method_signature_expectation; end
   def with(n); end
   def with_any_keywords; end
   def with_arity; end
@@ -1026,6 +1056,12 @@ class RSpec::Matchers::BuiltIn::RespondTo < RSpec::Matchers::BuiltIn::BaseMatche
   def with_keywords(*keywords); end
   def with_keywords_string; end
   def with_unlimited_arguments; end
+end
+class RSpec::Matchers::BuiltIn::RespondTo::ArityCheck
+  def initialize(expected_arity, expected_keywords, arbitrary_keywords, unlimited_arguments); end
+  def matches?(actual, name); end
+  def method_signature_for(actual, name); end
+  def verifier_for(actual, name); end
 end
 class RSpec::Matchers::BuiltIn::Satisfy < RSpec::Matchers::BuiltIn::BaseMatcher
   def block_representation; end
@@ -1067,24 +1103,13 @@ class RSpec::Matchers::BuiltIn::YieldProbe
   def yielded_once?(matcher_name); end
 end
 class RSpec::Matchers::BuiltIn::YieldControl < RSpec::Matchers::BuiltIn::BaseMatcher
-  def at_least(number); end
-  def at_most(number); end
-  def count_constraint_to_number(n); end
   def does_not_match?(block); end
-  def exactly(number); end
   def failure_message; end
   def failure_message_when_negated; end
   def failure_reason; end
-  def human_readable_count(count); end
-  def human_readable_expectation_type; end
-  def initialize; end
   def matches?(block); end
-  def once; end
-  def set_expected_yields_count(relativity, n); end
   def supports_block_expectations?; end
-  def thrice; end
-  def times; end
-  def twice; end
+  include RSpec::Matchers::BuiltIn::CountExpectation
 end
 class RSpec::Matchers::BuiltIn::YieldWithNoArgs < RSpec::Matchers::BuiltIn::BaseMatcher
   def does_not_match?(block); end

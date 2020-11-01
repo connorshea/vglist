@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/parser/all/parser.rbi
 #
-# parser-2.7.1.5
+# parser-2.7.2.0
 
 module Parser
   def self.warn_syntax_deviation(feature, version); end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/rouge/all/rouge.rbi
 #
-# rouge-3.23.0
+# rouge-3.24.0
 
 module Rouge
   def self.highlight(text, lexer, formatter, &b); end
@@ -258,13 +258,14 @@ class Rouge::Lexer
   def self.enable_debug!; end
   def self.filenames(*fnames); end
   def self.find(name); end
-  def self.find_fancy(str, code = nil, additional_options = nil); end
+  def self.find_fancy(str, code = nil, default_options = nil); end
   def self.guess(info = nil, &fallback); end
   def self.guess_by_filename(fname); end
   def self.guess_by_mimetype(mt); end
   def self.guess_by_source(source); end
   def self.guesses(info = nil); end
   def self.lex(stream, opts = nil, &b); end
+  def self.lookup_fancy(str, code = nil, default_options = nil); end
   def self.mimetypes(*mts); end
   def self.option(name, desc); end
   def self.option_docs; end
@@ -276,6 +277,7 @@ class Rouge::Lexer
   def string_option(name, &default); end
   def tag; end
   def token_option(name, &default); end
+  def with(opts = nil); end
   include Rouge::Token::Tokens
 end
 module Rouge::Lexers
@@ -310,6 +312,16 @@ class Rouge::RegexLexer < Rouge::Lexer
   def token(tok, val = nil); end
   def yield_token(tok, val); end
 end
+class Rouge::RegexLexer::InvalidRegex < StandardError
+  def initialize(re); end
+  def to_s; end
+end
+class Rouge::RegexLexer::ClosedState < StandardError
+  def initialize(state); end
+  def rule; end
+  def state; end
+  def to_s; end
+end
 class Rouge::RegexLexer::Rule
   def beginning_of_line; end
   def callback; end
@@ -325,9 +337,12 @@ class Rouge::RegexLexer::State
 end
 class Rouge::RegexLexer::StateDSL
   def appended(&defn); end
+  def close!; end
+  def context_sensitive?(re); end
   def initialize(name, &defn); end
   def load!; end
   def mixin(state); end
+  def name; end
   def prepended(&defn); end
   def rule(re, tok = nil, next_state = nil, &callback); end
   def rules; end
@@ -545,6 +560,7 @@ class Rouge::Lexers::GHCCmm < Rouge::RegexLexer
 end
 class Rouge::Lexers::HTTP < Rouge::RegexLexer
   def content_lexer; end
+  def guess_content_lexer; end
   def self.http_methods; end
 end
 class Rouge::Lexers::Actionscript < Rouge::RegexLexer
@@ -581,6 +597,8 @@ end
 class Rouge::Lexers::SassCommon < Rouge::RegexLexer
 end
 class Rouge::Lexers::Scss < Rouge::Lexers::SassCommon
+end
+class Rouge::Lexers::Email < Rouge::RegexLexer
 end
 class Rouge::Lexers::C < Rouge::RegexLexer
   def self.builtins; end
@@ -1121,6 +1139,14 @@ class Rouge::Lexers::XQuery < Rouge::Lexers::XPath
 end
 class Rouge::Lexers::Properties < Rouge::RegexLexer
 end
+class Rouge::Lexers::J < Rouge::RegexLexer
+  def self.control_words; end
+  def self.control_words_id; end
+  def self.inflection_list; end
+  def self.primitive(char, inflection); end
+  def self.primitive_table; end
+  def self.token_map; end
+end
 class Rouge::Lexers::Solidity < Rouge::RegexLexer
   def self.builtins; end
   def self.constants; end
@@ -1354,6 +1380,10 @@ end
 class Rouge::Formatters::HTMLLinewise < Rouge::Formatter
   def initialize(formatter, opts = nil); end
   def stream(tokens, &b); end
+end
+class Rouge::Formatters::HTMLLineHighlighter < Rouge::Formatter
+  def initialize(delegate, opts = nil); end
+  def stream(tokens); end
 end
 class Rouge::Formatters::HTMLLineTable < Rouge::Formatter
   def initialize(formatter, opts = nil); end

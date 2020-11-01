@@ -1,6 +1,7 @@
-# typed: strong
+# typed: strict
 class Company < ApplicationRecord
-  include PgSearch::Model
+  include GlobalSearchable
+  include Searchable
 
   has_many :game_developers
   has_many :developed_games, through: :game_developers, source: :game
@@ -21,13 +22,6 @@ class Company < ApplicationRecord
       greater_than: 0
     }
 
-  # Include companies in global search.
-  multisearchable against: [:name]
-
-  # Search scope specific to companies.
-  pg_search_scope :search,
-    against: [:name],
-    using: {
-      tsearch: { prefix: true }
-    }
+  global_searchable :name
+  searchable :name
 end

@@ -3,6 +3,8 @@ class User < ApplicationRecord
   extend T::Sig
   extend FriendlyId
   include PgSearch::Model
+  include GlobalSearchable
+  include Searchable
 
   after_create :on_user_creation
 
@@ -127,15 +129,8 @@ class User < ApplicationRecord
     size: { less_than: 3.megabytes },
     aspect_ratio: :square
 
-  # Include users in global search.
-  multisearchable against: [:username]
-
-  # Search scope specific to users.
-  pg_search_scope :search,
-    against: [:username],
-    using: {
-      tsearch: { prefix: true }
-    }
+  global_searchable :username
+  searchable :username
 
   sig { returns(T.nilable(String)) }
   def api_token

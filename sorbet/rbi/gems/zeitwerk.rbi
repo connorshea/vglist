@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/zeitwerk/all/zeitwerk.rbi
 #
-# zeitwerk-2.4.0
+# zeitwerk-2.4.1
 
 module Zeitwerk::RealModName
   def real_mod_name(mod); end

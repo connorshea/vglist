@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sparql/all/sparql.rbi
 #
-# sparql-3.1.2
+# sparql-3.1.3
 
 module SPARQL
   def first_content_type(acceptable, available); end
@@ -33,6 +33,13 @@ end
 class RDF::Query::Solutions < Array
   def filter_without_expression(criteria = nil); end
   include SPARQL::Results
+end
+class NilClass
+  def evaluate(bindings, **options); end
+end
+class FalseClass
+end
+class TrueClass
 end
 class SPARQL::MalformedQuery < Exception
   def title; end
@@ -76,9 +83,6 @@ module SPARQL::Algebra::Expression
   def validate!; end
   def validate; end
   def variable?; end
-end
-class NilClass
-  def evaluate(bindings, **options); end
 end
 class Object < BasicObject
   def optimize(**options); end
@@ -126,6 +130,7 @@ class RDF::Query
   def bind(solution); end
   def executable?; end
   def ndvars; end
+  def optimize_without_expression!(**options); end
   def query_yields_boolean?; end
   def query_yields_solutions?; end
   def query_yields_statements?; end
