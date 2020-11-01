@@ -1,6 +1,6 @@
-# typed: true
+# typed: false
 class Game < ApplicationRecord
-  include PgSearch::Model
+  include GlobalSearchable
 
   has_many :game_purchases, dependent: :destroy
   has_many :purchasers, through: :game_purchases, source: :user
@@ -137,8 +137,7 @@ class Game < ApplicationRecord
 
   validate :wikidata_id_not_blocklisted
 
-  # Include games in global search.
-  multisearchable against: [:name]
+  global_searchable :name
 
   # Search scope specific to games.
   pg_search_scope :search,

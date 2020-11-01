@@ -1,6 +1,7 @@
-# typed: strong
+# typed: false
 class Series < ApplicationRecord
-  include PgSearch::Model
+  include GlobalSearchable
+  include Searchable
 
   has_many :games
 
@@ -17,13 +18,6 @@ class Series < ApplicationRecord
       greater_than: 0
     }
 
-  # Include series in global search.
-  multisearchable against: [:name]
-
-  # Search scope specific to series.
-  pg_search_scope :search,
-    against: [:name],
-    using: {
-      tsearch: { prefix: true }
-    }
+  global_searchable :name
+  searchable :name
 end

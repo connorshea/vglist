@@ -1,6 +1,7 @@
-# typed: strong
+# typed: false
 class Genre < ApplicationRecord
-  include PgSearch::Model
+  include GlobalSearchable
+  include Searchable
 
   has_many :game_genres
   has_many :games, through: :game_genres, source: :game
@@ -18,13 +19,6 @@ class Genre < ApplicationRecord
       greater_than: 0
     }
 
-  # Include genres in global search.
-  multisearchable against: [:name]
-
-  # Search scope specific to genres.
-  pg_search_scope :search,
-    against: [:name],
-    using: {
-      tsearch: { prefix: true }
-    }
+  global_searchable :name
+  searchable :name
 end

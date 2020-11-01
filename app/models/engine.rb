@@ -1,6 +1,7 @@
-# typed: strong
+# typed: false
 class Engine < ApplicationRecord
-  include PgSearch::Model
+  include GlobalSearchable
+  include Searchable
 
   has_many :game_engines
   has_many :games, through: :game_engines, source: :game
@@ -18,13 +19,6 @@ class Engine < ApplicationRecord
       greater_than: 0
     }
 
-  # Include engines in global search.
-  multisearchable against: [:name]
-
-  # Search scope specific to engines.
-  pg_search_scope :search,
-    against: [:name],
-    using: {
-      tsearch: { prefix: true }
-    }
+  global_searchable :name
+  searchable :name
 end
