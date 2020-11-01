@@ -7,12 +7,12 @@ module Searchable
   module ClassMethods
     extend T::Sig
 
-    sig { params(fields: Symbol).void }
-    def searchable(*fields)
+    sig { params(fields: Symbol, tsearch: T::Hash[T.untyped, T.untyped]).void }
+    def searchable(*fields, tsearch: { prefix: true })
       pg_search_scope :search,
         against: fields,
         using: {
-          tsearch: { prefix: true }
+          tsearch: tsearch
         }
     end
   end
