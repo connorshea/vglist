@@ -395,7 +395,7 @@ GEM
     uniform_notifier (1.13.0)
     warden (1.2.9)
       rack (>= 2.0.9)
-    web-console (4.0.4)
+    web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
@@ -473,7 +473,7 @@ DEPENDENCIES
   spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
-  web-console (~> 4.0.4)
+  web-console (~> 4.1.0)
   webdrivers (~> 4.4)
   webpacker (~> 5.2.1)
 
