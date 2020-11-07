@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/mini_magick/all/mini_magick.rbi
 #
-# mini_magick-4.10.1
+# mini_magick-4.11.0
 
 module MiniMagick
   def self.cli_version; end
@@ -84,7 +84,7 @@ class MiniMagick::Tool
   def rose(value = nil); end
   def self.new(*args); end
   def self.option_methods; end
-  def stack; end
+  def stack(*args); end
   def stdin; end
   def stdout; end
   def text(value = nil); end
@@ -165,6 +165,7 @@ class MiniMagick::Image
   def run_command(tool_name, *args); end
   def self.attribute(name, key = nil); end
   def self.create(ext = nil, validate = nil, &block); end
+  def self.get_image_from_pixels(pixels, dimension, map, depth, mime_type); end
   def self.import_pixels(blob, columns, rows, depth, map, format = nil); end
   def self.open(path_or_url, ext = nil, options = nil); end
   def self.read(stream, ext = nil); end
@@ -190,6 +191,7 @@ class MiniMagick::Image::Info
   def identify; end
   def initialize(path); end
   def mime_type; end
+  def parse_warnings(raw_info); end
   def path; end
   def raw(value); end
   def raw_exif(value); end

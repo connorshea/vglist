@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/bootsnap/all/bootsnap.rbi
 #
-# bootsnap-1.4.9
+# bootsnap-1.5.0
 
 module Bootsnap
   def bundler?; end
@@ -184,7 +184,8 @@ module Bootsnap::CompileCache::ISeq
   def self.cache_dir; end
   def self.cache_dir=(arg0); end
   def self.compile_option_updated; end
-  def self.input_to_output(_, _); end
+  def self.fetch(path, cache_dir: nil); end
+  def self.input_to_output(_a, _b); end
   def self.input_to_storage(_, path, _args); end
   def self.install!(cache_dir); end
   def self.storage_to_output(binary, _args); end

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/better_errors/all/better_errors.rbi
 #
-# better_errors-2.8.3
+# better_errors-2.9.1
 
 module BetterErrors
   def self.application_root; end
@@ -73,6 +73,7 @@ class BetterErrors::ErrorPage
   def env; end
   def eval_and_respond(index, code); end
   def exception; end
+  def exception_hint; end
   def exception_message; end
   def exception_type; end
   def first_frame; end
@@ -110,16 +111,23 @@ class BetterErrors::Middleware
   def show_error_page(env, exception = nil); end
   def text?(env); end
 end
+class BetterErrors::ExceptionHint
+  def exception; end
+  def hint; end
+  def initialize(exception); end
+end
 class BetterErrors::RaisedException
   def backtrace; end
   def exception; end
   def has_bindings?; end
+  def hint; end
   def initialize(exception); end
   def massage_syntax_error; end
   def message; end
   def setup_backtrace; end
   def setup_backtrace_from_backtrace; end
   def setup_backtrace_from_bindings; end
+  def setup_hint; end
   def type; end
 end
 module BetterErrors::REPL
@@ -151,6 +159,20 @@ class BetterErrors::StackFrame
   def set_pretty_method_name; end
   def to_s; end
   def visible_instance_variables; end
+end
+class BetterErrors::Editor
+  def host_path; end
+  def initialize(url_proc); end
+  def self.default_editor; end
+  def self.editor_from_command(editor_command); end
+  def self.editor_from_environment_editor; end
+  def self.editor_from_environment_formatting_string; end
+  def self.editor_from_symbol(symbol); end
+  def self.for_formatting_string(formatting_string); end
+  def self.for_proc(url_proc); end
+  def url(raw_path, line); end
+  def url_proc; end
+  def virtual_path; end
 end
 module BetterErrors::ExceptionExtension
   def __better_errors_bindings_stack; end
