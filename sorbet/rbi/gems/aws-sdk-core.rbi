@@ -7,18 +7,19 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/aws-sdk-core/all/aws-sdk-core.rbi
 #
-# aws-sdk-core-3.96.1
+# aws-sdk-core-3.109.2
 
 module Seahorse
 end
 module Seahorse::Util
+  def self.host_label?(str); end
   def self.uri_escape(string); end
   def self.uri_path_escape(path); end
 end
 module Seahorse::Client
 end
 class Seahorse::Client::BlockIO
-  def initialize(&block); end
+  def initialize(headers = nil, &block); end
   def read(bytes = nil, output_buffer = nil); end
   def size; end
   def write(chunk); end
@@ -133,7 +134,7 @@ class Seahorse::Client::Plugin::PluginOption
   def default=(arg0); end
   def default_block; end
   def default_block=(arg0); end
-  def doc_default; end
+  def doc_default(options); end
   def doc_default=(arg0); end
   def doc_type; end
   def doc_type=(arg0); end
@@ -462,7 +463,24 @@ end
 class Seahorse::Client::Plugins::ResponseTarget::Handler < Seahorse::Client::Handler
   def add_event_listeners(context, target); end
   def call(context); end
-  def io(target); end
+  def io(target, headers); end
+end
+class Seahorse::Client::Plugins::ReadCallbackIO
+  def handle_chunk(chunk); end
+  def initialize(io, on_read = nil); end
+  def io; end
+  def read(*args); end
+  def size(*args, &block); end
+  extend Forwardable
+end
+class Seahorse::Client::Plugins::RequestCallback < Seahorse::Client::Plugin
+end
+class Seahorse::Client::Plugins::RequestCallback::OptionHandler < Seahorse::Client::Handler
+  def call(context); end
+end
+class Seahorse::Client::Plugins::RequestCallback::ReadCallbackHandler < Seahorse::Client::Handler
+  def add_event_listeners(context); end
+  def call(context); end
 end
 module Seahorse::Model
 end
@@ -482,6 +500,8 @@ class Seahorse::Model::Api
   def operation(name); end
   def operation_names; end
   def operations(&block); end
+  def require_endpoint_discovery; end
+  def require_endpoint_discovery=(arg0); end
   def version; end
   def version=(arg0); end
 end
@@ -504,6 +524,8 @@ class Seahorse::Model::Operation
   def endpoint_pattern=(arg0); end
   def errors; end
   def errors=(arg0); end
+  def http_checksum_required; end
+  def http_checksum_required=(arg0); end
   def http_method; end
   def http_method=(arg0); end
   def http_request_uri; end
@@ -732,11 +754,13 @@ class Aws::CredentialProviderChain
   def providers; end
   def resolve; end
   def shared_credentials(options); end
+  def sso_credentials(options); end
   def static_credentials(options); end
   def static_profile_assume_role_credentials(options); end
   def static_profile_assume_role_web_identity_credentials(options); end
   def static_profile_credentials(options); end
   def static_profile_process_credentials(options); end
+  def static_profile_sso_credentials(options); end
 end
 class Aws::ECSCredentials
   def backoff(backoff); end
@@ -796,6 +820,15 @@ class Aws::ProcessCredentials
   def initialize(process); end
   def near_expiration?; end
   def refresh; end
+  include Aws::CredentialProvider
+  include Aws::RefreshingCredentials
+end
+class Aws::SSOCredentials
+  def client; end
+  def initialize(options = nil); end
+  def read_cached_token; end
+  def refresh; end
+  def sso_cache_file; end
   include Aws::CredentialProvider
   include Aws::RefreshingCredentials
 end
@@ -899,8 +932,14 @@ class Aws::Errors::MissingWebIdentityTokenFile < RuntimeError
 end
 class Aws::Errors::InvalidProcessCredentialsPayload < RuntimeError
 end
+class Aws::Errors::InvalidSSOCredentials < RuntimeError
+end
 class Aws::Errors::MissingRegionError < ArgumentError
   def initialize(*args); end
+end
+class Aws::Errors::InvalidRegionError < ArgumentError
+  def initialize(*args); end
+  def possible_regions; end
 end
 class Aws::Errors::NoSuchEndpointError < RuntimeError
   def context; end
@@ -979,11 +1018,12 @@ class Aws::ParamValidator
   def error_messages(errors); end
   def expected_got(context, expected, got); end
   def initialize(rules, options = nil); end
-  def io_like?(value); end
+  def io_like?(value, require_size = nil); end
   def list(ref, values, errors, context); end
   def map(ref, values, errors, context); end
   def self.validate!(rules, params); end
   def shape(ref, value, errors, context); end
+  def streaming_input?(ref); end
   def structure(ref, values, errors, context); end
   def validate!(params); end
   include Seahorse::Model::Shapes
@@ -994,6 +1034,7 @@ class Aws::SharedConfig
   def assume_role_from_profile(cfg, profile, opts, chain_config); end
   def assume_role_process_credentials_from_config(profile); end
   def assume_role_web_identity_credentials_from_config(opts = nil); end
+  def ca_bundle(opts = nil); end
   def config_enabled?; end
   def config_path; end
   def correct_clock_skew(opts = nil); end
@@ -1028,6 +1069,8 @@ class Aws::SharedConfig
   def s3_us_east_1_regional_endpoint(opts = nil); end
   def s3_use_arn_region(opts = nil); end
   def self.config_reader(*attrs); end
+  def sso_credentials_from_config(opts = nil); end
+  def sso_credentials_from_profile(cfg, profile); end
   def sts_regional_endpoints(opts = nil); end
   def validate_profile_exists(profile); end
 end
@@ -1107,9 +1150,9 @@ class Aws::Log::Formatter
   def self.short(options = nil); end
 end
 class Aws::Log::ParamFilter
-  def filter(value); end
-  def filter_array(values); end
-  def filter_hash(values); end
+  def filter(values, type); end
+  def filter_array(values, type); end
+  def filter_hash(values, type); end
   def initialize(options = nil); end
 end
 class Aws::Log::ParamFormatter
@@ -1177,6 +1220,8 @@ class Aws::Stubbing::Protocols::Rest
   def encode_error(opts, event_data); end
   def encode_event(opts, rules, event_data, builder); end
   def encode_eventstream_response(rules, data, builder); end
+  def encode_modeled_event(opts, rules, event_type, event_data, builder); end
+  def encode_unknown_event(opts, event_type, event_data); end
   def eventstream?(rules); end
   def head_operation(operation); end
   def new_http_response; end
@@ -1185,14 +1230,13 @@ class Aws::Stubbing::Protocols::Rest
   include Seahorse::Model::Shapes
 end
 class Aws::Stubbing::Protocols::RestJson < Aws::Stubbing::Protocols::Rest
-  def body_for(_, _, rules, data); end
+  def body_for(_a, _b, rules, data); end
   def stub_error(error_code); end
 end
 class Aws::Stubbing::Protocols::RestXml < Aws::Stubbing::Protocols::Rest
   def body_for(api, operation, rules, data); end
   def stub_error(error_code); end
   def xmlns(api); end
-  include Seahorse::Model::Shapes
 end
 class Aws::Stubbing::Protocols::ApiGateway < Aws::Stubbing::Protocols::RestJson
 end
@@ -1653,6 +1697,7 @@ class Aws::ARN
   def region; end
   def resource; end
   def service; end
+  def to_h; end
   def to_s; end
   def valid?; end
 end
@@ -2269,6 +2314,14 @@ class Aws::Plugins::TransferEncoding::Handler < Seahorse::Client::Handler
   def requires_length?(ref); end
   def streaming?(ref); end
 end
+class Aws::Plugins::HttpChecksum < Seahorse::Client::Plugin
+  def add_handlers(handlers, _config); end
+end
+class Aws::Plugins::HttpChecksum::Handler < Seahorse::Client::Handler
+  def call(context); end
+  def md5(value); end
+  def update_in_chunks(digest, io); end
+end
 class Aws::Plugins::SignatureV4 < Seahorse::Client::Plugin
   def add_handlers(handlers, cfg); end
   def self.apply_authtype(context); end
@@ -2448,6 +2501,251 @@ class Aws::STS::Resource
 end
 class Aws::STS::Presigner
   def get_caller_identity_presigned_url(options = nil); end
+  def initialize(options = nil); end
+end
+module Aws::SSO
+end
+module Aws::SSO::Types
+end
+class Anonymous_Struct_101 < Struct
+  def account_id; end
+  def account_id=(_); end
+  def account_name; end
+  def account_name=(_); end
+  def email_address; end
+  def email_address=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::AccountInfo < Anonymous_Struct_101
+  include Aws::Structure
+end
+class Anonymous_Struct_102 < Struct
+  def access_token; end
+  def access_token=(_); end
+  def account_id; end
+  def account_id=(_); end
+  def role_name; end
+  def role_name=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::GetRoleCredentialsRequest < Anonymous_Struct_102
+  include Aws::Structure
+end
+class Anonymous_Struct_103 < Struct
+  def role_credentials; end
+  def role_credentials=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::GetRoleCredentialsResponse < Anonymous_Struct_103
+  include Aws::Structure
+end
+class Anonymous_Struct_104 < Struct
+  def message; end
+  def message=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::InvalidRequestException < Anonymous_Struct_104
+  include Aws::Structure
+end
+class Anonymous_Struct_105 < Struct
+  def access_token; end
+  def access_token=(_); end
+  def account_id; end
+  def account_id=(_); end
+  def max_results; end
+  def max_results=(_); end
+  def next_token; end
+  def next_token=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::ListAccountRolesRequest < Anonymous_Struct_105
+  include Aws::Structure
+end
+class Anonymous_Struct_106 < Struct
+  def next_token; end
+  def next_token=(_); end
+  def role_list; end
+  def role_list=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::ListAccountRolesResponse < Anonymous_Struct_106
+  include Aws::Structure
+end
+class Anonymous_Struct_107 < Struct
+  def access_token; end
+  def access_token=(_); end
+  def max_results; end
+  def max_results=(_); end
+  def next_token; end
+  def next_token=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::ListAccountsRequest < Anonymous_Struct_107
+  include Aws::Structure
+end
+class Anonymous_Struct_108 < Struct
+  def account_list; end
+  def account_list=(_); end
+  def next_token; end
+  def next_token=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::ListAccountsResponse < Anonymous_Struct_108
+  include Aws::Structure
+end
+class Anonymous_Struct_109 < Struct
+  def access_token; end
+  def access_token=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::LogoutRequest < Anonymous_Struct_109
+  include Aws::Structure
+end
+class Anonymous_Struct_110 < Struct
+  def message; end
+  def message=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::ResourceNotFoundException < Anonymous_Struct_110
+  include Aws::Structure
+end
+class Anonymous_Struct_111 < Struct
+  def access_key_id; end
+  def access_key_id=(_); end
+  def expiration; end
+  def expiration=(_); end
+  def secret_access_key; end
+  def secret_access_key=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+  def session_token; end
+  def session_token=(_); end
+end
+class Aws::SSO::Types::RoleCredentials < Anonymous_Struct_111
+  include Aws::Structure
+end
+class Anonymous_Struct_112 < Struct
+  def account_id; end
+  def account_id=(_); end
+  def role_name; end
+  def role_name=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::RoleInfo < Anonymous_Struct_112
+  include Aws::Structure
+end
+class Anonymous_Struct_113 < Struct
+  def message; end
+  def message=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::TooManyRequestsException < Anonymous_Struct_113
+  include Aws::Structure
+end
+class Anonymous_Struct_114 < Struct
+  def message; end
+  def message=(_); end
+  def self.[](*arg0); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*arg0); end
+end
+class Aws::SSO::Types::UnauthorizedException < Anonymous_Struct_114
+  include Aws::Structure
+end
+module Aws::SSO::ClientApi
+  include Seahorse::Model
+end
+class Aws::Plugins::Protocols::RestJson < Seahorse::Client::Plugin
+end
+module Aws::SSO::Plugins
+end
+class Aws::SSO::Plugins::ContentType < Seahorse::Client::Plugin
+  def add_handlers(handlers, config); end
+end
+class Aws::SSO::Plugins::ContentType::Handler < Seahorse::Client::Handler
+  def call(context); end
+end
+class Aws::SSO::Client < Seahorse::Client::Base
+  def build_request(operation_name, params = nil); end
+  def get_role_credentials(params = nil, options = nil); end
+  def initialize(*args); end
+  def list_account_roles(params = nil, options = nil); end
+  def list_accounts(params = nil, options = nil); end
+  def logout(params = nil, options = nil); end
+  def self.errors_module; end
+  def self.identifier; end
+  def waiter_names; end
+  include Anonymous_Module_115
+  include Aws::ClientStubs
+end
+module Anonymous_Module_115
+  def get_role_credentials(*args, &block); end
+  def list_account_roles(*args, &block); end
+  def list_accounts(*args, &block); end
+  def logout(*args, &block); end
+end
+module Aws::SSO::Errors
+  extend Aws::Errors::DynamicErrors
+end
+class Aws::SSO::Errors::ServiceError < Aws::Errors::ServiceError
+end
+class Aws::SSO::Errors::InvalidRequestException < Aws::SSO::Errors::ServiceError
+  def initialize(context, message, data = nil); end
+  def message; end
+end
+class Aws::SSO::Errors::ResourceNotFoundException < Aws::SSO::Errors::ServiceError
+  def initialize(context, message, data = nil); end
+  def message; end
+end
+class Aws::SSO::Errors::TooManyRequestsException < Aws::SSO::Errors::ServiceError
+  def initialize(context, message, data = nil); end
+  def message; end
+end
+class Aws::SSO::Errors::UnauthorizedException < Aws::SSO::Errors::ServiceError
+  def initialize(context, message, data = nil); end
+  def message; end
+end
+class Aws::SSO::Resource
+  def client; end
   def initialize(options = nil); end
 end
 class Aws::Plugins::Protocols::JsonRpc < Seahorse::Client::Plugin

@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/web-console/all/web-console.rbi
 #
-# web-console-4.0.4
+# web-console-4.1.0
 
 module WebConsole
   def self.logger; end

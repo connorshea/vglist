@@ -268,7 +268,7 @@ module EBNF::PEG::Parser::ClassMethods
   def terminal_handlers; end
   def terminal_regexps; end
 end
-class Anonymous_Struct_479 < Struct
+class Anonymous_Struct_500 < Struct
   def expecting; end
   def expecting=(_); end
   def lineno; end
@@ -280,7 +280,7 @@ class Anonymous_Struct_479 < Struct
   def self.members; end
   def self.new(*arg0); end
 end
-class EBNF::PEG::Parser::Unmatched < Anonymous_Struct_479
+class EBNF::PEG::Parser::Unmatched < Anonymous_Struct_500
   def to_s; end
 end
 class EBNF::PEG::Parser::Error < StandardError
