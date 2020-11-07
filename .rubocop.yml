@@ -391,3 +391,9 @@ Style/RedundantSelfAssignment:
 
 Style/SoleNestedConditional:
   Enabled: true
+
+# Disable this one for now since Sorbet's type signatures for
+# `URI.parse(foo).open` is weird and bad.
+# TODO: Re-enable this.
+Security/Open:
+  Enabled: false
