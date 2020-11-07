@@ -90,11 +90,11 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
-  gem 'rubocop', '~> 0.93', require: false
+  gem 'rubocop', '~> 1.2', require: false
 
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.8', require: false
-  gem 'rubocop-rspec', '~> 1.44', require: false
+  gem 'rubocop-rspec', '~> 2.0', require: false
   gem 'rubocop-rails', '~> 2.8', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
