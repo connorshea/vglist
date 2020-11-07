@@ -87,8 +87,8 @@ module ApplicationHelper
   def summarize(array, limit: 3)
     raise ArgumentError, 'Limit must be a positive integer' unless limit.positive?
 
-    return "#{array.first} and #{(array.length - limit)} more" if limit == 1 && array.length > 1
-    return "#{T.must(array[0...limit]).join(', ')}, and #{(array.length - limit)} more" if array.length > limit
+    return "#{array.first} and #{array.length - limit} more" if limit == 1 && array.length > 1
+    return "#{T.must(array[0...limit]).join(', ')}, and #{array.length - limit} more" if array.length > limit
     return array.join(', ') if array.length <= limit
   end
 
