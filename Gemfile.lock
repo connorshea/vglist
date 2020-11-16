@@ -129,7 +129,7 @@ GEM
       rdf (~> 3.1)
       scanf (~> 1.0)
       sxp (~> 1.1)
-    erubi (1.9.0)
+    erubi (1.10.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.1.0)
