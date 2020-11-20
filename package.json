@@ -6,7 +6,7 @@
     "@rails/activestorage": "^6.0.2",
     "@rails/ujs": "^6.0.2",
     "@rails/webpacker": "5.2.1",
-    "@sentry/browser": "5.27.3",
+    "@sentry/browser": "5.27.4",
     "@sentry/integrations": "^5.27.4",
     "@types/node": "^14.0.0",
     "babel-preset-typescript-vue": "^1.1.1",
