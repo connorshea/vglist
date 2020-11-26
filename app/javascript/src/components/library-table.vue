@@ -130,6 +130,7 @@ export default {
         field: 'after',
         width: '140px',
         hideable: false,
+        sortable: false,
         index: 10
       });
     }
