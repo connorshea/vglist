@@ -6,7 +6,7 @@
     :rows="rows"
     :sort-options="{
       enabled: true,
-      initialSortBy: { field: 'rating', type: 'desc' }
+      initialSortBy: { field: sortColumn, type: sortDirection }
     }"
     :search-options="{
       enabled: false
@@ -20,6 +20,7 @@
       disableSelectInfo: true
     }"
     @on-selected-rows-change="selectionChanged"
+    @on-sort-change="onSortChange"
   >
     <div slot="table-actions">
       <div class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile js-no-close-on-click">
@@ -225,7 +226,9 @@ export default {
         'fully_completed',
         'not_applicable',
         'paused'
-      ]
+      ],
+      sortDirection: localStorage.getItem('vglist__librarySortDirection') || 'desc',
+      sortColumn: localStorage.getItem('vglist__librarySortColumn') || 'rating'
     };
   },
   methods: {
@@ -330,6 +333,11 @@ export default {
     },
     selectionChanged(params) {
       this.$emit('selectedGamePurchasesChanged', params.selectedRows);
+    },
+    onSortChange(params) {
+      // type is either 'asc' or 'desc'
+      localStorage.setItem('vglist__librarySortDirection', params[0].type);
+      localStorage.setItem('vglist__librarySortColumn', params[0].field);
     }
   },
   mounted: function() {
@@ -348,6 +356,14 @@ export default {
           this.$data.columns[index].hidden = !value;
         }
       });
+    }
+
+    if (
+      typeof localStorage.getItem('vglist__librarySortDirection') !== 'undefined' ||
+      typeof localStorage.getItem('vglist__librarySortColumn') !== 'undefined'
+    ) {
+      this.$data.sortColumn = localStorage.getItem('vglist__librarySortColumn');
+      this.$data.sortDirection = localStorage.getItem('vglist__librarySortDirection');
     }
   },
   computed: {
