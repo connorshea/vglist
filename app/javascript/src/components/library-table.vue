@@ -228,8 +228,8 @@ export default {
         'not_applicable',
         'paused'
       ],
-      sortDirection: localStorage.getItem('vglist__librarySortDirection') || 'desc',
-      sortColumn: localStorage.getItem('vglist__librarySortColumn') || 'rating'
+      sortDirection: localStorage.getItem('vglist:librarySortDirection') || 'desc',
+      sortColumn: localStorage.getItem('vglist:librarySortColumn') || 'rating'
     };
   },
   methods: {
@@ -330,27 +330,27 @@ export default {
       this.columns.filter(column => typeof column.hideable === 'undefined').forEach(column => {
         columnVisibility[column.field] = !column.hidden
       });
-      document.cookie = `columns=${JSON.stringify(columnVisibility)};`;
+      localStorage.setItem('vglist:libraryColumns', JSON.stringify(columnVisibility));
     },
     selectionChanged(params) {
       this.$emit('selectedGamePurchasesChanged', params.selectedRows);
     },
     onSortChange(params) {
       // type is either 'asc' or 'desc'
-      localStorage.setItem('vglist__librarySortDirection', params[0].type);
-      localStorage.setItem('vglist__librarySortColumn', params[0].field);
+      localStorage.setItem('vglist:librarySortDirection', params[0].type);
+      localStorage.setItem('vglist:librarySortColumn', params[0].field);
     }
   },
   mounted: function() {
     // When the component is mounted, set the column visibility values
-    // based on the columns cookie.
-    // Don't do anything if the columns cookie isn't defined.
-    if (typeof VglistUtils.getCookie('columns') !== 'undefined') {
-      // Update the visible columns to match the defined cookie value.
-      let columnCookies = JSON.parse(VglistUtils.getCookie('columns'));
-      Object.entries(columnCookies).forEach(([key, value]) => {
+    // based on the libraryColumns value stored in localStorage.
+    // Don't do anything if the value isn't defined.
+    if (typeof localStorage.getItem('vglist:libraryColumns') !== 'undefined') {
+      // Update the visible columns to match the defined localStorage value.
+      let libraryColumns = JSON.parse(localStorage.getItem('vglist:libraryColumns'));
+      Object.entries(libraryColumns).forEach(([key, value]) => {
         let index = this.$data.columns.findIndex(col => col.field === key);
-        // Flip the value since the visibility cookie is stored as "whether
+        // Flip the value since the visibility value is stored as "whether
         // it's visible" but the hidden value is stored as "whether it's
         // hidden".
         if (typeof index !== 'undefined') {
@@ -360,11 +360,11 @@ export default {
     }
 
     if (
-      typeof localStorage.getItem('vglist__librarySortDirection') !== 'undefined' ||
-      typeof localStorage.getItem('vglist__librarySortColumn') !== 'undefined'
+      typeof localStorage.getItem('vglist:librarySortDirection') !== 'undefined' ||
+      typeof localStorage.getItem('vglist:librarySortColumn') !== 'undefined'
     ) {
-      this.$data.sortColumn = localStorage.getItem('vglist__librarySortColumn');
-      this.$data.sortDirection = localStorage.getItem('vglist__librarySortDirection');
+      this.$data.sortColumn = localStorage.getItem('vglist:librarySortColumn');
+      this.$data.sortDirection = localStorage.getItem('vglist:librarySortDirection');
     }
   },
   computed: {
