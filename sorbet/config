@@ -7,4 +7,6 @@
 --allowed-extension
 .rbi
 --ignore
-/node_modules
+node_modules/
+--ignore
+vendor/
