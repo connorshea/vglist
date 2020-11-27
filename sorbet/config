@@ -6,3 +6,5 @@
 .rb
 --allowed-extension
 .rbi
+--ignore
+/node_modules
