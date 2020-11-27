@@ -138,10 +138,6 @@ class ActionDispatch::DebugExceptions
   include ::Raven::Rails::Overrides::DebugExceptionsCatcher
 end
 
-module ActionDispatch::Http
-  include ::ActiveSupport::Deprecation::DeprecatedConstantAccessor
-end
-
 module ActionDispatch::Integration::Runner
   include ::Turbolinks::Assertions
 end
@@ -2074,8 +2070,6 @@ class Array
 
   def shelljoin(); end
 
-  def to_default_s(); end
-
   def to_h(); end
 
   def to_s_without_c14nxl(format=T.unsafe(nil)); end
@@ -2425,10 +2419,6 @@ end
 
 class Benchmark::Tms
   def to_a(); end
-end
-
-module Benchmark
-  def self.ms(); end
 end
 
 class BigDecimal
@@ -7527,16 +7517,6 @@ end
 class Doorkeeper::AccessGrant
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
-  include ::Doorkeeper::Orm::ActiveRecord::Mixins::AccessGrant
-  include ::Doorkeeper::Models::Orderable
-  include ::Doorkeeper::Models::SecretStorable
-  include ::Doorkeeper::Models::ResourceOwnerable
-  include ::Doorkeeper::AccessGrantMixin
-  include ::Doorkeeper::OAuth::Helpers
-  include ::Doorkeeper::Models::Expirable
-  include ::Doorkeeper::Models::Revocable
-  include ::Doorkeeper::Models::Accessible
-  include ::Doorkeeper::Models::Scopes
   def plaintext_token(); end
 end
 
@@ -7574,17 +7554,6 @@ end
 class Doorkeeper::AccessToken
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
-  include ::Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken
-  include ::Doorkeeper::Models::Orderable
-  include ::Doorkeeper::Models::SecretStorable
-  include ::Doorkeeper::Models::ResourceOwnerable
-  include ::Doorkeeper::AccessTokenMixin
-  include ::Doorkeeper::OAuth::Helpers
-  include ::Doorkeeper::Models::Expirable
-  include ::Doorkeeper::Models::Reusable
-  include ::Doorkeeper::Models::Revocable
-  include ::Doorkeeper::Models::Accessible
-  include ::Doorkeeper::Models::Scopes
   def use_refresh_token=(use_refresh_token); end
 end
 
@@ -7622,12 +7591,6 @@ end
 class Doorkeeper::Application
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
-  include ::Doorkeeper::Orm::ActiveRecord::Mixins::Application
-  include ::Doorkeeper::Models::Orderable
-  include ::Doorkeeper::Models::SecretStorable
-  include ::Doorkeeper::ApplicationMixin
-  include ::Doorkeeper::OAuth::Helpers
-  include ::Doorkeeper::Models::Scopes
   include ::Doorkeeper::Models::Ownership
   def authorized_for_resource_owner?(resource_owner); end
 
@@ -7673,44 +7636,8 @@ class Doorkeeper::ApplicationController
   include ::Doorkeeper::Helpers::Controller
 end
 
-class Doorkeeper::ApplicationController
-end
-
 class Doorkeeper::ApplicationMetalController
   include ::Doorkeeper::Helpers::Controller
-end
-
-class Doorkeeper::ApplicationMetalController
-end
-
-class Doorkeeper::ApplicationsController
-  def create(); end
-
-  def destroy(); end
-
-  def edit(); end
-
-  def index(); end
-
-  def new(); end
-
-  def show(); end
-
-  def update(); end
-end
-
-class Doorkeeper::AuthorizationsController
-  def create(); end
-
-  def destroy(); end
-
-  def new(); end
-end
-
-class Doorkeeper::AuthorizedApplicationsController
-  def destroy(); end
-
-  def index(); end
 end
 
 module Doorkeeper::Models::Ownership
@@ -7721,17 +7648,8 @@ module Doorkeeper::Models::Ownership
   extend ::ActiveSupport::Concern
 end
 
-module Doorkeeper::Orm::ActiveRecord::Mixins
-end
-
-module Doorkeeper::Orm::ActiveRecord::Mixins::AccessGrant
-end
-
 module Doorkeeper::Orm::ActiveRecord::Mixins::AccessGrant
   extend ::ActiveSupport::Concern
-end
-
-module Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken
 end
 
 module Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken
@@ -7739,13 +7657,7 @@ module Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken
 end
 
 module Doorkeeper::Orm::ActiveRecord::Mixins::Application
-end
-
-module Doorkeeper::Orm::ActiveRecord::Mixins::Application
   extend ::ActiveSupport::Concern
-end
-
-module Doorkeeper::Orm::ActiveRecord::Mixins
 end
 
 class Doorkeeper::Orm::ActiveRecord::StaleRecordsCleaner
@@ -7763,24 +7675,6 @@ class Doorkeeper::RedirectUriValidator
 end
 
 class Doorkeeper::RedirectUriValidator
-end
-
-class Doorkeeper::TokenInfoController
-  def show(); end
-end
-
-class Doorkeeper::TokenInfoController
-end
-
-class Doorkeeper::TokensController
-  def create(); end
-
-  def introspect(); end
-
-  def revoke(); end
-end
-
-class Doorkeeper::TokensController
 end
 
 module Doorkeeper::VERSION
@@ -16785,40 +16679,40 @@ class Platform
   def self.search(*args); end
 end
 
-module Polyfill::Module::M70194970162280
+module Polyfill::Module::M70281897869420
 end
 
-module Polyfill::Module::M70194970162280
+module Polyfill::Module::M70281897869420
 end
 
-module Polyfill::Module::M70194970561400
+module Polyfill::Module::M70281914572320
 end
 
-module Polyfill::Module::M70194970561400
+module Polyfill::Module::M70281914572320
 end
 
-module Polyfill::Module::M70194970677720
+module Polyfill::Module::M70281914811040
 end
 
-module Polyfill::Module::M70194970677720
+module Polyfill::Module::M70281914811040
 end
 
-module Polyfill::Module::M70194984723020
+module Polyfill::Module::M70281922980780
 end
 
-module Polyfill::Module::M70194984723020
+module Polyfill::Module::M70281922980780
 end
 
-module Polyfill::Module::M70194985074100
+module Polyfill::Module::M70281923064320
 end
 
-module Polyfill::Module::M70194985074100
+module Polyfill::Module::M70281923064320
 end
 
-module Polyfill::Module::M70194985132040
+module Polyfill::Module::M70281923146300
 end
 
-module Polyfill::Module::M70194985132040
+module Polyfill::Module::M70281923146300
 end
 
 class Proc
@@ -21170,8 +21064,6 @@ class String
 
   def cyan(); end
 
-  def ends_with?(*_); end
-
   def funcall_style(); end
 
   def green(); end
@@ -21241,8 +21133,6 @@ class String
   def shellescape(); end
 
   def shellsplit(); end
-
-  def starts_with?(*_); end
 
   def swap(); end
 
@@ -21471,21 +21361,6 @@ class Types::BaseInterface::UnresolvedTypeError
 end
 
 module Types::BaseInterface
-  extend ::GraphQL::Schema::Interface::DefinitionMethods
-  extend ::GraphQL::Schema::Member::CachedGraphQLDefinition
-  extend ::GraphQL::Relay::TypeExtensions
-  extend ::GraphQL::Schema::Member::BaseDSLMethods
-  extend ::GraphQL::Schema::FindInheritedValue
-  extend ::GraphQL::Schema::FindInheritedValue::EmptyObjects
-  extend ::GraphQL::Schema::Member::TypeSystemHelpers
-  extend ::GraphQL::Schema::Member::HasFields
-  extend ::GraphQL::Schema::Member::HasPath
-  extend ::GraphQL::Schema::Member::RelayShortcuts
-  extend ::GraphQL::Schema::Member::Scoped
-  extend ::GraphQL::Schema::Member::HasAstNode
-  extend ::GraphQL::Schema::Member::HasUnresolvedTypeError
-  extend ::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
-  extend ::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension
   extend ::Types::BaseInterface::DefinitionMethods
 end
 
