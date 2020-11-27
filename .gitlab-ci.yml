@@ -71,7 +71,15 @@ cacher:
 sorbet:tc:
   before_script: *no_db_necessary
   script:
-    - bundle exec srb tc . --ignore=vendor/
+    - bundle exec srb tc .
+    - bundle exec spoom coverage --save
+    - bundle exec spoom coverage report
+  artifacts:
+    when: always
+    paths:
+      - spoom_report.html
+    expire_in: 10 days
+    name: "Type Coverage Report"
 
 typescript:tsc:
   before_script: *no_db_necessary
