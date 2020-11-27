@@ -338,9 +338,9 @@ class UsersController < ApplicationController
     # Revoke any special roles from the banned user.
     @user.role = :member unless @user.member?
 
-    # Note: There's no good way to destroy sessions of users besides the
-    # current user, but there's a before_action method run on every request,
-    # so banned users will get logged out if they do anything.
+    # There's no good way to destroy sessions of users besides the current
+    # user, but there's a before_action method run on every request, so
+    # banned users will get logged out if they do anything.
 
     if @user.save
       redirect_to user_path(@user), success: "#{@user.username} was successfully banned."
