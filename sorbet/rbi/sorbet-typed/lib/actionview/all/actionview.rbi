@@ -1567,4 +1567,10 @@ module ActionView::ViewPaths
 end
 
 module ActionView::ViewPaths::ClassMethods
+  sig do
+    params(
+      value: T.any(String, T::Array[String]),
+    ).void
+  end
+  def append_view_path(value); end
 end
