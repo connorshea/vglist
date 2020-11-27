@@ -56,3 +56,7 @@ sorbet/rbi/hidden-definitions/errors.txt
 
 # Ignore the app visualization file so it doesn't get committed.
 /app-visualization.svg
+
+# Ignore spoom-related files for tracking type coverage.
+/spoom_data
+/spoom_report.html
