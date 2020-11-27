@@ -10,6 +10,7 @@ class SteamImportService
   end
 
   class Error < StandardError; end
+
   class NoGamesError < Error; end
 
   sig { returns(Result) }
