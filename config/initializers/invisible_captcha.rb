@@ -1,4 +1,4 @@
-# typed: ignore
+# typed: true
 
 # Configuration for https://github.com/markets/invisible_captcha
 InvisibleCaptcha.setup do |config|

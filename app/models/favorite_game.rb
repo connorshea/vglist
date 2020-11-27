@@ -1,4 +1,4 @@
-# typed: strong
+# typed: strict
 class FavoriteGame < ApplicationRecord
   extend T::Sig
 
