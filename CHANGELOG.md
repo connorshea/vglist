@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.11.28
+### Added
+- Add the ability to update 'Hours Played' for existing games in your library via the Steam importer. ([#1649])
+
 ## v2020.10.17
 ### Changed
 - Update Sentry configuration to use Releases and to split the frontend and backend error tracking projects, so errors are easier to discover and fix. ([#1568])
@@ -782,3 +786,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1488]: https://github.com/connorshea/vglist/pull/1488
 [#1501]: https://github.com/connorshea/vglist/pull/1501
 [#1568]: https://github.com/connorshea/vglist/pull/1568
+[#1649]: https://github.com/connorshea/vglist/pull/1649
