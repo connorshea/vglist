@@ -105,12 +105,17 @@ class UsersController < ApplicationController
   def steam_import
     @user = User.friendly.find(params[:id])
     authorize @user
+    # Coerce the value to a boolean.
+    @update_hours = params[:update_hours] == 'true'
 
-    @result = SteamImportService.new(@user).call
+    @result = SteamImportService.new(user: @user, update_hours: @update_hours).call
 
     respond_to do |format|
       format.html do
-        flash[:success] = "Added #{@result.added_games.count} #{'game'.pluralize(@result.added_games.count)}. #{@result.unmatched.count} games weren't found in the vglist database."
+        added_games_count = @result.added_games.count
+        unmatched_count = @result.unmatched.count
+        updated_games_count = @result.updated_games.count
+        flash[:success] = "Added #{added_games_count} #{'game'.pluralize(added_games_count)}. Updated #{updated_games_count} #{'game'.pluralize(updated_games_count)}. #{unmatched_count} games weren't found in the vglist database."
         render
       end
     end

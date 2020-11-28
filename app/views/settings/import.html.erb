@@ -44,10 +44,36 @@
           </div>
         <% end %>
         <p>Steam account: <%= link_to @steam_username, @steam_account.steam_profile_url %></p>
+
+        <br>
+
+        <%# Checkbox here to toggle the import games button %>
+        <%= label_tag 'update-hours', nil do %>
+          <%= check_box_tag 'update-hours',
+            false,
+            false,
+            class: 'update-hours-toggle',
+            data: {
+              toggle_partner_on: 'import-games-update-hours',
+              toggle_partner_off: 'import-games-no-update-hours',
+              toggle_control_event_type: 'change'
+            }
+          %>
+          Update hours for all imported games
+        <% end %>
+        <br>
         <%= link_to "Import games from Steam",
           steam_import_user_path(id: @user.id),
           method: :post,
-          class: 'button mt-10' %>
+          class: 'button mt-10 js-is-toggleable import-games-no-update-hours',
+          data: { toggle_partner: 'import-games-update-hours', toggle_control: 'update-hours-toggle' } %>
+
+        <%= link_to "Import games from Steam",
+          steam_import_user_path(id: @user.id, update_hours: 'true'),
+          method: :post,
+          class: 'button mt-10 js-is-toggleable import-games-update-hours is-hidden',
+          data: { toggle_partner: 'import-games-no-update-hours', toggle_control: 'update-hours-toggle' } %>
+
         <%= button_to "Disconnect Steam account",
           disconnect_steam_user_path(id: @user.id),
           data: { confirm: "Are you sure you want to disconnect your Steam account?" },
