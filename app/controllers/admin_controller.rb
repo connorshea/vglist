@@ -117,6 +117,7 @@ class AdminController < ApplicationController
 
   private
 
+  sig { returns(ActionController::Parameters) }
   def steam_blocklist_params
     params.typed_require(:steam_blocklist).permit(
       :name,

@@ -78,6 +78,7 @@ class PlatformsController < ApplicationController
 
   private
 
+  sig { returns(ActionController::Parameters) }
   def platform_params
     params.typed_require(:platform).permit(
       :name,

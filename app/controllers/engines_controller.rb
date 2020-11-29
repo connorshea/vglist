@@ -90,6 +90,7 @@ class EnginesController < ApplicationController
 
   private
 
+  sig { returns(ActionController::Parameters) }
   def engine_params
     params.typed_require(:engine).permit(
       :name,
