@@ -559,4 +559,27 @@ RSpec.describe "Users", type: :request do
       expect(response.body).to eq("[]")
     end
   end
+
+  describe "POST steam_import_user_path" do
+    let(:external_account) { create(:external_account) }
+    let(:user) { create(:confirmed_user, external_account: external_account) }
+    let(:game_purchases) { create_list(10, :game_purchase, user: user) }
+    let(:unmatched) { [SteamImportService::Unmatched.new(name: 'Foo', steam_id: rand(1..100_000))] }
+
+    it "returns http success" do
+      # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(SteamImportService).to receive(:call).and_return(
+        SteamImportService::Result.new(
+          created: GamePurchase.none,
+          updated: GamePurchase.none,
+          unmatched: unmatched
+        )
+      )
+      # rubocop:enable RSpec/AnyInstance
+
+      sign_in(user)
+      post steam_import_user_path(id: user.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
 end
