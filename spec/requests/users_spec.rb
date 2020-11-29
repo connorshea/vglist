@@ -489,6 +489,26 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "POST reset_token_users_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "resetting your own token as a user is successful" do
+      sign_in(user)
+      post reset_token_users_path
+      expect(response).to redirect_to(oauth_applications_path)
+      # Need to follow redirect for the flash message to show up.
+      follow_redirect!
+      expect(response.body).to include("API token successfully reset.")
+    end
+
+    it "resetting your own token as a user changes the token" do
+      sign_in(user)
+      expect do
+        post reset_token_users_path
+      end.to change(user.reload, :api_token)
+    end
+  end
+
   describe "GET search_users_path" do
     let(:user1) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
