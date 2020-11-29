@@ -227,6 +227,29 @@ RSpec.describe "Settings", type: :request do
     end
   end
 
+  describe "DELETE oauth_authorized_application_path" do
+    let(:user) { create(:confirmed_user) }
+    let(:application) { create(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+
+    it "returns http success" do
+      sign_in(user)
+      application
+      delete oauth_authorized_application_path(application)
+      follow_redirect!
+      expect(response).to have_http_status(:success)
+    end
+
+    it "revokes the user's access token" do
+      sign_in(user)
+      application
+      access_token
+      expect do
+        delete oauth_authorized_application_path(application)
+      end.to change(Doorkeeper::AccessToken.where(revoked_at: nil), :count).by(-1)
+    end
+  end
+
   describe "GET settings_api_token_path" do
     let(:token) { SecureRandom.alphanumeric(20) }
     let(:user) { create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(token)) }

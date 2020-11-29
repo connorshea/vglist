@@ -518,7 +518,7 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "POST reset_token_users_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_user, :encrypted_api_token) }
 
     it "resetting your own token as a user is successful" do
       sign_in(user)
