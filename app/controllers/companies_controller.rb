@@ -83,6 +83,7 @@ class CompaniesController < ApplicationController
 
   private
 
+  sig { returns(ActionController::Parameters) }
   def company_params
     params.typed_require(:company).permit(
       :name,
