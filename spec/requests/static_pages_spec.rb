@@ -8,4 +8,20 @@ RSpec.describe "StaticPages", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "GET graphiql_path" do
+    let(:user) { create(:confirmed_user) }
+
+    it "returns http success" do
+      get graphiql_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when signed in" do
+      sign_in(user)
+
+      get graphiql_path
+      expect(response).to have_http_status(:success)
+    end
+  end
 end
