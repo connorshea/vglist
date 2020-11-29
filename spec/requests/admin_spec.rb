@@ -132,6 +132,45 @@ RSpec.describe "Admin", type: :request do
     end
   end
 
+  describe "GET new_steam_blocklist_path" do
+    let(:admin) { create(:confirmed_admin) }
+
+    it "returns http success" do
+      sign_in(admin)
+      get admin_new_steam_blocklist_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "POST add_to_steam_blocklist" do
+    let(:admin) { create(:confirmed_admin) }
+    let(:game) { create(:game) }
+    let(:steam_app_id) { create(:steam_app_id, app_id: 123, game: game) }
+
+    it "creates a new blocklist entry" do
+      sign_in(admin)
+      expect do
+        post admin_add_to_steam_blocklist_path(steam_blocklist: { name: 'Half-Life', steam_app_id: 123 })
+      end.to change(SteamBlocklist, :count).by(1)
+    end
+
+    it "destroys the SteamAppId" do
+      sign_in(admin)
+      steam_app_id
+      expect do
+        post admin_add_to_steam_blocklist_path(steam_blocklist: { name: 'Half-Life', steam_app_id: 123 })
+      end.to change(SteamAppId, :count).by(-1)
+    end
+
+    it "removes the SteamAppId for a game" do
+      sign_in(admin)
+      steam_app_id
+      post admin_add_to_steam_blocklist_path(steam_blocklist: { name: 'Half-Life', steam_app_id: 123 })
+      expect(response).to redirect_to(admin_steam_blocklist_path)
+      expect(game.reload.steam_app_ids).to be_empty
+    end
+  end
+
   describe "DELETE admin_remove_from_steam_blocklist_path" do
     let(:user) { create(:confirmed_user) }
     let(:moderator) { create(:confirmed_moderator) }
