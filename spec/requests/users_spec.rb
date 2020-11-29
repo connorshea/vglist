@@ -5,6 +5,7 @@ RSpec.describe "Users", type: :request do
   describe "GET users_path" do
     let(:users) { create_list(:user, 10) }
     let(:banned_user) { create(:banned_user) }
+    let(:admin) { create(:confirmed_admin) }
 
     it "returns http success" do
       get users_path
@@ -21,6 +22,33 @@ RSpec.describe "Users", type: :request do
       users
       banned_user
       get users_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when there are users and you're logged in as admin" do
+      sign_in(admin)
+      users
+      get users_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when there is a banned user and you're logged in as admin" do
+      sign_in(admin)
+      users
+      banned_user
+      get users_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when the users are sorted by most games" do
+      users
+      get users_path(order_by: :most_games)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when the users are sorted by most followers" do
+      users
+      get users_path(order_by: :most_followers)
       expect(response).to have_http_status(:success)
     end
   end
