@@ -58,7 +58,7 @@ Rake tasks are Ruby code for running tasks. For vglist, most of these are for im
 - Importing
   - `rake import:update` - Imports updated data for existing games, companies, genres, series, etc.
   - `rake import:wikidata:games` - Imports new games.
-  - `rake import:full` - Imports new games, companies, gneres, series, etc.
+  - `rake import:full` - Imports new games, companies, genres, series, etc.
   - `rake import:pcgamingwiki:covers` - Imports covers from PCGamingWiki.
   - `rake import:mobygames:covers` - Imports covers from MobyGames, needs a MobyGames API key.
   - `rake rebuild:multisearch:all` - Rebuild the search indices, useful after running imports.
