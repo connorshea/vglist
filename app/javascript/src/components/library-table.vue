@@ -345,7 +345,7 @@ export default {
     // When the component is mounted, set the column visibility values
     // based on the libraryColumns value stored in localStorage.
     // Don't do anything if the value isn't defined.
-    if (typeof localStorage.getItem('vglist:libraryColumns') !== 'undefined') {
+    if (localStorage.getItem('vglist:libraryColumns') !== null) {
       // Update the visible columns to match the defined localStorage value.
       let libraryColumns = JSON.parse(localStorage.getItem('vglist:libraryColumns'));
       Object.entries(libraryColumns).forEach(([key, value]) => {
@@ -360,8 +360,8 @@ export default {
     }
 
     if (
-      typeof localStorage.getItem('vglist:librarySortDirection') !== 'undefined' ||
-      typeof localStorage.getItem('vglist:librarySortColumn') !== 'undefined'
+      localStorage.getItem('vglist:librarySortDirection') !== null ||
+      localStorage.getItem('vglist:librarySortColumn') !== null
     ) {
       this.$data.sortColumn = localStorage.getItem('vglist:librarySortColumn');
       this.$data.sortDirection = localStorage.getItem('vglist:librarySortDirection');
