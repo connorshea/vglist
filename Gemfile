@@ -120,9 +120,6 @@ group :development, :test do
   # Pundit matchers for simplifying policy testing.
   gem 'pundit-matchers', '~> 1.6.0'
 
-  # Bullet catches N+1 queries.
-  gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
-
   # Sorbet typechecker
   gem 'sorbet', '~> 0.5'
 end
