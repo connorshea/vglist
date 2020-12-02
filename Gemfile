@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '~> 2.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.3'
+gem 'rails', '~> 6.1.0.rc2'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.2'
@@ -121,7 +121,7 @@ group :development, :test do
   gem 'pundit-matchers', '~> 1.6.0'
 
   # Bullet catches N+1 queries.
-  gem 'bullet', '~> 6.1'
+  gem 'bullet', git: 'https://github.com/flyerhzm/bullet'
 
   # Sorbet typechecker
   gem 'sorbet', '~> 0.5'
