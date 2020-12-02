@@ -88,12 +88,12 @@ class ActionText::Attachables::ContentAttachment
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _validate_callbacks; end
     def _validate_callbacks=(value); end
     def _validators; end
-    def _validators=(val); end
+    def _validators=(value); end
     def _validators?; end
     def from_node(node); end
   end
@@ -218,12 +218,12 @@ class ActionText::AttachmentGallery
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _validate_callbacks; end
     def _validate_callbacks=(value); end
     def _validators; end
-    def _validators=(val); end
+    def _validators=(value); end
     def _validators?; end
     def find_attachment_gallery_nodes(content); end
     def fragment_by_canonicalizing_attachment_galleries(content); end
@@ -283,7 +283,9 @@ end
 
 class ActionText::Content
   include(::ActionText::Serialization)
+  include(::ActionText::Rendering)
   extend(::ActionText::Serialization::ClassMethods)
+  extend(::ActionText::Rendering::ClassMethods)
 
   def initialize(content = T.unsafe(nil), options = T.unsafe(nil)); end
 
@@ -301,10 +303,9 @@ class ActionText::Content
   def inspect; end
   def links; end
   def present?(*args, &block); end
+  def render(*args, &block); end
   def render_attachment_galleries(&block); end
   def render_attachments(**options, &block); end
-  def renderer; end
-  def renderer=(obj); end
   def to_html; end
   def to_plain_text; end
   def to_rendered_html_with_layout; end
@@ -327,30 +328,36 @@ end
 
 module ActionText::ContentHelper
   def allowed_attributes; end
-  def allowed_attributes=(obj); end
+  def allowed_attributes=(val); end
   def allowed_tags; end
-  def allowed_tags=(obj); end
+  def allowed_tags=(val); end
   def render_action_text_attachments(content); end
   def render_action_text_content(content); end
   def sanitize_action_text_content(content); end
   def sanitizer; end
-  def sanitizer=(obj); end
+  def sanitizer=(val); end
   def scrubber; end
-  def scrubber=(obj); end
+  def scrubber=(val); end
 
   class << self
     def allowed_attributes; end
-    def allowed_attributes=(obj); end
+    def allowed_attributes=(val); end
     def allowed_tags; end
-    def allowed_tags=(obj); end
+    def allowed_tags=(val); end
     def sanitizer; end
-    def sanitizer=(obj); end
+    def sanitizer=(val); end
     def scrubber; end
-    def scrubber=(obj); end
+    def scrubber=(val); end
   end
 end
 
 class ActionText::Engine < ::Rails::Engine
+end
+
+class ActionText::FixtureSet
+  class << self
+    def attachment(fixture_set_name, label, column_type: T.unsafe(nil)); end
+  end
 end
 
 class ActionText::Fragment
@@ -408,11 +415,30 @@ module ActionText::PlainTextConversion
   def remove_trailing_newlines(text); end
 end
 
-class ActionText::RichText < ::ActiveRecord::Base
+class ActionText::Record < ::ActiveRecord::Base
   include(::Kaminari::ActiveRecordModelExtension)
   include(::Kaminari::ConfigurationMethods)
   extend(::Kaminari::ConfigurationMethods::ClassMethods)
 
+  class << self
+    def _validators; end
+    def defined_enums; end
+    def page(num = T.unsafe(nil)); end
+  end
+end
+
+module ActionText::Rendering
+  extend(::ActiveSupport::Concern)
+
+  mixes_in_class_methods(::ActionText::Rendering::ClassMethods)
+end
+
+module ActionText::Rendering::ClassMethods
+  def render(*args, &block); end
+  def with_renderer(renderer); end
+end
+
+class ActionText::RichText < ::ActionText::Record
   def autosave_associated_records_for_record(*args); end
   def nil?(*args, &block); end
   def to_s(*args, &block); end
@@ -421,9 +447,8 @@ class ActionText::RichText < ::ActiveRecord::Base
     def __callbacks; end
     def _reflections; end
     def _validators; end
-    def attribute_type_decorations; end
+    def attributes_to_define_after_schema_loads; end
     def defined_enums; end
-    def page(num = T.unsafe(nil)); end
   end
 end
 
@@ -446,7 +471,7 @@ module ActionText::TagHelper
 
   class << self
     def id; end
-    def id=(obj); end
+    def id=(val); end
   end
 end
 
@@ -542,7 +567,7 @@ class ActionView::Helpers::FormBuilder
   def email_field(method, options = T.unsafe(nil)); end
   def emitted_hidden_id?; end
   def field_helpers; end
-  def field_helpers=(val); end
+  def field_helpers=(_arg0); end
   def field_helpers?; end
   def fields(scope = T.unsafe(nil), model: T.unsafe(nil), **options, &block); end
   def fields_for(record_name, record_object = T.unsafe(nil), fields_options = T.unsafe(nil), &block); end
@@ -594,7 +619,7 @@ class ActionView::Helpers::FormBuilder
   class << self
     def _to_partial_path; end
     def field_helpers; end
-    def field_helpers=(val); end
+    def field_helpers=(value); end
     def field_helpers?; end
   end
 end
@@ -624,9 +649,9 @@ module ActionView::Helpers::FormHelper
   def form_for(record, options = T.unsafe(nil), &block); end
   def form_with(model: T.unsafe(nil), scope: T.unsafe(nil), url: T.unsafe(nil), format: T.unsafe(nil), **options, &block); end
   def form_with_generates_ids; end
-  def form_with_generates_ids=(obj); end
+  def form_with_generates_ids=(val); end
   def form_with_generates_remote_forms; end
-  def form_with_generates_remote_forms=(obj); end
+  def form_with_generates_remote_forms=(val); end
   def hidden_field(object_name, method, options = T.unsafe(nil)); end
   def label(object_name, method, content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
   def month_field(object_name, method, options = T.unsafe(nil)); end
@@ -653,9 +678,9 @@ module ActionView::Helpers::FormHelper
 
   class << self
     def form_with_generates_ids; end
-    def form_with_generates_ids=(obj); end
+    def form_with_generates_ids=(val); end
     def form_with_generates_remote_forms; end
-    def form_with_generates_remote_forms=(obj); end
+    def form_with_generates_remote_forms=(val); end
   end
 end
 

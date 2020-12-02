@@ -15,7 +15,7 @@ module ActiveModel
 end
 
 class ActiveModel::Attribute
-  def initialize(name, value_before_type_cast, type, original_attribute = T.unsafe(nil)); end
+  def initialize(name, value_before_type_cast, type, original_attribute = T.unsafe(nil), value = T.unsafe(nil)); end
 
   def ==(other); end
   def came_from_user?; end
@@ -30,6 +30,7 @@ class ActiveModel::Attribute
   def initialized?; end
   def name; end
   def original_value; end
+  def original_value_for_database; end
   def type; end
   def type_cast(*_arg0); end
   def value; end
@@ -40,10 +41,6 @@ class ActiveModel::Attribute
   def with_value_from_database(value); end
   def with_value_from_user(value); end
 
-  protected
-
-  def original_value_for_database; end
-
   private
 
   def _original_value_for_database; end
@@ -53,11 +50,11 @@ class ActiveModel::Attribute
   def original_attribute; end
 
   class << self
-    def from_database(name, value, type); end
-    def from_user(name, value, type, original_attribute = T.unsafe(nil)); end
+    def from_database(name, value_before_type_cast, type, value = T.unsafe(nil)); end
+    def from_user(name, value_before_type_cast, type, original_attribute = T.unsafe(nil)); end
     def null(name); end
     def uninitialized(name, type); end
-    def with_cast_value(name, value, type); end
+    def with_cast_value(name, value_before_type_cast, type); end
   end
 end
 
@@ -106,7 +103,7 @@ end
 
 module ActiveModel::AttributeMethods::AttrNames
   class << self
-    def define_attribute_accessor_method(mod, attr_name, writer: T.unsafe(nil)); end
+    def define_attribute_accessor_method(owner, attr_name, writer: T.unsafe(nil)); end
   end
 end
 
@@ -121,7 +118,7 @@ module ActiveModel::AttributeMethods::ClassMethods
   def attribute_method_affix(*affixes); end
   def attribute_method_prefix(*prefixes); end
   def attribute_method_suffix(*suffixes); end
-  def define_attribute_method(attr_name); end
+  def define_attribute_method(attr_name, _owner: T.unsafe(nil)); end
   def define_attribute_methods(*attr_names); end
   def undefine_attribute_methods; end
 
@@ -129,7 +126,7 @@ module ActiveModel::AttributeMethods::ClassMethods
 
   def attribute_method_matchers_cache; end
   def attribute_method_matchers_matching(method_name); end
-  def define_proxy_call(include_private, mod, name, target, *extra); end
+  def define_proxy_call(include_private, code_generator, name, target, *extra); end
   def generated_attribute_methods; end
   def instance_method_already_implemented?(method_name); end
 end
@@ -139,7 +136,6 @@ class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher
 
   def match(method_name); end
   def method_name(attr_name); end
-  def plain?; end
   def prefix; end
   def suffix; end
   def target; end
@@ -162,7 +158,7 @@ end
 ActiveModel::AttributeMethods::NAME_COMPILABLE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
 class ActiveModel::AttributeMutationTracker
-  def initialize(attributes, forced_changes = T.unsafe(nil)); end
+  def initialize(attributes); end
 
   def any_changes?; end
   def change_to_attribute(attr_name); end
@@ -216,9 +212,9 @@ class ActiveModel::AttributeSet
 
   private
 
+  def default_attribute(name); end
   def initialize_clone(_); end
   def initialize_dup(_); end
-  def initialized_attributes; end
 end
 
 class ActiveModel::AttributeSet::Builder
@@ -251,12 +247,14 @@ module ActiveModel::Attributes
 
   def attribute_names; end
   def attributes; end
+  def freeze; end
 
   private
 
+  def _write_attribute(attr_name, value); end
   def attribute(attr_name); end
-  def attribute=(attribute_name, value); end
-  def write_attribute(attr_name, value); end
+  def attribute=(attr_name, value); end
+  def initialize_dup(other); end
 end
 
 module ActiveModel::Attributes::ClassMethods
@@ -266,7 +264,7 @@ module ActiveModel::Attributes::ClassMethods
   private
 
   def define_default_attribute(name, value, type); end
-  def define_method_attribute=(name); end
+  def define_method_attribute=(name, owner:); end
 end
 
 class ActiveModel::BlockValidator < ::ActiveModel::EachValidator
@@ -307,6 +305,28 @@ module ActiveModel::Conversion::ClassMethods
   def _to_partial_path; end
 end
 
+class ActiveModel::DeprecationHandlingDetailsHash < ::SimpleDelegator
+  def initialize(details); end
+end
+
+class ActiveModel::DeprecationHandlingMessageArray < ::SimpleDelegator
+  def initialize(content, errors, attribute); end
+
+  def <<(message); end
+  def clear; end
+end
+
+class ActiveModel::DeprecationHandlingMessageHash < ::SimpleDelegator
+  def initialize(errors); end
+
+  def []=(attribute, value); end
+  def delete(attribute); end
+
+  private
+
+  def prepare_content; end
+end
+
 module ActiveModel::Dirty
   extend(::ActiveSupport::Concern)
 
@@ -314,7 +334,8 @@ module ActiveModel::Dirty
 
   def attribute_changed?(attr_name, **options); end
   def attribute_changed_in_place?(attr_name); end
-  def attribute_previously_changed?(attr_name); end
+  def attribute_previously_changed?(attr_name, **options); end
+  def attribute_previously_was(attr_name); end
   def attribute_was(attr_name); end
   def changed; end
   def changed?; end
@@ -346,63 +367,111 @@ class ActiveModel::EachValidator < ::ActiveModel::Validator
   def check_validity!; end
   def validate(record); end
   def validate_each(record, attribute, value); end
+
+  private
+
+  def read_attribute_for_validation(record, attr_name); end
 end
+
+class ActiveModel::Error
+  def initialize(base, attribute, type = T.unsafe(nil), **options); end
+
+  def ==(other); end
+  def attribute; end
+  def base; end
+  def detail; end
+  def details; end
+  def eql?(other); end
+  def full_message; end
+  def hash; end
+  def i18n_customize_full_message; end
+  def i18n_customize_full_message=(_arg0); end
+  def i18n_customize_full_message?; end
+  def inspect; end
+  def match?(attribute, type = T.unsafe(nil), **options); end
+  def message; end
+  def options; end
+  def raw_type; end
+  def strict_match?(attribute, type, **options); end
+  def type; end
+
+  protected
+
+  def attributes_for_hash; end
+
+  private
+
+  def initialize_dup(other); end
+
+  class << self
+    def full_message(attribute, message, base); end
+    def generate_message(attribute, type, base, options); end
+    def i18n_customize_full_message; end
+    def i18n_customize_full_message=(value); end
+    def i18n_customize_full_message?; end
+  end
+end
+
+ActiveModel::Error::CALLBACKS_OPTIONS = T.let(T.unsafe(nil), Array)
+
+ActiveModel::Error::MESSAGE_OPTIONS = T.let(T.unsafe(nil), Array)
 
 class ActiveModel::Errors
   include(::Enumerable)
+  extend(::Forwardable)
 
   def initialize(base); end
 
   def [](attribute); end
-  def add(attribute, message = T.unsafe(nil), options = T.unsafe(nil)); end
-  def added?(attribute, message = T.unsafe(nil), options = T.unsafe(nil)); end
+  def add(attribute, type = T.unsafe(nil), **options); end
+  def added?(attribute, type = T.unsafe(nil), options = T.unsafe(nil)); end
+  def any?(*args, &block); end
   def as_json(options = T.unsafe(nil)); end
-  def blank?; end
-  def clear; end
+  def attribute_names; end
+  def blank?(*args, &block); end
+  def clear(*args, &block); end
   def copy!(other); end
-  def count; end
-  def delete(key); end
+  def count(*args, &block); end
+  def delete(attribute, type = T.unsafe(nil), **options); end
   def details; end
-  def each; end
-  def empty?; end
+  def each(&block); end
+  def empty?(*args, &block); end
+  def errors; end
   def full_message(attribute, message); end
   def full_messages; end
   def full_messages_for(attribute); end
   def generate_message(attribute, type = T.unsafe(nil), options = T.unsafe(nil)); end
+  def group_by_attribute; end
   def has_key?(attribute); end
+  def import(error, override_options = T.unsafe(nil)); end
   def include?(attribute); end
   def init_with(coder); end
   def key?(attribute); end
   def keys; end
-  def marshal_dump; end
   def marshal_load(array); end
   def merge!(other); end
   def messages; end
-  def of_kind?(attribute, message = T.unsafe(nil)); end
-  def size; end
+  def messages_for(attribute); end
+  def objects; end
+  def of_kind?(attribute, type = T.unsafe(nil)); end
+  def size(*args, &block); end
   def slice!(*keys); end
   def to_a; end
+  def to_h; end
   def to_hash(full_messages = T.unsafe(nil)); end
   def to_xml(options = T.unsafe(nil)); end
+  def uniq!(*args, &block); end
   def values; end
+  def where(attribute, type = T.unsafe(nil), **options); end
 
   private
 
-  def apply_default_array(hash); end
+  def add_from_legacy_details_hash(details); end
+  def deprecation_removal_warning(method_name, alternative_message = T.unsafe(nil)); end
+  def deprecation_rename_warning(old_method_name, new_method_name); end
   def initialize_dup(other); end
-  def normalize_detail(message, options); end
-  def normalize_message(attribute, message, options); end
-  def without_default_proc(hash); end
-
-  class << self
-    def i18n_customize_full_message; end
-    def i18n_customize_full_message=(_arg0); end
-  end
+  def normalize_arguments(attribute, type, **options); end
 end
-
-ActiveModel::Errors::CALLBACKS_OPTIONS = T.let(T.unsafe(nil), Array)
-
-ActiveModel::Errors::MESSAGE_OPTIONS = T.let(T.unsafe(nil), Array)
 
 class ActiveModel::ForbiddenAttributesError < ::StandardError
 end
@@ -416,7 +485,7 @@ module ActiveModel::ForbiddenAttributesProtection
 end
 
 class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTracker
-  def initialize(attributes, forced_changes = T.unsafe(nil)); end
+  def initialize(attributes); end
 
   def change_to_attribute(attr_name); end
   def changed_in_place?(attr_name); end
@@ -441,14 +510,13 @@ class ActiveModel::LazyAttributeHash
   def [](key); end
   def []=(key, value); end
   def deep_dup; end
-  def each_key(*args, &block); end
+  def each_key(&block); end
   def each_value(*args, &block); end
   def except(*args, &block); end
   def fetch(*args, &block); end
   def key?(key); end
   def marshal_dump; end
   def marshal_load(values); end
-  def select; end
   def transform_values(*args, &block); end
 
   protected
@@ -462,6 +530,26 @@ class ActiveModel::LazyAttributeHash
   def default_attributes; end
   def delegate_hash; end
   def initialize_dup(_); end
+  def types; end
+  def values; end
+end
+
+class ActiveModel::LazyAttributeSet < ::ActiveModel::AttributeSet
+  def initialize(values, types, additional_types, default_attributes, attributes = T.unsafe(nil)); end
+
+  def fetch_value(name, &block); end
+  def key?(name); end
+  def keys; end
+
+  protected
+
+  def attributes; end
+
+  private
+
+  def additional_types; end
+  def default_attribute(name, value_present = T.unsafe(nil), value = T.unsafe(nil)); end
+  def default_attributes; end
   def types; end
   def values; end
 end
@@ -514,17 +602,26 @@ class ActiveModel::Name
   def as_json(*args, &block); end
   def cache_key; end
   def collection; end
+  def collection=(_arg0); end
   def element; end
+  def element=(_arg0); end
   def eql?(*args, &block); end
   def human(options = T.unsafe(nil)); end
   def i18n_key; end
+  def i18n_key=(_arg0); end
   def match?(*args, &block); end
   def name; end
+  def name=(_arg0); end
   def param_key; end
+  def param_key=(_arg0); end
   def plural; end
+  def plural=(_arg0); end
   def route_key; end
+  def route_key=(_arg0); end
   def singular; end
+  def singular=(_arg0); end
   def singular_route_key; end
+  def singular_route_key=(_arg0); end
   def to_s(*args, &block); end
   def to_str(*args, &block); end
 
@@ -549,6 +646,15 @@ module ActiveModel::Naming
 
     def model_name_from_record_or_class(record_or_class); end
   end
+end
+
+class ActiveModel::NestedError < ::ActiveModel::Error
+  extend(::Forwardable)
+
+  def initialize(base, inner_error, override_options = T.unsafe(nil)); end
+
+  def inner_error; end
+  def message(*args, &block); end
 end
 
 class ActiveModel::NullMutationTracker
@@ -603,6 +709,7 @@ module ActiveModel::Serialization
   private
 
   def serializable_add_includes(options = T.unsafe(nil)); end
+  def serializable_attributes(attribute_names); end
 end
 
 module ActiveModel::Serializers
@@ -677,6 +784,7 @@ ActiveModel::Type::Boolean::FALSE_VALUES = T.let(T.unsafe(nil), Set)
 
 class ActiveModel::Type::Date < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Timezone)
+  include(::ActiveModel::Type::Helpers::AcceptsMultiparameterTime::InstanceMethods)
 
   def type; end
   def type_cast_for_schema(value); end
@@ -695,6 +803,7 @@ ActiveModel::Type::Date::ISO_DATE = T.let(T.unsafe(nil), Regexp)
 class ActiveModel::Type::DateTime < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Timezone)
   include(::ActiveModel::Type::Helpers::TimeValue)
+  include(::ActiveModel::Type::Helpers::AcceptsMultiparameterTime::InstanceMethods)
 
   def type; end
 
@@ -740,6 +849,13 @@ class ActiveModel::Type::Helpers::AcceptsMultiparameterTime < ::Module
   def initialize(defaults: T.unsafe(nil)); end
 end
 
+module ActiveModel::Type::Helpers::AcceptsMultiparameterTime::InstanceMethods
+  def assert_valid_value(value); end
+  def cast(value); end
+  def serialize(value); end
+  def value_constructed_by_mass_assignment?(value); end
+end
+
 module ActiveModel::Type::Helpers::Mutable
   def cast(value); end
   def changed_in_place?(raw_old_value, new_value); end
@@ -776,6 +892,8 @@ module ActiveModel::Type::Helpers::Timezone
 end
 
 class ActiveModel::Type::ImmutableString < ::ActiveModel::Type::Value
+  def initialize(**args); end
+
   def serialize(value); end
   def type; end
 
@@ -787,9 +905,10 @@ end
 class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Numeric)
 
-  def initialize(*_arg0, **_arg1); end
+  def initialize(**_arg0); end
 
   def deserialize(value); end
+  def serializable?(value); end
   def serialize(value); end
   def type; end
 
@@ -798,6 +917,7 @@ class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   def _limit; end
   def cast_value(value); end
   def ensure_in_range(value); end
+  def in_range?(value); end
   def max_value; end
   def min_value; end
   def range; end
@@ -825,13 +945,15 @@ class ActiveModel::Type::Registry
 
   private
 
-  def find_registration(symbol, *args); end
+  def find_registration(symbol, *args, **kwargs); end
+  def initialize_dup(other); end
   def registration_klass; end
   def registrations; end
 end
 
 class ActiveModel::Type::String < ::ActiveModel::Type::ImmutableString
   def changed_in_place?(raw_old_value, new_value); end
+  def to_immutable_string; end
 
   private
 
@@ -841,6 +963,7 @@ end
 class ActiveModel::Type::Time < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Timezone)
   include(::ActiveModel::Type::Helpers::TimeValue)
+  include(::ActiveModel::Type::Helpers::AcceptsMultiparameterTime::InstanceMethods)
 
   def type; end
   def user_input_in_time_zone(value); end
@@ -854,7 +977,7 @@ class ActiveModel::Type::Value
   def initialize(precision: T.unsafe(nil), limit: T.unsafe(nil), scale: T.unsafe(nil)); end
 
   def ==(other); end
-  def assert_valid_value(*_arg0); end
+  def assert_valid_value(_); end
   def binary?; end
   def cast(value); end
   def changed?(old_value, new_value, _new_value_before_type_cast); end
@@ -867,6 +990,7 @@ class ActiveModel::Type::Value
   def map(value); end
   def precision; end
   def scale; end
+  def serializable?(value); end
   def serialize(value); end
   def type; end
   def type_cast_for_schema(value); end
@@ -1075,7 +1199,7 @@ ActiveModel::Validations::LengthValidator::RESERVED_OPTIONS = T.let(T.unsafe(nil
 
 class ActiveModel::Validations::NumericalityValidator < ::ActiveModel::EachValidator
   def check_validity!; end
-  def validate_each(record, attr_name, value); end
+  def validate_each(record, attr_name, value, precision: T.unsafe(nil), scale: T.unsafe(nil)); end
 
   private
 
@@ -1083,8 +1207,10 @@ class ActiveModel::Validations::NumericalityValidator < ::ActiveModel::EachValid
   def filtered_options(value); end
   def is_hexadecimal_literal?(raw_value); end
   def is_integer?(raw_value); end
-  def is_number?(raw_value); end
-  def parse_as_number(raw_value); end
+  def is_number?(raw_value, precision, scale); end
+  def parse_as_number(raw_value, precision, scale); end
+  def parse_float(raw_value, precision, scale); end
+  def read_attribute_for_validation(record, attr_name); end
   def record_attribute_changed_in_place?(record, attr_name); end
 end
 

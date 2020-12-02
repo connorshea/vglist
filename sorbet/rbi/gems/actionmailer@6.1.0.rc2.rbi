@@ -54,16 +54,12 @@ class ActionMailer::Base < ::AbstractController::Base
   def __callbacks; end
   def __callbacks?; end
   def _helper_methods; end
-  def _helper_methods=(val); end
+  def _helper_methods=(_arg0); end
   def _helper_methods?; end
-  def _helpers; end
-  def _helpers=(val); end
-  def _helpers?; end
   def _process_action_callbacks; end
-  def _protected_ivars; end
   def _run_process_action_callbacks(&block); end
   def _view_cache_dependencies; end
-  def _view_cache_dependencies=(val); end
+  def _view_cache_dependencies=(_arg0); end
   def _view_cache_dependencies?; end
   def asset_host; end
   def asset_host=(value); end
@@ -73,28 +69,29 @@ class ActionMailer::Base < ::AbstractController::Base
   def default_asset_host_protocol; end
   def default_asset_host_protocol=(value); end
   def default_params; end
-  def default_params=(val); end
+  def default_params=(_arg0); end
   def default_params?; end
   def default_static_extension; end
   def default_static_extension=(value); end
   def deliver_later_queue_name; end
-  def deliver_later_queue_name=(obj); end
+  def deliver_later_queue_name=(val); end
   def delivery_job; end
-  def delivery_job=(val); end
+  def delivery_job=(_arg0); end
   def delivery_job?; end
   def delivery_method; end
-  def delivery_method=(val); end
+  def delivery_method=(_arg0); end
   def delivery_method?; end
   def delivery_methods; end
-  def delivery_methods=(val); end
+  def delivery_methods=(_arg0); end
   def delivery_methods?; end
+  def email_address_with_name(address, name); end
   def enable_fragment_cache_logging; end
   def enable_fragment_cache_logging=(value); end
   def file_settings; end
-  def file_settings=(val); end
+  def file_settings=(_arg0); end
   def file_settings?; end
   def fragment_cache_keys; end
-  def fragment_cache_keys=(val); end
+  def fragment_cache_keys=(_arg0); end
   def fragment_cache_keys?; end
   def headers(args = T.unsafe(nil)); end
   def javascripts_dir; end
@@ -110,33 +107,34 @@ class ActionMailer::Base < ::AbstractController::Base
   def perform_caching; end
   def perform_caching=(value); end
   def perform_deliveries; end
-  def perform_deliveries=(obj); end
+  def perform_deliveries=(val); end
   def preview_interceptors; end
   def preview_path; end
   def process(method_name, *args); end
   def raise_delivery_errors; end
-  def raise_delivery_errors=(obj); end
+  def raise_delivery_errors=(val); end
   def relative_url_root; end
   def relative_url_root=(value); end
   def rescue_handlers; end
-  def rescue_handlers=(val); end
+  def rescue_handlers=(_arg0); end
   def rescue_handlers?; end
   def sendmail_settings; end
-  def sendmail_settings=(val); end
+  def sendmail_settings=(_arg0); end
   def sendmail_settings?; end
   def show_previews; end
   def smtp_settings; end
-  def smtp_settings=(val); end
+  def smtp_settings=(_arg0); end
   def smtp_settings?; end
   def stylesheets_dir; end
   def stylesheets_dir=(value); end
   def test_settings; end
-  def test_settings=(val); end
+  def test_settings=(_arg0); end
   def test_settings?; end
 
   private
 
   def _layout(lookup_context, formats); end
+  def _protected_ivars; end
   def apply_defaults(headers); end
   def assign_headers_to_message(message, headers); end
   def collect_responses(headers, &block); end
@@ -151,27 +149,26 @@ class ActionMailer::Base < ::AbstractController::Base
   def instrument_name; end
   def instrument_payload(key); end
   def set_content_type(m, user_content_type, class_default); end
+  def wrap_inline_attachments(message); end
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _helper_methods; end
-    def _helper_methods=(val); end
+    def _helper_methods=(value); end
     def _helper_methods?; end
     def _helpers; end
-    def _helpers=(val); end
-    def _helpers?; end
     def _layout; end
-    def _layout=(val); end
+    def _layout=(value); end
     def _layout?; end
     def _layout_conditions; end
-    def _layout_conditions=(val); end
+    def _layout_conditions=(value); end
     def _layout_conditions?; end
     def _process_action_callbacks; end
     def _process_action_callbacks=(value); end
     def _view_cache_dependencies; end
-    def _view_cache_dependencies=(val); end
+    def _view_cache_dependencies=(value); end
     def _view_cache_dependencies?; end
     def asset_host; end
     def asset_host=(value); end
@@ -183,29 +180,30 @@ class ActionMailer::Base < ::AbstractController::Base
     def default_asset_host_protocol=(value); end
     def default_options=(value = T.unsafe(nil)); end
     def default_params; end
-    def default_params=(val); end
+    def default_params=(value); end
     def default_params?; end
     def default_static_extension; end
     def default_static_extension=(value); end
     def deliver_later_queue_name; end
-    def deliver_later_queue_name=(obj); end
+    def deliver_later_queue_name=(val); end
     def deliver_mail(mail); end
     def delivery_job; end
-    def delivery_job=(val); end
+    def delivery_job=(value); end
     def delivery_job?; end
     def delivery_method; end
-    def delivery_method=(val); end
+    def delivery_method=(value); end
     def delivery_method?; end
     def delivery_methods; end
-    def delivery_methods=(val); end
+    def delivery_methods=(value); end
     def delivery_methods?; end
+    def email_address_with_name(address, name); end
     def enable_fragment_cache_logging; end
     def enable_fragment_cache_logging=(value); end
     def file_settings; end
-    def file_settings=(val); end
+    def file_settings=(value); end
     def file_settings?; end
     def fragment_cache_keys; end
-    def fragment_cache_keys=(val); end
+    def fragment_cache_keys=(value); end
     def fragment_cache_keys?; end
     def javascripts_dir; end
     def javascripts_dir=(value); end
@@ -216,14 +214,13 @@ class ActionMailer::Base < ::AbstractController::Base
     def perform_caching; end
     def perform_caching=(value); end
     def perform_deliveries; end
-    def perform_deliveries=(obj); end
+    def perform_deliveries=(val); end
     def preview_interceptors; end
-    def preview_interceptors=(obj); end
+    def preview_interceptors=(val); end
     def preview_path; end
-    def preview_path=(obj); end
+    def preview_path=(val); end
     def raise_delivery_errors; end
-    def raise_delivery_errors=(obj); end
-    def receive(raw_mail); end
+    def raise_delivery_errors=(val); end
     def register_interceptor(interceptor); end
     def register_interceptors(*interceptors); end
     def register_observer(observer); end
@@ -231,21 +228,21 @@ class ActionMailer::Base < ::AbstractController::Base
     def relative_url_root; end
     def relative_url_root=(value); end
     def rescue_handlers; end
-    def rescue_handlers=(val); end
+    def rescue_handlers=(value); end
     def rescue_handlers?; end
     def sendmail_settings; end
-    def sendmail_settings=(val); end
+    def sendmail_settings=(value); end
     def sendmail_settings?; end
     def show_previews; end
-    def show_previews=(obj); end
+    def show_previews=(val); end
     def smtp_settings; end
-    def smtp_settings=(val); end
+    def smtp_settings=(value); end
     def smtp_settings?; end
     def stylesheets_dir; end
     def stylesheets_dir=(value); end
     def supports_path?; end
     def test_settings; end
-    def test_settings=(val); end
+    def test_settings=(value); end
     def test_settings?; end
     def unregister_interceptor(interceptor); end
     def unregister_interceptors(*interceptors); end
@@ -259,6 +256,13 @@ class ActionMailer::Base < ::AbstractController::Base
     def respond_to_missing?(method, include_all = T.unsafe(nil)); end
     def set_payload_for_mail(payload, mail); end
   end
+end
+
+module ActionMailer::Base::HelperMethods
+  include(::ActionMailer::MailHelper)
+
+  def combined_fragment_cache_key(*args, &block); end
+  def view_cache_dependencies(*args, &block); end
 end
 
 class ActionMailer::Base::LateAttachmentsProxy < ::SimpleDelegator
@@ -277,7 +281,7 @@ class ActionMailer::Base::NullMail
   def respond_to?(string, include_all = T.unsafe(nil)); end
 end
 
-ActionMailer::Base::PROTECTED_IVARS = T.let(T.unsafe(nil), Set)
+ActionMailer::Base::PROTECTED_IVARS = T.let(T.unsafe(nil), Array)
 
 class ActionMailer::Collector
   include(::AbstractController::Collector)
@@ -345,7 +349,6 @@ class ActionMailer::LogSubscriber < ::ActiveSupport::LogSubscriber
   def deliver(event); end
   def logger; end
   def process(event); end
-  def receive(event); end
 end
 
 class ActionMailer::MailDeliveryJob < ::ActiveJob::Base
@@ -386,6 +389,7 @@ class ActionMailer::MessageDelivery
 
   def enqueue_delivery(delivery_method, options = T.unsafe(nil)); end
   def processed_mailer; end
+  def use_new_args?(job); end
 end
 
 class ActionMailer::NonInferrableMailerError < ::StandardError
@@ -502,13 +506,13 @@ class ActionMailer::TestCase < ::ActiveSupport::TestCase
   extend(::ActionMailer::TestCase::Behavior::ClassMethods)
 
   def _mailer_class; end
-  def _mailer_class=(val); end
+  def _mailer_class=(_arg0); end
   def _mailer_class?; end
 
   class << self
     def __callbacks; end
     def _mailer_class; end
-    def _mailer_class=(val); end
+    def _mailer_class=(value); end
     def _mailer_class?; end
   end
 end

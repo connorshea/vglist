@@ -45,6 +45,7 @@ class Rails::Application < ::Rails::Engine
   def config_for(name, env: T.unsafe(nil)); end
   def console(&blk); end
   def credentials; end
+  def credentials=(_arg0); end
   def default_url_options(*args, &block); end
   def default_url_options=(arg); end
   def eager_load!; end
@@ -76,6 +77,7 @@ class Rails::Application < ::Rails::Engine
   def secret_key_base; end
   def secrets; end
   def secrets=(_arg0); end
+  def server(&blk); end
   def to_app; end
   def watchable_args; end
 
@@ -87,6 +89,7 @@ class Rails::Application < ::Rails::Engine
   def run_console_blocks(app); end
   def run_generators_blocks(app); end
   def run_runner_blocks(app); end
+  def run_server_blocks(app); end
   def run_tasks_blocks(app); end
   def validate_secret_key_base(secret_key_base); end
 
@@ -94,6 +97,7 @@ class Rails::Application < ::Rails::Engine
 
   def build_middleware; end
   def build_request(env); end
+  def coerce_same_site_protection(protection); end
   def generate_development_secret; end
 
   class << self
@@ -171,6 +175,8 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def force_ssl=(_arg0); end
   def helpers_paths; end
   def helpers_paths=(_arg0); end
+  def host_authorization; end
+  def host_authorization=(_arg0); end
   def hosts; end
   def hosts=(_arg0); end
   def load_database_yaml; end
@@ -185,10 +191,13 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def logger; end
   def logger=(_arg0); end
   def paths; end
+  def permissions_policy(&block); end
   def public_file_server; end
   def public_file_server=(_arg0); end
   def railties_order; end
   def railties_order=(_arg0); end
+  def rake_eager_load; end
+  def rake_eager_load=(_arg0); end
   def read_encrypted_secrets; end
   def read_encrypted_secrets=(_arg0); end
   def relative_url_root; end
@@ -262,17 +271,6 @@ end
 
 Rails::Application::INITIAL_VARIABLES = T.let(T.unsafe(nil), Array)
 
-class Rails::Application::NonSymbolAccessDeprecatedHash < ::ActiveSupport::HashWithIndifferentAccess
-  def initialize(value = T.unsafe(nil)); end
-
-  def []=(key, value); end
-
-  private
-
-  def convert_key(key); end
-  def convert_value(value, options = T.unsafe(nil)); end
-end
-
 class Rails::Application::RoutesReloader
   def initialize; end
 
@@ -280,6 +278,7 @@ class Rails::Application::RoutesReloader
   def eager_load=(_arg0); end
   def execute(*args, &block); end
   def execute_if_updated(*args, &block); end
+  def external_routes; end
   def paths; end
   def reload!; end
   def route_sets; end
@@ -305,7 +304,6 @@ class Rails::ApplicationController < ::ActionController::Base
 
   class << self
     def __callbacks; end
-    def _helpers; end
     def _layout; end
     def _layout_conditions; end
     def middleware_stack; end
@@ -416,6 +414,8 @@ end
 class Rails::Configuration::Generators
   def initialize; end
 
+  def after_generate(&block); end
+  def after_generate_callbacks; end
   def aliases; end
   def aliases=(_arg0); end
   def api_only; end
@@ -446,6 +446,9 @@ class Rails::Configuration::MiddlewareStackProxy
   def insert_after(*args, &block); end
   def insert_before(*args, &block); end
   def merge_into(other); end
+  def move(*args, &block); end
+  def move_after(*args, &block); end
+  def move_before(*args, &block); end
   def swap(*args, &block); end
   def unshift(*args, &block); end
   def use(*args, &block); end
@@ -473,6 +476,7 @@ class Rails::Engine < ::Rails::Railtie
   def load_generators(app = T.unsafe(nil)); end
   def load_runner(app = T.unsafe(nil)); end
   def load_seed; end
+  def load_server(app = T.unsafe(nil)); end
   def load_tasks(app = T.unsafe(nil)); end
   def middleware(*args, &block); end
   def paths(*args, &block); end
@@ -548,9 +552,11 @@ module Rails::Generators
   extend(::Rails::Command::Behavior::ClassMethods)
 
   def namespace; end
-  def namespace=(obj); end
+  def namespace=(val); end
 
   class << self
+    def add_generated_file(file); end
+    def after_generate_callbacks; end
     def aliases; end
     def api_only!; end
     def configure!(config); end
@@ -562,8 +568,7 @@ module Rails::Generators
     def hide_namespaces(*namespaces); end
     def invoke(namespace, args = T.unsafe(nil), config = T.unsafe(nil)); end
     def namespace; end
-    def namespace=(obj); end
-    def no_color!; end
+    def namespace=(val); end
     def options; end
     def print_generators; end
     def public_namespaces; end
@@ -577,6 +582,7 @@ module Rails::Generators
     def invoke_fallbacks_for(name, base); end
     def lookup_paths; end
     def print_list(base, namespaces); end
+    def run_after_generate_callback; end
   end
 end
 
@@ -597,11 +603,12 @@ module Rails::Generators::Actions
   def rake(command, options = T.unsafe(nil)); end
   def rakefile(filename, data = T.unsafe(nil)); end
   def readme(path); end
-  def route(routing_code); end
+  def route(routing_code, namespace: T.unsafe(nil)); end
   def vendor(filename, data = T.unsafe(nil)); end
 
   private
 
+  def append_file_with_newline(path, str, options = T.unsafe(nil)); end
   def execute_command(executor, command, options = T.unsafe(nil)); end
   def extify(name); end
   def indentation; end
@@ -810,30 +817,30 @@ class Rails::Generators::TestCase < ::ActiveSupport::TestCase
   extend(::Rails::Generators::Testing::Behaviour::ClassMethods)
 
   def current_path; end
-  def current_path=(val); end
+  def current_path=(_arg0); end
   def current_path?; end
   def default_arguments; end
-  def default_arguments=(val); end
+  def default_arguments=(_arg0); end
   def default_arguments?; end
   def destination_root; end
-  def destination_root=(val); end
+  def destination_root=(_arg0); end
   def destination_root?; end
   def generator_class; end
-  def generator_class=(val); end
+  def generator_class=(_arg0); end
   def generator_class?; end
 
   class << self
     def current_path; end
-    def current_path=(val); end
+    def current_path=(value); end
     def current_path?; end
     def default_arguments; end
-    def default_arguments=(val); end
+    def default_arguments=(value); end
     def default_arguments?; end
     def destination_root; end
-    def destination_root=(val); end
+    def destination_root=(value); end
     def destination_root?; end
     def generator_class; end
-    def generator_class=(val); end
+    def generator_class=(value); end
     def generator_class?; end
   end
 end
@@ -886,12 +893,12 @@ end
 
 module Rails::Info
   def properties; end
-  def properties=(obj); end
+  def properties=(val); end
 
   class << self
     def inspect; end
     def properties; end
-    def properties=(obj); end
+    def properties=(val); end
     def property(name, value = T.unsafe(nil)); end
     def to_html; end
     def to_s; end
@@ -903,19 +910,15 @@ class Rails::InfoController < ::Rails::ApplicationController
   def properties; end
   def routes; end
 
-  protected
-
-  def _layout_from_proc; end
-
   private
 
   def _layout(lookup_context, formats); end
+  def _layout_from_proc; end
   def match_route; end
   def with_leading_slash(path); end
 
   class << self
     def __callbacks; end
-    def _helpers; end
     def _layout; end
     def _layout_conditions; end
     def middleware_stack; end
@@ -983,9 +986,15 @@ class Rails::MailersController < ::Rails::ApplicationController
   class << self
     def __callbacks; end
     def _helper_methods; end
-    def _helpers; end
     def middleware_stack; end
   end
+end
+
+module Rails::MailersController::HelperMethods
+  include(::ActionController::Base::HelperMethods)
+
+  def locale_query(*args, &block); end
+  def part_query(*args, &block); end
 end
 
 module Rails::Paths
@@ -1017,6 +1026,7 @@ class Rails::Paths::Path
   def last; end
   def load_path!; end
   def load_path?; end
+  def paths; end
   def push(path); end
   def skip_autoload!; end
   def skip_autoload_once!; end
@@ -1086,6 +1096,7 @@ class Rails::Railtie
   def run_console_blocks(app); end
   def run_generators_blocks(app); end
   def run_runner_blocks(app); end
+  def run_server_blocks(app); end
   def run_tasks_blocks(app); end
 
   private
@@ -1103,6 +1114,7 @@ class Rails::Railtie
     def railtie_name(name = T.unsafe(nil)); end
     def rake_tasks(&blk); end
     def runner(&blk); end
+    def server(&blk); end
     def subclasses; end
 
     private
@@ -1188,7 +1200,6 @@ class Rails::SourceAnnotationExtractor::Annotation < ::Struct
   class << self
     def directories; end
     def extensions; end
-    def notes_task_deprecation_warning; end
     def register_directories(*dirs); end
     def register_extensions(*exts, &block); end
     def register_tags(*additional_tags); end
@@ -1235,7 +1246,11 @@ class Rails::TestUnit::Runner
 
     private
 
+    def default_test_exclude_glob; end
+    def default_test_glob; end
     def extract_filters(argv); end
+    def path_argument?(arg); end
+    def regexp_filter?(arg); end
   end
 end
 
@@ -1263,7 +1278,6 @@ class Rails::WelcomeController < ::Rails::ApplicationController
   def _layout(lookup_context, formats); end
 
   class << self
-    def _helpers; end
     def _layout; end
     def _layout_conditions; end
     def middleware_stack; end
@@ -1283,6 +1297,7 @@ class Rails::Generators::Actions::CreateMigration < ::Thor::Actions::CreateFile
   def existing_migration; end
   def exists?; end
   def identical?; end
+  def invoke!; end
   def migration_dir; end
   def migration_file_name; end
   def relative_existing_migration; end
@@ -1347,17 +1362,23 @@ module Rails::Generators::ModelHelpers
   def initialize(args, *_options); end
 
   def skip_warn; end
-  def skip_warn=(obj); end
+  def skip_warn=(val); end
+
+  private
+
+  def inflection_impossible?(name); end
+  def irregular_model_name?(name); end
+  def plural_model_name?(name); end
 
   class << self
     def included(base); end
     def skip_warn; end
-    def skip_warn=(obj); end
+    def skip_warn=(val); end
   end
 end
+
+Rails::Generators::ModelHelpers::INFLECTION_IMPOSSIBLE_ERROR_MESSAGE = T.let(T.unsafe(nil), String)
 
 Rails::Generators::ModelHelpers::IRREGULAR_MODEL_NAME_WARN_MESSAGE = T.let(T.unsafe(nil), String)
 
 Rails::Generators::ModelHelpers::PLURAL_MODEL_NAME_WARN_MESSAGE = T.let(T.unsafe(nil), String)
-
-SourceAnnotationExtractor = Rails::SourceAnnotationExtractor

@@ -24,7 +24,7 @@ module ActiveStorage::Attachment::CustomFinderMethods
   def find_by_id!(id); end
 end
 
-class ActiveStorage::Attachment < ActiveRecord::Base
+class ActiveStorage::Attachment < ActiveStorage::Record
   include ActiveStorage::Attachment::GeneratedAttributeMethods
   include ActiveStorage::Attachment::GeneratedAssociationMethods
   extend ActiveStorage::Attachment::CustomFinderMethods

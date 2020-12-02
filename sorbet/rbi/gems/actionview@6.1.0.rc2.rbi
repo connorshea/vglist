@@ -25,11 +25,31 @@ class ActionView::AbstractRenderer
   private
 
   def build_rendered_collection(templates, spacer); end
-  def build_rendered_template(content, template, layout = T.unsafe(nil)); end
+  def build_rendered_template(content, template); end
   def extract_details(options); end
-  def instrument(name, **options); end
   def prepend_formats(formats); end
 end
+
+ActionView::AbstractRenderer::NO_DETAILS = T.let(T.unsafe(nil), Hash)
+
+module ActionView::AbstractRenderer::ObjectRendering
+  def initialize(lookup_context, options); end
+
+
+  private
+
+  def local_variable(path); end
+  def merge_prefix_into_object_path(prefix, object_path); end
+  def partial_path(object, view); end
+  def raise_invalid_identifier(path); end
+  def raise_invalid_option_as(as); end
+end
+
+ActionView::AbstractRenderer::ObjectRendering::IDENTIFIER_ERROR_MESSAGE = T.let(T.unsafe(nil), String)
+
+ActionView::AbstractRenderer::ObjectRendering::OPTION_AS_ERROR_MESSAGE = T.let(T.unsafe(nil), String)
+
+ActionView::AbstractRenderer::ObjectRendering::PREFIXED_PARTIAL_NAMES = T.let(T.unsafe(nil), Concurrent::Map)
 
 class ActionView::AbstractRenderer::RenderedCollection
   def initialize(rendered_templates, spacer); end
@@ -51,11 +71,10 @@ class ActionView::AbstractRenderer::RenderedCollection::EmptyCollection
 end
 
 class ActionView::AbstractRenderer::RenderedTemplate
-  def initialize(body, layout, template); end
+  def initialize(body, template); end
 
   def body; end
   def format; end
-  def layout; end
   def template; end
 end
 
@@ -99,82 +118,85 @@ class ActionView::Base
   extend(::ActionView::Helpers::UrlHelper::ClassMethods)
   extend(::ActionView::Helpers::SanitizeHelper::ClassMethods)
 
-  def initialize(lookup_context = T.unsafe(nil), assigns = T.unsafe(nil), controller = T.unsafe(nil), formats = T.unsafe(nil)); end
+  def initialize(lookup_context, assigns, controller); end
 
   def _routes; end
-  def _routes=(val); end
+  def _routes=(_arg0); end
   def _routes?; end
-  def _run(method, template, locals, buffer, &block); end
+  def _run(method, template, locals, buffer, add_to_stack: T.unsafe(nil), &block); end
+  def annotate_rendered_view_with_filenames; end
+  def annotate_rendered_view_with_filenames=(val); end
   def assign(new_assigns); end
   def assigns; end
   def assigns=(_arg0); end
   def automatically_disable_submit_tag; end
-  def automatically_disable_submit_tag=(obj); end
+  def automatically_disable_submit_tag=(val); end
   def compiled_method_container; end
   def config; end
   def config=(_arg0); end
   def debug_missing_translation; end
-  def debug_missing_translation=(obj); end
+  def debug_missing_translation=(val); end
   def default_formats; end
-  def default_formats=(obj); end
+  def default_formats=(val); end
   def field_error_proc; end
-  def field_error_proc=(obj); end
+  def field_error_proc=(val); end
   def formats(*args, &block); end
   def formats=(arg); end
   def in_rendering_context(options); end
   def locale(*args, &block); end
   def locale=(arg); end
   def logger; end
-  def logger=(val); end
+  def logger=(_arg0); end
   def logger?; end
   def lookup_context; end
   def prefix_partial_path_with_controller_namespace; end
-  def prefix_partial_path_with_controller_namespace=(obj); end
+  def prefix_partial_path_with_controller_namespace=(_arg0); end
+  def prefix_partial_path_with_controller_namespace?; end
   def raise_on_missing_translations; end
-  def raise_on_missing_translations=(obj); end
+  def raise_on_missing_translations=(val); end
   def streaming_completion_on_exception; end
-  def streaming_completion_on_exception=(obj); end
+  def streaming_completion_on_exception=(val); end
   def view_paths(*args, &block); end
   def view_paths=(arg); end
   def view_renderer; end
 
   class << self
     def _routes; end
-    def _routes=(val); end
+    def _routes=(value); end
     def _routes?; end
+    def annotate_rendered_view_with_filenames; end
+    def annotate_rendered_view_with_filenames=(val); end
     def automatically_disable_submit_tag; end
-    def automatically_disable_submit_tag=(obj); end
-    def build_lookup_context(context); end
+    def automatically_disable_submit_tag=(val); end
     def cache_template_loading; end
     def cache_template_loading=(value); end
     def changed?(other); end
     def debug_missing_translation; end
-    def debug_missing_translation=(obj); end
+    def debug_missing_translation=(val); end
     def default_form_builder; end
-    def default_form_builder=(obj); end
+    def default_form_builder=(val); end
     def default_formats; end
-    def default_formats=(obj); end
+    def default_formats=(val); end
     def empty; end
     def erb_trim_mode=(arg); end
     def field_error_proc; end
-    def field_error_proc=(obj); end
+    def field_error_proc=(val); end
     def logger; end
-    def logger=(val); end
+    def logger=(value); end
     def logger?; end
     def prefix_partial_path_with_controller_namespace; end
-    def prefix_partial_path_with_controller_namespace=(obj); end
+    def prefix_partial_path_with_controller_namespace=(value); end
+    def prefix_partial_path_with_controller_namespace?; end
     def raise_on_missing_translations; end
-    def raise_on_missing_translations=(obj); end
+    def raise_on_missing_translations=(val); end
     def streaming_completion_on_exception; end
-    def streaming_completion_on_exception=(obj); end
+    def streaming_completion_on_exception=(val); end
     def with_context(context, assigns = T.unsafe(nil), controller = T.unsafe(nil)); end
     def with_empty_template_cache; end
     def with_view_paths(view_paths, assigns = T.unsafe(nil), controller = T.unsafe(nil)); end
     def xss_safe?; end
   end
 end
-
-ActionView::Base::NULL = T.let(T.unsafe(nil), Object)
 
 class ActionView::CacheExpiry
   def initialize(watcher:); end
@@ -192,6 +214,48 @@ class ActionView::CacheExpiry::Executor
   def initialize(watcher:); end
 
   def before(target); end
+end
+
+class ActionView::CollectionRenderer < ::ActionView::PartialRenderer
+  include(::ActionView::AbstractRenderer::ObjectRendering)
+
+  def render_collection_derive_partial(collection, context, block); end
+  def render_collection_with_partial(collection, partial, context, block); end
+
+  private
+
+  def collection_with_template(view, template, layout, collection); end
+  def render_collection(collection, view, path, template, layout, block); end
+  def retrieve_variable(path); end
+end
+
+class ActionView::CollectionRenderer::CollectionIterator
+  include(::Enumerable)
+
+  def initialize(collection); end
+
+  def each(&blk); end
+  def size; end
+end
+
+class ActionView::CollectionRenderer::MixedCollectionIterator < ::ActionView::CollectionRenderer::CollectionIterator
+  def initialize(collection, paths); end
+
+  def each_with_info; end
+end
+
+class ActionView::CollectionRenderer::PreloadCollectionIterator < ::ActionView::CollectionRenderer::SameCollectionIterator
+  def initialize(collection, path, variables, relation); end
+
+  def each_with_info; end
+  def from_collection(collection); end
+end
+
+class ActionView::CollectionRenderer::SameCollectionIterator < ::ActionView::CollectionRenderer::CollectionIterator
+  def initialize(collection, path, variables); end
+
+  def each_with_info; end
+  def from_collection(collection); end
 end
 
 module ActionView::Context
@@ -264,7 +328,7 @@ class ActionView::FallbackFileSystemResolver < ::ActionView::FileSystemResolver
 end
 
 class ActionView::FileSystemResolver < ::ActionView::PathResolver
-  def initialize(path, pattern = T.unsafe(nil)); end
+  def initialize(path); end
 
   def ==(resolver); end
   def eql?(resolver); end
@@ -274,14 +338,15 @@ class ActionView::FileSystemResolver < ::ActionView::PathResolver
 end
 
 class ActionView::FixtureResolver < ::ActionView::OptimizedFileSystemResolver
-  def initialize(hash = T.unsafe(nil), pattern = T.unsafe(nil)); end
+  def initialize(hash = T.unsafe(nil)); end
 
   def data; end
   def to_s; end
 
   private
 
-  def query(path, exts, _, locals, cache:); end
+  def find_candidate_template_paths(path); end
+  def source_for_template(template); end
 end
 
 module ActionView::Helpers
@@ -360,6 +425,7 @@ module ActionView::Helpers::AssetTagHelper
   def multiple_sources_tag_builder(type, sources); end
   def resolve_image_source(source, skip_pipeline); end
   def resolve_link_as(extname, mime_type); end
+  def send_preload_links_header(preload_links); end
 end
 
 module ActionView::Helpers::AssetUrlHelper
@@ -428,7 +494,7 @@ end
 
 module ActionView::Helpers::CacheHelper
   def cache(name = T.unsafe(nil), options = T.unsafe(nil), &block); end
-  def cache_fragment_name(name = T.unsafe(nil), skip_digest: T.unsafe(nil), virtual_path: T.unsafe(nil), digest_path: T.unsafe(nil)); end
+  def cache_fragment_name(name = T.unsafe(nil), skip_digest: T.unsafe(nil), digest_path: T.unsafe(nil)); end
   def cache_if(condition, name = T.unsafe(nil), options = T.unsafe(nil), &block); end
   def cache_unless(condition, name = T.unsafe(nil), options = T.unsafe(nil), &block); end
   def digest_path_from_template(template); end
@@ -436,7 +502,7 @@ module ActionView::Helpers::CacheHelper
   private
 
   def fragment_for(name = T.unsafe(nil), options = T.unsafe(nil), &block); end
-  def fragment_name_with_digest(name, virtual_path, digest_path); end
+  def fragment_name_with_digest(name, digest_path); end
   def read_fragment_for(name, options); end
   def write_fragment_for(name, options); end
 end
@@ -587,7 +653,7 @@ class ActionView::Helpers::FormBuilder
   def email_field(method, options = T.unsafe(nil)); end
   def emitted_hidden_id?; end
   def field_helpers; end
-  def field_helpers=(val); end
+  def field_helpers=(_arg0); end
   def field_helpers?; end
   def fields(scope = T.unsafe(nil), model: T.unsafe(nil), **options, &block); end
   def fields_for(record_name, record_object = T.unsafe(nil), fields_options = T.unsafe(nil), &block); end
@@ -639,7 +705,7 @@ class ActionView::Helpers::FormBuilder
   class << self
     def _to_partial_path; end
     def field_helpers; end
-    def field_helpers=(val); end
+    def field_helpers=(value); end
     def field_helpers?; end
   end
 end
@@ -669,9 +735,9 @@ module ActionView::Helpers::FormHelper
   def form_for(record, options = T.unsafe(nil), &block); end
   def form_with(model: T.unsafe(nil), scope: T.unsafe(nil), url: T.unsafe(nil), format: T.unsafe(nil), **options, &block); end
   def form_with_generates_ids; end
-  def form_with_generates_ids=(obj); end
+  def form_with_generates_ids=(val); end
   def form_with_generates_remote_forms; end
-  def form_with_generates_remote_forms=(obj); end
+  def form_with_generates_remote_forms=(val); end
   def hidden_field(object_name, method, options = T.unsafe(nil)); end
   def label(object_name, method, content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
   def month_field(object_name, method, options = T.unsafe(nil)); end
@@ -698,9 +764,9 @@ module ActionView::Helpers::FormHelper
 
   class << self
     def form_with_generates_ids; end
-    def form_with_generates_ids=(obj); end
+    def form_with_generates_ids=(val); end
     def form_with_generates_remote_forms; end
-    def form_with_generates_remote_forms=(obj); end
+    def form_with_generates_remote_forms=(val); end
   end
 end
 
@@ -732,7 +798,6 @@ module ActionView::Helpers::FormOptionsHelper
   def option_text_and_value(option); end
   def option_value_selected?(value, selected); end
   def prompt_text(prompt); end
-  def public_or_deprecated_send(item, value); end
   def value_for_collection(item, value); end
 end
 
@@ -751,10 +816,10 @@ module ActionView::Helpers::FormTagHelper
   def datetime_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
   def datetime_local_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
   def default_enforce_utf8; end
-  def default_enforce_utf8=(obj); end
+  def default_enforce_utf8=(val); end
   def email_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
   def embed_authenticity_token_in_remote_forms; end
-  def embed_authenticity_token_in_remote_forms=(obj); end
+  def embed_authenticity_token_in_remote_forms=(val); end
   def field_set_tag(legend = T.unsafe(nil), options = T.unsafe(nil), &block); end
   def file_field_tag(name, options = T.unsafe(nil)); end
   def form_tag(url_for_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
@@ -790,9 +855,9 @@ module ActionView::Helpers::FormTagHelper
 
   class << self
     def default_enforce_utf8; end
-    def default_enforce_utf8=(obj); end
+    def default_enforce_utf8=(val); end
     def embed_authenticity_token_in_remote_forms; end
-    def embed_authenticity_token_in_remote_forms=(obj); end
+    def embed_authenticity_token_in_remote_forms=(val); end
   end
 end
 
@@ -891,20 +956,31 @@ module ActionView::Helpers::TagHelper
   extend(::ActiveSupport::Concern)
 
   def cdata_section(content); end
+  def class_names(*args); end
   def content_tag(name, content_or_options_with_block = T.unsafe(nil), options = T.unsafe(nil), escape = T.unsafe(nil), &block); end
   def escape_once(html); end
   def tag(name = T.unsafe(nil), options = T.unsafe(nil), open = T.unsafe(nil), escape = T.unsafe(nil)); end
+  def token_list(*args); end
 
   private
 
+  def build_tag_values(*args); end
   def tag_builder; end
+
+  class << self
+    def build_tag_values(*args); end
+  end
 end
+
+ActionView::Helpers::TagHelper::ARIA_PREFIXES = T.let(T.unsafe(nil), Set)
 
 ActionView::Helpers::TagHelper::BOOLEAN_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
+ActionView::Helpers::TagHelper::DATA_PREFIXES = T.let(T.unsafe(nil), Set)
+
 ActionView::Helpers::TagHelper::PRE_CONTENT_STRINGS = T.let(T.unsafe(nil), Hash)
 
-ActionView::Helpers::TagHelper::TAG_PREFIXES = T.let(T.unsafe(nil), Set)
+ActionView::Helpers::TagHelper::TAG_TYPES = T.let(T.unsafe(nil), Hash)
 
 class ActionView::Helpers::TagHelper::TagBuilder
   include(::ActionView::Helpers::CaptureHelper)
@@ -914,6 +990,7 @@ class ActionView::Helpers::TagHelper::TagBuilder
 
   def boolean_tag_option(key); end
   def content_tag_string(name, content, options, escape = T.unsafe(nil)); end
+  def p(*arguments, **options, &block); end
   def tag_option(key, value, escape); end
   def tag_options(options, escape = T.unsafe(nil)); end
   def tag_string(name, content = T.unsafe(nil), escape_attributes: T.unsafe(nil), **options, &block); end
@@ -1101,6 +1178,7 @@ class ActionView::Helpers::Tags::Label::LabelBuilder
   def initialize(template_object, object_name, method_name, object, tag_value); end
 
   def object; end
+  def to_s; end
   def translation; end
 end
 
@@ -1270,8 +1348,15 @@ module ActionView::Helpers::TranslationHelper
 
   private
 
+  def html_escape_translation_options(options); end
+  def html_safe_translation(translation); end
   def html_safe_translation_key?(key); end
+  def missing_translation(key, options); end
   def scope_key_by_partial(key); end
+
+  class << self
+    def i18n_option?(name); end
+  end
 end
 
 module ActionView::Helpers::UrlHelper
@@ -1288,15 +1373,14 @@ module ActionView::Helpers::UrlHelper
   def link_to_unless(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
   def link_to_unless_current(name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
   def mail_to(email_address, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
+  def phone_to(phone_number, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
+  def sms_to(phone_number, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
   def url_for(options = T.unsafe(nil)); end
-
-  protected
-
-  def _back_url; end
-  def _filtered_referrer; end
 
   private
 
+  def _back_url; end
+  def _filtered_referrer; end
   def add_method_to_attributes!(html_options, method); end
   def convert_options_to_data_attributes(options, html_options); end
   def link_to_remote_options?(options); end
@@ -1372,6 +1456,7 @@ class ActionView::LogSubscriber < ::ActiveSupport::LogSubscriber
 
   def logger; end
   def render_collection(event); end
+  def render_layout(event); end
   def render_template(event); end
   def start(name, id, payload); end
 
@@ -1379,7 +1464,7 @@ class ActionView::LogSubscriber < ::ActiveSupport::LogSubscriber
 
   def cache_message(payload); end
   def from_rails_root(string); end
-  def log_rendering_start(payload); end
+  def log_rendering_start(payload, name); end
   def rails_root; end
   def render_count(payload); end
 end
@@ -1397,16 +1482,16 @@ class ActionView::LookupContext
 
   def digest_cache; end
   def fallbacks; end
-  def fallbacks=(obj); end
+  def fallbacks=(val); end
   def formats=(values); end
   def locale; end
   def locale=(value); end
   def prefixes; end
   def prefixes=(_arg0); end
   def registered_details; end
-  def registered_details=(obj); end
-  def rendered_format(*args, &block); end
-  def rendered_format=(*args, &block); end
+  def registered_details=(val); end
+  def rendered_format; end
+  def rendered_format=(_arg0); end
   def with_prepended_formats(formats); end
 
   private
@@ -1415,10 +1500,10 @@ class ActionView::LookupContext
 
   class << self
     def fallbacks; end
-    def fallbacks=(obj); end
+    def fallbacks=(val); end
     def register_detail(name, &block); end
     def registered_details; end
-    def registered_details=(obj); end
+    def registered_details=(val); end
   end
 end
 
@@ -1468,7 +1553,6 @@ module ActionView::LookupContext::ViewPaths
   def exists?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), **options); end
   def find(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
   def find_all(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
-  def find_file(*args, &block); end
   def find_template(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
   def html_fallback_for_js; end
   def template_exists?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), **options); end
@@ -1500,6 +1584,20 @@ class ActionView::NullResolver < ::ActionView::PathResolver
   def query(path, exts, _, locals, cache:); end
 end
 
+class ActionView::ObjectRenderer < ::ActionView::PartialRenderer
+  include(::ActionView::AbstractRenderer::ObjectRendering)
+
+  def initialize(lookup_context, options); end
+
+  def render_object_derive_partial(object, context, block); end
+  def render_object_with_partial(object, partial, context, block); end
+
+  private
+
+  def render_partial_template(view, locals, template, layout, block); end
+  def template_keys(path); end
+end
+
 class ActionView::OptimizedFileSystemResolver < ::ActionView::FileSystemResolver
   def initialize(path); end
 
@@ -1507,6 +1605,7 @@ class ActionView::OptimizedFileSystemResolver < ::ActionView::FileSystemResolver
   private
 
   def build_regex(path, details); end
+  def find_candidate_template_paths(path); end
   def find_template_paths_from_details(path, details); end
 end
 
@@ -1532,46 +1631,26 @@ end
 class ActionView::PartialRenderer < ::ActionView::AbstractRenderer
   include(::ActionView::CollectionCaching)
 
-  def initialize(*_arg0); end
+  def initialize(lookup_context, options); end
 
   def collection_cache; end
-  def collection_cache=(obj); end
-  def render(context, options, block); end
+  def collection_cache=(val); end
+  def render(partial, context, block); end
 
   private
 
-  def as_variable(options); end
-  def collection_from_object; end
-  def collection_from_options; end
-  def collection_with_template(view, template); end
-  def collection_without_template(view); end
-  def find_partial(path, template_keys); end
   def find_template(path, locals); end
-  def merge_prefix_into_object_path(prefix, object_path); end
-  def partial_path(object, view); end
-  def prefixed_partial_names; end
-  def raise_invalid_identifier(path); end
-  def raise_invalid_option_as(as); end
-  def render_collection(view, template); end
-  def render_partial(view, template); end
-  def retrieve_template_keys(variable); end
-  def retrieve_variable(path, as); end
-  def setup(context, options, as, block); end
+  def render_partial_template(view, locals, template, layout, block); end
+  def template_keys(_); end
 
   class << self
     def collection_cache; end
-    def collection_cache=(obj); end
+    def collection_cache=(val); end
   end
 end
 
-ActionView::PartialRenderer::IDENTIFIER_ERROR_MESSAGE = T.let(T.unsafe(nil), String)
-
-ActionView::PartialRenderer::OPTION_AS_ERROR_MESSAGE = T.let(T.unsafe(nil), String)
-
-ActionView::PartialRenderer::PREFIXED_PARTIAL_NAMES = T.let(T.unsafe(nil), Concurrent::Map)
-
 class ActionView::PathResolver < ::ActionView::Resolver
-  def initialize(pattern = T.unsafe(nil)); end
+  def initialize; end
 
   def clear_cache; end
 
@@ -1587,6 +1666,7 @@ class ActionView::PathResolver < ::ActionView::Resolver
   def inside_path?(path, filename); end
   def query(path, details, formats, locals, cache:); end
   def reject_files_external_to_app(files); end
+  def source_for_template(template); end
 end
 
 ActionView::PathResolver::DEFAULT_PATTERN = T.let(T.unsafe(nil), String)
@@ -1608,7 +1688,6 @@ class ActionView::PathSet
   def find(*args); end
   def find_all(path, prefixes = T.unsafe(nil), *args); end
   def find_all_with_query(query); end
-  def find_file(*args, &block); end
   def include?(*args, &block); end
   def insert(*args); end
   def paths; end
@@ -1627,8 +1706,6 @@ end
 
 class ActionView::Railtie < ::Rails::Engine
 end
-
-ActionView::Railtie::NULL_OPTION = T.let(T.unsafe(nil), Object)
 
 module ActionView::RecordIdentifier
   include(::ActionView::ModelNaming)
@@ -1660,6 +1737,11 @@ class ActionView::Renderer
   def render_template(context, options); end
   def render_template_to_object(context, options); end
   def render_to_object(context, options); end
+
+  private
+
+  def collection_from_object(object); end
+  def collection_from_options(options); end
 end
 
 module ActionView::Rendering
@@ -1697,11 +1779,10 @@ class ActionView::Resolver
   def initialize; end
 
   def caching; end
-  def caching=(obj); end
+  def caching=(val); end
   def caching?(*args, &block); end
   def clear_cache; end
   def find_all(name, prefix = T.unsafe(nil), partial = T.unsafe(nil), details = T.unsafe(nil), key = T.unsafe(nil), locals = T.unsafe(nil)); end
-  def find_all_anywhere(*args, &block); end
   def find_all_with_query(query); end
 
   private
@@ -1712,7 +1793,7 @@ class ActionView::Resolver
 
   class << self
     def caching; end
-    def caching=(obj); end
+    def caching=(val); end
     def caching?; end
   end
 end
@@ -1759,6 +1840,11 @@ class ActionView::Resolver::Path
   class << self
     def build(name, prefix, partial); end
   end
+end
+
+class ActionView::Resolver::PathParser
+  def build_path_regex; end
+  def parse(path); end
 end
 
 module ActionView::RoutingUrlFor
@@ -1825,33 +1911,24 @@ class ActionView::Template
   extend(::ActiveSupport::Autoload)
   extend(::ActionView::Template::Handlers)
 
-  def initialize(source, identifier, handler, format: T.unsafe(nil), variant: T.unsafe(nil), locals: T.unsafe(nil), virtual_path: T.unsafe(nil), updated_at: T.unsafe(nil)); end
+  def initialize(source, identifier, handler, locals:, format: T.unsafe(nil), variant: T.unsafe(nil), virtual_path: T.unsafe(nil)); end
 
   def encode!; end
   def format; end
-  def formats(*args, &block); end
-  def formats=(*args, &block); end
   def handler; end
   def identifier; end
   def inspect; end
   def locals; end
-  def locals=(*args, &block); end
   def marshal_dump; end
   def marshal_load(array); end
-  def original_encoding(*args, &block); end
-  def refresh(*args, &block); end
-  def render(view, locals, buffer = T.unsafe(nil), &block); end
+  def render(view, locals, buffer = T.unsafe(nil), add_to_stack: T.unsafe(nil), &block); end
   def short_identifier; end
   def source; end
   def supports_streaming?; end
   def type; end
-  def updated_at(*args, &block); end
   def variable; end
   def variant; end
-  def variants(*args, &block); end
-  def variants=(*args, &block); end
   def virtual_path; end
-  def virtual_path=(*args, &block); end
 
   private
 
@@ -1864,11 +1941,6 @@ class ActionView::Template
   def instrument_render_template(&block); end
   def locals_code; end
   def method_name; end
-
-  class << self
-    def finalize_compiled_template_methods; end
-    def finalize_compiled_template_methods=(_); end
-  end
 end
 
 class ActionView::Template::Error < ::ActionView::ActionViewError
@@ -1891,10 +1963,9 @@ end
 ActionView::Template::Error::SOURCE_CODE_RADIUS = T.let(T.unsafe(nil), Integer)
 
 class ActionView::Template::HTML
-  def initialize(string, type = T.unsafe(nil)); end
+  def initialize(string, type); end
 
   def format; end
-  def formats(*args, &block); end
   def identifier; end
   def inspect; end
   def render(*args); end
@@ -1919,7 +1990,7 @@ end
 class ActionView::Template::Handlers::Builder
   def call(template, source); end
   def default_format; end
-  def default_format=(val); end
+  def default_format=(_arg0); end
   def default_format?; end
 
   private
@@ -1928,7 +1999,7 @@ class ActionView::Template::Handlers::Builder
 
   class << self
     def default_format; end
-    def default_format=(val); end
+    def default_format=(value); end
     def default_format?; end
   end
 end
@@ -1936,16 +2007,14 @@ end
 class ActionView::Template::Handlers::ERB
   def call(template, source); end
   def erb_implementation; end
-  def erb_implementation=(val); end
+  def erb_implementation=(_arg0); end
   def erb_implementation?; end
   def erb_trim_mode; end
-  def erb_trim_mode=(val); end
+  def erb_trim_mode=(_arg0); end
   def erb_trim_mode?; end
   def escape_ignore_list; end
-  def escape_ignore_list=(val); end
+  def escape_ignore_list=(_arg0); end
   def escape_ignore_list?; end
-  def escape_whitelist(*args, &block); end
-  def escape_whitelist=(*args, &block); end
   def handles_encoding?; end
   def supports_streaming?; end
 
@@ -1956,16 +2025,14 @@ class ActionView::Template::Handlers::ERB
   class << self
     def call(template, source); end
     def erb_implementation; end
-    def erb_implementation=(val); end
+    def erb_implementation=(value); end
     def erb_implementation?; end
     def erb_trim_mode; end
-    def erb_trim_mode=(val); end
+    def erb_trim_mode=(value); end
     def erb_trim_mode?; end
     def escape_ignore_list; end
-    def escape_ignore_list=(val); end
+    def escape_ignore_list=(value); end
     def escape_ignore_list?; end
-    def escape_whitelist(*args, &block); end
-    def escape_whitelist=(*args, &block); end
   end
 end
 
@@ -1991,10 +2058,6 @@ class ActionView::Template::Handlers::Html < ::ActionView::Template::Handlers::R
   def call(template, source); end
 end
 
-class ActionView::Template::Handlers::LegacyHandlerWrapper < ::SimpleDelegator
-  def call(view, source); end
-end
-
 class ActionView::Template::Handlers::Raw
   def call(template, source); end
 end
@@ -2005,22 +2068,23 @@ end
 
 ActionView::Template::Inline::Finalizer = T.let(T.unsafe(nil), Proc)
 
-class ActionView::Template::LegacyTemplate
-  def initialize(template, source); end
-
-  def source; end
-end
-
 class ActionView::Template::RawFile
   def initialize(filename); end
 
   def format; end
   def format=(_arg0); end
-  def formats(*args, &block); end
   def identifier; end
   def render(*args); end
   def type; end
   def type=(_arg0); end
+end
+
+class ActionView::Template::Renderable
+  def initialize(renderable); end
+
+  def format; end
+  def identifier; end
+  def render(context, *args); end
 end
 
 module ActionView::Template::Sources
@@ -2037,7 +2101,6 @@ class ActionView::Template::Text
   def initialize(string); end
 
   def format; end
-  def formats(*args, &block); end
   def identifier; end
   def inspect; end
   def render(*args); end
@@ -2048,14 +2111,14 @@ end
 
 class ActionView::Template::Types
   def type_klass; end
-  def type_klass=(obj); end
+  def type_klass=(val); end
 
   class << self
     def [](type); end
     def delegate_to(klass); end
     def symbols; end
     def type_klass; end
-    def type_klass=(obj); end
+    def type_klass=(val); end
   end
 end
 
@@ -2141,24 +2204,19 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   extend(::ActionView::TestCase::Behavior::ClassMethods)
 
   def _helper_methods; end
-  def _helper_methods=(val); end
+  def _helper_methods=(_arg0); end
   def _helper_methods?; end
-  def _helpers; end
-  def _helpers=(val); end
-  def _helpers?; end
   def debug_missing_translation; end
-  def debug_missing_translation=(obj); end
+  def debug_missing_translation=(val); end
 
   class << self
     def __callbacks; end
     def _helper_methods; end
-    def _helper_methods=(val); end
+    def _helper_methods=(value); end
     def _helper_methods?; end
     def _helpers; end
-    def _helpers=(val); end
-    def _helpers?; end
     def debug_missing_translation; end
-    def debug_missing_translation=(obj); end
+    def debug_missing_translation=(val); end
   end
 end
 
@@ -2207,10 +2265,8 @@ module ActionView::TestCase::Behavior
   def _user_defined_ivars; end
   def _view; end
   def document_root_element; end
-  def make_test_case_available_to_view!; end
   def method_missing(selector, *args); end
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
-  def say_no_to_protect_against_forgery!; end
   def view; end
   def view_assigns; end
 end
@@ -2245,6 +2301,11 @@ class ActionView::TestCase::Behavior::RenderedViewsCollection
   def view_rendered?(view, expected_locals); end
 end
 
+module ActionView::TestCase::HelperMethods
+  def _test_case; end
+  def protect_against_forgery?; end
+end
+
 class ActionView::TestCase::TestController < ::ActionController::Base
   include(::ActionDispatch::TestProcess::FixtureFile)
   include(::ActionDispatch::TestProcess)
@@ -2264,14 +2325,14 @@ class ActionView::TestCase::TestController < ::ActionController::Base
   def _layout(lookup_context, formats); end
 
   class << self
-    def _helpers; end
+    def controller_path; end
     def controller_path=(_arg0); end
     def middleware_stack; end
   end
 end
 
 class ActionView::UnboundTemplate
-  def initialize(source, identifer, handler, options); end
+  def initialize(source, identifier, handler, options); end
 
   def bind_locals(locals); end
 
@@ -2344,11 +2405,12 @@ module ActionView::CollectionCaching
 
   private
 
-  def cache_collection_render(instrumentation_payload, view, template); end
+  def cache_collection_render(instrumentation_payload, view, template, collection); end
   def callable_cache_key?; end
-  def collection_by_cache_keys(view, template); end
+  def collection_by_cache_keys(view, template, collection); end
   def expanded_cache_key(key, view, template, digest_path); end
   def fetch_or_cache_partial(cached_partials, template, order_by:); end
+  def will_cache?(options, view); end
 end
 
 class ActionView::DependencyTracker
@@ -2368,7 +2430,7 @@ class ActionView::DependencyTracker::ERBTracker
 
   def add_dependencies(render_dependencies, arguments, pattern); end
   def add_dynamic_dependency(dependencies, dependency); end
-  def add_static_dependency(dependencies, dependency); end
+  def add_static_dependency(dependencies, dependency, quote_type); end
   def directory; end
   def explicit_dependencies; end
   def name; end

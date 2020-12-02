@@ -48,6 +48,7 @@ class ActiveJob::Base
   include(::ActiveJob::Callbacks)
   include(::ActiveJob::Exceptions)
   include(::ActiveJob::Logging)
+  include(::ActiveJob::Instrumentation)
   include(::ActiveJob::Timezones)
   include(::ActiveJob::Translation)
   include(::ActiveJob::TestHelper::TestQueueAdapter)
@@ -71,41 +72,55 @@ class ActiveJob::Base
   def _run_enqueue_callbacks(&block); end
   def _run_perform_callbacks(&block); end
   def logger; end
-  def logger=(obj); end
+  def logger=(val); end
+  def queue_adapter(*args, &block); end
+  def queue_name_prefix; end
+  def queue_name_prefix=(_arg0); end
+  def queue_name_prefix?; end
   def rescue_handlers; end
-  def rescue_handlers=(val); end
+  def rescue_handlers=(_arg0); end
   def rescue_handlers?; end
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _enqueue_callbacks; end
     def _enqueue_callbacks=(value); end
     def _perform_callbacks; end
     def _perform_callbacks=(value); end
     def _queue_adapter; end
-    def _queue_adapter=(val); end
+    def _queue_adapter=(value); end
     def _queue_adapter_name; end
-    def _queue_adapter_name=(val); end
+    def _queue_adapter_name=(value); end
     def _test_adapter; end
-    def _test_adapter=(val); end
+    def _test_adapter=(value); end
+    def log_arguments; end
+    def log_arguments=(value); end
+    def log_arguments?; end
     def logger; end
-    def logger=(obj); end
+    def logger=(val); end
     def priority; end
-    def priority=(val); end
+    def priority=(value); end
     def priority?; end
     def queue_name; end
-    def queue_name=(val); end
+    def queue_name=(value); end
     def queue_name?; end
     def queue_name_delimiter; end
-    def queue_name_delimiter=(val); end
+    def queue_name_delimiter=(value); end
     def queue_name_delimiter?; end
+    def queue_name_prefix; end
+    def queue_name_prefix=(value); end
+    def queue_name_prefix?; end
     def rescue_handlers; end
-    def rescue_handlers=(val); end
+    def rescue_handlers=(value); end
     def rescue_handlers?; end
-    def return_false_on_aborted_enqueue; end
-    def return_false_on_aborted_enqueue=(val); end
+    def retry_jitter; end
+    def retry_jitter=(value); end
+    def return_false_on_aborted_enqueue(*args, &block); end
+    def return_false_on_aborted_enqueue=(*args, &block); end
+    def skip_after_callbacks_if_terminated; end
+    def skip_after_callbacks_if_terminated=(val); end
   end
 end
 
@@ -116,6 +131,11 @@ module ActiveJob::Callbacks
   include(::ActiveSupport::Callbacks)
 
   mixes_in_class_methods(::ActiveJob::Callbacks::ClassMethods)
+
+
+  private
+
+  def halted_callback_hook(_filter, name); end
 
   class << self
     def __callbacks; end
@@ -132,6 +152,7 @@ module ActiveJob::Callbacks::ClassMethods
   def around_perform(*filters, &blk); end
   def before_enqueue(*filters, &blk); end
   def before_perform(*filters, &blk); end
+  def inherited(klass); end
 end
 
 class ActiveJob::ConfiguredJob
@@ -215,14 +236,14 @@ module ActiveJob::Exceptions
 
   private
 
-  def determine_delay(seconds_or_duration_or_algorithm:, executions:); end
+  def determine_delay(seconds_or_duration_or_algorithm:, executions:, jitter: T.unsafe(nil)); end
+  def determine_jitter_for_delay(delay, jitter); end
   def executions_for(exceptions); end
-  def instrument(name, error: T.unsafe(nil), wait: T.unsafe(nil), &block); end
 end
 
 module ActiveJob::Exceptions::ClassMethods
   def discard_on(*exceptions); end
-  def retry_on(*exceptions, wait: T.unsafe(nil), attempts: T.unsafe(nil), queue: T.unsafe(nil), priority: T.unsafe(nil)); end
+  def retry_on(*exceptions, wait: T.unsafe(nil), attempts: T.unsafe(nil), queue: T.unsafe(nil), priority: T.unsafe(nil), jitter: T.unsafe(nil)); end
 end
 
 module ActiveJob::Execution
@@ -241,17 +262,17 @@ module ActiveJob::Execution::ClassMethods
   def perform_now(*args); end
 end
 
-module ActiveJob::Logging
+module ActiveJob::Instrumentation
   extend(::ActiveSupport::Concern)
 
 
   private
 
-  def logger_tagged_by_active_job?; end
-  def tag_logger(*tags); end
+  def halted_callback_hook(*_arg0); end
+  def instrument(operation, payload = T.unsafe(nil), &block); end
 end
 
-class ActiveJob::Logging::LogSubscriber < ::ActiveSupport::LogSubscriber
+class ActiveJob::LogSubscriber < ::ActiveSupport::LogSubscriber
   def discard(event); end
   def enqueue(event); end
   def enqueue_at(event); end
@@ -267,6 +288,16 @@ class ActiveJob::Logging::LogSubscriber < ::ActiveSupport::LogSubscriber
   def logger; end
   def queue_name(event); end
   def scheduled_at(event); end
+end
+
+module ActiveJob::Logging
+  extend(::ActiveSupport::Concern)
+
+
+  private
+
+  def logger_tagged_by_active_job?; end
+  def tag_logger(*tags); end
 end
 
 module ActiveJob::QueueAdapter
@@ -330,6 +361,8 @@ class ActiveJob::QueueAdapters::InlineAdapter
 end
 
 class ActiveJob::QueueAdapters::TestAdapter
+  def at; end
+  def at=(_arg0); end
   def enqueue(job); end
   def enqueue_at(job, timestamp); end
   def enqueued_jobs; end
@@ -353,6 +386,7 @@ class ActiveJob::QueueAdapters::TestAdapter
   def filtered?(job); end
   def filtered_job_class?(job); end
   def filtered_queue?(job); end
+  def filtered_time?(job); end
   def job_to_hash(job, extras = T.unsafe(nil)); end
   def perform_or_enqueue(perform, job, job_data); end
 end
@@ -367,17 +401,13 @@ end
 
 module ActiveJob::QueueName::ClassMethods
   def default_queue_name; end
-  def default_queue_name=(obj); end
+  def default_queue_name=(val); end
   def queue_as(part_name = T.unsafe(nil), &block); end
   def queue_name_from_part(part_name); end
-  def queue_name_prefix; end
-  def queue_name_prefix=(obj); end
 
   class << self
     def default_queue_name; end
-    def default_queue_name=(obj); end
-    def queue_name_prefix; end
-    def queue_name_prefix=(obj); end
+    def default_queue_name=(val); end
   end
 end
 
@@ -391,12 +421,12 @@ end
 
 module ActiveJob::QueuePriority::ClassMethods
   def default_priority; end
-  def default_priority=(obj); end
+  def default_priority=(val); end
   def queue_with_priority(priority = T.unsafe(nil), &block); end
 
   class << self
     def default_priority; end
-    def default_priority=(obj); end
+    def default_priority=(val); end
   end
 end
 
@@ -410,11 +440,11 @@ module ActiveJob::Serializers
   extend(::ActiveSupport::Autoload)
 
   def _additional_serializers; end
-  def _additional_serializers=(obj); end
+  def _additional_serializers=(val); end
 
   class << self
     def _additional_serializers; end
-    def _additional_serializers=(obj); end
+    def _additional_serializers=(val); end
     def add_serializers(*new_serializers); end
     def deserialize(argument); end
     def serialize(argument); end
@@ -435,9 +465,8 @@ class ActiveJob::Serializers::DateSerializer < ::ActiveJob::Serializers::ObjectS
   end
 end
 
-class ActiveJob::Serializers::DateTimeSerializer < ::ActiveJob::Serializers::ObjectSerializer
+class ActiveJob::Serializers::DateTimeSerializer < ::ActiveJob::Serializers::TimeObjectSerializer
   def deserialize(hash); end
-  def serialize(time); end
 
   private
 
@@ -461,11 +490,24 @@ class ActiveJob::Serializers::DurationSerializer < ::ActiveJob::Serializers::Obj
   end
 end
 
+class ActiveJob::Serializers::ModuleSerializer < ::ActiveJob::Serializers::ObjectSerializer
+  def deserialize(hash); end
+  def serialize(constant); end
+
+  private
+
+  def klass; end
+
+  class << self
+    def instance; end
+  end
+end
+
 class ActiveJob::Serializers::ObjectSerializer
   include(::Singleton)
   extend(::Singleton::SingletonClassMethods)
 
-  def deserialize(_argument); end
+  def deserialize(json); end
   def serialize(hash); end
   def serialize?(argument); end
 
@@ -494,9 +536,18 @@ class ActiveJob::Serializers::SymbolSerializer < ::ActiveJob::Serializers::Objec
   end
 end
 
-class ActiveJob::Serializers::TimeSerializer < ::ActiveJob::Serializers::ObjectSerializer
-  def deserialize(hash); end
+class ActiveJob::Serializers::TimeObjectSerializer < ::ActiveJob::Serializers::ObjectSerializer
   def serialize(time); end
+
+  class << self
+    def instance; end
+  end
+end
+
+ActiveJob::Serializers::TimeObjectSerializer::NANO_PRECISION = T.let(T.unsafe(nil), Integer)
+
+class ActiveJob::Serializers::TimeSerializer < ::ActiveJob::Serializers::TimeObjectSerializer
+  def deserialize(hash); end
 
   private
 
@@ -507,9 +558,8 @@ class ActiveJob::Serializers::TimeSerializer < ::ActiveJob::Serializers::ObjectS
   end
 end
 
-class ActiveJob::Serializers::TimeWithZoneSerializer < ::ActiveJob::Serializers::ObjectSerializer
+class ActiveJob::Serializers::TimeWithZoneSerializer < ::ActiveJob::Serializers::TimeObjectSerializer
   def deserialize(hash); end
-  def serialize(time); end
 
   private
 
@@ -526,8 +576,8 @@ end
 
 module ActiveJob::TestHelper
   def after_teardown; end
-  def assert_enqueued_jobs(number, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil)); end
-  def assert_enqueued_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil)); end
+  def assert_enqueued_jobs(number, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
+  def assert_enqueued_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), &block); end
   def assert_no_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
   def assert_no_performed_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
   def assert_performed_jobs(number, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
@@ -535,7 +585,7 @@ module ActiveJob::TestHelper
   def before_setup; end
   def enqueued_jobs(*args, &block); end
   def enqueued_jobs=(arg); end
-  def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil)); end
+  def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
   def performed_jobs(*args, &block); end
   def performed_jobs=(arg); end
   def queue_adapter; end
@@ -546,15 +596,14 @@ module ActiveJob::TestHelper
   def clear_enqueued_jobs; end
   def clear_performed_jobs; end
   def deserialize_args_for_assertion(job); end
-  def enqueued_jobs_with(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
+  def enqueued_jobs_with(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
   def filter_as_proc(filter); end
-  def flush_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil)); end
+  def flush_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil)); end
   def instantiate_job(payload); end
-  def jobs_with(jobs, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil)); end
+  def jobs_with(jobs, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil)); end
   def performed_jobs_with(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
   def prepare_args_for_assertion(args); end
   def queue_adapter_changed_jobs; end
-  def round_time_arguments(argument); end
   def validate_option(only: T.unsafe(nil), except: T.unsafe(nil)); end
 end
 

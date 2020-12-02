@@ -52,9 +52,9 @@ class ActionCable::Channel::Base
   def logger(*args, &block); end
   def params; end
   def perform_action(data); end
-  def periodic_timers=(val); end
+  def periodic_timers=(_arg0); end
   def rescue_handlers; end
-  def rescue_handlers=(val); end
+  def rescue_handlers=(_arg0); end
   def rescue_handlers?; end
   def subscribe_to_channel; end
   def unsubscribe_from_channel; end
@@ -81,7 +81,7 @@ class ActionCable::Channel::Base
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _subscribe_callbacks; end
     def _subscribe_callbacks=(value); end
@@ -89,10 +89,10 @@ class ActionCable::Channel::Base
     def _unsubscribe_callbacks=(value); end
     def action_methods; end
     def periodic_timers; end
-    def periodic_timers=(val); end
+    def periodic_timers=(value); end
     def periodic_timers?; end
     def rescue_handlers; end
-    def rescue_handlers=(val); end
+    def rescue_handlers=(value); end
     def rescue_handlers?; end
 
     private
@@ -169,8 +169,11 @@ module ActionCable::Channel::Streams
 
   def pubsub(*args, &block); end
   def stop_all_streams; end
+  def stop_stream_for(model); end
+  def stop_stream_from(broadcasting); end
   def stream_for(model, callback = T.unsafe(nil), coder: T.unsafe(nil), &block); end
   def stream_from(broadcasting, callback = T.unsafe(nil), coder: T.unsafe(nil), &block); end
+  def stream_or_reject_for(record); end
 
   private
 
@@ -191,14 +194,14 @@ class ActionCable::Channel::TestCase < ::ActiveSupport::TestCase
   extend(::ActionCable::Channel::TestCase::Behavior::ClassMethods)
 
   def _channel_class; end
-  def _channel_class=(val); end
+  def _channel_class=(_arg0); end
   def _channel_class?; end
   def connection; end
   def subscription; end
 
   class << self
     def _channel_class; end
-    def _channel_class=(val); end
+    def _channel_class=(value); end
     def _channel_class?; end
   end
 end
@@ -251,7 +254,9 @@ class ActionCable::Connection::Base
   include(::ActionCable::Connection::Identification)
   include(::ActionCable::Connection::InternalChannel)
   include(::ActionCable::Connection::Authorization)
+  include(::ActiveSupport::Rescuable)
   extend(::ActionCable::Connection::Identification::ClassMethods)
+  extend(::ActiveSupport::Rescuable::ClassMethods)
 
   def initialize(server, env, coder: T.unsafe(nil)); end
 
@@ -261,7 +266,7 @@ class ActionCable::Connection::Base
   def env; end
   def event_loop(*args, &block); end
   def identifiers; end
-  def identifiers=(val); end
+  def identifiers=(_arg0); end
   def identifiers?; end
   def logger; end
   def on_close(reason, code); end
@@ -272,6 +277,9 @@ class ActionCable::Connection::Base
   def protocol; end
   def pubsub(*args, &block); end
   def receive(websocket_message); end
+  def rescue_handlers; end
+  def rescue_handlers=(_arg0); end
+  def rescue_handlers?; end
   def send_async(method, *arguments); end
   def server; end
   def statistics; end
@@ -301,8 +309,11 @@ class ActionCable::Connection::Base
 
   class << self
     def identifiers; end
-    def identifiers=(val); end
+    def identifiers=(value); end
     def identifiers?; end
+    def rescue_handlers; end
+    def rescue_handlers=(value); end
+    def rescue_handlers?; end
   end
 end
 
@@ -466,13 +477,13 @@ class ActionCable::Connection::TestCase < ::ActiveSupport::TestCase
   extend(::ActionCable::Connection::TestCase::Behavior::ClassMethods)
 
   def _connection_class; end
-  def _connection_class=(val); end
+  def _connection_class=(_arg0); end
   def _connection_class?; end
   def connection; end
 
   class << self
     def _connection_class; end
-    def _connection_class=(val); end
+    def _connection_class=(value); end
     def _connection_class?; end
   end
 end
@@ -545,7 +556,7 @@ class ActionCable::RemoteConnections::RemoteConnection
 
   def disconnect; end
   def identifiers; end
-  def identifiers=(val); end
+  def identifiers=(_arg0); end
   def identifiers?; end
 
   protected
@@ -559,7 +570,7 @@ class ActionCable::RemoteConnections::RemoteConnection
 
   class << self
     def identifiers; end
-    def identifiers=(val); end
+    def identifiers=(value); end
     def identifiers?; end
   end
 end
@@ -591,7 +602,7 @@ class ActionCable::Server::Base
 
   class << self
     def config; end
-    def config=(obj); end
+    def config=(val); end
     def logger; end
   end
 end
@@ -648,25 +659,45 @@ ActionCable::Server::Connections::BEAT_INTERVAL = T.let(T.unsafe(nil), Integer)
 
 class ActionCable::Server::Worker
   include(::ActiveSupport::Callbacks)
+  include(::ActionCable::Server::Worker::ActiveRecordConnectionManagement)
   extend(::ActiveSupport::Callbacks::ClassMethods)
   extend(::ActiveSupport::DescendantsTracker)
+
+  def initialize(max_size: T.unsafe(nil)); end
 
   def __callbacks; end
   def __callbacks?; end
   def _run_work_callbacks(&block); end
   def _work_callbacks; end
+  def async_exec(receiver, *args, connection:, &block); end
+  def async_invoke(receiver, method, *args, connection: T.unsafe(nil), &block); end
   def connection; end
   def connection=(obj); end
+  def executor; end
+  def halt; end
+  def invoke(receiver, method, *args, connection:, &block); end
+  def stopping?; end
+  def work(connection); end
+
+  private
+
+  def logger; end
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _work_callbacks; end
     def _work_callbacks=(value); end
     def connection; end
     def connection=(obj); end
   end
+end
+
+module ActionCable::Server::Worker::ActiveRecordConnectionManagement
+  extend(::ActiveSupport::Concern)
+
+  def with_database_connections; end
 end
 
 module ActionCable::SubscriptionAdapter
@@ -677,6 +708,7 @@ class ActionCable::SubscriptionAdapter::Base
   def initialize(server); end
 
   def broadcast(channel, payload); end
+  def identifier; end
   def logger; end
   def server; end
   def shutdown; end
@@ -722,8 +754,8 @@ end
 
 module ActionCable::TestHelper
   def after_teardown; end
-  def assert_broadcast_on(stream, data); end
-  def assert_broadcasts(stream, number); end
+  def assert_broadcast_on(stream, data, &block); end
+  def assert_broadcasts(stream, number, &block); end
   def assert_no_broadcasts(stream, &block); end
   def before_setup; end
   def broadcasts(*args, &block); end

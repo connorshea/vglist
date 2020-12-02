@@ -9,9 +9,9 @@ module ActiveSupport
   extend(::ActiveSupport::Autoload)
 
   def parse_json_times; end
-  def parse_json_times=(obj); end
+  def parse_json_times=(val); end
   def test_order; end
-  def test_order=(obj); end
+  def test_order=(val); end
 
   class << self
     def eager_load!; end
@@ -21,15 +21,17 @@ module ActiveSupport
     def json_encoder(*args, &block); end
     def json_encoder=(arg); end
     def parse_json_times; end
-    def parse_json_times=(obj); end
+    def parse_json_times=(val); end
     def test_order; end
-    def test_order=(obj); end
+    def test_order=(val); end
     def time_precision(*args, &block); end
     def time_precision=(arg); end
     def to_time_preserves_timezone; end
     def to_time_preserves_timezone=(value); end
     def use_standard_json_time_format(*args, &block); end
     def use_standard_json_time_format=(arg); end
+    def utc_to_local_returns_utc_offset_times; end
+    def utc_to_local_returns_utc_offset_times=(value); end
     def version; end
   end
 end
@@ -119,12 +121,12 @@ end
 class ActiveSupport::Cache::Entry
   def initialize(value, compress: T.unsafe(nil), compress_threshold: T.unsafe(nil), version: T.unsafe(nil), expires_in: T.unsafe(nil), **_arg5); end
 
+  def bytesize; end
   def dup_value!; end
   def expired?; end
   def expires_at; end
   def expires_at=(value); end
   def mismatched?(version); end
-  def size; end
   def value; end
   def version; end
 
@@ -143,7 +145,6 @@ class ActiveSupport::Cache::FileStore < ::ActiveSupport::Cache::Store
   def initialize(cache_path, options = T.unsafe(nil)); end
 
   def cache_path; end
-  def delete_matched(matcher, options = T.unsafe(nil)); end
 
   private
 
@@ -183,7 +184,7 @@ class ActiveSupport::Cache::MemoryStore < ::ActiveSupport::Cache::Store
 
   private
 
-  def cached_size(key, entry); end
+  def cached_size(key, payload); end
   def delete_entry(key, **options); end
   def modify_value(name, amount, options); end
   def read_entry(key, **options); end
@@ -194,12 +195,26 @@ class ActiveSupport::Cache::MemoryStore < ::ActiveSupport::Cache::Store
   end
 end
 
+ActiveSupport::Cache::MemoryStore::DEFAULT_CODER = ActiveSupport::Cache::MemoryStore::DupCoder
+
+module ActiveSupport::Cache::MemoryStore::DupCoder
+  class << self
+    def dump(entry); end
+    def load(entry); end
+  end
+end
+
 ActiveSupport::Cache::MemoryStore::PER_ENTRY_OVERHEAD = T.let(T.unsafe(nil), Integer)
+
+module ActiveSupport::Cache::NullCoder
+  class << self
+    def dump(entry); end
+    def load(payload); end
+  end
+end
 
 class ActiveSupport::Cache::NullStore < ::ActiveSupport::Cache::Store
   include(::ActiveSupport::Cache::Strategy::LocalCache)
-
-  def delete_matched(matcher, options = T.unsafe(nil)); end
 
   class << self
     def supports_cache_versioning?; end
@@ -214,12 +229,13 @@ class ActiveSupport::Cache::Store
   def decrement(name, amount = T.unsafe(nil), options = T.unsafe(nil)); end
   def delete(name, options = T.unsafe(nil)); end
   def delete_matched(matcher, options = T.unsafe(nil)); end
+  def delete_multi(names, options = T.unsafe(nil)); end
   def exist?(name, options = T.unsafe(nil)); end
-  def fetch(name, options = T.unsafe(nil)); end
+  def fetch(name, options = T.unsafe(nil), &block); end
   def fetch_multi(*names); end
   def increment(name, amount = T.unsafe(nil), options = T.unsafe(nil)); end
   def logger; end
-  def logger=(obj); end
+  def logger=(val); end
   def mute; end
   def options; end
   def read(name, options = T.unsafe(nil)); end
@@ -233,26 +249,28 @@ class ActiveSupport::Cache::Store
   private
 
   def delete_entry(key, **options); end
+  def delete_multi_entries(entries, **options); end
+  def deserialize_entry(payload); end
   def expanded_key(key); end
   def expanded_version(key); end
   def get_entry_value(entry, name, options); end
   def handle_expired_entry(entry, key, options); end
   def instrument(operation, key, options = T.unsafe(nil)); end
   def key_matcher(pattern, options); end
-  def log; end
   def merged_options(call_options); end
   def namespace_key(key, options = T.unsafe(nil)); end
   def normalize_key(key, options = T.unsafe(nil)); end
   def normalize_version(key, options = T.unsafe(nil)); end
   def read_entry(key, **options); end
   def read_multi_entries(names, **options); end
-  def save_block_result_to_cache(name, **options); end
+  def save_block_result_to_cache(name, options); end
+  def serialize_entry(entry); end
   def write_entry(key, entry, **options); end
   def write_multi_entries(hash, **options); end
 
   class << self
     def logger; end
-    def logger=(obj); end
+    def logger=(val); end
 
     private
 
@@ -261,6 +279,8 @@ class ActiveSupport::Cache::Store
   end
 end
 
+ActiveSupport::Cache::Store::DEFAULT_CODER = Marshal
+
 module ActiveSupport::Cache::Strategy
 end
 
@@ -268,6 +288,7 @@ module ActiveSupport::Cache::Strategy::LocalCache
   def cleanup(**options); end
   def clear(**options); end
   def decrement(name, amount = T.unsafe(nil), **options); end
+  def delete_matched(matcher, options = T.unsafe(nil)); end
   def increment(name, amount = T.unsafe(nil), **options); end
   def middleware; end
   def with_local_cache; end
@@ -308,7 +329,7 @@ class ActiveSupport::Cache::Strategy::LocalCache::LocalStore < ::ActiveSupport::
   def read_entry(key, **options); end
   def read_multi_entries(keys, **options); end
   def synchronize; end
-  def write_entry(key, value, **options); end
+  def write_entry(key, entry, **options); end
 end
 
 class ActiveSupport::Cache::Strategy::LocalCache::Middleware
@@ -337,7 +358,7 @@ module ActiveSupport::Callbacks
 
   private
 
-  def halted_callback_hook(filter); end
+  def halted_callback_hook(filter, name); end
 end
 
 ActiveSupport::Callbacks::CALLBACK_FILTER_TYPES = T.let(T.unsafe(nil), Array)
@@ -466,12 +487,12 @@ end
 
 class ActiveSupport::Callbacks::Filters::Before
   class << self
-    def build(callback_sequence, user_callback, user_conditions, chain_config, filter); end
+    def build(callback_sequence, user_callback, user_conditions, chain_config, filter, name); end
 
     private
 
-    def halting(callback_sequence, user_callback, halted_lambda, filter); end
-    def halting_and_conditional(callback_sequence, user_callback, user_conditions, halted_lambda, filter); end
+    def halting(callback_sequence, user_callback, halted_lambda, filter, name); end
+    def halting_and_conditional(callback_sequence, user_callback, user_conditions, halted_lambda, filter, name); end
   end
 end
 
@@ -501,6 +522,8 @@ module ActiveSupport::Concern
   def append_features(base); end
   def class_methods(&class_methods_module_definition); end
   def included(base = T.unsafe(nil), &block); end
+  def prepend_features(base); end
+  def prepended(base = T.unsafe(nil), &block); end
 
   class << self
     def extended(base); end
@@ -508,6 +531,10 @@ module ActiveSupport::Concern
 end
 
 class ActiveSupport::Concern::MultipleIncludedBlocks < ::StandardError
+  def initialize; end
+end
+
+class ActiveSupport::Concern::MultiplePrependBlocks < ::StandardError
   def initialize; end
 end
 
@@ -566,6 +593,24 @@ class ActiveSupport::Configurable::Configuration < ::ActiveSupport::InheritableO
   end
 end
 
+class ActiveSupport::ConfigurationFile
+  def initialize(content_path); end
+
+  def parse(context: T.unsafe(nil), **options); end
+
+  private
+
+  def read(content_path); end
+  def render(context); end
+
+  class << self
+    def parse(content_path, **options); end
+  end
+end
+
+class ActiveSupport::ConfigurationFile::FormatError < ::StandardError
+end
+
 class ActiveSupport::CurrentAttributes
   include(::ActiveSupport::Callbacks)
   extend(::ActiveSupport::Callbacks::ClassMethods)
@@ -589,7 +634,7 @@ class ActiveSupport::CurrentAttributes
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _reset_callbacks; end
     def _reset_callbacks=(value); end
@@ -606,6 +651,7 @@ class ActiveSupport::CurrentAttributes
     private
 
     def current_instances; end
+    def current_instances_key; end
     def generated_attribute_methods; end
     def method_missing(name, *args, &block); end
   end
@@ -616,43 +662,43 @@ module ActiveSupport::Dependencies
   extend(::Bootsnap::LoadPathCache::CoreExt::ActiveSupport::ClassMethods)
 
   def _eager_load_paths; end
-  def _eager_load_paths=(obj); end
+  def _eager_load_paths=(val); end
   def autoload_module!(into, const_name, qualified_name, path_suffix); end
   def autoload_once_paths; end
-  def autoload_once_paths=(obj); end
+  def autoload_once_paths=(val); end
   def autoload_paths; end
-  def autoload_paths=(obj); end
+  def autoload_paths=(val); end
   def autoloadable_module?(path_suffix); end
   def autoloaded?(desc); end
   def autoloaded_constants; end
-  def autoloaded_constants=(obj); end
+  def autoloaded_constants=(val); end
   def clear; end
   def constant_watch_stack; end
-  def constant_watch_stack=(obj); end
+  def constant_watch_stack=(val); end
   def constantize(name); end
   def depend_on(file_name, message = T.unsafe(nil)); end
   def explicitly_unloadable_constants; end
-  def explicitly_unloadable_constants=(obj); end
+  def explicitly_unloadable_constants=(val); end
   def history; end
-  def history=(obj); end
+  def history=(val); end
   def hook!; end
   def interlock; end
-  def interlock=(obj); end
+  def interlock=(val); end
   def load?; end
   def load_file(path, const_paths = T.unsafe(nil)); end
   def load_missing_constant(from_mod, const_name); end
   def load_once_path?(path); end
   def loadable_constants_for_path(path, bases = T.unsafe(nil)); end
   def loaded; end
-  def loaded=(obj); end
+  def loaded=(val); end
   def loading; end
-  def loading=(obj); end
+  def loading=(val); end
   def log(message); end
   def logger; end
-  def logger=(obj); end
+  def logger=(val); end
   def mark_for_unload(const_desc); end
   def mechanism; end
-  def mechanism=(obj); end
+  def mechanism=(val); end
   def new_constants_in(*descs); end
   def qualified_const_defined?(path); end
   def qualified_name_for(mod, name); end
@@ -665,46 +711,47 @@ module ActiveSupport::Dependencies
   def to_constant_name(desc); end
   def unhook!; end
   def verbose; end
-  def verbose=(obj); end
+  def verbose=(val); end
   def warnings_on_first_load; end
-  def warnings_on_first_load=(obj); end
+  def warnings_on_first_load=(val); end
   def will_unload?(const_desc); end
 
   private
 
   def real_mod_name(mod); end
+  def uninitialized_constant(qualified_name, const_name, receiver:); end
 
   class << self
     def _eager_load_paths; end
-    def _eager_load_paths=(obj); end
+    def _eager_load_paths=(val); end
     def autoload_once_paths; end
-    def autoload_once_paths=(obj); end
+    def autoload_once_paths=(val); end
     def autoload_paths; end
     def autoloaded_constants; end
-    def autoloaded_constants=(obj); end
+    def autoloaded_constants=(val); end
     def constant_watch_stack; end
-    def constant_watch_stack=(obj); end
+    def constant_watch_stack=(val); end
     def explicitly_unloadable_constants; end
-    def explicitly_unloadable_constants=(obj); end
+    def explicitly_unloadable_constants=(val); end
     def history; end
-    def history=(obj); end
+    def history=(val); end
     def interlock; end
-    def interlock=(obj); end
+    def interlock=(val); end
     def load_interlock; end
     def loaded; end
-    def loaded=(obj); end
+    def loaded=(val); end
     def loading; end
-    def loading=(obj); end
+    def loading=(val); end
     def logger; end
-    def logger=(obj); end
+    def logger=(val); end
     def mechanism; end
-    def mechanism=(obj); end
+    def mechanism=(val); end
     def run_interlock; end
     def unload_interlock; end
     def verbose; end
-    def verbose=(obj); end
+    def verbose=(val); end
     def warnings_on_first_load; end
-    def warnings_on_first_load=(obj); end
+    def warnings_on_first_load=(val); end
   end
 end
 
@@ -828,6 +875,7 @@ class ActiveSupport::Deprecation
   include(::ActiveSupport::Deprecation::InstanceDelegator)
   include(::ActiveSupport::Deprecation::Behavior)
   include(::ActiveSupport::Deprecation::Reporting)
+  include(::ActiveSupport::Deprecation::Disallowed)
   include(::ActiveSupport::Deprecation::MethodWrapper)
   extend(::Singleton::SingletonClassMethods)
   extend(::ActiveSupport::Deprecation::InstanceDelegator::ClassMethods)
@@ -839,6 +887,7 @@ class ActiveSupport::Deprecation
   def deprecation_horizon=(_arg0); end
 
   class << self
+    def allow(*args, &block); end
     def behavior(*args, &block); end
     def behavior=(arg); end
     def debug(*args, &block); end
@@ -846,6 +895,10 @@ class ActiveSupport::Deprecation
     def deprecate_methods(*args, &block); end
     def deprecation_horizon(*args, &block); end
     def deprecation_horizon=(arg); end
+    def disallowed_behavior(*args, &block); end
+    def disallowed_behavior=(arg); end
+    def disallowed_warnings(*args, &block); end
+    def disallowed_warnings=(arg); end
     def gem_name(*args, &block); end
     def gem_name=(arg); end
     def instance; end
@@ -860,6 +913,8 @@ module ActiveSupport::Deprecation::Behavior
   def behavior=(behavior); end
   def debug; end
   def debug=(_arg0); end
+  def disallowed_behavior; end
+  def disallowed_behavior=(behavior); end
 
   private
 
@@ -882,6 +937,7 @@ class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::Module
   def inspect; end
   def instance_methods(*args, &block); end
   def name(*args, &block); end
+  def respond_to?(*args, &block); end
 
   private
 
@@ -890,7 +946,7 @@ class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::Module
   def target; end
 
   class << self
-    def new(*args, **kwargs, &block); end
+    def new(*args, **options, &block); end
   end
 end
 
@@ -926,6 +982,16 @@ class ActiveSupport::Deprecation::DeprecationProxy
   end
 end
 
+module ActiveSupport::Deprecation::Disallowed
+  def disallowed_warnings; end
+  def disallowed_warnings=(_arg0); end
+
+  private
+
+  def deprecation_disallowed?(message); end
+  def explicitly_allowed?(message); end
+end
+
 module ActiveSupport::Deprecation::InstanceDelegator
   mixes_in_class_methods(::ActiveSupport::Deprecation::InstanceDelegator::OverrideDelegators)
 
@@ -949,10 +1015,11 @@ module ActiveSupport::Deprecation::MethodWrapper
 end
 
 module ActiveSupport::Deprecation::Reporting
+  def allow(allowed_warnings = T.unsafe(nil), if: T.unsafe(nil), &block); end
   def deprecation_warning(deprecated_method_name, message = T.unsafe(nil), caller_backtrace = T.unsafe(nil)); end
   def gem_name; end
   def gem_name=(_arg0); end
-  def silence; end
+  def silence(&block); end
   def silenced; end
   def silenced=(_arg0); end
   def warn(message = T.unsafe(nil), callstack = T.unsafe(nil)); end
@@ -976,12 +1043,14 @@ module ActiveSupport::DescendantsTracker
   def descendants; end
   def direct_descendants; end
   def inherited(base); end
+  def subclasses; end
 
   class << self
     def clear; end
     def descendants(klass); end
     def direct_descendants(klass); end
     def store_inherited(klass, descendant); end
+    def subclasses(klass); end
 
     private
 
@@ -1019,6 +1088,7 @@ class ActiveSupport::Duration
   def %(other); end
   def *(other); end
   def +(other); end
+  def +@; end
   def -(other); end
   def -@; end
   def /(other); end
@@ -1033,6 +1103,13 @@ class ActiveSupport::Duration
   def eql?(other); end
   def from_now(time = T.unsafe(nil)); end
   def hash; end
+  def in_days; end
+  def in_hours; end
+  def in_minutes; end
+  def in_months; end
+  def in_seconds; end
+  def in_weeks; end
+  def in_years; end
   def init_with(coder); end
   def inspect; end
   def instance_of?(klass); end
@@ -1128,7 +1205,10 @@ class ActiveSupport::Duration::ISO8601Serializer
   private
 
   def normalize; end
+  def week_mixed_with_date?(parts); end
 end
+
+ActiveSupport::Duration::ISO8601Serializer::DATE_COMPONENTS = T.let(T.unsafe(nil), Array)
 
 ActiveSupport::Duration::PARTS = T.let(T.unsafe(nil), Array)
 
@@ -1208,6 +1288,7 @@ class ActiveSupport::EncryptedFile
 
   private
 
+  def check_key_length; end
   def decrypt(contents); end
   def encrypt(contents); end
   def encryptor; end
@@ -1217,11 +1298,16 @@ class ActiveSupport::EncryptedFile
   def writing(contents); end
 
   class << self
+    def expected_key_length; end
     def generate_key; end
   end
 end
 
 ActiveSupport::EncryptedFile::CIPHER = T.let(T.unsafe(nil), String)
+
+class ActiveSupport::EncryptedFile::InvalidKeyLengthError < ::RuntimeError
+  def initialize; end
+end
 
 class ActiveSupport::EncryptedFile::MissingContentError < ::RuntimeError
   def initialize(content_path); end
@@ -1231,33 +1317,39 @@ class ActiveSupport::EncryptedFile::MissingKeyError < ::RuntimeError
   def initialize(key_path:, env_key:); end
 end
 
+class ActiveSupport::EnvironmentInquirer < ::ActiveSupport::StringInquirer
+  def initialize(env); end
+
+  def development?; end
+  def production?; end
+  def test?; end
+end
+
+ActiveSupport::EnvironmentInquirer::DEFAULT_ENVIRONMENTS = T.let(T.unsafe(nil), Array)
+
 class ActiveSupport::EventedFileUpdateChecker
   def initialize(files, dirs = T.unsafe(nil), &block); end
 
   def execute; end
   def execute_if_updated; end
   def updated?; end
-
-  private
-
-  def boot!; end
-  def changed(modified, added, removed); end
-  def directories_to_watch; end
-  def normalize_dirs!; end
-  def shutdown!; end
-  def watching?(file); end
 end
 
-class ActiveSupport::EventedFileUpdateChecker::PathHelper
-  def existing_parent(dir); end
-  def filter_out_descendants(dirs); end
-  def longest_common_subpath(paths); end
-  def normalize_extension(ext); end
-  def xpath(path); end
+class ActiveSupport::EventedFileUpdateChecker::Core
+  def initialize(files, dirs); end
 
-  private
-
-  def ascendant_of?(base, other); end
+  def changed(modified, added, removed); end
+  def common_path(paths); end
+  def directories_to_watch; end
+  def finalizer; end
+  def normalize_dirs!; end
+  def restart; end
+  def restart?; end
+  def start; end
+  def stop; end
+  def thread_safely; end
+  def updated; end
+  def watching?(file); end
 end
 
 class ActiveSupport::ExecutionWrapper
@@ -1280,7 +1372,7 @@ class ActiveSupport::ExecutionWrapper
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _complete_callbacks; end
     def _complete_callbacks=(value); end
@@ -1347,6 +1439,26 @@ class ActiveSupport::FileUpdateChecker
   def watched; end
 end
 
+module ActiveSupport::ForkTracker
+  class << self
+    def after_fork(&block); end
+    def check!; end
+    def hook!; end
+    def unregister(callback); end
+  end
+end
+
+module ActiveSupport::ForkTracker::CoreExt
+  def fork(*_arg0); end
+end
+
+module ActiveSupport::ForkTracker::CoreExtPrivate
+
+  private
+
+  def fork(*_arg0); end
+end
+
 module ActiveSupport::Gzip
   class << self
     def compress(source, level = T.unsafe(nil), strategy = T.unsafe(nil)); end
@@ -1382,8 +1494,8 @@ class ActiveSupport::HashWithIndifferentAccess < ::Hash
   def include?(key); end
   def key?(key); end
   def member?(key); end
-  def merge(hash, &block); end
-  def merge!(other_hash); end
+  def merge(*hashes, &block); end
+  def merge!(*other_hashes, &block); end
   def nested_under_indifferent_access; end
   def regular_update(*_arg0); end
   def regular_writer(_arg0, _arg1); end
@@ -1404,7 +1516,7 @@ class ActiveSupport::HashWithIndifferentAccess < ::Hash
   def transform_keys(*args, &block); end
   def transform_keys!; end
   def transform_values(*args, &block); end
-  def update(other_hash); end
+  def update(*other_hashes, &block); end
   def values_at(*keys); end
   def with_defaults(other_hash); end
   def with_defaults!(other_hash); end
@@ -1414,8 +1526,9 @@ class ActiveSupport::HashWithIndifferentAccess < ::Hash
   private
 
   def convert_key(key); end
-  def convert_value(value, options = T.unsafe(nil)); end
+  def convert_value(value, conversion: T.unsafe(nil)); end
   def set_defaults(target); end
+  def update_with_single_argument(other_hash, block); end
 
   class << self
     def [](*args); end
@@ -1455,6 +1568,8 @@ module ActiveSupport::Inflector
   def apply_inflections(word, rules, locale = T.unsafe(nil)); end
   def const_regexp(camel_cased_word); end
 end
+
+ActiveSupport::Inflector::ALLOWED_ENCODINGS_FOR_TRANSLITERATE = T.let(T.unsafe(nil), Array)
 
 class ActiveSupport::Inflector::Inflections
   def initialize; end
@@ -1566,7 +1681,7 @@ end
 
 class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   def colorize_logging; end
-  def colorize_logging=(obj); end
+  def colorize_logging=(val); end
   def debug(progname = T.unsafe(nil), &block); end
   def error(progname = T.unsafe(nil), &block); end
   def fatal(progname = T.unsafe(nil), &block); end
@@ -1583,11 +1698,15 @@ class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
 
   class << self
     def colorize_logging; end
-    def colorize_logging=(obj); end
+    def colorize_logging=(val); end
     def flush_all!; end
     def log_subscribers; end
     def logger; end
     def logger=(_arg0); end
+
+    private
+
+    def fetch_public_methods(subscriber, inherit_all); end
   end
 end
 
@@ -1618,15 +1737,15 @@ class ActiveSupport::Logger < ::Logger
   def initialize(*args, **kwargs); end
 
   def silencer; end
-  def silencer=(obj); end
+  def silencer=(val); end
 
   class << self
     def broadcast(logger); end
     def local_levels; end
-    def local_levels=(obj); end
+    def local_levels=(val); end
     def logger_outputs_to?(logger, *sources); end
     def silencer; end
-    def silencer=(obj); end
+    def silencer=(val); end
   end
 end
 
@@ -1639,14 +1758,13 @@ module ActiveSupport::LoggerSilence
 
   include(::ActiveSupport::LoggerThreadSafeLevel)
 
-  def silence(temporary_level = T.unsafe(nil)); end
+  def silence(severity = T.unsafe(nil)); end
 end
 
 module ActiveSupport::LoggerThreadSafeLevel
   extend(::ActiveSupport::Concern)
 
   def add(severity, message = T.unsafe(nil), progname = T.unsafe(nil), &block); end
-  def after_initialize; end
   def debug?; end
   def error?; end
   def fatal?; end
@@ -1655,6 +1773,7 @@ module ActiveSupport::LoggerThreadSafeLevel
   def local_level; end
   def local_level=(level); end
   def local_log_id; end
+  def log_at(level); end
   def unknown?; end
   def warn?; end
 end
@@ -1678,7 +1797,7 @@ class ActiveSupport::MessageEncryptor
     def default_cipher; end
     def key_len(cipher = T.unsafe(nil)); end
     def use_authenticated_message_encryption; end
-    def use_authenticated_message_encryption=(obj); end
+    def use_authenticated_message_encryption=(val); end
   end
 end
 
@@ -1732,6 +1851,7 @@ class ActiveSupport::Messages::Metadata
 
   def fresh?; end
   def match?(purpose); end
+  def parse_expires_at(expires_at); end
 
   class << self
     def verify(message, purpose); end
@@ -1750,12 +1870,12 @@ class ActiveSupport::Messages::RotationConfiguration
   def initialize; end
 
   def encrypted; end
-  def rotate(kind, *args); end
+  def rotate(kind, *args, **options); end
   def signed; end
 end
 
 module ActiveSupport::Messages::Rotator
-  def initialize(*_arg0, **options); end
+  def initialize(*secrets, on_rotation: T.unsafe(nil), **options); end
 
   def rotate(*secrets, **options); end
 
@@ -1804,8 +1924,8 @@ class ActiveSupport::Multibyte::Chars
   def decompose; end
   def grapheme_length; end
   def limit(limit); end
+  def match?(*args, &block); end
   def method_missing(method, *args, &block); end
-  def normalize(form = T.unsafe(nil)); end
   def reverse; end
   def reverse!(*args); end
   def slice!(*args); end
@@ -1822,10 +1942,6 @@ class ActiveSupport::Multibyte::Chars
 
   def chars(string); end
   def respond_to_missing?(method, include_private); end
-
-  class << self
-    def consumes?(string); end
-  end
 end
 
 module ActiveSupport::Multibyte::Unicode
@@ -1834,23 +1950,13 @@ module ActiveSupport::Multibyte::Unicode
   def compose(codepoints); end
   def decompose(type, codepoints); end
   def default_normalization_form; end
-  def default_normalization_form=(_arg0); end
-  def downcase(string); end
-  def normalize(string, form = T.unsafe(nil)); end
-  def pack_graphemes(unpacked); end
-  def swapcase(string); end
+  def default_normalization_form=(_); end
   def tidy_bytes(string, force = T.unsafe(nil)); end
-  def unpack_graphemes(string); end
-  def upcase(string); end
 
   private
 
   def recode_windows1252_chars(string); end
 end
-
-ActiveSupport::Multibyte::Unicode::NORMALIZATION_FORMS = T.let(T.unsafe(nil), Array)
-
-ActiveSupport::Multibyte::Unicode::NORMALIZATION_FORM_ALIASES = T.let(T.unsafe(nil), Hash)
 
 ActiveSupport::Multibyte::Unicode::UNICODE_VERSION = T.let(T.unsafe(nil), String)
 
@@ -1858,11 +1964,12 @@ module ActiveSupport::Notifications
   class << self
     def instrument(name, payload = T.unsafe(nil)); end
     def instrumenter; end
+    def monotonic_subscribe(pattern = T.unsafe(nil), callback = T.unsafe(nil), &block); end
     def notifier; end
     def notifier=(_arg0); end
     def publish(name, *args); end
-    def subscribe(*args, &block); end
-    def subscribed(callback, *args, &block); end
+    def subscribe(pattern = T.unsafe(nil), callback = T.unsafe(nil), &block); end
+    def subscribed(callback, pattern = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
     def unsubscribe(subscriber_or_name); end
   end
 end
@@ -1876,12 +1983,12 @@ class ActiveSupport::Notifications::Event
   def cpu_time; end
   def duration; end
   def end; end
-  def end=(ending); end
   def finish!; end
   def idle_time; end
   def name; end
   def parent_of?(event); end
   def payload; end
+  def payload=(_arg0); end
   def start!; end
   def time; end
   def transaction_id; end
@@ -1891,13 +1998,6 @@ class ActiveSupport::Notifications::Event
   def now; end
   def now_allocations; end
   def now_cpu; end
-
-  class << self
-
-    private
-
-    def clock_gettime_supported?; end
-  end
 end
 
 class ActiveSupport::Notifications::Fanout
@@ -1912,7 +2012,7 @@ class ActiveSupport::Notifications::Fanout
   def locked?; end
   def publish(name, *args); end
   def start(name, id, payload); end
-  def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), &block); end
+  def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
   def synchronize(&block); end
   def try_lock; end
   def unlock; end
@@ -1922,8 +2022,7 @@ end
 
 module ActiveSupport::Notifications::Fanout::Subscribers
   class << self
-    def event_object_subscriber(pattern, block); end
-    def new(pattern, listener); end
+    def new(pattern, listener, monotonic); end
     def wrap_all(pattern, subscriber); end
   end
 end
@@ -1973,6 +2072,12 @@ class ActiveSupport::Notifications::Fanout::Subscribers::Matcher
   end
 end
 
+class ActiveSupport::Notifications::Fanout::Subscribers::MonotonicTimed < ::ActiveSupport::Notifications::Fanout::Subscribers::Evented
+  def finish(name, id, payload); end
+  def publish(name, *args); end
+  def start(name, id, payload); end
+end
+
 class ActiveSupport::Notifications::Fanout::Subscribers::Timed < ::ActiveSupport::Notifications::Fanout::Subscribers::Evented
   def finish(name, id, payload); end
   def publish(name, *args); end
@@ -2019,12 +2124,12 @@ class ActiveSupport::NumberHelper::NumberConverter
 
   def execute; end
   def namespace; end
-  def namespace=(val); end
+  def namespace=(_arg0); end
   def namespace?; end
   def number; end
   def opts; end
   def validate_float; end
-  def validate_float=(val); end
+  def validate_float=(_arg0); end
   def validate_float?; end
 
   private
@@ -2041,10 +2146,10 @@ class ActiveSupport::NumberHelper::NumberConverter
   class << self
     def convert(number, options); end
     def namespace; end
-    def namespace=(val); end
+    def namespace=(value); end
     def namespace?; end
     def validate_float; end
-    def validate_float=(val); end
+    def validate_float=(value); end
     def validate_float?; end
   end
 end
@@ -2165,11 +2270,8 @@ class ActiveSupport::NumberHelper::RoundingHelper
 
   private
 
-  def absolute_number(number); end
+  def absolute_precision(number); end
   def convert_to_decimal(number); end
-  def precision; end
-  def round_significant(number); end
-  def round_without_significant(number); end
   def significant; end
 end
 
@@ -2196,6 +2298,7 @@ class ActiveSupport::OrderedOptions < ::Hash
   def [](key); end
   def []=(key, value); end
   def extractable_options?; end
+  def inspect; end
   def method_missing(name, *args); end
 
   protected
@@ -2269,12 +2372,12 @@ class ActiveSupport::Reloader < ::ActiveSupport::ExecutionWrapper
   def _run_class_unload_callbacks(&block); end
   def _run_prepare_callbacks(&block); end
   def check; end
-  def check=(val); end
+  def check=(_arg0); end
   def check?; end
   def class_unload!(&block); end
   def complete!; end
   def executor; end
-  def executor=(val); end
+  def executor=(_arg0); end
   def executor?; end
   def release_unload_lock!; end
   def require_unload_lock!; end
@@ -2290,10 +2393,10 @@ class ActiveSupport::Reloader < ::ActiveSupport::ExecutionWrapper
     def before_class_unload(*args, &block); end
     def check; end
     def check!; end
-    def check=(val); end
+    def check=(value); end
     def check?; end
     def executor; end
-    def executor=(val); end
+    def executor=(value); end
     def executor?; end
     def prepare!; end
     def reload!; end
@@ -2365,6 +2468,8 @@ class ActiveSupport::SafeBuffer < ::String
   def rstrip(*args, &block); end
   def rstrip!(*args); end
   def safe_concat(value); end
+  def scrub(*args, &block); end
+  def scrub!(*args); end
   def slice(*args, &block); end
   def slice!(*args); end
   def squeeze(*args, &block); end
@@ -2404,6 +2509,20 @@ ActiveSupport::SafeBuffer::UNSAFE_STRING_METHODS = T.let(T.unsafe(nil), Array)
 
 ActiveSupport::SafeBuffer::UNSAFE_STRING_METHODS_WITH_BACKREF = T.let(T.unsafe(nil), Array)
 
+class ActiveSupport::SecureCompareRotator
+  include(::ActiveSupport::Messages::Rotator)
+  include(::ActiveSupport::SecurityUtils)
+
+  def secure_compare!(other_value, on_rotation: T.unsafe(nil)); end
+
+  private
+
+  def build_rotation(previous_value, _options); end
+end
+
+class ActiveSupport::SecureCompareRotator::InvalidMatch < ::StandardError
+end
+
 module ActiveSupport::SecurityUtils
 
   private
@@ -2437,7 +2556,7 @@ class ActiveSupport::Subscriber
   def event_stack; end
 
   class << self
-    def attach_to(namespace, subscriber = T.unsafe(nil), notifier = T.unsafe(nil)); end
+    def attach_to(namespace, subscriber = T.unsafe(nil), notifier = T.unsafe(nil), inherit_all: T.unsafe(nil)); end
     def detach_from(namespace, notifier = T.unsafe(nil)); end
     def method_added(event); end
     def subscribers; end
@@ -2445,6 +2564,7 @@ class ActiveSupport::Subscriber
     private
 
     def add_event_subscriber(event); end
+    def fetch_public_methods(subscriber, inherit_all); end
     def find_attached_subscriber; end
     def invalid_event?(event); end
     def namespace; end
@@ -2486,6 +2606,15 @@ module ActiveSupport::TaggedLogging::Formatter
   def tags_text; end
 end
 
+module ActiveSupport::TaggedLogging::LocalTagStorage
+  def current_tags; end
+  def current_tags=(_arg0); end
+
+  class << self
+    def extended(base); end
+  end
+end
+
 class ActiveSupport::TestCase < ::Minitest::Test
   include(::ActiveSupport::Testing::SetupAndTeardown)
   include(::ActiveSupport::Testing::TaggedLogging)
@@ -2525,14 +2654,14 @@ class ActiveSupport::TestCase < ::Minitest::Test
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _setup_callbacks; end
     def _setup_callbacks=(value); end
     def _teardown_callbacks; end
     def _teardown_callbacks=(value); end
     def file_fixture_path; end
-    def file_fixture_path=(val); end
+    def file_fixture_path=(value); end
     def file_fixture_path?; end
     def parallelize(workers: T.unsafe(nil), with: T.unsafe(nil)); end
     def parallelize_setup(&block); end
@@ -2606,19 +2735,13 @@ end
 ActiveSupport::Testing::Isolation::Subprocess::ORIG_ARGV = T.let(T.unsafe(nil), Array)
 
 class ActiveSupport::Testing::Parallelization
-  def initialize(queue_size); end
+  def initialize(worker_count); end
 
   def <<(work); end
-  def after_fork(worker); end
   def after_fork_hooks; end
-  def run_cleanup(worker); end
   def run_cleanup_hooks; end
   def shutdown; end
   def start; end
-
-  private
-
-  def add_setup_exception(result, setup_exception); end
 
   class << self
     def after_fork_hook(&blk); end
@@ -2634,9 +2757,28 @@ class ActiveSupport::Testing::Parallelization::Server
   def initialize; end
 
   def <<(o); end
-  def length; end
+  def active_workers?; end
   def pop; end
   def record(reporter, result); end
+  def shutdown; end
+  def start_worker(worker_id); end
+  def stop_worker(worker_id); end
+end
+
+class ActiveSupport::Testing::Parallelization::Worker
+  def initialize(number, url); end
+
+  def after_fork; end
+  def perform_job(job); end
+  def run_cleanup; end
+  def safe_record(reporter, result); end
+  def start; end
+  def work_from_queue; end
+
+  private
+
+  def add_setup_exception(result); end
+  def set_process_title(status); end
 end
 
 module ActiveSupport::Testing::SetupAndTeardown
@@ -2657,6 +2799,7 @@ class ActiveSupport::Testing::SimpleStubs
   def initialize; end
 
   def stub_object(object, method_name, &block); end
+  def stubbed?; end
   def stubbing(object, method_name); end
   def unstub_all!; end
 
@@ -2764,9 +2907,11 @@ class ActiveSupport::TimeWithZone
   def min; end
   def mon; end
   def month; end
+  def next_day?; end
   def nsec; end
   def past?; end
   def period; end
+  def prev_day?; end
   def respond_to?(sym, include_priv = T.unsafe(nil)); end
   def rfc2822; end
   def rfc3339(fraction_digits = T.unsafe(nil)); end
@@ -2786,6 +2931,7 @@ class ActiveSupport::TimeWithZone
   def to_s(format = T.unsafe(nil)); end
   def to_time; end
   def today?; end
+  def tomorrow?; end
   def tv_sec; end
   def usec; end
   def utc; end
@@ -2795,12 +2941,14 @@ class ActiveSupport::TimeWithZone
   def xmlschema(fraction_digits = T.unsafe(nil)); end
   def yday; end
   def year; end
+  def yesterday?; end
   def zone; end
 
   private
 
   def duration_of_variable_length?(obj); end
   def get_period_and_ensure_valid_local_time(period); end
+  def incorporate_utc_offset(time, offset); end
   def respond_to_missing?(sym, include_priv); end
   def transfer_time_values_to_utc_constructor(time); end
   def wrap_with_time_zone(time); end
@@ -2811,6 +2959,8 @@ class ActiveSupport::TimeWithZone
 end
 
 ActiveSupport::TimeWithZone::PRECISIONS = T.let(T.unsafe(nil), Hash)
+
+ActiveSupport::TimeWithZone::SECONDS_PER_DAY = T.let(T.unsafe(nil), Integer)
 
 class ActiveSupport::TimeZone
   include(::Comparable)
@@ -2826,6 +2976,7 @@ class ActiveSupport::TimeZone
   def iso8601(str); end
   def local(*args); end
   def local_to_utc(time, dst = T.unsafe(nil)); end
+  def match?(re); end
   def name; end
   def now; end
   def parse(str, now = T.unsafe(nil)); end
@@ -2965,6 +3116,7 @@ module ActiveSupport::XmlMini_REXML
   def merge!(hash, key, value); end
   def merge_element!(hash, element, depth); end
   def merge_texts!(hash, element); end
+  def require_rexml; end
 end
 
 ActiveSupport::XmlMini_REXML::CONTENT_KEY = T.let(T.unsafe(nil), String)
@@ -2980,6 +3132,7 @@ class Array
   include(::FriendlyId::UnfriendlyUtils)
 
   def as_json(options = T.unsafe(nil)); end
+  def compact_blank!; end
   def excluding(*elements); end
   def extract!; end
   def extract_options!; end
@@ -3118,6 +3271,7 @@ module DateAndTime::Calculations
   def monday; end
   def months_ago(months); end
   def months_since(months); end
+  def next_day?; end
   def next_occurring(day_of_week); end
   def next_quarter; end
   def next_week(given_day_in_next_week = T.unsafe(nil), same_time: T.unsafe(nil)); end
@@ -3125,6 +3279,7 @@ module DateAndTime::Calculations
   def on_weekday?; end
   def on_weekend?; end
   def past?; end
+  def prev_day?; end
   def prev_occurring(day_of_week); end
   def prev_quarter; end
   def prev_week(start_day = T.unsafe(nil), same_time: T.unsafe(nil)); end
@@ -3132,11 +3287,13 @@ module DateAndTime::Calculations
   def sunday; end
   def today?; end
   def tomorrow; end
+  def tomorrow?; end
   def weeks_ago(weeks); end
   def weeks_since(weeks); end
   def years_ago(years); end
   def years_since(years); end
   def yesterday; end
+  def yesterday?; end
 
   private
 
@@ -3152,10 +3309,13 @@ DateAndTime::Calculations::WEEKEND_DAYS = T.let(T.unsafe(nil), Array)
 
 module DateAndTime::Compatibility
   def preserve_timezone; end
+  def utc_to_local_returns_utc_offset_times; end
 
   class << self
     def preserve_timezone; end
-    def preserve_timezone=(obj); end
+    def preserve_timezone=(val); end
+    def utc_to_local_returns_utc_offset_times; end
+    def utc_to_local_returns_utc_offset_times=(val); end
   end
 end
 
@@ -3191,7 +3351,6 @@ class DateTime < ::Date
   def beginning_of_minute; end
   def blank?; end
   def change(options); end
-  def default_inspect; end
   def end_of_day; end
   def end_of_hour; end
   def end_of_minute; end
@@ -3280,12 +3439,14 @@ ERB::Util::JSON_ESCAPE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
 module Enumerable
   def as_json(options = T.unsafe(nil)); end
+  def compact_blank; end
   def exclude?(object); end
   def excluding(*elements); end
   def including(*elements); end
   def index_by; end
   def index_with(default = T.unsafe(nil)); end
   def many?; end
+  def pick(*keys); end
   def pluck(*keys); end
   def sum(identity = T.unsafe(nil), &block); end
   def without(*elements); end
@@ -3324,6 +3485,8 @@ class Hash
 
   def as_json(options = T.unsafe(nil)); end
   def assert_valid_keys(*valid_keys); end
+  def compact_blank; end
+  def compact_blank!; end
   def deep_merge(other_hash, &block); end
   def deep_merge!(other_hash, &block); end
   def deep_stringify_keys; end
@@ -3393,6 +3556,7 @@ I18n::RESERVED_KEYS_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 class I18n::Railtie < ::Rails::Railtie
   class << self
+    def forward_raise_on_missing_translations_config(app); end
     def include_fallbacks_module; end
     def init_fallbacks(fallbacks); end
     def initialize_i18n(app); end
@@ -3427,7 +3591,6 @@ end
 Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
 
 module Kernel
-  def class_eval(*args, &block); end
 
   private
 
@@ -3448,13 +3611,6 @@ class LoadError < ::ScriptError
   def is_missing?(location); end
 end
 
-module LoggerSilence
-  extend(::ActiveSupport::Concern)
-
-  include(::ActiveSupport::LoggerThreadSafeLevel)
-  include(::ActiveSupport::LoggerSilence)
-end
-
 class Module
   include(::ActiveSupport::Dependencies::ModuleConstMissing)
   include(::Module::Concerning)
@@ -3466,32 +3622,29 @@ class Module
   def attr_internal_reader(*attrs); end
   def attr_internal_writer(*attrs); end
   def cattr_accessor(*syms, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil), &blk); end
-  def cattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
-  def cattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
+  def cattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil), location: T.unsafe(nil)); end
+  def cattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil), location: T.unsafe(nil)); end
   def delegate(*methods, to: T.unsafe(nil), prefix: T.unsafe(nil), allow_nil: T.unsafe(nil), private: T.unsafe(nil)); end
-  def delegate_missing_to(target); end
+  def delegate_missing_to(target, allow_nil: T.unsafe(nil)); end
   def deprecate(*method_names); end
   def mattr_accessor(*syms, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil), &blk); end
-  def mattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
-  def mattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
+  def mattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil), location: T.unsafe(nil)); end
+  def mattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil), location: T.unsafe(nil)); end
   def method_visibility(method); end
   def module_parent; end
   def module_parent_name; end
   def module_parents; end
-  def parent; end
-  def parent_name; end
-  def parents; end
   def redefine_method(method, &block); end
   def redefine_singleton_method(method, &block); end
   def remove_possible_method(method); end
   def remove_possible_singleton_method(method); end
   def silence_redefinition_of_method(method); end
-  def thread_cattr_accessor(*syms, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil)); end
-  def thread_cattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil)); end
-  def thread_cattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil)); end
-  def thread_mattr_accessor(*syms, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil)); end
-  def thread_mattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil)); end
-  def thread_mattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil)); end
+  def thread_cattr_accessor(*syms, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
+  def thread_cattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
+  def thread_cattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
+  def thread_mattr_accessor(*syms, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
+  def thread_mattr_reader(*syms, instance_reader: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
+  def thread_mattr_writer(*syms, instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
 
   private
 
@@ -3506,7 +3659,7 @@ end
 
 module Module::Concerning
   def concern(topic, &module_definition); end
-  def concerning(topic, &block); end
+  def concerning(topic, prepend: T.unsafe(nil), &block); end
 end
 
 Module::DELEGATION_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
@@ -3521,6 +3674,10 @@ Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 class NameError < ::StandardError
   def missing_name; end
   def missing_name?(name); end
+
+  private
+
+  def real_mod_name(mod); end
 end
 
 class NilClass
@@ -3531,8 +3688,8 @@ class NilClass
   def as_json(options = T.unsafe(nil)); end
   def blank?; end
   def to_param; end
-  def try(method_name = T.unsafe(nil), *args); end
-  def try!(method_name = T.unsafe(nil), *args); end
+  def try(_method_name = T.unsafe(nil), *_arg1); end
+  def try!(_method_name = T.unsafe(nil), *_arg1); end
 end
 
 class Numeric
@@ -3585,10 +3742,12 @@ Numeric::TERABYTE = T.let(T.unsafe(nil), Integer)
 
 class Object < ::BasicObject
   include(::ActiveSupport::ToJsonWithActiveSupportEncoder)
+  include(::ActiveSupport::ForkTracker::CoreExt)
+  include(::ActiveSupport::ForkTracker::CoreExtPrivate)
   include(::Kernel)
   include(::JSON::Ext::Generator::GeneratorMethods::Object)
-  include(::ActiveSupport::Dependencies::Loadable)
   include(::ActiveSupport::Tryable)
+  include(::ActiveSupport::Dependencies::Loadable)
   include(::FriendlyId::ObjectUtils)
   include(::PP::ObjectMixin)
   include(::MakeMakefile)
@@ -3732,6 +3891,8 @@ class Struct
   def as_json(options = T.unsafe(nil)); end
 end
 
+Struct::AwsEmptyStructure = Struct
+
 Struct::Group = Etc::Group
 
 Struct::HTMLElementDescription = Struct
@@ -3746,6 +3907,10 @@ class Symbol
   include(::FriendlyId::UnfriendlyUtils)
 
   def as_json(options = T.unsafe(nil)); end
+  def end_with?(*suffixes); end
+  def ends_with?(*suffixes); end
+  def start_with?(*prefixes); end
+  def starts_with?(*prefixes); end
 end
 
 class Time
@@ -3775,6 +3940,7 @@ class Time
   def beginning_of_hour; end
   def beginning_of_minute; end
   def blank?; end
+  def ceil(precision = T.unsafe(nil)); end
   def change(options); end
   def compare_with_coercion(other); end
   def end_of_day; end
@@ -3782,6 +3948,7 @@ class Time
   def end_of_minute; end
   def eql?(other); end
   def eql_with_coercion(other); end
+  def floor(precision = T.unsafe(nil)); end
   def formatted_offset(colon = T.unsafe(nil), alternate_utc_string = T.unsafe(nil)); end
   def in(seconds); end
   def midday; end

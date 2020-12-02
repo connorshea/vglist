@@ -8,27 +8,27 @@ module ActionMailbox
   extend(::ActiveSupport::Autoload)
 
   def incinerate; end
-  def incinerate=(obj); end
+  def incinerate=(val); end
   def incinerate_after; end
-  def incinerate_after=(obj); end
+  def incinerate_after=(val); end
   def ingress; end
-  def ingress=(obj); end
+  def ingress=(val); end
   def logger; end
-  def logger=(obj); end
+  def logger=(val); end
   def queues; end
-  def queues=(obj); end
+  def queues=(val); end
 
   class << self
     def incinerate; end
-    def incinerate=(obj); end
+    def incinerate=(val); end
     def incinerate_after; end
-    def incinerate_after=(obj); end
+    def incinerate_after=(val); end
     def ingress; end
-    def ingress=(obj); end
+    def ingress=(val); end
     def logger; end
-    def logger=(obj); end
+    def logger=(val); end
     def queues; end
-    def queues=(obj); end
+    def queues=(val); end
     def railtie_helpers_paths; end
     def railtie_namespace; end
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
@@ -64,10 +64,10 @@ class ActionMailbox::Base
   def perform_processing; end
   def process; end
   def rescue_handlers; end
-  def rescue_handlers=(val); end
+  def rescue_handlers=(_arg0); end
   def rescue_handlers?; end
   def router; end
-  def router=(obj); end
+  def router=(val); end
 
   private
 
@@ -75,16 +75,16 @@ class ActionMailbox::Base
 
   class << self
     def __callbacks; end
-    def __callbacks=(val); end
+    def __callbacks=(value); end
     def __callbacks?; end
     def _process_callbacks; end
     def _process_callbacks=(value); end
     def receive(inbound_email); end
     def rescue_handlers; end
-    def rescue_handlers=(val); end
+    def rescue_handlers=(value); end
     def rescue_handlers?; end
     def router; end
-    def router=(obj); end
+    def router=(val); end
   end
 end
 
@@ -100,7 +100,6 @@ class ActionMailbox::BaseController < ::ActionController::Base
 
   class << self
     def __callbacks; end
-    def _helpers; end
     def middleware_stack; end
   end
 end
@@ -108,21 +107,10 @@ end
 class ActionMailbox::Engine < ::Rails::Engine
 end
 
-class ActionMailbox::InboundEmail < ::ActiveRecord::Base
-  include(::Kaminari::ActiveRecordModelExtension)
-  include(::Kaminari::ConfigurationMethods)
-  include(::ActionMailbox::InboundEmail::Routable)
-  include(::ActionMailbox::InboundEmail::MessageId)
-  include(::ActionMailbox::InboundEmail::Incineratable)
-  extend(::Kaminari::ConfigurationMethods::ClassMethods)
-  extend(::ActionMailbox::InboundEmail::MessageId::ClassMethods)
-
+class ActionMailbox::InboundEmail < ::ActionMailbox::Record
   class << self
-    def __callbacks; end
     def _validators; end
-    def attribute_type_decorations; end
     def defined_enums; end
-    def page(num = T.unsafe(nil)); end
   end
 end
 
@@ -176,16 +164,28 @@ class ActionMailbox::IncinerationJob < ::ActiveJob::Base
   end
 end
 
+class ActionMailbox::Record < ::ActiveRecord::Base
+  include(::Kaminari::ActiveRecordModelExtension)
+  include(::Kaminari::ConfigurationMethods)
+  extend(::Kaminari::ConfigurationMethods::ClassMethods)
+
+  class << self
+    def _validators; end
+    def defined_enums; end
+    def page(num = T.unsafe(nil)); end
+  end
+end
+
 class ActionMailbox::Router
   def initialize; end
 
   def add_route(address, to:); end
   def add_routes(routes); end
+  def mailbox_for(inbound_email); end
   def route(inbound_email); end
 
   private
 
-  def match_to_mailbox(inbound_email); end
   def routes; end
 end
 
@@ -240,16 +240,17 @@ module ActionMailbox::Routing
 end
 
 module ActionMailbox::Routing::ClassMethods
+  def mailbox_for(inbound_email); end
   def route(inbound_email); end
   def routing(routes); end
 end
 
 module ActionMailbox::TestHelper
   def create_inbound_email_from_fixture(fixture_name, status: T.unsafe(nil)); end
-  def create_inbound_email_from_mail(status: T.unsafe(nil), **mail_options); end
+  def create_inbound_email_from_mail(status: T.unsafe(nil), **mail_options, &block); end
   def create_inbound_email_from_source(source, status: T.unsafe(nil)); end
   def receive_inbound_email_from_fixture(*args); end
-  def receive_inbound_email_from_mail(**kwargs); end
+  def receive_inbound_email_from_mail(**kwargs, &block); end
   def receive_inbound_email_from_source(*args); end
 end
 

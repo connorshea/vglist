@@ -32,6 +32,7 @@ module Bullet
     def get_whitelist_associations(type, class_name); end
     def growl=(arg); end
     def honeybadger=(arg); end
+    def inject_into_page?; end
     def n_plus_one_query_enable=(_arg0); end
     def n_plus_one_query_enable?; end
     def notification?; end
@@ -46,7 +47,6 @@ module Bullet
     def rollbar=(arg); end
     def sentry=(arg); end
     def skip_html_injection=(_arg0); end
-    def skip_html_injection?; end
     def slack=(arg); end
     def stacktrace_excludes; end
     def stacktrace_excludes=(_arg0); end
@@ -59,7 +59,6 @@ module Bullet
     def unused_eager_loading_enable=(_arg0); end
     def unused_eager_loading_enable?; end
     def warnings; end
-    def whitelist; end
     def xmpp=(arg); end
 
     private
@@ -96,6 +95,7 @@ module Bullet::Dependency
   def active_record52?; end
   def active_record5?; end
   def active_record60?; end
+  def active_record61?; end
   def active_record6?; end
   def active_record?; end
   def active_record_version; end
@@ -269,8 +269,10 @@ class Bullet::Rack
 
   private
 
-  def footer_div_attributes; end
-  def footer_header; end
+  def details_attributes; end
+  def footer_console_message; end
+  def footer_content_attributes; end
+  def summary_attributes; end
   def xhr_script; end
 end
 
@@ -321,10 +323,12 @@ end
 
 class Object < ::BasicObject
   include(::ActiveSupport::ToJsonWithActiveSupportEncoder)
+  include(::ActiveSupport::ForkTracker::CoreExt)
+  include(::ActiveSupport::ForkTracker::CoreExtPrivate)
   include(::Kernel)
   include(::JSON::Ext::Generator::GeneratorMethods::Object)
-  include(::ActiveSupport::Dependencies::Loadable)
   include(::ActiveSupport::Tryable)
+  include(::ActiveSupport::Dependencies::Loadable)
   include(::FriendlyId::ObjectUtils)
   include(::PP::ObjectMixin)
   include(::MakeMakefile)

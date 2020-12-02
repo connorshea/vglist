@@ -335,6 +335,9 @@ class SimpleCov::Filter
 end
 
 module SimpleCov::Formatter
+  class << self
+    def from_env(env); end
+  end
 end
 
 class SimpleCov::Formatter::MultiFormatter

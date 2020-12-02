@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/actionview/all/actionview.rbi
 #
-# typed: strong
+# typed: false
 
 module ActionView
   class ActionViewError < StandardError; end
