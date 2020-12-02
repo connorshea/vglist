@@ -93,10 +93,9 @@ class Game < ApplicationRecord
 
   validates :wikidata_id,
     uniqueness: true,
-    allow_nil: true,
+    allow_blank: true,
     numericality: {
       only_integer: true,
-      allow_nil: true,
       greater_than: 0
     }
 
