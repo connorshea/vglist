@@ -37,8 +37,7 @@ gem 'pundit', '~> 2.1'
 gem 'pg_search', '~> 2.3'
 
 # Image transformation
-# TODO: Swap this out for image_processing and libvips in Rails 6.
-gem 'mini_magick', '~> 4.11'
+gem 'image_processing', '~> 1.12'
 
 # Validations for ActiveStorage.
 gem 'active_storage_validations', '~> 0.9'

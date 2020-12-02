@@ -22,11 +22,9 @@ module ApplicationHelper
       # This prevents users from having images that aren't either
       # too wide or too tall.
       image_tag T.must(user.avatar).variant(
-        combine_options: {
-          resize: "#{size}x#{size}^",
-          gravity: 'Center',
-          crop: "#{size}x#{size}+0+0"
-        }
+        resize_to_fill: [size, size],
+        gravity: 'Center',
+        crop: "#{size}x#{size}+0+0"
       ),
       height: "#{size}px",
       width: "#{size}px",
@@ -48,7 +46,7 @@ module ApplicationHelper
   def game_cover(game, width, height)
     if game.cover&.attached? && game.cover&.variable?
       image_tag T.must(game.cover).variant(
-        resize: "#{width}x#{height}>"
+        resize_to_limit: [width, height]
       ),
       width: "#{width}px",
       height: "#{height}px",
