@@ -36,7 +36,10 @@ puts "Creating Game Purchases for admin..."
   end
   stores.uniq!
 
-  GamePurchase.find_or_create_by!(
+  GamePurchase.create_with(
+    platforms: platforms,
+    stores: stores
+  ).find_or_create_by!(
     game: game,
     user: admin,
     rating: rand(0..100),
@@ -45,8 +48,6 @@ puts "Creating Game Purchases for admin..."
     completion_date: Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date),
     comments: Faker::Lorem.sentence,
     hours_played: rand(0..100),
-    replay_count: rand(0..3),
-    platforms: platforms,
-    stores: stores
+    replay_count: rand(0..3)
   )
 end

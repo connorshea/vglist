@@ -26,16 +26,17 @@ puts "Creating Game Purchases..."
     stores.uniq!
 
     begin
-      GamePurchase.find_or_create_by!(
+      GamePurchase.create_with(
+        platforms: platforms,
+        stores: stores
+      ).find_or_create_by!(
         game: game,
         user: user,
         rating: rand(0..100),
         completion_status: rand(0..5),
         start_date: Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date),
         completion_date: Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date),
-        comments: Faker::Lorem.sentence,
-        platforms: platforms,
-        stores: stores
+        comments: Faker::Lorem.sentence
       )
     rescue ActiveRecord::RecordInvalid => e
       puts "Error: #{e}"
