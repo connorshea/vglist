@@ -110,6 +110,10 @@ module Types
       argument :username, String, required: false, description: "Find a user by their username."
     end
 
+    field :current_user, UserType, null: true do
+      description "Get the currently authenticated user."
+    end
+
     field :users, UserType.connection_type, null: true do
       description "List all users."
     end
@@ -249,6 +253,11 @@ module Types
       else
         raise GraphQL::ExecutionError, "Field 'user' is missing a required argument: 'id' or 'username'"
       end
+    end
+
+    sig { returns(T.nilable(User)) }
+    def current_user
+      context[:current_user]
     end
 
     sig { returns(User::RelationType) }
