@@ -851,19 +851,19 @@ module Doorkeeper::AccessToken::GeneratedAttributeMethods
 end
 
 module Doorkeeper::AccessToken::GeneratedAssociationMethods
-  sig { returns(::Doorkeeper::Application) }
+  sig { returns(::OauthApplication) }
   def application; end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Doorkeeper::Application).void)).returns(::Doorkeeper::Application) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::OauthApplication).void)).returns(::OauthApplication) }
   def build_application(*args, &block); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Doorkeeper::Application).void)).returns(::Doorkeeper::Application) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::OauthApplication).void)).returns(::OauthApplication) }
   def create_application(*args, &block); end
 
-  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::Doorkeeper::Application).void)).returns(::Doorkeeper::Application) }
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::OauthApplication).void)).returns(::OauthApplication) }
   def create_application!(*args, &block); end
 
-  sig { params(value: ::Doorkeeper::Application).void }
+  sig { params(value: ::OauthApplication).void }
   def application=(value); end
 
   sig { returns(T.untyped) }

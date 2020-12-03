@@ -3317,13 +3317,13 @@ module User::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
-  sig { returns(::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy) }
+  sig { returns(::OauthApplication::ActiveRecord_Associations_CollectionProxy) }
   def oauth_applications; end
 
   sig { returns(T::Array[Integer]) }
   def oauth_application_ids; end
 
-  sig { params(value: T::Enumerable[::Doorkeeper::Application]).void }
+  sig { params(value: T::Enumerable[::OauthApplication]).void }
   def oauth_applications=(value); end
 
   sig { returns(::Relationship::ActiveRecord_Associations_CollectionProxy) }

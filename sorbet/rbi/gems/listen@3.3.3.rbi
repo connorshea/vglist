@@ -181,10 +181,6 @@ class Listen::Change
 
   def invalidate(type, rel_path, options); end
   def record; end
-
-  private
-
-  def config; end
 end
 
 class Listen::Change::Config
@@ -284,8 +280,6 @@ class Listen::Event::Queue
   private
 
   def _safe_relative_from_cwd(dir); end
-  def config; end
-  def event_queue; end
 end
 
 class Listen::Event::Queue::Config
@@ -369,6 +363,10 @@ class Listen::Options
   def initialize(opts, defaults); end
 
   def method_missing(name, *_); end
+
+  private
+
+  def respond_to_missing?(name, *_); end
 end
 
 class Listen::QueueOptimizer
@@ -379,11 +377,11 @@ class Listen::QueueOptimizer
   private
 
   def _calculate_add_remove_difference(actions, path, default_if_exists); end
-  def _detect_possible_editor_save(changes); end
   def _logical_action_for(path, actions); end
   def _reinterpret_related_changes(cookies); end
   def _squash_changes(changes); end
   def config; end
+  def editor_modified?(changes); end
 end
 
 class Listen::QueueOptimizer::Config
@@ -413,7 +411,6 @@ class Listen::Record
   def _fast_try_file(entry); end
   def _fast_unset_path(dirname, basename); end
   def _fast_update_file(dirname, basename, data); end
-  def tree; end
 end
 
 class Listen::Record::Entry
@@ -463,8 +460,9 @@ class Listen::Silencer
 
   private
 
+  def _ignore?(path); end
   def _init_ignores(ignores, overrides); end
-  def options; end
+  def _only?(path); end
 end
 
 class Listen::Silencer::Controller
@@ -490,8 +488,8 @@ module Listen::Thread
 
     private
 
-    def _exception_with_causes(ex); end
-    def _log_exception(ex, thread_name, caller_stack: T.unsafe(nil)); end
+    def _exception_with_causes(exception); end
+    def _log_exception(exception, thread_name, caller_stack: T.unsafe(nil)); end
   end
 end
 

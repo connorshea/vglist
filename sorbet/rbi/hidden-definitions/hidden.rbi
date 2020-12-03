@@ -1937,6 +1937,12 @@ end
 class ActiveStorage::Service::DiskService
 end
 
+class ActiveStorage::Transformers::ImageProcessingTransformer
+end
+
+class ActiveStorage::Transformers::ImageProcessingTransformer
+end
+
 module ActiveSupport::Dependencies
   extend ::ActiveSupport::Dependencies::ZeitwerkIntegration::Decorations
   def self.autoload_paths=(obj); end
@@ -1968,6 +1974,11 @@ end
 
 class Addrinfo
   def connect_internal(local_addrinfo, timeout=T.unsafe(nil)); end
+end
+
+class AdminController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 class ApplicationController
@@ -6773,6 +6784,11 @@ end
 class ColorException
 end
 
+class CompaniesController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class Company
   include ::PgSearch::Multisearchable
   def pg_search_multisearchable_options(); end
@@ -7591,7 +7607,6 @@ end
 class Doorkeeper::Application
   include ::Kaminari::ActiveRecordModelExtension
   include ::Kaminari::ConfigurationMethods
-  include ::Doorkeeper::Models::Ownership
   def authorized_for_resource_owner?(resource_owner); end
 
   def plaintext_secret(); end
@@ -8357,6 +8372,11 @@ class Engine
   def self.pg_search_multisearchable_options?(); end
 
   def self.search(*args); end
+end
+
+class EnginesController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 module Enumerable
@@ -10215,6 +10235,29 @@ module GC
   def self.verify_transient_heap_internal_consistency(); end
 end
 
+module GLib
+  extend ::FFI::Library
+end
+
+class GObject::GObject::ManagedStruct
+end
+
+class GObject::GObject::Struct
+end
+
+class GObject::GParamSpec
+end
+
+class GObject::GParamSpecPtr
+end
+
+class GObject::GValue
+end
+
+module GObject
+  extend ::FFI::Library
+end
+
 class Game
   include ::PgSearch::Multisearchable
   def pg_search_multisearchable_options(); end
@@ -10530,6 +10573,11 @@ module GamePurchaseStore::GeneratedRelationMethods
 end
 
 class GamePurchasesController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class GamesController
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
 end
@@ -11174,6 +11222,11 @@ class Genre
   def self.pg_search_multisearchable_options?(); end
 
   def self.search(*args); end
+end
+
+class GenresController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 module GetText
@@ -15138,6 +15191,42 @@ module OTNetstring
   def self.parse(io, encoding=T.unsafe(nil), fallback_encoding=T.unsafe(nil)); end
 end
 
+class OauthApplication::ActiveRecord_AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Doorkeeper::Application::GeneratedRelationMethods
+  include ::OauthApplication::GeneratedRelationMethods
+end
+
+class OauthApplication::ActiveRecord_Associations_CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Doorkeeper::Application::GeneratedRelationMethods
+  include ::OauthApplication::GeneratedRelationMethods
+end
+
+class OauthApplication::ActiveRecord_Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::Doorkeeper::Application::GeneratedRelationMethods
+  include ::OauthApplication::GeneratedRelationMethods
+end
+
+module OauthApplication::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+module OauthApplication::GeneratedRelationMethods
+  def authorization_code(*args, &block); end
+
+  def implicit(*args, &block); end
+
+  def not_authorization_code(*args, &block); end
+
+  def not_implicit(*args, &block); end
+end
+
+module OauthApplication::GeneratedRelationMethods
+  extend ::Mutex_m
+end
+
 class Object
   include ::MakeMakefile
   include ::ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
@@ -15240,10 +15329,6 @@ class OpenSSL::BN
   def /(_); end
 
   def negative?(); end
-end
-
-module OpenSSL::Buffering
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module OpenSSL::KDF
@@ -16679,40 +16764,45 @@ class Platform
   def self.search(*args); end
 end
 
-module Polyfill::Module::M70281897869420
+class PlatformsController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
-module Polyfill::Module::M70281897869420
+module Polyfill::Module::M70146318182540
 end
 
-module Polyfill::Module::M70281914572320
+module Polyfill::Module::M70146318182540
 end
 
-module Polyfill::Module::M70281914572320
+module Polyfill::Module::M70146318367160
 end
 
-module Polyfill::Module::M70281914811040
+module Polyfill::Module::M70146318367160
 end
 
-module Polyfill::Module::M70281914811040
+module Polyfill::Module::M70146319246280
 end
 
-module Polyfill::Module::M70281922980780
+module Polyfill::Module::M70146319246280
 end
 
-module Polyfill::Module::M70281922980780
+module Polyfill::Module::M70146321592120
 end
 
-module Polyfill::Module::M70281923064320
+module Polyfill::Module::M70146321592120
 end
 
-module Polyfill::Module::M70281923064320
+module Polyfill::Module::M70146352765600
 end
 
-module Polyfill::Module::M70281923146300
+module Polyfill::Module::M70146352765600
 end
 
-module Polyfill::Module::M70281923146300
+module Polyfill::Module::M70146371194580
+end
+
+module Polyfill::Module::M70146371194580
 end
 
 class Proc
@@ -20347,6 +20437,11 @@ class Series
   def self.search(*args); end
 end
 
+class SeriesController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class Set
   def ==(other); end
 
@@ -20378,8 +20473,49 @@ class Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher::DecoratedColumn
   RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
 end
 
+class SimpleCov::Formatter::JSONFormatter
+  def format(result); end
+end
+
+class SimpleCov::Formatter::JSONFormatter
+end
+
 class SimpleCov::LinesClassifier
   NOT_RELEVANT = ::T.let(nil, ::T.untyped)
+end
+
+module SimpleCovJSONFormatter
+end
+
+class SimpleCovJSONFormatter::ResultExporter
+  def export(); end
+
+  def initialize(result_hash); end
+  FILENAME = ::T.let(nil, ::T.untyped)
+end
+
+class SimpleCovJSONFormatter::ResultExporter
+end
+
+class SimpleCovJSONFormatter::ResultHashFormatter
+  def format(); end
+
+  def initialize(result); end
+end
+
+class SimpleCovJSONFormatter::ResultHashFormatter
+end
+
+class SimpleCovJSONFormatter::SourceFileFormatter
+  def format(); end
+
+  def initialize(source_file); end
+end
+
+class SimpleCovJSONFormatter::SourceFileFormatter
+end
+
+module SimpleCovJSONFormatter
 end
 
 class SimpleDelegator
@@ -20915,6 +21051,11 @@ class Sprockets::Context::ENVProxy
   RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
 end
 
+class StaticPagesController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class Statistic
   include ::Statistic::GeneratedAssociationMethods
 end
@@ -21003,6 +21144,10 @@ module SteamBlocklist::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
+class SteamImportService::GameStruct
+  def self.inherited(s); end
+end
+
 class SteamImportService::Result
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -21047,6 +21192,11 @@ end
 class Store
   extend ::Searchable::ClassMethods
   def self.search(*args); end
+end
+
+class StoresController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 class String
@@ -21773,6 +21923,11 @@ class User
   def self.search(*args); end
 end
 
+class UsersController
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 module UsersHelper
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -21806,6 +21961,34 @@ class Vector
   extend ::Exception2MessageMapper
   extend ::Matrix::ConversionHelper
   def self.included(mod); end
+end
+
+class Vips::Argument
+end
+
+class Vips::ArgumentClassPtr
+end
+
+class Vips::ArgumentInstancePtr
+end
+
+class Vips::Image::GenericPtr
+end
+
+class Vips::IntStruct
+end
+
+class Vips::ObjectClass
+end
+
+class Vips::Progress
+end
+
+class Vips::SizeStruct
+end
+
+module Vips
+  extend ::FFI::Library
 end
 
 WEBrick::HTTPAuth::Authenticator::AuthException = WEBrick::HTTPStatus::Unauthorized

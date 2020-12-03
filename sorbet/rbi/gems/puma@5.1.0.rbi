@@ -21,6 +21,8 @@ end
 module Puma::Const
 end
 
+Puma::Const::BANNED_HEADER_KEY = T.let(T.unsafe(nil), Regexp)
+
 Puma::Const::CGI_VER = T.let(T.unsafe(nil), String)
 
 Puma::Const::CHUNKED = T.let(T.unsafe(nil), String)
@@ -46,6 +48,8 @@ Puma::Const::CONTENT_LENGTH2 = T.let(T.unsafe(nil), String)
 Puma::Const::CONTENT_LENGTH_S = T.let(T.unsafe(nil), String)
 
 Puma::Const::CONTINUE = T.let(T.unsafe(nil), String)
+
+Puma::Const::DQUOTE = T.let(T.unsafe(nil), String)
 
 Puma::Const::EARLY_HINTS = T.let(T.unsafe(nil), String)
 
@@ -85,9 +89,9 @@ Puma::Const::HTTP_CONNECTION = T.let(T.unsafe(nil), String)
 
 Puma::Const::HTTP_EXPECT = T.let(T.unsafe(nil), String)
 
-Puma::Const::HTTP_HOST = T.let(T.unsafe(nil), String)
+Puma::Const::HTTP_HEADER_DELIMITER = T.let(T.unsafe(nil), String)
 
-Puma::Const::HTTP_INJECTION_REGEX = T.let(T.unsafe(nil), Regexp)
+Puma::Const::HTTP_HOST = T.let(T.unsafe(nil), String)
 
 Puma::Const::HTTP_VERSION = T.let(T.unsafe(nil), String)
 
@@ -98,6 +102,10 @@ Puma::Const::HTTP_X_FORWARDED_PROTO = T.let(T.unsafe(nil), String)
 Puma::Const::HTTP_X_FORWARDED_SCHEME = T.let(T.unsafe(nil), String)
 
 Puma::Const::HTTP_X_FORWARDED_SSL = T.let(T.unsafe(nil), String)
+
+Puma::Const::ILLEGAL_HEADER_KEY_REGEX = T.let(T.unsafe(nil), Regexp)
+
+Puma::Const::ILLEGAL_HEADER_VALUE_REGEX = T.let(T.unsafe(nil), Regexp)
 
 Puma::Const::KEEP_ALIVE = T.let(T.unsafe(nil), String)
 
@@ -192,6 +200,29 @@ end
 class Puma::HttpParserError < ::IOError
 end
 
+module Puma::JSON
+  class << self
+    def generate(value); end
+
+    private
+
+    def serialize_object_key(output, value); end
+    def serialize_string(output, value); end
+    def serialize_value(output, value); end
+  end
+end
+
+Puma::JSON::BACKSLASH = T.let(T.unsafe(nil), Regexp)
+
+Puma::JSON::CHAR_TO_ESCAPE = T.let(T.unsafe(nil), Regexp)
+
+Puma::JSON::CONTROL_CHAR_TO_ESCAPE = T.let(T.unsafe(nil), Regexp)
+
+Puma::JSON::QUOTE = T.let(T.unsafe(nil), Regexp)
+
+class Puma::JSON::SerializationError < ::StandardError
+end
+
 class Puma::Launcher
   def initialize(conf, launcher_args = T.unsafe(nil)); end
 
@@ -221,7 +252,9 @@ class Puma::Launcher
   def files_to_require_after_prune; end
   def generate_restart_data; end
   def graceful_stop; end
+  def integrate_with_systemd; end
   def log(str); end
+  def log_config; end
   def prune_bundler; end
   def prune_bundler?; end
   def puma_wild_location; end
@@ -394,7 +427,7 @@ class Puma::Server
   def reaping_time; end
   def reaping_time=(_arg0); end
   def requests_count; end
-  def run(background = T.unsafe(nil)); end
+  def run(background = T.unsafe(nil), thread_name: T.unsafe(nil)); end
   def running; end
   def shutting_down?; end
   def stats; end
@@ -449,6 +482,7 @@ class Puma::Binder
   def proto_env; end
   def redirects_for_restart; end
   def redirects_for_restart_env; end
+  def synthesize_binds_from_activated_fs(binds, only_matching); end
   def unix_paths; end
 
   private
@@ -599,6 +633,7 @@ class Puma::Configuration
   def default_max_threads; end
   def environment; end
   def environment_str; end
+  def final_options; end
   def flatten; end
   def flatten!; end
   def load; end
@@ -644,6 +679,7 @@ class Puma::DSL
   def app(obj = T.unsafe(nil), &block); end
   def before_fork(&block); end
   def bind(url); end
+  def bind_to_activated_sockets(bind = T.unsafe(nil)); end
   def clean_thread_locals(which = T.unsafe(nil)); end
   def clear_binds!; end
   def debug; end
@@ -662,6 +698,7 @@ class Puma::DSL
   def log_formatter(&block); end
   def log_requests(which = T.unsafe(nil)); end
   def lowlevel_error_handler(obj = T.unsafe(nil), &block); end
+  def max_fast_inline(num_of_requests); end
   def nakayoshi_fork(enabled = T.unsafe(nil)); end
   def on_refork(&block); end
   def on_restart(&block); end
@@ -694,6 +731,10 @@ class Puma::DSL
   def worker_shutdown_timeout(timeout); end
   def worker_timeout(timeout); end
   def workers(count); end
+
+  class << self
+    def ssl_bind_str(host, port, opts); end
+  end
 end
 
 class Puma::ErrorLogger
@@ -726,11 +767,15 @@ class Puma::Events
   def error(str); end
   def fire(hook, *args); end
   def fire_on_booted!; end
+  def fire_on_restart!; end
+  def fire_on_stopped!; end
   def format(str); end
   def formatter; end
   def formatter=(_arg0); end
   def log(str); end
   def on_booted(&block); end
+  def on_restart(&block); end
+  def on_stopped(&block); end
   def parse_error(error, req); end
   def register(hook, obj = T.unsafe(nil), &blk); end
   def ssl_error(error, ssl_socket); end
@@ -837,15 +882,15 @@ end
 class Puma::Reactor
   def initialize(&block); end
 
-  def add(io); end
+  def add(client); end
   def run(background = T.unsafe(nil)); end
   def shutdown; end
 
   private
 
-  def register(io); end
+  def register(client); end
   def select_loop; end
-  def wakeup!(io); end
+  def wakeup!(client); end
 end
 
 module Puma::Request
@@ -859,7 +904,8 @@ module Puma::Request
 
   def fast_write(io, str); end
   def fetch_status_code(status); end
-  def possible_header_injection?(header_value); end
+  def illegal_header_key?(header_key); end
+  def illegal_header_value?(header_value); end
   def req_env_post_parse(env); end
   def str_early_hints(headers); end
   def str_headers(env, status, headers, res_info, lines); end
@@ -957,6 +1003,7 @@ class Puma::UserFileDefaultOptions
   def default_options; end
   def fetch(key, default_value = T.unsafe(nil)); end
   def file_options; end
+  def final_options; end
   def finalize_values; end
   def user_options; end
 end

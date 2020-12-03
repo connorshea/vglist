@@ -70,6 +70,8 @@ class Zeitwerk::Loader
   def manages?(dir); end
   def mutex; end
   def mutex2; end
+  def on_load(cpath, &block); end
+  def on_load_callbacks; end
   def preload(*paths); end
   def preloads; end
   def push_dir(path, namespace: T.unsafe(nil)); end
@@ -130,6 +132,10 @@ module Zeitwerk::Loader::Callbacks
   def on_dir_autoloaded(dir); end
   def on_file_autoloaded(file); end
   def on_namespace_loaded(namespace); end
+
+  private
+
+  def run_on_load_callbacks(cpath); end
 end
 
 class Zeitwerk::NameError < ::NameError

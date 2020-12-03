@@ -1143,6 +1143,8 @@ RuboCop::AST::NodePattern::LexerRex::IDENTIFIER = T.let(T.unsafe(nil), Regexp)
 class RuboCop::AST::NodePattern::LexerRex::LexerError < ::StandardError
 end
 
+RuboCop::AST::NodePattern::LexerRex::NODE_TYPE = T.let(T.unsafe(nil), Regexp)
+
 RuboCop::AST::NodePattern::LexerRex::REGEXP = T.let(T.unsafe(nil), Regexp)
 
 RuboCop::AST::NodePattern::LexerRex::REGEXP_BODY = T.let(T.unsafe(nil), Regexp)
@@ -1415,8 +1417,6 @@ RuboCop::AST::NodePattern::Sets::SET_CLASS_MODULE = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET_CLASS_MODULE_STRUCT = T.let(T.unsafe(nil), Set)
 
-RuboCop::AST::NodePattern::Sets::SET_COLLECT_COMPACT_FLATTEN_ETC = T.let(T.unsafe(nil), Set)
-
 RuboCop::AST::NodePattern::Sets::SET_CONTEXT_SHARED_CONTEXT = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET_COUNT_LENGTH_SIZE = T.let(T.unsafe(nil), Set)
@@ -1450,8 +1450,6 @@ RuboCop::AST::NodePattern::Sets::SET_EXECUTE_REMOVE_BELONGS_TO = T.let(T.unsafe(
 RuboCop::AST::NodePattern::Sets::SET_EXPECT_ALLOW = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET_FACTORYGIRL_FACTORYBOT = T.let(T.unsafe(nil), Set)
-
-RuboCop::AST::NodePattern::Sets::SET_FIRST_LAST_POP_ETC = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET_FIRST_LAST__ETC = T.let(T.unsafe(nil), Set)
 
@@ -1632,10 +1630,6 @@ RuboCop::AST::NodePattern::Sets::SET____ETC = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC_2 = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET____ETC_3 = T.let(T.unsafe(nil), Set)
-
-RuboCop::AST::NodePattern::Sets::SET____ETC_4 = T.let(T.unsafe(nil), Set)
-
-RuboCop::AST::NodePattern::Sets::SET____ETC_5 = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::VAR = T.let(T.unsafe(nil), String)
 
