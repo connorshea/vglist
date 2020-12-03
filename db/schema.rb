@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_09_014503) do
+ActiveRecord::Schema.define(version: 2020_12_03_012527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 2020_07_09_014503) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "owner_id"
     t.string "owner_type"
+    t.integer "grant_flow", default: 0, null: false
     t.index ["owner_id", "owner_type"], name: "index_oauth_applications_on_owner_id_and_owner_type"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end

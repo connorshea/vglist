@@ -23,6 +23,8 @@ Doorkeeper.configure do
     end
   end
 
+  application_class 'OauthApplication'
+
   # If you are planning to use Doorkeeper in Rails 5 API-only application, then you might
   # want to use API mode that will skip all the views management and change the way how
   # Doorkeeper responds to a requests.
@@ -305,12 +307,11 @@ Doorkeeper.configure do
   # @param allow_grant_flow_for_client [Proc] Block or any object respond to #call
   # @return [Boolean] `true` if allow or `false` if forbid the request
   #
-  # allow_grant_flow_for_client do |grant_flow, client|
-  #   # `grant_flows` is an Array column with grant
-  #   # flows that application supports
-  #
-  #   client.grant_flows.include?(grant_flow)
-  # end
+  allow_grant_flow_for_client do |grant_flow, client|
+    # `grant_flow` is an enum column with the grant
+    # flow that the application supports
+    client.grant_flow.to_s == grant_flow
+  end
 
   # Hook into the strategies' request & response life-cycle in case your
   # application needs advanced customization or logging:

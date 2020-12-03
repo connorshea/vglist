@@ -61,7 +61,7 @@ class User < ApplicationRecord
   # rubocop:enable Rails/InverseOf
 
   has_many :oauth_applications,
-    class_name: 'Doorkeeper::Application',
+    class_name: 'OauthApplication',
     as: :owner
 
   # External accounts, e.g. Steam. Can be changed to a has_many association if

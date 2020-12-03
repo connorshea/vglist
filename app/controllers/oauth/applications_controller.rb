@@ -32,7 +32,7 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   # Every application must have some owner
   def create
     authorize @application, policy_class: Oauth::ApplicationPolicy
-    @application = Doorkeeper::Application.new(application_params)
+    @application = OauthApplication.new(application_params)
     @application.owner = current_user if T.unsafe(Doorkeeper).configuration.confirm_application_owner?
     if @application.save
       flash[:notice] = I18n.t(:notice, scope: [:doorkeeper, :flash, :applications, :create])
@@ -61,7 +61,7 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   private
 
   def set_application
-    @application = Doorkeeper::Application.find(params[:id])
+    @application = OauthApplication.find(params[:id])
   end
 
   def application_params

@@ -132,7 +132,7 @@ RSpec.describe "Settings", type: :request do
 
       expect do
         post oauth_applications_path, params: { doorkeeper_application: attributes }
-      end.to change(Doorkeeper::Application, :count).by(1)
+      end.to change(OauthApplication, :count).by(1)
     end
   end
 
@@ -200,7 +200,7 @@ RSpec.describe "Settings", type: :request do
       application
       expect do
         delete oauth_application_path(application)
-      end.to change(Doorkeeper::Application, :count).by(-1)
+      end.to change(OauthApplication, :count).by(-1)
     end
 
     it "does not delete the OAuth application for users who are not the owner" do
@@ -208,7 +208,7 @@ RSpec.describe "Settings", type: :request do
       application
       expect do
         delete oauth_application_path(application)
-      end.to change(Doorkeeper::Application, :count).by(0)
+      end.to change(OauthApplication, :count).by(0)
     end
   end
 
