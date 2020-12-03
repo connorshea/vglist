@@ -222,5 +222,26 @@ RSpec.describe "Users API", type: :request do
         }]
       )
     end
+
+    it "returns data for current user when requesting currentUser" do
+      user
+      query_string = <<-GRAPHQL
+        query {
+          currentUser {
+            id
+            username
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+
+      expect(result["data"]["currentUser"]).to eq(
+        {
+          "id" => user.id.to_s,
+          "username" => user.username
+        }
+      )
+    end
   end
 end
