@@ -167,7 +167,12 @@ Doorkeeper.configure do
   # values should be the array of scopes for that grant type.
   # Note: scopes should be from configured_scopes (i.e. default or optional)
   #
-  # scopes_by_grant_type password: [:write], client_credentials: [:update]
+  # CUSTOMIZATION NOTE: Implicit grants only allow read access because
+  # they're less secure.
+  scopes_by_grant_type(
+    implicit: [:read],
+    authorization_code: [:read, :write]
+  )
 
   # Forbids creating/updating applications with arbitrary scopes that are
   # not in configuration, i.e. +default_scopes+ or +optional_scopes+.
@@ -274,7 +279,7 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w[authorization_code client_credentials]
+  grant_flows %w[authorization_code implicit]
 
   # Allows to customize OAuth grant flows that +each+ application support.
   # You can configure a custom block (or use a class respond to `#call`) that must
