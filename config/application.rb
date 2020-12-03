@@ -32,12 +32,17 @@ module VideoGameList
 
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
-    # Allow cross-origin requests to GraphQL and ActiveStorage blobs.
+    # Allow cross-origin requests to GraphQL, ActiveStorage blobs, and OAuth
+    # auth routes.
     config.middleware.insert_before 0, Rack::Cors do
       T.unsafe(self).allow do
         T.unsafe(self).origins '*'
+        # Add CORS exception for GraphQL requests.
         T.unsafe(self).resource '/graphql', headers: :any, methods: [:post, :options]
+        # Add CORS exception for ActiveStorage blobs.
         T.unsafe(self).resource '/rails/active_storage/*', headers: :any, methods: :get
+        # Add CORS exception for OAuth authentication.
+        T.unsafe(self).resource '/settings/oauth/token', headers: :any, methods: :post
       end
     end
 
