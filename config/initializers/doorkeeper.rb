@@ -23,6 +23,52 @@ Doorkeeper.configure do
     end
   end
 
+  # You can use your own model classes if you need to extend (or even override) default
+  # Doorkeeper models such as `Application`, `AccessToken` and `AccessGrant.
+  #
+  # Be default Doorkeeper ActiveRecord ORM uses it's own classes:
+  #
+  # access_token_class "Doorkeeper::AccessToken"
+  # access_grant_class "Doorkeeper::AccessGrant"
+  # application_class "Doorkeeper::Application"
+  #
+  # Don't forget to include Doorkeeper ORM mixins into your custom models:
+  #
+  #   *  ::Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken - for access token
+  #   *  ::Doorkeeper::Orm::ActiveRecord::Mixins::AccessGrant - for access grant
+  #   *  ::Doorkeeper::Orm::ActiveRecord::Mixins::Application - for application (OAuth2 clients)
+  #
+  # For example:
+  #
+  # access_token_class "MyAccessToken"
+  #
+  # class MyAccessToken < ApplicationRecord
+  #   include ::Doorkeeper::Orm::ActiveRecord::Mixins::AccessToken
+  #
+  #   self.table_name = "hey_i_wanna_my_name"
+  #
+  #   def destroy_me!
+  #     destroy
+  #   end
+  # end
+
+  # Enables polymorphic Resource Owner association for Access Tokens and Access Grants.
+  # By default this option is disabled.
+  #
+  # Make sure you properly setup you database and have all the required columns (run
+  # `bundle exec rails generate doorkeeper:enable_polymorphic_resource_owner` and execute Rails
+  # migrations).
+  #
+  # If this option enabled, Doorkeeper will store not only Resource Owner primary key
+  # value, but also it's type (class name). See "Polymorphic Associations" section of
+  # Rails guides: https://guides.rubyonrails.org/association_basics.html#polymorphic-associations
+  #
+  # [NOTE] If you apply this option on already existing project don't forget to manually
+  # update `resource_owner_type` column in the database and fix migration template as it will
+  # set NOT NULL constraint for Access Grants table.
+  #
+  # use_polymorphic_resource_owner
+
   # If you are planning to use Doorkeeper in Rails 5 API-only application, then you might
   # want to use API mode that will skip all the views management and change the way how
   # Doorkeeper responds to a requests.
@@ -82,6 +128,14 @@ Doorkeeper.configure do
   #
   # reuse_access_token
 
+  # In case you enabled `reuse_access_token` option Doorkeeper will try to find matching
+  # token using `matching_token_for` Access Token API that searches for valid records
+  # in batches in order not to pollute the memory with all the database records. By default
+  # Doorkeeper uses batch size of 10 000 records. You can increase or decrease this value
+  # depending on your needs and server capabilities.
+  #
+  # token_lookup_batch_size 10_000
+
   # Set a limit for token_reuse if using reuse_access_token option
   #
   # This option limits token_reusability to some extent.
@@ -91,6 +145,16 @@ Doorkeeper.configure do
   # This option should be a percentage(i.e. (0,100])
   #
   # token_reuse_limit 100
+
+  # Only allow one valid access token obtained via client credentials
+  # per client. If a new access token is obtained before the old one
+  # expired, the old one gets revoked (disabled by default)
+  #
+  # When enabling this option, make sure that you do not expect multiple processes
+  # using the same credentials at the same time (e.g. web servers spanning
+  # multiple machines and/or processes).
+  #
+  # revoke_previous_client_credentials_token
 
   # Hash access and refresh tokens before persisting them.
   # This will disable the possibility to use +reuse_access_token+
@@ -312,6 +376,17 @@ Doorkeeper.configure do
   #   client.grant_flows.include?(grant_flow)
   # end
 
+  # If you need arbitrary Resource Owner-Client authorization you can enable this option
+  # and implement the check your need. Config option must respond to #call and return
+  # true in case resource owner authorized for the specific application or false in other
+  # cases.
+  #
+  # Be default all Resource Owners are authorized to any Client (application).
+  #
+  # authorize_resource_owner_for_client do |client, resource_owner|
+  #   resource_owner.admin? || client.owners_whitelist.include?(resource_owner)
+  # end
+
   # Hook into the strategies' request & response life-cycle in case your
   # application needs advanced customization or logging:
   #
@@ -324,17 +399,25 @@ Doorkeeper.configure do
   # end
 
   # Hook into Authorization flow in order to implement Single Sign Out
-  # or add any other functionality.
+  # or add any other functionality. Inside the block you have an access
+  # to `controller` (authorizations controller instance) and `context`
+  # (Doorkeeper::OAuth::Hooks::Context instance) which provides pre auth
+  # or auth objects with issued token based on hook type (before or after).
   #
-  # before_successful_authorization do |controller|
+  # before_successful_authorization do |controller, context|
   #   Rails.logger.info(controller.request.params.inspect)
+  #
+  #   Rails.logger.info(context.pre_auth.inspect)
   # end
   #
-  # after_successful_authorization do |controller|
+  # after_successful_authorization do |controller, context|
   #   controller.session[:logout_urls] <<
   #     Doorkeeper::Application
   #       .find_by(controller.request.params.slice(:redirect_uri))
   #       .logout_uri
+  #
+  #   Rails.logger.info(context.auth.inspect)
+  #   Rails.logger.info(context.issued_token)
   # end
 
   # Under some circumstances you might want to have applications auto-approved,
