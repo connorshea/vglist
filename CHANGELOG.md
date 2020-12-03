@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.12.2
+### Added
+- Add `currentUser` query for GraphQL API. ([#1668])
+
+### Fixed
+- Fix issue with CORS that was preventing the OAuth authentication flow from working via a webpage. ([#1667])
+
 ## v2020.11.28
 ### Added
 - Add the ability to update 'Hours Played' for existing games in your library via the Steam importer. ([#1649])
@@ -787,3 +794,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1501]: https://github.com/connorshea/vglist/pull/1501
 [#1568]: https://github.com/connorshea/vglist/pull/1568
 [#1649]: https://github.com/connorshea/vglist/pull/1649
+[#1667]: https://github.com/connorshea/vglist/pull/1667
+[#1668]: https://github.com/connorshea/vglist/pull/1668
