@@ -370,7 +370,7 @@ class ActiveModel::EachValidator < ::ActiveModel::Validator
 
   private
 
-  def read_attribute_for_validation(record, attr_name); end
+  def prepare_value_for_validation(value, record, attr_name); end
 end
 
 class ActiveModel::Error
@@ -1015,8 +1015,6 @@ ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
-
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
@@ -1210,7 +1208,7 @@ class ActiveModel::Validations::NumericalityValidator < ::ActiveModel::EachValid
   def is_number?(raw_value, precision, scale); end
   def parse_as_number(raw_value, precision, scale); end
   def parse_float(raw_value, precision, scale); end
-  def read_attribute_for_validation(record, attr_name); end
+  def prepare_value_for_validation(value, record, attr_name); end
   def record_attribute_changed_in_place?(record, attr_name); end
 end
 

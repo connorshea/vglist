@@ -343,6 +343,11 @@ class Array
   def self.wrap(object); end
 end
 
+class ActiveSupport::BacktraceCleaner
+  sig { params(backtrace: T::Array[String], kind: Symbol).returns(T::Array[String]) }
+  def clean(backtrace, kind = :silent); end
+end
+
 module ActiveSupport::NumberHelper
   extend(::ActiveSupport::NumberHelper)
 
@@ -2775,7 +2780,7 @@ module ActiveSupport::Rescuable::ClassMethods
   def handler_for_rescue(exception, object: T.unsafe(nil)); end
 
   # https://github.com/rails/rails/blob/5-2-stable/activesupport/lib/active_support/rescuable.rb#L51
-  sig { params(klasses: Class, with: T.nilable(Symbol), block: T.nilable(T.proc.void)).void }
+  sig { params(klasses: Class, with: T.nilable(Symbol), block: T.nilable(T.proc.params(error: T.untyped).void)).void }
   def rescue_from(*klasses, with: T.unsafe(nil), &block); end
 
   def rescue_with_handler(exception, object: T.unsafe(nil), visited_exceptions: T.unsafe(nil)); end

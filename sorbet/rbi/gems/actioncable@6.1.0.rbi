@@ -774,8 +774,6 @@ ActionCable::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActionCable::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-ActionCable::VERSION::PRE = T.let(T.unsafe(nil), String)
-
 ActionCable::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActionCable::VERSION::TINY = T.let(T.unsafe(nil), Integer)

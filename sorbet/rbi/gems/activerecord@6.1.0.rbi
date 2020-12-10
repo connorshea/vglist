@@ -944,7 +944,7 @@ module ActiveRecord::AttributeMethods
   def attributes_for_create(attribute_names); end
   def attributes_for_update(attribute_names); end
   def attributes_with_values(attribute_names); end
-  def format_for_inspect(value); end
+  def format_for_inspect(name, value); end
   def pk_attribute?(name); end
 
   class << self
@@ -3141,7 +3141,7 @@ module ActiveRecord::Enum
   def _enum_methods_module; end
   def assert_valid_enum_definition_values(values); end
   def detect_enum_conflict!(enum_name, method_name, klass_method = T.unsafe(nil)); end
-  def detect_negative_condition!(method_name); end
+  def detect_negative_enum_conditions!(method_names); end
   def raise_conflict_error(enum_name, method_name, type: T.unsafe(nil), source: T.unsafe(nil)); end
 
   class << self
@@ -6315,8 +6315,6 @@ end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 

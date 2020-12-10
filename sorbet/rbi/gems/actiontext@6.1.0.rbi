@@ -320,6 +320,8 @@ class ActionText::Content
   def attachment_nodes; end
 
   class << self
+    def default_renderer; end
+    def default_renderer=(val); end
     def fragment_by_canonicalizing_content(content); end
     def renderer; end
     def renderer=(obj); end

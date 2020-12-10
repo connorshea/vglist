@@ -25,7 +25,6 @@ module ActiveStorage::VariantRecord::CustomFinderMethods
 end
 
 class ActiveStorage::VariantRecord < ActiveStorage::Record
-  include ActiveStorage::VariantRecord::GeneratedAttributeMethods
   include ActiveStorage::VariantRecord::GeneratedAssociationMethods
   extend ActiveStorage::VariantRecord::CustomFinderMethods
   extend ActiveStorage::VariantRecord::QueryMethodsReturningRelation
@@ -503,170 +502,6 @@ module ActiveStorage::VariantRecord::QueryMethodsReturningAssociationRelation
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
 end
 
-module ActiveStorage::VariantRecord::GeneratedAttributeMethods
-  sig { returns(Integer) }
-  def blob_id; end
-
-  sig { params(value: T.any(Numeric, ActiveSupport::Duration)).void }
-  def blob_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def blob_id?; end
-
-  sig { returns(Integer) }
-  def id; end
-
-  sig { params(value: T.any(Numeric, ActiveSupport::Duration)).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(String) }
-  def variation_digest; end
-
-  sig { params(value: T.any(String, Symbol)).void }
-  def variation_digest=(value); end
-
-  sig { returns(T::Boolean) }
-  def variation_digest?; end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def saved_change_to_id?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_id(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def will_save_change_to_id?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def id_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_was(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def id_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_id!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def id_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def id_came_from_user?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def saved_change_to_blob_id?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_blob_id(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def will_save_change_to_blob_id?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def blob_id_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_was(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def blob_id_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_blob_id!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def blob_id_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def blob_id_came_from_user?(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def saved_change_to_variation_digest?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def saved_change_to_variation_digest(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_before_last_save(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def will_save_change_to_variation_digest?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_change_to_be_saved(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_in_database(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def variation_digest_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_will_change!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_was(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def variation_digest_previously_changed?(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_previous_change(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def restore_variation_digest!(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def variation_digest_before_type_cast(*args); end
-
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def variation_digest_came_from_user?(*args); end
-end
-
 module ActiveStorage::VariantRecord::GeneratedAssociationMethods
   sig { returns(::ActiveStorage::Blob) }
   def blob; end
@@ -730,4 +565,7 @@ module ActiveStorage::VariantRecord::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def image_blob_ids=(ids); end
+end
+
+module ActiveStorage::VariantRecord::GeneratedAttributeMethods
 end

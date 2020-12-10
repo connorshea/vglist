@@ -460,8 +460,15 @@ class Rails::Configuration::MiddlewareStackProxy
 end
 
 class Rails::Engine < ::Rails::Railtie
+  include(::ActiveSupport::Callbacks)
+  extend(::ActiveSupport::Callbacks::ClassMethods)
+
   def initialize; end
 
+  def __callbacks; end
+  def __callbacks?; end
+  def _load_seed_callbacks; end
+  def _run_load_seed_callbacks(&block); end
   def app; end
   def call(env); end
   def config; end
@@ -499,9 +506,13 @@ class Rails::Engine < ::Rails::Railtie
   def default_middleware_stack; end
   def has_migrations?; end
   def load_config_initializer(initializer); end
-  def with_inline_jobs; end
 
   class << self
+    def __callbacks; end
+    def __callbacks=(value); end
+    def __callbacks?; end
+    def _load_seed_callbacks; end
+    def _load_seed_callbacks=(value); end
     def called_from; end
     def called_from=(_arg0); end
     def eager_load!(*args, &block); end
@@ -1082,6 +1093,7 @@ end
 
 class Rails::Railtie
   include(::Rails::Initializable)
+  extend(::ActiveSupport::DescendantsTracker)
   extend(::Rails::Initializable::ClassMethods)
 
   def initialize; end
@@ -1109,7 +1121,6 @@ class Rails::Railtie
     def configure(&block); end
     def console(&blk); end
     def generators(&blk); end
-    def inherited(base); end
     def instance; end
     def railtie_name(name = T.unsafe(nil)); end
     def rake_tasks(&blk); end
@@ -1263,8 +1274,6 @@ end
 Rails::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 Rails::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-
-Rails::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 Rails::VERSION::STRING = T.let(T.unsafe(nil), String)
 
