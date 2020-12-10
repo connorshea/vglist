@@ -1,8 +1,5 @@
-# typed: true
+# typed: false
 class UsersController < ApplicationController
-  # Skip bullet on activity to avoid errors.
-  around_action :skip_bullet, if: -> { defined?(Bullet) }
-
   def index
     # Hide banned users from users that aren't moderators or admins.
     if current_user&.member? || current_user.nil?
@@ -377,13 +374,5 @@ class UsersController < ApplicationController
       :avatar,
       :privacy
     )
-  end
-
-  def skip_bullet
-    previous_value = Bullet.enable?
-    Bullet.enable = false
-    yield
-  ensure
-    Bullet.enable = previous_value
   end
 end

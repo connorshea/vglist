@@ -4,7 +4,6 @@
 
 # typed: strict
 
-module ::FilterEncryptedAttributes; end
 module T::InterfaceWrapper::Helpers; end
 module T::Private::Abstract::Hooks; end
 module T::Private::Methods::MethodHooks; end

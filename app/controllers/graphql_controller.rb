@@ -1,8 +1,5 @@
 # typed: false
 class GraphqlController < ApplicationController
-  # Skip bullet on GraphQL queries to avoid errors.
-  around_action :skip_bullet, if: -> { defined?(Bullet) }
-
   # If the user hasn't provided any token, return a specific error message.
   before_action :handle_user_not_logged_in, if: -> { !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email') }
 
@@ -117,13 +114,5 @@ class GraphqlController < ApplicationController
 
   def handle_user_not_logged_in
     render json: { error: { message: 'You must provide a valid email and token to use the GraphQL API.' } }, status: :unauthorized
-  end
-
-  def skip_bullet
-    previous_value = Bullet.enable?
-    Bullet.enable = false
-    yield
-  ensure
-    Bullet.enable = previous_value
   end
 end

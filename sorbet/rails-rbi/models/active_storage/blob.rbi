@@ -24,7 +24,7 @@ module ActiveStorage::Blob::CustomFinderMethods
   def find_by_id!(id); end
 end
 
-class ActiveStorage::Blob < ActiveRecord::Base
+class ActiveStorage::Blob < ActiveStorage::Record
   include ActiveStorage::Blob::GeneratedAttributeMethods
   include ActiveStorage::Blob::GeneratedAssociationMethods
   extend ActiveStorage::Blob::CustomFinderMethods
@@ -36,6 +36,156 @@ class ActiveStorage::Blob < ActiveRecord::Base
 
   sig { params(args: T.untyped).returns(ActiveStorage::Blob::ActiveRecord_Relation) }
   def self.with_attached_preview_image(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_variant_records=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_variant_records=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_variant_records=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_variant_records=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_variant_records=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_variant_records=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_variant_records=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_variant_records; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_variant_records?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_variant_records=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_variant_records(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_variant_records(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_preview_image_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_preview_image_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_preview_image_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_preview_image_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_preview_image_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_preview_image_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_preview_image_attachment=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_preview_image_attachment; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_preview_image_attachment?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_preview_image_attachment=(val); end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_preview_image_attachment(*args); end
@@ -989,14 +1139,29 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def preview_image_blob=(value); end
 
+  sig { returns(::ActiveStorage::VariantRecord::ActiveRecord_Associations_CollectionProxy) }
+  def variant_records; end
+
+  sig { returns(T::Array[T.untyped]) }
+  def variant_record_ids; end
+
+  sig { params(value: T::Enumerable[::ActiveStorage::VariantRecord]).void }
+  def variant_records=(value); end
+
   sig { returns(T.nilable(ActiveStorage::Attached::One)) }
   def preview_image; end
 
   sig { params(attachable: T.untyped).returns(T.untyped) }
   def preview_image=(attachable); end
 
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def variant_record_ids=(ids); end
+
   sig { returns(T.untyped) }
   def reload_preview_image_attachment; end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def preview_image_attachment_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def preview_image_blob_ids=(ids); end

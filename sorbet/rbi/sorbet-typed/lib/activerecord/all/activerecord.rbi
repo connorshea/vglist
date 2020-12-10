@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/all/activerecord.rbi
 #
-# typed: false
+# typed: ignore
 
 VariadicUntypedFunction = T.type_alias { Proc }
 AssociationCallback = T.type_alias do
@@ -67,7 +67,7 @@ module ActiveRecord::Associations::ClassMethods
   sig do
     params(
       name: Symbol,
-      scope: T.nilable(T.proc.void),
+      scope: T.any(T.nilable(T.proc.void), T.nilable(T.proc.params(arg: T.untyped).void)),
       after_add: AssociationCallback,
       after_remove: AssociationCallback,
       anonymous_class: T.nilable(T.any(Symbol, String)),
@@ -250,7 +250,6 @@ end
 
 module ActiveRecord::AttributeMethods
   extend(::ActiveSupport::Concern)
-  extend(::FilterEncryptedAttributes)
 
   include(::ActiveModel::AttributeMethods)
   include(::ActiveRecord::AttributeMethods::Read)
@@ -803,6 +802,30 @@ class ActiveRecord::Enum::EnumType < ::ActiveModel::Type::Value
   def mapping; end
   def name; end
   def subtype; end
+end
+
+class ActiveRecord::Generators::Base < ::Rails::Generators::NamedBase
+  include ActiveRecord::Generators::Migration
+
+  class << self
+    def base_root; end
+  end
+end
+
+module ActiveRecord::Generators::Migration
+  extend ActiveSupport::Concern
+  include Rails::Generators::Migration
+
+  private
+
+  def primary_key_type; end
+  def db_migrate_path; end
+  def default_migrate_path; end
+  def configured_migrate_path; end
+end
+
+module ActiveRecord::Generators::Migration::ClassMethods
+  def next_migration_number(dirname); end
 end
 
 ActiveRecord::Migration::MigrationFilenameRegexp = T.let(T.unsafe(nil), Regexp)

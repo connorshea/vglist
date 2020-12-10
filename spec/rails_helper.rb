@@ -73,12 +73,6 @@ RSpec.configure do |config|
   config.include FeatureTestHelper, type: :feature
   config.include ApiRequestTestHelper, type: :request
 
-  # Raise an error on N+1 queries.
-  if Bullet.enable?
-    config.before(:each) { Bullet.start_request }
-    config.after(:each) { Bullet.end_request }
-  end
-
   # Prints JavaScript errors to the console if there are any.
   if ENV['RSPEC_FEATURE_DEBUG']
     config.after(:each, type: :feature, js: true) do
