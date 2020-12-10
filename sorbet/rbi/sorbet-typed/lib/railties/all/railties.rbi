@@ -29,7 +29,7 @@ module Rails
     def cache=(_arg0); end
     def configuration; end
 
-    # sig { returns(ActiveSupport::StringInquirer) }
+    sig { returns(ActiveSupport::StringInquirer) }
     def env; end
 
     def env=(environment); end
