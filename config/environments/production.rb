@@ -44,7 +44,7 @@ Rails.application.configure do
   config.active_storage.service = :amazon
 
   # Proxy storage requests directly to DigitalOcean rather than using a redirect.
-  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+  # config.active_storage.resolve_model_to_route = :rails_storage_proxy
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
