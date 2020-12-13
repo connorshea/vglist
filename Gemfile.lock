@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/connorshea/active_storage_validations
+  revision: b84dfeaba49d948ad15822a582286577a96cfa61
+  branch: fix-find-signed-rails-6-1
+  specs:
+    active_storage_validations (0.9.0)
+      rails (>= 5.2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -39,8 +47,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_storage_validations (0.9.0)
-      rails (>= 5.2.0)
     activejob (6.1.0)
       activesupport (= 6.1.0)
       globalid (>= 0.3.6)
@@ -439,7 +445,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_storage_validations (~> 0.9)
+  active_storage_validations!
   addressable (~> 2.7.0)
   aws-sdk-s3 (~> 1.66)
   better_errors (~> 2.9)
