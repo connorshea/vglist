@@ -43,6 +43,9 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :amazon
 
+  # Proxy storage requests directly to DigitalOcean rather than using a redirect.
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
