@@ -98,9 +98,21 @@ export default {
         .then(purchasedGames => {
           this.games = purchasedGames;
           this.isLoading = false;
-          // Emit a bulma init event to make sure that the filter dropdown is initialized.
-          let event = new Event('bulma:init');
-          document.body.dispatchEvent(event);
+
+          // Make sure to trigger bulma:init, even if the load event has already fired.
+          // This can theoretically trigger a race condtion because readyState
+          // will be set to complete right before the load event is fired, but yolo.
+          if (document.readyState === 'complete') {
+            // Emit a bulma init event to make sure that the filter dropdown is initialized.
+            let event = new Event('bulma:init');
+            document.body.dispatchEvent(event);
+          } else {
+            window.addEventListener('load', (_loadEvent) => {
+              // Emit a bulma init event to make sure that the filter dropdown is initialized.
+              let event = new Event('bulma:init');
+              document.body.dispatchEvent(event);
+            });
+          }
         });
     },
     refreshLibrary() {
