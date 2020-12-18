@@ -15,7 +15,7 @@ amazon:
   region: sfo2
   bucket: vglist
   endpoint: 'https://sfo2.digitaloceanspaces.com'
-  # public: true
+  public: true
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
