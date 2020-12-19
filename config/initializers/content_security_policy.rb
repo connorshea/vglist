@@ -19,7 +19,7 @@ Rails.application.config.content_security_policy do |policy|
   # Allow Webpacker to connect in development
   policy.connect_src :self, :https, 'http://localhost:3035', 'ws://localhost:3035' if Rails.env.development?
   # Allow Cloudflare Web Analytics in production
-  policy.connect_src 'https://cloudflareinsights.com', 'https://static.cloudflareinsights.com' if Rails.env.production?
+  policy.connect_src :self, 'https://cloudflareinsights.com', 'https://static.cloudflareinsights.com' if Rails.env.production?
 
   # Specify URI for violation reports
   # policy.report_uri "/csp-violation-report-endpoint"
