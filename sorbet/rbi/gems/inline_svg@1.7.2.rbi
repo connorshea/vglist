@@ -22,6 +22,7 @@ module InlineSvg::ActionView::Helpers
 
   private
 
+  def backwards_compatible_html_escape(filename); end
   def configured_asset_file; end
   def extension_hint(filename); end
   def placeholder(filename); end
@@ -51,7 +52,6 @@ class InlineSvg::CachedAssetFile
 
   private
 
-  def all_keys_matching(asset_name); end
   def key_for_asset(asset_name); end
   def matches_all_filters?(path); end
   def read_assets(acc, paths); end

@@ -1863,6 +1863,42 @@ class ActiveStorage::Attachment::ActiveRecord_Relation
 end
 
 module ActiveStorage::Attachment::GeneratedAttributeMethods
+  def blob_id_for_database(*args); end
+
+  def blob_id_previously_was(*args); end
+
+  def clear_blob_id_change(*args); end
+
+  def clear_created_at_change(*args); end
+
+  def clear_id_change(*args); end
+
+  def clear_name_change(*args); end
+
+  def clear_record_id_change(*args); end
+
+  def clear_record_type_change(*args); end
+
+  def created_at_for_database(*args); end
+
+  def created_at_previously_was(*args); end
+
+  def id_previously_was(*args); end
+
+  def name_for_database(*args); end
+
+  def name_previously_was(*args); end
+
+  def record_id_for_database(*args); end
+
+  def record_id_previously_was(*args); end
+
+  def record_type_for_database(*args); end
+
+  def record_type_previously_was(*args); end
+end
+
+module ActiveStorage::Attachment::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
@@ -1980,6 +2016,8 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
 
   def clear_metadata_change(*args); end
 
+  def clear_service_name_change(*args); end
+
   def content_type_for_database(*args); end
 
   def content_type_previously_was(*args); end
@@ -2001,6 +2039,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   def metadata_for_database(*args); end
 
   def metadata_previously_was(*args); end
+
+  def service_name_for_database(*args); end
+
+  def service_name_previously_was(*args); end
 end
 
 module ActiveStorage::Blob::GeneratedAttributeMethods
@@ -2162,10 +2204,6 @@ end
 
 module ActiveStorage::VERSION
   PRE = ::T.let(nil, ::T.untyped)
-end
-
-class ActiveStorage::VariantRecord
-  include ::ActiveStorage::VariantRecord::GeneratedAttributeMethods
 end
 
 class ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation
@@ -15557,6 +15595,8 @@ end
 class Net::HTTPAlreadyReported
 end
 
+Net::HTTPClientError::EXCEPTION_TYPE = Net::HTTPServerException
+
 Net::HTTPClientErrorCode = Net::HTTPClientError
 
 class Net::HTTPEarlyHints
@@ -15622,6 +15662,8 @@ end
 class Net::HTTPRangeNotSatisfiable
 end
 
+Net::HTTPRedirection::EXCEPTION_TYPE = Net::HTTPRetriableError
+
 Net::HTTPRedirectionCode = Net::HTTPRedirection
 
 Net::HTTPRequestURITooLarge = Net::HTTPURITooLong
@@ -15629,6 +15671,8 @@ Net::HTTPRequestURITooLarge = Net::HTTPURITooLong
 Net::HTTPResponceReceiver = Net::HTTPResponse
 
 Net::HTTPRetriableCode = Net::HTTPRedirection
+
+Net::HTTPServerError::EXCEPTION_TYPE = Net::HTTPFatalError
 
 Net::HTTPServerErrorCode = Net::HTTPServerError
 
@@ -16214,6 +16258,12 @@ class Parlour::RbiGenerator::RbiObject
   extend ::T::Sig
   extend ::T::Private::Abstract::Hooks
   extend ::T::InterfaceWrapper::Helpers
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Parlour::RbiGenerator::StructProp
+  extend ::T::Sig
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
 end
@@ -17533,42 +17583,6 @@ end
 class PlatformsController
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
-end
-
-module Polyfill::Module::M70232005271560
-end
-
-module Polyfill::Module::M70232005271560
-end
-
-module Polyfill::Module::M70232028238960
-end
-
-module Polyfill::Module::M70232028238960
-end
-
-module Polyfill::Module::M70232028972360
-end
-
-module Polyfill::Module::M70232028972360
-end
-
-module Polyfill::Module::M70232037802760
-end
-
-module Polyfill::Module::M70232037802760
-end
-
-module Polyfill::Module::M70232060230000
-end
-
-module Polyfill::Module::M70232060230000
-end
-
-module Polyfill::Module::M70232060517180
-end
-
-module Polyfill::Module::M70232060517180
 end
 
 class Proc
@@ -21200,6 +21214,8 @@ module SemanticRange
 
   def self.eq?(a, b, loose=T.unsafe(nil)); end
 
+  def self.filter(versions, range, loose=T.unsafe(nil), platform=T.unsafe(nil)); end
+
   def self.gt(a, b, loose=T.unsafe(nil)); end
 
   def self.gt?(a, b, loose=T.unsafe(nil)); end
@@ -22091,14 +22107,79 @@ module SteamBlocklist::GeneratedRelationMethods
   extend ::Mutex_m
 end
 
+class SteamImportService
+  def call(*args, &blk); end
+
+  def initialize(*args, &blk); end
+
+  def steam_account(*args, &blk); end
+
+  def steam_account=(steam_account); end
+
+  def steam_account_id(*args, &blk); end
+
+  def steam_api_url(*args, &blk); end
+
+  def user(*args, &blk); end
+end
+
+class SteamImportService::Error
+end
+
+class SteamImportService::Error
+end
+
+class SteamImportService::GameStruct
+  def created_at(); end
+
+  def game_id(); end
+
+  def hours_played(); end
+
+  def initialize(hash=T.unsafe(nil)); end
+
+  def updated_at(); end
+
+  def user_id(); end
+end
+
 class SteamImportService::GameStruct
   def self.inherited(s); end
 end
 
+class SteamImportService::NoGamesError
+end
+
+class SteamImportService::NoGamesError
+end
+
 class SteamImportService::Result
+  def added_games(*args, &blk); end
+
+  def created(); end
+
+  def initialize(hash=T.unsafe(nil)); end
+
+  def unmatched(); end
+
+  def updated(); end
+
+  def updated_games(*args, &blk); end
+end
+
+class SteamImportService::Result
+  extend ::T::Sig
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
   def self.inherited(s); end
+end
+
+class SteamImportService::Unmatched
+  def initialize(hash=T.unsafe(nil)); end
+
+  def name(); end
+
+  def steam_id(); end
 end
 
 class SteamImportService::Unmatched
@@ -22106,6 +22187,7 @@ class SteamImportService::Unmatched
 end
 
 class SteamImportService
+  extend ::T::Sig
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
 end

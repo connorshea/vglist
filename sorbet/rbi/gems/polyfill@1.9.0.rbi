@@ -19,12 +19,13 @@ module Polyfill::InternalUtils
 
   private
 
-  def create_module; end
+  def create_module(*args); end
   def current_ruby_version; end
   def ignore_warnings; end
   def keep_only_these_methods!(mod, whitelist); end
   def methods_to_keep(modules, methods, lead_symbol, module_name); end
   def modules_to_use(module_name, versions); end
+  def namify_arguments(*args); end
   def polyfill_versions_to_use(desired_version = T.unsafe(nil)); end
   def to_f(obj); end
   def to_hash(obj); end
@@ -32,12 +33,13 @@ module Polyfill::InternalUtils
   def to_str(obj); end
 
   class << self
-    def create_module; end
+    def create_module(*args); end
     def current_ruby_version; end
     def ignore_warnings; end
     def keep_only_these_methods!(mod, whitelist); end
     def methods_to_keep(modules, methods, lead_symbol, module_name); end
     def modules_to_use(module_name, versions); end
+    def namify_arguments(*args); end
     def polyfill_versions_to_use(desired_version = T.unsafe(nil)); end
     def to_f(obj); end
     def to_hash(obj); end
@@ -49,22 +51,19 @@ end
 module Polyfill::Module
 end
 
-module Polyfill::Module::M70178488025220
+module Polyfill::Module::MezpFbnVtZXJhYmxlPT5bIiNjaHVua193aGlsZSJdLCA6dmVyc2lvbj0_1IjIuNCJ9
 end
 
-module Polyfill::Module::M70178521105520
+module Polyfill::Module::MezpIYXNoPT5bIiNzbGljZSJdfQ__
 end
 
-module Polyfill::Module::M70178521266500
+module Polyfill::Module::MezpJbnRlZ2VyPT5bIiNjZWlsIiwgIiNmbG9vciIsICIjcm91bmQiLCAiI3RydW5jYXRlIl0sIDp2ZXJzaW9uPT4iMi40In0_
 end
 
-module Polyfill::Module::M70178521310480
+module Polyfill::Module::MezpLZXJuZWw9PlsiI3lpZWxkX3NlbGYiXSwgOnZlcnNpb249PiIyLjUifQ__
 end
 
-module Polyfill::Module::M70178521518240
-end
-
-module Polyfill::Module::M70178528465040
+module Polyfill::Module::MezpOdW1lcmljPT5bIiNkdXAiXSwgOnZlcnNpb249PiIyLjQifQ__
 end
 
 module Polyfill::V2_2

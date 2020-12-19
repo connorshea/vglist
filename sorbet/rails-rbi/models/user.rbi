@@ -39,23 +39,6 @@ module User::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-class User::Privacy < T::Enum
-  enums do
-    PublicAccount = new(%q{public_account})
-    PrivateAccount = new(%q{private_account})
-  end
-
-end
-
-class User::Role < T::Enum
-  enums do
-    Member = new(%q{member})
-    Moderator = new(%q{moderator})
-    Admin = new(%q{admin})
-  end
-
-end
-
 module User::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[User]) }
   def first_n(limit); end
@@ -138,6 +121,23 @@ class User < ApplicationRecord
 
   sig { params(value: User::Role).void }
   def typed_role=(value); end
+
+  class Privacy < T::Enum
+    enums do
+      PublicAccount = new(%q{public_account})
+      PrivateAccount = new(%q{private_account})
+    end
+
+  end
+
+  class Role < T::Enum
+    enums do
+      Member = new(%q{member})
+      Moderator = new(%q{moderator})
+      Admin = new(%q{admin})
+    end
+
+  end
 
   sig { returns(T.untyped) }
   def self.after_add_for_game_purchases; end

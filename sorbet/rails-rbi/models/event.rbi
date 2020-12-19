@@ -39,17 +39,6 @@ module Event::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-class Event::EventCategory < T::Enum
-  enums do
-    AddToLibrary = new(%q{add_to_library})
-    ChangeCompletionStatus = new(%q{change_completion_status})
-    FavoriteGame = new(%q{favorite_game})
-    NewUser = new(%q{new_user})
-    Following = new(%q{following})
-  end
-
-end
-
 module Event::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[Event]) }
   def first_n(limit); end
@@ -128,6 +117,17 @@ class Event < ApplicationRecord
 
   sig { params(value: Event::EventCategory).void }
   def typed_event_category=(value); end
+
+  class EventCategory < T::Enum
+    enums do
+      AddToLibrary = new(%q{add_to_library})
+      ChangeCompletionStatus = new(%q{change_completion_status})
+      FavoriteGame = new(%q{favorite_game})
+      NewUser = new(%q{new_user})
+      Following = new(%q{following})
+    end
+
+  end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_eventable(*args); end

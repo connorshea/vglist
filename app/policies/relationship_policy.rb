@@ -1,4 +1,4 @@
-# typed: strong
+# typed: strict
 class RelationshipPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :follower

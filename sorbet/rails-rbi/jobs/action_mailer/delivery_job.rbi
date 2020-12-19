@@ -8,7 +8,7 @@ class ActionMailer::DeliveryJob
       mail_method: T.untyped,
       delivery_method: T.untyped,
       args: T.untyped
-    ).void
+    ).returns(ActionMailer::DeliveryJob)
   end
   def self.perform_later(mailer, mail_method, delivery_method, *args); end
 
@@ -18,7 +18,7 @@ class ActionMailer::DeliveryJob
       mail_method: T.untyped,
       delivery_method: T.untyped,
       args: T.untyped
-    ).void
+    ).returns(ActionMailer::DeliveryJob)
   end
   def self.perform_now(mailer, mail_method, delivery_method, *args); end
 

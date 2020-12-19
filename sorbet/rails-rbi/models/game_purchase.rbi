@@ -51,19 +51,6 @@ module GamePurchase::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-class GamePurchase::CompletionStatus < T::Enum
-  enums do
-    Unplayed = new(%q{unplayed})
-    InProgress = new(%q{in_progress})
-    Dropped = new(%q{dropped})
-    Completed = new(%q{completed})
-    FullyCompleted = new(%q{fully_completed})
-    NotApplicable = new(%q{not_applicable})
-    Paused = new(%q{paused})
-  end
-
-end
-
 module GamePurchase::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[GamePurchase]) }
   def first_n(limit); end
@@ -139,6 +126,19 @@ class GamePurchase < ApplicationRecord
 
   sig { params(value: T.nilable(GamePurchase::CompletionStatus)).void }
   def typed_completion_status=(value); end
+
+  class CompletionStatus < T::Enum
+    enums do
+      Unplayed = new(%q{unplayed})
+      InProgress = new(%q{in_progress})
+      Dropped = new(%q{dropped})
+      Completed = new(%q{completed})
+      FullyCompleted = new(%q{fully_completed})
+      NotApplicable = new(%q{not_applicable})
+      Paused = new(%q{paused})
+    end
+
+  end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_game(*args); end
