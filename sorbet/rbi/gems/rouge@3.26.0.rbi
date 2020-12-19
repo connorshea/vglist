@@ -1420,6 +1420,16 @@ Rouge::Lexers::Nim::TYPES = T.let(T.unsafe(nil), Array)
 class Rouge::Lexers::Nix < ::Rouge::RegexLexer
 end
 
+class Rouge::Lexers::OCL < ::Rouge::RegexLexer
+  class << self
+    def builtins; end
+    def functions; end
+    def keywords; end
+    def keywords_type; end
+    def operators; end
+  end
+end
+
 class Rouge::Lexers::OCaml < ::Rouge::Lexers::OCamlCommon
   class << self
     def keywords; end
@@ -1592,6 +1602,14 @@ class Rouge::Lexers::Racket < ::Rouge::RegexLexer
     def builtins; end
     def detect?(text); end
     def keywords; end
+  end
+end
+
+class Rouge::Lexers::ReScript < ::Rouge::Lexers::OCamlCommon
+  class << self
+    def keywords; end
+    def types; end
+    def word_operators; end
   end
 end
 

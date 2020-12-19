@@ -81,6 +81,7 @@ class ActiveStorageValidations::Matchers::AttachedValidatorMatcher
 
   def attachable; end
   def invalid_when_not_attached; end
+  def responds_to_methods; end
   def valid_when_attached; end
 end
 
@@ -102,6 +103,7 @@ class ActiveStorageValidations::Matchers::ContentTypeValidatorMatcher
   def rejected_types; end
   def rejected_types_and_failures; end
   def rejected_types_rejected?; end
+  def responds_to_methods; end
   def type_allowed?(type); end
 end
 
@@ -129,6 +131,7 @@ class ActiveStorageValidations::Matchers::DimensionValidatorMatcher
   def height_smaller_than_max?; end
   def height_smaller_than_min?; end
   def passes_validation_with_dimensions(width, height, check); end
+  def responds_to_methods; end
   def valid_height; end
   def valid_width; end
   def width_equals?; end
@@ -158,6 +161,7 @@ class ActiveStorageValidations::Matchers::SizeValidatorMatcher
   def lower_than_high?; end
   def lower_than_low?; end
   def passes_validation_with_size(new_size); end
+  def responds_to_methods; end
 end
 
 class ActiveStorageValidations::Metadata

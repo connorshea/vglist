@@ -10,7 +10,7 @@ class ActionMailer::MailDeliveryJob
       args: T.untyped,
       kwargs: T.untyped,
       params: T.untyped
-    ).void
+    ).returns(ActionMailer::MailDeliveryJob)
   end
   def self.perform_later(mailer, mail_method, delivery_method, args:, kwargs: nil, params: nil); end
 
@@ -22,7 +22,7 @@ class ActionMailer::MailDeliveryJob
       args: T.untyped,
       kwargs: T.untyped,
       params: T.untyped
-    ).void
+    ).returns(ActionMailer::MailDeliveryJob)
   end
   def self.perform_now(mailer, mail_method, delivery_method, args:, kwargs: nil, params: nil); end
 

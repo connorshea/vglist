@@ -10,7 +10,7 @@ class ActiveRecord::DestroyAssociationAsyncJob
       association_ids: T.untyped,
       association_primary_key_column: T.untyped,
       ensuring_owner_was_method: T.untyped
-    ).void
+    ).returns(ActiveRecord::DestroyAssociationAsyncJob)
   end
   def self.perform_later(owner_model_name: nil, owner_id: nil, association_class: nil, association_ids: nil, association_primary_key_column: nil, ensuring_owner_was_method: nil); end
 
@@ -22,7 +22,7 @@ class ActiveRecord::DestroyAssociationAsyncJob
       association_ids: T.untyped,
       association_primary_key_column: T.untyped,
       ensuring_owner_was_method: T.untyped
-    ).void
+    ).returns(ActiveRecord::DestroyAssociationAsyncJob)
   end
   def self.perform_now(owner_model_name: nil, owner_id: nil, association_class: nil, association_ids: nil, association_primary_key_column: nil, ensuring_owner_was_method: nil); end
 

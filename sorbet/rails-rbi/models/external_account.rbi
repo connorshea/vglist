@@ -15,13 +15,6 @@ module ExternalAccount::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-class ExternalAccount::AccountType < T::Enum
-  enums do
-    Steam = new(%q{steam})
-  end
-
-end
-
 module ExternalAccount::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[ExternalAccount]) }
   def first_n(limit); end
@@ -61,6 +54,13 @@ class ExternalAccount < ApplicationRecord
 
   sig { params(value: ExternalAccount::AccountType).void }
   def typed_account_type=(value); end
+
+  class AccountType < T::Enum
+    enums do
+      Steam = new(%q{steam})
+    end
+
+  end
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_user(*args); end

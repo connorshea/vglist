@@ -738,6 +738,15 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def metadata?; end
 
+  sig { returns(String) }
+  def service_name; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def service_name=(value); end
+
+  sig { returns(T::Boolean) }
+  def service_name?; end
+
   sig { params(args: T.untyped).returns(T::Boolean) }
   def saved_change_to_id?(*args); end
 
@@ -1097,6 +1106,51 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_service_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_service_name(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_service_name?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def service_name_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def service_name_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_service_name!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def service_name_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def service_name_came_from_user?(*args); end
 end
 
 module ActiveStorage::Blob::GeneratedAssociationMethods
@@ -1142,7 +1196,7 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
   sig { returns(::ActiveStorage::VariantRecord::ActiveRecord_Associations_CollectionProxy) }
   def variant_records; end
 
-  sig { returns(T::Array[T.untyped]) }
+  sig { returns(T::Array[Integer]) }
   def variant_record_ids; end
 
   sig { params(value: T::Enumerable[::ActiveStorage::VariantRecord]).void }
