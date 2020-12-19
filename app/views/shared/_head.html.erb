@@ -29,4 +29,15 @@
 
   <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_pack_tag 'application', nonce: true, 'data-turbolinks-track': 'reload' %>
+
+  <% if Rails.env.production? %>
+    <!-- Cloudflare Web Analytics -->
+    <%= javascript_include_tag 'https://static.cloudflareinsights.com/beacon.min.js',
+        nonce: true,
+        defer: true,
+        data: {
+          cf_beacon: { token: ENV['CLOUDFLARE_WEB_ANALYTICS_TOKEN'] }.to_json
+        } %>
+    <!-- End Cloudflare Web Analytics -->
+  <% end %>
 </head>
