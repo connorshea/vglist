@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.12.19
+### Added
+- Add [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) so we can track some basic analytics data. ([#1696])
+
+## v2020.12.13
+### Fixed
+- Fix a bug causing library table dropdowns to not work. ([#1684])
+
+## v2020.12.9
+### Changed
+- Upgrade Ruby on Rails to Rails 6.1. ([#1678])
+
 ## v2020.12.2
 ### Added
 - Add `currentUser` query for GraphQL API. ([#1668])
@@ -796,3 +808,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1649]: https://github.com/connorshea/vglist/pull/1649
 [#1667]: https://github.com/connorshea/vglist/pull/1667
 [#1668]: https://github.com/connorshea/vglist/pull/1668
+[#1678]: https://github.com/connorshea/vglist/pull/1678
+[#1684]: https://github.com/connorshea/vglist/pull/1684
+[#1696]: https://github.com/connorshea/vglist/pull/1696
