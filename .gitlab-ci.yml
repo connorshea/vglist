@@ -1,7 +1,7 @@
 image: "registry.gitlab.com/connorshea/vglist:latest"
 
 services:
-  - postgres:11
+  - postgres:12
 
 variables:
   BUNDLE_PATH: vendor/bundle
