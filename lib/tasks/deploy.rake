@@ -3,6 +3,11 @@ namespace :deploy do
   desc "Deploys the latest code from the master branch into production"
   task production: :environment do
     Bundler.with_unbundled_env do
+      # Stash changes so the `git pull` will be guaranteed to work.
+      puts
+      puts "Stashing any changes..."
+      system('git stash')
+
       # Pull down latest code.
       puts
       puts "Pulling down the latest code from master..."
