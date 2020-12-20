@@ -137,8 +137,6 @@ group :development do
   gem 'binding_of_caller', '~> 0.8'
   # Open screenshots when they're taken with capybara.
   gem 'launchy', '~> 2.5'
-  # Generate a graph of the app structure.
-  gem 'rails-erd', '~> 1.6'
   # Improve the formatting of GraphQL requests in the logs.
   # https://github.com/jetruby/graphql-rails_logger
   gem 'graphql-rails_logger', '~> 1.2.2'
