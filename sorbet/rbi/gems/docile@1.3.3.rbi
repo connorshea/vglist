@@ -21,6 +21,13 @@ module Docile
   end
 end
 
+module Docile::BacktraceFilter
+  def backtrace; end
+  def backtrace_locations; end
+end
+
+Docile::BacktraceFilter::FILTER_PATTERN = T.let(T.unsafe(nil), Regexp)
+
 class Docile::ChainingFallbackContextProxy < ::Docile::FallbackContextProxy
   def method_missing(method, *args, &block); end
 end
@@ -40,7 +47,7 @@ class Docile::FallbackContextProxy
   def initialize(receiver, fallback); end
 
   def instance_variables; end
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **kwargs, &block); end
 end
 
 Docile::FallbackContextProxy::NON_FALLBACK_METHODS = T.let(T.unsafe(nil), Set)

@@ -62,7 +62,7 @@ class Rails::Application < ::Rails::Engine
   def assets_manifest=(_arg0); end
   def build_middleware_stack; end
 
-  # sig { returns(Rails::Application::Configuration) }
+  sig { returns(Rails::Application::Configuration) }
   def config; end
 
   def config=(_arg0); end
