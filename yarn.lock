@@ -3766,10 +3766,10 @@ graphql-language-service-utils@^2.4.3:
   dependencies:
     graphql-language-service-types "^1.6.3"
 
-graphql-schema-linter@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-1.0.1.tgz#8b16ef19f77ab436ca4fc4c7cfa648b7f4abc8a4"
-  integrity sha512-wcT0to0fBKLmbe4N9C1pM53T6hn8PJ393k1GkWQPLC5xVAVjh37BU23NB9drekVzYXwWfnvP64B4wwFFHKr56w==
+graphql-schema-linter@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-2.0.1.tgz#fa76752fc9461721992b0e8e3c8660a29819759f"
+  integrity sha512-zCezfm0TRW+WhmI7WzVjZbaZrymij7gj4ipc3bqQFQnQLyzirUKKW365kIe7YWKOudnmNp9o1IYKFm1MM/R0zw==
   dependencies:
     chalk "^2.0.1"
     columnify "^1.5.4"
