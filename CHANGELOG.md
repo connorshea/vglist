@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2020.12.21
+### Changed
+- Update Ruby version for vglist from 2.6.6 to 2.7.2. ([#1712])
+
 ## v2020.12.19
 ### Added
 - Add [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) so we can track some basic analytics data. ([#1696])
@@ -811,3 +815,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1678]: https://github.com/connorshea/vglist/pull/1678
 [#1684]: https://github.com/connorshea/vglist/pull/1684
 [#1696]: https://github.com/connorshea/vglist/pull/1696
+[#1712]: https://github.com/connorshea/vglist/pull/1712
