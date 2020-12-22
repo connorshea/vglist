@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-- Ruby 2.6
+- Ruby 2.7
 - Postgres 12.x
 - Node.js 10.x
 - Yarn 1.x
