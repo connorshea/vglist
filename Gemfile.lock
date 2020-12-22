@@ -1,10 +1,52 @@
 GIT
+  remote: https://github.com/BetterErrors/binding_of_caller
+  revision: 4eb57bccd06c5ab60291d6645bb95095c6762665
+  branch: feature/ruby-3.0
+  specs:
+    binding_of_caller (0.8.0)
+      debug_inspector (>= 0.0.1)
+
+GIT
+  remote: https://github.com/banister/debug_inspector
+  revision: ab538ce76bb1d03a5e6b8fe3a83069717167ed0e
+  specs:
+    debug_inspector (0.0.3)
+
+GIT
   remote: https://github.com/connorshea/active_storage_validations
   revision: e07393c7cc60c58e0d4bc29a8f8f29ea95406ad0
   branch: ruby-2-7-deprecation-fixes
   specs:
     active_storage_validations (0.9.1)
       rails (>= 5.2.0)
+
+GIT
+  remote: https://github.com/connorshea/net-http-persistent
+  revision: 873b04442382a488f6bb0eb51773e7c11444e09f
+  specs:
+    net-http-persistent (3.2.0)
+      connection_pool (~> 2.2)
+
+GIT
+  remote: https://github.com/ruby-rdf/sparql
+  revision: c5e7b576e4e0e410564fe14dcefafcd76604946b
+  specs:
+    sparql (3.1.3)
+      builder (~> 3.2)
+      ebnf (>= 1.1)
+      rdf (~> 3.1, >= 3.1.2)
+      rdf-aggregate-repo (~> 3.1)
+      rdf-xsd (~> 3.1)
+      sparql-client (~> 3.1)
+      sxp (~> 1.1)
+
+GIT
+  remote: https://github.com/ruby-rdf/sparql-client
+  revision: 2f98a5d69f065007eb77ee165580ed52a9b5f9bc
+  specs:
+    sparql-client (3.1.0)
+      net-http-persistent (~> 3.1)
+      rdf (~> 3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -93,8 +135,6 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
     bindex (0.8.1)
-    binding_of_caller (0.8.0)
-      debug_inspector (>= 0.0.1)
     bootsnap (1.5.1)
       msgpack (~> 1.0)
     builder (3.2.4)
@@ -116,7 +156,6 @@ GEM
     connection_pool (2.2.3)
     crass (1.0.6)
     database_cleaner (1.8.5)
-    debug_inspector (0.0.3)
     devise (4.7.3)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -211,8 +250,6 @@ GEM
     minitest (5.14.2)
     msgpack (1.3.3)
     multipart-post (2.1.1)
-    net-http-persistent (3.1.0)
-      connection_pool (~> 2.2)
     nio4r (2.5.4)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
@@ -369,17 +406,6 @@ GEM
     sorbet-static (0.5.6164-universal-darwin-18)
     sorbet-static (0.5.6164-universal-darwin-19)
     sorbet-static (0.5.6164-x86_64-linux)
-    sparql (3.1.3)
-      builder (~> 3.2)
-      ebnf (>= 1.1)
-      rdf (~> 3.1, >= 3.1.2)
-      rdf-aggregate-repo (~> 3.1)
-      rdf-xsd (~> 3.1)
-      sparql-client (~> 3.1)
-      sxp (~> 1.1)
-    sparql-client (3.1.0)
-      net-http-persistent (~> 3.1)
-      rdf (~> 3.1)
     spoom (1.0.7)
       colorize
       sorbet (~> 0.5.5)
@@ -446,11 +472,12 @@ DEPENDENCIES
   addressable (~> 2.7.0)
   aws-sdk-s3 (~> 1.66)
   better_errors (~> 2.9)
-  binding_of_caller (~> 0.8)
+  binding_of_caller!
   bootsnap (>= 1.1.0)
   byebug
   capybara (~> 3.34)
   database_cleaner (~> 1.8)
+  debug_inspector!
   devise (~> 4.7)
   doorkeeper (~> 5.4)
   dotenv-rails (~> 2.7)
@@ -467,6 +494,7 @@ DEPENDENCIES
   kaminari (~> 1.2)
   launchy (~> 2.5)
   listen (>= 3.0.5, < 3.4)
+  net-http-persistent!
   pg (~> 1.2)
   pg_search (~> 2.3)
   pry (~> 0.13)
@@ -489,7 +517,8 @@ DEPENDENCIES
   sorbet (~> 0.5)
   sorbet-rails (~> 0.7)
   sorbet-runtime (~> 0.5)
-  sparql (~> 3.1.3)
+  sparql!
+  sparql-client!
   spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)
   tapioca (~> 0.4.10)

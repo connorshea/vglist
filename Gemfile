@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 2.7.2'
+ruby '>= 2.7.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.0'
@@ -46,7 +46,8 @@ gem 'active_storage_validations', git: 'https://github.com/connorshea/active_sto
 gem 'friendly_id', '~> 5.4.1'
 
 # Use SPARQL for querying Wikidata in imports.
-gem 'sparql', '~> 3.1.3', require: false
+gem 'sparql', git: 'https://github.com/ruby-rdf/sparql', require: false
+gem 'sparql-client', git: 'https://github.com/ruby-rdf/sparql-client', require: false
 
 # Use Addressable for use with the Wikidata API.
 gem 'addressable', '~> 2.7.0', require: false
@@ -79,6 +80,8 @@ gem 'inline_svg', '~> 1.7'
 # Honeypot for spambots that doesn't require the user to actually do any
 # captcha and doesn't use google stuff.
 gem 'invisible_captcha', '~> 1.1.0'
+
+gem 'net-http-persistent', git: 'https://github.com/connorshea/net-http-persistent'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -134,7 +137,7 @@ group :development do
   # Better error pages.
   gem 'better_errors', '~> 2.9'
   # For more useful BetterError error pages.
-  gem 'binding_of_caller', '~> 0.8'
+  gem 'binding_of_caller', git: 'https://github.com/BetterErrors/binding_of_caller', branch: 'feature/ruby-3.0'
   # Open screenshots when they're taken with capybara.
   gem 'launchy', '~> 2.5'
   # Improve the formatting of GraphQL requests in the logs.
@@ -144,6 +147,8 @@ group :development do
   gem 'dotenv-rails', '~> 2.7'
   # Tapioca for generating Sorbet RBI files.
   gem 'tapioca', '~> 0.4.10', require: false
+
+  gem 'debug_inspector', git: 'https://github.com/banister/debug_inspector'
 end
 
 group :test do
