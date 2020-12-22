@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/connorshea/active_storage_validations
-  revision: b84dfeaba49d948ad15822a582286577a96cfa61
-  branch: fix-find-signed-rails-6-1
+  revision: e07393c7cc60c58e0d4bc29a8f8f29ea95406ad0
+  branch: ruby-2-7-deprecation-fixes
   specs:
-    active_storage_validations (0.9.0)
+    active_storage_validations (0.9.1)
       rails (>= 5.2.0)
 
 GEM

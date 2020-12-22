@@ -40,7 +40,7 @@ gem 'pg_search', '~> 2.3'
 gem 'image_processing', '~> 1.12'
 
 # Validations for ActiveStorage.
-gem 'active_storage_validations', git: 'https://github.com/connorshea/active_storage_validations', branch: 'fix-find-signed-rails-6-1'
+gem 'active_storage_validations', git: 'https://github.com/connorshea/active_storage_validations', branch: 'ruby-2-7-deprecation-fixes'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
 gem 'friendly_id', '~> 5.4.1'
