@@ -17,7 +17,7 @@ module ApplicationHelper
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
       # too wide or too tall.
-      image_tag T.must(user.avatar).variant(
+      image_tag user.avatar.variant(
         resize_to_fill: [size, size],
         gravity: 'Center',
         crop: "#{size}x#{size}+0+0"
@@ -40,7 +40,7 @@ module ApplicationHelper
   # A helper for displaying game covers.
   def game_cover(game, width, height)
     if game.cover&.attached? && game.cover&.variable?
-      image_tag T.must(game.cover).variant(
+      image_tag game.cover.variant(
         resize_to_limit: [width, height]
       ),
       width: "#{width}px",
@@ -78,14 +78,14 @@ module ApplicationHelper
     raise ArgumentError, 'Limit must be a positive integer' unless limit.positive?
 
     return "#{array.first} and #{array.length - limit} more" if limit == 1 && array.length > 1
-    return "#{T.must(array[0...limit]).join(', ')}, and #{array.length - limit} more" if array.length > limit
+    return "#{array[0...limit].join(', ')}, and #{array.length - limit} more" if array.length > limit
     return array.join(', ') if array.length <= limit
   end
 
   # This returns the `:page` parameter for Kaminari, it's a convenience method
   # for helping Sorbet understand the parameter.
   def page_param(param: :page)
-    return T.cast(params[param].to_i, T.nilable(Integer))
+    return params[param].to_i
   end
 
   # Embeds an SVG icon.

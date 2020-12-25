@@ -2,7 +2,7 @@ class WikidataHelper
   require "addressable/template"
   require "open-uri"
   require "json"
-  
+
   # Make an API call.
   #
   # @param [String] action The action to perform, see https://www.wikidata.org/w/api.php?action=help&modules=main

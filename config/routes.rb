@@ -113,10 +113,10 @@ Rails.application.routes.draw do
 
   scope :settings do
     # This is contributed by Doorkeeper, but Sorbet doesn't know that so we have to hack around it.
-    T.unsafe(self).use_doorkeeper do
-      T.unsafe(self).controllers applications: 'oauth/applications',
-                                 authorized_applications: 'oauth/authorized_applications',
-                                 authorizations: 'oauth/authorizations'
+    use_doorkeeper do
+      controllers applications: 'oauth/applications',
+                  authorized_applications: 'oauth/authorized_applications',
+                  authorizations: 'oauth/authorizations'
     end
   end
 

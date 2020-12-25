@@ -7,7 +7,7 @@ class UsersController < ApplicationController
       @users = User.all
     end
 
-    order_by_sym = T.cast(params[:order_by], T.nilable(String))&.to_sym
+    order_by_sym = params[:order_by]&.to_sym
     if !order_by_sym.nil? && [
       :most_games,
       :most_followers
@@ -132,7 +132,7 @@ class UsersController < ApplicationController
 
     # Resolve the numerical Steam ID based on the provided username.
     steam_api_url = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{params[:steam_username]}"
-    json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
+    json = JSON.parse(URI.open(steam_api_url).read)
 
     steam_id = json.dig("response", "steamid")
 

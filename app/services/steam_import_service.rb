@@ -1,10 +1,9 @@
 require 'set'
 
 class SteamImportService
-  
   def initialize(user:, update_hours: false)
     @user = user
-    @steam_account = T.let(@user.external_account, T.nilable(ExternalAccount))
+    @steam_account = @user.external_account
     @update_hours = update_hours
   end
 
@@ -15,37 +14,33 @@ class SteamImportService
   def call
     raise Error, 'No Steam account.' if steam_account.nil?
 
-    json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
+    json = JSON.parse(URI.open(steam_api_url).read)
 
     games = json.dig('response', 'games')
 
     raise NoGamesError if games.nil?
 
-    blocklisted_steam_app_ids = T.let(SteamBlocklist.pluck(:steam_app_id), T::Array[Integer])
+    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
 
     games.reject! { |game| game['img_logo_url'].blank? }
 
     # The Steam IDs for all games that were just imported from Steam.
-    steam_ids = T.let(games.map { |g| g['appid'].to_i }.uniq, T::Array[Integer])
+    steam_ids = games.map { |g| g['appid'].to_i }.uniq
 
     # An array of ID pairs for the Steam App ID and vglist game ID, lists all
     # the games that were sent from the Steam API that could be found in our
     # database.
-    matching_app_and_game_ids = T.let(SteamAppId.where(app_id: steam_ids).pluck(:app_id, :game_id), T::Array[[Integer, Integer]])
+    matching_app_and_game_ids = SteamAppId.where(app_id: steam_ids).pluck(:app_id, :game_id)
     # A hash that stores all the Steam App IDs and Game IDs.
     matching_app_and_game_ids_hash = matching_app_and_game_ids.each_with_object({}) do |(app_id, game_id), hash|
       hash[app_id] = game_id
     end
     # Get a list of Steam IDs that weren't found in the vglist database.
-    missing_ids = T.let(
-      steam_ids.to_set - matching_app_and_game_ids.map(&:first).to_set,
-      T::Set[Integer]
-    )
+    missing_ids = steam_ids.to_set - matching_app_and_game_ids.map(&:first).to_set
 
     create_time = Time.current
 
-    game_structs = T.let(
-      games.each
+    game_structs = games.each
            .lazy
            .reject { |game| missing_ids.include?(game['appid']) }
            .map do |game_info|
@@ -56,9 +51,7 @@ class SteamImportService
           created_at: create_time,
           updated_at: create_time
         )
-      end.to_a,
-      T::Array[GameStruct]
-    )
+      end.to_a
 
     created = []
     updated = []
@@ -98,7 +91,7 @@ class SteamImportService
     )
   end
 
-  class GameStruct < T::Struct
+  class GameStruct < Struct
     const :hours_played, Float
     const :game_id, Integer
     const :user_id, Integer
@@ -106,13 +99,12 @@ class SteamImportService
     const :updated_at, ActiveSupport::TimeWithZone
   end
 
-  class Unmatched < T::Struct
+  class Unmatched < Struct
     const :name, String
     const :steam_id, Integer
   end
 
-  class Result < T::Struct
-    
+  class Result < Struct
     const :created, GamePurchase::RelationType
     const :updated, GamePurchase::RelationType
     const :unmatched, T::Array[Unmatched]
@@ -137,6 +129,6 @@ class SteamImportService
   end
 
   def steam_account_id
-    T.must(steam_account)[:steam_id]
+    steam_account[:steam_id]
   end
 end

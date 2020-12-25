@@ -51,8 +51,7 @@ module Types
     # see this information.
     [:bio, :game_purchases, :followers, :following, :favorite_games].each do |meth_name|
       define_method(meth_name) do
-        # Sorbet is dumb and doesn't realize the handler method exists, I guess.
-        T.unsafe(self).handler(meth_name)
+        handler(meth_name)
       end
     end
 

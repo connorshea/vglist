@@ -12,7 +12,7 @@ User.create_with(
 admin = User.find_by(email: "admin@example.com")
 
 # Confirm the admin's email.
-T.must(admin).confirm
+admin.confirm
 
 # Exit early if there aren't at least 10 games in the db.
 return if Game.count < 10

@@ -20,7 +20,7 @@ module ActivityHelper
 
   def completion_status_event_text(event)
     # Coerce the value to a hash since we know it will always be one
-    after_value = T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1].to_sym
+    after_value = event.differences['completion_status'][1].to_sym
     user_link = link_to(event.user.username, user_path(event.user))
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
 
@@ -70,7 +70,7 @@ module ActivityHelper
     when :change_completion_status
       ['completed', 'fully_completed', 'dropped', 'paused'].include?(
         # Coerce the value to a hash since we know it will always be one
-        T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1]
+        event.differences['completion_status'][1]
       )
     when :add_to_library, :favorite_game, :new_user, :following
       true

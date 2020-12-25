@@ -1,16 +1,14 @@
-
 # A service for encrypting/decrypting values.
 #
 # Based on this blog post:
 # https://pawelurbanek.com/rails-secure-encrypt-decrypt
 class EncryptionService
-  
-  KEY = T.let(ActiveSupport::KeyGenerator.new(
+  KEY = ActiveSupport::KeyGenerator.new(
     Rails.application.credentials.secret_key_base
   ).generate_key(
     Rails.application.credentials.encryption_service_salt,
     ActiveSupport::MessageEncryptor.key_len
-  ).freeze, String)
+  ).freeze
 
   private_constant :KEY
 
