@@ -1,7 +1,7 @@
 target :lib do
   signature "sig"
 
-  check "db"                       # Directory name
+  check "db"                        # Directory name
   check "lib"                       # Directory name
   check "Gemfile"                   # File name
   check "app/models/**/*.rb"        # Glob
@@ -14,6 +14,9 @@ target :lib do
 
   # Standard libraries
   library "pathname", "set"
+
+  repo_path "vendor/rbs/gem_rbs/gems"
+  library 'actionpack', 'actionview', 'activejob', 'activemodel', 'activerecord', 'activesupport', 'listen', 'railties'
 end
 
 # target :spec do
