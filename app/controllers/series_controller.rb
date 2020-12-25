@@ -78,7 +78,7 @@ class SeriesController < ApplicationController
   private
 
   def series_params
-    params.typed_require(:series).permit(
+    params.require(:series).permit(
       :name,
       :wikidata_id
     )

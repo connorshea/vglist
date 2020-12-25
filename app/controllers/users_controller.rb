@@ -367,7 +367,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.typed_require(:user).permit(
+    params.require(:user).permit(
       :bio,
       :avatar,
       :privacy

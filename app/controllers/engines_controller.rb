@@ -90,7 +90,7 @@ class EnginesController < ApplicationController
   private
 
   def engine_params
-    params.typed_require(:engine).permit(
+    params.require(:engine).permit(
       :name,
       :wikidata_id
     )
