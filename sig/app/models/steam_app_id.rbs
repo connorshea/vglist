@@ -1,0 +1,58 @@
+class SteamAppId < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[SteamAppId, SteamAppId::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor game_id (): Integer
+  def game_id_changed?: () -> bool
+  def game_id_change: () -> [Integer?, Integer?]
+  def game_id_will_change!: () -> void
+  def game_id_was: () -> Integer?
+  def game_id_previously_changed?: () -> bool
+  def game_id_previous_change: () -> Array[Integer?]?
+  def game_id_previously_was: () -> Integer?
+  def restore_game_id!: () -> void
+  def clear_game_id_change: () -> void
+
+  attr_accessor app_id (): Integer
+  def app_id_changed?: () -> bool
+  def app_id_change: () -> [Integer?, Integer?]
+  def app_id_will_change!: () -> void
+  def app_id_was: () -> Integer?
+  def app_id_previously_changed?: () -> bool
+  def app_id_previous_change: () -> Array[Integer?]?
+  def app_id_previously_was: () -> Integer?
+  def restore_app_id!: () -> void
+  def clear_app_id_change: () -> void
+
+
+
+  def game: () -> Game
+  def game=: (Game?) -> Game?
+  def build_game: (untyped) -> Game
+  def create_game: (untyped) -> Game
+  def create_game!: (untyped) -> Game
+  def reload_game: () -> Game?
+
+
+
+end
+
+class SteamAppId::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[SteamAppId]
+  include Enumerable[SteamAppId]
+
+
+end
+
+class SteamAppId::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

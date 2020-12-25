@@ -1,0 +1,103 @@
+class ExternalAccount < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[ExternalAccount, ExternalAccount::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor user_id (): Integer
+  def user_id_changed?: () -> bool
+  def user_id_change: () -> [Integer?, Integer?]
+  def user_id_will_change!: () -> void
+  def user_id_was: () -> Integer?
+  def user_id_previously_changed?: () -> bool
+  def user_id_previous_change: () -> Array[Integer?]?
+  def user_id_previously_was: () -> Integer?
+  def restore_user_id!: () -> void
+  def clear_user_id_change: () -> void
+
+  attr_accessor account_type (): String
+  def account_type_changed?: () -> bool
+  def account_type_change: () -> [String?, String?]
+  def account_type_will_change!: () -> void
+  def account_type_was: () -> String?
+  def account_type_previously_changed?: () -> bool
+  def account_type_previous_change: () -> Array[String?]?
+  def account_type_previously_was: () -> String?
+  def restore_account_type!: () -> void
+  def clear_account_type_change: () -> void
+
+  attr_accessor steam_id (): Integer?
+  def steam_id_changed?: () -> bool
+  def steam_id_change: () -> [Integer?, Integer?]
+  def steam_id_will_change!: () -> void
+  def steam_id_was: () -> Integer?
+  def steam_id_previously_changed?: () -> bool
+  def steam_id_previous_change: () -> Array[Integer?]?
+  def steam_id_previously_was: () -> Integer?
+  def restore_steam_id!: () -> void
+  def clear_steam_id_change: () -> void
+
+  attr_accessor steam_profile_url (): String?
+  def steam_profile_url_changed?: () -> bool
+  def steam_profile_url_change: () -> [String?, String?]
+  def steam_profile_url_will_change!: () -> void
+  def steam_profile_url_was: () -> String?
+  def steam_profile_url_previously_changed?: () -> bool
+  def steam_profile_url_previous_change: () -> Array[String?]?
+  def steam_profile_url_previously_was: () -> String?
+  def restore_steam_profile_url!: () -> void
+  def clear_steam_profile_url_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+
+
+  def user: () -> User
+  def user=: (User?) -> User?
+  def build_user: (untyped) -> User
+  def create_user: (untyped) -> User
+  def create_user!: (untyped) -> User
+  def reload_user: () -> User?
+  def steam!: () -> bool
+  def steam?: () -> bool
+  def self.steam: () -> ExternalAccount::ActiveRecord_Relation
+
+end
+
+class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[ExternalAccount]
+  include Enumerable[ExternalAccount]
+  def steam: () -> ExternalAccount::ActiveRecord_Relation
+
+end
+
+class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

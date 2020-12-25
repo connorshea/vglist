@@ -1,0 +1,87 @@
+class Genre < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Genre, Genre::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor name (): String
+  def name_changed?: () -> bool
+  def name_change: () -> [String?, String?]
+  def name_will_change!: () -> void
+  def name_was: () -> String?
+  def name_previously_changed?: () -> bool
+  def name_previous_change: () -> Array[String?]?
+  def name_previously_was: () -> String?
+  def restore_name!: () -> void
+  def clear_name_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  attr_accessor wikidata_id (): Integer?
+  def wikidata_id_changed?: () -> bool
+  def wikidata_id_change: () -> [Integer?, Integer?]
+  def wikidata_id_will_change!: () -> void
+  def wikidata_id_was: () -> Integer?
+  def wikidata_id_previously_changed?: () -> bool
+  def wikidata_id_previous_change: () -> Array[Integer?]?
+  def wikidata_id_previously_was: () -> Integer?
+  def restore_wikidata_id!: () -> void
+  def clear_wikidata_id_change: () -> void
+
+  def game_genres: () -> GameGenre::ActiveRecord_Associations_CollectionProxy
+  def game_genres=: (GameGenre::ActiveRecord_Associations_CollectionProxy | Array[GameGenre]) -> (GameGenre::ActiveRecord_Associations_CollectionProxy | Array[GameGenre])
+  def game_genre_ids: () -> Array[Integer]
+  def game_genre_ids=: (Array[Integer]) -> Array[Integer]
+  def games: () -> Game::ActiveRecord_Associations_CollectionProxy
+  def games=: (Game::ActiveRecord_Associations_CollectionProxy | Array[Game]) -> (Game::ActiveRecord_Associations_CollectionProxy | Array[Game])
+  def game_ids: () -> Array[Integer]
+  def game_ids=: (Array[Integer]) -> Array[Integer]
+  def pg_search_document: () -> PgSearch::Document
+  def pg_search_document=: (PgSearch::Document?) -> PgSearch::Document?
+  def build_pg_search_document: (untyped) -> PgSearch::Document
+  def create_pg_search_document: (untyped) -> PgSearch::Document
+  def create_pg_search_document!: (untyped) -> PgSearch::Document
+  def reload_pg_search_document: () -> PgSearch::Document?
+
+
+
+
+end
+
+class Genre::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[Genre]
+  include Enumerable[Genre]
+
+
+end
+
+class Genre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

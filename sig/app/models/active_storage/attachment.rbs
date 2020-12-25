@@ -1,0 +1,97 @@
+class ActiveStorage::Attachment < ActiveStorage::Record
+  extend _ActiveRecord_Relation_ClassMethods[ActiveStorage::Attachment, ActiveStorage::Attachment::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor name (): String
+  def name_changed?: () -> bool
+  def name_change: () -> [String?, String?]
+  def name_will_change!: () -> void
+  def name_was: () -> String?
+  def name_previously_changed?: () -> bool
+  def name_previous_change: () -> Array[String?]?
+  def name_previously_was: () -> String?
+  def restore_name!: () -> void
+  def clear_name_change: () -> void
+
+  attr_accessor record_type (): String
+  def record_type_changed?: () -> bool
+  def record_type_change: () -> [String?, String?]
+  def record_type_will_change!: () -> void
+  def record_type_was: () -> String?
+  def record_type_previously_changed?: () -> bool
+  def record_type_previous_change: () -> Array[String?]?
+  def record_type_previously_was: () -> String?
+  def restore_record_type!: () -> void
+  def clear_record_type_change: () -> void
+
+  attr_accessor record_id (): Integer
+  def record_id_changed?: () -> bool
+  def record_id_change: () -> [Integer?, Integer?]
+  def record_id_will_change!: () -> void
+  def record_id_was: () -> Integer?
+  def record_id_previously_changed?: () -> bool
+  def record_id_previous_change: () -> Array[Integer?]?
+  def record_id_previously_was: () -> Integer?
+  def restore_record_id!: () -> void
+  def clear_record_id_change: () -> void
+
+  attr_accessor blob_id (): Integer
+  def blob_id_changed?: () -> bool
+  def blob_id_change: () -> [Integer?, Integer?]
+  def blob_id_will_change!: () -> void
+  def blob_id_was: () -> Integer?
+  def blob_id_previously_changed?: () -> bool
+  def blob_id_previous_change: () -> Array[Integer?]?
+  def blob_id_previously_was: () -> Integer?
+  def restore_blob_id!: () -> void
+  def clear_blob_id_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+
+
+  def record: () -> untyped
+  def record=: (untyped?) -> untyped?
+  def build_record: (untyped) -> untyped
+  def create_record: (untyped) -> untyped
+  def create_record!: (untyped) -> untyped
+  def reload_record: () -> untyped?
+  def blob: () -> ActiveStorage::Blob
+  def blob=: (ActiveStorage::Blob?) -> ActiveStorage::Blob?
+  def build_blob: (untyped) -> ActiveStorage::Blob
+  def create_blob: (untyped) -> ActiveStorage::Blob
+  def create_blob!: (untyped) -> ActiveStorage::Blob
+  def reload_blob: () -> ActiveStorage::Blob?
+
+
+
+end
+
+class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[ActiveStorage::Attachment]
+  include Enumerable[ActiveStorage::Attachment]
+
+
+end
+
+class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

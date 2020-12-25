@@ -1,0 +1,86 @@
+class GameEngine < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[GameEngine, GameEngine::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor game_id (): Integer
+  def game_id_changed?: () -> bool
+  def game_id_change: () -> [Integer?, Integer?]
+  def game_id_will_change!: () -> void
+  def game_id_was: () -> Integer?
+  def game_id_previously_changed?: () -> bool
+  def game_id_previous_change: () -> Array[Integer?]?
+  def game_id_previously_was: () -> Integer?
+  def restore_game_id!: () -> void
+  def clear_game_id_change: () -> void
+
+  attr_accessor engine_id (): Integer
+  def engine_id_changed?: () -> bool
+  def engine_id_change: () -> [Integer?, Integer?]
+  def engine_id_will_change!: () -> void
+  def engine_id_was: () -> Integer?
+  def engine_id_previously_changed?: () -> bool
+  def engine_id_previous_change: () -> Array[Integer?]?
+  def engine_id_previously_was: () -> Integer?
+  def restore_engine_id!: () -> void
+  def clear_engine_id_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+
+
+  def game: () -> Game
+  def game=: (Game?) -> Game?
+  def build_game: (untyped) -> Game
+  def create_game: (untyped) -> Game
+  def create_game!: (untyped) -> Game
+  def reload_game: () -> Game?
+  def engine: () -> Engine
+  def engine=: (Engine?) -> Engine?
+  def build_engine: (untyped) -> Engine
+  def create_engine: (untyped) -> Engine
+  def create_engine!: (untyped) -> Engine
+  def reload_engine: () -> Engine?
+
+
+
+end
+
+class GameEngine::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[GameEngine]
+  include Enumerable[GameEngine]
+
+
+end
+
+class GameEngine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

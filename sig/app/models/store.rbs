@@ -1,0 +1,71 @@
+class Store < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Store, Store::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor name (): String
+  def name_changed?: () -> bool
+  def name_change: () -> [String?, String?]
+  def name_will_change!: () -> void
+  def name_was: () -> String?
+  def name_previously_changed?: () -> bool
+  def name_previous_change: () -> Array[String?]?
+  def name_previously_was: () -> String?
+  def restore_name!: () -> void
+  def clear_name_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  def game_purchase_stores: () -> GamePurchaseStore::ActiveRecord_Associations_CollectionProxy
+  def game_purchase_stores=: (GamePurchaseStore::ActiveRecord_Associations_CollectionProxy | Array[GamePurchaseStore]) -> (GamePurchaseStore::ActiveRecord_Associations_CollectionProxy | Array[GamePurchaseStore])
+  def game_purchase_store_ids: () -> Array[Integer]
+  def game_purchase_store_ids=: (Array[Integer]) -> Array[Integer]
+  def game_purchases: () -> GamePurchase::ActiveRecord_Associations_CollectionProxy
+  def game_purchases=: (GamePurchase::ActiveRecord_Associations_CollectionProxy | Array[GamePurchase]) -> (GamePurchase::ActiveRecord_Associations_CollectionProxy | Array[GamePurchase])
+  def game_purchase_ids: () -> Array[Integer]
+  def game_purchase_ids=: (Array[Integer]) -> Array[Integer]
+
+
+
+
+
+end
+
+class Store::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[Store]
+  include Enumerable[Store]
+
+
+end
+
+class Store::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

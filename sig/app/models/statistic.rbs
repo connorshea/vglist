@@ -1,0 +1,284 @@
+class Statistic < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Statistic, Statistic::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  attr_accessor users (): Integer
+  def users_changed?: () -> bool
+  def users_change: () -> [Integer?, Integer?]
+  def users_will_change!: () -> void
+  def users_was: () -> Integer?
+  def users_previously_changed?: () -> bool
+  def users_previous_change: () -> Array[Integer?]?
+  def users_previously_was: () -> Integer?
+  def restore_users!: () -> void
+  def clear_users_change: () -> void
+
+  attr_accessor games (): Integer
+  def games_changed?: () -> bool
+  def games_change: () -> [Integer?, Integer?]
+  def games_will_change!: () -> void
+  def games_was: () -> Integer?
+  def games_previously_changed?: () -> bool
+  def games_previous_change: () -> Array[Integer?]?
+  def games_previously_was: () -> Integer?
+  def restore_games!: () -> void
+  def clear_games_change: () -> void
+
+  attr_accessor platforms (): Integer
+  def platforms_changed?: () -> bool
+  def platforms_change: () -> [Integer?, Integer?]
+  def platforms_will_change!: () -> void
+  def platforms_was: () -> Integer?
+  def platforms_previously_changed?: () -> bool
+  def platforms_previous_change: () -> Array[Integer?]?
+  def platforms_previously_was: () -> Integer?
+  def restore_platforms!: () -> void
+  def clear_platforms_change: () -> void
+
+  attr_accessor series (): Integer
+  def series_changed?: () -> bool
+  def series_change: () -> [Integer?, Integer?]
+  def series_will_change!: () -> void
+  def series_was: () -> Integer?
+  def series_previously_changed?: () -> bool
+  def series_previous_change: () -> Array[Integer?]?
+  def series_previously_was: () -> Integer?
+  def restore_series!: () -> void
+  def clear_series_change: () -> void
+
+  attr_accessor engines (): Integer
+  def engines_changed?: () -> bool
+  def engines_change: () -> [Integer?, Integer?]
+  def engines_will_change!: () -> void
+  def engines_was: () -> Integer?
+  def engines_previously_changed?: () -> bool
+  def engines_previous_change: () -> Array[Integer?]?
+  def engines_previously_was: () -> Integer?
+  def restore_engines!: () -> void
+  def clear_engines_change: () -> void
+
+  attr_accessor companies (): Integer
+  def companies_changed?: () -> bool
+  def companies_change: () -> [Integer?, Integer?]
+  def companies_will_change!: () -> void
+  def companies_was: () -> Integer?
+  def companies_previously_changed?: () -> bool
+  def companies_previous_change: () -> Array[Integer?]?
+  def companies_previously_was: () -> Integer?
+  def restore_companies!: () -> void
+  def clear_companies_change: () -> void
+
+  attr_accessor genres (): Integer
+  def genres_changed?: () -> bool
+  def genres_change: () -> [Integer?, Integer?]
+  def genres_will_change!: () -> void
+  def genres_was: () -> Integer?
+  def genres_previously_changed?: () -> bool
+  def genres_previous_change: () -> Array[Integer?]?
+  def genres_previously_was: () -> Integer?
+  def restore_genres!: () -> void
+  def clear_genres_change: () -> void
+
+  attr_accessor stores (): Integer
+  def stores_changed?: () -> bool
+  def stores_change: () -> [Integer?, Integer?]
+  def stores_will_change!: () -> void
+  def stores_was: () -> Integer?
+  def stores_previously_changed?: () -> bool
+  def stores_previous_change: () -> Array[Integer?]?
+  def stores_previously_was: () -> Integer?
+  def restore_stores!: () -> void
+  def clear_stores_change: () -> void
+
+  attr_accessor events (): Integer
+  def events_changed?: () -> bool
+  def events_change: () -> [Integer?, Integer?]
+  def events_will_change!: () -> void
+  def events_was: () -> Integer?
+  def events_previously_changed?: () -> bool
+  def events_previous_change: () -> Array[Integer?]?
+  def events_previously_was: () -> Integer?
+  def restore_events!: () -> void
+  def clear_events_change: () -> void
+
+  attr_accessor game_purchases (): Integer
+  def game_purchases_changed?: () -> bool
+  def game_purchases_change: () -> [Integer?, Integer?]
+  def game_purchases_will_change!: () -> void
+  def game_purchases_was: () -> Integer?
+  def game_purchases_previously_changed?: () -> bool
+  def game_purchases_previous_change: () -> Array[Integer?]?
+  def game_purchases_previously_was: () -> Integer?
+  def restore_game_purchases!: () -> void
+  def clear_game_purchases_change: () -> void
+
+  attr_accessor relationships (): Integer
+  def relationships_changed?: () -> bool
+  def relationships_change: () -> [Integer?, Integer?]
+  def relationships_will_change!: () -> void
+  def relationships_was: () -> Integer?
+  def relationships_previously_changed?: () -> bool
+  def relationships_previous_change: () -> Array[Integer?]?
+  def relationships_previously_was: () -> Integer?
+  def restore_relationships!: () -> void
+  def clear_relationships_change: () -> void
+
+  attr_accessor games_with_covers (): Integer
+  def games_with_covers_changed?: () -> bool
+  def games_with_covers_change: () -> [Integer?, Integer?]
+  def games_with_covers_will_change!: () -> void
+  def games_with_covers_was: () -> Integer?
+  def games_with_covers_previously_changed?: () -> bool
+  def games_with_covers_previous_change: () -> Array[Integer?]?
+  def games_with_covers_previously_was: () -> Integer?
+  def restore_games_with_covers!: () -> void
+  def clear_games_with_covers_change: () -> void
+
+  attr_accessor games_with_release_dates (): Integer
+  def games_with_release_dates_changed?: () -> bool
+  def games_with_release_dates_change: () -> [Integer?, Integer?]
+  def games_with_release_dates_will_change!: () -> void
+  def games_with_release_dates_was: () -> Integer?
+  def games_with_release_dates_previously_changed?: () -> bool
+  def games_with_release_dates_previous_change: () -> Array[Integer?]?
+  def games_with_release_dates_previously_was: () -> Integer?
+  def restore_games_with_release_dates!: () -> void
+  def clear_games_with_release_dates_change: () -> void
+
+  attr_accessor banned_users (): Integer
+  def banned_users_changed?: () -> bool
+  def banned_users_change: () -> [Integer?, Integer?]
+  def banned_users_will_change!: () -> void
+  def banned_users_was: () -> Integer?
+  def banned_users_previously_changed?: () -> bool
+  def banned_users_previous_change: () -> Array[Integer?]?
+  def banned_users_previously_was: () -> Integer?
+  def restore_banned_users!: () -> void
+  def clear_banned_users_change: () -> void
+
+  attr_accessor mobygames_ids (): Integer
+  def mobygames_ids_changed?: () -> bool
+  def mobygames_ids_change: () -> [Integer?, Integer?]
+  def mobygames_ids_will_change!: () -> void
+  def mobygames_ids_was: () -> Integer?
+  def mobygames_ids_previously_changed?: () -> bool
+  def mobygames_ids_previous_change: () -> Array[Integer?]?
+  def mobygames_ids_previously_was: () -> Integer?
+  def restore_mobygames_ids!: () -> void
+  def clear_mobygames_ids_change: () -> void
+
+  attr_accessor pcgamingwiki_ids (): Integer
+  def pcgamingwiki_ids_changed?: () -> bool
+  def pcgamingwiki_ids_change: () -> [Integer?, Integer?]
+  def pcgamingwiki_ids_will_change!: () -> void
+  def pcgamingwiki_ids_was: () -> Integer?
+  def pcgamingwiki_ids_previously_changed?: () -> bool
+  def pcgamingwiki_ids_previous_change: () -> Array[Integer?]?
+  def pcgamingwiki_ids_previously_was: () -> Integer?
+  def restore_pcgamingwiki_ids!: () -> void
+  def clear_pcgamingwiki_ids_change: () -> void
+
+  attr_accessor wikidata_ids (): Integer
+  def wikidata_ids_changed?: () -> bool
+  def wikidata_ids_change: () -> [Integer?, Integer?]
+  def wikidata_ids_will_change!: () -> void
+  def wikidata_ids_was: () -> Integer?
+  def wikidata_ids_previously_changed?: () -> bool
+  def wikidata_ids_previous_change: () -> Array[Integer?]?
+  def wikidata_ids_previously_was: () -> Integer?
+  def restore_wikidata_ids!: () -> void
+  def clear_wikidata_ids_change: () -> void
+
+  attr_accessor giantbomb_ids (): Integer
+  def giantbomb_ids_changed?: () -> bool
+  def giantbomb_ids_change: () -> [Integer?, Integer?]
+  def giantbomb_ids_will_change!: () -> void
+  def giantbomb_ids_was: () -> Integer?
+  def giantbomb_ids_previously_changed?: () -> bool
+  def giantbomb_ids_previous_change: () -> Array[Integer?]?
+  def giantbomb_ids_previously_was: () -> Integer?
+  def restore_giantbomb_ids!: () -> void
+  def clear_giantbomb_ids_change: () -> void
+
+  attr_accessor steam_app_ids (): Integer
+  def steam_app_ids_changed?: () -> bool
+  def steam_app_ids_change: () -> [Integer?, Integer?]
+  def steam_app_ids_will_change!: () -> void
+  def steam_app_ids_was: () -> Integer?
+  def steam_app_ids_previously_changed?: () -> bool
+  def steam_app_ids_previous_change: () -> Array[Integer?]?
+  def steam_app_ids_previously_was: () -> Integer?
+  def restore_steam_app_ids!: () -> void
+  def clear_steam_app_ids_change: () -> void
+
+  attr_accessor epic_games_store_ids (): Integer
+  def epic_games_store_ids_changed?: () -> bool
+  def epic_games_store_ids_change: () -> [Integer?, Integer?]
+  def epic_games_store_ids_will_change!: () -> void
+  def epic_games_store_ids_was: () -> Integer?
+  def epic_games_store_ids_previously_changed?: () -> bool
+  def epic_games_store_ids_previous_change: () -> Array[Integer?]?
+  def epic_games_store_ids_previously_was: () -> Integer?
+  def restore_epic_games_store_ids!: () -> void
+  def clear_epic_games_store_ids_change: () -> void
+
+  attr_accessor gog_ids (): Integer
+  def gog_ids_changed?: () -> bool
+  def gog_ids_change: () -> [Integer?, Integer?]
+  def gog_ids_will_change!: () -> void
+  def gog_ids_was: () -> Integer?
+  def gog_ids_previously_changed?: () -> bool
+  def gog_ids_previous_change: () -> Array[Integer?]?
+  def gog_ids_previously_was: () -> Integer?
+  def restore_gog_ids!: () -> void
+  def clear_gog_ids_change: () -> void
+
+
+
+
+
+
+
+end
+
+class Statistic::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[Statistic]
+  include Enumerable[Statistic]
+
+
+end
+
+class Statistic::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

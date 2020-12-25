@@ -1,0 +1,207 @@
+class GamePurchase < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[GamePurchase, GamePurchase::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor game_id (): Integer
+  def game_id_changed?: () -> bool
+  def game_id_change: () -> [Integer?, Integer?]
+  def game_id_will_change!: () -> void
+  def game_id_was: () -> Integer?
+  def game_id_previously_changed?: () -> bool
+  def game_id_previous_change: () -> Array[Integer?]?
+  def game_id_previously_was: () -> Integer?
+  def restore_game_id!: () -> void
+  def clear_game_id_change: () -> void
+
+  attr_accessor user_id (): Integer
+  def user_id_changed?: () -> bool
+  def user_id_change: () -> [Integer?, Integer?]
+  def user_id_will_change!: () -> void
+  def user_id_was: () -> Integer?
+  def user_id_previously_changed?: () -> bool
+  def user_id_previous_change: () -> Array[Integer?]?
+  def user_id_previously_was: () -> Integer?
+  def restore_user_id!: () -> void
+  def clear_user_id_change: () -> void
+
+  attr_accessor comments (): String
+  def comments_changed?: () -> bool
+  def comments_change: () -> [String?, String?]
+  def comments_will_change!: () -> void
+  def comments_was: () -> String?
+  def comments_previously_changed?: () -> bool
+  def comments_previous_change: () -> Array[String?]?
+  def comments_previously_was: () -> String?
+  def restore_comments!: () -> void
+  def clear_comments_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  attr_accessor rating (): Integer?
+  def rating_changed?: () -> bool
+  def rating_change: () -> [Integer?, Integer?]
+  def rating_will_change!: () -> void
+  def rating_was: () -> Integer?
+  def rating_previously_changed?: () -> bool
+  def rating_previous_change: () -> Array[Integer?]?
+  def rating_previously_was: () -> Integer?
+  def restore_rating!: () -> void
+  def clear_rating_change: () -> void
+
+  attr_accessor completion_status (): String?
+  def completion_status_changed?: () -> bool
+  def completion_status_change: () -> [String?, String?]
+  def completion_status_will_change!: () -> void
+  def completion_status_was: () -> String?
+  def completion_status_previously_changed?: () -> bool
+  def completion_status_previous_change: () -> Array[String?]?
+  def completion_status_previously_was: () -> String?
+  def restore_completion_status!: () -> void
+  def clear_completion_status_change: () -> void
+
+  attr_accessor start_date (): Date?
+  def start_date_changed?: () -> bool
+  def start_date_change: () -> [Date?, Date?]
+  def start_date_will_change!: () -> void
+  def start_date_was: () -> Date?
+  def start_date_previously_changed?: () -> bool
+  def start_date_previous_change: () -> Array[Date?]?
+  def start_date_previously_was: () -> Date?
+  def restore_start_date!: () -> void
+  def clear_start_date_change: () -> void
+
+  attr_accessor completion_date (): Date?
+  def completion_date_changed?: () -> bool
+  def completion_date_change: () -> [Date?, Date?]
+  def completion_date_will_change!: () -> void
+  def completion_date_was: () -> Date?
+  def completion_date_previously_changed?: () -> bool
+  def completion_date_previous_change: () -> Array[Date?]?
+  def completion_date_previously_was: () -> Date?
+  def restore_completion_date!: () -> void
+  def clear_completion_date_change: () -> void
+
+  attr_accessor hours_played (): BigDecimal?
+  def hours_played_changed?: () -> bool
+  def hours_played_change: () -> [BigDecimal?, BigDecimal?]
+  def hours_played_will_change!: () -> void
+  def hours_played_was: () -> BigDecimal?
+  def hours_played_previously_changed?: () -> bool
+  def hours_played_previous_change: () -> Array[BigDecimal?]?
+  def hours_played_previously_was: () -> BigDecimal?
+  def restore_hours_played!: () -> void
+  def clear_hours_played_change: () -> void
+
+  attr_accessor replay_count (): Integer
+  def replay_count_changed?: () -> bool
+  def replay_count_change: () -> [Integer?, Integer?]
+  def replay_count_will_change!: () -> void
+  def replay_count_was: () -> Integer?
+  def replay_count_previously_changed?: () -> bool
+  def replay_count_previous_change: () -> Array[Integer?]?
+  def replay_count_previously_was: () -> Integer?
+  def restore_replay_count!: () -> void
+  def clear_replay_count_change: () -> void
+
+  def game_purchase_platforms: () -> GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy
+  def game_purchase_platforms=: (GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy | Array[GamePurchasePlatform]) -> (GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy | Array[GamePurchasePlatform])
+  def game_purchase_platform_ids: () -> Array[Integer]
+  def game_purchase_platform_ids=: (Array[Integer]) -> Array[Integer]
+  def platforms: () -> Platform::ActiveRecord_Associations_CollectionProxy
+  def platforms=: (Platform::ActiveRecord_Associations_CollectionProxy | Array[Platform]) -> (Platform::ActiveRecord_Associations_CollectionProxy | Array[Platform])
+  def platform_ids: () -> Array[Integer]
+  def platform_ids=: (Array[Integer]) -> Array[Integer]
+  def game_purchase_stores: () -> GamePurchaseStore::ActiveRecord_Associations_CollectionProxy
+  def game_purchase_stores=: (GamePurchaseStore::ActiveRecord_Associations_CollectionProxy | Array[GamePurchaseStore]) -> (GamePurchaseStore::ActiveRecord_Associations_CollectionProxy | Array[GamePurchaseStore])
+  def game_purchase_store_ids: () -> Array[Integer]
+  def game_purchase_store_ids=: (Array[Integer]) -> Array[Integer]
+  def stores: () -> Store::ActiveRecord_Associations_CollectionProxy
+  def stores=: (Store::ActiveRecord_Associations_CollectionProxy | Array[Store]) -> (Store::ActiveRecord_Associations_CollectionProxy | Array[Store])
+  def store_ids: () -> Array[Integer]
+  def store_ids=: (Array[Integer]) -> Array[Integer]
+  def events: () -> Event::ActiveRecord_Associations_CollectionProxy
+  def events=: (Event::ActiveRecord_Associations_CollectionProxy | Array[Event]) -> (Event::ActiveRecord_Associations_CollectionProxy | Array[Event])
+  def event_ids: () -> Array[Integer]
+  def event_ids=: (Array[Integer]) -> Array[Integer]
+
+  def game: () -> Game
+  def game=: (Game?) -> Game?
+  def build_game: (untyped) -> Game
+  def create_game: (untyped) -> Game
+  def create_game!: (untyped) -> Game
+  def reload_game: () -> Game?
+  def user: () -> User
+  def user=: (User?) -> User?
+  def build_user: (untyped) -> User
+  def create_user: (untyped) -> User
+  def create_user!: (untyped) -> User
+  def reload_user: () -> User?
+  def unplayed!: () -> bool
+  def unplayed?: () -> bool
+  def in_progress!: () -> bool
+  def in_progress?: () -> bool
+  def dropped!: () -> bool
+  def dropped?: () -> bool
+  def completed!: () -> bool
+  def completed?: () -> bool
+  def fully_completed!: () -> bool
+  def fully_completed?: () -> bool
+  def not_applicable!: () -> bool
+  def not_applicable?: () -> bool
+  def paused!: () -> bool
+  def paused?: () -> bool
+  def self.unplayed: () -> GamePurchase::ActiveRecord_Relation
+  def self.in_progress: () -> GamePurchase::ActiveRecord_Relation
+  def self.dropped: () -> GamePurchase::ActiveRecord_Relation
+  def self.completed: () -> GamePurchase::ActiveRecord_Relation
+  def self.fully_completed: () -> GamePurchase::ActiveRecord_Relation
+  def self.not_applicable: () -> GamePurchase::ActiveRecord_Relation
+  def self.paused: () -> GamePurchase::ActiveRecord_Relation
+
+end
+
+class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[GamePurchase]
+  include Enumerable[GamePurchase]
+  def unplayed: () -> GamePurchase::ActiveRecord_Relation
+  def in_progress: () -> GamePurchase::ActiveRecord_Relation
+  def dropped: () -> GamePurchase::ActiveRecord_Relation
+  def completed: () -> GamePurchase::ActiveRecord_Relation
+  def fully_completed: () -> GamePurchase::ActiveRecord_Relation
+  def not_applicable: () -> GamePurchase::ActiveRecord_Relation
+  def paused: () -> GamePurchase::ActiveRecord_Relation
+
+end
+
+class GamePurchase::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

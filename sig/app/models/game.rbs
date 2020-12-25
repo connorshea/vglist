@@ -1,0 +1,258 @@
+class Game < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Game, Game::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor name (): String
+  def name_changed?: () -> bool
+  def name_change: () -> [String?, String?]
+  def name_will_change!: () -> void
+  def name_was: () -> String?
+  def name_previously_changed?: () -> bool
+  def name_previous_change: () -> Array[String?]?
+  def name_previously_was: () -> String?
+  def restore_name!: () -> void
+  def clear_name_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  attr_accessor series_id (): Integer?
+  def series_id_changed?: () -> bool
+  def series_id_change: () -> [Integer?, Integer?]
+  def series_id_will_change!: () -> void
+  def series_id_was: () -> Integer?
+  def series_id_previously_changed?: () -> bool
+  def series_id_previous_change: () -> Array[Integer?]?
+  def series_id_previously_was: () -> Integer?
+  def restore_series_id!: () -> void
+  def clear_series_id_change: () -> void
+
+  attr_accessor wikidata_id (): Integer?
+  def wikidata_id_changed?: () -> bool
+  def wikidata_id_change: () -> [Integer?, Integer?]
+  def wikidata_id_will_change!: () -> void
+  def wikidata_id_was: () -> Integer?
+  def wikidata_id_previously_changed?: () -> bool
+  def wikidata_id_previous_change: () -> Array[Integer?]?
+  def wikidata_id_previously_was: () -> Integer?
+  def restore_wikidata_id!: () -> void
+  def clear_wikidata_id_change: () -> void
+
+  attr_accessor pcgamingwiki_id (): String?
+  def pcgamingwiki_id_changed?: () -> bool
+  def pcgamingwiki_id_change: () -> [String?, String?]
+  def pcgamingwiki_id_will_change!: () -> void
+  def pcgamingwiki_id_was: () -> String?
+  def pcgamingwiki_id_previously_changed?: () -> bool
+  def pcgamingwiki_id_previous_change: () -> Array[String?]?
+  def pcgamingwiki_id_previously_was: () -> String?
+  def restore_pcgamingwiki_id!: () -> void
+  def clear_pcgamingwiki_id_change: () -> void
+
+  attr_accessor mobygames_id (): String?
+  def mobygames_id_changed?: () -> bool
+  def mobygames_id_change: () -> [String?, String?]
+  def mobygames_id_will_change!: () -> void
+  def mobygames_id_was: () -> String?
+  def mobygames_id_previously_changed?: () -> bool
+  def mobygames_id_previous_change: () -> Array[String?]?
+  def mobygames_id_previously_was: () -> String?
+  def restore_mobygames_id!: () -> void
+  def clear_mobygames_id_change: () -> void
+
+  attr_accessor release_date (): Date?
+  def release_date_changed?: () -> bool
+  def release_date_change: () -> [Date?, Date?]
+  def release_date_will_change!: () -> void
+  def release_date_was: () -> Date?
+  def release_date_previously_changed?: () -> bool
+  def release_date_previous_change: () -> Array[Date?]?
+  def release_date_previously_was: () -> Date?
+  def restore_release_date!: () -> void
+  def clear_release_date_change: () -> void
+
+  attr_accessor giantbomb_id (): String?
+  def giantbomb_id_changed?: () -> bool
+  def giantbomb_id_change: () -> [String?, String?]
+  def giantbomb_id_will_change!: () -> void
+  def giantbomb_id_was: () -> String?
+  def giantbomb_id_previously_changed?: () -> bool
+  def giantbomb_id_previous_change: () -> Array[String?]?
+  def giantbomb_id_previously_was: () -> String?
+  def restore_giantbomb_id!: () -> void
+  def clear_giantbomb_id_change: () -> void
+
+  attr_accessor epic_games_store_id (): String?
+  def epic_games_store_id_changed?: () -> bool
+  def epic_games_store_id_change: () -> [String?, String?]
+  def epic_games_store_id_will_change!: () -> void
+  def epic_games_store_id_was: () -> String?
+  def epic_games_store_id_previously_changed?: () -> bool
+  def epic_games_store_id_previous_change: () -> Array[String?]?
+  def epic_games_store_id_previously_was: () -> String?
+  def restore_epic_games_store_id!: () -> void
+  def clear_epic_games_store_id_change: () -> void
+
+  attr_accessor gog_id (): String?
+  def gog_id_changed?: () -> bool
+  def gog_id_change: () -> [String?, String?]
+  def gog_id_will_change!: () -> void
+  def gog_id_was: () -> String?
+  def gog_id_previously_changed?: () -> bool
+  def gog_id_previous_change: () -> Array[String?]?
+  def gog_id_previously_was: () -> String?
+  def restore_gog_id!: () -> void
+  def clear_gog_id_change: () -> void
+
+  attr_accessor avg_rating (): Float?
+  def avg_rating_changed?: () -> bool
+  def avg_rating_change: () -> [Float?, Float?]
+  def avg_rating_will_change!: () -> void
+  def avg_rating_was: () -> Float?
+  def avg_rating_previously_changed?: () -> bool
+  def avg_rating_previous_change: () -> Array[Float?]?
+  def avg_rating_previously_was: () -> Float?
+  def restore_avg_rating!: () -> void
+  def clear_avg_rating_change: () -> void
+
+  def game_purchases: () -> GamePurchase::ActiveRecord_Associations_CollectionProxy
+  def game_purchases=: (GamePurchase::ActiveRecord_Associations_CollectionProxy | Array[GamePurchase]) -> (GamePurchase::ActiveRecord_Associations_CollectionProxy | Array[GamePurchase])
+  def game_purchase_ids: () -> Array[Integer]
+  def game_purchase_ids=: (Array[Integer]) -> Array[Integer]
+  def purchasers: () -> User::ActiveRecord_Associations_CollectionProxy
+  def purchasers=: (User::ActiveRecord_Associations_CollectionProxy | Array[User]) -> (User::ActiveRecord_Associations_CollectionProxy | Array[User])
+  def purchaser_ids: () -> Array[Integer]
+  def purchaser_ids=: (Array[Integer]) -> Array[Integer]
+  def game_developers: () -> GameDeveloper::ActiveRecord_Associations_CollectionProxy
+  def game_developers=: (GameDeveloper::ActiveRecord_Associations_CollectionProxy | Array[GameDeveloper]) -> (GameDeveloper::ActiveRecord_Associations_CollectionProxy | Array[GameDeveloper])
+  def game_developer_ids: () -> Array[Integer]
+  def game_developer_ids=: (Array[Integer]) -> Array[Integer]
+  def developers: () -> Company::ActiveRecord_Associations_CollectionProxy
+  def developers=: (Company::ActiveRecord_Associations_CollectionProxy | Array[Company]) -> (Company::ActiveRecord_Associations_CollectionProxy | Array[Company])
+  def developer_ids: () -> Array[Integer]
+  def developer_ids=: (Array[Integer]) -> Array[Integer]
+  def game_publishers: () -> GamePublisher::ActiveRecord_Associations_CollectionProxy
+  def game_publishers=: (GamePublisher::ActiveRecord_Associations_CollectionProxy | Array[GamePublisher]) -> (GamePublisher::ActiveRecord_Associations_CollectionProxy | Array[GamePublisher])
+  def game_publisher_ids: () -> Array[Integer]
+  def game_publisher_ids=: (Array[Integer]) -> Array[Integer]
+  def publishers: () -> Company::ActiveRecord_Associations_CollectionProxy
+  def publishers=: (Company::ActiveRecord_Associations_CollectionProxy | Array[Company]) -> (Company::ActiveRecord_Associations_CollectionProxy | Array[Company])
+  def publisher_ids: () -> Array[Integer]
+  def publisher_ids=: (Array[Integer]) -> Array[Integer]
+  def game_platforms: () -> GamePlatform::ActiveRecord_Associations_CollectionProxy
+  def game_platforms=: (GamePlatform::ActiveRecord_Associations_CollectionProxy | Array[GamePlatform]) -> (GamePlatform::ActiveRecord_Associations_CollectionProxy | Array[GamePlatform])
+  def game_platform_ids: () -> Array[Integer]
+  def game_platform_ids=: (Array[Integer]) -> Array[Integer]
+  def platforms: () -> Platform::ActiveRecord_Associations_CollectionProxy
+  def platforms=: (Platform::ActiveRecord_Associations_CollectionProxy | Array[Platform]) -> (Platform::ActiveRecord_Associations_CollectionProxy | Array[Platform])
+  def platform_ids: () -> Array[Integer]
+  def platform_ids=: (Array[Integer]) -> Array[Integer]
+  def game_genres: () -> GameGenre::ActiveRecord_Associations_CollectionProxy
+  def game_genres=: (GameGenre::ActiveRecord_Associations_CollectionProxy | Array[GameGenre]) -> (GameGenre::ActiveRecord_Associations_CollectionProxy | Array[GameGenre])
+  def game_genre_ids: () -> Array[Integer]
+  def game_genre_ids=: (Array[Integer]) -> Array[Integer]
+  def genres: () -> Genre::ActiveRecord_Associations_CollectionProxy
+  def genres=: (Genre::ActiveRecord_Associations_CollectionProxy | Array[Genre]) -> (Genre::ActiveRecord_Associations_CollectionProxy | Array[Genre])
+  def genre_ids: () -> Array[Integer]
+  def genre_ids=: (Array[Integer]) -> Array[Integer]
+  def game_engines: () -> GameEngine::ActiveRecord_Associations_CollectionProxy
+  def game_engines=: (GameEngine::ActiveRecord_Associations_CollectionProxy | Array[GameEngine]) -> (GameEngine::ActiveRecord_Associations_CollectionProxy | Array[GameEngine])
+  def game_engine_ids: () -> Array[Integer]
+  def game_engine_ids=: (Array[Integer]) -> Array[Integer]
+  def engines: () -> Engine::ActiveRecord_Associations_CollectionProxy
+  def engines=: (Engine::ActiveRecord_Associations_CollectionProxy | Array[Engine]) -> (Engine::ActiveRecord_Associations_CollectionProxy | Array[Engine])
+  def engine_ids: () -> Array[Integer]
+  def engine_ids=: (Array[Integer]) -> Array[Integer]
+  def steam_app_ids: () -> SteamAppId::ActiveRecord_Associations_CollectionProxy
+  def steam_app_ids=: (SteamAppId::ActiveRecord_Associations_CollectionProxy | Array[SteamAppId]) -> (SteamAppId::ActiveRecord_Associations_CollectionProxy | Array[SteamAppId])
+  def steam_app_id_ids: () -> Array[Integer]
+  def steam_app_id_ids=: (Array[Integer]) -> Array[Integer]
+  def favorites: () -> FavoriteGame::ActiveRecord_Associations_CollectionProxy
+  def favorites=: (FavoriteGame::ActiveRecord_Associations_CollectionProxy | Array[FavoriteGame]) -> (FavoriteGame::ActiveRecord_Associations_CollectionProxy | Array[FavoriteGame])
+  def favorite_ids: () -> Array[Integer]
+  def favorite_ids=: (Array[Integer]) -> Array[Integer]
+  def cover_attachment: () -> ActiveStorage::Attachment
+  def cover_attachment=: (ActiveStorage::Attachment?) -> ActiveStorage::Attachment?
+  def build_cover_attachment: (untyped) -> ActiveStorage::Attachment
+  def create_cover_attachment: (untyped) -> ActiveStorage::Attachment
+  def create_cover_attachment!: (untyped) -> ActiveStorage::Attachment
+  def reload_cover_attachment: () -> ActiveStorage::Attachment?
+  def cover_blob: () -> ActiveStorage::Blob
+  def cover_blob=: (ActiveStorage::Blob?) -> ActiveStorage::Blob?
+  def build_cover_blob: (untyped) -> ActiveStorage::Blob
+  def create_cover_blob: (untyped) -> ActiveStorage::Blob
+  def create_cover_blob!: (untyped) -> ActiveStorage::Blob
+  def reload_cover_blob: () -> ActiveStorage::Blob?
+  def pg_search_document: () -> PgSearch::Document
+  def pg_search_document=: (PgSearch::Document?) -> PgSearch::Document?
+  def build_pg_search_document: (untyped) -> PgSearch::Document
+  def create_pg_search_document: (untyped) -> PgSearch::Document
+  def create_pg_search_document!: (untyped) -> PgSearch::Document
+  def reload_pg_search_document: () -> PgSearch::Document?
+  def series: () -> Series
+  def series=: (Series?) -> Series?
+  def build_series: (untyped) -> Series
+  def create_series: (untyped) -> Series
+  def create_series!: (untyped) -> Series
+  def reload_series: () -> Series?
+
+
+  def self.newest: () -> Game::ActiveRecord_Relation
+  def self.oldest: () -> Game::ActiveRecord_Relation
+  def self.recently_updated: () -> Game::ActiveRecord_Relation
+  def self.least_recently_updated: () -> Game::ActiveRecord_Relation
+  def self.highest_avg_rating: () -> Game::ActiveRecord_Relation
+  def self.most_favorites: () -> Game::ActiveRecord_Relation
+  def self.most_owners: () -> Game::ActiveRecord_Relation
+  def self.recently_released: () -> Game::ActiveRecord_Relation
+  def self.on_platform: (untyped) -> Game::ActiveRecord_Relation
+  def self.by_year: (untyped) -> Game::ActiveRecord_Relation
+end
+
+class Game::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[Game]
+  include Enumerable[Game]
+
+  def newest: () -> Game::ActiveRecord_Relation
+  def oldest: () -> Game::ActiveRecord_Relation
+  def recently_updated: () -> Game::ActiveRecord_Relation
+  def least_recently_updated: () -> Game::ActiveRecord_Relation
+  def highest_avg_rating: () -> Game::ActiveRecord_Relation
+  def most_favorites: () -> Game::ActiveRecord_Relation
+  def most_owners: () -> Game::ActiveRecord_Relation
+  def recently_released: () -> Game::ActiveRecord_Relation
+  def on_platform: (untyped) -> Game::ActiveRecord_Relation
+  def by_year: (untyped) -> Game::ActiveRecord_Relation
+end
+
+class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

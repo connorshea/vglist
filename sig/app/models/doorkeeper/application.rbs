@@ -1,0 +1,162 @@
+class Doorkeeper::Application < ActiveRecord::Base
+  extend _ActiveRecord_Relation_ClassMethods[Doorkeeper::Application, Doorkeeper::Application::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor name (): String
+  def name_changed?: () -> bool
+  def name_change: () -> [String?, String?]
+  def name_will_change!: () -> void
+  def name_was: () -> String?
+  def name_previously_changed?: () -> bool
+  def name_previous_change: () -> Array[String?]?
+  def name_previously_was: () -> String?
+  def restore_name!: () -> void
+  def clear_name_change: () -> void
+
+  attr_accessor uid (): String
+  def uid_changed?: () -> bool
+  def uid_change: () -> [String?, String?]
+  def uid_will_change!: () -> void
+  def uid_was: () -> String?
+  def uid_previously_changed?: () -> bool
+  def uid_previous_change: () -> Array[String?]?
+  def uid_previously_was: () -> String?
+  def restore_uid!: () -> void
+  def clear_uid_change: () -> void
+
+  attr_accessor secret (): String
+  def secret_changed?: () -> bool
+  def secret_change: () -> [String?, String?]
+  def secret_will_change!: () -> void
+  def secret_was: () -> String?
+  def secret_previously_changed?: () -> bool
+  def secret_previous_change: () -> Array[String?]?
+  def secret_previously_was: () -> String?
+  def restore_secret!: () -> void
+  def clear_secret_change: () -> void
+
+  attr_accessor redirect_uri (): String
+  def redirect_uri_changed?: () -> bool
+  def redirect_uri_change: () -> [String?, String?]
+  def redirect_uri_will_change!: () -> void
+  def redirect_uri_was: () -> String?
+  def redirect_uri_previously_changed?: () -> bool
+  def redirect_uri_previous_change: () -> Array[String?]?
+  def redirect_uri_previously_was: () -> String?
+  def restore_redirect_uri!: () -> void
+  def clear_redirect_uri_change: () -> void
+
+  attr_accessor scopes (): String
+  def scopes_changed?: () -> bool
+  def scopes_change: () -> [String?, String?]
+  def scopes_will_change!: () -> void
+  def scopes_was: () -> String?
+  def scopes_previously_changed?: () -> bool
+  def scopes_previous_change: () -> Array[String?]?
+  def scopes_previously_was: () -> String?
+  def restore_scopes!: () -> void
+  def clear_scopes_change: () -> void
+
+  attr_accessor confidential (): bool
+  def confidential_changed?: () -> bool
+  def confidential_change: () -> [bool?, bool?]
+  def confidential_will_change!: () -> void
+  def confidential_was: () -> bool?
+  def confidential_previously_changed?: () -> bool
+  def confidential_previous_change: () -> Array[bool?]?
+  def confidential_previously_was: () -> bool?
+  def restore_confidential!: () -> void
+  def clear_confidential_change: () -> void
+  attr_accessor confidential? (): bool
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  attr_accessor owner_id (): Integer?
+  def owner_id_changed?: () -> bool
+  def owner_id_change: () -> [Integer?, Integer?]
+  def owner_id_will_change!: () -> void
+  def owner_id_was: () -> Integer?
+  def owner_id_previously_changed?: () -> bool
+  def owner_id_previous_change: () -> Array[Integer?]?
+  def owner_id_previously_was: () -> Integer?
+  def restore_owner_id!: () -> void
+  def clear_owner_id_change: () -> void
+
+  attr_accessor owner_type (): String?
+  def owner_type_changed?: () -> bool
+  def owner_type_change: () -> [String?, String?]
+  def owner_type_will_change!: () -> void
+  def owner_type_was: () -> String?
+  def owner_type_previously_changed?: () -> bool
+  def owner_type_previous_change: () -> Array[String?]?
+  def owner_type_previously_was: () -> String?
+  def restore_owner_type!: () -> void
+  def clear_owner_type_change: () -> void
+
+  def access_grants: () -> Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy
+  def access_grants=: (Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessGrant]) -> (Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessGrant])
+  def access_grant_ids: () -> Array[Integer]
+  def access_grant_ids=: (Array[Integer]) -> Array[Integer]
+  def access_tokens: () -> Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy
+  def access_tokens=: (Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessToken]) -> (Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessToken])
+  def access_token_ids: () -> Array[Integer]
+  def access_token_ids=: (Array[Integer]) -> Array[Integer]
+  def authorized_tokens: () -> Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy
+  def authorized_tokens=: (Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessToken]) -> (Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessToken])
+  def authorized_token_ids: () -> Array[Integer]
+  def authorized_token_ids=: (Array[Integer]) -> Array[Integer]
+  def authorized_applications: () -> Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy
+  def authorized_applications=: (Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::Application]) -> (Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::Application])
+  def authorized_application_ids: () -> Array[Integer]
+  def authorized_application_ids=: (Array[Integer]) -> Array[Integer]
+
+  def owner: () -> untyped
+  def owner=: (untyped?) -> untyped?
+  def build_owner: (untyped) -> untyped
+  def create_owner: (untyped) -> untyped
+  def create_owner!: (untyped) -> untyped
+  def reload_owner: () -> untyped?
+
+
+
+end
+
+class Doorkeeper::Application::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[Doorkeeper::Application]
+  include Enumerable[Doorkeeper::Application]
+
+
+end
+
+class Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

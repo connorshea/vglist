@@ -1,0 +1,86 @@
+class GamePurchasePlatform < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[GamePurchasePlatform, GamePurchasePlatform::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor game_purchase_id (): Integer
+  def game_purchase_id_changed?: () -> bool
+  def game_purchase_id_change: () -> [Integer?, Integer?]
+  def game_purchase_id_will_change!: () -> void
+  def game_purchase_id_was: () -> Integer?
+  def game_purchase_id_previously_changed?: () -> bool
+  def game_purchase_id_previous_change: () -> Array[Integer?]?
+  def game_purchase_id_previously_was: () -> Integer?
+  def restore_game_purchase_id!: () -> void
+  def clear_game_purchase_id_change: () -> void
+
+  attr_accessor platform_id (): Integer
+  def platform_id_changed?: () -> bool
+  def platform_id_change: () -> [Integer?, Integer?]
+  def platform_id_will_change!: () -> void
+  def platform_id_was: () -> Integer?
+  def platform_id_previously_changed?: () -> bool
+  def platform_id_previous_change: () -> Array[Integer?]?
+  def platform_id_previously_was: () -> Integer?
+  def restore_platform_id!: () -> void
+  def clear_platform_id_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+
+
+  def game_purchase: () -> GamePurchase
+  def game_purchase=: (GamePurchase?) -> GamePurchase?
+  def build_game_purchase: (untyped) -> GamePurchase
+  def create_game_purchase: (untyped) -> GamePurchase
+  def create_game_purchase!: (untyped) -> GamePurchase
+  def reload_game_purchase: () -> GamePurchase?
+  def platform: () -> Platform
+  def platform=: (Platform?) -> Platform?
+  def build_platform: (untyped) -> Platform
+  def create_platform: (untyped) -> Platform
+  def create_platform!: (untyped) -> Platform
+  def reload_platform: () -> Platform?
+
+
+
+end
+
+class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[GamePurchasePlatform]
+  include Enumerable[GamePurchasePlatform]
+
+
+end
+
+class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

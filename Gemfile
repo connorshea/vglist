@@ -152,3 +152,9 @@ end
 
 # # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 # gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'rbs', '~> 1.0'
+
+gem 'rbs_rails', '~> 0.6.0', require: false
+
+gem "steep", "~> 0.39.0"

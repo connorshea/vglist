@@ -1,0 +1,378 @@
+class User < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[User, User::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor email (): String
+  def email_changed?: () -> bool
+  def email_change: () -> [String?, String?]
+  def email_will_change!: () -> void
+  def email_was: () -> String?
+  def email_previously_changed?: () -> bool
+  def email_previous_change: () -> Array[String?]?
+  def email_previously_was: () -> String?
+  def restore_email!: () -> void
+  def clear_email_change: () -> void
+
+  attr_accessor encrypted_password (): String
+  def encrypted_password_changed?: () -> bool
+  def encrypted_password_change: () -> [String?, String?]
+  def encrypted_password_will_change!: () -> void
+  def encrypted_password_was: () -> String?
+  def encrypted_password_previously_changed?: () -> bool
+  def encrypted_password_previous_change: () -> Array[String?]?
+  def encrypted_password_previously_was: () -> String?
+  def restore_encrypted_password!: () -> void
+  def clear_encrypted_password_change: () -> void
+
+  attr_accessor reset_password_token (): String?
+  def reset_password_token_changed?: () -> bool
+  def reset_password_token_change: () -> [String?, String?]
+  def reset_password_token_will_change!: () -> void
+  def reset_password_token_was: () -> String?
+  def reset_password_token_previously_changed?: () -> bool
+  def reset_password_token_previous_change: () -> Array[String?]?
+  def reset_password_token_previously_was: () -> String?
+  def restore_reset_password_token!: () -> void
+  def clear_reset_password_token_change: () -> void
+
+  attr_accessor reset_password_sent_at (): ActiveSupport::TimeWithZone?
+  def reset_password_sent_at_changed?: () -> bool
+  def reset_password_sent_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def reset_password_sent_at_will_change!: () -> void
+  def reset_password_sent_at_was: () -> ActiveSupport::TimeWithZone?
+  def reset_password_sent_at_previously_changed?: () -> bool
+  def reset_password_sent_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def reset_password_sent_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_reset_password_sent_at!: () -> void
+  def clear_reset_password_sent_at_change: () -> void
+
+  attr_accessor remember_created_at (): ActiveSupport::TimeWithZone?
+  def remember_created_at_changed?: () -> bool
+  def remember_created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def remember_created_at_will_change!: () -> void
+  def remember_created_at_was: () -> ActiveSupport::TimeWithZone?
+  def remember_created_at_previously_changed?: () -> bool
+  def remember_created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def remember_created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_remember_created_at!: () -> void
+  def clear_remember_created_at_change: () -> void
+
+  attr_accessor sign_in_count (): Integer
+  def sign_in_count_changed?: () -> bool
+  def sign_in_count_change: () -> [Integer?, Integer?]
+  def sign_in_count_will_change!: () -> void
+  def sign_in_count_was: () -> Integer?
+  def sign_in_count_previously_changed?: () -> bool
+  def sign_in_count_previous_change: () -> Array[Integer?]?
+  def sign_in_count_previously_was: () -> Integer?
+  def restore_sign_in_count!: () -> void
+  def clear_sign_in_count_change: () -> void
+
+  attr_accessor current_sign_in_at (): ActiveSupport::TimeWithZone?
+  def current_sign_in_at_changed?: () -> bool
+  def current_sign_in_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def current_sign_in_at_will_change!: () -> void
+  def current_sign_in_at_was: () -> ActiveSupport::TimeWithZone?
+  def current_sign_in_at_previously_changed?: () -> bool
+  def current_sign_in_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def current_sign_in_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_current_sign_in_at!: () -> void
+  def clear_current_sign_in_at_change: () -> void
+
+  attr_accessor last_sign_in_at (): ActiveSupport::TimeWithZone?
+  def last_sign_in_at_changed?: () -> bool
+  def last_sign_in_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def last_sign_in_at_will_change!: () -> void
+  def last_sign_in_at_was: () -> ActiveSupport::TimeWithZone?
+  def last_sign_in_at_previously_changed?: () -> bool
+  def last_sign_in_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def last_sign_in_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_last_sign_in_at!: () -> void
+  def clear_last_sign_in_at_change: () -> void
+
+  attr_accessor current_sign_in_ip (): IPAddr?
+  def current_sign_in_ip_changed?: () -> bool
+  def current_sign_in_ip_change: () -> [IPAddr?, IPAddr?]
+  def current_sign_in_ip_will_change!: () -> void
+  def current_sign_in_ip_was: () -> IPAddr?
+  def current_sign_in_ip_previously_changed?: () -> bool
+  def current_sign_in_ip_previous_change: () -> Array[IPAddr?]?
+  def current_sign_in_ip_previously_was: () -> IPAddr?
+  def restore_current_sign_in_ip!: () -> void
+  def clear_current_sign_in_ip_change: () -> void
+
+  attr_accessor last_sign_in_ip (): IPAddr?
+  def last_sign_in_ip_changed?: () -> bool
+  def last_sign_in_ip_change: () -> [IPAddr?, IPAddr?]
+  def last_sign_in_ip_will_change!: () -> void
+  def last_sign_in_ip_was: () -> IPAddr?
+  def last_sign_in_ip_previously_changed?: () -> bool
+  def last_sign_in_ip_previous_change: () -> Array[IPAddr?]?
+  def last_sign_in_ip_previously_was: () -> IPAddr?
+  def restore_last_sign_in_ip!: () -> void
+  def clear_last_sign_in_ip_change: () -> void
+
+  attr_accessor confirmation_token (): String?
+  def confirmation_token_changed?: () -> bool
+  def confirmation_token_change: () -> [String?, String?]
+  def confirmation_token_will_change!: () -> void
+  def confirmation_token_was: () -> String?
+  def confirmation_token_previously_changed?: () -> bool
+  def confirmation_token_previous_change: () -> Array[String?]?
+  def confirmation_token_previously_was: () -> String?
+  def restore_confirmation_token!: () -> void
+  def clear_confirmation_token_change: () -> void
+
+  attr_accessor confirmed_at (): ActiveSupport::TimeWithZone?
+  def confirmed_at_changed?: () -> bool
+  def confirmed_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def confirmed_at_will_change!: () -> void
+  def confirmed_at_was: () -> ActiveSupport::TimeWithZone?
+  def confirmed_at_previously_changed?: () -> bool
+  def confirmed_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def confirmed_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_confirmed_at!: () -> void
+  def clear_confirmed_at_change: () -> void
+
+  attr_accessor confirmation_sent_at (): ActiveSupport::TimeWithZone?
+  def confirmation_sent_at_changed?: () -> bool
+  def confirmation_sent_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def confirmation_sent_at_will_change!: () -> void
+  def confirmation_sent_at_was: () -> ActiveSupport::TimeWithZone?
+  def confirmation_sent_at_previously_changed?: () -> bool
+  def confirmation_sent_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def confirmation_sent_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_confirmation_sent_at!: () -> void
+  def clear_confirmation_sent_at_change: () -> void
+
+  attr_accessor unconfirmed_email (): String?
+  def unconfirmed_email_changed?: () -> bool
+  def unconfirmed_email_change: () -> [String?, String?]
+  def unconfirmed_email_will_change!: () -> void
+  def unconfirmed_email_was: () -> String?
+  def unconfirmed_email_previously_changed?: () -> bool
+  def unconfirmed_email_previous_change: () -> Array[String?]?
+  def unconfirmed_email_previously_was: () -> String?
+  def restore_unconfirmed_email!: () -> void
+  def clear_unconfirmed_email_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  attr_accessor username (): String
+  def username_changed?: () -> bool
+  def username_change: () -> [String?, String?]
+  def username_will_change!: () -> void
+  def username_was: () -> String?
+  def username_previously_changed?: () -> bool
+  def username_previous_change: () -> Array[String?]?
+  def username_previously_was: () -> String?
+  def restore_username!: () -> void
+  def clear_username_change: () -> void
+
+  attr_accessor bio (): String
+  def bio_changed?: () -> bool
+  def bio_change: () -> [String?, String?]
+  def bio_will_change!: () -> void
+  def bio_was: () -> String?
+  def bio_previously_changed?: () -> bool
+  def bio_previous_change: () -> Array[String?]?
+  def bio_previously_was: () -> String?
+  def restore_bio!: () -> void
+  def clear_bio_change: () -> void
+
+  attr_accessor role (): String
+  def role_changed?: () -> bool
+  def role_change: () -> [String?, String?]
+  def role_will_change!: () -> void
+  def role_was: () -> String?
+  def role_previously_changed?: () -> bool
+  def role_previous_change: () -> Array[String?]?
+  def role_previously_was: () -> String?
+  def restore_role!: () -> void
+  def clear_role_change: () -> void
+
+  attr_accessor slug (): String?
+  def slug_changed?: () -> bool
+  def slug_change: () -> [String?, String?]
+  def slug_will_change!: () -> void
+  def slug_was: () -> String?
+  def slug_previously_changed?: () -> bool
+  def slug_previous_change: () -> Array[String?]?
+  def slug_previously_was: () -> String?
+  def restore_slug!: () -> void
+  def clear_slug_change: () -> void
+
+  attr_accessor privacy (): String
+  def privacy_changed?: () -> bool
+  def privacy_change: () -> [String?, String?]
+  def privacy_will_change!: () -> void
+  def privacy_was: () -> String?
+  def privacy_previously_changed?: () -> bool
+  def privacy_previous_change: () -> Array[String?]?
+  def privacy_previously_was: () -> String?
+  def restore_privacy!: () -> void
+  def clear_privacy_change: () -> void
+
+  attr_accessor banned (): bool
+  def banned_changed?: () -> bool
+  def banned_change: () -> [bool?, bool?]
+  def banned_will_change!: () -> void
+  def banned_was: () -> bool?
+  def banned_previously_changed?: () -> bool
+  def banned_previous_change: () -> Array[bool?]?
+  def banned_previously_was: () -> bool?
+  def restore_banned!: () -> void
+  def clear_banned_change: () -> void
+  attr_accessor banned? (): bool
+
+  attr_accessor encrypted_api_token (): String?
+  def encrypted_api_token_changed?: () -> bool
+  def encrypted_api_token_change: () -> [String?, String?]
+  def encrypted_api_token_will_change!: () -> void
+  def encrypted_api_token_was: () -> String?
+  def encrypted_api_token_previously_changed?: () -> bool
+  def encrypted_api_token_previous_change: () -> Array[String?]?
+  def encrypted_api_token_previously_was: () -> String?
+  def restore_encrypted_api_token!: () -> void
+  def clear_encrypted_api_token_change: () -> void
+
+  def game_purchases: () -> GamePurchase::ActiveRecord_Associations_CollectionProxy
+  def game_purchases=: (GamePurchase::ActiveRecord_Associations_CollectionProxy | Array[GamePurchase]) -> (GamePurchase::ActiveRecord_Associations_CollectionProxy | Array[GamePurchase])
+  def game_purchase_ids: () -> Array[Integer]
+  def game_purchase_ids=: (Array[Integer]) -> Array[Integer]
+  def games: () -> Game::ActiveRecord_Associations_CollectionProxy
+  def games=: (Game::ActiveRecord_Associations_CollectionProxy | Array[Game]) -> (Game::ActiveRecord_Associations_CollectionProxy | Array[Game])
+  def game_ids: () -> Array[Integer]
+  def game_ids=: (Array[Integer]) -> Array[Integer]
+  def favorite_games: () -> FavoriteGame::ActiveRecord_Associations_CollectionProxy
+  def favorite_games=: (FavoriteGame::ActiveRecord_Associations_CollectionProxy | Array[FavoriteGame]) -> (FavoriteGame::ActiveRecord_Associations_CollectionProxy | Array[FavoriteGame])
+  def favorite_game_ids: () -> Array[Integer]
+  def favorite_game_ids=: (Array[Integer]) -> Array[Integer]
+  def active_relationships: () -> Relationship::ActiveRecord_Associations_CollectionProxy
+  def active_relationships=: (Relationship::ActiveRecord_Associations_CollectionProxy | Array[Relationship]) -> (Relationship::ActiveRecord_Associations_CollectionProxy | Array[Relationship])
+  def active_relationship_ids: () -> Array[Integer]
+  def active_relationship_ids=: (Array[Integer]) -> Array[Integer]
+  def following: () -> User::ActiveRecord_Associations_CollectionProxy
+  def following=: (User::ActiveRecord_Associations_CollectionProxy | Array[User]) -> (User::ActiveRecord_Associations_CollectionProxy | Array[User])
+  def following_ids: () -> Array[Integer]
+  def following_ids=: (Array[Integer]) -> Array[Integer]
+  def passive_relationships: () -> Relationship::ActiveRecord_Associations_CollectionProxy
+  def passive_relationships=: (Relationship::ActiveRecord_Associations_CollectionProxy | Array[Relationship]) -> (Relationship::ActiveRecord_Associations_CollectionProxy | Array[Relationship])
+  def passive_relationship_ids: () -> Array[Integer]
+  def passive_relationship_ids=: (Array[Integer]) -> Array[Integer]
+  def followers: () -> User::ActiveRecord_Associations_CollectionProxy
+  def followers=: (User::ActiveRecord_Associations_CollectionProxy | Array[User]) -> (User::ActiveRecord_Associations_CollectionProxy | Array[User])
+  def follower_ids: () -> Array[Integer]
+  def follower_ids=: (Array[Integer]) -> Array[Integer]
+  def events: () -> Event::ActiveRecord_Associations_CollectionProxy
+  def events=: (Event::ActiveRecord_Associations_CollectionProxy | Array[Event]) -> (Event::ActiveRecord_Associations_CollectionProxy | Array[Event])
+  def event_ids: () -> Array[Integer]
+  def event_ids=: (Array[Integer]) -> Array[Integer]
+  def wikidata_blocklists: () -> WikidataBlocklist::ActiveRecord_Associations_CollectionProxy
+  def wikidata_blocklists=: (WikidataBlocklist::ActiveRecord_Associations_CollectionProxy | Array[WikidataBlocklist]) -> (WikidataBlocklist::ActiveRecord_Associations_CollectionProxy | Array[WikidataBlocklist])
+  def wikidata_blocklist_ids: () -> Array[Integer]
+  def wikidata_blocklist_ids=: (Array[Integer]) -> Array[Integer]
+  def steam_blocklists: () -> SteamBlocklist::ActiveRecord_Associations_CollectionProxy
+  def steam_blocklists=: (SteamBlocklist::ActiveRecord_Associations_CollectionProxy | Array[SteamBlocklist]) -> (SteamBlocklist::ActiveRecord_Associations_CollectionProxy | Array[SteamBlocklist])
+  def steam_blocklist_ids: () -> Array[Integer]
+  def steam_blocklist_ids=: (Array[Integer]) -> Array[Integer]
+  def access_grants: () -> Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy
+  def access_grants=: (Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessGrant]) -> (Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessGrant])
+  def access_grant_ids: () -> Array[Integer]
+  def access_grant_ids=: (Array[Integer]) -> Array[Integer]
+  def access_tokens: () -> Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy
+  def access_tokens=: (Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessToken]) -> (Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::AccessToken])
+  def access_token_ids: () -> Array[Integer]
+  def access_token_ids=: (Array[Integer]) -> Array[Integer]
+  def oauth_applications: () -> Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy
+  def oauth_applications=: (Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::Application]) -> (Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy | Array[Doorkeeper::Application])
+  def oauth_application_ids: () -> Array[Integer]
+  def oauth_application_ids=: (Array[Integer]) -> Array[Integer]
+  def external_account: () -> ExternalAccount
+  def external_account=: (ExternalAccount?) -> ExternalAccount?
+  def build_external_account: (untyped) -> ExternalAccount
+  def create_external_account: (untyped) -> ExternalAccount
+  def create_external_account!: (untyped) -> ExternalAccount
+  def reload_external_account: () -> ExternalAccount?
+  def avatar_attachment: () -> ActiveStorage::Attachment
+  def avatar_attachment=: (ActiveStorage::Attachment?) -> ActiveStorage::Attachment?
+  def build_avatar_attachment: (untyped) -> ActiveStorage::Attachment
+  def create_avatar_attachment: (untyped) -> ActiveStorage::Attachment
+  def create_avatar_attachment!: (untyped) -> ActiveStorage::Attachment
+  def reload_avatar_attachment: () -> ActiveStorage::Attachment?
+  def avatar_blob: () -> ActiveStorage::Blob
+  def avatar_blob=: (ActiveStorage::Blob?) -> ActiveStorage::Blob?
+  def build_avatar_blob: (untyped) -> ActiveStorage::Blob
+  def create_avatar_blob: (untyped) -> ActiveStorage::Blob
+  def create_avatar_blob!: (untyped) -> ActiveStorage::Blob
+  def reload_avatar_blob: () -> ActiveStorage::Blob?
+  def pg_search_document: () -> PgSearch::Document
+  def pg_search_document=: (PgSearch::Document?) -> PgSearch::Document?
+  def build_pg_search_document: (untyped) -> PgSearch::Document
+  def create_pg_search_document: (untyped) -> PgSearch::Document
+  def create_pg_search_document!: (untyped) -> PgSearch::Document
+  def reload_pg_search_document: () -> PgSearch::Document?
+
+  def member!: () -> bool
+  def member?: () -> bool
+  def moderator!: () -> bool
+  def moderator?: () -> bool
+  def admin!: () -> bool
+  def admin?: () -> bool
+  def public_account!: () -> bool
+  def public_account?: () -> bool
+  def private_account!: () -> bool
+  def private_account?: () -> bool
+  def self.member: () -> User::ActiveRecord_Relation
+  def self.moderator: () -> User::ActiveRecord_Relation
+  def self.admin: () -> User::ActiveRecord_Relation
+  def self.public_account: () -> User::ActiveRecord_Relation
+  def self.private_account: () -> User::ActiveRecord_Relation
+  def self.most_games: () -> User::ActiveRecord_Relation
+  def self.most_followers: () -> User::ActiveRecord_Relation
+end
+
+class User::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[User]
+  include Enumerable[User]
+  def member: () -> User::ActiveRecord_Relation
+  def moderator: () -> User::ActiveRecord_Relation
+  def admin: () -> User::ActiveRecord_Relation
+  def public_account: () -> User::ActiveRecord_Relation
+  def private_account: () -> User::ActiveRecord_Relation
+  def most_games: () -> User::ActiveRecord_Relation
+  def most_followers: () -> User::ActiveRecord_Relation
+end
+
+class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

@@ -1,0 +1,69 @@
+class ActiveStorage::VariantRecord < ActiveStorage::Record
+  extend _ActiveRecord_Relation_ClassMethods[ActiveStorage::VariantRecord, ActiveStorage::VariantRecord::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor blob_id (): Integer
+  def blob_id_changed?: () -> bool
+  def blob_id_change: () -> [Integer?, Integer?]
+  def blob_id_will_change!: () -> void
+  def blob_id_was: () -> Integer?
+  def blob_id_previously_changed?: () -> bool
+  def blob_id_previous_change: () -> Array[Integer?]?
+  def blob_id_previously_was: () -> Integer?
+  def restore_blob_id!: () -> void
+  def clear_blob_id_change: () -> void
+
+  attr_accessor variation_digest (): String
+  def variation_digest_changed?: () -> bool
+  def variation_digest_change: () -> [String?, String?]
+  def variation_digest_will_change!: () -> void
+  def variation_digest_was: () -> String?
+  def variation_digest_previously_changed?: () -> bool
+  def variation_digest_previous_change: () -> Array[String?]?
+  def variation_digest_previously_was: () -> String?
+  def restore_variation_digest!: () -> void
+  def clear_variation_digest_change: () -> void
+
+
+  def image_attachment: () -> ActiveStorage::Attachment
+  def image_attachment=: (ActiveStorage::Attachment?) -> ActiveStorage::Attachment?
+  def build_image_attachment: (untyped) -> ActiveStorage::Attachment
+  def create_image_attachment: (untyped) -> ActiveStorage::Attachment
+  def create_image_attachment!: (untyped) -> ActiveStorage::Attachment
+  def reload_image_attachment: () -> ActiveStorage::Attachment?
+  def image_blob: () -> ActiveStorage::Blob
+  def image_blob=: (ActiveStorage::Blob?) -> ActiveStorage::Blob?
+  def build_image_blob: (untyped) -> ActiveStorage::Blob
+  def create_image_blob: (untyped) -> ActiveStorage::Blob
+  def create_image_blob!: (untyped) -> ActiveStorage::Blob
+  def reload_image_blob: () -> ActiveStorage::Blob?
+  def blob: () -> ActiveStorage::Blob
+  def blob=: (ActiveStorage::Blob?) -> ActiveStorage::Blob?
+  def build_blob: (untyped) -> ActiveStorage::Blob
+  def create_blob: (untyped) -> ActiveStorage::Blob
+  def create_blob!: (untyped) -> ActiveStorage::Blob
+  def reload_blob: () -> ActiveStorage::Blob?
+
+
+
+end
+
+class ActiveStorage::VariantRecord::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[ActiveStorage::VariantRecord]
+  include Enumerable[ActiveStorage::VariantRecord]
+
+
+end
+
+class ActiveStorage::VariantRecord::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

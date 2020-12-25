@@ -1,0 +1,144 @@
+class Event < ApplicationRecord
+  extend _ActiveRecord_Relation_ClassMethods[Event, Event::ActiveRecord_Relation]
+
+  attr_accessor id (): String
+  def id_changed?: () -> bool
+  def id_change: () -> [String?, String?]
+  def id_will_change!: () -> void
+  def id_was: () -> String?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[String?]?
+  def id_previously_was: () -> String?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor user_id (): Integer
+  def user_id_changed?: () -> bool
+  def user_id_change: () -> [Integer?, Integer?]
+  def user_id_will_change!: () -> void
+  def user_id_was: () -> Integer?
+  def user_id_previously_changed?: () -> bool
+  def user_id_previous_change: () -> Array[Integer?]?
+  def user_id_previously_was: () -> Integer?
+  def restore_user_id!: () -> void
+  def clear_user_id_change: () -> void
+
+  attr_accessor eventable_id (): Integer
+  def eventable_id_changed?: () -> bool
+  def eventable_id_change: () -> [Integer?, Integer?]
+  def eventable_id_will_change!: () -> void
+  def eventable_id_was: () -> Integer?
+  def eventable_id_previously_changed?: () -> bool
+  def eventable_id_previous_change: () -> Array[Integer?]?
+  def eventable_id_previously_was: () -> Integer?
+  def restore_eventable_id!: () -> void
+  def clear_eventable_id_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor updated_at (): ActiveSupport::TimeWithZone
+  def updated_at_changed?: () -> bool
+  def updated_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def updated_at_will_change!: () -> void
+  def updated_at_was: () -> ActiveSupport::TimeWithZone?
+  def updated_at_previously_changed?: () -> bool
+  def updated_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def updated_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_updated_at!: () -> void
+  def clear_updated_at_change: () -> void
+
+  attr_accessor event_category (): String
+  def event_category_changed?: () -> bool
+  def event_category_change: () -> [String?, String?]
+  def event_category_will_change!: () -> void
+  def event_category_was: () -> String?
+  def event_category_previously_changed?: () -> bool
+  def event_category_previous_change: () -> Array[String?]?
+  def event_category_previously_was: () -> String?
+  def restore_event_category!: () -> void
+  def clear_event_category_change: () -> void
+
+  attr_accessor differences (): untyped?
+  def differences_changed?: () -> bool
+  def differences_change: () -> [untyped?, untyped?]
+  def differences_will_change!: () -> void
+  def differences_was: () -> untyped?
+  def differences_previously_changed?: () -> bool
+  def differences_previous_change: () -> Array[untyped?]?
+  def differences_previously_was: () -> untyped?
+  def restore_differences!: () -> void
+  def clear_differences_change: () -> void
+
+  attr_accessor eventable_type (): String?
+  def eventable_type_changed?: () -> bool
+  def eventable_type_change: () -> [String?, String?]
+  def eventable_type_will_change!: () -> void
+  def eventable_type_was: () -> String?
+  def eventable_type_previously_changed?: () -> bool
+  def eventable_type_previous_change: () -> Array[String?]?
+  def eventable_type_previously_was: () -> String?
+  def restore_eventable_type!: () -> void
+  def clear_eventable_type_change: () -> void
+
+
+
+  def eventable: () -> untyped
+  def eventable=: (untyped?) -> untyped?
+  def build_eventable: (untyped) -> untyped
+  def create_eventable: (untyped) -> untyped
+  def create_eventable!: (untyped) -> untyped
+  def reload_eventable: () -> untyped?
+  def user: () -> User
+  def user=: (User?) -> User?
+  def build_user: (untyped) -> User
+  def create_user: (untyped) -> User
+  def create_user!: (untyped) -> User
+  def reload_user: () -> User?
+  def add_to_library!: () -> bool
+  def add_to_library?: () -> bool
+  def change_completion_status!: () -> bool
+  def change_completion_status?: () -> bool
+  def favorite_game!: () -> bool
+  def favorite_game?: () -> bool
+  def new_user!: () -> bool
+  def new_user?: () -> bool
+  def following!: () -> bool
+  def following?: () -> bool
+  def self.add_to_library: () -> Event::ActiveRecord_Relation
+  def self.change_completion_status: () -> Event::ActiveRecord_Relation
+  def self.favorite_game: () -> Event::ActiveRecord_Relation
+  def self.new_user: () -> Event::ActiveRecord_Relation
+  def self.following: () -> Event::ActiveRecord_Relation
+  def self.game_purchases: () -> Event::ActiveRecord_Relation
+  def self.favorite_games: () -> Event::ActiveRecord_Relation
+  def self.users: () -> Event::ActiveRecord_Relation
+  def self.relationships: () -> Event::ActiveRecord_Relation
+  def self.recently_created: () -> Event::ActiveRecord_Relation
+end
+
+class Event::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[Event]
+  include Enumerable[Event]
+  def add_to_library: () -> Event::ActiveRecord_Relation
+  def change_completion_status: () -> Event::ActiveRecord_Relation
+  def favorite_game: () -> Event::ActiveRecord_Relation
+  def new_user: () -> Event::ActiveRecord_Relation
+  def following: () -> Event::ActiveRecord_Relation
+  def game_purchases: () -> Event::ActiveRecord_Relation
+  def favorite_games: () -> Event::ActiveRecord_Relation
+  def users: () -> Event::ActiveRecord_Relation
+  def relationships: () -> Event::ActiveRecord_Relation
+  def recently_created: () -> Event::ActiveRecord_Relation
+end
+
+class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

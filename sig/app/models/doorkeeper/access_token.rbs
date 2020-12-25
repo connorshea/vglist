@@ -1,0 +1,135 @@
+class Doorkeeper::AccessToken < ActiveRecord::Base
+  extend _ActiveRecord_Relation_ClassMethods[Doorkeeper::AccessToken, Doorkeeper::AccessToken::ActiveRecord_Relation]
+
+  attr_accessor id (): Integer
+  def id_changed?: () -> bool
+  def id_change: () -> [Integer?, Integer?]
+  def id_will_change!: () -> void
+  def id_was: () -> Integer?
+  def id_previously_changed?: () -> bool
+  def id_previous_change: () -> Array[Integer?]?
+  def id_previously_was: () -> Integer?
+  def restore_id!: () -> void
+  def clear_id_change: () -> void
+
+  attr_accessor resource_owner_id (): Integer?
+  def resource_owner_id_changed?: () -> bool
+  def resource_owner_id_change: () -> [Integer?, Integer?]
+  def resource_owner_id_will_change!: () -> void
+  def resource_owner_id_was: () -> Integer?
+  def resource_owner_id_previously_changed?: () -> bool
+  def resource_owner_id_previous_change: () -> Array[Integer?]?
+  def resource_owner_id_previously_was: () -> Integer?
+  def restore_resource_owner_id!: () -> void
+  def clear_resource_owner_id_change: () -> void
+
+  attr_accessor application_id (): Integer
+  def application_id_changed?: () -> bool
+  def application_id_change: () -> [Integer?, Integer?]
+  def application_id_will_change!: () -> void
+  def application_id_was: () -> Integer?
+  def application_id_previously_changed?: () -> bool
+  def application_id_previous_change: () -> Array[Integer?]?
+  def application_id_previously_was: () -> Integer?
+  def restore_application_id!: () -> void
+  def clear_application_id_change: () -> void
+
+  attr_accessor token (): String
+  def token_changed?: () -> bool
+  def token_change: () -> [String?, String?]
+  def token_will_change!: () -> void
+  def token_was: () -> String?
+  def token_previously_changed?: () -> bool
+  def token_previous_change: () -> Array[String?]?
+  def token_previously_was: () -> String?
+  def restore_token!: () -> void
+  def clear_token_change: () -> void
+
+  attr_accessor refresh_token (): String?
+  def refresh_token_changed?: () -> bool
+  def refresh_token_change: () -> [String?, String?]
+  def refresh_token_will_change!: () -> void
+  def refresh_token_was: () -> String?
+  def refresh_token_previously_changed?: () -> bool
+  def refresh_token_previous_change: () -> Array[String?]?
+  def refresh_token_previously_was: () -> String?
+  def restore_refresh_token!: () -> void
+  def clear_refresh_token_change: () -> void
+
+  attr_accessor expires_in (): Integer?
+  def expires_in_changed?: () -> bool
+  def expires_in_change: () -> [Integer?, Integer?]
+  def expires_in_will_change!: () -> void
+  def expires_in_was: () -> Integer?
+  def expires_in_previously_changed?: () -> bool
+  def expires_in_previous_change: () -> Array[Integer?]?
+  def expires_in_previously_was: () -> Integer?
+  def restore_expires_in!: () -> void
+  def clear_expires_in_change: () -> void
+
+  attr_accessor revoked_at (): ActiveSupport::TimeWithZone?
+  def revoked_at_changed?: () -> bool
+  def revoked_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def revoked_at_will_change!: () -> void
+  def revoked_at_was: () -> ActiveSupport::TimeWithZone?
+  def revoked_at_previously_changed?: () -> bool
+  def revoked_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def revoked_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_revoked_at!: () -> void
+  def clear_revoked_at_change: () -> void
+
+  attr_accessor created_at (): ActiveSupport::TimeWithZone
+  def created_at_changed?: () -> bool
+  def created_at_change: () -> [ActiveSupport::TimeWithZone?, ActiveSupport::TimeWithZone?]
+  def created_at_will_change!: () -> void
+  def created_at_was: () -> ActiveSupport::TimeWithZone?
+  def created_at_previously_changed?: () -> bool
+  def created_at_previous_change: () -> Array[ActiveSupport::TimeWithZone?]?
+  def created_at_previously_was: () -> ActiveSupport::TimeWithZone?
+  def restore_created_at!: () -> void
+  def clear_created_at_change: () -> void
+
+  attr_accessor scopes (): String?
+  def scopes_changed?: () -> bool
+  def scopes_change: () -> [String?, String?]
+  def scopes_will_change!: () -> void
+  def scopes_was: () -> String?
+  def scopes_previously_changed?: () -> bool
+  def scopes_previous_change: () -> Array[String?]?
+  def scopes_previously_was: () -> String?
+  def restore_scopes!: () -> void
+  def clear_scopes_change: () -> void
+
+  attr_accessor previous_refresh_token (): String
+  def previous_refresh_token_changed?: () -> bool
+  def previous_refresh_token_change: () -> [String?, String?]
+  def previous_refresh_token_will_change!: () -> void
+  def previous_refresh_token_was: () -> String?
+  def previous_refresh_token_previously_changed?: () -> bool
+  def previous_refresh_token_previous_change: () -> Array[String?]?
+  def previous_refresh_token_previously_was: () -> String?
+  def restore_previous_refresh_token!: () -> void
+  def clear_previous_refresh_token_change: () -> void
+
+
+
+  def application: () -> Doorkeeper::Application
+  def application=: (Doorkeeper::Application?) -> Doorkeeper::Application?
+  def build_application: (untyped) -> Doorkeeper::Application
+  def create_application: (untyped) -> Doorkeeper::Application
+  def create_application!: (untyped) -> Doorkeeper::Application
+  def reload_application: () -> Doorkeeper::Application?
+
+
+
+end
+
+class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
+  include _ActiveRecord_Relation[Doorkeeper::AccessToken]
+  include Enumerable[Doorkeeper::AccessToken]
+
+
+end
+
+class Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+end

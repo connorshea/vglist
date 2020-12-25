@@ -1,0 +1,13 @@
+module Minitest
+  class Test
+  end
+
+  class SummaryReporter
+  end
+
+  class StatisticsReporter
+  end
+
+  module Assertions
+  end
+end
