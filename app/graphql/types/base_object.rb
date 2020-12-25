@@ -1,6 +1,6 @@
 module Types
   class BaseObject < GraphQL::Schema::Object
-        include Pundit
+    include Pundit
 
     connection_type_class(Types::BaseConnectionObject)
 

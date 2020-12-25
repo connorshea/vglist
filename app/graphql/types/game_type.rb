@@ -1,6 +1,5 @@
 module Types
   class GameType < Types::BaseObject
-    
     description "Video games"
 
     field :id, ID, null: false, description: "ID of the game."

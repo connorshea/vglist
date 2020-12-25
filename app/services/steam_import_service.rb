@@ -41,17 +41,17 @@ class SteamImportService
     create_time = Time.current
 
     game_structs = games.each
-           .lazy
-           .reject { |game| missing_ids.include?(game['appid']) }
-           .map do |game_info|
-        GameStruct.new(
-          hours_played: (game_info['playtime_forever'].to_f / 60).round(1),
-          game_id: matching_app_and_game_ids_hash[game_info['appid']],
-          user_id: user.id,
-          created_at: create_time,
-          updated_at: create_time
-        )
-      end.to_a
+                        .lazy
+                        .reject { |game| missing_ids.include?(game['appid']) }
+                        .map do |game_info|
+      GameStruct.new(
+        hours_played: (game_info['playtime_forever'].to_f / 60).round(1),
+        game_id: matching_app_and_game_ids_hash[game_info['appid']],
+        user_id: user.id,
+        created_at: create_time,
+        updated_at: create_time
+      )
+    end.to_a
 
     created = []
     updated = []

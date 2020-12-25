@@ -1,5 +1,4 @@
 module GamesHelper
-  
   # Checks if the user has the given game in their library.
   # This is probably pretty slow and should be optimized.
   def game_in_user_library?(game)

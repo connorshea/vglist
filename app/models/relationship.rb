@@ -1,5 +1,4 @@
 class Relationship < ApplicationRecord
-  
   after_create :create_follow_event
 
   # The user that's following the other.

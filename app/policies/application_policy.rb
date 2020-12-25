@@ -1,6 +1,5 @@
 # Defines defaults for all policies.
 class ApplicationPolicy
-  
   class Scope
     attr_reader :user, :scope
 

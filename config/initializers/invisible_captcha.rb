@@ -1,4 +1,3 @@
-
 # Configuration for https://github.com/markets/invisible_captcha
 InvisibleCaptcha.setup do |config|
   # Disable timestamp checking so the test suite doesn't get caught by it.

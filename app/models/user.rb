@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-    extend FriendlyId
+  extend FriendlyId
   include PgSearch::Model
   include GlobalSearchable
   include Searchable

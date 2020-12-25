@@ -1,5 +1,4 @@
 class Types::PageInfoType < GraphQL::Types::Relay::PageInfo
-  
   field :page_size, Integer, null: false, description: "The max page size for a given set of nodes."
 
   def page_size

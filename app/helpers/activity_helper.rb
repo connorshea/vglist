@@ -1,6 +1,5 @@
 # rubocop:disable Style/StringConcatenation
 module ActivityHelper
-  
   def event_text(event)
     case event.event_category.to_sym
     when :add_to_library
