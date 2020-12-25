@@ -3,7 +3,7 @@ target :lib do
 
   check "db"                        # Directory name
   check "lib"                       # Directory name
-  check "Gemfile"                   # File name
+  # check "Gemfile"                   # File name
   check "app/models/**/*.rb"        # Glob
   check "app/controllers/**/*.rb"   # Glob
   check "app/graphql/**/*.rb"       # Glob
