@@ -1,7 +1,5 @@
 module ApplicationHelper
-  extend T::Sig
-
-  sig { params(level: T.any(String, Symbol)).returns(String) }
+  
   def flash_class(level)
     case level.to_sym
     when :notice then "is-info"
@@ -13,7 +11,6 @@ module ApplicationHelper
   end
 
   # A helper for displaying user avatars.
-  sig { params(user_id: T.any(Integer, String), size: Integer, css_class_name: String).returns(T.untyped) }
   def user_avatar(user_id, size, css_class_name: 'user-avatar')
     user = User.find(user_id)
     if user.avatar&.attached? && user.avatar&.variable?
@@ -41,7 +38,6 @@ module ApplicationHelper
   end
 
   # A helper for displaying game covers.
-  sig { params(game: Game, width: Integer, height: Integer).returns(T.untyped) }
   def game_cover(game, width, height)
     if game.cover&.attached? && game.cover&.variable?
       image_tag T.must(game.cover).variant(
@@ -58,13 +54,11 @@ module ApplicationHelper
   end
 
   # rubocop:disable Style/StringConcatenation
-  sig { params(title: String).returns(String) }
   def meta_title(title)
     return (title + " | " if title.present?).to_s + "vglist"
   end
   # rubocop:enable Style/StringConcatenation
 
-  sig { params(description: String).returns(String) }
   def meta_description(description)
     return description.presence || "vglist helps you track your entire video game library across every store and platform."
   end
@@ -80,7 +74,6 @@ module ApplicationHelper
   #
   #   summarize(['PlayStation 2', 'Xbox 360', 'Wii U', 'Windows'], limit: 1)
   #     => "PlayStation 2 and 3 more"
-  sig { params(array: T::Array[String], limit: Integer).returns(T.nilable(String)) }
   def summarize(array, limit: 3)
     raise ArgumentError, 'Limit must be a positive integer' unless limit.positive?
 
@@ -91,7 +84,6 @@ module ApplicationHelper
 
   # This returns the `:page` parameter for Kaminari, it's a convenience method
   # for helping Sorbet understand the parameter.
-  sig { params(param: Symbol).returns(T.nilable(Integer)) }
   def page_param(param: :page)
     return T.cast(params[param].to_i, T.nilable(Integer))
   end
@@ -108,18 +100,6 @@ module ApplicationHelper
   # @param [Hash] options A hash of options to pass inline_svg_pack_tag.
   #
   # @return [any] An inline svg pack tag.
-  sig do
-    params(
-      icon: String,
-      height: Integer,
-      width: T.nilable(Integer),
-      fill: T.nilable(T.any(String, Symbol)),
-      css_class: T.nilable(String),
-      aria: T::Boolean,
-      title: String,
-      options: T::Hash[Symbol, T.untyped]
-    ).returns(T.untyped)
-  end
   def svg_icon(icon, height: 20, width: nil, fill: nil, css_class: nil, aria: true, title: "Icon", options: {})
     options[:aria] = aria
     options[:aria_hidden] = true unless aria
@@ -135,7 +115,6 @@ module ApplicationHelper
   # Return titles and paths for each item that should be displayed in the
   # navbar. A `nil` value means that the item can either be ignored or
   # should be a divider.
-  sig { returns(T::Array[T::Hash[Symbol, T.nilable(String)]]) }
   def navbar_items
     items = []
 

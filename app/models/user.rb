@@ -1,6 +1,5 @@
 class User < ApplicationRecord
-  extend T::Sig
-  extend FriendlyId
+    extend FriendlyId
   include PgSearch::Model
   include GlobalSearchable
   include Searchable
@@ -131,34 +130,29 @@ class User < ApplicationRecord
   global_searchable :username
   searchable :username
 
-  sig { returns(T.nilable(String)) }
   def api_token
     return nil if encrypted_api_token.nil?
 
     EncryptionService.decrypt(T.must(encrypted_api_token))
   end
 
-  sig { params(value: String).void }
   def api_token=(value)
     self.encrypted_api_token = EncryptionService.encrypt(value)
   end
 
   # Make sure the user isn't banned when logging in with Devise.
-  sig { returns(T.nilable(T::Boolean)) }
   def active_for_authentication?
     super && !banned?
   end
 
   # If the user is determined to be inactive by `active_for_authentication?`,
   # this is the name of the message that will be returned.
-  sig { returns(Symbol) }
   def inactive_message
     banned? ? :account_banned : super
   end
 
   # Verify that the token passed into the application matches the user's
   # actual token.
-  sig { params(token: T.nilable(String)).returns(T::Boolean) }
   def verify_api_token!(token)
     # Return false if the user attempts to pass a nil token. This prevents
     # other users from hijacking an account if the account doesn't have
@@ -170,7 +164,6 @@ class User < ApplicationRecord
 
   private
 
-  sig { void }
   def on_user_creation
     Event.create!(
       eventable_type: 'User',

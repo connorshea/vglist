@@ -1,12 +1,10 @@
 module Types
   class BaseObject < GraphQL::Schema::Object
-    extend T::Sig
-    include Pundit
+        include Pundit
 
     connection_type_class(Types::BaseConnectionObject)
 
     # User needs to be logged in to get anything from the API.
-    sig { params(_object: T.untyped, context: GraphQL::Query::Context).returns(T::Boolean) }
     def self.authorized?(_object, context)
       raise GraphQL::ExecutionError, "You must be logged in to use the API." if context[:current_user].nil?
       raise GraphQL::ExecutionError, "The user that owns this token has been banned." if context[:current_user]&.banned?

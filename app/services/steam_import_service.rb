@@ -1,9 +1,7 @@
 require 'set'
 
 class SteamImportService
-  extend T::Sig
-
-  sig { params(user: User, update_hours: T::Boolean).void }
+  
   def initialize(user:, update_hours: false)
     @user = user
     @steam_account = T.let(@user.external_account, T.nilable(ExternalAccount))
@@ -14,7 +12,6 @@ class SteamImportService
 
   class NoGamesError < Error; end
 
-  sig { returns(Result) }
   def call
     raise Error, 'No Steam account.' if steam_account.nil?
 
@@ -115,37 +112,30 @@ class SteamImportService
   end
 
   class Result < T::Struct
-    extend T::Sig
-
+    
     const :created, GamePurchase::RelationType
     const :updated, GamePurchase::RelationType
     const :unmatched, T::Array[Unmatched]
 
     # Returns the games for all the newly created game purchases.
-    sig { returns(Game::RelationType) }
     def added_games
       Game.joins(:game_purchases).merge(created)
     end
 
     # Returns the games for all the updated game purchases.
-    sig { returns(Game::RelationType) }
     def updated_games
       Game.joins(:game_purchases).merge(updated)
     end
   end
 
-  sig { returns(User) }
   attr_reader :user
 
-  sig { returns(T.nilable(ExternalAccount)) }
   attr_accessor :steam_account
 
-  sig { returns(String) }
   def steam_api_url
     "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&steamid=#{steam_account_id}&include_appinfo=1&include_played_free_games=1"
   end
 
-  sig { returns(Integer) }
   def steam_account_id
     T.must(steam_account)[:steam_id]
   end

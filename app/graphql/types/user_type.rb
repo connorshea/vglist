@@ -21,7 +21,6 @@ module Types
 
     field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar."
 
-    sig { returns(T.nilable(Event::ActiveRecord_Relation)) }
     def activity
       return nil unless user_visible?
 
@@ -32,7 +31,6 @@ module Types
 
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
-    sig { returns(T.nilable(String)) }
     def avatar_url
       attachment = @object.avatar_attachment
       return if attachment.nil?
@@ -42,7 +40,6 @@ module Types
 
     # Extremely cursed metaprogramming that protects private users from having their details exposed
     # if the UserPolicy wants to prevent it.
-    sig { params(field_name: Symbol).returns(T.untyped) }
     def handler(field_name)
       return @object.public_send(field_name) if user_visible?
 
@@ -59,7 +56,6 @@ module Types
       end
     end
 
-    sig { returns(T::Boolean) }
     def user_visible?
       # Short-circuit if the user has a public account, to prevent instantiating
       # a UserPolicy and all that.

@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  extend T::Sig
   include Pundit
 
   # Require a valid CSRF token, throw an exception if there isn't one.

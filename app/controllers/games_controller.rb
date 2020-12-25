@@ -256,7 +256,6 @@ class GamesController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def game_params
     params.typed_require(:game).permit(
       :name,
@@ -283,7 +282,6 @@ class GamesController < ApplicationController
     )
   end
 
-  sig { returns(ActionController::Parameters) }
   def game_purchase_params
     params.typed_require(:game_purchase).permit(
       :user_id,

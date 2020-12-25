@@ -1,7 +1,6 @@
 module Types
   class GameType < Types::BaseObject
-    extend T::Sig
-
+    
     description "Video games"
 
     field :id, ID, null: false, description: "ID of the game."
@@ -31,7 +30,6 @@ module Types
 
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
-    sig { returns(T.nilable(String)) }
     def cover_url
       attachment = @object.cover_attachment
       return if attachment.nil?
@@ -40,7 +38,6 @@ module Types
     end
 
     # Get the Steam App ID values as an array.
-    sig { returns(T::Array[Integer]) }
     def steam_app_ids
       @object.steam_app_ids.map(&:app_id)
     end

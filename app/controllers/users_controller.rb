@@ -366,7 +366,6 @@ class UsersController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def user_params
     params.typed_require(:user).permit(
       :bio,

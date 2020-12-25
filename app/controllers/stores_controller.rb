@@ -89,7 +89,6 @@ class StoresController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def store_params
     params.typed_require(:store).permit(
       :name
