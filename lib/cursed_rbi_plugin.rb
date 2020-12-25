@@ -1,4 +1,3 @@
-# typed: true
 class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
   # Add some cursed methods to the Rails generators.
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }

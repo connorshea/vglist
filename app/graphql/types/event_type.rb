@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class EventType < Types::BaseObject
     description "Represents events in the Activity Feed."

@@ -1,4 +1,3 @@
-# typed: strict
 class Engine < ApplicationRecord
   include GlobalSearchable
   include Searchable

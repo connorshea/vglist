@@ -1,4 +1,3 @@
-# typed: strict
 class SettingsPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :current_user, :user

@@ -1,4 +1,3 @@
-# typed: strict
 puts "Creating Engines..."
 
 10.times do

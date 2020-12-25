@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :platform do
     name { "Xbox 360" }

@@ -1,4 +1,3 @@
-# typed: false
 # These Rake tasks are meant to make using Sorbet easier.
 namespace :sorbet do
   desc "Run Sorbet's typechecker."

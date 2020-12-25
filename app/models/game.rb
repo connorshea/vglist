@@ -1,4 +1,3 @@
-# typed: true
 class Game < ApplicationRecord
   include GlobalSearchable
   include Searchable

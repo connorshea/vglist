@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class GenreType < Types::BaseObject
     description "Video game genres"

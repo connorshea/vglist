@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::UnfavoriteGame < Mutations::BaseMutation
   description "Remove a game from the current user's favorites."
 

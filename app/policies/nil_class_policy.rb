@@ -1,4 +1,3 @@
-# typed: ignore
 class NilClassPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve

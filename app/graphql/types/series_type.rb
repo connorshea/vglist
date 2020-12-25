@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class SeriesType < Types::BaseObject
     description "Video game series'"

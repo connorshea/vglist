@@ -1,4 +1,3 @@
-# typed: true
 class CreateStatistics < ActiveRecord::Migration[6.0]
   def change
     # Create a table for tracking all statistics over time.

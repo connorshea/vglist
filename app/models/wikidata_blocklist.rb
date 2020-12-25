@@ -1,4 +1,3 @@
-# typed: strict
 class WikidataBlocklist < ApplicationRecord
   belongs_to :user, optional: true
 

@@ -1,4 +1,3 @@
-# typed: true
 # Auto-generated migration.
 # rubocop:disable all
 class CreatePgSearchDocuments < ActiveRecord::Migration[5.2]

@@ -1,4 +1,3 @@
-# typed: false
 module ApiRequestTestHelper
   def api_request(query_string, variables: nil, token:)
     post graphql_path,

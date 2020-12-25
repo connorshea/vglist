@@ -1,4 +1,3 @@
-# typed: strict
 puts "Creating Series..."
 
 # Create 20 Series.

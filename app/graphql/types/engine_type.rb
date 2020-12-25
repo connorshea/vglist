@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class EngineType < Types::BaseObject
     description "Video game engines"

@@ -1,4 +1,3 @@
-# typed: strict
 class Relationship < ApplicationRecord
   extend T::Sig
 

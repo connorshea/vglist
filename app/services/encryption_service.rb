@@ -1,4 +1,3 @@
-# typed: strict
 
 # A service for encrypting/decrypting values.
 #

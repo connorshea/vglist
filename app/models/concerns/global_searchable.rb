@@ -1,4 +1,3 @@
-# typed: false
 
 module GlobalSearchable
   extend ActiveSupport::Concern

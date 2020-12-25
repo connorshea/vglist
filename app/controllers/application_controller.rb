@@ -1,4 +1,3 @@
-# typed: false
 class ApplicationController < ActionController::Base
   extend T::Sig
   include Pundit

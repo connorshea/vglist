@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class RelationshipType < Types::BaseObject
     description "This represents the relationship between two users, where one user is following another."

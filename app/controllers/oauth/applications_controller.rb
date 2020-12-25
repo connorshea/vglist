@@ -1,4 +1,3 @@
-# typed: true
 class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   before_action :authenticate_user!
   # Doorkeeper tries to require that the user be an admin in order to create

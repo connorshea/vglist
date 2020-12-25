@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::UnfollowUser < Mutations::BaseMutation
   description "Unfollow a user."
 

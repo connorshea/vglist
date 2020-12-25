@@ -1,4 +1,3 @@
-# typed: strict
 class VideoGameListSchema < GraphQL::Schema
   extend T::Sig
 

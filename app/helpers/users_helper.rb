@@ -1,4 +1,3 @@
-# typed: strict
 module UsersHelper
   extend T::Sig
 

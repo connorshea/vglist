@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::UpdateGameInLibrary < Mutations::BaseMutation
   description "Update a game in the current user's library."
 

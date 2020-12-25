@@ -1,4 +1,3 @@
-# typed: true
 class StaticPagesController < ApplicationController
   layout :resolve_layout
 

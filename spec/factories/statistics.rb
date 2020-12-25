@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :statistic do
     users { rand(100_000) }

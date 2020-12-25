@@ -1,4 +1,3 @@
-# typed: true
 class Types::EventableUnion < Types::BaseUnion
   description "Objects which may be the subject of events."
   possible_types Types::UserType,

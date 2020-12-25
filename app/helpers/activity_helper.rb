@@ -1,4 +1,3 @@
-# typed: strict
 # rubocop:disable Style/StringConcatenation
 module ActivityHelper
   extend T::Sig

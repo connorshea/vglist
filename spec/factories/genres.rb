@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :genre do
     name { "First-person shooter" }

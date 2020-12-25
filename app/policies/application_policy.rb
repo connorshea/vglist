@@ -1,4 +1,3 @@
-# typed: true
 # Defines defaults for all policies.
 class ApplicationPolicy
   extend T::Sig

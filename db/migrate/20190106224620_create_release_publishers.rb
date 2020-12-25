@@ -1,4 +1,3 @@
-# typed: true
 class CreateReleasePublishers < ActiveRecord::Migration[5.2]
   def change
     create_table :release_publishers do |t|

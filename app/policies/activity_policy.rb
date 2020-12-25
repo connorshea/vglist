@@ -1,4 +1,3 @@
-# typed: strong
 class ActivityPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user

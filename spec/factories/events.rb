@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :event do
     user

@@ -1,4 +1,3 @@
-# typed: strict
 
 # A service for merging two games together.
 class GameMergeService

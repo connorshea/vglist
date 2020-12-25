@@ -1,4 +1,3 @@
-# typed: false
 module SorbetRailsHack
   extend T::Sig
 

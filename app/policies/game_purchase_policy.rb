@@ -1,4 +1,3 @@
-# typed: strict
 class GamePurchasePolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user

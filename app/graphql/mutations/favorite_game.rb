@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::FavoriteGame < Mutations::BaseMutation
   description "Add a game to the current user's favorites."
 

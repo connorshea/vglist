@@ -1,4 +1,3 @@
-# typed: true
 class ReplaceBeforeAfterValuesWithDifferencesColumn < ActiveRecord::Migration[6.0]
   def change
     remove_column :game_purchase_events, :before_value, :text

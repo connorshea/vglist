@@ -1,4 +1,3 @@
-# typed: strict
 
 require Rails.root.join('lib/cursed_rbi_plugin')
 

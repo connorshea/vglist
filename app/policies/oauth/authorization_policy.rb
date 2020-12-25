@@ -1,4 +1,3 @@
-# typed: true
 class Oauth::AuthorizationPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user

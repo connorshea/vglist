@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   module BaseInterface
     include GraphQL::Schema::Interface

@@ -1,4 +1,3 @@
-# typed: strict
 module GamesHelper
   extend T::Sig
 

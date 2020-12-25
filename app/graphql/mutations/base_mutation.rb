@@ -1,4 +1,3 @@
-# typed: strict
 class Mutations::BaseMutation < GraphQL::Schema::Mutation
   extend T::Sig
 

@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class BaseObject < GraphQL::Schema::Object
     extend T::Sig

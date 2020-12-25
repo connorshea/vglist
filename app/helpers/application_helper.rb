@@ -1,4 +1,3 @@
-# typed: true
 module ApplicationHelper
   extend T::Sig
 

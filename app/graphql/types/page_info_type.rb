@@ -1,4 +1,3 @@
-# typed: strict
 class Types::PageInfoType < GraphQL::Types::Relay::PageInfo
   extend T::Sig
 

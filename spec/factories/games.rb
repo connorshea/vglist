@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :game do
     name { "Half-Life 2" }

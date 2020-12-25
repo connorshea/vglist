@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class PlatformType < Types::BaseObject
     description "Video game platforms, usually consoles or PC operating systems."
