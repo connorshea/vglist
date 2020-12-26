@@ -1,16 +1,14 @@
 target :lib do
   signature "sig"
 
-  check "db"                        # Directory name
-  check "lib"                       # Directory name
-  # check "Gemfile"                   # File name
-  check "app/models/**/*.rb"        # Glob
-  check "app/controllers/**/*.rb"   # Glob
-  check "app/graphql/**/*.rb"       # Glob
-  check "app/helpers/**/*.rb"       # Glob
-  check "app/policies/**/*.rb"      # Glob
-  check "app/services/**/*.rb"      # Glob
-  # ignore "lib/templates/*.rb"
+  check "db"
+  check "lib"
+  check "app/models"
+  check "app/controllers"
+  check "app/graphql"
+  check "app/helpers"
+  check "app/policies"
+  check "app/services"
 
   # Standard libraries
   library "pathname", "set"
