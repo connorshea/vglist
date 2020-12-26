@@ -180,7 +180,7 @@ module RSpec::Rails::FileFixtureSupport
 end
 
 module RSpec::Rails::FixtureFileUploadSupport
-  def fixture_file_upload(*args, &block); end
+  def fixture_file_upload(*_arg0, &_arg1); end
 
   private
 
@@ -193,7 +193,7 @@ class RSpec::Rails::FixtureFileUploadSupport::RailsFixtureFileWrapper
 
   class << self
     def fixture_path; end
-    def fixture_path=(value); end
+    def fixture_path=(_arg0); end
     def instance; end
   end
 end
@@ -212,6 +212,8 @@ module RSpec::Rails::FixtureSupport::Fixtures
   extend(::ActiveSupport::Concern)
 
   mixes_in_class_methods(::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods)
+
+  def name; end
 end
 
 module RSpec::Rails::FixtureSupport::Fixtures::ClassMethods

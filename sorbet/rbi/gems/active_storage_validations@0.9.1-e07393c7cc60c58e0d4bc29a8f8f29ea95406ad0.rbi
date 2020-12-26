@@ -184,7 +184,7 @@ end
 class ActiveStorageValidations::SizeValidator < ::ActiveModel::EachValidator
   def check_validity!; end
   def content_size_valid?(file_size); end
-  def number_to_human_size(*args, &block); end
+  def number_to_human_size(*_arg0, &_arg1); end
   def validate_each(record, attribute, _value); end
 end
 

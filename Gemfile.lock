@@ -352,8 +352,8 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.2)
-    sorbet (0.5.6164)
-      sorbet-static (= 0.5.6164)
+    sorbet (0.5.6189)
+      sorbet-static (= 0.5.6189)
     sorbet-coerce (0.2.7)
       polyfill (~> 1.8)
       safe_type (~> 1.1, >= 1.1.1)
@@ -365,10 +365,15 @@ GEM
       parser (>= 2.7)
       sorbet-coerce (>= 0.2.6)
       sorbet-runtime (>= 0.5)
-    sorbet-runtime (0.5.6164)
-    sorbet-static (0.5.6164-universal-darwin-18)
-    sorbet-static (0.5.6164-universal-darwin-19)
-    sorbet-static (0.5.6164-x86_64-linux)
+    sorbet-runtime (0.5.6189)
+    sorbet-static (0.5.6189-universal-darwin-14)
+    sorbet-static (0.5.6189-universal-darwin-15)
+    sorbet-static (0.5.6189-universal-darwin-16)
+    sorbet-static (0.5.6189-universal-darwin-17)
+    sorbet-static (0.5.6189-universal-darwin-18)
+    sorbet-static (0.5.6189-universal-darwin-19)
+    sorbet-static (0.5.6189-universal-darwin-20)
+    sorbet-static (0.5.6189-x86_64-linux)
     sparql (3.1.4)
       builder (~> 3.2)
       ebnf (~> 2.1)
@@ -502,4 +507,4 @@ RUBY VERSION
    ruby 2.7.2p137
 
 BUNDLED WITH
-   2.2.2
+   2.2.3

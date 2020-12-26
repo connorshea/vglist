@@ -2923,6 +2923,8 @@ end
 class Bundler::Definition
   def dependencies_for(groups); end
 
+  def most_specific_locked_platform(); end
+
   def requested_dependencies(); end
 end
 
@@ -3203,8 +3205,16 @@ class Bundler::GemHelper
   def self.tag_prefix=(prefix); end
 end
 
+class Bundler::GemHelpers::PlatformMatch
+  def self.specificity_score(spec_platform, user_platform); end
+end
+
 module Bundler::GemHelpers
   def self.local_platform(); end
+
+  def self.same_deps(spec, exemplary_spec); end
+
+  def self.same_specificity(platform, spec, exemplary_spec); end
 end
 
 class Bundler::GemVersionPromoter
@@ -3474,8 +3484,6 @@ class Bundler::Resolver::SpecGroup
   def copy_for(platforms); end
 
   def sorted_activated_platforms(); end
-
-  def spec_for(platform); end
 end
 
 class Bundler::Retry
@@ -5277,7 +5285,7 @@ module Bundler::VersionRanges
 end
 
 module Bundler
-  def self.locked_bundler_version(); end
+  def self.most_specific_locked_platform?(platform); end
 
   def self.original_exec(*args); end
 
@@ -11643,6 +11651,13 @@ class Gem::Requirement
   def _sorted_requirements(); end
 end
 
+class Gem::Resolver::APISet::GemParser
+  def parse(line); end
+end
+
+class Gem::Resolver::APISet::GemParser
+end
+
 class Gem::Resolver::APISpecification
   def self.new(set, api_data); end
 end
@@ -11659,6 +11674,12 @@ end
 
 class Gem::Resolver::IndexSpecification
   def ==(other); end
+end
+
+class Gem::Resolver::InstallerSet
+  def force(); end
+
+  def force=(force); end
 end
 
 class Gem::Resolver::LocalSpecification
@@ -11785,6 +11806,12 @@ class Gem::Resolver::Molinillo::VersionConflict
   def message_with_trees(opts=T.unsafe(nil)); end
 
   def specification_provider(); end
+end
+
+class Gem::Resolver::Specification
+  def required_ruby_version(); end
+
+  def required_rubygems_version(); end
 end
 
 class Gem::RuntimeRequirementNotMetError
@@ -15335,7 +15362,13 @@ module MiniMagick::VERSION
   PRE = ::T.let(nil, ::T.untyped)
 end
 
-MiniTest = Minitest
+module Minitest
+end
+
+MiniTest::Assertions = Minitest::Assertions
+
+module Minitest
+end
 
 class Module
   def autoload_without_bootsnap(_, _1); end
@@ -16128,6 +16161,15 @@ class Parlour::ConflictResolver
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 
+class Parlour::Conversion::Converter
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::InterfaceWrapper::Helpers
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 module Parlour::Debugging::Tree
   extend ::T::Sig
   extend ::T::Private::Methods::MethodHooks
@@ -16135,6 +16177,18 @@ module Parlour::Debugging::Tree
 end
 
 module Parlour::Debugging
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Parlour::Generator
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Parlour::Options
   extend ::T::Sig
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -16155,23 +16209,8 @@ class Parlour::Plugin
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 
-class Parlour::RbiGenerator::Options
-  extend ::T::Sig
-  extend ::T::Private::Methods::MethodHooks
-  extend ::T::Private::Methods::SingletonMethodHooks
-end
-
 class Parlour::RbiGenerator::Parameter
   extend ::T::Sig
-  extend ::T::Private::Methods::MethodHooks
-  extend ::T::Private::Methods::SingletonMethodHooks
-end
-
-class Parlour::RbiGenerator::RbiObject
-  extend ::T::Helpers
-  extend ::T::Sig
-  extend ::T::Private::Abstract::Hooks
-  extend ::T::InterfaceWrapper::Helpers
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
 end
@@ -16182,7 +16221,19 @@ class Parlour::RbiGenerator::StructProp
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 
-class Parlour::RbiGenerator
+class Parlour::RbsGenerator::Block
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Parlour::RbsGenerator::MethodSignature
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Parlour::RbsGenerator::Parameter
   extend ::T::Sig
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -16202,6 +16253,34 @@ end
 
 class Parlour::TypeParser
   extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Parlour::TypedObject
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::InterfaceWrapper::Helpers
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module Parlour::Types
+  TypeLike = ::T.let(nil, ::T.untyped)
+end
+
+class Parlour::Types::Proc::Parameter
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Parlour::Types::Type
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::InterfaceWrapper::Helpers
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
 end
@@ -17093,1049 +17172,7 @@ class Parser::Ruby24
 end
 
 class Parser::Ruby27
-  def _reduce_10(val, _values, result); end
-
-  def _reduce_100(val, _values, result); end
-
-  def _reduce_101(val, _values, result); end
-
-  def _reduce_102(val, _values, result); end
-
-  def _reduce_103(val, _values, result); end
-
-  def _reduce_104(val, _values, result); end
-
-  def _reduce_105(val, _values, result); end
-
-  def _reduce_106(val, _values, result); end
-
-  def _reduce_107(val, _values, result); end
-
-  def _reduce_108(val, _values, result); end
-
-  def _reduce_109(val, _values, result); end
-
-  def _reduce_11(val, _values, result); end
-
-  def _reduce_110(val, _values, result); end
-
-  def _reduce_111(val, _values, result); end
-
-  def _reduce_112(val, _values, result); end
-
-  def _reduce_113(val, _values, result); end
-
-  def _reduce_114(val, _values, result); end
-
-  def _reduce_116(val, _values, result); end
-
-  def _reduce_117(val, _values, result); end
-
-  def _reduce_118(val, _values, result); end
-
-  def _reduce_12(val, _values, result); end
-
-  def _reduce_124(val, _values, result); end
-
-  def _reduce_126(val, _values, result); end
-
-  def _reduce_127(val, _values, result); end
-
-  def _reduce_128(val, _values, result); end
-
-  def _reduce_13(val, _values, result); end
-
-  def _reduce_14(val, _values, result); end
-
-  def _reduce_15(val, _values, result); end
-
-  def _reduce_17(val, _values, result); end
-
-  def _reduce_18(val, _values, result); end
-
-  def _reduce_19(val, _values, result); end
-
-  def _reduce_2(val, _values, result); end
-
-  def _reduce_20(val, _values, result); end
-
-  def _reduce_200(val, _values, result); end
-
-  def _reduce_201(val, _values, result); end
-
-  def _reduce_202(val, _values, result); end
-
-  def _reduce_203(val, _values, result); end
-
-  def _reduce_204(val, _values, result); end
-
-  def _reduce_205(val, _values, result); end
-
-  def _reduce_206(val, _values, result); end
-
-  def _reduce_207(val, _values, result); end
-
-  def _reduce_208(val, _values, result); end
-
-  def _reduce_209(val, _values, result); end
-
-  def _reduce_21(val, _values, result); end
-
-  def _reduce_210(val, _values, result); end
-
-  def _reduce_211(val, _values, result); end
-
-  def _reduce_212(val, _values, result); end
-
-  def _reduce_213(val, _values, result); end
-
-  def _reduce_214(val, _values, result); end
-
-  def _reduce_215(val, _values, result); end
-
-  def _reduce_216(val, _values, result); end
-
-  def _reduce_217(val, _values, result); end
-
-  def _reduce_218(val, _values, result); end
-
-  def _reduce_219(val, _values, result); end
-
-  def _reduce_22(val, _values, result); end
-
-  def _reduce_220(val, _values, result); end
-
-  def _reduce_221(val, _values, result); end
-
-  def _reduce_222(val, _values, result); end
-
-  def _reduce_223(val, _values, result); end
-
-  def _reduce_224(val, _values, result); end
-
-  def _reduce_225(val, _values, result); end
-
-  def _reduce_226(val, _values, result); end
-
-  def _reduce_227(val, _values, result); end
-
-  def _reduce_229(val, _values, result); end
-
-  def _reduce_23(val, _values, result); end
-
-  def _reduce_230(val, _values, result); end
-
-  def _reduce_231(val, _values, result); end
-
-  def _reduce_232(val, _values, result); end
-
-  def _reduce_233(val, _values, result); end
-
-  def _reduce_234(val, _values, result); end
-
-  def _reduce_235(val, _values, result); end
-
-  def _reduce_236(val, _values, result); end
-
-  def _reduce_237(val, _values, result); end
-
-  def _reduce_238(val, _values, result); end
-
-  def _reduce_239(val, _values, result); end
-
-  def _reduce_24(val, _values, result); end
-
-  def _reduce_240(val, _values, result); end
-
-  def _reduce_241(val, _values, result); end
-
-  def _reduce_247(val, _values, result); end
-
-  def _reduce_248(val, _values, result); end
-
-  def _reduce_25(val, _values, result); end
-
-  def _reduce_252(val, _values, result); end
-
-  def _reduce_253(val, _values, result); end
-
-  def _reduce_255(val, _values, result); end
-
-  def _reduce_256(val, _values, result); end
-
-  def _reduce_257(val, _values, result); end
-
-  def _reduce_258(val, _values, result); end
-
-  def _reduce_26(val, _values, result); end
-
-  def _reduce_260(val, _values, result); end
-
-  def _reduce_263(val, _values, result); end
-
-  def _reduce_264(val, _values, result); end
-
-  def _reduce_265(val, _values, result); end
-
-  def _reduce_266(val, _values, result); end
-
-  def _reduce_267(val, _values, result); end
-
-  def _reduce_268(val, _values, result); end
-
-  def _reduce_269(val, _values, result); end
-
-  def _reduce_27(val, _values, result); end
-
-  def _reduce_270(val, _values, result); end
-
-  def _reduce_271(val, _values, result); end
-
-  def _reduce_272(val, _values, result); end
-
-  def _reduce_273(val, _values, result); end
-
-  def _reduce_274(val, _values, result); end
-
-  def _reduce_275(val, _values, result); end
-
-  def _reduce_276(val, _values, result); end
-
-  def _reduce_277(val, _values, result); end
-
-  def _reduce_278(val, _values, result); end
-
-  def _reduce_279(val, _values, result); end
-
-  def _reduce_28(val, _values, result); end
-
-  def _reduce_281(val, _values, result); end
-
-  def _reduce_282(val, _values, result); end
-
-  def _reduce_283(val, _values, result); end
-
-  def _reduce_29(val, _values, result); end
-
-  def _reduce_294(val, _values, result); end
-
-  def _reduce_295(val, _values, result); end
-
-  def _reduce_296(val, _values, result); end
-
-  def _reduce_297(val, _values, result); end
-
-  def _reduce_298(val, _values, result); end
-
-  def _reduce_299(val, _values, result); end
-
-  def _reduce_3(val, _values, result); end
-
-  def _reduce_300(val, _values, result); end
-
-  def _reduce_301(val, _values, result); end
-
-  def _reduce_302(val, _values, result); end
-
-  def _reduce_303(val, _values, result); end
-
-  def _reduce_304(val, _values, result); end
-
-  def _reduce_305(val, _values, result); end
-
-  def _reduce_306(val, _values, result); end
-
-  def _reduce_307(val, _values, result); end
-
-  def _reduce_308(val, _values, result); end
-
-  def _reduce_309(val, _values, result); end
-
-  def _reduce_31(val, _values, result); end
-
-  def _reduce_310(val, _values, result); end
-
-  def _reduce_311(val, _values, result); end
-
-  def _reduce_312(val, _values, result); end
-
-  def _reduce_313(val, _values, result); end
-
-  def _reduce_315(val, _values, result); end
-
-  def _reduce_316(val, _values, result); end
-
-  def _reduce_317(val, _values, result); end
-
-  def _reduce_318(val, _values, result); end
-
-  def _reduce_319(val, _values, result); end
-
-  def _reduce_32(val, _values, result); end
-
-  def _reduce_320(val, _values, result); end
-
-  def _reduce_321(val, _values, result); end
-
-  def _reduce_322(val, _values, result); end
-
-  def _reduce_323(val, _values, result); end
-
-  def _reduce_324(val, _values, result); end
-
-  def _reduce_325(val, _values, result); end
-
-  def _reduce_326(val, _values, result); end
-
-  def _reduce_327(val, _values, result); end
-
-  def _reduce_328(val, _values, result); end
-
-  def _reduce_329(val, _values, result); end
-
-  def _reduce_33(val, _values, result); end
-
-  def _reduce_330(val, _values, result); end
-
-  def _reduce_331(val, _values, result); end
-
-  def _reduce_332(val, _values, result); end
-
-  def _reduce_333(val, _values, result); end
-
-  def _reduce_334(val, _values, result); end
-
-  def _reduce_335(val, _values, result); end
-
-  def _reduce_336(val, _values, result); end
-
-  def _reduce_337(val, _values, result); end
-
-  def _reduce_338(val, _values, result); end
-
-  def _reduce_339(val, _values, result); end
-
-  def _reduce_34(val, _values, result); end
-
-  def _reduce_340(val, _values, result); end
-
-  def _reduce_342(val, _values, result); end
-
-  def _reduce_345(val, _values, result); end
-
-  def _reduce_349(val, _values, result); end
-
-  def _reduce_351(val, _values, result); end
-
-  def _reduce_354(val, _values, result); end
-
-  def _reduce_355(val, _values, result); end
-
-  def _reduce_356(val, _values, result); end
-
-  def _reduce_357(val, _values, result); end
-
-  def _reduce_359(val, _values, result); end
-
-  def _reduce_36(val, _values, result); end
-
-  def _reduce_360(val, _values, result); end
-
-  def _reduce_361(val, _values, result); end
-
-  def _reduce_362(val, _values, result); end
-
-  def _reduce_363(val, _values, result); end
-
-  def _reduce_364(val, _values, result); end
-
-  def _reduce_365(val, _values, result); end
-
-  def _reduce_366(val, _values, result); end
-
-  def _reduce_367(val, _values, result); end
-
-  def _reduce_368(val, _values, result); end
-
-  def _reduce_369(val, _values, result); end
-
-  def _reduce_37(val, _values, result); end
-
-  def _reduce_370(val, _values, result); end
-
-  def _reduce_371(val, _values, result); end
-
-  def _reduce_372(val, _values, result); end
-
-  def _reduce_373(val, _values, result); end
-
-  def _reduce_374(val, _values, result); end
-
-  def _reduce_375(val, _values, result); end
-
-  def _reduce_376(val, _values, result); end
-
-  def _reduce_378(val, _values, result); end
-
-  def _reduce_379(val, _values, result); end
-
-  def _reduce_38(val, _values, result); end
-
-  def _reduce_380(val, _values, result); end
-
-  def _reduce_381(val, _values, result); end
-
-  def _reduce_382(val, _values, result); end
-
-  def _reduce_383(val, _values, result); end
-
-  def _reduce_384(val, _values, result); end
-
-  def _reduce_385(val, _values, result); end
-
-  def _reduce_387(val, _values, result); end
-
-  def _reduce_388(val, _values, result); end
-
-  def _reduce_389(val, _values, result); end
-
-  def _reduce_39(val, _values, result); end
-
-  def _reduce_390(val, _values, result); end
-
-  def _reduce_391(val, _values, result); end
-
-  def _reduce_392(val, _values, result); end
-
-  def _reduce_393(val, _values, result); end
-
-  def _reduce_394(val, _values, result); end
-
-  def _reduce_395(val, _values, result); end
-
-  def _reduce_397(val, _values, result); end
-
-  def _reduce_398(val, _values, result); end
-
-  def _reduce_399(val, _values, result); end
-
-  def _reduce_4(val, _values, result); end
-
-  def _reduce_40(val, _values, result); end
-
-  def _reduce_400(val, _values, result); end
-
-  def _reduce_401(val, _values, result); end
-
-  def _reduce_402(val, _values, result); end
-
-  def _reduce_403(val, _values, result); end
-
-  def _reduce_404(val, _values, result); end
-
-  def _reduce_405(val, _values, result); end
-
-  def _reduce_406(val, _values, result); end
-
-  def _reduce_407(val, _values, result); end
-
-  def _reduce_408(val, _values, result); end
-
-  def _reduce_409(val, _values, result); end
-
-  def _reduce_41(val, _values, result); end
-
-  def _reduce_410(val, _values, result); end
-
-  def _reduce_411(val, _values, result); end
-
-  def _reduce_412(val, _values, result); end
-
-  def _reduce_413(val, _values, result); end
-
-  def _reduce_414(val, _values, result); end
-
-  def _reduce_415(val, _values, result); end
-
-  def _reduce_416(val, _values, result); end
-
-  def _reduce_417(val, _values, result); end
-
-  def _reduce_418(val, _values, result); end
-
-  def _reduce_419(val, _values, result); end
-
-  def _reduce_42(val, _values, result); end
-
-  def _reduce_420(val, _values, result); end
-
-  def _reduce_421(val, _values, result); end
-
-  def _reduce_422(val, _values, result); end
-
-  def _reduce_423(val, _values, result); end
-
-  def _reduce_424(val, _values, result); end
-
-  def _reduce_425(val, _values, result); end
-
-  def _reduce_426(val, _values, result); end
-
-  def _reduce_427(val, _values, result); end
-
-  def _reduce_428(val, _values, result); end
-
-  def _reduce_429(val, _values, result); end
-
-  def _reduce_43(val, _values, result); end
-
-  def _reduce_430(val, _values, result); end
-
-  def _reduce_431(val, _values, result); end
-
-  def _reduce_433(val, _values, result); end
-
-  def _reduce_434(val, _values, result); end
-
-  def _reduce_435(val, _values, result); end
-
-  def _reduce_436(val, _values, result); end
-
-  def _reduce_438(val, _values, result); end
-
-  def _reduce_439(val, _values, result); end
-
-  def _reduce_440(val, _values, result); end
-
-  def _reduce_442(val, _values, result); end
-
-  def _reduce_443(val, _values, result); end
-
-  def _reduce_444(val, _values, result); end
-
-  def _reduce_445(val, _values, result); end
-
-  def _reduce_447(val, _values, result); end
-
-  def _reduce_449(val, _values, result); end
-
-  def _reduce_45(val, _values, result); end
-
-  def _reduce_451(val, _values, result); end
-
-  def _reduce_452(val, _values, result); end
-
-  def _reduce_454(val, _values, result); end
-
-  def _reduce_455(val, _values, result); end
-
-  def _reduce_456(val, _values, result); end
-
-  def _reduce_457(val, _values, result); end
-
-  def _reduce_458(val, _values, result); end
-
-  def _reduce_459(val, _values, result); end
-
-  def _reduce_460(val, _values, result); end
-
-  def _reduce_461(val, _values, result); end
-
-  def _reduce_462(val, _values, result); end
-
-  def _reduce_463(val, _values, result); end
-
-  def _reduce_464(val, _values, result); end
-
-  def _reduce_465(val, _values, result); end
-
-  def _reduce_466(val, _values, result); end
-
-  def _reduce_467(val, _values, result); end
-
-  def _reduce_468(val, _values, result); end
-
-  def _reduce_469(val, _values, result); end
-
-  def _reduce_470(val, _values, result); end
-
-  def _reduce_471(val, _values, result); end
-
-  def _reduce_472(val, _values, result); end
-
-  def _reduce_473(val, _values, result); end
-
-  def _reduce_474(val, _values, result); end
-
-  def _reduce_476(val, _values, result); end
-
-  def _reduce_477(val, _values, result); end
-
-  def _reduce_478(val, _values, result); end
-
-  def _reduce_479(val, _values, result); end
-
-  def _reduce_48(val, _values, result); end
-
-  def _reduce_480(val, _values, result); end
-
-  def _reduce_481(val, _values, result); end
-
-  def _reduce_482(val, _values, result); end
-
-  def _reduce_483(val, _values, result); end
-
-  def _reduce_485(val, _values, result); end
-
-  def _reduce_486(val, _values, result); end
-
-  def _reduce_487(val, _values, result); end
-
-  def _reduce_488(val, _values, result); end
-
-  def _reduce_489(val, _values, result); end
-
-  def _reduce_49(val, _values, result); end
-
-  def _reduce_490(val, _values, result); end
-
-  def _reduce_491(val, _values, result); end
-
-  def _reduce_492(val, _values, result); end
-
-  def _reduce_493(val, _values, result); end
-
-  def _reduce_494(val, _values, result); end
-
-  def _reduce_495(val, _values, result); end
-
-  def _reduce_496(val, _values, result); end
-
-  def _reduce_497(val, _values, result); end
-
-  def _reduce_498(val, _values, result); end
-
-  def _reduce_499(val, _values, result); end
-
-  def _reduce_5(val, _values, result); end
-
-  def _reduce_50(val, _values, result); end
-
-  def _reduce_501(val, _values, result); end
-
-  def _reduce_502(val, _values, result); end
-
-  def _reduce_503(val, _values, result); end
-
-  def _reduce_504(val, _values, result); end
-
-  def _reduce_508(val, _values, result); end
-
-  def _reduce_509(val, _values, result); end
-
-  def _reduce_51(val, _values, result); end
-
-  def _reduce_518(val, _values, result); end
-
-  def _reduce_519(val, _values, result); end
-
-  def _reduce_52(val, _values, result); end
-
-  def _reduce_520(val, _values, result); end
-
-  def _reduce_521(val, _values, result); end
-
-  def _reduce_522(val, _values, result); end
-
-  def _reduce_523(val, _values, result); end
-
-  def _reduce_524(val, _values, result); end
-
-  def _reduce_525(val, _values, result); end
-
-  def _reduce_526(val, _values, result); end
-
-  def _reduce_527(val, _values, result); end
-
-  def _reduce_528(val, _values, result); end
-
-  def _reduce_53(val, _values, result); end
-
-  def _reduce_531(val, _values, result); end
-
-  def _reduce_533(val, _values, result); end
-
-  def _reduce_537(val, _values, result); end
-
-  def _reduce_538(val, _values, result); end
-
-  def _reduce_539(val, _values, result); end
-
-  def _reduce_540(val, _values, result); end
-
-  def _reduce_541(val, _values, result); end
-
-  def _reduce_542(val, _values, result); end
-
-  def _reduce_543(val, _values, result); end
-
-  def _reduce_544(val, _values, result); end
-
-  def _reduce_545(val, _values, result); end
-
-  def _reduce_546(val, _values, result); end
-
-  def _reduce_547(val, _values, result); end
-
-  def _reduce_548(val, _values, result); end
-
-  def _reduce_549(val, _values, result); end
-
-  def _reduce_550(val, _values, result); end
-
-  def _reduce_551(val, _values, result); end
-
-  def _reduce_552(val, _values, result); end
-
-  def _reduce_553(val, _values, result); end
-
-  def _reduce_554(val, _values, result); end
-
-  def _reduce_555(val, _values, result); end
-
-  def _reduce_556(val, _values, result); end
-
-  def _reduce_557(val, _values, result); end
-
-  def _reduce_558(val, _values, result); end
-
-  def _reduce_559(val, _values, result); end
-
-  def _reduce_56(val, _values, result); end
-
-  def _reduce_560(val, _values, result); end
-
-  def _reduce_561(val, _values, result); end
-
-  def _reduce_562(val, _values, result); end
-
-  def _reduce_563(val, _values, result); end
-
-  def _reduce_564(val, _values, result); end
-
-  def _reduce_565(val, _values, result); end
-
-  def _reduce_566(val, _values, result); end
-
-  def _reduce_567(val, _values, result); end
-
-  def _reduce_568(val, _values, result); end
-
-  def _reduce_569(val, _values, result); end
-
-  def _reduce_57(val, _values, result); end
-
-  def _reduce_570(val, _values, result); end
-
-  def _reduce_571(val, _values, result); end
-
-  def _reduce_575(val, _values, result); end
-
-  def _reduce_576(val, _values, result); end
-
-  def _reduce_577(val, _values, result); end
-
-  def _reduce_578(val, _values, result); end
-
-  def _reduce_579(val, _values, result); end
-
-  def _reduce_580(val, _values, result); end
-
-  def _reduce_581(val, _values, result); end
-
-  def _reduce_582(val, _values, result); end
-
-  def _reduce_583(val, _values, result); end
-
-  def _reduce_584(val, _values, result); end
-
-  def _reduce_585(val, _values, result); end
-
-  def _reduce_586(val, _values, result); end
-
-  def _reduce_587(val, _values, result); end
-
-  def _reduce_588(val, _values, result); end
-
-  def _reduce_589(val, _values, result); end
-
-  def _reduce_590(val, _values, result); end
-
-  def _reduce_591(val, _values, result); end
-
-  def _reduce_592(val, _values, result); end
-
-  def _reduce_593(val, _values, result); end
-
-  def _reduce_594(val, _values, result); end
-
-  def _reduce_595(val, _values, result); end
-
-  def _reduce_596(val, _values, result); end
-
-  def _reduce_597(val, _values, result); end
-
-  def _reduce_598(val, _values, result); end
-
-  def _reduce_599(val, _values, result); end
-
-  def _reduce_6(val, _values, result); end
-
-  def _reduce_600(val, _values, result); end
-
-  def _reduce_601(val, _values, result); end
-
-  def _reduce_602(val, _values, result); end
-
-  def _reduce_603(val, _values, result); end
-
-  def _reduce_604(val, _values, result); end
-
-  def _reduce_605(val, _values, result); end
-
-  def _reduce_606(val, _values, result); end
-
-  def _reduce_607(val, _values, result); end
-
-  def _reduce_608(val, _values, result); end
-
-  def _reduce_609(val, _values, result); end
-
-  def _reduce_61(val, _values, result); end
-
-  def _reduce_610(val, _values, result); end
-
-  def _reduce_611(val, _values, result); end
-
-  def _reduce_612(val, _values, result); end
-
-  def _reduce_613(val, _values, result); end
-
-  def _reduce_614(val, _values, result); end
-
-  def _reduce_615(val, _values, result); end
-
-  def _reduce_616(val, _values, result); end
-
-  def _reduce_617(val, _values, result); end
-
-  def _reduce_618(val, _values, result); end
-
-  def _reduce_619(val, _values, result); end
-
-  def _reduce_62(val, _values, result); end
-
-  def _reduce_620(val, _values, result); end
-
-  def _reduce_621(val, _values, result); end
-
-  def _reduce_622(val, _values, result); end
-
-  def _reduce_623(val, _values, result); end
-
-  def _reduce_624(val, _values, result); end
-
-  def _reduce_625(val, _values, result); end
-
-  def _reduce_626(val, _values, result); end
-
-  def _reduce_627(val, _values, result); end
-
-  def _reduce_628(val, _values, result); end
-
-  def _reduce_629(val, _values, result); end
-
-  def _reduce_63(val, _values, result); end
-
-  def _reduce_630(val, _values, result); end
-
-  def _reduce_631(val, _values, result); end
-
-  def _reduce_632(val, _values, result); end
-
-  def _reduce_633(val, _values, result); end
-
-  def _reduce_634(val, _values, result); end
-
-  def _reduce_636(val, _values, result); end
-
-  def _reduce_637(val, _values, result); end
-
-  def _reduce_638(val, _values, result); end
-
-  def _reduce_639(val, _values, result); end
-
-  def _reduce_640(val, _values, result); end
-
-  def _reduce_641(val, _values, result); end
-
-  def _reduce_642(val, _values, result); end
-
-  def _reduce_643(val, _values, result); end
-
-  def _reduce_644(val, _values, result); end
-
-  def _reduce_645(val, _values, result); end
-
-  def _reduce_646(val, _values, result); end
-
-  def _reduce_647(val, _values, result); end
-
-  def _reduce_648(val, _values, result); end
-
-  def _reduce_649(val, _values, result); end
-
-  def _reduce_65(val, _values, result); end
-
-  def _reduce_650(val, _values, result); end
-
-  def _reduce_653(val, _values, result); end
-
-  def _reduce_654(val, _values, result); end
-
-  def _reduce_655(val, _values, result); end
-
-  def _reduce_656(val, _values, result); end
-
-  def _reduce_657(val, _values, result); end
-
-  def _reduce_658(val, _values, result); end
-
-  def _reduce_659(val, _values, result); end
-
-  def _reduce_66(val, _values, result); end
-
-  def _reduce_660(val, _values, result); end
-
-  def _reduce_661(val, _values, result); end
-
-  def _reduce_664(val, _values, result); end
-
-  def _reduce_665(val, _values, result); end
-
-  def _reduce_668(val, _values, result); end
-
-  def _reduce_669(val, _values, result); end
-
-  def _reduce_67(val, _values, result); end
-
-  def _reduce_670(val, _values, result); end
-
-  def _reduce_672(val, _values, result); end
-
-  def _reduce_673(val, _values, result); end
-
-  def _reduce_675(val, _values, result); end
-
-  def _reduce_676(val, _values, result); end
-
-  def _reduce_677(val, _values, result); end
-
-  def _reduce_678(val, _values, result); end
-
-  def _reduce_679(val, _values, result); end
-
-  def _reduce_68(val, _values, result); end
-
-  def _reduce_680(val, _values, result); end
-
-  def _reduce_69(val, _values, result); end
-
-  def _reduce_693(val, _values, result); end
-
-  def _reduce_694(val, _values, result); end
-
-  def _reduce_699(val, _values, result); end
-
-  def _reduce_70(val, _values, result); end
-
-  def _reduce_700(val, _values, result); end
-
-  def _reduce_701(val, _values, result); end
-
-  def _reduce_705(val, _values, result); end
-
-  def _reduce_709(val, _values, result); end
-
-  def _reduce_71(val, _values, result); end
-
-  def _reduce_72(val, _values, result); end
-
-  def _reduce_73(val, _values, result); end
-
-  def _reduce_74(val, _values, result); end
-
-  def _reduce_75(val, _values, result); end
-
-  def _reduce_76(val, _values, result); end
-
-  def _reduce_77(val, _values, result); end
-
-  def _reduce_78(val, _values, result); end
-
-  def _reduce_79(val, _values, result); end
-
-  def _reduce_8(val, _values, result); end
-
-  def _reduce_81(val, _values, result); end
-
-  def _reduce_82(val, _values, result); end
-
-  def _reduce_83(val, _values, result); end
-
-  def _reduce_84(val, _values, result); end
-
-  def _reduce_85(val, _values, result); end
-
-  def _reduce_86(val, _values, result); end
-
-  def _reduce_87(val, _values, result); end
-
-  def _reduce_88(val, _values, result); end
-
-  def _reduce_89(val, _values, result); end
-
-  def _reduce_9(val, _values, result); end
-
-  def _reduce_91(val, _values, result); end
-
-  def _reduce_92(val, _values, result); end
-
-  def _reduce_93(val, _values, result); end
-
-  def _reduce_94(val, _values, result); end
-
-  def _reduce_95(val, _values, result); end
-
-  def _reduce_96(val, _values, result); end
-
-  def _reduce_97(val, _values, result); end
-
-  def _reduce_98(val, _values, result); end
-
-  def _reduce_99(val, _values, result); end
-
-  def _reduce_none(val, _values, result); end
-
-  def default_encoding(); end
-
-  def version(); end
-  Racc_arg = ::T.let(nil, ::T.untyped)
   Racc_debug_parser = ::T.let(nil, ::T.untyped)
-  Racc_token_to_s_table = ::T.let(nil, ::T.untyped)
-end
-
-class Parser::Ruby27
 end
 
 class Pathname
@@ -18638,6 +17675,7 @@ end
 
 class RDF::Statement
   include ::SPARQL::Algebra::Expression
+  def executable?(); end
 end
 
 module RDF::Term
@@ -20985,10 +20023,6 @@ module RSpec::Rails::ChannelExampleGroup
   extend ::ActiveSupport::Concern
 end
 
-module RSpec::Rails::FixtureSupport::Fixtures
-  def name(); end
-end
-
 module RSpec::Rails::MailboxExampleGroup
   extend ::ActionMailbox::TestHelper
 end
@@ -22065,8 +21099,6 @@ end
 
 class Resolv::DNS
   def extract_resources(msg, name, typeclass); end
-
-  def getname(address); end
   RequestID = ::T.let(nil, ::T.untyped)
   RequestIDMutex = ::T.let(nil, ::T.untyped)
 end
@@ -22704,8 +21736,28 @@ module RuboCop::AST::CollectionNode
   def to_list(*args, &block); end
 end
 
+class RuboCop::AST::Node
+  def kwargs_type?(); end
+
+  def match_pattern_p_type?(); end
+
+  def match_pattern_type?(); end
+end
+
 class RuboCop::AST::NodePattern::Parser
   Racc_debug_parser = ::T.let(nil, ::T.untyped)
+end
+
+module RuboCop::AST::NodePattern::Sets
+  SET___EQL = ::T.let(nil, ::T.untyped)
+end
+
+module RuboCop::AST::Traversal
+  def on_kwargs(node); end
+
+  def on_match_pattern(node); end
+
+  def on_match_pattern_p(node); end
 end
 
 class RubyLex

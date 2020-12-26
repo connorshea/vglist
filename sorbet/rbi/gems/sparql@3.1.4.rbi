@@ -17,10 +17,6 @@ class NilClass
   include(::JSON::Ext::Generator::GeneratorMethods::NilClass)
   include(::MessagePack::CoreExt)
   include(::FriendlyId::UnfriendlyUtils)
-  include(::FriendlyId::Reserved::Configuration)
-  include(::FriendlyId::Scoped::Configuration)
-  include(::FriendlyId::SimpleI18n::Configuration)
-  include(::FriendlyId::Slugged::Configuration)
 
   def to_sxp; end
 end
@@ -146,7 +142,7 @@ module SPARQL::Algebra::Expression
   class << self
     def [](*sse); end
     def cast(datatype, value); end
-    def debug(*args); end
+    def debug(*args, &block); end
     def extension(function, *args); end
     def extensions; end
     def for(*sse); end
@@ -547,7 +543,7 @@ class SPARQL::Algebra::Operator::Graph < ::SPARQL::Algebra::Operator::Binary
   def rewrite(&block); end
 
   class << self
-    def new(name, patterns, &block); end
+    def new(name, patterns, options = T.unsafe(nil), &block); end
   end
 end
 
@@ -1449,7 +1445,7 @@ class SPARQL::QueryRequestRefused < ::Exception
 end
 
 module SPARQL::Results
-  def to_csv; end
+  def to_csv(bnode_map: T.unsafe(nil)); end
   def to_html; end
   def to_json; end
   def to_tsv; end
