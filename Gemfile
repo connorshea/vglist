@@ -46,7 +46,7 @@ gem 'active_storage_validations', git: 'https://github.com/connorshea/active_sto
 gem 'friendly_id', '~> 5.4.1'
 
 # Use SPARQL for querying Wikidata in imports.
-gem 'sparql', '~> 3.1.3', require: false
+gem 'sparql', '~> 3.1.4', require: false
 
 # Use Addressable for use with the Wikidata API.
 gem 'addressable', '~> 2.7.0', require: false
