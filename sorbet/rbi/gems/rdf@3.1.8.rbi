@@ -16,6 +16,7 @@ module RDF
     def URI(*args); end
     def Vocabulary(uri); end
     def [](property); end
+    def config; end
     def enum_for(method = T.unsafe(nil), *args); end
     def method_missing(property, *args, &block); end
     def respond_to?(method, include_all = T.unsafe(nil)); end
@@ -318,7 +319,7 @@ class RDF::List
   include(::RDF::Value)
   include(::Comparable)
 
-  def initialize(subject: T.unsafe(nil), graph: T.unsafe(nil), values: T.unsafe(nil), &block); end
+  def initialize(subject: T.unsafe(nil), graph: T.unsafe(nil), values: T.unsafe(nil), wrap_transaction: T.unsafe(nil), &block); end
 
   def &(other); end
   def *(int_or_str); end
@@ -712,10 +713,10 @@ end
 
 class RDF::NTriples::Reader < ::RDF::Reader
   def read_comment; end
+  def read_embTriple; end
   def read_eos; end
   def read_literal; end
   def read_node; end
-  def read_rdfstar; end
   def read_triple; end
   def read_uriref(intern: T.unsafe(nil), **options); end
   def read_value; end
@@ -798,9 +799,9 @@ class RDF::NTriples::Writer < ::RDF::Writer
   def initialize(output = T.unsafe(nil), validate: T.unsafe(nil), **options, &block); end
 
   def escaped(string); end
+  def format_embTriple(statement, **options); end
   def format_literal(literal, **options); end
   def format_node(node, unique_bnodes: T.unsafe(nil), **options); end
-  def format_rdfstar(statement, **options); end
   def format_statement(statement, **options); end
   def format_triple(subject, predicate, object, **options); end
   def format_uri(uri, **options); end
@@ -854,8 +855,6 @@ class RDF::Node
     def uuid(format: T.unsafe(nil)); end
   end
 end
-
-RDF::Node::CACHE_SIZE = T.let(T.unsafe(nil), Integer)
 
 class RDF::OWL < ::RDF::StrictVocabulary
   class << self
@@ -1664,8 +1663,6 @@ class RDF::URI
   end
 end
 
-RDF::URI::CACHE_SIZE = T.let(T.unsafe(nil), Integer)
-
 RDF::URI::GEN_DELIMS = T.let(T.unsafe(nil), Regexp)
 
 RDF::URI::HOST_FROM_AUTHORITY_RE = T.let(T.unsafe(nil), Regexp)
@@ -1763,6 +1760,7 @@ end
 class RDF::Util::Cache
   def initialize(capacity = T.unsafe(nil)); end
 
+  def capacity; end
   def has_capacity?; end
   def size; end
 
@@ -1884,20 +1882,20 @@ class RDF::Util::Logger::IOWrapper
   def binmode(*args, &block); end
   def binmode?(*args, &block); end
   def blank?(*args, &block); end
-  def bullet_key(*args, &block); end
-  def bullet_primary_key_value(*args, &block); end
   def byebug(*args, &block); end
   def bytes(*args, &block); end
   def cc_command(*args, &block); end
+  def cc_config(*args, &block); end
   def chain(*args, &block); end
   def chars(*args, &block); end
   def check_signedness(*args, &block); end
   def check_sizeof(*args, &block); end
+  def check_winsize_changed(*args, &block); end
   def checking_for(*args, &block); end
   def checking_message(*args, &block); end
   def chunk(*args, &block); end
   def chunk_while(*args, &block); end
-  def class_eval(*args, &block); end
+  def clear_screen(*args, &block); end
   def close(*args, &block); end
   def close_on_exec=(*args, &block); end
   def close_on_exec?(*args, &block); end
@@ -1907,7 +1905,11 @@ class RDF::Util::Logger::IOWrapper
   def codepoints(*args, &block); end
   def collect(*args, &block); end
   def collect_concat(*args, &block); end
+  def compact_blank(*args, &block); end
   def configuration(*args, &block); end
+  def conftest_source(*args, &block); end
+  def console_mode(*args, &block); end
+  def console_mode=(*args, &block); end
   def convertible_int(*args, &block); end
   def cooked(*args, &block); end
   def cooked!(*args, &block); end
@@ -1919,6 +1921,10 @@ class RDF::Util::Logger::IOWrapper
   def create_tmpsrc(*args, &block); end
   def cursor(*args, &block); end
   def cursor=(*args, &block); end
+  def cursor_down(*args, &block); end
+  def cursor_left(*args, &block); end
+  def cursor_right(*args, &block); end
+  def cursor_up(*args, &block); end
   def cycle(*args, &block); end
   def dclone(*args, &block); end
   def debugger(*args, &block); end
@@ -1948,6 +1954,8 @@ class RDF::Util::Logger::IOWrapper
   def entries(*args, &block); end
   def eof(*args, &block); end
   def eof?(*args, &block); end
+  def erase_line(*args, &block); end
+  def erase_screen(*args, &block); end
   def exclude?(*args, &block); end
   def excluding(*args, &block); end
   def external_encoding(*args, &block); end
@@ -1955,6 +1963,7 @@ class RDF::Util::Logger::IOWrapper
   def fdatasync(*args, &block); end
   def fileno(*args, &block); end
   def filter(*args, &block); end
+  def filter_map(*args, &block); end
   def find(*args, &block); end
   def find_all(*args, &block); end
   def find_executable(*args, &block); end
@@ -1974,6 +1983,7 @@ class RDF::Util::Logger::IOWrapper
   def getpass(*args, &block); end
   def gets(*args, &block); end
   def goto(*args, &block); end
+  def goto_column(*args, &block); end
   def grep(*args, &block); end
   def grep_v(*args, &block); end
   def group_by(*args, &block); end
@@ -2014,6 +2024,7 @@ class RDF::Util::Logger::IOWrapper
   def lineno=(*args, &block); end
   def lines(*args, &block); end
   def link_command(*args, &block); end
+  def link_config(*args, &block); end
   def load_dependency(*args, &block); end
   def log_src(*args, &block); end
   def macro_defined?(*args, &block); end
@@ -2042,6 +2053,7 @@ class RDF::Util::Logger::IOWrapper
   def one?(*args, &block); end
   def partition(*args, &block); end
   def pathconf(*args, &block); end
+  def pick(*args, &block); end
   def pid(*args, &block); end
   def pkg_config(*args, &block); end
   def pluck(*args, &block); end
@@ -2084,9 +2096,12 @@ class RDF::Util::Logger::IOWrapper
   def rewind(*args, &block); end
   def scalar_ptr_type?(*args, &block); end
   def scalar_type?(*args, &block); end
+  def scroll_backward(*args, &block); end
+  def scroll_forward(*args, &block); end
   def seek(*args, &block); end
   def select(*args, &block); end
   def set_encoding(*args, &block); end
+  def set_encoding_by_bom(*args, &block); end
   def should(*args, &block); end
   def should_not(*args, &block); end
   def slice_after(*args, &block); end
@@ -2104,6 +2119,7 @@ class RDF::Util::Logger::IOWrapper
   def syswrite(*args, &block); end
   def take(*args, &block); end
   def take_while(*args, &block); end
+  def tally(*args, &block); end
   def tell(*args, &block); end
   def timestamp_file(*args, &block); end
   def to_a(*args, &block); end
@@ -2116,8 +2132,6 @@ class RDF::Util::Logger::IOWrapper
   def to_set(*args, &block); end
   def to_sxp(*args, &block); end
   def to_yaml(*args, &block); end
-  def translation_metadata(*args, &block); end
-  def translation_metadata=(*args, &block); end
   def try(*args, &block); end
   def try!(*args, &block); end
   def try_cflags(*args, &block); end
@@ -2394,10 +2408,10 @@ class RDF::Writer
   def encoding; end
   def flush; end
   def flush!(*args, &block); end
+  def format_embTriple(value, **options); end
   def format_list(value, **options); end
   def format_literal(value, **options); end
   def format_node(value, **options); end
-  def format_rdfstar(value, **options); end
   def format_term(term, **options); end
   def format_uri(value, **options); end
   def insert_statement(*args, &block); end

@@ -106,16 +106,6 @@ class Faraday::Adapter::EMSynchrony < ::Faraday::Adapter
   end
 end
 
-class Faraday::Adapter::EMSynchrony::ParallelManager
-  def add(request, method, *args, &block); end
-  def run; end
-
-  private
-
-  def perform; end
-  def queue; end
-end
-
 class Faraday::Adapter::Excon < ::Faraday::Adapter
   def build_connection(env); end
   def call(env); end
@@ -477,9 +467,12 @@ class Faraday::Middleware
   extend(::Faraday::MiddlewareRegistry)
   extend(::Faraday::DependencyLoader)
 
-  def initialize(app = T.unsafe(nil)); end
+  def initialize(app = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  def app; end
+  def call(env); end
   def close; end
+  def options; end
 end
 
 module Faraday::MiddlewareRegistry
@@ -795,7 +788,6 @@ class Faraday::Response::Logger < ::Faraday::Response::Middleware
 end
 
 class Faraday::Response::Middleware < ::Faraday::Middleware
-  def call(env); end
   def on_complete(env); end
 end
 
@@ -825,8 +817,6 @@ end
 class Faraday::TimeoutError < ::Faraday::ServerError
   def initialize(exc = T.unsafe(nil), response = T.unsafe(nil)); end
 end
-
-Faraday::Timer = Timeout
 
 class Faraday::UnauthorizedError < ::Faraday::ClientError
 end
@@ -970,3 +960,5 @@ class Faraday::Logging::Formatter
 end
 
 Faraday::Logging::Formatter::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
+
+Timer = Timeout
