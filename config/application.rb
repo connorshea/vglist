@@ -61,7 +61,7 @@ module VideoGameList
     # caching to make sure the cache is busted when a new version of the
     # application is deployed.
     # https://brandonhilkert.com/blog/understanding-the-rails-cache-id-environment-variable/
-    ENV['GIT_COMMIT_SHA'] = `git rev-parse --short HEAD`.strip
+    ENV['GIT_COMMIT_SHA'] = `git rev-parse HEAD`.strip
 
     # Configure Sentry.
     Raven.configure do |config|
