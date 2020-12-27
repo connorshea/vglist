@@ -20,7 +20,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.connect_src :self, :https, 'http://localhost:3035', 'ws://localhost:3035' if Rails.env.development?
   # Allow Cloudflare Web Analytics in production, and allow loading and
   # uploading images from DigitalOcean.
-  policy.connect_src :self, 'https://cloudflareinsights.com', 'https://static.cloudflareinsights.com', 'https://vglist.sfo2.digitaloceanspaces.com' if Rails.env.production?
+  policy.connect_src :self, 'https://cloudflareinsights.com', 'https://static.cloudflareinsights.com', 'https://vglist.sfo2.digitaloceanspaces.com', 'https://*.sentry.io' if Rails.env.production?
 
   # Specify URI for violation reports
   # policy.report_uri "/csp-violation-report-endpoint"
