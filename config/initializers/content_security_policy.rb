@@ -17,13 +17,20 @@ Rails.application.config.content_security_policy do |policy|
   policy.style_src :self, :https, :unsafe_inline
 
   # Allow Webpacker to connect in development
-  policy.connect_src :self, :https, 'http://localhost:3035', 'ws://localhost:3035' if Rails.env.development?
+  if Rails.env.development?
+    policy.connect_src :self, :https, 'http://localhost:3035', 'ws://localhost:3035'
   # Allow Cloudflare Web Analytics in production, and allow loading and
   # uploading images from DigitalOcean.
-  policy.connect_src :self, 'https://cloudflareinsights.com', 'https://static.cloudflareinsights.com', 'https://vglist.sfo2.digitaloceanspaces.com', 'https://*.sentry.io' if Rails.env.production?
+  elsif Rails.env.production?
+    policy.connect_src :self,
+                       'https://cloudflareinsights.com',
+                       'https://static.cloudflareinsights.com',
+                       'https://vglist.sfo2.digitaloceanspaces.com',
+                       'https://*.sentry.io'
+  end
 
-  # Specify URI for violation reports
-  # policy.report_uri "/csp-violation-report-endpoint"
+  # Specify Sentry URI for CSP violation reports in production
+  policy.report_uri "#{ENV.fetch('SENTRY_SECURITY_REPORT_URI')}&sentry_environment=#{Rails.env}&sentry_release=#{ENV.fetch('GIT_COMMIT_SHA')}" if Rails.env.production?
 end
 
 # If you are using UJS then enable automatic nonce generation
