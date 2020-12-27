@@ -95,7 +95,14 @@ export default {
     uploadFile(file) {
       this.existingAvatar = null;
       const url = this.railsDirectUploadsPath;
-      const upload = new DirectUpload(file, url);
+      const upload = new DirectUpload(file, url, {
+        directUploadWillStoreFileWithXHR: (xhr) => {
+          // Use this workaround to make sure that Direct Upload-ed images are
+          // uploaded with the correct header. Otherwise they will end up being
+          // private files.
+          xhr.setRequestHeader('x-amz-acl', 'public-read');
+        }
+      });
 
       upload.create((error, blob) => {
         if (error) {
