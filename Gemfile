@@ -134,7 +134,7 @@ group :development do
   # Better error pages.
   gem 'better_errors', '~> 2.9'
   # For more useful BetterError error pages.
-  gem 'binding_of_caller', '~> 0.8'
+  gem 'binding_of_caller', '~> 1.0'
   # Open screenshots when they're taken with capybara.
   gem 'launchy', '~> 2.5'
   # Improve the formatting of GraphQL requests in the logs.
