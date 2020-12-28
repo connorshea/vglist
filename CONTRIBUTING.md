@@ -13,7 +13,7 @@
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 2.2.2, `gem install bundler:2.2.2`
+1. To get Bundler 2.2.3, `gem install bundler:2.2.3`
 1. `bundle install`
 1. `yarn install`
 1. `bundle exec rails db:setup`
