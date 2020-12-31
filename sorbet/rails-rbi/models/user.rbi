@@ -61,6 +61,7 @@ class User < ApplicationRecord
   include User::GeneratedAttributeMethods
   include User::GeneratedAssociationMethods
   extend User::CustomFinderMethods
+  extend FriendlyId::Base
   extend PgSearch::Model::ClassMethods
   extend User::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(User::ActiveRecord_Relation, User::ActiveRecord_Associations_CollectionProxy, User::ActiveRecord_AssociationRelation) }
@@ -1464,6 +1465,9 @@ class User < ApplicationRecord
 
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_pg_search_document(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def self.search(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(User::ActiveRecord_Relation) }
   def self.page(num = nil); end

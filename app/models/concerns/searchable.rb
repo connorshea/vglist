@@ -2,6 +2,7 @@
 
 module Searchable
   extend ActiveSupport::Concern
+  extend T::Helpers
   include PgSearch::Model
 
   module ClassMethods
@@ -16,4 +17,6 @@ module Searchable
         }
     end
   end
+
+  mixes_in_class_methods(ClassMethods)
 end

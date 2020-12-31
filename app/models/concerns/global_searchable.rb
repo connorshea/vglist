@@ -2,6 +2,7 @@
 
 module GlobalSearchable
   extend ActiveSupport::Concern
+  extend T::Helpers
   include PgSearch::Model
 
   module ClassMethods
@@ -12,4 +13,6 @@ module GlobalSearchable
       multisearchable against: fields
     end
   end
+
+  mixes_in_class_methods(ClassMethods)
 end

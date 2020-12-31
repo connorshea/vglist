@@ -1,8 +1,14 @@
-# typed: ignore
+# typed: strict
 require 'set'
 
 class SteamImportService
   extend T::Sig
+
+  sig { returns(User) }
+  attr_reader :user
+
+  sig { returns(T.nilable(ExternalAccount)) }
+  attr_accessor :steam_account
 
   sig { params(user: User, update_hours: T::Boolean).void }
   def initialize(user:, update_hours: false)
@@ -134,12 +140,6 @@ class SteamImportService
       Game.joins(:game_purchases).merge(updated)
     end
   end
-
-  sig { returns(User) }
-  attr_reader :user
-
-  sig { returns(T.nilable(ExternalAccount)) }
-  attr_accessor :steam_account
 
   sig { returns(String) }
   def steam_api_url

@@ -1253,10 +1253,13 @@ module RSpec::Core::HashImitatable
   def collect_concat(*args, &block); end
   def compact(*args, &block); end
   def compact!(*args, &block); end
+  def compact_blank(*args, &block); end
+  def compact_blank!(*args, &block); end
   def compare_by_identity(*args, &block); end
   def compare_by_identity?(*args, &block); end
   def count(*args, &block); end
   def cycle(*args, &block); end
+  def deconstruct_keys(*args, &block); end
   def deep_merge(*args, &block); end
   def deep_merge!(*args, &block); end
   def deep_stringify_keys(*args, &block); end
@@ -1296,6 +1299,7 @@ module RSpec::Core::HashImitatable
   def fetch_values(*args, &block); end
   def filter(*args, &block); end
   def filter!(*args, &block); end
+  def filter_map(*args, &block); end
   def find(*args, &block); end
   def find_all(*args, &block); end
   def find_index(*args, &block); end
@@ -1335,6 +1339,7 @@ module RSpec::Core::HashImitatable
   def none?(*args, &block); end
   def one?(*args, &block); end
   def partition(*args, &block); end
+  def pick(*args, &block); end
   def pluck(*args, &block); end
   def rassoc(*args, &block); end
   def reduce(*args, &block); end
@@ -1365,6 +1370,7 @@ module RSpec::Core::HashImitatable
   def symbolize_keys!(*args, &block); end
   def take(*args, &block); end
   def take_while(*args, &block); end
+  def tally(*args, &block); end
   def to_a(*args, &block); end
   def to_h; end
   def to_hash(*args, &block); end
@@ -2054,6 +2060,7 @@ class RSpec::Core::OutputWrapper
   def rewind(*args, &block); end
   def seek(*args, &block); end
   def set_encoding(*args, &block); end
+  def set_encoding_by_bom(*args, &block); end
   def stat(*args, &block); end
   def sync(*args, &block); end
   def sync=(*args, &block); end
@@ -2312,7 +2319,7 @@ end
 
 class RSpec::Core::Time
   class << self
-    def now; end
+    def now(*_arg0); end
   end
 end
 

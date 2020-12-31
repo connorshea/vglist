@@ -1,6 +1,7 @@
 # typed: true
 class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
   # Add some cursed methods to the Rails generators.
+  # Mostly ActiveModel::Dirty stuff.
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root)
     return if @model_class.reflections.keys.empty?

@@ -206,7 +206,6 @@ class ProgressBar::Components::Time
   def estimated; end
   def estimated_seconds_remaining; end
   def estimated_with_elapsed_fallback; end
-  def out_of_bounds_time; end
 end
 
 ProgressBar::Components::Time::ELAPSED_LABEL = T.let(T.unsafe(nil), String)
@@ -218,6 +217,8 @@ ProgressBar::Components::Time::NO_TIME_ELAPSED_TEXT = T.let(T.unsafe(nil), Strin
 ProgressBar::Components::Time::OOB_FRIENDLY_TIME_TEXT = T.let(T.unsafe(nil), String)
 
 ProgressBar::Components::Time::OOB_LIMIT_IN_HOURS = T.let(T.unsafe(nil), Integer)
+
+ProgressBar::Components::Time::OOB_TEXT_TO_FORMAT = T.let(T.unsafe(nil), Hash)
 
 ProgressBar::Components::Time::OOB_TIME_FORMATS = T.let(T.unsafe(nil), Array)
 

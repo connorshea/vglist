@@ -17,7 +17,6 @@ class Fuubar < ::RSpec::Core::Formatters::BaseTextFormatter
   def example_tick_lock; end
   def example_tick_lock=(_arg0); end
   def example_tick_thread; end
-  def example_tick_thread=(_arg0); end
   def failed_count; end
   def failed_count=(_arg0); end
   def message(notification); end

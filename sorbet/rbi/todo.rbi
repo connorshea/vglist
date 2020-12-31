@@ -4,8 +4,12 @@
 
 # typed: strict
 
-module T::InterfaceWrapper::Helpers; end
-module T::Private::Abstract::Hooks; end
-module T::Private::Methods::MethodHooks; end
+module ::EBNF::LL1::Parser; end
+module ::EBNF::LL1::Parser::ClassMethods; end
+module ::FFI::Function; end
+module ::FFI::Library; end
+module ::FFI::ManagedStruct; end
+module ::FFI::Struct; end
+module ::MakeMakefile; end
+module ::NilClassPolicy; end
 module T::Private::Methods::Signature; end
-module T::Private::Methods::SingletonMethodHooks; end
