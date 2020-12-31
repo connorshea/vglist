@@ -12,6 +12,11 @@ module Devise::Controllers::Helpers
   def current_user; end
 end
 
+# This is necessary for current_user to be available inside controllers.
+class ActionController::Base
+  include ::Devise::Controllers::Helpers
+end
+
 class ActionController::Parameters
   # This is a disgusting hack to make `params.require` less verbose for its
   # most common case. I am not proud of what I have done.
