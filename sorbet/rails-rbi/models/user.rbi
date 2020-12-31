@@ -61,6 +61,7 @@ class User < ApplicationRecord
   include User::GeneratedAttributeMethods
   include User::GeneratedAssociationMethods
   extend User::CustomFinderMethods
+  extend FriendlyId::Base
   extend PgSearch::Model::ClassMethods
   extend User::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(User::ActiveRecord_Relation, User::ActiveRecord_Associations_CollectionProxy, User::ActiveRecord_AssociationRelation) }
