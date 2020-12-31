@@ -29,6 +29,21 @@ class ActiveRecord::Base
   include ::ActiveStorage::Attached::Model
 end
 
+# Make Sorbet understand that PgSearch::Model mixes in class methods.
+module PgSearch::Model
+  extend T::Helpers
+
+  mixes_in_class_methods(ClassMethods)
+end
+
+# Make Sorbet understand that SorbetRails::ModelPlugins::Base extends T::Sig.
+# Otherwise it won't let us use sigs in the plugin class.
+module SorbetRails::ModelPlugins
+  class Base < ::Parlour::Plugin
+    extend T::Sig
+  end
+end
+
 class Doorkeeper::ApplicationsController < ApplicationController; end
 class Doorkeeper::AuthorizedApplicationsController < ApplicationController; end
 class Doorkeeper::AuthorizationsController < ApplicationController; end

@@ -1,8 +1,10 @@
 # typed: strict
 
 require Rails.root.join('lib/cursed_rbi_plugin')
+require Rails.root.join('lib/pg_search_custom_plugin')
 
 SorbetRails::ModelRbiFormatter.register_plugin(CursedRbiPlugin)
+SorbetRails::ModelRbiFormatter.register_plugin(PgSearchCustomPlugin)
 
 SorbetRails.configure do |config|
   config.enabled_gem_plugins = [

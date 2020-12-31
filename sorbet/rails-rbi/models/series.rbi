@@ -188,6 +188,9 @@ class Series < ApplicationRecord
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_pg_search_document(*args); end
 
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def self.search(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Series::ActiveRecord_Relation) }
   def self.page(num = nil); end
 
