@@ -10,6 +10,9 @@ class DeviseController < ApplicationController; end
 module Devise::Controllers::Helpers
   sig { returns(T.nilable(User)) }
   def current_user; end
+
+  sig { params(args: T.untyped, block: T.untyped).returns(T::Boolean) }
+  def user_signed_in?(*args, &block); end
 end
 
 # This is necessary for current_user to be available inside controllers.
@@ -42,6 +45,17 @@ module SorbetRails::ModelPlugins
   class Base < ::Parlour::Plugin
     extend T::Sig
   end
+end
+
+# Add modules from Devise to User.
+class User
+  include ::Devise::Models::Authenticatable
+  include ::Devise::Models::Rememberable
+  include ::Devise::Models::Recoverable
+  include ::Devise::Models::Registerable
+  include ::Devise::Models::Validatable
+  include ::Devise::Models::Confirmable
+  include ::Devise::Models::Trackable
 end
 
 class Doorkeeper::ApplicationsController < ApplicationController; end

@@ -80,7 +80,7 @@ namespace :sorbet do
         system('CI=true bundle exec srb rbi sorbet-typed')
         system('CI=true bundle exec tapioca sync')
         system('bundle exec rake rails_rbi:all')
-        system('CI=true bundle exec srb rbi hidden-definitions')
+        # system('CI=true bundle exec srb rbi hidden-definitions')
         system('CI=true bundle exec tapioca todo')
         # Generate Sorbet Rails RBIs.
         system('CI=true bundle exec srb rbi suggest-typed')
