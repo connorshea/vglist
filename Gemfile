@@ -115,7 +115,7 @@ group :development, :test do
   gem 'faker', '~> 2.15'
 
   # For better display of rspec test suite progress
-  gem 'fuubar', '~> 2.5.0'
+  gem 'fuubar', '~> 2.5.1'
 
   # Pundit matchers for simplifying policy testing.
   gem 'pundit-matchers', '~> 1.6.0'
