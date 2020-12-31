@@ -1,6 +1,6 @@
-# typed: ignore
+# typed: true
 class NilClassPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       raise Pundit::NotDefinedError, "Cannot scope NilClass"
     end

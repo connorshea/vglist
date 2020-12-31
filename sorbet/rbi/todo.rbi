@@ -11,5 +11,4 @@ module ::FFI::Library; end
 module ::FFI::ManagedStruct; end
 module ::FFI::Struct; end
 module ::MakeMakefile; end
-module ::NilClassPolicy; end
 module T::Private::Methods::Signature; end
