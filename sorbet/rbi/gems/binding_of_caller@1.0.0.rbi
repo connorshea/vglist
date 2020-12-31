@@ -14,3 +14,5 @@ module BindingOfCaller::BindingExtensions
   def frame_type; end
   def of_caller(n); end
 end
+
+BindingOfCaller::VERSION = T.let(T.unsafe(nil), String)

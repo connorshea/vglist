@@ -114,7 +114,6 @@ class Webdrivers::Edgedriver < ::Webdrivers::Chromedriver
   class << self
     def base_url; end
     def browser_version; end
-    def remove; end
 
     private
 
@@ -148,6 +147,7 @@ class Webdrivers::IEdriver < ::Webdrivers::Common
 
     private
 
+    def download_manifest; end
     def downloads; end
     def file_name; end
   end
