@@ -45,8 +45,8 @@ before_script:
 
 .no_db_template:
   before_script: &no_db_necessary
-    - ruby -v
     - gem install bundler:$BUNDLER_VERSION
+    - bundle env
     - echo -e "section_start:`date +%s`:bundle_install[collapsed=true]\r\e[0Kbundle install"
     - bundle install -j $(nproc)
     - echo -e "section_end:`date +%s`:bundle_install\r\e[0K"
