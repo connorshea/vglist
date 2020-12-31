@@ -55,7 +55,7 @@ gem 'addressable', '~> 2.7.0', require: false
 gem 'aws-sdk-s3', '~> 1.66', require: false
 
 # A CLI progress bar for use with the import rake tasks.
-gem 'ruby-progressbar', '~> 1.10', require: false
+gem 'ruby-progressbar', '~> 1.11', require: false
 
 # Use Sentry for error tracking in production.
 gem 'sentry-raven', '~> 3.1'
