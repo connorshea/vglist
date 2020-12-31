@@ -24,6 +24,11 @@ class ActionController::Parameters
   def typed_require(key); end
 end
 
+# Include ActiveStorage::Attached::Model to get the has_one_attached class method.
+class ActiveRecord::Base
+  include ::ActiveStorage::Attached::Model
+end
+
 class Doorkeeper::ApplicationsController < ApplicationController; end
 class Doorkeeper::AuthorizedApplicationsController < ApplicationController; end
 class Doorkeeper::AuthorizationsController < ApplicationController; end
