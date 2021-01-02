@@ -32,7 +32,7 @@ namespace 'active_storage:vglist:clean' do
     # Find all orphan blobs so they can be purged.
     orphan_blobs = ActiveStorage::Blob.where.missing(:attachments)
 
-    total_size_in_mb = orphan_blobs.sum(&:byte_size).to_f.fdiv(1024).round(2)
+    total_size_in_mb = orphan_blobs.sum(&:byte_size).fdiv(1_000_000).round(2)
     puts "Found #{orphan_blobs.count} orphan ActiveStorage::Blobs, total size #{total_size_in_mb} MB."
 
     # Purge all the orphan blobs.
