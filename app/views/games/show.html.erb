@@ -7,7 +7,7 @@
 <div class="columns">
   <div class="game-sidebar column is-3-desktop is-5-tablet is-12-mobile">
     <div class="hero-image game-cover mb-10">
-      <%= game_cover(@game, 500, 800) %>
+      <%= game_cover(@game, size: :large) %>
     </div>
 
     <div class="field buttons buttons-vertical">
@@ -130,7 +130,7 @@
             <% @games_in_series.each do |game| %>
               <%= link_to(game_path(game.id)) do %>
                 <figure class="game-cover">
-                  <%= game_cover(game, 300, 500) %>
+                  <%= game_cover(game, size: :medium) %>
                   <p><%= game.name %></p>
                 </figure>
               <% end %>

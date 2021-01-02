@@ -1,7 +1,7 @@
 <div class="user-card custom-card">
   <%= link_to(user_path(user.slug), class: 'card-container') do %>
     <figure class="user-avatar">
-      <%= user_avatar(user.id, 80) %>
+      <%= user_avatar(user.id, size: :small) %>
     </figure>
     <div class="card-content">
       <p class="title is-4 mb-5 is-vertical-align-middle">

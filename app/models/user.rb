@@ -70,6 +70,15 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
+  AVATAR_SIZES = T.let(
+    {
+      small: [80, 80],
+      medium: [150, 150],
+      large: [300, 300]
+    },
+    T::Hash[Symbol, [Integer, Integer]]
+  )
+
   friendly_id :username, use: [:slugged, :finders]
 
   # Sort by most games owned.
