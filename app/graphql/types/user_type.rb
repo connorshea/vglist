@@ -20,7 +20,9 @@ module Types
     field :favorite_games, GameType.connection_type, null: true, description: "Games that this user has favorited."
     field :activity, EventType.connection_type, null: true, description: "Activity Events that refer to this user."
 
-    field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar."
+    field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar." do
+      argument :size, UserAvatarSizeType, required: false, default_value: :small, description: "The size of the avatar image being requested."
+    end
 
     sig { returns(T.nilable(Event::ActiveRecord_Relation)) }
     def activity
@@ -33,12 +35,19 @@ module Types
 
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
-    sig { returns(T.nilable(String)) }
-    def avatar_url
-      attachment = @object.avatar_attachment
-      return if attachment.nil?
+    sig { params(size: Symbol).returns(T.nilable(String)) }
+    def avatar_url(size:)
+      avatar = T.cast(@object, User).avatar_attachment
+      return if avatar.nil?
 
-      Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true)
+      width, height = User::AVATAR_SIZES[size]
+      avatar_variant = avatar.variant(
+        resize_to_fill: [width, height],
+        gravity: 'Center',
+        crop: "#{width}x#{height}+0+0"
+      )
+
+      Rails.application.routes.url_helpers.rails_representation_url(avatar_variant)
     end
 
     # Extremely cursed metaprogramming that protects private users from having their details exposed
