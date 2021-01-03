@@ -72,9 +72,7 @@ RSpec.describe "Games API", type: :request do
 
       width, height = Game::COVER_SIZES[:small]
       cover_variant = game_with_cover.cover.variant(
-        resize_to_fill: [width, height],
-        gravity: 'Center',
-        crop: "#{width}x#{height}+0+0"
+        resize_to_limit: [width, height]
       )
 
       expect(result["data"]["game"]).to eq(

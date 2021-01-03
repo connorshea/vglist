@@ -41,9 +41,7 @@ module Types
 
       width, height = Game::COVER_SIZES[size]
       cover_variant = cover.variant(
-        resize_to_fill: [width, height],
-        gravity: 'Center',
-        crop: "#{width}x#{height}+0+0"
+        resize_to_limit: [width, height]
       )
 
       Rails.application.routes.url_helpers.rails_representation_url(cover_variant)
