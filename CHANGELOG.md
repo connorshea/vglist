@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.1.2
+### Changed
+- Updated the copyright year, Happy New Year! :)
+- Limit the sizes of the cover and avatar images in the GraphQL API, and use the fully-qualified URL rather than just the path. This is a breaking change for API users. ([#1747])
+
+### Fixed
+- Prevent ActiveStorage from attempting to create different sizes of WebP images, since ImageMagick can't handle those right now. ([#1746])
+
 ## v2020.12.21
 ### Changed
 - Update Ruby version for vglist from 2.6.6 to 2.7.2. ([#1712])
@@ -816,3 +824,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1684]: https://github.com/connorshea/vglist/pull/1684
 [#1696]: https://github.com/connorshea/vglist/pull/1696
 [#1712]: https://github.com/connorshea/vglist/pull/1712
+[#1746]: https://github.com/connorshea/vglist/pull/1746
+[#1747]: https://github.com/connorshea/vglist/pull/1747
