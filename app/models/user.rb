@@ -70,6 +70,7 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
+  # Only use one of the pre-set sizes for these images.
   AVATAR_SIZES = T.let(
     {
       small: [80, 80],

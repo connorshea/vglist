@@ -33,6 +33,16 @@ class Game < ApplicationRecord
 
   has_one_attached :cover
 
+  # Only use one of the pre-set sizes for these images.
+  COVER_SIZES = T.let(
+    {
+      small: [200, 300],
+      medium: [300, 500],
+      large: [500, 800]
+    },
+    T::Hash[Symbol, [Integer, Integer]]
+  )
+
   scope :newest, -> { order("created_at desc") }
   scope :oldest, -> { order("created_at asc") }
   scope :recently_updated, -> { order("updated_at desc") }

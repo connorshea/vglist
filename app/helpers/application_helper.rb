@@ -42,19 +42,10 @@ module ApplicationHelper
     end
   end
 
-  GAME_COVER_SIZES = T.let(
-    {
-      small: [200, 300],
-      medium: [300, 500],
-      large: [500, 800]
-    },
-    T::Hash[Symbol, [Integer, Integer]]
-  )
-
   # A helper for displaying game covers.
   sig { params(game: Game, size: Symbol).returns(T.untyped) }
   def game_cover(game, size:)
-    width, height = GAME_COVER_SIZES[size]
+    width, height = Game::COVER_SIZES[size]
 
     if game.cover&.attached? && game.cover&.variable?
       image_tag T.must(game.cover).variant(
