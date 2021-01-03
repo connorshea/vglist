@@ -78,11 +78,18 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { id: user_with_avatar.id }, token: access_token_for_user_with_avatar)
 
+      width, height = User::AVATAR_SIZES[:small]
+      avatar_variant = user_with_avatar.avatar.variant(
+        resize_to_fill: [width, height],
+        gravity: 'Center',
+        crop: "#{width}x#{height}+0+0"
+      )
+
       expect(result["data"]["user"]).to eq(
         {
           "id" => user_with_avatar.id.to_s,
           "username" => user_with_avatar.username,
-          "avatarUrl" => Rails.application.routes.url_helpers.rails_blob_url(user_with_avatar.avatar_attachment, only_path: true)
+          "avatarUrl" => Rails.application.routes.url_helpers.rails_representation_url(avatar_variant)
         }
       )
     end

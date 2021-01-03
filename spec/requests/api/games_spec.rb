@@ -70,11 +70,18 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { id: game_with_cover.id }, token: access_token)
 
+      width, height = Game::COVER_SIZES[:small]
+      cover_variant = game_with_cover.cover.variant(
+        resize_to_fill: [width, height],
+        gravity: 'Center',
+        crop: "#{width}x#{height}+0+0"
+      )
+
       expect(result["data"]["game"]).to eq(
         {
           "id" => game_with_cover.id.to_s,
           "name" => game_with_cover.name,
-          "coverUrl" => Rails.application.routes.url_helpers.rails_blob_url(game_with_cover.cover_attachment, only_path: true)
+          "coverUrl" => Rails.application.routes.url_helpers.rails_representation_url(cover_variant)
         }
       )
     end

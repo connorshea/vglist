@@ -28,16 +28,25 @@ module Types
     field :platforms, PlatformType.connection_type, null: true, description: "Platforms the game is available on."
     field :owners, UserType.connection_type, null: true, method: :purchasers, description: "Users who have this game in their libraries."
 
-    field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover."
+    field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
+      argument :size, GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
+    end
 
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
-    sig { returns(T.nilable(String)) }
-    def cover_url
-      attachment = @object.cover_attachment
-      return if attachment.nil?
+    sig { params(size: Symbol).returns(T.nilable(String)) }
+    def cover_url(size:)
+      cover = T.cast(@object, Game).cover_attachment
+      return if cover.nil?
 
-      Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true)
+      width, height = Game::COVER_SIZES[size]
+      cover_variant = cover.variant(
+        resize_to_fill: [width, height],
+        gravity: 'Center',
+        crop: "#{width}x#{height}+0+0"
+      )
+
+      Rails.application.routes.url_helpers.rails_representation_url(cover_variant)
     end
 
     # Get the Steam App ID values as an array.

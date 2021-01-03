@@ -14,36 +14,39 @@ module ApplicationHelper
   end
 
   # A helper for displaying user avatars.
-  sig { params(user_id: T.any(Integer, String), size: Integer, css_class_name: String).returns(T.untyped) }
-  def user_avatar(user_id, size, css_class_name: 'user-avatar')
+  sig { params(user_id: T.any(Integer, String), size: Symbol, css_class_name: String).returns(T.untyped) }
+  def user_avatar(user_id, size:, css_class_name: 'user-avatar')
+    width, height = User::AVATAR_SIZES[size]
     user = User.find(user_id)
     if user.avatar&.attached? && user.avatar&.variable?
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
       # too wide or too tall.
       image_tag T.must(user.avatar).variant(
-        resize_to_fill: [size, size],
+        resize_to_fill: [width, height],
         gravity: 'Center',
-        crop: "#{size}x#{size}+0+0"
+        crop: "#{width}x#{height}+0+0"
       ),
-      height: "#{size}px",
-      width: "#{size}px",
+      height: "#{height}px",
+      width: "#{width}px",
       class: css_class_name,
       alt: "Avatar for #{user.username}."
     elsif user.avatar&.attached? && !user.avatar&.variable?
-      image_tag user.avatar, width: "#{size}px", height: "#{size}px", class: css_class_name, alt: "Avatar for #{user.username}."
+      image_tag user.avatar, width: "#{width}px", height: "#{height}px", class: css_class_name, alt: "Avatar for #{user.username}."
     else
       image_tag 'default-avatar.png',
-        height: "#{size}px",
-        width: "#{size}px",
+        height: "#{height}px",
+        width: "#{width}px",
         class: css_class_name,
         alt: "Placeholder avatar for #{user.username}."
     end
   end
 
   # A helper for displaying game covers.
-  sig { params(game: Game, width: Integer, height: Integer).returns(T.untyped) }
-  def game_cover(game, width, height)
+  sig { params(game: Game, size: Symbol).returns(T.untyped) }
+  def game_cover(game, size:)
+    width, height = Game::COVER_SIZES[size]
+
     if game.cover&.attached? && game.cover&.variable?
       image_tag T.must(game.cover).variant(
         resize_to_limit: [width, height]
