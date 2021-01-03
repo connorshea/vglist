@@ -37,17 +37,10 @@ module Types
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
     sig { params(size: Symbol).returns(T.nilable(String)) }
     def avatar_url(size:)
-      avatar = T.cast(@object, User).avatar_attachment
+      avatar = T.cast(@object, User).sized_avatar(size)
       return if avatar.nil?
 
-      width, height = User::AVATAR_SIZES[size]
-      avatar_variant = avatar.variant(
-        resize_to_fill: [width, height],
-        gravity: 'Center',
-        crop: "#{width}x#{height}+0+0"
-      )
-
-      Rails.application.routes.url_helpers.rails_representation_url(avatar_variant)
+      Rails.application.routes.url_helpers.rails_representation_url(avatar)
     end
 
     # Extremely cursed metaprogramming that protects private users from having their details exposed

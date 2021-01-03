@@ -22,15 +22,11 @@ module ApplicationHelper
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
       # too wide or too tall.
-      image_tag T.must(user.avatar).variant(
-        resize_to_fill: [width, height],
-        gravity: 'Center',
-        crop: "#{width}x#{height}+0+0"
-      ),
-      height: "#{height}px",
-      width: "#{width}px",
-      class: css_class_name,
-      alt: "Avatar for #{user.username}."
+      image_tag T.must(user.sized_avatar(size)),
+        height: "#{height}px",
+        width: "#{width}px",
+        class: css_class_name,
+        alt: "Avatar for #{user.username}."
     elsif user.avatar&.attached? && !user.avatar&.variable?
       image_tag user.avatar, width: "#{width}px", height: "#{height}px", class: css_class_name, alt: "Avatar for #{user.username}."
     else
@@ -48,12 +44,10 @@ module ApplicationHelper
     width, height = Game::COVER_SIZES[size]
 
     if game.cover&.attached? && game.cover&.variable?
-      image_tag T.must(game.cover).variant(
-        resize_to_limit: [width, height]
-      ),
-      width: "#{width}px",
-      height: "#{height}px",
-      alt: "Cover for #{game.name}."
+      image_tag T.must(game.sized_cover(size)),
+        width: "#{width}px",
+        height: "#{height}px",
+        alt: "Cover for #{game.name}."
     elsif game.cover&.attached? && !game.cover&.variable?
       image_tag game.cover, width: "#{width}px", height: "#{height}px", alt: "Cover for #{game.name}."
     else

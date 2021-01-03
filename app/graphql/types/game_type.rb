@@ -36,15 +36,10 @@ module Types
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
     sig { params(size: Symbol).returns(T.nilable(String)) }
     def cover_url(size:)
-      cover = T.cast(@object, Game).cover_attachment
+      cover = T.cast(@object, Game).sized_cover(size)
       return if cover.nil?
 
-      width, height = Game::COVER_SIZES[size]
-      cover_variant = cover.variant(
-        resize_to_limit: [width, height]
-      )
-
-      Rails.application.routes.url_helpers.rails_representation_url(cover_variant)
+      Rails.application.routes.url_helpers.rails_representation_url(cover)
     end
 
     # Get the Steam App ID values as an array.

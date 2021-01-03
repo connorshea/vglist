@@ -70,10 +70,7 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { id: game_with_cover.id }, token: access_token)
 
-      width, height = Game::COVER_SIZES[:small]
-      cover_variant = game_with_cover.cover.variant(
-        resize_to_limit: [width, height]
-      )
+      cover_variant = game_with_cover.sized_cover(:small)
 
       expect(result["data"]["game"]).to eq(
         {
