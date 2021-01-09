@@ -120,9 +120,20 @@
 
     <% if @favoriters_count.positive? %>
       <h3 class="title is-5 mb-5 mt-15">Favorites (<%= @favoriters_count %>)</h3>
-      <ul>
+      <ul class='avatar-image-grid mt-10'>
         <% @favoriters.each do |favoriter| %>
-          <li><%= link_to(favoriter.username, user_path(favoriter)) %></li>
+          <li class='avatar-image-grid-item'>
+            <%= link_to(user_path(favoriter), class: 'image') do %>
+              <%= user_avatar(favoriter.id, size: :small, title: favoriter.username) %>
+            <% end %>
+          </li>
+        <% end %>
+        <% unless @favoriters_count == @favoriters.count %>
+          <li class='avatar-image-grid-item avatar-image-grid-item-overflow'>
+            <p class="has-text-weight-semibold">
+              <%= "+#{@favoriters_count - @favoriters.count}" %>
+            </p>
+          </li>
         <% end %>
       </ul>
     <% else %>
