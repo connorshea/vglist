@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.1.9
+### Changed
+- Change the user lists on game pages to a grid of avatar images. ([#1771])
+
 ## v2021.1.2
 ### Changed
-- Updated the copyright year, Happy New Year! :)
+- Update the copyright year, Happy New Year! :)
 - Limit the sizes of the cover and avatar images in the GraphQL API, and use the fully-qualified URL rather than just the path. This is a breaking change for API users. ([#1747])
 
 ### Fixed
@@ -826,3 +830,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1712]: https://github.com/connorshea/vglist/pull/1712
 [#1746]: https://github.com/connorshea/vglist/pull/1746
 [#1747]: https://github.com/connorshea/vglist/pull/1747
+[#1771]: https://github.com/connorshea/vglist/pull/1771
