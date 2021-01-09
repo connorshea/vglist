@@ -1019,26 +1019,22 @@ nav.navbar {
   grid-template-columns: repeat(auto-fill, 64px);
 
   @include touch {
-    grid-template-columns: repeat(auto-fill, 128px);
+    // Display rows of three on mobile.
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
   .avatar-image-grid-item {
     // Special styling for the "+123" element.
-    &.avatar-image-grid-item-extra {
+    &.avatar-image-grid-item-overflow {
       display: inline-grid; // this is necessary for centering the text to work.
       background-color: var(--scheme-alt);
-      width: 64px;
-      height: 64px;
+      width: 100%;
+      height: 100%;
       border: 1px solid var(--border);
 
       // No borders if the user has dark theme.
       @media (prefers-color-scheme: dark) {
         border: 0;
-      }
-
-      @include touch {
-        width: 128px;
-        height: 128px;
       }
 
       p {
@@ -1048,13 +1044,8 @@ nav.navbar {
     }
 
     a {
-      width: 64px;
-      height: 64px;
-
-      @include touch {
-        width: 128px;
-        height: 128px;
-      }
+      width: 100%;
+      height: 100%;
     }
   }
 }
