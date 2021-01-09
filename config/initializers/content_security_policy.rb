@@ -12,7 +12,13 @@ Rails.application.config.content_security_policy do |policy|
   policy.object_src :none
   # TODO: Disable unsafe_eval in production.
   # Maybe with this? https://github.com/rails/webpacker/issues/1520#issuecomment-399112369
-  policy.script_src :self, :https, :unsafe_eval
+  # Require unsafe_inline for Vue DevTools in development.
+  # https://github.com/vuejs/vue-devtools/issues/616
+  if Rails.env.development?
+    policy.script_src :self, :https, :unsafe_eval, :unsafe_inline
+  else
+    policy.script_src :self, :https, :unsafe_eval
+  end
   # Allow unsafe_inline because vue-select uses inline styles I guess?
   policy.style_src :self, :https, :unsafe_inline
 
