@@ -14,8 +14,8 @@ module ApplicationHelper
   end
 
   # A helper for displaying user avatars.
-  sig { params(user_id: T.any(Integer, String), size: Symbol, css_class_name: String).returns(T.untyped) }
-  def user_avatar(user_id, size:, css_class_name: 'user-avatar')
+  sig { params(user_id: T.any(Integer, String), size: Symbol, css_class_name: String, options: T.untyped).returns(T.untyped) }
+  def user_avatar(user_id, size:, css_class_name: 'user-avatar', **options)
     width, height = User::AVATAR_SIZES[size]
     user = User.find(user_id)
     if user.avatar&.attached? && user.avatar&.variable?
@@ -26,32 +26,48 @@ module ApplicationHelper
         height: "#{height}px",
         width: "#{width}px",
         class: css_class_name,
-        alt: "Avatar for #{user.username}."
+        alt: "Avatar for #{user.username}.",
+        **options
     elsif user.avatar&.attached? && !user.avatar&.variable?
-      image_tag user.avatar, width: "#{width}px", height: "#{height}px", class: css_class_name, alt: "Avatar for #{user.username}."
+      image_tag user.avatar,
+        width: "#{width}px",
+        height: "#{height}px",
+        class: css_class_name,
+        alt: "Avatar for #{user.username}.",
+        **options
     else
       image_tag 'default-avatar.png',
         height: "#{height}px",
         width: "#{width}px",
         class: css_class_name,
-        alt: "Placeholder avatar for #{user.username}."
+        alt: "Placeholder avatar for #{user.username}.",
+        **options
     end
   end
 
   # A helper for displaying game covers.
-  sig { params(game: Game, size: Symbol).returns(T.untyped) }
-  def game_cover(game, size:)
+  sig { params(game: Game, size: Symbol, options: T.untyped).returns(T.untyped) }
+  def game_cover(game, size:, **options)
     width, height = Game::COVER_SIZES[size]
 
     if game.cover&.attached? && game.cover&.variable?
       image_tag T.must(game.sized_cover(size)),
         width: "#{width}px",
         height: "#{height}px",
-        alt: "Cover for #{game.name}."
+        alt: "Cover for #{game.name}.",
+        **options
     elsif game.cover&.attached? && !game.cover&.variable?
-      image_tag game.cover, width: "#{width}px", height: "#{height}px", alt: "Cover for #{game.name}."
+      image_tag game.cover,
+      width: "#{width}px",
+      height: "#{height}px",
+      alt: "Cover for #{game.name}.",
+      **options
     else
-      image_tag 'no-cover.png', width: "#{width}px", height: "#{height}px", alt: "Placeholder cover for #{game.name}."
+      image_tag 'no-cover.png',
+      width: "#{width}px",
+      height: "#{height}px",
+      alt: "Placeholder cover for #{game.name}.",
+      **options
     end
   end
 

@@ -97,9 +97,20 @@
 
     <% if @owners_count.positive? %>
       <h3 class="title is-5 mb-5 mt-15">Owners (<%= @owners_count %>)</h3>
-      <ul>
+      <ul class='avatar-image-grid mt-10'>
         <% @owners.each do |owner| %>
-          <li><%= link_to(owner.username, user_path(owner)) %></li>
+          <li class='avatar-image-grid-item'>
+            <%= link_to(user_path(owner), class: 'image') do %>
+              <%= user_avatar(owner.id, size: :small, title: owner.username) %>
+            <% end %>
+          </li>
+        <% end %>
+        <% unless @owners_count == @owners.count %>
+          <li class='avatar-image-grid-item avatar-image-grid-item-extra'>
+            <p class="has-text-weight-semibold">
+              <%= "+#{@owners_count - @owners.count}" %>
+            </p>
+          </li>
         <% end %>
       </ul>
     <% else %>

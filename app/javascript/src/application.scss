@@ -17,10 +17,11 @@
   --custom-card-drop-shadow-color-rgb: 10, 10, 10;
   --dropdown-link-no-highlight: #000;
   --navbar-dropdown-item-color: #333;
-  --navbar-item-background-hover: #eeeded;
+  --navbar-item-background-hover: var(--scheme-secondary);
   --library-edit-bar-border: #dcdfe6;
   --input-radius: 4px;
   --scheme-alt: #fff;
+  --scheme-secondary: #eeeded;
   --input-placeholder-color: #333;
 
   --dropdown-icon-fill: $dropdown-content-arrow;
@@ -1008,5 +1009,52 @@ nav.navbar {
 .vgt-table th.vgt-row-header {
   @media (prefers-color-scheme: dark) {
     background-color: var(--scheme-main) !important;
+  }
+}
+
+// Grid of avatars on the Game page.
+.avatar-image-grid {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(auto-fill, 64px);
+
+  @include touch {
+    grid-template-columns: repeat(auto-fill, 128px);
+  }
+
+  .avatar-image-grid-item {
+    // Special styling for the "+123" element.
+    &.avatar-image-grid-item-extra {
+      display: inline-grid; // this is necessary for centering the text to work.
+      background-color: var(--scheme-alt);
+      width: 64px;
+      height: 64px;
+      border: 1px solid var(--border);
+
+      // No borders if the user has dark theme.
+      @media (prefers-color-scheme: dark) {
+        border: 0;
+      }
+
+      @include touch {
+        width: 128px;
+        height: 128px;
+      }
+
+      p {
+        margin: auto;
+        font-size: 1.2rem;
+      }
+    }
+
+    a {
+      width: 64px;
+      height: 64px;
+
+      @include touch {
+        width: 128px;
+        height: 128px;
+      }
+    }
   }
 }
