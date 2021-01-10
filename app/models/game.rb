@@ -151,7 +151,7 @@ class Game < ApplicationRecord
   global_searchable :name
   searchable :name, tsearch: { normalization: 2 }
 
-  sig { params(size: Symbol).returns(T.nilable(ActiveStorage::Variant)) }
+  sig { params(size: Symbol).returns(T.nilable(T.any(ActiveStorage::Variant, ActiveStorage::VariantWithRecord))) }
   def sized_cover(size)
     width, height = COVER_SIZES[size]
     cover&.variant(

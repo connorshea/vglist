@@ -179,7 +179,7 @@ class User < ApplicationRecord
     api_token == token
   end
 
-  sig { params(size: Symbol).returns(T.nilable(ActiveStorage::Variant)) }
+  sig { params(size: Symbol).returns(T.nilable(T.any(ActiveStorage::Variant, ActiveStorage::VariantWithRecord))) }
   def sized_avatar(size)
     width, height = AVATAR_SIZES[size]
     avatar&.variant(
