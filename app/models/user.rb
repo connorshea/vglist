@@ -179,7 +179,18 @@ class User < ApplicationRecord
     api_token == token
   end
 
-  sig { params(size: Symbol).returns(T.nilable(T.any(ActiveStorage::Variant, ActiveStorage::VariantWithRecord))) }
+  # Generate an avatar variant with a specific size, size must be a Symbol
+  # matching one of the keys in `User::AVATAR_SIZES`.
+  sig do
+    params(size: Symbol).returns(
+      T.nilable(
+        T.any(
+          ActiveStorage::Variant,
+          ActiveStorage::VariantWithRecord
+        )
+      )
+    )
+  end
   def sized_avatar(size)
     width, height = AVATAR_SIZES[size]
     avatar&.variant(

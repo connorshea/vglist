@@ -151,7 +151,18 @@ class Game < ApplicationRecord
   global_searchable :name
   searchable :name, tsearch: { normalization: 2 }
 
-  sig { params(size: Symbol).returns(T.nilable(T.any(ActiveStorage::Variant, ActiveStorage::VariantWithRecord))) }
+  # Generate a cover variant with a specific size, size must be a Symbol
+  # matching one of the keys in `Game::COVER_SIZES`.
+  sig do
+    params(size: Symbol).returns(
+      T.nilable(
+        T.any(
+          ActiveStorage::Variant,
+          ActiveStorage::VariantWithRecord
+        )
+      )
+    )
+  end
   def sized_cover(size)
     width, height = COVER_SIZES[size]
     cover&.variant(
