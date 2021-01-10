@@ -19,6 +19,9 @@ namespace 'active_storage:vglist:variants' do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
+    # Disable logging in production to prevent log spam.
+    Rails.logger.level = 2 if Rails.env.production?
+
     games.each do |game|
       [:small, :medium, :large].each do |size|
         game.sized_cover(size).process
