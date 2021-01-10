@@ -31,8 +31,15 @@ namespace 'active_storage:vglist:variants' do
 
     Parallel.each(games, in_threads: thread_count) do |game|
       ActiveRecord::Base.connection_pool.with_connection do
-        [:small, :medium, :large].each do |size|
-          game.sized_cover(size).process
+        begin
+          [:small, :medium, :large].each do |size|
+            game.sized_cover(size).process
+          end
+        # Rescue MiniMagick errors if they occur so that they don't block the
+        # task from continuing.
+        rescue MiniMagick::Error => e
+          games_progress_bar.log "ERROR: #{e.message}"
+          games_progress_bar.log "Failed on game ID: #{game.id}"
         end
         games_progress_bar.increment
       end
@@ -52,8 +59,15 @@ namespace 'active_storage:vglist:variants' do
 
     Parallel.each(users, in_threads: thread_count) do |user|
       ActiveRecord::Base.connection_pool.with_connection do
-        [:small, :medium, :large].each do |size|
-          user.sized_avatar(size).process
+        begin
+          [:small, :medium, :large].each do |size|
+            user.sized_avatar(size).process
+          end
+        # Rescue MiniMagick errors if they occur so that they don't block the
+        # task from continuing.
+        rescue MiniMagick::Error => e
+          users_progress_bar.log "ERROR: #{e.message}"
+          users_progress_bar.log "Failed on user ID: #{user.id}"
         end
         users_progress_bar.increment
       end
