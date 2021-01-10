@@ -13,6 +13,8 @@ namespace 'active_storage:vglist:variants' do
   desc "Create all variants for covers and avatars in the database."
   task create: :environment do
     games = Game.joins(:cover_attachment)
+    # Only attempt to create variants if the cover is able to have variants.
+    games = games.filter { |game| game.cover.variable? }
     puts 'Creating game cover variants...'
 
     # Use the configured max number of threads, with 2 leftover for web requests.
@@ -39,6 +41,8 @@ namespace 'active_storage:vglist:variants' do
     games_progress_bar.finish unless games_progress_bar.finished?
 
     users = User.joins(:avatar_attachment)
+    # Only attempt to create variants if the avatar is able to have variants.
+    users = users.filter { |user| user.avatar.variable? }
     puts 'Creating user avatar variants...'
 
     users_progress_bar = ProgressBar.create(
