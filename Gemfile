@@ -80,6 +80,8 @@ gem 'inline_svg', '~> 1.7'
 # captcha and doesn't use google stuff.
 gem 'invisible_captcha', '~> 1.1.0'
 
+gem 'parallel', '~> 1.20', require: false
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
