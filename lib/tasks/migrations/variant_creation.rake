@@ -8,6 +8,7 @@
 # the change to track variants.
 namespace 'active_storage:vglist:variants' do
   require 'ruby-progressbar'
+  require 'parallel'
 
   desc "Create all variants for covers and avatars in the database."
   task create: :environment do
@@ -22,11 +23,13 @@ namespace 'active_storage:vglist:variants' do
     # Disable logging in production to prevent log spam.
     Rails.logger.level = 2 if Rails.env.production?
 
-    games.each do |game|
-      [:small, :medium, :large].each do |size|
-        game.sized_cover(size).process
+    Parallel.each(games, in_threads: 10) do |game|
+      ActiveRecord::Base.connection_pool.with_connection do
+        [:small, :medium, :large].each do |size|
+          game.sized_cover(size).process
+        end
+        games_progress_bar.increment
       end
-      games_progress_bar.increment
     end
 
     games_progress_bar.finish unless games_progress_bar.finished?
@@ -39,12 +42,15 @@ namespace 'active_storage:vglist:variants' do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    users.each do |user|
-      [:small, :medium, :large].each do |size|
-        user.sized_avatar(size).process
+    Parallel.each(users, in_threads: 10) do |user|
+      ActiveRecord::Base.connection_pool.with_connection do
+        [:small, :medium, :large].each do |size|
+          user.sized_avatar(size).process
+        end
+        users_progress_bar.increment
       end
-      users_progress_bar.increment
     end
+
     users_progress_bar.finish unless users_progress_bar.finished?
   end
 end
