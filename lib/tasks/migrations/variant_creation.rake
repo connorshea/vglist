@@ -8,11 +8,16 @@
 # the change to track variants.
 namespace 'active_storage:vglist:variants' do
   require 'ruby-progressbar'
+  require 'parallel'
 
   desc "Create all variants for covers and avatars in the database."
   task create: :environment do
     games = Game.joins(:cover_attachment)
     puts 'Creating game cover variants...'
+
+    # Use the configured max number of threads, with 2 leftover for web requests.
+    # Clamp it to 1 if the configured max threads is 2 or less for whatever reason.
+    thread_count = [(ENV.fetch('RAILS_MAX_THREADS', 5).to_i - 2), 1].max
 
     games_progress_bar = ProgressBar.create(
       total: games.count,
@@ -22,11 +27,13 @@ namespace 'active_storage:vglist:variants' do
     # Disable logging in production to prevent log spam.
     Rails.logger.level = 2 if Rails.env.production?
 
-    games.each do |game|
-      [:small, :medium, :large].each do |size|
-        game.sized_cover(size).process
+    Parallel.each(games, in_threads: thread_count) do |game|
+      ActiveRecord::Base.connection_pool.with_connection do
+        [:small, :medium, :large].each do |size|
+          game.sized_cover(size).process
+        end
+        games_progress_bar.increment
       end
-      games_progress_bar.increment
     end
 
     games_progress_bar.finish unless games_progress_bar.finished?
@@ -39,12 +46,15 @@ namespace 'active_storage:vglist:variants' do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    users.each do |user|
-      [:small, :medium, :large].each do |size|
-        user.sized_avatar(size).process
+    Parallel.each(users, in_threads: thread_count) do |user|
+      ActiveRecord::Base.connection_pool.with_connection do
+        [:small, :medium, :large].each do |size|
+          user.sized_avatar(size).process
+        end
+        users_progress_bar.increment
       end
-      users_progress_bar.increment
     end
+
     users_progress_bar.finish unless users_progress_bar.finished?
   end
 end
