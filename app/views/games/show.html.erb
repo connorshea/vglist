@@ -101,7 +101,7 @@
         <% @owners.each do |owner| %>
           <li class='avatar-image-grid-item'>
             <%= link_to(user_path(owner), class: 'image') do %>
-              <%= user_avatar(owner.id, size: :small, title: owner.username) %>
+              <%= user_avatar(owner, size: :small, title: owner.username) %>
             <% end %>
           </li>
         <% end %>
@@ -124,7 +124,7 @@
         <% @favoriters.each do |favoriter| %>
           <li class='avatar-image-grid-item'>
             <%= link_to(user_path(favoriter), class: 'image') do %>
-              <%= user_avatar(favoriter.id, size: :small, title: favoriter.username) %>
+              <%= user_avatar(favoriter, size: :small, title: favoriter.username) %>
             <% end %>
           </li>
         <% end %>

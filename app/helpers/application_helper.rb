@@ -14,10 +14,10 @@ module ApplicationHelper
   end
 
   # A helper for displaying user avatars.
-  sig { params(user_id: T.any(Integer, String), size: Symbol, css_class_name: String, options: T.untyped).returns(T.untyped) }
-  def user_avatar(user_id, size:, css_class_name: 'user-avatar', **options)
+  sig { params(user: User, size: Symbol, css_class_name: String, options: T.untyped).returns(T.untyped) }
+  def user_avatar(user, size:, css_class_name: 'user-avatar', **options)
     width, height = User::AVATAR_SIZES[size]
-    user = User.find(user_id)
+
     if user.avatar&.attached? && user.avatar&.variable?
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
@@ -58,16 +58,16 @@ module ApplicationHelper
         **options
     elsif game.cover&.attached? && !game.cover&.variable?
       image_tag game.cover,
-      width: "#{width}px",
-      height: "#{height}px",
-      alt: "Cover for #{game.name}.",
-      **options
+        width: "#{width}px",
+        height: "#{height}px",
+        alt: "Cover for #{game.name}.",
+        **options
     else
       image_tag 'no-cover.png',
-      width: "#{width}px",
-      height: "#{height}px",
-      alt: "Placeholder cover for #{game.name}.",
-      **options
+        width: "#{width}px",
+        height: "#{height}px",
+        alt: "Placeholder cover for #{game.name}.",
+        **options
     end
   end
 
