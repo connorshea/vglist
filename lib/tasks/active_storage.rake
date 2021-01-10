@@ -18,6 +18,8 @@ namespace 'active_storage:vglist:clean' do
           Game.find(attachment.record_id).cover.purge
         when 'User'
           User.find(attachment.record_id).avatar.purge
+        when 'ActiveStorage::VariantRecord'
+          puts 'ActiveStorage::VariantRecord, this should not happen'
         else
           raise StandardError, "Invalid record type for attachment: #{attachment.record_type}."
         end
