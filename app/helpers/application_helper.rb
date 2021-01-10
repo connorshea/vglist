@@ -58,16 +58,16 @@ module ApplicationHelper
         **options
     elsif game.cover&.attached? && !game.cover&.variable?
       image_tag game.cover,
-      width: "#{width}px",
-      height: "#{height}px",
-      alt: "Cover for #{game.name}.",
-      **options
+        width: "#{width}px",
+        height: "#{height}px",
+        alt: "Cover for #{game.name}.",
+        **options
     else
       image_tag 'no-cover.png',
-      width: "#{width}px",
-      height: "#{height}px",
-      alt: "Placeholder cover for #{game.name}.",
-      **options
+        width: "#{width}px",
+        height: "#{height}px",
+        alt: "Placeholder cover for #{game.name}.",
+        **options
     end
   end
 
