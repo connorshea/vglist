@@ -15,6 +15,10 @@ namespace 'active_storage:vglist:variants' do
     games = Game.joins(:cover_attachment)
     puts 'Creating game cover variants...'
 
+    # Use the configured max number of threads, with 2 leftover for web requests.
+    # Clamp it to 1 if the configured max threads is 2 or less for whatever reason.
+    thread_count = [(ENV.fetch('RAILS_MAX_THREADS', 5).to_i - 2), 1].max
+
     games_progress_bar = ProgressBar.create(
       total: games.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
@@ -23,7 +27,7 @@ namespace 'active_storage:vglist:variants' do
     # Disable logging in production to prevent log spam.
     Rails.logger.level = 2 if Rails.env.production?
 
-    Parallel.each(games, in_threads: 10) do |game|
+    Parallel.each(games, in_threads: thread_count) do |game|
       ActiveRecord::Base.connection_pool.with_connection do
         [:small, :medium, :large].each do |size|
           game.sized_cover(size).process
@@ -42,7 +46,7 @@ namespace 'active_storage:vglist:variants' do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    Parallel.each(users, in_threads: 10) do |user|
+    Parallel.each(users, in_threads: thread_count) do |user|
       ActiveRecord::Base.connection_pool.with_connection do
         [:small, :medium, :large].each do |size|
           user.sized_avatar(size).process
