@@ -400,7 +400,7 @@ GEM
       sprockets (>= 3.0.0)
     sxp (1.1.0)
       rdf (~> 3.1)
-    tapioca (0.4.11)
+    tapioca (0.4.12)
       parlour (>= 2.1.0)
       pry (>= 0.12.2)
       sorbet-runtime
@@ -495,7 +495,7 @@ DEPENDENCIES
   sparql (~> 3.1.4)
   spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)
-  tapioca (~> 0.4.11)
+  tapioca (~> 0.4.12)
   turbolinks (~> 5)
   web-console (~> 4.1.0)
   webdrivers (~> 4.4)
