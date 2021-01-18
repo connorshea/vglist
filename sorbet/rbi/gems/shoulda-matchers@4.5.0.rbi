@@ -61,7 +61,7 @@ class Shoulda::Matchers::ActionController::FilterParamMatcher
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
-  def matches?(controller); end
+  def matches?(_controller); end
 
   private
 
@@ -394,7 +394,7 @@ module Shoulda::Matchers::ActiveModel
   def allow_mass_assignment_of(value); end
   def allow_value(*values); end
   def allow_values(*values); end
-  def have_secure_password; end
+  def have_secure_password(attr = T.unsafe(nil)); end
   def validate_absence_of(attr); end
   def validate_acceptance_of(attr); end
   def validate_confirmation_of(attr); end
@@ -685,6 +685,8 @@ class Shoulda::Matchers::ActiveModel::DisallowValueMatcher
 end
 
 class Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher
+  def initialize(attribute); end
+
   def description; end
   def failure_message; end
   def matches?(subject); end
@@ -693,11 +695,14 @@ class Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher
 
   def subject; end
   def validate; end
+
+  private
+
+  def authenticate_method; end
+  def expected_methods; end
 end
 
 Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher::CORRECT_PASSWORD = T.let(T.unsafe(nil), String)
-
-Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher::EXPECTED_METHODS = T.let(T.unsafe(nil), Array)
 
 Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher::INCORRECT_PASSWORD = T.let(T.unsafe(nil), String)
 
@@ -787,7 +792,7 @@ class Shoulda::Matchers::ActiveModel::NumericalityMatchers::NumericTypeMatcher
 
   def attribute; end
   def disallowed_value; end
-  def wrap_disallow_value_matcher(matcher); end
+  def wrap_disallow_value_matcher(_matcher); end
 
   private
 
@@ -852,13 +857,10 @@ class Shoulda::Matchers::ActiveModel::Qualifiers::IgnoreInterferenceByWriter
 end
 
 module Shoulda::Matchers::ActiveModel::Qualifiers::IgnoringInterferenceByWriter
-  def initialize(*args); end
+  def initialize(*_arg0); end
 
   def ignore_interference_by_writer; end
   def ignoring_interference_by_writer(value = T.unsafe(nil)); end
-end
-
-module Shoulda::Matchers::ActiveModel::Uniqueness
 end
 
 class Shoulda::Matchers::ActiveModel::ValidateAbsenceOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
@@ -870,6 +872,7 @@ class Shoulda::Matchers::ActiveModel::ValidateAbsenceOfMatcher < ::Shoulda::Matc
 
   private
 
+  def array_column?; end
   def collection?; end
   def column_type; end
   def reflection; end
@@ -1082,6 +1085,7 @@ class Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher
   def has_been_qualified?; end
   def matches_or_does_not_match?(subject); end
   def model; end
+  def non_numeric_value; end
   def number_of_submatchers_for_failure_message; end
   def overall_failure_message; end
   def overall_failure_message_when_negated; end
@@ -1091,8 +1095,6 @@ class Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher
 end
 
 Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher::DEFAULT_DIFF_TO_COMPARE = T.let(T.unsafe(nil), Integer)
-
-Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher::NON_NUMERIC_VALUE = T.let(T.unsafe(nil), String)
 
 Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher::NUMERIC_NAME = T.let(T.unsafe(nil), String)
 
@@ -1277,7 +1279,7 @@ end
 class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def initialize(macro, name); end
 
-  def associated_class(*args, &block); end
+  def associated_class(*_arg0, &_arg1); end
   def autosave(autosave); end
   def class_name(class_name); end
   def conditions(conditions); end
@@ -1291,18 +1293,18 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def join_table(join_table_name); end
   def join_table_name; end
   def matches?(subject); end
-  def model_class(*args, &block); end
+  def model_class(*_arg0, &_arg1); end
   def name; end
   def option_verifier; end
   def optional(optional = T.unsafe(nil)); end
   def options; end
   def order(order); end
-  def polymorphic?(*args, &block); end
-  def reflection(*args, &block); end
+  def polymorphic?(*_arg0, &_arg1); end
+  def reflection(*_arg0, &_arg1); end
   def required(required = T.unsafe(nil)); end
   def source(source); end
   def through(through); end
-  def through?(*args, &block); end
+  def through?(*_arg0, &_arg1); end
   def touch(touch = T.unsafe(nil)); end
   def validate(validate = T.unsafe(nil)); end
   def with_foreign_key(foreign_key); end
@@ -1324,7 +1326,9 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def expectation; end
   def failing_submatchers; end
   def foreign_key; end
+  def foreign_key_correct?; end
   def foreign_key_exists?; end
+  def foreign_key_failure_message(klass, foreign_key); end
   def foreign_key_reflection; end
   def has_foreign_key_missing?; end
   def index_errors_correct?; end
@@ -1348,6 +1352,8 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def validate_correct?; end
   def validate_inverse_of_through_association; end
 end
+
+Shoulda::Matchers::ActiveRecord::AssociationMatcher::MACROS = T.let(T.unsafe(nil), Hash)
 
 module Shoulda::Matchers::ActiveRecord::AssociationMatchers
 end
@@ -1418,21 +1424,21 @@ end
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::JoinTableMatcher
   def initialize(association_matcher, reflector); end
 
-  def associated_class(*args, &block); end
-  def association_foreign_key(*args, &block); end
-  def connection(*args, &block); end
+  def associated_class(*_arg0, &_arg1); end
+  def association_foreign_key(*_arg0, &_arg1); end
+  def connection(*_arg0, &_arg1); end
   def failure_message; end
-  def foreign_key(*args, &block); end
+  def foreign_key(*_arg0, &_arg1); end
   def join_table_exists?; end
   def join_table_has_correct_columns?; end
-  def join_table_name(*args, &block); end
+  def join_table_name(*_arg0, &_arg1); end
   def join_table_option_correct?; end
-  def matches?(subject); end
+  def matches?(_subject); end
   def missing_option; end
-  def model_class(*args, &block); end
-  def name(*args, &block); end
-  def option_verifier(*args, &block); end
-  def options(*args, &block); end
+  def model_class(*_arg0, &_arg1); end
+  def name(*_arg0, &_arg1); end
+  def option_verifier(*_arg0, &_arg1); end
+  def options(*_arg0, &_arg1); end
 
   protected
 
@@ -1476,20 +1482,20 @@ end
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector
   def initialize(subject, name); end
 
-  def associated_class(*args, &block); end
-  def association_foreign_key(*args, &block); end
+  def associated_class(*_arg0, &_arg1); end
+  def association_foreign_key(*_arg0, &_arg1); end
   def association_relation; end
   def build_relation_with_clause(name, value); end
   def extract_relation_clause_from(relation, name); end
-  def foreign_key(*args, &block); end
-  def has_and_belongs_to_many_name(*args, &block); end
-  def join_table_name(*args, &block); end
+  def foreign_key(*_arg0, &_arg1); end
+  def has_and_belongs_to_many_name(*_arg0, &_arg1); end
+  def join_table_name(*_arg0, &_arg1); end
   def model_class; end
-  def polymorphic?(*args, &block); end
+  def polymorphic?(*_arg0, &_arg1); end
   def reflect_on_association(name); end
   def reflection; end
-  def through?(*args, &block); end
-  def validate_inverse_of_through_association!(*args, &block); end
+  def through?(*_arg0, &_arg1); end
+  def validate_inverse_of_through_association!(*_arg0, &_arg1); end
 
   protected
 
@@ -1508,11 +1514,12 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier
   def correct_for_hash?(name, expected_value); end
   def correct_for_relation_clause?(name, expected_value); end
   def correct_for_string?(name, expected_value); end
-  def reflection(*args, &block); end
+  def reflection(*_arg0, &_arg1); end
 
   protected
 
   def actual_value_for_class_name; end
+  def actual_value_for_option(name); end
   def actual_value_for_relation_clause(name); end
   def expected_value_for(type, name, value); end
   def expected_value_for_constant(name); end
@@ -1520,6 +1527,8 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier
   def reflector; end
   def type_cast(type, value); end
 end
+
+Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier::DEFAULT_VALUE_OF_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier::RELATION_OPTIONS = T.let(T.unsafe(nil), Array)
 
@@ -1707,6 +1716,7 @@ class Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher
   def expectation; end
   def matched_column; end
   def model_class; end
+  def validate_options(opts); end
 end
 
 class Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher::DecoratedColumn < ::SimpleDelegator
@@ -1719,6 +1729,8 @@ class Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher::DecoratedColumn < ::
 
   def model; end
 end
+
+Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher::OPTIONS = T.let(T.unsafe(nil), Array)
 
 class Shoulda::Matchers::ActiveRecord::HaveDbIndexMatcher
   def initialize(columns); end
@@ -1788,7 +1800,7 @@ class Shoulda::Matchers::ActiveRecord::HaveReadonlyAttributeMatcher
   def readonly_attributes; end
 end
 
-class Shoulda::Matchers::ActiveRecord::HaveRichText
+class Shoulda::Matchers::ActiveRecord::HaveRichTextMatcher
   def initialize(rich_text_attribute); end
 
   def description; end
@@ -2124,6 +2136,7 @@ module Shoulda::Matchers::Doublespeak::DoubleImplementationRegistry
     private
 
     def find_class!(type); end
+    def registry; end
   end
 end
 
@@ -2397,7 +2410,7 @@ module Shoulda::Matchers::Integrations::TestFrameworks
 end
 
 class Shoulda::Matchers::Integrations::TestFrameworks::ActiveSupportTestCase
-  def include(*modules, **options); end
+  def include(*modules, **_options); end
   def n_unit?; end
   def present?; end
   def validate!; end
@@ -2412,7 +2425,7 @@ class Shoulda::Matchers::Integrations::TestFrameworks::ActiveSupportTestCase
 end
 
 class Shoulda::Matchers::Integrations::TestFrameworks::Minitest4
-  def include(*modules, **options); end
+  def include(*modules, **_options); end
   def n_unit?; end
   def present?; end
   def validate!; end
@@ -2423,7 +2436,7 @@ class Shoulda::Matchers::Integrations::TestFrameworks::Minitest4
 end
 
 class Shoulda::Matchers::Integrations::TestFrameworks::Minitest5
-  def include(*modules, **options); end
+  def include(*modules, **_options); end
   def n_unit?; end
   def present?; end
   def validate!; end
@@ -2448,7 +2461,7 @@ class Shoulda::Matchers::Integrations::TestFrameworks::Rspec
 end
 
 class Shoulda::Matchers::Integrations::TestFrameworks::TestUnit
-  def include(*modules, **options); end
+  def include(*modules, **_options); end
   def n_unit?; end
   def present?; end
   def validate!; end
@@ -2476,7 +2489,7 @@ class Shoulda::Matchers::Line
   def determine_where_to_break_line(line, args); end
   def normalize_whitespace(string); end
   def read_indentation; end
-  def wrap_line(line, direction: T.unsafe(nil)); end
+  def wrap_line(line); end
 end
 
 Shoulda::Matchers::Line::OFFSETS = T.let(T.unsafe(nil), Hash)

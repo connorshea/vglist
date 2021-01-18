@@ -32,6 +32,7 @@ class TypeCoerce::Converter
 
   def _build_args(args, type, raise_coercion_error); end
   def _convert(value, type, raise_coercion_error); end
+  def _convert_enum(value, type, raise_coercion_error); end
   def _convert_simple(value, type, raise_coercion_error); end
   def _convert_to_a(ary, type, raise_coercion_error); end
   def _nil_like?(value, type); end

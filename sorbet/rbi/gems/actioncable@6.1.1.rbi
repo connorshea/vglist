@@ -49,7 +49,7 @@ class ActionCable::Channel::Base
   def _unsubscribe_callbacks; end
   def connection; end
   def identifier; end
-  def logger(*args, &block); end
+  def logger(*_arg0, &_arg1); end
   def params; end
   def perform_action(data); end
   def periodic_timers=(_arg0); end
@@ -107,8 +107,8 @@ module ActionCable::Channel::Broadcasting
 
   mixes_in_class_methods(::ActionCable::Channel::Broadcasting::ClassMethods)
 
-  def broadcast_to(*args, &block); end
-  def broadcasting_for(*args, &block); end
+  def broadcast_to(*_arg0, &_arg1); end
+  def broadcasting_for(*_arg0, &_arg1); end
 end
 
 module ActionCable::Channel::Broadcasting::ClassMethods
@@ -139,7 +139,7 @@ module ActionCable::Channel::Naming
 
   mixes_in_class_methods(::ActionCable::Channel::Naming::ClassMethods)
 
-  def channel_name(*args, &block); end
+  def channel_name(*_arg0, &_arg1); end
 end
 
 module ActionCable::Channel::Naming::ClassMethods
@@ -167,7 +167,7 @@ end
 module ActionCable::Channel::Streams
   extend(::ActiveSupport::Concern)
 
-  def pubsub(*args, &block); end
+  def pubsub(*_arg0, &_arg1); end
   def stop_all_streams; end
   def stop_stream_for(model); end
   def stop_stream_from(broadcasting); end
@@ -264,7 +264,7 @@ class ActionCable::Connection::Base
   def close(reason: T.unsafe(nil), reconnect: T.unsafe(nil)); end
   def dispatch_websocket_message(websocket_message); end
   def env; end
-  def event_loop(*args, &block); end
+  def event_loop(*_arg0, &_arg1); end
   def identifiers; end
   def identifiers=(_arg0); end
   def identifiers?; end
@@ -275,7 +275,7 @@ class ActionCable::Connection::Base
   def on_open; end
   def process; end
   def protocol; end
-  def pubsub(*args, &block); end
+  def pubsub(*_arg0, &_arg1); end
   def receive(websocket_message); end
   def rescue_handlers; end
   def rescue_handlers=(_arg0); end
@@ -438,7 +438,7 @@ class ActionCable::Connection::Subscriptions
   def add(data); end
   def execute_command(data); end
   def identifiers; end
-  def logger(*args, &block); end
+  def logger(*_arg0, &_arg1); end
   def perform_action(data); end
   def remove(data); end
   def remove_subscription(subscription); end
@@ -593,7 +593,7 @@ class ActionCable::Server::Base
   def connection_identifiers; end
   def disconnect(identifiers); end
   def event_loop; end
-  def logger(*args, &block); end
+  def logger(*_arg0, &_arg1); end
   def mutex; end
   def pubsub; end
   def remote_connections; end
@@ -758,8 +758,8 @@ module ActionCable::TestHelper
   def assert_broadcasts(stream, number, &block); end
   def assert_no_broadcasts(stream, &block); end
   def before_setup; end
-  def broadcasts(*args, &block); end
-  def clear_messages(*args, &block); end
+  def broadcasts(*_arg0, &_arg1); end
+  def clear_messages(*_arg0, &_arg1); end
   def pubsub_adapter; end
 
   private

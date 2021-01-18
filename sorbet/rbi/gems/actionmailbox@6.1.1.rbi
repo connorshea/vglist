@@ -55,12 +55,12 @@ class ActionMailbox::Base
   def _process_callbacks; end
   def _run_process_callbacks(&block); end
   def bounce_with(message); end
-  def bounced!(*args, &block); end
-  def delivered!(*args, &block); end
+  def bounced!(*_arg0, &_arg1); end
+  def delivered!(*_arg0, &_arg1); end
   def finished_processing?; end
   def inbound_email; end
-  def logger(*args, &block); end
-  def mail(*args, &block); end
+  def logger(*_arg0, &_arg1); end
+  def mail(*_arg0, &_arg1); end
   def perform_processing; end
   def process; end
   def rescue_handlers; end
@@ -560,8 +560,8 @@ module Rails
     def env=(environment); end
     def gem_version; end
     def groups(*groups); end
-    def initialize!(*args, &block); end
-    def initialized?(*args, &block); end
+    def initialize!(*_arg0, &_arg1); end
+    def initialized?(*_arg0, &_arg1); end
     def logger; end
     def logger=(_arg0); end
     def public_path; end

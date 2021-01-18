@@ -38,7 +38,7 @@ end
 class ActiveStorageValidations::DimensionValidator < ::ActiveModel::EachValidator
   def initialize(options); end
 
-  def add_error(record, attribute, type, *attrs); end
+  def add_error(record, attribute, type, **attrs); end
   def check_validity!; end
   def is_valid?(record, attribute, file_metadata); end
   def validate_each(record, attribute, _value); end

@@ -135,28 +135,6 @@ class Faraday::Adapter::HTTPClient < ::Faraday::Adapter
   def ssl_verify_mode(ssl); end
 end
 
-class Faraday::Adapter::NetHttp < ::Faraday::Adapter
-  def initialize(app = T.unsafe(nil), opts = T.unsafe(nil), &block); end
-
-  def build_connection(env); end
-  def call(env); end
-  def net_http_connection(env); end
-
-  private
-
-  def configure_request(http, req); end
-  def configure_ssl(http, ssl); end
-  def create_request(env); end
-  def perform_request(http, env); end
-  def request_via_get_method(http, env, &block); end
-  def request_via_request_method(http, env, &block); end
-  def request_with_wrapped_block(http, env, &block); end
-  def ssl_cert_store(ssl); end
-  def ssl_verify_mode(ssl); end
-end
-
-Faraday::Adapter::NetHttp::NET_HTTP_EXCEPTIONS = T.let(T.unsafe(nil), Array)
-
 class Faraday::Adapter::NetHttpPersistent < ::Faraday::Adapter::NetHttp
 
   private
@@ -435,6 +413,9 @@ class Faraday::Error < ::StandardError
   def backtrace; end
   def inspect; end
   def response; end
+  def response_body; end
+  def response_headers; end
+  def response_status; end
   def wrapped_exception; end
 
   protected
@@ -818,6 +799,8 @@ class Faraday::TimeoutError < ::Faraday::ServerError
   def initialize(exc = T.unsafe(nil), response = T.unsafe(nil)); end
 end
 
+Faraday::Timer = Timeout
+
 class Faraday::UnauthorizedError < ::Faraday::ClientError
 end
 
@@ -960,5 +943,3 @@ class Faraday::Logging::Formatter
 end
 
 Faraday::Logging::Formatter::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
-
-Timer = Timeout

@@ -353,11 +353,11 @@ module I18n::Base
   def localize(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
   def normalize_keys(locale, key, scope, separator = T.unsafe(nil)); end
   def reload!; end
-  def t(key = T.unsafe(nil), *_arg1, throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
-  def t!(key, options = T.unsafe(nil)); end
-  def translate(key = T.unsafe(nil), *_arg1, throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
-  def translate!(key, options = T.unsafe(nil)); end
-  def transliterate(key, *_arg1, throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), replacement: T.unsafe(nil), **options); end
+  def t(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
+  def t!(key, **options); end
+  def translate(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
+  def translate!(key, **options); end
+  def transliterate(key, throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), replacement: T.unsafe(nil), **options); end
   def with_locale(tmp_locale = T.unsafe(nil)); end
 
   private
@@ -582,10 +582,6 @@ module I18n::Tests::Localization
   end
 end
 
-module I18n::Tests::Localization::Date
-  def setup; end
-end
-
 class I18n::UnknownFileType < ::I18n::ArgumentError
   def initialize(type, filename); end
 
@@ -600,38 +596,3 @@ I18n::JSON = ActiveSupport::JSON
 I18n::Locale::Tag::RFC4646_FORMATS = T.let(T.unsafe(nil), Hash)
 
 I18n::Locale::Tag::RFC4646_SUBTAGS = T.let(T.unsafe(nil), Array)
-
-module I18n::Tests::Basics
-  def teardown; end
-end
-
-module I18n::Tests::Defaults
-  def setup; end
-end
-
-module I18n::Tests::Interpolation
-end
-
-module I18n::Tests::Link
-end
-
-module I18n::Tests::Localization::DateTime
-  def setup; end
-end
-
-module I18n::Tests::Localization::Procs
-end
-
-module I18n::Tests::Localization::Time
-  def setup; end
-end
-
-module I18n::Tests::Lookup
-  def setup; end
-end
-
-module I18n::Tests::Pluralization
-end
-
-module I18n::Tests::Procs
-end

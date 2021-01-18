@@ -125,7 +125,7 @@ Listen::Adapter::Linux::INOTIFY_LIMIT_MESSAGE = T.let(T.unsafe(nil), String)
 
 Listen::Adapter::Linux::OS_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-Listen::Adapter::Linux::WIKI_URL = T.let(T.unsafe(nil), String)
+Listen::Adapter::Linux::README_URL = T.let(T.unsafe(nil), String)
 
 Listen::Adapter::OPTIMIZED_ADAPTERS = T.let(T.unsafe(nil), Array)
 
@@ -200,6 +200,15 @@ class Listen::Directory
   end
 end
 
+class Listen::Error < ::RuntimeError
+end
+
+class Listen::Error::NotStarted < ::Listen::Error
+end
+
+class Listen::Error::SymlinkLoop < ::Listen::Error
+end
+
 module Listen::Event
 end
 
@@ -213,7 +222,6 @@ class Listen::Event::Config
   def min_delay_between_events; end
   def optimize_changes(changes); end
   def sleep(seconds); end
-  def timestamp; end
 end
 
 class Listen::Event::Loop
@@ -235,13 +243,11 @@ class Listen::Event::Loop
   def _wakeup(reason); end
 end
 
-class Listen::Event::Loop::Error < ::RuntimeError
-end
-
-class Listen::Event::Loop::Error::NotStarted < ::Listen::Event::Loop::Error
-end
+Listen::Event::Loop::Error = Listen::Error
 
 Listen::Event::Loop::MAX_STARTUP_SECONDS = T.let(T.unsafe(nil), Float)
+
+Listen::Event::Loop::NotStarted = Listen::Error::NotStarted
 
 class Listen::Event::Processor
   def initialize(config, reasons); end
@@ -257,7 +263,6 @@ class Listen::Event::Processor
   def _remember_time_of_first_unprocessed_event; end
   def _reset_no_unprocessed_events; end
   def _sleep(seconds); end
-  def _timestamp; end
   def _wait_until_events; end
   def _wait_until_events_calm_down; end
   def _wait_until_no_longer_paused; end
@@ -359,6 +364,12 @@ end
 
 Listen::Listener::Config::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
+module Listen::MonotonicTime
+  class << self
+    def now; end
+  end
+end
+
 class Listen::Options
   def initialize(opts, defaults); end
 
@@ -395,7 +406,6 @@ end
 class Listen::Record
   def initialize(directory); end
 
-  def _sub_tree(rel_path); end
   def add_dir(rel_path); end
   def build; end
   def dir_entries(rel_path); end
@@ -441,12 +451,11 @@ class Listen::Record::SymlinkDetector
   def _fail(symlinked, real_path); end
 end
 
-class Listen::Record::SymlinkDetector::Error < ::RuntimeError
-end
+Listen::Record::SymlinkDetector::Error = Listen::Error
+
+Listen::Record::SymlinkDetector::README_URL = T.let(T.unsafe(nil), String)
 
 Listen::Record::SymlinkDetector::SYMLINK_LOOP_ERROR = T.let(T.unsafe(nil), String)
-
-Listen::Record::SymlinkDetector::WIKI = T.let(T.unsafe(nil), String)
 
 class Listen::Silencer
   def initialize; end

@@ -175,6 +175,15 @@ class SorbetRails::ModelPlugins::ActiveRecordQuerying < ::SorbetRails::ModelPlug
   def create_in_batches_method(root, inner_type:); end
 end
 
+class SorbetRails::ModelPlugins::ActiveRecordSerializedAttribute < ::SorbetRails::ModelPlugins::Base
+  sig { params(columns_hash: T::Hash[String, ActiveRecord::ConnectionAdapters::Column]).returns(T::Boolean) }
+  def any_serialized_columns?(columns_hash); end
+  sig { params(serialization_coder: T.nilable(Class)).returns(String) }
+  def attr_types_for_coder(serialization_coder); end
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
+  def generate(root); end
+end
+
 class SorbetRails::ModelPlugins::ActiveRelationWhereNot < ::SorbetRails::ModelPlugins::Base
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
@@ -205,6 +214,8 @@ class SorbetRails::ModelPlugins::Base < ::Parlour::Plugin
   def available_classes; end
   sig { override.returns(T.class_of(ActiveRecord::Base)) }
   def model_class; end
+  sig { params(column_name: String).returns(T.nilable(Class)) }
+  def serialization_coder_for_column(column_name); end
 end
 
 SorbetRails::ModelPlugins::Base::Parameter = Parlour::RbiGenerator::Parameter
@@ -238,8 +249,8 @@ class SorbetRails::ModelRbiFormatter
   def generate_rbi; end
   sig { override.returns(T.class_of(ActiveRecord::Base)) }
   def model_class; end
-  sig { params(plugins: T::Array[Parlour::Plugin], generator: Parlour::RbiGenerator, allow_failure: T::Boolean).void }
-  def run_plugins(plugins, generator, allow_failure: T.unsafe(nil)); end
+  sig { params(plugins: T::Array[Parlour::Plugin], generator: Parlour::RbiGenerator).void }
+  def run_plugins(plugins, generator); end
 end
 
 module SorbetRails::ModelUtils
