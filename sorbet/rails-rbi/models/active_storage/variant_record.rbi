@@ -683,6 +683,9 @@ module ActiveStorage::VariantRecord::GeneratedAssociationMethods
   sig { params(value: ::ActiveStorage::Blob).void }
   def blob=(value); end
 
+  sig { returns(::ActiveStorage::Blob) }
+  def reload_blob; end
+
   sig { returns(T.nilable(::ActiveStorage::Attachment)) }
   def image_attachment; end
 
@@ -697,6 +700,9 @@ module ActiveStorage::VariantRecord::GeneratedAssociationMethods
 
   sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
   def image_attachment=(value); end
+
+  sig { returns(T.nilable(::ActiveStorage::Attachment)) }
+  def reload_image_attachment; end
 
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def image_blob; end
@@ -713,17 +719,14 @@ module ActiveStorage::VariantRecord::GeneratedAssociationMethods
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def image_blob=(value); end
 
+  sig { returns(T.nilable(::ActiveStorage::Blob)) }
+  def reload_image_blob; end
+
   sig { returns(T.nilable(ActiveStorage::Attached::One)) }
   def image; end
 
   sig { params(attachable: T.untyped).returns(T.untyped) }
   def image=(attachable); end
-
-  sig { returns(T.untyped) }
-  def reload_blob; end
-
-  sig { returns(T.untyped) }
-  def reload_image_attachment; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def image_attachment_ids=(ids); end

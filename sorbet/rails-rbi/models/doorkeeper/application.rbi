@@ -1340,6 +1340,9 @@ module Doorkeeper::Application::GeneratedAssociationMethods
   sig { params(value: T.nilable(T.untyped)).void }
   def owner=(value); end
 
+  sig { returns(T.nilable(T.untyped)) }
+  def reload_owner; end
+
   sig { params(ids: T.untyped).returns(T.untyped) }
   def access_grant_ids=(ids); end
 
@@ -1351,9 +1354,6 @@ module Doorkeeper::Application::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def authorized_application_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_owner; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def owner_ids=(ids); end

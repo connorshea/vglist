@@ -846,14 +846,14 @@ module Engine::GeneratedAssociationMethods
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
+  sig { returns(T.nilable(T.untyped)) }
+  def reload_pg_search_document; end
+
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_engine_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def game_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_pg_search_document; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

@@ -780,6 +780,6 @@ module ExternalAccount::GeneratedAssociationMethods
   sig { params(value: ::User).void }
   def user=(value); end
 
-  sig { returns(T.untyped) }
+  sig { returns(::User) }
   def reload_user; end
 end

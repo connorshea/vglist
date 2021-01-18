@@ -674,6 +674,9 @@ module GameGenre::GeneratedAssociationMethods
   sig { params(value: ::Game).void }
   def game=(value); end
 
+  sig { returns(::Game) }
+  def reload_game; end
+
   sig { returns(::Genre) }
   def genre; end
 
@@ -689,10 +692,7 @@ module GameGenre::GeneratedAssociationMethods
   sig { params(value: ::Genre).void }
   def genre=(value); end
 
-  sig { returns(T.untyped) }
-  def reload_game; end
-
-  sig { returns(T.untyped) }
+  sig { returns(::Genre) }
   def reload_genre; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }

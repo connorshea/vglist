@@ -762,6 +762,9 @@ module Relationship::GeneratedAssociationMethods
   def followed=(value); end
 
   sig { returns(::User) }
+  def reload_followed; end
+
+  sig { returns(::User) }
   def follower; end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
@@ -776,11 +779,8 @@ module Relationship::GeneratedAssociationMethods
   sig { params(value: ::User).void }
   def follower=(value); end
 
-  sig { returns(T.untyped) }
+  sig { returns(::User) }
   def reload_follower; end
-
-  sig { returns(T.untyped) }
-  def reload_followed; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def followed_ids=(ids); end

@@ -674,6 +674,9 @@ module GamePurchaseStore::GeneratedAssociationMethods
   sig { params(value: ::GamePurchase).void }
   def game_purchase=(value); end
 
+  sig { returns(::GamePurchase) }
+  def reload_game_purchase; end
+
   sig { returns(::Store) }
   def store; end
 
@@ -689,10 +692,7 @@ module GamePurchaseStore::GeneratedAssociationMethods
   sig { params(value: ::Store).void }
   def store=(value); end
 
-  sig { returns(T.untyped) }
-  def reload_game_purchase; end
-
-  sig { returns(T.untyped) }
+  sig { returns(::Store) }
   def reload_store; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }

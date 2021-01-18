@@ -728,6 +728,9 @@ module ActiveStorage::Attachment::GeneratedAssociationMethods
   sig { params(value: ::ActiveStorage::Blob).void }
   def blob=(value); end
 
+  sig { returns(::ActiveStorage::Blob) }
+  def reload_blob; end
+
   sig { returns(T.untyped) }
   def record; end
 
@@ -745,9 +748,6 @@ module ActiveStorage::Attachment::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_record; end
-
-  sig { returns(T.untyped) }
-  def reload_blob; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def blob_ids=(ids); end

@@ -7,6 +7,17 @@ module ActiveStorage::Blob::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
+module ActiveStorage::Blob::GeneratedSerializedAttributeMethods
+  sig { returns(T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))) }
+  def metadata; end
+
+  sig { params(value: T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))).void }
+  def metadata=(value); end
+
+  sig { returns(T::Boolean) }
+  def metadata?; end
+end
+
 module ActiveStorage::Blob::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[ActiveStorage::Blob]) }
   def first_n(limit); end
@@ -25,6 +36,7 @@ module ActiveStorage::Blob::CustomFinderMethods
 end
 
 class ActiveStorage::Blob < ActiveStorage::Record
+  include ActiveStorage::Blob::GeneratedSerializedAttributeMethods
   include ActiveStorage::Blob::GeneratedAttributeMethods
   include ActiveStorage::Blob::GeneratedAssociationMethods
   extend ActiveStorage::Blob::CustomFinderMethods
@@ -729,15 +741,6 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def key?; end
 
-  sig { returns(T.nilable(String)) }
-  def metadata; end
-
-  sig { params(value: T.nilable(T.any(String, Symbol))).void }
-  def metadata=(value); end
-
-  sig { returns(T::Boolean) }
-  def metadata?; end
-
   sig { returns(String) }
   def service_name; end
 
@@ -1178,6 +1181,9 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
   sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
   def preview_image_attachment=(value); end
 
+  sig { returns(T.nilable(::ActiveStorage::Attachment)) }
+  def reload_preview_image_attachment; end
+
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def preview_image_blob; end
 
@@ -1192,6 +1198,9 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
 
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def preview_image_blob=(value); end
+
+  sig { returns(T.nilable(::ActiveStorage::Blob)) }
+  def reload_preview_image_blob; end
 
   sig { returns(::ActiveStorage::VariantRecord::ActiveRecord_Associations_CollectionProxy) }
   def variant_records; end
@@ -1210,9 +1219,6 @@ module ActiveStorage::Blob::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def variant_record_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_preview_image_attachment; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def preview_image_attachment_ids=(ids); end
