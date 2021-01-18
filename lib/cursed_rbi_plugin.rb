@@ -20,14 +20,6 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     ]
 
     @model_class.reflections.each do |assoc_name, reflection|
-      # puts "assoc_name: #{assoc_name}, reflection: #{reflection}"
-      if singular_associations.include?(reflection.class)
-        # def reload_user(); end
-        assoc_module_rbi.create_method(
-          "reload_#{assoc_name}",
-          return_type: 'T.untyped'
-        )
-      end
 
       if has_many_through_reflections.include?(reflection.class)
         # def user_ids=(ids); end
