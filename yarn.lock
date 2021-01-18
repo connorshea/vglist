@@ -8207,10 +8207,10 @@ vscode-languageserver-types@^3.15.1:
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
   integrity sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
 
-vue-good-table@^2.21.2:
-  version "2.21.2"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.2.tgz#f65483e76924060fcc2d18b8d6f7004812bee754"
-  integrity sha512-YUuB9xvXGZD3Hwggv3lYTOOOjiMqe7NjTB6g8JX6ojh/TLNWKy4fRbGHUTQtwd6ercC031lqePsm0DETXtBVtA==
+vue-good-table@^2.21.3:
+  version "2.21.3"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.3.tgz#17006575c67a7885d8ab21e724c44462514b2d0b"
+  integrity sha512-JQOHl4KYadiXdv9wjMq5SL3o7WqMAyJODP5C4QVe09xwYmFh5cEf8dT+ch96Kl8WIW5fFUqW2nKX7zEF8QfazQ==
   dependencies:
     date-fns "^2.0.0-beta.4"
     diacriticless "1.0.1"
