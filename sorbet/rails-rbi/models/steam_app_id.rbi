@@ -488,7 +488,7 @@ module SteamAppId::GeneratedAssociationMethods
   sig { params(value: ::Game).void }
   def game=(value); end
 
-  sig { returns(T.untyped) }
+  sig { returns(::Game) }
   def reload_game; end
 end
 

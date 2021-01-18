@@ -1096,6 +1096,9 @@ module Event::GeneratedAssociationMethods
   sig { params(value: T.untyped).void }
   def eventable=(value); end
 
+  sig { returns(T.untyped) }
+  def reload_eventable; end
+
   sig { returns(::User) }
   def user; end
 
@@ -1111,10 +1114,7 @@ module Event::GeneratedAssociationMethods
   sig { params(value: ::User).void }
   def user=(value); end
 
-  sig { returns(T.untyped) }
-  def reload_eventable; end
-
-  sig { returns(T.untyped) }
+  sig { returns(::User) }
   def reload_user; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }

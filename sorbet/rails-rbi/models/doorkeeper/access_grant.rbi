@@ -812,7 +812,7 @@ module Doorkeeper::AccessGrant::GeneratedAssociationMethods
   sig { params(value: ::Doorkeeper::Application).void }
   def application=(value); end
 
-  sig { returns(T.untyped) }
+  sig { returns(::Doorkeeper::Application) }
   def reload_application; end
 end
 

@@ -1011,6 +1011,9 @@ module Company::GeneratedAssociationMethods
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
+  sig { returns(T.nilable(T.untyped)) }
+  def reload_pg_search_document; end
+
   sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
   def published_games; end
 
@@ -1031,9 +1034,6 @@ module Company::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def published_game_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_pg_search_document; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

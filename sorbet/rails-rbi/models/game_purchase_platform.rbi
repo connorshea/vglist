@@ -674,6 +674,9 @@ module GamePurchasePlatform::GeneratedAssociationMethods
   sig { params(value: ::GamePurchase).void }
   def game_purchase=(value); end
 
+  sig { returns(::GamePurchase) }
+  def reload_game_purchase; end
+
   sig { returns(::Platform) }
   def platform; end
 
@@ -689,10 +692,7 @@ module GamePurchasePlatform::GeneratedAssociationMethods
   sig { params(value: ::Platform).void }
   def platform=(value); end
 
-  sig { returns(T.untyped) }
-  def reload_game_purchase; end
-
-  sig { returns(T.untyped) }
+  sig { returns(::Platform) }
   def reload_platform; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }

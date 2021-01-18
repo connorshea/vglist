@@ -674,6 +674,9 @@ module GamePublisher::GeneratedAssociationMethods
   sig { params(value: ::Company).void }
   def company=(value); end
 
+  sig { returns(::Company) }
+  def reload_company; end
+
   sig { returns(::Game) }
   def game; end
 
@@ -689,11 +692,8 @@ module GamePublisher::GeneratedAssociationMethods
   sig { params(value: ::Game).void }
   def game=(value); end
 
-  sig { returns(T.untyped) }
+  sig { returns(::Game) }
   def reload_game; end
-
-  sig { returns(T.untyped) }
-  def reload_company; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def company_ids=(ids); end

@@ -20,7 +20,6 @@ class CursedRbiPlugin < SorbetRails::ModelPlugins::Base
     ]
 
     @model_class.reflections.each do |assoc_name, reflection|
-
       if has_many_through_reflections.include?(reflection.class)
         # def user_ids=(ids); end
         assoc_module_rbi.create_method(

@@ -3237,6 +3237,9 @@ module User::GeneratedAssociationMethods
   sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
   def avatar_attachment=(value); end
 
+  sig { returns(T.nilable(::ActiveStorage::Attachment)) }
+  def reload_avatar_attachment; end
+
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def avatar_blob; end
 
@@ -3251,6 +3254,9 @@ module User::GeneratedAssociationMethods
 
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def avatar_blob=(value); end
+
+  sig { returns(T.nilable(::ActiveStorage::Blob)) }
+  def reload_avatar_blob; end
 
   sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
   def events; end
@@ -3275,6 +3281,9 @@ module User::GeneratedAssociationMethods
 
   sig { params(value: T.nilable(::ExternalAccount)).void }
   def external_account=(value); end
+
+  sig { returns(T.nilable(::ExternalAccount)) }
+  def reload_external_account; end
 
   sig { returns(::FavoriteGame::ActiveRecord_Associations_CollectionProxy) }
   def favorite_games; end
@@ -3354,6 +3363,9 @@ module User::GeneratedAssociationMethods
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
+  sig { returns(T.nilable(T.untyped)) }
+  def reload_pg_search_document; end
+
   sig { returns(::SteamBlocklist::ActiveRecord_Associations_CollectionProxy) }
   def steam_blocklists; end
 
@@ -3417,23 +3429,14 @@ module User::GeneratedAssociationMethods
   sig { params(ids: T.untyped).returns(T.untyped) }
   def oauth_application_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def reload_external_account; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def external_account_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_avatar_attachment; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def avatar_attachment_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def avatar_blob_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_pg_search_document; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

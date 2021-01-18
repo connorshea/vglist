@@ -2589,6 +2589,9 @@ module Game::GeneratedAssociationMethods
   sig { params(value: T.nilable(::ActiveStorage::Attachment)).void }
   def cover_attachment=(value); end
 
+  sig { returns(T.nilable(::ActiveStorage::Attachment)) }
+  def reload_cover_attachment; end
+
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def cover_blob; end
 
@@ -2603,6 +2606,9 @@ module Game::GeneratedAssociationMethods
 
   sig { params(value: T.nilable(::ActiveStorage::Blob)).void }
   def cover_blob=(value); end
+
+  sig { returns(T.nilable(::ActiveStorage::Blob)) }
+  def reload_cover_blob; end
 
   sig { returns(::Company::ActiveRecord_Associations_CollectionProxy) }
   def developers; end
@@ -2709,6 +2715,9 @@ module Game::GeneratedAssociationMethods
   sig { params(value: T.nilable(T.untyped)).void }
   def pg_search_document=(value); end
 
+  sig { returns(T.nilable(T.untyped)) }
+  def reload_pg_search_document; end
+
   sig { returns(::Platform::ActiveRecord_Associations_CollectionProxy) }
   def platforms; end
 
@@ -2750,6 +2759,9 @@ module Game::GeneratedAssociationMethods
 
   sig { params(value: T.nilable(::Series)).void }
   def series=(value); end
+
+  sig { returns(T.nilable(::Series)) }
+  def reload_series; end
 
   sig { returns(::SteamAppId::ActiveRecord_Associations_CollectionProxy) }
   def steam_app_ids; end
@@ -2808,23 +2820,14 @@ module Game::GeneratedAssociationMethods
   sig { params(ids: T.untyped).returns(T.untyped) }
   def favorite_ids=(ids); end
 
-  sig { returns(T.untyped) }
-  def reload_series; end
-
   sig { params(ids: T.untyped).returns(T.untyped) }
   def series_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_cover_attachment; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def cover_attachment_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def cover_blob_ids=(ids); end
-
-  sig { returns(T.untyped) }
-  def reload_pg_search_document; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

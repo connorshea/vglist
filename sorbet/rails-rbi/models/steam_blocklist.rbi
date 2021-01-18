@@ -650,7 +650,7 @@ module SteamBlocklist::GeneratedAssociationMethods
   sig { params(value: T.nilable(::User)).void }
   def user=(value); end
 
-  sig { returns(T.untyped) }
+  sig { returns(T.nilable(::User)) }
   def reload_user; end
 end
 

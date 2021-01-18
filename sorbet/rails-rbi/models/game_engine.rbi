@@ -674,6 +674,9 @@ module GameEngine::GeneratedAssociationMethods
   sig { params(value: ::Engine).void }
   def engine=(value); end
 
+  sig { returns(::Engine) }
+  def reload_engine; end
+
   sig { returns(::Game) }
   def game; end
 
@@ -689,11 +692,8 @@ module GameEngine::GeneratedAssociationMethods
   sig { params(value: ::Game).void }
   def game=(value); end
 
-  sig { returns(T.untyped) }
+  sig { returns(::Game) }
   def reload_game; end
-
-  sig { returns(T.untyped) }
-  def reload_engine; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def engine_ids=(ids); end

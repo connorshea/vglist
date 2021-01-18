@@ -11,4 +11,7 @@ module ::FFI::Library; end
 module ::FFI::ManagedStruct; end
 module ::FFI::Struct; end
 module ::MakeMakefile; end
+module RSpec::Mocks::ExampleMethods; end
+module RSpec::Mocks::ExampleMethods::ExpectHost; end
+module Rake::TaskLib::Cloneable; end
 module T::Private::Methods::Signature; end

@@ -674,6 +674,9 @@ module GamePlatform::GeneratedAssociationMethods
   sig { params(value: ::Game).void }
   def game=(value); end
 
+  sig { returns(::Game) }
+  def reload_game; end
+
   sig { returns(::Platform) }
   def platform; end
 
@@ -689,10 +692,7 @@ module GamePlatform::GeneratedAssociationMethods
   sig { params(value: ::Platform).void }
   def platform=(value); end
 
-  sig { returns(T.untyped) }
-  def reload_game; end
-
-  sig { returns(T.untyped) }
+  sig { returns(::Platform) }
   def reload_platform; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }

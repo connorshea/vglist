@@ -761,6 +761,9 @@ module FavoriteGame::GeneratedAssociationMethods
   sig { params(value: ::Game).void }
   def game=(value); end
 
+  sig { returns(::Game) }
+  def reload_game; end
+
   sig { returns(::User) }
   def user; end
 
@@ -776,10 +779,7 @@ module FavoriteGame::GeneratedAssociationMethods
   sig { params(value: ::User).void }
   def user=(value); end
 
-  sig { returns(T.untyped) }
-  def reload_game; end
-
-  sig { returns(T.untyped) }
+  sig { returns(::User) }
   def reload_user; end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
