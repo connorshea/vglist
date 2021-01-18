@@ -154,6 +154,7 @@ module RuboCop::AST::CollectionNode
   def concat(*args, &block); end
   def count(*args, &block); end
   def cycle(*args, &block); end
+  def deconstruct(*args, &block); end
   def delete(*args, &block); end
   def delete_at(*args, &block); end
   def delete_if(*args, &block); end
@@ -180,6 +181,7 @@ module RuboCop::AST::CollectionNode
   def fill(*args, &block); end
   def filter(*args, &block); end
   def filter!(*args, &block); end
+  def filter_map(*args, &block); end
   def find(*args, &block); end
   def find_all(*args, &block); end
   def find_index(*args, &block); end
@@ -203,6 +205,7 @@ module RuboCop::AST::CollectionNode
   def inject(*args, &block); end
   def inquiry(*args, &block); end
   def insert(*args, &block); end
+  def intersection(*args, &block); end
   def join(*args, &block); end
   def keep_if(*args, &block); end
   def last(*args, &block); end
@@ -266,6 +269,7 @@ module RuboCop::AST::CollectionNode
   def sum(*args, &block); end
   def take(*args, &block); end
   def take_while(*args, &block); end
+  def tally(*args, &block); end
   def third(*args, &block); end
   def third_to_last(*args, &block); end
   def to(*args, &block); end
@@ -647,6 +651,7 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def ivasgn_type?; end
   def keyword?; end
   def kwarg_type?; end
+  def kwargs_type?; end
   def kwbegin_type?; end
   def kwnilarg_type?; end
   def kwoptarg_type?; end
@@ -669,6 +674,8 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def match_current_line_type?; end
   def match_guard_clause?(param0 = T.unsafe(nil)); end
   def match_nil_pattern_type?; end
+  def match_pattern_p_type?; end
+  def match_pattern_type?; end
   def match_rest_type?; end
   def match_var_type?; end
   def match_with_lvasgn_type?; end
@@ -1602,8 +1609,6 @@ RuboCop::AST::NodePattern::Sets::SET__ = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET__AT_SLICE = T.let(T.unsafe(nil), Set)
 
-RuboCop::AST::NodePattern::Sets::SET__EQL_ = T.let(T.unsafe(nil), Set)
-
 RuboCop::AST::NodePattern::Sets::SET__EQUAL_EQL = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET__GLOB = T.let(T.unsafe(nil), Set)
@@ -1623,6 +1628,8 @@ RuboCop::AST::NodePattern::Sets::SET___6 = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET___7 = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET___8 = T.let(T.unsafe(nil), Set)
+
+RuboCop::AST::NodePattern::Sets::SET___EQL = T.let(T.unsafe(nil), Set)
 
 RuboCop::AST::NodePattern::Sets::SET___METHOD_____CALLEE__ = T.let(T.unsafe(nil), Set)
 
@@ -1944,6 +1951,7 @@ module RuboCop::AST::Traversal
   def on_ivar(node); end
   def on_ivasgn(node); end
   def on_kwarg(node); end
+  def on_kwargs(node); end
   def on_kwbegin(node); end
   def on_kwnilarg(node); end
   def on_kwoptarg(node); end
@@ -1957,6 +1965,8 @@ module RuboCop::AST::Traversal
   def on_match_as(node); end
   def on_match_current_line(node); end
   def on_match_nil_pattern(node); end
+  def on_match_pattern(node); end
+  def on_match_pattern_p(node); end
   def on_match_rest(node); end
   def on_match_var(node); end
   def on_match_with_lvasgn(node); end

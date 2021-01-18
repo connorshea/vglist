@@ -307,7 +307,7 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   def method_missing(method, *args, &block); end
   def purge; end
   def purge_later; end
-  def signed_id(*args, &block); end
+  def signed_id(*_arg0, &_arg1); end
   def validate_associated_records_for_blob(*args); end
 
   private
@@ -783,15 +783,15 @@ class ActiveStorage::Variant
   def initialize(blob, variation_or_variation_key); end
 
   def blob; end
-  def content_type(*args, &block); end
-  def content_type_for_serving(*args, &block); end
+  def content_type(*_arg0, &_arg1); end
+  def content_type_for_serving(*_arg0, &_arg1); end
   def download(&block); end
   def filename; end
   def forced_disposition_for_serving; end
   def image; end
   def key; end
   def processed; end
-  def service(*args, &block); end
+  def service(*_arg0, &_arg1); end
   def service_url(*args, &block); end
   def url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
   def variation; end
@@ -817,14 +817,14 @@ class ActiveStorage::VariantWithRecord
   def initialize(blob, variation); end
 
   def blob; end
-  def download(*args, &block); end
+  def download(*_arg0, &_arg1); end
   def image; end
-  def key(*args, &block); end
+  def key(*_arg0, &_arg1); end
   def process; end
   def processed; end
   def processed?; end
   def service_url(*args, &block); end
-  def url(*args, &block); end
+  def url(*_arg0, &_arg1); end
   def variation; end
 
   private

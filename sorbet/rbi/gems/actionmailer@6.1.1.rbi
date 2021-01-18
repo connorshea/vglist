@@ -319,7 +319,7 @@ end
 
 module ActionMailer::DeliveryMethods::ClassMethods
   def add_delivery_method(symbol, klass, default_options = T.unsafe(nil)); end
-  def deliveries(*args, &block); end
+  def deliveries(*_arg0, &_arg1); end
   def deliveries=(arg); end
   def wrap_delivery_behavior(mail, method = T.unsafe(nil), options = T.unsafe(nil)); end
 end
@@ -518,6 +518,7 @@ class ActionMailer::TestCase < ::ActiveSupport::TestCase
 end
 
 module ActionMailer::TestCase::Behavior
+  include(::ActiveSupport::Testing::Assertions)
   include(::ActiveJob::TestHelper)
   include(::ActionMailer::TestHelper)
   include(::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable)
@@ -558,6 +559,7 @@ module ActionMailer::TestCase::ClearTestDeliveries
 end
 
 module ActionMailer::TestHelper
+  include(::ActiveSupport::Testing::Assertions)
   include(::ActiveJob::TestHelper)
 
   def assert_emails(number, &block); end

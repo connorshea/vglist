@@ -2132,6 +2132,8 @@ class RDF::Util::Logger::IOWrapper
   def to_set(*args, &block); end
   def to_sxp(*args, &block); end
   def to_yaml(*args, &block); end
+  def translation_metadata(*args, &block); end
+  def translation_metadata=(*args, &block); end
   def try(*args, &block); end
   def try!(*args, &block); end
   def try_cflags(*args, &block); end

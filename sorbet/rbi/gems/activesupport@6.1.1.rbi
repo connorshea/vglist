@@ -15,20 +15,20 @@ module ActiveSupport
 
   class << self
     def eager_load!; end
-    def escape_html_entities_in_json(*args, &block); end
+    def escape_html_entities_in_json(*_arg0, &_arg1); end
     def escape_html_entities_in_json=(arg); end
     def gem_version; end
-    def json_encoder(*args, &block); end
+    def json_encoder(*_arg0, &_arg1); end
     def json_encoder=(arg); end
     def parse_json_times; end
     def parse_json_times=(val); end
     def test_order; end
     def test_order=(val); end
-    def time_precision(*args, &block); end
+    def time_precision(*_arg0, &_arg1); end
     def time_precision=(arg); end
     def to_time_preserves_timezone; end
     def to_time_preserves_timezone=(value); end
-    def use_standard_json_time_format(*args, &block); end
+    def use_standard_json_time_format(*_arg0, &_arg1); end
     def use_standard_json_time_format=(arg); end
     def utc_to_local_returns_utc_offset_times; end
     def utc_to_local_returns_utc_offset_times=(value); end
@@ -643,10 +643,10 @@ class ActiveSupport::CurrentAttributes
     def before_reset(&block); end
     def clear_all; end
     def instance; end
-    def reset(*args, &block); end
+    def reset(*_arg0, &_arg1); end
     def reset_all; end
     def resets(&block); end
-    def set(*args, &block); end
+    def set(*_arg0, &_arg1); end
 
     private
 
@@ -887,23 +887,22 @@ class ActiveSupport::Deprecation
   def deprecation_horizon=(_arg0); end
 
   class << self
-    def allow(*args, &block); end
-    def behavior(*args, &block); end
+    def allow(*_arg0, &_arg1); end
+    def behavior(*_arg0, &_arg1); end
     def behavior=(arg); end
-    def debug(*args, &block); end
+    def debug(*_arg0, &_arg1); end
     def debug=(arg); end
-    def deprecate_methods(*args, &block); end
-    def deprecation_horizon(*args, &block); end
+    def deprecate_methods(*_arg0, &_arg1); end
+    def deprecation_horizon(*_arg0, &_arg1); end
     def deprecation_horizon=(arg); end
-    def disallowed_behavior(*args, &block); end
+    def disallowed_behavior(*_arg0, &_arg1); end
     def disallowed_behavior=(arg); end
-    def disallowed_warnings(*args, &block); end
+    def disallowed_warnings(*_arg0, &_arg1); end
     def disallowed_warnings=(arg); end
-    def gem_name(*args, &block); end
+    def gem_name(*_arg0, &_arg1); end
     def gem_name=(arg); end
-    def instance; end
-    def silence(*args, &block); end
-    def silenced(*args, &block); end
+    def silence(*_arg0, &_arg1); end
+    def silenced(*_arg0, &_arg1); end
     def silenced=(arg); end
   end
 end
@@ -933,11 +932,11 @@ class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::Module
   def initialize(old_const, new_const, deprecator = T.unsafe(nil), message: T.unsafe(nil)); end
 
   def class; end
-  def hash(*args, &block); end
+  def hash(*_arg0, &_arg1); end
   def inspect; end
-  def instance_methods(*args, &block); end
-  def name(*args, &block); end
-  def respond_to?(*args, &block); end
+  def instance_methods(*_arg0, &_arg1); end
+  def name(*_arg0, &_arg1); end
+  def respond_to?(*_arg0, &_arg1); end
 
   private
 
@@ -1237,9 +1236,9 @@ class ActiveSupport::Duration::Scalar < ::Numeric
   def /(other); end
   def <=>(other); end
   def coerce(other); end
-  def to_f(*args, &block); end
-  def to_i(*args, &block); end
-  def to_s(*args, &block); end
+  def to_f(*_arg0, &_arg1); end
+  def to_i(*_arg0, &_arg1); end
+  def to_s(*_arg0, &_arg1); end
   def value; end
 
   private
@@ -1260,9 +1259,9 @@ end
 class ActiveSupport::EncryptedConfiguration < ::ActiveSupport::EncryptedFile
   def initialize(config_path:, key_path:, env_key:, raise_if_missing_key:); end
 
-  def [](*args, &block); end
+  def [](*_arg0, &_arg1); end
   def config; end
-  def fetch(*args, &block); end
+  def fetch(*_arg0, &_arg1); end
   def method_missing(method, *args, &block); end
   def read; end
   def write(contents); end
@@ -1916,15 +1915,15 @@ class ActiveSupport::Multibyte::Chars
 
   def initialize(string); end
 
-  def <=>(*args, &block); end
-  def =~(*args, &block); end
-  def acts_like_string?(*args, &block); end
+  def <=>(*_arg0, &_arg1); end
+  def =~(*_arg0, &_arg1); end
+  def acts_like_string?(*_arg0, &_arg1); end
   def as_json(options = T.unsafe(nil)); end
   def compose; end
   def decompose; end
   def grapheme_length; end
   def limit(limit); end
-  def match?(*args, &block); end
+  def match?(*_arg0, &_arg1); end
   def method_missing(method, *args, &block); end
   def reverse; end
   def reverse!(*args); end
@@ -2585,10 +2584,10 @@ class ActiveSupport::SubscriberQueueRegistry
 end
 
 module ActiveSupport::TaggedLogging
-  def clear_tags!(*args, &block); end
+  def clear_tags!(*_arg0, &_arg1); end
   def flush; end
-  def pop_tags(*args, &block); end
-  def push_tags(*args, &block); end
+  def pop_tags(*_arg0, &_arg1); end
+  def push_tags(*_arg0, &_arg1); end
   def tagged(*tags); end
 
   class << self
@@ -3071,7 +3070,7 @@ module ActiveSupport::XmlMini
   def backend=(name); end
   def depth; end
   def depth=(_arg0); end
-  def parse(*args, &block); end
+  def parse(*_arg0, &_arg1); end
   def rename_key(key, options = T.unsafe(nil)); end
   def to_tag(key, value, options); end
   def with_backend(name); end
@@ -3572,9 +3571,25 @@ class IO
   def as_json(options = T.unsafe(nil)); end
 end
 
+class IO::ConsoleMode
+  def echo=(_arg0); end
+  def raw(*_arg0); end
+  def raw!(*_arg0); end
+
+  private
+
+  def initialize_copy(_arg0); end
+end
+
 IO::EWOULDBLOCKWaitReadable = IO::EAGAINWaitReadable
 
 IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
+
+class IPAddr
+  include(::Comparable)
+
+  def as_json(options = T.unsafe(nil)); end
+end
 
 class Integer < ::Numeric
   include(::JSON::Ext::Generator::GeneratorMethods::Integer)
@@ -3670,6 +3685,8 @@ end
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 class NameError < ::StandardError
+  include(::DidYouMean::Correctable)
+
   def missing_name; end
   def missing_name?(name); end
 
@@ -3905,10 +3922,6 @@ class Symbol
   include(::FriendlyId::UnfriendlyUtils)
 
   def as_json(options = T.unsafe(nil)); end
-  def end_with?(*suffixes); end
-  def ends_with?(*suffixes); end
-  def start_with?(*prefixes); end
-  def starts_with?(*prefixes); end
 end
 
 class Time
@@ -3946,7 +3959,6 @@ class Time
   def end_of_minute; end
   def eql?(other); end
   def eql_with_coercion(other); end
-  def floor(precision = T.unsafe(nil)); end
   def formatted_offset(colon = T.unsafe(nil), alternate_utc_string = T.unsafe(nil)); end
   def in(seconds); end
   def midday; end

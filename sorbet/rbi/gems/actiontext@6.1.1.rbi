@@ -75,7 +75,7 @@ class ActionText::Attachables::ContentAttachment
   def _validators; end
   def _validators?; end
   def attachable_plain_text_representation(caption); end
-  def model_name(*args, &block); end
+  def model_name(*_arg0, &_arg1); end
   def name; end
   def name=(_arg0); end
   def to_partial_path; end
@@ -102,7 +102,7 @@ end
 module ActionText::Attachables::MissingAttachable
   extend(::ActiveModel::Naming)
 
-  def model_name(*args, &block); end
+  def model_name(*_arg0, &_arg1); end
 
   class << self
     def to_partial_path; end
@@ -117,7 +117,7 @@ class ActionText::Attachables::RemoteImage
   def attachable_plain_text_representation(caption); end
   def content_type; end
   def height; end
-  def model_name(*args, &block); end
+  def model_name(*_arg0, &_arg1); end
   def to_partial_path; end
   def url; end
   def width; end
@@ -148,7 +148,7 @@ class ActionText::Attachment
   def method_missing(method, *args, &block); end
   def node; end
   def to_html; end
-  def to_param(*args, &block); end
+  def to_param(*_arg0, &_arg1); end
   def to_plain_text; end
   def to_s; end
   def with_full_attributes; end
@@ -207,7 +207,7 @@ class ActionText::AttachmentGallery
   def _validators?; end
   def attachments; end
   def inspect; end
-  def model_name(*args, &block); end
+  def model_name(*_arg0, &_arg1); end
   def node; end
   def size; end
   def validation_context; end
@@ -295,15 +295,15 @@ class ActionText::Content
   def attachables; end
   def attachment_galleries; end
   def attachments; end
-  def blank?(*args, &block); end
-  def empty?(*args, &block); end
+  def blank?(*_arg0, &_arg1); end
+  def empty?(*_arg0, &_arg1); end
   def fragment; end
   def gallery_attachments; end
-  def html_safe(*args, &block); end
+  def html_safe(*_arg0, &_arg1); end
   def inspect; end
   def links; end
-  def present?(*args, &block); end
-  def render(*args, &block); end
+  def present?(*_arg0, &_arg1); end
+  def render(*_arg0, &_arg1); end
   def render_attachment_galleries(&block); end
   def render_attachments(**options, &block); end
   def to_html; end
@@ -442,8 +442,8 @@ end
 
 class ActionText::RichText < ::ActionText::Record
   def autosave_associated_records_for_record(*args); end
-  def nil?(*args, &block); end
-  def to_s(*args, &block); end
+  def nil?(*_arg0, &_arg1); end
+  def to_s(*_arg0, &_arg1); end
 
   class << self
     def __callbacks; end
@@ -689,7 +689,7 @@ end
 class ActionView::Helpers::Tags::ActionText < ::ActionView::Helpers::Tags::Base
   include(::ActionView::Helpers::Tags::Placeholderable)
 
-  def dom_id(*args, &block); end
+  def dom_id(*_arg0, &_arg1); end
   def editable_value; end
   def render; end
 end

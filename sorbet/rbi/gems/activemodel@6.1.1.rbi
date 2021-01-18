@@ -190,9 +190,9 @@ class ActiveModel::AttributeSet
   def []=(name, value); end
   def accessed; end
   def deep_dup; end
-  def each_value(*args, &block); end
-  def except(*args, &block); end
-  def fetch(*args, &block); end
+  def each_value(*_arg0, &_arg1); end
+  def except(*_arg0, &_arg1); end
+  def fetch(*_arg0, &_arg1); end
   def fetch_value(name, &block); end
   def freeze; end
   def key?(name); end
@@ -511,13 +511,13 @@ class ActiveModel::LazyAttributeHash
   def []=(key, value); end
   def deep_dup; end
   def each_key(&block); end
-  def each_value(*args, &block); end
-  def except(*args, &block); end
-  def fetch(*args, &block); end
+  def each_value(*_arg0, &_arg1); end
+  def except(*_arg0, &_arg1); end
+  def fetch(*_arg0, &_arg1); end
   def key?(key); end
   def marshal_dump; end
   def marshal_load(values); end
-  def transform_values(*args, &block); end
+  def transform_values(*_arg0, &_arg1); end
 
   protected
 
@@ -594,22 +594,22 @@ class ActiveModel::Name
 
   def initialize(klass, namespace = T.unsafe(nil), name = T.unsafe(nil)); end
 
-  def !~(*args, &block); end
-  def <=>(*args, &block); end
+  def !~(*_arg0, &_arg1); end
+  def <=>(*_arg0, &_arg1); end
   def ==(arg); end
   def ===(arg); end
-  def =~(*args, &block); end
-  def as_json(*args, &block); end
+  def =~(*_arg0, &_arg1); end
+  def as_json(*_arg0, &_arg1); end
   def cache_key; end
   def collection; end
   def collection=(_arg0); end
   def element; end
   def element=(_arg0); end
-  def eql?(*args, &block); end
+  def eql?(*_arg0, &_arg1); end
   def human(options = T.unsafe(nil)); end
   def i18n_key; end
   def i18n_key=(_arg0); end
-  def match?(*args, &block); end
+  def match?(*_arg0, &_arg1); end
   def name; end
   def name=(_arg0); end
   def param_key; end
@@ -622,8 +622,8 @@ class ActiveModel::Name
   def singular=(_arg0); end
   def singular_route_key; end
   def singular_route_key=(_arg0); end
-  def to_s(*args, &block); end
-  def to_str(*args, &block); end
+  def to_s(*_arg0, &_arg1); end
+  def to_str(*_arg0, &_arg1); end
 
   private
 
@@ -669,10 +669,6 @@ class ActiveModel::NullMutationTracker
   def changed_values; end
   def changes; end
   def original_value(attr_name); end
-
-  class << self
-    def instance; end
-  end
 end
 
 class ActiveModel::Railtie < ::Rails::Railtie
@@ -1092,6 +1088,10 @@ end
 module ActiveModel::Validations::Callbacks::ClassMethods
   def after_validation(*args, &block); end
   def before_validation(*args, &block); end
+
+  private
+
+  def set_options_for_callback(options); end
 end
 
 module ActiveModel::Validations::ClassMethods

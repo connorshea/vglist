@@ -7,7 +7,12 @@
 module Unicode
 end
 
-module Unicode::DisplayWidth
+class Unicode::DisplayWidth
+  def initialize(ambiguous: T.unsafe(nil), overwrite: T.unsafe(nil), emoji: T.unsafe(nil)); end
+
+  def get_config(**kwargs); end
+  def of(string, **kwargs); end
+
   class << self
     def emoji_extra_width_of(string, ambiguous = T.unsafe(nil), overwrite = T.unsafe(nil), _ = T.unsafe(nil)); end
     def of(string, ambiguous = T.unsafe(nil), overwrite = T.unsafe(nil), options = T.unsafe(nil)); end
@@ -21,8 +26,6 @@ Unicode::DisplayWidth::DEPTHS = T.let(T.unsafe(nil), Array)
 Unicode::DisplayWidth::INDEX = T.let(T.unsafe(nil), Array)
 
 Unicode::DisplayWidth::INDEX_FILENAME = T.let(T.unsafe(nil), String)
-
-Unicode::DisplayWidth::NO_STRING_EXT = T.let(T.unsafe(nil), TrueClass)
 
 Unicode::DisplayWidth::UNICODE_VERSION = T.let(T.unsafe(nil), String)
 

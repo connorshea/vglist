@@ -55,6 +55,7 @@ module FriendlyId::FinderMethods
   private
 
   def first_by_friendly_id(id); end
+  def parse_friendly_id(value); end
   def potential_primary_key?(id); end
   def raise_not_found_exception(id); end
 end
@@ -218,7 +219,6 @@ class FriendlyId::Slug < ::ActiveRecord::Base
     def __callbacks; end
     def _reflections; end
     def _validators; end
-    def attribute_type_decorations; end
     def defined_enums; end
     def page(num = T.unsafe(nil)); end
   end
