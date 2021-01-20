@@ -106,7 +106,7 @@ GEM
     colorize (0.8.1)
     commander (4.5.2)
       highline (~> 2.0.0)
-    concurrent-ruby (1.1.7)
+    concurrent-ruby (1.1.8)
     connection_pool (2.2.3)
     crass (1.0.6)
     database_cleaner (1.8.5)
