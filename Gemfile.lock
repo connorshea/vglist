@@ -408,7 +408,7 @@ GEM
       sorbet-static (>= 0.4.4471)
       spoom
       thor (>= 0.19.2)
-    thor (1.0.1)
+    thor (1.1.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
