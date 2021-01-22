@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.1.21
+### Added
+- Add audit logs via the paper_trail gem for tracking changes to companies, games, genres, engines, platforms, and series records. Now every change to a record is tracked including the contents of the change and the user that changed it. ([#1806])
+
 ## v2021.1.9
 ### Changed
 - Change the user lists on game pages to a grid of avatar images. ([#1771])
@@ -831,3 +835,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1746]: https://github.com/connorshea/vglist/pull/1746
 [#1747]: https://github.com/connorshea/vglist/pull/1747
 [#1771]: https://github.com/connorshea/vglist/pull/1771
+[#1806]: https://github.com/connorshea/vglist/pull/1806
