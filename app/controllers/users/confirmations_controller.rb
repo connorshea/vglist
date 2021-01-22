@@ -19,4 +19,12 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     skip_authorization
     super
   end
+
+  private
+
+  # Disable PaperTrail to prevent weird errors with Devise that are caused by
+  # providing the PaperTrail metadata in ApplicationController.
+  def paper_trail_enabled_for_controller
+    false
+  end
 end

@@ -78,6 +78,16 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'Custom Validations' do
+    let(:user) { build(:user, username: 'system') }
+
+    it 'fails validation if username is reserved' do
+      user
+      expect(user).to be_invalid
+      expect(user.errors[:username]).to include('is reserved by the system')
+    end
+  end
+
   describe "Associations" do
     it { should have_many(:game_purchases) }
     it { should have_many(:games).through(:game_purchases) }

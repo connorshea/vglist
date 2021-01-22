@@ -5,6 +5,11 @@ class Series < ApplicationRecord
 
   has_many :games
 
+  has_paper_trail ignore: [:updated_at, :created_at],
+                  versions: {
+                    class_name: 'Versions::SeriesVersion'
+                  }
+
   validates :name,
     presence: true,
     length: { maximum: 120 }

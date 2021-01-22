@@ -153,6 +153,10 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  describe "Versioning" do
+    it { should be_versioned }
+  end
+
   describe "Associations" do
     it { should have_many(:game_purchases) }
     it { should have_many(:purchasers).through(:game_purchases).source(:user) }

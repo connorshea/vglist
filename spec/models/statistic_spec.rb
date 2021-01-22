@@ -9,26 +9,36 @@ RSpec.describe Statistic, type: :model do
       expect(statistic).to be_valid
     end
 
-    it { should validate_numericality_of(:users) }
-    it { should validate_numericality_of(:games) }
-    it { should validate_numericality_of(:platforms) }
-    it { should validate_numericality_of(:series) }
-    it { should validate_numericality_of(:engines) }
-    it { should validate_numericality_of(:companies) }
-    it { should validate_numericality_of(:genres) }
-    it { should validate_numericality_of(:stores) }
-    it { should validate_numericality_of(:events) }
-    it { should validate_numericality_of(:game_purchases) }
-    it { should validate_numericality_of(:relationships) }
-    it { should validate_numericality_of(:games_with_covers) }
-    it { should validate_numericality_of(:games_with_release_dates) }
-    it { should validate_numericality_of(:banned_users) }
-    it { should validate_numericality_of(:mobygames_ids) }
-    it { should validate_numericality_of(:pcgamingwiki_ids) }
-    it { should validate_numericality_of(:wikidata_ids) }
-    it { should validate_numericality_of(:giantbomb_ids) }
-    it { should validate_numericality_of(:steam_app_ids) }
-    it { should validate_numericality_of(:epic_games_store_ids) }
-    it { should validate_numericality_of(:gog_ids) }
+    [
+      :users,
+      :games,
+      :platforms,
+      :series,
+      :engines,
+      :companies,
+      :genres,
+      :stores,
+      :events,
+      :game_purchases,
+      :relationships,
+      :games_with_covers,
+      :games_with_release_dates,
+      :banned_users,
+      :mobygames_ids,
+      :pcgamingwiki_ids,
+      :wikidata_ids,
+      :giantbomb_ids,
+      :steam_app_ids,
+      :epic_games_store_ids,
+      :gog_ids,
+      :company_versions,
+      :game_versions,
+      :genre_versions,
+      :engine_versions,
+      :platform_versions,
+      :series_versions
+    ].each do |statistic|
+      it { should validate_numericality_of(statistic) }
+    end
   end
 end

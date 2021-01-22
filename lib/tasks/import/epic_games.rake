@@ -34,6 +34,9 @@ namespace :import do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
+    # Set whodunnit to 'system' for any audited changes made by this Rake task.
+    PaperTrail.request.whodunnit = 'system'
+
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 

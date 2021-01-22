@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
   before_action :sign_out_banned_users
   # Send context with error messages to Sentry.
   before_action :set_raven_context
+  # Set PaperTrail whodunnit to the current user.
+  before_action :set_paper_trail_whodunnit
 
   # Make sure pundit is implemented on everything, except index pages since
   # those should be accessible without an authorization.
@@ -48,5 +50,15 @@ class ApplicationController < ActionController::Base
   def set_raven_context
     Raven.user_context(id: current_user&.id, username: current_user&.username)
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  end
+
+  # Set whodunnit to the user's username.
+  def user_for_paper_trail
+    current_user&.username
+  end
+
+  # Set whodunnit_id to the user's numeric ID.
+  def info_for_paper_trail
+    { whodunnit_id: current_user&.id }
   end
 end

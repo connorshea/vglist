@@ -37,13 +37,16 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
-    PgSearch.disable_multisearch do
-      companies.each do |company|
-        Company.create!(
-          name: company[:name],
-          wikidata_id: company[:wikidata_id].delete('Q')
-        )
-        progress_bar_for_import.increment
+    # Set whodunnit to 'system' when creating records.
+    PaperTrail.request(whodunnit: 'system') do
+      PgSearch.disable_multisearch do
+        companies.each do |company|
+          Company.create!(
+            name: company[:name],
+            wikidata_id: company[:wikidata_id].delete('Q')
+          )
+          progress_bar_for_import.increment
+        end
       end
     end
 
@@ -83,13 +86,16 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
-    PgSearch.disable_multisearch do
-      platforms.each do |platform|
-        Platform.create!(
-          name: platform[:name],
-          wikidata_id: platform[:wikidata_id].delete('Q')
-        )
-        progress_bar_for_import.increment
+    # Set whodunnit to 'system' when creating records.
+    PaperTrail.request(whodunnit: 'system') do
+      PgSearch.disable_multisearch do
+        platforms.each do |platform|
+          Platform.create!(
+            name: platform[:name],
+            wikidata_id: platform[:wikidata_id].delete('Q')
+          )
+          progress_bar_for_import.increment
+        end
       end
     end
 
@@ -130,13 +136,16 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
-    PgSearch.disable_multisearch do
-      genres.each do |genre|
-        Genre.create!(
-          name: genre[:name],
-          wikidata_id: genre[:wikidata_id].delete('Q')
-        )
-        progress_bar_for_import.increment
+    # Set whodunnit to 'system' when creating records.
+    PaperTrail.request(whodunnit: 'system') do
+      PgSearch.disable_multisearch do
+        genres.each do |genre|
+          Genre.create!(
+            name: genre[:name],
+            wikidata_id: genre[:wikidata_id].delete('Q')
+          )
+          progress_bar_for_import.increment
+        end
       end
     end
 
@@ -176,13 +185,16 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
-    PgSearch.disable_multisearch do
-      series.each do |s|
-        Series.create!(
-          name: s[:name],
-          wikidata_id: s[:wikidata_id].delete('Q')
-        )
-        progress_bar_for_import.increment
+    # Set whodunnit to 'system' when creating records.
+    PaperTrail.request(whodunnit: 'system') do
+      PgSearch.disable_multisearch do
+        series.each do |s|
+          Series.create!(
+            name: s[:name],
+            wikidata_id: s[:wikidata_id].delete('Q')
+          )
+          progress_bar_for_import.increment
+        end
       end
     end
 
@@ -222,13 +234,16 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
-    PgSearch.disable_multisearch do
-      engines.each do |engine|
-        Engine.create!(
-          name: engine[:name],
-          wikidata_id: engine[:wikidata_id].delete('Q')
-        )
-        progress_bar_for_import.increment
+    # Set whodunnit to 'system' when creating records.
+    PaperTrail.request(whodunnit: 'system') do
+      PgSearch.disable_multisearch do
+        engines.each do |engine|
+          Engine.create!(
+            name: engine[:name],
+            wikidata_id: engine[:wikidata_id].delete('Q')
+          )
+          progress_bar_for_import.increment
+        end
       end
     end
 

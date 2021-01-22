@@ -121,6 +121,9 @@ class User < ApplicationRecord
     format: /\A(?=.{3,20}\z)[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*\z/,
     uniqueness: true
 
+  # Validate that the username is not reserved when the user is created.
+  validate :username_not_reserved, on: :create
+
   validates :slug,
     presence: true,
     uniqueness: true
@@ -201,6 +204,20 @@ class User < ApplicationRecord
   end
 
   private
+
+  # Usernames that are reserved so they cannot be used.
+  RESERVED_USERNAMES = T.let(%w[
+    mod moderator admin administrator
+    new edit index session login logout
+    sign_out sign_up sign_in search
+    system username
+  ].freeze, T::Array[String])
+
+  # Validate that the username isn't reserved for use by the system.
+  sig { void }
+  def username_not_reserved
+    errors.add(:username, "is reserved by the system") if RESERVED_USERNAMES.include?(username.downcase)
+  end
 
   sig { void }
   def on_user_creation

@@ -1392,6 +1392,84 @@ class Game < ApplicationRecord
   def validate_associated_records_for_cover_blob(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_versions=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_versions=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_versions=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_versions=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_versions=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_versions=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_versions=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_versions; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_versions?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_versions=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_versions(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_versions(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_pg_search_document; end
 
   sig { returns(T::Boolean) }
@@ -2772,6 +2850,15 @@ module Game::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::SteamAppId]).void }
   def steam_app_ids=(value); end
 
+  sig { returns(::Versions::GameVersion::ActiveRecord_Associations_CollectionProxy) }
+  def versions; end
+
+  sig { returns(T::Array[Integer]) }
+  def version_ids; end
+
+  sig { params(value: T::Enumerable[::Versions::GameVersion]).void }
+  def versions=(value); end
+
   sig { returns(T.nilable(ActiveStorage::Attached::One)) }
   def cover; end
 
@@ -2828,6 +2915,9 @@ module Game::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def cover_blob_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def version_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def pg_search_document_ids=(ids); end

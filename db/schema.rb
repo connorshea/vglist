@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_02_003012) do
+ActiveRecord::Schema.define(version: 2021_01_22_043044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -53,6 +53,30 @@ ActiveRecord::Schema.define(version: 2020_12_02_003012) do
     t.datetime "updated_at", null: false
     t.bigint "wikidata_id"
     t.index ["wikidata_id"], name: "index_companies_on_wikidata_id", unique: true
+  end
+
+  create_table "company_versions", force: :cascade do |t|
+    t.text "item_type", null: false
+    t.bigint "item_id", null: false
+    t.text "event", null: false
+    t.text "whodunnit"
+    t.bigint "whodunnit_id"
+    t.jsonb "object"
+    t.jsonb "object_changes"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_company_versions_on_item_type_and_item_id"
+  end
+
+  create_table "engine_versions", force: :cascade do |t|
+    t.text "item_type", null: false
+    t.bigint "item_id", null: false
+    t.text "event", null: false
+    t.text "whodunnit"
+    t.bigint "whodunnit_id"
+    t.jsonb "object"
+    t.jsonb "object_changes"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_engine_versions_on_item_type_and_item_id"
   end
 
   create_table "engines", force: :cascade do |t|
@@ -196,6 +220,18 @@ ActiveRecord::Schema.define(version: 2020_12_02_003012) do
     t.index ["user_id"], name: "index_game_purchases_on_user_id"
   end
 
+  create_table "game_versions", force: :cascade do |t|
+    t.text "item_type", null: false
+    t.bigint "item_id", null: false
+    t.text "event", null: false
+    t.text "whodunnit"
+    t.bigint "whodunnit_id"
+    t.jsonb "object"
+    t.jsonb "object_changes"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_game_versions_on_item_type_and_item_id"
+  end
+
   create_table "games", force: :cascade do |t|
     t.text "name", default: "", null: false
     t.datetime "created_at", null: false
@@ -214,6 +250,18 @@ ActiveRecord::Schema.define(version: 2020_12_02_003012) do
     t.index ["mobygames_id"], name: "index_games_on_mobygames_id", unique: true
     t.index ["series_id"], name: "index_games_on_series_id"
     t.index ["wikidata_id"], name: "index_games_on_wikidata_id", unique: true
+  end
+
+  create_table "genre_versions", force: :cascade do |t|
+    t.text "item_type", null: false
+    t.bigint "item_id", null: false
+    t.text "event", null: false
+    t.text "whodunnit"
+    t.bigint "whodunnit_id"
+    t.jsonb "object"
+    t.jsonb "object_changes"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_genre_versions_on_item_type_and_item_id"
   end
 
   create_table "genres", force: :cascade do |t|
@@ -278,6 +326,18 @@ ActiveRecord::Schema.define(version: 2020_12_02_003012) do
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
+  create_table "platform_versions", force: :cascade do |t|
+    t.text "item_type", null: false
+    t.bigint "item_id", null: false
+    t.text "event", null: false
+    t.text "whodunnit"
+    t.bigint "whodunnit_id"
+    t.jsonb "object"
+    t.jsonb "object_changes"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_platform_versions_on_item_type_and_item_id"
+  end
+
   create_table "platforms", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
@@ -304,6 +364,18 @@ ActiveRecord::Schema.define(version: 2020_12_02_003012) do
     t.index ["wikidata_id"], name: "index_series_on_wikidata_id", unique: true
   end
 
+  create_table "series_versions", force: :cascade do |t|
+    t.text "item_type", null: false
+    t.bigint "item_id", null: false
+    t.text "event", null: false
+    t.text "whodunnit"
+    t.bigint "whodunnit_id"
+    t.jsonb "object"
+    t.jsonb "object_changes"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_series_versions_on_item_type_and_item_id"
+  end
+
   create_table "statistics", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -328,6 +400,12 @@ ActiveRecord::Schema.define(version: 2020_12_02_003012) do
     t.integer "steam_app_ids", null: false
     t.integer "epic_games_store_ids", null: false
     t.integer "gog_ids", null: false
+    t.bigint "company_versions"
+    t.bigint "game_versions"
+    t.bigint "genre_versions"
+    t.bigint "engine_versions"
+    t.bigint "platform_versions"
+    t.bigint "series_versions"
   end
 
   create_table "steam_app_ids", force: :cascade do |t|

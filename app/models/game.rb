@@ -34,6 +34,12 @@ class Game < ApplicationRecord
 
   has_one_attached :cover
 
+  # Track changes to the record, but ignore changes to the average rating.
+  has_paper_trail ignore: [:avg_rating, :updated_at, :created_at],
+                  versions: {
+                    class_name: 'Versions::GameVersion'
+                  }
+
   # Only use one of the pre-set sizes for these images.
   COVER_SIZES = T.let(
     {

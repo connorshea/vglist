@@ -83,6 +83,9 @@ gem 'invisible_captcha', '~> 1.1.0'
 # For parallel execution of long-running tasks.
 gem 'parallel', '~> 1.20', require: false
 
+# For tracking changes to records.
+gem 'paper_trail', git: 'https://github.com/paper-trail-gem/paper_trail'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

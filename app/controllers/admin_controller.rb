@@ -33,6 +33,15 @@ class AdminController < ApplicationController
       gog_ids: Game.where.not(gog_id: nil).count
     }
 
+    @version_counts = {
+      company_versions: Versions::CompanyVersion.count,
+      game_versions: Versions::GameVersion.count,
+      genre_versions: Versions::GenreVersion.count,
+      engine_versions: Versions::EngineVersion.count,
+      platform_versions: Versions::PlatformVersion.count,
+      series_versions: Versions::SeriesVersion.count
+    }
+
     @statistics = Statistic.all.reverse_order.page helpers.page_param
   end
 

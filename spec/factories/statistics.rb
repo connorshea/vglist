@@ -22,5 +22,11 @@ FactoryBot.define do
     steam_app_ids { rand(100_000) }
     epic_games_store_ids { rand(100_000) }
     gog_ids { rand(100_000) }
+    company_versions { rand(100_000) }
+    game_versions { rand(100_000) }
+    genre_versions { rand(100_000) }
+    engine_versions { rand(100_000) }
+    platform_versions { rand(100_000) }
+    series_versions { rand(100_000) }
   end
 end

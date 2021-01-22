@@ -22,6 +22,10 @@ RSpec.describe Platform, type: :model do
     end
   end
 
+  describe "Versioning" do
+    it { should be_versioned }
+  end
+
   describe "Associations" do
     it { should have_many(:game_platforms) }
     it { should have_many(:games).through(:game_platforms).source(:game) }
