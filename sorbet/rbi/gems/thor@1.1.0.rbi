@@ -408,6 +408,8 @@ class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
   def method_missing(method, *args); end
 end
 
+Thor::Correctable = DidYouMean::Correctable
+
 class Thor::DynamicCommand < ::Thor::Command
   def initialize(name, options = T.unsafe(nil)); end
 
@@ -562,6 +564,10 @@ class Thor::NestedContext
 
   def pop; end
   def push; end
+end
+
+class Thor::NoKwargSpellChecker < ::DidYouMean::SpellChecker
+  def initialize(dictionary); end
 end
 
 class Thor::Option < ::Thor::Argument
@@ -732,6 +738,7 @@ class Thor::Shell::Color < ::Thor::Shell::Basic
   protected
 
   def are_colors_disabled?; end
+  def are_colors_supported?; end
   def can_display_colors?; end
   def diff_lcs_loaded?; end
   def output_diff_line(diff); end
@@ -829,6 +836,8 @@ Thor::THOR_RESERVED_WORDS = T.let(T.unsafe(nil), Array)
 Thor::Task = Thor::Command
 
 class Thor::UndefinedCommandError < ::Thor::Error
+  include(::DidYouMean::Correctable)
+
   def initialize(command, all_commands, namespace); end
 
   def all_commands; end
@@ -846,6 +855,8 @@ end
 Thor::UndefinedTaskError = Thor::UndefinedCommandError
 
 class Thor::UnknownArgumentError < ::Thor::Error
+  include(::DidYouMean::Correctable)
+
   def initialize(switches, unknown); end
 
   def switches; end

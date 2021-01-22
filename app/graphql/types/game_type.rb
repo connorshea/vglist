@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 module Types
   class GameType < Types::BaseObject
     extend T::Sig

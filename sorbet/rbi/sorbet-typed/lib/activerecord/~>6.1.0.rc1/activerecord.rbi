@@ -157,7 +157,8 @@ class ActiveRecord::Migration::Current < ActiveRecord::Migration
       null: T::Boolean,
       precision: Integer,
       scale: Integer,
-      comment: String
+      comment: String,
+      array: T::Boolean
     ).void
   end
   def add_column(
@@ -169,7 +170,8 @@ class ActiveRecord::Migration::Current < ActiveRecord::Migration
     null: nil,
     precision: nil,
     scale: nil,
-    comment: nil
+    comment: nil,
+    array: nil
   ); end
 
   sig do

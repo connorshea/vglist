@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 module Types
   class UserType < Types::BaseObject
     description "User accounts on vglist"

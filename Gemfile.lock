@@ -1,3 +1,16 @@
+GIT
+  remote: https://github.com/connorshea/tapioca
+  revision: c54ab11bee7abc1c019da7c701e34444799efc3d
+  branch: fix-issue-with-tapioca-optional-deps
+  specs:
+    tapioca (0.4.13)
+      parlour (>= 2.1.0)
+      pry (>= 0.12.2)
+      sorbet-runtime
+      sorbet-static (>= 0.4.4471)
+      spoom
+      thor (>= 0.19.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -369,8 +382,13 @@ GEM
       sorbet-coerce (>= 0.2.6)
       sorbet-runtime (>= 0.5)
     sorbet-runtime (0.5.6216)
+    sorbet-static (0.5.6216-universal-darwin-14)
+    sorbet-static (0.5.6216-universal-darwin-15)
+    sorbet-static (0.5.6216-universal-darwin-16)
+    sorbet-static (0.5.6216-universal-darwin-17)
     sorbet-static (0.5.6216-universal-darwin-18)
     sorbet-static (0.5.6216-universal-darwin-19)
+    sorbet-static (0.5.6216-universal-darwin-20)
     sorbet-static (0.5.6216-x86_64-linux)
     sparql (3.1.5)
       builder (~> 3.2)
@@ -401,13 +419,6 @@ GEM
       sprockets (>= 3.0.0)
     sxp (1.1.0)
       rdf (~> 3.1)
-    tapioca (0.4.13)
-      parlour (>= 2.1.0)
-      pry (>= 0.12.2)
-      sorbet-runtime
-      sorbet-static (>= 0.4.4471)
-      spoom
-      thor (>= 0.19.2)
     thor (1.1.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
@@ -496,7 +507,7 @@ DEPENDENCIES
   sparql (~> 3.1.5)
   spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)
-  tapioca (~> 0.4.13)
+  tapioca!
   turbolinks (~> 5)
   web-console (~> 4.1.0)
   webdrivers (~> 4.5)

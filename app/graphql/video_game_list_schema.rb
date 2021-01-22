@@ -2,12 +2,6 @@
 class VideoGameListSchema < GraphQL::Schema
   extend T::Sig
 
-  # Use new error handling and interpreter.
-  use GraphQL::Execution::Interpreter
-  use GraphQL::Analysis::AST
-  use GraphQL::Execution::Errors
-  use GraphQL::Pagination::Connections
-
   mutation(Types::MutationType)
   query(Types::QueryType)
 
