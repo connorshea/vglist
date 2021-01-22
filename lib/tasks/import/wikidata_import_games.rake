@@ -45,6 +45,9 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
+    # Set whodunnit to 'system' for any audited changes made by this Rake task.
+    PaperTrail.request.whodunnit = 'system'
+
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
@@ -260,6 +263,9 @@ namespace 'import:wikidata' do
       wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '')
       existing_wikidata_ids.include?(wikidata_id.to_i)
     end
+
+    # Set whodunnit to 'system' for any audited changes made by this Rake task.
+    PaperTrail.request.whodunnit = 'system'
 
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?

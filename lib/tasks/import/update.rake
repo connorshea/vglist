@@ -63,6 +63,8 @@ namespace :import do
         format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
       )
 
+      # Set whodunnit to 'system' for any audited changes made by this Rake task.
+      PaperTrail.request.whodunnit = 'system'
       # Limit logging in production to allow the progress bar to work.
       Rails.logger.level = 2 if Rails.env.production?
 
@@ -204,6 +206,9 @@ namespace :import do
 
     # This has to use send because methods in Rake tasks are private by default.
     rows = get_rows(send("games_with_#{property_name.pluralize}_query"))
+
+    # Set whodunnit to 'system' for any audited changes made by this Rake task.
+    PaperTrail.request.whodunnit = 'system'
 
     # Limit logging in production to allow the progress bar to work and
     # to prevent spamming the logs when running the command.

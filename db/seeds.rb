@@ -23,6 +23,9 @@ seed_tasks = [
   'db:seed:admin'
 ]
 
+# Set whodunnit to 'system' for any audited changes made during the seeding.
+PaperTrail.request.whodunnit = 'system'
+
 seed_tasks.each do |task|
   Rake::Task[task].invoke
 end
