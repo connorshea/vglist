@@ -21,7 +21,13 @@ class Statistic < ApplicationRecord
     :giantbomb_ids,
     :steam_app_ids,
     :epic_games_store_ids,
-    :gog_ids
+    :gog_ids,
+    :company_versions,
+    :game_versions,
+    :genre_versions,
+    :engine_versions,
+    :platform_versions,
+    :series_versions
   ].freeze
 
   validates(*STATISTICS, numericality: true)

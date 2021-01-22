@@ -26,6 +26,15 @@ module Statistic::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def companies?; end
 
+  sig { returns(T.nilable(Integer)) }
+  def company_versions; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def company_versions=(value); end
+
+  sig { returns(T::Boolean) }
+  def company_versions?; end
+
   sig { returns(ActiveSupport::TimeWithZone) }
   def created_at; end
 
@@ -34,6 +43,15 @@ module Statistic::GeneratedAttributeMethods
 
   sig { returns(T::Boolean) }
   def created_at?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def engine_versions; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def engine_versions=(value); end
+
+  sig { returns(T::Boolean) }
+  def engine_versions?; end
 
   sig { returns(Integer) }
   def engines; end
@@ -71,6 +89,15 @@ module Statistic::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def game_purchases?; end
 
+  sig { returns(T.nilable(Integer)) }
+  def game_versions; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def game_versions=(value); end
+
+  sig { returns(T::Boolean) }
+  def game_versions?; end
+
   sig { returns(Integer) }
   def games; end
 
@@ -97,6 +124,15 @@ module Statistic::GeneratedAttributeMethods
 
   sig { returns(T::Boolean) }
   def games_with_release_dates?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def genre_versions; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def genre_versions=(value); end
+
+  sig { returns(T::Boolean) }
+  def genre_versions?; end
 
   sig { returns(Integer) }
   def genres; end
@@ -152,6 +188,15 @@ module Statistic::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def pcgamingwiki_ids?; end
 
+  sig { returns(T.nilable(Integer)) }
+  def platform_versions; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def platform_versions=(value); end
+
+  sig { returns(T::Boolean) }
+  def platform_versions?; end
+
   sig { returns(Integer) }
   def platforms; end
 
@@ -178,6 +223,15 @@ module Statistic::GeneratedAttributeMethods
 
   sig { returns(T::Boolean) }
   def series?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def series_versions; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def series_versions=(value); end
+
+  sig { returns(T::Boolean) }
+  def series_versions?; end
 
   sig { returns(Integer) }
   def steam_app_ids; end

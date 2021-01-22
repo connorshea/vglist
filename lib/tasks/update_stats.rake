@@ -24,7 +24,13 @@ namespace :vglist do
         giantbomb_ids: Game.where.not(giantbomb_id: nil).count,
         steam_app_ids: Game.joins(:steam_app_ids).count,
         epic_games_store_ids: Game.where.not(epic_games_store_id: nil).count,
-        gog_ids: Game.where.not(gog_id: nil).count
+        gog_ids: Game.where.not(gog_id: nil).count,
+        company_versions: Versions::CompanyVersion.count,
+        game_versions: Versions::GameVersion.count,
+        genre_versions: Versions::GenreVersion.count,
+        engine_versions: Versions::EngineVersion.count,
+        platform_versions: Versions::PlatformVersion.count,
+        series_versions: Versions::SeriesVersion.count
       )
       puts "Statistics table updated."
     end

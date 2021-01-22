@@ -43,6 +43,20 @@
     </nav>
   </div>
 
+  <div class="card mt-30 pt-15 pb-15">
+    <div class="has-text-centered has-text-weight-bold mb-25">Version Counts</div>
+    <nav class="level">
+      <% @version_counts.each do |key, count| %>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading"><%= key.to_s.titlecase %></p>
+            <p class="title"><%= count %></p>
+          </div>
+        </div>
+      <% end %>
+    </nav>
+  </div>
+
   <h3 class="has-text-centered mt-25 mb-10 has-text-weight-bold">Statistics Over Time</h3>
   <div class="table-container">
     <table class="table is-striped is-narrow is-bordered is-fullwidth">
@@ -115,6 +129,36 @@
             <td><%= statistic.steam_app_ids %></td>
             <td><%= statistic.epic_games_store_ids %></td>
             <td><%= statistic.gog_ids %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="has-text-centered mt-15 mb-10 has-text-weight-bold">Version Count Over Time</h3>
+  <div class="table-container">
+    <table class="table is-striped is-narrow is-bordered is-fullwidth">
+      <thead>
+        <tr>
+          <th style="min-width: 250px;">Date</th>
+          <th>Company Versions</th>
+          <th>Game Versions</th>
+          <th>Genre Versions</th>
+          <th>Engine Versions</th>
+          <th>Platform Versions</th>
+          <th>Series Versions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @statistics.each do |statistic| %>
+          <tr>
+            <td><%= statistic.created_at.strftime("%b %e, %Y %l:%M:%S %p") %></td>
+            <td><%= statistic.company_versions %></td>
+            <td><%= statistic.game_versions %></td>
+            <td><%= statistic.genre_versions %></td>
+            <td><%= statistic.engine_versions %></td>
+            <td><%= statistic.platform_versions %></td>
+            <td><%= statistic.series_versions %></td>
           </tr>
         <% end %>
       </tbody>

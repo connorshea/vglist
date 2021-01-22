@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_22_012249) do
+ActiveRecord::Schema.define(version: 2021_01_22_043044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -400,6 +400,12 @@ ActiveRecord::Schema.define(version: 2021_01_22_012249) do
     t.integer "steam_app_ids", null: false
     t.integer "epic_games_store_ids", null: false
     t.integer "gog_ids", null: false
+    t.bigint "company_versions"
+    t.bigint "game_versions"
+    t.bigint "genre_versions"
+    t.bigint "engine_versions"
+    t.bigint "platform_versions"
+    t.bigint "series_versions"
   end
 
   create_table "steam_app_ids", force: :cascade do |t|
