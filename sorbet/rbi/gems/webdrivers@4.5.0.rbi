@@ -56,10 +56,12 @@ class Webdrivers::Chromedriver < ::Webdrivers::Common
 
     private
 
+    def apple_m1_compatible?(driver_version); end
     def browser_build_version; end
     def chrome_build_version; end
     def current_build_version; end
     def download_url; end
+    def driver_filename(driver_version); end
     def file_name; end
     def latest_point_release(version); end
     def sufficient_binary?; end
@@ -117,7 +119,9 @@ class Webdrivers::Edgedriver < ::Webdrivers::Chromedriver
 
     private
 
+    def apple_m1_compatible?(driver_version); end
     def download_url; end
+    def driver_filename(driver_version); end
     def failed_to_find_message(version); end
     def file_name; end
     def latest_point_release(version); end
@@ -198,6 +202,7 @@ end
 
 class Webdrivers::System
   class << self
+    def apple_m1_architecture?; end
     def bitsize; end
     def cache_version(file_name, version); end
     def cached_version(file_name); end
@@ -215,7 +220,7 @@ class Webdrivers::System
     def untargz_file(source, target); end
     def unzip_file(filename, driver_name); end
     def valid_cache?(file_name); end
-    def wsl?; end
+    def wsl_v1?; end
   end
 end
 

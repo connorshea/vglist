@@ -57,6 +57,7 @@ class SPARQL::Client
   def set_url_default_graph(url); end
 
   class << self
+    def finalize(klass); end
     def parse_csv_bindings(csv, nodes = T.unsafe(nil)); end
     def parse_json_bindings(json, nodes = T.unsafe(nil)); end
     def parse_json_value(value, nodes = T.unsafe(nil)); end

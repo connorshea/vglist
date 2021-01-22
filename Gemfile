@@ -80,6 +80,7 @@ gem 'inline_svg', '~> 1.7'
 # captcha and doesn't use google stuff.
 gem 'invisible_captcha', '~> 1.1.0'
 
+# For parallel execution of long-running tasks.
 gem 'parallel', '~> 1.20', require: false
 
 group :development, :test do
@@ -145,7 +146,8 @@ group :development do
   # Enable dotenv for local environment variables.
   gem 'dotenv-rails', '~> 2.7'
   # Tapioca for generating Sorbet RBI files.
-  gem 'tapioca', '~> 0.4.13', require: false
+  # Use a fork to fix this issue: https://github.com/Shopify/tapioca/issues/208
+  gem 'tapioca', git: 'https://github.com/connorshea/tapioca', branch: 'fix-issue-with-tapioca-optional-deps', require: false
 end
 
 group :test do

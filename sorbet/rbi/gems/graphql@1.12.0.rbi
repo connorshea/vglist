@@ -21,6 +21,7 @@ end
 
 module GraphQL
   class << self
+    def const_missing(const_name); end
     def default_parser; end
     def default_parser=(_arg0); end
     def parse(graphql_string, tracer: T.unsafe(nil)); end
@@ -39,6 +40,7 @@ module GraphQL::Analysis
   def analyze_multiplex(multiplex, analyzers); end
   def analyze_query(query, analyzers, multiplex_states: T.unsafe(nil)); end
   def reduce_node(irep_node, reducer_states); end
+  def use(schema_class); end
   def visit_analyzers(visit_type, irep_node, reducer_states); end
 
   class << self
@@ -46,6 +48,7 @@ module GraphQL::Analysis
     def analyze_multiplex(multiplex, analyzers); end
     def analyze_query(query, analyzers, multiplex_states: T.unsafe(nil)); end
     def reduce_node(irep_node, reducer_states); end
+    def use(schema_class); end
     def visit_analyzers(visit_type, irep_node, reducer_states); end
   end
 end
@@ -191,6 +194,7 @@ class GraphQL::Analysis::AST::Visitor < ::GraphQL::Language::Visitor
   def previous_argument_definition; end
   def previous_field_definition; end
   def query; end
+  def rescued_errors; end
   def response_path; end
   def skipping?; end
   def type_definition; end
@@ -343,8 +347,6 @@ class GraphQL::Authorization::InaccessibleFieldsError < ::GraphQL::AnalysisError
   def irep_nodes; end
 end
 
-GraphQL::BOOLEAN_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
-
 class GraphQL::Backtrace
   include(::Enumerable)
   extend(::Forwardable)
@@ -358,10 +360,20 @@ class GraphQL::Backtrace
   def to_s; end
 
   class << self
-    def disable; end
-    def enable; end
-    def use(schema_defn); end
+    def use(schema_defn, legacy: T.unsafe(nil)); end
   end
+end
+
+class GraphQL::Backtrace::Frame
+  def initialize(path:, query:, ast_node:, object:, field:, arguments:, parent_frame:); end
+
+  def arguments; end
+  def ast_node; end
+  def field; end
+  def object; end
+  def parent_frame; end
+  def path; end
+  def query; end
 end
 
 module GraphQL::Backtrace::InspectResult
@@ -374,6 +386,17 @@ module GraphQL::Backtrace::InspectResult
   class << self
     def inspect_result(obj); end
     def inspect_truncated(obj); end
+  end
+end
+
+module GraphQL::Backtrace::LegacyTracer
+
+  private
+
+  def trace(key, metadata); end
+
+  class << self
+    def trace(key, metadata); end
   end
 end
 
@@ -618,6 +641,72 @@ end
 
 GraphQL::Compatibility::SchemaParserSpecification::SCHEMA_DEFINITION_STRING = T.let(T.unsafe(nil), String)
 
+GraphQL::DEPRECATED_BOOLEAN_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+
+GraphQL::DEPRECATED_FLOAT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+
+GraphQL::DEPRECATED_ID_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+
+GraphQL::DEPRECATED_INT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+
+GraphQL::DEPRECATED_STRING_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+
+class GraphQL::Dataloader
+  def initialize(multiplex_context); end
+
+  def context; end
+  def current_runtime; end
+  def current_runtime=(_arg0); end
+  def enqueue(&block); end
+  def run; end
+  def with(source_class, *batch_parameters); end
+  def yield; end
+  def yielded?; end
+  def yielded_fibers; end
+
+  private
+
+  def create_source_fiber; end
+  def resume_fiber_and_enqueue_continuation(fiber, fiber_stack); end
+
+  class << self
+    def use(schema); end
+  end
+end
+
+class GraphQL::Dataloader::NullDataloader < ::GraphQL::Dataloader
+  def enqueue; end
+  def run; end
+  def yield; end
+  def yielded?; end
+end
+
+class GraphQL::Dataloader::Request
+  def initialize(source, key); end
+
+  def load; end
+end
+
+class GraphQL::Dataloader::RequestAll < ::GraphQL::Dataloader::Request
+  def initialize(source, keys); end
+
+  def load; end
+end
+
+class GraphQL::Dataloader::Source
+  def dataloader; end
+  def fetch(keys); end
+  def load(key); end
+  def load_all(keys); end
+  def pending?; end
+  def request(key); end
+  def request_all(keys); end
+  def results; end
+  def run_pending_keys; end
+  def setup(dataloader); end
+  def sync; end
+end
+
 module GraphQL::Define
   class << self
     def assign_metadata_key(key); end
@@ -685,6 +774,7 @@ module GraphQL::Define::InstanceDefinable
   mixes_in_class_methods(::GraphQL::Define::InstanceDefinable::ClassMethods)
 
   def define(**kwargs, &block); end
+  def deprecated_define(**kwargs, &block); end
   def metadata; end
   def redefine(**kwargs, &block); end
 
@@ -717,6 +807,7 @@ end
 module GraphQL::Define::InstanceDefinable::ClassMethods
   def accepts_definitions(*accepts); end
   def define(**kwargs, &block); end
+  def deprecated_define(**kwargs, &block); end
   def dictionary; end
   def ensure_defined(*method_names); end
   def ensure_defined_method_names; end
@@ -728,6 +819,10 @@ class GraphQL::Define::InstanceDefinable::Definition
 
   def define_keywords; end
   def define_proc; end
+end
+
+module GraphQL::Define::InstanceDefinable::DeprecatedDefine
+  def define(**kwargs, &block); end
 end
 
 class GraphQL::Define::NoDefinitionError < ::GraphQL::Error
@@ -747,10 +842,6 @@ class GraphQL::Define::TypeDefiner
   def Int; end
   def String; end
   def [](type); end
-
-  class << self
-    def instance; end
-  end
 end
 
 module GraphQL::DeprecatedDSL
@@ -847,6 +938,8 @@ GraphQL::Directive::SkipDirective = T.let(T.unsafe(nil), GraphQL::Directive)
 GraphQL::Directive::UNION = T.let(T.unsafe(nil), Symbol)
 
 class GraphQL::EnumType < ::GraphQL::BaseType
+  extend(::GraphQL::Define::InstanceDefinable::DeprecatedDefine)
+
   def initialize; end
 
   def add_value(enum_value); end
@@ -935,6 +1028,7 @@ class GraphQL::Execution::Execute
     def begin_query(query, _multiplex); end
     def finish_multiplex(results, multiplex); end
     def finish_query(query, _multiplex); end
+    def use(schema_class); end
   end
 end
 
@@ -1027,19 +1121,25 @@ class GraphQL::Execution::Interpreter::Arguments
   include(::GraphQL::Dig)
   extend(::Forwardable)
 
-  def initialize(keyword_arguments:, argument_values:); end
+  def initialize(argument_values:, keyword_arguments: T.unsafe(nil)); end
 
   def [](*args, &block); end
   def argument_values; end
   def each(*args, &block); end
   def each_value(*args, &block); end
+  def empty?; end
   def fetch(*args, &block); end
   def inspect; end
   def key?(*args, &block); end
   def keys(*args, &block); end
   def keyword_arguments; end
+  def merge_extras(extra_args); end
   def values(*args, &block); end
 end
+
+GraphQL::Execution::Interpreter::Arguments::EMPTY = T.let(T.unsafe(nil), GraphQL::Execution::Interpreter::Arguments)
+
+GraphQL::Execution::Interpreter::Arguments::NO_ARGS = T.let(T.unsafe(nil), Hash)
 
 class GraphQL::Execution::Interpreter::ArgumentsCache
   def initialize(query); end
@@ -1051,16 +1151,14 @@ class GraphQL::Execution::Interpreter::ArgumentsCache
   def prepare_args_hash(ast_arg_or_hash_or_value); end
 end
 
+GraphQL::Execution::Interpreter::ArgumentsCache::NO_ARGUMENTS = T.let(T.unsafe(nil), Hash)
+
 GraphQL::Execution::Interpreter::ArgumentsCache::NO_VALUE_GIVEN = T.let(T.unsafe(nil), Object)
 
 class GraphQL::Execution::Interpreter::ExecutionErrors
   def initialize(ctx, ast_node, path); end
 
   def add(err_or_msg); end
-end
-
-module GraphQL::Execution::Interpreter::HandlesRawValue
-  def raw_value(obj); end
 end
 
 class GraphQL::Execution::Interpreter::HashResponse
@@ -1092,7 +1190,7 @@ class GraphQL::Execution::Interpreter::Runtime
   def initialize(query:, response:); end
 
   def add_dead_path(path); end
-  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, eager: T.unsafe(nil), trace: T.unsafe(nil), &block); end
+  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, ast_node:, eager: T.unsafe(nil), trace: T.unsafe(nil), &block); end
   def arguments(graphql_object, arg_owner, ast_node); end
   def authorized_new(type, value, context, path); end
   def context; end
@@ -1101,9 +1199,11 @@ class GraphQL::Execution::Interpreter::Runtime
   def dead_path?(path); end
   def delete_interpreter_context(key); end
   def directives_include?(node, graphql_object, parent_type); end
-  def evaluate_selections(path, scoped_context, owner_object, owner_type, selections, root_operation_type: T.unsafe(nil)); end
+  def enqueue_selections_fiber; end
+  def evaluate_selection(path, result_name, field_ast_nodes_or_ast_node, scoped_context, owner_object, owner_type, is_eager_field); end
+  def evaluate_selections(path, scoped_context, owner_object, owner_type, is_eager_selection:, gathered_selections:, after:); end
   def final_value; end
-  def gather_selections(owner_object, owner_type, selections, selections_by_name); end
+  def gather_selections(owner_object, owner_type, selections, selections_by_name = T.unsafe(nil)); end
   def inspect; end
   def query; end
   def resolve_type(type, value, path); end
@@ -1111,15 +1211,19 @@ class GraphQL::Execution::Interpreter::Runtime
   def run_directive(object, ast_node, idx, &block); end
   def run_eager; end
   def schema; end
+  def set_all_interpreter_context(object, field, arguments, path); end
   def set_interpreter_context(key, value); end
   def set_type_at_path(path, type); end
   def type_at(path); end
+  def value_at(path); end
   def write_execution_errors_in_response(path, errors); end
   def write_in_response(path, value); end
   def write_invalid_null_in_response(path, invalid_null_error); end
 end
 
 GraphQL::Execution::Interpreter::Runtime::HALT = T.let(T.unsafe(nil), Object)
+
+GraphQL::Execution::Interpreter::Runtime::NO_ARGS = T.let(T.unsafe(nil), Hash)
 
 class GraphQL::Execution::Lazy
   def initialize(path: T.unsafe(nil), field: T.unsafe(nil), &get_value_func); end
@@ -1232,6 +1336,7 @@ class GraphQL::Execution::Multiplex
   def initialize(schema:, queries:, context:, max_complexity:); end
 
   def context; end
+  def dataloader; end
   def max_complexity; end
   def queries; end
   def schema; end
@@ -1272,8 +1377,6 @@ class GraphQL::ExecutionError < ::GraphQL::Error
   def path=(_arg0); end
   def to_h; end
 end
-
-GraphQL::FLOAT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 
 class GraphQL::Field
   include(::GraphQL::Define::InstanceDefinable)
@@ -1415,6 +1518,7 @@ class GraphQL::Function
     def complexity(new_value = T.unsafe(nil)); end
     def deprecation_reason(new_value = T.unsafe(nil)); end
     def description(new_value = T.unsafe(nil)); end
+    def inherited(subclass); end
     def type(premade_type = T.unsafe(nil), &block); end
     def types; end
 
@@ -1425,11 +1529,9 @@ class GraphQL::Function
   end
 end
 
-GraphQL::ID_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
-
-GraphQL::INT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
-
 class GraphQL::InputObjectType < ::GraphQL::BaseType
+  extend(::GraphQL::Define::InstanceDefinable::DeprecatedDefine)
+
   def initialize; end
 
   def arguments; end
@@ -1452,6 +1554,12 @@ end
 
 GraphQL::InputObjectType::INVALID_OBJECT_MESSAGE = T.let(T.unsafe(nil), String)
 
+class GraphQL::IntegerDecodingError < ::GraphQL::RuntimeTypeError
+  def initialize(value); end
+
+  def integer_value; end
+end
+
 class GraphQL::IntegerEncodingError < ::GraphQL::RuntimeTypeError
   def initialize(value); end
 
@@ -1459,6 +1567,8 @@ class GraphQL::IntegerEncodingError < ::GraphQL::RuntimeTypeError
 end
 
 class GraphQL::InterfaceType < ::GraphQL::BaseType
+  extend(::GraphQL::Define::InstanceDefinable::DeprecatedDefine)
+
   def initialize; end
 
   def all_fields; end
@@ -1779,6 +1889,8 @@ class GraphQL::Language::DocumentFromSchemaDefinition
 
   def always_include_schema; end
   def ast_directives(member); end
+  def definition_directives(member); end
+  def directives(member); end
   def include_built_in_directives; end
   def include_built_in_scalars; end
   def include_introspection_types; end
@@ -2841,6 +2953,8 @@ class GraphQL::NonNullType < ::GraphQL::BaseType
 end
 
 class GraphQL::ObjectType < ::GraphQL::BaseType
+  extend(::GraphQL::Define::InstanceDefinable::DeprecatedDefine)
+
   def initialize; end
 
   def all_fields; end
@@ -2893,7 +3007,7 @@ class GraphQL::Pagination::ArrayConnection < ::GraphQL::Pagination::Connection
 end
 
 class GraphQL::Pagination::Connection
-  def initialize(items, parent: T.unsafe(nil), context: T.unsafe(nil), first: T.unsafe(nil), after: T.unsafe(nil), max_page_size: T.unsafe(nil), last: T.unsafe(nil), before: T.unsafe(nil), edge_class: T.unsafe(nil)); end
+  def initialize(items, parent: T.unsafe(nil), field: T.unsafe(nil), context: T.unsafe(nil), first: T.unsafe(nil), after: T.unsafe(nil), max_page_size: T.unsafe(nil), last: T.unsafe(nil), before: T.unsafe(nil), edge_class: T.unsafe(nil)); end
 
   def after; end
   def after_value; end
@@ -2909,6 +3023,8 @@ class GraphQL::Pagination::Connection
   def edge_nodes; end
   def edges; end
   def end_cursor; end
+  def field; end
+  def field=(_arg0); end
   def first; end
   def first=(_arg0); end
   def first_value; end
@@ -2954,7 +3070,7 @@ class GraphQL::Pagination::Connections
   def all_wrappers; end
   def delete(nodes_class); end
   def edge_class_for_field(field); end
-  def wrap(field, parent, items, arguments, context, wrappers: T.unsafe(nil)); end
+  def wrap(field, parent, items, arguments, context); end
   def wrapper_for(items, wrappers: T.unsafe(nil)); end
 
   protected
@@ -3041,12 +3157,14 @@ class GraphQL::Query
   def get_type(*args, &block); end
   def inspect; end
   def internal_representation(*args, &block); end
-  def interpreter?(*args, &block); end
+  def interpreter?; end
   def irep_selection; end
   def lookahead; end
   def max_complexity(*args, &block); end
   def max_depth(*args, &block); end
   def merge_filters(only: T.unsafe(nil), except: T.unsafe(nil)); end
+  def multiplex; end
+  def multiplex=(_arg0); end
   def mutation?; end
   def operation_fingerprint; end
   def operation_name; end
@@ -3154,8 +3272,9 @@ class GraphQL::Query::Context
   def initialize(query:, values:, object:, schema: T.unsafe(nil)); end
 
   def [](key); end
-  def []=(*args, &block); end
+  def []=(key, value); end
   def ast_node; end
+  def dataloader; end
   def delete(key); end
   def dig(key, *other_keys); end
   def errors; end
@@ -3445,14 +3564,14 @@ end
 
 class GraphQL::Relay::ArrayConnection < ::GraphQL::Relay::BaseConnection
   def cursor_from_node(item); end
+  def first; end
   def has_next_page; end
   def has_previous_page; end
+  def last; end
 
   private
 
-  def first; end
   def index_from_cursor(cursor); end
-  def last; end
   def paged_nodes; end
   def sliced_nodes; end
 end
@@ -3672,15 +3791,14 @@ class GraphQL::RequiredImplementationMissingError < ::GraphQL::Error
 end
 
 module GraphQL::Ruby2Keywords
-  def ruby2_keywords(*_arg0); end
 end
 
 class GraphQL::RuntimeTypeError < ::GraphQL::Error
 end
 
-GraphQL::STRING_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
-
 class GraphQL::ScalarType < ::GraphQL::BaseType
+  extend(::GraphQL::Define::InstanceDefinable::DeprecatedDefine)
+
   def initialize; end
 
   def coerce=(proc); end
@@ -3711,6 +3829,7 @@ class GraphQL::Schema
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
   extend(::GraphQL::Schema::Member::HasAstNode)
   extend(::GraphQL::Define::InstanceDefinable::ClassMethods)
+  extend(::GraphQL::Define::InstanceDefinable::DeprecatedDefine)
   extend(::GraphQL::Schema::FindInheritedValue)
   extend(::GraphQL::Schema::FindInheritedValue::EmptyObjects)
   extend(::GraphQL::Schema::LazyHandlingMethods)
@@ -3733,12 +3852,13 @@ class GraphQL::Schema
   def context_class=(_arg0); end
   def cursor_encoder; end
   def cursor_encoder=(_arg0); end
+  def dataloader_class; end
   def default_filter; end
   def default_mask; end
   def default_mask=(_arg0); end
   def default_max_page_size; end
   def default_max_page_size=(_arg0); end
-  def define(**kwargs, &block); end
+  def deprecated_define(**kwargs, &block); end
   def directive(*args, &block); end
   def directives; end
   def directives=(_arg0); end
@@ -3769,7 +3889,6 @@ class GraphQL::Schema
   def instrument(instrumentation_type, instrumenter); end
   def instrumenters; end
   def instrumenters=(_arg0); end
-  def interpreter=(_arg0); end
   def interpreter?; end
   def introspection_namespace; end
   def introspection_namespace=(_arg0); end
@@ -3809,6 +3928,7 @@ class GraphQL::Schema
   def references_to(type_name = T.unsafe(nil)); end
   def remove_handler(*args, &block); end
   def rescue_from(*args, &block); end
+  def rescues(*args, &block); end
   def resolve_type(type, object, ctx = T.unsafe(nil)); end
   def resolve_type=(new_resolve_type_proc); end
   def resolve_type_proc; end
@@ -3834,6 +3954,8 @@ class GraphQL::Schema
   def union_memberships(type); end
   def using_ast_analysis?; end
   def validate(string_or_document, rules: T.unsafe(nil), context: T.unsafe(nil)); end
+  def validate_timeout; end
+  def validate_timeout=(_arg0); end
   def visible?(member, context); end
 
   protected
@@ -3857,6 +3979,9 @@ class GraphQL::Schema
     def connections=(_arg0); end
     def context_class(new_context_class = T.unsafe(nil)); end
     def cursor_encoder(new_encoder = T.unsafe(nil)); end
+    def dataloader_class; end
+    def dataloader_class=(_arg0); end
+    def default_analysis_engine; end
     def default_directives; end
     def default_execution_strategy; end
     def default_execution_strategy=(_arg0); end
@@ -3878,7 +4003,7 @@ class GraphQL::Schema
     def execute(query_str = T.unsafe(nil), **kwargs); end
     def execution_strategy_for_operation(*args, &block); end
     def find(path); end
-    def from_definition(definition_or_path, default_resolve: T.unsafe(nil), interpreter: T.unsafe(nil), parser: T.unsafe(nil), using: T.unsafe(nil)); end
+    def from_definition(definition_or_path, default_resolve: T.unsafe(nil), parser: T.unsafe(nil), using: T.unsafe(nil)); end
     def from_introspection(introspection_result); end
     def get_field(type_or_name, field_name); end
     def get_fields(type); end
@@ -3947,10 +4072,13 @@ class GraphQL::Schema
     def use(plugin, **kwargs); end
     def using_ast_analysis?; end
     def validate(*args, &block); end
+    def validate_timeout(new_validate_timeout = T.unsafe(nil)); end
+    def validate_timeout=(_arg0); end
     def visible?(member, ctx); end
 
     private
 
+    def add_directives_from(owner); end
     def add_type(type, owner:, late_types:, path:); end
     def add_type_and_traverse(t, root:); end
     def all_middleware; end
@@ -3979,6 +4107,10 @@ class GraphQL::Schema::Argument
   include(::GraphQL::Schema::Member::AcceptsDefinition)
   include(::GraphQL::Schema::Member::HasPath)
   include(::GraphQL::Schema::Member::HasAstNode)
+  include(::GraphQL::Schema::Member::HasDirectives)
+  include(::GraphQL::Schema::Member::HasDeprecationReason)
+  include(::GraphQL::Schema::FindInheritedValue::EmptyObjects)
+  include(::GraphQL::Schema::Member::HasValidators)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
 
   def accessible?(context); end
@@ -3987,7 +4119,7 @@ class GraphQL::Schema::Argument
   def default_value; end
   def default_value?; end
   def deprecation_reason(text = T.unsafe(nil)); end
-  def deprecation_reason=(text = T.unsafe(nil)); end
+  def deprecation_reason=(new_reason); end
   def description(text = T.unsafe(nil)); end
   def description=(_arg0); end
   def from_resolver?; end
@@ -4024,7 +4156,7 @@ module GraphQL::Schema::BuildFromDefinition
   class << self
     def from_definition(definition_string, parser: T.unsafe(nil), **kwargs); end
     def from_definition_path(definition_path, parser: T.unsafe(nil), **kwargs); end
-    def from_document(document, default_resolve:, using: T.unsafe(nil), relay: T.unsafe(nil), interpreter: T.unsafe(nil)); end
+    def from_document(document, default_resolve:, using: T.unsafe(nil), relay: T.unsafe(nil)); end
   end
 end
 
@@ -4078,6 +4210,16 @@ class GraphQL::Schema::Directive < ::GraphQL::Schema::Member
   extend(::GraphQL::Schema::Member::HasArguments)
   extend(::GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor)
 
+  def initialize(owner, **arguments); end
+
+  def arguments; end
+  def owner; end
+
+  private
+
+  def assert_has_location(location); end
+  def assert_valid_owner; end
+
   class << self
     def default_directive(new_default_directive = T.unsafe(nil)); end
     def default_directive?; end
@@ -4087,6 +4229,7 @@ class GraphQL::Schema::Directive < ::GraphQL::Schema::Member
     def on_field?; end
     def on_fragment?; end
     def on_operation?; end
+    def path; end
     def resolve(object, arguments, context); end
     def static_include?(_arguments, _context); end
     def to_graphql; end
@@ -4116,6 +4259,18 @@ class GraphQL::Schema::Directive::Feature < ::GraphQL::Schema::Directive
   class << self
     def enabled?(flag_name, object, context); end
     def include?(object, arguments, context); end
+  end
+end
+
+class GraphQL::Schema::Directive::Flagged < ::GraphQL::Schema::Directive
+  def initialize(target, **options); end
+end
+
+module GraphQL::Schema::Directive::Flagged::VisibleByFlag
+  def visible?(context); end
+
+  class << self
+    def included(schema_class); end
   end
 end
 
@@ -4201,12 +4356,12 @@ class GraphQL::Schema::EnumValue < ::GraphQL::Schema::Member
   include(::GraphQL::Schema::Member::AcceptsDefinition)
   include(::GraphQL::Schema::Member::HasPath)
   include(::GraphQL::Schema::Member::HasAstNode)
+  include(::GraphQL::Schema::Member::HasDirectives)
+  include(::GraphQL::Schema::Member::HasDeprecationReason)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
 
   def accessible?(_ctx); end
   def authorized?(_ctx); end
-  def deprecation_reason; end
-  def deprecation_reason=(_arg0); end
   def description(new_desc = T.unsafe(nil)); end
   def graphql_name; end
   def owner; end
@@ -4224,6 +4379,9 @@ class GraphQL::Schema::Field
   include(::GraphQL::Schema::Member::HasAstNode)
   include(::GraphQL::Schema::Member::HasPath)
   include(::GraphQL::Schema::FindInheritedValue::EmptyObjects)
+  include(::GraphQL::Schema::Member::HasValidators)
+  include(::GraphQL::Schema::Member::HasDirectives)
+  include(::GraphQL::Schema::Member::HasDeprecationReason)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
   extend(::GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor)
   extend(::GraphQL::Schema::FindInheritedValue)
@@ -4234,8 +4392,6 @@ class GraphQL::Schema::Field
   def broadcastable?; end
   def complexity(new_complexity = T.unsafe(nil)); end
   def connection?; end
-  def deprecation_reason; end
-  def deprecation_reason=(_arg0); end
   def description(text = T.unsafe(nil)); end
   def description=(_arg0); end
   def extension(extension, options = T.unsafe(nil)); end
@@ -4271,7 +4427,7 @@ class GraphQL::Schema::Field
   private
 
   def public_send_field(unextended_obj, unextended_ruby_kwargs, query_ctx); end
-  def run_extensions_before_resolve(memos, obj, args, ctx, idx: T.unsafe(nil)); end
+  def run_extensions_before_resolve(obj, args, ctx, extended, idx: T.unsafe(nil)); end
   def to_ruby_args(obj, graphql_args, field_ctx); end
   def with_extensions(obj, args, ctx); end
 
@@ -4290,7 +4446,7 @@ end
 GraphQL::Schema::Field::NO_ARGS = T.let(T.unsafe(nil), Hash)
 
 class GraphQL::Schema::Field::ScopeExtension < ::GraphQL::Schema::FieldExtension
-  def after_resolve(value:, context:, **rest); end
+  def after_resolve(object:, arguments:, context:, value:, memo:); end
 end
 
 class GraphQL::Schema::FieldExtension
@@ -4353,6 +4509,7 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
   extend(::GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor)
   extend(::GraphQL::Schema::Member::HasArguments::ArgumentObjectLoader)
   extend(::GraphQL::Schema::Member::ValidatesInput)
+  extend(::GraphQL::Schema::Member::HasValidators)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension)
 
   def initialize(arguments = T.unsafe(nil), context:, defaults_used:, ruby_kwargs: T.unsafe(nil)); end
@@ -4372,6 +4529,10 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
   def to_kwargs; end
   def unwrap_value(value); end
   def values(*args, &block); end
+
+  private
+
+  def overwrite_argument(key, value); end
 
   class << self
     def argument(*args, **kwargs, &block); end
@@ -4399,6 +4560,7 @@ module GraphQL::Schema::Interface
   extend(::GraphQL::Schema::Member::Scoped)
   extend(::GraphQL::Schema::Member::HasAstNode)
   extend(::GraphQL::Schema::Member::HasUnresolvedTypeError)
+  extend(::GraphQL::Schema::Member::HasDirectives)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
   extend(::GraphQL::Schema::Interface::DefinitionMethods)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension)
@@ -4420,6 +4582,7 @@ module GraphQL::Schema::Interface::DefinitionMethods
   include(::GraphQL::Schema::Member::Scoped)
   include(::GraphQL::Schema::Member::HasAstNode)
   include(::GraphQL::Schema::Member::HasUnresolvedTypeError)
+  include(::GraphQL::Schema::Member::HasDirectives)
   include(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
 
   def accessible?(context); end
@@ -4538,6 +4701,7 @@ class GraphQL::Schema::Member
   extend(::GraphQL::Schema::Member::RelayShortcuts)
   extend(::GraphQL::Schema::Member::HasPath)
   extend(::GraphQL::Schema::Member::HasAstNode)
+  extend(::GraphQL::Schema::Member::HasDirectives)
 end
 
 module GraphQL::Schema::Member::AcceptsDefinition
@@ -4640,6 +4804,7 @@ module GraphQL::Schema::Member::HasArguments
   def coerce_arguments(parent_object, values, context); end
   def get_argument(argument_name); end
   def own_arguments; end
+  def validate_directive_argument(arg_defn, value); end
 
   class << self
     def extended(cls); end
@@ -4662,6 +4827,27 @@ GraphQL::Schema::Member::HasArguments::NO_ARGUMENTS = T.let(T.unsafe(nil), Hash)
 module GraphQL::Schema::Member::HasAstNode
   def ast_node(new_ast_node = T.unsafe(nil)); end
 end
+
+module GraphQL::Schema::Member::HasDeprecationReason
+  def deprecation_reason; end
+  def deprecation_reason=(text); end
+end
+
+module GraphQL::Schema::Member::HasDirectives
+  def directive(dir_class, **options); end
+  def directives; end
+  def remove_directive(dir_class); end
+
+  protected
+
+  def own_directives; end
+
+  private
+
+  def merge_directives(target, dirs); end
+end
+
+GraphQL::Schema::Member::HasDirectives::NO_DIRECTIVES = T.let(T.unsafe(nil), Array)
 
 module GraphQL::Schema::Member::HasFields
   def add_field(field_defn, method_conflict_warning: T.unsafe(nil)); end
@@ -4692,6 +4878,13 @@ module GraphQL::Schema::Member::HasUnresolvedTypeError
   private
 
   def add_unresolved_type_error(child_class); end
+end
+
+module GraphQL::Schema::Member::HasValidators
+  include(::GraphQL::Schema::FindInheritedValue::EmptyObjects)
+
+  def validates(validation_config); end
+  def validators; end
 end
 
 module GraphQL::Schema::Member::Instrumentation
@@ -4822,7 +5015,6 @@ module GraphQL::Schema::NullMask
 end
 
 class GraphQL::Schema::Object < ::GraphQL::Schema::Member
-  include(::GraphQL::Execution::Interpreter::HandlesRawValue)
   extend(::GraphQL::Schema::Member::AcceptsDefinition)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
   extend(::GraphQL::Schema::Member::HasFields)
@@ -4831,7 +5023,9 @@ class GraphQL::Schema::Object < ::GraphQL::Schema::Member
   def initialize(object, context); end
 
   def context; end
+  def dataloader; end
   def object; end
+  def raw_value(obj); end
 
   class << self
     def authorized_new(object, context); end
@@ -4906,6 +5100,7 @@ class GraphQL::Schema::Resolver
   extend(::GraphQL::Schema::Member::BaseDSLMethods)
   extend(::GraphQL::Schema::Member::HasArguments)
   extend(::GraphQL::Schema::Member::HasArguments::ArgumentClassAccessor)
+  extend(::GraphQL::Schema::Member::HasValidators)
   extend(::GraphQL::Schema::Member::HasPath)
 
   def initialize(object:, context:, field:); end
@@ -4913,6 +5108,7 @@ class GraphQL::Schema::Resolver
   def arguments; end
   def authorized?(**inputs); end
   def context; end
+  def dataloader; end
   def field; end
   def object; end
   def ready?(**args); end
@@ -4957,6 +5153,8 @@ module GraphQL::Schema::Resolver::HasPayloadType
   def generate_payload_type; end
 end
 
+GraphQL::Schema::Resolver::HasPayloadType::NO_INTERFACES = T.let(T.unsafe(nil), Array)
+
 class GraphQL::Schema::Scalar < ::GraphQL::Schema::Member
   extend(::GraphQL::Schema::Member::AcceptsDefinition)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
@@ -4983,6 +5181,7 @@ class GraphQL::Schema::Subscription < ::GraphQL::Schema::Resolver
   def resolve(**args); end
   def resolve_subscribe(**args); end
   def resolve_update(**args); end
+  def resolve_with_support(**args); end
   def subscribe(args = T.unsafe(nil)); end
   def unsubscribe; end
   def update(args = T.unsafe(nil)); end
@@ -5160,6 +5359,68 @@ GraphQL::Schema::Validation::Rules::SCHEMA_INSTRUMENTERS_ARE_VALID = T.let(T.uns
 
 GraphQL::Schema::Validation::Rules::TYPE_IS_VALID_INPUT_TYPE = T.let(T.unsafe(nil), Proc)
 
+class GraphQL::Schema::Validator
+  include(::GraphQL::Schema::FindInheritedValue::EmptyObjects)
+
+  def initialize(validated:, allow_blank: T.unsafe(nil), allow_null: T.unsafe(nil)); end
+
+  def apply(object, context, value); end
+  def partial_format(string, substitutions); end
+  def validate(object, context, value); end
+  def validated; end
+
+  class << self
+    def all_validators; end
+    def all_validators=(_arg0); end
+    def from_config(schema_member, validates_hash); end
+    def install(name, validator_class); end
+    def uninstall(name); end
+    def validate!(validators, object, context, value, as: T.unsafe(nil)); end
+  end
+end
+
+class GraphQL::Schema::Validator::ExclusionValidator < ::GraphQL::Schema::Validator
+  def initialize(in:, message: T.unsafe(nil), **default_options); end
+
+  def validate(_object, _context, value); end
+end
+
+class GraphQL::Schema::Validator::FormatValidator < ::GraphQL::Schema::Validator
+  def initialize(with: T.unsafe(nil), without: T.unsafe(nil), message: T.unsafe(nil), **default_options); end
+
+  def validate(_object, _context, value); end
+end
+
+class GraphQL::Schema::Validator::InclusionValidator < ::GraphQL::Schema::Validator
+  def initialize(in:, message: T.unsafe(nil), **default_options); end
+
+  def validate(_object, _context, value); end
+end
+
+class GraphQL::Schema::Validator::LengthValidator < ::GraphQL::Schema::Validator
+  def initialize(maximum: T.unsafe(nil), too_long: T.unsafe(nil), minimum: T.unsafe(nil), too_short: T.unsafe(nil), is: T.unsafe(nil), within: T.unsafe(nil), wrong_length: T.unsafe(nil), message: T.unsafe(nil), **default_options); end
+
+  def validate(_object, _context, value); end
+end
+
+class GraphQL::Schema::Validator::NumericalityValidator < ::GraphQL::Schema::Validator
+  def initialize(greater_than: T.unsafe(nil), greater_than_or_equal_to: T.unsafe(nil), less_than: T.unsafe(nil), less_than_or_equal_to: T.unsafe(nil), equal_to: T.unsafe(nil), other_than: T.unsafe(nil), odd: T.unsafe(nil), even: T.unsafe(nil), message: T.unsafe(nil), **default_options); end
+
+  def validate(object, context, value); end
+end
+
+class GraphQL::Schema::Validator::RequiredValidator < ::GraphQL::Schema::Validator
+  def initialize(one_of:, message: T.unsafe(nil), **default_options); end
+
+  def validate(_object, _context, value); end
+end
+
+class GraphQL::Schema::Validator::ValidationFailedError < ::GraphQL::ExecutionError
+  def initialize(errors:); end
+
+  def errors; end
+end
+
 class GraphQL::Schema::Warden
   def initialize(filter, context:, schema:); end
 
@@ -5303,6 +5564,7 @@ end
 
 class GraphQL::StaticValidation::DefaultVisitor < ::GraphQL::StaticValidation::BaseVisitor
   include(::GraphQL::StaticValidation::DefinitionDependencies)
+  include(::GraphQL::StaticValidation::InputObjectNamesAreUnique)
   include(::GraphQL::StaticValidation::SubscriptionRootExists)
   include(::GraphQL::StaticValidation::MutationRootExists)
   include(::GraphQL::StaticValidation::VariableUsagesAreAllowed)
@@ -5481,8 +5743,9 @@ module GraphQL::StaticValidation::FieldsWillMerge
   def find_conflicts_within(response_keys); end
   def find_fields_and_fragments(selections, owner_type:, parents:, fields:, fragment_spreads:); end
   def mutually_exclusive?(parents1, parents2); end
-  def possible_arguments(field1, field2); end
+  def same_arguments?(field1, field2); end
   def serialize_arg(arg_value); end
+  def serialize_field_args(field); end
 end
 
 class GraphQL::StaticValidation::FieldsWillMerge::Field < ::Struct
@@ -5645,8 +5908,25 @@ class GraphQL::StaticValidation::FragmentsAreUsedError < ::GraphQL::StaticValida
   def to_h; end
 end
 
+module GraphQL::StaticValidation::InputObjectNamesAreUnique
+  def on_input_object(node, parent); end
+
+  private
+
+  def validate_input_fields(node); end
+end
+
+class GraphQL::StaticValidation::InputObjectNamesAreUniqueError < ::GraphQL::StaticValidation::Error
+  def initialize(message, name:, path: T.unsafe(nil), nodes: T.unsafe(nil)); end
+
+  def code; end
+  def name; end
+  def to_h; end
+end
+
 class GraphQL::StaticValidation::InterpreterVisitor < ::GraphQL::StaticValidation::BaseVisitor
   include(::GraphQL::StaticValidation::DefinitionDependencies)
+  include(::GraphQL::StaticValidation::InputObjectNamesAreUnique)
   include(::GraphQL::StaticValidation::SubscriptionRootExists)
   include(::GraphQL::StaticValidation::MutationRootExists)
   include(::GraphQL::StaticValidation::VariableUsagesAreAllowed)
@@ -5988,10 +6268,18 @@ class GraphQL::StaticValidation::ValidationContext
   def warden(*args, &block); end
 end
 
+class GraphQL::StaticValidation::ValidationTimeoutError < ::GraphQL::StaticValidation::Error
+  def initialize(message, path: T.unsafe(nil), nodes: T.unsafe(nil)); end
+
+  def code; end
+  def to_h; end
+end
+
 class GraphQL::StaticValidation::Validator
   def initialize(schema:, rules: T.unsafe(nil)); end
 
-  def validate(query, validate: T.unsafe(nil)); end
+  def handle_timeout(query, context); end
+  def validate(query, validate: T.unsafe(nil), timeout: T.unsafe(nil)); end
 end
 
 module GraphQL::StaticValidation::VariableDefaultValuesAreCorrectlyTyped
@@ -6515,7 +6803,7 @@ GraphQL::Types::ISO8601DateTime::DEFAULT_TIME_PRECISION = T.let(T.unsafe(nil), I
 
 class GraphQL::Types::Int < ::GraphQL::Schema::Scalar
   class << self
-    def coerce_input(value, _ctx); end
+    def coerce_input(value, ctx); end
     def coerce_result(value, ctx); end
   end
 end
@@ -6534,8 +6822,27 @@ end
 module GraphQL::Types::Relay
 end
 
-class GraphQL::Types::Relay::BaseConnection < ::GraphQL::Types::Relay::BaseObject
+class GraphQL::Types::Relay::BaseConnection < ::GraphQL::Schema::Object
+  include(::GraphQL::Types::Relay::ConnectionBehaviors)
+  extend(::GraphQL::Types::Relay::ConnectionBehaviors::ClassMethods)
+  extend(::GraphQL::Types::Relay::DefaultRelay)
+end
+
+class GraphQL::Types::Relay::BaseConnection::InvalidNullError < ::GraphQL::InvalidNullError
+end
+
+class GraphQL::Types::Relay::BaseEdge < ::GraphQL::Schema::Object
+  include(::GraphQL::Types::Relay::EdgeBehaviors)
+  extend(::GraphQL::Types::Relay::EdgeBehaviors::ClassMethods)
+end
+
+class GraphQL::Types::Relay::BaseEdge::InvalidNullError < ::GraphQL::InvalidNullError
+end
+
+module GraphQL::Types::Relay::ConnectionBehaviors
   extend(::Forwardable)
+
+  mixes_in_class_methods(::GraphQL::Types::Relay::DefaultRelay)
 
   def cursor_from_node(*args, &block); end
   def edges; end
@@ -6543,87 +6850,72 @@ class GraphQL::Types::Relay::BaseConnection < ::GraphQL::Types::Relay::BaseObjec
   def parent(*args, &block); end
 
   class << self
-    def accessible?(ctx); end
-    def authorized?(obj, ctx); end
-    def edge_class; end
-    def edge_type(edge_type_class, edge_class: T.unsafe(nil), node_type: T.unsafe(nil), nodes_field: T.unsafe(nil), node_nullable: T.unsafe(nil)); end
-    def node_type; end
-    def nodes_field; end
-    def scope_items(items, context); end
-    def visible?(ctx); end
-
-    private
-
-    def define_nodes_field(nullable = T.unsafe(nil)); end
+    def add_page_info_field(obj_type); end
+    def included(child_class); end
   end
 end
 
-class GraphQL::Types::Relay::BaseConnection::InvalidNullError < ::GraphQL::InvalidNullError
+module GraphQL::Types::Relay::ConnectionBehaviors::ClassMethods
+  def accessible?(ctx); end
+  def authorized?(obj, ctx); end
+  def edge_class; end
+  def edge_type(edge_type_class, edge_class: T.unsafe(nil), node_type: T.unsafe(nil), nodes_field: T.unsafe(nil), node_nullable: T.unsafe(nil)); end
+  def node_nullable(new_value = T.unsafe(nil)); end
+  def node_type; end
+  def nodes_field(node_nullable: T.unsafe(nil)); end
+  def scope_items(items, context); end
+  def visible?(ctx); end
+
+  private
+
+  def define_nodes_field(nullable); end
 end
 
-class GraphQL::Types::Relay::BaseEdge < ::GraphQL::Types::Relay::BaseObject
-  class << self
-    def accessible?(ctx); end
-    def authorized?(obj, ctx); end
-    def node_type(node_type = T.unsafe(nil), null: T.unsafe(nil)); end
-    def visible?(ctx); end
-  end
-end
-
-class GraphQL::Types::Relay::BaseEdge::InvalidNullError < ::GraphQL::InvalidNullError
-end
-
-class GraphQL::Types::Relay::BaseField < ::GraphQL::Schema::Field
-  def initialize(edge_class: T.unsafe(nil), **rest, &block); end
-
-  def to_graphql; end
-end
-
-module GraphQL::Types::Relay::BaseInterface
-  include(::GraphQL::Schema::Member::GraphQLTypeNames)
-  include(::GraphQL::Schema::Interface)
-  extend(::GraphQL::Schema::Member::CachedGraphQLDefinition)
-  extend(::GraphQL::Relay::TypeExtensions)
-  extend(::GraphQL::Schema::FindInheritedValue)
-  extend(::GraphQL::Schema::FindInheritedValue::EmptyObjects)
-  extend(::GraphQL::Schema::Member::BaseDSLMethods)
-  extend(::GraphQL::Schema::Member::TypeSystemHelpers)
-  extend(::GraphQL::Schema::Member::HasFields)
-  extend(::GraphQL::Schema::Member::HasPath)
-  extend(::GraphQL::Schema::Member::RelayShortcuts)
-  extend(::GraphQL::Schema::Member::Scoped)
-  extend(::GraphQL::Schema::Member::HasAstNode)
-  extend(::GraphQL::Schema::Member::HasUnresolvedTypeError)
-  extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
-  extend(::GraphQL::Schema::Interface::DefinitionMethods)
-  extend(::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension)
-  extend(::GraphQL::Types::Relay::BaseInterface::DefinitionMethods)
-end
-
-module GraphQL::Types::Relay::BaseInterface::DefinitionMethods
+module GraphQL::Types::Relay::DefaultRelay
   def default_relay(new_value); end
   def default_relay?; end
   def to_graphql; end
-end
 
-class GraphQL::Types::Relay::BaseInterface::UnresolvedTypeError < ::GraphQL::UnresolvedTypeError
-end
-
-class GraphQL::Types::Relay::BaseObject < ::GraphQL::Schema::Object
   class << self
-    def default_relay(new_value); end
-    def default_relay?; end
-    def to_graphql; end
+    def extended(child_class); end
   end
 end
 
-class GraphQL::Types::Relay::BaseObject::InvalidNullError < ::GraphQL::InvalidNullError
+module GraphQL::Types::Relay::EdgeBehaviors
+  mixes_in_class_methods(::GraphQL::Types::Relay::EdgeBehaviors::ClassMethods)
+
+  class << self
+    def included(child_class); end
+  end
+end
+
+module GraphQL::Types::Relay::EdgeBehaviors::ClassMethods
+  def accessible?(ctx); end
+  def authorized?(obj, ctx); end
+  def node_type(node_type = T.unsafe(nil), null: T.unsafe(nil)); end
+  def visible?(ctx); end
+end
+
+module GraphQL::Types::Relay::HasNodeField
+  class << self
+    def field_block; end
+    def field_options; end
+    def included(child_class); end
+  end
+end
+
+module GraphQL::Types::Relay::HasNodesField
+  class << self
+    def field_block; end
+    def field_options; end
+    def included(child_class); end
+  end
 end
 
 module GraphQL::Types::Relay::Node
   include(::GraphQL::Schema::Member::GraphQLTypeNames)
   include(::GraphQL::Schema::Interface)
-  include(::GraphQL::Types::Relay::BaseInterface)
+  include(::GraphQL::Types::Relay::NodeBehaviors)
   extend(::GraphQL::Schema::Member::CachedGraphQLDefinition)
   extend(::GraphQL::Relay::TypeExtensions)
   extend(::GraphQL::Schema::FindInheritedValue)
@@ -6636,11 +6928,12 @@ module GraphQL::Types::Relay::Node
   extend(::GraphQL::Schema::Member::Scoped)
   extend(::GraphQL::Schema::Member::HasAstNode)
   extend(::GraphQL::Schema::Member::HasUnresolvedTypeError)
+  extend(::GraphQL::Schema::Member::HasDirectives)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods)
   extend(::GraphQL::Schema::Interface::DefinitionMethods)
   extend(::GraphQL::Schema::Member::AcceptsDefinition::ToGraphQLExtension)
-  extend(::GraphQL::Types::Relay::BaseInterface::DefinitionMethods)
   extend(::GraphQL::Types::Relay::Node::DefinitionMethods)
+  extend(::GraphQL::Types::Relay::DefaultRelay)
 end
 
 module GraphQL::Types::Relay::Node::DefinitionMethods
@@ -6649,14 +6942,32 @@ end
 class GraphQL::Types::Relay::Node::UnresolvedTypeError < ::GraphQL::UnresolvedTypeError
 end
 
+module GraphQL::Types::Relay::NodeBehaviors
+  mixes_in_class_methods(::GraphQL::Types::Relay::DefaultRelay)
+
+  class << self
+    def included(child_module); end
+  end
+end
+
 GraphQL::Types::Relay::NodeField = T.let(T.unsafe(nil), GraphQL::Schema::Field)
 
 GraphQL::Types::Relay::NodesField = T.let(T.unsafe(nil), GraphQL::Schema::Field)
 
-class GraphQL::Types::Relay::PageInfo < ::GraphQL::Types::Relay::BaseObject
+class GraphQL::Types::Relay::PageInfo < ::GraphQL::Schema::Object
+  include(::GraphQL::Types::Relay::PageInfoBehaviors)
+  extend(::GraphQL::Types::Relay::DefaultRelay)
 end
 
 class GraphQL::Types::Relay::PageInfo::InvalidNullError < ::GraphQL::InvalidNullError
+end
+
+module GraphQL::Types::Relay::PageInfoBehaviors
+  mixes_in_class_methods(::GraphQL::Types::Relay::DefaultRelay)
+
+  class << self
+    def included(child_class); end
+  end
 end
 
 class GraphQL::Types::String < ::GraphQL::Schema::Scalar
@@ -6682,6 +6993,8 @@ class GraphQL::UnauthorizedFieldError < ::GraphQL::UnauthorizedError
 end
 
 class GraphQL::UnionType < ::GraphQL::BaseType
+  extend(::GraphQL::Define::InstanceDefinable::DeprecatedDefine)
+
   def initialize; end
 
   def add_possible_types(types, **options); end
