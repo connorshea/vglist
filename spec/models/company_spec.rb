@@ -22,6 +22,10 @@ RSpec.describe Company, type: :model do
     end
   end
 
+  describe "Versioning" do
+    it { should be_versioned }
+  end
+
   describe "Associations" do
     it { should have_many(:game_developers) }
     it { should have_many(:developed_games).through(:game_developers).source(:game) }
