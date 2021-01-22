@@ -1101,13 +1101,13 @@ module Platform::GeneratedAssociationMethods
   sig { returns(T.nilable(T.untyped)) }
   def reload_pg_search_document; end
 
-  sig { returns(::PaperTrail::Version::ActiveRecord_Associations_CollectionProxy) }
+  sig { returns(::Versions::PlatformVersion::ActiveRecord_Associations_CollectionProxy) }
   def versions; end
 
   sig { returns(T::Array[Integer]) }
   def version_ids; end
 
-  sig { params(value: T::Enumerable[::PaperTrail::Version]).void }
+  sig { params(value: T::Enumerable[::Versions::PlatformVersion]).void }
   def versions=(value); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }

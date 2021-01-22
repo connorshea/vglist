@@ -1101,13 +1101,13 @@ module Company::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::Game]).void }
   def published_games=(value); end
 
-  sig { returns(::PaperTrail::Version::ActiveRecord_Associations_CollectionProxy) }
+  sig { returns(::Versions::CompanyVersion::ActiveRecord_Associations_CollectionProxy) }
   def versions; end
 
   sig { returns(T::Array[Integer]) }
   def version_ids; end
 
-  sig { params(value: T::Enumerable[::PaperTrail::Version]).void }
+  sig { params(value: T::Enumerable[::Versions::CompanyVersion]).void }
   def versions=(value); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }

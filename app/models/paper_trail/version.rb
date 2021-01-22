@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module PaperTrail
   class Version < ActiveRecord::Base # rubocop:disable Rails/ApplicationRecord
     include PaperTrail::VersionConcern
