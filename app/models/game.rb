@@ -34,7 +34,8 @@ class Game < ApplicationRecord
 
   has_one_attached :cover
 
-  has_paper_trail
+  # Track changes to the record, but ignore changes to the average rating.
+  has_paper_trail ignore: [:avg_rating]
 
   # Only use one of the pre-set sizes for these images.
   COVER_SIZES = T.let(
