@@ -6,7 +6,10 @@ class Genre < ApplicationRecord
   has_many :game_genres
   has_many :games, through: :game_genres, source: :game
 
-  has_paper_trail
+  has_paper_trail ignore: [:updated_at, :created_at],
+                  versions: {
+                    class_name: 'Versions::GenreVersion'
+                  }
 
   validates :name,
     presence: true,

@@ -51,4 +51,14 @@ class ApplicationController < ActionController::Base
     Raven.user_context(id: current_user&.id, username: current_user&.username)
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
   end
+
+  # Set whodunnit to the user's username.
+  def user_for_paper_trail
+    current_user&.username
+  end
+
+  # Set whodunnit_id to the user's numeric ID.
+  def info_for_paper_trail
+    { whodunnit_id: current_user&.id }
+  end
 end

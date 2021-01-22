@@ -33,4 +33,10 @@ class Users::PasswordsController < Devise::PasswordsController
   def spam_callback
     redirect_to root_path
   end
+
+  # Disable PaperTrail to prevent weird errors with Devise that are caused by
+  # providing the PaperTrail metadata in ApplicationController.
+  def paper_trail_enabled_for_controller
+    false
+  end
 end

@@ -9,7 +9,10 @@ class Platform < ApplicationRecord
   has_many :game_purchase_platforms
   has_many :game_purchases, through: :game_purchase_platforms, source: :game_purchase
 
-  has_paper_trail
+  has_paper_trail ignore: [:updated_at, :created_at],
+                  versions: {
+                    class_name: 'Versions::PlatformVersion'
+                  }
 
   validates :name,
     presence: true,

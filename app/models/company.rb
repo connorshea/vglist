@@ -9,7 +9,10 @@ class Company < ApplicationRecord
   has_many :game_publishers
   has_many :published_games, through: :game_publishers, source: :game
 
-  has_paper_trail
+  has_paper_trail ignore: [:updated_at, :created_at],
+                  versions: {
+                    class_name: 'Versions::CompanyVersion'
+                  }
 
   validates :name,
     presence: true,

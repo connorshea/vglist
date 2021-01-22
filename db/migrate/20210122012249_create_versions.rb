@@ -1,23 +1,81 @@
-# typed: true
+# typed: false
 
-# This migration creates the `versions` table, the only schema PT requires.
+# This migration creates the various `versions` tables, the only schema
+# PaperTrail requires.
 # All other migrations PT provides are optional.
 class CreateVersions < ActiveRecord::Migration[6.1]
-  # The largest text column available in all supported RDBMS is
-  # 1024^3 - 1 bytes, roughly one gibibyte.  We specify a size
-  # so that MySQL will use `longtext` instead of `text`.  Otherwise,
-  # when serializing very large objects, `text` might not be big enough.
-  TEXT_BYTES = 1_073_741_823
-
   def change
-    create_table :versions do |t|
-      t.string   :item_type, { null: false }
+    create_table :company_versions do |t|
+      t.text     :item_type, null: false
       t.bigint   :item_id,   null: false
-      t.string   :event,     null: false
-      t.string   :whodunnit
-      t.text     :object, limit: TEXT_BYTES
+      t.text     :event,     null: false
+      t.text     :whodunnit
+      t.bigint   :whodunnit_id
+      t.jsonb    :object
+      t.jsonb    :object_changes
       t.datetime :created_at
     end
-    add_index :versions, [:item_type, :item_id]
+
+    create_table :engine_versions do |t|
+      t.text     :item_type, null: false
+      t.bigint   :item_id,   null: false
+      t.text     :event,     null: false
+      t.text     :whodunnit
+      t.bigint   :whodunnit_id
+      t.jsonb    :object
+      t.jsonb    :object_changes
+      t.datetime :created_at
+    end
+
+    create_table :game_versions do |t|
+      t.text     :item_type, null: false
+      t.bigint   :item_id,   null: false
+      t.text     :event,     null: false
+      t.text     :whodunnit
+      t.bigint   :whodunnit_id
+      t.jsonb    :object
+      t.jsonb    :object_changes
+      t.datetime :created_at
+    end
+
+    create_table :genre_versions do |t|
+      t.text     :item_type, null: false
+      t.bigint   :item_id,   null: false
+      t.text     :event,     null: false
+      t.text     :whodunnit
+      t.bigint   :whodunnit_id
+      t.jsonb    :object
+      t.jsonb    :object_changes
+      t.datetime :created_at
+    end
+
+    create_table :platform_versions do |t|
+      t.text     :item_type, null: false
+      t.bigint   :item_id,   null: false
+      t.text     :event,     null: false
+      t.text     :whodunnit
+      t.bigint   :whodunnit_id
+      t.jsonb    :object
+      t.jsonb    :object_changes
+      t.datetime :created_at
+    end
+
+    create_table :series_versions do |t|
+      t.text     :item_type, null: false
+      t.bigint   :item_id,   null: false
+      t.text     :event,     null: false
+      t.text     :whodunnit
+      t.bigint   :whodunnit_id
+      t.jsonb    :object
+      t.jsonb    :object_changes
+      t.datetime :created_at
+    end
+
+    add_index :company_versions,  [:item_type, :item_id]
+    add_index :engine_versions,   [:item_type, :item_id]
+    add_index :game_versions,     [:item_type, :item_id]
+    add_index :genre_versions,    [:item_type, :item_id]
+    add_index :platform_versions, [:item_type, :item_id]
+    add_index :series_versions,   [:item_type, :item_id]
   end
 end
