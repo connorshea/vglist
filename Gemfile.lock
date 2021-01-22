@@ -11,6 +11,14 @@ GIT
       spoom
       thor (>= 0.19.2)
 
+GIT
+  remote: https://github.com/paper-trail-gem/paper_trail
+  revision: c3c58b739a62100b83ff79762c91f3dbd857761d
+  specs:
+    paper_trail (11.1.0)
+      activerecord (>= 5.2)
+      request_store (~> 1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -304,6 +312,8 @@ GEM
       rdf (~> 3.1)
       rexml (~> 3.2)
     regexp_parser (1.8.2)
+    request_store (1.5.0)
+      rack (>= 1.4)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -481,6 +491,7 @@ DEPENDENCIES
   kaminari (~> 1.2)
   launchy (~> 2.5)
   listen (>= 3.0.5, < 3.5)
+  paper_trail!
   parallel (~> 1.20)
   pg (~> 1.2)
   pg_search (~> 2.3)
