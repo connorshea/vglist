@@ -34,6 +34,8 @@ class Game < ApplicationRecord
 
   has_one_attached :cover
 
+  has_paper_trail
+
   # Only use one of the pre-set sizes for these images.
   COVER_SIZES = T.let(
     {

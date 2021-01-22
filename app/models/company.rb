@@ -9,6 +9,8 @@ class Company < ApplicationRecord
   has_many :game_publishers
   has_many :published_games, through: :game_publishers, source: :game
 
+  has_paper_trail
+
   validates :name,
     presence: true,
     length: { maximum: 120 }

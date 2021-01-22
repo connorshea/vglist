@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
   before_action :sign_out_banned_users
   # Send context with error messages to Sentry.
   before_action :set_raven_context
+  # Set PaperTrail whodunnit to the current user.
+  before_action :set_paper_trail_whodunnit
 
   # Make sure pundit is implemented on everything, except index pages since
   # those should be accessible without an authorization.

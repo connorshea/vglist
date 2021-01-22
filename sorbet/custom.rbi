@@ -101,3 +101,10 @@ class Faker::Game
   sig { returns(String) }
   def self.store; end
 end
+
+# Include PaperTrail so the has_paper_trail method can be used in the
+# ActiveModel models. This happens implicitly, but we have to tell Sorbet
+# here for it to understand.
+class ApplicationRecord
+  include PaperTrail::Model
+end

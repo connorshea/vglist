@@ -6,6 +6,8 @@ class Engine < ApplicationRecord
   has_many :game_engines
   has_many :games, through: :game_engines, source: :game
 
+  has_paper_trail
+
   validates :name,
     presence: true,
     length: { maximum: 120 }

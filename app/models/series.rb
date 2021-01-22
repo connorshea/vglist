@@ -5,6 +5,8 @@ class Series < ApplicationRecord
 
   has_many :games
 
+  has_paper_trail
+
   validates :name,
     presence: true,
     length: { maximum: 120 }

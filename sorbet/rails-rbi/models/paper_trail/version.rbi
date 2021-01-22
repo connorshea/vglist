@@ -24,10 +24,8 @@ module PaperTrail::Version::CustomFinderMethods
   def find_by_id!(id); end
 end
 
-module PaperTrail::Version::GeneratedAttributeMethods
-end
-
 class PaperTrail::Version < ActiveRecord::Base
+  include PaperTrail::Version::GeneratedAttributeMethods
   include PaperTrail::Version::GeneratedAssociationMethods
   extend PaperTrail::Version::CustomFinderMethods
   extend PaperTrail::Version::QueryMethodsReturningRelation
@@ -310,8 +308,442 @@ class PaperTrail::Version::ActiveRecord_AssociationRelation < ActiveRecord::Asso
   def padding(num); end
 end
 
+module PaperTrail::Version::GeneratedAttributeMethods
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def created_at; end
+
+  sig { params(value: T.nilable(T.any(Date, Time, ActiveSupport::TimeWithZone))).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(String) }
+  def event; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def event=(value); end
+
+  sig { returns(T::Boolean) }
+  def event?; end
+
+  sig { returns(Integer) }
+  def id; end
+
+  sig { params(value: T.any(Numeric, ActiveSupport::Duration)).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(Integer) }
+  def item_id; end
+
+  sig { params(value: T.any(Numeric, ActiveSupport::Duration)).void }
+  def item_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def item_id?; end
+
+  sig { returns(String) }
+  def item_type; end
+
+  sig { params(value: T.any(String, Symbol)).void }
+  def item_type=(value); end
+
+  sig { returns(T::Boolean) }
+  def item_type?; end
+
+  sig { returns(T.nilable(String)) }
+  def object; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def object=(value); end
+
+  sig { returns(T::Boolean) }
+  def object?; end
+
+  sig { returns(T.nilable(String)) }
+  def object_changes; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def object_changes=(value); end
+
+  sig { returns(T::Boolean) }
+  def object_changes?; end
+
+  sig { returns(T.nilable(String)) }
+  def whodunnit; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def whodunnit=(value); end
+
+  sig { returns(T::Boolean) }
+  def whodunnit?; end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_item_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_item_type(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_item_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def item_type_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def item_type_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_item_type!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_type_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def item_type_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_item_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_item_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_item_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def item_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def item_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_item_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def item_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def item_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_event?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_event(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_event?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def event_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def event_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_event!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def event_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_whodunnit?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_whodunnit(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_whodunnit?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def whodunnit_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def whodunnit_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_whodunnit!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def whodunnit_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def whodunnit_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_object?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_object(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_object?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def object_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def object_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_object!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def object_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_object_changes?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_object_changes(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_object_changes?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def object_changes_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def object_changes_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_object_changes!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def object_changes_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def object_changes_came_from_user?(*args); end
+end
+
 module PaperTrail::Version::GeneratedAssociationMethods
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def item; end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
@@ -323,10 +755,10 @@ module PaperTrail::Version::GeneratedAssociationMethods
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
   def create_item!(*args, &block); end
 
-  sig { params(value: T.nilable(T.untyped)).void }
+  sig { params(value: T.untyped).void }
   def item=(value); end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def reload_item; end
 end
 
