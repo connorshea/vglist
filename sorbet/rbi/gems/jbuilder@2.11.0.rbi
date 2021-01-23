@@ -14,7 +14,7 @@ class Jbuilder < ::ActiveSupport::ProxyObject
   def extract!(object, *attributes); end
   def ignore_nil!(value = T.unsafe(nil)); end
   def key_format!(*args); end
-  def merge!(hash_or_array); end
+  def merge!(object); end
   def method_missing(*args, &block); end
   def nil!; end
   def null!; end
@@ -26,6 +26,7 @@ class Jbuilder < ::ActiveSupport::ProxyObject
   def _blank?(value = T.unsafe(nil)); end
   def _extract_hash_values(object, attributes); end
   def _extract_method_values(object, attributes); end
+  def _format_keys(hash_or_array); end
   def _is_collection?(object); end
   def _key(key); end
   def _map_collection(collection); end
@@ -84,12 +85,12 @@ end
 
 class JbuilderHandler
   def default_format; end
-  def default_format=(obj); end
+  def default_format=(val); end
 
   class << self
     def call(template, source = T.unsafe(nil)); end
     def default_format; end
-    def default_format=(obj); end
+    def default_format=(val); end
   end
 end
 

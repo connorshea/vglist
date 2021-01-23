@@ -5,6 +5,10 @@
 # typed: true
 
 module Spoom
+  class << self
+    sig { params(cmd: String, arg: String, path: String, capture_err: T::Boolean).returns([String, T::Boolean]) }
+    def exec(cmd, *arg, path: T.unsafe(nil), capture_err: T.unsafe(nil)); end
+  end
 end
 
 module Spoom::Cli
@@ -16,6 +20,8 @@ class Spoom::Cli::Bump < ::Thor
   sig { params(directory: String).void }
   def bump(directory = T.unsafe(nil)); end
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
+  def print_changes(files, from: T.unsafe(nil), to: T.unsafe(nil), dry: T.unsafe(nil), path: T.unsafe(nil)); end
+  def undo_changes(files, from_strictness); end
 end
 
 class Spoom::Cli::Config < ::Thor
@@ -97,22 +103,19 @@ end
 class Spoom::Cli::Run < ::Thor
   include(::Spoom::Cli::Helper)
 
-  def colorize_code(code, colors = T.unsafe(nil)); end
-  def colorize_message(message, colors = T.unsafe(nil)); end
+  def colorize_message(message); end
+  def format_error(error, format); end
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
-  def tc; end
+  def tc(*arg); end
 end
 
-module Spoom::Config
-end
+Spoom::Cli::Run::DEFAULT_FORMAT = T.let(T.unsafe(nil), String)
 
-Spoom::Config::SORBET_CONFIG = T.let(T.unsafe(nil), String)
+Spoom::Cli::Run::SORT_CODE = T.let(T.unsafe(nil), String)
 
-Spoom::Config::SORBET_GEM_PATH = T.let(T.unsafe(nil), String)
+Spoom::Cli::Run::SORT_ENUM = T.let(T.unsafe(nil), Array)
 
-Spoom::Config::SORBET_PATH = T.let(T.unsafe(nil), String)
-
-Spoom::Config::SPOOM_PATH = T.let(T.unsafe(nil), String)
+Spoom::Cli::Run::SORT_LOC = T.let(T.unsafe(nil), String)
 
 module Spoom::Coverage
   class << self
@@ -120,8 +123,10 @@ module Spoom::Coverage
     def report(snapshots, palette:, path: T.unsafe(nil)); end
     sig { params(path: String).returns(Spoom::FileTree) }
     def sigils_tree(path: T.unsafe(nil)); end
-    sig { params(path: String).returns(Spoom::Coverage::Snapshot) }
-    def snapshot(path: T.unsafe(nil)); end
+    sig { params(path: String, rbi: T::Boolean, sorbet_bin: T.nilable(String)).returns(Spoom::Coverage::Snapshot) }
+    def snapshot(path: T.unsafe(nil), rbi: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
+    sig { params(path: String).returns(Spoom::Sorbet::Config) }
+    def sorbet_config(path: T.unsafe(nil)); end
   end
 end
 
@@ -548,7 +553,7 @@ class Spoom::FileTree
 
   private
 
-  sig { params(node: Spoom::FileTree::Node, collected_nodes: T::Array[Spoom::FileTree::Node]).returns(T::Array[String]) }
+  sig { params(node: Spoom::FileTree::Node, collected_nodes: T::Array[Spoom::FileTree::Node]).returns(T::Array[Spoom::FileTree::Node]) }
   def collect_nodes(node, collected_nodes = T.unsafe(nil)); end
 end
 
@@ -619,7 +624,7 @@ module Spoom::LSP
 end
 
 class Spoom::LSP::Client
-  def initialize(sorbet_cmd, *sorbet_args, path: T.unsafe(nil)); end
+  def initialize(sorbet_bin, *sorbet_args, path: T.unsafe(nil)); end
 
   def close; end
   def definitions(uri, line, column); end
@@ -866,29 +871,39 @@ class Spoom::Printer
   def printt; end
 end
 
+Spoom::SPOOM_PATH = T.let(T.unsafe(nil), String)
+
 module Spoom::Sorbet
   class << self
-    sig { params(arg: String, path: String, capture_err: T::Boolean).returns([String, T::Boolean]) }
-    def srb(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil)); end
+    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns([String, T::Boolean]) }
+    def srb(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
     sig { params(config: Spoom::Sorbet::Config, path: String).returns(T::Array[String]) }
     def srb_files(config, path: T.unsafe(nil)); end
-    sig { params(arg: String, path: String, capture_err: T::Boolean).returns(T.nilable(T::Hash[String, Integer])) }
-    def srb_metrics(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil)); end
-    sig { params(arg: String, path: String, capture_err: T::Boolean).returns([String, T::Boolean]) }
-    def srb_tc(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil)); end
-    sig { params(arg: String, path: String, capture_err: T::Boolean).returns(T.nilable(String)) }
-    def srb_version(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil)); end
+    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns(T.nilable(T::Hash[String, Integer])) }
+    def srb_metrics(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
+    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns([String, T::Boolean]) }
+    def srb_tc(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
+    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns(T.nilable(String)) }
+    def srb_version(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
     sig { params(gem: String, path: String).returns(T.nilable(String)) }
     def version_from_gemfile_lock(gem: T.unsafe(nil), path: T.unsafe(nil)); end
   end
 end
+
+Spoom::Sorbet::BIN_PATH = T.let(T.unsafe(nil), String)
+
+Spoom::Sorbet::CONFIG_PATH = T.let(T.unsafe(nil), String)
 
 class Spoom::Sorbet::Config
   sig { void }
   def initialize; end
 
   def allowed_extensions; end
+  sig { returns(Spoom::Sorbet::Config) }
+  def copy; end
   def ignore; end
+  sig { returns(String) }
+  def options_string; end
   sig { returns(T::Array[String]) }
   def paths; end
 
@@ -906,6 +921,10 @@ class Spoom::Sorbet::Config
 end
 
 module Spoom::Sorbet::Errors
+  class << self
+    sig { params(errors: T::Array[Spoom::Sorbet::Errors::Error]).returns(T::Array[Spoom::Sorbet::Errors::Error]) }
+    def sort_errors_by_code(errors); end
+  end
 end
 
 class Spoom::Sorbet::Errors::Error
@@ -956,6 +975,8 @@ Spoom::Sorbet::Errors::Parser::ERROR_LINE_MATCH_REGEX = T.let(T.unsafe(nil), Reg
 
 Spoom::Sorbet::Errors::Parser::HEADER = T.let(T.unsafe(nil), Array)
 
+Spoom::Sorbet::GEM_PATH = T.let(T.unsafe(nil), String)
+
 module Spoom::Sorbet::MetricsParser
   class << self
     sig { params(path: String, prefix: String).returns(T::Hash[String, Integer]) }
@@ -978,7 +999,7 @@ module Spoom::Sorbet::Sigils
     sig { params(path: T.any(Pathname, String)).returns(T.nilable(String)) }
     def file_strictness(path); end
     sig { params(directory: T.any(Pathname, String), strictness: String, extension: String).returns(T::Array[String]) }
-    def files_with_sigil_strictness(directory, strictness, extension = T.unsafe(nil)); end
+    def files_with_sigil_strictness(directory, strictness, extension: T.unsafe(nil)); end
     sig { params(strictness: String).returns(String) }
     def sigil_string(strictness); end
     sig { params(content: String).returns(T.nilable(String)) }

@@ -81,7 +81,12 @@ namespace :sorbet do
       Bundler.with_unbundled_env do
         # Run with CI=true so it doesn't try to pull down external images when
         # running the seed files.
-        system('CI=true bundle exec srb rbi sorbet-typed')
+        system('SRB_SORBET_TYPED_REPO="https://github.com/sorbet/sorbet-typed.git" SRB_SORBET_TYPED_REVISION="origin/master" CI=true bundle exec srb rbi sorbet-typed')
+        # We don't want to include the RBI files for these gems since they're not useful.
+        puts 'Removing unwanted gem definitions from sorbet-typed...'
+        ['rspec-core', 'rake', 'rubocop'].each do |gem|
+          FileUtils.remove_dir(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}"))
+        end
         system('CI=true bundle exec tapioca sync')
         # Generate Sorbet Rails RBIs.
         system('bundle exec rake rails_rbi:all')

@@ -1330,6 +1330,7 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def foreign_key_exists?; end
   def foreign_key_failure_message(klass, foreign_key); end
   def foreign_key_reflection; end
+  def has_column?(klass, column); end
   def has_foreign_key_missing?; end
   def index_errors_correct?; end
   def join_table_correct?; end
