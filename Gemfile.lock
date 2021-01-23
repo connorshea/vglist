@@ -392,13 +392,8 @@ GEM
       sorbet-coerce (>= 0.2.6)
       sorbet-runtime (>= 0.5)
     sorbet-runtime (0.5.6216)
-    sorbet-static (0.5.6216-universal-darwin-14)
-    sorbet-static (0.5.6216-universal-darwin-15)
-    sorbet-static (0.5.6216-universal-darwin-16)
-    sorbet-static (0.5.6216-universal-darwin-17)
     sorbet-static (0.5.6216-universal-darwin-18)
     sorbet-static (0.5.6216-universal-darwin-19)
-    sorbet-static (0.5.6216-universal-darwin-20)
     sorbet-static (0.5.6216-x86_64-linux)
     sparql (3.1.5)
       builder (~> 3.2)
@@ -411,7 +406,7 @@ GEM
     sparql-client (3.1.2)
       net-http-persistent (~> 4.0, >= 4.0.1)
       rdf (~> 3.1)
-    spoom (1.0.7)
+    spoom (1.0.8)
       colorize
       sorbet (~> 0.5.5)
       sorbet-runtime
