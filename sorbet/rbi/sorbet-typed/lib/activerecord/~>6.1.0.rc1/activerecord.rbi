@@ -492,3 +492,9 @@ module ActiveRecord::ConnectionHandling
   def connects_to(database: T.unsafe(nil)); end
   def current_role; end
 end
+
+module ActiveRecord
+  class StatementTimeout < QueryAborted; end
+  class QueryCanceled < QueryAborted; end
+  class QueryAborted < StatementInvalid; end
+end
