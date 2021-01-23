@@ -1,5 +1,4 @@
 # typed: true
-
 # Given a response body, parse the JSON, access the specific type of search
 # result we want, and return just the attributes we want.
 #

@@ -1,5 +1,4 @@
 # typed: false
-
 module Searchable
   extend ActiveSupport::Concern
   extend T::Helpers

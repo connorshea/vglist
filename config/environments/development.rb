@@ -1,5 +1,4 @@
 # typed: true
-
 require "active_support/core_ext/integer/time"
 
 # Solution for muting the ActiveStorage logger from:
