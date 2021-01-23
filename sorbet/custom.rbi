@@ -62,46 +62,6 @@ class Doorkeeper::ApplicationsController < ApplicationController; end
 class Doorkeeper::AuthorizedApplicationsController < ApplicationController; end
 class Doorkeeper::AuthorizationsController < ApplicationController; end
 
-# Dumb hack to work around an issue in Sorbet with nilable blocks not
-# letting you use `T.proc.bind`.
-# https://github.com/sorbet/sorbet/issues/498
-# This allows `argument` to be used within field blocks, even though the
-# actual solution should look more like this:
-#
-# ```ruby
-# module GraphQL::Schema::Member::HasFields
-#   sig do
-#     params(
-#       args: T.untyped,
-#       kwargs: T.untyped,
-#       block: T.nilable(T.proc.bind(GraphQL::Schema::Field).void)
-#     ).returns(T.untyped)
-#   end
-#   def field(*args, **kwargs, &block); end
-# end
-# ```
-#
-# Note that this will only impact QueryType, and will need to be done for every
-# class where we want to use fields with arguments.
-# class Types::QueryType < Types::BaseObject
-#   extend GraphQL::Schema::Member::HasArguments
-# end
-
-# Add types for custom Faker methods defined in `config/initializers/faker.rb`.
-class Faker::Game
-  sig { returns(String) }
-  def self.company; end
-
-  sig { returns(String) }
-  def self.engine; end
-
-  sig { returns(String) }
-  def self.series; end
-
-  sig { returns(String) }
-  def self.store; end
-end
-
 # Include PaperTrail so the has_paper_trail method can be used in the
 # ActiveModel models. This happens implicitly, but we have to tell Sorbet
 # here for it to understand.
