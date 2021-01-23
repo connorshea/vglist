@@ -54,13 +54,21 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
 end
 
 class GraphQL::Schema::Object < ::GraphQL::Schema::Member
+  extend(::GraphQL::Schema::Member::HasFields)
+
   sig { returns(GraphQL::Query::Context) }
   def context; end
 end
 
 class GraphQL::Schema::Resolver
+  extend(::GraphQL::Schema::Member::BaseDSLMethods)
+
   sig { returns(GraphQL::Query::Context) }
   def context; end
+end
+
+class GraphQL::Schema::Member
+  extend(::GraphQL::Schema::Member::BaseDSLMethods)
 end
 
 module GraphQL::Schema::Member::HasFields
@@ -72,4 +80,30 @@ module GraphQL::Schema::Member::HasFields
     ).returns(T.untyped)
   end
   def field(*args, **kwargs, &block); end
+end
+
+module GraphQL::Schema::Member::HasArguments
+  def argument(*args, **kwargs, &block); end
+end
+
+module GraphQL::Schema::Member::HasFields
+  def field_class(new_field_class = nil); end
+end
+
+module GraphQL::Schema::Member::BaseDSLMethods
+  sig { params(new_description: String).returns(T.nilable(String)) }
+  def description(new_description = T.unsafe(nil)); end
+end
+
+module GraphQL::Schema::Interface
+  mixes_in_class_methods(::GraphQL::Schema::Member::BaseDSLMethods)
+  mixes_in_class_methods(::GraphQL::Schema::Member::HasFields)
+end
+
+class GraphQL::Schema::Mutation < ::GraphQL::Schema::Resolver
+  extend(::GraphQL::Schema::Member::HasFields)
+end
+
+class GraphQL::Schema::Subscription < ::GraphQL::Schema::Resolver
+  extend(::GraphQL::Schema::Member::HasFields)
 end
