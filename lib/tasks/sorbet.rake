@@ -81,7 +81,7 @@ namespace :sorbet do
       Bundler.with_unbundled_env do
         # Run with CI=true so it doesn't try to pull down external images when
         # running the seed files.
-        system('CI=true bundle exec srb rbi sorbet-typed')
+        system('SRB_SORBET_TYPED_REPO="https://github.com/sorbet/sorbet-typed.git" SRB_SORBET_TYPED_REVISION="origin/master" CI=true bundle exec srb rbi sorbet-typed')
         system('CI=true bundle exec tapioca sync')
         # Generate Sorbet Rails RBIs.
         system('bundle exec rake rails_rbi:all')
