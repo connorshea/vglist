@@ -1,5 +1,4 @@
 # typed: false
-
 module GlobalSearchable
   extend ActiveSupport::Concern
   extend T::Helpers

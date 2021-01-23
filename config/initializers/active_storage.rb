@@ -1,5 +1,4 @@
 # typed: false
-
 # Only attempt to create variants of PNG and JPEG images, don't try to
 # generate webp variants. This can be changed in the future if we switch to
 # vips or update ImageMagick to support webp.

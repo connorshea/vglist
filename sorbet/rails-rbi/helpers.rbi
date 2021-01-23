@@ -6,6 +6,7 @@ module ActivityHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
   include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
 end
 
 module ApplicationHelper
@@ -13,6 +14,7 @@ module ApplicationHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
   include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
 end
 
 module GamesHelper
@@ -20,6 +22,7 @@ module GamesHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
   include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
 end
 
 module SettingsHelper
@@ -27,6 +30,7 @@ module SettingsHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
   include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
 end
 
 module UsersHelper
@@ -34,6 +38,7 @@ module UsersHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
   include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
 end
 
 module Doorkeeper::DashboardHelper
@@ -41,6 +46,7 @@ module Doorkeeper::DashboardHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
   include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
 end
 
 module DeviseHelper
@@ -48,6 +54,7 @@ module DeviseHelper
   include ActionView::Helpers
   include Devise::Controllers::Helpers
   include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
 end
 
 module ActionController::Helpers

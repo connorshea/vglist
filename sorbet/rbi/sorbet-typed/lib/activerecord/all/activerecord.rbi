@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/all/activerecord.rbi
 #
-# typed: ignore
+# typed: false
 
 VariadicUntypedFunction = T.type_alias { Proc }
 AssociationCallback = T.type_alias do
@@ -1701,7 +1701,6 @@ module ActiveRecord
   class PreparedStatementCacheExpired < StatementInvalid; end
   class PreparedStatementInvalid < ActiveRecordError; end
   class ProtectedEnvironmentError < ActiveRecordError; end
-  class QueryCanceled < StatementInvalid; end
   class RangeError < StatementInvalid; end
   class ReadOnlyRecord < ActiveRecordError; end
 
@@ -1718,7 +1717,6 @@ module ActiveRecord
   class SerializationTypeMismatch < ActiveRecordError; end
   class StaleObjectError < ActiveRecordError; end
   class StatementInvalid < ActiveRecordError; end
-  class StatementTimeout < StatementInvalid; end
   class SubclassNotFound < ActiveRecordError; end
   class ThroughCantAssociateThroughHasOneOrManyReflection < ActiveRecordError; end
   class ThroughNestedAssociationsAreReadonly < ActiveRecordError; end

@@ -7,7 +7,7 @@ class GraphqlController < ApplicationController
   before_action :authorize_doorkeeper_user, if: -> { !request.headers.key?('X-User-Email') && user_using_oauth? }
 
   # Authenticate with a user's authorization token if they're not using OAuth.
-  before_action :authorize_token_user, if: -> { !user_using_oauth? }
+  before_action :authorize_token_user, unless: :user_using_oauth?
 
   # Disable CSRF protection for GraphQL because we don't want to have CSRF
   # protection on our API endpoint. The point is to let anyone send requests
@@ -33,7 +33,7 @@ class GraphqlController < ApplicationController
       token_auth: !user_using_oauth?
     }
 
-    result = VideoGameListSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+    result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name)
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?
