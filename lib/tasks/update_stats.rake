@@ -25,6 +25,7 @@ namespace :vglist do
         steam_app_ids: Game.joins(:steam_app_ids).count,
         epic_games_store_ids: Game.where.not(epic_games_store_id: nil).count,
         gog_ids: Game.where.not(gog_id: nil).count,
+        igdb_ids: Game.where.not(igdb_id: nil).count,
         company_versions: Versions::CompanyVersion.count,
         game_versions: Versions::GameVersion.count,
         genre_versions: Versions::GenreVersion.count,

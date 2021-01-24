@@ -135,6 +135,29 @@ RSpec.describe Game, type: :model do
       ).for(:gog_id)
     end
 
+    it { should validate_length_of(:igdb_id).is_at_most(300) }
+
+    it 'allows valid IGDB IDs' do
+      expect(game).to allow_values(
+        'divinity-2-developers-cut',
+        'deus-ex-invisible-war',
+        'toca-race-driver-3',
+        'samorost-3',
+        'z',
+        '123',
+        'foobar--1'
+      ).for(:igdb_id)
+    end
+
+    it 'disallows invalid IGDB IDs' do
+      expect(game).not_to allow_values(
+        'Game with spaces in name',
+        '<script></script>',
+        'foo_underscore_bar',
+        'foo_underscore_bar'
+      ).for(:igdb_id)
+    end
+
     it 'has an optional cover' do
       expect(game).not_to validate_attached_of(:cover)
       expect(game).to validate_content_type_of(:cover).allowing('image/png', 'image/jpg', 'image/jpeg')

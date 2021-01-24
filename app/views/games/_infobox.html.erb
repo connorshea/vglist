@@ -88,7 +88,8 @@
     game.mobygames_id,
     game.giantbomb_id,
     game.epic_games_store_id,
-    game.gog_id
+    game.gog_id,
+    game.igdb_id
   ].all?(&:blank?) %>
     <div class="infobox-section">
       <p class="infobox-header has-text-weight-semibold">External links
@@ -115,6 +116,9 @@
         <% end %>
         <% unless game.giantbomb_id.blank? %>
           <li><%= link_to 'GiantBomb', "https://www.giantbomb.com/wd/#{game.giantbomb_id}" %>
+        <% end %>
+        <% unless game.igdb_id.blank? %>
+          <li><%= link_to 'IGDB', "https://www.igdb.com/games/#{game.igdb_id}" %>
         <% end %>
       </ul>
     </div>

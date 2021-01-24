@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_22_043044) do
+ActiveRecord::Schema.define(version: 2021_01_24_200454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -245,6 +244,7 @@ ActiveRecord::Schema.define(version: 2021_01_22_043044) do
     t.text "epic_games_store_id"
     t.text "gog_id"
     t.float "avg_rating"
+    t.text "igdb_id"
     t.index ["epic_games_store_id"], name: "index_games_on_epic_games_store_id", unique: true
     t.index ["giantbomb_id"], name: "index_games_on_giantbomb_id", unique: true
     t.index ["mobygames_id"], name: "index_games_on_mobygames_id", unique: true
@@ -406,6 +406,7 @@ ActiveRecord::Schema.define(version: 2021_01_22_043044) do
     t.bigint "engine_versions"
     t.bigint "platform_versions"
     t.bigint "series_versions"
+    t.bigint "igdb_ids"
   end
 
   create_table "steam_app_ids", force: :cascade do |t|

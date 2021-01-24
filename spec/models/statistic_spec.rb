@@ -31,6 +31,7 @@ RSpec.describe Statistic, type: :model do
       :steam_app_ids,
       :epic_games_store_ids,
       :gog_ids,
+      :igdb_ids,
       :company_versions,
       :game_versions,
       :genre_versions,
