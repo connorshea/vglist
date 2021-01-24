@@ -15,6 +15,7 @@ namespace :import do
       "import:giantbomb",
       "import:epic_games",
       "import:gog",
+      "import:igdb",
       "import:mobygames",
       "import:update:series",
       "import:update:genres",

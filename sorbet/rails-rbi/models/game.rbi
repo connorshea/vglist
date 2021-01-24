@@ -2003,6 +2003,15 @@ module Game::GeneratedAttributeMethods
   def id?; end
 
   sig { returns(T.nilable(String)) }
+  def igdb_id; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def igdb_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def igdb_id?; end
+
+  sig { returns(T.nilable(String)) }
   def mobygames_id; end
 
   sig { params(value: T.nilable(T.any(String, Symbol))).void }
@@ -2649,6 +2658,51 @@ module Game::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def avg_rating_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_igdb_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_igdb_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_igdb_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def igdb_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def igdb_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_igdb_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def igdb_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def igdb_id_came_from_user?(*args); end
 end
 
 module Game::GeneratedAssociationMethods

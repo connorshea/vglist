@@ -96,6 +96,13 @@
 
     <text-field
       :form-class="formData.class"
+      :attribute="formData.igdbId.attribute"
+      :label="formData.igdbId.label"
+      v-model="game.igdbId"
+    ></text-field>
+
+    <text-field
+      :form-class="formData.class"
       :attribute="formData.pcgamingwikiId.attribute"
       :label="formData.pcgamingwikiId.label"
       v-model="game.pcgamingwikiId"
@@ -218,6 +225,10 @@ export default {
       type: String,
       required: false
     },
+    igdbId: {
+      type: String,
+      required: false
+    },
     wikidataId: {
       type: Number,
       required: false
@@ -270,6 +281,7 @@ export default {
         steamAppIds: this.$props.steamAppIds,
         epicGamesStoreId: this.$props.epicGamesStoreId,
         gogId: this.$props.gogId,
+        igdbId: this.$props.igdbId,
         wikidataId: this.$props.wikidataId,
         pcgamingwikiId: this.$props.pcgamingwikiId,
         mobygamesId: this.$props.mobygamesId,
@@ -319,6 +331,10 @@ export default {
         gogId: {
           label: 'GOG.com ID',
           attribute: 'gog_id'
+        },
+        igdbId: {
+          label: 'IGDB ID',
+          attribute: 'igdb_id'
         },
         wikidataId: {
           label: 'Wikidata ID',
@@ -415,6 +431,7 @@ export default {
           steam_app_ids_attributes: steamAppIds,
           epic_games_store_id: this.game.epicGamesStoreId,
           gog_id: this.game.gogId,
+          igdb_id: this.game.igdbId,
           wikidata_id: this.game.wikidataId,
           pcgamingwiki_id: this.game.pcgamingwikiId,
           mobygames_id: this.game.mobygamesId,
@@ -424,7 +441,7 @@ export default {
 
       // If the attribute's value is an empty string, replace it with null so
       // it's nullified when sent to the backend.
-      ['epic_games_store_id', 'gog_id', 'wikidata_id', 'pcgamingwiki_id', 'mobygames_id', 'giantbomb_id'].forEach(attr => {
+      ['epic_games_store_id', 'gog_id', 'igdb_id', 'wikidata_id', 'pcgamingwiki_id', 'mobygames_id', 'giantbomb_id'].forEach(attr => {
         if (submittableData['game'][attr] === '') {
           submittableData['game'][attr] = null;
         }

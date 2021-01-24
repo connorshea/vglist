@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_22_043044) do
+ActiveRecord::Schema.define(version: 2021_01_24_204720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -245,8 +245,10 @@ ActiveRecord::Schema.define(version: 2021_01_22_043044) do
     t.text "epic_games_store_id"
     t.text "gog_id"
     t.float "avg_rating"
+    t.text "igdb_id"
     t.index ["epic_games_store_id"], name: "index_games_on_epic_games_store_id", unique: true
     t.index ["giantbomb_id"], name: "index_games_on_giantbomb_id", unique: true
+    t.index ["igdb_id"], name: "index_games_on_igdb_id", unique: true
     t.index ["mobygames_id"], name: "index_games_on_mobygames_id", unique: true
     t.index ["series_id"], name: "index_games_on_series_id"
     t.index ["wikidata_id"], name: "index_games_on_wikidata_id", unique: true
@@ -406,6 +408,7 @@ ActiveRecord::Schema.define(version: 2021_01_22_043044) do
     t.bigint "engine_versions"
     t.bigint "platform_versions"
     t.bigint "series_versions"
+    t.bigint "igdb_ids"
   end
 
   create_table "steam_app_ids", force: :cascade do |t|

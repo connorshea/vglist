@@ -170,6 +170,15 @@ module Statistic::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def id?; end
 
+  sig { returns(T.nilable(Integer)) }
+  def igdb_ids; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def igdb_ids=(value); end
+
+  sig { returns(T::Boolean) }
+  def igdb_ids?; end
+
   sig { returns(Integer) }
   def mobygames_ids; end
 

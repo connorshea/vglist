@@ -30,7 +30,8 @@ class AdminController < ApplicationController
       giantbomb_ids: Game.where.not(giantbomb_id: nil).count,
       steam_app_ids: Game.joins(:steam_app_ids).count,
       epic_games_store_ids: Game.where.not(epic_games_store_id: nil).count,
-      gog_ids: Game.where.not(gog_id: nil).count
+      gog_ids: Game.where.not(gog_id: nil).count,
+      igdb_ids: Game.where.not(igdb_id: nil).count
     }
 
     @version_counts = {

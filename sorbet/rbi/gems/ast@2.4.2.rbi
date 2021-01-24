@@ -17,6 +17,7 @@ class AST::Node
   def children; end
   def clone; end
   def concat(array); end
+  def deconstruct; end
   def dup; end
   def eql?(other); end
   def hash; end
