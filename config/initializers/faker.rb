@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 if defined?(Faker)
   # Add custom methods to the Game Faker.
   module Faker

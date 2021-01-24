@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/faker/~>2.13/faker.rbi
 #
-# typed: true
+# typed: strict
 
 # :nodoc:
 module Faker
