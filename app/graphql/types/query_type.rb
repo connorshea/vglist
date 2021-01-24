@@ -6,9 +6,15 @@ module Types
     description "Queries are GraphQL requests that can be used to request data from vglist's database."
 
     field :game, GameType, null: true do
-      description "Find a game by ID."
+      description "Find a game by ID or GiantBomb ID. May only use one of the filters at a time."
       argument :id, ID, required: false, description: "Find a game by its unique ID."
       argument :giantbomb_id, String, required: false, description: "Find a game by its GiantBomb ID, e.g. `'3030-23708'`."
+
+      # Use validator to validate that one of the arguments is being used.
+      validates required: {
+        one_of: [:id, :giantbomb_id],
+        message: 'Cannot provide more than one argument to game at a time.'
+      }
     end
 
     field :games, GameType.connection_type, null: true do
@@ -105,9 +111,15 @@ module Types
     end
 
     field :user, UserType, null: true do
-      description "Find a user."
+      description "Find a user. May only use one or the other."
       argument :id, ID, required: false, description: "Find a user by their ID."
       argument :username, String, required: false, description: "Find a user by their username."
+
+      # Use validator to validate that one of the arguments is being used.
+      validates required: {
+        one_of: [:id, :username],
+        message: 'Cannot provide more than one argument to user at a time.'
+      }
     end
 
     field :current_user, UserType, null: true do
@@ -139,8 +151,6 @@ module Types
         Game.find(id)
       elsif !giantbomb_id.nil?
         Game.find_by(giantbomb_id: giantbomb_id)
-      else
-        raise GraphQL::ExecutionError, "Field 'game' is missing a required argument: 'id' or 'giantbomb_id'"
       end
     end
 
@@ -250,8 +260,6 @@ module Types
         User.find(id)
       elsif !username.nil?
         User.find_by(username: username)
-      else
-        raise GraphQL::ExecutionError, "Field 'user' is missing a required argument: 'id' or 'username'"
       end
     end
 

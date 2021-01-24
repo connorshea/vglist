@@ -64,6 +64,22 @@ RSpec.describe "Users API", type: :request do
       )
     end
 
+    it "returns an error if the query uses both an id and username" do
+      query_string = <<-GRAPHQL
+        query($id: ID!, $username: String!) {
+          user(id: $id, username: $username) {
+            id
+            username
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: user.id, username: user.username }, token: access_token)
+
+      expect(result["data"]["user"]).to be_nil
+      expect(result["errors"].first['message']).to eq('Cannot provide more than one argument to user at a time.')
+    end
+
     it "returns avatar for user" do
       sign_in(user_with_avatar)
       query_string = <<-GRAPHQL

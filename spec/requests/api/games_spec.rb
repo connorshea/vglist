@@ -11,6 +11,7 @@ RSpec.describe "Games API", type: :request do
     let(:game_with_cover) { create(:game_with_cover) }
     let(:game_with_release_date) { create(:game_with_release_date) }
     let(:game_with_steam_app_ids) { create(:game_with_steam_app_id) }
+    let(:game_with_giantbomb_id) { create(:game, :giantbomb_id) }
 
     it "returns basic data for game" do
       game
@@ -102,6 +103,42 @@ RSpec.describe "Games API", type: :request do
           "releaseDate" => game_with_release_date.release_date.strftime("%F")
         }
       )
+    end
+
+    it "returns basic data for game when searching by giantbomb_id" do
+      query_string = <<-GRAPHQL
+        query($giantbombId: String!) {
+          game(giantbombId: $giantbombId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { giantbomb_id: game_with_giantbomb_id.giantbomb_id }, token: access_token)
+
+      expect(result["data"]["game"]).to eq(
+        {
+          "id" => game_with_giantbomb_id.id.to_s,
+          "name" => game_with_giantbomb_id.name
+        }
+      )
+    end
+
+    it "returns an error if the query uses both an id and giantbomb_id" do
+      query_string = <<-GRAPHQL
+        query($id: ID!, $giantbombId: String!) {
+          game(id: $id, giantbombId: $giantbombId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: game_with_giantbomb_id.id, giantbomb_id: game_with_giantbomb_id.giantbomb_id }, token: access_token)
+
+      expect(result["data"]["game"]).to be_nil
+      expect(result["errors"].first['message']).to eq('Cannot provide more than one argument to game at a time.')
     end
 
     it "returns data for a game when searching" do
