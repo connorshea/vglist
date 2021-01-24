@@ -135,6 +135,7 @@ RSpec.describe Game, type: :model do
       ).for(:gog_id)
     end
 
+    it { should validate_uniqueness_of(:igdb_id).allow_nil }
     it { should validate_length_of(:igdb_id).is_at_most(300) }
 
     it 'allows valid IGDB IDs' do
@@ -206,6 +207,10 @@ RSpec.describe Game, type: :model do
 
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
+    it { should have_db_index(:giantbomb_id).unique }
+    it { should have_db_index(:epic_games_store_id).unique }
+    it { should have_db_index(:mobygames_id).unique }
+    it { should have_db_index(:igdb_id).unique }
   end
 
   describe 'Scopes' do

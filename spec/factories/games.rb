@@ -62,7 +62,7 @@ FactoryBot.define do
     end
 
     trait :igdb_id do
-      igdb_id { Faker::Game.title.parameterize }
+      igdb_id { Faker::Game.unique.title.parameterize }
     end
 
     trait :release_date do
