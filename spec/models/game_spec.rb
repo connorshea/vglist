@@ -146,7 +146,8 @@ RSpec.describe Game, type: :model do
         'samorost-3',
         'z',
         '123',
-        'foobar--1'
+        'foobar--1',
+        'cat-president-~a-more-purrfect-union~' # this is valid for some reason
       ).for(:igdb_id)
     end
 

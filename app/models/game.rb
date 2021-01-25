@@ -155,7 +155,7 @@ class Game < ApplicationRecord
   validates :igdb_id,
     uniqueness: true,
     allow_nil: true,
-    format: /\A[a-z0-9-]+\z/,
+    format: /\A[a-z0-9-~]+\z/,
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 
