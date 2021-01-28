@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Resolvers
   module UserResolvers
     class SearchResolver < Resolvers::BaseResolver

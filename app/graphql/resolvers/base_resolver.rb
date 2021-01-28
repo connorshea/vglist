@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Resolvers
   class BaseResolver < GraphQL::Schema::Resolver
     extend T::Sig

@@ -11,6 +11,7 @@ class Jbuilder < ::ActiveSupport::ProxyObject
   def attributes!; end
   def call(object, *attributes, &block); end
   def child!; end
+  def deep_format_keys!(value = T.unsafe(nil)); end
   def extract!(object, *attributes); end
   def ignore_nil!(value = T.unsafe(nil)); end
   def key_format!(*args); end
@@ -37,6 +38,7 @@ class Jbuilder < ::ActiveSupport::ProxyObject
   def _set_value(key, value); end
 
   class << self
+    def deep_format_keys(value = T.unsafe(nil)); end
     def encode(*args, &block); end
     def ignore_nil(value = T.unsafe(nil)); end
     def key_format(*args); end

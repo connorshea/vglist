@@ -11,4 +11,6 @@ module ::FFI::Library; end
 module ::FFI::ManagedStruct; end
 module ::FFI::Struct; end
 module ::MakeMakefile; end
+module ActiveSupport::NumericWithFormat; end
+module Capybara::Minitest::Assertions; end
 module T::Private::Methods::Signature; end

@@ -296,6 +296,8 @@ class Puma::MiniSSL::Context
   def no_tlsv1_1=(tlsv1_1); end
   def ssl_cipher_filter; end
   def ssl_cipher_filter=(_arg0); end
+  def verification_flags; end
+  def verification_flags=(_arg0); end
   def verify_mode; end
   def verify_mode=(_arg0); end
 end
@@ -335,6 +337,10 @@ Puma::MiniSSL::OPENSSL_NO_SSL3 = T.let(T.unsafe(nil), TrueClass)
 
 Puma::MiniSSL::OPENSSL_VERSION = T.let(T.unsafe(nil), String)
 
+class Puma::MiniSSL::SSLContext
+  def initialize(_arg0); end
+end
+
 class Puma::MiniSSL::SSLError < ::StandardError
 end
 
@@ -345,6 +351,7 @@ class Puma::MiniSSL::Server
   def accept_nonblock; end
   def addr; end
   def close; end
+  def closed?; end
   def to_io; end
 end
 
@@ -372,6 +379,8 @@ class Puma::MiniSSL::Socket
 
   def bad_tlsv1_3?; end
 end
+
+Puma::MiniSSL::VERIFICATION_FLAGS = T.let(T.unsafe(nil), Hash)
 
 Puma::MiniSSL::VERIFY_FAIL_IF_NO_PEER_CERT = T.let(T.unsafe(nil), Integer)
 
@@ -423,7 +432,6 @@ class Puma::Server
   def pool_capacity; end
   def process_client(client, buffer); end
   def reactor_wakeup(client); end
-  def read_body(env, client, body, cl); end
   def reaping_time; end
   def reaping_time=(_arg0); end
   def requests_count; end
@@ -487,6 +495,7 @@ class Puma::Binder
 
   private
 
+  def loc_addr_str(io); end
   def loopback_addresses; end
   def socket_activation_fd(int); end
 end
@@ -694,6 +703,7 @@ class Puma::DSL
   def fork_worker(after_requests = T.unsafe(nil)); end
   def get(key, default = T.unsafe(nil)); end
   def inject(&blk); end
+  def io_selector_backend(backend); end
   def load(file); end
   def log_formatter(&block); end
   def log_requests(which = T.unsafe(nil)); end
@@ -750,6 +760,10 @@ class Puma::ErrorLogger
   def request_parsed?(req); end
   def request_title(req); end
   def title(options = T.unsafe(nil)); end
+
+  private
+
+  def log(str); end
 
   class << self
     def stdio; end
@@ -817,6 +831,7 @@ class Puma::NullIO
   def read(count = T.unsafe(nil), _buffer = T.unsafe(nil)); end
   def rewind; end
   def size; end
+  def string; end
   def sync=(v); end
   def write(*ary); end
 end
@@ -880,7 +895,7 @@ class Puma::Rack::Options
 end
 
 class Puma::Reactor
-  def initialize(&block); end
+  def initialize(backend, &block); end
 
   def add(client); end
   def run(background = T.unsafe(nil)); end
@@ -989,6 +1004,9 @@ end
 Puma::ThreadPool::SHUTDOWN_GRACE_TIME = T.let(T.unsafe(nil), Integer)
 
 class Puma::UnknownPlugin < ::RuntimeError
+end
+
+class Puma::UnsupportedBackend < ::StandardError
 end
 
 class Puma::UnsupportedOption < ::RuntimeError

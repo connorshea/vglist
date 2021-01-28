@@ -31,6 +31,7 @@ class FalseClass
 end
 
 class Float < ::Numeric
+  include(::ActiveSupport::NumericWithFormat)
   include(::JSON::Ext::Generator::GeneratorMethods::Float)
   include(::MessagePack::CoreExt)
 
@@ -53,6 +54,7 @@ class Hash
 end
 
 class Integer < ::Numeric
+  include(::ActiveSupport::NumericWithFormat)
   include(::JSON::Ext::Generator::GeneratorMethods::Integer)
   include(::MessagePack::CoreExt)
 
@@ -150,10 +152,6 @@ class NilClass
   include(::JSON::Ext::Generator::GeneratorMethods::NilClass)
   include(::MessagePack::CoreExt)
   include(::FriendlyId::UnfriendlyUtils)
-  include(::FriendlyId::Reserved::Configuration)
-  include(::FriendlyId::Scoped::Configuration)
-  include(::FriendlyId::SimpleI18n::Configuration)
-  include(::FriendlyId::Slugged::Configuration)
 
 
   private
