@@ -192,7 +192,7 @@ GEM
       nokogiri (>= 1.6)
     invisible_captcha (1.1.0)
       rails (>= 4.2)
-    jbuilder (2.11.1)
+    jbuilder (2.11.2)
       activesupport (>= 5.0.0)
     jmespath (1.4.0)
     kaminari (1.2.1)
