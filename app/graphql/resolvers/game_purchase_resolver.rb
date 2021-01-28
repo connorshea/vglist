@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Resolvers
   class GamePurchaseResolver < Resolvers::BaseResolver
     type Types::GamePurchaseType, null: true

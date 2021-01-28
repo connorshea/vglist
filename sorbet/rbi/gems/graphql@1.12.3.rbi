@@ -661,7 +661,7 @@ class GraphQL::Dataloader
   def run; end
   def with(source_class, *batch_parameters); end
   def yield; end
-  def yielded?; end
+  def yielded?(path); end
   def yielded_fibers; end
 
   private
@@ -678,7 +678,7 @@ class GraphQL::Dataloader::NullDataloader < ::GraphQL::Dataloader
   def enqueue; end
   def run; end
   def yield; end
-  def yielded?; end
+  def yielded?(_path); end
 end
 
 class GraphQL::Dataloader::Request
@@ -855,6 +855,12 @@ module GraphQL::DeprecatedDSL::Methods
 end
 
 GraphQL::DeprecatedDSL::TYPE_CLASSES = T.let(T.unsafe(nil), Array)
+
+module GraphQL::Deprecation
+  class << self
+    def warn(message); end
+  end
+end
 
 module GraphQL::Dig
   def dig(own_key, *rest_keys); end
@@ -1205,6 +1211,7 @@ class GraphQL::Execution::Interpreter::Runtime
   def final_value; end
   def gather_selections(owner_object, owner_type, selections, selections_by_name = T.unsafe(nil)); end
   def inspect; end
+  def progress_path; end
   def query; end
   def resolve_type(type, value, path); end
   def resolve_with_directives(object, ast_node, &block); end

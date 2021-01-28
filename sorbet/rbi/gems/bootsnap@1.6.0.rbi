@@ -9,27 +9,29 @@ module ActiveSupport
   extend(::ActiveSupport::Autoload)
 
   def parse_json_times; end
-  def parse_json_times=(obj); end
+  def parse_json_times=(val); end
   def test_order; end
-  def test_order=(obj); end
+  def test_order=(val); end
 
   class << self
     def eager_load!; end
-    def escape_html_entities_in_json(*args, &block); end
+    def escape_html_entities_in_json(*_arg0, &_arg1); end
     def escape_html_entities_in_json=(arg); end
     def gem_version; end
-    def json_encoder(*args, &block); end
+    def json_encoder(*_arg0, &_arg1); end
     def json_encoder=(arg); end
     def parse_json_times; end
-    def parse_json_times=(obj); end
+    def parse_json_times=(val); end
     def test_order; end
-    def test_order=(obj); end
-    def time_precision(*args, &block); end
+    def test_order=(val); end
+    def time_precision(*_arg0, &_arg1); end
     def time_precision=(arg); end
     def to_time_preserves_timezone; end
     def to_time_preserves_timezone=(value); end
-    def use_standard_json_time_format(*args, &block); end
+    def use_standard_json_time_format(*_arg0, &_arg1); end
     def use_standard_json_time_format=(arg); end
+    def utc_to_local_returns_utc_offset_times; end
+    def utc_to_local_returns_utc_offset_times=(value); end
     def version; end
   end
 end
@@ -39,43 +41,43 @@ module ActiveSupport::Dependencies
   extend(::Bootsnap::LoadPathCache::CoreExt::ActiveSupport::ClassMethods)
 
   def _eager_load_paths; end
-  def _eager_load_paths=(obj); end
+  def _eager_load_paths=(val); end
   def autoload_module!(into, const_name, qualified_name, path_suffix); end
   def autoload_once_paths; end
-  def autoload_once_paths=(obj); end
+  def autoload_once_paths=(val); end
   def autoload_paths; end
-  def autoload_paths=(obj); end
+  def autoload_paths=(val); end
   def autoloadable_module?(path_suffix); end
   def autoloaded?(desc); end
   def autoloaded_constants; end
-  def autoloaded_constants=(obj); end
+  def autoloaded_constants=(val); end
   def clear; end
   def constant_watch_stack; end
-  def constant_watch_stack=(obj); end
+  def constant_watch_stack=(val); end
   def constantize(name); end
   def depend_on(file_name, message = T.unsafe(nil)); end
   def explicitly_unloadable_constants; end
-  def explicitly_unloadable_constants=(obj); end
+  def explicitly_unloadable_constants=(val); end
   def history; end
-  def history=(obj); end
+  def history=(val); end
   def hook!; end
   def interlock; end
-  def interlock=(obj); end
+  def interlock=(val); end
   def load?; end
   def load_file(path, const_paths = T.unsafe(nil)); end
   def load_missing_constant(from_mod, const_name); end
   def load_once_path?(path); end
   def loadable_constants_for_path(path, bases = T.unsafe(nil)); end
   def loaded; end
-  def loaded=(obj); end
+  def loaded=(val); end
   def loading; end
-  def loading=(obj); end
+  def loading=(val); end
   def log(message); end
   def logger; end
-  def logger=(obj); end
+  def logger=(val); end
   def mark_for_unload(const_desc); end
   def mechanism; end
-  def mechanism=(obj); end
+  def mechanism=(val); end
   def new_constants_in(*descs); end
   def qualified_const_defined?(path); end
   def qualified_name_for(mod, name); end
@@ -88,46 +90,47 @@ module ActiveSupport::Dependencies
   def to_constant_name(desc); end
   def unhook!; end
   def verbose; end
-  def verbose=(obj); end
+  def verbose=(val); end
   def warnings_on_first_load; end
-  def warnings_on_first_load=(obj); end
+  def warnings_on_first_load=(val); end
   def will_unload?(const_desc); end
 
   private
 
   def real_mod_name(mod); end
+  def uninitialized_constant(qualified_name, const_name, receiver:); end
 
   class << self
     def _eager_load_paths; end
-    def _eager_load_paths=(obj); end
+    def _eager_load_paths=(val); end
     def autoload_once_paths; end
-    def autoload_once_paths=(obj); end
+    def autoload_once_paths=(val); end
     def autoload_paths; end
     def autoloaded_constants; end
-    def autoloaded_constants=(obj); end
+    def autoloaded_constants=(val); end
     def constant_watch_stack; end
-    def constant_watch_stack=(obj); end
+    def constant_watch_stack=(val); end
     def explicitly_unloadable_constants; end
-    def explicitly_unloadable_constants=(obj); end
+    def explicitly_unloadable_constants=(val); end
     def history; end
-    def history=(obj); end
+    def history=(val); end
     def interlock; end
-    def interlock=(obj); end
+    def interlock=(val); end
     def load_interlock; end
     def loaded; end
-    def loaded=(obj); end
+    def loaded=(val); end
     def loading; end
-    def loading=(obj); end
+    def loading=(val); end
     def logger; end
-    def logger=(obj); end
+    def logger=(val); end
     def mechanism; end
-    def mechanism=(obj); end
+    def mechanism=(val); end
     def run_interlock; end
     def unload_interlock; end
     def verbose; end
-    def verbose=(obj); end
+    def verbose=(val); end
     def warnings_on_first_load; end
-    def warnings_on_first_load=(obj); end
+    def warnings_on_first_load=(val); end
   end
 end
 
@@ -162,8 +165,9 @@ module Bootsnap::CompileCache::ISeq
     def compile_option_updated; end
     def fetch(path, cache_dir: T.unsafe(nil)); end
     def input_to_output(_data, _kwargs); end
-    def input_to_storage(_, path, _args); end
+    def input_to_storage(_, path); end
     def install!(cache_dir); end
+    def precompile(path, cache_dir: T.unsafe(nil)); end
     def storage_to_output(binary, _args); end
   end
 end
@@ -180,11 +184,13 @@ module Bootsnap::CompileCache::Native
   def compile_option_crc32=(_arg0); end
   def coverage_running?; end
   def fetch(_arg0, _arg1, _arg2, _arg3); end
+  def precompile(_arg0, _arg1, _arg2); end
 
   class << self
     def compile_option_crc32=(_arg0); end
     def coverage_running?; end
     def fetch(_arg0, _arg1, _arg2, _arg3); end
+    def precompile(_arg0, _arg1, _arg2); end
   end
 end
 
@@ -200,10 +206,11 @@ module Bootsnap::CompileCache::YAML
     def cache_dir=(_arg0); end
     def init!; end
     def input_to_output(data, kwargs); end
-    def input_to_storage(contents, _, kwargs); end
+    def input_to_storage(contents, _); end
     def install!(cache_dir); end
     def msgpack_factory; end
     def msgpack_factory=(_arg0); end
+    def precompile(path, cache_dir: T.unsafe(nil)); end
     def storage_to_output(data, kwargs); end
     def supported_options; end
     def supported_options=(_arg0); end
@@ -211,8 +218,6 @@ module Bootsnap::CompileCache::YAML
 end
 
 module Bootsnap::CompileCache::YAML::Patch
-  extend(::Bootsnap::CompileCache::YAML::Patch)
-
   def load_file(path, *args); end
 end
 

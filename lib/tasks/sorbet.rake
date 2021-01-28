@@ -92,6 +92,9 @@ namespace :sorbet do
         system('bundle exec rake rails_rbi:all')
         system('CI=true bundle exec tapioca todo')
         system('CI=true bundle exec srb rbi suggest-typed')
+        # Run spoom bump at the end to bump some files that suggest-typed
+        # erroneously treats as failing the typecheck.
+        system('CI=true bundle exec spoom bump')
       end
     end
   end

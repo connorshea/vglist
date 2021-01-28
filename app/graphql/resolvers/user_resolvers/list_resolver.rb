@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Resolvers
   module UserResolvers
     class ListResolver < Resolvers::BaseResolver

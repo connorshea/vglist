@@ -198,111 +198,111 @@ module Capybara::DSL
   include(::Capybara::DSLRSpecProxyInstaller)
   extend(::Capybara::DSLRSpecProxyInstaller::ClassMethods)
 
-  def accept_alert(*args, &block); end
-  def accept_confirm(*args, &block); end
-  def accept_prompt(*args, &block); end
-  def all(*args, &block); end
-  def assert_all_of_selectors(*args, &block); end
-  def assert_any_of_selectors(*args, &block); end
-  def assert_current_path(*args, &block); end
-  def assert_no_current_path(*args, &block); end
-  def assert_no_selector(*args, &block); end
-  def assert_no_text(*args, &block); end
-  def assert_no_title(*args, &block); end
-  def assert_none_of_selectors(*args, &block); end
-  def assert_selector(*args, &block); end
-  def assert_text(*args, &block); end
-  def assert_title(*args, &block); end
-  def attach_file(*args, &block); end
-  def body(*args, &block); end
-  def check(*args, &block); end
-  def choose(*args, &block); end
-  def click_button(*args, &block); end
-  def click_link(*args, &block); end
-  def click_link_or_button(*args, &block); end
-  def click_on(*args, &block); end
-  def current_host(*args, &block); end
-  def current_path(*args, &block); end
-  def current_scope(*args, &block); end
-  def current_url(*args, &block); end
-  def current_window(*args, &block); end
-  def dismiss_confirm(*args, &block); end
-  def dismiss_prompt(*args, &block); end
-  def evaluate_script(*args, &block); end
-  def execute_script(*args, &block); end
-  def fill_in(*args, &block); end
-  def find(*args, &block); end
-  def find_all(*args, &block); end
-  def find_button(*args, &block); end
-  def find_by_id(*args, &block); end
-  def find_field(*args, &block); end
-  def find_link(*args, &block); end
-  def first(*args, &block); end
-  def go_back(*args, &block); end
-  def go_forward(*args, &block); end
-  def has_button?(*args, &block); end
-  def has_checked_field?(*args, &block); end
-  def has_content?(*args, &block); end
-  def has_css?(*args, &block); end
-  def has_current_path?(*args, &block); end
-  def has_field?(*args, &block); end
-  def has_link?(*args, &block); end
-  def has_no_button?(*args, &block); end
-  def has_no_checked_field?(*args, &block); end
-  def has_no_content?(*args, &block); end
-  def has_no_css?(*args, &block); end
-  def has_no_current_path?(*args, &block); end
-  def has_no_field?(*args, &block); end
-  def has_no_link?(*args, &block); end
-  def has_no_select?(*args, &block); end
-  def has_no_selector?(*args, &block); end
-  def has_no_table?(*args, &block); end
-  def has_no_text?(*args, &block); end
-  def has_no_title?(*args, &block); end
-  def has_no_unchecked_field?(*args, &block); end
-  def has_no_xpath?(*args, &block); end
-  def has_select?(*args, &block); end
-  def has_selector?(*args, &block); end
-  def has_table?(*args, &block); end
-  def has_text?(*args, &block); end
-  def has_title?(*args, &block); end
-  def has_unchecked_field?(*args, &block); end
-  def has_xpath?(*args, &block); end
-  def html(*args, &block); end
-  def open_new_window(*args, &block); end
+  def accept_alert(*_arg0, &_arg1); end
+  def accept_confirm(*_arg0, &_arg1); end
+  def accept_prompt(*_arg0, &_arg1); end
+  def all(*_arg0, &_arg1); end
+  def assert_all_of_selectors(*_arg0, &_arg1); end
+  def assert_any_of_selectors(*_arg0, &_arg1); end
+  def assert_current_path(*_arg0, &_arg1); end
+  def assert_no_current_path(*_arg0, &_arg1); end
+  def assert_no_selector(*_arg0, &_arg1); end
+  def assert_no_text(*_arg0, &_arg1); end
+  def assert_no_title(*_arg0, &_arg1); end
+  def assert_none_of_selectors(*_arg0, &_arg1); end
+  def assert_selector(*_arg0, &_arg1); end
+  def assert_text(*_arg0, &_arg1); end
+  def assert_title(*_arg0, &_arg1); end
+  def attach_file(*_arg0, &_arg1); end
+  def body(*_arg0, &_arg1); end
+  def check(*_arg0, &_arg1); end
+  def choose(*_arg0, &_arg1); end
+  def click_button(*_arg0, &_arg1); end
+  def click_link(*_arg0, &_arg1); end
+  def click_link_or_button(*_arg0, &_arg1); end
+  def click_on(*_arg0, &_arg1); end
+  def current_host(*_arg0, &_arg1); end
+  def current_path(*_arg0, &_arg1); end
+  def current_scope(*_arg0, &_arg1); end
+  def current_url(*_arg0, &_arg1); end
+  def current_window(*_arg0, &_arg1); end
+  def dismiss_confirm(*_arg0, &_arg1); end
+  def dismiss_prompt(*_arg0, &_arg1); end
+  def evaluate_script(*_arg0, &_arg1); end
+  def execute_script(*_arg0, &_arg1); end
+  def fill_in(*_arg0, &_arg1); end
+  def find(*_arg0, &_arg1); end
+  def find_all(*_arg0, &_arg1); end
+  def find_button(*_arg0, &_arg1); end
+  def find_by_id(*_arg0, &_arg1); end
+  def find_field(*_arg0, &_arg1); end
+  def find_link(*_arg0, &_arg1); end
+  def first(*_arg0, &_arg1); end
+  def go_back(*_arg0, &_arg1); end
+  def go_forward(*_arg0, &_arg1); end
+  def has_button?(*_arg0, &_arg1); end
+  def has_checked_field?(*_arg0, &_arg1); end
+  def has_content?(*_arg0, &_arg1); end
+  def has_css?(*_arg0, &_arg1); end
+  def has_current_path?(*_arg0, &_arg1); end
+  def has_field?(*_arg0, &_arg1); end
+  def has_link?(*_arg0, &_arg1); end
+  def has_no_button?(*_arg0, &_arg1); end
+  def has_no_checked_field?(*_arg0, &_arg1); end
+  def has_no_content?(*_arg0, &_arg1); end
+  def has_no_css?(*_arg0, &_arg1); end
+  def has_no_current_path?(*_arg0, &_arg1); end
+  def has_no_field?(*_arg0, &_arg1); end
+  def has_no_link?(*_arg0, &_arg1); end
+  def has_no_select?(*_arg0, &_arg1); end
+  def has_no_selector?(*_arg0, &_arg1); end
+  def has_no_table?(*_arg0, &_arg1); end
+  def has_no_text?(*_arg0, &_arg1); end
+  def has_no_title?(*_arg0, &_arg1); end
+  def has_no_unchecked_field?(*_arg0, &_arg1); end
+  def has_no_xpath?(*_arg0, &_arg1); end
+  def has_select?(*_arg0, &_arg1); end
+  def has_selector?(*_arg0, &_arg1); end
+  def has_table?(*_arg0, &_arg1); end
+  def has_text?(*_arg0, &_arg1); end
+  def has_title?(*_arg0, &_arg1); end
+  def has_unchecked_field?(*_arg0, &_arg1); end
+  def has_xpath?(*_arg0, &_arg1); end
+  def html(*_arg0, &_arg1); end
+  def open_new_window(*_arg0, &_arg1); end
   def page; end
-  def query(*args, &block); end
-  def refresh(*args, &block); end
-  def refute_selector(*args, &block); end
-  def reset_session!(*args, &block); end
-  def response_headers(*args, &block); end
-  def save_and_open_page(*args, &block); end
-  def save_and_open_screenshot(*args, &block); end
-  def save_page(*args, &block); end
-  def save_screenshot(*args, &block); end
-  def scroll_by(*args, &block); end
-  def scroll_to(*args, &block); end
-  def select(*args, &block); end
-  def send_keys(*args, &block); end
-  def source(*args, &block); end
-  def status_code(*args, &block); end
-  def switch_to_frame(*args, &block); end
-  def switch_to_window(*args, &block); end
-  def text(*args, &block); end
-  def title(*args, &block); end
-  def uncheck(*args, &block); end
-  def unselect(*args, &block); end
+  def query(*_arg0, &_arg1); end
+  def refresh(*_arg0, &_arg1); end
+  def refute_selector(*_arg0, &_arg1); end
+  def reset_session!(*_arg0, &_arg1); end
+  def response_headers(*_arg0, &_arg1); end
+  def save_and_open_page(*_arg0, &_arg1); end
+  def save_and_open_screenshot(*_arg0, &_arg1); end
+  def save_page(*_arg0, &_arg1); end
+  def save_screenshot(*_arg0, &_arg1); end
+  def scroll_by(*_arg0, &_arg1); end
+  def scroll_to(*_arg0, &_arg1); end
+  def select(*_arg0, &_arg1); end
+  def send_keys(*_arg0, &_arg1); end
+  def source(*_arg0, &_arg1); end
+  def status_code(*_arg0, &_arg1); end
+  def switch_to_frame(*_arg0, &_arg1); end
+  def switch_to_window(*_arg0, &_arg1); end
+  def text(*_arg0, &_arg1); end
+  def title(*_arg0, &_arg1); end
+  def uncheck(*_arg0, &_arg1); end
+  def unselect(*_arg0, &_arg1); end
   def using_session(name_or_session, &block); end
   def using_wait_time(seconds, &block); end
-  def visit(*args, &block); end
-  def window_opened_by(*args, &block); end
-  def windows(*args, &block); end
-  def within(*args, &block); end
-  def within_element(*args, &block); end
-  def within_fieldset(*args, &block); end
-  def within_frame(*args, &block); end
-  def within_table(*args, &block); end
-  def within_window(*args, &block); end
+  def visit(*_arg0, &_arg1); end
+  def window_opened_by(*_arg0, &_arg1); end
+  def windows(*_arg0, &_arg1); end
+  def within(*_arg0, &_arg1); end
+  def within_element(*_arg0, &_arg1); end
+  def within_fieldset(*_arg0, &_arg1); end
+  def within_frame(*_arg0, &_arg1); end
+  def within_table(*_arg0, &_arg1); end
+  def within_window(*_arg0, &_arg1); end
 
   class << self
     def extended(base); end
@@ -455,78 +455,6 @@ class Capybara::Helpers::Timer
 end
 
 class Capybara::InfiniteRedirectError < ::Capybara::CapybaraError
-end
-
-module Capybara::Minitest
-end
-
-module Capybara::Minitest::Assertions
-  def assert_all_of_selectors(*args, &optional_filter_block); end
-  def assert_ancestor(*args, &optional_filter_block); end
-  def assert_any_of_selectors(*args, &optional_filter_block); end
-  def assert_button(*args, &optional_filter_block); end
-  def assert_checked_field(*args, &optional_filter_block); end
-  def assert_content(*args, **kwargs, &optional_filter_block); end
-  def assert_css(*args, &optional_filter_block); end
-  def assert_current_path(*args, **kwargs, &optional_filter_block); end
-  def assert_field(*args, &optional_filter_block); end
-  def assert_link(*args, &optional_filter_block); end
-  def assert_matches_css(*args, &optional_filter_block); end
-  def assert_matches_selector(*args, &optional_filter_block); end
-  def assert_matches_style(*args, &optional_filter_block); end
-  def assert_matches_xpath(*args, &optional_filter_block); end
-  def assert_no_ancestor(*args, &optional_filter_block); end
-  def assert_no_button(*args, &optional_filter_block); end
-  def assert_no_checked_field(*args, &optional_filter_block); end
-  def assert_no_content(*args, **kwargs, &optional_filter_block); end
-  def assert_no_css(*args, &optional_filter_block); end
-  def assert_no_current_path(*args, **kwargs, &optional_filter_block); end
-  def assert_no_field(*args, &optional_filter_block); end
-  def assert_no_link(*args, &optional_filter_block); end
-  def assert_no_select(*args, &optional_filter_block); end
-  def assert_no_selector(*args, &optional_filter_block); end
-  def assert_no_sibling(*args, &optional_filter_block); end
-  def assert_no_table(*args, &optional_filter_block); end
-  def assert_no_text(*args, **kwargs, &optional_filter_block); end
-  def assert_no_title(*args, **kwargs, &optional_filter_block); end
-  def assert_no_unchecked_field(*args, &optional_filter_block); end
-  def assert_no_xpath(*args, &optional_filter_block); end
-  def assert_none_of_selectors(*args, &optional_filter_block); end
-  def assert_not_matches_css(*args, &optional_filter_block); end
-  def assert_not_matches_selector(*args, &optional_filter_block); end
-  def assert_not_matches_xpath(*args, &optional_filter_block); end
-  def assert_select(*args, &optional_filter_block); end
-  def assert_selector(*args, &optional_filter_block); end
-  def assert_sibling(*args, &optional_filter_block); end
-  def assert_table(*args, &optional_filter_block); end
-  def assert_text(*args, **kwargs, &optional_filter_block); end
-  def assert_title(*args, **kwargs, &optional_filter_block); end
-  def assert_unchecked_field(*args, &optional_filter_block); end
-  def assert_xpath(*args, &optional_filter_block); end
-  def refute_ancestor(*args, &optional_filter_block); end
-  def refute_button(*args, &optional_filter_block); end
-  def refute_checked_field(*args, &optional_filter_block); end
-  def refute_content(*args, **kwargs, &optional_filter_block); end
-  def refute_css(*args, &optional_filter_block); end
-  def refute_current_path(*args, **kwargs, &optional_filter_block); end
-  def refute_field(*args, &optional_filter_block); end
-  def refute_link(*args, &optional_filter_block); end
-  def refute_matches_css(*args, &optional_filter_block); end
-  def refute_matches_selector(*args, &optional_filter_block); end
-  def refute_matches_xpath(*args, &optional_filter_block); end
-  def refute_select(*args, &optional_filter_block); end
-  def refute_selector(*args, &optional_filter_block); end
-  def refute_sibling(*args, &optional_filter_block); end
-  def refute_table(*args, &optional_filter_block); end
-  def refute_text(*args, **kwargs, &optional_filter_block); end
-  def refute_title(*args, **kwargs, &optional_filter_block); end
-  def refute_unchecked_field(*args, &optional_filter_block); end
-  def refute_xpath(*args, &optional_filter_block); end
-
-  private
-
-  def determine_subject(args); end
-  def extract_locator(args); end
 end
 
 class Capybara::ModalNotFound < ::Capybara::CapybaraError
@@ -893,6 +821,7 @@ class Capybara::Queries::SelectorQuery < ::Capybara::Queries::BaseQuery
   def matches_text_regexp?(node, regexp); end
   def matches_visibility_filters?(node); end
   def matching_text; end
+  def need_to_process_classes?; end
   def node_filters; end
   def normalize_ws; end
   def ordered_results(results); end
@@ -1359,23 +1288,23 @@ end
 
 class Capybara::RackTest::Node < ::Capybara::Driver::Node
   def ==(other); end
-  def [](*args); end
-  def all_text(*args); end
-  def checked?(*args); end
-  def click(*args); end
-  def disabled?(*args); end
-  def find_css(*args); end
-  def find_xpath(*args); end
-  def path(*args); end
-  def select_option(*args); end
-  def selected?(*args); end
-  def set(*args); end
-  def style(*args); end
-  def tag_name(*args); end
-  def unselect_option(*args); end
-  def value(*args); end
-  def visible?(*args); end
-  def visible_text(*args); end
+  def [](*_arg0, &_arg1); end
+  def all_text(*_arg0, &_arg1); end
+  def checked?(*_arg0, &_arg1); end
+  def click(*_arg0, &_arg1); end
+  def disabled?(*_arg0, &_arg1); end
+  def find_css(*_arg0, &_arg1); end
+  def find_xpath(*_arg0, &_arg1); end
+  def path(*_arg0, &_arg1); end
+  def select_option(*_arg0, &_arg1); end
+  def selected?(*_arg0, &_arg1); end
+  def set(*_arg0, &_arg1); end
+  def style(*_arg0, &_arg1); end
+  def tag_name(*_arg0, &_arg1); end
+  def unselect_option(*_arg0, &_arg1); end
+  def value(*_arg0, &_arg1); end
+  def visible?(*_arg0, &_arg1); end
+  def visible_text(*_arg0, &_arg1); end
 
   protected
 
@@ -1851,9 +1780,12 @@ class Capybara::Selenium::Driver < ::Capybara::Driver::Base
   class << self
     def load_selenium; end
     def register_specialization(browser_name, specialization); end
+    def selenium_webdriver_version; end
     def specializations; end
   end
 end
+
+Capybara::Selenium::Driver::CAPS_VERSION = T.let(T.unsafe(nil), Gem::Requirement)
 
 module Capybara::Selenium::Driver::ChromeDriver
   def fullscreen_window(handle); end
@@ -1986,6 +1918,7 @@ class Capybara::Selenium::FirefoxNode < ::Capybara::Selenium::Node
   def click(keys = T.unsafe(nil), **options); end
   def disabled?; end
   def drop(*args); end
+  def focused?; end
   def hover; end
   def select_option; end
   def send_keys(*args); end
@@ -2239,26 +2172,26 @@ class Capybara::Session
   def accept_alert(text = T.unsafe(nil), **options, &blk); end
   def accept_confirm(text = T.unsafe(nil), **options, &blk); end
   def accept_prompt(text = T.unsafe(nil), **options, &blk); end
-  def all(*args, &block); end
+  def all(*_arg0, &_arg1); end
   def app; end
-  def assert_all_of_selectors(*args, &block); end
-  def assert_any_of_selectors(*args, &block); end
-  def assert_no_selector(*args, &block); end
-  def assert_no_text(*args, &block); end
-  def assert_no_title(*args, &block); end
-  def assert_none_of_selectors(*args, &block); end
-  def assert_selector(*args, &block); end
-  def assert_text(*args, &block); end
-  def assert_title(*args, &block); end
-  def attach_file(*args, &block); end
+  def assert_all_of_selectors(*_arg0, &_arg1); end
+  def assert_any_of_selectors(*_arg0, &_arg1); end
+  def assert_no_selector(*_arg0, &_arg1); end
+  def assert_no_text(*_arg0, &_arg1); end
+  def assert_no_title(*_arg0, &_arg1); end
+  def assert_none_of_selectors(*_arg0, &_arg1); end
+  def assert_selector(*_arg0, &_arg1); end
+  def assert_text(*_arg0, &_arg1); end
+  def assert_title(*_arg0, &_arg1); end
+  def attach_file(*_arg0, &_arg1); end
   def body; end
-  def check(*args, &block); end
-  def choose(*args, &block); end
+  def check(*_arg0, &_arg1); end
+  def choose(*_arg0, &_arg1); end
   def cleanup!; end
-  def click_button(*args, &block); end
-  def click_link(*args, &block); end
-  def click_link_or_button(*args, &block); end
-  def click_on(*args, &block); end
+  def click_button(*_arg0, &_arg1); end
+  def click_link(*_arg0, &_arg1); end
+  def click_link_or_button(*_arg0, &_arg1); end
+  def click_on(*_arg0, &_arg1); end
   def config; end
   def configure; end
   def current_host; end
@@ -2273,51 +2206,51 @@ class Capybara::Session
   def evaluate_async_script(script, *args); end
   def evaluate_script(script, *args); end
   def execute_script(script, *args); end
-  def fill_in(*args, &block); end
-  def find(*args, &block); end
-  def find_all(*args, &block); end
-  def find_button(*args, &block); end
-  def find_by_id(*args, &block); end
-  def find_field(*args, &block); end
-  def find_link(*args, &block); end
-  def first(*args, &block); end
+  def fill_in(*_arg0, &_arg1); end
+  def find(*_arg0, &_arg1); end
+  def find_all(*_arg0, &_arg1); end
+  def find_button(*_arg0, &_arg1); end
+  def find_by_id(*_arg0, &_arg1); end
+  def find_field(*_arg0, &_arg1); end
+  def find_link(*_arg0, &_arg1); end
+  def first(*_arg0, &_arg1); end
   def go_back; end
   def go_forward; end
-  def has_button?(*args, &block); end
-  def has_checked_field?(*args, &block); end
-  def has_content?(*args, &block); end
-  def has_css?(*args, &block); end
-  def has_field?(*args, &block); end
-  def has_link?(*args, &block); end
-  def has_no_button?(*args, &block); end
-  def has_no_checked_field?(*args, &block); end
-  def has_no_content?(*args, &block); end
-  def has_no_css?(*args, &block); end
-  def has_no_field?(*args, &block); end
-  def has_no_link?(*args, &block); end
-  def has_no_select?(*args, &block); end
-  def has_no_selector?(*args, &block); end
-  def has_no_table?(*args, &block); end
-  def has_no_text?(*args, &block); end
-  def has_no_title?(*args, &block); end
-  def has_no_unchecked_field?(*args, &block); end
-  def has_no_xpath?(*args, &block); end
-  def has_select?(*args, &block); end
-  def has_selector?(*args, &block); end
-  def has_table?(*args, &block); end
-  def has_text?(*args, &block); end
-  def has_title?(*args, &block); end
-  def has_unchecked_field?(*args, &block); end
-  def has_xpath?(*args, &block); end
+  def has_button?(*_arg0, &_arg1); end
+  def has_checked_field?(*_arg0, &_arg1); end
+  def has_content?(*_arg0, &_arg1); end
+  def has_css?(*_arg0, &_arg1); end
+  def has_field?(*_arg0, &_arg1); end
+  def has_link?(*_arg0, &_arg1); end
+  def has_no_button?(*_arg0, &_arg1); end
+  def has_no_checked_field?(*_arg0, &_arg1); end
+  def has_no_content?(*_arg0, &_arg1); end
+  def has_no_css?(*_arg0, &_arg1); end
+  def has_no_field?(*_arg0, &_arg1); end
+  def has_no_link?(*_arg0, &_arg1); end
+  def has_no_select?(*_arg0, &_arg1); end
+  def has_no_selector?(*_arg0, &_arg1); end
+  def has_no_table?(*_arg0, &_arg1); end
+  def has_no_text?(*_arg0, &_arg1); end
+  def has_no_title?(*_arg0, &_arg1); end
+  def has_no_unchecked_field?(*_arg0, &_arg1); end
+  def has_no_xpath?(*_arg0, &_arg1); end
+  def has_select?(*_arg0, &_arg1); end
+  def has_selector?(*_arg0, &_arg1); end
+  def has_table?(*_arg0, &_arg1); end
+  def has_text?(*_arg0, &_arg1); end
+  def has_title?(*_arg0, &_arg1); end
+  def has_unchecked_field?(*_arg0, &_arg1); end
+  def has_xpath?(*_arg0, &_arg1); end
   def html; end
   def inspect; end
   def mode; end
   def open_new_window(kind = T.unsafe(nil)); end
-  def query(*args, &block); end
+  def query(*_arg0, &_arg1); end
   def quit; end
   def raise_server_error!; end
   def refresh; end
-  def refute_selector(*args, &block); end
+  def refute_selector(*_arg0, &_arg1); end
   def reset!; end
   def reset_session!; end
   def response_headers; end
@@ -2325,9 +2258,9 @@ class Capybara::Session
   def save_and_open_screenshot(path = T.unsafe(nil), **options); end
   def save_page(path = T.unsafe(nil)); end
   def save_screenshot(path = T.unsafe(nil), **options); end
-  def scroll_by(*args, &block); end
-  def scroll_to(*args, &block); end
-  def select(*args, &block); end
+  def scroll_by(*_arg0, &_arg1); end
+  def scroll_to(*_arg0, &_arg1); end
+  def select(*_arg0, &_arg1); end
   def send_keys(*args, **kw_args); end
   def server; end
   def server_url; end
@@ -2337,10 +2270,10 @@ class Capybara::Session
   def switch_to_window(window = T.unsafe(nil), **options, &window_locator); end
   def synchronized; end
   def synchronized=(_arg0); end
-  def text(*args, &block); end
-  def title(*args, &block); end
-  def uncheck(*args, &block); end
-  def unselect(*args, &block); end
+  def text(*_arg0, &_arg1); end
+  def title(*_arg0, &_arg1); end
+  def uncheck(*_arg0, &_arg1); end
+  def unselect(*_arg0, &_arg1); end
   def using_wait_time(seconds, &block); end
   def visit(visit_uri); end
   def window_opened_by(**options); end
@@ -2517,6 +2450,10 @@ Puma::MiniSSL::OPENSSL_LIBRARY_VERSION = T.let(T.unsafe(nil), String)
 Puma::MiniSSL::OPENSSL_NO_SSL3 = T.let(T.unsafe(nil), TrueClass)
 
 Puma::MiniSSL::OPENSSL_VERSION = T.let(T.unsafe(nil), String)
+
+class Puma::MiniSSL::SSLContext
+  def initialize(_arg0); end
+end
 
 class Puma::MiniSSL::SSLError < ::StandardError
 end

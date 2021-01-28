@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Resolvers
   module GenreResolvers
     class GenreResolver < Resolvers::BaseResolver

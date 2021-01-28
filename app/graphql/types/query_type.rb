@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 module Types
   class QueryType < Types::BaseObject
     extend T::Sig
