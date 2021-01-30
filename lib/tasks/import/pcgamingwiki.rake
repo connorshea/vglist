@@ -97,18 +97,23 @@ namespace :import do
     Rails.logger.level = 2 if Rails.env.production?
 
     games.each do |game|
-      progress_bar.log ""
-      progress_bar.log "Adding cover for #{game[:name]}."
+      progress_bar.log "#{game[:name].ljust(40)} | Adding cover..."
       api_url = "https://www.pcgamingwiki.com/w/api.php?action=askargs&conditions=#{game[:pcgamingwiki_id].gsub('&', '%26')}&printouts=Cover&format=json"
+
+      unless api_url.ascii_only?
+        progress_bar.log "#{game[:name].ljust(40)} | URL cannot contain non-ASCII characters: #{api_url}."
+        cover_not_found_or_errored_count += 1
+        progress_bar.increment
+        next
+      end
 
       begin
         api_url = URI.parse(api_url)
-      rescue URI::InvalidURIError
-        # I can't get this to work with any other method, so I'm using a
-        # deprecated method here.
-        # rubocop:disable Lint/UriEscapeUnescape
-        api_url = URI.parse(URI.escape(api_url))
-        # rubocop:enable Lint/UriEscapeUnescape
+      rescue URI::InvalidURIError => e
+        progress_bar.log "#{game[:name].ljust(40)} | Invalid URL: #{e}."
+        cover_not_found_or_errored_count += 1
+        progress_bar.increment
+        next
       end
 
       req = Net::HTTP::Get.new(api_url)
@@ -122,7 +127,7 @@ namespace :import do
 
       json = json.dig('query', 'results')
       if json.nil? || json.blank?
-        progress_bar.log "Not finding any covers, skipping."
+        progress_bar.log "#{game[:name].ljust(40)} | Not finding any covers, skipping."
         cover_not_found_or_errored_count += 1
         progress_bar.increment
         next
@@ -132,7 +137,7 @@ namespace :import do
       cover_url = json.dig(json.keys.first, 'printouts', 'Cover').first
 
       if cover_url.nil?
-        progress_bar.log "Not finding any covers, skipping."
+        progress_bar.log "#{game[:name].ljust(40)} | Not finding any covers, skipping."
         cover_not_found_or_errored_count += 1
         progress_bar.increment
         # Exit early if the game has no cover.
@@ -140,7 +145,7 @@ namespace :import do
       end
 
       unless cover_url.ascii_only?
-        progress_bar.log "Cover URL has non-ascii characters, skipping."
+        progress_bar.log "#{game[:name].ljust(40)} | Cover URL has non-ascii characters, skipping."
         cover_not_found_or_errored_count += 1
         progress_bar.increment
         # Exit early if the game's cover URL is invalid.
@@ -155,7 +160,7 @@ namespace :import do
       begin
         cover_blob = URI.open(cover_url)
       rescue OpenURI::HTTPError, URI::InvalidURIError => e
-        progress_bar.log "Error: #{e}"
+        progress_bar.log "#{game[:name].ljust(40)} | Error: #{e}"
         progress_bar.increment
         cover_not_found_or_errored_count += 1
         next
@@ -164,8 +169,20 @@ namespace :import do
       # Copy the image data to a file with ActiveStorage.
       game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
 
+      # If the cover has any errors, they'll show up on the `Game` record.
+      # Check for any errors and print them if they exist.
+      if game.errors.any?
+        game.errors.full_messages.each do |msg|
+          progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added: #{msg}"
+        end
+        progress_bar.increment
+        cover_not_found_or_errored_count += 1
+        next
+      end
+
+      # If the but somehow wasn't caught in the last step, do the same thing but with a generic message.
       if game.reload.cover.blank?
-        progress_bar.log "Cover could not be added for #{game[:name]}."
+        progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added."
         progress_bar.increment
         cover_not_found_or_errored_count += 1
         next
@@ -173,7 +190,7 @@ namespace :import do
 
       cover_added_count += 1
       progress_bar.increment
-      progress_bar.log "Cover added to #{game[:name]}."
+      progress_bar.log "#{game[:name].ljust(40)} | Cover added successfully."
     end
 
     progress_bar.finish unless progress_bar.finished?

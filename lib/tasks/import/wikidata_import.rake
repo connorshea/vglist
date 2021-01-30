@@ -49,9 +49,12 @@ namespace 'import:wikidata' do
         end
       end
     end
+    progress_bar_for_import.finish unless progress_bar_for_import.finished?
+
+    puts 'Rebuilding search index...'
+    PgSearch::Multisearch.rebuild(Company)
 
     puts "There are now #{Company.count} companies in the database."
-    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Companies]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game platforms from Wikidata"
@@ -98,9 +101,12 @@ namespace 'import:wikidata' do
         end
       end
     end
+    progress_bar_for_import.finish unless progress_bar_for_import.finished?
+
+    puts 'Rebuilding search index...'
+    PgSearch::Multisearch.rebuild(Platform)
 
     puts "There are now #{Platform.count} platforms in the database."
-    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Platforms]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game genres from Wikidata"
@@ -148,9 +154,12 @@ namespace 'import:wikidata' do
         end
       end
     end
+    progress_bar_for_import.finish unless progress_bar_for_import.finished?
+
+    puts 'Rebuilding search index...'
+    PgSearch::Multisearch.rebuild(Genre)
 
     puts "There are now #{Genre.count} genres in the database."
-    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Genres]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game series from Wikidata"
@@ -198,8 +207,12 @@ namespace 'import:wikidata' do
       end
     end
 
+    progress_bar_for_import.finish unless progress_bar_for_import.finished?
+
+    puts 'Rebuilding search index...'
+    PgSearch::Multisearch.rebuild(Series)
+
     puts "There are now #{Series.count} series in the database."
-    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Series]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import game engines from Wikidata"
@@ -247,8 +260,12 @@ namespace 'import:wikidata' do
       end
     end
 
+    progress_bar_for_import.finish unless progress_bar_for_import.finished?
+
+    puts 'Rebuilding search index...'
+    PgSearch::Multisearch.rebuild(Engine)
+
     puts "There are now #{Engine.count} engines in the database."
-    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Engines]' to have pg_search rebuild its multisearch index."
   end
 
   # Filter invalid items from a set of wikidata rows, and get better

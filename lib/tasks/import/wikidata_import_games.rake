@@ -242,8 +242,12 @@ namespace 'import:wikidata' do
       end
     end
 
+    progress_bar.finish unless progress_bar.finished?
+
+    puts 'Rebuilding search index...'
+    PgSearch::Multisearch.rebuild(Game)
+
     puts "There are now #{Game.count} games in the database."
-    puts "Run 'bundle exec rake pg_search:multisearch:rebuild[Games]' to have pg_search rebuild its multisearch index."
   end
 
   desc "Import release dates for games from Wikidata"
@@ -333,6 +337,8 @@ namespace 'import:wikidata' do
         next
       end
     end
+
+    progress_bar.finish unless progress_bar.finished?
   end
 
   # The SPARQL query for getting all video games with English labels on Wikidata.
