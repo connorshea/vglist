@@ -27,7 +27,12 @@
 
 #### Extras
 
-- If you want to test the Steam import functionality, you'll need to [generate a Steam Web API Key](https://steamcommunity.com/dev/registerkey) and set it as an environment variable, `STEAM_WEB_API_KEY`.
+Optional environment variables for miscellaneous functionality:
+
+- `STEAM_WEB_API_KEY`: If you want to use the Steam import functionality, you'll need to [generate a Steam Web API Key](https://steamcommunity.com/dev/registerkey).
+- `MOBYGAMES_API_KEY`: If you want to use the MobyGames cover import Rake task, you'll need to get [a MobyGames API key](https://www.mobygames.com/info/api#toc-authorization).
+- `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`: If you want to use the IGDB cover import Rake task, you'll need to [create an OAuth app for the Twitch API](https://dev.twitch.tv/docs/authentication).
+  - The "OAuth Redirect URL" for the OAuth app can just be set to `http://localhost`, the redirect URL isn't used.
 
 ## Libraries
 
@@ -53,7 +58,7 @@ This is a list of libraries used for various functionality across the app. It's 
 
 ## Rake tasks
 
-Rake tasks are Ruby code for running tasks. For vglist, most of these are for importing data.
+Rake tasks are Ruby code for performing tasks. For vglist, most of these are for importing data.
 
 - Importing
   - `rake import:update` - Imports updated data for existing games, companies, genres, series, etc.
@@ -61,6 +66,7 @@ Rake tasks are Ruby code for running tasks. For vglist, most of these are for im
   - `rake import:full` - Imports new games, companies, genres, series, etc.
   - `rake import:pcgamingwiki:covers` - Imports covers from PCGamingWiki.
   - `rake import:mobygames:covers` - Imports covers from MobyGames, needs a MobyGames API key.
+  - `rake import:igdb:covers` - Imports covers from Internet Game Database (IGDB), needs a Twitch API key.
   - `rake pg_search:multisearch:rebuild:all` - Rebuild the search indices, useful after running imports.
 - Deployment
   - `rake deploy:production` - Deploys the website in production mode, for use on the production server.
