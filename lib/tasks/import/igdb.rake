@@ -97,12 +97,14 @@ namespace :import do
     games.in_groups_of(50, false) do |game_batch|
       slugs = game_batch.pluck(:igdb_id)
 
-      igdb_body = <<~TXT
+      # This format is called APIcalypse and is specific to IGDB.
+      # API Docs: https://api-docs.igdb.com/#game
+      igdb_body = <<~APICALYPSE
         fields id, slug, cover.url;
         where slug = ("#{slugs.join('", "')}") & cover != null & cover.animated = false;
         sort slug asc;
         limit 50;
-      TXT
+      APICALYPSE
 
       igdb_response = igdb_request(
         body: igdb_body,
@@ -111,6 +113,9 @@ namespace :import do
       )
 
       igdb_response.map! do |igdb_game|
+        # Cover URLs returned from the API look like this by default:
+        # "//images.igdb.com/igdb/image/upload/t_thumb/co2lc8.jpg"
+        # So we change it to have a protocol and use the 1080p size.
         igdb_game['cover']['url'] = "https:#{igdb_game['cover']['url'].gsub('t_thumb', 't_1080p')}"
         igdb_game
       end
