@@ -1,4 +1,4 @@
-steam# typed: ignore
+# typed: ignore
 # rubocop:disable Rails/TimeZone
 namespace 'import:wikidata' do
   require 'sparql/client'
