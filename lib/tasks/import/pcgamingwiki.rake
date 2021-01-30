@@ -139,6 +139,14 @@ namespace :import do
         next
       end
 
+      unless cover_url.ascii_only?
+        progress_bar.log "Cover URL has non-ascii characters, skipping."
+        cover_not_found_or_errored_count += 1
+        progress_bar.increment
+        # Exit early if the game's cover URL is invalid.
+        next
+      end
+
       # The cover URL is returned from the API like //pcgamingwiki.com/images/whatever.png,
       # so we need to turn it into a valid URL.
       cover_url = "https:#{cover_url}" unless cover_url.start_with?('https:')
