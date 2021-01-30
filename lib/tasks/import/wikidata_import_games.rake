@@ -1,4 +1,4 @@
-# typed: ignore
+steam# typed: ignore
 # rubocop:disable Rails/TimeZone
 namespace 'import:wikidata' do
   require 'sparql/client'
@@ -150,10 +150,14 @@ namespace 'import:wikidata' do
 
         unless steam_app_id.nil? || blocklisted_steam_app_ids.include?(steam_app_id.to_i)
           progress_bar.log 'Adding Steam App ID.' if ENV['DEBUG']
-          SteamAppId.create!(
-            game_id: game.id,
-            app_id: steam_app_id
-          )
+          begin
+            SteamAppId.create!(
+              game_id: game.id,
+              app_id: steam_app_id
+            )
+          rescue ActiveRecord::RecordInvalid => e
+            progress_bar.log "Invalid Steam AppID: #{hash[:name].ljust(30)} | #{e}"
+          end
         end
 
         if keys.include?(:developers)
