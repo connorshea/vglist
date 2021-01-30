@@ -111,12 +111,9 @@ namespace :import do
       begin
         api_url = URI.parse(api_url)
       rescue URI::InvalidURIError => e
-        progress_bar.log e
-        # I can't get this to work with any other method, so I'm using a
-        # deprecated method here.
-        # rubocop:disable Lint/UriEscapeUnescape
-        api_url = URI.parse(URI.escape(api_url))
-        # rubocop:enable Lint/UriEscapeUnescape
+        progress_bar.log "Invalid URL: #{e}."
+        progress_bar.increment
+        next
       end
 
       # progress_bar.log "API URL: #{api_url}"
