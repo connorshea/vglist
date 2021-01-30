@@ -180,7 +180,8 @@ namespace :import do
         next
       end
 
-      # If the but somehow wasn't caught in the last step, do the same thing but with a generic message.
+      # If the cover is invalid but somehow wasn't caught in the last step, do
+      # the same thing but with a generic message.
       if game.reload.cover.blank?
         progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added."
         progress_bar.increment
