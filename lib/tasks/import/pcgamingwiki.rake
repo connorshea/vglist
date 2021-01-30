@@ -190,8 +190,8 @@ namespace :import do
       end
 
       cover_added_count += 1
-      progress_bar.increment
       progress_bar.log "#{game[:name].ljust(40)} | Cover added successfully."
+      progress_bar.increment
     end
 
     progress_bar.finish unless progress_bar.finished?

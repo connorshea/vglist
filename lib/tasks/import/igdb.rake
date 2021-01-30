@@ -76,8 +76,6 @@ namespace :import do
 
   desc "Attach covers to games, only applies to games that have an IGDB ID and don't already have a cover."
   task 'igdb:covers': :environment do
-    require 'net/https'
-
     puts "This task will attach covers to any games which have IGDB IDs and no cover."
 
     games = Game.includes(:cover_attachment)
@@ -86,29 +84,24 @@ namespace :import do
 
     puts "Found #{games.count} games with an IGDB ID and no cover."
 
-    cover_not_found_or_errored_count = 0
-    cover_added_count = 0
-
-    progress_bar = ProgressBar.create(
-      total: games.count,
-      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-    )
-
     # Set whodunnit to 'system' for any audited changes made by this Rake task.
     PaperTrail.request.whodunnit = 'system'
 
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
-    games.each do |game|
-      slugs = ['donut-county', 'star-wars-squadrons', 'hades--1', 'pistol-whip', 'mario-kart-8-deluxe', 'bloons-td-6', 'grand-theft-auto-vice-city', 'grand-theft-auto-iii', 'cyberpunk-2077', 'wolfenstein-youngblood', 'playerunknowns-battlegrounds', 'half-life-alyx', 'factorio', 'stardew-valley', 'poly-bridge', 'superhot-mind-control-delete', 'superhot', 'hexcells-infinite', 'hexcells-plus', 'bastion']
-      offset = 0
+    igdb_games = []
+
+    puts "Getting game information from IGDB..."
+
+    games.in_groups_of(50, false) do |game_batch|
+      slugs = game_batch.pluck(:igdb_id)
+
       igdb_body = <<~TXT
         fields id, slug, cover.url;
         where slug = ("#{slugs.join('", "')}") & cover != null & cover.animated = false;
         sort slug asc;
-        limit 100;
-        offset #{offset};
+        limit 50;
       TXT
 
       igdb_response = igdb_request(
@@ -121,11 +114,37 @@ namespace :import do
         igdb_game['cover']['url'] = "https:#{igdb_game['cover']['url'].gsub('t_thumb', 't_1080p')}"
         igdb_game
       end
-      puts JSON.pretty_generate(igdb_response)
+
+      igdb_games.concat(igdb_response)
+      # Sleep to prevent the rate limiter from killing us.
+      sleep 1
+    end
+
+    progress_bar = ProgressBar.create(
+      total: games.count,
+      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    )
+
+    cover_not_found_or_errored_count = 0
+    cover_added_count = 0
+
+    games.each do |game|
+      # Find the IGDB cover URL from igdb_games for this game record.
+      igdb_game = igdb_games.find { |g| g['slug'] == game[:igdb_id] }
+
+      if igdb_game.nil?
+        progress_bar.log "#{game[:name].ljust(40)} | No cover found for the game's IGDB ID."
+        progress_bar.increment
+        cover_not_found_or_errored_count += 1
+        next
+      end
 
       # Catch the error if the IGDB cover image doesn't actually exist.
       begin
-        cover_blob = URI.open(cover_url)
+        # Sleep between each attempt at pulling down the game cover, to avoid
+        # hitting the IGDB website with a lot of load.
+        sleep 0.25
+        cover_blob = URI.open(igdb_game.dig('cover', 'url'))
       rescue OpenURI::HTTPError, URI::InvalidURIError => e
         progress_bar.log "#{game[:name].ljust(40)} | Error: #{e}"
         progress_bar.increment
@@ -133,8 +152,11 @@ namespace :import do
         next
       end
 
+      # Incredibly stupid way to get the file extension from the IGDB cover URL.
+      file_ext = (cover_blob.base_uri.to_s.split(%r{[/.]})[-1]).to_s
       # Copy the image data to a file with ActiveStorage.
-      game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
+      # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
+      game.cover.attach(io: cover_blob, filename: "#{game.id}_from_igdb.#{file_ext}")
 
       # If the cover has any errors, they'll show up on the `Game` record.
       # Check for any errors and print them if they exist.
@@ -157,8 +179,8 @@ namespace :import do
       end
 
       cover_added_count += 1
-      progress_bar.increment
       progress_bar.log "#{game[:name].ljust(40)} | Cover added successfully."
+      progress_bar.increment
     end
 
     progress_bar.finish unless progress_bar.finished?
