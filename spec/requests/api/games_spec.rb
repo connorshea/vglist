@@ -188,5 +188,32 @@ RSpec.describe "Games API", type: :request do
         ]
       )
     end
+
+    context 'with favoriters' do
+      let!(:favorite_game) { create(:favorite_game, game: game) }
+
+      it "returns user data for the game when they've favorited the game" do
+        query_string = <<-GRAPHQL
+          query($id: ID!) {
+            game(id: $id) {
+              favoriters {
+                nodes {
+                  id
+                  username
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, variables: { id: game.id }, token: access_token)
+        expect(result.graphql_dig(:game, :favoriters, :nodes)).to include(
+          {
+            id: favorite_game.user.id.to_s,
+            username: favorite_game.user.username
+          }
+        )
+      end
+    end
   end
 end

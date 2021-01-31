@@ -19,7 +19,6 @@ class User < ApplicationRecord
 
   # Relationship to FavoriteGame records.
   has_many :favorite_games, dependent: :destroy
-
   # Relationship to the _Game_ records that the user has favorited.
   has_many :favorited_games,
     through: :favorite_games,

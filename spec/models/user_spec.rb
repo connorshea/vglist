@@ -92,6 +92,7 @@ RSpec.describe User, type: :model do
     it { should have_many(:game_purchases) }
     it { should have_many(:games).through(:game_purchases) }
     it { should have_many(:favorite_games).dependent(:destroy) }
+    it { should have_many(:favorited_games).through(:favorite_games) }
     it { should have_many(:events).dependent(:destroy) }
     it { should have_many(:wikidata_blocklists).dependent(:nullify) }
     it { should have_many(:steam_blocklists).dependent(:nullify) }
