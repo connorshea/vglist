@@ -186,6 +186,9 @@ RSpec.describe Game, type: :model do
     it { should have_many(:game_purchases) }
     it { should have_many(:purchasers).through(:game_purchases).source(:user) }
 
+    it { should have_many(:favorites) }
+    it { should have_many(:favoriters).through(:favorites).source(:user) }
+
     it { should have_many(:game_developers) }
     it { should have_many(:developers).through(:game_developers).source(:company) }
 

@@ -241,25 +241,55 @@ RSpec.describe "Users API", type: :request do
       )
     end
 
-    it "returns data for current user when requesting currentUser" do
-      user
-      query_string = <<-GRAPHQL
-        query {
-          currentUser {
-            id
-            username
+    context 'with favoritedGames' do
+      let!(:favorite_game) { create(:favorite_game, user: user) }
+
+      it "returns data for current user's favorite games when requesting favoritedGames" do
+        query_string = <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              favoritedGames {
+                nodes {
+                  id
+                  name
+                }
+              }
+            }
           }
-        }
-      GRAPHQL
+        GRAPHQL
 
-      result = api_request(query_string, token: access_token)
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
 
-      expect(result.graphql_dig(:current_user)).to eq(
-        {
-          id: user.id.to_s,
-          username: user.username
-        }
-      )
+        expect(result.graphql_dig(:user, :favorited_games, :nodes)).to include(
+          {
+            id: favorite_game.game.id.to_s,
+            name: favorite_game.game.name
+          }
+        )
+      end
+    end
+
+    context 'with currentUser' do
+      it "returns data for current user when requesting currentUser" do
+        user
+        query_string = <<-GRAPHQL
+          query {
+            currentUser {
+              id
+              username
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+
+        expect(result.graphql_dig(:current_user)).to eq(
+          {
+            id: user.id.to_s,
+            username: user.username
+          }
+        )
+      end
     end
   end
 end

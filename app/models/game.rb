@@ -30,6 +30,10 @@ class Game < ApplicationRecord
     inverse_of: :user,
     dependent: :destroy
 
+  has_many :favoriters,
+    through: :favorites,
+    source: :user
+
   belongs_to :series, optional: true
 
   has_one_attached :cover

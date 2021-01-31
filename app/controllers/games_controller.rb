@@ -39,13 +39,13 @@ class GamesController < ApplicationController
     @owners = @game.purchasers.limit(10)
     @owners_count = @game.purchasers.count
 
-    @favoriters = User.where(id: @game.favorites.limit(10).collect(&:user_id))
+    @favoriters = @game.favoriters.limit(10)
     @favoriters_count = @game.favorites.count
 
     @game_purchase = current_user&.game_purchases&.find_by(game_id: @game.id) if current_user
 
     unless @game.series_id.nil?
-      series = Series.find(@game.series_id)
+      series = T.must(@game.series)
       @games_in_series = series.games
                                .where.not(id: @game.id)
                                .order(Arel.sql('RANDOM()'))

@@ -17,8 +17,12 @@ class User < ApplicationRecord
   has_many :game_purchases
   has_many :games, through: :game_purchases
 
-  # Users have favorites of various types.
+  # Relationship to FavoriteGame records.
   has_many :favorite_games, dependent: :destroy
+  # Relationship to the _Game_ records that the user has favorited.
+  has_many :favorited_games,
+    through: :favorite_games,
+    source: :game
 
   # Users can follow other users.
   has_many :active_relationships,

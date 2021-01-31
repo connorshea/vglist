@@ -1158,6 +1158,84 @@ class Game < ApplicationRecord
   def validate_associated_records_for_favorites(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_favoriters=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_favoriters=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_favoriters=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_favoriters=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_favoriters=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_favoriters=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_favoriters=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_favoriters; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_favoriters?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_favoriters=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_favoriters(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_favoriters(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_series; end
 
   sig { returns(T::Boolean) }
@@ -2760,6 +2838,15 @@ module Game::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::Engine]).void }
   def engines=(value); end
 
+  sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
+  def favoriters; end
+
+  sig { returns(T::Array[Integer]) }
+  def favoriter_ids; end
+
+  sig { params(value: T::Enumerable[::User]).void }
+  def favoriters=(value); end
+
   sig { returns(::FavoriteGame::ActiveRecord_Associations_CollectionProxy) }
   def favorites; end
 
@@ -2960,6 +3047,9 @@ module Game::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def favorite_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def favoriter_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def series_ids=(ids); end
