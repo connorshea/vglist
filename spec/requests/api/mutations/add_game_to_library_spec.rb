@@ -41,7 +41,7 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result.graphql_dig(:addGameToLibrary, :gamePurchase)).to eq(
+      expect(result.graphql_dig(:add_game_to_library, :game_purchase)).to eq(
         {
           user: {
             id: user.id.to_s
@@ -107,7 +107,7 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result.graphql_dig(:addGameToLibrary, :gamePurchase)).to eq(
+      expect(result.graphql_dig(:add_game_to_library, :game_purchase)).to eq(
         {
           user: {
             id: user.id.to_s

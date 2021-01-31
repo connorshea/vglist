@@ -45,7 +45,7 @@ RSpec.describe "Genres API", type: :request do
 
       result = api_request(query_string, variables: { query: genre.name }, token: access_token)
 
-      expect(result.graphql_dig(:genreSearch, :nodes)).to eq(
+      expect(result.graphql_dig(:genre_search, :nodes)).to eq(
         [{
           id: genre.id.to_s,
           name: genre.name

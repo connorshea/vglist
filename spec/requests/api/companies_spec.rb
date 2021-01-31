@@ -45,7 +45,7 @@ RSpec.describe "Companies API", type: :request do
 
       result = api_request(query_string, variables: { query: company.name }, token: access_token)
 
-      expect(result.graphql_dig(:companySearch, :nodes)).to eq(
+      expect(result.graphql_dig(:company_search, :nodes)).to eq(
         [{
           id: company.id.to_s,
           name: company.name

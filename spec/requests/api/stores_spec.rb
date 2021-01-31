@@ -45,7 +45,7 @@ RSpec.describe "Stores API", type: :request do
 
       result = api_request(query_string, variables: { query: store.name }, token: access_token)
 
-      expect(result.graphql_dig(:storeSearch, :nodes)).to eq(
+      expect(result.graphql_dig(:store_search, :nodes)).to eq(
         [{
           id: store.id.to_s,
           name: store.name

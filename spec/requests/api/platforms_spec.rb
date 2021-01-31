@@ -45,7 +45,7 @@ RSpec.describe "Platforms API", type: :request do
 
       result = api_request(query_string, variables: { query: platform.name }, token: access_token)
 
-      expect(result.graphql_dig(:platformSearch, :nodes)).to eq(
+      expect(result.graphql_dig(:platform_search, :nodes)).to eq(
         [{
           id: platform.id.to_s,
           name: platform.name

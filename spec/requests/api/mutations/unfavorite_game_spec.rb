@@ -34,7 +34,7 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result.graphql_dig(:unfavoriteGame, :game)).to eq(
+      expect(result.graphql_dig(:unfavorite_game, :game)).to eq(
         {
           id: game.id.to_s,
           name: game.name

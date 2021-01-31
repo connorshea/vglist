@@ -233,7 +233,7 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { query: user.username }, token: access_token)
 
-      expect(result.graphql_dig(:userSearch, :nodes)).to eq(
+      expect(result.graphql_dig(:user_search, :nodes)).to eq(
         [{
           id: user.id.to_s,
           username: user.username
@@ -254,7 +254,7 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:currentUser)).to eq(
+      expect(result.graphql_dig(:current_user)).to eq(
         {
           id: user.id.to_s,
           username: user.username

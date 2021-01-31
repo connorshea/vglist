@@ -48,7 +48,7 @@ RSpec.describe "RemoveGameFromLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result.graphql_dig(:removeGameFromLibrary, :game)).to eq(
+      expect(result.graphql_dig(:remove_game_from_library, :game)).to eq(
         {
           id: game.id.to_s,
           name: game.name
@@ -61,7 +61,7 @@ RSpec.describe "RemoveGameFromLibrary Mutation API", type: :request do
 
       result = api_request(query_string2, variables: { id: game_purchase.id }, token: access_token)
 
-      expect(result.graphql_dig(:removeGameFromLibrary, :game)).to eq(
+      expect(result.graphql_dig(:remove_game_from_library, :game)).to eq(
         {
           id: game_purchase.game.id.to_s,
           name: game_purchase.game.name

@@ -27,8 +27,8 @@ RSpec.describe "API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:games, :pageInfo, :hasNextPage)).to eq(true)
-      expect(result.graphql_dig(:games, :pageInfo, :pageSize)).to eq(30)
+      expect(result.graphql_dig(:games, :page_info, :has_next_page)).to eq(true)
+      expect(result.graphql_dig(:games, :page_info, :page_size)).to eq(30)
     end
   end
 end

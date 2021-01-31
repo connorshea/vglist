@@ -45,7 +45,7 @@ RSpec.describe "Series API", type: :request do
 
       result = api_request(query_string, variables: { query: series.name }, token: access_token)
 
-      expect(result.graphql_dig(:seriesSearch, :nodes)).to eq(
+      expect(result.graphql_dig(:series_search, :nodes)).to eq(
         [{
           id: series.id.to_s,
           name: series.name
@@ -69,7 +69,7 @@ RSpec.describe "Series API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:seriesList, :nodes)).to eq(
+      expect(result.graphql_dig(:series_list, :nodes)).to eq(
         [
           {
             id: series.id.to_s,
