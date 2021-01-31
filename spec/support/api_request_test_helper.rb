@@ -1,5 +1,9 @@
 # typed: false
 module ApiRequestTestHelper
+  # @param query_string [String]
+  # @param variables [Hash]
+  # @param token [Doorkeeper::AccessToken]
+  # @return [VglistApiRequestResponse]
   def api_request(query_string, variables: nil, token:)
     # Allow variables to be sent as snake case, e.g. "giantbomb_id" by
     # transforming them into "giantbombId" before passing them to GraphQL.
@@ -15,11 +19,14 @@ module ApiRequestTestHelper
       }
 
     response_body = VglistApiRequestResponse.new(JSON.parse(response.body))
-    puts "ERRORS: #{response_body['errors'].inspect}" if ENV['DEBUG'] && response_body['errors']&.any?
+    puts "ERRORS: #{response_body.to_h['errors'].inspect}" if ENV['DEBUG'] && response_body.to_h['errors']&.any?
     return response_body
   end
 
   # Return an array of error messages from the GraphQL result object.
+  #
+  # @param result [VglistApiRequestResponse]
+  # @return [Hash]
   def api_result_errors(result)
     return result.to_h['errors'].map { |item| item['message'] }
   end
@@ -33,6 +40,9 @@ class VglistApiRequestResponse
     @body = body
   end
 
+  # Returns the body as a hash.
+  #
+  # @return [Hash]
   def to_h
     body
   end
@@ -44,6 +54,7 @@ class VglistApiRequestResponse
   # It digs into `data` automatically.
   #
   # @param args [Symbol] The keys to go through for digging into nested objects.
+  # @return [Array<any>|Hash<any>] Returns a hash or an array by digging into the GraphQL response.
   def graphql_dig(*args)
     formatted_args = args.map { |arg| arg.to_s.camelize(:lower) }
     data = body.dig('data', *formatted_args)
