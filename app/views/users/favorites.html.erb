@@ -9,13 +9,13 @@
 
 <%= render 'user_header', user: @user %>
 
-<% if @favorites.length > 0 %>
+<% if @favorited_games.length > 0 %>
   <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile game-card-list">
-    <% @favorites.each do |favorite| %>
-      <%= render 'shared/game_card', game: Game.find(favorite.game_id) %>
+    <% @favorited_games.each do |favorited_game| %>
+      <%= render 'shared/game_card', game: favorited_game %>
     <% end %>
 
-    <%= paginate @favorites %>
+    <%= paginate @favorited_games %>
   </div>
 <% else %>
   <div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">

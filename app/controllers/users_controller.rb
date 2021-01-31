@@ -291,7 +291,7 @@ class UsersController < ApplicationController
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).favorites?
 
-    @favorites = @user.favorite_games.page helpers.page_param
+    @favorited_games = @user.favorited_games.page helpers.page_param
   end
 
   def following
