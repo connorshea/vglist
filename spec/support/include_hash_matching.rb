@@ -36,10 +36,22 @@ require 'rspec/expectations'
 # ```
 RSpec::Matchers.define :include_hash_matching do |expected|
   match do |array_of_hashes|
+    expected.stringify_keys!
+    array_of_hashes.map!(&:stringify_keys)
     array_of_hashes.any? do |element|
-      expected = expected.stringify_keys
-      element = element.stringify_keys
       element.slice(*expected.keys) == expected
     end
+  end
+
+  failure_message do |array_of_hashes|
+    expected_pairs = []
+    expected.each_pair do |k, v|
+      expected_pairs << "#{k}: #{v.inspect}"
+    end
+    "expected #{array_of_hashes} to have at least one hash with these attributes:\n#{expected_pairs.join("\n")}"
+  end
+
+  failure_message_when_negated do |array_of_hashes|
+    "expected #{array_of_hashes} not to include key-value pairs #{expected.to_s.gsub(/\{|\}/, '')}."
   end
 end
