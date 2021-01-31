@@ -13,7 +13,8 @@ complex_types = ['Game', 'User'].freeze
     results_of_type = @search_results.select { |result| result[:searchable_type] == type }
     if complex_types.include?(type)
       json.array!(results_of_type) do |pg_search|
-        json.id pg_search.searchable.id
+        # Use friendly_id if it's a user so the link is correct.
+        json.id type == 'User' ? pg_search.searchable.friendly_id : pg_search.searchable.id
         json.content pg_search.content
         json.searchable_type pg_search.searchable_type
         json.searchable_id pg_search.searchable_id
