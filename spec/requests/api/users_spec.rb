@@ -241,7 +241,7 @@ RSpec.describe "Users API", type: :request do
       )
     end
 
-    context 'with favoriteGames' do
+    context 'with favoritedGames' do
       let!(:favorite_game) { create(:favorite_game, user: user) }
 
       it "returns data for current user's favorite games when requesting favoritedGames" do
