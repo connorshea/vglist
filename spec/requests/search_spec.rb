@@ -7,6 +7,8 @@ RSpec.describe "Search", type: :request do
     let(:game) { create(:game) }
     let(:sequential_games) { create_list(:game, 15, :sequential_name) }
     let(:more_sequential_games) { create_list(:game, 20, :sequential_name) }
+    let(:user1) { create(:user, username: 'foo.bar') }
+    let(:user2) { create(:user, username: 'BazQux') }
 
     it "returns the given series" do
       get search_path(query: series.name, format: :json)
@@ -15,7 +17,8 @@ RSpec.describe "Search", type: :request do
     end
 
     it "returns no item when given a random string" do
-      get search_path(query: SecureRandom.alphanumeric(8), format: :json)
+      sequential_games
+      get search_path(query: SecureRandom.alphanumeric(16), format: :json)
       expected_response = {}
       %w[Game Series Company Platform Engine Genre User].each do |type|
         expected_response[type] = []
@@ -56,6 +59,20 @@ RSpec.describe "Search", type: :request do
       expect(searchable_helper(response.body, 'Game')).not_to include(not_expected_response)
       # Only return games when only_games parameter is used.
       expect(JSON.parse(response.body).keys).not_to include(['Series', 'Platform', 'Company', 'User', 'Genre', 'Engine'])
+    end
+
+    it "returns correct user information when username has a period" do
+      user1
+      get search_path(query: "foo", format: :json)
+      expected_response = { searchable_id: user1.id, content: user1.username, searchable_type: 'User', slug: 'foo-bar' }
+      expect(searchable_helper(response.body, 'User', expected_response.keys)).to include(expected_response)
+    end
+
+    it "returns correct user information when username has capital letters" do
+      user2
+      get search_path(query: "baz", format: :json)
+      expected_response = { searchable_id: user2.id, content: user2.username, searchable_type: 'User', slug: 'bazqux' }
+      expect(searchable_helper(response.body, 'User', expected_response.keys)).to include(expected_response)
     end
   end
 end

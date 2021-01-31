@@ -195,9 +195,8 @@ export default {
           return true;
         }
         betterSearchResults[key].map(result => {
-          // Use the id in the URL if it's a user because the id is sluggified
-          // and 'friendly' (aka not a number).
-          let url_key = result.searchable_type === 'User' ? result.id : result.searchable_id;
+          // Use the slug in the URL if it's a user.
+          let url_key = result.searchable_type === 'User' ? result.slug : result.searchable_id;
           result.url = `/${this.plurals[result.searchable_type]}/${url_key}`;
           return result;
         });
