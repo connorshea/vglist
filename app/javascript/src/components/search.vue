@@ -195,8 +195,8 @@ export default {
           return true;
         }
         betterSearchResults[key].map(result => {
-          // Use the username in the URL if it's a user.
-          let url_key = result.searchable_type === 'User' ? result.content : result.searchable_id;
+          // Use the slug in the URL if it's a user.
+          let url_key = result.searchable_type === 'User' ? result.slug : result.searchable_id;
           result.url = `/${this.plurals[result.searchable_type]}/${url_key}`;
           return result;
         });

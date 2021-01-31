@@ -32,6 +32,8 @@ complex_types = ['Game', 'User'].freeze
           else
             json.image_url asset_path('default-avatar.png')
           end
+          # Provide the slug if it's a user so the link is correct.
+          json.slug pg_search.searchable.friendly_id
         end
       end
     else

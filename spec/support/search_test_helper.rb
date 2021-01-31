@@ -28,13 +28,14 @@
 #
 # @param [String] searchables The JSON string representing the search results. See format above.
 # @param [String] type The type of returned searchable to filter to, one of ['Game', 'Series', 'Company', 'Platform', 'Engine', 'Genre, 'User']
-# @return [Array<Hash>] A hash with `searchable_id`, `content`, and `searchable_type` keys.
-def searchable_helper(searchables, type)
+# @param [Array<Symbol>] keys The keys to return from the searchable objects, by default `searchable_id`, `content`, and `searchable_type`.
+# @return [Array<Hash>] A hash with whatever keys are determined by `keys`.
+def searchable_helper(searchables, type, keys = [:searchable_id, :content, :searchable_type])
   return JSON.parse(searchables)[type].map do |searchable|
-    {
-      searchable_id: searchable['searchable_id'],
-      content: searchable['content'],
-      searchable_type: searchable['searchable_type']
-    }
+    hash = {}
+    keys.each do |key|
+      hash[key] = searchable[key.to_s]
+    end
+    hash
   end
 end
