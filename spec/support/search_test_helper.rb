@@ -1,8 +1,8 @@
 # typed: true
-# Given a response body, parse the JSON, access the specific type of search
-# result we want, and return just the attributes we want.
+# Given a response body, parse the JSON and access the specific type of search
+# result we want.
 #
-# `searchables` is in this format:
+# `searchables` is in roughly this format:
 #
 # ```json
 # {
@@ -28,14 +28,7 @@
 #
 # @param [String] searchables The JSON string representing the search results. See format above.
 # @param [String] type The type of returned searchable to filter to, one of ['Game', 'Series', 'Company', 'Platform', 'Engine', 'Genre, 'User']
-# @param [Array<Symbol>] keys The keys to return from the searchable objects, by default `searchable_id`, `content`, and `searchable_type`.
-# @return [Array<Hash>] A hash with whatever keys are determined by `keys`.
-def searchable_helper(searchables, type, keys = [:searchable_id, :content, :searchable_type])
-  return JSON.parse(searchables)[type].map do |searchable|
-    hash = {}
-    keys.each do |key|
-      hash[key] = searchable[key.to_s]
-    end
-    hash
-  end
+# @return [Array<Hash>] An array of hashes.
+def searchable_helper(searchables, type)
+  return JSON.parse(searchables)[type]
 end

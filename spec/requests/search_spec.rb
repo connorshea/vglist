@@ -13,7 +13,7 @@ RSpec.describe "Search", type: :request do
     it "returns the given series" do
       get search_path(query: series.name, format: :json)
       expected_response = { searchable_id: series.id, content: series.name, searchable_type: 'Series' }
-      expect(searchable_helper(response.body, 'Series')).to include(expected_response)
+      expect(searchable_helper(response.body, 'Series')).to include_hash_matching(expected_response)
     end
 
     it "returns no item when given a random string" do
@@ -38,14 +38,14 @@ RSpec.describe "Search", type: :request do
     it "returns game when a query is given" do
       get search_path(query: game.name, format: :json)
       expected_response = { searchable_id: game.id, content: game.name, searchable_type: 'Game' }
-      expect(searchable_helper(response.body, 'Game')).to include(expected_response)
+      expect(searchable_helper(response.body, 'Game')).to include_hash_matching(expected_response)
     end
 
     it "returns games when a query is given and multiple games with similar names exist" do
       sequential_games
       get search_path(query: "Game Name", format: :json)
       expected_response = { searchable_id: sequential_games.first.id, content: sequential_games.first.name, searchable_type: 'Game' }
-      expect(searchable_helper(response.body, 'Game')).to include(expected_response)
+      expect(searchable_helper(response.body, 'Game')).to include_hash_matching(expected_response)
     end
 
     it "returns games when using only games parameter and paginating" do
@@ -55,8 +55,8 @@ RSpec.describe "Search", type: :request do
       not_expected_response = { searchable_id: more_sequential_games.first.id, content: more_sequential_games.first.name, searchable_type: 'Game' }
       # Include the 16th game in the sequential list but not the first, since
       # we're on page 2.
-      expect(searchable_helper(response.body, 'Game')).to include(expected_response)
-      expect(searchable_helper(response.body, 'Game')).not_to include(not_expected_response)
+      expect(searchable_helper(response.body, 'Game')).to include_hash_matching(expected_response)
+      expect(searchable_helper(response.body, 'Game')).not_to include_hash_matching(not_expected_response)
       # Only return games when only_games parameter is used.
       expect(JSON.parse(response.body).keys).not_to include(['Series', 'Platform', 'Company', 'User', 'Genre', 'Engine'])
     end
@@ -65,14 +65,14 @@ RSpec.describe "Search", type: :request do
       user1
       get search_path(query: "foo", format: :json)
       expected_response = { searchable_id: user1.id, content: user1.username, searchable_type: 'User', slug: 'foo-bar' }
-      expect(searchable_helper(response.body, 'User', expected_response.keys)).to include(expected_response)
+      expect(searchable_helper(response.body, 'User')).to include_hash_matching(expected_response)
     end
 
     it "returns correct user information when username has capital letters" do
       user2
       get search_path(query: "baz", format: :json)
       expected_response = { searchable_id: user2.id, content: user2.username, searchable_type: 'User', slug: 'bazqux' }
-      expect(searchable_helper(response.body, 'User', expected_response.keys)).to include(expected_response)
+      expect(searchable_helper(response.body, 'User')).to include_hash_matching(expected_response)
     end
   end
 end
