@@ -41,18 +41,18 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result["data"]["addGameToLibrary"]["gamePurchase"]).to eq(
+      expect(result.graphql_dig(:addGameToLibrary, :gamePurchase)).to eq(
         {
-          "user" => {
-            "id" => user.id.to_s
+          user: {
+            id: user.id.to_s
           },
-          "game" => {
-            "name" => game.name
+          game: {
+            name: game.name
           },
-          "hoursPlayed" => nil,
-          "comments" => "",
-          "completionStatus" => nil,
-          "rating" => nil
+          hoursPlayed: nil,
+          comments: "",
+          completionStatus: nil,
+          rating: nil
         }
       )
     end
@@ -107,20 +107,20 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result["data"]["addGameToLibrary"]["gamePurchase"]).to eq(
+      expect(result.graphql_dig(:addGameToLibrary, :gamePurchase)).to eq(
         {
-          "user" => {
-            "id" => user.id.to_s
+          user: {
+            id: user.id.to_s
           },
-          "game" => {
-            "name" => game.name
+          game: {
+            name: game.name
           },
-          "hoursPlayed" => 10,
-          "comments" => "Pretty good",
-          "completionStatus" => "NOT_APPLICABLE",
-          "rating" => 100,
-          "startDate" => "2019-10-10",
-          "completionDate" => "2019-10-11"
+          hoursPlayed: 10,
+          comments: "Pretty good",
+          completionStatus: "NOT_APPLICABLE",
+          rating: 100,
+          startDate: "2019-10-10",
+          completionDate: "2019-10-11"
         }
       )
     end

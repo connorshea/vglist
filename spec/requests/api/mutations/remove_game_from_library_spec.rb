@@ -48,10 +48,10 @@ RSpec.describe "RemoveGameFromLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result["data"]["removeGameFromLibrary"]["game"]).to eq(
+      expect(result.graphql_dig(:removeGameFromLibrary, :game)).to eq(
         {
-          "id" => game.id.to_s,
-          "name" => game.name
+          id: game.id.to_s,
+          name: game.name
         }
       )
     end
@@ -61,10 +61,10 @@ RSpec.describe "RemoveGameFromLibrary Mutation API", type: :request do
 
       result = api_request(query_string2, variables: { id: game_purchase.id }, token: access_token)
 
-      expect(result["data"]["removeGameFromLibrary"]["game"]).to eq(
+      expect(result.graphql_dig(:removeGameFromLibrary, :game)).to eq(
         {
-          "id" => game_purchase.game.id.to_s,
-          "name" => game_purchase.game.name
+          id: game_purchase.game.id.to_s,
+          name: game_purchase.game.name
         }
       )
     end
@@ -74,7 +74,7 @@ RSpec.describe "RemoveGameFromLibrary Mutation API", type: :request do
 
       expect do
         response = api_request(query_string2, variables: { id: game_purchase_for_other_user.id }, token: access_token)
-        expect(response['errors'].first['message']).to eq("You aren't allowed to delete this game purchase.")
+        expect(response.to_h['errors'].first['message']).to eq("You aren't allowed to delete this game purchase.")
       end.to change(GamePurchase, :count).by(0)
     end
   end

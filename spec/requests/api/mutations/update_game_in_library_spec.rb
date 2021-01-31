@@ -33,15 +33,15 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game_purchase.id }, token: access_token)
 
-      expect(result["data"]["updateGameInLibrary"]["gamePurchase"]).to eq(
+      expect(result.graphql_dig(:updateGameInLibrary, :gamePurchase)).to eq(
         {
-          "user" => {
-            "id" => user.id.to_s
+          user: {
+            id: user.id.to_s
           },
-          "game" => {
-            "name" => game.name
+          game: {
+            name: game.name
           },
-          "hoursPlayed" => 5
+          hoursPlayed: 5
         }
       )
     end
@@ -51,7 +51,7 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
 
       expect do
         response = api_request(query_string, variables: { id: game_purchase_for_other_user.id }, token: access_token)
-        expect(response['errors'].first['message']).to eq("You aren't allowed to update this game purchase.")
+        expect(response.to_h['errors'].first['message']).to eq("You aren't allowed to update this game purchase.")
       end.to change(GamePurchase, :count).by(0)
     end
   end
@@ -121,20 +121,20 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game_purchase.id }, token: access_token)
 
-      expect(result["data"]["updateGameInLibrary"]["gamePurchase"]).to eq(
+      expect(result.graphql_dig(:updateGameInLibrary, :gamePurchase)).to eq(
         {
-          "user" => {
-            "id" => user.id.to_s
+          user: {
+            id: user.id.to_s
           },
-          "game" => {
-            "name" => game.name
+          game: {
+            name: game.name
           },
-          "hoursPlayed" => 5,
-          "completionStatus" => "UNPLAYED",
-          "comments" => "Pretty good",
-          "rating" => 100,
-          "startDate" => "2019-10-10",
-          "completionDate" => "2019-10-11"
+          hoursPlayed: 5,
+          completionStatus: "UNPLAYED",
+          comments: "Pretty good",
+          rating: 100,
+          startDate: "2019-10-10",
+          completionDate: "2019-10-11"
         }
       )
     end
@@ -144,16 +144,16 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
 
       result = api_request(query_string2, variables: { id: game_purchase2.id }, token: access_token)
 
-      expect(result["data"]["updateGameInLibrary"]["gamePurchase"]).to eq(
+      expect(result.graphql_dig(:updateGameInLibrary, :gamePurchase)).to eq(
         {
-          "user" => {
-            "id" => user.id.to_s
+          user: {
+            id: user.id.to_s
           },
-          "game" => {
-            "name" => game.name
+          game: {
+            name: game.name
           },
-          "hoursPlayed" => nil,
-          "rating" => 100
+          hoursPlayed: nil,
+          rating: 100
         }
       )
     end

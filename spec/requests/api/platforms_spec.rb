@@ -22,10 +22,10 @@ RSpec.describe "Platforms API", type: :request do
 
       result = api_request(query_string, variables: { id: platform.id }, token: access_token)
 
-      expect(result["data"]["platform"]).to eq(
+      expect(result.graphql_dig(:platform)).to eq(
         {
-          "id" => platform.id.to_s,
-          "name" => platform.name
+          id: platform.id.to_s,
+          name: platform.name
         }
       )
     end
@@ -45,10 +45,10 @@ RSpec.describe "Platforms API", type: :request do
 
       result = api_request(query_string, variables: { query: platform.name }, token: access_token)
 
-      expect(result["data"]["platformSearch"]["nodes"]).to eq(
+      expect(result.graphql_dig(:platformSearch, :nodes)).to eq(
         [{
-          "id" => platform.id.to_s,
-          "name" => platform.name
+          id: platform.id.to_s,
+          name: platform.name
         }]
       )
     end
@@ -69,15 +69,15 @@ RSpec.describe "Platforms API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result["data"]["platforms"]["nodes"]).to eq(
+      expect(result.graphql_dig(:platforms, :nodes)).to eq(
         [
           {
-            "id" => platform.id.to_s,
-            "name" => platform.name
+            id: platform.id.to_s,
+            name: platform.name
           },
           {
-            "id" => platform2.id.to_s,
-            "name" => platform2.name
+            id: platform2.id.to_s,
+            name: platform2.name
           }
         ]
       )

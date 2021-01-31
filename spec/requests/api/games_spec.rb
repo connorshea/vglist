@@ -26,10 +26,10 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result["data"]["game"]).to eq(
+      expect(result.graphql_dig(:game)).to eq(
         {
-          "id" => game.id.to_s,
-          "name" => game.name
+          id: game.id.to_s,
+          name: game.name
         }
       )
     end
@@ -48,12 +48,10 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { id: game_with_steam_app_ids.id }, token: access_token)
 
-      expect(result["data"]["game"]).to eq(
-        {
-          "id" => game_with_steam_app_ids.id.to_s,
-          "name" => game_with_steam_app_ids.name,
-          "steamAppIds" => game_with_steam_app_ids.steam_app_ids.map(&:app_id)
-        }
+      expect(result.graphql_dig(:game)).to include(
+        id: game_with_steam_app_ids.id.to_s,
+        name: game_with_steam_app_ids.name,
+        steamAppIds: game_with_steam_app_ids.steam_app_ids.map(&:app_id)
       )
     end
 
@@ -73,11 +71,11 @@ RSpec.describe "Games API", type: :request do
 
       cover_variant = game_with_cover.sized_cover(:small)
 
-      expect(result["data"]["game"]).to eq(
+      expect(result.graphql_dig(:game)).to eq(
         {
-          "id" => game_with_cover.id.to_s,
-          "name" => game_with_cover.name,
-          "coverUrl" => Rails.application.routes.url_helpers.rails_representation_url(cover_variant)
+          id: game_with_cover.id.to_s,
+          name: game_with_cover.name,
+          coverUrl: Rails.application.routes.url_helpers.rails_representation_url(cover_variant)
         }
       )
     end
@@ -96,11 +94,11 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { id: game_with_release_date.id }, token: access_token)
 
-      expect(result["data"]["game"]).to eq(
+      expect(result.graphql_dig(:game)).to eq(
         {
-          "id" => game_with_release_date.id.to_s,
-          "name" => game_with_release_date.name,
-          "releaseDate" => game_with_release_date.release_date.strftime("%F")
+          id: game_with_release_date.id.to_s,
+          name: game_with_release_date.name,
+          releaseDate: game_with_release_date.release_date.strftime("%F")
         }
       )
     end
@@ -117,10 +115,10 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { giantbomb_id: game_with_giantbomb_id.giantbomb_id }, token: access_token)
 
-      expect(result["data"]["game"]).to eq(
+      expect(result.graphql_dig(:game)).to eq(
         {
-          "id" => game_with_giantbomb_id.id.to_s,
-          "name" => game_with_giantbomb_id.name
+          id: game_with_giantbomb_id.id.to_s,
+          name: game_with_giantbomb_id.name
         }
       )
     end
@@ -137,8 +135,8 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { id: game_with_giantbomb_id.id, giantbomb_id: game_with_giantbomb_id.giantbomb_id }, token: access_token)
 
-      expect(result["data"]["game"]).to be_nil
-      expect(result["errors"].first['message']).to eq('Cannot provide more than one argument to game at a time.')
+      expect(result.graphql_dig(:game)).to be_nil
+      expect(result.to_h["errors"].first['message']).to eq('Cannot provide more than one argument to game at a time.')
     end
 
     it "returns data for a game when searching" do
@@ -156,11 +154,9 @@ RSpec.describe "Games API", type: :request do
 
       result = api_request(query_string, variables: { query: game.name }, token: access_token)
 
-      expect(result["data"]["gameSearch"]["nodes"]).to eq(
-        [{
-          "id" => game.id.to_s,
-          "name" => game.name
-        }]
+      expect(result.graphql_dig(:game_search, :nodes)).to include_hash_matching(
+        id: game.id.to_s,
+        name: game.name
       )
     end
 
@@ -179,15 +175,15 @@ RSpec.describe "Games API", type: :request do
       GRAPHQL
 
       result = api_request(query_string, token: access_token)
-      expect(result["data"]["games"]["nodes"]).to eq(
+      expect(result.graphql_dig(:games, :nodes)).to eq(
         [
           {
-            "id" => game.id.to_s,
-            "name" => game.name
+            id: game.id.to_s,
+            name: game.name
           },
           {
-            "id" => game2.id.to_s,
-            "name" => game2.name
+            id: game2.id.to_s,
+            name: game2.name
           }
         ]
       )

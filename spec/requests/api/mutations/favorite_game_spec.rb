@@ -33,10 +33,10 @@ RSpec.describe "FavoriteGame Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: game.id }, token: access_token)
 
-      expect(result["data"]["favoriteGame"]["game"]).to eq(
+      expect(result.graphql_dig(:favoriteGame, :game)).to eq(
         {
-          "id" => game.id.to_s,
-          "name" => game.name
+          id: game.id.to_s,
+          name: game.name
         }
       )
     end

@@ -22,10 +22,10 @@ RSpec.describe "Genres API", type: :request do
 
       result = api_request(query_string, variables: { id: genre.id }, token: access_token)
 
-      expect(result["data"]["genre"]).to eq(
+      expect(result.graphql_dig(:genre)).to eq(
         {
-          "id" => genre.id.to_s,
-          "name" => genre.name
+          id: genre.id.to_s,
+          name: genre.name
         }
       )
     end
@@ -45,10 +45,10 @@ RSpec.describe "Genres API", type: :request do
 
       result = api_request(query_string, variables: { query: genre.name }, token: access_token)
 
-      expect(result["data"]["genreSearch"]["nodes"]).to eq(
+      expect(result.graphql_dig(:genreSearch, :nodes)).to eq(
         [{
-          "id" => genre.id.to_s,
-          "name" => genre.name
+          id: genre.id.to_s,
+          name: genre.name
         }]
       )
     end
@@ -69,15 +69,15 @@ RSpec.describe "Genres API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result["data"]["genres"]["nodes"]).to eq(
+      expect(result.graphql_dig(:genres, :nodes)).to eq(
         [
           {
-            "id" => genre.id.to_s,
-            "name" => genre.name
+            id: genre.id.to_s,
+            name: genre.name
           },
           {
-            "id" => genre2.id.to_s,
-            "name" => genre2.name
+            id: genre2.id.to_s,
+            name: genre2.name
           }
         ]
       )

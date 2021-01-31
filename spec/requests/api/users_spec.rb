@@ -27,13 +27,13 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { id: user.id }, token: access_token)
 
-      expect(result["data"]["user"]).to eq(
+      expect(result.graphql_dig(:user)).to eq(
         {
-          "id" => user.id.to_s,
-          "username" => user.username,
-          "role" => user.role.upcase,
-          "privacy" => user.privacy.upcase,
-          "avatarUrl" => nil
+          id: user.id.to_s,
+          username: user.username,
+          role: user.role.upcase,
+          privacy: user.privacy.upcase,
+          avatarUrl: nil
         }
       )
     end
@@ -53,13 +53,13 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { username: user.username }, token: access_token)
 
-      expect(result["data"]["user"]).to eq(
+      expect(result.graphql_dig(:user)).to eq(
         {
-          "id" => user.id.to_s,
-          "username" => user.username,
-          "role" => user.role.upcase,
-          "privacy" => user.privacy.upcase,
-          "avatarUrl" => nil
+          id: user.id.to_s,
+          username: user.username,
+          role: user.role.upcase,
+          privacy: user.privacy.upcase,
+          avatarUrl: nil
         }
       )
     end
@@ -76,8 +76,8 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { id: user.id, username: user.username }, token: access_token)
 
-      expect(result["data"]["user"]).to be_nil
-      expect(result["errors"].first['message']).to eq('Cannot provide more than one argument to user at a time.')
+      expect(result.graphql_dig(:user)).to be_nil
+      expect(result.to_h["errors"].first['message']).to eq('Cannot provide more than one argument to user at a time.')
     end
 
     it "returns avatar for user" do
@@ -96,11 +96,11 @@ RSpec.describe "Users API", type: :request do
 
       avatar_variant = user_with_avatar.sized_avatar(:small)
 
-      expect(result["data"]["user"]).to eq(
+      expect(result.graphql_dig(:user)).to eq(
         {
-          "id" => user_with_avatar.id.to_s,
-          "username" => user_with_avatar.username,
-          "avatarUrl" => Rails.application.routes.url_helpers.rails_representation_url(avatar_variant)
+          id: user_with_avatar.id.to_s,
+          username: user_with_avatar.username,
+          avatarUrl: Rails.application.routes.url_helpers.rails_representation_url(avatar_variant)
         }
       )
     end
@@ -128,13 +128,13 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { id: private_user.id }, token: access_token)
 
-      expect(result["data"]["user"]).to eq(
+      expect(result.graphql_dig(:user)).to eq(
         {
-          "id" => private_user.id.to_s,
-          "username" => private_user.username,
-          "bio" => nil,
-          "gamePurchases" => nil,
-          "activity" => nil
+          id: private_user.id.to_s,
+          username: private_user.username,
+          bio: nil,
+          gamePurchases: nil,
+          activity: nil
         }
       )
     end
@@ -171,17 +171,17 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { id: user.id }, token: access_token)
 
-      expect(result["data"]["user"]).to eq(
+      expect(result.graphql_dig(:user)).to eq(
         {
-          "id" => user.id.to_s,
-          "username" => user.username,
-          "activity" => {
-            "nodes" => [
+          id: user.id.to_s,
+          username: user.username,
+          activity: {
+            nodes: [
               {
-                "id" => user.events.first.id,
-                "eventable" => {
-                  "id" => user.id.to_s,
-                  "__typename" => "User"
+                id: user.events.first.id,
+                eventable: {
+                  id: user.id.to_s,
+                  __typename: "User"
                 }
               }
             ]
@@ -206,14 +206,14 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result["data"]["users"]["nodes"]).to include(
+      expect(result.graphql_dig(:users, :nodes)).to include(
         {
-          "id" => user.id.to_s,
-          "username" => user.username
+          id: user.id.to_s,
+          username: user.username
         },
         {
-          "id" => user2.id.to_s,
-          "username" => user2.username
+          id: user2.id.to_s,
+          username: user2.username
         }
       )
     end
@@ -233,10 +233,10 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, variables: { query: user.username }, token: access_token)
 
-      expect(result["data"]["userSearch"]["nodes"]).to eq(
+      expect(result.graphql_dig(:userSearch, :nodes)).to eq(
         [{
-          "id" => user.id.to_s,
-          "username" => user.username
+          id: user.id.to_s,
+          username: user.username
         }]
       )
     end
@@ -254,10 +254,10 @@ RSpec.describe "Users API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result["data"]["currentUser"]).to eq(
+      expect(result.graphql_dig(:currentUser)).to eq(
         {
-          "id" => user.id.to_s,
-          "username" => user.username
+          id: user.id.to_s,
+          username: user.username
         }
       )
     end
