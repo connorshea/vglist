@@ -375,6 +375,84 @@ class User < ApplicationRecord
   def validate_associated_records_for_favorite_games(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_favorited_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_favorited_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_favorited_games=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_favorited_games=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_favorited_games=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_favorited_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_favorited_games=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_favorited_games; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_favorited_games?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_favorited_games=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_favorited_games(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_favorited_games(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_active_relationships; end
 
   sig { returns(T::Boolean) }
@@ -3294,6 +3372,15 @@ module User::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::FavoriteGame]).void }
   def favorite_games=(value); end
 
+  sig { returns(::Game::ActiveRecord_Associations_CollectionProxy) }
+  def favorited_games; end
+
+  sig { returns(T::Array[Integer]) }
+  def favorited_game_ids; end
+
+  sig { params(value: T::Enumerable[::Game]).void }
+  def favorited_games=(value); end
+
   sig { returns(::User::ActiveRecord_Associations_CollectionProxy) }
   def followers; end
 
@@ -3398,6 +3485,9 @@ module User::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def favorite_game_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def favorited_game_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def active_relationship_ids=(ids); end
