@@ -32,25 +32,25 @@ RSpec.describe "Activity API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result["data"]["activity"]["nodes"]).to include(
+      expect(result.graphql_dig(:activity, :nodes)).to include(
         {
-          "user" => {
-            "username" => user.username
+          user: {
+            username: user.username
           },
-          "eventable" => {
-            "__typename" => "GamePurchase"
+          eventable: {
+            __typename: "GamePurchase"
           }
         },
         {
-          "user" => {
-            "username" => user.username
+          user: {
+            username: user.username
           },
-          "eventable" => {
-            "__typename" => "User"
+          eventable: {
+            __typename: "User"
           }
         }
       )
-      expect(result["data"]["activity"]["nodes"].length).to eq(2)
+      expect(result.graphql_dig(:activity, :nodes).length).to eq(2)
     end
 
     it "returns data for various types of activity events" do
@@ -88,50 +88,50 @@ RSpec.describe "Activity API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result["data"]["activity"]["nodes"]).to include(
+      expect(result.graphql_dig(:activity, :nodes)).to include(
         {
-          "user" => {
-            "username" => user.username
+          user: {
+            username: user.username
           },
-          "eventable" => {
-            "__typename" => "FavoriteGame",
-            "id" => favorite_game.id.to_s
+          eventable: {
+            __typename: "FavoriteGame",
+            id: favorite_game.id.to_s
           }
         },
         {
-          "user" => {
-            "username" => user.username
+          user: {
+            username: user.username
           },
-          "eventable" => {
-            "__typename" => "Relationship",
-            "id" => relationship.id.to_s
+          eventable: {
+            __typename: "Relationship",
+            id: relationship.id.to_s
           }
         },
         {
-          "user" => {
-            "username" => user2.username
+          user: {
+            username: user2.username
           },
-          "eventable" => {
-            "__typename" => "User",
-            "id" => user2.id.to_s
+          eventable: {
+            __typename: "User",
+            id: user2.id.to_s
           }
         },
         {
-          "user" => {
-            "username" => user.username
+          user: {
+            username: user.username
           },
-          "eventable" => {
-            "__typename" => "GamePurchase",
-            "id" => game_purchase.id.to_s
+          eventable: {
+            __typename: "GamePurchase",
+            id: game_purchase.id.to_s
           }
         },
         {
-          "user" => {
-            "username" => user.username
+          user: {
+            username: user.username
           },
-          "eventable" => {
-            "__typename" => "User",
-            "id" => user.id.to_s
+          eventable: {
+            __typename: "User",
+            id: user.id.to_s
           }
         }
       )
@@ -160,30 +160,30 @@ RSpec.describe "Activity API", type: :request do
       result = api_request(query_string, token: access_token)
 
       # Doesn't include user3 because user isn't following them.
-      expect(result["data"]["activity"]["nodes"]).to eq(
+      expect(result.graphql_dig(:activity, :nodes)).to eq(
         [
           {
-            "user" => {
-              "username" => user.username
+            user: {
+              username: user.username
             },
-            "eventable" => {
-              "__typename" => "Relationship"
+            eventable: {
+              __typename: "Relationship"
             }
           },
           {
-            "user" => {
-              "username" => user2.username
+            user: {
+              username: user2.username
             },
-            "eventable" => {
-              "__typename" => "User"
+            eventable: {
+              __typename: "User"
             }
           },
           {
-            "user" => {
-              "username" => user.username
+            user: {
+              username: user.username
             },
-            "eventable" => {
-              "__typename" => "User"
+            eventable: {
+              __typename: "User"
             }
           }
         ]

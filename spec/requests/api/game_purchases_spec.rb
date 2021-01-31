@@ -22,11 +22,11 @@ RSpec.describe "GamePurchase API", type: :request do
 
       result = api_request(query_string, variables: { id: game_purchase.id }, token: access_token)
 
-      expect(result["data"]["gamePurchase"]).to eq(
+      expect(result.graphql_dig(:game_purchase)).to eq(
         {
-          "id" => game_purchase.id.to_s,
-          "rating" => game_purchase.rating,
-          "comments" => game_purchase.comments
+          id: game_purchase.id.to_s,
+          rating: game_purchase.rating,
+          comments: game_purchase.comments
         }
       )
     end
@@ -53,7 +53,7 @@ RSpec.describe "GamePurchase API", type: :request do
 
       result = api_request(query_string, variables: { id: game_purchase.id }, token: access_token)
 
-      expect(result["data"]["gamePurchase"]).to eq(nil)
+      expect(result.graphql_dig(:game_purchase)).to eq(nil)
     end
   end
 end

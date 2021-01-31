@@ -33,10 +33,10 @@ RSpec.describe "FollowUser Mutation API", type: :request do
 
       result = api_request(query_string, variables: { id: user2.id }, token: access_token)
 
-      expect(result["data"]["followUser"]["user"]).to eq(
+      expect(result.graphql_dig(:follow_user, :user)).to eq(
         {
-          "id" => user2.id.to_s,
-          "username" => user2.username
+          id: user2.id.to_s,
+          username: user2.username
         }
       )
     end

@@ -22,10 +22,10 @@ RSpec.describe "Engines API", type: :request do
 
       result = api_request(query_string, variables: { id: engine.id }, token: access_token)
 
-      expect(result["data"]["engine"]).to eq(
+      expect(result.graphql_dig(:engine)).to eq(
         {
-          "id" => engine.id.to_s,
-          "name" => engine.name
+          id: engine.id.to_s,
+          name: engine.name
         }
       )
     end
@@ -45,10 +45,10 @@ RSpec.describe "Engines API", type: :request do
 
       result = api_request(query_string, variables: { query: engine.name }, token: access_token)
 
-      expect(result["data"]["engineSearch"]["nodes"]).to eq(
+      expect(result.graphql_dig(:engine_search, :nodes)).to eq(
         [{
-          "id" => engine.id.to_s,
-          "name" => engine.name
+          id: engine.id.to_s,
+          name: engine.name
         }]
       )
     end
@@ -69,15 +69,15 @@ RSpec.describe "Engines API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.to_h["data"]["engines"]["nodes"]).to eq(
+      expect(result.graphql_dig(:engines, :nodes)).to eq(
         [
           {
-            "id" => engine.id.to_s,
-            "name" => engine.name
+            id: engine.id.to_s,
+            name: engine.name
           },
           {
-            "id" => engine2.id.to_s,
-            "name" => engine2.name
+            id: engine2.id.to_s,
+            name: engine2.name
           }
         ]
       )

@@ -22,10 +22,10 @@ RSpec.describe "Companies API", type: :request do
 
       result = api_request(query_string, variables: { id: company.id }, token: access_token)
 
-      expect(result["data"]["company"]).to eq(
+      expect(result.graphql_dig(:company)).to eq(
         {
-          "id" => company.id.to_s,
-          "name" => company.name
+          id: company.id.to_s,
+          name: company.name
         }
       )
     end
@@ -45,10 +45,10 @@ RSpec.describe "Companies API", type: :request do
 
       result = api_request(query_string, variables: { query: company.name }, token: access_token)
 
-      expect(result["data"]["companySearch"]["nodes"]).to eq(
+      expect(result.graphql_dig(:company_search, :nodes)).to eq(
         [{
-          "id" => company.id.to_s,
-          "name" => company.name
+          id: company.id.to_s,
+          name: company.name
         }]
       )
     end
@@ -69,15 +69,15 @@ RSpec.describe "Companies API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result["data"]["companies"]["nodes"]).to eq(
+      expect(result.graphql_dig(:companies, :nodes)).to eq(
         [
           {
-            "id" => company.id.to_s,
-            "name" => company.name
+            id: company.id.to_s,
+            name: company.name
           },
           {
-            "id" => company2.id.to_s,
-            "name" => company2.name
+            id: company2.id.to_s,
+            name: company2.name
           }
         ]
       )
