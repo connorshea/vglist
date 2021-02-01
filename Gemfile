@@ -103,7 +103,7 @@ group :development, :test do
   gem 'rubocop-rails', '~> 2.9', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
-  gem 'database_cleaner', '~> 1.8'
+  gem 'database_cleaner', '~> 2.0'
 
   # Rspec-rails for testing.
   gem 'rspec-rails', '~> 4.0'
