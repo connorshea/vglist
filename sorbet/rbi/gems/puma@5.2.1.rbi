@@ -183,6 +183,8 @@ Puma::Const::WORKER_CHECK_INTERVAL = T.let(T.unsafe(nil), Integer)
 
 Puma::Const::WRITE_TIMEOUT = T.let(T.unsafe(nil), Integer)
 
+Puma::HAS_FORK = T.let(T.unsafe(nil), TrueClass)
+
 Puma::HAS_SSL = T.let(T.unsafe(nil), TrueClass)
 
 class Puma::HttpParser
@@ -199,6 +201,8 @@ end
 
 class Puma::HttpParserError < ::IOError
 end
+
+Puma::IS_MRI = T.let(T.unsafe(nil), TrueClass)
 
 module Puma::JSON
   class << self

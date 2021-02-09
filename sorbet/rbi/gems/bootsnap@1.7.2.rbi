@@ -4,146 +4,25 @@
 
 # typed: true
 
-module ActiveSupport
-  extend(::ActiveSupport::LazyLoadHooks)
-  extend(::ActiveSupport::Autoload)
-
-  def parse_json_times; end
-  def parse_json_times=(val); end
-  def test_order; end
-  def test_order=(val); end
-
-  class << self
-    def eager_load!; end
-    def escape_html_entities_in_json(*_arg0, &_arg1); end
-    def escape_html_entities_in_json=(arg); end
-    def gem_version; end
-    def json_encoder(*_arg0, &_arg1); end
-    def json_encoder=(arg); end
-    def parse_json_times; end
-    def parse_json_times=(val); end
-    def test_order; end
-    def test_order=(val); end
-    def time_precision(*_arg0, &_arg1); end
-    def time_precision=(arg); end
-    def to_time_preserves_timezone; end
-    def to_time_preserves_timezone=(value); end
-    def use_standard_json_time_format(*_arg0, &_arg1); end
-    def use_standard_json_time_format=(arg); end
-    def utc_to_local_returns_utc_offset_times; end
-    def utc_to_local_returns_utc_offset_times=(value); end
-    def version; end
-  end
-end
-
-module ActiveSupport::Dependencies
-  extend(::ActiveSupport::Dependencies)
-  extend(::Bootsnap::LoadPathCache::CoreExt::ActiveSupport::ClassMethods)
-
-  def _eager_load_paths; end
-  def _eager_load_paths=(val); end
-  def autoload_module!(into, const_name, qualified_name, path_suffix); end
-  def autoload_once_paths; end
-  def autoload_once_paths=(val); end
-  def autoload_paths; end
-  def autoload_paths=(val); end
-  def autoloadable_module?(path_suffix); end
-  def autoloaded?(desc); end
-  def autoloaded_constants; end
-  def autoloaded_constants=(val); end
-  def clear; end
-  def constant_watch_stack; end
-  def constant_watch_stack=(val); end
-  def constantize(name); end
-  def depend_on(file_name, message = T.unsafe(nil)); end
-  def explicitly_unloadable_constants; end
-  def explicitly_unloadable_constants=(val); end
-  def history; end
-  def history=(val); end
-  def hook!; end
-  def interlock; end
-  def interlock=(val); end
-  def load?; end
-  def load_file(path, const_paths = T.unsafe(nil)); end
-  def load_missing_constant(from_mod, const_name); end
-  def load_once_path?(path); end
-  def loadable_constants_for_path(path, bases = T.unsafe(nil)); end
-  def loaded; end
-  def loaded=(val); end
-  def loading; end
-  def loading=(val); end
-  def log(message); end
-  def logger; end
-  def logger=(val); end
-  def mark_for_unload(const_desc); end
-  def mechanism; end
-  def mechanism=(val); end
-  def new_constants_in(*descs); end
-  def qualified_const_defined?(path); end
-  def qualified_name_for(mod, name); end
-  def reference(klass); end
-  def remove_constant(const); end
-  def remove_unloadable_constants!; end
-  def require_or_load(file_name, const_path = T.unsafe(nil)); end
-  def safe_constantize(name); end
-  def search_for_file(path_suffix); end
-  def to_constant_name(desc); end
-  def unhook!; end
-  def verbose; end
-  def verbose=(val); end
-  def warnings_on_first_load; end
-  def warnings_on_first_load=(val); end
-  def will_unload?(const_desc); end
-
-  private
-
-  def real_mod_name(mod); end
-  def uninitialized_constant(qualified_name, const_name, receiver:); end
-
-  class << self
-    def _eager_load_paths; end
-    def _eager_load_paths=(val); end
-    def autoload_once_paths; end
-    def autoload_once_paths=(val); end
-    def autoload_paths; end
-    def autoloaded_constants; end
-    def autoloaded_constants=(val); end
-    def constant_watch_stack; end
-    def constant_watch_stack=(val); end
-    def explicitly_unloadable_constants; end
-    def explicitly_unloadable_constants=(val); end
-    def history; end
-    def history=(val); end
-    def interlock; end
-    def interlock=(val); end
-    def load_interlock; end
-    def loaded; end
-    def loaded=(val); end
-    def loading; end
-    def loading=(val); end
-    def logger; end
-    def logger=(val); end
-    def mechanism; end
-    def mechanism=(val); end
-    def run_interlock; end
-    def unload_interlock; end
-    def verbose; end
-    def verbose=(val); end
-    def warnings_on_first_load; end
-    def warnings_on_first_load=(val); end
-  end
-end
-
-ActiveSupport::Dependencies::Reference = T.let(T.unsafe(nil), ActiveSupport::Dependencies::ClassCache)
-
 module Bootsnap
   extend(::Bootsnap)
 
   def bundler?; end
 
+  private
+
+  def instrumentation_enabled=(_arg0); end
+
   class << self
+    def _instrument(event, path); end
+    def default_setup; end
+    def instrumentation=(callback); end
+    def instrumentation_enabled=(_arg0); end
+    def iseq_cache_supported?; end
+    def log!; end
+    def logger; end
+    def logger=(logger); end
     def setup(cache_dir:, development_mode: T.unsafe(nil), load_path_cache: T.unsafe(nil), autoload_paths_cache: T.unsafe(nil), disable_trace: T.unsafe(nil), compile_cache_iseq: T.unsafe(nil), compile_cache_yaml: T.unsafe(nil)); end
-    def setup_disable_trace; end
   end
 end
 
@@ -241,11 +120,10 @@ end
 
 module Bootsnap::LoadPathCache
   class << self
-    def autoload_paths_cache; end
     def load_path_cache; end
     def loaded_features_index; end
     def realpath_cache; end
-    def setup(cache_path:, development_mode:, active_support: T.unsafe(nil)); end
+    def setup(cache_path:, development_mode:); end
     def supported?; end
   end
 end
@@ -323,23 +201,6 @@ module Bootsnap::LoadPathCache::CoreExt
   end
 end
 
-module Bootsnap::LoadPathCache::CoreExt::ActiveSupport
-  class << self
-    def allow_bootsnap_retry(allowed); end
-    def without_bootsnap_cache; end
-  end
-end
-
-module Bootsnap::LoadPathCache::CoreExt::ActiveSupport::ClassMethods
-  def autoload_paths=(o); end
-  def autoloadable_module?(path_suffix); end
-  def depend_on(*_arg0); end
-  def load_missing_constant(from_mod, const_name); end
-  def remove_constant(const); end
-  def require_or_load(*_arg0); end
-  def search_for_file(path); end
-end
-
 Bootsnap::LoadPathCache::DLEXT = T.let(T.unsafe(nil), String)
 
 Bootsnap::LoadPathCache::DL_EXTENSIONS = T.let(T.unsafe(nil), Array)
@@ -396,6 +257,7 @@ Bootsnap::LoadPathCache::Path::VOLATILE = T.let(T.unsafe(nil), Symbol)
 module Bootsnap::LoadPathCache::PathScanner
   class << self
     def call(path); end
+    def os_path(path); end
     def walk(absolute_dir_path, relative_dir_path, &block); end
   end
 end

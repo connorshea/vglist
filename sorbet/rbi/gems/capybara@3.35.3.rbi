@@ -2423,41 +2423,6 @@ end
 class Capybara::WindowError < ::Capybara::CapybaraError
 end
 
-module Puma::MiniSSL
-  class << self
-    def check; end
-  end
-end
-
-class Puma::MiniSSL::Engine
-  def extract; end
-  def init?; end
-  def inject(_arg0); end
-  def peercert; end
-  def read; end
-  def shutdown; end
-  def ssl_vers_st; end
-  def write(_arg0); end
-
-  class << self
-    def client; end
-    def server(_arg0); end
-  end
-end
-
-Puma::MiniSSL::OPENSSL_LIBRARY_VERSION = T.let(T.unsafe(nil), String)
-
-Puma::MiniSSL::OPENSSL_NO_SSL3 = T.let(T.unsafe(nil), TrueClass)
-
-Puma::MiniSSL::OPENSSL_VERSION = T.let(T.unsafe(nil), String)
-
-class Puma::MiniSSL::SSLContext
-  def initialize(_arg0); end
-end
-
-class Puma::MiniSSL::SSLError < ::StandardError
-end
-
 module XPath
   include(::XPath::DSL)
   extend(::XPath::DSL)
