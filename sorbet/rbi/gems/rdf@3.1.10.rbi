@@ -172,29 +172,37 @@ module RDF::Enumerable
   def enum_terms(*args, &block); end
   def enum_triple; end
   def enum_triples(*args, &block); end
+  def graph?(graph_name); end
   def graph_names(unique: T.unsafe(nil)); end
-  def has_graph?(graph_name); end
-  def has_object?(value); end
-  def has_predicate?(value); end
-  def has_quad?(quad); end
-  def has_statement?(statement); end
-  def has_subject?(value); end
-  def has_term?(value); end
-  def has_triple?(triple); end
+  def has_graph?(*args, &block); end
+  def has_object?(*args, &block); end
+  def has_predicate?(*args, &block); end
+  def has_quad?(*args, &block); end
+  def has_statement?(*args, &block); end
+  def has_subject?(*args, &block); end
+  def has_term?(*args, &block); end
+  def has_triple?(*args, &block); end
   def include?(*args, &block); end
   def invalid?; end
+  def object?(value); end
   def objects(unique: T.unsafe(nil)); end
+  def predicate?(value); end
   def predicates(unique: T.unsafe(nil)); end
   def project_graph(graph_name); end
+  def quad?(quad); end
   def quads(**options); end
+  def statement?(statement = T.unsafe(nil)); end
   def statements(**options); end
+  def subject?(value); end
   def subjects(unique: T.unsafe(nil)); end
   def supports?(feature); end
+  def term?(value = T.unsafe(nil)); end
   def terms(unique: T.unsafe(nil)); end
   def to_a; end
   def to_enum(*args, &block); end
   def to_h; end
   def to_set; end
+  def triple?(triple); end
   def triples(**options); end
   def valid?; end
   def validate(*args, &block); end
@@ -280,7 +288,7 @@ class RDF::Graph
   def graph_name=(_arg0); end
   def graph_names(unique: T.unsafe(nil)); end
   def graphs; end
-  def has_statement?(statement); end
+  def has_statement?(statement = T.unsafe(nil)); end
   def insert_statements(statements); end
   def load!(*args); end
   def name; end
@@ -288,6 +296,7 @@ class RDF::Graph
   def named?; end
   def options; end
   def project_graph(graph_name, &block); end
+  def statement?(statement = T.unsafe(nil)); end
   def to_s; end
   def to_uri; end
   def unnamed?; end
@@ -482,8 +491,10 @@ class RDF::Literal::Date < ::RDF::Literal
   def has_timezone?; end
   def has_tz?; end
   def humanize(lang = T.unsafe(nil)); end
+  def timezone?; end
   def to_s; end
   def tz; end
+  def tz?; end
   def valid?; end
 end
 
@@ -503,9 +514,13 @@ class RDF::Literal::DateTime < ::RDF::Literal
   def has_timezone?; end
   def has_tz?; end
   def humanize(lang = T.unsafe(nil)); end
+  def milliseconds?; end
+  def ms?; end
   def timezone; end
+  def timezone?; end
   def to_s; end
   def tz; end
+  def tz?; end
   def valid?; end
 end
 
@@ -610,8 +625,10 @@ class RDF::Literal::Time < ::RDF::Literal
   def has_timezone?; end
   def has_tz?; end
   def humanize(lang = T.unsafe(nil)); end
+  def timezone?; end
   def to_s; end
   def tz; end
+  def tz?; end
   def valid?; end
 end
 
@@ -1090,6 +1107,8 @@ class RDF::Query::Solution
   def to_a; end
   def to_h; end
   def unbound?(name); end
+  def variable?(variables); end
+  def variables?(variables); end
 
   protected
 
@@ -1127,7 +1146,9 @@ class RDF::Query::Solutions < ::Array
   def reduced; end
   def reduced!; end
   def select(*variables); end
+  def variable?(variables); end
   def variable_names; end
+  def variables?(variables); end
 end
 
 class RDF::Query::Variable
@@ -1170,7 +1191,7 @@ end
 module RDF::Queryable
   include(::Enumerable)
 
-  def concise_bounded_description(*terms, &block); end
+  def concise_bounded_description(*terms, **options, &block); end
   def enum_for(method = T.unsafe(nil), *args); end
   def first(pattern = T.unsafe(nil)); end
   def first_literal(pattern = T.unsafe(nil)); end
@@ -1364,11 +1385,13 @@ module RDF::Repository::Implementation
   def each(&block); end
   def each_graph(&block); end
   def each_statement(&block); end
+  def graph?(graph); end
   def graph_names(options = T.unsafe(nil), &block); end
   def has_graph?(graph); end
-  def has_statement?(statement); end
+  def has_statement?(statement = T.unsafe(nil)); end
   def isolation_level; end
   def snapshot; end
+  def statement?(statement = T.unsafe(nil)); end
   def supports?(feature); end
 
   protected
@@ -1385,6 +1408,7 @@ module RDF::Repository::Implementation
   def delete_from(data, statement); end
   def has_statement_in?(data, statement); end
   def insert_to(data, statement); end
+  def statement_in?(data, statement); end
 
   class << self
     def extend_object(obj); end
@@ -1431,6 +1455,7 @@ class RDF::Statement
   def complete?; end
   def embedded?; end
   def eql?(other); end
+  def graph?; end
   def graph_name; end
   def graph_name=(_arg0); end
   def has_blank_nodes?; end
@@ -1446,18 +1471,23 @@ class RDF::Statement
   def inferred?; end
   def initialize!; end
   def invalid?; end
+  def name?; end
   def node?; end
   def object; end
   def object=(_arg0); end
+  def object?; end
   def options; end
   def options=(_arg0); end
   def predicate; end
   def predicate=(_arg0); end
+  def predicate?; end
   def quoted?; end
   def reified(subject: T.unsafe(nil), id: T.unsafe(nil), graph_name: T.unsafe(nil)); end
   def statement?; end
   def subject; end
   def subject=(_arg0); end
+  def subject?; end
+  def terms; end
   def to_a; end
   def to_h(subject_key = T.unsafe(nil), predicate_key = T.unsafe(nil), object_key = T.unsafe(nil), graph_key = T.unsafe(nil)); end
   def to_quad; end
@@ -1488,6 +1518,7 @@ module RDF::Term
   def compatible?(other); end
   def eql?(other); end
   def term?; end
+  def terms; end
   def to_base; end
   def to_term; end
 
@@ -1523,7 +1554,7 @@ class RDF::Transaction
   def each(*args, &block); end
   def execute; end
   def graph_name; end
-  def has_statement?(statement); end
+  def has_statement?(statement = T.unsafe(nil)); end
   def inspect; end
   def inspect!; end
   def isolation_level; end
@@ -1533,6 +1564,7 @@ class RDF::Transaction
   def readable?; end
   def repository; end
   def rollback; end
+  def statement?(statement = T.unsafe(nil)); end
   def writable?; end
 
   protected
@@ -1609,6 +1641,7 @@ class RDF::URI
   def normalized_userinfo; end
   def object; end
   def parent; end
+  def parent?; end
   def parse(value); end
   def password; end
   def password=(value); end
@@ -1761,6 +1794,7 @@ class RDF::Util::Cache
   def initialize(capacity = T.unsafe(nil)); end
 
   def capacity; end
+  def capacity?; end
   def has_capacity?; end
   def size; end
 
@@ -1895,6 +1929,7 @@ class RDF::Util::Logger::IOWrapper
   def checking_message(*args, &block); end
   def chunk(*args, &block); end
   def chunk_while(*args, &block); end
+  def class_eval(*args, &block); end
   def clear_screen(*args, &block); end
   def close(*args, &block); end
   def close_on_exec=(*args, &block); end
