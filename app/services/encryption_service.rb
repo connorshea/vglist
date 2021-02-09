@@ -7,10 +7,17 @@
 class EncryptionService
   extend T::Sig
 
+  # Only define the fallbacks in development, otherwise leave them unset.
+  FALLBACK_KEY = T.let(Rails.env.development? ? 'foo' : nil, T.nilable(String))
+  FALLBACK_SALT = T.let(Rails.env.development? ? 'bar' : nil, T.nilable(String))
+
+  # Use the fallback key if no credentials.yml exists. Will work for
+  # development and fail in production. We don't want to use the fallback in
+  # production because that'd be insecure.
   KEY = T.let(ActiveSupport::KeyGenerator.new(
-    Rails.application.credentials.secret_key_base
+    Rails.application.credentials.fetch(:secret_key_base, FALLBACK_KEY)
   ).generate_key(
-    Rails.application.credentials.encryption_service_salt,
+    Rails.application.credentials.fetch(:encryption_service_salt, FALLBACK_SALT),
     ActiveSupport::MessageEncryptor.key_len
   ).freeze, String)
 
