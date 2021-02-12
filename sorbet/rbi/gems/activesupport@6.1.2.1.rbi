@@ -659,7 +659,6 @@ end
 
 module ActiveSupport::Dependencies
   extend(::ActiveSupport::Dependencies)
-  extend(::Bootsnap::LoadPathCache::CoreExt::ActiveSupport::ClassMethods)
 
   def _eager_load_paths; end
   def _eager_load_paths=(val); end
@@ -727,6 +726,7 @@ module ActiveSupport::Dependencies
     def autoload_once_paths; end
     def autoload_once_paths=(val); end
     def autoload_paths; end
+    def autoload_paths=(val); end
     def autoloaded_constants; end
     def autoloaded_constants=(val); end
     def constant_watch_stack; end
@@ -1777,6 +1777,10 @@ module ActiveSupport::LoggerThreadSafeLevel
   def warn?; end
 end
 
+module ActiveSupport::MarshalWithAutoloading
+  def load(source, proc = T.unsafe(nil)); end
+end
+
 class ActiveSupport::MessageEncryptor
   include(::ActiveSupport::Messages::Rotator)
   include(::ActiveSupport::Messages::Rotator::Encryptor)
@@ -2272,6 +2276,10 @@ class ActiveSupport::NumberHelper::RoundingHelper
   def absolute_precision(number); end
   def convert_to_decimal(number); end
   def significant; end
+end
+
+module ActiveSupport::NumericWithFormat
+  def to_s(format = T.unsafe(nil), options = T.unsafe(nil)); end
 end
 
 class ActiveSupport::OptionMerger
@@ -3033,6 +3041,8 @@ ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
+
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActiveSupport::VERSION::TINY = T.let(T.unsafe(nil), Integer)
@@ -3118,10 +3128,6 @@ end
 
 ActiveSupport::XmlMini_REXML::CONTENT_KEY = T.let(T.unsafe(nil), String)
 
-module ActiveSupport::MarshalWithAutoloading
-  def load(source, proc = T.unsafe(nil)); end
-end
-
 class Array
   include(::Enumerable)
   include(::JSON::Ext::Generator::GeneratorMethods::Array)
@@ -3163,6 +3169,7 @@ end
 
 class BigDecimal < ::Numeric
   include(::ActiveSupport::BigDecimalWithDefaultFormat)
+  include(::ActiveSupport::NumericWithFormat)
 
   def as_json(options = T.unsafe(nil)); end
 end
@@ -3468,6 +3475,7 @@ class FalseClass
 end
 
 class Float < ::Numeric
+  include(::ActiveSupport::NumericWithFormat)
   include(::JSON::Ext::Generator::GeneratorMethods::Float)
   include(::MessagePack::CoreExt)
 
@@ -3592,11 +3600,15 @@ class IPAddr
 end
 
 class Integer < ::Numeric
+  include(::ActiveSupport::NumericWithFormat)
   include(::JSON::Ext::Generator::GeneratorMethods::Integer)
   include(::MessagePack::CoreExt)
 
   def month; end
   def months; end
+  def multiple_of?(number); end
+  def ordinal; end
+  def ordinalize; end
   def year; end
   def years; end
 end
@@ -3604,15 +3616,18 @@ end
 Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
 
 module Kernel
+  def class_eval(*args, &block); end
 
   private
 
+  def concern(topic, &module_definition); end
   def enable_warnings; end
   def silence_warnings; end
   def suppress(*exception_classes); end
   def with_warnings(flag); end
 
   class << self
+    def concern(topic, &module_definition); end
     def enable_warnings; end
     def silence_warnings; end
     def suppress(*exception_classes); end
@@ -3841,13 +3856,26 @@ class Regexp::Token < ::Struct
   end
 end
 
+module SecureRandom
+  extend(::Random::Formatter)
+
+  class << self
+    def base36(n = T.unsafe(nil)); end
+    def base58(n = T.unsafe(nil)); end
+  end
+end
+
+SecureRandom::BASE36_ALPHABET = T.let(T.unsafe(nil), Array)
+
+SecureRandom::BASE58_ALPHABET = T.let(T.unsafe(nil), Array)
+
 class String
   include(::Comparable)
-  include(::JSON::Ext::Generator::GeneratorMethods::String)
   include(::Colorize::InstanceMethods)
+  include(::JSON::Ext::Generator::GeneratorMethods::String)
   include(::MessagePack::CoreExt)
-  extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
   extend(::Colorize::ClassMethods)
+  extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
 
   def acts_like_string?; end
   def as_json(options = T.unsafe(nil)); end
@@ -3985,8 +4013,8 @@ class Time
 
   class << self
     def ===(other); end
-    def at(*args); end
-    def at_with_coercion(*args); end
+    def at(*args, **kwargs); end
+    def at_with_coercion(*args, **kwargs); end
     def current; end
     def days_in_month(month, year = T.unsafe(nil)); end
     def days_in_year(year = T.unsafe(nil)); end

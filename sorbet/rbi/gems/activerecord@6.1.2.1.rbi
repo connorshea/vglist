@@ -71,10 +71,12 @@ class ActiveRecord::AssociationRelation < ::ActiveRecord::Relation
   def initialize(klass, association, **_arg2); end
 
   def ==(other); end
+  def build(attributes = T.unsafe(nil), &block); end
   def insert(attributes, **kwargs); end
   def insert!(attributes, **kwargs); end
   def insert_all(attributes, **kwargs); end
   def insert_all!(attributes, **kwargs); end
+  def new(attributes = T.unsafe(nil), &block); end
   def proxy_association; end
   def upsert(attributes, **kwargs); end
   def upsert_all(attributes, **kwargs); end
@@ -262,6 +264,7 @@ class ActiveRecord::Associations::Builder::Association
 
     private
 
+    def add_after_commit_jobs_callback(model, dependent); end
     def add_destroy_callbacks(model, reflection); end
     def build_scope(scope); end
     def check_dependent_options(dependent, model); end
@@ -1275,6 +1278,7 @@ class ActiveRecord::Base
   include(::Kaminari::ActiveRecordExtension)
   include(::ActiveStorageValidations)
   include(::FriendlyId::UnfriendlyUtils)
+  include(::PaperTrail::Model)
   extend(::ActiveModel::Naming)
   extend(::ActiveSupport::Benchmarkable)
   extend(::ActiveSupport::DescendantsTracker)
@@ -1331,6 +1335,7 @@ class ActiveRecord::Base
   extend(::ActiveRecord::Suppressor::ClassMethods)
   extend(::OrmAdapter::ToAdapter)
   extend(::Kaminari::ActiveRecordExtension::ClassMethods)
+  extend(::PaperTrail::Model::ClassMethods)
   extend(::Devise::Models)
 
   def __callbacks; end
@@ -1472,7 +1477,6 @@ class ActiveRecord::Base
     def _validators; end
     def _validators=(value); end
     def _validators?; end
-    def abstract_base_class; end
     def action_on_strict_loading_violation; end
     def action_on_strict_loading_violation=(val); end
     def after_create(*args, **options, &block); end
@@ -1519,6 +1523,10 @@ class ActiveRecord::Base
     def configurations; end
     def configurations=(config); end
     def connected_to_stack; end
+    def connection_class; end
+    def connection_class=(b); end
+    def connection_class?; end
+    def connection_classes; end
     def connection_handler; end
     def connection_handler=(handler); end
     def connection_handlers; end
@@ -1616,7 +1624,7 @@ class ActiveRecord::Base
     def strict_loading_by_default; end
     def strict_loading_by_default=(value); end
     def strict_loading_by_default?; end
-    def strict_loading_violation!(owner:, association:); end
+    def strict_loading_violation!(owner:, reflection:); end
     def suppress_multiple_database_warning; end
     def suppress_multiple_database_warning=(val); end
     def table_name_prefix; end
@@ -1786,6 +1794,8 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def check_version; end
   def clear_cache!; end
   def close; end
+  def connection_klass; end
+  def create(*_arg0); end
   def database_version; end
   def default_index_type?(index); end
   def default_uniqueness_comparison(attribute, value); end
@@ -1809,7 +1819,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def migration_context; end
   def migrations_paths; end
   def owner; end
-  def owner_name; end
   def pool; end
   def pool=(_arg0); end
   def prefetch_primary_key?(table_name = T.unsafe(nil)); end
@@ -2012,6 +2021,7 @@ class ActiveRecord::ConnectionAdapters::Column
 end
 
 class ActiveRecord::ConnectionAdapters::ColumnDefinition < ::Struct
+  def aliased_types(name, fallback); end
   def collation; end
   def collation=(value); end
   def comment; end
@@ -2091,6 +2101,7 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   def clear_reloadable_connections!; end
   def connected?; end
   def connection; end
+  def connection_klass; end
   def connections; end
   def db_config; end
   def discard!; end
@@ -2101,7 +2112,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   def flush!; end
   def lock_thread=(lock_thread); end
   def num_waiting_in_queue; end
-  def owner_name; end
   def pool_config; end
   def reap; end
   def reaper; end
@@ -2343,7 +2353,7 @@ end
 class ActiveRecord::ConnectionAdapters::NullPool
   include(::ActiveRecord::ConnectionAdapters::AbstractPool)
 
-  def owner_name; end
+  def connection_klass; end
   def schema_cache; end
   def schema_cache=(_arg0); end
 end
@@ -2361,8 +2371,9 @@ end
 class ActiveRecord::ConnectionAdapters::PoolConfig
   include(::Mutex_m)
 
-  def initialize(connection_specification_name, db_config); end
+  def initialize(connection_klass, db_config); end
 
+  def connection_klass; end
   def connection_specification_name; end
   def db_config; end
   def discard_pool!; end
@@ -2752,7 +2763,7 @@ module ActiveRecord::ConnectionHandling
   def connected?; end
   def connected_to(database: T.unsafe(nil), role: T.unsafe(nil), shard: T.unsafe(nil), prevent_writes: T.unsafe(nil), &blk); end
   def connected_to?(role:, shard: T.unsafe(nil)); end
-  def connected_to_many(classes, role:, shard: T.unsafe(nil), prevent_writes: T.unsafe(nil)); end
+  def connected_to_many(*classes, role:, shard: T.unsafe(nil), prevent_writes: T.unsafe(nil)); end
   def connecting_to(role: T.unsafe(nil), shard: T.unsafe(nil), prevent_writes: T.unsafe(nil)); end
   def connection; end
   def connection_config(*args, &block); end
@@ -3684,6 +3695,7 @@ module ActiveRecord::Locking::Optimistic
   private
 
   def _create_record(attribute_names = T.unsafe(nil)); end
+  def _lock_value_for_database(locking_column); end
   def _touch_row(attribute_names, time); end
   def _update_row(attribute_names, attempted_action = T.unsafe(nil)); end
   def destroy_row; end
@@ -6321,6 +6333,8 @@ end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+
+ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 

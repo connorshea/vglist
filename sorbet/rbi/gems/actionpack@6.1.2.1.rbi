@@ -336,6 +336,7 @@ class ActionController::API < ::ActionController::Metal
   include(::ActionController::Instrumentation)
   include(::ActionController::ParamsWrapper)
   include(::ActionController::RespondWith)
+  include(::PaperTrail::Rails::Controller)
   extend(::ActionView::ViewPaths::ClassMethods)
   extend(::AbstractController::UrlFor::ClassMethods)
   extend(::ActionController::Rendering::ClassMethods)
@@ -481,6 +482,7 @@ class ActionController::Base < ::ActionController::Metal
   include(::ActionController::Instrumentation)
   include(::ActionController::ParamsWrapper)
   include(::ActionController::RespondWith)
+  include(::PaperTrail::Rails::Controller)
   extend(::ActionView::ViewPaths::ClassMethods)
   extend(::AbstractController::Helpers::ClassMethods)
   extend(::ActionController::Helpers::ClassMethods)
@@ -5193,6 +5195,8 @@ end
 ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+
+ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 

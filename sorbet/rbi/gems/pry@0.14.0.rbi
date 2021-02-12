@@ -5,18 +5,17 @@
 # typed: true
 
 class BasicObject
-  extend(::ActiveSupport::Dependencies::ModuleConstMissing)
-  extend(::Module::Concerning)
-
   def __binding__; end
 end
 
 class Object < ::BasicObject
   include(::ActiveSupport::ToJsonWithActiveSupportEncoder)
+  include(::ActiveSupport::ForkTracker::CoreExt)
+  include(::ActiveSupport::ForkTracker::CoreExtPrivate)
   include(::Kernel)
   include(::JSON::Ext::Generator::GeneratorMethods::Object)
-  include(::ActiveSupport::Dependencies::Loadable)
   include(::ActiveSupport::Tryable)
+  include(::ActiveSupport::Dependencies::Loadable)
   include(::FriendlyId::ObjectUtils)
   include(::PP::ObjectMixin)
   include(::MakeMakefile)
@@ -161,12 +160,10 @@ class Pry
     def load_file_at_toplevel(file); end
     def load_file_through_repl(file_name); end
     def load_history; end
-    def load_plugins(*args, &block); end
     def load_rc_files; end
     def load_requires; end
     def load_traps; end
     def load_win32console; end
-    def locate_plugins(*args, &block); end
     def main; end
     def memory_size(*args, &block); end
     def memory_size=(*args, &block); end
@@ -174,7 +171,6 @@ class Pry
     def output=(*args, &block); end
     def pager(*args, &block); end
     def pager=(*args, &block); end
-    def plugins(*args, &block); end
     def print(*args, &block); end
     def print=(*args, &block); end
     def prompt(*args, &block); end
@@ -219,7 +215,6 @@ class Pry::CLI
   class << self
     def add_option_processor(&block); end
     def add_options(&block); end
-    def add_plugin_options; end
     def input_args; end
     def input_args=(_arg0); end
     def option_processors; end
@@ -1355,8 +1350,6 @@ class Pry::Config
   def requires=(_arg0); end
   def should_load_local_rc; end
   def should_load_local_rc=(_arg0); end
-  def should_load_plugins; end
-  def should_load_plugins=(_arg0); end
   def should_load_rc; end
   def should_load_rc=(_arg0); end
   def should_load_requires; end
@@ -1461,8 +1454,6 @@ module Pry::FrozenObjectException
     def ===(exception); end
   end
 end
-
-Pry::HAS_SAFE_LEVEL = T.let(T.unsafe(nil), TrueClass)
 
 module Pry::Helpers
   class << self
@@ -2219,53 +2210,6 @@ class Pry::Pager::SystemPager < ::Pry::Pager::NullPager
   end
 end
 
-class Pry::PluginManager
-  def initialize; end
-
-  def load_plugins; end
-  def locate_plugins; end
-  def plugins; end
-
-  private
-
-  def gem_list; end
-  def plugin_located?(plugin); end
-end
-
-class Pry::PluginManager::NoPlugin
-  def initialize(name); end
-
-  def method_missing(*_arg0); end
-
-  private
-
-  def respond_to_missing?(*_arg0); end
-end
-
-Pry::PluginManager::PRY_PLUGIN_PREFIX = T.let(T.unsafe(nil), Regexp)
-
-class Pry::PluginManager::Plugin
-  def initialize(name, gem_name, spec, enabled); end
-
-  def activate!; end
-  def active; end
-  def active=(_arg0); end
-  def active?; end
-  def disable!; end
-  def enable!; end
-  def enabled; end
-  def enabled=(_arg0); end
-  def enabled?; end
-  def gem_name; end
-  def gem_name=(_arg0); end
-  def load_cli_options; end
-  def name; end
-  def name=(_arg0); end
-  def spec; end
-  def spec=(_arg0); end
-  def supported?; end
-end
-
 class Pry::Prompt
   def initialize(name, description, prompt_procs); end
 
@@ -2463,31 +2407,19 @@ class Pry::Slop::Option
   def initialize(slop, short, long, description, config = T.unsafe(nil), &block); end
 
   def accepts_optional_argument?; end
-  def argument?; end
   def argument_in_value; end
   def argument_in_value=(_arg0); end
-  def as?; end
-  def autocreated?; end
   def call(*objects); end
-  def callback?; end
   def config; end
   def count; end
   def count=(_arg0); end
-  def default?; end
-  def delimiter?; end
   def description; end
   def expects_argument?; end
   def help; end
   def inspect; end
   def key; end
-  def limit?; end
   def long; end
-  def match?; end
-  def optional?; end
-  def optional_argument?; end
-  def required?; end
   def short; end
-  def tail?; end
   def to_s; end
   def types; end
   def value; end

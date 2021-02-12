@@ -6,6 +6,7 @@
 
 module GraphQL
   class << self
+    def const_missing(const_name); end
     def default_parser; end
     def default_parser=(_arg0); end
     def parse(graphql_string, tracer: T.unsafe(nil)); end
@@ -16,13 +17,15 @@ module GraphQL
   end
 end
 
-GraphQL::BOOLEAN_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+GraphQL::DEPRECATED_BOOLEAN_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 
-GraphQL::FLOAT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+GraphQL::DEPRECATED_FLOAT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 
-GraphQL::ID_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+GraphQL::DEPRECATED_ID_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 
-GraphQL::INT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+GraphQL::DEPRECATED_INT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
+
+GraphQL::DEPRECATED_STRING_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 
 module GraphQL::RailsLogger
   class << self
@@ -48,10 +51,13 @@ end
 
 class GraphQL::RailsLogger::Subscriber < ::ActionController::LogSubscriber
   def start_processing(event); end
+
+  private
+
+  def indent(data); end
+  def pretty(data); end
 end
 
 GraphQL::RailsLogger::VERSION = T.let(T.unsafe(nil), String)
-
-GraphQL::STRING_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 
 GraphQL::VERSION = T.let(T.unsafe(nil), String)

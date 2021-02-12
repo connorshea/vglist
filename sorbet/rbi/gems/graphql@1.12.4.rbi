@@ -652,22 +652,16 @@ GraphQL::DEPRECATED_INT_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 GraphQL::DEPRECATED_STRING_TYPE = T.let(T.unsafe(nil), GraphQL::ScalarType)
 
 class GraphQL::Dataloader
-  def initialize(multiplex_context); end
+  def initialize; end
 
-  def context; end
-  def current_runtime; end
-  def current_runtime=(_arg0); end
-  def enqueue(&block); end
+  def append_job(&job); end
   def run; end
   def with(source_class, *batch_parameters); end
   def yield; end
-  def yielded?(path); end
-  def yielded_fibers; end
 
   private
 
   def create_source_fiber; end
-  def resume_fiber_and_enqueue_continuation(fiber, fiber_stack); end
 
   class << self
     def use(schema); end
@@ -675,10 +669,9 @@ class GraphQL::Dataloader
 end
 
 class GraphQL::Dataloader::NullDataloader < ::GraphQL::Dataloader
-  def enqueue; end
+  def append_job; end
   def run; end
   def yield; end
-  def yielded?(_path); end
 end
 
 class GraphQL::Dataloader::Request
@@ -701,10 +694,13 @@ class GraphQL::Dataloader::Source
   def pending?; end
   def request(key); end
   def request_all(keys); end
-  def results; end
   def run_pending_keys; end
   def setup(dataloader); end
   def sync; end
+
+  private
+
+  def result_for(key); end
 end
 
 module GraphQL::Define
@@ -1150,11 +1146,12 @@ GraphQL::Execution::Interpreter::Arguments::NO_ARGS = T.let(T.unsafe(nil), Hash)
 class GraphQL::Execution::Interpreter::ArgumentsCache
   def initialize(query); end
 
+  def dataload_for(ast_node, argument_owner, parent_object, &block); end
   def fetch(ast_node, argument_owner, parent_object); end
 
-  private
-
-  def prepare_args_hash(ast_arg_or_hash_or_value); end
+  class << self
+    def prepare_args_hash(query, ast_arg_or_hash_or_value); end
+  end
 end
 
 GraphQL::Execution::Interpreter::ArgumentsCache::NO_ARGUMENTS = T.let(T.unsafe(nil), Hash)
@@ -1187,8 +1184,8 @@ end
 
 module GraphQL::Execution::Interpreter::Resolve
   class << self
-    def resolve(results); end
-    def resolve_all(results); end
+    def resolve(results, dataloader); end
+    def resolve_all(results, dataloader); end
   end
 end
 
@@ -1205,9 +1202,9 @@ class GraphQL::Execution::Interpreter::Runtime
   def dead_path?(path); end
   def delete_interpreter_context(key); end
   def directives_include?(node, graphql_object, parent_type); end
-  def enqueue_selections_fiber; end
   def evaluate_selection(path, result_name, field_ast_nodes_or_ast_node, scoped_context, owner_object, owner_type, is_eager_field); end
-  def evaluate_selections(path, scoped_context, owner_object, owner_type, is_eager_selection:, gathered_selections:, after:); end
+  def evaluate_selection_with_args(kwarg_arguments, field_defn, next_path, ast_node, field_ast_nodes, scoped_context, owner_type, object, is_eager_field); end
+  def evaluate_selections(path, scoped_context, owner_object, owner_type, is_eager_selection, gathered_selections); end
   def final_value; end
   def gather_selections(owner_object, owner_type, selections, selections_by_name = T.unsafe(nil)); end
   def inspect; end
@@ -1349,12 +1346,12 @@ class GraphQL::Execution::Multiplex
   def schema; end
 
   class << self
+    def begin_query(results, idx, query, multiplex); end
     def run_all(schema, query_options, **kwargs); end
     def run_queries(schema, queries, context: T.unsafe(nil), max_complexity: T.unsafe(nil)); end
 
     private
 
-    def begin_query(query, multiplex); end
     def finish_query(data_result, query, multiplex); end
     def instrument_and_analyze(multiplex); end
     def run_as_multiplex(multiplex); end
@@ -3153,6 +3150,7 @@ class GraphQL::Query
   def analysis_errors; end
   def analysis_errors=(_arg0); end
   def analyzers(*args, &block); end
+  def arguments_cache; end
   def arguments_for(ast_node, definition, parent_object: T.unsafe(nil)); end
   def ast_analyzers(*args, &block); end
   def context; end
@@ -3426,6 +3424,7 @@ class GraphQL::Query::NullContext
   def initialize; end
 
   def [](key); end
+  def dataloader; end
   def interpreter?; end
   def query; end
   def schema; end
@@ -3433,6 +3432,7 @@ class GraphQL::Query::NullContext
 
   class << self
     def [](key); end
+    def dataloader(*args, &block); end
     def instance; end
     def interpreter?(*args, &block); end
     def query(*args, &block); end
@@ -4123,6 +4123,7 @@ class GraphQL::Schema::Argument
   def accessible?(context); end
   def authorized?(obj, value, ctx); end
   def authorized_as_type?(obj, value, ctx, as_type:); end
+  def coerce_into_values(parent_object, values, context, argument_values); end
   def default_value; end
   def default_value?; end
   def deprecation_reason(text = T.unsafe(nil)); end
@@ -4407,6 +4408,7 @@ class GraphQL::Schema::Field
   def fetch_extra(extra_name, ctx); end
   def graphql_name; end
   def has_max_page_size?; end
+  def inspect; end
   def introspection?; end
   def max_page_size; end
   def method_conflict_warning?; end
@@ -4808,7 +4810,7 @@ module GraphQL::Schema::Member::HasArguments
   def argument_class(new_arg_class = T.unsafe(nil)); end
   def arguments; end
   def arguments_statically_coercible?; end
-  def coerce_arguments(parent_object, values, context); end
+  def coerce_arguments(parent_object, values, context, &block); end
   def get_argument(argument_name); end
   def own_arguments; end
   def validate_directive_argument(arg_defn, value); end

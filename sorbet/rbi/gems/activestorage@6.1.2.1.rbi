@@ -775,6 +775,8 @@ ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
+ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
+
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActiveStorage::VERSION::TINY = T.let(T.unsafe(nil), Integer)

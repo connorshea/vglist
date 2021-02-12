@@ -150,7 +150,7 @@ group :development do
   gem 'dotenv-rails', '~> 2.7'
   # Tapioca for generating Sorbet RBI files.
   # Use a fork to fix this issue: https://github.com/Shopify/tapioca/issues/208
-  gem 'tapioca', git: 'https://github.com/connorshea/tapioca', branch: 'fix-issue-with-tapioca-optional-deps', require: false
+  gem 'tapioca', '~> 0.4.14'
 end
 
 group :test do

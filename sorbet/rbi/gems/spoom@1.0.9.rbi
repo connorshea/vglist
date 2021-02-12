@@ -19,8 +19,9 @@ class Spoom::Cli::Bump < ::Thor
 
   sig { params(directory: String).void }
   def bump(directory = T.unsafe(nil)); end
+  def config_files(path: T.unsafe(nil)); end
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
-  def print_changes(files, from: T.unsafe(nil), to: T.unsafe(nil), dry: T.unsafe(nil), path: T.unsafe(nil)); end
+  def print_changes(files, command:, from: T.unsafe(nil), to: T.unsafe(nil), dry: T.unsafe(nil), path: T.unsafe(nil)); end
   def undo_changes(files, from_strictness); end
 end
 
@@ -49,21 +50,39 @@ Spoom::Cli::Coverage::DATA_DIR = T.let(T.unsafe(nil), String)
 module Spoom::Cli::Helper
   include(::Thor::Shell)
 
+  sig { params(string: String).returns(String) }
+  def blue(string); end
   sig { returns(T::Boolean) }
   def color?; end
   sig { params(string: String, color: Symbol).returns(String) }
   def colorize(string, color); end
   sig { returns(String) }
   def exec_path; end
+  sig { params(string: String).returns(String) }
+  def gray(string); end
+  sig { params(string: String).returns(String) }
+  def green(string); end
+  sig { params(string: String).returns(String) }
+  def highlight(string); end
   sig { void }
   def in_sorbet_project!; end
   sig { returns(T::Boolean) }
   def in_sorbet_project?; end
-  sig { params(message: String, status: String).void }
-  def say_error(message, status = T.unsafe(nil)); end
-  sig { returns(String) }
+  sig { params(string: String).returns(String) }
+  def red(string); end
+  sig { params(message: String).void }
+  def say(message); end
+  sig { params(message: String, status: T.nilable(String), nl: T::Boolean).void }
+  def say_error(message, status: T.unsafe(nil), nl: T.unsafe(nil)); end
+  sig { returns(Spoom::Sorbet::Config) }
   def sorbet_config; end
+  sig { returns(String) }
+  def sorbet_config_file; end
+  sig { params(string: String).returns(String) }
+  def yellow(string); end
 end
+
+Spoom::Cli::Helper::HIGHLIGHT_COLOR = T.let(T.unsafe(nil), Symbol)
 
 class Spoom::Cli::LSP < ::Thor
   include(::Spoom::Cli::Helper)
