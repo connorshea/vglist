@@ -64,6 +64,32 @@ RSpec.describe "Users API", type: :request do
       )
     end
 
+    it "returns basic data for user when searching by slug" do
+      query_string = <<-GRAPHQL
+        query($slug: String!) {
+          user(slug: $slug) {
+            id
+            username
+            role
+            privacy
+            avatarUrl
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { slug: user.slug }, token: access_token)
+
+      expect(result.graphql_dig(:user)).to eq(
+        {
+          id: user.id.to_s,
+          username: user.username,
+          role: user.role.upcase,
+          privacy: user.privacy.upcase,
+          avatarUrl: nil
+        }
+      )
+    end
+
     it "returns an error if the query uses both an id and username" do
       query_string = <<-GRAPHQL
         query($id: ID!, $username: String!) {
