@@ -34,7 +34,7 @@ RSpec.describe Event, type: :model do
     let(:user) { create(:confirmed_user) }
     let(:game) { create(:game) }
     let(:game_purchase) { create(:game_purchase, game: game) }
-    let(:game_purchase_event) { create(:game_purchase_event, user: user, eventable: game_purchase) }
+    let(:game_purchase_event) { create(:add_to_library_event, user: user, eventable: game_purchase) }
 
     it 'GamePurchase should not be deleted when Event is deleted' do
       game_purchase_event
