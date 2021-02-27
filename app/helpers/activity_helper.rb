@@ -23,8 +23,6 @@ module ActivityHelper
 
   sig { params(event: Event).returns(T.nilable(String)) }
   def completion_status_event_text(event)
-    return if event.eventable.try(:game).nil?
-
     # Coerce the value to a hash since we know it will always be one
     after_value = T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1].to_sym
     user_link = link_to(event.user.username, user_path(event.user))
@@ -46,8 +44,7 @@ module ActivityHelper
 
   sig { params(event: Event).returns(T.nilable(String)) }
   def add_to_library_event_text(event)
-    return if event.eventable.try(:game).nil?
-
+    binding.pry
     user_link = link_to(event.user.username, user_path(event.user))
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
 
@@ -56,8 +53,6 @@ module ActivityHelper
 
   sig { params(event: Event).returns(T.nilable(String)) }
   def favorite_game_event_text(event)
-    return if event.eventable.try(:game).nil?
-
     user_link = link_to(event.user.username, user_path(event.user))
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
 
@@ -73,8 +68,6 @@ module ActivityHelper
 
   sig { params(event: Event).returns(T.nilable(String)) }
   def following_event_text(event)
-    return if event.eventable.try(:followed).nil?
-
     follower_user_link = link_to(event.user.username, user_path(event.user))
     followed_user_link = link_to(event.eventable.followed.username, user_path(event.eventable.followed))
 
