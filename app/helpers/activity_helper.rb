@@ -71,8 +71,10 @@ module ActivityHelper
     return user_link + " created their account."
   end
 
-  sig { params(event: Event).returns(String) }
+  sig { params(event: Event).returns(T.nilable(String)) }
   def following_event_text(event)
+    return unless event.eventable.respond_to?(:followed)
+
     follower_user_link = link_to(event.user.username, user_path(event.user))
     followed_user_link = link_to(event.eventable.followed.username, user_path(event.eventable.followed))
 
