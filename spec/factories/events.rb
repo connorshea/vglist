@@ -10,25 +10,30 @@ FactoryBot.define do
       # One of these needs to be included by default for the factory to be valid.
       # They can be overridden by explicitly using the traits for each event_type.
       event_category { [:add_to_library, :change_completion_status].sample }
+      eventable_type { 'GamePurchase' }
     end
 
     trait :for_favorite_game do
       association(:eventable, factory: :favorite_game)
       event_category { :favorite_game }
+      eventable_type { 'FavoriteGame' }
     end
 
     trait :for_new_user do
       association(:eventable, factory: :user)
       event_category { :new_user }
+      eventable_type { 'User' }
     end
 
     trait :for_following do
       association(:eventable, factory: :relationship)
       event_category { :following }
+      eventable_type { 'Relationship' }
     end
 
     trait :add_to_library do
       event_category { :add_to_library }
+      eventable_type { 'GamePurchase' }
     end
 
     trait :change_completion_status do
@@ -37,6 +42,7 @@ FactoryBot.define do
         # Pick two random values
         { completion_status: GamePurchase.completion_statuses.values.sample(2) }
       end
+      eventable_type { 'GamePurchase' }
     end
 
     factory :game_purchase_event,            traits: [:for_game_purchase]
