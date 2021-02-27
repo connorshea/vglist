@@ -44,7 +44,6 @@ module ActivityHelper
 
   sig { params(event: Event).returns(T.nilable(String)) }
   def add_to_library_event_text(event)
-    binding.pry
     user_link = link_to(event.user.username, user_path(event.user))
     game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
 
