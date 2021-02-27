@@ -11,6 +11,7 @@ class Event < ApplicationRecord
 
   validates :event_category, presence: true
 
+  # Make sure to update database constraints if a new event type is added.
   enum event_category: {
     add_to_library: 0,
     change_completion_status: 1,

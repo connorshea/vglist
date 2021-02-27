@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_24_204720) do
+ActiveRecord::Schema.define(version: 2021_02_27_204700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_204720) do
     t.index ["eventable_id", "eventable_type", "user_id"], name: "index_events_on_id_type_and_user_id"
     t.index ["eventable_id"], name: "index_events_on_eventable_id"
     t.index ["user_id"], name: "index_events_on_user_id"
+    t.check_constraint "((event_category = ANY (ARRAY[0, 1])) AND ((eventable_type)::text = 'GamePurchase'::text)) OR ((event_category = 2) AND ((eventable_type)::text = 'FavoriteGame'::text)) OR ((event_category = 3) AND ((eventable_type)::text = 'User'::text)) OR ((event_category = 4) AND ((eventable_type)::text = 'Relationship'::text))", name: "event_category_type_check"
   end
 
   create_table "external_accounts", force: :cascade do |t|
@@ -218,6 +219,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_204720) do
     t.index ["game_id", "user_id"], name: "index_game_purchases_on_game_id_and_user_id", unique: true
     t.index ["game_id"], name: "index_game_purchases_on_game_id"
     t.index ["user_id"], name: "index_game_purchases_on_user_id"
+    t.check_constraint "replay_count >= 0", name: "game_purchases_replay_count_not_negative"
   end
 
   create_table "game_versions", force: :cascade do |t|
