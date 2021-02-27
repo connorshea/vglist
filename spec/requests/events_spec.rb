@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe "Events", type: :request do
   describe "DELETE event_path" do
     let(:user) { create(:confirmed_user) }
-    let!(:event) { create(:game_purchase_event, user: user) }
+    let!(:event) { create(:event, user: user) }
 
     it "deletes an event" do
       sign_in(user)
