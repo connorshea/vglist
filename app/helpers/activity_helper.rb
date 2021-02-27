@@ -26,7 +26,7 @@ module ActivityHelper
     # Coerce the value to a hash since we know it will always be one
     after_value = T.cast(event.differences, T::Hash[String, T.untyped])['completion_status'][1].to_sym
     user_link = link_to(event.user.username, user_path(event.user))
-    game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
+    game_link = link_to(event.eventable.try(:game)&.name, game_path(event.eventable.try(:game)))
 
     case after_value
     when :completed
@@ -45,7 +45,7 @@ module ActivityHelper
   sig { params(event: Event).returns(String) }
   def add_to_library_event_text(event)
     user_link = link_to(event.user.username, user_path(event.user))
-    game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
+    game_link = link_to(event.eventable.try(:game)&.name, game_path(event.eventable.try(:game)))
 
     return user_link + " added " + game_link + " to their library."
   end
@@ -53,7 +53,7 @@ module ActivityHelper
   sig { params(event: Event).returns(String) }
   def favorite_game_event_text(event)
     user_link = link_to(event.user.username, user_path(event.user))
-    game_link = link_to(event.eventable.game.name, game_path(event.eventable.game))
+    game_link = link_to(event.eventable.try(:game)&.name, game_path(event.eventable.try(:game)))
 
     return user_link + " favorited " + game_link + "."
   end
