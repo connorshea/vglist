@@ -148,6 +148,21 @@ RSpec.describe "Users API", type: :request do
                 id
               }
             }
+            followers {
+              nodes {
+                id
+              }
+            }
+            following {
+              nodes {
+                id
+              }
+            }
+            favoritedGames {
+              nodes {
+                id
+              }
+            }
           }
         }
       GRAPHQL
@@ -160,7 +175,10 @@ RSpec.describe "Users API", type: :request do
           username: private_user.username,
           bio: nil,
           gamePurchases: nil,
-          activity: nil
+          activity: nil,
+          followers: nil,
+          following: nil,
+          favoritedGames: nil
         }
       )
     end
