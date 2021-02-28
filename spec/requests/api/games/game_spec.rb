@@ -1,13 +1,12 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe "Games API", type: :request do
+RSpec.describe "Game query API", type: :request do
   describe "Query for data on games" do
     let(:user) { create(:confirmed_user) }
     let(:application) { build(:application, owner: user) }
     let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:game) { create(:game) }
-    let(:game2) { create(:game) }
     let(:game_with_cover) { create(:game_with_cover) }
     let(:game_with_release_date) { create(:game_with_release_date) }
     let(:game_with_steam_app_ids) { create(:game_with_steam_app_id) }
@@ -288,56 +287,6 @@ RSpec.describe "Games API", type: :request do
 
       expect(result.graphql_dig(:game)).to be_nil
       expect(result.to_h["errors"].first['message']).to eq('Cannot provide more than one argument to game at a time.')
-    end
-
-    it "returns data for a game when searching" do
-      game
-      query_string = <<-GRAPHQL
-        query($query: String!) {
-          gameSearch(query: $query) {
-            nodes {
-              id
-              name
-            }
-          }
-        }
-      GRAPHQL
-
-      result = api_request(query_string, variables: { query: game.name }, token: access_token)
-
-      expect(result.graphql_dig(:game_search, :nodes)).to include_hash_matching(
-        id: game.id.to_s,
-        name: game.name
-      )
-    end
-
-    it "returns data for games when listing" do
-      game
-      game2
-      query_string = <<-GRAPHQL
-        query {
-          games {
-            nodes {
-              id
-              name
-            }
-          }
-        }
-      GRAPHQL
-
-      result = api_request(query_string, token: access_token)
-      expect(result.graphql_dig(:games, :nodes)).to eq(
-        [
-          {
-            id: game.id.to_s,
-            name: game.name
-          },
-          {
-            id: game2.id.to_s,
-            name: game2.name
-          }
-        ]
-      )
     end
 
     context 'with favoriters' do
