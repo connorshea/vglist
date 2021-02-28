@@ -5290,7 +5290,7 @@ class ActiveRecord::Relation::WhereClause
   def invert; end
   def merge(other, rewhere = T.unsafe(nil)); end
   def or(other); end
-  def to_h(table_name = T.unsafe(nil)); end
+  def to_h(table_name = T.unsafe(nil), equality_only: T.unsafe(nil)); end
   def |(other); end
 
   protected
@@ -5300,7 +5300,7 @@ class ActiveRecord::Relation::WhereClause
 
   private
 
-  def equalities(predicates); end
+  def equalities(predicates, equality_only); end
   def equality_node?(node); end
   def except_predicates(columns); end
   def extract_attribute(node); end
@@ -6333,8 +6333,6 @@ end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 

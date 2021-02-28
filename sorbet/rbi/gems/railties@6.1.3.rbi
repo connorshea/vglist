@@ -1275,8 +1275,6 @@ Rails::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 Rails::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-Rails::VERSION::PRE = T.let(T.unsafe(nil), String)
-
 Rails::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 Rails::VERSION::TINY = T.let(T.unsafe(nil), Integer)

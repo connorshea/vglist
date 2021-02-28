@@ -3041,8 +3041,6 @@ ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
-
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActiveSupport::VERSION::TINY = T.let(T.unsafe(nil), Integer)

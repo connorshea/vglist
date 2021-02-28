@@ -662,6 +662,7 @@ class GraphQL::Dataloader
   private
 
   def create_source_fiber; end
+  def resume(fiber); end
 
   class << self
     def use(schema); end
@@ -3047,6 +3048,7 @@ class GraphQL::Pagination::Connection
   def page_info; end
   def parent; end
   def parent=(_arg0); end
+  def range_add_edge(item); end
   def start_cursor; end
 
   private
@@ -5139,6 +5141,8 @@ class GraphQL::Schema::Resolver
     def extensions; end
     def extras(new_extras = T.unsafe(nil)); end
     def field_options; end
+    def has_max_page_size?; end
+    def max_page_size(new_max_page_size = T.unsafe(nil)); end
     def null(allow_null = T.unsafe(nil)); end
     def resolve_method(new_method = T.unsafe(nil)); end
     def type(new_type = T.unsafe(nil), null: T.unsafe(nil)); end

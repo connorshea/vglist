@@ -1011,8 +1011,6 @@ ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
-
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)

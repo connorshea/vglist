@@ -191,12 +191,12 @@ module RDF::Enumerable
   def project_graph(graph_name); end
   def quad?(quad); end
   def quads(**options); end
-  def statement?(statement = T.unsafe(nil)); end
+  def statement?(*args); end
   def statements(**options); end
   def subject?(value); end
   def subjects(unique: T.unsafe(nil)); end
   def supports?(feature); end
-  def term?(value = T.unsafe(nil)); end
+  def term?(*args); end
   def terms(unique: T.unsafe(nil)); end
   def to_a; end
   def to_enum(*args, &block); end
@@ -283,12 +283,12 @@ class RDF::Graph
   def durable?; end
   def each(&block); end
   def each_graph; end
-  def graph?; end
+  def graph?(*args); end
   def graph_name; end
   def graph_name=(_arg0); end
   def graph_names(unique: T.unsafe(nil)); end
   def graphs; end
-  def has_statement?(statement = T.unsafe(nil)); end
+  def has_statement?(*args); end
   def insert_statements(statements); end
   def load!(*args); end
   def name; end
@@ -296,7 +296,7 @@ class RDF::Graph
   def named?; end
   def options; end
   def project_graph(graph_name, &block); end
-  def statement?(statement = T.unsafe(nil)); end
+  def statement?(*args); end
   def to_s; end
   def to_uri; end
   def unnamed?; end
@@ -976,7 +976,7 @@ class RDF::Query
   def graph_name; end
   def graph_name=(_arg0); end
   def has_blank_nodes?; end
-  def has_variables?; end
+  def has_variables?(*args); end
   def matched?; end
   def named?; end
   def node?; end
@@ -990,10 +990,10 @@ class RDF::Query
   def unnamed?; end
   def valid?; end
   def validate!; end
-  def variable?; end
+  def variable?(*args); end
   def variable_count; end
   def variables; end
-  def variables?; end
+  def variables?(*args); end
 
   protected
 
@@ -1098,7 +1098,7 @@ class RDF::Query::Solution
   def enum_value; end
   def enum_variable; end
   def eql?(other); end
-  def has_variables?(variables); end
+  def has_variables?(*args); end
   def hash; end
   def inspect; end
   def isomorphic_with?(other); end
@@ -1107,8 +1107,8 @@ class RDF::Query::Solution
   def to_a; end
   def to_h; end
   def unbound?(name); end
-  def variable?(variables); end
-  def variables?(variables); end
+  def variable?(*args); end
+  def variables?(*args); end
 
   protected
 
@@ -1132,8 +1132,8 @@ class RDF::Query::Solutions < ::Array
   def each_solution; end
   def filter(criteria = T.unsafe(nil)); end
   def filter!(criteria = T.unsafe(nil)); end
-  def has_variables?(variables); end
-  def have_variables?(variables); end
+  def has_variables?(*args); end
+  def have_variables?(*args); end
   def limit(length); end
   def limit!(length); end
   def merge(other); end
@@ -1146,9 +1146,9 @@ class RDF::Query::Solutions < ::Array
   def reduced; end
   def reduced!; end
   def select(*variables); end
-  def variable?(variables); end
+  def variable?(*args); end
   def variable_names; end
-  def variables?(variables); end
+  def variables?(*args); end
 end
 
 class RDF::Query::Variable
@@ -1184,7 +1184,7 @@ class RDF::Query::Variable
   def value; end
   def value=(_arg0); end
   def var_values(var, term); end
-  def variable?; end
+  def variable?(*args); end
   def variables; end
 end
 
@@ -1385,13 +1385,13 @@ module RDF::Repository::Implementation
   def each(&block); end
   def each_graph(&block); end
   def each_statement(&block); end
-  def graph?(graph); end
+  def graph?(*args); end
   def graph_names(options = T.unsafe(nil), &block); end
-  def has_graph?(graph); end
-  def has_statement?(statement = T.unsafe(nil)); end
+  def has_graph?(*args); end
+  def has_statement?(*args); end
   def isolation_level; end
   def snapshot; end
-  def statement?(statement = T.unsafe(nil)); end
+  def statement?(*args); end
   def supports?(feature); end
 
   protected
@@ -1455,12 +1455,12 @@ class RDF::Statement
   def complete?; end
   def embedded?; end
   def eql?(other); end
-  def graph?; end
+  def graph?(*args); end
   def graph_name; end
   def graph_name=(_arg0); end
   def has_blank_nodes?; end
-  def has_graph?; end
-  def has_name?; end
+  def has_graph?(*args); end
+  def has_name?(*args); end
   def has_object?; end
   def has_predicate?; end
   def has_subject?; end
@@ -1471,7 +1471,7 @@ class RDF::Statement
   def inferred?; end
   def initialize!; end
   def invalid?; end
-  def name?; end
+  def name?(*args); end
   def node?; end
   def object; end
   def object=(_arg0); end
@@ -1483,7 +1483,7 @@ class RDF::Statement
   def predicate?; end
   def quoted?; end
   def reified(subject: T.unsafe(nil), id: T.unsafe(nil), graph_name: T.unsafe(nil)); end
-  def statement?; end
+  def statement?(*args); end
   def subject; end
   def subject=(_arg0); end
   def subject?; end
@@ -1494,7 +1494,7 @@ class RDF::Statement
   def to_s; end
   def to_triple; end
   def valid?; end
-  def variable?; end
+  def variable?(*args); end
 
   class << self
     def from(statement, graph_name: T.unsafe(nil), **options); end
@@ -1517,7 +1517,7 @@ module RDF::Term
   def ==(other); end
   def compatible?(other); end
   def eql?(other); end
-  def term?; end
+  def term?(*args); end
   def terms; end
   def to_base; end
   def to_term; end
@@ -1554,7 +1554,7 @@ class RDF::Transaction
   def each(*args, &block); end
   def execute; end
   def graph_name; end
-  def has_statement?(statement = T.unsafe(nil)); end
+  def has_statement?(*args); end
   def inspect; end
   def inspect!; end
   def isolation_level; end
@@ -1564,7 +1564,7 @@ class RDF::Transaction
   def readable?; end
   def repository; end
   def rollback; end
-  def statement?(statement = T.unsafe(nil)); end
+  def statement?(*args); end
   def writable?; end
 
   protected
@@ -2269,7 +2269,7 @@ module RDF::Value
   def canonicalize; end
   def canonicalize!; end
   def constant?; end
-  def graph?; end
+  def graph?(*args); end
   def inspect; end
   def inspect!; end
   def invalid?; end
@@ -2280,8 +2280,8 @@ module RDF::Value
   def resource?; end
   def start_with?(string); end
   def starts_with?(string); end
-  def statement?; end
-  def term?; end
+  def statement?(*args); end
+  def term?(*args); end
   def to_nquads; end
   def to_ntriples; end
   def to_rdf; end
@@ -2291,7 +2291,7 @@ module RDF::Value
   def valid?; end
   def validate; end
   def validate!; end
-  def variable?; end
+  def variable?(*args); end
 end
 
 class RDF::Vocabulary
@@ -2393,6 +2393,10 @@ module RDF::Vocabulary::Term
     def new(*args, vocab: T.unsafe(nil), attributes: T.unsafe(nil), **options); end
   end
 end
+
+RDF::Vocabulary::Term::ATTR_URIs = T.let(T.unsafe(nil), Hash)
+
+RDF::Vocabulary::Term::URI_ATTRs = T.let(T.unsafe(nil), Hash)
 
 class RDF::Vocabulary::Writer < ::RDF::Writer
   def initialize(output = T.unsafe(nil), base_uri:, **options, &block); end

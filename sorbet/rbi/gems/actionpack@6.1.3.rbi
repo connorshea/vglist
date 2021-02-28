@@ -5196,8 +5196,6 @@ ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
-
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
