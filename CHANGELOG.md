@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.2.27
+### Added
+- Add `deleteEvent` mutation to GraphQL API. ([#1895])
+
 ## v2021.1.24
 ### Added
 - Add Internet Game Database IDs. ([#1817])
@@ -841,3 +845,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1771]: https://github.com/connorshea/vglist/pull/1771
 [#1806]: https://github.com/connorshea/vglist/pull/1806
 [#1817]: https://github.com/connorshea/vglist/pull/1817
+[#1895]: https://github.com/connorshea/vglist/pull/1895
