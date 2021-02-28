@@ -11,7 +11,18 @@ RSpec.describe "Games API", type: :request do
     let(:game_with_cover) { create(:game_with_cover) }
     let(:game_with_release_date) { create(:game_with_release_date) }
     let(:game_with_steam_app_ids) { create(:game_with_steam_app_id) }
+    let(:game_with_wikidata_id) { create(:game, :wikidata_id) }
     let(:game_with_giantbomb_id) { create(:game, :giantbomb_id) }
+    let(:game_with_igdb_id) { create(:game, :igdb_id) }
+    let(:game_with_mobygames_id) { create(:game, :mobygames_id) }
+    let(:game_with_pcgamingwiki_id) { create(:game, :pcgamingwiki_id) }
+    let(:game_with_steam_app_id) do
+      create(:game) do |game|
+        create(:steam_app_id, game: game)
+      end
+    end
+    let(:game_with_epic_games_store_id) { create(:game, :epic_games_store_id) }
+    let(:game_with_gog_id) { create(:game, :gog_id) }
 
     it "returns basic data for game" do
       game
@@ -103,6 +114,26 @@ RSpec.describe "Games API", type: :request do
       )
     end
 
+    it "returns basic data for game when searching by wikidata_id" do
+      query_string = <<-GRAPHQL
+        query($wikidataId: Int!) {
+          game(wikidataId: $wikidataId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { wikidata_id: game_with_wikidata_id.wikidata_id.to_i }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to eq(
+        {
+          id: game_with_wikidata_id.id.to_s,
+          name: game_with_wikidata_id.name
+        }
+      )
+    end
+
     it "returns basic data for game when searching by giantbomb_id" do
       query_string = <<-GRAPHQL
         query($giantbombId: String!) {
@@ -119,6 +150,126 @@ RSpec.describe "Games API", type: :request do
         {
           id: game_with_giantbomb_id.id.to_s,
           name: game_with_giantbomb_id.name
+        }
+      )
+    end
+
+    it "returns basic data for game when searching by igdb_id" do
+      query_string = <<-GRAPHQL
+        query($igdbId: String!) {
+          game(igdbId: $igdbId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { igdb_id: game_with_igdb_id.igdb_id }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to eq(
+        {
+          id: game_with_igdb_id.id.to_s,
+          name: game_with_igdb_id.name
+        }
+      )
+    end
+
+    it "returns basic data for game when searching by mobygames_id" do
+      query_string = <<-GRAPHQL
+        query($mobygamesId: String!) {
+          game(mobygamesId: $mobygamesId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { mobygames_id: game_with_mobygames_id.mobygames_id }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to eq(
+        {
+          id: game_with_mobygames_id.id.to_s,
+          name: game_with_mobygames_id.name
+        }
+      )
+    end
+
+    it "returns basic data for game when searching by pcgamingwiki_id" do
+      query_string = <<-GRAPHQL
+        query($pcgamingwikiId: String!) {
+          game(pcgamingwikiId: $pcgamingwikiId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { pcgamingwiki_id: game_with_pcgamingwiki_id.pcgamingwiki_id }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to eq(
+        {
+          id: game_with_pcgamingwiki_id.id.to_s,
+          name: game_with_pcgamingwiki_id.name
+        }
+      )
+    end
+
+    it "returns basic data for game when searching by steam_app_id" do
+      query_string = <<-GRAPHQL
+        query($steamAppId: Int!) {
+          game(steamAppId: $steamAppId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { steam_app_id: game_with_steam_app_id.steam_app_ids.first.app_id.to_i }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to eq(
+        {
+          id: game_with_steam_app_id.id.to_s,
+          name: game_with_steam_app_id.name
+        }
+      )
+    end
+
+    it "returns basic data for game when searching by epic_games_store_id" do
+      query_string = <<-GRAPHQL
+        query($epicGamesStoreId: String!) {
+          game(epicGamesStoreId: $epicGamesStoreId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { epic_games_store_id: game_with_epic_games_store_id.epic_games_store_id }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to eq(
+        {
+          id: game_with_epic_games_store_id.id.to_s,
+          name: game_with_epic_games_store_id.name
+        }
+      )
+    end
+
+    it "returns basic data for game when searching by gog_id" do
+      query_string = <<-GRAPHQL
+        query($gogId: String!) {
+          game(gogId: $gogId) {
+            id
+            name
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { gog_id: game_with_gog_id.gog_id }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to eq(
+        {
+          id: game_with_gog_id.id.to_s,
+          name: game_with_gog_id.name
         }
       )
     end
