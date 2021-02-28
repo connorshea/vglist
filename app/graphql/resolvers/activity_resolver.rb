@@ -15,7 +15,7 @@ module Resolvers
              .joins(:user)
              .where(users: { privacy: :public_account })
       when 'following'
-        user_ids = @context[:current_user]&.following&.map { |u| u.id }
+        user_ids = @context[:current_user]&.following&.map(&:id)
         # Include the user's own activity in the feed.
         user_ids << @context[:current_user].id
         Event.recently_created
