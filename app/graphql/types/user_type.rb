@@ -55,7 +55,7 @@ module Types
     # Define a method for each of these fields, to forward the correct info onto the handler method.
     # This overrides the default field accessors to make sure the viewer is actually supposed to
     # see this information.
-    [:bio, :game_purchases, :followers, :following, :favorite_games].each do |meth_name|
+    [:bio, :game_purchases, :followers, :following, :favorited_games].each do |meth_name|
       define_method(meth_name) do
         # Sorbet is dumb and doesn't realize the handler method exists, I guess.
         T.unsafe(self).handler(meth_name)
