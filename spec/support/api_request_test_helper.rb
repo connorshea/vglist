@@ -12,7 +12,7 @@ module ApiRequestTestHelper
     post graphql_path,
       params: {
         query: query_string,
-        variables: variables
+        variables: variables.to_json
       },
       headers: {
         'Authorization': "Bearer #{token.token}"
