@@ -2833,10 +2833,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^2.0.0-beta.4:
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz#05775792c3f3331da812af253e1a935851d3834b"
-  integrity sha512-sAJVKx/FqrLYHAQeN7VpJrPhagZc9R4ImZIWYRFZaaohR3KzmuK88touwsSwSVT8Qcbd4zoDsnGfX4GFB4imyQ==
+date-fns@^2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.17.0.tgz#afa55daea539239db0a64e236ce716ef3d681ba1"
+  integrity sha512-ZEhqxUtEZeGgg9eHNSOAJ8O9xqSgiJdrL0lzSSfMF54x6KXWJiOH/xntSJ9YomJPrYH/p08t6gWjGWq1SDJlSA==
 
 de-indent@^1.0.2:
   version "1.0.2"
@@ -4883,26 +4883,6 @@ lodash._reinterpolate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
   integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
-
-lodash.assign@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/lodash.assign/-/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
-  integrity sha1-DZnzzNem0mHRm9rrkkUAXShYCOc=
-
-lodash.clonedeep@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
-  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
-
-lodash.filter@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/lodash.filter/-/lodash.filter-4.6.0.tgz#668b1d4981603ae1cc5a6fa760143e480b4c4ace"
-  integrity sha1-ZosdSYFgOuHMWm+nYBQ+SAtMSs4=
-
-lodash.foreach@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.foreach/-/lodash.foreach-4.5.0.tgz#1a6a35eace401280c7f06dddec35165ab27e3e53"
-  integrity sha1-Gmo16s5AEoDH8G3d7DUWWrJ+PlM=
 
 lodash.get@^4.0:
   version "4.4.2"
@@ -8347,17 +8327,13 @@ vscode-languageserver-types@^3.15.1:
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
   integrity sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
 
-vue-good-table@^2.21.4:
-  version "2.21.4"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.4.tgz#0f223dc2d067cccfc1bcb6ed00e904d58df336d3"
-  integrity sha512-LIIErTCiYXYQPJsf66JUjanRqBwA8ZwYwUCW1PMPleyX+g5OUegPIKcEQ/9Is3/Y9wXY6SfUfbmCKq8vxfRuDw==
+vue-good-table@^2.21.6:
+  version "2.21.6"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.6.tgz#9c86e70d666bbde57336d9b3ed2b1c19c9c1a437"
+  integrity sha512-xfXqtX2SU3fmNO4qyA0+Iuw1fU/wWt+x0w3vQpKq4Kn9imNqPaKOgDDnsRlK2kiDDiBrJGE7jm7kJibVN6MFDQ==
   dependencies:
-    date-fns "^2.0.0-beta.4"
+    date-fns "^2.17.0"
     diacriticless "1.0.1"
-    lodash.assign "^4.2.0"
-    lodash.clonedeep "^4.5.0"
-    lodash.filter "^4.6.0"
-    lodash.foreach "^4.5.0"
     lodash.isequal "^4.5.0"
 
 vue-hot-reload-api@^2.3.0:
