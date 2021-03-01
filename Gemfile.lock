@@ -232,7 +232,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.20.1)
-    parlour (5.0.0)
+    parlour (6.0.0)
       commander (~> 4.5)
       parser
       rainbow (~> 3.0)
