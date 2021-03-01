@@ -30,5 +30,24 @@ RSpec.describe "API", type: :request do
       expect(result.graphql_dig(:games, :page_info, :has_next_page)).to eq(true)
       expect(result.graphql_dig(:games, :page_info, :page_size)).to eq(30)
     end
+
+    it "returns correct totalCount with 31 records" do
+      games
+      query_string = <<-GRAPHQL
+        query {
+          games {
+            nodes {
+              id
+              name
+            }
+            totalCount
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+
+      expect(result.graphql_dig(:games, :total_count)).to eq(31)
+    end
   end
 end
