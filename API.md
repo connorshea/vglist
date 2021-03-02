@@ -171,6 +171,20 @@ query($id: ID!) {
 
 You may want to use a variable for the cursor value, to make it easier to page through the query response.
 
+You can also use `totalCount` on any Connection types to get the total number of records that a given query returns, regardless of pagination.
+
+```graphql
+query {
+  games {
+    nodes {
+      id
+      name
+    }
+    totalCount
+  }
+}
+```
+
 ## Mutations
 
 In GraphQL, API requests that are intended to change the data in the API (e.g. adding a game to a user's library) are called [Mutations](https://graphql.org/learn/queries/#mutations). Unlike queries, which only _read_ data, mutations can be used to _write_ data.
