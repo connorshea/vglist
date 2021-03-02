@@ -13,7 +13,7 @@ module Resolvers
 
       sig { returns(T::Boolean) }
       def authorized?
-        raise GraphQL::ExecutionError, "You aren't allowed to view site statistics." unless AdminPolicy.new(@context[:current_user], nil).statistics?
+        raise GraphQL::ExecutionError, "Viewing site statistics is only available to admins." unless AdminPolicy.new(@context[:current_user], nil).statistics?
 
         true
       end
