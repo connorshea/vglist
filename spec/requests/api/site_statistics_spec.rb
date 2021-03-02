@@ -141,4 +141,49 @@ RSpec.describe "Site Statistics API", type: :request do
       end
     end
   end
+
+  describe 'Query for basic site statistics' do
+    let(:user) { create(:confirmed_user) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:companies) { create_list(:company, rand(1..15)) }
+    let(:engines) { create_list(:engine, rand(1..15)) }
+    let(:games) { create_list(:game, rand(1..15)) }
+    let(:genres) { create_list(:genre, rand(1..15)) }
+    let(:platforms) { create_list(:platform, rand(1..15)) }
+    let(:series) { create_list(:series, rand(1..15)) }
+
+    it "returns a permissions error for statistic" do
+      companies
+      engines
+      games
+      genres
+      platforms
+      series
+      query_string = <<-GRAPHQL
+        query {
+          basicSiteStatistics {
+            companies
+            engines
+            games
+            genres
+            platforms
+            series
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+      expect(result.graphql_dig(:basic_site_statistics)).to eq(
+        {
+          companies: companies.count,
+          engines: engines.count,
+          games: games.count,
+          genres: genres.count,
+          platforms: platforms.count,
+          series: series.count
+        }
+      )
+    end
+  end
 end
