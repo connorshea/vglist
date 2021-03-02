@@ -43,5 +43,6 @@ module Types
     field :activity, resolver: Resolvers::ActivityResolver
 
     field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver
+    field :basic_site_statistics, resolver: Resolvers::SiteStatisticResolvers::BasicResolver
   end
 end
