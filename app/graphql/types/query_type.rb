@@ -41,5 +41,7 @@ module Types
     field :game_purchase, resolver: Resolvers::GamePurchaseResolver
 
     field :activity, resolver: Resolvers::ActivityResolver
+
+    field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver
   end
 end

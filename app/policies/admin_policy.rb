@@ -12,6 +12,11 @@ class AdminPolicy < ApplicationPolicy
 
   sig { returns(T.nilable(T::Boolean)) }
   def dashboard?
+    statistics?
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def statistics?
     user&.admin?
   end
 
