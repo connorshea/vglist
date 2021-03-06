@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.3.6
+- Upgrade Node.js from v10 to v14. ([#1927])
+
 ## v2021.2.28
 ### Added
 - Add filters and sorting to games queries in GraphQL API. ([#1906], [#1907])
@@ -852,3 +855,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1895]: https://github.com/connorshea/vglist/pull/1895
 [#1906]: https://github.com/connorshea/vglist/pull/1906
 [#1907]: https://github.com/connorshea/vglist/pull/1907
+[#1927]: https://github.com/connorshea/vglist/pull/1927
