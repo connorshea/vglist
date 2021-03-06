@@ -78,7 +78,7 @@ gem 'inline_svg', '~> 1.7'
 
 # Honeypot for spambots that doesn't require the user to actually do any
 # captcha and doesn't use google stuff.
-gem 'invisible_captcha', '~> 1.1.0'
+gem 'invisible_captcha', '~> 2.0.0'
 
 # For parallel execution of long-running tasks.
 gem 'parallel', '~> 1.20', require: false
