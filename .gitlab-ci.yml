@@ -14,7 +14,7 @@ variables:
   RACK_ENV: test
   NODE_ENV: test
   CI: 'true'
-  BUNDLER_VERSION: '2.2.3'
+  BUNDLER_VERSION: '2.2.13'
 
 # Cache gems and node_modules in between builds
 cache:
