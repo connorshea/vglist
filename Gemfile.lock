@@ -386,6 +386,7 @@ GEM
     sorbet-runtime (0.5.6324)
     sorbet-static (0.5.6324-universal-darwin-18)
     sorbet-static (0.5.6324-universal-darwin-19)
+    sorbet-static (0.5.6324-universal-darwin-20)
     sorbet-static (0.5.6324-x86_64-linux)
     sparql (3.1.5)
       builder (~> 3.2)
@@ -458,6 +459,7 @@ PLATFORMS
   ruby
   x86_64-darwin-18
   x86_64-darwin-19
+  x86_64-darwin-20
   x86_64-linux
 
 DEPENDENCIES
