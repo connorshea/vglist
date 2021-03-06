@@ -57,3 +57,5 @@ sorbet/rbi/hidden-definitions/errors.txt
 # Ignore spoom-related files for tracking type coverage.
 /spoom_data
 /spoom_report.html
+
+/vendor/*
