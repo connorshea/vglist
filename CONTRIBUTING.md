@@ -6,14 +6,14 @@
 
 - Ruby 2.7
 - Postgres 12.x
-- Node.js 10.x
+- Node.js 14.x
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
 
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 2.2.3, `gem install bundler:2.2.3`
+1. To get Bundler 2.2.13, `gem install bundler:2.2.13`
 1. `bundle install`
 1. `yarn install`
 1. `bundle exec rails db:setup`
