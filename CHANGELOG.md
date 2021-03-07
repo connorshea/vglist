@@ -6,8 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## v2021.3.7
 ### Added
-- Added ability for moderators and admins to ban and unban users in GraphQL API. ([#1929])
-- Added ability for moderators and admins to remove game covers in GraphQL API. ([#1930])
+- Add ability for moderators and admins to ban and unban users in GraphQL API. ([#1929])
+- Add ability for moderators and admins to remove game covers in GraphQL API. ([#1930])
 
 ## v2021.3.6
 ### Changed
