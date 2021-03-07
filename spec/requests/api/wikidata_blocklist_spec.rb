@@ -1,23 +1,23 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe "Steam Blocklist API", type: :request do
-  describe "Query for data on steam blocklist entries" do
+RSpec.describe "Wikidata Blocklist API", type: :request do
+  describe "Query for data on Wikidata blocklist entries" do
     context 'when signed in as an admin' do
       let(:user) { create(:confirmed_admin) }
       let(:application) { build(:application, owner: user) }
       let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
-      let(:steam_blocklist_entries) { create_list(:steam_blocklist, 2) }
+      let(:wikidata_blocklist_entries) { create_list(:wikidata_blocklist, 2) }
 
-      it "returns basic data for steam blocklist entries" do
-        steam_blocklist_entries
+      it "returns basic data for wikidata blocklist entries" do
+        wikidata_blocklist_entries
         query_string = <<-GRAPHQL
           query {
-            steamBlocklist {
+            wikidataBlocklist {
               nodes {
                 id
                 name
-                steamAppId
+                wikidataId
                 user {
                   id
                   username
@@ -29,15 +29,15 @@ RSpec.describe "Steam Blocklist API", type: :request do
 
         result = api_request(query_string, token: access_token)
 
-        expect(result.graphql_dig(:steam_blocklist, :nodes).length).to eq(2)
-        expect(result.graphql_dig(:steam_blocklist, :nodes).first).to eq(
+        expect(result.graphql_dig(:wikidata_blocklist, :nodes).length).to eq(2)
+        expect(result.graphql_dig(:wikidata_blocklist, :nodes).first).to eq(
           {
-            id: steam_blocklist_entries.first.id.to_s,
-            name: steam_blocklist_entries.first.name,
-            steamAppId: steam_blocklist_entries.first.steam_app_id,
+            id: wikidata_blocklist_entries.first.id.to_s,
+            name: wikidata_blocklist_entries.first.name,
+            wikidataId: wikidata_blocklist_entries.first.wikidata_id,
             user: {
-              id: steam_blocklist_entries.first.user.id.to_s,
-              username: steam_blocklist_entries.first.user.username
+              id: wikidata_blocklist_entries.first.user.id.to_s,
+              username: wikidata_blocklist_entries.first.user.username
             }
           }
         )
@@ -48,17 +48,17 @@ RSpec.describe "Steam Blocklist API", type: :request do
       let(:user) { create(:confirmed_user) }
       let(:application) { build(:application, owner: user) }
       let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
-      let(:steam_blocklist_entry) { create(:steam_blocklist) }
+      let(:wikidata_blocklist_entry) { create(:wikidata_blocklist) }
 
       it "returns a permissions error" do
-        steam_blocklist_entry
+        wikidata_blocklist_entry
         query_string = <<-GRAPHQL
           query {
-            steamBlocklist {
+            wikidataBlocklist {
               nodes {
                 id
                 name
-                steamAppId
+                wikidataId
                 user {
                   id
                   username
@@ -70,8 +70,8 @@ RSpec.describe "Steam Blocklist API", type: :request do
 
         result = api_request(query_string, token: access_token)
 
-        expect(api_result_errors(result)).to include('Viewing the Steam Blocklist is only available to admins.')
-        expect(result.graphql_dig(:steam_blocklist)).to be_nil
+        expect(api_result_errors(result)).to include('Viewing the Wikidata Blocklist is only available to admins.')
+        expect(result.graphql_dig(:wikidata_blocklist)).to be_nil
       end
     end
   end
