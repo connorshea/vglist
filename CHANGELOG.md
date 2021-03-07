@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.3.7
+### Added
+- Added ability for moderators and admins to ban and unban users in GraphQL API. ([#1929])
+- Added ability for moderators and admins to remove game covers in GraphQL API. ([#1930])
+
 ## v2021.3.6
+### Changed
 - Upgrade Node.js from v10 to v14. ([#1927])
 
 ## v2021.2.28
@@ -856,3 +862,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1906]: https://github.com/connorshea/vglist/pull/1906
 [#1907]: https://github.com/connorshea/vglist/pull/1907
 [#1927]: https://github.com/connorshea/vglist/pull/1927
+[#1929]: https://github.com/connorshea/vglist/pull/1929
+[#1930]: https://github.com/connorshea/vglist/pull/1930
