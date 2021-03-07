@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::UnfollowUser < Mutations::BaseMutation
+class Mutations::Users::UnfollowUser < Mutations::BaseMutation
   description "Unfollow a user."
 
   argument :user_id, ID, required: true, description: "ID of user to unfollow."

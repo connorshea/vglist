@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::AddGameToLibrary < Mutations::BaseMutation
+class Mutations::GamePurchases::AddGameToLibrary < Mutations::BaseMutation
   description "Add a game to the current user's library."
 
   argument :game_id, ID, required: true, description: "ID of game to add."

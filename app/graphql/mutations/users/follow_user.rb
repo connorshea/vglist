@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::FollowUser < Mutations::BaseMutation
+class Mutations::Users::FollowUser < Mutations::BaseMutation
   description "Follow a user."
 
   argument :user_id, ID, required: true, description: "ID of user to follow."

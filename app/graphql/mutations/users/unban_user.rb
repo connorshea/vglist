@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::UnbanUser < Mutations::BaseMutation
+class Mutations::Users::UnbanUser < Mutations::BaseMutation
   description "Unban a user. **Only available to moderators and admins.**"
 
   argument :user_id, ID, required: true, description: "ID of user to unban."

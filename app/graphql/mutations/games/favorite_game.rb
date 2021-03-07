@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::FavoriteGame < Mutations::BaseMutation
+class Mutations::Games::FavoriteGame < Mutations::BaseMutation
   description "Add a game to the current user's favorites."
 
   argument :game_id, ID, required: true, description: "ID of game to favorite."

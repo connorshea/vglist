@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::RemoveGameCover < Mutations::BaseMutation
+class Mutations::Games::RemoveGameCover < Mutations::BaseMutation
   description "Remove the cover from a game. **Only available to moderators and admins.**"
 
   argument :game_id, ID, required: true, description: "ID of game to remove a cover from."

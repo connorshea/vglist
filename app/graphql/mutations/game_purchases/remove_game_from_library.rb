@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::RemoveGameFromLibrary < Mutations::BaseMutation
+class Mutations::GamePurchases::RemoveGameFromLibrary < Mutations::BaseMutation
   description "Remove a game from the current user's library."
 
   argument :game_id, ID, required: false, description: "ID of game to remove from user library."

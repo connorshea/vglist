@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::UnfavoriteGame < Mutations::BaseMutation
+class Mutations::Games::UnfavoriteGame < Mutations::BaseMutation
   description "Remove a game from the current user's favorites."
 
   argument :game_id, ID, required: true, description: "ID of game to unfavorite."

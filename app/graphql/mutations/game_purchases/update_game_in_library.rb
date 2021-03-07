@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::UpdateGameInLibrary < Mutations::BaseMutation
+class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
   description "Update a game in the current user's library."
 
   argument :game_purchase_id, ID, required: true, description: "ID of game purchase to modify."

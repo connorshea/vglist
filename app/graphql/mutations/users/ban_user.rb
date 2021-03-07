@@ -1,5 +1,5 @@
 # typed: true
-class Mutations::BanUser < Mutations::BaseMutation
+class Mutations::Users::BanUser < Mutations::BaseMutation
   description "Ban a user. **Only available to moderators and admins.**"
 
   argument :user_id, ID, required: true, description: "ID of user to ban."
