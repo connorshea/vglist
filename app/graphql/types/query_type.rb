@@ -42,7 +42,10 @@ module Types
 
     field :activity, resolver: Resolvers::ActivityResolver
 
-    field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver
     field :basic_site_statistics, resolver: Resolvers::SiteStatisticResolvers::BasicResolver
+
+    # Admin stuff
+    field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver
+    field :steam_blocklist, resolver: Resolvers::SteamBlocklistResolver
   end
 end
