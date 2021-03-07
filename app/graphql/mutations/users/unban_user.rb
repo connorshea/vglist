@@ -21,6 +21,7 @@ class Mutations::Users::UnbanUser < Mutations::BaseMutation
     }
   end
 
+  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     user = User.find_by(id: object[:user_id])
