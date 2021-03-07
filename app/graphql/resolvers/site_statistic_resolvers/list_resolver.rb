@@ -4,7 +4,7 @@ module Resolvers
     class ListResolver < Resolvers::BaseResolver
       type Types::SiteStatisticType.connection_type, null: true
 
-      description "List all statistics. **This information is only available to admins.**"
+      description "List all statistics. **Only available to admins.**"
 
       sig { returns(Statistic::RelationType) }
       def resolve
