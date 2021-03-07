@@ -14,6 +14,7 @@ module Types
     field :add_game_to_library, mutation: Mutations::AddGameToLibrary
     field :update_game_in_library, mutation: Mutations::UpdateGameInLibrary
     field :remove_game_from_library, mutation: Mutations::RemoveGameFromLibrary
+    field :remove_game_cover, mutation: Mutations::RemoveGameCover
 
     field :delete_event, mutation: Mutations::DeleteEvent
   end
