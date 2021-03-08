@@ -34,8 +34,8 @@ module Types
       argument :size, GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
     end
 
-    field :is_favorited, Boolean, null: true, method: :favorited?, description: "Whether the game is in the current user's favorites, or null if there is no logged-in user."
-    field :is_in_library, Boolean, null: true, method: :in_library?, description: "Whether the game is in the current user's library, or null if there is no logged-in user."
+    field :is_favorited, Boolean, null: true, resolver_method: :favorited?, description: "Whether the game is in the current user's favorites, or null if there is no logged-in user."
+    field :is_in_library, Boolean, null: true, resolver_method: :in_library?, description: "Whether the game is in the current user's library, or null if there is no logged-in user."
 
     # Get the Steam App ID values as an array.
     sig { returns(T::Array[Integer]) }
