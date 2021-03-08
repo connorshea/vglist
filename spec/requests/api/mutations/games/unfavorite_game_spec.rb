@@ -15,6 +15,7 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
             game {
               id
               name
+              isFavorited
             }
           }
         }
@@ -37,7 +38,8 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
       expect(result.graphql_dig(:unfavorite_game, :game)).to eq(
         {
           id: game.id.to_s,
-          name: game.name
+          name: game.name,
+          isFavorited: false
         }
       )
     end

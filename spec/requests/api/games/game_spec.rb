@@ -315,5 +315,71 @@ RSpec.describe "Game query API", type: :request do
         )
       end
     end
+
+    context 'with the current user having favorited the game' do
+      let(:favorite_game) { create(:favorite_game, game: game, user: user) }
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!) {
+            game(id: $id) {
+              isFavorited
+            }
+          }
+        GRAPHQL
+      end
+
+      it "returns that the user has favorited the game" do
+        favorite_game
+
+        result = api_request(query_string, variables: { id: game.id }, token: access_token)
+        expect(result.graphql_dig(:game)).to include(
+          {
+            isFavorited: true
+          }
+        )
+      end
+
+      it "returns that the user has not favorited the game" do
+        result = api_request(query_string, variables: { id: game.id }, token: access_token)
+        expect(result.graphql_dig(:game)).to include(
+          {
+            isFavorited: false
+          }
+        )
+      end
+    end
+
+    context 'with the current user having added the game to their library' do
+      let(:game_purchase) { create(:game_purchase, game: game, user: user) }
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!) {
+            game(id: $id) {
+              isInLibrary
+            }
+          }
+        GRAPHQL
+      end
+
+      it "returns that the user has added the game to their library" do
+        game_purchase
+
+        result = api_request(query_string, variables: { id: game.id }, token: access_token)
+        expect(result.graphql_dig(:game)).to include(
+          {
+            isInLibrary: true
+          }
+        )
+      end
+
+      it "returns that the user has not added the game to their library" do
+        result = api_request(query_string, variables: { id: game.id }, token: access_token)
+        expect(result.graphql_dig(:game)).to include(
+          {
+            isInLibrary: false
+          }
+        )
+      end
+    end
   end
 end
