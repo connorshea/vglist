@@ -14,6 +14,7 @@ RSpec.describe "FavoriteGame Mutation API", type: :request do
             game {
               id
               name
+              isFavorited
             }
           }
         }
@@ -36,7 +37,8 @@ RSpec.describe "FavoriteGame Mutation API", type: :request do
       expect(result.graphql_dig(:favorite_game, :game)).to eq(
         {
           id: game.id.to_s,
-          name: game.name
+          name: game.name,
+          isFavorited: true
         }
       )
     end
