@@ -238,7 +238,7 @@ class RuboCop::Cop::Performance::ConstantRegexp < ::RuboCop::Cop::Base
   private
 
   def include_interpolated_const?(node); end
-  def within_const_assignment?(node); end
+  def within_allowed_assignment?(node); end
 end
 
 RuboCop::Cop::Performance::ConstantRegexp::MSG = T.let(T.unsafe(nil), String)
@@ -482,6 +482,28 @@ RuboCop::Cop::Performance::RedundantBlockCall::SPACE = T.let(T.unsafe(nil), Stri
 
 RuboCop::Cop::Performance::RedundantBlockCall::YIELD = T.let(T.unsafe(nil), String)
 
+class RuboCop::Cop::Performance::RedundantEqualityComparisonBlock < ::RuboCop::Cop::Base
+  extend(::RuboCop::Cop::AutoCorrector)
+  extend(::RuboCop::Cop::TargetRubyVersion)
+
+  def on_block(node); end
+
+  private
+
+  def new_argument(block_argument, block_body); end
+  def offense_range(node); end
+  def same_block_argument_and_is_a_argument?(block_body, block_argument); end
+  def use_equality_comparison_block?(block_body); end
+end
+
+RuboCop::Cop::Performance::RedundantEqualityComparisonBlock::COMPARISON_METHODS = T.let(T.unsafe(nil), Array)
+
+RuboCop::Cop::Performance::RedundantEqualityComparisonBlock::IS_A_METHODS = T.let(T.unsafe(nil), Array)
+
+RuboCop::Cop::Performance::RedundantEqualityComparisonBlock::MSG = T.let(T.unsafe(nil), String)
+
+RuboCop::Cop::Performance::RedundantEqualityComparisonBlock::TARGET_METHODS = T.let(T.unsafe(nil), Array)
+
 class RuboCop::Cop::Performance::RedundantMatch < ::RuboCop::Cop::Base
   extend(::RuboCop::Cop::AutoCorrector)
 
@@ -560,6 +582,26 @@ class RuboCop::Cop::Performance::RedundantSortBlock < ::RuboCop::Cop::Base
 end
 
 RuboCop::Cop::Performance::RedundantSortBlock::MSG = T.let(T.unsafe(nil), String)
+
+class RuboCop::Cop::Performance::RedundantSplitRegexpArgument < ::RuboCop::Cop::Base
+  extend(::RuboCop::Cop::AutoCorrector)
+
+  def on_send(node); end
+  def split_call_with_regexp?(param0 = T.unsafe(nil)); end
+
+  private
+
+  def determinist_regexp?(regexp_node); end
+  def replacement(regexp_node); end
+end
+
+RuboCop::Cop::Performance::RedundantSplitRegexpArgument::DETERMINISTIC_REGEX = T.let(T.unsafe(nil), Regexp)
+
+RuboCop::Cop::Performance::RedundantSplitRegexpArgument::MSG = T.let(T.unsafe(nil), String)
+
+RuboCop::Cop::Performance::RedundantSplitRegexpArgument::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+RuboCop::Cop::Performance::RedundantSplitRegexpArgument::STR_SPECIAL_CHARS = T.let(T.unsafe(nil), Array)
 
 class RuboCop::Cop::Performance::RedundantStringChars < ::RuboCop::Cop::Base
   include(::RuboCop::Cop::RangeHelp)

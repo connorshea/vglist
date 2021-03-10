@@ -1121,6 +1121,8 @@ class RDF::Query::Solution
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+RDF::Query::Solution::INSTANCE_METHODS = T.let(T.unsafe(nil), Array)
+
 class RDF::Query::Solutions < ::Array
   include(::SPARQL::Results)
 
@@ -2167,8 +2169,6 @@ class RDF::Util::Logger::IOWrapper
   def to_set(*args, &block); end
   def to_sxp(*args, &block); end
   def to_yaml(*args, &block); end
-  def translation_metadata(*args, &block); end
-  def translation_metadata=(*args, &block); end
   def try(*args, &block); end
   def try!(*args, &block); end
   def try_cflags(*args, &block); end

@@ -4,12 +4,13 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/doorkeeper/<5.5.0.rc1/doorkeeper.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/doorkeeper/>=5.5.0.rc1/doorkeeper.rbi
 #
 class Doorkeeper::OAuth::Authorization::Context
-  def initialize(client, grant_type, scopes); end
+  def initialize(**attributes); end
 
   def client; end
   def grant_type; end
+  def resource_owner; end
   def scopes; end
 end

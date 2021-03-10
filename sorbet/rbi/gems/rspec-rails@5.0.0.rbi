@@ -190,8 +190,15 @@ end
 class RSpec::Rails::FixtureFileUploadSupport::RailsFixtureFileWrapper
   include(::ActionDispatch::TestProcess::FixtureFile)
   include(::ActionDispatch::TestProcess)
+  include(::ActiveSupport::Testing::FileFixtures)
+
+  def file_fixture_path; end
+  def file_fixture_path?; end
 
   class << self
+    def file_fixture_path; end
+    def file_fixture_path=(value); end
+    def file_fixture_path?; end
     def fixture_path; end
     def fixture_path=(_arg0); end
     def instance; end
@@ -206,14 +213,14 @@ module RSpec::Rails::FixtureSupport
   include(::RSpec::Rails::MinitestAssertionAdapter)
   include(::ActiveRecord::TestFixtures)
   include(::RSpec::Rails::FixtureSupport::Fixtures)
+
+  def run_in_transaction?; end
 end
 
 module RSpec::Rails::FixtureSupport::Fixtures
   extend(::ActiveSupport::Concern)
 
   mixes_in_class_methods(::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods)
-
-  def name; end
 end
 
 module RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
@@ -377,6 +384,7 @@ class RSpec::Rails::Matchers::ActiveJob::Base < ::RSpec::Rails::Matchers::BaseMa
   def base_job_message(job); end
   def base_message; end
   def check(jobs); end
+  def check_for_inprecise_value(scheduled_at); end
   def deserialize_arguments(job); end
   def job_match?(job); end
   def queue_adapter; end

@@ -10,6 +10,7 @@ module Doorkeeper
     def config; end
     def configuration; end
     def configure(&block); end
+    def gem_version; end
     def setup_application_owner; end
     def setup_orm_adapter; end
     def setup_orm_models; end
@@ -83,7 +84,7 @@ module Doorkeeper::AccessTokenMixin::ClassMethods
   def by_token(token); end
   def create_for(application:, resource_owner:, scopes:, **token_attributes); end
   def fallback_secret_strategy; end
-  def find_access_token_in_batches(relation, *args, &block); end
+  def find_access_token_in_batches(relation, **args, &block); end
   def find_matching_token(relation, application, scopes); end
   def find_or_create_for(application:, resource_owner:, scopes:, **token_attributes); end
   def last_authorized_token_for(application_id, resource_owner); end
@@ -115,6 +116,7 @@ module Doorkeeper::ApplicationMixin::ClassMethods
 end
 
 class Doorkeeper::Config
+  include(::Doorkeeper::Config::Validations)
   extend(::Doorkeeper::Config::Option)
 
   def access_grant_class(*_args); end
@@ -141,6 +143,7 @@ class Doorkeeper::Config
   def authenticate_admin(*_args); end
   def authenticate_resource_owner(*_args); end
   def authorization_code_expires_in(*_args); end
+  def authorization_response_flows; end
   def authorization_response_types; end
   def authorize_resource_owner_for_client(*_args); end
   def base_controller(*_args); end
@@ -148,13 +151,19 @@ class Doorkeeper::Config
   def before_successful_authorization(*_args); end
   def before_successful_strategy_response(*_args); end
   def builder_class; end
+  def calculate_authorization_response_types; end
+  def calculate_grant_flows; end
+  def calculate_token_grant_types; end
   def client_credentials_methods; end
   def confirm_application_owner?; end
   def custom_access_token_expires_in(*_args); end
   def custom_introspection_response(*_args); end
   def default_generator_method(*_args); end
   def default_scopes; end
+  def deprecated_authorization_flows; end
+  def deprecated_token_grant_types_resolver; end
   def enable_application_owner?; end
+  def enabled_grant_flows; end
   def enforce_configured_scopes?; end
   def enforce_content_type; end
   def forbid_redirect_uri(*_args); end
@@ -176,21 +185,18 @@ class Doorkeeper::Config
   def scopes; end
   def scopes_by_grant_type; end
   def skip_authorization(*_args); end
+  def skip_client_authentication_for_password_grant(*_args); end
+  def token_grant_flows; end
   def token_grant_types; end
   def token_lookup_batch_size(*_args); end
   def token_reuse_limit(*_args); end
   def token_secret_fallback_strategy; end
   def token_secret_strategy; end
-  def validate!; end
 
   private
 
-  def calculate_authorization_response_types; end
-  def calculate_token_grant_types; end
+  def calculate_token_grant_flows; end
   def option_set?(instance_key); end
-  def validate_reuse_access_token_value; end
-  def validate_secret_strategies; end
-  def validate_token_reuse_limit; end
 
   class << self
     def builder_class; end
@@ -250,6 +256,7 @@ class Doorkeeper::Config::Builder < ::Doorkeeper::Config::AbstractBuilder
   def revoke_previous_client_credentials_token; end
   def scopes_by_grant_type(hash = T.unsafe(nil)); end
   def skip_authorization(*args, &block); end
+  def skip_client_authentication_for_password_grant(*args, &block); end
   def token_lookup_batch_size(*args, &block); end
   def token_reuse_limit(*args, &block); end
   def use_polymorphic_resource_owner; end
@@ -266,6 +273,16 @@ module Doorkeeper::Config::Option
   class << self
     def extended(base); end
   end
+end
+
+module Doorkeeper::Config::Validations
+  def validate!; end
+
+  private
+
+  def validate_reuse_access_token_value; end
+  def validate_secret_strategies; end
+  def validate_token_reuse_limit; end
 end
 
 module Doorkeeper::DashboardHelper
@@ -326,6 +343,50 @@ class Doorkeeper::Errors::TokenUnknown < ::Doorkeeper::Errors::InvalidToken
 end
 
 class Doorkeeper::Errors::UnableToGenerateToken < ::Doorkeeper::Errors::DoorkeeperError
+end
+
+module Doorkeeper::GrantFlow
+  extend(::Doorkeeper::GrantFlow::Registry)
+end
+
+class Doorkeeper::GrantFlow::FallbackFlow < ::Doorkeeper::GrantFlow::Flow
+  def handles_grant_type?; end
+  def handles_response_type?; end
+end
+
+class Doorkeeper::GrantFlow::Flow
+  def initialize(name, **options); end
+
+  def default_response_mode; end
+  def grant_type_matches; end
+  def grant_type_strategy; end
+  def handles_grant_type?; end
+  def handles_response_type?; end
+  def matches_grant_type?(value); end
+  def matches_response_mode?(value); end
+  def matches_response_type?(value); end
+  def name; end
+  def response_mode_matches; end
+  def response_type_matches; end
+  def response_type_strategy; end
+end
+
+module Doorkeeper::GrantFlow::Registry
+  def aliases; end
+  def aliases=(val); end
+  def expand_alias(alias_name); end
+  def flows; end
+  def flows=(val); end
+  def get(name); end
+  def register(name_or_flow, **options); end
+  def register_alias(alias_name, **options); end
+
+  class << self
+    def aliases; end
+    def aliases=(val); end
+    def flows; end
+    def flows=(val); end
+  end
 end
 
 module Doorkeeper::Helpers
@@ -414,15 +475,15 @@ module Doorkeeper::Models::SecretStorable
 
   mixes_in_class_methods(::Doorkeeper::Models::SecretStorable::ClassMethods)
 
-  def fallback_secret_strategy(*args, &block); end
-  def secret_strategy(*args, &block); end
+  def fallback_secret_strategy(*_arg0, &_arg1); end
+  def secret_strategy(*_arg0, &_arg1); end
 end
 
 module Doorkeeper::Models::SecretStorable::ClassMethods
   def fallback_secret_strategy; end
   def find_by_fallback_token(attr, plain_secret); end
   def find_by_plaintext_token(attr, token); end
-  def secret_matches?(*args, &block); end
+  def secret_matches?(*_arg0, &_arg1); end
   def secret_strategy; end
   def upgrade_fallback_value(instance, attr, plain_secret); end
 end
@@ -438,6 +499,7 @@ end
 class Doorkeeper::OAuth::Authorization::Code
   def initialize(pre_auth, resource_owner); end
 
+  def access_grant?; end
   def issue_token!; end
   def oob_redirect; end
   def pre_auth; end
@@ -453,16 +515,18 @@ class Doorkeeper::OAuth::Authorization::Code
 end
 
 class Doorkeeper::OAuth::Authorization::Context
-  def initialize(client, grant_type, scopes); end
+  def initialize(**attributes); end
 
   def client; end
   def grant_type; end
+  def resource_owner; end
   def scopes; end
 end
 
 class Doorkeeper::OAuth::Authorization::Token
   def initialize(pre_auth, resource_owner); end
 
+  def access_token?; end
   def issue_token!; end
   def oob_redirect; end
   def pre_auth; end
@@ -475,7 +539,7 @@ class Doorkeeper::OAuth::Authorization::Token
 
   class << self
     def access_token_expires_in(configuration, context); end
-    def build_context(pre_auth_or_oauth_client, grant_type, scopes); end
+    def build_context(pre_auth_or_oauth_client, grant_type, scopes, resource_owner); end
     def refresh_token_enabled?(server, context); end
   end
 end
@@ -507,11 +571,11 @@ class Doorkeeper::OAuth::AuthorizationCodeRequest < ::Doorkeeper::OAuth::BaseReq
   def before_successful_response; end
   def generate_code_challenge(code_verifier); end
   def pkce_supported?; end
+  def resource_owner; end
   def validate_client; end
   def validate_code_verifier; end
   def validate_grant; end
   def validate_params; end
-  def validate_pkce_support; end
   def validate_redirect_uri; end
 end
 
@@ -522,7 +586,7 @@ class Doorkeeper::OAuth::BaseRequest
   def after_successful_response; end
   def authorize; end
   def before_successful_response; end
-  def default_scopes(*args, &block); end
+  def default_scopes(*_arg0, &_arg1); end
   def find_or_create_access_token(client, resource_owner, scopes, server); end
   def grant_type; end
   def scopes; end
@@ -549,11 +613,11 @@ class Doorkeeper::OAuth::Client
   def initialize(application); end
 
   def application; end
-  def id(*args, &block); end
-  def name(*args, &block); end
-  def redirect_uri(*args, &block); end
-  def scopes(*args, &block); end
-  def uid(*args, &block); end
+  def id(*_arg0, &_arg1); end
+  def name(*_arg0, &_arg1); end
+  def redirect_uri(*_arg0, &_arg1); end
+  def scopes(*_arg0, &_arg1); end
+  def uid(*_arg0, &_arg1); end
 
   class << self
     def authenticate(credentials, method = T.unsafe(nil)); end
@@ -562,7 +626,7 @@ class Doorkeeper::OAuth::Client
 end
 
 class Doorkeeper::OAuth::Client::Credentials < ::Struct
-  def blank?(*args, &block); end
+  def blank?(*_arg0, &_arg1); end
   def secret; end
   def secret=(_); end
   def uid; end
@@ -626,7 +690,7 @@ class Doorkeeper::OAuth::ClientCredentialsRequest < ::Doorkeeper::OAuth::BaseReq
 
   def access_token; end
   def client; end
-  def error(*args, &block); end
+  def error(*_arg0, &_arg1); end
   def error_response; end
   def issuer; end
   def original_scopes; end
@@ -652,6 +716,7 @@ class Doorkeeper::OAuth::CodeResponse < ::Doorkeeper::OAuth::BaseResponse
   def initialize(pre_auth, auth, options = T.unsafe(nil)); end
 
   def auth; end
+  def body; end
   def issued_token; end
   def pre_auth; end
   def redirect_uri; end
@@ -680,13 +745,13 @@ class Doorkeeper::OAuth::ErrorResponse < ::Doorkeeper::OAuth::BaseResponse
   def initialize(attributes = T.unsafe(nil)); end
 
   def body; end
-  def description(*args, &block); end
+  def description(*_arg0, &_arg1); end
   def headers; end
-  def name(*args, &block); end
+  def name(*_arg0, &_arg1); end
   def raise_exception!; end
   def redirect_uri; end
   def redirectable?; end
-  def state(*args, &block); end
+  def state(*_arg0, &_arg1); end
   def status; end
 
   protected
@@ -702,6 +767,8 @@ class Doorkeeper::OAuth::ErrorResponse < ::Doorkeeper::OAuth::BaseResponse
     def from_request(request, attributes = T.unsafe(nil)); end
   end
 end
+
+Doorkeeper::OAuth::ErrorResponse::NON_REDIRECTABLE_STATES = T.let(T.unsafe(nil), Array)
 
 class Doorkeeper::OAuth::ForbiddenTokenResponse < ::Doorkeeper::OAuth::ErrorResponse
   def initialize(attributes = T.unsafe(nil)); end
@@ -849,13 +916,16 @@ class Doorkeeper::OAuth::PreAuthorization
 
   def as_json(_options = T.unsafe(nil)); end
   def authorizable?; end
+  def authorization_response_flow; end
   def client; end
   def code_challenge; end
   def code_challenge_method; end
   def error_response; end
+  def form_post_response?; end
   def missing_param; end
   def redirect_uri; end
   def resource_owner; end
+  def response_mode; end
   def response_type; end
   def scope; end
   def scopes; end
@@ -876,6 +946,7 @@ class Doorkeeper::OAuth::PreAuthorization
   def validate_params; end
   def validate_redirect_uri; end
   def validate_resource_owner_authorize_for_client; end
+  def validate_response_mode; end
   def validate_response_type; end
   def validate_scopes; end
 end
@@ -918,8 +989,8 @@ class Doorkeeper::OAuth::Scopes
   def <=>(other); end
   def add(*scopes); end
   def all; end
-  def each(*args, &block); end
-  def empty?(*args, &block); end
+  def each(*_arg0, &_arg1); end
+  def empty?(*_arg0, &_arg1); end
   def exists?(scope); end
   def has_scopes?(scopes); end
   def scopes?(scopes); end
@@ -1102,19 +1173,20 @@ end
 module Doorkeeper::Request
   class << self
     def authorization_strategy(response_type); end
-    def get_strategy(grant_type, available); end
     def token_strategy(grant_type); end
 
     private
 
-    def build_strategy_class(grant_or_request_type); end
-    def token_grant_types; end
+    def authorization_flows; end
+    def available; end
+    def build_fallback_strategy_class(grant_or_request_type); end
+    def token_flows; end
   end
 end
 
 class Doorkeeper::Request::AuthorizationCode < ::Doorkeeper::Request::Strategy
-  def client(*args, &block); end
-  def parameters(*args, &block); end
+  def client(*_arg0, &_arg1); end
+  def parameters(*_arg0, &_arg1); end
   def request; end
 
   private
@@ -1123,28 +1195,28 @@ class Doorkeeper::Request::AuthorizationCode < ::Doorkeeper::Request::Strategy
 end
 
 class Doorkeeper::Request::ClientCredentials < ::Doorkeeper::Request::Strategy
-  def client(*args, &block); end
-  def parameters(*args, &block); end
+  def client(*_arg0, &_arg1); end
+  def parameters(*_arg0, &_arg1); end
   def request; end
 end
 
 class Doorkeeper::Request::Code < ::Doorkeeper::Request::Strategy
-  def current_resource_owner(*args, &block); end
+  def current_resource_owner(*_arg0, &_arg1); end
   def pre_auth; end
   def request; end
 end
 
 class Doorkeeper::Request::Password < ::Doorkeeper::Request::Strategy
-  def client(*args, &block); end
-  def credentials(*args, &block); end
-  def parameters(*args, &block); end
+  def client(*_arg0, &_arg1); end
+  def credentials(*_arg0, &_arg1); end
+  def parameters(*_arg0, &_arg1); end
   def request; end
-  def resource_owner(*args, &block); end
+  def resource_owner(*_arg0, &_arg1); end
 end
 
 class Doorkeeper::Request::RefreshToken < ::Doorkeeper::Request::Strategy
-  def credentials(*args, &block); end
-  def parameters(*args, &block); end
+  def credentials(*_arg0, &_arg1); end
+  def parameters(*_arg0, &_arg1); end
   def refresh_token; end
   def request; end
 end
@@ -1152,13 +1224,13 @@ end
 class Doorkeeper::Request::Strategy
   def initialize(server); end
 
-  def authorize(*args, &block); end
+  def authorize(*_arg0, &_arg1); end
   def request; end
   def server; end
 end
 
 class Doorkeeper::Request::Token < ::Doorkeeper::Request::Strategy
-  def current_resource_owner(*args, &block); end
+  def current_resource_owner(*_arg0, &_arg1); end
   def pre_auth; end
   def request; end
 end
@@ -1231,6 +1303,8 @@ end
 Doorkeeper::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 Doorkeeper::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+
+Doorkeeper::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 Doorkeeper::VERSION::STRING = T.let(T.unsafe(nil), String)
 

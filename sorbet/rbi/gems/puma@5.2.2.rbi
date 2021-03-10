@@ -713,6 +713,7 @@ class Puma::DSL
   def log_requests(which = T.unsafe(nil)); end
   def lowlevel_error_handler(obj = T.unsafe(nil), &block); end
   def max_fast_inline(num_of_requests); end
+  def mutate_stdout_and_stderr_to_sync_on_write(enabled = T.unsafe(nil)); end
   def nakayoshi_fork(enabled = T.unsafe(nil)); end
   def on_refork(&block); end
   def on_restart(&block); end
@@ -830,12 +831,14 @@ class Puma::NullIO
   def close; end
   def each; end
   def eof?; end
+  def flush; end
   def gets; end
   def puts(*ary); end
   def read(count = T.unsafe(nil), _buffer = T.unsafe(nil)); end
   def rewind; end
   def size; end
   def string; end
+  def sync; end
   def sync=(v); end
   def write(*ary); end
 end

@@ -7,6 +7,7 @@
 module InvisibleCaptcha
   class << self
     def css_strategy; end
+    def encode(value); end
     def generate_random_honeypot; end
     def get_honeypot; end
     def honeypots; end
@@ -14,9 +15,13 @@ module InvisibleCaptcha
     def init!; end
     def injectable_styles; end
     def injectable_styles=(_arg0); end
+    def secret; end
+    def secret=(_arg0); end
     def sentence_for_humans; end
     def sentence_for_humans=(_arg0); end
     def setup; end
+    def spinner_enabled; end
+    def spinner_enabled=(_arg0); end
     def timestamp_enabled; end
     def timestamp_enabled=(_arg0); end
     def timestamp_error_message; end
@@ -40,6 +45,7 @@ module InvisibleCaptcha::ControllerExt
   def honeypot_spam?(options = T.unsafe(nil)); end
   def on_spam(options = T.unsafe(nil)); end
   def on_timestamp_spam(options = T.unsafe(nil)); end
+  def spinner_spam?; end
   def timestamp_spam?(options = T.unsafe(nil)); end
   def warn_spam(message); end
 end
@@ -66,6 +72,7 @@ module InvisibleCaptcha::ViewHelpers
   def build_input_name(honeypot, scope = T.unsafe(nil)); end
   def build_invisible_captcha(honeypot = T.unsafe(nil), scope = T.unsafe(nil), options = T.unsafe(nil)); end
   def build_label_name(honeypot, scope = T.unsafe(nil)); end
+  def current_request; end
   def default_honeypot_options; end
   def visibility_css(css_class, options); end
 end
