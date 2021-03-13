@@ -18,14 +18,23 @@ class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
   sig do
     params(
       game_purchase_id: T.any(String, Integer),
+      platforms: T::Array[T.any(String, Integer)],
+      stores: T::Array[T.any(String, Integer)],
       attributes: T.untyped
     ).returns(T::Hash[Symbol, GamePurchase])
   end
   def resolve(
     game_purchase_id:,
+    platforms: [],
+    stores: [],
     **attributes
   )
-    game_purchase = GamePurchase.update(game_purchase_id, attributes)
+    game_purchase = GamePurchase.update(
+      game_purchase_id,
+      platform_ids: platforms,
+      store_ids: stores,
+      **attributes
+    )
 
     raise GraphQL::ExecutionError, game_purchase.errors.full_messages.join(", ") unless game_purchase.save
 
