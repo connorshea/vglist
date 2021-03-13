@@ -356,6 +356,7 @@ RSpec.describe "Game query API", type: :request do
           query($id: ID!) {
             game(id: $id) {
               isInLibrary
+              gamePurchaseId
             }
           }
         GRAPHQL
@@ -367,7 +368,8 @@ RSpec.describe "Game query API", type: :request do
         result = api_request(query_string, variables: { id: game.id }, token: access_token)
         expect(result.graphql_dig(:game)).to include(
           {
-            isInLibrary: true
+            isInLibrary: true,
+            gamePurchaseId: game_purchase.id.to_s
           }
         )
       end
@@ -376,7 +378,8 @@ RSpec.describe "Game query API", type: :request do
         result = api_request(query_string, variables: { id: game.id }, token: access_token)
         expect(result.graphql_dig(:game)).to include(
           {
-            isInLibrary: false
+            isInLibrary: false,
+            gamePurchaseId: nil
           }
         )
       end

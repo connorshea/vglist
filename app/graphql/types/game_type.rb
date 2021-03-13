@@ -36,6 +36,7 @@ module Types
 
     field :is_favorited, Boolean, null: true, resolver_method: :favorited?, description: "Whether the game is in the current user's favorites, or null if there is no logged-in user."
     field :is_in_library, Boolean, null: true, resolver_method: :in_library?, description: "Whether the game is in the current user's library, or null if there is no logged-in user."
+    field :game_purchase_id, ID, null: true, description: 'The ID of the GamePurchase record if the game is in the current user\'s library, or `null` otherwise.'
 
     # Get the Steam App ID values as an array.
     sig { returns(T::Array[Integer]) }
@@ -65,6 +66,13 @@ module Types
       return nil if @context[:current_user].nil?
 
       @context[:current_user].game_purchases.find_by(game_id: @object.id).present?
+    end
+
+    sig { returns(T.nilable(Integer)) }
+    def game_purchase_id
+      return nil if @context[:current_user].nil?
+
+      @context[:current_user].game_purchases.find_by(game_id: @object.id)&.id
     end
   end
 end
