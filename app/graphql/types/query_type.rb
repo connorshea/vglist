@@ -44,7 +44,7 @@ module Types
 
     field :basic_site_statistics, resolver: Resolvers::SiteStatisticResolvers::BasicResolver
 
-    field :multisearch, resolver: Resolvers::MultisearchResolver
+    field :global_search, resolver: Resolvers::GlobalSearchResolver
 
     # Admin stuff
     field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver

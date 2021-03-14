@@ -1,6 +1,6 @@
 # typed: strict
 module Resolvers
-  class MultisearchResolver < Resolvers::BaseResolver
+  class GlobalSearchResolver < Resolvers::BaseResolver
     type Types::SearchResultType.connection_type, null: false
 
     description <<~MARKDOWN
