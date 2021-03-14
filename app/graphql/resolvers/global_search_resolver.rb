@@ -1,7 +1,7 @@
 # typed: strict
 module Resolvers
   class GlobalSearchResolver < Resolvers::BaseResolver
-    type Types::SearchResultType.connection_type, null: false
+    type Types::SearchResultUnion.connection_type, null: false
 
     description <<~MARKDOWN
       Search for records matching a given string. Returns Companies, Engines,
