@@ -44,6 +44,8 @@ module Types
 
     field :basic_site_statistics, resolver: Resolvers::SiteStatisticResolvers::BasicResolver
 
+    field :multisearch, resolver: Resolvers::MultisearchResolver
+
     # Admin stuff
     field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver
     field :steam_blocklist, resolver: Resolvers::SteamBlocklistResolver
