@@ -315,60 +315,30 @@ RSpec.describe "Users API", type: :request do
 
     context 'with isFollowed field' do
       let(:relationship) { create(:relationship, follower: user, followed: user2) }
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              isFollowed
+            }
+          }
+        GRAPHQL
+      end
 
       it "returns true for current user that follows this user" do
         relationship
-        query_string = <<-GRAPHQL
-          query($id: ID!) {
-            user(id: $id) {
-              isFollowed
-            }
-          }
-        GRAPHQL
-
         result = api_request(query_string, variables: { id: user2.id }, token: access_token)
-
-        expect(result.graphql_dig(:user)).to eq(
-          {
-            isFollowed: true
-          }
-        )
+        expect(result.graphql_dig(:user)).to eq({ isFollowed: true })
       end
 
       it "returns false for current user that doesn't follow this user" do
-        query_string = <<-GRAPHQL
-          query($id: ID!) {
-            user(id: $id) {
-              isFollowed
-            }
-          }
-        GRAPHQL
-
         result = api_request(query_string, variables: { id: user2.id }, token: access_token)
-
-        expect(result.graphql_dig(:user)).to eq(
-          {
-            isFollowed: false
-          }
-        )
+        expect(result.graphql_dig(:user)).to eq({ isFollowed: false })
       end
 
       it "returns null for current user that is looking at themselves" do
-        query_string = <<-GRAPHQL
-          query($id: ID!) {
-            user(id: $id) {
-              isFollowed
-            }
-          }
-        GRAPHQL
-
         result = api_request(query_string, variables: { id: user.id }, token: access_token)
-
-        expect(result.graphql_dig(:user)).to eq(
-          {
-            isFollowed: nil
-          }
-        )
+        expect(result.graphql_dig(:user)).to eq({ isFollowed: nil })
       end
     end
 
