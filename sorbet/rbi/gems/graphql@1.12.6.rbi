@@ -1848,6 +1848,14 @@ module GraphQL::Language::BlockString
   end
 end
 
+class GraphQL::Language::Cache
+  def initialize(path); end
+
+  def fetch(filename); end
+end
+
+GraphQL::Language::Cache::DIGEST = T.let(T.unsafe(nil), Digest::SHA256)
+
 module GraphQL::Language::DefinitionSlice
   extend(::GraphQL::Language::DefinitionSlice)
 
@@ -2737,6 +2745,8 @@ class GraphQL::Language::Parser < ::Racc::Parser
   def on_error(parser_token_id, lexer_token, vstack); end
 
   class << self
+    def cache; end
+    def cache=(_arg0); end
     def parse(query_string, filename: T.unsafe(nil), tracer: T.unsafe(nil)); end
     def parse_file(filename, tracer: T.unsafe(nil)); end
   end
@@ -3012,11 +3022,13 @@ class GraphQL::Pagination::ArrayConnection < ::GraphQL::Pagination::Connection
 end
 
 class GraphQL::Pagination::Connection
-  def initialize(items, parent: T.unsafe(nil), field: T.unsafe(nil), context: T.unsafe(nil), first: T.unsafe(nil), after: T.unsafe(nil), max_page_size: T.unsafe(nil), last: T.unsafe(nil), before: T.unsafe(nil), edge_class: T.unsafe(nil)); end
+  def initialize(items, parent: T.unsafe(nil), field: T.unsafe(nil), context: T.unsafe(nil), first: T.unsafe(nil), after: T.unsafe(nil), max_page_size: T.unsafe(nil), last: T.unsafe(nil), before: T.unsafe(nil), edge_class: T.unsafe(nil), arguments: T.unsafe(nil)); end
 
   def after; end
   def after_value; end
   def after_value=(_arg0); end
+  def arguments; end
+  def arguments=(_arg0); end
   def before; end
   def before_value; end
   def before_value=(_arg0); end
@@ -6872,7 +6884,9 @@ module GraphQL::Types::Relay::ConnectionBehaviors::ClassMethods
   def accessible?(ctx); end
   def authorized?(obj, ctx); end
   def edge_class; end
-  def edge_type(edge_type_class, edge_class: T.unsafe(nil), node_type: T.unsafe(nil), nodes_field: T.unsafe(nil), node_nullable: T.unsafe(nil)); end
+  def edge_nullable(new_value = T.unsafe(nil)); end
+  def edge_type(edge_type_class, edge_class: T.unsafe(nil), node_type: T.unsafe(nil), nodes_field: T.unsafe(nil), node_nullable: T.unsafe(nil), edges_nullable: T.unsafe(nil), edge_nullable: T.unsafe(nil)); end
+  def edges_nullable(new_value = T.unsafe(nil)); end
   def node_nullable(new_value = T.unsafe(nil)); end
   def node_type; end
   def nodes_field(node_nullable: T.unsafe(nil)); end
