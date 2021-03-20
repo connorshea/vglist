@@ -6,10 +6,14 @@ module Resolvers
 
       description "List all users."
 
-      sig { returns(User::RelationType) }
-      def resolve
+      argument :sort_by, Types::UserSortType, required: false, description: "The order to sort the users in, if any."
+
+      sig { params(sort_by: T.nilable(String)).returns(User::RelationType) }
+      def resolve(sort_by: nil)
         # Exclude banned users from the results.
-        User.all.where(banned: false)
+        users = User.all.where(banned: false)
+
+        sort_by.nil? ? users.order(:id) : users.public_send(sort_by.to_sym)
       end
     end
   end
