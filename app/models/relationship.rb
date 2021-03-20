@@ -1,7 +1,5 @@
 # typed: strict
 class Relationship < ApplicationRecord
-  extend T::Sig
-
   after_create :create_follow_event
 
   # The user that's following the other.

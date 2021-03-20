@@ -1,7 +1,5 @@
 # typed: strict
 class FavoriteGame < ApplicationRecord
-  extend T::Sig
-
   after_create :favorite_game_create_event
 
   belongs_to :game

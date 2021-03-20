@@ -1,6 +1,5 @@
 # typed: strict
 class Game < ApplicationRecord
-  extend T::Sig
   include GlobalSearchable
   include Searchable
 

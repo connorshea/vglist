@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 class GamePurchase < ApplicationRecord
   after_create :game_purchase_create
   after_update :game_purchase_update
@@ -55,6 +55,7 @@ class GamePurchase < ApplicationRecord
 
   private
 
+  sig { void }
   def game_purchase_create
     Event.create!(
       eventable_id: id,
@@ -66,6 +67,7 @@ class GamePurchase < ApplicationRecord
     update_average_rating
   end
 
+  sig { void }
   def game_purchase_update
     update_average_rating
 
@@ -81,12 +83,14 @@ class GamePurchase < ApplicationRecord
     )
   end
 
+  sig { void }
   def game_purchase_destroy
     update_average_rating
   end
 
   # If there aren't any game purchases for a given game, it'll return nil so
   # avg_rating should be set to nil.
+  sig { void }
   def update_average_rating
     average = GamePurchase.where(game_id: game_id).average(:rating)
     average.nil? ? game.update(avg_rating: nil) : game.update(avg_rating: average.round(1))

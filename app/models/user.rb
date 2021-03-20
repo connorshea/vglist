@@ -1,6 +1,5 @@
 # typed: strict
 class User < ApplicationRecord
-  extend T::Sig
   extend FriendlyId
   include PgSearch::Model
   include GlobalSearchable
