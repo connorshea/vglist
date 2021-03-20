@@ -364,5 +364,57 @@ RSpec.describe "Users API", type: :request do
         )
       end
     end
+
+    context 'when sorting users' do
+      # Need to do some fancy stuff here otherwise the order of the results is
+      # non-deterministic, which causes flaky failures. We make sure that the
+      # users each have a different number of followers and a different number
+      # of owned games.
+      let(:user) do
+        create(:user_with_game_purchase) do |current_user|
+          create(:relationship, follower: user2, followed: current_user)
+          create(:relationship, follower: user3, followed: current_user)
+        end
+      end
+      let(:user2) do
+        create(:user) do |current_user|
+          create(:relationship, follower: user3, followed: current_user)
+        end
+      end
+      let(:user3) do
+        create(:user_with_game_purchase) do |current_user|
+          create_list(:game_purchase, 3, user: current_user)
+        end
+      end
+
+      # Test each sort order and make sure it matches the corresponding sort
+      # method. We test the sort scopes individually in method specs, so we
+      # should be able to rely on those tests for testing the specific order.
+      [:most_games, :most_followers].each do |sort_order|
+        it "returns data in expected order for #{sort_order}" do
+          query_string = <<~GRAPHQL_WITH_INTERP
+            query {
+              users(sortBy: #{sort_order.upcase}) {
+                nodes {
+                  id
+                  username
+                }
+              }
+            }
+          GRAPHQL_WITH_INTERP
+
+          result = api_request(query_string, token: access_token)
+          # This is a bit of a hack to get the users in the same format as
+          # they're returned by GraphQL (hashes with only the specific
+          # requested keys, with IDs being strings).
+          expected_users = User.public_send(sort_order).select(:id, :username).map(&:as_json).map(&:symbolize_keys).map do |user|
+            user[:id] = user[:id].to_s
+            user
+          end
+
+          expect(result.graphql_dig(:users, :nodes)).to eq(expected_users)
+        end
+      end
+    end
   end
 end
