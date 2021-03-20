@@ -24,6 +24,8 @@ module Types
       argument :size, UserAvatarSizeType, required: false, default_value: :small, description: "The size of the avatar image being requested."
     end
 
+    field :is_followed, Boolean, null: true, resolver_method: :followed?, description: "Whether the current user is following this user. `null` if there is no logged-in user or the current user is querying on themselves."
+
     sig { returns(T.nilable(Event::ActiveRecord_Relation)) }
     def activity
       return nil unless user_visible?
@@ -61,6 +63,15 @@ module Types
         T.unsafe(self).handler(meth_name)
       end
     end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def followed?
+      return nil if @context[:current_user].nil? || @context[:current_user].id == @object.id
+
+      @context[:current_user].following.exists?(id: @object.id)
+    end
+
+    private
 
     sig { returns(T::Boolean) }
     def user_visible?
