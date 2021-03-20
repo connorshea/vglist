@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 class Game < ApplicationRecord
   extend T::Sig
   include GlobalSearchable
@@ -190,6 +190,7 @@ class Game < ApplicationRecord
   protected
 
   # Prevent the game from using a Wikidata ID which has been blocklisted.
+  sig { void }
   def wikidata_id_not_blocklisted
     return unless wikidata_id.present? && WikidataBlocklist.pluck(:wikidata_id).include?(wikidata_id)
 
