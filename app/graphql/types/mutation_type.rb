@@ -3,15 +3,19 @@ module Types
   class MutationType < Types::BaseObject
     description "Mutations are GraphQL requests that can be used to create, update, or delete records on vglist."
 
+    # Game mutations
+    field :delete_game, mutation: Mutations::Games::DeleteGame
     field :favorite_game, mutation: Mutations::Games::FavoriteGame
     field :unfavorite_game, mutation: Mutations::Games::UnfavoriteGame
     field :remove_game_cover, mutation: Mutations::Games::RemoveGameCover
 
+    # User mutations
     field :follow_user, mutation: Mutations::Users::FollowUser
     field :unfollow_user, mutation: Mutations::Users::UnfollowUser
     field :ban_user, mutation: Mutations::Users::BanUser
     field :unban_user, mutation: Mutations::Users::UnbanUser
 
+    # GamePurchase mutations
     field :add_game_to_library, mutation: Mutations::GamePurchases::AddGameToLibrary
     field :update_game_in_library, mutation: Mutations::GamePurchases::UpdateGameInLibrary
     field :remove_game_from_library, mutation: Mutations::GamePurchases::RemoveGameFromLibrary
@@ -46,9 +50,10 @@ module Types
     field :update_store, mutation: Mutations::Stores::UpdateStore
     field :delete_store, mutation: Mutations::Stores::DeleteStore
 
+    # Event mutations
     field :delete_event, mutation: Mutations::DeleteEvent
 
-    # Admin
+    # Admin dashboard mutations
     field :add_to_steam_blocklist, mutation: Mutations::Admin::AddToSteamBlocklist
     field :remove_from_steam_blocklist, mutation: Mutations::Admin::RemoveFromSteamBlocklist
     field :add_to_wikidata_blocklist, mutation: Mutations::Admin::AddToWikidataBlocklist
