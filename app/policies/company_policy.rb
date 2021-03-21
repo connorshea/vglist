@@ -31,13 +31,20 @@ class CompanyPolicy < ApplicationPolicy
     user.present?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
-    user.present?
+    user_is_moderator_or_admin?
   end
 
   sig { returns(T::Boolean) }
   def search?
     user.present?
+  end
+
+  private
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def user_is_moderator_or_admin?
+    user && (user&.moderator? || user&.admin?)
   end
 end

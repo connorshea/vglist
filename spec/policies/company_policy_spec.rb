@@ -8,10 +8,14 @@ RSpec.describe CompanyPolicy, type: :policy do
     let(:user) { create(:user) }
     let(:company) { create(:company) }
 
-    it "let's a user do everything" do
+    it "let's a user do everything except destroy the company" do
       expect(company_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :destroy, :search]
+        [:index, :show, :create, :new, :edit, :update, :search]
       )
+    end
+
+    it 'does not let a user destroy companies' do
+      expect(company_policy).to forbid_action(:destroy)
     end
   end
 
