@@ -36,6 +36,11 @@ module Types
     field :update_platform, mutation: Mutations::Platforms::UpdatePlatform
     field :delete_platform, mutation: Mutations::Platforms::DeletePlatform
 
+    # Series mutations
+    field :create_series, mutation: Mutations::Series::CreateSeries
+    field :update_series, mutation: Mutations::Series::UpdateSeries
+    field :delete_series, mutation: Mutations::Series::DeleteSeries
+
     # Store mutations
     field :create_store, mutation: Mutations::Stores::CreateStore
     field :update_store, mutation: Mutations::Stores::UpdateStore
