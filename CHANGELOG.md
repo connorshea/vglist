@@ -4,10 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.3.21
+### Added
+- Add create, update, and delete mutations for Companies, Engines, Genres, Platforms, Series, and Stores to GraphQL API. ([#1972], [#1973], [#1974])
+- Add `deleteGame` mutation to GraphQL API. ([#1976])
+
+## v2021.3.20
+### Added
+- Add `isFollowed` field on User type to GraphQL API. ([#1959])
+- Add sorting to `users` query in GraphQL API. ([#1960])
+- Add mutations for manipulating Steam and Wikidata blocklist records to GraphQL API. ([#1961])
+
+## v2021.3.14
+### Added
+- Add `globalSearch` query to GraphQL API, for use with the search bar in the site header. ([#1953])
+
 ## v2021.3.7
 ### Added
 - Add ability for moderators and admins to ban and unban users in GraphQL API. ([#1929])
 - Add ability for moderators and admins to remove game covers in GraphQL API. ([#1930])
+- Add `steamBlocklist` query to GraphQL API. ([#1933])
+- Add `wikidataBlocklist` query to GraphQL API. ([#1935])
+- Add `isFavorited` and `isInLibrary` fields on Game type to GraphQL API. ([#1937])
 
 ## v2021.3.6
 ### Changed
@@ -864,3 +882,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1927]: https://github.com/connorshea/vglist/pull/1927
 [#1929]: https://github.com/connorshea/vglist/pull/1929
 [#1930]: https://github.com/connorshea/vglist/pull/1930
+[#1933]: https://github.com/connorshea/vglist/pull/1933
+[#1935]: https://github.com/connorshea/vglist/pull/1935
+[#1937]: https://github.com/connorshea/vglist/pull/1937
+[#1953]: https://github.com/connorshea/vglist/pull/1953
+[#1959]: https://github.com/connorshea/vglist/pull/1959
+[#1960]: https://github.com/connorshea/vglist/pull/1960
+[#1961]: https://github.com/connorshea/vglist/pull/1961
+[#1972]: https://github.com/connorshea/vglist/pull/1972
+[#1973]: https://github.com/connorshea/vglist/pull/1973
+[#1974]: https://github.com/connorshea/vglist/pull/1974
+[#1976]: https://github.com/connorshea/vglist/pull/1976
