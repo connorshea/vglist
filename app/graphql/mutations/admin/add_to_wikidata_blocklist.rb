@@ -1,8 +1,8 @@
 # typed: true
 class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
-  description "Add to game Wikidata blocklist."
+  description "Add game to Wikidata blocklist."
 
-  argument :name, String, required: true, description: 'The user being followed.'
+  argument :name, String, required: true, description: 'The name of the game being added to the blocklist.'
   argument :wikidata_id, Integer, required: true, description: 'ID of the Wikidata item.'
 
   field :wikidata_blocklist_entry, Types::WikidataBlocklistEntryType, null: true, description: "The Wikidata Blocklist entry that was created."

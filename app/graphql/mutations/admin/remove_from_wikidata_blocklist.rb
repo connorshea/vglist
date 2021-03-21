@@ -6,7 +6,7 @@ class Mutations::Admin::RemoveFromWikidataBlocklist < Mutations::BaseMutation
 
   field :deleted, Boolean, null: false, description: "Whether the blocklist entry was deleted."
 
-  sig { params(wikidata_blocklist_entry_id: T.untyped).returns(T.untyped) }
+  sig { params(wikidata_blocklist_entry_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(wikidata_blocklist_entry_id:)
     wikidata_blocklist_entry = WikidataBlocklist.find_by(id: wikidata_blocklist_entry_id)
 
