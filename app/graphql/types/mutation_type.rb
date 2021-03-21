@@ -26,10 +26,25 @@ module Types
     field :update_engine, mutation: Mutations::Engines::UpdateEngine
     field :delete_engine, mutation: Mutations::Engines::DeleteEngine
 
+    # Genre mutations
+    field :create_genre, mutation: Mutations::Genres::CreateGenre
+    field :update_genre, mutation: Mutations::Genres::UpdateGenre
+    field :delete_genre, mutation: Mutations::Genres::DeleteGenre
+
     # Platform mutations
     field :create_platform, mutation: Mutations::Platforms::CreatePlatform
     field :update_platform, mutation: Mutations::Platforms::UpdatePlatform
     field :delete_platform, mutation: Mutations::Platforms::DeletePlatform
+
+    # Series mutations
+    field :create_series, mutation: Mutations::Series::CreateSeries
+    field :update_series, mutation: Mutations::Series::UpdateSeries
+    field :delete_series, mutation: Mutations::Series::DeleteSeries
+
+    # Store mutations
+    field :create_store, mutation: Mutations::Stores::CreateStore
+    field :update_store, mutation: Mutations::Stores::UpdateStore
+    field :delete_store, mutation: Mutations::Stores::DeleteStore
 
     field :delete_event, mutation: Mutations::DeleteEvent
 
