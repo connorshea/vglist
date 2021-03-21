@@ -21,6 +21,11 @@ module Types
     field :update_company, mutation: Mutations::Companies::UpdateCompany
     field :delete_company, mutation: Mutations::Companies::DeleteCompany
 
+    # Platform mutations
+    field :create_platform, mutation: Mutations::Platforms::CreatePlatform
+    field :update_platform, mutation: Mutations::Platforms::UpdatePlatform
+    field :delete_platform, mutation: Mutations::Platforms::DeletePlatform
+
     field :delete_event, mutation: Mutations::DeleteEvent
 
     # Admin
