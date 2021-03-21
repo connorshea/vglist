@@ -17,5 +17,11 @@ module Types
     field :remove_game_from_library, mutation: Mutations::GamePurchases::RemoveGameFromLibrary
 
     field :delete_event, mutation: Mutations::DeleteEvent
+
+    # Admin
+    field :add_to_steam_blocklist, mutation: Mutations::Admin::AddToSteamBlocklist
+    field :remove_from_steam_blocklist, mutation: Mutations::Admin::RemoveFromSteamBlocklist
+    field :add_to_wikidata_blocklist, mutation: Mutations::Admin::AddToWikidataBlocklist
+    field :remove_from_wikidata_blocklist, mutation: Mutations::Admin::RemoveFromWikidataBlocklist
   end
 end
