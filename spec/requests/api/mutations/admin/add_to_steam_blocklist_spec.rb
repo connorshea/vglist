@@ -8,7 +8,7 @@ RSpec.describe "Add to Steam Blocklist Mutation API", type: :request do
     let(:query_string) do
       <<-GRAPHQL
         mutation ($name: String!, $steamAppId: Int!) {
-          addToSteamBlocklist(name: $name, steamAppId: $steamId) {
+          addToSteamBlocklist(name: $name, steamAppId: $steamAppId) {
             steamBlocklistEntry {
               name
               steamAppId
