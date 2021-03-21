@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Companies::CreateCompany < Mutations::BaseMutation
-  description "Create a new game company."
+  description "Create a new game company. **Not available in production for now.**"
 
   argument :name, String, required: true, description: 'The name of the company.'
   argument :wikidata_id, Integer, required: false, description: 'The ID of the company item in Wikidata.'
@@ -21,6 +21,9 @@ class Mutations::Companies::CreateCompany < Mutations::BaseMutation
   # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
+    # TODO: Remove this line when the first-party OAuth applications are ready.
+    return false if Rails.env.production?
+
     raise GraphQL::ExecutionError, "You aren't allowed to create a company." unless CompanyPolicy.new(@context[:current_user], nil).create?
 
     return true
