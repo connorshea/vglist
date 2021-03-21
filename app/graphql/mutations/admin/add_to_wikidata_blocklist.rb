@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
-  description "Add game to Wikidata blocklist."
+  description "Add game to Wikidata blocklist. **Only available to admins.**"
 
   argument :name, String, required: true, description: 'The name of the game being added to the blocklist.'
   argument :wikidata_id, Integer, required: true, description: 'ID of the Wikidata item.'

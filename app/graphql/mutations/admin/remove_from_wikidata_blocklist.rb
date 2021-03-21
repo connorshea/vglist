@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Admin::RemoveFromWikidataBlocklist < Mutations::BaseMutation
-  description "Remove game from Wikidata blocklist."
+  description "Remove game from Wikidata blocklist. **Only available to admins.**"
 
   argument :wikidata_blocklist_entry_id, ID, required: true, description: 'The ID of the blocklist entry.'
 

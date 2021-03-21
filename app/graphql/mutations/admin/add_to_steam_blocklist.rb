@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
-  description "Add game to Steam blocklist."
+  description "Add game to Steam blocklist. **Only available to admins.**"
 
   argument :name, String, required: true, description: 'The name of the game being added to the blocklist.'
   argument :steam_app_id, Integer, required: true, description: 'ID of the Steam game.'

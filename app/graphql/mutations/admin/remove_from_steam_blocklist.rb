@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Admin::RemoveFromSteamBlocklist < Mutations::BaseMutation
-  description "Remove game from Steam blocklist."
+  description "Remove game from Steam blocklist. **Only available to admins.**"
 
   argument :steam_blocklist_entry_id, ID, required: true, description: 'The ID of the blocklist entry.'
 
