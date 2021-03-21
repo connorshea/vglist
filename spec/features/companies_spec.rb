@@ -75,7 +75,8 @@ RSpec.describe "Companies", type: :feature do
 
   describe "delete company" do
     let!(:company) { create(:company) }
-    let(:user) { create(:confirmed_user) }
+    # Must be a moderator or the company won't be deletable.
+    let(:user) { create(:confirmed_moderator) }
 
     it "accepts valid company data" do
       sign_in(user)

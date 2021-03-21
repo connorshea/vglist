@@ -16,6 +16,11 @@ module Types
     field :update_game_in_library, mutation: Mutations::GamePurchases::UpdateGameInLibrary
     field :remove_game_from_library, mutation: Mutations::GamePurchases::RemoveGameFromLibrary
 
+    # Company mutations
+    field :create_company, mutation: Mutations::Companies::CreateCompany
+    field :update_company, mutation: Mutations::Companies::UpdateCompany
+    field :delete_company, mutation: Mutations::Companies::DeleteCompany
+
     field :delete_event, mutation: Mutations::DeleteEvent
 
     # Admin

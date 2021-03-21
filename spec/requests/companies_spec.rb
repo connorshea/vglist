@@ -94,7 +94,7 @@ RSpec.describe "Companies", type: :request do
   end
 
   describe "DELETE company_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let!(:company) { create(:company) }
 
     it "deletes a company" do
