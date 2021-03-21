@@ -21,6 +21,11 @@ module Types
     field :update_company, mutation: Mutations::Companies::UpdateCompany
     field :delete_company, mutation: Mutations::Companies::DeleteCompany
 
+    # Engine mutations
+    field :create_engine, mutation: Mutations::Engines::CreateEngine
+    field :update_engine, mutation: Mutations::Engines::UpdateEngine
+    field :delete_engine, mutation: Mutations::Engines::DeleteEngine
+
     # Platform mutations
     field :create_platform, mutation: Mutations::Platforms::CreatePlatform
     field :update_platform, mutation: Mutations::Platforms::UpdatePlatform
