@@ -31,6 +31,11 @@ module Types
     field :update_platform, mutation: Mutations::Platforms::UpdatePlatform
     field :delete_platform, mutation: Mutations::Platforms::DeletePlatform
 
+    # Store mutations
+    field :create_store, mutation: Mutations::Stores::CreateStore
+    field :update_store, mutation: Mutations::Stores::UpdateStore
+    field :delete_store, mutation: Mutations::Stores::DeleteStore
+
     field :delete_event, mutation: Mutations::DeleteEvent
 
     # Admin
