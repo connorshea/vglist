@@ -4,7 +4,7 @@ class Mutations::Series::UpdateSeries < Mutations::BaseMutation
 
   argument :series_id, ID, required: true, description: 'The ID of the series record.'
   argument :name, String, required: false, description: 'The name of the series.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the series item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the series item in Wikidata.'
 
   field :series, Types::SeriesType, null: false, description: "The series that was updated."
 

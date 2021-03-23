@@ -3,11 +3,11 @@ class Mutations::Genres::CreateGenre < Mutations::BaseMutation
   description "Create a new game genre. **Only available to moderators and admins.** **Not available in production for now.**"
 
   argument :name, String, required: true, description: 'The name of the genre.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the genre item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the genre item in Wikidata.'
 
   field :genre, Types::GenreType, null: true, description: "The genre that was created."
 
-  sig { params(name: String, wikidata_id: T.nilable(Integer)).returns(T::Hash[Symbol, Genre]) }
+  sig { params(name: String, wikidata_id: T.nilable(T.any(String, Integer))).returns(T::Hash[Symbol, Genre]) }
   def resolve(name:, wikidata_id: nil)
     genre = Genre.new(name: name, wikidata_id: wikidata_id)
 

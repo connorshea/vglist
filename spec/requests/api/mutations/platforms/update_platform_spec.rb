@@ -8,7 +8,7 @@ RSpec.describe "UpdatePlatform Mutation API", type: :request do
     let!(:platform) { create(:platform, name: 'Xbox 360') }
     let(:query_string) do
       <<-GRAPHQL
-        mutation($platformId: ID!, $name: String, $wikidataId: Int) {
+        mutation($platformId: ID!, $name: String, $wikidataId: ID) {
           updatePlatform(platformId: $platformId, name: $name, wikidataId: $wikidataId) {
             platform {
               name

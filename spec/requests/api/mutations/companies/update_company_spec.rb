@@ -8,7 +8,7 @@ RSpec.describe "UpdateCompany Mutation API", type: :request do
     let!(:company) { create(:company) }
     let(:query_string) do
       <<-GRAPHQL
-        mutation($companyId: ID!, $name: String, $wikidataId: Int) {
+        mutation($companyId: ID!, $name: String, $wikidataId: ID) {
           updateCompany(companyId: $companyId, name: $name, wikidataId: $wikidataId) {
             company {
               name

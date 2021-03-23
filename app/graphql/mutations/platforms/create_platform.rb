@@ -3,11 +3,11 @@ class Mutations::Platforms::CreatePlatform < Mutations::BaseMutation
   description "Create a new game platform. **Only available to moderators and admins.** **Not available in production for now.**"
 
   argument :name, String, required: true, description: 'The name of the platform.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the platform item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the platform item in Wikidata.'
 
   field :platform, Types::PlatformType, null: true, description: "The platform that was created."
 
-  sig { params(name: String, wikidata_id: T.nilable(Integer)).returns(T::Hash[Symbol, Platform]) }
+  sig { params(name: String, wikidata_id: T.nilable(T.any(String, Integer))).returns(T::Hash[Symbol, Platform]) }
   def resolve(name:, wikidata_id: nil)
     platform = Platform.new(name: name, wikidata_id: wikidata_id)
 

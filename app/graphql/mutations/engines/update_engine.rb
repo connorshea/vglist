@@ -4,7 +4,7 @@ class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
 
   argument :engine_id, ID, required: true, description: 'The ID of the engine record.'
   argument :name, String, required: false, description: 'The name of the engine.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the engine item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the engine item in Wikidata.'
 
   field :engine, Types::EngineType, null: false, description: "The engine that was updated."
 

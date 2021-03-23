@@ -7,7 +7,7 @@ RSpec.describe "CreateEngine Mutation API", type: :request do
     let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:query_string) do
       <<-GRAPHQL
-        mutation($name: String!, $wikidataId: Int!) {
+        mutation($name: String!, $wikidataId: ID!) {
           createEngine(name: $name, wikidataId: $wikidataId) {
             engine {
               name

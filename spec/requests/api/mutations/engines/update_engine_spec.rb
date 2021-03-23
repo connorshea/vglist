@@ -8,7 +8,7 @@ RSpec.describe "UpdateEngine Mutation API", type: :request do
     let!(:engine) { create(:engine) }
     let(:query_string) do
       <<-GRAPHQL
-        mutation($engineId: ID!, $name: String, $wikidataId: Int) {
+        mutation($engineId: ID!, $name: String, $wikidataId: ID) {
           updateEngine(engineId: $engineId, name: $name, wikidataId: $wikidataId) {
             engine {
               name

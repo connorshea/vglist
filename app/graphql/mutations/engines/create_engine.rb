@@ -3,11 +3,11 @@ class Mutations::Engines::CreateEngine < Mutations::BaseMutation
   description "Create a new game engine. **Not available in production for now.**"
 
   argument :name, String, required: true, description: 'The name of the engine.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the engine item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the engine item in Wikidata.'
 
   field :engine, Types::EngineType, null: true, description: "The engine that was created."
 
-  sig { params(name: String, wikidata_id: T.nilable(Integer)).returns(T::Hash[Symbol, Engine]) }
+  sig { params(name: String, wikidata_id: T.nilable(T.any(String, Integer))).returns(T::Hash[Symbol, Engine]) }
   def resolve(name:, wikidata_id: nil)
     engine = Engine.new(name: name, wikidata_id: wikidata_id)
 

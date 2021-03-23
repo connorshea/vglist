@@ -3,11 +3,11 @@ class Mutations::Companies::CreateCompany < Mutations::BaseMutation
   description "Create a new game company. **Not available in production for now.**"
 
   argument :name, String, required: true, description: 'The name of the company.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the company item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the company item in Wikidata.'
 
   field :company, Types::CompanyType, null: true, description: "The company that was created."
 
-  sig { params(name: String, wikidata_id: T.nilable(Integer)).returns(T::Hash[Symbol, Company]) }
+  sig { params(name: String, wikidata_id: T.nilable(T.any(String, Integer))).returns(T::Hash[Symbol, Company]) }
   def resolve(name:, wikidata_id: nil)
     company = Company.new(name: name, wikidata_id: wikidata_id)
 
