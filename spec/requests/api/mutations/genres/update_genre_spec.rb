@@ -8,7 +8,7 @@ RSpec.describe "UpdateGenre Mutation API", type: :request do
     let!(:genre) { create(:genre, name: 'First-person shooter') }
     let(:query_string) do
       <<-GRAPHQL
-        mutation($genreId: ID!, $name: String, $wikidataId: Int) {
+        mutation($genreId: ID!, $name: String, $wikidataId: ID) {
           updateGenre(genreId: $genreId, name: $name, wikidataId: $wikidataId) {
             genre {
               name

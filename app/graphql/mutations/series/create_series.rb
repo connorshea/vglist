@@ -3,11 +3,11 @@ class Mutations::Series::CreateSeries < Mutations::BaseMutation
   description "Create a new game series. **Not available in production for now.**"
 
   argument :name, String, required: true, description: 'The name of the series.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the series item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the series item in Wikidata.'
 
   field :series, Types::SeriesType, null: true, description: "The series that was created."
 
-  sig { params(name: String, wikidata_id: T.nilable(Integer)).returns(T::Hash[Symbol, Series]) }
+  sig { params(name: String, wikidata_id: T.nilable(T.any(String, Integer))).returns(T::Hash[Symbol, Series]) }
   def resolve(name:, wikidata_id: nil)
     series = Series.new(name: name, wikidata_id: wikidata_id)
 

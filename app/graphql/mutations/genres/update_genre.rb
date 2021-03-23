@@ -4,7 +4,7 @@ class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
 
   argument :genre_id, ID, required: true, description: 'The ID of the genre record.'
   argument :name, String, required: false, description: 'The name of the genre.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the genre item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the genre item in Wikidata.'
 
   field :genre, Types::GenreType, null: false, description: "The genre that was updated."
 

@@ -8,7 +8,7 @@ RSpec.describe "UpdateSeries Mutation API", type: :request do
     let!(:series) { create(:series, name: 'Half-Life') }
     let(:query_string) do
       <<-GRAPHQL
-        mutation($seriesId: ID!, $name: String, $wikidataId: Int) {
+        mutation($seriesId: ID!, $name: String, $wikidataId: ID) {
           updateSeries(seriesId: $seriesId, name: $name, wikidataId: $wikidataId) {
             series {
               name

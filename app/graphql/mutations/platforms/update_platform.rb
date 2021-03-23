@@ -4,7 +4,7 @@ class Mutations::Platforms::UpdatePlatform < Mutations::BaseMutation
 
   argument :platform_id, ID, required: true, description: 'The ID of the platform record.'
   argument :name, String, required: false, description: 'The name of the platform.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the platform item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the platform item in Wikidata.'
 
   field :platform, Types::PlatformType, null: false, description: "The platform that was updated."
 

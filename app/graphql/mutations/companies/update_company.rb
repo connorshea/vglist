@@ -4,7 +4,7 @@ class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
 
   argument :company_id, ID, required: true, description: 'The ID of the company record.'
   argument :name, String, required: false, description: 'The name of the company.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the company item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the company item in Wikidata.'
 
   field :company, Types::CompanyType, null: false, description: "The company that was updated."
 
