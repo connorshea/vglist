@@ -18,12 +18,10 @@ RSpec.describe "Global Search API", type: :request do
         query_string = <<-GRAPHQL
           query($query: String!) {
             globalSearch(query: $query) {
-              nodes {
-                ... on GameSearchResult {
-                  id
-                  searchableId
-                  content
-                }
+              ... on GameSearchResult {
+                id
+                searchableId
+                content
               }
             }
           }
@@ -31,9 +29,9 @@ RSpec.describe "Global Search API", type: :request do
 
         result = api_request(query_string, variables: { query: 'Portal' }, token: access_token)
 
-        expect(result.graphql_dig(:global_search, :nodes).length).to eq(10)
-        expect(result.graphql_dig(:global_search, :nodes).pluck(:searchableId)).to eq(games.pluck(:id).map(&:to_s))
-        expect(result.graphql_dig(:global_search, :nodes).pluck(:content)).to eq(Array.new(10) { 'Portal' })
+        expect(result.graphql_dig(:global_search).length).to eq(10)
+        expect(result.graphql_dig(:global_search).pluck(:searchableId)).to eq(games.pluck(:id).map(&:to_s))
+        expect(result.graphql_dig(:global_search).pluck(:content)).to eq(Array.new(10) { 'Portal' })
       end
 
       it "returns cover, release date, and developer" do
@@ -41,14 +39,12 @@ RSpec.describe "Global Search API", type: :request do
         query_string = <<-GRAPHQL
           query($query: String!) {
             globalSearch(query: $query) {
-              nodes {
-                ... on GameSearchResult {
-                  searchableId
-                  content
-                  coverUrl
-                  releaseDate
-                  developerName
-                }
+              ... on GameSearchResult {
+                searchableId
+                content
+                coverUrl
+                releaseDate
+                developerName
               }
             }
           }
@@ -58,7 +54,7 @@ RSpec.describe "Global Search API", type: :request do
 
         cover_variant = game2.sized_cover(:small)
 
-        expect(result.graphql_dig(:global_search, :nodes)).to eq(
+        expect(result.graphql_dig(:global_search)).to eq(
           [
             {
               searchableId: game2.id.to_s,
@@ -79,13 +75,11 @@ RSpec.describe "Global Search API", type: :request do
         query_string = <<-GRAPHQL
           query($query: String!) {
             globalSearch(query: $query) {
-              nodes {
-                ... on UserSearchResult {
-                  searchableId
-                  content
-                  avatarUrl
-                  slug
-                }
+              ... on UserSearchResult {
+                searchableId
+                content
+                avatarUrl
+                slug
               }
             }
           }
@@ -95,7 +89,7 @@ RSpec.describe "Global Search API", type: :request do
 
         avatar_variant = user.sized_avatar(:small)
 
-        expect(result.graphql_dig(:global_search, :nodes)).to eq(
+        expect(result.graphql_dig(:global_search)).to eq(
           [
             {
               searchableId: user.id.to_s,
@@ -121,35 +115,33 @@ RSpec.describe "Global Search API", type: :request do
         query_string = <<-GRAPHQL
           query($query: String!) {
             globalSearch(query: $query) {
-              nodes {
-                ... on GameSearchResult {
-                  searchableId
-                  content
-                }
-                ... on UserSearchResult {
-                  searchableId
-                  content
-                }
-                ... on PlatformSearchResult {
-                  searchableId
-                  content
-                }
-                ... on SeriesSearchResult {
-                  searchableId
-                  content
-                }
-                ... on GenreSearchResult {
-                  searchableId
-                  content
-                }
-                ... on EngineSearchResult {
-                  searchableId
-                  content
-                }
-                ... on CompanySearchResult {
-                  searchableId
-                  content
-                }
+              ... on GameSearchResult {
+                searchableId
+                content
+              }
+              ... on UserSearchResult {
+                searchableId
+                content
+              }
+              ... on PlatformSearchResult {
+                searchableId
+                content
+              }
+              ... on SeriesSearchResult {
+                searchableId
+                content
+              }
+              ... on GenreSearchResult {
+                searchableId
+                content
+              }
+              ... on EngineSearchResult {
+                searchableId
+                content
+              }
+              ... on CompanySearchResult {
+                searchableId
+                content
               }
             }
           }
@@ -157,8 +149,8 @@ RSpec.describe "Global Search API", type: :request do
 
         result = api_request(query_string, variables: { query: 'Foo' }, token: access_token)
 
-        expect(result.graphql_dig(:global_search, :nodes).length).to eq(7)
-        expect(result.graphql_dig(:global_search, :nodes)).to eq(
+        expect(result.graphql_dig(:global_search).length).to eq(7)
+        expect(result.graphql_dig(:global_search)).to eq(
           [
             {
               searchableId: company.id.to_s,
