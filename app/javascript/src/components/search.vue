@@ -76,12 +76,16 @@ export default {
     searchIcon: {
       type: String,
       required: true
+    },
+    searchParam: {
+      type: String,
+      required: false
     }
   },
   data: function() {
     return {
       searchUrl: '/search.json',
-      query: '',
+      query: this.searchParam,
       searchResults: {},
       plurals: {
         Game: 'games',
@@ -96,6 +100,12 @@ export default {
       currentPage: 1,
       moreAlreadyLoaded: false
     };
+  },
+  // Trigger the search field if there's a search param passed to the component.
+  mounted() {
+    if (this.searchParam.length > 0) {
+      this.onSearch();
+    }
   },
   methods: {
     // Debounce the search for 400ms before showing results, to prevent

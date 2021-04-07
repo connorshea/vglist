@@ -15,6 +15,11 @@ class StaticPagesController < ApplicationController
     skip_authorization
   end
 
+  def opensearch
+    skip_authorization
+    render layout: false
+  end
+
   private
 
   sig { returns(T.nilable(String)) }
