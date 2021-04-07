@@ -18,7 +18,9 @@
         data-vue-component="search"
         data-vue-props="<%=
           {
-            searchIcon: svg_icon('search', height: 16, aria: false)
+            searchIcon: svg_icon('search', height: 16, aria: false),
+            # To allow for a search param to pre-fill the input.
+            searchParam: params[:search] || ''
           }.to_json
         %>"
       >

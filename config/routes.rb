@@ -126,6 +126,9 @@ Rails.application.routes.draw do
 
   get '/about', to: 'static_pages#about'
 
+  # For exposing the OpenSearch XML definition
+  get '/opensearch', to: 'static_pages#opensearch', defaults: { format: :xml }
+
   # API routes
   get '/graphiql', to: 'static_pages#graphiql'
   # Execute GraphQL queries posted to '/graphql'.
