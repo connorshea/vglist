@@ -809,6 +809,13 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def about_url(*args, **kwargs); end
 
+  # Sigs for route /opensearch(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def opensearch_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def opensearch_url(*args, **kwargs); end
+
   # Sigs for route /graphiql(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def graphiql_path(*args, **kwargs); end
