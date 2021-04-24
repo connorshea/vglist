@@ -11,7 +11,7 @@ module Resolvers
       argument :by_year, Integer,
         required: false,
         description: "Filter games by the year of their release date, earliest allowed year is 1950.",
-        validates: { numericality: { greater_than_or_equal_to: 1950 } }
+        validates: { numericality: { greater_than_or_equal_to: 1950, allow_null: true } }
 
       sig do
         params(
