@@ -1,6 +1,8 @@
 # typed: true
 class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
-  description "Update an existing game engine. **Not available in production for now.**"
+  description "Update an existing game engine. **Only available when using a first-party OAuth Application.**"
+
+  required_permissions :first_party
 
   argument :engine_id, ID, required: true, description: 'The ID of the engine record.'
   argument :name, String, required: false, description: 'The name of the engine.'
@@ -20,12 +22,8 @@ class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
-
     engine = Engine.find(object[:engine_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this engine." unless EnginePolicy.new(@context[:current_user], engine).update?
 

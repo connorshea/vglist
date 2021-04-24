@@ -1,6 +1,8 @@
 # typed: true
 class Mutations::Series::DeleteSeries < Mutations::BaseMutation
-  description "Delete a game series. **Only available to moderators and admins.** **Not available in production for now.**"
+  description "Delete a game series. **Only available to moderators and admins using a first-party OAuth Application.**"
+
+  required_permissions :first_party
 
   argument :series_id, ID, required: true, description: 'The ID of the series to delete.'
 
@@ -17,12 +19,8 @@ class Mutations::Series::DeleteSeries < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
-
     series = Series.find(object[:series_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this series." unless SeriesPolicy.new(@context[:current_user], series).destroy?
 

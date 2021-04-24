@@ -30,7 +30,8 @@ class GraphqlController < ApplicationController
       current_user: graphql_current_user,
       pundit: self,
       doorkeeper_scopes: doorkeeper_token&.scopes&.to_a,
-      token_auth: !user_using_oauth?
+      token_auth: !user_using_oauth?,
+      first_party: first_party?
     }
 
     result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name)
@@ -83,6 +84,27 @@ class GraphqlController < ApplicationController
     @doorkeeper_user ||= User.find_by(id: doorkeeper_token[:resource_owner_id])
   end
 
+  # Check whether the doorkeeper token is associated with a first-party OAuth
+  # application, and return true if so. The purpose of this method is for use
+  # with GraphQL queries and mutations that shouldn't be available to
+  # third-party applications, such as those related to banning or deleting
+  # users.
+  #
+  # Currently this is a hack to work around a bug with Doorkeeper that prevents
+  # us from modifying the Doorkeeper Application class.
+  #
+  # TODO: Implement this as `doorkeeper_token.application.first_party?` once
+  #       we can add that to the Application class.
+  sig { returns(T::Boolean) }
+  def first_party?
+    return false if doorkeeper_token.nil? || doorkeeper_token.application_id.nil?
+
+    # Just block it in production for now to prevent malicious usage of the API,
+    # but still allow local development.
+    return !Rails.env.production?
+  end
+
+  sig { returns(T.nilable(User)) }
   def api_user
     User.find_by(email: request.headers['X-User-Email'])
   end

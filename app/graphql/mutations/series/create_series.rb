@@ -1,6 +1,8 @@
 # typed: true
 class Mutations::Series::CreateSeries < Mutations::BaseMutation
-  description "Create a new game series. **Not available in production for now.**"
+  description "Create a new game series. **Only available when using a first-party OAuth Application.**"
+
+  required_permissions :first_party
 
   argument :name, String, required: true, description: 'The name of the series.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the series item in Wikidata.'
@@ -18,12 +20,8 @@ class Mutations::Series::CreateSeries < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
-
     raise GraphQL::ExecutionError, "You aren't allowed to create a series." unless SeriesPolicy.new(@context[:current_user], nil).create?
 
     return true
