@@ -2,8 +2,6 @@
 class Mutations::Series::CreateSeries < Mutations::BaseMutation
   description "Create a new game series. **Only available when using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :name, String, required: true, description: 'The name of the series.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the series item in Wikidata.'
 
@@ -22,6 +20,8 @@ class Mutations::Series::CreateSeries < Mutations::BaseMutation
 
   sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
+    require_permissions!(:first_party)
+
     raise GraphQL::ExecutionError, "You aren't allowed to create a series." unless SeriesPolicy.new(@context[:current_user], nil).create?
 
     return true

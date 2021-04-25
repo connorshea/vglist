@@ -2,8 +2,6 @@
 class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
   description "Add game to Steam blocklist. **Only available to admins using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :name, String, required: true, description: 'The name of the game being added to the blocklist.'
   argument :steam_app_id, Integer, required: true, description: 'ID of the Steam game.'
 
@@ -22,6 +20,8 @@ class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
 
   sig { params(_object: T.untyped).returns(T.nilable(T::Boolean)) }
   def authorized?(_object)
+    require_permissions!(:first_party)
+
     raise GraphQL::ExecutionError, "You aren't allowed to add this game to the Steam Blocklist." unless AdminPolicy.new(@context[:current_user], nil).add_to_steam_blocklist?
 
     return true

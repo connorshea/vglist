@@ -2,8 +2,6 @@
 class Mutations::Companies::DeleteCompany < Mutations::BaseMutation
   description "Delete a game company. **Only available to moderators and admins using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :company_id, ID, required: true, description: 'The ID of the company to delete.'
 
   field :deleted, Boolean, null: true, description: "Whether the company was successfully deleted."
@@ -21,6 +19,8 @@ class Mutations::Companies::DeleteCompany < Mutations::BaseMutation
 
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
+    require_permissions!(:first_party)
+
     company = Company.find(object[:company_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this company." unless CompanyPolicy.new(@context[:current_user], company).destroy?
 

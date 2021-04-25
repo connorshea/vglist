@@ -2,8 +2,6 @@
 class Mutations::Series::DeleteSeries < Mutations::BaseMutation
   description "Delete a game series. **Only available to moderators and admins using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :series_id, ID, required: true, description: 'The ID of the series to delete.'
 
   field :deleted, Boolean, null: true, description: "Whether the series was successfully deleted."
@@ -21,6 +19,8 @@ class Mutations::Series::DeleteSeries < Mutations::BaseMutation
 
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
+    require_permissions!(:first_party)
+
     series = Series.find(object[:series_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this series." unless SeriesPolicy.new(@context[:current_user], series).destroy?
 

@@ -2,8 +2,6 @@
 class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
   description "Update an existing game engine. **Only available when using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :engine_id, ID, required: true, description: 'The ID of the engine record.'
   argument :name, String, required: false, description: 'The name of the engine.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the engine item in Wikidata.'
@@ -24,6 +22,8 @@ class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
 
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
+    require_permissions!(:first_party)
+
     engine = Engine.find(object[:engine_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this engine." unless EnginePolicy.new(@context[:current_user], engine).update?
 

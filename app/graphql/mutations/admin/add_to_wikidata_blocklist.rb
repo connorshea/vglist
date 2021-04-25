@@ -2,8 +2,6 @@
 class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
   description "Add game to Wikidata blocklist. **Only available to admins using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :name, String, required: true, description: 'The name of the game being added to the blocklist.'
   argument :wikidata_id, Integer, required: true, description: 'ID of the Wikidata item.'
 
@@ -22,6 +20,8 @@ class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
 
   sig { params(_object: T.untyped).returns(T.nilable(T::Boolean)) }
   def authorized?(_object)
+    require_permissions!(:first_party)
+
     raise GraphQL::ExecutionError, "You aren't allowed to add this game to the Wikidata Blocklist." unless AdminPolicy.new(@context[:current_user], nil).remove_from_wikidata_blocklist?
 
     return true

@@ -11,8 +11,9 @@ class Mutations::BaseMutation < GraphQL::Schema::Mutation
   # only accepts `:first_party`, but may accept other permission types in the
   # future.
   sig { params(permissions: Symbol).void }
-  def self.required_permissions(*permissions)
-    @require_first_party = T.let(permissions.include?(:first_party), T.nilable(T::Boolean))
+  def require_permissions!(*permissions)
+    error_msg = "Your token must be from a first-party OAuth application to perform this mutation."
+    raise GraphQL::ExecutionError, error_msg if !@context[:first_party] && permissions.include?(:first_party)
   end
 
   # Validate that the user's token has the 'write' scope and check for a
@@ -21,10 +22,8 @@ class Mutations::BaseMutation < GraphQL::Schema::Mutation
   def ready?(**_args)
     # Make sure the doorkeeper scopes include write.
     # Skip this check if the user is using token authentication.
-    raise GraphQL::ExecutionError, "Your token must have the 'write' scope to perform a mutation." if !context[:token_auth] &&
-                                                                                                      !context[:doorkeeper_scopes]&.include?('write')
-
-    raise GraphQL::ExecutionError, "Your token must be from a first-party OAuth application to perform this mutation." if !context[:first_party] && @require_first_party
+    raise GraphQL::ExecutionError, "Your token must have the 'write' scope to perform a mutation." if !@context[:token_auth] &&
+                                                                                                      !@context[:doorkeeper_scopes]&.include?('write')
 
     return true
   end

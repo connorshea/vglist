@@ -2,8 +2,6 @@
 class Mutations::Genres::DeleteGenre < Mutations::BaseMutation
   description "Delete a game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :genre_id, ID, required: true, description: 'The ID of the genre to delete.'
 
   field :deleted, Boolean, null: true, description: "Whether the genre was successfully deleted."
@@ -21,6 +19,8 @@ class Mutations::Genres::DeleteGenre < Mutations::BaseMutation
 
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
+    require_permissions!(:first_party)
+
     genre = Genre.find(object[:genre_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this genre." unless GenrePolicy.new(@context[:current_user], genre).destroy?
 

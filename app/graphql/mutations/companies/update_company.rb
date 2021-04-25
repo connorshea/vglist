@@ -2,8 +2,6 @@
 class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
   description "Update an existing game company. **Only available when using a first-party OAuth Application.**"
 
-  required_permissions :first_party
-
   argument :company_id, ID, required: true, description: 'The ID of the company record.'
   argument :name, String, required: false, description: 'The name of the company.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the company item in Wikidata.'
@@ -24,6 +22,8 @@ class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
 
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
+    require_permissions!(:first_party)
+
     company = Company.find(object[:company_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this company." unless CompanyPolicy.new(@context[:current_user], company).update?
 
