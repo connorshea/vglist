@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Users::UnbanUser < Mutations::BaseMutation
-  description "Unban a user. **Only available to moderators and admins.**"
+  description "Unban a user. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :user_id, ID, required: true, description: "ID of user to unban."
 
@@ -21,9 +21,10 @@ class Mutations::Users::UnbanUser < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
+    require_permissions!(:first_party)
+
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?

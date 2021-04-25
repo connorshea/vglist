@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
-  description "Update an existing game company. **Not available in production for now.**"
+  description "Update an existing game company. **Only available when using a first-party OAuth Application.**"
 
   argument :company_id, ID, required: true, description: 'The ID of the company record.'
   argument :name, String, required: false, description: 'The name of the company.'
@@ -20,11 +20,9 @@ class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
+    require_permissions!(:first_party)
 
     company = Company.find(object[:company_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this company." unless CompanyPolicy.new(@context[:current_user], company).update?

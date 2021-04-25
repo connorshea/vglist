@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
-  description "Update an existing game genre. **Only available to moderators and admins.** **Not available in production for now.**"
+  description "Update an existing game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :genre_id, ID, required: true, description: 'The ID of the genre record.'
   argument :name, String, required: false, description: 'The name of the genre.'
@@ -20,11 +20,9 @@ class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
+    require_permissions!(:first_party)
 
     genre = Genre.find(object[:genre_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this genre." unless GenrePolicy.new(@context[:current_user], genre).update?

@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Games::DeleteGame < Mutations::BaseMutation
-  description "Delete a game. **Only available to moderators and admins.** **Not available in production for now.**"
+  description "Delete a game. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :game_id, ID, required: true, description: 'The ID of the game to delete.'
 
@@ -17,11 +17,9 @@ class Mutations::Games::DeleteGame < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
+    require_permissions!(:first_party)
 
     game = Game.find(object[:game_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this game." unless GamePolicy.new(@context[:current_user], game).destroy?

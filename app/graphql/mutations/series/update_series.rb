@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Series::UpdateSeries < Mutations::BaseMutation
-  description "Update an existing game series. **Not available in production for now.**"
+  description "Update an existing game series. **Only available when using a first-party OAuth Application.**"
 
   argument :series_id, ID, required: true, description: 'The ID of the series record.'
   argument :name, String, required: false, description: 'The name of the series.'
@@ -20,11 +20,9 @@ class Mutations::Series::UpdateSeries < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
+    require_permissions!(:first_party)
 
     series = Series.find(object[:series_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this series." unless SeriesPolicy.new(@context[:current_user], series).update?

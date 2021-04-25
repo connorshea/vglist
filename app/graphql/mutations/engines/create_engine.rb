@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Engines::CreateEngine < Mutations::BaseMutation
-  description "Create a new game engine. **Not available in production for now.**"
+  description "Create a new game engine. **Only available when using a first-party OAuth Application.**"
 
   argument :name, String, required: true, description: 'The name of the engine.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the engine item in Wikidata.'
@@ -18,11 +18,9 @@ class Mutations::Engines::CreateEngine < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
+    require_permissions!(:first_party)
 
     raise GraphQL::ExecutionError, "You aren't allowed to create an engine." unless EnginePolicy.new(@context[:current_user], nil).create?
 

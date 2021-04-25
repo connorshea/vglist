@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Stores::DeleteStore < Mutations::BaseMutation
-  description "Delete a game store. **Only available to moderators and admins.** **Not available in production for now.**"
+  description "Delete a game store. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :store_id, ID, required: true, description: 'The ID of the store to delete.'
 
@@ -17,11 +17,9 @@ class Mutations::Stores::DeleteStore < Mutations::BaseMutation
     }
   end
 
-  # TODO: Put this mutation behind the "first party" OAuth application flag.
   sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
-    # TODO: Remove this line when the first-party OAuth applications are ready.
-    return false if Rails.env.production?
+    require_permissions!(:first_party)
 
     store = Store.find(object[:store_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this store." unless StorePolicy.new(@context[:current_user], store).destroy?
