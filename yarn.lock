@@ -2991,11 +2991,6 @@ detect-node@^2.0.4:
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.4.tgz#014ee8f8f669c5c58023da64b8179c083a28c46c"
   integrity sha512-ZIzRpLJrOj7jjP2miAtgqIfmzbxa4ZOr5jJc601zklsfEx9oTzmmj2nVpIPRpNlRTIh8lc1kyViIY7BWSGNmKw==
 
-diacriticless@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/diacriticless/-/diacriticless-1.0.1.tgz#e7dda978c2919609bb48aee1efc5de6a337bd4c3"
-  integrity sha1-592peMKRlgm7SK7h78XeajN71MM=
-
 diffie-hellman@^5.0.0:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/diffie-hellman/-/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
@@ -8376,13 +8371,12 @@ vscode-languageserver-types@^3.15.1:
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
   integrity sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
 
-vue-good-table@^2.21.9:
-  version "2.21.9"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.9.tgz#b695307b5bfb0d76397e838ddc7be343e79f2186"
-  integrity sha512-EOlOOjAOM3FivYovRju8wkuX3cD67a4+AL5cpwv6yemBOKCZIJ/gO6ecV3rAPPCA92DsyLToz7TSYJ7PYALvpA==
+vue-good-table@^2.21.10:
+  version "2.21.10"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.10.tgz#a6efd27f345512b6ff3933dff8d2e9f1431ac590"
+  integrity sha512-K7yD8LwW5ouJmMTjNyjnXK1qwm6/FPt4jt+xk+dYAlVPTikW5QWnY8WZHgsiAWWWq58l5oOzRw9wS1tAAWaj6g==
   dependencies:
     date-fns "^2.17.0"
-    diacriticless "1.0.1"
     lodash.isequal "^4.5.0"
 
 vue-hot-reload-api@^2.3.0:
