@@ -60,5 +60,6 @@ module Types
     field :remove_from_steam_blocklist, mutation: Mutations::Admin::RemoveFromSteamBlocklist
     field :add_to_wikidata_blocklist, mutation: Mutations::Admin::AddToWikidataBlocklist
     field :remove_from_wikidata_blocklist, mutation: Mutations::Admin::RemoveFromWikidataBlocklist
+    field :merge_games, mutation: Mutations::Admin::MergeGames
   end
 end
