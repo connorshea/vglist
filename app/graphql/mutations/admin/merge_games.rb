@@ -3,7 +3,7 @@ class Mutations::Admin::MergeGames < Mutations::BaseMutation
   description "Merge one game into another. Re-associates all favorites and game purchases (if possible). **Only available to admins using a first-party OAuth Application.**"
 
   argument :game_to_keep_id, ID, required: true, description: 'The ID of the game to keep.'
-  argument :game_to_merge_id, ID, required: true, description: 'ID of the game to merge. This game will be deleted.'
+  argument :game_to_merge_id, ID, required: true, description: 'The ID of the game to merge. This game will be deleted.'
 
   field :game, Types::GameType, null: false, description: "The resulting game that was kept after merging the two."
 
@@ -23,8 +23,8 @@ class Mutations::Admin::MergeGames < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T.nilable(T::Boolean)) }
-  def authorized?(_object)
+  sig { params(object: T.untyped).returns(T.nilable(T::Boolean)) }
+  def authorized?(object)
     require_permissions!(:first_party)
 
     game = Game.find_by(id: object[:game_to_keep_id])
