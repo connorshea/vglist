@@ -402,7 +402,7 @@ GEM
     sparql-client (3.1.2)
       net-http-persistent (~> 4.0, >= 4.0.1)
       rdf (~> 3.1)
-    spoom (1.1.0)
+    spoom (1.1.1)
       colorize
       sorbet (>= 0.5.6347)
       sorbet-runtime
