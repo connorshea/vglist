@@ -8,6 +8,7 @@ RSpec.describe "Site Statistics API", type: :request do
       let(:application) { build(:application, owner: user) }
       let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
       let(:statistic) { create(:statistic) }
+      let(:statistic2) { create(:statistic) }
 
       it "returns basic data for statistic" do
         statistic
@@ -110,6 +111,39 @@ RSpec.describe "Site Statistics API", type: :request do
             platformVersions: statistic.platform_versions,
             seriesVersions: statistic.series_versions
           }
+        )
+      end
+
+      it "returns basic data for statistic with sorting" do
+        statistic
+        statistic2
+        query_string = <<-GRAPHQL
+          query {
+            siteStatistics(sortDirection: ASC) {
+              nodes {
+                id
+                timestamp
+                games
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+
+        expect(result.graphql_dig(:site_statistics, :nodes)).to eq(
+          [
+            {
+              id: statistic.id.to_s,
+              timestamp: statistic.created_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+              games: statistic.games
+            },
+            {
+              id: statistic2.id.to_s,
+              timestamp: statistic2.created_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+              games: statistic2.games
+            }
+          ]
         )
       end
     end
