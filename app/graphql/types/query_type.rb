@@ -50,6 +50,7 @@ module Types
 
     # Admin stuff
     field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver
+    field :live_statistics, resolver: Resolvers::SiteStatisticResolvers::LiveResolver
     field :steam_blocklist, resolver: Resolvers::SteamBlocklistResolver
     field :wikidata_blocklist, resolver: Resolvers::WikidataBlocklistResolver
   end

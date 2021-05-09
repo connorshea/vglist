@@ -7,13 +7,13 @@ module Types
       `null` where necessary.
     MARKDOWN
 
-    field :id, ID, null: false, description: "ID of the statistic record."
+    field :id, ID, null: true, description: "ID of the statistic record. Shouldn't ever be `null` except in the LiveStatistics query."
 
     # Actually #created_at, but timestamp works better.
     field :timestamp, GraphQL::Types::ISO8601DateTime,
-      null: false,
+      null: true,
       method: :created_at,
-      description: "The point in time at which these statistics were logged, always UTC."
+      description: "The point in time at which these statistics were logged, always UTC. Shouldn't ever be `null` except in the LiveStatistics query."
 
     field :users, Integer, null: false, description: "The number of Users at this point in time."
     field :games, Integer, null: false, description: "The number of Games at this point in time."
