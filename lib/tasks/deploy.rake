@@ -1,6 +1,6 @@
 # typed: false
 namespace :deploy do
-  desc "Deploys the latest code from the master branch into production"
+  desc "Deploys the latest code from the main branch into production"
   task production: :environment do
     Bundler.with_unbundled_env do
       # Stash changes so the `git pull` will be guaranteed to work.
@@ -10,7 +10,7 @@ namespace :deploy do
 
       # Pull down latest code.
       puts
-      puts "Pulling down the latest code from master..."
+      puts "Pulling down the latest code from main..."
       system('git pull')
 
       # Create Sentry release.

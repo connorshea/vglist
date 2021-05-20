@@ -6,7 +6,7 @@ updates:
     interval: daily
     time: '12:00'
   open-pull-requests-limit: 10
-  target-branch: master
+  target-branch: main
   assignees:
   - connorshea
   allow:
@@ -39,7 +39,7 @@ updates:
     interval: weekly
     time: '12:00'
   open-pull-requests-limit: 10
-  target-branch: master
+  target-branch: main
   assignees:
   - connorshea
 - package-ecosystem: npm
@@ -48,7 +48,7 @@ updates:
     interval: weekly
     time: '12:00'
   open-pull-requests-limit: 10
-  target-branch: master
+  target-branch: main
   assignees:
   - connorshea
   ignore:
