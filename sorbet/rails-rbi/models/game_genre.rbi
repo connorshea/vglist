@@ -368,6 +368,9 @@ class GameGenre::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(GameGenre::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class GameGenre::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -384,6 +387,9 @@ class GameGenre::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRel
 
   sig { params(num: Integer).returns(GameGenre::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module GameGenre::GeneratedAttributeMethods
@@ -724,4 +730,7 @@ class GameGenre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Assoc
 
   sig { params(num: Integer).returns(GameGenre::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

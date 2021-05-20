@@ -1688,6 +1688,9 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Game::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -1737,6 +1740,9 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
 
   sig { params(num: Integer).returns(Game::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -1797,6 +1803,9 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(num: Integer).returns(Game::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Game::QueryMethodsReturningRelation

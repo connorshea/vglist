@@ -674,6 +674,9 @@ class Doorkeeper::Application::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Doorkeeper::Application::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Doorkeeper::Application::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -690,6 +693,9 @@ class Doorkeeper::Application::ActiveRecord_AssociationRelation < ActiveRecord::
 
   sig { params(num: Integer).returns(Doorkeeper::Application::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Doorkeeper::Application::GeneratedAttributeMethods
@@ -1384,4 +1390,7 @@ class Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy < Activ
 
   sig { params(num: Integer).returns(Doorkeeper::Application::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

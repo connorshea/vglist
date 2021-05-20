@@ -290,6 +290,9 @@ class SteamAppId::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(SteamAppId::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class SteamAppId::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -306,6 +309,9 @@ class SteamAppId::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRe
 
   sig { params(num: Integer).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module SteamAppId::GeneratedAttributeMethods
@@ -517,4 +523,7 @@ class SteamAppId::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Asso
 
   sig { params(num: Integer).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

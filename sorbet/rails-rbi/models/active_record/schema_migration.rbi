@@ -294,6 +294,9 @@ class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relat
 
   sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -310,6 +313,9 @@ class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRe
 
   sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -337,4 +343,7 @@ class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy <
 
   sig { params(num: Integer).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

@@ -290,6 +290,9 @@ class Doorkeeper::AccessGrant::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Doorkeeper::AccessGrant::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -306,6 +309,9 @@ class Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation < ActiveRecord::
 
   sig { params(num: Integer).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Doorkeeper::AccessGrant::GeneratedAttributeMethods
@@ -841,4 +847,7 @@ class Doorkeeper::AccessGrant::ActiveRecord_Associations_CollectionProxy < Activ
 
   sig { params(num: Integer).returns(Doorkeeper::AccessGrant::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

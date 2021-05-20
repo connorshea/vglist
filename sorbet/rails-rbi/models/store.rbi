@@ -444,6 +444,9 @@ class Store::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Store::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Store::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -460,6 +463,9 @@ class Store::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
 
   sig { params(num: Integer).returns(Store::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Store::GeneratedAttributeMethods
@@ -731,4 +737,7 @@ class Store::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
 
   sig { params(num: Integer).returns(Store::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

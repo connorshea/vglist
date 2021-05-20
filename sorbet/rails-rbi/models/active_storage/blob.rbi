@@ -394,6 +394,9 @@ class ActiveStorage::Blob::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(ActiveStorage::Blob::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveStorage::Blob::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -416,6 +419,9 @@ class ActiveStorage::Blob::ActiveRecord_AssociationRelation < ActiveRecord::Asso
 
   sig { params(num: Integer).returns(ActiveStorage::Blob::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -449,6 +455,9 @@ class ActiveStorage::Blob::ActiveRecord_Associations_CollectionProxy < ActiveRec
 
   sig { params(num: Integer).returns(ActiveStorage::Blob::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module ActiveStorage::Blob::QueryMethodsReturningRelation
