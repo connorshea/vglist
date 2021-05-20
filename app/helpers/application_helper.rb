@@ -196,7 +196,7 @@ module ApplicationHelper
         },
         {
           title: 'Changelog',
-          path: 'https://github.com/connorshea/vglist/blob/master/CHANGELOG.md'
+          path: 'https://github.com/connorshea/vglist/blob/main/CHANGELOG.md'
         },
         {
           title: 'GitHub',
@@ -204,7 +204,7 @@ module ApplicationHelper
         },
         {
           title: 'API Docs',
-          path: 'https://github.com/connorshea/vglist/blob/master/API.md'
+          path: 'https://github.com/connorshea/vglist/blob/main/API.md'
         },
         {
           title: 'GraphiQL',
