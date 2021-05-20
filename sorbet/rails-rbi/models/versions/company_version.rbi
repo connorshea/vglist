@@ -290,6 +290,9 @@ class Versions::CompanyVersion::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Versions::CompanyVersion::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Versions::CompanyVersion::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -306,6 +309,9 @@ class Versions::CompanyVersion::ActiveRecord_AssociationRelation < ActiveRecord:
 
   sig { params(num: Integer).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Versions::CompanyVersion::GeneratedAttributeMethods
@@ -841,4 +847,7 @@ class Versions::CompanyVersion::ActiveRecord_Associations_CollectionProxy < Acti
 
   sig { params(num: Integer).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

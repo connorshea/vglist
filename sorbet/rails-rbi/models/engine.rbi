@@ -600,6 +600,9 @@ class Engine::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Engine::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Engine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -616,6 +619,9 @@ class Engine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelati
 
   sig { params(num: Integer).returns(Engine::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Engine::GeneratedAttributeMethods
@@ -974,4 +980,7 @@ class Engine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associat
 
   sig { params(num: Integer).returns(Engine::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

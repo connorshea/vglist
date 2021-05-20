@@ -290,6 +290,9 @@ class SteamBlocklist::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(SteamBlocklist::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class SteamBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -306,6 +309,9 @@ class SteamBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::Associati
 
   sig { params(num: Integer).returns(SteamBlocklist::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module SteamBlocklist::GeneratedAttributeMethods
@@ -679,4 +685,7 @@ class SteamBlocklist::ActiveRecord_Associations_CollectionProxy < ActiveRecord::
 
   sig { params(num: Integer).returns(SteamBlocklist::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

@@ -226,6 +226,9 @@ class ActiveStorage::VariantRecord::ActiveRecord_Relation < ActiveRecord::Relati
 
   sig { params(num: Integer).returns(ActiveStorage::VariantRecord::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -245,6 +248,9 @@ class ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation < ActiveRec
 
   sig { params(num: Integer).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveStorage::VariantRecord::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -275,6 +281,9 @@ class ActiveStorage::VariantRecord::ActiveRecord_Associations_CollectionProxy < 
 
   sig { params(num: Integer).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module ActiveStorage::VariantRecord::QueryMethodsReturningRelation

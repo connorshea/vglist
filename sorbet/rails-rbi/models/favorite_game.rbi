@@ -446,6 +446,9 @@ class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class FavoriteGame::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -462,6 +465,9 @@ class FavoriteGame::ActiveRecord_AssociationRelation < ActiveRecord::Association
 
   sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module FavoriteGame::GeneratedAttributeMethods
@@ -814,4 +820,7 @@ class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::As
 
   sig { params(num: Integer).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

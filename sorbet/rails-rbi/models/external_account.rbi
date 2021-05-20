@@ -101,6 +101,9 @@ class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -123,6 +126,9 @@ class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::Associat
 
   sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -156,6 +162,9 @@ class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord:
 
   sig { params(num: Integer).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module ExternalAccount::QueryMethodsReturningRelation

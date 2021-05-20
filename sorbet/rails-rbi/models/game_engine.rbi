@@ -368,6 +368,9 @@ class GameEngine::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(GameEngine::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class GameEngine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -384,6 +387,9 @@ class GameEngine::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRe
 
   sig { params(num: Integer).returns(GameEngine::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module GameEngine::GeneratedAttributeMethods
@@ -724,4 +730,7 @@ class GameEngine::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Asso
 
   sig { params(num: Integer).returns(GameEngine::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

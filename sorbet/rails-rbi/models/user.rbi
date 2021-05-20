@@ -1617,6 +1617,9 @@ class User::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(num: Integer).returns(User::ActiveRecord_Relation) }
   def padding(num); end
 
+  sig { returns(T::Boolean) }
+  def last_page?; end
+
   sig { returns(User::ActiveRecord_Relation) }
   def friendly; end
 end
@@ -1674,6 +1677,9 @@ class User::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
 
   sig { params(num: Integer).returns(User::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 
   sig { returns(User::ActiveRecord_AssociationRelation) }
   def friendly; end
@@ -1743,6 +1749,9 @@ class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(num: Integer).returns(User::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 
   sig { returns(User::ActiveRecord_AssociationRelation) }
   def friendly; end

@@ -282,6 +282,9 @@ class ActiveStorage::Record::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(ActiveStorage::Record::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveStorage::Record::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -298,6 +301,9 @@ class ActiveStorage::Record::ActiveRecord_AssociationRelation < ActiveRecord::As
 
   sig { params(num: Integer).returns(ActiveStorage::Record::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class ActiveStorage::Record::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -325,4 +331,7 @@ class ActiveStorage::Record::ActiveRecord_Associations_CollectionProxy < ActiveR
 
   sig { params(num: Integer).returns(ActiveStorage::Record::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

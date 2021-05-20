@@ -290,6 +290,9 @@ class Versions::GenreVersion::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Versions::GenreVersion::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Versions::GenreVersion::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -306,6 +309,9 @@ class Versions::GenreVersion::ActiveRecord_AssociationRelation < ActiveRecord::A
 
   sig { params(num: Integer).returns(Versions::GenreVersion::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Versions::GenreVersion::GeneratedAttributeMethods
@@ -841,4 +847,7 @@ class Versions::GenreVersion::ActiveRecord_Associations_CollectionProxy < Active
 
   sig { params(num: Integer).returns(Versions::GenreVersion::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

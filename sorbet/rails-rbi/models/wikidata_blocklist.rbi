@@ -290,6 +290,9 @@ class WikidataBlocklist::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(WikidataBlocklist::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class WikidataBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -306,6 +309,9 @@ class WikidataBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::Associ
 
   sig { params(num: Integer).returns(WikidataBlocklist::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module WikidataBlocklist::GeneratedAttributeMethods
@@ -679,4 +685,7 @@ class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy < ActiveRecor
 
   sig { params(num: Integer).returns(WikidataBlocklist::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

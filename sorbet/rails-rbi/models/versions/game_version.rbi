@@ -290,6 +290,9 @@ class Versions::GameVersion::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Versions::GameVersion::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Versions::GameVersion::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -306,6 +309,9 @@ class Versions::GameVersion::ActiveRecord_AssociationRelation < ActiveRecord::As
 
   sig { params(num: Integer).returns(Versions::GameVersion::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Versions::GameVersion::GeneratedAttributeMethods
@@ -841,4 +847,7 @@ class Versions::GameVersion::ActiveRecord_Associations_CollectionProxy < ActiveR
 
   sig { params(num: Integer).returns(Versions::GameVersion::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

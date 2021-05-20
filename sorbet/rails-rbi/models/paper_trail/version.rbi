@@ -292,6 +292,9 @@ class PaperTrail::Version::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(PaperTrail::Version::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class PaperTrail::Version::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -308,6 +311,9 @@ class PaperTrail::Version::ActiveRecord_AssociationRelation < ActiveRecord::Asso
 
   sig { params(num: Integer).returns(PaperTrail::Version::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module PaperTrail::Version::GeneratedAssociationMethods
@@ -355,4 +361,7 @@ class PaperTrail::Version::ActiveRecord_Associations_CollectionProxy < ActiveRec
 
   sig { params(num: Integer).returns(PaperTrail::Version::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

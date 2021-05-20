@@ -756,6 +756,9 @@ class Platform::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Platform::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Platform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -772,6 +775,9 @@ class Platform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRela
 
   sig { params(num: Integer).returns(Platform::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Platform::GeneratedAttributeMethods
@@ -1154,4 +1160,7 @@ class Platform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associ
 
   sig { params(num: Integer).returns(Platform::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

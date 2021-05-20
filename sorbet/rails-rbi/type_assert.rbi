@@ -1,4 +1,4 @@
-# typed: strong
+# typed: false
 
 module ITypeAssert
   extend T::Sig

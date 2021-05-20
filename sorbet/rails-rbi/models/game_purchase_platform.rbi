@@ -368,6 +368,9 @@ class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class GamePurchasePlatform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -384,6 +387,9 @@ class GamePurchasePlatform::ActiveRecord_AssociationRelation < ActiveRecord::Ass
 
   sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module GamePurchasePlatform::GeneratedAttributeMethods
@@ -724,4 +730,7 @@ class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRe
 
   sig { params(num: Integer).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end

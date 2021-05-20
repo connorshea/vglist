@@ -285,6 +285,9 @@ class Event::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(num: Integer).returns(Event::ActiveRecord_Relation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
@@ -346,6 +349,9 @@ class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
 
   sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
@@ -418,6 +424,9 @@ class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associati
 
   sig { params(num: Integer).returns(Event::ActiveRecord_AssociationRelation) }
   def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module Event::QueryMethodsReturningRelation
