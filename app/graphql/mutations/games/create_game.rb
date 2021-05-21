@@ -4,7 +4,13 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
 
   argument :name, String, required: true, description: 'The name of the game.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the game item in Wikidata.'
+  argument :release_date, GraphQL::Types::ISO8601Date, required: false, description: 'The date of the game\'s initial release.'
   argument :series_id, ID, required: false, description: 'The ID of the game\'s associated Series.'
+  argument :platform_ids, [ID], required: false, description: 'The ID(s) of the game\'s platforms.'
+  argument :developer_ids, [ID], required: false, description: 'The ID(s) of the game\'s developers.'
+  argument :publisher_ids, [ID], required: false, description: 'The ID(s) of the game\'s publishers.'
+  argument :genre_ids, [ID], required: false, description: 'The ID(s) of the game\'s genres.'
+  argument :engine_ids, [ID], required: false, description: 'The ID(s) of the game\'s engines.'
   argument :pcgamingwiki_id, String, required: false, description: 'The ID of the game on PCGamingWiki.'
   argument :mobygames_id, String, required: false, description: 'The ID of the game on MobyGames.'
   argument :giantbomb_id, String, required: false, description: 'The ID of the game on the GiantBomb Wiki.'
@@ -19,7 +25,13 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
     params(
       name: String,
       wikidata_id: T.nilable(T.any(String, Integer)),
+      release_date: T.nilable(Date),
       series_id: T.nilable(Integer),
+      platform_ids: T::Array[T.any(String, Integer)],
+      developer_ids: T::Array[T.any(String, Integer)],
+      publisher_ids: T::Array[T.any(String, Integer)],
+      genre_ids: T::Array[T.any(String, Integer)],
+      engine_ids: T::Array[T.any(String, Integer)],
       pcgamingwiki_id: T.nilable(String),
       mobygames_id: T.nilable(String),
       giantbomb_id: T.nilable(String),
@@ -32,7 +44,13 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   def resolve(
     name:,
     wikidata_id: nil,
+    release_date: nil,
     series_id: nil,
+    platform_ids: [],
+    developer_ids: [],
+    publisher_ids: [],
+    genre_ids: [],
+    engine_ids: [],
     pcgamingwiki_id: nil,
     mobygames_id: nil,
     giantbomb_id: nil,
@@ -41,32 +59,29 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
     igdb_id: nil,
     steam_app_ids: []
   )
-    # Use a transaction so the change gets reverted if any part of the record creation fails.
-    created_game = Game.transaction do
-      game = Game.new(
-        name: name,
-        wikidata_id: wikidata_id,
-        series_id: series_id,
-        pcgamingwiki_id: pcgamingwiki_id,
-        mobygames_id: mobygames_id,
-        giantbomb_id: giantbomb_id,
-        epic_games_store_id: epic_games_store_id,
-        gog_id: gog_id,
-        igdb_id: igdb_id
-      )
+    game = Game.new(
+      name: name,
+      wikidata_id: wikidata_id,
+      release_date: release_date,
+      series_id: series_id,
+      platform_ids: platform_ids,
+      developer_ids: developer_ids,
+      publisher_ids: publisher_ids,
+      genre_ids: genre_ids,
+      engine_ids: engine_ids,
+      pcgamingwiki_id: pcgamingwiki_id,
+      mobygames_id: mobygames_id,
+      giantbomb_id: giantbomb_id,
+      epic_games_store_id: epic_games_store_id,
+      gog_id: gog_id,
+      igdb_id: igdb_id,
+      steam_app_ids_attributes: steam_app_ids
+    )
 
-      raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.save
-
-      # Create associated SteamAppId records if there are any passed to the mutation.
-      steam_app_ids.each do |app_id|
-        SteamAppId.create(game: game, app_id: app_id)
-      end
-
-      game
-    end
+    raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.save
 
     {
-      game: created_game
+      game: game
     }
   end
 
