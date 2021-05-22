@@ -4,7 +4,7 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
 
   argument :game_id, ID, required: true, description: 'The ID of the game record.'
   argument :name, String, required: false, description: 'The name of the game.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the game item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the game item in Wikidata.'
   argument :release_date, GraphQL::Types::ISO8601Date, required: false, description: 'The date of the game\'s initial release.'
   argument :series_id, ID, required: false, description: 'The ID of the game\'s associated Series.'
   argument :platform_ids, [ID], required: false, description: 'The ID(s) of the game\'s platforms.'

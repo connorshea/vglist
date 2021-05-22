@@ -3,7 +3,7 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   description "Create a new game. **Only available when using a first-party OAuth Application.**"
 
   argument :name, String, required: true, description: 'The name of the game.'
-  argument :wikidata_id, Integer, required: false, description: 'The ID of the game item in Wikidata.'
+  argument :wikidata_id, ID, required: false, description: 'The ID of the game item in Wikidata.'
   argument :release_date, GraphQL::Types::ISO8601Date, required: false, description: 'The date of the game\'s initial release.'
   argument :series_id, ID, required: false, description: 'The ID of the game\'s associated Series.'
   argument :platform_ids, [ID], required: false, description: 'The ID(s) of the game\'s platforms.'
@@ -26,7 +26,7 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   sig do
     params(
       name: String,
-      wikidata_id: T.nilable(Integer),
+      wikidata_id: T.nilable(T.any(String, Integer)),
       release_date: T.nilable(Date),
       series_id: T.nilable(T.any(String, Integer)),
       platform_ids: T::Array[T.any(String, Integer)],

@@ -55,7 +55,7 @@ RSpec.describe "UpdateGame Mutation API", type: :request do
             $mobygamesId: String,
             $giantbombId: String,
             $pcgamingwikiId: String,
-            $wikidataId: Int,
+            $wikidataId: ID,
             $igdbId: String
           ) {
             updateGame(
