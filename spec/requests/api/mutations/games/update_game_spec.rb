@@ -158,7 +158,7 @@ RSpec.describe "UpdateGame Mutation API", type: :request do
         end.not_to change(Game, :count)
       end
 
-      it "returns the data for game after creating it" do
+      it "returns the data for game after updating it" do
         result = api_request(query_string, variables: variables, token: access_token)
 
         expect(result.graphql_dig(:update_game, :game)).to eq(
