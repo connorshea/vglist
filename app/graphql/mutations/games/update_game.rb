@@ -47,20 +47,22 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
   )
     game = Game.find(game_id)
 
-    raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**args)
+    Game.transaction do
+      raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**args)
 
-    # Update the steam_app_ids via nested attributes if they're set.
-    # Update the other IDs directly.
-    other_game_attrs = {
-      platform_ids: platform_ids,
-      developer_ids: developer_ids,
-      publisher_ids: publisher_ids,
-      genre_ids: genre_ids,
-      engine_ids: engine_ids,
-      steam_app_ids_attributes: steam_app_ids
-    }.reject(&:nil?)
+      # Update the steam_app_ids via nested attributes if they're set.
+      # Update the other IDs directly.
+      other_game_attrs = {
+        platform_ids: platform_ids,
+        developer_ids: developer_ids,
+        publisher_ids: publisher_ids,
+        genre_ids: genre_ids,
+        engine_ids: engine_ids,
+        steam_app_ids_attributes: steam_app_ids
+      }.reject(&:nil?)
 
-    raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**other_game_attrs)
+      raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**other_game_attrs)
+    end
 
     {
       game: game
