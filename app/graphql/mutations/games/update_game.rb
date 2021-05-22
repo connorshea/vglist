@@ -61,7 +61,7 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
         genre_ids: genre_ids,
         engine_ids: engine_ids,
         steam_app_ids_attributes: steam_app_ids&.map { |app_id| { app_id: app_id } }
-      }.reject(&:nil?)
+      }.reject { |_k, v| v.nil? }
 
       raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**other_game_attrs)
     end
