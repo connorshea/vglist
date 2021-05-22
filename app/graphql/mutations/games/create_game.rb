@@ -3,7 +3,7 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   description "Create a new game. **Only available when using a first-party OAuth Application.**"
 
   argument :name, String, required: true, description: 'The name of the game.'
-  argument :wikidata_id, ID, required: false, description: 'The ID of the game item in Wikidata.'
+  argument :wikidata_id, Integer, required: false, description: 'The ID of the game item in Wikidata.'
   argument :release_date, GraphQL::Types::ISO8601Date, required: false, description: 'The date of the game\'s initial release.'
   argument :series_id, ID, required: false, description: 'The ID of the game\'s associated Series.'
   argument :platform_ids, [ID], required: false, description: 'The ID(s) of the game\'s platforms.'
@@ -19,14 +19,16 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   argument :igdb_id, String, required: false, description: 'The ID of the game on IGDB.'
   argument :steam_app_ids, [Integer], required: false, description: 'The ID(s) of the game on Steam.'
 
+  # TODO: Add ability to set game cover in mutation.
+
   field :game, Types::GameType, null: true, description: "The game that was created."
 
   sig do
     params(
       name: String,
-      wikidata_id: T.nilable(T.any(String, Integer)),
+      wikidata_id: T.nilable(Integer),
       release_date: T.nilable(Date),
-      series_id: T.nilable(Integer),
+      series_id: T.nilable(T.any(String, Integer)),
       platform_ids: T::Array[T.any(String, Integer)],
       developer_ids: T::Array[T.any(String, Integer)],
       publisher_ids: T::Array[T.any(String, Integer)],
@@ -75,7 +77,7 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
       epic_games_store_id: epic_games_store_id,
       gog_id: gog_id,
       igdb_id: igdb_id,
-      steam_app_ids_attributes: steam_app_ids
+      steam_app_ids_attributes: steam_app_ids.map { |app_id| { app_id: app_id } }
     )
 
     raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.save
