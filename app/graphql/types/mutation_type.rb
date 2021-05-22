@@ -4,6 +4,8 @@ module Types
     description "Mutations are GraphQL requests that can be used to create, update, or delete records on vglist."
 
     # Game mutations
+    field :create_game, mutation: Mutations::Games::CreateGame
+    field :update_game, mutation: Mutations::Games::UpdateGame
     field :delete_game, mutation: Mutations::Games::DeleteGame
     field :favorite_game, mutation: Mutations::Games::FavoriteGame
     field :unfavorite_game, mutation: Mutations::Games::UnfavoriteGame
