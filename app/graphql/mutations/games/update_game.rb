@@ -52,15 +52,27 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
     Game.transaction do
       raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**args)
 
-      # Update the steam_app_ids via nested attributes if they're set.
+      # Have to do some messy stuff here to create and destroy the correct
+      # Steam App ID records. Skip all of this stuff if we're not trying to update the SteamAppIds at all.
+      unless steam_app_ids.nil?
+        existing_app_ids = game.steam_app_ids
+        app_ids_to_destroy = existing_app_ids.reject do |app_id_record|
+          steam_app_ids.include?(app_id_record[:app_id])
+        end
+        app_ids_to_create = steam_app_ids.difference(existing_app_ids.map(&:app_id))
+
+        # Create new SteamAppIds and destroy the ones that no longer exist.
+        app_ids_to_create.each { |app_id| game.steam_app_ids.create(app_id: app_id) }
+        app_ids_to_destroy.each { |app_id| game.steam_app_ids.find_by(app_id: app_id)&.destroy }
+      end
+
       # Update the other IDs directly.
       other_game_attrs = {
         platform_ids: platform_ids,
         developer_ids: developer_ids,
         publisher_ids: publisher_ids,
         genre_ids: genre_ids,
-        engine_ids: engine_ids,
-        steam_app_ids_attributes: steam_app_ids&.map { |app_id| { app_id: app_id } }
+        engine_ids: engine_ids
       }.reject { |_k, v| v.nil? }
 
       raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**other_game_attrs)
