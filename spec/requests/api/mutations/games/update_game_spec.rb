@@ -206,5 +206,58 @@ RSpec.describe "UpdateGame Mutation API", type: :request do
         )
       end
     end
+
+    context 'with game that has Steam AppIDs' do
+      let(:game) do
+        create(:game, name: 'Half-Life') do |game|
+          create(:steam_app_id, game: game, app_id: 123)
+          create(:steam_app_id, game: game, app_id: 124)
+        end
+      end
+      let(:query_string) do
+        <<-GRAPHQL
+          mutation($gameId: ID!, $name: String!, $steamAppIds: [Int!]) {
+            updateGame(gameId: $gameId, name: $name, steamAppIds: $steamAppIds) {
+              game {
+                id
+                name
+                steamAppIds
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      it "updates the game" do
+        game
+        expect do
+          api_request(query_string, variables: { game_id: game.id, name: 'Portal', steam_app_ids: [123, 125] }, token: access_token)
+        end.not_to change(Game, :count)
+      end
+
+      it "returns data for game after updating it and updates the SteamAppId records correctly" do
+        result = api_request(query_string, variables: { game_id: game.id, name: 'Portal', steam_app_ids: [123, 125] }, token: access_token)
+
+        expect(result.graphql_dig(:update_game, :game)).to eq(
+          {
+            id: game.id.to_s,
+            name: 'Portal',
+            steamAppIds: [123, 125]
+          }
+        )
+      end
+
+      it "returns data for game after updating it and does not touch SteamAppIds" do
+        result = api_request(query_string, variables: { game_id: game.id, name: 'Portal' }, token: access_token)
+
+        expect(result.graphql_dig(:update_game, :game)).to eq(
+          {
+            id: game.id.to_s,
+            name: 'Portal',
+            steamAppIds: [123, 124]
+          }
+        )
+      end
+    end
   end
 end

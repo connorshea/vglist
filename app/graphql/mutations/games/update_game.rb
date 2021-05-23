@@ -55,11 +55,11 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
       # Have to do some messy stuff here to create and destroy the correct
       # Steam App ID records. Skip all of this stuff if we're not trying to update the SteamAppIds at all.
       unless steam_app_ids.nil?
-        existing_app_ids = game.steam_app_ids
-        app_ids_to_destroy = existing_app_ids.reject do |app_id_record|
-          steam_app_ids.include?(app_id_record[:app_id])
+        existing_app_ids = game.steam_app_ids.map(&:app_id)
+        app_ids_to_destroy = existing_app_ids.reject do |app_id|
+          steam_app_ids.include?(app_id)
         end
-        app_ids_to_create = steam_app_ids.difference(existing_app_ids.map(&:app_id))
+        app_ids_to_create = steam_app_ids.difference(existing_app_ids)
 
         # Create new SteamAppIds and destroy the ones that no longer exist.
         app_ids_to_create.each { |app_id| game.steam_app_ids.create(app_id: app_id) }
@@ -79,7 +79,7 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
     end
 
     {
-      game: game
+      game: game.reload
     }
   end
 
