@@ -90,6 +90,17 @@ class Game < ApplicationRecord
   scope :on_platform, ->(platform_id) {
     joins(:game_platforms).where(game_platforms: { platform_id: platform_id })
   }
+
+  # Find games in a given genre.
+  scope :by_genre, ->(genre_id) {
+    joins(:game_genres).where(game_genres: { genre_id: genre_id })
+  }
+
+  # Find games built with a given engine.
+  scope :by_engine, ->(engine_id) {
+    joins(:game_engines).where(game_engines: { engine_id: engine_id })
+  }
+
   # Find games released in a given year.
   scope :by_year, ->(year) {
     where('extract(year from release_date) = ?', year)
