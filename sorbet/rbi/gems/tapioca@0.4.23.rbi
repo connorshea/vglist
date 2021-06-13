@@ -11,9 +11,6 @@ class String
   include ::MessagePack::CoreExt
   extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
   extend ::Colorize::ClassMethods
-
-  sig { returns(String) }
-  def underscore; end
 end
 
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
@@ -284,6 +281,9 @@ class Tapioca::Compilers::SymbolTable::SymbolGenerator
   sig { params(tree: Tapioca::RBI::Tree, symbol: String).void }
   def generate_from_symbol(tree, symbol); end
 
+  sig { params(constant: T.all(Module, T::Generic)).returns(String) }
+  def generic_name_of(constant); end
+
   sig { params(constant: Module).returns(T::Array[String]) }
   def get_file_candidates(constant); end
 
@@ -524,6 +524,9 @@ class Tapioca::Gemfile::Gem
   private
 
   sig { returns(T::Boolean) }
+  def default_gem?; end
+
+  sig { returns(T::Boolean) }
   def gem_ignored?; end
 
   sig { params(gemfile_dir: String).returns(T::Boolean) }
@@ -534,6 +537,9 @@ class Tapioca::Gemfile::Gem
 
   sig { params(path: String).returns(T::Boolean) }
   def has_parent_gemspec?(path); end
+
+  sig { returns(Pathname) }
+  def ruby_lib_dir; end
 
   sig { params(path: T.any(Pathname, String)).returns(String) }
   def to_realpath(path); end

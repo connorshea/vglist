@@ -33,6 +33,12 @@ class Game < ApplicationRecord
   RelationType = T.type_alias { T.any(Game::ActiveRecord_Relation, Game::ActiveRecord_Associations_CollectionProxy, Game::ActiveRecord_AssociationRelation) }
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.by_engine(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.by_genre(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.by_year(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -1648,6 +1654,12 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   Elem = type_member(fixed: Game)
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def by_engine(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def by_genre(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def by_year(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -1700,6 +1712,12 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   Elem = type_member(fixed: Game)
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def by_engine(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def by_genre(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_year(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
@@ -1749,6 +1767,12 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
   include Game::CustomFinderMethods
   include Game::QueryMethodsReturningAssociationRelation
   Elem = type_member(fixed: Game)
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def by_engine(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def by_genre(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_year(*args); end

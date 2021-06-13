@@ -630,7 +630,7 @@ RuboCop::Cop::RSpec::FactoryBot::FactoryClassName::RESTRICT_ON_SEND = T.let(T.un
 class RuboCop::Cop::RSpec::FilePath < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::TopLevelGroup
 
-  def const_described(param0 = T.unsafe(nil)); end
+  def example_group(param0 = T.unsafe(nil)); end
   def on_top_level_example_group(node); end
   def routing_metadata?(param0); end
 
@@ -638,12 +638,12 @@ class RuboCop::Cop::RSpec::FilePath < ::RuboCop::Cop::RSpec::Base
 
   def camel_to_snake_case(string); end
   def custom_transform; end
-  def ensure_correct_file_path(send_node, described_class, arguments); end
+  def ensure_correct_file_path(send_node, example_group, arguments); end
   def expected_path(constant); end
   def filename_ends_with?(pattern); end
   def ignore_methods?; end
   def name_pattern(method_name); end
-  def pattern_for(described_class, method_name); end
+  def pattern_for(example_group, method_name); end
   def pattern_for_spec_suffix_only?; end
   def relevant_rubocop_rspec_file?(_file); end
   def routing_spec?(args); end
@@ -709,6 +709,14 @@ class RuboCop::Cop::RSpec::HooksBeforeExamples < ::RuboCop::Cop::RSpec::Base
 end
 
 RuboCop::Cop::RSpec::HooksBeforeExamples::MSG = T.let(T.unsafe(nil), String)
+
+class RuboCop::Cop::RSpec::IdenticalEqualityAssertion < ::RuboCop::Cop::RSpec::Base
+  def equality_check?(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::RSpec::IdenticalEqualityAssertion::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::RSpec::IdenticalEqualityAssertion::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 class RuboCop::Cop::RSpec::ImplicitBlockExpectation < ::RuboCop::Cop::RSpec::Base
   def implicit_expect(param0 = T.unsafe(nil)); end
@@ -1100,6 +1108,15 @@ class RuboCop::Cop::RSpec::PredicateMatcher < ::RuboCop::Cop::RSpec::Base
 end
 
 module RuboCop::Cop::RSpec::Rails; end
+
+class RuboCop::Cop::RSpec::Rails::AvoidSetupHook < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def on_block(node); end
+  def setup_call(param0 = T.unsafe(nil)); end
+end
+
+RuboCop::Cop::RSpec::Rails::AvoidSetupHook::MSG = T.let(T.unsafe(nil), String)
 
 class RuboCop::Cop::RSpec::Rails::HttpStatus < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle

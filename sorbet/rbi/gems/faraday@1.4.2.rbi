@@ -49,63 +49,6 @@ end
 
 Faraday::Adapter::CONTENT_LENGTH = T.let(T.unsafe(nil), String)
 
-class Faraday::Adapter::EMHttp < ::Faraday::Adapter
-  include ::Faraday::Adapter::EMHttp::Options
-
-  def call(env); end
-  def create_request(env); end
-  def error_message(client); end
-  def parallel?(env); end
-  def perform_request(env); end
-  def perform_single_request(env); end
-  def raise_error(msg); end
-  def timeout_message?(msg); end
-
-  class << self
-    def setup_parallel_manager(_options = T.unsafe(nil)); end
-  end
-end
-
-class Faraday::Adapter::EMHttp::Manager
-  def initialize; end
-
-  def add(&block); end
-  def check_finished; end
-  def perform_request; end
-  def reset; end
-  def run; end
-  def running?; end
-end
-
-module Faraday::Adapter::EMHttp::Options
-  def configure_compression(options, env); end
-  def configure_proxy(options, env); end
-  def configure_socket(options, env); end
-  def configure_ssl(options, env); end
-  def configure_timeout(options, env); end
-  def connection_config(env); end
-  def read_body(env); end
-  def request_config(env); end
-  def request_options(env); end
-end
-
-class Faraday::Adapter::EMSynchrony < ::Faraday::Adapter
-  include ::Faraday::Adapter::EMHttp::Options
-
-  def call(env); end
-  def create_request(env); end
-
-  private
-
-  def call_block(block); end
-  def execute_parallel_request(env, request, http_method); end
-  def execute_single_request(env, request, http_method); end
-
-  class << self
-    def setup_parallel_manager(_options = T.unsafe(nil)); end
-  end
-end
-
 class Faraday::Adapter::HTTPClient < ::Faraday::Adapter
   def build_connection(env); end
   def call(env); end
