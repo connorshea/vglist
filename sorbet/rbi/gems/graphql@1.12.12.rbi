@@ -403,6 +403,7 @@ class GraphQL::Backtrace::Table
   def build_rows(context_entry, rows:, top: T.unsafe(nil)); end
   def render_table(rows); end
   def rows; end
+  def value_at(runtime, path); end
 end
 
 GraphQL::Backtrace::Table::HEADERS = T.let(T.unsafe(nil), Array)
@@ -637,6 +638,7 @@ class GraphQL::Dataloader
 
   def append_job(&job); end
   def run; end
+  def run_isolated; end
   def with(source_class, *batch_parameters); end
   def yield; end
 
@@ -654,6 +656,7 @@ end
 class GraphQL::Dataloader::NullDataloader < ::GraphQL::Dataloader
   def append_job; end
   def run; end
+  def run_isolated; end
   def yield; end
 end
 
@@ -1016,7 +1019,7 @@ end
 GraphQL::Execution::Execute::PROPAGATE_NULL = T.let(T.unsafe(nil), GraphQL::Execution::Execute::PropagateNull)
 class GraphQL::Execution::Execute::PropagateNull; end
 GraphQL::Execution::Execute::SKIP = T.let(T.unsafe(nil), GraphQL::Execution::Execute::Skip)
-class GraphQL::Execution::Execute::Skip; end
+class GraphQL::Execution::Execute::Skip < ::GraphQL::Error; end
 
 module GraphQL::Execution::Flatten
   class << self
@@ -1107,14 +1110,6 @@ class GraphQL::Execution::Interpreter::ExecutionErrors
   def add(err_or_msg); end
 end
 
-class GraphQL::Execution::Interpreter::HashResponse
-  def initialize; end
-
-  def final_value; end
-  def inspect; end
-  def write(path, value); end
-end
-
 class GraphQL::Execution::Interpreter::ListResultFailedError < ::GraphQL::Error
   def initialize(value:, path:, field:); end
 end
@@ -1133,39 +1128,66 @@ module GraphQL::Execution::Interpreter::Resolve
 end
 
 class GraphQL::Execution::Interpreter::Runtime
-  def initialize(query:, response:); end
+  def initialize(query:); end
 
-  def add_dead_path(path); end
-  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, ast_node:, eager: T.unsafe(nil), trace: T.unsafe(nil), &block); end
+  def after_lazy(lazy_obj, owner:, field:, path:, scoped_context:, owner_object:, arguments:, ast_node:, result:, result_name:, eager: T.unsafe(nil), trace: T.unsafe(nil), &block); end
   def arguments(graphql_object, arg_owner, ast_node); end
   def authorized_new(type, value, context); end
   def context; end
-  def continue_field(path, value, owner_type, field, current_type, ast_node, next_selections, is_non_null, owner_object, arguments); end
-  def continue_value(path, value, parent_type, field, is_non_null, ast_node); end
-  def dead_path?(path); end
+  def continue_field(path, value, owner_type, field, current_type, ast_node, next_selections, is_non_null, owner_object, arguments, result_name, selection_result); end
+  def continue_value(path, value, parent_type, field, is_non_null, ast_node, result_name, selection_result); end
+  def dead_result?(selection_result); end
+  def deep_merge_selection_result(from_result, into_result); end
   def delete_interpreter_context(key); end
   def directives_include?(node, graphql_object, parent_type); end
-  def evaluate_selection(path, result_name, field_ast_nodes_or_ast_node, scoped_context, owner_object, owner_type, is_eager_field); end
-  def evaluate_selection_with_args(kwarg_arguments, field_defn, next_path, ast_node, field_ast_nodes, scoped_context, owner_type, object, is_eager_field); end
-  def evaluate_selections(path, scoped_context, owner_object, owner_type, is_eager_selection, gathered_selections); end
-  def final_value; end
-  def gather_selections(owner_object, owner_type, selections, selections_by_name = T.unsafe(nil)); end
+  def evaluate_selection(path, result_name, field_ast_nodes_or_ast_node, scoped_context, owner_object, owner_type, is_eager_field, selections_result); end
+  def evaluate_selection_with_args(kwarg_arguments, field_defn, next_path, ast_node, field_ast_nodes, scoped_context, owner_type, object, is_eager_field, result_name, selection_result); end
+  def evaluate_selections(path, scoped_context, owner_object, owner_type, is_eager_selection, gathered_selections, selections_result, target_result); end
+  def gather_selections(owner_object, owner_type, selections, selections_to_run = T.unsafe(nil), selections_by_name = T.unsafe(nil)); end
   def inspect; end
+  def lazy?(object); end
   def progress_path; end
   def query; end
   def resolve_type(type, value, path); end
-  def resolve_with_directives(object, ast_node, &block); end
-  def run_directive(object, ast_node, idx, &block); end
+  def resolve_with_directives(object, directives, &block); end
+  def response; end
+  def run_directive(object, directives, idx, &block); end
   def run_eager; end
   def schema; end
   def set_all_interpreter_context(object, field, arguments, path); end
   def set_interpreter_context(key, value); end
-  def set_type_at_path(path, type); end
-  def type_at(path); end
-  def value_at(path); end
-  def write_execution_errors_in_response(path, errors); end
-  def write_in_response(path, value); end
-  def write_invalid_null_in_response(path, invalid_null_error); end
+  def set_result(selection_result, result_name, value); end
+  def tap_or_each(obj_or_array); end
+end
+
+module GraphQL::Execution::Interpreter::Runtime::GraphQLResult
+  def graphql_dead; end
+  def graphql_dead=(_arg0); end
+  def graphql_non_null_field_names; end
+  def graphql_non_null_field_names=(_arg0); end
+  def graphql_non_null_list_items; end
+  def graphql_non_null_list_items=(_arg0); end
+  def graphql_parent; end
+  def graphql_parent=(_arg0); end
+  def graphql_result_name; end
+  def graphql_result_name=(_arg0); end
+end
+
+class GraphQL::Execution::Interpreter::Runtime::GraphQLResultArray < ::Array
+  include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
+end
+
+class GraphQL::Execution::Interpreter::Runtime::GraphQLResultHash < ::Hash
+  include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
+
+  def []=(key, value); end
+  def graphql_merged_into; end
+  def graphql_merged_into=(_arg0); end
+end
+
+class GraphQL::Execution::Interpreter::Runtime::GraphQLSelectionSet < ::Hash
+  def graphql_directives; end
+  def graphql_directives=(_arg0); end
 end
 
 GraphQL::Execution::Interpreter::Runtime::HALT = T.let(T.unsafe(nil), Object)
@@ -3997,8 +4019,6 @@ class GraphQL::Schema
 
     private
 
-    def add_directives_from(owner); end
-    def add_type(type, owner:, late_types:, path:); end
     def add_type_and_traverse(t, root:); end
     def all_middleware; end
     def lazy_methods; end
@@ -4014,8 +4034,28 @@ class GraphQL::Schema
     def own_tracers; end
     def own_types; end
     def own_union_memberships; end
-    def update_type_owner(owner, type); end
   end
+end
+
+class GraphQL::Schema::Addition
+  def initialize(schema:, own_types:, new_types:); end
+
+  def arguments_with_default_values; end
+  def directives; end
+  def possible_types; end
+  def references; end
+  def types; end
+  def union_memberships; end
+
+  private
+
+  def add_directives_from(owner); end
+  def add_type(type, owner:, late_types:, path:); end
+  def add_type_and_traverse(new_types); end
+  def get_local_type(name); end
+  def get_type(name); end
+  def references_to(thing, from:); end
+  def update_type_owner(owner, type); end
 end
 
 class GraphQL::Schema::Argument
@@ -4052,12 +4092,17 @@ class GraphQL::Schema::Argument
   def statically_coercible?; end
   def type; end
   def type=(new_type); end
+  def validate_default_value; end
   def visible?(context); end
 
   private
 
   def validate_deprecated_or_optional(null:, deprecation_reason:); end
   def validate_input_type(input_type); end
+end
+
+class GraphQL::Schema::Argument::InvalidDefaultValueError < ::GraphQL::Error
+  def initialize(argument); end
 end
 
 GraphQL::Schema::Argument::NO_DEFAULT = T.let(T.unsafe(nil), Symbol)
@@ -5046,6 +5091,7 @@ class GraphQL::Schema::Resolver
     private
 
     def own_arguments_loads_as_type; end
+    def own_extensions; end
   end
 end
 

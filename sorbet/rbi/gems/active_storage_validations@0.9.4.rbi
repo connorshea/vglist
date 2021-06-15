@@ -117,6 +117,7 @@ class ActiveStorageValidations::Matchers::DimensionValidatorMatcher
   def width_between(range); end
   def width_max(width); end
   def width_min(width); end
+  def with_message(message); end
 
   protected
 

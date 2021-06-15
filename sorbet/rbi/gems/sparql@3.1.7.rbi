@@ -5,24 +5,24 @@
 # typed: true
 
 class FalseClass
-  include(::JSON::Ext::Generator::GeneratorMethods::FalseClass)
-  include(::MessagePack::CoreExt)
-  include(::FriendlyId::UnfriendlyUtils)
-  include(::SafeType::BooleanMixin)
+  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
+  include ::MessagePack::CoreExt
+  include ::FriendlyId::UnfriendlyUtils
+  include ::SafeType::BooleanMixin
 
   def to_sxp; end
 end
 
 class NilClass
-  include(::JSON::Ext::Generator::GeneratorMethods::NilClass)
-  include(::MessagePack::CoreExt)
-  include(::FriendlyId::UnfriendlyUtils)
+  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
+  include ::MessagePack::CoreExt
+  include ::FriendlyId::UnfriendlyUtils
 
   def to_sxp; end
 end
 
 class RDF::Query::Solutions < ::Array
-  include(::SPARQL::Results)
+  include ::SPARQL::Results
 
   def bindings; end
   def count(&block); end
@@ -52,7 +52,7 @@ class RDF::Query::Solutions < ::Array
 end
 
 module RDF::Queryable
-  include(::Enumerable)
+  include ::Enumerable
 
   def concise_bounded_description(*terms, **options, &block); end
   def enum_for(method = T.unsafe(nil), *args); end
@@ -72,7 +72,6 @@ module RDF::Queryable
 end
 
 module SPARQL
-
   private
 
   def first_content_type(acceptable, available); end
@@ -89,8 +88,7 @@ module SPARQL
 end
 
 module SPARQL::Algebra
-  include(::RDF)
-
+  include ::RDF
 
   private
 
@@ -111,21 +109,21 @@ end
 
 module SPARQL::Algebra::Aggregate
   def aggregate(solutions = T.unsafe(nil), **options); end
-  def apply(enum); end
+  def apply(enum, **options); end
   def replace_aggregate!(&block); end
   def replace_vars!(&block); end
 end
 
 module SPARQL::Algebra::Evaluatable
-  def apply(*operands); end
+  def apply(*operands, **options); end
   def evaluate(bindings, **options); end
-  def memoize(*operands); end
+  def memoize(*operands, **options); end
   def replace_aggregate!(&block); end
   def replace_vars!(&block); end
 end
 
 module SPARQL::Algebra::Expression
-  include(::RDF::Util::Logger)
+  include ::RDF::Util::Logger
 
   def constant?; end
   def evaluate(bindings, **options); end
@@ -158,8 +156,8 @@ module SPARQL::Algebra::Expression
 end
 
 class SPARQL::Algebra::Operator
-  include(::RDF::Util::Logger)
-  include(::SPARQL::Algebra::Expression)
+  include ::RDF::Util::Logger
+  include ::SPARQL::Algebra::Expression
 
   def initialize(*operands, **options); end
 
@@ -202,7 +200,7 @@ class SPARQL::Algebra::Operator
     def arity; end
     def base_uri; end
     def base_uri=(uri); end
-    def evaluate(*operands); end
+    def evaluate(*operands, **options); end
     def for(name, arity = T.unsafe(nil)); end
     def inherited(child); end
     def prefixes; end
@@ -213,15 +211,15 @@ end
 SPARQL::Algebra::Operator::ARITY = T.let(T.unsafe(nil), Integer)
 
 class SPARQL::Algebra::Operator::Abs < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Abs::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Add < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -229,7 +227,7 @@ end
 SPARQL::Algebra::Operator::Add::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Alt < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -237,7 +235,7 @@ end
 SPARQL::Algebra::Operator::Alt::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::And < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def initialize(left, right, **options); end
 
@@ -247,7 +245,7 @@ end
 SPARQL::Algebra::Operator::And::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Asc < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -255,7 +253,7 @@ end
 SPARQL::Algebra::Operator::Asc::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Ask < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options); end
   def query_yields_boolean?; end
@@ -264,11 +262,11 @@ end
 SPARQL::Algebra::Operator::Ask::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Avg < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Aggregate)
+  include ::SPARQL::Algebra::Aggregate
 
   def initialize(*operands, **options); end
 
-  def apply(enum); end
+  def apply(enum, **options); end
 end
 
 SPARQL::Algebra::Operator::Avg::NAME = T.let(T.unsafe(nil), Symbol)
@@ -282,11 +280,11 @@ end
 SPARQL::Algebra::Operator::BGP::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::BNode < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def initialize(literal = T.unsafe(nil), **options); end
 
-  def apply(literal, bindings); end
+  def apply(literal, bindings, **options); end
   def evaluate(bindings, **options); end
   def to_sxp_bin; end
 end
@@ -294,7 +292,7 @@ end
 SPARQL::Algebra::Operator::BNode::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Base < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def optimize(**options); end
@@ -311,7 +309,7 @@ end
 SPARQL::Algebra::Operator::Binary::ARITY = T.let(T.unsafe(nil), Integer)
 
 class SPARQL::Algebra::Operator::Bound < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def initialize(var, **options); end
 
@@ -321,15 +319,15 @@ end
 SPARQL::Algebra::Operator::Bound::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Ceil < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Ceil::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Clear < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -337,7 +335,7 @@ end
 SPARQL::Algebra::Operator::Clear::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Coalesce < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -345,15 +343,19 @@ end
 SPARQL::Algebra::Operator::Coalesce::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Compare < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
+
+  private
+
+  def spaceship(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::Compare::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Concat < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -361,7 +363,7 @@ end
 SPARQL::Algebra::Operator::Concat::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Construct < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def query_yields_statements?; end
@@ -370,15 +372,15 @@ end
 SPARQL::Algebra::Operator::Construct::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Contains < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::Contains::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Copy < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -386,15 +388,15 @@ end
 SPARQL::Algebra::Operator::Copy::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Count < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Aggregate)
+  include ::SPARQL::Algebra::Aggregate
 
-  def apply(enum); end
+  def apply(enum, **options); end
 end
 
 SPARQL::Algebra::Operator::Count::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Create < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -402,7 +404,7 @@ end
 SPARQL::Algebra::Operator::Create::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Dataset < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &base); end
 end
@@ -410,23 +412,23 @@ end
 SPARQL::Algebra::Operator::Dataset::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Datatype < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(literal); end
+  def apply(literal, **options); end
 end
 
 SPARQL::Algebra::Operator::Datatype::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Day < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Day::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Delete < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, solutions: T.unsafe(nil), **options); end
 end
@@ -434,7 +436,7 @@ end
 SPARQL::Algebra::Operator::Delete::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::DeleteData < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -442,20 +444,17 @@ end
 SPARQL::Algebra::Operator::DeleteData::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::DeleteWhere < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
 
 SPARQL::Algebra::Operator::DeleteWhere::NAME = T.let(T.unsafe(nil), Array)
-
-class SPARQL::Algebra::Operator::Desc < ::SPARQL::Algebra::Operator::Asc
-end
-
+class SPARQL::Algebra::Operator::Desc < ::SPARQL::Algebra::Operator::Asc; end
 SPARQL::Algebra::Operator::Desc::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Describe < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def query_yields_statements?; end
@@ -464,7 +463,7 @@ end
 SPARQL::Algebra::Operator::Describe::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Distinct < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -472,15 +471,15 @@ end
 SPARQL::Algebra::Operator::Distinct::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Divide < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::Divide::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Drop < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -488,21 +487,21 @@ end
 SPARQL::Algebra::Operator::Drop::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::EncodeForURI < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::EncodeForURI::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Equal < ::SPARQL::Algebra::Operator::Compare
-  def apply(term1, term2); end
+  def apply(term1, term2, **options); end
 end
 
 SPARQL::Algebra::Operator::Equal::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Exists < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -510,7 +509,7 @@ end
 SPARQL::Algebra::Operator::Exists::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Exprlist < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -518,7 +517,7 @@ end
 SPARQL::Algebra::Operator::Exprlist::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Extend < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def validate!; end
@@ -527,7 +526,7 @@ end
 SPARQL::Algebra::Operator::Extend::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Filter < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def validate!; end
@@ -536,15 +535,15 @@ end
 SPARQL::Algebra::Operator::Filter::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Floor < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Floor::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Graph < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def rewrite(&block); end
@@ -557,19 +556,19 @@ end
 SPARQL::Algebra::Operator::Graph::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::GreaterThan < ::SPARQL::Algebra::Operator::Compare
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::GreaterThan::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::GreaterThanOrEqual < ::SPARQL::Algebra::Operator::Compare
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::GreaterThanOrEqual::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Group < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def validate!; end
@@ -578,32 +577,32 @@ end
 SPARQL::Algebra::Operator::Group::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::GroupConcat < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Aggregate)
+  include ::SPARQL::Algebra::Aggregate
 
   def aggregate(solutions = T.unsafe(nil), **options); end
-  def apply(enum, separator); end
+  def apply(enum, separator, **options); end
 end
 
 SPARQL::Algebra::Operator::GroupConcat::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Hours < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Hours::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::IRI < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(literal); end
+  def apply(literal, **options); end
 end
 
 SPARQL::Algebra::Operator::IRI::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::If < ::SPARQL::Algebra::Operator::Ternary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -611,7 +610,7 @@ end
 SPARQL::Algebra::Operator::If::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::In < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -619,7 +618,7 @@ end
 SPARQL::Algebra::Operator::In::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Insert < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, solutions: T.unsafe(nil), **options); end
 end
@@ -627,7 +626,7 @@ end
 SPARQL::Algebra::Operator::Insert::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::InsertData < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -635,49 +634,48 @@ end
 SPARQL::Algebra::Operator::InsertData::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::IsBlank < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term); end
+  def apply(term, **options); end
 end
 
 SPARQL::Algebra::Operator::IsBlank::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::IsIRI < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term); end
+  def apply(term, **options); end
 end
 
 SPARQL::Algebra::Operator::IsIRI::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::IsLiteral < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term); end
+  def apply(term, **options); end
 end
 
 SPARQL::Algebra::Operator::IsLiteral::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::IsNumeric < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term); end
+  def apply(term, **options); end
 end
 
 SPARQL::Algebra::Operator::IsNumeric::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::IsTriple < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term); end
+  def apply(term, **options); end
 end
 
 SPARQL::Algebra::Operator::IsTriple::NAME = T.let(T.unsafe(nil), Symbol)
-
 SPARQL::Algebra::Operator::IsURI = SPARQL::Algebra::Operator::IsIRI
 
 class SPARQL::Algebra::Operator::Join < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def optimize!(**options); end
@@ -687,31 +685,31 @@ end
 SPARQL::Algebra::Operator::Join::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::LCase < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::LCase::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Lang < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(literal); end
+  def apply(literal, **options); end
 end
 
 SPARQL::Algebra::Operator::Lang::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::LangMatches < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(language_tag, language_range); end
+  def apply(language_tag, language_range, **options); end
 end
 
 SPARQL::Algebra::Operator::LangMatches::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::LeftJoin < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def optimize!(**options); end
@@ -721,19 +719,19 @@ end
 SPARQL::Algebra::Operator::LeftJoin::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::LessThan < ::SPARQL::Algebra::Operator::Compare
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::LessThan::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::LessThanOrEqual < ::SPARQL::Algebra::Operator::Compare
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::LessThanOrEqual::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Load < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -741,35 +739,35 @@ end
 SPARQL::Algebra::Operator::Load::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::MD5 < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::MD5::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Max < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Aggregate)
+  include ::SPARQL::Algebra::Aggregate
 
   def initialize(*operands, **options); end
 
-  def apply(enum); end
+  def apply(enum, **options); end
 end
 
 SPARQL::Algebra::Operator::Max::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Min < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Aggregate)
+  include ::SPARQL::Algebra::Aggregate
 
   def initialize(*operands, **options); end
 
-  def apply(enum); end
+  def apply(enum, **options); end
 end
 
 SPARQL::Algebra::Operator::Min::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Minus < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def optimize!(**options); end
@@ -778,15 +776,15 @@ end
 SPARQL::Algebra::Operator::Minus::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Minutes < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Minutes::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Modify < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -794,15 +792,15 @@ end
 SPARQL::Algebra::Operator::Modify::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Month < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Month::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Move < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -810,37 +808,37 @@ end
 SPARQL::Algebra::Operator::Move::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Multiply < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::Multiply::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Negate < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term); end
+  def apply(term, **options); end
 end
 
 SPARQL::Algebra::Operator::Negate::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Not < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Not::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::NotEqual < ::SPARQL::Algebra::Operator::Equal
-  def apply(term1, term2); end
+  def apply(term1, term2, **options); end
 end
 
 SPARQL::Algebra::Operator::NotEqual::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::NotExists < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -848,7 +846,7 @@ end
 SPARQL::Algebra::Operator::NotExists::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::NotIn < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
 end
@@ -856,7 +854,7 @@ end
 SPARQL::Algebra::Operator::NotIn::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::NotOneOf < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -864,9 +862,9 @@ end
 SPARQL::Algebra::Operator::NotOneOf::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Now < ::SPARQL::Algebra::Operator::Nullary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply; end
+  def apply(**options); end
 end
 
 SPARQL::Algebra::Operator::Now::NAME = T.let(T.unsafe(nil), Symbol)
@@ -878,15 +876,15 @@ end
 SPARQL::Algebra::Operator::Nullary::ARITY = T.let(T.unsafe(nil), Integer)
 
 class SPARQL::Algebra::Operator::Object < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Object::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Or < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def initialize(left, right, **options); end
 
@@ -896,7 +894,7 @@ end
 SPARQL::Algebra::Operator::Or::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Order < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -904,7 +902,7 @@ end
 SPARQL::Algebra::Operator::Order::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Path < ::SPARQL::Algebra::Operator::Ternary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -912,7 +910,7 @@ end
 SPARQL::Algebra::Operator::Path::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::PathOpt < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -920,7 +918,7 @@ end
 SPARQL::Algebra::Operator::PathOpt::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::PathPlus < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -928,7 +926,7 @@ end
 SPARQL::Algebra::Operator::PathPlus::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::PathStar < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -936,23 +934,23 @@ end
 SPARQL::Algebra::Operator::PathStar::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Plus < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right = T.unsafe(nil)); end
+  def apply(left, right = T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::Plus::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Predicate < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Predicate::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Prefix < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def merge!(other); end
@@ -964,7 +962,7 @@ end
 SPARQL::Algebra::Operator::Prefix::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Project < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -978,15 +976,15 @@ end
 SPARQL::Algebra::Operator::Quaternary::ARITY = T.let(T.unsafe(nil), Integer)
 
 class SPARQL::Algebra::Operator::Rand < ::SPARQL::Algebra::Operator::Nullary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply; end
+  def apply(**options); end
 end
 
 SPARQL::Algebra::Operator::Rand::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Reduced < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -994,28 +992,28 @@ end
 SPARQL::Algebra::Operator::Reduced::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Regex < ::SPARQL::Algebra::Operator::Ternary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def initialize(text, pattern, flags = T.unsafe(nil), **options); end
 
-  def apply(text, pattern, flags = T.unsafe(nil)); end
+  def apply(text, pattern, flags = T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::Regex::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Replace < ::SPARQL::Algebra::Operator::Quaternary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def initialize(text, pattern, replacement, flags = T.unsafe(nil), **options); end
 
-  def apply(text, pattern, replacement, flags = T.unsafe(nil)); end
+  def apply(text, pattern, replacement, flags = T.unsafe(nil), **options); end
   def to_sxp_bin; end
 end
 
 SPARQL::Algebra::Operator::Replace::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Reverse < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -1023,66 +1021,66 @@ end
 SPARQL::Algebra::Operator::Reverse::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Round < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Round::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::SHA1 < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::SHA1::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::SHA256 < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::SHA256::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::SHA512 < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::SHA512::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::SameTerm < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term1, term2); end
+  def apply(term1, term2, **options); end
   def optimize(**options); end
 end
 
 SPARQL::Algebra::Operator::SameTerm::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Sample < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Aggregate)
+  include ::SPARQL::Algebra::Aggregate
 
   def initialize(*operands, **options); end
 
-  def apply(enum); end
+  def apply(enum, **options); end
 end
 
 SPARQL::Algebra::Operator::Sample::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Seconds < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Seconds::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Seq < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -1090,7 +1088,7 @@ end
 SPARQL::Algebra::Operator::Seq::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Sequence < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -1098,7 +1096,7 @@ end
 SPARQL::Algebra::Operator::Sequence::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Slice < ::SPARQL::Algebra::Operator::Ternary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -1106,122 +1104,122 @@ end
 SPARQL::Algebra::Operator::Slice::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Str < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(term); end
+  def apply(term, **options); end
 end
 
 SPARQL::Algebra::Operator::Str::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrAfter < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::StrAfter::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrBefore < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::StrBefore::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrDT < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(value, datatypeIRI); end
+  def apply(value, datatypeIRI, **options); end
 end
 
 SPARQL::Algebra::Operator::StrDT::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrEnds < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::StrEnds::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrLang < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(value, langTag); end
+  def apply(value, langTag, **options); end
 end
 
 SPARQL::Algebra::Operator::StrLang::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrLen < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::StrLen::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrStarts < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::StrStarts::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::StrUUID < ::SPARQL::Algebra::Operator::Nullary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply; end
+  def apply(**options); end
 end
 
 SPARQL::Algebra::Operator::StrUUID::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::SubStr < ::SPARQL::Algebra::Operator::Ternary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
   def initialize(source, startingLoc, length = T.unsafe(nil), **options); end
 
-  def apply(source, startingLoc, length); end
+  def apply(source, startingLoc, length, **options); end
   def to_sxp_bin; end
 end
 
 SPARQL::Algebra::Operator::SubStr::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Subject < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Subject::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Subtract < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(left, right); end
+  def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::Subtract::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Sum < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Aggregate)
+  include ::SPARQL::Algebra::Aggregate
 
-  def apply(enum); end
+  def apply(enum, **options); end
 end
 
 SPARQL::Algebra::Operator::Sum::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::TZ < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::TZ::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Table < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -1235,25 +1233,25 @@ end
 SPARQL::Algebra::Operator::Ternary::ARITY = T.let(T.unsafe(nil), Integer)
 
 class SPARQL::Algebra::Operator::Timezone < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Timezone::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::UCase < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::UCase::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::UUID < ::SPARQL::Algebra::Operator::Nullary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply; end
+  def apply(**options); end
 end
 
 SPARQL::Algebra::Operator::UUID::NAME = T.let(T.unsafe(nil), Symbol)
@@ -1265,7 +1263,7 @@ end
 SPARQL::Algebra::Operator::Unary::ARITY = T.let(T.unsafe(nil), Integer)
 
 class SPARQL::Algebra::Operator::Union < ::SPARQL::Algebra::Operator::Binary
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def optimize!(**options); end
@@ -1275,7 +1273,7 @@ end
 SPARQL::Algebra::Operator::Union::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Update < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -1283,7 +1281,7 @@ end
 SPARQL::Algebra::Operator::Update::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Using < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Query)
+  include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
 end
@@ -1291,7 +1289,7 @@ end
 SPARQL::Algebra::Operator::Using::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::With < ::SPARQL::Algebra::Operator
-  include(::SPARQL::Algebra::Update)
+  include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
 end
@@ -1299,9 +1297,9 @@ end
 SPARQL::Algebra::Operator::With::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Year < ::SPARQL::Algebra::Operator::Unary
-  include(::SPARQL::Algebra::Evaluatable)
+  include ::SPARQL::Algebra::Evaluatable
 
-  def apply(operand); end
+  def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Year::NAME = T.let(T.unsafe(nil), Symbol)
@@ -1329,7 +1327,6 @@ module SPARQL::Algebra::Update
 end
 
 SPARQL::Algebra::Variable = RDF::Query::Variable
-
 SPARQL::ERROR_MESSAGE = T.let(T.unsafe(nil), String)
 
 module SPARQL::Grammar
@@ -1341,11 +1338,19 @@ module SPARQL::Grammar
   end
 end
 
+module SPARQL::Grammar::Meta; end
+SPARQL::Grammar::Meta::BRANCH = T.let(T.unsafe(nil), Hash)
+SPARQL::Grammar::Meta::CLEANUP = T.let(T.unsafe(nil), Hash)
+SPARQL::Grammar::Meta::FIRST = T.let(T.unsafe(nil), Hash)
+SPARQL::Grammar::Meta::FOLLOW = T.let(T.unsafe(nil), Hash)
+SPARQL::Grammar::Meta::START = T.let(T.unsafe(nil), Symbol)
+SPARQL::Grammar::Meta::TERMINALS = T.let(T.unsafe(nil), Array)
+
 class SPARQL::Grammar::Parser
-  include(::SPARQL::Grammar::Meta)
-  include(::SPARQL::Grammar::Terminals)
-  include(::EBNF::LL1::Parser)
-  extend(::EBNF::LL1::Parser::ClassMethods)
+  include ::SPARQL::Grammar::Meta
+  include ::SPARQL::Grammar::Terminals
+  include ::EBNF::LL1::Parser
+  extend ::EBNF::LL1::Parser::ClassMethods
 
   def initialize(input = T.unsafe(nil), **options, &block); end
 
@@ -1389,96 +1394,50 @@ class SPARQL::Grammar::Parser
 end
 
 SPARQL::Grammar::Parser::AGGREGATE_RULES = T.let(T.unsafe(nil), Array)
-
 SPARQL::Grammar::Parser::BUILTINS = T.let(T.unsafe(nil), Array)
-
 SPARQL::Grammar::Parser::BUILTIN_RULES = T.let(T.unsafe(nil), Array)
-
-module SPARQL::Grammar::Terminals
-end
-
+module SPARQL::Grammar::Terminals; end
 SPARQL::Grammar::Terminals::ANON = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::BLANK_NODE_LABEL = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::DECIMAL = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::DECIMAL_NEGATIVE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::DECIMAL_POSITIVE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::DOUBLE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::DOUBLE_NEGATIVE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::DOUBLE_POSITIVE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::ECHAR = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::EXPONENT = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::INTEGER = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::INTEGER_NEGATIVE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::INTEGER_POSITIVE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::IRIREF = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::IRI_RANGE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::LANGTAG = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::NIL = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PERCENT = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PLX = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PNAME_LN = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PNAME_NS = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_CHARS = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_CHARS_BASE = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_CHARS_BODY = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_CHARS_U = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_LOCAL = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_LOCAL_BODY = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_LOCAL_ESC = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::PN_PREFIX = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::STRING_LITERAL1 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::STRING_LITERAL2 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::STRING_LITERAL_LONG1 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::STRING_LITERAL_LONG2 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::STR_EXPR = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::STR_MAP = T.let(T.unsafe(nil), Hash)
-
 SPARQL::Grammar::Terminals::UCHAR = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::U_CHARS1 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::U_CHARS2 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::VAR1 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::VAR2 = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::VARNAME = T.let(T.unsafe(nil), Regexp)
-
 SPARQL::Grammar::Terminals::WS = T.let(T.unsafe(nil), Regexp)
 
 class SPARQL::MalformedQuery < ::Exception
@@ -1508,35 +1467,16 @@ module SPARQL::VERSION
 end
 
 SPARQL::VERSION::MAJOR = T.let(T.unsafe(nil), String)
-
 SPARQL::VERSION::MINOR = T.let(T.unsafe(nil), String)
-
 SPARQL::VERSION::STRING = T.let(T.unsafe(nil), String)
-
 SPARQL::VERSION::TINY = T.let(T.unsafe(nil), String)
-
 SPARQL::VERSION::VERSION_FILE = T.let(T.unsafe(nil), String)
 
-module SPARQL::Grammar::Meta
-end
-
-SPARQL::Grammar::Meta::BRANCH = T.let(T.unsafe(nil), Hash)
-
-SPARQL::Grammar::Meta::CLEANUP = T.let(T.unsafe(nil), Hash)
-
-SPARQL::Grammar::Meta::FIRST = T.let(T.unsafe(nil), Hash)
-
-SPARQL::Grammar::Meta::FOLLOW = T.let(T.unsafe(nil), Hash)
-
-SPARQL::Grammar::Meta::START = T.let(T.unsafe(nil), Symbol)
-
-SPARQL::Grammar::Meta::TERMINALS = T.let(T.unsafe(nil), Array)
-
 class TrueClass
-  include(::JSON::Ext::Generator::GeneratorMethods::TrueClass)
-  include(::MessagePack::CoreExt)
-  include(::FriendlyId::UnfriendlyUtils)
-  include(::SafeType::BooleanMixin)
+  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
+  include ::MessagePack::CoreExt
+  include ::FriendlyId::UnfriendlyUtils
+  include ::SafeType::BooleanMixin
 
   def to_sxp; end
 end

@@ -78,6 +78,8 @@ class Puma::Client
   def inspect; end
   def io; end
   def io_ok?; end
+  def listener; end
+  def listener=(_arg0); end
   def peerip; end
   def peerip=(_arg0); end
   def ready; end
@@ -743,7 +745,7 @@ module Puma::Request
   include ::Puma::Const
 
   def default_server_port(env); end
-  def handle_request(client, lines); end
+  def handle_request(client, lines, requests); end
   def normalize_env(env, client); end
 
   private
@@ -754,7 +756,7 @@ module Puma::Request
   def illegal_header_value?(header_value); end
   def req_env_post_parse(env); end
   def str_early_hints(headers); end
-  def str_headers(env, status, headers, res_info, lines); end
+  def str_headers(env, status, headers, res_info, lines, requests, client); end
 end
 
 class Puma::Runner

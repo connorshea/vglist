@@ -443,6 +443,13 @@ class RuboCop::AST::IfNode < ::RuboCop::AST::Node
   def unless?; end
 end
 
+class RuboCop::AST::InPatternNode < ::RuboCop::AST::Node
+  def body; end
+  def branch_index; end
+  def pattern; end
+  def then?; end
+end
+
 class RuboCop::AST::IndexNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::RestArguments
@@ -522,7 +529,8 @@ module RuboCop::AST::MethodDispatchNode
   def block_node; end
   def command?(name); end
   def const_receiver?; end
-  def def_modifier?; end
+  def def_modifier(node = T.unsafe(nil)); end
+  def def_modifier?(node = T.unsafe(nil)); end
   def dot?; end
   def double_colon?; end
   def implicit_call?; end
@@ -1422,6 +1430,7 @@ RuboCop::AST::NodePattern::Sets::SET_EACH_EXAMPLE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_EACH_WITH_INDEX_WITH_INDEX = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_EACH_WITH_OBJECT_WITH_OBJECT = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_ENUMERATOR_RATIONAL_COMPLEX_THREAD = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_EQL_EQ_BE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_ESCAPE_ENCODE_UNESCAPE_DECODE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_EXACTLY_AT_LEAST_AT_MOST = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_EXECUTE_REMOVE_BELONGS_TO = T.let(T.unsafe(nil), Set)
