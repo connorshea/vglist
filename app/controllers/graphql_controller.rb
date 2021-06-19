@@ -1,10 +1,16 @@
 # typed: false
 class GraphqlController < ApplicationController
   # If the user hasn't provided any token, return a specific error message.
-  before_action :handle_user_not_logged_in, if: -> { !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email') }
+  before_action :handle_user_not_logged_in, if: -> {
+    T.bind(self, GraphqlController)
+    !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email')
+  }
 
   # Authenticate with Doorkeeper if there's no X-User-Email header.
-  before_action :authorize_doorkeeper_user, if: -> { !request.headers.key?('X-User-Email') && user_using_oauth? }
+  before_action :authorize_doorkeeper_user, if: -> {
+    T.bind(self, GraphqlController)
+    !request.headers.key?('X-User-Email') && user_using_oauth?
+  }
 
   # Authenticate with a user's authorization token if they're not using OAuth.
   before_action :authorize_token_user, unless: :user_using_oauth?
