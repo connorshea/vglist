@@ -1,10 +1,13 @@
-# typed: false
+# typed: true
 class ApplicationController < ActionController::Base
   extend T::Sig
   include Pundit
 
   # Require a valid CSRF token, throw an exception if there isn't one.
-  protect_from_forgery with: :exception, unless: -> { request.format.json? }
+  protect_from_forgery with: :exception, unless: -> {
+    T.bind(self, ApplicationController)
+    request.format.json?
+  }
 
   # In devise-related pages, permit a username parameter.
   before_action :configure_permitted_parameters, if: :devise_controller?

@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class UsersController < ApplicationController
   def index
     # Hide banned users from users that aren't moderators or admins.
@@ -103,7 +103,7 @@ class UsersController < ApplicationController
     @user = User.friendly.find(params[:id])
     authorize @user
     # Coerce the value to a boolean.
-    @update_hours = params[:update_hours] == 'true'
+    @update_hours = T.cast(params[:update_hours], T.nilable(String)) == 'true'
 
     @result = SteamImportService.new(user: @user, update_hours: @update_hours).call
 
