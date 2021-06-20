@@ -3,6 +3,8 @@ class Game < ApplicationRecord
   include GlobalSearchable
   include Searchable
 
+  update_index('games') { T.bind(self, Game); game_genres }
+
   has_many :game_purchases, dependent: :destroy
   has_many :purchasers, through: :game_purchases, source: :user
 

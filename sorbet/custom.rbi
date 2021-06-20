@@ -30,6 +30,7 @@ end
 # Include ActiveStorage::Attached::Model to get the has_one_attached class method.
 class ActiveRecord::Base
   include ::ActiveStorage::Attached::Model
+  extend ::Chewy::Index::Observe::ActiveRecordMethods
 end
 
 # Make Sorbet understand that PgSearch::Model mixes in class methods.
