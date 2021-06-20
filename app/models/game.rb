@@ -106,6 +106,37 @@ class Game < ApplicationRecord
     where('extract(year from release_date) = ?', year)
   }
 
+  include AASM
+
+  aasm do
+    state :foo, initial: true
+    state :bar, :baz, :quux
+    after_all_transitions :foo_bar!
+
+    event :barify do
+      transitions from: %i[foo], to: :bar
+      after do
+        puts 'barify'
+      end
+    end
+
+    event :bazify do
+      transitions from: %i[foo bar], to: :baz
+      after do
+        puts "baz"
+      end
+    end
+
+    event :quuxify do
+      transitions from: %i[bar baz], to: :quux
+    end
+  end
+
+  sig { void }
+  def foo_bar!
+    puts 'foobar'
+  end
+
   validates :name,
     presence: true,
     length: { maximum: 120 }
@@ -205,5 +236,13 @@ class Game < ApplicationRecord
     return unless wikidata_id.present? && WikidataBlocklist.pluck(:wikidata_id).include?(wikidata_id)
 
     errors.add(:wikidata_id, "is blocklisted")
+  end
+
+  sig { void }
+  def test_aasm
+    Game.first&.barify!
+    Game.first&.bazify!
+    Game.first&.may_bazify?
+    Game.find(123).barify_without_validation!
   end
 end

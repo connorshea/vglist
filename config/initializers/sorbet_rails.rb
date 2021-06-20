@@ -3,10 +3,12 @@
 require Rails.root.join('lib/cursed_rbi_plugin')
 require Rails.root.join('lib/pg_search_custom_plugin')
 require Rails.root.join('lib/friendly_id_custom_plugin')
+require Rails.root.join('lib/aasm_custom_plugin')
 
 SorbetRails::ModelRbiFormatter.register_plugin(CursedRbiPlugin)
 SorbetRails::ModelRbiFormatter.register_plugin(PgSearchCustomPlugin)
 SorbetRails::ModelRbiFormatter.register_plugin(FriendlyIdCustomPlugin)
+SorbetRails::ModelRbiFormatter.register_plugin(AasmCustomPlugin)
 
 SorbetRails.configure do |config|
   config.enabled_gem_plugins = [

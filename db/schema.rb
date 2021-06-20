@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_27_204700) do
+ActiveRecord::Schema.define(version: 2021_06_20_160649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(version: 2021_02_27_204700) do
     t.text "gog_id"
     t.float "avg_rating"
     t.text "igdb_id"
+    t.string "aasm_state"
     t.index ["epic_games_store_id"], name: "index_games_on_epic_games_store_id", unique: true
     t.index ["giantbomb_id"], name: "index_games_on_giantbomb_id", unique: true
     t.index ["igdb_id"], name: "index_games_on_igdb_id", unique: true

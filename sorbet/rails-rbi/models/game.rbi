@@ -33,6 +33,12 @@ class Game < ApplicationRecord
   RelationType = T.type_alias { T.any(Game::ActiveRecord_Relation, Game::ActiveRecord_Associations_CollectionProxy, Game::ActiveRecord_AssociationRelation) }
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.bar(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.baz(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.by_engine(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -40,6 +46,9 @@ class Game < ApplicationRecord
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.foo(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.highest_avg_rating(*args); end
@@ -61,6 +70,9 @@ class Game < ApplicationRecord
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.on_platform(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def self.quux(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def self.recently_released(*args); end
@@ -1634,6 +1646,54 @@ class Game < ApplicationRecord
   sig { params(args: T.untyped).returns(T.untyped) }
   def self.search(*args); end
 
+  sig { returns(T::Boolean) }
+  def may_barify?; end
+
+  sig { returns(T::Boolean) }
+  def barify!; end
+
+  sig { returns(T::Boolean) }
+  def barify; end
+
+  sig { returns(T::Boolean) }
+  def barify_without_validation!; end
+
+  sig { returns(T::Boolean) }
+  def may_bazify?; end
+
+  sig { returns(T::Boolean) }
+  def bazify!; end
+
+  sig { returns(T::Boolean) }
+  def bazify; end
+
+  sig { returns(T::Boolean) }
+  def bazify_without_validation!; end
+
+  sig { returns(T::Boolean) }
+  def may_quuxify?; end
+
+  sig { returns(T::Boolean) }
+  def quuxify!; end
+
+  sig { returns(T::Boolean) }
+  def quuxify; end
+
+  sig { returns(T::Boolean) }
+  def quuxify_without_validation!; end
+
+  sig { returns(T::Boolean) }
+  def foo?; end
+
+  sig { returns(T::Boolean) }
+  def bar?; end
+
+  sig { returns(T::Boolean) }
+  def baz?; end
+
+  sig { returns(T::Boolean) }
+  def quux?; end
+
   sig { params(num: T.nilable(Integer)).returns(Game::ActiveRecord_Relation) }
   def self.page(num = nil); end
 
@@ -1654,6 +1714,12 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   Elem = type_member(fixed: Game)
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def bar(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def baz(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def by_engine(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
@@ -1661,6 +1727,9 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def foo(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def highest_avg_rating(*args); end
@@ -1682,6 +1751,9 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def on_platform(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
+  def quux(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def recently_released(*args); end
@@ -1712,6 +1784,12 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   Elem = type_member(fixed: Game)
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def bar(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def baz(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_engine(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
@@ -1719,6 +1797,9 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def foo(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def highest_avg_rating(*args); end
@@ -1740,6 +1821,9 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def on_platform(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def quux(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def recently_released(*args); end
@@ -1769,6 +1853,12 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
   Elem = type_member(fixed: Game)
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def bar(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def baz(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_engine(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
@@ -1776,6 +1866,9 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_year(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def foo(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def highest_avg_rating(*args); end
@@ -1797,6 +1890,9 @@ class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associatio
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def on_platform(*args); end
+
+  sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
+  def quux(*args); end
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def recently_released(*args); end
@@ -2059,6 +2155,15 @@ module Game::QueryMethodsReturningAssociationRelation
 end
 
 module Game::GeneratedAttributeMethods
+  sig { returns(T.nilable(String)) }
+  def aasm_state; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def aasm_state=(value); end
+
+  sig { returns(T::Boolean) }
+  def aasm_state?; end
+
   sig { returns(T.nilable(Float)) }
   def avg_rating; end
 
@@ -2814,6 +2919,51 @@ module Game::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def igdb_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_aasm_state?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_aasm_state(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_aasm_state?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def aasm_state_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def aasm_state_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_aasm_state!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def aasm_state_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def aasm_state_came_from_user?(*args); end
 end
 
 module Game::GeneratedAssociationMethods
