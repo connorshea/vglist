@@ -15,7 +15,7 @@ RSpec.describe EnginePolicy, type: :policy do
     end
 
     it "doesn't allow deleting an engine" do
-      expect(engine_policy).not_to permit_actions(
+      expect(engine_policy).to forbid_actions(
         [:destroy]
       )
     end
@@ -32,7 +32,7 @@ RSpec.describe EnginePolicy, type: :policy do
     end
 
     it "doesn't allow anything else" do
-      expect(engine_policy).not_to permit_actions(
+      expect(engine_policy).to forbid_actions(
         [:create, :new, :edit, :update, :destroy, :search]
       )
     end

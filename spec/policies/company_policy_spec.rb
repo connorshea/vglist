@@ -46,6 +46,6 @@ RSpec.describe CompanyPolicy, type: :policy do
     let(:company) { create(:company) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:create, :new, :edit, :update, :destroy, :search]) }
+    it { should forbid_actions([:create, :new, :edit, :update, :destroy, :search]) }
   end
 end

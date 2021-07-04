@@ -13,6 +13,6 @@ RSpec.describe SettingsPolicy, type: :policy do
   describe 'An anonymous user' do
     let(:current_user) { nil }
 
-    it { should_not permit_actions([:profile, :account, :import, :export, :api_token]) }
+    it { should forbid_actions([:profile, :account, :import, :export, :api_token]) }
   end
 end

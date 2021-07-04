@@ -23,7 +23,7 @@ class StorePolicy < ApplicationPolicy
 
   sig { returns(T.nilable(T::Boolean)) }
   def create?
-    user.present?
+    user_is_moderator_or_admin?
   end
 
   sig { returns(T.nilable(T::Boolean)) }

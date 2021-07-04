@@ -15,7 +15,7 @@ RSpec.describe PlatformPolicy, type: :policy do
     end
 
     it "doesn't let a normal user create, update, or destroy platforms" do
-      expect(platform_policy).not_to permit_actions(
+      expect(platform_policy).to forbid_actions(
         [:create, :new, :edit, :update, :destroy]
       )
     end
@@ -48,6 +48,6 @@ RSpec.describe PlatformPolicy, type: :policy do
     let(:platform) { create(:platform) }
 
     it { should permit_actions([:index, :show]) }
-    it { should_not permit_actions([:create, :new, :edit, :update, :destroy, :search]) }
+    it { should forbid_actions([:create, :new, :edit, :update, :destroy, :search]) }
   end
 end
