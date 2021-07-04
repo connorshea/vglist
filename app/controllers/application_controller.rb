@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   # If the user has been banned, sign them out.
   before_action :sign_out_banned_users
   # Send context with error messages to Sentry.
-  before_action :set_raven_context
+  before_action :set_sentry_context
   # Set PaperTrail whodunnit to the current user.
   before_action :set_paper_trail_whodunnit
 
@@ -50,9 +50,11 @@ class ApplicationController < ActionController::Base
   end
 
   # Send user ID, params, and request URL to Sentry on-error.
-  def set_raven_context
-    Raven.user_context(id: current_user&.id, username: current_user&.username)
-    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  def set_sentry_context
+    Sentry.with_scope do |scope|
+      scope.set_user(id: current_user&.id, username: current_user&.username)
+      scope.set_extras(params: params.to_unsafe_h, url: request.url)
+    end
   end
 
   # Set whodunnit to the user's username.

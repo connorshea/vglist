@@ -146,19 +146,23 @@ GEM
       railties (>= 5.0.0)
     faker (2.18.0)
       i18n (>= 1.6, < 2)
-    faraday (1.4.3)
+    faraday (1.5.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0.1)
       faraday-net_http (~> 1.0)
       faraday-net_http_persistent (~> 1.1)
+      faraday-patron (~> 1.0)
       multipart-post (>= 1.2, < 3)
       ruby2_keywords (>= 0.0.4)
     faraday-em_http (1.0.0)
     faraday-em_synchrony (1.0.0)
     faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.1.0)
+    faraday-patron (1.0.0)
     ffi (1.15.3)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
@@ -364,8 +368,16 @@ GEM
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
-    sentry-raven (3.1.2)
+    sentry-rails (4.6.0)
+      railties (>= 5.0)
+      sentry-ruby-core (~> 4.6.0)
+    sentry-ruby (4.6.0)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
       faraday (>= 1.0)
+      sentry-ruby-core (= 4.6.0)
+    sentry-ruby-core (4.6.0)
+      concurrent-ruby
+      faraday
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
     simplecov (0.21.2)
@@ -514,7 +526,8 @@ DEPENDENCIES
   rubocop-rspec (~> 2.4)
   ruby-progressbar (~> 1.11)
   selenium-webdriver (~> 3.142)
-  sentry-raven (~> 3.1)
+  sentry-rails (~> 4.6.0)
+  sentry-ruby (~> 4.6.0)
   shoulda-matchers (= 4.5.1)
   simplecov (~> 0.21)
   sorbet (~> 0.5)
@@ -533,4 +546,4 @@ RUBY VERSION
    ruby 2.7.2p137
 
 BUNDLED WITH
-   2.2.13
+   2.2.20
