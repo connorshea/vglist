@@ -8,7 +8,7 @@ RSpec.describe NilClassPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it 'defaults to disallowing everything' do
-      expect(nil_class_policy).not_to permit_actions(
+      expect(nil_class_policy).to forbid_actions(
         [:index, :show, :create, :new, :edit, :update, :destroy]
       )
     end
@@ -18,7 +18,7 @@ RSpec.describe NilClassPolicy, type: :policy do
     let(:user) { nil }
 
     it 'defaults to disallowing everything' do
-      expect(nil_class_policy).not_to permit_actions(
+      expect(nil_class_policy).to forbid_actions(
         [:index, :show, :create, :new, :edit, :update, :destroy]
       )
     end
@@ -28,7 +28,7 @@ RSpec.describe NilClassPolicy, type: :policy do
     let(:user) { create(:user) }
 
     it "is disallowed" do
-      expect(nil_class_policy).not_to permit_actions(
+      expect(nil_class_policy).to forbid_actions(
         [:not_a_real_action]
       )
     end

@@ -96,7 +96,7 @@ RSpec.describe GamePolicy, type: :policy do
     it { should permit_actions([:index, :show]) }
 
     it "can't do most things" do
-      expect(game_policy).not_to permit_actions(
+      expect(game_policy).to forbid_actions(
         [
           :create,
           :new,
