@@ -49,12 +49,9 @@ class ApplicationController < ActionController::Base
     redirect_to(request.referrer || root_path)
   end
 
-  # Send user ID, params, and request URL to Sentry on-error.
+  # Send user id and username to Sentry on-error.
   def set_sentry_context
-    Sentry.with_scope do |scope|
-      scope.set_user(id: current_user&.id, username: current_user&.username)
-      scope.set_extras(params: params.to_unsafe_h, url: request.url)
-    end
+    Sentry.set_user(id: current_user&.id, username: current_user&.username)
   end
 
   # Set whodunnit to the user's username.
