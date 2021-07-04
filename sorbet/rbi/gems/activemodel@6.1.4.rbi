@@ -383,6 +383,7 @@ module ActiveModel::Dirty
   extend ::ActiveSupport::Concern
   include ::ActiveModel::AttributeMethods
 
+  def as_json(options = T.unsafe(nil)); end
   def attribute_changed?(attr_name, **options); end
   def attribute_changed_in_place?(attr_name); end
   def attribute_previously_changed?(attr_name, **options); end
@@ -1049,7 +1050,6 @@ end
 module ActiveModel::VERSION; end
 ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

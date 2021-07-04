@@ -63,14 +63,6 @@ module VideoGameList
     # https://brandonhilkert.com/blog/understanding-the-rails-cache-id-environment-variable/
     ENV['GIT_COMMIT_SHA'] = `git rev-parse HEAD`.strip
 
-    # Configure Sentry.
-    Raven.configure do |config|
-      config.dsn = ENV['SENTRY_DSN_RAILS']
-      # Only run in production.
-      config.environments = ['production']
-      config.release = ENV['GIT_COMMIT_SHA']
-    end
-
     config.to_prepare do
       # Only Applications list
       T.unsafe(Doorkeeper::ApplicationsController).layout "application"

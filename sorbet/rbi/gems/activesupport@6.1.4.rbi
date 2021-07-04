@@ -141,7 +141,7 @@ ActiveSupport::Cache::Entry::DEFAULT_COMPRESS_LIMIT = T.let(T.unsafe(nil), Integ
 class ActiveSupport::Cache::FileStore < ::ActiveSupport::Cache::Store
   include ::ActiveSupport::Cache::Strategy::LocalCache
 
-  def initialize(cache_path, options = T.unsafe(nil)); end
+  def initialize(cache_path, **options); end
 
   def cache_path; end
 
@@ -2991,7 +2991,6 @@ end
 module ActiveSupport::VERSION; end
 ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -3954,8 +3953,8 @@ class Time
 
   class << self
     def ===(other); end
-    def at(*args, **kwargs); end
-    def at_with_coercion(*args, **kwargs); end
+    def at(*args); end
+    def at_with_coercion(*args); end
     def current; end
     def days_in_month(month, year = T.unsafe(nil)); end
     def days_in_year(year = T.unsafe(nil)); end

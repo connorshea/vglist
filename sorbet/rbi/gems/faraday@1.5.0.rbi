@@ -49,37 +49,11 @@ end
 
 Faraday::Adapter::CONTENT_LENGTH = T.let(T.unsafe(nil), String)
 
-class Faraday::Adapter::HTTPClient < ::Faraday::Adapter
-  def build_connection(env); end
-  def call(env); end
-  def configure_client(client); end
-  def configure_proxy(client, proxy); end
-  def configure_socket(client, bind); end
-  def configure_ssl(client, ssl); end
-  def configure_timeouts(client, req); end
-  def ssl_cert_store(ssl); end
-  def ssl_verify_mode(ssl); end
-end
-
 module Faraday::Adapter::Parallelism
   def inherited(subclass); end
   def supports_parallel=(_arg0); end
   def supports_parallel?; end
 end
-
-class Faraday::Adapter::Patron < ::Faraday::Adapter
-  def build_connection(env); end
-  def call(env); end
-  def configure_proxy(session, proxy); end
-  def configure_ssl(session, ssl); end
-  def configure_timeouts(session, req); end
-
-  private
-
-  def connection_timed_out_message?(message); end
-end
-
-Faraday::Adapter::Patron::CURL_TIMEOUT_MESSAGES = T.let(T.unsafe(nil), Array)
 
 class Faraday::Adapter::Rack < ::Faraday::Adapter
   def initialize(faraday_app, rack_app); end

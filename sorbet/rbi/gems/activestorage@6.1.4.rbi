@@ -41,6 +41,8 @@ module ActiveStorage
   def variant_processor=(val); end
   def verifier; end
   def verifier=(val); end
+  def video_preview_arguments; end
+  def video_preview_arguments=(val); end
   def web_image_content_types; end
   def web_image_content_types=(val); end
 
@@ -86,6 +88,8 @@ module ActiveStorage
     def verifier; end
     def verifier=(val); end
     def version; end
+    def video_preview_arguments; end
+    def video_preview_arguments=(val); end
     def web_image_content_types; end
     def web_image_content_types=(val); end
   end
@@ -551,6 +555,7 @@ class ActiveStorage::Preview
 end
 
 class ActiveStorage::Preview::UnprocessedError < ::StandardError; end
+class ActiveStorage::PreviewError < ::ActiveStorage::Error; end
 
 class ActiveStorage::Previewer
   def initialize(blob); end
@@ -777,7 +782,6 @@ class ActiveStorage::UnrepresentableError < ::ActiveStorage::Error; end
 module ActiveStorage::VERSION; end
 ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
