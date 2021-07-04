@@ -49,7 +49,7 @@ gem 'friendly_id', '~> 5.4.2'
 gem 'sparql', '~> 3.1.7', require: false
 
 # Use Addressable for use with the Wikidata API.
-gem 'addressable', '~> 2.7.0', require: false
+gem 'addressable', '~> 2.8.0', require: false
 
 # Use the AWS SDK S3 gem for DigitalOcean Spaces - which are S3-compatible.
 gem 'aws-sdk-s3', '~> 1.66', require: false
