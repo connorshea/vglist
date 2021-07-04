@@ -17,7 +17,7 @@ RSpec.describe "CreateStore Mutation API", type: :request do
       GRAPHQL
     end
 
-    [:user, :moderator, :admin].each do |role|
+    [:moderator, :admin].each do |role|
       context "when the current user is a(n) #{role}" do
         let(:user) { create("confirmed_#{role}".to_sym) }
 
