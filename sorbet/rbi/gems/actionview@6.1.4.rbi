@@ -1416,7 +1416,7 @@ module ActionView::Helpers::UrlHelper
   mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
 
   def button_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
-  def current_page?(options = T.unsafe(nil), check_parameters: T.unsafe(nil), **options_as_kwargs); end
+  def current_page?(*args); end
   def link_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
   def link_to_if(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
   def link_to_unless(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
@@ -2389,7 +2389,6 @@ end
 module ActionView::VERSION; end
 ActionView::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionView::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionView::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionView::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionView::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

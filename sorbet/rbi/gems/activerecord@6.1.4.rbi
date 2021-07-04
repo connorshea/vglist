@@ -169,6 +169,7 @@ class ActiveRecord::Associations::Association
   def scope_for_create; end
   def skip_statement_cache?(scope); end
   def stale_state; end
+  def strict_loading?; end
   def target_scope; end
 end
 
@@ -1757,6 +1758,7 @@ class ActiveRecord::Coders::YAMLColumn
   private
 
   def check_arity_of_constructor; end
+  def yaml_load(payload); end
 end
 
 class ActiveRecord::ConcurrentMigrationError < ::ActiveRecord::MigrationError
@@ -1829,6 +1831,7 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def pool=(_arg0); end
   def prefetch_primary_key?(table_name = T.unsafe(nil)); end
   def prepared_statements; end
+  def prepared_statements?; end
   def prepared_statements_disabled_cache; end
   def preventing_writes?; end
   def raw_connection; end
@@ -2414,7 +2417,7 @@ class ActiveRecord::ConnectionAdapters::LegacyPoolManager
   def get_pool_config(_, shard); end
   def pool_configs(_ = T.unsafe(nil)); end
   def remove_pool_config(_, shard); end
-  def set_pool_config(_, shard, pool_config); end
+  def set_pool_config(role, shard, pool_config); end
   def shard_names; end
 end
 
@@ -2987,6 +2990,8 @@ class ActiveRecord::ConnectionAdapters::TransactionState
   def fully_committed?; end
   def fully_completed?; end
   def fully_rolledback?; end
+  def invalidate!; end
+  def invalidated?; end
   def nullify!; end
   def rollback!; end
   def rolledback?; end
@@ -3077,7 +3082,7 @@ module ActiveRecord::Core::ClassMethods
   def arel_table; end
   def cached_find_by_statement(key, &block); end
   def filter_attributes; end
-  def filter_attributes=(_arg0); end
+  def filter_attributes=(filter_attributes); end
   def find(*ids); end
   def find_by(*args); end
   def find_by!(*args); end
@@ -3086,6 +3091,7 @@ module ActiveRecord::Core::ClassMethods
   def initialize_find_by_cache; end
   def initialize_generated_modules; end
   def inspect; end
+  def inspection_filter; end
   def predicate_builder; end
   def type_caster; end
 
@@ -3429,15 +3435,14 @@ class ActiveRecord::Enum::EnumType < ::ActiveModel::Type::Value
   def assert_valid_value(value); end
   def cast(value); end
   def deserialize(value); end
-  def serializable?(value); end
   def serialize(value); end
+  def subtype; end
   def type(*_arg0, &_arg1); end
 
   private
 
   def mapping; end
   def name; end
-  def subtype; end
 end
 
 class ActiveRecord::EnvironmentMismatchError < ::ActiveRecord::ActiveRecordError
@@ -4968,7 +4973,7 @@ module ActiveRecord::QueryMethods
   def arel_column(field); end
   def arel_columns(columns); end
   def assert_mutability!; end
-  def build_arel(aliases); end
+  def build_arel(aliases = T.unsafe(nil)); end
   def build_cast_value(name, value); end
   def build_from; end
   def build_join_buckets; end
@@ -5623,6 +5628,7 @@ class ActiveRecord::Relation::WhereClause
 
   private
 
+  def each_attributes; end
   def equalities(predicates, equality_only); end
   def equality_node?(node); end
   def except_predicates(columns); end
@@ -5964,7 +5970,7 @@ class ActiveRecord::StatementCache::PartialQueryCollector
 
   def <<(str); end
   def add_bind(obj); end
-  def add_binds(binds); end
+  def add_binds(binds, proc_for_binds = T.unsafe(nil)); end
   def preparable; end
   def preparable=(_arg0); end
   def value; end
@@ -6288,6 +6294,7 @@ module ActiveRecord::TestFixtures
   def load_fixtures(config); end
   def load_instances?; end
   def setup_shared_connection_pool; end
+  def teardown_shared_connection_pool; end
 end
 
 module ActiveRecord::TestFixtures::ClassMethods
@@ -6628,7 +6635,6 @@ end
 module ActiveRecord::VERSION; end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -6751,7 +6757,7 @@ class Arel::Collectors::Bind
 
   def <<(str); end
   def add_bind(bind); end
-  def add_binds(binds); end
+  def add_binds(binds, proc_for_binds = T.unsafe(nil)); end
   def value; end
 end
 
@@ -6760,7 +6766,7 @@ class Arel::Collectors::Composite
 
   def <<(str); end
   def add_bind(bind, &block); end
-  def add_binds(binds, &block); end
+  def add_binds(binds, proc_for_binds = T.unsafe(nil), &block); end
   def preparable; end
   def preparable=(_arg0); end
   def value; end
@@ -6782,7 +6788,7 @@ class Arel::Collectors::SQLString < ::Arel::Collectors::PlainString
   def initialize(*_arg0); end
 
   def add_bind(bind); end
-  def add_binds(binds, &block); end
+  def add_binds(binds, proc_for_binds = T.unsafe(nil), &block); end
   def preparable; end
   def preparable=(_arg0); end
 end
@@ -6792,7 +6798,7 @@ class Arel::Collectors::SubstituteBinds
 
   def <<(str); end
   def add_bind(bind); end
-  def add_binds(binds); end
+  def add_binds(binds, proc_for_binds = T.unsafe(nil)); end
   def preparable; end
   def preparable=(_arg0); end
   def value; end
@@ -7163,6 +7169,7 @@ class Arel::Nodes::HomogeneousIn < ::Arel::Nodes::Node
   def hash; end
   def invert; end
   def left; end
+  def proc_for_binds; end
   def right; end
   def table_name; end
   def type; end

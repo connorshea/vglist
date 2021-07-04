@@ -1143,6 +1143,7 @@ class GraphQL::Execution::Interpreter::Runtime
   def evaluate_selection(path, result_name, field_ast_nodes_or_ast_node, scoped_context, owner_object, owner_type, is_eager_field, selections_result); end
   def evaluate_selection_with_args(kwarg_arguments, field_defn, next_path, ast_node, field_ast_nodes, scoped_context, owner_type, object, is_eager_field, result_name, selection_result); end
   def evaluate_selections(path, scoped_context, owner_object, owner_type, is_eager_selection, gathered_selections, selections_result, target_result); end
+  def final_result; end
   def gather_selections(owner_object, owner_type, selections, selections_to_run = T.unsafe(nil), selections_by_name = T.unsafe(nil)); end
   def inspect; end
   def lazy?(object); end
@@ -1150,11 +1151,11 @@ class GraphQL::Execution::Interpreter::Runtime
   def query; end
   def resolve_type(type, value, path); end
   def resolve_with_directives(object, directives, &block); end
-  def response; end
   def run_directive(object, directives, idx, &block); end
   def run_eager; end
   def schema; end
   def set_all_interpreter_context(object, field, arguments, path); end
+  def set_graphql_dead(selection_result); end
   def set_interpreter_context(key, value); end
   def set_result(selection_result, result_name, value); end
   def tap_or_each(obj_or_array); end
@@ -1169,20 +1170,35 @@ module GraphQL::Execution::Interpreter::Runtime::GraphQLResult
   def graphql_non_null_list_items=(_arg0); end
   def graphql_parent; end
   def graphql_parent=(_arg0); end
+  def graphql_result_data; end
+  def graphql_result_data=(_arg0); end
   def graphql_result_name; end
   def graphql_result_name=(_arg0); end
 end
 
-class GraphQL::Execution::Interpreter::Runtime::GraphQLResultArray < ::Array
+class GraphQL::Execution::Interpreter::Runtime::GraphQLResultArray
   include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
+
+  def initialize; end
+
+  def []=(idx, value); end
+  def graphql_skip_at(index); end
+  def values; end
 end
 
-class GraphQL::Execution::Interpreter::Runtime::GraphQLResultHash < ::Hash
+class GraphQL::Execution::Interpreter::Runtime::GraphQLResultHash
   include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
 
+  def initialize; end
+
+  def [](k); end
   def []=(key, value); end
+  def delete(key); end
+  def each; end
   def graphql_merged_into; end
   def graphql_merged_into=(_arg0); end
+  def key?(k); end
+  def values; end
 end
 
 class GraphQL::Execution::Interpreter::Runtime::GraphQLSelectionSet < ::Hash
@@ -4314,7 +4330,9 @@ class GraphQL::Schema::Enum < ::GraphQL::Schema::Member
   end
 end
 
-class GraphQL::Schema::Enum::UnresolvedValueError < ::GraphQL::EnumType::UnresolvedValueError; end
+class GraphQL::Schema::Enum::UnresolvedValueError < ::GraphQL::EnumType::UnresolvedValueError
+  def initialize(value:, enum:, context:); end
+end
 
 class GraphQL::Schema::EnumValue < ::GraphQL::Schema::Member
   extend ::GraphQL::Schema::Member::AcceptsDefinition::AcceptsDefinitionDefinitionMethods
