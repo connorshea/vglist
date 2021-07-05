@@ -3,14 +3,14 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/parlour/6.0.0/parlour.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/parlour/6.0.1/parlour.rbi
 #
-# typed: strict
+# typed: strong
 module Kernel
 end
 
 module Parlour
-  VERSION = '6.0.0'
+  VERSION = '6.0.1'
 
   class ConflictResolver
     extend T::Sig
