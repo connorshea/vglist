@@ -79,6 +79,12 @@ The grant type will always be `authorization_code`. The Authorization URL is `ht
 
 To try the OAuth Application you've created, I would recommend trying to send a GraphQL request using [Insomnia](https://insomnia.rest/). You can create a 'Request', set its type to GraphQL, and authenticate using OAuth 2.0. Then you can play with it as much as you want.
 
+#### OAuth Confidential Clients
+
+For OAuth applications you can set whether an application is "Confidential", which essentially determines whether the user needs to pass an Application Secret with the request for it to authenticate. Need to explain that in the API docs.
+
+And also maybe make it so non-confidential applications can only use the read scope.
+
 #### Scopes
 
 There are two available scopes for OAuth tokens: `read` and `write`. All access tokens will have the `read` scope by default.
