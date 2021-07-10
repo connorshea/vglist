@@ -9,6 +9,7 @@ module Types
     field :name, String, null: false, description: "Name of the game."
     field :release_date, GraphQL::Types::ISO8601Date, null: true, description: "The release date of the game."
     field :avg_rating, Float, null: true, description: "The average rating from all users who own the game."
+    field :rating_count, Integer, null: false, description: "The number of ratings across all game purchases associated to this game."
     field :wikidata_id, Integer, null: true, description: "Identifier for Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier for PCGamingWiki."
     field :mobygames_id, String, null: true, description: "Identifier for the MobyGames database."
@@ -37,6 +38,12 @@ module Types
     field :is_favorited, Boolean, null: true, resolver_method: :favorited?, description: "Whether the game is in the current user's favorites, or `null` if there is no logged-in user."
     field :is_in_library, Boolean, null: true, resolver_method: :in_library?, description: "Whether the game is in the current user's library, or `null` if there is no logged-in user."
     field :game_purchase_id, ID, null: true, description: 'The ID of the GamePurchase record if the game is in the current user\'s library, or `null` otherwise.'
+
+    # Get the number of purchases for the game where rating is not nil.
+    sig { returns(Integer) }
+    def rating_count
+      @object.game_purchases.where.not(rating: nil).count
+    end
 
     # Get the Steam App ID values as an array.
     sig { returns(T::Array[Integer]) }
