@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_27_204700) do
+ActiveRecord::Schema.define(version: 2021_07_10_185728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 2021_02_27_204700) do
     t.integer "replay_count", default: 0, null: false
     t.index ["game_id", "user_id"], name: "index_game_purchases_on_game_id_and_user_id", unique: true
     t.index ["game_id"], name: "index_game_purchases_on_game_id"
+    t.index ["rating", "game_id"], name: "index_game_purchases_on_extant_rating_and_game_id", where: "(rating IS NOT NULL)"
     t.index ["user_id"], name: "index_game_purchases_on_user_id"
     t.check_constraint "replay_count >= 0", name: "game_purchases_replay_count_not_negative"
   end

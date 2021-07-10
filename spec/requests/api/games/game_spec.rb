@@ -373,13 +373,38 @@ RSpec.describe "Game query API", type: :request do
           }
         )
       end
+    end
 
-      it "returns that the user has not added the game to their library" do
+    context 'when getting the count of ratings' do
+      let(:game_purchases) { create_list(:game_purchase, 3, game: game, rating: rand(100)) }
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!) {
+            game(id: $id) {
+              avgRating
+              ratingCount
+            }
+          }
+        GRAPHQL
+      end
+
+      it 'returns the number of ratings' do
+        game_purchases
         result = api_request(query_string, variables: { id: game.id }, token: access_token)
         expect(result.graphql_dig(:game)).to include(
           {
-            isInLibrary: false,
-            gamePurchaseId: nil
+            avgRating: be_a(Float),
+            ratingCount: 3
+          }
+        )
+      end
+
+      it 'returns zero ratings when none exist' do
+        result = api_request(query_string, variables: { id: game.id }, token: access_token)
+        expect(result.graphql_dig(:game)).to include(
+          {
+            avgRating: nil,
+            ratingCount: 0
           }
         )
       end
