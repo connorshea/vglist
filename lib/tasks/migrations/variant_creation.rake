@@ -12,6 +12,8 @@ namespace 'active_storage:vglist:variants' do
 
   desc "Create all variants for covers and avatars in the database."
   task create: :environment do
+    image_sizes = [:small, :medium, :large]
+
     games = Game.joins(:cover_attachment)
     # Only attempt to create variants if the cover is able to have variants.
     games = games.filter { |game| game.cover.variable? }
@@ -32,7 +34,7 @@ namespace 'active_storage:vglist:variants' do
     Parallel.each(games, in_threads: thread_count) do |game|
       ActiveRecord::Base.connection_pool.with_connection do
         begin
-          [:small, :medium, :large].each do |size|
+          image_sizes.each do |size|
             game.sized_cover(size).process
           end
         # Rescue MiniMagick errors if they occur so that they don't block the
@@ -60,7 +62,7 @@ namespace 'active_storage:vglist:variants' do
     Parallel.each(users, in_threads: thread_count) do |user|
       ActiveRecord::Base.connection_pool.with_connection do
         begin
-          [:small, :medium, :large].each do |size|
+          image_sizes.each do |size|
             user.sized_avatar(size).process
           end
         # Rescue MiniMagick errors if they occur so that they don't block the

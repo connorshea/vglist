@@ -73,7 +73,7 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
         publisher_ids: publisher_ids,
         genre_ids: genre_ids,
         engine_ids: engine_ids
-      }.reject { |_k, v| v.nil? }
+      }.compact
 
       raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**other_game_attrs)
     end

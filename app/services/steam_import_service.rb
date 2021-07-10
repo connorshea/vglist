@@ -90,7 +90,7 @@ class SteamImportService
     created_purchases = GamePurchase.where(id: created.map { |e| e['id'] })
     updated_purchases = GamePurchase.where(id: updated.map { |e| e['id'] })
 
-    unmatched = missing_ids.to_a.map do |id|
+    unmatched = missing_ids.to_a.filter_map do |id|
       game = games.find { |g| g['appid'] == id }
 
       next unless game
@@ -99,7 +99,7 @@ class SteamImportService
       next if blocklisted_steam_app_ids.include?(game['appid'].to_i)
 
       Unmatched.new(name: game['name'], steam_id: game['appid'])
-    end.compact
+    end
 
     Result.new(
       created: created_purchases,

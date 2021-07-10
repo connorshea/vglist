@@ -38,7 +38,7 @@ class WikidataHelper
     ]
     query_options_string = query_options.join(',')
 
-    template = T.unsafe(Addressable::Template).new("https://www.wikidata.org/w/api.php{?#{query_options_string}}")
+    template = Addressable::Template.new("https://www.wikidata.org/w/api.php{?#{query_options_string}}")
     template = template.expand(
       {
         'action': action,

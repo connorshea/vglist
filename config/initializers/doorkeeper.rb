@@ -1,6 +1,8 @@
 # typed: false
 # frozen_string_literal: true
 
+# rubocop:disable Naming/InclusiveLanguage
+
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (requires ORM extensions installed).
   # Check the list of supported ORMs here: https://github.com/doorkeeper-gem/doorkeeper#orms
@@ -484,3 +486,5 @@ Doorkeeper.configure do
   #
   # realm "Doorkeeper"
 end
+
+# rubocop:enable Naming/InclusiveLanguage
