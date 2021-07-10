@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.7.10
+### Added
+- Add `ratingCount` field to the Game type in the GraphQL API. ([#2171])
+
 ## v2021.3.21
 ### Added
 - Add create, update, and delete mutations for Companies, Engines, Genres, Platforms, Series, and Stores to GraphQL API. ([#1972], [#1973], [#1974])
@@ -893,3 +897,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1973]: https://github.com/connorshea/vglist/pull/1973
 [#1974]: https://github.com/connorshea/vglist/pull/1974
 [#1976]: https://github.com/connorshea/vglist/pull/1976
+[#2171]: https://github.com/connorshea/vglist/pull/2171
