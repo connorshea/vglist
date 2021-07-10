@@ -26,7 +26,7 @@ namespace :import do
     end
 
     # Reject any nil values that are returned.
-    games.reject! { |game| game.nil? }
+    games.compact!
     games.uniq! { |e| e[:wikidata_id] }
 
     puts "Found #{games.count} games on Wikidata with a GOG.com ID."

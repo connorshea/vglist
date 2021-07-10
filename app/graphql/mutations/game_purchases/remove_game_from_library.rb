@@ -11,16 +11,16 @@ class Mutations::GamePurchases::RemoveGameFromLibrary < Mutations::BaseMutation
   def resolve(game_id: nil, game_purchase_id: nil)
     raise GraphQL::ExecutionError, "Field 'game' is missing a required argument: 'gameId' or 'gamePurchaseId'" if game_id.nil? && game_purchase_id.nil?
 
-    if !game_purchase_id.nil?
-      game_purchase = GamePurchase.find_by(id: game_purchase_id)
-      game = game_purchase&.game
-    else
+    if game_purchase_id.nil?
       game = Game.find(game_id)
 
       game_purchase = GamePurchase.find_by(
         user: @context[:current_user],
         game: game
       )
+    else
+      game_purchase = GamePurchase.find_by(id: game_purchase_id)
+      game = game_purchase&.game
     end
 
     raise GraphQL::ExecutionError, T.must(game_purchase).errors.full_messages.join(", ") unless game_purchase&.destroy

@@ -56,7 +56,7 @@ class GamePurchasesController < ApplicationController
     # Exclude the ids and store ids from 'actual params', and then filter any
     # nil values to make sure we don't nullify the completion status or rating
     # when just trying to update stores.
-    actual_params = bulk_game_purchase_params.except(:ids, :store_ids).reject { |_k, v| v.nil? }
+    actual_params = bulk_game_purchase_params.except(:ids, :store_ids).compact
 
     # Use update because it allows you to pass an array of records to update
     # and also triggers validations and callbacks (update_all does not).

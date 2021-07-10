@@ -45,7 +45,7 @@ namespace :import do
     blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
 
     valid_wikidata_ids = games_without_steam_ids.pluck(:wikidata_id)
-    valid_wikidata_ids.reject! { |wikidata_id| wikidata_id.nil? }
+    valid_wikidata_ids.compact!
 
     games_to_modify = games.select { |game| valid_wikidata_ids.include?(game[:wikidata_id].to_i) }
 
