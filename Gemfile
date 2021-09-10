@@ -101,7 +101,7 @@ group :development, :test do
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.11', require: false
   gem 'rubocop-rspec', '~> 2.4', require: false
-  gem 'rubocop-rails', '~> 2.11', require: false
+  gem 'rubocop-rails', '~> 2.12', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 2.0'
