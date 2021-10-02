@@ -5,7 +5,7 @@
     "@babel/preset-typescript": "^7.15.0",
     "@rails/activestorage": "^6.1.4",
     "@rails/ujs": "^6.1.4",
-    "@rails/webpacker": "5.4.0",
+    "@rails/webpacker": "5.4.3",
     "@sentry/browser": "5.29.0",
     "@sentry/integrations": "^5.29.0",
     "@types/node": "^14.0.0",
