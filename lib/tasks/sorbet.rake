@@ -85,7 +85,7 @@ namespace :sorbet do
         ['rspec-core', 'rake', 'rubocop'].each do |gem|
           FileUtils.remove_dir(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}"))
         end
-        system('bundle exec tapioca sync')
+        system('bundle exec tapioca gem')
         # Generate Sorbet Rails RBIs.
         system('bundle exec rake rails_rbi:all')
         system('bundle exec tapioca todo')
