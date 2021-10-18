@@ -75,6 +75,8 @@ Make sure to name it, set the URL to the website you want to redirect to (this i
 
 The page will redirect and show the application secret. **Make sure** to copy this somewhere safe, you'll only get to see this secret once. It's encrypted and can't be shown again later. If you want to change the application secret, you'll need to create a new application.
 
+<!-- TODO: Make it possible to change the application secret without creating an entire new OAuth application. -->
+
 The grant type will always be `authorization_code`. The Authorization URL is `https://vglist.co/settings/oauth/authorize` and the Access Token URL is `https://vglist.co/settings/oauth/token`. The Client ID and Client Secret are provided on the Application page you were redirected to when the application was created. The exact Authorization URL - with query parameters included - is available on the OAuth Application page.
 
 To try the OAuth Application you've created, I would recommend trying to send a GraphQL request using [Insomnia](https://insomnia.rest/). You can create a 'Request', set its type to GraphQL, and authenticate using OAuth 2.0. Then you can play with it as much as you want.
