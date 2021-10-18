@@ -8,6 +8,7 @@ RSpec.describe "Game query API", type: :request do
     let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:game) { create(:game) }
     let(:game_with_cover) { create(:game_with_cover) }
+    let(:game_with_platform) { create(:game, :platform) }
     let(:game_with_release_date) { create(:game_with_release_date) }
     let(:game_with_steam_app_ids) { create(:game_with_steam_app_id) }
     let(:game_with_wikidata_id) { create(:game, :wikidata_id) }
@@ -62,6 +63,39 @@ RSpec.describe "Game query API", type: :request do
         id: game_with_steam_app_ids.id.to_s,
         name: game_with_steam_app_ids.name,
         steamAppIds: game_with_steam_app_ids.steam_app_ids.map(&:app_id)
+      )
+    end
+
+    it "returns data for game with platform" do
+      game_with_platform
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          game(id: $id) {
+            id
+            name
+            platforms {
+              nodes {
+                id
+                name
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: game_with_platform.id }, token: access_token)
+
+      expect(result.graphql_dig(:game)).to include(
+        id: game_with_platform.id.to_s,
+        name: game_with_platform.name,
+        platforms: {
+          nodes: [
+            {
+              id: Platform.first.id.to_s,
+              name: Platform.first.name,
+            }
+          ]
+        }
       )
     end
 
