@@ -446,15 +446,15 @@ GEM
       sprockets (>= 3.0.0)
     sxp (1.1.0)
       rdf (~> 3.1)
-    tapioca (0.5.2)
+    tapioca (0.5.3)
       bundler (>= 1.17.3)
       pry (>= 0.12.2)
       rbi
       sorbet-runtime
-      sorbet-static (>= 0.4.4471)
+      sorbet-static (>= 0.5.6200)
       spoom
       thor (>= 0.19.2)
-      unparser
+      yard-sorbet
     thor (1.1.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
@@ -487,6 +487,10 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yard (0.9.26)
+    yard-sorbet (0.6.0)
+      sorbet-runtime (>= 0.5)
+      yard (>= 0.9)
     zeitwerk (2.5.1)
 
 PLATFORMS
@@ -550,7 +554,7 @@ DEPENDENCIES
   sparql (~> 3.1.8)
   spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)
-  tapioca (~> 0.5.2)
+  tapioca (~> 0.5.3)
   turbolinks (~> 5)
   web-console (~> 4.1.0)
   webdrivers (~> 5.0)
