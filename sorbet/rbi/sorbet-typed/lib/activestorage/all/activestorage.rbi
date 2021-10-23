@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/activestorage/all/activestorage.rbi
 #
-# typed: strong
+# typed: false
 
 module ActiveStorage
   sig { returns(Gem::Version) }

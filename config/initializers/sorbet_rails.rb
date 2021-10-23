@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 
 require Rails.root.join('lib/cursed_rbi_plugin')
 require Rails.root.join('lib/pg_search_custom_plugin')

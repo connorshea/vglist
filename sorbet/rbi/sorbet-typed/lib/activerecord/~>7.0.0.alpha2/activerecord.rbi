@@ -3,7 +3,7 @@
 #
 # If you would like to make changes to this file, great! Please upstream any changes you make here:
 #
-#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/~>6.1.0.rc1/activerecord.rbi
+#   https://github.com/sorbet/sorbet-typed/edit/master/lib/activerecord/~>7.0.0.alpha2/activerecord.rbi
 #
 # typed: false
 
@@ -40,15 +40,16 @@ class ActiveRecord::Migration::Compatibility::V5_2 < ActiveRecord::Migration::Co
 end
 
 class ActiveRecord::Migration::Compatibility::V6_0 < ActiveRecord::Migration::Compatibility::V6_1; end
+class ActiveRecord::Migration::Compatibility::V6_1 < ActiveRecord::Migration::Compatibility::V7_0; end
 
-ActiveRecord::Migration::Compatibility::V6_1 = ActiveRecord::Migration::Current
+ActiveRecord::Migration::Compatibility::V7_0 = ActiveRecord::Migration::Current
 
 # Method definitions are documented here:
-# https://api.rubyonrails.org/v6.1/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html
+# https://api.rubyonrails.org/v7.0/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html
 class ActiveRecord::Migration::Current < ActiveRecord::Migration
   # Tables
 
-  # https://github.com/rails/rails/blob/v6.1.0.rc1/activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb#L154-L295
+  # https://github.com/rails/rails/blob/v7.0.0.alpha2/activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb#L154-L295
   sig do
     params(
       table_name: T.any(String, Symbol),

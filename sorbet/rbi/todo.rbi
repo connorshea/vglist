@@ -8,6 +8,7 @@ module ::EBNF::LL1::Parser; end
 module ::EBNF::LL1::Parser::ClassMethods; end
 module ::MakeMakefile; end
 module ::Vips::Image; end
+module ActiveSupport::Dependencies::Loadable; end
+module ActiveSupport::Dependencies::ModuleConstMissing; end
 module Capybara::Minitest::Assertions; end
-module Rake::TaskLib; end
 module T::Private::Methods::Signature; end
