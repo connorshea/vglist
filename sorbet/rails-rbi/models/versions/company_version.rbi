@@ -17,7 +17,7 @@ module Versions::CompanyVersion::CustomFinderMethods
   sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[Versions::CompanyVersion]) }
   def find_n(*args); end
 
-  sig { params(id: Integer).returns(T.nilable(Versions::CompanyVersion)) }
+  sig { params(id: T.nilable(Integer)).returns(T.nilable(Versions::CompanyVersion)) }
   def find_by_id(id); end
 
   sig { params(id: Integer).returns(Versions::CompanyVersion) }
@@ -58,9 +58,6 @@ module Versions::CompanyVersion::QueryMethodsReturningRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_Relation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_Relation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_Relation) }
@@ -146,6 +143,12 @@ module Versions::CompanyVersion::QueryMethodsReturningRelation
 
   sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_Relation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: Versions::CompanyVersion).returns(T::Boolean)).returns(T::Array[Versions::CompanyVersion]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(Versions::CompanyVersion::ActiveRecord_Relation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Versions::CompanyVersion::ActiveRecord_Relation) }
   def extending(*args, &block); end
@@ -171,9 +174,6 @@ module Versions::CompanyVersion::QueryMethodsReturningAssociationRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
@@ -259,6 +259,12 @@ module Versions::CompanyVersion::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.untyped).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: Versions::CompanyVersion).returns(T::Boolean)).returns(T::Array[Versions::CompanyVersion]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Versions::CompanyVersion::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end

@@ -49,7 +49,7 @@ module User::CustomFinderMethods
   sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[User]) }
   def find_n(*args); end
 
-  sig { params(id: Integer).returns(T.nilable(User)) }
+  sig { params(id: T.nilable(Integer)).returns(T.nilable(User)) }
   def find_by_id(id); end
 
   sig { params(id: Integer).returns(User) }
@@ -1765,9 +1765,6 @@ module User::QueryMethodsReturningRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
@@ -1853,6 +1850,12 @@ module User::QueryMethodsReturningRelation
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: User).returns(T::Boolean)).returns(T::Array[User]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(User::ActiveRecord_Relation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(User::ActiveRecord_Relation) }
   def extending(*args, &block); end
@@ -1878,9 +1881,6 @@ module User::QueryMethodsReturningAssociationRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
@@ -1966,6 +1966,12 @@ module User::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: User).returns(T::Boolean)).returns(T::Array[User]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(User::ActiveRecord_AssociationRelation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(User::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end

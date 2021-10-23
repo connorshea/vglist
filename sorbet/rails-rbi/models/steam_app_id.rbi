@@ -17,7 +17,7 @@ module SteamAppId::CustomFinderMethods
   sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[SteamAppId]) }
   def find_n(*args); end
 
-  sig { params(id: Integer).returns(T.nilable(SteamAppId)) }
+  sig { params(id: T.nilable(Integer)).returns(T.nilable(SteamAppId)) }
   def find_by_id(id); end
 
   sig { params(id: Integer).returns(SteamAppId) }
@@ -58,9 +58,6 @@ module SteamAppId::QueryMethodsReturningRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_Relation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_Relation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_Relation) }
@@ -146,6 +143,12 @@ module SteamAppId::QueryMethodsReturningRelation
 
   sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_Relation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: SteamAppId).returns(T::Boolean)).returns(T::Array[SteamAppId]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(SteamAppId::ActiveRecord_Relation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(SteamAppId::ActiveRecord_Relation) }
   def extending(*args, &block); end
@@ -171,9 +174,6 @@ module SteamAppId::QueryMethodsReturningAssociationRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_AssociationRelation) }
@@ -259,6 +259,12 @@ module SteamAppId::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.untyped).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: SteamAppId).returns(T::Boolean)).returns(T::Array[SteamAppId]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(SteamAppId::ActiveRecord_AssociationRelation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
