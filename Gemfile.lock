@@ -1,3 +1,15 @@
+GIT
+  remote: https://github.com/heartcombo/devise
+  revision: 8593801130f2df94a50863b5db535c272b00efe1
+  branch: main
+  specs:
+    devise (4.8.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -116,12 +128,6 @@ GEM
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     debug_inspector (1.1.0)
-    devise (4.8.0)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
-      responders
-      warden (~> 1.2.3)
     diff-lcs (1.4.4)
     docile (1.4.0)
     doorkeeper (5.5.0.rc2)
@@ -510,7 +516,7 @@ DEPENDENCIES
   byebug
   capybara (~> 3.35)
   database_cleaner (~> 2.0)
-  devise (~> 4.8)
+  devise!
   doorkeeper (= 5.5.0.rc2)
   dotenv-rails (~> 2.7)
   factory_bot_rails (~> 6.2)
