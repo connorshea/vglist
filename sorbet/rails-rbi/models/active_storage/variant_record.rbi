@@ -17,7 +17,7 @@ module ActiveStorage::VariantRecord::CustomFinderMethods
   sig { params(args: T::Array[T.any(Integer, String)]).returns(T::Array[ActiveStorage::VariantRecord]) }
   def find_n(*args); end
 
-  sig { params(id: Integer).returns(T.nilable(ActiveStorage::VariantRecord)) }
+  sig { params(id: T.nilable(Integer)).returns(T.nilable(ActiveStorage::VariantRecord)) }
   def find_by_id(id); end
 
   sig { params(id: Integer).returns(ActiveStorage::VariantRecord) }
@@ -294,9 +294,6 @@ module ActiveStorage::VariantRecord::QueryMethodsReturningRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_Relation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_Relation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_Relation) }
@@ -382,6 +379,12 @@ module ActiveStorage::VariantRecord::QueryMethodsReturningRelation
 
   sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_Relation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: ActiveStorage::VariantRecord).returns(T::Boolean)).returns(T::Array[ActiveStorage::VariantRecord]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(ActiveStorage::VariantRecord::ActiveRecord_Relation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::VariantRecord::ActiveRecord_Relation) }
   def extending(*args, &block); end
@@ -407,9 +410,6 @@ module ActiveStorage::VariantRecord::QueryMethodsReturningAssociationRelation
   def unscoped(&block); end
 
   sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
-  def select(*args); end
-
-  sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
   def reselect(*args); end
 
   sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
@@ -495,6 +495,12 @@ module ActiveStorage::VariantRecord::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.untyped).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
   def only(*args); end
+
+  sig { params(block: T.proc.params(e: ActiveStorage::VariantRecord).returns(T::Boolean)).returns(T::Array[ActiveStorage::VariantRecord]) }
+  def select(&block); end
+
+  sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
+  def select_columns(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::VariantRecord::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
