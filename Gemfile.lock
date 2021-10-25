@@ -305,10 +305,10 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rbi (0.0.5)
+    rbi (0.0.6)
       ast
       parser
-      sorbet-runtime
+      sorbet-runtime (>= 0.5.9204)
       unparser
     rdf (3.1.15)
       hamster (~> 3.0)
