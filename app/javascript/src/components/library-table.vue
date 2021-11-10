@@ -74,6 +74,9 @@
           <a :href="`/stores/${store.id}`">{{ store.name }}</a>
         </p>
       </span>
+      <span v-else-if"props.colun.field == 'comments'">
+        <vue-markdown>{{ store.comments }}</vue-markdown>
+      </span>
       <span v-else>{{ props.formattedRow[props.column.field] }}</span>
     </template>
     <div slot="emptystate" class="vgt-center-align">
@@ -93,12 +96,14 @@
 import Rails from '@rails/ujs';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
+import VueMarkdown from 'vue-markdown';
 import VglistUtils from '../utils';
 
 export default {
   name: 'library-table',
   components: {
-    VueGoodTable
+    VueGoodTable,
+    VueMarkdown
   },
   props: {
     gamePurchasesUrl: {
