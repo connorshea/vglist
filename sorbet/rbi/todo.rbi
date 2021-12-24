@@ -4,10 +4,15 @@
 
 # typed: strict
 
+module ::Colorize::ClassMethods; end
+module ::Colorize::InstanceMethods; end
 module ::EBNF::LL1::Parser; end
 module ::EBNF::LL1::Parser::ClassMethods; end
+module ::FFI::Function; end
+module ::FFI::Library; end
+module ::FFI::ManagedStruct; end
+module ::FFI::Struct; end
 module ::MakeMakefile; end
-module ::Vips::Image; end
-module Capybara::Minitest::Assertions; end
 module Rake::TaskLib; end
 module T::Private::Methods::Signature; end
+module Vips::Image; end

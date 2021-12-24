@@ -83,7 +83,7 @@ namespace :sorbet do
         # We don't want to include the RBI files for these gems since they're not useful.
         puts 'Removing unwanted gem definitions from sorbet-typed...'
         ['rspec-core', 'rake', 'rubocop'].each do |gem|
-          FileUtils.remove_dir(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}"))
+          FileUtils.remove_dir(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}")) if Dir.exist?(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}"))
         end
         system('bundle exec tapioca gem')
         # Generate Sorbet Rails RBIs.
