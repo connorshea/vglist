@@ -75,7 +75,7 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
         engine_ids: engine_ids
       }.compact
 
-      raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(**other_game_attrs)
+      raise GraphQL::ExecutionError, game.errors.full_messages.join(", ") unless game.update(other_game_attrs)
     end
 
     {
