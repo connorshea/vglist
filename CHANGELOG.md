@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2021.12.28
+- Upgrade to Ruby 3.0. ([#2420])
+
 ## v2021.7.10
 ### Added
 - Add `ratingCount` field to the Game type in the GraphQL API. ([#2171])
@@ -898,3 +901,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1974]: https://github.com/connorshea/vglist/pull/1974
 [#1976]: https://github.com/connorshea/vglist/pull/1976
 [#2171]: https://github.com/connorshea/vglist/pull/2171
+[#2420]: https://github.com/connorshea/vglist/pull/2420
