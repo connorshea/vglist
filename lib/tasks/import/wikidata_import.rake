@@ -380,7 +380,7 @@ namespace 'import:wikidata' do
     client = SPARQL::Client.new(
       "https://query.wikidata.org/sparql",
       method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 2.7' }
+      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' }
     )
 
     rows = []

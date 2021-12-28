@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-- Ruby 2.7
+- Ruby 3.0
 - Postgres 12.x
 - Node.js 14.x
 - Yarn 1.x
@@ -13,7 +13,7 @@
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 2.2.13, `gem install bundler:2.2.13`
+1. To get Bundler 2.3.3, `gem install bundler:2.3.3`
 1. `bundle install`
 1. `yarn install`
 1. `bundle exec rails db:setup`
