@@ -3,7 +3,7 @@
 <% if @user.avatar.attached? %>
   <% content_for :opengraph_image, rails_blob_url(@user.avatar) %>
 <% else %>
-  <% content_for :opengraph_image, image_url('default-avatar.png') %>
+  <% content_for :opengraph_image, asset_pack_url('media/images/default-avatar.png') %>
 <% end %>
 
 <%= render 'user_header', user: @user %>

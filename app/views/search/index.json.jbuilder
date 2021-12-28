@@ -22,7 +22,7 @@ complex_types = ['Game', 'User'].freeze
           if pg_search.searchable.cover.attached?
             json.image_url rails_blob_path(pg_search.searchable.cover, disposition: "attachment")
           else
-            json.image_url asset_path('no-cover.png')
+            json.image_url asset_pack_path('media/images/no-cover.png')
           end
           json.developer pg_search.searchable.developers&.first&.name
           json.release_date pg_search.searchable.release_date
@@ -30,7 +30,7 @@ complex_types = ['Game', 'User'].freeze
           if pg_search.searchable.avatar.attached?
             json.image_url rails_blob_path(pg_search.searchable.avatar, disposition: "attachment")
           else
-            json.image_url asset_path('default-avatar.png')
+            json.image_url asset_pack_path('media/images/default-avatar.png')
           end
           # Provide the slug if it's a user so the link is correct.
           json.slug pg_search.searchable.friendly_id
