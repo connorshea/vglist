@@ -18,7 +18,8 @@ SorbetRails.configure do |config|
   config.extra_helper_includes = [
     'Devise::Controllers::Helpers',
     'InlineSvg::ActionView::Helpers',
-    'Doorkeeper::Rails::Helpers'
+    'Doorkeeper::Rails::Helpers',
+    'Webpacker::Helper'
   ]
 end
 
