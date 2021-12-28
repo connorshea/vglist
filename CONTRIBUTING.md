@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-- Ruby 3.0
+- Ruby 2.7
 - Postgres 12.x
 - Node.js 14.x
 - Yarn 1.x
@@ -13,7 +13,7 @@
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 2.3.3, `gem install bundler:2.3.3`
+1. To get Bundler 2.2.13, `gem install bundler:2.2.13`
 1. `bundle install`
 1. `yarn install`
 1. `bundle exec rails db:setup`
@@ -79,7 +79,7 @@ Rake tasks are Ruby code for performing tasks. For vglist, most of these are for
 To update the Docker container used by GitLab CI:
 
 - Log into the GitLab CI Docker registry with `docker login registry.gitlab.com` (you'll need to use a Personal Access Token as your password).
-- Build the container with `docker build --platform=linux/amd64 -f Dockerfile -t registry.gitlab.com/connorshea/vglist .`
+- Build the container with `docker build -f Dockerfile -t registry.gitlab.com/connorshea/vglist .`
   - You may want to add `--no-cache` to fully rebuild the container from scratch.
 - Then use `docker push registry.gitlab.com/connorshea/vglist` to push the container to the GitLab Container Registry.
 
