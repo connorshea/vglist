@@ -34,7 +34,6 @@ require 'set'
 require 'simplecov'
 require 'sparql'
 require 'sparql/client'
-require 'sprockets/railtie'
 require 'webdrivers'
 
 # Manual gem requires.
