@@ -314,7 +314,7 @@ GEM
       parser
       sorbet-runtime (>= 0.5.9204)
       unparser
-    rdf (3.2.0)
+    rdf (3.2.1)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (3.2.0)
       rdf (~> 3.2)
