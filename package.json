@@ -2,7 +2,7 @@
   "name": "vglist",
   "private": true,
   "dependencies": {
-    "@babel/preset-typescript": "^7.16.5",
+    "@babel/preset-typescript": "^7.16.7",
     "@rails/activestorage": "^6.1.4",
     "@rails/ujs": "^6.1.4",
     "@rails/webpacker": "5.4.3",
