@@ -378,9 +378,9 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
-    sentry-rails (4.8.1)
+    sentry-rails (4.8.2)
       railties (>= 5.0)
-      sentry-ruby-core (~> 4.8.1)
+      sentry-ruby-core (~> 4.8.2)
     sentry-ruby (4.8.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       faraday (~> 1.0)
@@ -495,7 +495,7 @@ GEM
     yard-sorbet (0.6.1)
       sorbet-runtime (>= 0.5)
       yard (>= 0.9)
-    zeitwerk (2.5.2)
+    zeitwerk (2.5.3)
 
 PLATFORMS
   ruby
@@ -548,7 +548,7 @@ DEPENDENCIES
   rubocop-rspec (~> 2.7)
   ruby-progressbar (~> 1.11)
   selenium-webdriver (~> 4.1)
-  sentry-rails (~> 4.8.1)
+  sentry-rails (~> 4.8.2)
   sentry-ruby (~> 4.8.2)
   shoulda-matchers (= 5.1.0)
   simplecov (~> 0.21)
