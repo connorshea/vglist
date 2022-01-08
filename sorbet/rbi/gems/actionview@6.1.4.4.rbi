@@ -81,6 +81,10 @@ class ActionView::ActionViewError < ::StandardError; end
 class ActionView::Base
   include ::ActionView::Context
   include ::ERB::Util
+  include ::ActiveSupport::Benchmarkable
+  include ::ActionView::Helpers::ActiveModelHelper
+  include ::ActionView::Helpers::AtomFeedHelper
+  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::ControllerHelper
   include ::ActionView::Helpers::CspHelper
@@ -88,13 +92,9 @@ class ActionView::Base
   include ::ActionView::Helpers::DateHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
-  include ::ActiveSupport::Benchmarkable
-  include ::ActionView::Helpers::ActiveModelHelper
   include ::ActionView::Helpers::AssetUrlHelper
   include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::UrlHelper
-  include ::ActionView::Helpers::AtomFeedHelper
-  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::TextHelper
@@ -1427,7 +1427,7 @@ module ActionView::Helpers::UrlHelper
   mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
 
   def button_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
-  def current_page?(*args); end
+  def current_page?(options = T.unsafe(nil), check_parameters: T.unsafe(nil), **options_as_kwargs); end
   def link_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
   def link_to_if(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
   def link_to_unless(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
@@ -1788,6 +1788,7 @@ class ActionView::Railtie < ::Rails::Engine; end
 
 module ActionView::RecordIdentifier
   include ::ActionView::ModelNaming
+  extend ::ActionView::ModelNaming
   extend ::ActionView::RecordIdentifier
   extend ::ActionView::ModelNaming
 
@@ -2235,6 +2236,10 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   include ::ActionDispatch::Assertions::RoutingAssertions
   include ::ActionDispatch::Assertions
   include ::AbstractController::Helpers
+  include ::ActiveSupport::Benchmarkable
+  include ::ActionView::Helpers::ActiveModelHelper
+  include ::ActionView::Helpers::AtomFeedHelper
+  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::ControllerHelper
   include ::ActionView::Helpers::CspHelper
@@ -2242,13 +2247,9 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   include ::ActionView::Helpers::DateHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
-  include ::ActiveSupport::Benchmarkable
-  include ::ActionView::Helpers::ActiveModelHelper
   include ::ActionView::Helpers::AssetUrlHelper
   include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::UrlHelper
-  include ::ActionView::Helpers::AtomFeedHelper
-  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::TextHelper

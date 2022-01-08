@@ -3231,6 +3231,7 @@ class Date
 end
 
 Date::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
+Date::VERSION = T.let(T.unsafe(nil), String)
 module DateAndTime; end
 
 module DateAndTime::Calculations
@@ -3490,7 +3491,6 @@ class Hash
   def deep_transform_keys!(&block); end
   def deep_transform_values(&block); end
   def deep_transform_values!(&block); end
-  def except(*keys); end
   def except!(*keys); end
   def extract!(*keys); end
   def extractable_options?; end
@@ -3601,6 +3601,9 @@ end
 
 IO::EWOULDBLOCKWaitReadable = IO::EAGAINWaitReadable
 IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
+IO::PRIORITY = T.let(T.unsafe(nil), Integer)
+IO::READABLE = T.let(T.unsafe(nil), Integer)
+IO::WRITABLE = T.let(T.unsafe(nil), Integer)
 
 class IPAddr
   include ::Comparable
@@ -3643,6 +3646,8 @@ module Kernel
 end
 
 class LoadError < ::ScriptError
+  include ::DidYouMean::Correctable
+
   def is_missing?(location); end
 end
 
@@ -3782,6 +3787,8 @@ class Object < ::BasicObject
   include ::ActiveSupport::ForkTracker::CoreExt
   include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Kernel
+  include ::ActiveSupport::ForkTracker::CoreExt
+  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::JSON::Ext::Generator::GeneratorMethods::Object
   include ::ActiveSupport::Tryable
   include ::ActiveSupport::Dependencies::Loadable
@@ -3942,7 +3949,6 @@ Struct::AwsEmptyStructure = Struct
 Struct::Group = Etc::Group
 Struct::HTMLElementDescription = Struct
 Struct::Passwd = Etc::Passwd
-Struct::Tms = Process::Tms
 
 class Symbol
   include ::Comparable
@@ -3979,7 +3985,6 @@ class Time
   def beginning_of_hour; end
   def beginning_of_minute; end
   def blank?; end
-  def ceil(precision = T.unsafe(nil)); end
   def change(options); end
   def compare_with_coercion(other); end
   def end_of_day; end
@@ -4045,7 +4050,6 @@ end
 
 module URI
   include ::URI::RFC2396_REGEXP
-  extend ::URI::Escape
 
   class << self
     def parser; end

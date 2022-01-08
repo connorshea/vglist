@@ -2725,6 +2725,10 @@ end
 
 ActionDispatch::HostAuthorization::ALLOWED_HOSTS_IN_DEVELOPMENT = T.let(T.unsafe(nil), Array)
 ActionDispatch::HostAuthorization::DEFAULT_RESPONSE_APP = T.let(T.unsafe(nil), Proc)
+ActionDispatch::HostAuthorization::IPV4_HOSTNAME = T.let(T.unsafe(nil), Regexp)
+ActionDispatch::HostAuthorization::IPV6_HOSTNAME = T.let(T.unsafe(nil), Regexp)
+ActionDispatch::HostAuthorization::IPV6_HOSTNAME_WITH_PORT = T.let(T.unsafe(nil), Regexp)
+ActionDispatch::HostAuthorization::PORT_REGEX = T.let(T.unsafe(nil), Regexp)
 
 class ActionDispatch::HostAuthorization::Permissions
   def initialize(hosts); end
@@ -2734,10 +2738,13 @@ class ActionDispatch::HostAuthorization::Permissions
 
   private
 
+  def extract_hostname(host); end
   def sanitize_hosts(hosts); end
   def sanitize_regexp(host); end
   def sanitize_string(host); end
 end
+
+ActionDispatch::HostAuthorization::VALID_IP_HOSTNAME = T.let(T.unsafe(nil), Regexp)
 
 module ActionDispatch::Http
   extend ::ActiveSupport::Autoload
