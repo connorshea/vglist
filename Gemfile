@@ -75,7 +75,7 @@ gem "doorkeeper", "5.5.0.rc2"
 gem "rack-cors", "~> 1.1"
 
 # Render SVGs inline using Webpacker.
-gem 'inline_svg', '~> 1.7'
+gem 'inline_svg', '~> 1.8'
 
 # Honeypot for spambots that doesn't require the user to actually do any
 # captcha and doesn't use google stuff.
