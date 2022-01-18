@@ -59,7 +59,7 @@ gem 'ruby-progressbar', '~> 1.11', require: false
 
 # Use Sentry for error tracking in production.
 gem 'sentry-ruby', '~> 4.9.1'
-gem 'sentry-rails', '~> 4.9.0'
+gem 'sentry-rails', '~> 4.9.1'
 
 # Sorbet runtime typechecker and Sorbet Rails.
 gem 'sorbet-runtime', '~> 0.5'
