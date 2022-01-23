@@ -8,7 +8,7 @@ module Resolvers
 
       argument :sort_direction, Types::SortDirectionType, required: false, description: "Direction to sort the returned list. Defaults to descending.", default_value: 'desc'
 
-      sig { params(sort_direction: String).returns(Statistic::RelationType) }
+      sig { params(sort_direction: String).returns(Statistic::PrivateRelation) }
       def resolve(sort_direction:)
         Statistic.all.order(created_at: sort_direction)
       end

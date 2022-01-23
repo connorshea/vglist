@@ -6,7 +6,7 @@ module Resolvers
 
       description "List all platforms."
 
-      sig { returns(Platform::RelationType) }
+      sig { returns(Platform::PrivateRelation) }
       def resolve
         Platform.all
       end

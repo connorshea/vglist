@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 module Resolvers
   module EngineResolvers
     class SearchResolver < Resolvers::BaseResolver
@@ -8,7 +8,7 @@ module Resolvers
 
       argument :query, String, required: true, description: "Name to search by."
 
-      sig { params(query: String).returns(Engine::RelationType) }
+      sig { params(query: String).returns(Engine::PrivateRelation) }
       def resolve(query:)
         Engine.search(query)
       end

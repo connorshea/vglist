@@ -7,6 +7,14 @@
 module ::Colorize::ClassMethods; end
 module ::Colorize::InstanceMethods; end
 module ::MakeMakefile; end
+module ::SafeType::BooleanMixin; end
 module ::Vips::Image; end
+module Company::ActiveRecord_Relation; end
+module Engine::ActiveRecord_Relation; end
+module Event::ActiveRecord_Relation; end
+module Game::ActiveRecord_Relation; end
+module Genre::ActiveRecord_Relation; end
+module Platform::ActiveRecord_Relation; end
 module RDoc::Task; end
-module T::Private::Methods::Signature; end
+module Series::ActiveRecord_Relation; end
+module Store::ActiveRecord_Relation; end

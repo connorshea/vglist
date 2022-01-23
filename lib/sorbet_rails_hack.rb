@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 # TODO: Delete this file.
 
 # module SorbetRailsHack

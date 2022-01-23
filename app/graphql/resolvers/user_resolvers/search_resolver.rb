@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 module Resolvers
   module UserResolvers
     class SearchResolver < Resolvers::BaseResolver
@@ -8,7 +8,7 @@ module Resolvers
 
       argument :query, String, required: true, description: "Username to search by."
 
-      sig { params(query: String).returns(User::RelationType) }
+      sig { params(query: String).returns(User::PrivateRelation) }
       def resolve(query:)
         User.search(query)
       end

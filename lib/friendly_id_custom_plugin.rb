@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # TODO: Delete this file.
 
 # class FriendlyIdCustomPlugin < SorbetRails::ModelPlugins::Base

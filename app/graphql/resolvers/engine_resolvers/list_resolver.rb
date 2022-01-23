@@ -6,7 +6,7 @@ module Resolvers
 
       description "List all game engines."
 
-      sig { returns(Engine::RelationType) }
+      sig { returns(Engine::PrivateRelation) }
       def resolve
         Engine.all
       end

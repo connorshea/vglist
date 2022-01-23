@@ -5,7 +5,7 @@ module Resolvers
 
     description "List all Wikidata blocklist entries. **Only available to admins.**"
 
-    sig { returns(T.nilable(WikidataBlocklist::RelationType)) }
+    sig { returns(T.nilable(WikidataBlocklist::PrivateRelation)) }
     def resolve
       WikidataBlocklist.all
     end

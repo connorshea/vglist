@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # TODO: Delete this file.
 
 # class CursedRbiPlugin < SorbetRails::ModelPlugins::Base

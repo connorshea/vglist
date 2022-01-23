@@ -7,7 +7,7 @@ module Resolvers
 
     argument :feed_type, Types::ActivityFeedType, required: false
 
-    sig { params(feed_type: String).returns(T.nilable(Event::RelationType)) }
+    sig { params(feed_type: String).returns(T.nilable(Event::PrivateRelationWhereChain)) }
     def resolve(feed_type: 'following')
       case feed_type
       when 'global'
