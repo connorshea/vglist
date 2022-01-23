@@ -20,7 +20,7 @@ class ActionController::Base
   include ::Devise::Controllers::Helpers
 end
 
-# TODO: Figure out if I should remove this when removing sorbet-rails.
+# TODO: Convert this to a monkey-patch so I can have this actually work.
 class ActionController::Parameters
   # This is a disgusting hack to make `params.require` less verbose for its
   # most common case. I am not proud of what I have done.
@@ -32,21 +32,6 @@ end
 class ActiveRecord::Base
   include ::ActiveStorage::Attached::Model
 end
-
-# Make Sorbet understand that PgSearch::Model mixes in class methods.
-module PgSearch::Model
-  extend T::Helpers
-
-  mixes_in_class_methods(ClassMethods)
-end
-
-# Make Sorbet understand that SorbetRails::ModelPlugins::Base extends T::Sig.
-# Otherwise it won't let us use sigs in the plugin class.
-# module SorbetRails::ModelPlugins
-#   class Base < ::Parlour::Plugin
-#     extend T::Sig
-#   end
-# end
 
 # Add modules from Devise to User.
 class User

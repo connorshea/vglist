@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 module Types
   class UserType < Types::BaseObject
     description "User accounts on vglist"
@@ -26,7 +26,7 @@ module Types
 
     field :is_followed, Boolean, null: true, resolver_method: :followed?, description: "Whether the current user is following this user. `null` if there is no logged-in user or the current user is querying on themselves."
 
-    sig { returns(T.nilable(Event::ActiveRecord_Relation)) }
+    sig { returns(T.nilable(Event::PrivateRelationWhereChain)) }
     def activity
       return nil unless user_visible?
 
