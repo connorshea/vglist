@@ -16,7 +16,7 @@ class Platform
   def to_ary; end
 
   class << self
-    sig { params(args: T.untyped).returns(T.untyped) }
+    sig { params(args: T.untyped).returns(Platform::PrivateRelation) }
     def search(*args); end
   end
 

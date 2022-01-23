@@ -30,7 +30,7 @@ class User
     sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
     def roles; end
 
-    sig { params(args: T.untyped).returns(T.untyped) }
+    sig { params(args: T.untyped).returns(User::PrivateRelation) }
     def search(*args); end
   end
 

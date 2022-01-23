@@ -26,7 +26,7 @@ module Tapioca
               parameters: [
                 create_rest_param("args", type: "T.untyped")
               ],
-              return_type: "T.untyped"
+              return_type: "#{constant}::PrivateRelation"
             )
           end
         end
