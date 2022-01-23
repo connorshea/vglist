@@ -10,6 +10,7 @@ class User
   include EnumMethodsModule
   extend CommonRelationMethods
   extend GeneratedRelationMethods
+  extend FriendlyId::Base
 
   sig { returns(ActiveStorage::Attached::One) }
   def avatar; end
