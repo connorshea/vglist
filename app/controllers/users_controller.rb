@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class UsersController < ApplicationController
   def index
     # Hide banned users from users that aren't moderators or admins.
@@ -196,11 +196,6 @@ class UsersController < ApplicationController
         format.html do
           flash[:success] = "Successfully reset game library."
           redirect_to user_path(@user)
-        end
-      else
-        format.html do
-          flash[:error] = "Unable to delete all the games in your library."
-          redirect_to settings_account_path
         end
       end
     end
