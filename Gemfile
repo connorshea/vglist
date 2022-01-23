@@ -61,9 +61,8 @@ gem 'ruby-progressbar', '~> 1.11', require: false
 gem 'sentry-ruby', '~> 5.0.0'
 gem 'sentry-rails', '~> 5.0.0'
 
-# Sorbet runtime typechecker and Sorbet Rails.
+# Sorbet runtime typechecker.
 gem 'sorbet-runtime', '~> 0.5'
-gem "sorbet-rails", '~> 0.7'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 1.13.6'
@@ -150,7 +149,6 @@ group :development do
   # Enable dotenv for local environment variables.
   gem 'dotenv-rails', '~> 2.7'
   # Tapioca for generating Sorbet RBI files.
-  # Use a fork to fix this issue: https://github.com/Shopify/tapioca/issues/208
   gem 'tapioca', '~> 0.6.2'
 end
 
