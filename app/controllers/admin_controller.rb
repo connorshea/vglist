@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class AdminController < ApplicationController
   before_action :authenticate_user!
 

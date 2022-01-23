@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class CompaniesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
