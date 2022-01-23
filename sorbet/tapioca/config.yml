@@ -1,2 +1,4 @@
 ---
-exclude: ['faker']
+gem:
+  exclude:
+  - 'faker'

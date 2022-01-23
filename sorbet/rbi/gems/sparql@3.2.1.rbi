@@ -17,7 +17,6 @@ class Array
   def constant?; end
   def deep_dup; end
   def evaluatable?; end
-  def evaluate(bindings, **options); end
   def executable?; end
   def execute(queryable, **options); end
   def ndvars; end
@@ -122,7 +121,7 @@ class RDF::Query
   def query_yields_statements?; end
   def rewrite(&block); end
   def solutions; end
-  def to_sparql(top_level: T.unsafe(nil), **options); end
+  def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
   def to_sxp(**options); end
   def to_sxp_bin; end
   def unnamed?; end
@@ -500,12 +499,13 @@ module SPARQL::Algebra::Expression
   def debug(*args, &block); end
 
   class << self
-    def [](*sse); end
+    def [](*sse, **options); end
     def cast(datatype, value); end
     def debug(*args, &block); end
     def extension(function, *args); end
+    def extension?(function); end
     def extensions; end
-    def for(*sse); end
+    def for(*sse, **options); end
     def new(sse, **options); end
     def open(filename, **options, &block); end
     def parse(sse, **options, &block); end
@@ -564,7 +564,7 @@ class SPARQL::Algebra::Operator
     def inherited(child); end
     def prefixes; end
     def prefixes=(hash); end
-    def to_sparql(content, distinct: T.unsafe(nil), extensions: T.unsafe(nil), filter_ops: T.unsafe(nil), group_ops: T.unsafe(nil), limit: T.unsafe(nil), offset: T.unsafe(nil), order_ops: T.unsafe(nil), project: T.unsafe(nil), reduced: T.unsafe(nil), **options); end
+    def to_sparql(content, datasets: T.unsafe(nil), distinct: T.unsafe(nil), extensions: T.unsafe(nil), filter_ops: T.unsafe(nil), group_ops: T.unsafe(nil), having_ops: T.unsafe(nil), limit: T.unsafe(nil), offset: T.unsafe(nil), order_ops: T.unsafe(nil), project: T.unsafe(nil), reduced: T.unsafe(nil), values_clause: T.unsafe(nil), where_clause: T.unsafe(nil), **options); end
   end
 end
 
@@ -941,11 +941,22 @@ end
 
 SPARQL::Algebra::Operator::Floor::NAME = T.let(T.unsafe(nil), Array)
 
+class SPARQL::Algebra::Operator::FunctionCall < ::SPARQL::Algebra::Operator
+  include ::SPARQL::Algebra::Evaluatable
+
+  def apply(iri, *args, **options); end
+  def to_sparql(**options); end
+  def to_sxp_bin; end
+end
+
+SPARQL::Algebra::Operator::FunctionCall::NAME = T.let(T.unsafe(nil), Symbol)
+
 class SPARQL::Algebra::Operator::Graph < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
   def rewrite(&block); end
+  def to_sparql(top_level: T.unsafe(nil), **options); end
 
   class << self
     def new(name, patterns, **options, &block); end
@@ -970,7 +981,7 @@ class SPARQL::Algebra::Operator::Group < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
-  def to_sparql(extensions: T.unsafe(nil), **options); end
+  def to_sparql(extensions: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
   def validate!; end
 end
 
@@ -1008,6 +1019,7 @@ class SPARQL::Algebra::Operator::If < ::SPARQL::Algebra::Operator::Ternary
   include ::SPARQL::Algebra::Evaluatable
 
   def evaluate(bindings, **options); end
+  def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::If::NAME = T.let(T.unsafe(nil), Symbol)
@@ -1090,7 +1102,7 @@ class SPARQL::Algebra::Operator::Join < ::SPARQL::Algebra::Operator::Binary
 
   def execute(queryable, **options, &block); end
   def optimize!(**options); end
-  def to_sparql(top_level: T.unsafe(nil), **options); end
+  def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), extensions: T.unsafe(nil), **options); end
   def validate!; end
 end
 
@@ -1128,7 +1140,7 @@ class SPARQL::Algebra::Operator::LeftJoin < ::SPARQL::Algebra::Operator
 
   def execute(queryable, **options, &block); end
   def optimize!(**options); end
-  def to_sparql(top_level: T.unsafe(nil), **options); end
+  def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), extensions: T.unsafe(nil), **options); end
   def validate!; end
 end
 
@@ -1191,7 +1203,7 @@ class SPARQL::Algebra::Operator::Minus < ::SPARQL::Algebra::Operator::Binary
 
   def execute(queryable, **options, &block); end
   def optimize!(**options); end
-  def to_sparql(top_level: T.unsafe(nil), **options); end
+  def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), extensions: T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::Minus::NAME = T.let(T.unsafe(nil), Symbol)
@@ -1287,6 +1299,7 @@ class SPARQL::Algebra::Operator::NotOneOf < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
+  def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::NotOneOf::NAME = T.let(T.unsafe(nil), Symbol)
@@ -1698,7 +1711,7 @@ class SPARQL::Algebra::Operator::Table < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
-  def to_sparql(**options); end
+  def to_sparql(top_level: T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::Table::NAME = T.let(T.unsafe(nil), Array)

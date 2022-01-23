@@ -15,6 +15,7 @@ module Bootsnap
 
   class << self
     def _instrument(event, path); end
+    def absolute_path?(path); end
     def default_setup; end
     def instrumentation=(callback); end
     def instrumentation_enabled=(_arg0); end
@@ -39,13 +40,13 @@ class Bootsnap::CompileCache::Error < ::StandardError; end
 module Bootsnap::CompileCache::ISeq
   class << self
     def cache_dir; end
-    def cache_dir=(_arg0); end
+    def cache_dir=(cache_dir); end
     def compile_option_updated; end
     def fetch(path, cache_dir: T.unsafe(nil)); end
     def input_to_output(_data, _kwargs); end
     def input_to_storage(_, path); end
     def install!(cache_dir); end
-    def precompile(path, cache_dir: T.unsafe(nil)); end
+    def precompile(path); end
     def storage_to_output(binary, _args); end
   end
 end
@@ -58,14 +59,14 @@ end
 module Bootsnap::CompileCache::JSON
   class << self
     def cache_dir; end
-    def cache_dir=(_arg0); end
+    def cache_dir=(cache_dir); end
     def init!; end
     def input_to_output(data, kwargs); end
     def input_to_storage(payload, _); end
     def install!(cache_dir); end
     def msgpack_factory; end
     def msgpack_factory=(_arg0); end
-    def precompile(path, cache_dir: T.unsafe(nil)); end
+    def precompile(path); end
     def storage_to_output(data, kwargs); end
     def supported_options; end
     def supported_options=(_arg0); end
@@ -93,30 +94,67 @@ module Bootsnap::CompileCache::Native
 end
 
 class Bootsnap::CompileCache::PermissionError < ::Bootsnap::CompileCache::Error; end
-class Bootsnap::CompileCache::Uncompilable < ::StandardError; end
+Bootsnap::CompileCache::UNCOMPILABLE = T.let(T.unsafe(nil), BasicObject)
 
 module Bootsnap::CompileCache::YAML
   class << self
     def cache_dir; end
-    def cache_dir=(_arg0); end
+    def cache_dir=(cache_dir); end
+    def implementation; end
     def init!; end
-    def input_to_output(data, kwargs); end
-    def input_to_storage(contents, _); end
     def install!(cache_dir); end
     def msgpack_factory; end
     def msgpack_factory=(_arg0); end
-    def precompile(path, cache_dir: T.unsafe(nil)); end
-    def storage_to_output(data, kwargs); end
-    def strict_load(payload, *args); end
+    def patch; end
+    def precompile(path); end
+    def strict_load(payload); end
     def strict_visitor; end
     def supported_options; end
     def supported_options=(_arg0); end
   end
 end
 
-module Bootsnap::CompileCache::YAML::Patch
-  def load_file(path, *args); end
+module Bootsnap::CompileCache::YAML::Psych3
+  extend ::Bootsnap::CompileCache::YAML::Psych3
+
+  def input_to_output(data, kwargs); end
+  def input_to_storage(contents, _); end
+  def storage_to_output(data, kwargs); end
 end
+
+module Bootsnap::CompileCache::YAML::Psych3::Patch
+  def load_file(path, *args); end
+  def unsafe_load_file(path, *args); end
+end
+
+module Bootsnap::CompileCache::YAML::Psych4
+  extend ::Bootsnap::CompileCache::YAML::Psych4
+
+  def input_to_storage(contents, _); end
+end
+
+module Bootsnap::CompileCache::YAML::Psych4::Patch
+  def load_file(path, *args); end
+  def unsafe_load_file(path, *args); end
+end
+
+module Bootsnap::CompileCache::YAML::Psych4::SafeLoad
+  extend ::Bootsnap::CompileCache::YAML::Psych4::SafeLoad
+
+  def input_to_output(data, kwargs); end
+  def input_to_storage(contents, _); end
+  def storage_to_output(data, kwargs); end
+end
+
+module Bootsnap::CompileCache::YAML::Psych4::UnsafeLoad
+  extend ::Bootsnap::CompileCache::YAML::Psych4::UnsafeLoad
+
+  def input_to_output(data, kwargs); end
+  def input_to_storage(contents, _); end
+  def storage_to_output(data, kwargs); end
+end
+
+class Bootsnap::CompileCache::YAML::UnsupportedTags < ::StandardError; end
 
 module Bootsnap::ExplicitRequire
   class << self
@@ -147,7 +185,6 @@ Bootsnap::LoadPathCache::CACHED_EXTENSIONS = T.let(T.unsafe(nil), Array)
 class Bootsnap::LoadPathCache::Cache
   def initialize(store, path_obj, development_mode: T.unsafe(nil)); end
 
-  def absolute_path?(path); end
   def find(feature, try_extensions: T.unsafe(nil)); end
   def load_dir(dir); end
   def push_paths(sender, *paths); end
@@ -158,13 +195,13 @@ class Bootsnap::LoadPathCache::Cache
 
   def dir_changed?; end
   def expand_path(feature); end
-  def maybe_append_extension(f); end
+  def maybe_append_extension(feature); end
   def now; end
   def push_paths_locked(*paths); end
-  def search_index(f, try_extensions: T.unsafe(nil)); end
+  def search_index(feature, try_extensions: T.unsafe(nil)); end
   def stale?; end
-  def try_ext(f); end
-  def try_index(f); end
+  def try_ext(feature); end
+  def try_index(feature); end
   def unshift_paths_locked(*paths); end
 end
 
@@ -210,31 +247,26 @@ module Bootsnap::LoadPathCache::ChangeObserver::ArrayMixin
   def unshift(*entries); end
 end
 
-module Bootsnap::LoadPathCache::CoreExt
-  class << self
-    def make_load_error(path); end
-  end
-end
-
 Bootsnap::LoadPathCache::DLEXT = T.let(T.unsafe(nil), String)
 Bootsnap::LoadPathCache::DL_EXTENSIONS = T.let(T.unsafe(nil), Array)
 Bootsnap::LoadPathCache::DOT_RB = T.let(T.unsafe(nil), String)
 Bootsnap::LoadPathCache::DOT_SO = T.let(T.unsafe(nil), String)
-Bootsnap::LoadPathCache::ERROR_TAG_IVAR = T.let(T.unsafe(nil), Symbol)
-class Bootsnap::LoadPathCache::FallbackScan < ::StandardError; end
+Bootsnap::LoadPathCache::FALLBACK_SCAN = T.let(T.unsafe(nil), BasicObject)
 
 class Bootsnap::LoadPathCache::LoadedFeaturesIndex
   def initialize; end
 
+  def cursor(short); end
+  def identify(short, cursor); end
   def key?(feature); end
   def purge(feature); end
   def purge_multi(features); end
-  def register(short, long = T.unsafe(nil)); end
+  def register(short, long); end
 
   private
 
-  def extension_elidable?(f); end
-  def strip_extension_if_elidable(f); end
+  def extension_elidable?(feature); end
+  def strip_extension_if_elidable(feature); end
 end
 
 Bootsnap::LoadPathCache::LoadedFeaturesIndex::STRIP_EXTENSION = T.let(T.unsafe(nil), Regexp)
@@ -286,7 +318,6 @@ class Bootsnap::LoadPathCache::RealpathCache
   def realpath(caller_location, path); end
 end
 
-class Bootsnap::LoadPathCache::ReturnFalse < ::StandardError; end
 Bootsnap::LoadPathCache::SLASH = T.let(T.unsafe(nil), String)
 
 class Bootsnap::LoadPathCache::Store
@@ -300,12 +331,15 @@ class Bootsnap::LoadPathCache::Store
   private
 
   def commit_transaction; end
+  def default_data; end
   def dump_data; end
   def load_data; end
 end
 
+Bootsnap::LoadPathCache::Store::CURRENT_VERSION = T.let(T.unsafe(nil), String)
 class Bootsnap::LoadPathCache::Store::NestedTransactionError < ::StandardError; end
 class Bootsnap::LoadPathCache::Store::SetOutsideTransactionNotAllowed < ::StandardError; end
+Bootsnap::LoadPathCache::Store::VERSION_KEY = T.let(T.unsafe(nil), String)
 Bootsnap::VERSION = T.let(T.unsafe(nil), String)
 
 module Kernel
@@ -313,13 +347,11 @@ module Kernel
 
   def load(path, wrap = T.unsafe(nil)); end
   def require_relative(path); end
-  def require_with_bootsnap_lfi(path, resolved = T.unsafe(nil)); end
   def zeitwerk_original_require(path); end
 
   class << self
     def load(path, wrap = T.unsafe(nil)); end
     def require_relative(path); end
-    def require_with_bootsnap_lfi(path, resolved = T.unsafe(nil)); end
   end
 end
 

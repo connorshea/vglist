@@ -109,6 +109,14 @@ class RuboCop::Cop::IndexMethod::Captures < ::Struct
 end
 
 RuboCop::Cop::IndexMethod::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+module RuboCop::Cop::MigrationsHelper
+  extend ::RuboCop::AST::NodePattern::Macros
+
+  def in_migration?(node); end
+  def migration_class?(param0 = T.unsafe(nil)); end
+end
+
 module RuboCop::Cop::Rails; end
 
 class RuboCop::Cop::Rails::ActionFilter < ::RuboCop::Cop::Base
@@ -398,6 +406,7 @@ class RuboCop::Cop::Rails::CompactBlank < ::RuboCop::Cop::Base
   def offense_range(node); end
   def preferred_method(node); end
   def use_hash_value_block_argument?(arguments, receiver_in_block); end
+  def use_single_value_block_argument?(arguments, receiver_in_block); end
 end
 
 RuboCop::Cop::Rails::CompactBlank::MSG = T.let(T.unsafe(nil), String)
@@ -947,6 +956,7 @@ class RuboCop::Cop::Rails::InverseOf < ::RuboCop::Cop::Base
 
   private
 
+  def ignore_scopes?; end
   def message(options); end
 end
 
@@ -1254,8 +1264,12 @@ class RuboCop::Cop::Rails::ReadWriteAttribute < ::RuboCop::Cop::Base
 
   private
 
-  def message(node); end
+  def build_message(node); end
+  def multi_line_message(node); end
+  def node_replacement(node); end
   def read_attribute_replacement(node); end
+  def single_line_message(node); end
+  def within_shadowing_method?(node); end
   def write_attribute_replacement(node); end
 end
 
@@ -1313,8 +1327,15 @@ class RuboCop::Cop::Rails::RedundantPresenceValidationOnBelongsTo < ::RuboCop::C
 
   private
 
+  def add_offense_and_correct(node, all_keys, keys, options, presence); end
   def belongs_to_for(model_class_node, key); end
-  def remove_presence_validation(corrector, node, options, presence); end
+  def extract_validation_for_keys(corrector, node, keys, options); end
+  def message_for(keys); end
+  def non_optional_belongs_to(node, keys); end
+  def remove_keys_from_validation(corrector, node, keys); end
+  def remove_presence_option(corrector, presence); end
+  def remove_validation(corrector, node); end
+  def validation_range(node); end
 end
 
 RuboCop::Cop::Rails::RedundantPresenceValidationOnBelongsTo::MSG = T.let(T.unsafe(nil), String)
@@ -1456,6 +1477,8 @@ RuboCop::Cop::Rails::RequireDependency::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RequireDependency::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 class RuboCop::Cop::Rails::ReversibleMigration < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::MigrationsHelper
+
   def change_table_call(param0 = T.unsafe(nil)); end
   def drop_table_call(param0 = T.unsafe(nil)); end
   def irreversible_schema_statement_call(param0 = T.unsafe(nil)); end
@@ -1486,8 +1509,9 @@ end
 RuboCop::Cop::Rails::ReversibleMigration::MSG = T.let(T.unsafe(nil), String)
 
 class RuboCop::Cop::Rails::ReversibleMigrationMethodDefinition < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::MigrationsHelper
+
   def change_method?(param0 = T.unsafe(nil)); end
-  def migration_class?(param0 = T.unsafe(nil)); end
   def on_class(node); end
   def up_and_down_methods?(param0 = T.unsafe(nil)); end
 end
