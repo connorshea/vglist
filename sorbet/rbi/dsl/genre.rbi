@@ -15,6 +15,11 @@ class Genre
   sig { returns(NilClass) }
   def to_ary; end
 
+  class << self
+    sig { params(args: T.untyped).returns(T.untyped) }
+    def search(*args); end
+  end
+
   module CommonRelationMethods
     sig { params(block: T.nilable(T.proc.params(record: ::Genre).returns(T.untyped))).returns(T::Boolean) }
     def any?(&block); end

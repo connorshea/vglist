@@ -29,6 +29,9 @@ class User
 
     sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
     def roles; end
+
+    sig { params(args: T.untyped).returns(T.untyped) }
+    def search(*args); end
   end
 
   module CommonRelationMethods
