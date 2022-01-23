@@ -702,10 +702,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def byte_size?; end
 
-  sig { returns(String) }
+  sig { returns(T.nilable(String)) }
   def checksum; end
 
-  sig { params(value: T.any(String, Symbol)).void }
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
   def checksum=(value); end
 
   sig { returns(T::Boolean) }

@@ -242,7 +242,7 @@ class RDF::Query
   def query_yields_statements?; end
   def rewrite(&block); end
   def solutions; end
-  def to_sparql(top_level: T.unsafe(nil), **options); end
+  def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
   def to_sxp(**options); end
   def to_sxp_bin; end
   def unnamed?; end
@@ -481,6 +481,8 @@ RDF::URI::IUNRESERVED = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IUSERINFO = T.let(T.unsafe(nil), Regexp)
 RDF::URI::NON_HIER_SCHEMES = T.let(T.unsafe(nil), Array)
 RDF::URI::PCT_ENCODED = T.let(T.unsafe(nil), Regexp)
+RDF::URI::PN_ESCAPES = T.let(T.unsafe(nil), Regexp)
+RDF::URI::PN_ESCAPE_CHARS = T.let(T.unsafe(nil), Regexp)
 RDF::URI::PORT = T.let(T.unsafe(nil), Regexp)
 RDF::URI::PORT_FROM_AUTHORITY_RE = T.let(T.unsafe(nil), Regexp)
 RDF::URI::PORT_MAPPING = T.let(T.unsafe(nil), Hash)

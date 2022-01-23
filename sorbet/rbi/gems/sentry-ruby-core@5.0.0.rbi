@@ -287,7 +287,7 @@ class Sentry::Breadcrumb
   def level; end
   def level=(_arg0); end
   def message; end
-  def message=(msg); end
+  def message=(message); end
   def timestamp; end
   def timestamp=(_arg0); end
   def to_hash; end
@@ -502,10 +502,7 @@ class Sentry::Event
   def initialize(configuration:, integration_meta: T.unsafe(nil), message: T.unsafe(nil)); end
 
   def add_exception_interface(exception); end
-  def add_request_interface(env); end
   def add_threads_interface(backtrace: T.unsafe(nil), **options); end
-  def backtrace; end
-  def backtrace=(_arg0); end
   def breadcrumbs; end
   def breadcrumbs=(_arg0); end
   def configuration; end
@@ -521,7 +518,7 @@ class Sentry::Event
   def fingerprint; end
   def fingerprint=(_arg0); end
   def level; end
-  def level=(new_level); end
+  def level=(level); end
   def message; end
   def message=(_arg0); end
   def modules; end
@@ -551,6 +548,7 @@ class Sentry::Event
 
   private
 
+  def add_request_interface(env); end
   def calculate_real_ip_from_rack(env); end
   def serialize_attributes; end
 
@@ -566,7 +564,7 @@ Sentry::Event::SKIP_INSPECTION_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 Sentry::Event::WRITER_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 
 class Sentry::ExceptionInterface < ::Sentry::Interface
-  def initialize(values:); end
+  def initialize(exceptions:); end
 
   def to_hash; end
 
@@ -580,13 +578,11 @@ class Sentry::ExternalError < ::Sentry::Error; end
 class Sentry::HTTPTransport < ::Sentry::Transport
   def initialize(*args); end
 
-  def adapter; end
   def conn; end
   def send_data(data); end
 
   private
 
-  def faraday_opts; end
   def handle_rate_limited_response(headers); end
   def has_rate_limited_header?(headers); end
   def parse_rate_limit_header(rate_limit_header); end
@@ -601,6 +597,7 @@ Sentry::HTTPTransport::GZIP_ENCODING = T.let(T.unsafe(nil), String)
 Sentry::HTTPTransport::GZIP_THRESHOLD = T.let(T.unsafe(nil), Integer)
 Sentry::HTTPTransport::RATE_LIMIT_HEADER = T.let(T.unsafe(nil), String)
 Sentry::HTTPTransport::RETRY_AFTER_HEADER = T.let(T.unsafe(nil), String)
+Sentry::HTTPTransport::USER_AGENT = T.let(T.unsafe(nil), String)
 
 class Sentry::Hub
   include ::Sentry::ArgumentCheckingHelper
@@ -647,11 +644,6 @@ end
 
 class Sentry::Interface
   def to_hash; end
-
-  class << self
-    def inherited(klass); end
-    def registered; end
-  end
 end
 
 Sentry::LOGGER_PROGNAME = T.let(T.unsafe(nil), String)
@@ -686,18 +678,16 @@ Sentry::META = T.let(T.unsafe(nil), Hash)
 module Sentry::Net; end
 
 module Sentry::Net::HTTP
-  def do_finish; end
-  def do_start; end
   def request(req, body = T.unsafe(nil), &block); end
 
   private
 
   def extract_request_info(req); end
-  def finish_sentry_span; end
+  def finish_sentry_span(sentry_span); end
   def from_sentry_sdk?; end
   def record_sentry_breadcrumb(req, res); end
-  def record_sentry_span(req, res); end
-  def set_sentry_trace_header(req); end
+  def record_sentry_span(req, res, sentry_span); end
+  def set_sentry_trace_header(req, sentry_span); end
   def start_sentry_span; end
 end
 
@@ -739,7 +729,7 @@ class Sentry::ReleaseDetector
 end
 
 class Sentry::RequestInterface < ::Sentry::Interface
-  def initialize(request:); end
+  def initialize(env:, send_default_pii:, rack_env_whitelist:); end
 
   def cookies; end
   def cookies=(_arg0); end
@@ -759,16 +749,11 @@ class Sentry::RequestInterface < ::Sentry::Interface
   private
 
   def encode_to_utf_8(value); end
-  def filter_and_format_env(env); end
+  def filter_and_format_env(env, rack_env_whitelist); end
   def filter_and_format_headers(env); end
   def is_server_protocol?(key, value, protocol_version); end
   def is_skippable_header?(key); end
   def read_data_from(request); end
-
-  class << self
-    def build(env:); end
-    def clean_env(env); end
-  end
 end
 
 Sentry::RequestInterface::CONTENT_HEADERS = T.let(T.unsafe(nil), Array)
@@ -887,7 +872,7 @@ class Sentry::Span
   def span_id; end
   def span_recorder; end
   def span_recorder=(_arg0); end
-  def start_child(**options); end
+  def start_child(**attributes); end
   def start_timestamp; end
   def status; end
   def tags; end
@@ -897,7 +882,7 @@ class Sentry::Span
   def trace_id; end
   def transaction; end
   def transaction=(_arg0); end
-  def with_child_span(**options, &block); end
+  def with_child_span(**attributes, &block); end
 end
 
 Sentry::Span::STATUS_MAP = T.let(T.unsafe(nil), Hash)
@@ -1084,10 +1069,6 @@ class Sentry::Transport::Configuration
 
   def encoding; end
   def encoding=(_arg0); end
-  def faraday_builder; end
-  def faraday_builder=(_arg0); end
-  def http_adapter; end
-  def http_adapter=(_arg0); end
   def open_timeout; end
   def open_timeout=(_arg0); end
   def proxy; end
