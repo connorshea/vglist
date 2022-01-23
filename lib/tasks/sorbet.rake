@@ -88,7 +88,6 @@ namespace :sorbet do
         system('bundle exec tapioca gem')
         # Generate Tapioca's Rails DSL RBIs.
         system('bundle exec tapioca dsl')
-        system('bundle exec rake rails_rbi:all')
         system('bundle exec tapioca todo')
         system('bundle exec srb rbi suggest-typed')
       end
