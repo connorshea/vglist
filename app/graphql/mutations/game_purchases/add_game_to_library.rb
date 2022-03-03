@@ -18,7 +18,7 @@ class Mutations::GamePurchases::AddGameToLibrary < Mutations::BaseMutation
   sig do
     params(
       game_id: T.any(String, Integer),
-      completion_status: T.nilable(T.untyped),
+      completion_status: T.untyped,
       rating: T.nilable(Integer),
       hours_played: T.nilable(Float),
       replay_count: Integer,

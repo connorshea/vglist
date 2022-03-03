@@ -18,10 +18,10 @@ class ApplicationPolicy
 
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   attr_reader :record
 
-  sig { params(user: T.nilable(User), record: T.nilable(T.untyped)).void }
+  sig { params(user: T.nilable(User), record: T.untyped).void }
   def initialize(user, record)
     @user = user
     @record = record
