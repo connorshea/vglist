@@ -165,7 +165,7 @@ GEM
       rouge (~> 3.0)
     highline (2.0.3)
     htmlentities (4.3.4)
-    i18n (1.9.0)
+    i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     image_processing (1.12.2)
       mini_magick (>= 4.9.5, < 5)
