@@ -1,7 +1,7 @@
 # typed: true
 class ApplicationController < ActionController::Base
   extend T::Sig
-  include Pundit
+  include Pundit::Authorization
 
   # Require a valid CSRF token, throw an exception if there isn't one.
   protect_from_forgery with: :exception, unless: -> {

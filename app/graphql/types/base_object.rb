@@ -2,7 +2,7 @@
 module Types
   class BaseObject < GraphQL::Schema::Object
     extend T::Sig
-    include Pundit
+    include Pundit::Authorization
 
     connection_type_class(Types::BaseConnectionObject)
 
