@@ -58,8 +58,8 @@ gem 'aws-sdk-s3', '~> 1.66', require: false
 gem 'ruby-progressbar', '~> 1.11', require: false
 
 # Use Sentry for error tracking in production.
-gem 'sentry-ruby', '~> 5.0.2'
-gem 'sentry-rails', '~> 5.0.2'
+gem 'sentry-ruby', '~> 5.1.1'
+gem 'sentry-rails', '~> 5.1.1'
 
 # Sorbet runtime typechecker and Sorbet Rails.
 gem 'sorbet-runtime', '~> 0.5'
