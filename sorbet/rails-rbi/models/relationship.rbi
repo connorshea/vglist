@@ -306,6 +306,9 @@ module Relationship::QueryMethodsReturningRelation
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(Relationship::ActiveRecord_Relation) }
   def select_columns(*args); end
 
+  sig { params(args: Symbol).returns(Relationship::ActiveRecord_Relation) }
+  def where_missing(*args); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Relationship::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -421,6 +424,9 @@ module Relationship::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(Relationship::ActiveRecord_AssociationRelation) }
   def select_columns(*args); end
+
+  sig { params(args: Symbol).returns(Relationship::ActiveRecord_AssociationRelation) }
+  def where_missing(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Relationship::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end

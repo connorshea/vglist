@@ -152,6 +152,9 @@ module PaperTrail::Version::QueryMethodsReturningRelation
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(PaperTrail::Version::ActiveRecord_Relation) }
   def select_columns(*args); end
 
+  sig { params(args: Symbol).returns(PaperTrail::Version::ActiveRecord_Relation) }
+  def where_missing(*args); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(PaperTrail::Version::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -268,6 +271,9 @@ module PaperTrail::Version::QueryMethodsReturningAssociationRelation
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(PaperTrail::Version::ActiveRecord_AssociationRelation) }
   def select_columns(*args); end
 
+  sig { params(args: Symbol).returns(PaperTrail::Version::ActiveRecord_AssociationRelation) }
+  def where_missing(*args); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(PaperTrail::Version::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
@@ -323,7 +329,7 @@ class PaperTrail::Version::ActiveRecord_AssociationRelation < ActiveRecord::Asso
 end
 
 module PaperTrail::Version::GeneratedAssociationMethods
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def item; end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
@@ -335,10 +341,10 @@ module PaperTrail::Version::GeneratedAssociationMethods
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
   def create_item!(*args, &block); end
 
-  sig { params(value: T.nilable(T.untyped)).void }
+  sig { params(value: T.untyped).void }
   def item=(value); end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def reload_item; end
 end
 
