@@ -1857,6 +1857,9 @@ module User::QueryMethodsReturningRelation
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(User::ActiveRecord_Relation) }
   def select_columns(*args); end
 
+  sig { params(args: Symbol).returns(User::ActiveRecord_Relation) }
+  def where_missing(*args); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(User::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -1973,6 +1976,9 @@ module User::QueryMethodsReturningAssociationRelation
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(User::ActiveRecord_AssociationRelation) }
   def select_columns(*args); end
 
+  sig { params(args: Symbol).returns(User::ActiveRecord_AssociationRelation) }
+  def where_missing(*args); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(User::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
@@ -2053,10 +2059,10 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def current_sign_in_at?; end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def current_sign_in_ip; end
 
-  sig { params(value: T.nilable(T.untyped)).void }
+  sig { params(value: T.untyped).void }
   def current_sign_in_ip=(value); end
 
   sig { returns(T::Boolean) }
@@ -2107,10 +2113,10 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def last_sign_in_at?; end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def last_sign_in_ip; end
 
-  sig { params(value: T.nilable(T.untyped)).void }
+  sig { params(value: T.untyped).void }
   def last_sign_in_ip=(value); end
 
   sig { returns(T::Boolean) }
@@ -3450,7 +3456,7 @@ module User::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::Relationship]).void }
   def passive_relationships=(value); end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def pg_search_document; end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
@@ -3462,10 +3468,10 @@ module User::GeneratedAssociationMethods
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
   def create_pg_search_document!(*args, &block); end
 
-  sig { params(value: T.nilable(T.untyped)).void }
+  sig { params(value: T.untyped).void }
   def pg_search_document=(value); end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def reload_pg_search_document; end
 
   sig { returns(::SteamBlocklist::ActiveRecord_Associations_CollectionProxy) }

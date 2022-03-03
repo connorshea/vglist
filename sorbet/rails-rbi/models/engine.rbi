@@ -460,6 +460,9 @@ module Engine::QueryMethodsReturningRelation
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(Engine::ActiveRecord_Relation) }
   def select_columns(*args); end
 
+  sig { params(args: Symbol).returns(Engine::ActiveRecord_Relation) }
+  def where_missing(*args); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -575,6 +578,9 @@ module Engine::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(Engine::ActiveRecord_AssociationRelation) }
   def select_columns(*args); end
+
+  sig { params(args: Symbol).returns(Engine::ActiveRecord_AssociationRelation) }
+  def where_missing(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(Engine::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
@@ -921,7 +927,7 @@ module Engine::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def pg_search_document; end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
@@ -933,10 +939,10 @@ module Engine::GeneratedAssociationMethods
   sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: T.untyped).void)).returns(T.untyped) }
   def create_pg_search_document!(*args, &block); end
 
-  sig { params(value: T.nilable(T.untyped)).void }
+  sig { params(value: T.untyped).void }
   def pg_search_document=(value); end
 
-  sig { returns(T.nilable(T.untyped)) }
+  sig { returns(T.untyped) }
   def reload_pg_search_document; end
 
   sig { returns(::Versions::EngineVersion::ActiveRecord_Associations_CollectionProxy) }

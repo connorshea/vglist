@@ -228,6 +228,9 @@ module GameGenre::QueryMethodsReturningRelation
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(GameGenre::ActiveRecord_Relation) }
   def select_columns(*args); end
 
+  sig { params(args: Symbol).returns(GameGenre::ActiveRecord_Relation) }
+  def where_missing(*args); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameGenre::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -343,6 +346,9 @@ module GameGenre::QueryMethodsReturningAssociationRelation
 
   sig { params(args: T.any(String, Symbol, T::Array[T.any(String, Symbol)])).returns(GameGenre::ActiveRecord_AssociationRelation) }
   def select_columns(*args); end
+
+  sig { params(args: Symbol).returns(GameGenre::ActiveRecord_AssociationRelation) }
+  def where_missing(*args); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GameGenre::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
