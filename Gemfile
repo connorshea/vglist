@@ -4,10 +4,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '>= 3.0.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.4'
+gem 'rails', '~> 7.0.2'
 
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.2'
+gem 'pg', '~> 1.3'
 
 # Use Puma as the app server
 gem 'puma', '~> 5.5'
@@ -58,7 +58,7 @@ gem 'aws-sdk-s3', '~> 1.66', require: false
 gem 'ruby-progressbar', '~> 1.11', require: false
 
 # Use Sentry for error tracking in production.
-gem 'sentry-ruby', '~> 5.0.0'
+gem 'sentry-ruby', '~> 5.0.2'
 gem 'sentry-rails', '~> 5.0.0'
 
 # Sorbet runtime typechecker and Sorbet Rails.
@@ -107,7 +107,7 @@ group :development, :test do
   gem 'database_cleaner', '~> 2.0'
 
   # Rspec-rails for testing.
-  gem 'rspec-rails', '~> 5.0'
+  gem 'rspec-rails', '~> 5.1'
 
   # Factory Bot for creating factories.
   gem 'factory_bot_rails', '~> 6.2'
@@ -151,7 +151,7 @@ group :development do
   gem 'dotenv-rails', '~> 2.7'
   # Tapioca for generating Sorbet RBI files.
   # Use a fork to fix this issue: https://github.com/Shopify/tapioca/issues/208
-  gem 'tapioca', '~> 0.6.2'
+  gem 'tapioca', '~> 0.7.0'
 end
 
 group :test do
