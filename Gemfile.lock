@@ -134,7 +134,7 @@ GEM
     dotenv-rails (2.7.6)
       dotenv (= 2.7.6)
       railties (>= 3.2)
-    ebnf (2.3.0)
+    ebnf (2.3.1)
       amazing_print (~> 1.4)
       htmlentities (~> 4.3)
       rdf (~> 3.2)
