@@ -4,7 +4,7 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.16.7",
     "@rails/activestorage": "^6.1.4",
-    "@rails/ujs": "^6.1.4",
+    "@rails/ujs": "^6.1.5",
     "@rails/webpacker": "5.4.3",
     "@sentry/browser": "5.29.0",
     "@sentry/integrations": "^5.29.0",
