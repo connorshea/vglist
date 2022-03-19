@@ -1,5 +1,6 @@
 # typed: strict
 require 'set'
+require 'net/http'
 
 class SteamImportService
   extend T::Sig
@@ -25,15 +26,20 @@ class SteamImportService
   def call
     raise Error, 'No Steam account.' if steam_account.nil?
 
-    json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
+    uri = URI(steam_api_url)
+    response = Net::HTTP.get_response(uri)
 
+    raise Error, 'Steam API Request failed.' unless response.is_a?(Net::HTTPSuccess)
+
+    json = JSON.parse(response.body)
     games = json.dig('response', 'games')
 
     raise NoGamesError if games.nil?
 
     blocklisted_steam_app_ids = T.let(SteamBlocklist.pluck(:steam_app_id), T::Array[Integer])
 
-    games.reject! { |game| game['img_logo_url'].blank? }
+    # Filter out games with no icon, as they tend to be random server software and such.
+    games.reject! { |game| game['img_icon_url'].blank? }
 
     # The Steam IDs for all games that were just imported from Steam.
     steam_ids = T.let(games.map { |g| g['appid'].to_i }.uniq, T::Array[Integer])
