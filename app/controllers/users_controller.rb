@@ -125,6 +125,15 @@ class UsersController < ApplicationController
         return
       end
     end
+  rescue SteamImportService::Error
+    # If the API request errors, return a generic error message.
+    respond_to do |format|
+      format.html do
+        flash[:error] = "Steam API Request failed."
+        redirect_to settings_import_path
+        return
+      end
+    end
   end
 
   def connect_steam
@@ -132,8 +141,9 @@ class UsersController < ApplicationController
     authorize @user
 
     # Resolve the numerical Steam ID based on the provided username.
-    steam_api_url = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{params[:steam_username]}"
-    json = JSON.parse(T.must(T.must(URI.open(steam_api_url)).read))
+    uri = URI("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{params[:steam_username]}")
+    response = Net::HTTP.get_response(uri)
+    json = JSON.parse(response.body)
 
     steam_id = json.dig("response", "steamid")
 
