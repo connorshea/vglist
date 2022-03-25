@@ -98,7 +98,7 @@ namespace :import do
 
     games.each do |game|
       progress_bar.log "#{game[:name].ljust(40)} | Adding cover..."
-      api_url = "https://www.pcgamingwiki.com/w/api.php?action=askargs&conditions=#{game[:pcgamingwiki_id].gsub('&', '%26')}&printouts=Cover&format=json"
+      api_url = "https://www.pcgamingwiki.com/w/api.php?action=cargoquery&format=json&tables=Infobox_game&fields=Infobox_game.Cover_URL&where=Infobox_game._pageName%3D\"#{game[:pcgamingwiki_id].gsub('"', '%22')}\""
 
       unless api_url.ascii_only?
         progress_bar.log "#{game[:name].ljust(40)} | URL cannot contain non-ASCII characters: #{api_url}."
@@ -125,16 +125,15 @@ namespace :import do
 
       json = JSON.parse(res.body)
 
-      json = json.dig('query', 'results')
-      if json.nil? || json.blank?
+      json = json.dig('cargoquery', 0)
+      if json.nil?
         progress_bar.log "#{game[:name].ljust(40)} | Not finding any covers, skipping."
         cover_not_found_or_errored_count += 1
         progress_bar.increment
         next
       end
 
-      # We don't know the key for the game name, so we just use the first key in the hash (generally there's only one key so this should be fine)
-      cover_url = json.dig(json.keys.first, 'printouts', 'Cover').first
+      cover_url = json.dig('title', 'Cover URL')
 
       if cover_url.nil?
         progress_bar.log "#{game[:name].ljust(40)} | Not finding any covers, skipping."
@@ -151,10 +150,6 @@ namespace :import do
         # Exit early if the game's cover URL is invalid.
         next
       end
-
-      # The cover URL is returned from the API like //pcgamingwiki.com/images/whatever.png,
-      # so we need to turn it into a valid URL.
-      cover_url = "https:#{cover_url}" unless cover_url.start_with?('https:')
 
       # Catch the error if the PCGamingWiki cover image doesn't actually exist.
       begin
