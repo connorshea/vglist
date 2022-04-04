@@ -2626,10 +2626,10 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
-codemirror-graphql@^1.2.14:
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-1.2.14.tgz#069df62347a1db5aca6a1a74ad2f933392d2a6b9"
-  integrity sha512-zt2N0sZgaZZUOp8eTNIy2d364gGKjtAu0PKHMjQqogB2S4KrD/z/wICCjRf0JXskPM8jN/kNqufhHt59UKf6gQ==
+codemirror-graphql@^1.2.15:
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-1.2.15.tgz#0a7ba091ee429763aa31075e1c06ce1ed29a655f"
+  integrity sha512-srON9VHCaVt6VoZm2m7Qgy0EUNCUgD50Lc3HRtHpyoi1HRjN9dAens6KlQPjv5uJrpuYLGkhwiYjh92zLfSyiA==
   dependencies:
     "@codemirror/stream-parser" "^0.19.2"
     graphql-language-service "^5.0.1"
@@ -4175,20 +4175,20 @@ graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphiql@1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.8.0.tgz#8d0c439b9f0a3e43c634b35486ade98e827dfad5"
-  integrity sha512-Dw6e/qNTi+91r1r2VdLUBKTP3gvpJeIfRqapAHtxmOpABesH4zRhW5iYwxwFUURZoIJkfqHtGBrURzrrVX2LVA==
+graphiql@1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.8.3.tgz#4696755cbba851c93aea9deacbcf4229044a705d"
+  integrity sha512-3qb3jdlzg8nqQCRMnch6lG11royrE6etP2eoDKLxdrSpdaxI0PgNNttbMAJJYfsqEJ0XHcXtUDt1jH6jkKOK4Q==
   dependencies:
     "@graphiql/toolkit" "^0.4.2"
     codemirror "^5.58.2"
-    codemirror-graphql "^1.2.14"
+    codemirror-graphql "^1.2.15"
     copy-to-clipboard "^3.2.0"
-    dset "^3.1.0"
     entities "^2.0.0"
     escape-html "^1.0.3"
     graphql-language-service "^5.0.1"
     markdown-it "^12.2.0"
+    set-value "^4.1.0"
 
 graphql-config@^4.1.0:
   version "4.1.0"
@@ -4878,6 +4878,11 @@ is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   integrity sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==
   dependencies:
     isobject "^3.0.1"
+
+is-primitive@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/is-primitive/-/is-primitive-3.0.1.tgz#98c4db1abff185485a657fc2905052b940524d05"
+  integrity sha512-GljRxhWvlCNRfZyORiH77FwdFwGcMO620o37EOYC0ORWdq+WYNVqW0w2Juzew4M+L81l6/QS3t5gkkihyRqv9w==
 
 is-regex@^1.0.4:
   version "1.1.1"
@@ -7477,6 +7482,14 @@ set-value@^2.0.0, set-value@^2.0.1:
     is-extendable "^0.1.1"
     is-plain-object "^2.0.3"
     split-string "^3.0.1"
+
+set-value@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/set-value/-/set-value-4.1.0.tgz#aa433662d87081b75ad88a4743bd450f044e7d09"
+  integrity sha512-zTEg4HL0RwVrqcWs3ztF+x1vkxfm0lP+MQQFPiMJTKVceBwEV0A569Ou8l9IYQG8jOZdMVI1hGsc0tmeD2o/Lw==
+  dependencies:
+    is-plain-object "^2.0.4"
+    is-primitive "^3.0.1"
 
 setimmediate@^1.0.4:
   version "1.0.5"
