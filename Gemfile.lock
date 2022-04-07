@@ -210,7 +210,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.15.0)
-    msgpack (1.5.0)
+    msgpack (1.5.1)
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
     nio4r (2.5.8)
