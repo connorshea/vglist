@@ -1197,10 +1197,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
-"@graphiql/toolkit@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@graphiql/toolkit/-/toolkit-0.4.2.tgz#34de819add64672f3f7d4830dffb2094fb8d5366"
-  integrity sha512-14uG67QrONbRrhXwvBJFsMfcQfexmGhj7dgkputesx9xuPUkcCDNmVULnVA8sGYt8P/rSvjkfQYx3rtfW+GhAQ==
+"@graphiql/toolkit@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@graphiql/toolkit/-/toolkit-0.4.3.tgz#2653d045693d902f7faaf87b9047e8786397ec48"
+  integrity sha512-L0l6BezvTXmWZhtdmZxirhYwKzcZToAciQY0A13KRAWSpJ9bb/ZdkBpcz3fOXrsjuJHf0wBr6Vk9kztJ6lV7uA==
   dependencies:
     "@n1ru4l/push-pull-async-iterable-iterator" "^3.1.0"
     meros "^1.1.4"
@@ -4175,12 +4175,12 @@ graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphiql@1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.8.3.tgz#4696755cbba851c93aea9deacbcf4229044a705d"
-  integrity sha512-3qb3jdlzg8nqQCRMnch6lG11royrE6etP2eoDKLxdrSpdaxI0PgNNttbMAJJYfsqEJ0XHcXtUDt1jH6jkKOK4Q==
+graphiql@1.8.4:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.8.4.tgz#3a447eae85d839eb207a07fc3aabc6f3a10df46d"
+  integrity sha512-mEYtfympvlZ4E1VMEMZ0BG3NCLA9L69EEbnpHpAA12oWz3aul4HXWl59JS0aHZftyiPx1/gHjSsjctkhbazT9g==
   dependencies:
-    "@graphiql/toolkit" "^0.4.2"
+    "@graphiql/toolkit" "^0.4.3"
     codemirror "^5.58.2"
     codemirror-graphql "^1.2.15"
     copy-to-clipboard "^3.2.0"
