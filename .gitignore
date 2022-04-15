@@ -59,3 +59,4 @@ sorbet/rbi/hidden-definitions/errors.txt
 /spoom_report.html
 
 /vendor/*
+.env
