@@ -11,6 +11,7 @@
           <th>Service Name</th>
           <th>Service ID</th>
           <th>Game Name</th>
+          <th>Wikidata Actions</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -21,7 +22,17 @@
             <td><%= unmatched_game.external_service_name %></td>
             <td><%= unmatched_game.external_service_id %></td>
             <td><%= unmatched_game.name %></td>
-            <td>ACTION BUTTONS GO HERE</td>
+            <td>
+              <%= link_to 'Search', "https://www.wikidata.org/w/index.php?search=#{ERB::Util.url_encode(unmatched_game.name)}" %>
+              <%= link_to 'Create', "https://www.wikidata.org/w/index.php?title=Special:NewItem&label=#{ERB::Util.url_encode(unmatched_game.name)}&description=video+game" %>
+            </td>
+            <td>
+              <% if unmatched_game.external_service_name == 'Steam' %>
+                <%= link_to 'Add to blocklist', admin_new_steam_blocklist_path(name: unmatched_game.name, steam_app_id: unmatched_game.external_service_id), target: "_blank" %>
+              <% end %>
+              <%# TODO: Make this Delete button work. %>
+              <%= link_to 'Delete', '/' %>
+            </td>
           </tr>
         <% end %>
       </tbody>
