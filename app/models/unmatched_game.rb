@@ -9,4 +9,12 @@ class UnmatchedGame < ApplicationRecord
   validates :user_id, uniqueness: {
     scope: [:external_service_id, :external_service_name]
   }
+
+  # Use the same length limit as Game#name.
+  validates :name,
+    presence: true,
+    length: { maximum: 120 }
+
+  validates :external_service_id, presence: true
+  validates :external_service_name, presence: true, inclusion: { in: ['Steam'] }
 end
