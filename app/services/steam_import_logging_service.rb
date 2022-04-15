@@ -19,8 +19,6 @@ class SteamImportLoggingService
     @unmatched_from_import = unmatched_from_import
   end
 
-  class Error < StandardError; end
-
   sig { void }
   def call
     unmatched_from_import.each do |unmatched_game_struct|
