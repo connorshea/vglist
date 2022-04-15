@@ -6,9 +6,8 @@ class Admin::UnmatchedGamesController < ApplicationController
     authorize nil, policy_class: Admin::UnmatchedGamesPolicy
     skip_policy_scope
 
-    @unmatched_games = UnmatchedGame.all
-                                    .includes(:user)
-                                    .page helpers.page_param
+    @unmatched_games = Views::GroupedUnmatchedGame.where(external_service_name: 'Steam')
+                                                  .page helpers.page_param
   end
 end
 
