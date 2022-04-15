@@ -1,0 +1,39 @@
+<% content_for :title, "Unmatched Games" %>
+
+<div class="ml-50 mr-50 mr-0-mobile ml-0-mobile">
+  <%= render 'admin/admin_header' %>
+
+  <div class="table-container">
+    <table class="table is-striped is-narrow is-bordered is-fullwidth">
+      <thead>
+        <tr>
+          <th style="min-width: 250px;">Date</th>
+          <th>Service Name</th>
+          <th>Service ID</th>
+          <th>Game Name</th>
+          <th>User</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @unmatched_games.each do |unmatched_game| %>
+          <tr>
+            <td><%= unmatched_game.created_at.strftime("%b %e, %Y %l:%M:%S %p") %></td>
+            <td><%= unmatched_game.external_service_name %></td>
+            <td><%= unmatched_game.external_service_id %></td>
+            <td><%= unmatched_game.name %></td>
+            <td>
+              <%# User can be null, so check for presence first. %>
+              <% if unmatched_game.user.present? %>
+                <%= link_to unmatched_game.user.username, user_path(unmatched_game.user) %>
+              <% end %>
+            </td>
+            <td>ACTION BUTTONS GO HERE</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= paginate @unmatched_games %>
+</div>

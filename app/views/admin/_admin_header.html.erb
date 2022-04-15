@@ -12,5 +12,8 @@
     <li class="<%= 'is-active' if current_page?(admin_games_without_wikidata_ids_path) %>">
       <%= link_to 'Games Without Wikidata IDs', admin_games_without_wikidata_ids_path %>
     </li>
+    <li class="<%= 'is-active' if current_page?(admin_unmatched_games_path) %>">
+      <%= link_to 'Unmatched Games', admin_unmatched_games_path %>
+    </li>
   </ul>
 </div>
