@@ -14,4 +14,9 @@ class Admin::UnmatchedGamesPolicy < ApplicationPolicy
   def index?
     user&.admin? || false
   end
+
+  sig { returns(T::Boolean) }
+  def destroy?
+    user&.admin? || false
+  end
 end

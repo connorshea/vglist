@@ -72,7 +72,7 @@ Rails.application.routes.draw do
 
     get :games_without_wikidata_ids
 
-    resources :unmatched_games, only: :index
+    resources :unmatched_games, param: :external_service_id, only: [:index, :destroy]
   end
 
   resources :events, only: :destroy

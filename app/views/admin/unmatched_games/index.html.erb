@@ -30,8 +30,7 @@
               <% if unmatched_game.external_service_name == 'Steam' %>
                 <%= link_to 'Add to blocklist', admin_new_steam_blocklist_path(name: unmatched_game.name, steam_app_id: unmatched_game.external_service_id), target: "_blank" %>
               <% end %>
-              <%# TODO: Make this Delete button work. %>
-              <%= link_to 'Delete', '/' %>
+              <%= link_to 'Delete', admin_unmatched_game_path(external_service_id: unmatched_game.external_service_id, external_service_name: unmatched_game.external_service_name), method: :delete, data: { confirm: 'Are you sure?' } %>
             </td>
           </tr>
         <% end %>
