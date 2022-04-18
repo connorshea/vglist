@@ -25,6 +25,9 @@ module VideoGameList
     # Initialize configuration defaults for Rails 6.0.
     config.load_defaults 6.0
 
+    # Use structure.sql because we have SQL views, and the schema.rb doesn't support those.
+    config.active_record.schema_format = :sql
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
