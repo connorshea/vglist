@@ -111,7 +111,12 @@ class Puma::Client
   def write_chunk(str); end
 end
 
+Puma::Client::ALLOWED_TRANSFER_ENCODING = T.let(T.unsafe(nil), Array)
+Puma::Client::CHUNK_SIZE_INVALID = T.let(T.unsafe(nil), Regexp)
+Puma::Client::CHUNK_VALID_ENDING = T.let(T.unsafe(nil), String)
+Puma::Client::CONTENT_LENGTH_VALUE_INVALID = T.let(T.unsafe(nil), Regexp)
 Puma::Client::EmptyBody = T.let(T.unsafe(nil), Puma::NullIO)
+Puma::Client::TE_ERR_MSG = T.let(T.unsafe(nil), String)
 
 class Puma::Cluster < ::Puma::Runner
   def initialize(cli, events); end
@@ -485,6 +490,7 @@ class Puma::HttpParser
 end
 
 class Puma::HttpParserError < ::IOError; end
+class Puma::HttpParserError501 < ::IOError; end
 
 class Puma::IOBuffer < ::String
   def append(*args); end

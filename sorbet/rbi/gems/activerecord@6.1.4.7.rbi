@@ -6167,6 +6167,10 @@ class ActiveRecord::Scoping::ScopeRegistry
   private
 
   def raise_invalid_scope_type!(scope_type); end
+
+  class << self
+    def value_for(*_arg0, &_arg1); end
+  end
 end
 
 ActiveRecord::Scoping::ScopeRegistry::VALID_SCOPE_TYPES = T.let(T.unsafe(nil), Array)

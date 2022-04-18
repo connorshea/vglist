@@ -204,6 +204,7 @@ module Sentry
     def registered_patches; end
     def sdk_meta; end
     def send_event(*args); end
+    def session_flusher; end
     def set_context(*args); end
     def set_extras(*args); end
     def set_tags(*args); end
@@ -214,6 +215,7 @@ module Sentry
     def use_relative_model_naming?; end
     def utc_now; end
     def with_scope(&block); end
+    def with_session_tracking(&block); end
   end
 end
 
@@ -352,6 +354,8 @@ class Sentry::Configuration
   def app_dirs_pattern=(_arg0); end
   def async; end
   def async=(value); end
+  def auto_session_tracking; end
+  def auto_session_tracking=(_arg0); end
   def background_worker_threads; end
   def background_worker_threads=(_arg0); end
   def backtrace_cleanup_callback; end
@@ -484,8 +488,11 @@ Sentry::DSN::REQUIRED_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 class Sentry::DummyTransport < ::Sentry::Transport
   def initialize(*_arg0); end
 
+  def envelopes; end
+  def envelopes=(_arg0); end
   def events; end
   def events=(_arg0); end
+  def send_envelope(envelope); end
   def send_event(event); end
 end
 
@@ -499,7 +506,6 @@ class Sentry::Envelope
   def item_types; end
   def items; end
   def items=(_arg0); end
-  def to_s; end
 end
 
 class Sentry::Envelope::Item
@@ -578,6 +584,7 @@ class Sentry::Event
 end
 
 Sentry::Event::MAX_MESSAGE_SIZE_IN_BYTES = T.let(T.unsafe(nil), Integer)
+Sentry::Event::MAX_SERIALIZED_PAYLOAD_SIZE = T.let(T.unsafe(nil), Integer)
 Sentry::Event::SERIALIZEABLE_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 Sentry::Event::SKIP_INSPECTION_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 Sentry::Event::WRITER_ATTRIBUTES = T.let(T.unsafe(nil), Array)
@@ -632,13 +639,16 @@ class Sentry::Hub
   def configure_scope(&block); end
   def current_client; end
   def current_scope; end
+  def end_session; end
   def last_event_id; end
   def new_from_top; end
   def pop_scope; end
   def push_scope; end
+  def start_session; end
   def start_transaction(transaction: T.unsafe(nil), custom_sampling_context: T.unsafe(nil), **options); end
   def with_background_worker_disabled(&block); end
   def with_scope(&block); end
+  def with_session_tracking(&block); end
 
   private
 
@@ -826,6 +836,7 @@ class Sentry::Scope
   def get_transaction; end
   def level; end
   def rack_env; end
+  def session; end
   def set_context(key, value); end
   def set_contexts(contexts_hash); end
   def set_extra(key, value); end
@@ -833,6 +844,7 @@ class Sentry::Scope
   def set_fingerprint(fingerprint); end
   def set_level(level); end
   def set_rack_env(env); end
+  def set_session(session); end
   def set_span(span); end
   def set_tag(key, value); end
   def set_tags(tags_hash); end
@@ -855,6 +867,7 @@ class Sentry::Scope
   def fingerprint=(_arg0); end
   def level=(_arg0); end
   def rack_env=(_arg0); end
+  def session=(_arg0); end
   def span=(_arg0); end
   def tags=(_arg0); end
   def transaction_names=(_arg0); end
@@ -872,6 +885,39 @@ class Sentry::Scope
 end
 
 Sentry::Scope::ATTRIBUTES = T.let(T.unsafe(nil), Array)
+
+class Sentry::Session
+  def initialize; end
+
+  def aggregation_key; end
+  def close; end
+  def deep_dup; end
+  def started; end
+  def status; end
+  def update_from_exception(_exception = T.unsafe(nil)); end
+end
+
+Sentry::Session::AGGREGATE_STATUSES = T.let(T.unsafe(nil), Array)
+Sentry::Session::STATUSES = T.let(T.unsafe(nil), Array)
+
+class Sentry::SessionFlusher
+  include ::Sentry::LoggingHelper
+
+  def initialize(configuration, client); end
+
+  def add_session(session); end
+  def flush; end
+  def kill; end
+
+  private
+
+  def attrs; end
+  def ensure_thread; end
+  def init_aggregates(aggregation_key); end
+  def pending_envelope; end
+end
+
+Sentry::SessionFlusher::FLUSH_INTERVAL = T.let(T.unsafe(nil), Integer)
 
 class Sentry::SingleExceptionInterface < ::Sentry::Interface
   include ::Sentry::CustomInspection
@@ -1099,6 +1145,7 @@ class Sentry::Transport
   def send_data(data, options = T.unsafe(nil)); end
   def send_envelope(envelope); end
   def send_event(event); end
+  def serialize_envelope(envelope); end
 
   private
 

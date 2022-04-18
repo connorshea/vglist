@@ -36,6 +36,7 @@ module Sentry
     def registered_patches; end
     def sdk_meta; end
     def send_event(*args); end
+    def session_flusher; end
     def set_context(*args); end
     def set_extras(*args); end
     def set_tags(*args); end
@@ -46,6 +47,7 @@ module Sentry
     def use_relative_model_naming?; end
     def utc_now; end
     def with_scope(&block); end
+    def with_session_tracking(&block); end
   end
 end
 
@@ -61,6 +63,8 @@ class Sentry::Configuration
   def app_dirs_pattern=(_arg0); end
   def async; end
   def async=(value); end
+  def auto_session_tracking; end
+  def auto_session_tracking=(_arg0); end
   def background_worker_threads; end
   def background_worker_threads=(_arg0); end
   def backtrace_cleanup_callback; end

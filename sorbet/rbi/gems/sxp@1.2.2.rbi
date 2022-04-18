@@ -162,6 +162,7 @@ end
 
 RDF::Literal::Double::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
 RDF::Literal::Double::GRAMMAR = T.let(T.unsafe(nil), Regexp)
+RDF::Literal::Double::PI = T.let(T.unsafe(nil), RDF::Literal::Double)
 RDF::Literal::FALSE = T.let(T.unsafe(nil), RDF::Literal::Boolean)
 RDF::Literal::TRUE = T.let(T.unsafe(nil), RDF::Literal::Boolean)
 RDF::Literal::ZERO = T.let(T.unsafe(nil), RDF::Literal::Integer)

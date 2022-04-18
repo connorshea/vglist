@@ -379,15 +379,11 @@ GraphQL::Execution::DirectiveChecks::INCLUDE = T.let(T.unsafe(nil), String)
 GraphQL::Execution::DirectiveChecks::SKIP = T.let(T.unsafe(nil), String)
 
 class GraphQL::Execution::Errors
-  def initialize(schema); end
-
-  def each_rescue; end
-  def find_handler_for(error_class); end
-  def rescue_from(error_class, error_handler); end
-  def with_error_handling(ctx); end
+  class << self
+    def find_handler_for(schema, error_class); end
+    def register_rescue_from(error_class, error_handlers, error_handler); end
+  end
 end
-
-GraphQL::Execution::Errors::NEW_HANDLER_HASH = T.let(T.unsafe(nil), Proc)
 
 module GraphQL::Execution::Instrumentation
   class << self
@@ -2111,6 +2107,7 @@ class GraphQL::Query
   def fragments; end
   def get_field(*args, &block); end
   def get_type(*args, &block); end
+  def handle_or_reraise(err); end
   def inspect; end
   def interpreter?; end
   def lookahead; end
@@ -2153,7 +2150,6 @@ class GraphQL::Query
   def variables; end
   def variables_fingerprint; end
   def warden; end
-  def with_error_handling; end
 
   private
 
@@ -2271,10 +2267,7 @@ class GraphQL::Query::NullContext
   end
 end
 
-class GraphQL::Query::NullContext::NullQuery
-  def with_error_handling; end
-end
-
+class GraphQL::Query::NullContext::NullQuery; end
 class GraphQL::Query::NullContext::NullSchema < ::GraphQL::Schema; end
 
 class GraphQL::Query::NullContext::NullWarden < ::GraphQL::Schema::Warden
@@ -2365,7 +2358,7 @@ class GraphQL::Railtie < ::Rails::Railtie; end
 module GraphQL::Relay; end
 
 class GraphQL::Relay::RangeAdd
-  def initialize(collection:, item:, parent: T.unsafe(nil), context: T.unsafe(nil), edge_class: T.unsafe(nil)); end
+  def initialize(collection:, item:, context:, parent: T.unsafe(nil), edge_class: T.unsafe(nil)); end
 
   def connection; end
   def edge; end
@@ -2413,7 +2406,7 @@ class GraphQL::Schema
     def disable_type_introspection_entry_point?; end
     def error_bubbling(new_error_bubbling = T.unsafe(nil)); end
     def error_bubbling=(_arg0); end
-    def error_handler; end
+    def error_handlers; end
     def execute(query_str = T.unsafe(nil), **kwargs); end
     def find(path); end
     def from_definition(definition_or_path, default_resolve: T.unsafe(nil), parser: T.unsafe(nil), using: T.unsafe(nil)); end
@@ -2421,6 +2414,7 @@ class GraphQL::Schema
     def get_field(type_or_name, field_name, context = T.unsafe(nil)); end
     def get_fields(type, context = T.unsafe(nil)); end
     def get_type(type_name, context = T.unsafe(nil)); end
+    def handle_or_reraise(context, err); end
     def id_from_object(object, type, ctx); end
     def inaccessible_fields(error); end
     def inherited(child_class); end
@@ -2840,7 +2834,7 @@ class GraphQL::Schema::Field
   def owner=(_arg0); end
   def owner_type; end
   def relay_node_field; end
-  def resolve(object, args, ctx); end
+  def resolve(object, args, query_ctx); end
   def resolver; end
   def resolver_method; end
   def scoped?; end
@@ -2854,7 +2848,6 @@ class GraphQL::Schema::Field
   private
 
   def assert_satisfactory_implementation(receiver, method_name, ruby_kwargs); end
-  def public_send_field(unextended_obj, unextended_ruby_kwargs, query_ctx); end
   def run_extensions_before_resolve(obj, args, ctx, extended, idx: T.unsafe(nil)); end
   def with_extensions(obj, args, ctx); end
 
@@ -3266,6 +3259,11 @@ module GraphQL::Schema::Member::RelayShortcuts
   def connection_type_class(new_connection_type_class = T.unsafe(nil)); end
   def edge_type; end
   def edge_type_class(new_edge_type_class = T.unsafe(nil)); end
+
+  protected
+
+  def configured_connection_type_class; end
+  def configured_edge_type_class; end
 end
 
 module GraphQL::Schema::Member::Scoped
@@ -3368,6 +3366,7 @@ class GraphQL::Schema::RelayClassicMutation < ::GraphQL::Schema::Mutation
   def authorize_arguments(args, values); end
 
   class << self
+    def all_field_argument_definitions; end
     def argument(*args, own_argument: T.unsafe(nil), **kwargs, &block); end
     def dummy; end
     def field_arguments(context = T.unsafe(nil)); end
@@ -3414,6 +3413,7 @@ class GraphQL::Schema::Resolver
   def load_arguments(args); end
 
   class << self
+    def all_field_argument_definitions; end
     def argument(*args, **kwargs, &block); end
     def broadcastable(new_broadcastable); end
     def broadcastable?; end
@@ -3426,7 +3426,6 @@ class GraphQL::Schema::Resolver
     def has_max_page_size?; end
     def max_page_size(new_max_page_size = T.unsafe(nil)); end
     def null(allow_null = T.unsafe(nil)); end
-    def own_field_arguments; end
     def resolve_method(new_method = T.unsafe(nil)); end
     def resolver_method(new_method_name = T.unsafe(nil)); end
     def type(new_type = T.unsafe(nil), null: T.unsafe(nil)); end
@@ -5003,8 +5002,6 @@ module GraphQL::Types::Relay::ConnectionBehaviors
   mixes_in_class_methods ::GraphQL::Types::Relay::DefaultRelay
 
   def cursor_from_node(*args, &block); end
-  def edges; end
-  def nodes; end
   def parent(*args, &block); end
 
   class << self

@@ -1122,12 +1122,14 @@ RDF::Query::Solution::INSTANCE_METHODS = T.let(T.unsafe(nil), Array)
 class RDF::Query::Solutions < ::Array
   include ::SPARQL::Results
 
+  def ==(other); end
   def bindings; end
   def count(&block); end
   def distinct; end
   def distinct!; end
   def dup; end
   def each_solution; end
+  def eql?(other); end
   def filter(expression = T.unsafe(nil), &block); end
   def filter!(expression = T.unsafe(nil), &block); end
   def filter_without_expression(criteria = T.unsafe(nil)); end
@@ -1147,6 +1149,7 @@ class RDF::Query::Solutions < ::Array
   def select(*variables); end
   def variable?(*args); end
   def variable_names; end
+  def variable_names=(vars); end
   def variables?(*args); end
 end
 

@@ -79,6 +79,7 @@ class PG::BasicTypeRegistry
   def coders_for(format, direction); end
   def define_default_types; end
   def register_coder(coder); end
+  def register_default_types; end
   def register_type(format, name, encoder_class, decoder_class); end
 
   class << self

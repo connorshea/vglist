@@ -101,6 +101,10 @@ class ActiveStorageValidations::Matchers::ContentTypeValidatorMatcher
   def rejected_types_rejected?; end
   def responds_to_methods; end
   def type_allowed?(type); end
+
+  private
+
+  def content_type_keys; end
 end
 
 class ActiveStorageValidations::Matchers::DimensionValidatorMatcher
@@ -165,7 +169,9 @@ class ActiveStorageValidations::Metadata
   def initialize(file); end
 
   def file; end
+  def image_processor; end
   def metadata; end
+  def require_image_processor; end
 
   private
 
@@ -173,6 +179,7 @@ class ActiveStorageValidations::Metadata
   def read_file_path; end
   def read_image; end
   def rotated_image?(image); end
+  def valid_image?(image); end
 end
 
 class ActiveStorageValidations::Railtie < ::Rails::Railtie; end

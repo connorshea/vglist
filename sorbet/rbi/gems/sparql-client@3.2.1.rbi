@@ -61,7 +61,7 @@ class SPARQL::Client
     def parse_json_bindings(json, nodes = T.unsafe(nil)); end
     def parse_json_value(value, nodes = T.unsafe(nil)); end
     def parse_tsv_bindings(tsv, nodes = T.unsafe(nil)); end
-    def parse_xml_bindings(xml, nodes = T.unsafe(nil)); end
+    def parse_xml_bindings(xml, nodes = T.unsafe(nil), library: T.unsafe(nil)); end
     def parse_xml_value(value, nodes = T.unsafe(nil)); end
     def serialize_patterns(patterns, use_vars = T.unsafe(nil)); end
     def serialize_predicate(value, rdepth = T.unsafe(nil)); end
