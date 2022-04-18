@@ -20,7 +20,13 @@
           <tr>
             <td><%= unmatched_game.count %></td>
             <td><%= unmatched_game.external_service_name %></td>
-            <td><%= unmatched_game.external_service_id %></td>
+            <td>
+              <% if unmatched_game.external_service_name == 'Steam' %>
+                <%= link_to unmatched_game.external_service_id, "https://store.steampowered.com/app/#{unmatched_game.external_service_id}", target: "_blank" %>
+              <% else %>
+                <%= unmatched_game.external_service_id %>
+              <% end %>
+            </td>
             <td><%= unmatched_game.name %></td>
             <td>
               <%= link_to 'Search', "https://www.wikidata.org/w/index.php?search=#{ERB::Util.url_encode(unmatched_game.name)}", target: "_blank" %>
