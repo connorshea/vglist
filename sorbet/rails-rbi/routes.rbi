@@ -460,6 +460,20 @@ module GeneratedUrlHelpers
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def admin_games_without_wikidata_ids_url(*args, **kwargs); end
 
+  # Sigs for route /admin/unmatched_games(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_unmatched_games_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_unmatched_games_url(*args, **kwargs); end
+
+  # Sigs for route /admin/unmatched_games/:external_service_id(.:format)
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_unmatched_game_path(*args, **kwargs); end
+
+  sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
+  def admin_unmatched_game_url(*args, **kwargs); end
+
   # Sigs for route /events/:id(.:format)
   sig { params(args: T.untyped, kwargs: T.untyped).returns(String) }
   def event_path(*args, **kwargs); end
