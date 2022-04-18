@@ -57,6 +57,7 @@ RSpec.describe "Site Statistics API", type: :request do
                 gamesWithCovers
                 gamesWithReleaseDates
                 bannedUsers
+                unmatchedGames
                 mobygamesIds
                 pcgamingwikiIds
                 wikidataIds
@@ -96,6 +97,7 @@ RSpec.describe "Site Statistics API", type: :request do
             gamesWithCovers: statistic.games_with_covers,
             gamesWithReleaseDates: statistic.games_with_release_dates,
             bannedUsers: statistic.banned_users,
+            unmatchedGames: statistic.unmatched_games,
             mobygamesIds: statistic.mobygames_ids,
             pcgamingwikiIds: statistic.pcgamingwiki_ids,
             wikidataIds: statistic.wikidata_ids,

@@ -29,6 +29,7 @@ module Types
     field :games_with_covers, Integer, null: false, description: "The number of Games with covers at this point in time."
     field :games_with_release_dates, Integer, null: false, description: "The number of Games with release dates at this point in time."
     field :banned_users, Integer, null: false, description: "The number of Banned Users at this point in time."
+    field :unmatched_games, Integer, null: true, description: "The number of Unmatched Games collected via imports from external services (e.g. Steam) at this point in time."
 
     # External IDs
     field :mobygames_ids, Integer, null: false, description: "The number of MobyGames IDs at this point in time."

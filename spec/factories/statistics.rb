@@ -15,6 +15,7 @@ FactoryBot.define do
     games_with_covers { rand(100_000) }
     games_with_release_dates { rand(100_000) }
     banned_users { rand(100_000) }
+    unmatched_games { rand(100_000) }
     mobygames_ids { rand(100_000) }
     pcgamingwiki_ids { rand(100_000) }
     wikidata_ids { rand(100_000) }

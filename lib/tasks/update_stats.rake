@@ -18,6 +18,7 @@ namespace :vglist do
         games_with_covers: Game.joins(:cover_attachment).count,
         games_with_release_dates: Game.where.not(release_date: nil).count,
         banned_users: User.where(banned: true).count,
+        unmatched_games: UnmatchedGame.count,
         mobygames_ids: Game.where.not(mobygames_id: nil).count,
         pcgamingwiki_ids: Game.where.not(pcgamingwiki_id: nil).count,
         wikidata_ids: Game.where.not(wikidata_id: nil).count,

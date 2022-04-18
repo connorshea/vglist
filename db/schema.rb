@@ -1,4 +1,4 @@
-# typed: false
+# false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_15_044554) do
+ActiveRecord::Schema.define(version: 2022_04_18_015453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -412,6 +412,7 @@ ActiveRecord::Schema.define(version: 2022_04_15_044554) do
     t.bigint "platform_versions"
     t.bigint "series_versions"
     t.bigint "igdb_ids"
+    t.bigint "unmatched_games"
   end
 
   create_table "steam_app_ids", force: :cascade do |t|

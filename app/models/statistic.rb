@@ -28,7 +28,8 @@ class Statistic < ApplicationRecord
     :genre_versions,
     :engine_versions,
     :platform_versions,
-    :series_versions
+    :series_versions,
+    :unmatched_games
   ].freeze
 
   validates(*STATISTICS, numericality: true)
