@@ -23,8 +23,8 @@
             <td><%= unmatched_game.external_service_id %></td>
             <td><%= unmatched_game.name %></td>
             <td>
-              <%= link_to 'Search', "https://www.wikidata.org/w/index.php?search=#{ERB::Util.url_encode(unmatched_game.name)}" %>
-              <%= link_to 'Create', "https://www.wikidata.org/w/index.php?title=Special:NewItem&label=#{ERB::Util.url_encode(unmatched_game.name)}&description=video+game" %>
+              <%= link_to 'Search', "https://www.wikidata.org/w/index.php?search=#{ERB::Util.url_encode(unmatched_game.name)}", target: "_blank" %>
+              <%= link_to 'Create', "https://www.wikidata.org/w/index.php?title=Special:NewItem&label=#{ERB::Util.url_encode(unmatched_game.name)}&description=video+game", target: "_blank" %>
             </td>
             <td>
               <% if unmatched_game.external_service_name == 'Steam' %>
