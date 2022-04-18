@@ -107,6 +107,9 @@ class SteamImportService
       Unmatched.new(name: game['name'], steam_id: game['appid'])
     end
 
+    # Log any unmatched games that we tried to import, for later.
+    SteamImportLoggingService.new(user: user, unmatched_from_import: unmatched).call
+
     Result.new(
       created: created_purchases,
       updated: updated_purchases,

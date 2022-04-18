@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_10_185728) do
+ActiveRecord::Schema.define(version: 2022_04_15_044554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -435,6 +435,19 @@ ActiveRecord::Schema.define(version: 2021_07_10_185728) do
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "unmatched_games", comment: "Games imported from a third party service, such as Steam, that we weren't able to match to a game in vglist.", force: :cascade do |t|
+    t.bigint "user_id", comment: "The ID of the user that tried to import this game, can be null if the user deleted their account."
+    t.text "external_service_id", comment: "The ID of the game on the external service, e.g. the Steam AppID."
+    t.text "external_service_name", comment: "The name of the service we're trying to import from, e.g. Steam."
+    t.text "name", comment: "The name of the game that was imported."
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["external_service_id", "external_service_name"], name: "index_unmatched_games_on_service_id_and_name"
+    t.index ["user_id", "external_service_id", "external_service_name"], name: "index_unmatched_games_on_game_per_user", unique: true, where: "(user_id IS NOT NULL)"
+    t.index ["user_id"], name: "index_unmatched_games_on_user_id"
+    t.check_constraint "external_service_name = 'Steam'::text", name: "validate_external_service_name"
   end
 
   create_table "users", force: :cascade do |t|

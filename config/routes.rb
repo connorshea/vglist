@@ -71,6 +71,8 @@ Rails.application.routes.draw do
     delete :remove_from_steam_blocklist, path: 'steam/:steam_app_id/remove'
 
     get :games_without_wikidata_ids
+
+    resources :unmatched_games, param: :external_service_id, only: [:index, :destroy]
   end
 
   resources :events, only: :destroy
