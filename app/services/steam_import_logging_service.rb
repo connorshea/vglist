@@ -25,7 +25,7 @@ class SteamImportLoggingService
       # Use find_or_create_by to ensure that we don't attempt to create one of
       # these and then error due to uniqueness checks.
       UnmatchedGame.create_with(
-        name: unmatched_game_struct.name,
+        name: unmatched_game_struct.name
       ).find_or_create_by(
         user_id: @user.id,
         external_service_id: unmatched_game_struct.steam_id,

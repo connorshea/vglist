@@ -1,7 +1,7 @@
 # typed: true
 class CreateGroupedUnmatchedGamesView < ActiveRecord::Migration[6.1]
   def up
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE OR REPLACE VIEW public.grouped_unmatched_games AS
         SELECT
           COUNT(*),

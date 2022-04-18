@@ -24,4 +24,3 @@ class Admin::UnmatchedGamesController < ApplicationController
     redirect_to admin_unmatched_games_url, success: "Unmatched game records were successfully deleted."
   end
 end
-
