@@ -59,6 +59,7 @@ test:
   <<: *default
   database: vglist_test
   # username: postgres
+  
   # password: <%= ENV['VGLIST_DATABASE_PASSWORD'] || 'password' %>
   
 
