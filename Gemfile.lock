@@ -226,7 +226,7 @@ GEM
       activerecord (>= 5.2)
       request_store (~> 1.1)
     parallel (1.22.1)
-    parlour (6.0.1)
+    parlour (7.0.0)
       commander (~> 4.5)
       parser
       rainbow (~> 3.0)
