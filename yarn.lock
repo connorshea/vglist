@@ -3869,22 +3869,16 @@ graphql-language-service@^5.0.0, graphql-language-service@^5.0.3:
     nullthrows "^1.0.0"
     vscode-languageserver-types "^3.15.1"
 
-graphql-schema-linter@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-2.0.1.tgz#fa76752fc9461721992b0e8e3c8660a29819759f"
-  integrity sha512-zCezfm0TRW+WhmI7WzVjZbaZrymij7gj4ipc3bqQFQnQLyzirUKKW365kIe7YWKOudnmNp9o1IYKFm1MM/R0zw==
+graphql-schema-linter@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-3.0.0.tgz#8e88afa994a75a21a0f6e217449c0d33d08ce092"
+  integrity sha512-nXsyFvcqrD9/QWgimvJjvRBsUXHw8O7XoPLhpnGZd9eX6r2ZXsOBCGhTzF9ZrFtWosCBEfBGU2xpFUPe0qCHVg==
   dependencies:
     chalk "^2.0.1"
     columnify "^1.5.4"
     commander "^3.0.0"
     cosmiconfig "^5.2.1"
     glob "^7.1.2"
-    graphql "^15.0.0"
-
-graphql@^15.0.0:
-  version "15.7.2"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.7.2.tgz#85ab0eeb83722977151b3feb4d631b5f2ab287ef"
-  integrity sha512-AnnKk7hFQFmU/2I9YSQf3xw44ctnSFCfp3zE0N6W174gqe9fWG/2rKaKxROK7CcI3XtERpjEKFqts8o319Kf7A==
 
 graphql@^16.4.0:
   version "16.4.0"
