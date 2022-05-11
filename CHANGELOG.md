@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2022.04.17
+### Added
+- Add UnmatchedGames for tracking Steam imports that fail to match a game in the database. ([#2633])
+
 ## v2021.12.28
 ### Changed
 - Upgrade to Ruby 3.0. ([#2420])
@@ -903,3 +907,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1976]: https://github.com/connorshea/vglist/pull/1976
 [#2171]: https://github.com/connorshea/vglist/pull/2171
 [#2420]: https://github.com/connorshea/vglist/pull/2420
+[#2633]: https://github.com/connorshea/vglist/pull/2633
