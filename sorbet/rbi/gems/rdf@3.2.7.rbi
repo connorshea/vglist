@@ -258,6 +258,9 @@ class RDF::Format
     def require(library); end
     def symbols; end
     def to_sym; end
+    def to_uri; end
+    def uri; end
+    def uris; end
     def writer(klass = T.unsafe(nil), &block); end
     def writer_class(klass = T.unsafe(nil), &block); end
     def writer_symbols; end
@@ -1499,7 +1502,7 @@ class RDF::Statement
   def to_h(subject_key = T.unsafe(nil), predicate_key = T.unsafe(nil), object_key = T.unsafe(nil), graph_key = T.unsafe(nil)); end
   def to_quad; end
   def to_s; end
-  def to_sparql(as_statement: T.unsafe(nil), **options); end
+  def to_sparql(**options); end
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
   def to_sxp_bin; end
   def to_triple; end

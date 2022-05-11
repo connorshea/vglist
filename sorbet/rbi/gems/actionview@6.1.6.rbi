@@ -1039,10 +1039,11 @@ class ActionView::Helpers::TagHelper::TagBuilder
   def p(*arguments, **options, &block); end
   def tag_option(key, value, escape); end
   def tag_options(options, escape = T.unsafe(nil)); end
-  def tag_string(name, content = T.unsafe(nil), escape_attributes: T.unsafe(nil), **options, &block); end
+  def tag_string(name, content = T.unsafe(nil), **options, &block); end
 
   private
 
+  def handle_deprecated_escape_options(options); end
   def method_missing(called, *args, **options, &block); end
   def prefix_tag_option(prefix, key, value, escape); end
   def respond_to_missing?(*args); end
@@ -1227,7 +1228,9 @@ class ActionView::Helpers::Tags::GroupedCollectionSelect < ::ActionView::Helpers
   def render; end
 end
 
-class ActionView::Helpers::Tags::HiddenField < ::ActionView::Helpers::Tags::TextField; end
+class ActionView::Helpers::Tags::HiddenField < ::ActionView::Helpers::Tags::TextField
+  def render; end
+end
 
 class ActionView::Helpers::Tags::Label < ::ActionView::Helpers::Tags::Base
   def initialize(object_name, method_name, template_object, content_or_options = T.unsafe(nil), options = T.unsafe(nil)); end
@@ -1446,6 +1449,7 @@ module ActionView::Helpers::UrlHelper
   def link_to_remote_options?(options); end
   def method_not_get_method?(method); end
   def method_tag(method); end
+  def remove_trailing_slash!(url_string); end
   def to_form_params(attribute, namespace = T.unsafe(nil)); end
   def token_tag(token = T.unsafe(nil), form_options: T.unsafe(nil)); end
 end
@@ -2435,7 +2439,6 @@ end
 module ActionView::VERSION; end
 ActionView::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionView::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionView::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionView::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionView::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

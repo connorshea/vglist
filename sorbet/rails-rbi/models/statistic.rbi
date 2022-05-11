@@ -260,6 +260,15 @@ module Statistic::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def stores?; end
 
+  sig { returns(T.nilable(Integer)) }
+  def unmatched_games; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def unmatched_games=(value); end
+
+  sig { returns(T::Boolean) }
+  def unmatched_games?; end
+
   sig { returns(ActiveSupport::TimeWithZone) }
   def updated_at; end
 
@@ -566,7 +575,7 @@ class Statistic::ActiveRecord_Relation < ActiveRecord::Relation
   include Statistic::ActiveRelation_WhereNot
   include Statistic::CustomFinderMethods
   include Statistic::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Statistic)
+  Elem = type_member {{fixed: Statistic}}
 
   sig { params(num: T.nilable(Integer)).returns(Statistic::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -585,7 +594,7 @@ class Statistic::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRel
   include Statistic::ActiveRelation_WhereNot
   include Statistic::CustomFinderMethods
   include Statistic::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Statistic)
+  Elem = type_member {{fixed: Statistic}}
 
   sig { params(num: T.nilable(Integer)).returns(Statistic::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -603,7 +612,7 @@ end
 class Statistic::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Statistic::CustomFinderMethods
   include Statistic::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Statistic)
+  Elem = type_member {{fixed: Statistic}}
 
   sig { params(records: T.any(Statistic, T::Array[Statistic])).returns(T.self_type) }
   def <<(*records); end

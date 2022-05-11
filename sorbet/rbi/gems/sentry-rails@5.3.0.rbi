@@ -46,6 +46,7 @@ module Sentry
     def table_name_prefix; end
     def use_relative_model_naming?; end
     def utc_now; end
+    def with_child_span(**attributes, &block); end
     def with_scope(&block); end
     def with_session_tracking(&block); end
   end
@@ -198,6 +199,8 @@ end
 class Sentry::Rails::Configuration
   def initialize; end
 
+  def register_error_subscriber; end
+  def register_error_subscriber=(_arg0); end
   def report_rescued_exceptions; end
   def report_rescued_exceptions=(_arg0); end
   def skippable_job_adapters; end

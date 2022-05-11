@@ -524,7 +524,7 @@ class Series::ActiveRecord_Relation < ActiveRecord::Relation
   include Series::ActiveRelation_WhereNot
   include Series::CustomFinderMethods
   include Series::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Series)
+  Elem = type_member {{fixed: Series}}
 
   sig { params(num: T.nilable(Integer)).returns(Series::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -543,7 +543,7 @@ class Series::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelati
   include Series::ActiveRelation_WhereNot
   include Series::CustomFinderMethods
   include Series::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Series)
+  Elem = type_member {{fixed: Series}}
 
   sig { params(num: T.nilable(Integer)).returns(Series::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -880,7 +880,7 @@ end
 class Series::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Series::CustomFinderMethods
   include Series::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Series)
+  Elem = type_member {{fixed: Series}}
 
   sig { params(records: T.any(Series, T::Array[Series])).returns(T.self_type) }
   def <<(*records); end

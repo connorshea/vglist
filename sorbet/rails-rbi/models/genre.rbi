@@ -602,7 +602,7 @@ class Genre::ActiveRecord_Relation < ActiveRecord::Relation
   include Genre::ActiveRelation_WhereNot
   include Genre::CustomFinderMethods
   include Genre::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Genre)
+  Elem = type_member {{fixed: Genre}}
 
   sig { params(num: T.nilable(Integer)).returns(Genre::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -621,7 +621,7 @@ class Genre::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
   include Genre::ActiveRelation_WhereNot
   include Genre::CustomFinderMethods
   include Genre::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Genre)
+  Elem = type_member {{fixed: Genre}}
 
   sig { params(num: T.nilable(Integer)).returns(Genre::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -970,7 +970,7 @@ end
 class Genre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Genre::CustomFinderMethods
   include Genre::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Genre)
+  Elem = type_member {{fixed: Genre}}
 
   sig { params(records: T.any(Genre, T::Array[Genre])).returns(T.self_type) }
   def <<(*records); end

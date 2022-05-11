@@ -168,6 +168,7 @@ end
 class ActiveStorageValidations::Metadata
   def initialize(file); end
 
+  def exception_class; end
   def file; end
   def image_processor; end
   def metadata; end

@@ -631,7 +631,7 @@ class GamePurchase::ActiveRecord_Relation < ActiveRecord::Relation
   include GamePurchase::ActiveRelation_WhereNot
   include GamePurchase::CustomFinderMethods
   include GamePurchase::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GamePurchase)
+  Elem = type_member {{fixed: GamePurchase}}
 
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_Relation) }
   def completed(*args); end
@@ -692,7 +692,7 @@ class GamePurchase::ActiveRecord_AssociationRelation < ActiveRecord::Association
   include GamePurchase::ActiveRelation_WhereNot
   include GamePurchase::CustomFinderMethods
   include GamePurchase::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchase)
+  Elem = type_member {{fixed: GamePurchase}}
 
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
   def completed(*args); end
@@ -752,7 +752,7 @@ end
 class GamePurchase::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include GamePurchase::CustomFinderMethods
   include GamePurchase::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchase)
+  Elem = type_member {{fixed: GamePurchase}}
 
   sig { params(args: T.untyped).returns(GamePurchase::ActiveRecord_AssociationRelation) }
   def completed(*args); end

@@ -292,7 +292,7 @@ class SteamBlocklist::ActiveRecord_Relation < ActiveRecord::Relation
   include SteamBlocklist::ActiveRelation_WhereNot
   include SteamBlocklist::CustomFinderMethods
   include SteamBlocklist::QueryMethodsReturningRelation
-  Elem = type_member(fixed: SteamBlocklist)
+  Elem = type_member {{fixed: SteamBlocklist}}
 
   sig { params(num: T.nilable(Integer)).returns(SteamBlocklist::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -311,7 +311,7 @@ class SteamBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::Associati
   include SteamBlocklist::ActiveRelation_WhereNot
   include SteamBlocklist::CustomFinderMethods
   include SteamBlocklist::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: SteamBlocklist)
+  Elem = type_member {{fixed: SteamBlocklist}}
 
   sig { params(num: T.nilable(Integer)).returns(SteamBlocklist::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -675,7 +675,7 @@ end
 class SteamBlocklist::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include SteamBlocklist::CustomFinderMethods
   include SteamBlocklist::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: SteamBlocklist)
+  Elem = type_member {{fixed: SteamBlocklist}}
 
   sig { params(records: T.any(SteamBlocklist, T::Array[SteamBlocklist])).returns(T.self_type) }
   def <<(*records); end

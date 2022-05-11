@@ -292,7 +292,7 @@ class UnmatchedGame::ActiveRecord_Relation < ActiveRecord::Relation
   include UnmatchedGame::ActiveRelation_WhereNot
   include UnmatchedGame::CustomFinderMethods
   include UnmatchedGame::QueryMethodsReturningRelation
-  Elem = type_member(fixed: UnmatchedGame)
+  Elem = type_member {{fixed: UnmatchedGame}}
 
   sig { params(num: T.nilable(Integer)).returns(UnmatchedGame::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -311,7 +311,7 @@ class UnmatchedGame::ActiveRecord_AssociationRelation < ActiveRecord::Associatio
   include UnmatchedGame::ActiveRelation_WhereNot
   include UnmatchedGame::CustomFinderMethods
   include UnmatchedGame::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: UnmatchedGame)
+  Elem = type_member {{fixed: UnmatchedGame}}
 
   sig { params(num: T.nilable(Integer)).returns(UnmatchedGame::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -729,7 +729,7 @@ end
 class UnmatchedGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include UnmatchedGame::CustomFinderMethods
   include UnmatchedGame::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: UnmatchedGame)
+  Elem = type_member {{fixed: UnmatchedGame}}
 
   sig { params(records: T.any(UnmatchedGame, T::Array[UnmatchedGame])).returns(T.self_type) }
   def <<(*records); end

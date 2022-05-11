@@ -370,7 +370,7 @@ class GamePurchaseStore::ActiveRecord_Relation < ActiveRecord::Relation
   include GamePurchaseStore::ActiveRelation_WhereNot
   include GamePurchaseStore::CustomFinderMethods
   include GamePurchaseStore::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GamePurchaseStore)
+  Elem = type_member {{fixed: GamePurchaseStore}}
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchaseStore::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -389,7 +389,7 @@ class GamePurchaseStore::ActiveRecord_AssociationRelation < ActiveRecord::Associ
   include GamePurchaseStore::ActiveRelation_WhereNot
   include GamePurchaseStore::CustomFinderMethods
   include GamePurchaseStore::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchaseStore)
+  Elem = type_member {{fixed: GamePurchaseStore}}
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchaseStore::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -720,7 +720,7 @@ end
 class GamePurchaseStore::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include GamePurchaseStore::CustomFinderMethods
   include GamePurchaseStore::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchaseStore)
+  Elem = type_member {{fixed: GamePurchaseStore}}
 
   sig { params(records: T.any(GamePurchaseStore, T::Array[GamePurchaseStore])).returns(T.self_type) }
   def <<(*records); end

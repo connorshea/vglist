@@ -758,7 +758,7 @@ class Platform::ActiveRecord_Relation < ActiveRecord::Relation
   include Platform::ActiveRelation_WhereNot
   include Platform::CustomFinderMethods
   include Platform::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Platform)
+  Elem = type_member {{fixed: Platform}}
 
   sig { params(num: T.nilable(Integer)).returns(Platform::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -777,7 +777,7 @@ class Platform::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRela
   include Platform::ActiveRelation_WhereNot
   include Platform::CustomFinderMethods
   include Platform::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Platform)
+  Elem = type_member {{fixed: Platform}}
 
   sig { params(num: T.nilable(Integer)).returns(Platform::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -1150,7 +1150,7 @@ end
 class Platform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Platform::CustomFinderMethods
   include Platform::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Platform)
+  Elem = type_member {{fixed: Platform}}
 
   sig { params(records: T.any(Platform, T::Array[Platform])).returns(T.self_type) }
   def <<(*records); end

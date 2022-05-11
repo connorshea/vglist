@@ -676,7 +676,7 @@ class Doorkeeper::Application::ActiveRecord_Relation < ActiveRecord::Relation
   include Doorkeeper::Application::ActiveRelation_WhereNot
   include Doorkeeper::Application::CustomFinderMethods
   include Doorkeeper::Application::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Doorkeeper::Application)
+  Elem = type_member {{fixed: Doorkeeper::Application}}
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::Application::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -695,7 +695,7 @@ class Doorkeeper::Application::ActiveRecord_AssociationRelation < ActiveRecord::
   include Doorkeeper::Application::ActiveRelation_WhereNot
   include Doorkeeper::Application::CustomFinderMethods
   include Doorkeeper::Application::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Doorkeeper::Application)
+  Elem = type_member {{fixed: Doorkeeper::Application}}
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::Application::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -1380,7 +1380,7 @@ end
 class Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Doorkeeper::Application::CustomFinderMethods
   include Doorkeeper::Application::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Doorkeeper::Application)
+  Elem = type_member {{fixed: Doorkeeper::Application}}
 
   sig { params(records: T.any(Doorkeeper::Application, T::Array[Doorkeeper::Application])).returns(T.self_type) }
   def <<(*records); end

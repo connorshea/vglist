@@ -370,7 +370,7 @@ class GameDeveloper::ActiveRecord_Relation < ActiveRecord::Relation
   include GameDeveloper::ActiveRelation_WhereNot
   include GameDeveloper::CustomFinderMethods
   include GameDeveloper::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GameDeveloper)
+  Elem = type_member {{fixed: GameDeveloper}}
 
   sig { params(num: T.nilable(Integer)).returns(GameDeveloper::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -389,7 +389,7 @@ class GameDeveloper::ActiveRecord_AssociationRelation < ActiveRecord::Associatio
   include GameDeveloper::ActiveRelation_WhereNot
   include GameDeveloper::CustomFinderMethods
   include GameDeveloper::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GameDeveloper)
+  Elem = type_member {{fixed: GameDeveloper}}
 
   sig { params(num: T.nilable(Integer)).returns(GameDeveloper::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -720,7 +720,7 @@ end
 class GameDeveloper::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include GameDeveloper::CustomFinderMethods
   include GameDeveloper::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GameDeveloper)
+  Elem = type_member {{fixed: GameDeveloper}}
 
   sig { params(records: T.any(GameDeveloper, T::Array[GameDeveloper])).returns(T.self_type) }
   def <<(*records); end

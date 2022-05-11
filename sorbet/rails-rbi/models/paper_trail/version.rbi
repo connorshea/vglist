@@ -294,7 +294,7 @@ class PaperTrail::Version::ActiveRecord_Relation < ActiveRecord::Relation
   include PaperTrail::Version::ActiveRelation_WhereNot
   include PaperTrail::Version::CustomFinderMethods
   include PaperTrail::Version::QueryMethodsReturningRelation
-  Elem = type_member(fixed: PaperTrail::Version)
+  Elem = type_member {{fixed: PaperTrail::Version}}
 
   sig { params(num: T.nilable(Integer)).returns(PaperTrail::Version::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -313,7 +313,7 @@ class PaperTrail::Version::ActiveRecord_AssociationRelation < ActiveRecord::Asso
   include PaperTrail::Version::ActiveRelation_WhereNot
   include PaperTrail::Version::CustomFinderMethods
   include PaperTrail::Version::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: PaperTrail::Version)
+  Elem = type_member {{fixed: PaperTrail::Version}}
 
   sig { params(num: T.nilable(Integer)).returns(PaperTrail::Version::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -351,7 +351,7 @@ end
 class PaperTrail::Version::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include PaperTrail::Version::CustomFinderMethods
   include PaperTrail::Version::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: PaperTrail::Version)
+  Elem = type_member {{fixed: PaperTrail::Version}}
 
   sig { params(records: T.any(PaperTrail::Version, T::Array[PaperTrail::Version])).returns(T.self_type) }
   def <<(*records); end

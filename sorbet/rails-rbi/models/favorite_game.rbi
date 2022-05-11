@@ -448,7 +448,7 @@ class FavoriteGame::ActiveRecord_Relation < ActiveRecord::Relation
   include FavoriteGame::ActiveRelation_WhereNot
   include FavoriteGame::CustomFinderMethods
   include FavoriteGame::QueryMethodsReturningRelation
-  Elem = type_member(fixed: FavoriteGame)
+  Elem = type_member {{fixed: FavoriteGame}}
 
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -467,7 +467,7 @@ class FavoriteGame::ActiveRecord_AssociationRelation < ActiveRecord::Association
   include FavoriteGame::ActiveRelation_WhereNot
   include FavoriteGame::CustomFinderMethods
   include FavoriteGame::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: FavoriteGame)
+  Elem = type_member {{fixed: FavoriteGame}}
 
   sig { params(num: T.nilable(Integer)).returns(FavoriteGame::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -810,7 +810,7 @@ end
 class FavoriteGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include FavoriteGame::CustomFinderMethods
   include FavoriteGame::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: FavoriteGame)
+  Elem = type_member {{fixed: FavoriteGame}}
 
   sig { params(records: T.any(FavoriteGame, T::Array[FavoriteGame])).returns(T.self_type) }
   def <<(*records); end

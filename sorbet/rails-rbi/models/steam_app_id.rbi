@@ -292,7 +292,7 @@ class SteamAppId::ActiveRecord_Relation < ActiveRecord::Relation
   include SteamAppId::ActiveRelation_WhereNot
   include SteamAppId::CustomFinderMethods
   include SteamAppId::QueryMethodsReturningRelation
-  Elem = type_member(fixed: SteamAppId)
+  Elem = type_member {{fixed: SteamAppId}}
 
   sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -311,7 +311,7 @@ class SteamAppId::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRe
   include SteamAppId::ActiveRelation_WhereNot
   include SteamAppId::CustomFinderMethods
   include SteamAppId::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: SteamAppId)
+  Elem = type_member {{fixed: SteamAppId}}
 
   sig { params(num: T.nilable(Integer)).returns(SteamAppId::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -513,7 +513,7 @@ end
 class SteamAppId::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include SteamAppId::CustomFinderMethods
   include SteamAppId::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: SteamAppId)
+  Elem = type_member {{fixed: SteamAppId}}
 
   sig { params(records: T.any(SteamAppId, T::Array[SteamAppId])).returns(T.self_type) }
   def <<(*records); end

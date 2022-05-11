@@ -370,7 +370,7 @@ class GamePurchasePlatform::ActiveRecord_Relation < ActiveRecord::Relation
   include GamePurchasePlatform::ActiveRelation_WhereNot
   include GamePurchasePlatform::CustomFinderMethods
   include GamePurchasePlatform::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GamePurchasePlatform)
+  Elem = type_member {{fixed: GamePurchasePlatform}}
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -389,7 +389,7 @@ class GamePurchasePlatform::ActiveRecord_AssociationRelation < ActiveRecord::Ass
   include GamePurchasePlatform::ActiveRelation_WhereNot
   include GamePurchasePlatform::CustomFinderMethods
   include GamePurchasePlatform::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchasePlatform)
+  Elem = type_member {{fixed: GamePurchasePlatform}}
 
   sig { params(num: T.nilable(Integer)).returns(GamePurchasePlatform::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -720,7 +720,7 @@ end
 class GamePurchasePlatform::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include GamePurchasePlatform::CustomFinderMethods
   include GamePurchasePlatform::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePurchasePlatform)
+  Elem = type_member {{fixed: GamePurchasePlatform}}
 
   sig { params(records: T.any(GamePurchasePlatform, T::Array[GamePurchasePlatform])).returns(T.self_type) }
   def <<(*records); end

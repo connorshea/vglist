@@ -296,7 +296,7 @@ class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ActiveRecord::Relat
   include ActiveRecord::SchemaMigration::ActiveRelation_WhereNot
   include ActiveRecord::SchemaMigration::CustomFinderMethods
   include ActiveRecord::SchemaMigration::QueryMethodsReturningRelation
-  Elem = type_member(fixed: ActiveRecord::SchemaMigration)
+  Elem = type_member {{fixed: ActiveRecord::SchemaMigration}}
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -315,7 +315,7 @@ class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ActiveRe
   include ActiveRecord::SchemaMigration::ActiveRelation_WhereNot
   include ActiveRecord::SchemaMigration::CustomFinderMethods
   include ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ActiveRecord::SchemaMigration)
+  Elem = type_member {{fixed: ActiveRecord::SchemaMigration}}
 
   sig { params(num: T.nilable(Integer)).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -333,7 +333,7 @@ end
 class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include ActiveRecord::SchemaMigration::CustomFinderMethods
   include ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ActiveRecord::SchemaMigration)
+  Elem = type_member {{fixed: ActiveRecord::SchemaMigration}}
 
   sig { params(records: T.any(ActiveRecord::SchemaMigration, T::Array[ActiveRecord::SchemaMigration])).returns(T.self_type) }
   def <<(*records); end

@@ -323,7 +323,7 @@ class Views::GroupedUnmatchedGame::ActiveRecord_Relation < ActiveRecord::Relatio
   include Views::GroupedUnmatchedGame::ActiveRelation_WhereNot
   include Views::GroupedUnmatchedGame::CustomFinderMethods
   include Views::GroupedUnmatchedGame::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Views::GroupedUnmatchedGame)
+  Elem = type_member {{fixed: Views::GroupedUnmatchedGame}}
 
   sig { params(num: T.nilable(Integer)).returns(Views::GroupedUnmatchedGame::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -342,7 +342,7 @@ class Views::GroupedUnmatchedGame::ActiveRecord_AssociationRelation < ActiveReco
   include Views::GroupedUnmatchedGame::ActiveRelation_WhereNot
   include Views::GroupedUnmatchedGame::CustomFinderMethods
   include Views::GroupedUnmatchedGame::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Views::GroupedUnmatchedGame)
+  Elem = type_member {{fixed: Views::GroupedUnmatchedGame}}
 
   sig { params(num: T.nilable(Integer)).returns(Views::GroupedUnmatchedGame::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -360,7 +360,7 @@ end
 class Views::GroupedUnmatchedGame::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Views::GroupedUnmatchedGame::CustomFinderMethods
   include Views::GroupedUnmatchedGame::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Views::GroupedUnmatchedGame)
+  Elem = type_member {{fixed: Views::GroupedUnmatchedGame}}
 
   sig { params(records: T.any(Views::GroupedUnmatchedGame, T::Array[Views::GroupedUnmatchedGame])).returns(T.self_type) }
   def <<(*records); end

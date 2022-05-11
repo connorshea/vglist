@@ -234,7 +234,7 @@ module AbstractController::Collector
 
   private
 
-  def method_missing(symbol, &block); end
+  def method_missing(symbol, *args, &block); end
 
   class << self
     def generate_method_for_mime(mime); end
@@ -2324,7 +2324,6 @@ class ActionDispatch::ContentSecurityPolicy::Middleware
   private
 
   def header_name(request); end
-  def html_response?(headers); end
   def policy_present?(headers); end
 end
 
@@ -2724,7 +2723,19 @@ class ActionDispatch::HostAuthorization
 end
 
 ActionDispatch::HostAuthorization::ALLOWED_HOSTS_IN_DEVELOPMENT = T.let(T.unsafe(nil), Array)
-ActionDispatch::HostAuthorization::DEFAULT_RESPONSE_APP = T.let(T.unsafe(nil), Proc)
+
+class ActionDispatch::HostAuthorization::DefaultResponseApp
+  def call(env); end
+
+  private
+
+  def available_logger(request); end
+  def log_error(request); end
+  def response(format, body); end
+  def response_body(request); end
+end
+
+ActionDispatch::HostAuthorization::DefaultResponseApp::RESPONSE_STATUS = T.let(T.unsafe(nil), Integer)
 ActionDispatch::HostAuthorization::IPV4_HOSTNAME = T.let(T.unsafe(nil), Regexp)
 ActionDispatch::HostAuthorization::IPV6_HOSTNAME = T.let(T.unsafe(nil), Regexp)
 ActionDispatch::HostAuthorization::IPV6_HOSTNAME_WITH_PORT = T.let(T.unsafe(nil), Regexp)
@@ -5251,6 +5262,7 @@ class ActionDispatch::ShowExceptions
 
   private
 
+  def fallback_to_html_format_if_invalid_mime_type(request); end
   def pass_response(status); end
   def render_exception(request, exception); end
 end
@@ -5287,6 +5299,7 @@ class ActionDispatch::SystemTestCase < ::ActiveSupport::TestCase
   end
 end
 
+ActionDispatch::SystemTestCase::DEFAULT_HOST = T.let(T.unsafe(nil), String)
 module ActionDispatch::SystemTesting; end
 
 class ActionDispatch::SystemTesting::Browser
@@ -5428,7 +5441,6 @@ end
 module ActionPack::VERSION; end
 ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
