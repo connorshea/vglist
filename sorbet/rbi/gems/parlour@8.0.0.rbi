@@ -144,7 +144,7 @@ module Parlour::Mixin::Searchable
 
   abstract!
 
-  Child = type_member
+  Child = type_member { { upper: Parlour::TypedObject } }
 
   sig { abstract.returns(T::Array[Child]) }
   def children; end
@@ -304,7 +304,7 @@ end
 class Parlour::RbiGenerator::ClassNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
 
-  Child = type_member(fixed: Parlour::RbiGenerator::RbiObject)
+  Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
   sig do
     params(
@@ -380,7 +380,7 @@ end
 class Parlour::RbiGenerator::EnumClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
 
-  Child = type_member(fixed: Parlour::RbiGenerator::RbiObject)
+  Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
   sig do
     params(
@@ -548,7 +548,7 @@ end
 class Parlour::RbiGenerator::ModuleNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
 
-  Child = type_member(fixed: Parlour::RbiGenerator::RbiObject)
+  Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
   sig do
     params(
@@ -589,7 +589,7 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
 
-  Child = type_member(fixed: Parlour::RbiGenerator::RbiObject)
+  Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
   sig do
     params(
@@ -876,7 +876,7 @@ end
 class Parlour::RbiGenerator::StructClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
 
-  Child = type_member(fixed: Parlour::RbiGenerator::RbiObject)
+  Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
   sig do
     params(
@@ -1099,7 +1099,7 @@ end
 class Parlour::RbsGenerator::ClassNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
 
-  Child = type_member(fixed: Parlour::RbsGenerator::RbsObject)
+  Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
   sig do
     params(
@@ -1218,7 +1218,7 @@ end
 class Parlour::RbsGenerator::InterfaceNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
 
-  Child = type_member(fixed: Parlour::RbsGenerator::RbsObject)
+  Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
@@ -1297,7 +1297,7 @@ end
 class Parlour::RbsGenerator::ModuleNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
 
-  Child = type_member(fixed: Parlour::RbsGenerator::RbsObject)
+  Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
@@ -1310,7 +1310,7 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
 
-  Child = type_member(fixed: Parlour::RbsGenerator::RbsObject)
+  Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
   sig do
     params(
