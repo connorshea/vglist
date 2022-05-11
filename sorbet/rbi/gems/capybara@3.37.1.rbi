@@ -6,6 +6,7 @@
 
 module Capybara
   extend ::Capybara::DSL
+  extend ::Capybara::DSLRSpecProxyInstaller
 
   class << self
     def HTML(html); end
@@ -395,6 +396,7 @@ class Capybara::Driver::Node
   def selected?; end
   def send_keys(*args); end
   def set(value, **options); end
+  def shadow_root; end
   def style(styles); end
   def tag_name; end
   def trigger(event); end
@@ -624,6 +626,7 @@ class Capybara::Node::Element < ::Capybara::Node::Base
   def selected?; end
   def send_keys(*args); end
   def set(value, **options); end
+  def shadow_root; end
   def style(*styles); end
   def tag_name; end
   def text(type = T.unsafe(nil), normalize_ws: T.unsafe(nil)); end
@@ -876,6 +879,7 @@ class Capybara::Queries::SelectorQuery < ::Capybara::Queries::BaseQuery
   def matches_system_filters?(node); end
   def matches_text_exactly?(node, value); end
   def matches_text_filter?(node); end
+  def matches_text_regexp(node, regexp); end
   def matches_text_regexp?(node, regexp); end
   def matches_visibility_filters?(node); end
   def matching_text; end
@@ -997,9 +1001,9 @@ end
 
 module Capybara::RSpecMatchers
   def become_closed(**options); end
-  def have_all_of_selectors(*args, **kw_args, &optional_filter_block); end
-  def have_ancestor(*args, **kw_args, &optional_filter_block); end
-  def have_any_of_selectors(*args, **kw_args, &optional_filter_block); end
+  def have_all_of_selectors(*_arg0, &_arg1); end
+  def have_ancestor(*_arg0, &_arg1); end
+  def have_any_of_selectors(*_arg0, &_arg1); end
   def have_button(locator = T.unsafe(nil), **options, &optional_filter_block); end
   def have_checked_field(locator = T.unsafe(nil), **options, &optional_filter_block); end
   def have_content(text_or_type, *args, **options); end
@@ -1023,10 +1027,10 @@ module Capybara::RSpecMatchers
   def have_no_title(*args, **kw_args, &optional_filter_block); end
   def have_no_unchecked_field(*args, **kw_args, &optional_filter_block); end
   def have_no_xpath(*args, **kw_args, &optional_filter_block); end
-  def have_none_of_selectors(*args, **kw_args, &optional_filter_block); end
+  def have_none_of_selectors(*_arg0, &_arg1); end
   def have_select(locator = T.unsafe(nil), **options, &optional_filter_block); end
-  def have_selector(*args, **kw_args, &optional_filter_block); end
-  def have_sibling(*args, **kw_args, &optional_filter_block); end
+  def have_selector(*_arg0, &_arg1); end
+  def have_sibling(*_arg0, &_arg1); end
   def have_style(styles = T.unsafe(nil), **options); end
   def have_table(locator = T.unsafe(nil), **options, &optional_filter_block); end
   def have_text(text_or_type, *args, **options); end
@@ -1034,7 +1038,7 @@ module Capybara::RSpecMatchers
   def have_unchecked_field(locator = T.unsafe(nil), **options, &optional_filter_block); end
   def have_xpath(expr, **options, &optional_filter_block); end
   def match_css(expr, **options, &optional_filter_block); end
-  def match_selector(*args, **kw_args, &optional_filter_block); end
+  def match_selector(*_arg0, &_arg1); end
   def match_style(styles = T.unsafe(nil), **options); end
   def match_xpath(expr, **options, &optional_filter_block); end
   def not_match_css(*args, **kw_args, &optional_filter_block); end
@@ -1265,6 +1269,8 @@ class Capybara::RackTest::Browser
   def find(format, selector); end
   def follow(method, path, **attributes); end
   def html; end
+  def last_request; end
+  def last_response; end
   def options; end
   def process(method, path, attributes = T.unsafe(nil), env = T.unsafe(nil)); end
   def process_and_follow_redirects(method, path, attributes = T.unsafe(nil), env = T.unsafe(nil)); end
@@ -1277,16 +1283,22 @@ class Capybara::RackTest::Browser
 
   protected
 
+  def base_href; end
+  def base_relative_uri_for(uri); end
   def build_rack_mock_session; end
   def request_path; end
+  def safe_last_request; end
 
   private
 
   def fragment_or_script?(path); end
+  def referer_url; end
 end
 
 class Capybara::RackTest::CSSHandlers < ::BasicObject
   include ::Kernel
+  include ::ActiveSupport::ForkTracker::CoreExt
+  include ::ActiveSupport::ForkTracker::CoreExtPrivate
 
   def disabled(list); end
   def enabled(list); end
@@ -1298,19 +1310,19 @@ class Capybara::RackTest::Driver < ::Capybara::Driver::Base
   def app; end
   def browser; end
   def current_url; end
-  def delete(*args, &block); end
+  def delete(*_arg0, &_arg1); end
   def dom; end
   def find_css(selector); end
   def find_xpath(selector); end
   def follow(method, path, **attributes); end
   def follow_redirects?; end
-  def get(*args, &block); end
+  def get(*_arg0, &_arg1); end
   def header(key, value); end
   def html; end
   def invalid_element_errors; end
   def options; end
-  def post(*args, &block); end
-  def put(*args, &block); end
+  def post(*_arg0, &_arg1); end
+  def put(*_arg0, &_arg1); end
   def redirect_limit; end
   def refresh; end
   def request; end
@@ -2054,6 +2066,7 @@ class Capybara::Selenium::Node < ::Capybara::Driver::Node
   def selected?; end
   def send_keys(*args); end
   def set(value, **options); end
+  def shadow_root; end
   def style(styles); end
   def tag_name; end
   def unselect_option; end
@@ -2228,10 +2241,11 @@ class Capybara::Server::AnimationDisabler
 
   private
 
+  def directive_nonces; end
   def disable_css_markup; end
   def disable_js_markup; end
   def html_content?; end
-  def insert_disable(html); end
+  def insert_disable(html, nonces); end
 
   class << self
     def selector_for(css_or_bool); end

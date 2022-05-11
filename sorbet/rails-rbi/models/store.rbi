@@ -446,7 +446,7 @@ class Store::ActiveRecord_Relation < ActiveRecord::Relation
   include Store::ActiveRelation_WhereNot
   include Store::CustomFinderMethods
   include Store::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Store)
+  Elem = type_member {{fixed: Store}}
 
   sig { params(num: T.nilable(Integer)).returns(Store::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -465,7 +465,7 @@ class Store::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
   include Store::ActiveRelation_WhereNot
   include Store::CustomFinderMethods
   include Store::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Store)
+  Elem = type_member {{fixed: Store}}
 
   sig { params(num: T.nilable(Integer)).returns(Store::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -727,7 +727,7 @@ end
 class Store::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Store::CustomFinderMethods
   include Store::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Store)
+  Elem = type_member {{fixed: Store}}
 
   sig { params(records: T.any(Store, T::Array[Store])).returns(T.self_type) }
   def <<(*records); end

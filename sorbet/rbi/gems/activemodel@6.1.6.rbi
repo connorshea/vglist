@@ -881,7 +881,7 @@ end
 module ActiveModel::Type
   class << self
     def default_value; end
-    def lookup(*args, **kwargs); end
+    def lookup(*args); end
     def register(type_name, klass = T.unsafe(nil), **options, &block); end
     def registry; end
     def registry=(_arg0); end
@@ -1069,7 +1069,7 @@ ActiveModel::Type::Integer::DEFAULT_LIMIT = T.let(T.unsafe(nil), Integer)
 class ActiveModel::Type::Registration
   def initialize(name, block, **_arg2); end
 
-  def call(_registry, *args, **kwargs); end
+  def call(_registry, *args); end
   def matches?(type_name, *args, **kwargs); end
 
   private
@@ -1081,7 +1081,7 @@ end
 class ActiveModel::Type::Registry
   def initialize; end
 
-  def lookup(symbol, *args, **kwargs); end
+  def lookup(symbol, *args); end
   def register(type_name, klass = T.unsafe(nil), **options, &block); end
 
   private
@@ -1152,7 +1152,6 @@ end
 module ActiveModel::VERSION; end
 ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

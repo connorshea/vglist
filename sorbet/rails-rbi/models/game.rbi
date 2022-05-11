@@ -1651,7 +1651,7 @@ class Game::ActiveRecord_Relation < ActiveRecord::Relation
   include Game::ActiveRelation_WhereNot
   include Game::CustomFinderMethods
   include Game::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Game)
+  Elem = type_member {{fixed: Game}}
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_Relation) }
   def by_engine(*args); end
@@ -1709,7 +1709,7 @@ class Game::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include Game::ActiveRelation_WhereNot
   include Game::CustomFinderMethods
   include Game::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Game)
+  Elem = type_member {{fixed: Game}}
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_engine(*args); end
@@ -1766,7 +1766,7 @@ end
 class Game::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Game::CustomFinderMethods
   include Game::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Game)
+  Elem = type_member {{fixed: Game}}
 
   sig { params(args: T.untyped).returns(Game::ActiveRecord_AssociationRelation) }
   def by_engine(*args); end

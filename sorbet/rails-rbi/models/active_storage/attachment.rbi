@@ -370,7 +370,7 @@ class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
   include ActiveStorage::Attachment::ActiveRelation_WhereNot
   include ActiveStorage::Attachment::CustomFinderMethods
   include ActiveStorage::Attachment::QueryMethodsReturningRelation
-  Elem = type_member(fixed: ActiveStorage::Attachment)
+  Elem = type_member {{fixed: ActiveStorage::Attachment}}
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -389,7 +389,7 @@ class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord
   include ActiveStorage::Attachment::ActiveRelation_WhereNot
   include ActiveStorage::Attachment::CustomFinderMethods
   include ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ActiveStorage::Attachment)
+  Elem = type_member {{fixed: ActiveStorage::Attachment}}
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -774,7 +774,7 @@ end
 class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include ActiveStorage::Attachment::CustomFinderMethods
   include ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ActiveStorage::Attachment)
+  Elem = type_member {{fixed: ActiveStorage::Attachment}}
 
   sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
   def <<(*records); end

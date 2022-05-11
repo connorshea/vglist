@@ -292,7 +292,7 @@ class WikidataBlocklist::ActiveRecord_Relation < ActiveRecord::Relation
   include WikidataBlocklist::ActiveRelation_WhereNot
   include WikidataBlocklist::CustomFinderMethods
   include WikidataBlocklist::QueryMethodsReturningRelation
-  Elem = type_member(fixed: WikidataBlocklist)
+  Elem = type_member {{fixed: WikidataBlocklist}}
 
   sig { params(num: T.nilable(Integer)).returns(WikidataBlocklist::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -311,7 +311,7 @@ class WikidataBlocklist::ActiveRecord_AssociationRelation < ActiveRecord::Associ
   include WikidataBlocklist::ActiveRelation_WhereNot
   include WikidataBlocklist::CustomFinderMethods
   include WikidataBlocklist::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: WikidataBlocklist)
+  Elem = type_member {{fixed: WikidataBlocklist}}
 
   sig { params(num: T.nilable(Integer)).returns(WikidataBlocklist::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -675,7 +675,7 @@ end
 class WikidataBlocklist::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include WikidataBlocklist::CustomFinderMethods
   include WikidataBlocklist::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: WikidataBlocklist)
+  Elem = type_member {{fixed: WikidataBlocklist}}
 
   sig { params(records: T.any(WikidataBlocklist, T::Array[WikidataBlocklist])).returns(T.self_type) }
   def <<(*records); end

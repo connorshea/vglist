@@ -292,7 +292,7 @@ class Versions::GameVersion::ActiveRecord_Relation < ActiveRecord::Relation
   include Versions::GameVersion::ActiveRelation_WhereNot
   include Versions::GameVersion::CustomFinderMethods
   include Versions::GameVersion::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Versions::GameVersion)
+  Elem = type_member {{fixed: Versions::GameVersion}}
 
   sig { params(num: T.nilable(Integer)).returns(Versions::GameVersion::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -311,7 +311,7 @@ class Versions::GameVersion::ActiveRecord_AssociationRelation < ActiveRecord::As
   include Versions::GameVersion::ActiveRelation_WhereNot
   include Versions::GameVersion::CustomFinderMethods
   include Versions::GameVersion::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Versions::GameVersion)
+  Elem = type_member {{fixed: Versions::GameVersion}}
 
   sig { params(num: T.nilable(Integer)).returns(Versions::GameVersion::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -837,7 +837,7 @@ end
 class Versions::GameVersion::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Versions::GameVersion::CustomFinderMethods
   include Versions::GameVersion::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Versions::GameVersion)
+  Elem = type_member {{fixed: Versions::GameVersion}}
 
   sig { params(records: T.any(Versions::GameVersion, T::Array[Versions::GameVersion])).returns(T.self_type) }
   def <<(*records); end

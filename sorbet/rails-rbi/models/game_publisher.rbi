@@ -370,7 +370,7 @@ class GamePublisher::ActiveRecord_Relation < ActiveRecord::Relation
   include GamePublisher::ActiveRelation_WhereNot
   include GamePublisher::CustomFinderMethods
   include GamePublisher::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GamePublisher)
+  Elem = type_member {{fixed: GamePublisher}}
 
   sig { params(num: T.nilable(Integer)).returns(GamePublisher::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -389,7 +389,7 @@ class GamePublisher::ActiveRecord_AssociationRelation < ActiveRecord::Associatio
   include GamePublisher::ActiveRelation_WhereNot
   include GamePublisher::CustomFinderMethods
   include GamePublisher::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePublisher)
+  Elem = type_member {{fixed: GamePublisher}}
 
   sig { params(num: T.nilable(Integer)).returns(GamePublisher::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -720,7 +720,7 @@ end
 class GamePublisher::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include GamePublisher::CustomFinderMethods
   include GamePublisher::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GamePublisher)
+  Elem = type_member {{fixed: GamePublisher}}
 
   sig { params(records: T.any(GamePublisher, T::Array[GamePublisher])).returns(T.self_type) }
   def <<(*records); end

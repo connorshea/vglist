@@ -292,7 +292,7 @@ class Versions::GenreVersion::ActiveRecord_Relation < ActiveRecord::Relation
   include Versions::GenreVersion::ActiveRelation_WhereNot
   include Versions::GenreVersion::CustomFinderMethods
   include Versions::GenreVersion::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Versions::GenreVersion)
+  Elem = type_member {{fixed: Versions::GenreVersion}}
 
   sig { params(num: T.nilable(Integer)).returns(Versions::GenreVersion::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -311,7 +311,7 @@ class Versions::GenreVersion::ActiveRecord_AssociationRelation < ActiveRecord::A
   include Versions::GenreVersion::ActiveRelation_WhereNot
   include Versions::GenreVersion::CustomFinderMethods
   include Versions::GenreVersion::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Versions::GenreVersion)
+  Elem = type_member {{fixed: Versions::GenreVersion}}
 
   sig { params(num: T.nilable(Integer)).returns(Versions::GenreVersion::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -837,7 +837,7 @@ end
 class Versions::GenreVersion::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Versions::GenreVersion::CustomFinderMethods
   include Versions::GenreVersion::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Versions::GenreVersion)
+  Elem = type_member {{fixed: Versions::GenreVersion}}
 
   sig { params(records: T.any(Versions::GenreVersion, T::Array[Versions::GenreVersion])).returns(T.self_type) }
   def <<(*records); end

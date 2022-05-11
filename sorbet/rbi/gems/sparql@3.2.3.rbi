@@ -29,6 +29,7 @@ class Array
   def valid?; end
   def validate!; end
   def variable?; end
+  def variables; end
   def vars; end
 end
 
@@ -239,12 +240,14 @@ RDF::Query::Solution::INSTANCE_METHODS = T.let(T.unsafe(nil), Array)
 class RDF::Query::Solutions < ::Array
   include ::SPARQL::Results
 
+  def ==(other); end
   def bindings; end
   def count(&block); end
   def distinct; end
   def distinct!; end
   def dup; end
   def each_solution; end
+  def eql?(other); end
   def filter(expression = T.unsafe(nil), &block); end
   def filter!(expression = T.unsafe(nil), &block); end
   def filter_without_expression(criteria = T.unsafe(nil)); end
@@ -264,6 +267,7 @@ class RDF::Query::Solutions < ::Array
   def select(*variables); end
   def variable?(*args); end
   def variable_names; end
+  def variable_names=(vars); end
   def variables?(*args); end
 end
 
@@ -390,7 +394,7 @@ class RDF::Statement
   def to_h(subject_key = T.unsafe(nil), predicate_key = T.unsafe(nil), object_key = T.unsafe(nil), graph_key = T.unsafe(nil)); end
   def to_quad; end
   def to_s; end
-  def to_sparql(as_statement: T.unsafe(nil), **options); end
+  def to_sparql(**options); end
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
   def to_sxp_bin; end
   def to_triple; end
@@ -506,12 +510,14 @@ module SPARQL::Algebra::Expression
     def extension?(function); end
     def extensions; end
     def for(*sse, **options); end
-    def new(sse, **options); end
+    def new(sse, parent_operator: T.unsafe(nil), **options); end
     def open(filename, **options, &block); end
     def parse(sse, **options, &block); end
     def register_extension(uri, &block); end
   end
 end
+
+SPARQL::Algebra::Expression::PATTERN_PARENTS = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator
   include ::RDF::Util::Logger
@@ -548,6 +554,7 @@ class SPARQL::Algebra::Operator
   def to_sxp_bin; end
   def validate!; end
   def variable?; end
+  def variables; end
   def vars; end
 
   protected
@@ -587,6 +594,15 @@ class SPARQL::Algebra::Operator::Add < ::SPARQL::Algebra::Operator
 end
 
 SPARQL::Algebra::Operator::Add::NAME = T.let(T.unsafe(nil), Array)
+
+class SPARQL::Algebra::Operator::Adjust < ::SPARQL::Algebra::Operator::Binary
+  include ::SPARQL::Algebra::Evaluatable
+
+  def apply(operand, duration, **options); end
+  def to_sparql(**options); end
+end
+
+SPARQL::Algebra::Operator::Adjust::NAME = T.let(T.unsafe(nil), Array)
 
 class SPARQL::Algebra::Operator::Alt < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
@@ -918,6 +934,7 @@ class SPARQL::Algebra::Operator::Extend < ::SPARQL::Algebra::Operator::Binary
   def execute(queryable, **options, &block); end
   def to_sparql(**options); end
   def validate!; end
+  def variables; end
 end
 
 SPARQL::Algebra::Operator::Extend::NAME = T.let(T.unsafe(nil), Array)
@@ -981,8 +998,10 @@ class SPARQL::Algebra::Operator::Group < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
   def execute(queryable, **options, &block); end
+  def internal_variables; end
   def to_sparql(extensions: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
   def validate!; end
+  def variables; end
 end
 
 SPARQL::Algebra::Operator::Group::NAME = T.let(T.unsafe(nil), Array)
@@ -1375,6 +1394,17 @@ end
 
 SPARQL::Algebra::Operator::PathPlus::NAME = T.let(T.unsafe(nil), Symbol)
 
+class SPARQL::Algebra::Operator::PathRange < ::SPARQL::Algebra::Operator::Ternary
+  include ::SPARQL::Algebra::Query
+
+  def initialize(min, max, path, **options); end
+
+  def execute(queryable, accumulator: T.unsafe(nil), index: T.unsafe(nil), **options, &block); end
+  def to_sparql(**options); end
+end
+
+SPARQL::Algebra::Operator::PathRange::NAME = T.let(T.unsafe(nil), Symbol)
+
 class SPARQL::Algebra::Operator::PathStar < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
@@ -1383,6 +1413,14 @@ class SPARQL::Algebra::Operator::PathStar < ::SPARQL::Algebra::Operator::Unary
 end
 
 SPARQL::Algebra::Operator::PathStar::NAME = T.let(T.unsafe(nil), Symbol)
+
+class SPARQL::Algebra::Operator::PathZero < ::SPARQL::Algebra::Operator::Unary
+  include ::SPARQL::Algebra::Query
+
+  def execute(queryable, **options, &block); end
+end
+
+SPARQL::Algebra::Operator::PathZero::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::Plus < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
@@ -1420,6 +1458,8 @@ class SPARQL::Algebra::Operator::Project < ::SPARQL::Algebra::Operator::Binary
 
   def execute(queryable, **options, &block); end
   def to_sparql(**options); end
+  def validate!; end
+  def variables; end
 end
 
 SPARQL::Algebra::Operator::Project::NAME = T.let(T.unsafe(nil), Array)
@@ -1565,6 +1605,7 @@ class SPARQL::Algebra::Operator::Sequence < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
   def execute(queryable, **options); end
+  def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Sequence::NAME = T.let(T.unsafe(nil), Symbol)
@@ -1712,6 +1753,7 @@ class SPARQL::Algebra::Operator::Table < ::SPARQL::Algebra::Operator
 
   def execute(queryable, **options, &block); end
   def to_sparql(top_level: T.unsafe(nil), **options); end
+  def variables; end
 end
 
 SPARQL::Algebra::Operator::Table::NAME = T.let(T.unsafe(nil), Array)
@@ -1730,6 +1772,15 @@ class SPARQL::Algebra::Operator::Timezone < ::SPARQL::Algebra::Operator::Unary
 end
 
 SPARQL::Algebra::Operator::Timezone::NAME = T.let(T.unsafe(nil), Symbol)
+
+class SPARQL::Algebra::Operator::Triple < ::SPARQL::Algebra::Operator::Ternary
+  include ::SPARQL::Algebra::Evaluatable
+
+  def apply(subject, predicate, object, **options); end
+  def to_sparql(**options); end
+end
+
+SPARQL::Algebra::Operator::Triple::NAME = T.let(T.unsafe(nil), Symbol)
 
 class SPARQL::Algebra::Operator::UCase < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
@@ -1869,7 +1920,7 @@ class SPARQL::Grammar::Parser
 
   def accumulate_operator_expressions(operator, production, data); end
   def add_operator_expressions(production, data); end
-  def add_pattern(production, **options); end
+  def add_pattern(production, quoted: T.unsafe(nil), **options); end
   def base_uri; end
   def base_uri=(iri); end
   def bnode(id = T.unsafe(nil)); end

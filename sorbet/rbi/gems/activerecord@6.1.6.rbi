@@ -405,7 +405,7 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   def merge_target_lists(persisted, memory); end
   def remove_records(existing_records, records, method); end
   def replace_common_records_in_memory(new_target, original_target); end
-  def replace_on_target(record, index, skip_callbacks); end
+  def replace_on_target(record, skip_callbacks, replace:, inversing: T.unsafe(nil)); end
   def replace_records(new_target, original_target); end
 end
 
@@ -4069,6 +4069,7 @@ class ActiveRecord::InternalMetadata < ::ActiveRecord::Base
     def enabled?; end
     def page(num = T.unsafe(nil)); end
     def primary_key; end
+    def record_timestamps; end
     def table_name; end
   end
 end
@@ -7018,7 +7019,6 @@ end
 module ActiveRecord::VERSION; end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

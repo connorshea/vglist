@@ -370,7 +370,7 @@ class GameGenre::ActiveRecord_Relation < ActiveRecord::Relation
   include GameGenre::ActiveRelation_WhereNot
   include GameGenre::CustomFinderMethods
   include GameGenre::QueryMethodsReturningRelation
-  Elem = type_member(fixed: GameGenre)
+  Elem = type_member {{fixed: GameGenre}}
 
   sig { params(num: T.nilable(Integer)).returns(GameGenre::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -389,7 +389,7 @@ class GameGenre::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRel
   include GameGenre::ActiveRelation_WhereNot
   include GameGenre::CustomFinderMethods
   include GameGenre::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GameGenre)
+  Elem = type_member {{fixed: GameGenre}}
 
   sig { params(num: T.nilable(Integer)).returns(GameGenre::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -720,7 +720,7 @@ end
 class GameGenre::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include GameGenre::CustomFinderMethods
   include GameGenre::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: GameGenre)
+  Elem = type_member {{fixed: GameGenre}}
 
   sig { params(records: T.any(GameGenre, T::Array[GameGenre])).returns(T.self_type) }
   def <<(*records); end

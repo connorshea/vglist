@@ -448,7 +448,7 @@ class Relationship::ActiveRecord_Relation < ActiveRecord::Relation
   include Relationship::ActiveRelation_WhereNot
   include Relationship::CustomFinderMethods
   include Relationship::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Relationship)
+  Elem = type_member {{fixed: Relationship}}
 
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -467,7 +467,7 @@ class Relationship::ActiveRecord_AssociationRelation < ActiveRecord::Association
   include Relationship::ActiveRelation_WhereNot
   include Relationship::CustomFinderMethods
   include Relationship::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Relationship)
+  Elem = type_member {{fixed: Relationship}}
 
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -810,7 +810,7 @@ end
 class Relationship::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Relationship::CustomFinderMethods
   include Relationship::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Relationship)
+  Elem = type_member {{fixed: Relationship}}
 
   sig { params(records: T.any(Relationship, T::Array[Relationship])).returns(T.self_type) }
   def <<(*records); end

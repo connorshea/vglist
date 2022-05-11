@@ -85,7 +85,7 @@ class ExternalAccount::ActiveRecord_Relation < ActiveRecord::Relation
   include ExternalAccount::ActiveRelation_WhereNot
   include ExternalAccount::CustomFinderMethods
   include ExternalAccount::QueryMethodsReturningRelation
-  Elem = type_member(fixed: ExternalAccount)
+  Elem = type_member {{fixed: ExternalAccount}}
 
   sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_Relation) }
   def not_steam(*args); end
@@ -110,7 +110,7 @@ class ExternalAccount::ActiveRecord_AssociationRelation < ActiveRecord::Associat
   include ExternalAccount::ActiveRelation_WhereNot
   include ExternalAccount::CustomFinderMethods
   include ExternalAccount::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ExternalAccount)
+  Elem = type_member {{fixed: ExternalAccount}}
 
   sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
   def not_steam(*args); end
@@ -134,7 +134,7 @@ end
 class ExternalAccount::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include ExternalAccount::CustomFinderMethods
   include ExternalAccount::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ExternalAccount)
+  Elem = type_member {{fixed: ExternalAccount}}
 
   sig { params(args: T.untyped).returns(ExternalAccount::ActiveRecord_AssociationRelation) }
   def not_steam(*args); end

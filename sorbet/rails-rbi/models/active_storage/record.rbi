@@ -284,7 +284,7 @@ class ActiveStorage::Record::ActiveRecord_Relation < ActiveRecord::Relation
   include ActiveStorage::Record::ActiveRelation_WhereNot
   include ActiveStorage::Record::CustomFinderMethods
   include ActiveStorage::Record::QueryMethodsReturningRelation
-  Elem = type_member(fixed: ActiveStorage::Record)
+  Elem = type_member {{fixed: ActiveStorage::Record}}
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Record::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -303,7 +303,7 @@ class ActiveStorage::Record::ActiveRecord_AssociationRelation < ActiveRecord::As
   include ActiveStorage::Record::ActiveRelation_WhereNot
   include ActiveStorage::Record::CustomFinderMethods
   include ActiveStorage::Record::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ActiveStorage::Record)
+  Elem = type_member {{fixed: ActiveStorage::Record}}
 
   sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Record::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -321,7 +321,7 @@ end
 class ActiveStorage::Record::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include ActiveStorage::Record::CustomFinderMethods
   include ActiveStorage::Record::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: ActiveStorage::Record)
+  Elem = type_member {{fixed: ActiveStorage::Record}}
 
   sig { params(records: T.any(ActiveStorage::Record, T::Array[ActiveStorage::Record])).returns(T.self_type) }
   def <<(*records); end

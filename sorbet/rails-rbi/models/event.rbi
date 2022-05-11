@@ -230,7 +230,7 @@ class Event::ActiveRecord_Relation < ActiveRecord::Relation
   include Event::ActiveRelation_WhereNot
   include Event::CustomFinderMethods
   include Event::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Event)
+  Elem = type_member {{fixed: Event}}
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_Relation) }
   def add_to_library(*args); end
@@ -294,7 +294,7 @@ class Event::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelatio
   include Event::ActiveRelation_WhereNot
   include Event::CustomFinderMethods
   include Event::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Event)
+  Elem = type_member {{fixed: Event}}
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def add_to_library(*args); end
@@ -357,7 +357,7 @@ end
 class Event::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Event::CustomFinderMethods
   include Event::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Event)
+  Elem = type_member {{fixed: Event}}
 
   sig { params(args: T.untyped).returns(Event::ActiveRecord_AssociationRelation) }
   def add_to_library(*args); end

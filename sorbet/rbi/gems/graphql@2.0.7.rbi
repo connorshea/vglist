@@ -614,22 +614,6 @@ end
 
 GraphQL::Execution::Lazy::NullResult = T.let(T.unsafe(nil), GraphQL::Execution::Lazy)
 
-module GraphQL::Execution::Lazy::Resolve
-  class << self
-    def deep_sync(val); end
-    def each_lazy(acc, value); end
-    def resolve(value); end
-    def resolve_in_place(value); end
-  end
-end
-
-module GraphQL::Execution::Lazy::Resolve::NullAccumulator
-  class << self
-    def <<(item); end
-    def empty?; end
-  end
-end
-
 class GraphQL::Execution::Lookahead
   def initialize(query:, ast_nodes:, field: T.unsafe(nil), root_type: T.unsafe(nil), owner_type: T.unsafe(nil)); end
 
@@ -2743,10 +2727,11 @@ end
 GraphQL::Schema::Directive::Transform::TRANSFORMS = T.let(T.unsafe(nil), Array)
 GraphQL::Schema::Directive::UNION = T.let(T.unsafe(nil), Symbol)
 GraphQL::Schema::Directive::VARIABLE_DEFINITION = T.let(T.unsafe(nil), Symbol)
-class GraphQL::Schema::DuplicateNamesError < ::GraphQL::Error; end
 
-class GraphQL::Schema::DuplicateTypeNamesError < ::GraphQL::Error
-  def initialize(type_name:, first_definition:, second_definition:, path:); end
+class GraphQL::Schema::DuplicateNamesError < ::GraphQL::Error
+  def initialize(duplicated_name:, duplicated_definition_1:, duplicated_definition_2:); end
+
+  def duplicated_name; end
 end
 
 class GraphQL::Schema::Enum < ::GraphQL::Schema::Member
@@ -2815,12 +2800,14 @@ class GraphQL::Schema::Field
   def connection?; end
   def description(text = T.unsafe(nil)); end
   def description=(_arg0); end
+  def dig_keys; end
   def extension(extension_class, options = T.unsafe(nil)); end
   def extensions(new_extensions = T.unsafe(nil)); end
   def extras(new_extras = T.unsafe(nil)); end
   def fetch_extra(extra_name, ctx); end
   def graphql_name; end
   def has_max_page_size?; end
+  def hash_key; end
   def inspect; end
   def introspection?; end
   def max_page_size; end
@@ -4610,7 +4597,7 @@ class GraphQL::StringEncodingError < ::GraphQL::RuntimeTypeError
 end
 
 class GraphQL::Subscriptions
-  def initialize(schema:, broadcast: T.unsafe(nil), default_broadcastable: T.unsafe(nil), **rest); end
+  def initialize(schema:, validate_update: T.unsafe(nil), broadcast: T.unsafe(nil), default_broadcastable: T.unsafe(nil), **rest); end
 
   def broadcastable?(query_str, **query_options); end
   def build_id; end
@@ -4623,6 +4610,7 @@ class GraphQL::Subscriptions
   def normalize_name(event_or_arg_name); end
   def read_subscription(subscription_id); end
   def trigger(event_name, args, object, scope: T.unsafe(nil), context: T.unsafe(nil)); end
+  def validate_update?(query:, context:, root_value:, subscription_topic:, operation_name:, variables:); end
   def write_subscription(query, events); end
 
   private

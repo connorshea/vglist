@@ -1567,7 +1567,7 @@ class User::ActiveRecord_Relation < ActiveRecord::Relation
   include User::ActiveRelation_WhereNot
   include User::CustomFinderMethods
   include User::QueryMethodsReturningRelation
-  Elem = type_member(fixed: User)
+  Elem = type_member {{fixed: User}}
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_Relation) }
   def admin(*args); end
@@ -1628,7 +1628,7 @@ class User::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
   include User::ActiveRelation_WhereNot
   include User::CustomFinderMethods
   include User::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: User)
+  Elem = type_member {{fixed: User}}
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
   def admin(*args); end
@@ -1688,7 +1688,7 @@ end
 class User::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include User::CustomFinderMethods
   include User::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: User)
+  Elem = type_member {{fixed: User}}
 
   sig { params(args: T.untyped).returns(User::ActiveRecord_AssociationRelation) }
   def admin(*args); end

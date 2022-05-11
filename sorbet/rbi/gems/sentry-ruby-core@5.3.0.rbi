@@ -214,6 +214,7 @@ module Sentry
     def table_name_prefix; end
     def use_relative_model_naming?; end
     def utc_now; end
+    def with_child_span(**attributes, &block); end
     def with_scope(&block); end
     def with_session_tracking(&block); end
   end
@@ -521,13 +522,19 @@ end
 
 class Sentry::Error < ::StandardError; end
 
+class Sentry::ErrorEvent < ::Sentry::Event
+  def add_exception_interface(exception); end
+  def add_threads_interface(backtrace: T.unsafe(nil), **options); end
+  def exception; end
+  def threads; end
+  def to_hash; end
+end
+
 class Sentry::Event
   include ::Sentry::CustomInspection
 
   def initialize(configuration:, integration_meta: T.unsafe(nil), message: T.unsafe(nil)); end
 
-  def add_exception_interface(exception); end
-  def add_threads_interface(backtrace: T.unsafe(nil), **options); end
   def breadcrumbs; end
   def breadcrumbs=(_arg0); end
   def configuration; end
@@ -537,7 +544,6 @@ class Sentry::Event
   def environment=(_arg0); end
   def event_id; end
   def event_id=(_arg0); end
-  def exception; end
   def extra; end
   def extra=(_arg0); end
   def fingerprint; end
@@ -560,7 +566,6 @@ class Sentry::Event
   def server_name=(_arg0); end
   def tags; end
   def tags=(_arg0); end
-  def threads; end
   def timestamp; end
   def timestamp=(time); end
   def to_hash; end
@@ -587,6 +592,7 @@ Sentry::Event::MAX_MESSAGE_SIZE_IN_BYTES = T.let(T.unsafe(nil), Integer)
 Sentry::Event::MAX_SERIALIZED_PAYLOAD_SIZE = T.let(T.unsafe(nil), Integer)
 Sentry::Event::SERIALIZEABLE_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 Sentry::Event::SKIP_INSPECTION_ATTRIBUTES = T.let(T.unsafe(nil), Array)
+Sentry::Event::TYPE = T.let(T.unsafe(nil), String)
 Sentry::Event::WRITER_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 
 class Sentry::ExceptionInterface < ::Sentry::Interface
@@ -611,6 +617,7 @@ class Sentry::HTTPTransport < ::Sentry::Transport
   def conn; end
   def handle_rate_limited_response(headers); end
   def has_rate_limited_header?(headers); end
+  def normalize_proxy(proxy); end
   def parse_rate_limit_header(rate_limit_header); end
   def should_compress?(data); end
   def ssl_configuration; end
@@ -1089,45 +1096,14 @@ end
 Sentry::Transaction::UNLABELD_NAME = T.let(T.unsafe(nil), String)
 
 class Sentry::TransactionEvent < ::Sentry::Event
-  def initialize(configuration:, integration_meta: T.unsafe(nil), message: T.unsafe(nil)); end
-
-  def contexts; end
-  def contexts=(_arg0); end
-  def environment; end
-  def environment=(_arg0); end
-  def event_id; end
-  def event_id=(_arg0); end
-  def extra; end
-  def extra=(_arg0); end
-  def level; end
-  def modules; end
-  def modules=(_arg0); end
-  def platform; end
-  def platform=(_arg0); end
-  def release; end
-  def release=(_arg0); end
-  def sdk; end
-  def sdk=(_arg0); end
-  def server_name; end
-  def server_name=(_arg0); end
   def spans; end
   def spans=(_arg0); end
   def start_timestamp; end
   def start_timestamp=(time); end
-  def tags; end
-  def tags=(_arg0); end
-  def timestamp; end
   def to_hash; end
-  def transaction; end
-  def transaction=(_arg0); end
-  def type; end
-  def user; end
-  def user=(_arg0); end
 end
 
-Sentry::TransactionEvent::SERIALIZEABLE_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 Sentry::TransactionEvent::TYPE = T.let(T.unsafe(nil), String)
-Sentry::TransactionEvent::WRITER_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 
 class Sentry::Transport
   include ::Sentry::LoggingHelper
@@ -1150,7 +1126,6 @@ class Sentry::Transport
   private
 
   def fetch_pending_client_report; end
-  def get_item_type(event_hash); end
   def reject_rate_limited_items(envelope); end
 end
 

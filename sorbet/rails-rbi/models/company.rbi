@@ -758,7 +758,7 @@ class Company::ActiveRecord_Relation < ActiveRecord::Relation
   include Company::ActiveRelation_WhereNot
   include Company::CustomFinderMethods
   include Company::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Company)
+  Elem = type_member {{fixed: Company}}
 
   sig { params(num: T.nilable(Integer)).returns(Company::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -777,7 +777,7 @@ class Company::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelat
   include Company::ActiveRelation_WhereNot
   include Company::CustomFinderMethods
   include Company::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Company)
+  Elem = type_member {{fixed: Company}}
 
   sig { params(num: T.nilable(Integer)).returns(Company::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -1150,7 +1150,7 @@ end
 class Company::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Company::CustomFinderMethods
   include Company::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Company)
+  Elem = type_member {{fixed: Company}}
 
   sig { params(records: T.any(Company, T::Array[Company])).returns(T.self_type) }
   def <<(*records); end

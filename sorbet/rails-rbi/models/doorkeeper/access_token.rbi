@@ -292,7 +292,7 @@ class Doorkeeper::AccessToken::ActiveRecord_Relation < ActiveRecord::Relation
   include Doorkeeper::AccessToken::ActiveRelation_WhereNot
   include Doorkeeper::AccessToken::CustomFinderMethods
   include Doorkeeper::AccessToken::QueryMethodsReturningRelation
-  Elem = type_member(fixed: Doorkeeper::AccessToken)
+  Elem = type_member {{fixed: Doorkeeper::AccessToken}}
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_Relation) }
   def page(num = nil); end
@@ -311,7 +311,7 @@ class Doorkeeper::AccessToken::ActiveRecord_AssociationRelation < ActiveRecord::
   include Doorkeeper::AccessToken::ActiveRelation_WhereNot
   include Doorkeeper::AccessToken::CustomFinderMethods
   include Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Doorkeeper::AccessToken)
+  Elem = type_member {{fixed: Doorkeeper::AccessToken}}
 
   sig { params(num: T.nilable(Integer)).returns(Doorkeeper::AccessToken::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
@@ -891,7 +891,7 @@ end
 class Doorkeeper::AccessToken::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
   include Doorkeeper::AccessToken::CustomFinderMethods
   include Doorkeeper::AccessToken::QueryMethodsReturningAssociationRelation
-  Elem = type_member(fixed: Doorkeeper::AccessToken)
+  Elem = type_member {{fixed: Doorkeeper::AccessToken}}
 
   sig { params(records: T.any(Doorkeeper::AccessToken, T::Array[Doorkeeper::AccessToken])).returns(T.self_type) }
   def <<(*records); end

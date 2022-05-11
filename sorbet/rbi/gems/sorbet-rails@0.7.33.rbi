@@ -160,7 +160,7 @@ class SorbetRails::ModelPlugins::ActiveRecordAssoc < ::SorbetRails::ModelPlugins
   sig { params(reflection: T.untyped).returns(T.nilable(T::Boolean)) }
   def assoc_should_be_untyped?(reflection); end
 
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
   sig { params(reflection: T.untyped).returns(T.nilable(T::Boolean)) }
@@ -185,14 +185,14 @@ class SorbetRails::ModelPlugins::ActiveRecordAssoc < ::SorbetRails::ModelPlugins
 end
 
 class SorbetRails::ModelPlugins::ActiveRecordAttribute < ::SorbetRails::ModelPlugins::Base
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
   sig do
     params(
-      root: ::Parlour::RbiGenerator::Namespace,
-      model_class_rbi: ::Parlour::RbiGenerator::Namespace,
-      attribute_module_rbi: ::Parlour::RbiGenerator::Namespace,
+      root: Parlour::RbiGenerator::Namespace,
+      model_class_rbi: Parlour::RbiGenerator::Namespace,
+      attribute_module_rbi: Parlour::RbiGenerator::Namespace,
       model_defined_enums: T::Hash[::String, T::Hash[::String, T.untyped]],
       column_name: ::String,
       column_def: T.untyped
@@ -205,22 +205,22 @@ class SorbetRails::ModelPlugins::ActiveRecordAttribute < ::SorbetRails::ModelPlu
 end
 
 class SorbetRails::ModelPlugins::ActiveRecordEnum < ::SorbetRails::ModelPlugins::Base
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
 class SorbetRails::ModelPlugins::ActiveRecordNamedScope < ::SorbetRails::ModelPlugins::Base
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
 class SorbetRails::ModelPlugins::ActiveRecordQuerying < ::SorbetRails::ModelPlugins::Base
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
   private
 
-  sig { params(root: ::Parlour::RbiGenerator::Namespace, inner_type: ::String).void }
+  sig { params(root: Parlour::RbiGenerator::Namespace, inner_type: ::String).void }
   def create_in_batches_method(root, inner_type:); end
 end
 
@@ -231,12 +231,12 @@ class SorbetRails::ModelPlugins::ActiveRecordSerializedAttribute < ::SorbetRails
   sig { params(serialization_coder: T.nilable(::Class)).returns(::String) }
   def attr_types_for_coder(serialization_coder); end
 
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
 class SorbetRails::ModelPlugins::ActiveRelationWhereNot < ::SorbetRails::ModelPlugins::Base
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
@@ -244,13 +244,13 @@ class SorbetRails::ModelPlugins::ActiveStorageMethods < ::SorbetRails::ModelPlug
   sig { params(model_class: T.class_of(ActiveRecord::Base), available_classes: T::Set[::String]).void }
   def initialize(model_class, available_classes); end
 
-  sig { params(assoc_name: ::String, mod: ::Parlour::RbiGenerator::Namespace).void }
+  sig { params(assoc_name: ::String, mod: Parlour::RbiGenerator::Namespace).void }
   def create_has_many_methods(assoc_name, mod); end
 
-  sig { params(assoc_name: ::String, mod: ::Parlour::RbiGenerator::Namespace).void }
+  sig { params(assoc_name: ::String, mod: Parlour::RbiGenerator::Namespace).void }
   def create_has_one_methods(assoc_name, mod); end
 
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
@@ -276,12 +276,12 @@ end
 SorbetRails::ModelPlugins::Base::Parameter = Parlour::RbiGenerator::Parameter
 
 class SorbetRails::ModelPlugins::CustomFinderMethods < ::SorbetRails::ModelPlugins::Base
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
 class SorbetRails::ModelPlugins::EnumerableCollections < ::SorbetRails::ModelPlugins::Base
-  sig { override.params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
@@ -298,7 +298,7 @@ class SorbetRails::ModelRbiFormatter
   sig { returns(T::Set[::String]) }
   def available_classes; end
 
-  sig { params(root: ::Parlour::RbiGenerator::Namespace).void }
+  sig { params(root: Parlour::RbiGenerator::Namespace).void }
   def generate_base_rbi(root); end
 
   sig { returns(::String) }
@@ -318,7 +318,7 @@ module SorbetRails::ModelUtils
 
   sig do
     params(
-      root: ::Parlour::RbiGenerator::Namespace,
+      root: Parlour::RbiGenerator::Namespace,
       method_name: ::String,
       parameters: T.nilable(T::Array[::Parlour::RbiGenerator::Parameter]),
       builtin_query_method: T::Boolean,
