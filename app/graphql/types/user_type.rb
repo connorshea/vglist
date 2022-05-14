@@ -14,11 +14,11 @@ module Types
     field :banned, Boolean, null: false, description: "Whether this user has been banned."
 
     # Associations
-    field :game_purchases, GamePurchaseType.connection_type, null: true, description: "Games in this user's library."
-    field :followers, UserType.connection_type, null: true, description: "Users that are following this user."
-    field :following, UserType.connection_type, null: true, description: "Users that this user is following."
-    field :favorited_games, GameType.connection_type, null: true, description: "Games that this user has favorited."
-    field :activity, EventType.connection_type, null: true, description: "Activity Events that refer to this user."
+    field :game_purchases, GamePurchaseType.connection_type, null: false, description: "Games in this user's library."
+    field :followers, UserType.connection_type, null: false, description: "Users that are following this user."
+    field :following, UserType.connection_type, null: false, description: "Users that this user is following."
+    field :favorited_games, GameType.connection_type, null: false, description: "Games that this user has favorited."
+    field :activity, EventType.connection_type, null: false, description: "Activity Events that refer to this user."
 
     field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar." do
       argument :size, UserAvatarSizeType, required: false, default_value: :small, description: "The size of the avatar image being requested."
@@ -26,9 +26,9 @@ module Types
 
     field :is_followed, Boolean, null: true, resolver_method: :followed?, description: "Whether the current user is following this user. `null` if there is no logged-in user or the current user is querying on themselves."
 
-    sig { returns(T.nilable(Event::ActiveRecord_Relation)) }
+    sig { returns(T.any(T::Array[T.untyped], Event::ActiveRecord_Relation)) }
     def activity
-      return nil unless user_visible?
+      return [] unless user_visible?
 
       Event.recently_created
            .joins(:user)
@@ -45,22 +45,28 @@ module Types
       Rails.application.routes.url_helpers.rails_representation_url(avatar)
     end
 
-    # Extremely cursed metaprogramming that protects private users from having their details exposed
-    # if the UserPolicy wants to prevent it.
-    sig { params(field_name: Symbol).returns(T.untyped) }
-    def handler(field_name)
+    # Extremely cursed metaprogramming that protects private users from having
+    # their details exposed if the UserPolicy wants to prevent it.
+    sig { params(field_name: Symbol, fallback: T.untyped).returns(T.untyped) }
+    def handler(field_name, fallback = nil)
       return @object.public_send(field_name) if user_visible?
 
-      nil
+      fallback
     end
 
     # Define a method for each of these fields, to forward the correct info onto the handler method.
     # This overrides the default field accessors to make sure the viewer is actually supposed to
     # see this information.
-    [:bio, :game_purchases, :followers, :following, :favorited_games].each do |meth_name|
+    {
+      bio: nil,
+      game_purchases: [],
+      followers: [],
+      following: [],
+      favorited_games: []
+    }.each_pair do |meth_name, fallback|
       define_method(meth_name) do
         # Sorbet is dumb and doesn't realize the handler method exists, I guess.
-        T.unsafe(self).handler(meth_name)
+        T.unsafe(self).handler(meth_name, fallback)
       end
     end
 

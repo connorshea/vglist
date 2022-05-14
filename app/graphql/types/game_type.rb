@@ -23,13 +23,13 @@ module Types
 
     # Assocations
     field :series, SeriesType, null: true, description: "The series that the game belongs to."
-    field :developers, CompanyType.connection_type, null: true, description: "Developers of the game."
-    field :publishers, CompanyType.connection_type, null: true, description: "Publishers of the game."
-    field :engines, EngineType.connection_type, null: true, description: "Game engines that the game runs on."
-    field :genres, GenreType.connection_type, null: true, description: "Genres of the game."
-    field :platforms, PlatformType.connection_type, null: true, description: "Platforms the game is available on."
-    field :owners, UserType.connection_type, null: true, method: :purchasers, description: "Users who have this game in their libraries."
-    field :favoriters, UserType.connection_type, null: true, description: "Users who have favorited this game."
+    field :developers, CompanyType.connection_type, null: false, description: "Developers of the game."
+    field :publishers, CompanyType.connection_type, null: false, description: "Publishers of the game."
+    field :engines, EngineType.connection_type, null: false, description: "Game engines that the game runs on."
+    field :genres, GenreType.connection_type, null: false, description: "Genres of the game."
+    field :platforms, PlatformType.connection_type, null: false, description: "Platforms the game is available on."
+    field :owners, UserType.connection_type, null: false, method: :purchasers, description: "Users who have this game in their libraries."
+    field :favoriters, UserType.connection_type, null: false, description: "Users who have favorited this game."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
       argument :size, GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."

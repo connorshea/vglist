@@ -174,11 +174,11 @@ RSpec.describe "Users API", type: :request do
           id: private_user.id.to_s,
           username: private_user.username,
           bio: nil,
-          gamePurchases: nil,
-          activity: nil,
-          followers: nil,
-          following: nil,
-          favoritedGames: nil
+          gamePurchases: { nodes: [] },
+          activity: { nodes: [] },
+          followers: { nodes: [] },
+          following: { nodes: [] },
+          favoritedGames: { nodes: [] }
         }
       )
     end
