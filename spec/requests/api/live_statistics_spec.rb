@@ -13,8 +13,6 @@ RSpec.describe "Live Statistics API", type: :request do
         query_string = <<-GRAPHQL
           query {
             liveStatistics {
-              id
-              timestamp
               users
               games
               platforms
@@ -26,8 +24,6 @@ RSpec.describe "Live Statistics API", type: :request do
 
         expect(result.graphql_dig(:live_statistics)).to eq(
           {
-            id: nil,
-            timestamp: nil,
             users: 1,
             games: 0,
             platforms: 0
@@ -40,8 +36,6 @@ RSpec.describe "Live Statistics API", type: :request do
         query_string = <<-GRAPHQL
           query {
             liveStatistics {
-              id
-              timestamp
               users
               games
               platforms
@@ -78,8 +72,6 @@ RSpec.describe "Live Statistics API", type: :request do
 
         expect(result.graphql_dig(:live_statistics)).to eq(
           {
-            id: nil,
-            timestamp: nil,
             users: 1,
             games: 1,
             platforms: 1,
@@ -122,8 +114,6 @@ RSpec.describe "Live Statistics API", type: :request do
         query_string = <<-GRAPHQL
           query {
             liveStatistics {
-              id
-              timestamp
               games
             }
           }

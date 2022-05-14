@@ -2,16 +2,13 @@
 module Resolvers
   module SiteStatisticResolvers
     class LiveResolver < Resolvers::BaseResolver
-      type Types::SiteStatisticType, null: false
+      type Types::LiveSiteStatisticType, null: false
 
       description "Current statistics for all records on the site, for use on the admin dashboard. **Only available to admins.**"
 
       sig { returns(T::Hash[Symbol, Integer]) }
       def resolve
         {
-          id: nil,
-          timestamp: nil,
-
           users: User.count,
           games: Game.count,
           platforms: Platform.count,
