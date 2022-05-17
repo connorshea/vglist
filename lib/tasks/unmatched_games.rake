@@ -4,6 +4,10 @@ namespace :vglist do
   namespace :unmatched_games do
     desc "Clean out the unmatched_games table."
     task clean: :environment do
+      puts 'Cleaning out UnmatchedGames...'
+
+      before_count = UnmatchedGame.count
+
       # Destroy all the UnmatchedGame records where the game is already on the
       # Steam Blocklist.
       UnmatchedGame.where(
@@ -18,7 +22,7 @@ namespace :vglist do
         external_service_id: SteamAppId.pluck(:app_id)
       ).each(&:destroy!)
 
-      puts "Unmatched Games updated."
+      puts "Unmatched Games cleaned. #{before_count - UnmatchedGame.count} records removed. #{UnmatchedGame.count} records remaining."
     end
   end
 end
