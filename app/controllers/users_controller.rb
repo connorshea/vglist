@@ -254,7 +254,7 @@ class UsersController < ApplicationController
     end
 
     # Sum of total hours played, represented as days.
-    @stats[:total_days_played] = (total_time_played / 24).to_f.round(2)
+    @stats[:total_days_played] = @user.hide_days_played? ? nil : (total_time_played / 24).to_f.round(2)
 
     @stats[:games_count] = game_purchases.count
 
@@ -382,7 +382,8 @@ class UsersController < ApplicationController
     params.typed_require(:user).permit(
       :bio,
       :avatar,
-      :privacy
+      :privacy,
+      :hide_days_played
     )
   end
 end

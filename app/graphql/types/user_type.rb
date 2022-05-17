@@ -25,6 +25,7 @@ module Types
     end
 
     field :is_followed, Boolean, null: true, resolver_method: :followed?, description: "Whether the current user is following this user. `null` if there is no logged-in user or the current user is querying on themselves."
+    field :hide_days_played, Boolean, null: false, description: "Whether to hide the 'Days Played' value on the this user's profile."
 
     sig { returns(T.any(T::Array[T.untyped], Event::ActiveRecord_Relation)) }
     def activity
