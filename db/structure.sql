@@ -1413,7 +1413,8 @@ CREATE TABLE public.users (
     slug character varying,
     privacy integer DEFAULT 0 NOT NULL,
     banned boolean DEFAULT false NOT NULL,
-    encrypted_api_token character varying
+    encrypted_api_token character varying,
+    hide_total_played boolean DEFAULT false
 );
 
 
@@ -3015,6 +3016,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211228183617'),
 ('20220415022658'),
 ('20220415044554'),
-('20220418015453');
+('20220418015453'),
+('20220517025337');
 
 
