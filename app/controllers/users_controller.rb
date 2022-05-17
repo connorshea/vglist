@@ -382,7 +382,8 @@ class UsersController < ApplicationController
     params.typed_require(:user).permit(
       :bio,
       :avatar,
-      :privacy
+      :privacy,
+      :hide_days_played
     )
   end
 end

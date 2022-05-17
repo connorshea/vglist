@@ -56,6 +56,14 @@
       </div>
 
       <div class="field">
+        <p class="label">Misc settings</p>
+        <%= f.label :hide_days_played, class: 'checkbox' do %>
+          <%= f.check_box :hide_days_played %>
+          Hide days played
+        <% end %>
+      </div>
+
+      <div class="field">
         <%= f.submit "Save changes", class: "button is-primary" %>
       </div>
     <% end %>
