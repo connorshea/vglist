@@ -1,3 +1,4 @@
+# typed: false
 module Types::SiteStatisticItem
   include Types::BaseInterface
 
