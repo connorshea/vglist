@@ -27,7 +27,10 @@ module ActionText::Attachable
   def attachable_filesize; end
   def attachable_metadata; end
   def attachable_sgid; end
+
+  # @return [Boolean]
   def previewable_attachable?; end
+
   def to_rich_text_attributes(attributes = T.unsafe(nil)); end
   def to_trix_content_attachment_partial_path; end
 
@@ -76,8 +79,15 @@ class ActionText::Attachables::ContentAttachment
   def _validators?; end
   def attachable_plain_text_representation(caption); end
   def model_name(*_arg0, &_arg1); end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
+
   def to_partial_path; end
   def to_trix_content_attachment_partial_path; end
   def validation_context; end
@@ -112,14 +122,24 @@ end
 class ActionText::Attachables::RemoteImage
   extend ::ActiveModel::Naming
 
+  # @return [RemoteImage] a new instance of RemoteImage
   def initialize(attributes = T.unsafe(nil)); end
 
   def attachable_plain_text_representation(caption); end
+
+  # Returns the value of attribute content_type.
   def content_type; end
+
+  # Returns the value of attribute height.
   def height; end
+
   def model_name(*_arg0, &_arg1); end
   def to_partial_path; end
+
+  # Returns the value of attribute url.
   def url; end
+
+  # Returns the value of attribute width.
   def width; end
 
   class << self
@@ -128,6 +148,8 @@ class ActionText::Attachables::RemoteImage
     private
 
     def attributes_from_node(node); end
+
+    # @return [Boolean]
     def content_type_is_image?(content_type); end
   end
 end
@@ -139,14 +161,20 @@ class ActionText::Attachment
   extend ::ActionText::Attachments::Minification::ClassMethods
   extend ::ActionText::Attachments::TrixConversion::ClassMethods
 
+  # @return [Attachment] a new instance of Attachment
   def initialize(node, attachable); end
 
+  # Returns the value of attribute attachable.
   def attachable; end
+
   def caption; end
   def full_attributes; end
   def inspect; end
   def method_missing(method, *args, &block); end
+
+  # Returns the value of attribute node.
   def node; end
+
   def to_html; end
   def to_param(*_arg0, &_arg1); end
   def to_plain_text; end
@@ -195,6 +223,7 @@ class ActionText::AttachmentGallery
   extend ::ActiveModel::Validations::HelperMethods
   extend ::ActiveModel::Conversion::ClassMethods
 
+  # @return [AttachmentGallery] a new instance of AttachmentGallery
   def initialize(node); end
 
   def __callbacks; end
@@ -206,7 +235,10 @@ class ActionText::AttachmentGallery
   def attachments; end
   def inspect; end
   def model_name(*_arg0, &_arg1); end
+
+  # Returns the value of attribute node.
   def node; end
+
   def size; end
   def validation_context; end
 
@@ -289,6 +321,7 @@ class ActionText::Content
   extend ::ActionText::Serialization::ClassMethods
   extend ::ActionText::Rendering::ClassMethods
 
+  # @return [Content] a new instance of Content
   def initialize(content = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def ==(other); end
@@ -299,7 +332,10 @@ class ActionText::Content
   def attachments; end
   def blank?(*_arg0, &_arg1); end
   def empty?(*_arg0, &_arg1); end
+
+  # Returns the value of attribute fragment.
   def fragment; end
+
   def gallery_attachments; end
   def html_safe(*_arg0, &_arg1); end
   def inspect; end
@@ -364,14 +400,20 @@ class ActionText::FixtureSet
 end
 
 class ActionText::Fragment
+  # @return [Fragment] a new instance of Fragment
   def initialize(source); end
 
   def find_all(selector); end
   def replace(selector); end
+
+  # Returns the value of attribute source.
   def source; end
+
   def to_html; end
   def to_plain_text; end
   def to_s; end
+
+  # @yield [source = self.source.clone]
   def update; end
 
   class << self
@@ -495,10 +537,14 @@ module ActionText::TagHelper
 end
 
 class ActionText::TrixAttachment
+  # @return [TrixAttachment] a new instance of TrixAttachment
   def initialize(node); end
 
   def attributes; end
+
+  # Returns the value of attribute node.
   def node; end
+
   def to_html; end
   def to_s; end
 

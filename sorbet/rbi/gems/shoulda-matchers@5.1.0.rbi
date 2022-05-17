@@ -10,72 +10,1009 @@ module Shoulda::Matchers
   extend ::Shoulda::Matchers::WordWrap
 
   class << self
+    # @private
     def assertion_exception_class; end
+
+    # @private
     def assertion_exception_class=(_arg0); end
+
+    # @private
     def configuration; end
+
+    # @private
+    # @yield [configuration]
     def configure; end
+
+    # @private
     def integrations; end
+
+    # @private
     def warn(message); end
+
+    # @private
     def warn_about_deprecated_method(old_method, new_method); end
   end
 end
 
+# This module provides matchers that are used to test behavior within
+# controllers.
 module Shoulda::Matchers::ActionController
+  # The `filter_param` matcher is used to test parameter filtering
+  # configuration. Specifically, it asserts that the given parameter is
+  # present in `config.filter_parameters`.
+  #
+  #     class MyApplication < Rails::Application
+  #       config.filter_parameters << :secret_key
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe ApplicationController, type: :controller do
+  #       it { should filter_param(:secret_key) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ApplicationControllerTest < ActionController::TestCase
+  #       should filter_param(:secret_key)
+  #     end
+  #
+  # @return [FilterParamMatcher]
   def filter_param(key); end
+
+  # The `permit` matcher tests that an action in your controller receives a
+  # whitelist of parameters using Rails' Strong Parameters feature
+  # (specifically that `permit` was called with the correct arguments).
+  #
+  # Here's an example:
+  #
+  #     class UsersController < ApplicationController
+  #       def create
+  #         user = User.create(user_params)
+  #         # ...
+  #       end
+  #
+  #       private
+  #
+  #       def user_params
+  #         params.require(:user).permit(
+  #           :first_name,
+  #           :last_name,
+  #           :email,
+  #           :password
+  #         )
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UsersController, type: :controller do
+  #       it do
+  #         params = {
+  #           user: {
+  #             first_name: 'John',
+  #             last_name: 'Doe',
+  #             email: 'johndoe@example.com',
+  #             password: 'password'
+  #           }
+  #         }
+  #         should permit(:first_name, :last_name, :email, :password).
+  #           for(:create, params: params).
+  #           on(:user)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UsersControllerTest < ActionController::TestCase
+  #       should "(for POST #create) restrict parameters on :user to first_name, last_name, email, and password" do
+  #         params = {
+  #           user: {
+  #             first_name: 'John',
+  #             last_name: 'Doe',
+  #             email: 'johndoe@example.com',
+  #             password: 'password'
+  #           }
+  #         }
+  #         matcher = permit(:first_name, :last_name, :email, :password).
+  #           for(:create, params: params).
+  #           on(:user)
+  #         assert_accepts matcher, subject
+  #       end
+  #     end
+  #
+  # If your action requires query parameters in order to work, then you'll
+  # need to supply them:
+  #
+  #     class UsersController < ApplicationController
+  #       def update
+  #         user = User.find(params[:id])
+  #
+  #         if user.update_attributes(user_params)
+  #           # ...
+  #         else
+  #           # ...
+  #         end
+  #       end
+  #
+  #       private
+  #
+  #       def user_params
+  #         params.require(:user).permit(
+  #           :first_name,
+  #           :last_name,
+  #           :email,
+  #           :password
+  #         )
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UsersController, type: :controller do
+  #       before do
+  #         create(:user, id: 1)
+  #       end
+  #
+  #       it do
+  #         params = {
+  #           id: 1,
+  #           user: {
+  #             first_name: 'Jon',
+  #             last_name: 'Doe',
+  #             email: 'jondoe@example.com',
+  #             password: 'password'
+  #           }
+  #         }
+  #         should permit(:first_name, :last_name, :email, :password).
+  #           for(:update, params: params).
+  #           on(:user)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UsersControllerTest < ActionController::TestCase
+  #       setup do
+  #         create(:user, id: 1)
+  #       end
+  #
+  #       should "(for PATCH #update) restrict parameters on :user to :first_name, :last_name, :email, and :password" do
+  #         params = {
+  #           id: 1,
+  #           user: {
+  #             first_name: 'Jon',
+  #             last_name: 'Doe',
+  #             email: 'jondoe@example.com',
+  #             password: 'password'
+  #           }
+  #         }
+  #         matcher = permit(:first_name, :last_name, :email, :password).
+  #           for(:update, params: params).
+  #           on(:user)
+  #         assert_accepts matcher, subject
+  #       end
+  #     end
+  #
+  # Finally, if you have an action that isn't one of the seven resourceful
+  # actions, then you'll need to provide the HTTP verb that it responds to:
+  #
+  #     Rails.application.routes.draw do
+  #       resources :users do
+  #         member do
+  #           put :toggle
+  #         end
+  #       end
+  #     end
+  #
+  #     class UsersController < ApplicationController
+  #       def toggle
+  #         user = User.find(params[:id])
+  #
+  #         if user.update_attributes(user_params)
+  #           # ...
+  #         else
+  #           # ...
+  #         end
+  #       end
+  #
+  #       private
+  #
+  #       def user_params
+  #         params.require(:user).permit(:activated)
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UsersController, type: :controller do
+  #       before do
+  #         create(:user, id: 1)
+  #       end
+  #
+  #       it do
+  #         params = { id: 1, user: { activated: true } }
+  #         should permit(:activated).
+  #           for(:toggle, params: params, verb: :put).
+  #           on(:user)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UsersControllerTest < ActionController::TestCase
+  #       setup do
+  #         create(:user, id: 1)
+  #       end
+  #
+  #       should "(for PUT #toggle) restrict parameters on :user to :activated" do
+  #         params = { id: 1, user: { activated: true } }
+  #         matcher = permit(:activated).
+  #           for(:toggle, params: params, verb: :put).
+  #           on(:user)
+  #         assert_accepts matcher, subject
+  #       end
+  #     end
+  #
+  # @return [PermitMatcher]
   def permit(*params); end
+
+  # The `redirect_to` matcher tests that an action redirects to a certain
+  # location. In a test suite using RSpec, it is very similar to
+  # rspec-rails's `redirect_to` matcher. In a test suite using Minitest +
+  # Shoulda, it provides a more expressive syntax over
+  # `assert_redirected_to`.
+  #
+  #     class PostsController < ApplicationController
+  #       def show
+  #         redirect_to :index
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #show' do
+  #         before { get :show }
+  #
+  #         it { should redirect_to(posts_path) }
+  #         it { should redirect_to(action: :index) }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #show' do
+  #         setup { get :show }
+  #
+  #         should redirect_to('/posts') { posts_path }
+  #         should redirect_to(action: :index)
+  #       end
+  #     end
+  #
+  # @return [RedirectToMatcher]
   def redirect_to(url_or_description, &block); end
+
+  # The `render_template` matcher tests that an action renders a template
+  # or partial. In RSpec, it is very similar to rspec-rails's
+  # `render_template` matcher. In a test suite using Minitest + Shoulda, it
+  # provides a more expressive syntax over `assert_template`.
+  #
+  #     class PostsController < ApplicationController
+  #       def show
+  #       end
+  #     end
+  #
+  #     # app/views/posts/show.html.erb
+  #     <%= render 'sidebar' %>
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #show' do
+  #         before { get :show }
+  #
+  #         it { should render_template('show') }
+  #         it { should render_template(partial: '_sidebar') }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #show' do
+  #         setup { get :show }
+  #
+  #         should render_template('show')
+  #         should render_template(partial: '_sidebar')
+  #       end
+  #     end
+  #
+  # @return [RenderTemplateMatcher]
   def render_template(options = T.unsafe(nil), message = T.unsafe(nil)); end
+
+  # The `render_with_layout` matcher asserts that an action is rendered with
+  # a particular layout.
+  #
+  #     class PostsController < ApplicationController
+  #       def show
+  #         render layout: 'posts'
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #show' do
+  #         before { get :show }
+  #
+  #         it { should render_with_layout('posts') }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #show' do
+  #         setup { get :show }
+  #
+  #         should render_with_layout('posts')
+  #       end
+  #     end
+  #
+  # It can also be used to assert that the action is not rendered with a
+  # layout at all:
+  #
+  #     class PostsController < ApplicationController
+  #       def sidebar
+  #         render layout: false
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #sidebar' do
+  #         before { get :sidebar }
+  #
+  #         it { should_not render_with_layout }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #sidebar' do
+  #         setup { get :sidebar }
+  #
+  #         should_not render_with_layout
+  #       end
+  #     end
+  #
+  # @return [RenderWithLayoutMatcher]
   def render_with_layout(expected_layout = T.unsafe(nil)); end
+
+  # The `rescue_from` matcher tests usage of the `rescue_from` macro. It
+  # asserts that an exception and method are present in the list of
+  # exception handlers, and that the handler method exists.
+  #
+  #     class ApplicationController < ActionController::Base
+  #       rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
+  #
+  #       private
+  #
+  #       def handle_not_found
+  #         # ...
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe ApplicationController, type: :controller do
+  #       it do
+  #         should rescue_from(ActiveRecord::RecordNotFound).
+  #           with(:handle_not_found)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ApplicationControllerTest < ActionController::TestCase
+  #       should rescue_from(ActiveRecord::RecordNotFound).
+  #         with(:handle_not_found)
+  #     end
+  #
+  # @return [RescueFromMatcher]
   def rescue_from(exception); end
+
+  # The `respond_with` matcher tests that an action responds with a certain
+  # status code.
+  #
+  # You can specify that the status should be a number:
+  #
+  #     class PostsController < ApplicationController
+  #       def index
+  #         render status: 403
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #index' do
+  #         before { get :index }
+  #
+  #         it { should respond_with(403) }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :index }
+  #
+  #         should respond_with(403)
+  #       end
+  #     end
+  #
+  # You can specify that the status should be within a range of numbers:
+  #
+  #     class PostsController < ApplicationController
+  #       def destroy
+  #         render status: 508
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'DELETE #destroy' do
+  #         before { delete :destroy }
+  #
+  #         it { should respond_with(500..600) }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'DELETE #destroy' do
+  #         setup { delete :destroy }
+  #
+  #         should respond_with(500..600)
+  #       end
+  #     end
+  #
+  # Finally, you can specify that the status should be a symbol:
+  #
+  #     class PostsController < ApplicationController
+  #       def show
+  #         render status: :locked
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #show' do
+  #         before { get :show }
+  #
+  #         it { should respond_with(:locked) }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #show' do
+  #         setup { get :show }
+  #
+  #         should respond_with(:locked)
+  #       end
+  #     end
+  #
+  # @return [RespondWithMatcher]
   def respond_with(status); end
+
+  # The `route` matcher tests that a route resolves to a controller,
+  # action, and params; and that the controller, action, and params
+  # generates the same route. For an RSpec suite, this is like using a
+  # combination of `route_to` and `be_routable`. In a test suite using
+  # Minitest + Shoulda, it provides a more expressive syntax over
+  # `assert_routing`.
+  #
+  # You can use this matcher either in a controller test case or in a
+  # routing test case. For instance, given these routes:
+  #
+  #     My::Application.routes.draw do
+  #       get '/posts', to: 'posts#index'
+  #       get '/posts/:id', to: 'posts#show'
+  #     end
+  #
+  # You could choose to write tests for these routes alongside other tests
+  # for PostsController:
+  #
+  #     class PostsController < ApplicationController
+  #       # ...
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       it { should route(:get, '/posts').to(action: :index) }
+  #       it { should route(:get, '/posts/1').to(action: :show, id: 1) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       should route(:get, '/posts').to(action: 'index')
+  #       should route(:get, '/posts/1').to(action: :show, id: 1)
+  #     end
+  #
+  # Or you could place the tests along with other route tests:
+  #
+  #     # RSpec
+  #     describe 'Routing', type: :routing do
+  #       it do
+  #         should route(:get, '/posts').
+  #           to(controller: :posts, action: :index)
+  #       end
+  #
+  #       it do
+  #         should route(:get, '/posts/1').
+  #           to('posts#show', id: 1)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RoutesTest < ActionController::IntegrationTest
+  #       should route(:get, '/posts').
+  #         to(controller: :posts, action: :index)
+  #
+  #       should route(:get, '/posts/1').
+  #         to('posts#show', id: 1)
+  #     end
+  #
+  # Notice that in the former case, as we are inside of a test case for
+  # PostsController, we do not have to specify that the routes resolve to
+  # this controller. In the latter case we specify this using the
+  # `controller` key passed to the `to` qualifier.
+  #
+  # #### Specifying a port
+  #
+  # If the route you're testing has a constraint on it that limits the route
+  # to a particular port, you can specify it by passing a `port` option to
+  # the matcher:
+  #
+  #     class PortConstraint
+  #       def initialize(port)
+  #         @port = port
+  #       end
+  #
+  #       def matches?(request)
+  #         request.port == @port
+  #       end
+  #     end
+  #
+  #     My::Application.routes.draw do
+  #       get '/posts',
+  #         to: 'posts#index',
+  #         constraints: PortConstraint.new(12345)
+  #     end
+  #
+  #     # RSpec
+  #     describe 'Routing', type: :routing do
+  #       it do
+  #         should route(:get, '/posts', port: 12345).
+  #           to('posts#index')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RoutesTest < ActionController::IntegrationTest
+  #       should route(:get, '/posts', port: 12345).
+  #         to('posts#index')
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### to
+  #
+  # Use `to` to specify the action (along with the controller, if needed)
+  # that the route resolves to.
+  #
+  # `to` takes either keyword arguments (`controller` and `action`) or a
+  # string that represents the controller/action pair:
+  #
+  #     route(:get, '/posts').to(action: index)
+  #     route(:get, '/posts').to(controller: :posts, action: index)
+  #     route(:get, '/posts').to('posts#index')
+  #
+  # If there are parameters in your route, then specify those too:
+  #
+  #     route(:get, '/posts/1').to('posts#show', id: 1)
+  #
+  # You may also specify special parameters such as `:format`:
+  #
+  #     route(:get, '/posts').to('posts#index', format: :json)
+  #
+  # @return [RouteMatcher]
   def route(method, path, port: T.unsafe(nil)); end
+
+  # The `set_flash` matcher is used to make assertions about the
+  # `flash` hash.
+  #
+  #     class PostsController < ApplicationController
+  #       def index
+  #         flash[:foo] = 'A candy bar'
+  #       end
+  #
+  #       def destroy
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #index' do
+  #         before { get :index }
+  #
+  #         it { should set_flash }
+  #       end
+  #
+  #       describe 'DELETE #destroy' do
+  #         before { delete :destroy }
+  #
+  #         it { should_not set_flash }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :index }
+  #
+  #         should set_flash
+  #       end
+  #
+  #       context 'DELETE #destroy' do
+  #         setup { delete :destroy }
+  #
+  #         should_not set_flash
+  #       end
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### []
+  #
+  # Use `[]` to narrow the scope of the matcher to a particular key.
+  #
+  #     class PostsController < ApplicationController
+  #       def index
+  #         flash[:foo] = 'A candy bar'
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #index' do
+  #         before { get :index }
+  #
+  #         it { should set_flash[:foo] }
+  #         it { should_not set_flash[:bar] }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :show }
+  #
+  #         should set_flash[:foo]
+  #         should_not set_flash[:bar]
+  #       end
+  #     end
+  #
+  # ##### to
+  #
+  # Use `to` to assert that some key was set to a particular value, or that
+  # some key matches a particular regex.
+  #
+  #     class PostsController < ApplicationController
+  #       def index
+  #         flash[:foo] = 'A candy bar'
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #index' do
+  #         before { get :index }
+  #
+  #         it { should set_flash.to('A candy bar') }
+  #         it { should set_flash.to(/bar/) }
+  #         it { should set_flash[:foo].to('bar') }
+  #         it { should_not set_flash[:foo].to('something else') }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :show }
+  #
+  #         should set_flash.to('A candy bar')
+  #         should set_flash.to(/bar/)
+  #         should set_flash[:foo].to('bar')
+  #         should_not set_flash[:foo].to('something else')
+  #       end
+  #     end
+  #
+  # ##### now
+  #
+  # Use `now` to change the scope of the matcher to use the "now" hash
+  # instead of the usual "future" hash.
+  #
+  #     class PostsController < ApplicationController
+  #       def show
+  #         flash.now[:foo] = 'bar'
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #show' do
+  #         before { get :show }
+  #
+  #         it { should set_flash.now }
+  #         it { should set_flash.now[:foo] }
+  #         it { should set_flash.now[:foo].to('bar') }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :show }
+  #
+  #         should set_flash.now
+  #         should set_flash.now[:foo]
+  #         should set_flash.now[:foo].to('bar')
+  #       end
+  #     end
+  #
+  # @return [SetFlashMatcher]
   def set_flash; end
+
+  # The `set_session` matcher is used to make assertions about the
+  # `session` hash.
+  #
+  #     class PostsController < ApplicationController
+  #       def index
+  #         session[:foo] = 'A candy bar'
+  #       end
+  #
+  #       def destroy
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #index' do
+  #         before { get :index }
+  #
+  #         it { should set_session }
+  #       end
+  #
+  #       describe 'DELETE #destroy' do
+  #         before { delete :destroy }
+  #
+  #         it { should_not set_session }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :index }
+  #
+  #         should set_session
+  #       end
+  #
+  #       context 'DELETE #destroy' do
+  #         setup { delete :destroy }
+  #
+  #         should_not set_session
+  #       end
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### []
+  #
+  # Use `[]` to narrow the scope of the matcher to a particular key.
+  #
+  #     class PostsController < ApplicationController
+  #       def index
+  #         session[:foo] = 'A candy bar'
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #index' do
+  #         before { get :index }
+  #
+  #         it { should set_session[:foo] }
+  #         it { should_not set_session[:bar] }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :show }
+  #
+  #         should set_session[:foo]
+  #         should_not set_session[:bar]
+  #       end
+  #     end
+  #
+  # ##### to
+  #
+  # Use `to` to assert that some key was set to a particular value, or that
+  # some key matches a particular regex.
+  #
+  #     class PostsController < ApplicationController
+  #       def index
+  #         session[:foo] = 'A candy bar'
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PostsController, type: :controller do
+  #       describe 'GET #index' do
+  #         before { get :index }
+  #
+  #         it { should set_session.to('A candy bar') }
+  #         it { should set_session.to(/bar/) }
+  #         it { should set_session[:foo].to('bar') }
+  #         it { should_not set_session[:foo].to('something else') }
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostsControllerTest < ActionController::TestCase
+  #       context 'GET #index' do
+  #         setup { get :show }
+  #
+  #         should set_session.to('A candy bar')
+  #         should set_session.to(/bar/)
+  #         should set_session[:foo].to('bar')
+  #         should_not set_session[:foo].to('something else')
+  #       end
+  #     end
+  #
+  # @return [SetSessionMatcher]
   def set_session; end
+
+  # The `use_after_action` matcher is used to test that an after_action
+  # callback is defined within your controller.
+  #
+  #     class IssuesController < ApplicationController
+  #       after_action :log_activity
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe IssuesController, type: :controller do
+  #       it { should use_after_action(:log_activity) }
+  #       it { should_not use_after_action(:destroy_user) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class IssuesControllerTest < ActionController::TestCase
+  #       should use_after_action(:log_activity)
+  #       should_not use_after_action(:destroy_user)
+  #     end
+  #
+  # @return [CallbackMatcher]
   def use_after_action(callback); end
+
+  # The `use_around_action` matcher is used to test that an around_action
+  # callback is defined within your controller.
+  #
+  #     class ChangesController < ApplicationController
+  #       around_action :wrap_in_transaction
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe ChangesController, type: :controller do
+  #       it { should use_around_action(:wrap_in_transaction) }
+  #       it { should_not use_around_action(:save_view_context) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ChangesControllerTest < ActionController::TestCase
+  #       should use_around_action(:wrap_in_transaction)
+  #       should_not use_around_action(:save_view_context)
+  #     end
+  #
+  # @return [CallbackMatcher]
   def use_around_action(callback); end
+
+  # The `use_before_action` matcher is used to test that a before_action
+  # callback is defined within your controller.
+  #
+  #     class UsersController < ApplicationController
+  #       before_action :authenticate_user!
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UsersController, type: :controller do
+  #       it { should use_before_action(:authenticate_user!) }
+  #       it { should_not use_before_action(:prevent_ssl) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UsersControllerTest < ActionController::TestCase
+  #       should use_before_action(:authenticate_user!)
+  #       should_not use_before_action(:prevent_ssl)
+  #     end
+  #
+  # @return [CallbackMatcher]
   def use_before_action(callback); end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::CallbackMatcher
+  # @return [CallbackMatcher] a new instance of CallbackMatcher
   def initialize(method_name, kind, callback_type); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(controller); end
 
   protected
 
+  # Returns the value of attribute callback_type.
   def callback_type; end
+
   def callbacks; end
+
+  # Returns the value of attribute controller.
   def controller; end
+
+  # Returns the value of attribute controller_class.
   def controller_class; end
+
+  # Returns the value of attribute kind.
   def kind; end
+
+  # Returns the value of attribute method_name.
   def method_name; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::FilterParamMatcher
+  # @return [FilterParamMatcher] a new instance of FilterParamMatcher
   def initialize(key); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(_controller); end
 
   private
 
   def filtered_keys; end
+
+  # @return [Boolean]
   def filters_key?; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::FlashStore
+  # @return [FlashStore] a new instance of FlashStore
   def initialize; end
 
+  # Returns the value of attribute controller.
   def controller; end
+
+  # Sets the attribute controller
+  #
+  # @param value the value to set the attribute controller to.
   def controller=(_arg0); end
+
   def empty?(*_arg0, &_arg1); end
+
+  # @return [Boolean]
   def has_key?(key); end
+
+  # @return [Boolean]
   def has_value?(expected_value); end
+
   def name; end
   def use_now!; end
 
@@ -95,7 +1032,9 @@ class Shoulda::Matchers::ActionController::FlashStore
   end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::PermitMatcher
+  # @return [PermitMatcher] a new instance of PermitMatcher
   def initialize(expected_permitted_parameter_names); end
 
   def add_params(params); end
@@ -104,36 +1043,69 @@ class Shoulda::Matchers::ActionController::PermitMatcher
   def failure_message_when_negated; end
   def for(action, options = T.unsafe(nil)); end
   def in_context(context); end
+
+  # @return [Boolean]
   def matches?(controller); end
+
   def on(subparameter_name); end
+
+  # Sets the attribute stubbed_params
+  #
+  # @param value the value to set the attribute stubbed_params to.
   def stubbed_params=(_arg0); end
 
   protected
 
+  # Returns the value of attribute action.
   def action; end
+
   def actual_permitted_parameter_names; end
+
+  # Returns the value of attribute context.
   def context; end
+
+  # Returns the value of attribute controller.
   def controller; end
+
   def default_verb; end
+
+  # Returns the value of attribute double_collections_by_parameter_name.
   def double_collections_by_parameter_name; end
+
   def ensure_action_and_verb_present!; end
   def expectation; end
+
+  # Returns the value of attribute expected_permitted_parameter_names.
   def expected_permitted_parameter_names; end
+
   def format_parameter_names(parameter_names); end
   def parameter_names_as_sentence; end
+
+  # Returns the value of attribute parameters_double_registry.
   def parameters_double_registry; end
+
   def reality; end
+
+  # Returns the value of attribute request_params.
   def request_params; end
+
+  # Returns the value of attribute subparameter_name.
   def subparameter_name; end
+
   def unpermitted_parameter_names; end
+
+  # Returns the value of attribute verb.
   def verb; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::PermitMatcher::ActionNotDefinedError < ::StandardError
   def message; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::PermitMatcher::CompositeParametersDoubleRegistry
+  # @return [CompositeParametersDoubleRegistry] a new instance of CompositeParametersDoubleRegistry
   def initialize; end
 
   def permitted_parameter_names(options = T.unsafe(nil)); end
@@ -141,10 +1113,13 @@ class Shoulda::Matchers::ActionController::PermitMatcher::CompositeParametersDou
 
   protected
 
+  # Returns the value of attribute parameters_double_registries.
   def parameters_double_registries; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::PermitMatcher::ParametersDoubleRegistry
+  # @return [ParametersDoubleRegistry] a new instance of ParametersDoubleRegistry
   def initialize(params); end
 
   def permitted_parameter_names(args = T.unsafe(nil)); end
@@ -152,7 +1127,10 @@ class Shoulda::Matchers::ActionController::PermitMatcher::ParametersDoubleRegist
 
   protected
 
+  # Returns the value of attribute double_collections_by_parameter_name.
   def double_collections_by_parameter_name; end
+
+  # Returns the value of attribute params.
   def params; end
 
   private
@@ -168,46 +1146,75 @@ end
 
 Shoulda::Matchers::ActionController::PermitMatcher::ParametersDoubleRegistry::TOP_LEVEL = T.let(T.unsafe(nil), Object)
 
+# @private
 class Shoulda::Matchers::ActionController::PermitMatcher::VerbNotDefinedError < ::StandardError
   def message; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::RedirectToMatcher
+  # @return [RedirectToMatcher] a new instance of RedirectToMatcher
   def initialize(url_or_description, context, &block); end
 
   def description; end
+
+  # Returns the value of attribute failure_message.
   def failure_message; end
+
+  # Returns the value of attribute failure_message_when_negated.
   def failure_message_when_negated; end
+
   def in_context(context); end
+
+  # @return [Boolean]
   def matches?(controller); end
 
   private
 
+  # @return [Boolean]
   def redirects_to_url?; end
+
   def url; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::RenderTemplateMatcher
+  # @return [RenderTemplateMatcher] a new instance of RenderTemplateMatcher
   def initialize(options, message, context); end
 
   def description; end
+
+  # Returns the value of attribute failure_message.
   def failure_message; end
+
+  # Returns the value of attribute failure_message_when_negated.
   def failure_message_when_negated; end
+
   def in_context(context); end
+
+  # @return [Boolean]
   def matches?(controller); end
 
   private
 
+  # @return [Boolean]
   def renders_template?; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::RenderWithLayoutMatcher
+  # @return [RenderWithLayoutMatcher] a new instance of RenderWithLayoutMatcher
   def initialize(expected_layout); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # Used to provide access to layouts recorded by
+  # ActionController::TemplateAssertions in Rails 3
   def in_context(context); end
+
+  # @return [Boolean]
   def matches?(controller); end
 
   private
@@ -215,80 +1222,138 @@ class Shoulda::Matchers::ActionController::RenderWithLayoutMatcher
   def expectation; end
   def recorded_layouts; end
   def rendered_layouts; end
+
+  # @return [Boolean]
   def rendered_with_expected_layout?; end
+
+  # @return [Boolean]
   def rendered_with_layout?; end
+
   def result; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::RescueFromMatcher
+  # @return [RescueFromMatcher] a new instance of RescueFromMatcher
   def initialize(exception); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(controller); end
+
   def with(method); end
 
   protected
 
+  # Returns the value of attribute controller.
   def controller; end
+
+  # Returns the value of attribute exception.
   def exception; end
+
   def expectation; end
+
+  # Returns the value of attribute expected_method.
   def expected_method; end
+
+  # @return [Boolean]
   def handler_exists?; end
+
+  # Returns the value of attribute handlers.
   def handlers; end
+
+  # @return [Boolean]
   def method_name_matches?; end
+
+  # @return [Boolean]
   def rescues_from_exception?; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::RespondWithMatcher
+  # @return [RespondWithMatcher] a new instance of RespondWithMatcher
   def initialize(status); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(controller); end
 
   protected
 
+  # @return [Boolean]
   def correct_status_code?; end
+
+  # @return [Boolean]
   def correct_status_code_range?; end
+
   def expectation; end
   def response_code; end
   def symbol_to_status_code(potential_symbol); end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::RouteMatcher
+  # @return [RouteMatcher] a new instance of RouteMatcher
   def initialize(context, method, path, port: T.unsafe(nil)); end
 
   def description; end
+
+  # Returns the value of attribute failure_message.
   def failure_message; end
+
   def failure_message_when_negated; end
   def in_context(context); end
+
+  # @return [Boolean]
   def matches?(controller); end
+
   def to(*args); end
 
   private
 
   def add_port_to_path(path, port); end
+
+  # Returns the value of attribute context.
   def context; end
+
   def guess_controller_if_necessary(controller); end
+
+  # Returns the value of attribute method.
   def method; end
+
   def normalize_path(path); end
+
+  # Returns the value of attribute params.
   def params; end
+
+  # Returns the value of attribute path.
   def path; end
+
+  # @return [Boolean]
   def route_recognized?; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::RouteParams
+  # @return [RouteParams] a new instance of RouteParams
   def initialize(args); end
 
   def normalize; end
 
   protected
 
+  # Returns the value of attribute args.
   def args; end
+
+  # @return [Boolean]
   def controller_and_action_given_as_string?; end
+
   def extract_params_from_string; end
   def normalize_values(hash); end
   def stringify(value); end
@@ -298,12 +1363,25 @@ end
 
 Shoulda::Matchers::ActionController::RouteParams::PARAMS_TO_SYMBOLIZE = T.let(T.unsafe(nil), Array)
 
+# @private
 class Shoulda::Matchers::ActionController::SessionStore
+  # Returns the value of attribute controller.
   def controller; end
+
+  # Sets the attribute controller
+  #
+  # @param value the value to set the attribute controller to.
   def controller=(_arg0); end
+
+  # @return [Boolean]
   def empty?; end
+
+  # @return [Boolean]
   def has_key?(key); end
+
+  # @return [Boolean]
   def has_value?(expected_value); end
+
   def name; end
 
   private
@@ -311,9 +1389,11 @@ class Shoulda::Matchers::ActionController::SessionStore
   def session; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::SetFlashMatcher
   extend ::Forwardable
 
+  # @return [SetFlashMatcher] a new instance of SetFlashMatcher
   def initialize; end
 
   def [](key); end
@@ -329,18 +1409,26 @@ class Shoulda::Matchers::ActionController::SetFlashMatcher
 
   protected
 
+  # Returns the value of attribute expected_value.
   def expected_value; end
+
+  # Returns the value of attribute key.
   def key; end
+
+  # Returns the value of attribute underlying_matcher.
   def underlying_matcher; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::SetFlashMatcher::QualifierOrderError < ::StandardError
   def message; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::SetSessionMatcher
   extend ::Forwardable
 
+  # @return [SetSessionMatcher] a new instance of SetSessionMatcher
   def initialize; end
 
   def [](key); end
@@ -355,10 +1443,13 @@ class Shoulda::Matchers::ActionController::SetSessionMatcher
 
   protected
 
+  # Returns the value of attribute underlying_matcher.
   def underlying_matcher; end
 end
 
+# @private
 class Shoulda::Matchers::ActionController::SetSessionOrFlashMatcher
+  # @return [SetSessionOrFlashMatcher] a new instance of SetSessionOrFlashMatcher
   def initialize(store); end
 
   def [](key); end
@@ -368,66 +1459,2082 @@ class Shoulda::Matchers::ActionController::SetSessionOrFlashMatcher
   def failure_message_for_should_not; end
   def failure_message_when_negated; end
   def in_context(context); end
+
+  # @return [Boolean]
   def matches?(controller); end
+
   def to(expected_value = T.unsafe(nil), &block); end
 
   protected
 
+  # Returns the value of attribute context.
   def context; end
+
+  # Returns the value of attribute controller.
   def controller; end
+
+  # Returns the value of attribute expected_value.
   def expected_value; end
+
+  # Returns the value of attribute key.
   def key; end
+
+  # Returns the value of attribute store.
   def store; end
 
   private
 
+  # @return [Boolean]
   def context_set?; end
+
   def expectation_description; end
+
+  # @return [Boolean]
   def expected_value_matches?; end
+
+  # @return [Boolean]
   def expected_value_set?; end
+
+  # @return [Boolean]
   def key_matches?; end
+
+  # @return [Boolean]
   def key_set?; end
 end
 
+# This module provides matchers that are used to test behavior within
+# ActiveModel or ActiveRecord classes.
+#
+# ### Testing conditional validations
+#
+# If your model defines a validation conditionally -- meaning that the
+# validation is declared with an `:if` or `:unless` option -- how do you
+# test it? You might expect the validation matchers here to have
+# corresponding `if` or `unless` qualifiers, but this isn't what you use.
+# Instead, before using the matcher in question, you place the record
+# you're testing in a state such that the validation you're also testing
+# will be run. A common way to do this is to make a new `context` and
+# override the subject to populate the record accordingly. You'll also want
+# to make sure to test that the validation is *not* run when the
+# conditional fails.
+#
+# Here's an example to illustrate what we mean:
+#
+#     class User
+#       include ActiveModel::Model
+#
+#       attr_accessor :role, :admin
+#
+#       validates_presence_of :role, if: :admin
+#     end
+#
+#     # RSpec
+#     RSpec.describe User, type: :model do
+#       context "when an admin" do
+#         subject { User.new(admin: true) }
+#
+#         it { should validate_presence_of(:role) }
+#       end
+#
+#       context "when not an admin" do
+#         subject { User.new(admin: false) }
+#
+#         it { should_not validate_presence_of(:role) }
+#       end
+#     end
+#
+#     # Minitest (Shoulda)
+#     class UserTest < ActiveSupport::TestCase
+#       context "when an admin" do
+#         subject { User.new(admin: true) }
+#
+#         should validate_presence_of(:role)
+#       end
+#
+#       context "when not an admin" do
+#         subject { User.new(admin: false) }
+#
+#         should_not validate_presence_of(:role)
+#       end
+#     end
 module Shoulda::Matchers::ActiveModel
+  # The `allow_value` matcher (or its alias, `allow_values`) is used to
+  # ensure that an attribute is valid or invalid if set to one or more
+  # values.
+  #
+  # Take this model for example:
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :website_url
+  #
+  #       validates_format_of :website_url, with: URI.regexp
+  #     end
+  #
+  # You can use `allow_value` to test one value at a time:
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it { should allow_value('https://foo.com').for(:website_url) }
+  #       it { should allow_value('https://bar.com').for(:website_url) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('https://foo.com').for(:website_url)
+  #       should allow_value('https://bar.com').for(:website_url)
+  #     end
+  #
+  # You can also test multiple values in one go, if you like. In the
+  # positive sense, this makes an assertion that none of the values cause the
+  # record to be invalid. In the negative sense, this makes an assertion
+  # that none of the values cause the record to be valid:
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_values('https://foo.com', 'https://bar.com').
+  #           for(:website_url)
+  #       end
+  #
+  #       it do
+  #         should_not allow_values('foo', 'buz').
+  #           for(:website_url)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_values('https://foo.com', 'https://bar.com/baz').
+  #         for(:website_url)
+  #
+  #       should_not allow_values('foo', 'buz').
+  #         for(:website_url)
+  #     end
+  #
+  # #### Caveats
+  #
+  # When using `allow_value` or any matchers that depend on it, you may
+  # encounter an AttributeChangedValueError. This exception is raised if the
+  # matcher, in attempting to set a value on the attribute, detects that
+  # the value set is different from the value that the attribute returns
+  # upon reading it back.
+  #
+  # This usually happens if the writer method (`foo=`, `bar=`, etc.) for
+  # that attribute has custom logic to ignore certain incoming values or
+  # change them in any way. Here are three examples we've seen:
+  #
+  # * You're attempting to assert that an attribute should not allow nil,
+  #   yet the attribute's writer method contains a conditional to do nothing
+  #   if the attribute is set to nil:
+  #
+  #         class Foo
+  #           include ActiveModel::Model
+  #
+  #           attr_reader :bar
+  #
+  #           def bar=(value)
+  #             return if value.nil?
+  #             @bar = value
+  #           end
+  #         end
+  #
+  #         RSpec.describe Foo, type: :model do
+  #           it do
+  #             foo = Foo.new
+  #             foo.bar = "baz"
+  #             # This will raise an AttributeChangedValueError since `foo.bar` is now "123"
+  #             expect(foo).not_to allow_value(nil).for(:bar)
+  #           end
+  #         end
+  #
+  # * You're attempting to assert that a numeric attribute should not allow
+  #   a string that contains non-numeric characters, yet the writer method
+  #   for that attribute strips out non-numeric characters:
+  #
+  #         class Foo
+  #           include ActiveModel::Model
+  #
+  #           attr_reader :bar
+  #
+  #           def bar=(value)
+  #             @bar = value.gsub(/\D+/, '')
+  #           end
+  #         end
+  #
+  #         RSpec.describe Foo, type: :model do
+  #           it do
+  #             foo = Foo.new
+  #             # This will raise an AttributeChangedValueError since `foo.bar` is now "123"
+  #             expect(foo).not_to allow_value("abc123").for(:bar)
+  #           end
+  #         end
+  #
+  # * You're passing a value to `allow_value` that the model typecasts into
+  #   another value:
+  #
+  #         RSpec.describe Foo, type: :model do
+  #           # Assume that `attr` is a string
+  #           # This will raise an AttributeChangedValueError since `attr` typecasts `[]` to `"[]"`
+  #           it { should_not allow_value([]).for(:attr) }
+  #         end
+  #
+  # Fortunately, if you understand why this is happening, and wish to get
+  # around this exception, it is possible to do so. You can use the
+  # `ignoring_interference_by_writer` qualifier like so:
+  #
+  #         it do
+  #           should_not allow_value([]).
+  #             for(:attr).
+  #             ignoring_interference_by_writer
+  #         end
+  #
+  # Please note, however, that this qualifier won't magically cause your
+  # test to pass. It may just so happen that the final value that ends up
+  # being set causes the model to fail validation. In that case, you'll have
+  # to figure out what to do. You may need to write your own test, or
+  # perhaps even remove your test altogether.
+  #
+  # #### Qualifiers
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :birthday_as_string
+  #
+  #       validates_format_of :birthday_as_string,
+  #         with: /^(\d+)-(\d+)-(\d+)$/,
+  #         on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('2013-01-01').
+  #           for(:birthday_as_string).
+  #           on(:create)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('2013-01-01').
+  #         for(:birthday_as_string).
+  #         on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :state
+  #
+  #       validates_format_of :state,
+  #         with: /^(open|closed)$/,
+  #         message: 'State must be open or closed'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('open', 'closed').
+  #           for(:state).
+  #           with_message('State must be open or closed')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('open', 'closed').
+  #         for(:state).
+  #         with_message('State must be open or closed')
+  #     end
+  #
+  # Use `with_message` with a regexp to perform a partial match:
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :state
+  #
+  #       validates_format_of :state,
+  #         with: /^(open|closed)$/,
+  #         message: 'State must be open or closed'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('open', 'closed').
+  #           for(:state).
+  #           with_message(/open or closed/)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('open', 'closed').
+  #         for(:state).
+  #         with_message(/open or closed/)
+  #     end
+  #
+  # Use `with_message` with the `:against` option if the attribute the
+  # validation message is stored under is different from the attribute
+  # being validated:
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :sports_team
+  #
+  #       validate :sports_team_must_be_valid
+  #
+  #       private
+  #
+  #       def sports_team_must_be_valid
+  #         if sports_team !~ /^(Broncos|Titans)$/i
+  #           self.errors.add :chosen_sports_team,
+  #             'Must be either a Broncos fan or a Titans fan'
+  #         end
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('Broncos', 'Titans').
+  #           for(:sports_team).
+  #           with_message('Must be either a Broncos or Titans fan',
+  #             against: :chosen_sports_team
+  #           )
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('Broncos', 'Titans').
+  #         for(:sports_team).
+  #         with_message('Must be either a Broncos or Titans fan',
+  #           against: :chosen_sports_team
+  #         )
+  #     end
+  #
+  # ##### ignoring_interference_by_writer
+  #
+  # Use `ignoring_interference_by_writer` to bypass an
+  # AttributeChangedValueError that you have encountered. Please read the
+  # Caveats section above for more information.
+  #
+  #     class Address < ActiveRecord::Base
+  #       # Address has a zip_code field which is a string
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Address, type: :model do
+  #       it do
+  #         should_not allow_value([]).
+  #           for(:zip_code).
+  #           ignoring_interference_by_writer
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class AddressTest < ActiveSupport::TestCase
+  #       should_not allow_value([]).
+  #         for(:zip_code).
+  #         ignoring_interference_by_writer
+  #     end
+  #
+  # @return [AllowValueMatcher]
   def allow_value(*values); end
+
+  # The `allow_value` matcher (or its alias, `allow_values`) is used to
+  # ensure that an attribute is valid or invalid if set to one or more
+  # values.
+  #
+  # Take this model for example:
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :website_url
+  #
+  #       validates_format_of :website_url, with: URI.regexp
+  #     end
+  #
+  # You can use `allow_value` to test one value at a time:
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it { should allow_value('https://foo.com').for(:website_url) }
+  #       it { should allow_value('https://bar.com').for(:website_url) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('https://foo.com').for(:website_url)
+  #       should allow_value('https://bar.com').for(:website_url)
+  #     end
+  #
+  # You can also test multiple values in one go, if you like. In the
+  # positive sense, this makes an assertion that none of the values cause the
+  # record to be invalid. In the negative sense, this makes an assertion
+  # that none of the values cause the record to be valid:
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_values('https://foo.com', 'https://bar.com').
+  #           for(:website_url)
+  #       end
+  #
+  #       it do
+  #         should_not allow_values('foo', 'buz').
+  #           for(:website_url)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_values('https://foo.com', 'https://bar.com/baz').
+  #         for(:website_url)
+  #
+  #       should_not allow_values('foo', 'buz').
+  #         for(:website_url)
+  #     end
+  #
+  # #### Caveats
+  #
+  # When using `allow_value` or any matchers that depend on it, you may
+  # encounter an AttributeChangedValueError. This exception is raised if the
+  # matcher, in attempting to set a value on the attribute, detects that
+  # the value set is different from the value that the attribute returns
+  # upon reading it back.
+  #
+  # This usually happens if the writer method (`foo=`, `bar=`, etc.) for
+  # that attribute has custom logic to ignore certain incoming values or
+  # change them in any way. Here are three examples we've seen:
+  #
+  # * You're attempting to assert that an attribute should not allow nil,
+  #   yet the attribute's writer method contains a conditional to do nothing
+  #   if the attribute is set to nil:
+  #
+  #         class Foo
+  #           include ActiveModel::Model
+  #
+  #           attr_reader :bar
+  #
+  #           def bar=(value)
+  #             return if value.nil?
+  #             @bar = value
+  #           end
+  #         end
+  #
+  #         RSpec.describe Foo, type: :model do
+  #           it do
+  #             foo = Foo.new
+  #             foo.bar = "baz"
+  #             # This will raise an AttributeChangedValueError since `foo.bar` is now "123"
+  #             expect(foo).not_to allow_value(nil).for(:bar)
+  #           end
+  #         end
+  #
+  # * You're attempting to assert that a numeric attribute should not allow
+  #   a string that contains non-numeric characters, yet the writer method
+  #   for that attribute strips out non-numeric characters:
+  #
+  #         class Foo
+  #           include ActiveModel::Model
+  #
+  #           attr_reader :bar
+  #
+  #           def bar=(value)
+  #             @bar = value.gsub(/\D+/, '')
+  #           end
+  #         end
+  #
+  #         RSpec.describe Foo, type: :model do
+  #           it do
+  #             foo = Foo.new
+  #             # This will raise an AttributeChangedValueError since `foo.bar` is now "123"
+  #             expect(foo).not_to allow_value("abc123").for(:bar)
+  #           end
+  #         end
+  #
+  # * You're passing a value to `allow_value` that the model typecasts into
+  #   another value:
+  #
+  #         RSpec.describe Foo, type: :model do
+  #           # Assume that `attr` is a string
+  #           # This will raise an AttributeChangedValueError since `attr` typecasts `[]` to `"[]"`
+  #           it { should_not allow_value([]).for(:attr) }
+  #         end
+  #
+  # Fortunately, if you understand why this is happening, and wish to get
+  # around this exception, it is possible to do so. You can use the
+  # `ignoring_interference_by_writer` qualifier like so:
+  #
+  #         it do
+  #           should_not allow_value([]).
+  #             for(:attr).
+  #             ignoring_interference_by_writer
+  #         end
+  #
+  # Please note, however, that this qualifier won't magically cause your
+  # test to pass. It may just so happen that the final value that ends up
+  # being set causes the model to fail validation. In that case, you'll have
+  # to figure out what to do. You may need to write your own test, or
+  # perhaps even remove your test altogether.
+  #
+  # #### Qualifiers
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :birthday_as_string
+  #
+  #       validates_format_of :birthday_as_string,
+  #         with: /^(\d+)-(\d+)-(\d+)$/,
+  #         on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('2013-01-01').
+  #           for(:birthday_as_string).
+  #           on(:create)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('2013-01-01').
+  #         for(:birthday_as_string).
+  #         on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :state
+  #
+  #       validates_format_of :state,
+  #         with: /^(open|closed)$/,
+  #         message: 'State must be open or closed'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('open', 'closed').
+  #           for(:state).
+  #           with_message('State must be open or closed')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('open', 'closed').
+  #         for(:state).
+  #         with_message('State must be open or closed')
+  #     end
+  #
+  # Use `with_message` with a regexp to perform a partial match:
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :state
+  #
+  #       validates_format_of :state,
+  #         with: /^(open|closed)$/,
+  #         message: 'State must be open or closed'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('open', 'closed').
+  #           for(:state).
+  #           with_message(/open or closed/)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('open', 'closed').
+  #         for(:state).
+  #         with_message(/open or closed/)
+  #     end
+  #
+  # Use `with_message` with the `:against` option if the attribute the
+  # validation message is stored under is different from the attribute
+  # being validated:
+  #
+  #     class UserProfile
+  #       include ActiveModel::Model
+  #       attr_accessor :sports_team
+  #
+  #       validate :sports_team_must_be_valid
+  #
+  #       private
+  #
+  #       def sports_team_must_be_valid
+  #         if sports_team !~ /^(Broncos|Titans)$/i
+  #           self.errors.add :chosen_sports_team,
+  #             'Must be either a Broncos fan or a Titans fan'
+  #         end
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe UserProfile, type: :model do
+  #       it do
+  #         should allow_value('Broncos', 'Titans').
+  #           for(:sports_team).
+  #           with_message('Must be either a Broncos or Titans fan',
+  #             against: :chosen_sports_team
+  #           )
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserProfileTest < ActiveSupport::TestCase
+  #       should allow_value('Broncos', 'Titans').
+  #         for(:sports_team).
+  #         with_message('Must be either a Broncos or Titans fan',
+  #           against: :chosen_sports_team
+  #         )
+  #     end
+  #
+  # ##### ignoring_interference_by_writer
+  #
+  # Use `ignoring_interference_by_writer` to bypass an
+  # AttributeChangedValueError that you have encountered. Please read the
+  # Caveats section above for more information.
+  #
+  #     class Address < ActiveRecord::Base
+  #       # Address has a zip_code field which is a string
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Address, type: :model do
+  #       it do
+  #         should_not allow_value([]).
+  #           for(:zip_code).
+  #           ignoring_interference_by_writer
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class AddressTest < ActiveSupport::TestCase
+  #       should_not allow_value([]).
+  #         for(:zip_code).
+  #         ignoring_interference_by_writer
+  #     end
+  #
+  # @private
+  # @return [AllowValueMatcher]
   def allow_values(*values); end
+
+  # The `have_secure_password` matcher tests usage of the
+  # `has_secure_password` macro.
+  #
+  # #### Example
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       include ActiveModel::SecurePassword
+  #       attr_accessor :password
+  #       attr_accessor :reset_password
+  #
+  #       has_secure_password
+  #       has_secure_password :reset_password
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should have_secure_password }
+  #       it { should have_secure_password(:reset_password) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should have_secure_password
+  #       should have_secure_password(:reset_password)
+  #     end
+  #
+  # @return [HaveSecurePasswordMatcher]
   def have_secure_password(attr = T.unsafe(nil)); end
+
+  # The `validate_absence_of` matcher tests the usage of the
+  # `validates_absence_of` validation.
+  #
+  #     class PowerHungryCountry
+  #       include ActiveModel::Model
+  #       attr_accessor :nuclear_weapons
+  #
+  #       validates_absence_of :nuclear_weapons
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PowerHungryCountry, type: :model do
+  #       it { should validate_absence_of(:nuclear_weapons) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PowerHungryCountryTest < ActiveSupport::TestCase
+  #       should validate_absence_of(:nuclear_weapons)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class PowerHungryCountry
+  #       include ActiveModel::Model
+  #       attr_accessor :nuclear_weapons
+  #
+  #       validates_absence_of :nuclear_weapons, on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PowerHungryCountry, type: :model do
+  #       it { should validate_absence_of(:nuclear_weapons).on(:create) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PowerHungryCountryTest < ActiveSupport::TestCase
+  #       should validate_absence_of(:nuclear_weapons).on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class PowerHungryCountry
+  #       include ActiveModel::Model
+  #       attr_accessor :nuclear_weapons
+  #
+  #       validates_absence_of :nuclear_weapons,
+  #         message: "there shall be peace on Earth"
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe PowerHungryCountry, type: :model do
+  #       it do
+  #         should validate_absence_of(:nuclear_weapons).
+  #           with_message("there shall be peace on Earth")
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PowerHungryCountryTest < ActiveSupport::TestCase
+  #       should validate_absence_of(:nuclear_weapons).
+  #         with_message("there shall be peace on Earth")
+  #     end
+  #
+  # @return [ValidateAbsenceOfMatcher]
   def validate_absence_of(attr); end
+
+  # The `validate_acceptance_of` matcher tests usage of the
+  # `validates_acceptance_of` validation.
+  #
+  #     class Registration
+  #       include ActiveModel::Model
+  #       attr_accessor :eula
+  #
+  #       validates_acceptance_of :eula
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Registration, type: :model do
+  #       it { should validate_acceptance_of(:eula) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RegistrationTest < ActiveSupport::TestCase
+  #       should validate_acceptance_of(:eula)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class Registration
+  #       include ActiveModel::Model
+  #       attr_accessor :terms_of_service
+  #
+  #       validates_acceptance_of :terms_of_service, on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Registration, type: :model do
+  #       it do
+  #         should validate_acceptance_of(:terms_of_service).
+  #           on(:create)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RegistrationTest < ActiveSupport::TestCase
+  #       should validate_acceptance_of(:terms_of_service).on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class Registration
+  #       include ActiveModel::Model
+  #       attr_accessor :terms_of_service
+  #
+  #       validates_acceptance_of :terms_of_service,
+  #         message: 'You must accept the terms of service'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Registration, type: :model do
+  #       it do
+  #         should validate_acceptance_of(:terms_of_service).
+  #           with_message('You must accept the terms of service')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RegistrationTest < ActiveSupport::TestCase
+  #       should validate_acceptance_of(:terms_of_service).
+  #         with_message('You must accept the terms of service')
+  #     end
+  #
+  # @return [ValidateAcceptanceOfMatcher]
   def validate_acceptance_of(attr); end
+
+  # The `validate_confirmation_of` matcher tests usage of the
+  # `validates_confirmation_of` validation.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :email
+  #
+  #       validates_confirmation_of :email
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should validate_confirmation_of(:email) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_confirmation_of(:email)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :password
+  #
+  #       validates_confirmation_of :password, on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should validate_confirmation_of(:password).on(:create) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_confirmation_of(:password).on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :password
+  #
+  #       validates_confirmation_of :password,
+  #         message: 'Please re-enter your password'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it do
+  #         should validate_confirmation_of(:password).
+  #           with_message('Please re-enter your password')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_confirmation_of(:password).
+  #         with_message('Please re-enter your password')
+  #     end
+  #
+  # @return [ValidateConfirmationOfMatcher]
   def validate_confirmation_of(attr); end
+
+  # The `validate_exclusion_of` matcher tests usage of the
+  # `validates_exclusion_of` validation, asserting that an attribute cannot
+  # take a blacklist of values, and inversely, can take values outside of
+  # this list.
+  #
+  # If your blacklist is an array of values, use `in_array`:
+  #
+  #     class Game
+  #       include ActiveModel::Model
+  #       attr_accessor :supported_os
+  #
+  #       validates_exclusion_of :supported_os, in: ['Mac', 'Linux']
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Game, type: :model do
+  #       it do
+  #         should validate_exclusion_of(:supported_os).
+  #           in_array(['Mac', 'Linux'])
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class GameTest < ActiveSupport::TestCase
+  #       should validate_exclusion_of(:supported_os).
+  #         in_array(['Mac', 'Linux'])
+  #     end
+  #
+  # If your blacklist is a range of values, use `in_range`:
+  #
+  #     class Game
+  #       include ActiveModel::Model
+  #       attr_accessor :supported_os
+  #
+  #       validates_exclusion_of :supported_os, in: 5..8
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Game, type: :model do
+  #       it do
+  #         should validate_exclusion_of(:floors_with_enemies).
+  #           in_range(5..8)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class GameTest < ActiveSupport::TestCase
+  #       should validate_exclusion_of(:floors_with_enemies).
+  #         in_range(5..8)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class Game
+  #       include ActiveModel::Model
+  #       attr_accessor :weapon
+  #
+  #       validates_exclusion_of :weapon,
+  #         in: ['pistol', 'paintball gun', 'stick'],
+  #         on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Game, type: :model do
+  #       it do
+  #         should validate_exclusion_of(:weapon).
+  #           in_array(['pistol', 'paintball gun', 'stick']).
+  #           on(:create)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class GameTest < ActiveSupport::TestCase
+  #       should validate_exclusion_of(:weapon).
+  #         in_array(['pistol', 'paintball gun', 'stick']).
+  #         on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class Game
+  #       include ActiveModel::Model
+  #       attr_accessor :weapon
+  #
+  #       validates_exclusion_of :weapon,
+  #         in: ['pistol', 'paintball gun', 'stick'],
+  #         message: 'You chose a puny weapon'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Game, type: :model do
+  #       it do
+  #         should validate_exclusion_of(:weapon).
+  #           in_array(['pistol', 'paintball gun', 'stick']).
+  #           with_message('You chose a puny weapon')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class GameTest < ActiveSupport::TestCase
+  #       should validate_exclusion_of(:weapon).
+  #         in_array(['pistol', 'paintball gun', 'stick']).
+  #         with_message('You chose a puny weapon')
+  #     end
+  #
+  # @return [ValidateExclusionOfMatcher]
   def validate_exclusion_of(attr); end
+
+  # The `validate_inclusion_of` matcher tests usage of the
+  # `validates_inclusion_of` validation, asserting that an attribute can
+  # take a whitelist of values and cannot take values outside of this list.
+  #
+  # If your whitelist is an array of values, use `in_array`:
+  #
+  #     class Issue
+  #       include ActiveModel::Model
+  #       attr_accessor :state
+  #
+  #       validates_inclusion_of :state,
+  #         in: ['open', 'resolved', 'unresolved']
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it do
+  #         should validate_inclusion_of(:state).
+  #           in_array(['open', 'resolved', 'unresolved'])
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class IssueTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:state).
+  #         in_array(['open', 'resolved', 'unresolved'])
+  #     end
+  #
+  # If your whitelist is a range of values, use `in_range`:
+  #
+  #     class Issue
+  #       include ActiveModel::Model
+  #       attr_accessor :priority
+  #
+  #       validates_inclusion_of :priority, in: 1..5
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it { should validate_inclusion_of(:state).in_range(1..5) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class IssueTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:state).in_range(1..5)
+  #     end
+  #
+  # #### Caveats
+  #
+  # We discourage using `validate_inclusion_of` with boolean columns. In
+  # fact, there is never a case where a boolean column will be anything but
+  # true, false, or nil, as ActiveRecord will type-cast an incoming value to
+  # one of these three values. That means there isn't any way we can refute
+  # this logic in a test. Hence, this will produce a warning:
+  #
+  #     it do
+  #       should validate_inclusion_of(:imported).
+  #         in_array([true, false])
+  #     end
+  #
+  # The only case where `validate_inclusion_of` *could* be appropriate is
+  # for ensuring that a boolean column accepts nil, but we recommend
+  # using `allow_value` instead, like this:
+  #
+  #     it { should allow_value(nil).for(:imported) }
+  #
+  # #### Qualifiers
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class Issue
+  #       include ActiveModel::Model
+  #       attr_accessor :severity
+  #
+  #       validates_inclusion_of :severity,
+  #         in: %w(low medium high),
+  #         on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it do
+  #         should validate_inclusion_of(:severity).
+  #           in_array(%w(low medium high)).
+  #           on(:create)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class IssueTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:severity).
+  #         in_array(%w(low medium high)).
+  #         on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class Issue
+  #       include ActiveModel::Model
+  #       attr_accessor :severity
+  #
+  #       validates_inclusion_of :severity,
+  #         in: %w(low medium high),
+  #         message: 'Severity must be low, medium, or high'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it do
+  #         should validate_inclusion_of(:severity).
+  #           in_array(%w(low medium high)).
+  #           with_message('Severity must be low, medium, or high')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class IssueTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:severity).
+  #         in_array(%w(low medium high)).
+  #         with_message('Severity must be low, medium, or high')
+  #     end
+  #
+  # ##### with_low_message
+  #
+  # Use `with_low_message` if you have a custom validation message for when
+  # a given value is too low.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :age
+  #
+  #       validate :age_must_be_valid
+  #
+  #       private
+  #
+  #       def age_must_be_valid
+  #         if age < 65
+  #           self.errors.add :age, 'You do not receive any benefits'
+  #         end
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_inclusion_of(:age).
+  #           in_range(0..65).
+  #           with_low_message('You do not receive any benefits')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:age).
+  #         in_range(0..65).
+  #         with_low_message('You do not receive any benefits')
+  #     end
+  #
+  # ##### with_high_message
+  #
+  # Use `with_high_message` if you have a custom validation message for
+  # when a given value is too high.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :age
+  #
+  #       validate :age_must_be_valid
+  #
+  #       private
+  #
+  #       def age_must_be_valid
+  #         if age > 21
+  #           self.errors.add :age, "You're too old for this stuff"
+  #         end
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_inclusion_of(:age).
+  #           in_range(0..21).
+  #           with_high_message("You're too old for this stuff")
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:age).
+  #         in_range(0..21).
+  #         with_high_message("You're too old for this stuff")
+  #     end
+  #
+  # ##### allow_nil
+  #
+  # Use `allow_nil` to assert that the attribute allows nil.
+  #
+  #     class Issue
+  #       include ActiveModel::Model
+  #       attr_accessor :state
+  #
+  #       validates_presence_of :state
+  #       validates_inclusion_of :state,
+  #         in: ['open', 'resolved', 'unresolved'],
+  #         allow_nil: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it do
+  #         should validate_inclusion_of(:state).
+  #           in_array(['open', 'resolved', 'unresolved']).
+  #           allow_nil
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class IssueTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:state).
+  #         in_array(['open', 'resolved', 'unresolved']).
+  #         allow_nil
+  #     end
+  #
+  # ##### allow_blank
+  #
+  # Use `allow_blank` to assert that the attribute allows blank.
+  #
+  #     class Issue
+  #       include ActiveModel::Model
+  #       attr_accessor :state
+  #
+  #       validates_presence_of :state
+  #       validates_inclusion_of :state,
+  #         in: ['open', 'resolved', 'unresolved'],
+  #         allow_blank: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it do
+  #         should validate_inclusion_of(:state).
+  #           in_array(['open', 'resolved', 'unresolved']).
+  #           allow_blank
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class IssueTest < ActiveSupport::TestCase
+  #       should validate_inclusion_of(:state).
+  #         in_array(['open', 'resolved', 'unresolved']).
+  #         allow_blank
+  #     end
+  #
+  # @return [ValidateInclusionOfMatcher]
   def validate_inclusion_of(attr); end
+
+  # The `validate_length_of` matcher tests usage of the
+  # `validates_length_of` matcher. Note that this matcher is intended to be
+  # used against string columns and not integer columns.
+  #
+  # #### Qualifiers
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :password
+  #
+  #       validates_length_of :password, minimum: 10, on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it do
+  #         should validate_length_of(:password).
+  #           is_at_least(10).
+  #           on(:create)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:password).
+  #         is_at_least(10).
+  #         on(:create)
+  #     end
+  #
+  # ##### is_at_least
+  #
+  # Use `is_at_least` to test usage of the `:minimum` option. This asserts
+  # that the attribute can take a string which is equal to or longer than
+  # the given length and cannot take a string which is shorter.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :bio
+  #
+  #       validates_length_of :bio, minimum: 15
+  #     end
+  #
+  #     # RSpec
+  #
+  #     RSpec.describe User, type: :model do
+  #       it { should validate_length_of(:bio).is_at_least(15) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:bio).is_at_least(15)
+  #     end
+  #
+  # ##### is_at_most
+  #
+  # Use `is_at_most` to test usage of the `:maximum` option. This asserts
+  # that the attribute can take a string which is equal to or shorter than
+  # the given length and cannot take a string which is longer.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :status_update
+  #
+  #       validates_length_of :status_update, maximum: 140
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should validate_length_of(:status_update).is_at_most(140) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:status_update).is_at_most(140)
+  #     end
+  #
+  # ##### is_equal_to
+  #
+  # Use `is_equal_to` to test usage of the `:is` option. This asserts that
+  # the attribute can take a string which is exactly equal to the given
+  # length and cannot take a string which is shorter or longer.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :favorite_superhero
+  #
+  #       validates_length_of :favorite_superhero, is: 6
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should validate_length_of(:favorite_superhero).is_equal_to(6) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:favorite_superhero).is_equal_to(6)
+  #     end
+  #
+  # ##### is_at_least + is_at_most
+  #
+  # Use `is_at_least` and `is_at_most` together to test usage of the `:in`
+  # option.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :password
+  #
+  #       validates_length_of :password, in: 5..30
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it do
+  #         should validate_length_of(:password).
+  #           is_at_least(5).is_at_most(30)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:password).
+  #         is_at_least(5).is_at_most(30)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :password
+  #
+  #       validates_length_of :password,
+  #         minimum: 10,
+  #         message: "Password isn't long enough"
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it do
+  #         should validate_length_of(:password).
+  #           is_at_least(10).
+  #           with_message("Password isn't long enough")
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:password).
+  #         is_at_least(10).
+  #         with_message("Password isn't long enough")
+  #     end
+  #
+  # ##### with_short_message
+  #
+  # Use `with_short_message` if you are using a custom "too short" message.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :secret_key
+  #
+  #       validates_length_of :secret_key,
+  #         in: 15..100,
+  #         too_short: 'Secret key must be more than 15 characters'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it do
+  #         should validate_length_of(:secret_key).
+  #           is_at_least(15).
+  #           with_short_message('Secret key must be more than 15 characters')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:secret_key).
+  #         is_at_least(15).
+  #         with_short_message('Secret key must be more than 15 characters')
+  #     end
+  #
+  # ##### with_long_message
+  #
+  # Use `with_long_message` if you are using a custom "too long" message.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :secret_key
+  #
+  #       validates_length_of :secret_key,
+  #         in: 15..100,
+  #         too_long: 'Secret key must be less than 100 characters'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it do
+  #         should validate_length_of(:secret_key).
+  #           is_at_most(100).
+  #           with_long_message('Secret key must be less than 100 characters')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:secret_key).
+  #         is_at_most(100).
+  #         with_long_message('Secret key must be less than 100 characters')
+  #     end
+  #
+  # ##### allow_nil
+  #
+  # Use `allow_nil` to assert that the attribute allows nil.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :bio
+  #
+  #       validates_length_of :bio, minimum: 15, allow_nil: true
+  #     end
+  #
+  #     # RSpec
+  #     describe User do
+  #       it { should validate_length_of(:bio).is_at_least(15).allow_nil }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:bio).is_at_least(15).allow_nil
+  #     end
+  #
+  # # ##### allow_blank
+  #
+  # Use `allow_blank` to assert that the attribute allows blank.
+  #
+  #     class User
+  #       include ActiveModel::Model
+  #       attr_accessor :bio
+  #
+  #       validates_length_of :bio, minimum: 15, allow_blank: true
+  #     end
+  #
+  #     # RSpec
+  #     describe User do
+  #       it { should validate_length_of(:bio).is_at_least(15).allow_blank }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should validate_length_of(:bio).is_at_least(15).allow_blank
+  #     end
+  #
+  # @return [ValidateLengthOfMatcher]
   def validate_length_of(attr); end
+
+  # The `validate_numericality_of` matcher tests usage of the
+  # `validates_numericality_of` validation.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :gpa
+  #
+  #       validates_numericality_of :gpa
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should validate_numericality_of(:gpa) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:gpa)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :number_of_dependents
+  #
+  #       validates_numericality_of :number_of_dependents, on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_numericality_of(:number_of_dependents).
+  #           on(:create)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:number_of_dependents).on(:create)
+  #     end
+  #
+  # ##### only_integer
+  #
+  # Use `only_integer` to test usage of the `:only_integer` option. This
+  # asserts that your attribute only allows integer numbers and disallows
+  # non-integer ones.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :age
+  #
+  #       validates_numericality_of :age, only_integer: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should validate_numericality_of(:age).only_integer }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:age).only_integer
+  #     end
+  #
+  # ##### is_less_than
+  #
+  # Use `is_less_than` to test usage of the the `:less_than` option. This
+  # asserts that the attribute can take a number which is less than the
+  # given value and cannot take a number which is greater than or equal to
+  # it.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :number_of_cars
+  #
+  #       validates_numericality_of :number_of_cars, less_than: 2
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_numericality_of(:number_of_cars).
+  #           is_less_than(2)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:number_of_cars).
+  #         is_less_than(2)
+  #     end
+  #
+  # ##### is_less_than_or_equal_to
+  #
+  # Use `is_less_than_or_equal_to` to test usage of the
+  # `:less_than_or_equal_to` option. This asserts that the attribute can
+  # take a number which is less than or equal to the given value and cannot
+  # take a number which is greater than it.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :birth_year
+  #
+  #       validates_numericality_of :birth_year, less_than_or_equal_to: 1987
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_numericality_of(:birth_year).
+  #           is_less_than_or_equal_to(1987)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:birth_year).
+  #         is_less_than_or_equal_to(1987)
+  #     end
+  #
+  # ##### is_equal_to
+  #
+  # Use `is_equal_to` to test usage of the `:equal_to` option. This asserts
+  # that the attribute can take a number which is equal to the given value
+  # and cannot take a number which is not equal.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :weight
+  #
+  #       validates_numericality_of :weight, equal_to: 150
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should validate_numericality_of(:weight).is_equal_to(150) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:weight).is_equal_to(150)
+  #     end
+  #
+  # ##### is_greater_than_or_equal_to
+  #
+  # Use `is_greater_than_or_equal_to` to test usage of the
+  # `:greater_than_or_equal_to` option. This asserts that the attribute can
+  # take a number which is greater than or equal to the given value and
+  # cannot take a number which is less than it.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :height
+  #
+  #       validates_numericality_of :height, greater_than_or_equal_to: 55
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_numericality_of(:height).
+  #           is_greater_than_or_equal_to(55)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:height).
+  #         is_greater_than_or_equal_to(55)
+  #     end
+  #
+  # ##### is_greater_than
+  #
+  # Use `is_greater_than` to test usage of the `:greater_than` option.
+  # This asserts that the attribute can take a number which is greater than
+  # the given value and cannot take a number less than or equal to it.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :legal_age
+  #
+  #       validates_numericality_of :legal_age, greater_than: 21
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_numericality_of(:legal_age).
+  #           is_greater_than(21)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:legal_age).
+  #         is_greater_than(21)
+  #     end
+  #
+  # ##### is_other_than
+  #
+  # Use `is_other_than` to test usage of the `:other_than` option.
+  # This asserts that the attribute can take a number which is not equal to
+  # the given value.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :legal_age
+  #
+  #       validates_numericality_of :legal_age, other_than: 21
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_numericality_of(:legal_age).
+  #           is_other_than(21)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:legal_age).
+  #         is_other_than(21)
+  #     end
+  #
+  # ##### even
+  #
+  # Use `even` to test usage of the `:even` option. This asserts that the
+  # attribute can take odd numbers and cannot take even ones.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :birth_month
+  #
+  #       validates_numericality_of :birth_month, even: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should validate_numericality_of(:birth_month).even }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:birth_month).even
+  #     end
+  #
+  # ##### odd
+  #
+  # Use `odd` to test usage of the `:odd` option. This asserts that the
+  # attribute can take a number which is odd and cannot take a number which
+  # is even.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :birth_day
+  #
+  #       validates_numericality_of :birth_day, odd: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should validate_numericality_of(:birth_day).odd }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:birth_day).odd
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class Person
+  #       include ActiveModel::Model
+  #       attr_accessor :number_of_dependents
+  #
+  #       validates_numericality_of :number_of_dependents,
+  #         message: 'Number of dependents must be a number'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should validate_numericality_of(:number_of_dependents).
+  #           with_message('Number of dependents must be a number')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:number_of_dependents).
+  #         with_message('Number of dependents must be a number')
+  #     end
+  #
+  # ##### allow_nil
+  #
+  # Use `allow_nil` to assert that the attribute allows nil.
+  #
+  #     class Post
+  #       include ActiveModel::Model
+  #       attr_accessor :age
+  #
+  #       validates_numericality_of :age, allow_nil: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_numericality_of(:age).allow_nil }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_numericality_of(:age).allow_nil
+  #     end
+  #
+  # @return [ValidateNumericalityOfMatcher]
   def validate_numericality_of(attr); end
+
+  # The `validate_presence_of` matcher tests usage of the
+  # `validates_presence_of` validation.
+  #
+  #     class Robot
+  #       include ActiveModel::Model
+  #       attr_accessor :arms
+  #
+  #       validates_presence_of :arms
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Robot, type: :model do
+  #       it { should validate_presence_of(:arms) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RobotTest < ActiveSupport::TestCase
+  #       should validate_presence_of(:arms)
+  #     end
+  #
+  # #### Caveats
+  #
+  # Under Rails 4 and greater, if your model `has_secure_password` and you
+  # are validating presence of the password using a record whose password
+  # has already been set prior to calling the matcher, you will be
+  # instructed to use a record whose password is empty instead.
+  #
+  # For example, given this scenario:
+  #
+  #     class User < ActiveRecord::Base
+  #       has_secure_password validations: false
+  #
+  #       validates_presence_of :password
+  #     end
+  #
+  #     RSpec.describe User, type: :model do
+  #       subject { User.new(password: '123456') }
+  #
+  #       it { should validate_presence_of(:password) }
+  #     end
+  #
+  # the above test will raise an error like this:
+  #
+  #     The validation failed because your User model declares
+  #     `has_secure_password`, and `validate_presence_of` was called on a
+  #     user which has `password` already set to a value. Please use a user
+  #     with an empty `password` instead.
+  #
+  # This happens because `has_secure_password` itself overrides your model
+  # so that it is impossible to set `password` to nil. This means that it is
+  # impossible to test that setting `password` to nil places your model in
+  # an invalid state (which in turn means that the validation itself is
+  # unnecessary).
+  #
+  # #### Qualifiers
+  #
+  # ##### allow_nil
+  #
+  # Use `allow_nil` if your model has an optional attribute.
+  #
+  #   class Robot
+  #     include ActiveModel::Model
+  #     attr_accessor :nickname
+  #
+  #     validates_presence_of :nickname, allow_nil: true
+  #   end
+  #
+  #   # RSpec
+  #   RSpec.describe Robot, type: :model do
+  #     it { should validate_presence_of(:nickname).allow_nil }
+  #   end
+  #
+  #   # Minitest (Shoulda)
+  #   class RobotTest < ActiveSupport::TestCase
+  #     should validate_presence_of(:nickname).allow_nil
+  #   end
+  #
+  # ##### on
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class Robot
+  #       include ActiveModel::Model
+  #       attr_accessor :arms
+  #
+  #       validates_presence_of :arms, on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Robot, type: :model do
+  #       it { should validate_presence_of(:arms).on(:create) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RobotTest < ActiveSupport::TestCase
+  #       should validate_presence_of(:arms).on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class Robot
+  #       include ActiveModel::Model
+  #       attr_accessor :legs
+  #
+  #       validates_presence_of :legs, message: 'Robot has no legs'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Robot, type: :model do
+  #       it do
+  #         should validate_presence_of(:legs).
+  #           with_message('Robot has no legs')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class RobotTest < ActiveSupport::TestCase
+  #       should validate_presence_of(:legs).
+  #         with_message('Robot has no legs')
+  #     end
+  #
+  # @return [ValidatePresenceOfMatcher]
   def validate_presence_of(attr); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher
   include ::Shoulda::Matchers::ActiveModel::Helpers
   include ::Shoulda::Matchers::ActiveModel::Qualifiers::IgnoringInterferenceByWriter
 
+  # @return [AllowValueMatcher] a new instance of AllowValueMatcher
   def initialize(*values); end
 
   def _after_setting_value(&callback); end
+
+  # Returns the value of attribute after_setting_value_callback.
   def after_setting_value_callback; end
+
+  # Sets the attribute attribute_changed_value_message
+  #
+  # @param value the value to set the attribute attribute_changed_value_message to.
   def attribute_changed_value_message=(_arg0); end
+
+  # Returns the value of attribute attribute_to_check_message_against.
   def attribute_to_check_message_against; end
+
+  # Returns the value of attribute attribute_to_set.
   def attribute_to_set; end
+
+  # Returns the value of attribute context.
   def context; end
+
   def description; end
+
+  # @return [Boolean]
   def does_not_match?(instance); end
+
   def expected_message; end
+
+  # @return [Boolean]
   def expects_custom_validation_message?; end
+
+  # @return [Boolean]
   def expects_strict?; end
+
   def failure_message; end
+
+  # Sets the attribute failure_message_preface
+  #
+  # @param value the value to set the attribute failure_message_preface to.
   def failure_message_preface=(_arg0); end
+
   def failure_message_when_negated; end
   def for(attribute_name); end
   def instance; end
   def last_attribute_setter_used; end
   def last_value_set; end
+
+  # @return [Boolean]
   def matches?(instance); end
+
   def model; end
   def on(context); end
   def simple_description; end
@@ -437,9 +3544,15 @@ class Shoulda::Matchers::ActiveModel::AllowValueMatcher
 
   protected
 
+  # Returns the value of attribute options.
   def options; end
+
+  # Returns the value of attribute result.
   def result; end
+
+  # Returns the value of attribute values_to_preset.
   def values_to_preset; end
+
   def values_to_set; end
 
   private
@@ -456,85 +3569,188 @@ class Shoulda::Matchers::ActiveModel::AllowValueMatcher
   def descriptions_for_preset_values; end
   def failure_message_preface; end
   def human_attribute_name; end
+
+  # @return [Boolean]
   def include_attribute_changed_value_message?; end
+
   def inspected_values_to_set; end
   def model_name; end
   def run(strategy); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeChangedValueError < ::Shoulda::Matchers::Error
+  # Returns the value of attribute attribute_name.
   def attribute_name; end
+
+  # Sets the attribute attribute_name
+  #
+  # @param value the value to set the attribute attribute_name to.
   def attribute_name=(_arg0); end
+
+  # Returns the value of attribute matcher_name.
   def matcher_name; end
+
+  # Sets the attribute matcher_name
+  #
+  # @param value the value to set the attribute matcher_name to.
   def matcher_name=(_arg0); end
+
   def message; end
+
+  # Returns the value of attribute model.
   def model; end
+
+  # Sets the attribute model
+  #
+  # @param value the value to set the attribute model to.
   def model=(_arg0); end
+
+  # @return [Boolean]
   def successful?; end
+
+  # Returns the value of attribute value_read.
   def value_read; end
+
+  # Sets the attribute value_read
+  #
+  # @param value the value to set the attribute value_read to.
   def value_read=(_arg0); end
+
+  # Returns the value of attribute value_written.
   def value_written; end
+
+  # Sets the attribute value_written
+  #
+  # @param value the value to set the attribute value_written to.
   def value_written=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeDoesNotExistError < ::Shoulda::Matchers::Error
+  # Returns the value of attribute attribute_name.
   def attribute_name; end
+
+  # Sets the attribute attribute_name
+  #
+  # @param value the value to set the attribute attribute_name to.
   def attribute_name=(_arg0); end
+
   def message; end
+
+  # Returns the value of attribute model.
   def model; end
+
+  # Sets the attribute model
+  #
+  # @param value the value to set the attribute model to.
   def model=(_arg0); end
+
+  # @return [Boolean]
   def successful?; end
+
+  # Returns the value of attribute value.
   def value; end
+
+  # Sets the attribute value
+  #
+  # @param value the value to set the attribute value to.
   def value=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSetter
+  # @return [AttributeSetter] a new instance of AttributeSetter
   def initialize(args); end
 
+  # @return [Boolean]
   def attribute_changed_value?; end
+
+  # Returns the value of attribute attribute_name.
   def attribute_name; end
+
   def check; end
+
+  # @return [Boolean]
   def checked?; end
+
   def description; end
   def failure_message; end
+
+  # Returns the value of attribute result_of_checking.
   def result_of_checking; end
+
+  # Returns the value of attribute result_of_setting.
   def result_of_setting; end
+
   def run; end
   def run!; end
   def set; end
   def set!; end
+
+  # @return [Boolean]
   def set?; end
+
+  # @return [Boolean]
   def successful?; end
+
+  # @return [Boolean]
   def successfully_checked?; end
+
+  # @return [Boolean]
   def successfully_set?; end
+
+  # @return [Boolean]
   def unsuccessful?; end
+
+  # @return [Boolean]
   def unsuccessfully_checked?; end
+
   def value_read; end
   def value_written; end
 
   protected
 
+  # Returns the value of attribute after_set_callback.
   def after_set_callback; end
+
+  # Returns the value of attribute args.
   def args; end
+
+  # Returns the value of attribute matcher_name.
   def matcher_name; end
+
+  # Returns the value of attribute object.
   def object; end
 
   private
 
+  # @return [Boolean]
   def active_resource_object?; end
+
   def attribute_changed_value!; end
   def attribute_changed_value_error; end
   def attribute_does_not_exist!; end
   def attribute_does_not_exist_error; end
+
+  # @return [Boolean]
   def attribute_exists?; end
+
+  # @return [Boolean]
   def attribute_is_an_enum?; end
+
   def defined_enums; end
   def enum_values; end
   def ignore_interference_by_writer; end
   def model; end
+
+  # @return [Boolean]
   def raise_attribute_changed_value_error?; end
+
   def successful_check; end
   def successful_setting; end
+
+  # @return [Boolean]
   def value_read_is_expected_for_an_enum?; end
 
   class << self
@@ -542,9 +3758,11 @@ class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSetter
   end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSetterAndValidator
   extend ::Forwardable
 
+  # @return [AttributeSetterAndValidator] a new instance of AttributeSetterAndValidator
   def initialize(allow_value_matcher, attribute_name, value); end
 
   def after_setting_value_callback(*args, &block); end
@@ -560,14 +3778,21 @@ class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSetterAndValid
 
   protected
 
+  # Returns the value of attribute allow_value_matcher.
   def allow_value_matcher; end
+
+  # Returns the value of attribute attribute_name.
   def attribute_name; end
+
+  # Returns the value of attribute value.
   def value; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSetters
   include ::Enumerable
 
+  # @return [AttributeSetters] a new instance of AttributeSetters
   def initialize(allow_value_matcher, values); end
 
   def each(&block); end
@@ -575,16 +3800,20 @@ class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSetters
 
   protected
 
+  # Returns the value of attribute tuples.
   def tuples; end
 
   private
 
+  # @return [Boolean]
   def does_not_match?(tuple); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSettersAndValidators
   include ::Enumerable
 
+  # @return [AttributeSettersAndValidators] a new instance of AttributeSettersAndValidators
   def initialize(allow_value_matcher, values); end
 
   def each(&block); end
@@ -593,27 +3822,43 @@ class Shoulda::Matchers::ActiveModel::AllowValueMatcher::AttributeSettersAndVali
 
   protected
 
+  # Returns the value of attribute tuples.
   def tuples; end
 
   private
 
+  # @return [Boolean]
   def does_not_match?(tuple); end
+
+  # @return [Boolean]
   def matches?(tuple); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::SuccessfulCheck
+  # @return [Boolean]
   def successful?; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::AllowValueMatcher::SuccessfulSetting
+  # @return [Boolean]
   def successful?; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::CouldNotDetermineValueOutsideOfArray < ::RuntimeError; end
 
+# @private
 class Shoulda::Matchers::ActiveModel::CouldNotSetPasswordError < ::Shoulda::Matchers::Error
   def message; end
+
+  # Returns the value of attribute model.
   def model; end
+
+  # Sets the attribute model
+  #
+  # @param value the value to set the attribute model to.
   def model=(_arg0); end
 
   private
@@ -626,16 +3871,21 @@ class Shoulda::Matchers::ActiveModel::CouldNotSetPasswordError < ::Shoulda::Matc
   end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::DisallowValueMatcher
   extend ::Forwardable
 
+  # @return [DisallowValueMatcher] a new instance of DisallowValueMatcher
   def initialize(value); end
 
   def _after_setting_value(*args, &block); end
   def attribute_changed_value_message=(*args, &block); end
   def attribute_to_set(*args, &block); end
   def description(*args, &block); end
+
+  # @return [Boolean]
   def does_not_match?(subject); end
+
   def expects_strict?(*args, &block); end
   def failure_message; end
   def failure_message_preface(*args, &block); end
@@ -646,7 +3896,10 @@ class Shoulda::Matchers::ActiveModel::DisallowValueMatcher
   def ignoring_interference_by_writer(value = T.unsafe(nil)); end
   def last_attribute_setter_used(*args, &block); end
   def last_value_set(*args, &block); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def model(*args, &block); end
   def on(context); end
   def simple_description(*args, &block); end
@@ -656,19 +3909,28 @@ class Shoulda::Matchers::ActiveModel::DisallowValueMatcher
 
   protected
 
+  # Returns the value of attribute allow_matcher.
   def allow_matcher; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher
+  # @return [HaveSecurePasswordMatcher] a new instance of HaveSecurePasswordMatcher
   def initialize(attribute); end
 
   def description; end
+
+  # Returns the value of attribute failure_message.
   def failure_message; end
+
+  # @return [Boolean]
   def matches?(subject); end
 
   protected
 
+  # Returns the value of attribute subject.
   def subject; end
+
   def validate; end
 
   private
@@ -681,15 +3943,23 @@ Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher::CORRECT_PASSWORD = T.
 Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher::INCORRECT_PASSWORD = T.let(T.unsafe(nil), String)
 Shoulda::Matchers::ActiveModel::HaveSecurePasswordMatcher::MESSAGES = T.let(T.unsafe(nil), Hash)
 
+# @private
 module Shoulda::Matchers::ActiveModel::Helpers
   def default_error_message(type, options = T.unsafe(nil)); end
   def format_validation_errors(errors); end
   def pretty_error_messages(object); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::NonNullableBooleanError < ::Shoulda::Matchers::Error
+  # Returns the value of attribute attribute.
   def attribute; end
+
+  # Sets the attribute attribute
+  #
+  # @param value the value to set the attribute attribute to.
   def attribute=(_arg0); end
+
   def message; end
 
   class << self
@@ -697,23 +3967,34 @@ class Shoulda::Matchers::ActiveModel::NonNullableBooleanError < ::Shoulda::Match
   end
 end
 
+# @private
 module Shoulda::Matchers::ActiveModel::NumericalityMatchers; end
 
+# @private
 class Shoulda::Matchers::ActiveModel::NumericalityMatchers::ComparisonMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
+  # @return [ComparisonMatcher] a new instance of ComparisonMatcher
   def initialize(numericality_matcher, value, operator); end
 
   def comparison_description; end
+
+  # @return [Boolean]
   def expects_custom_validation_message?; end
+
   def failure_message; end
   def failure_message_when_negated; end
   def for(attribute); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
   def with_message(message); end
 
   private
 
+  # @return [Boolean]
   def all_bounds_correct?; end
+
   def assertions; end
   def comparison_combos; end
   def comparison_expectation; end
@@ -727,6 +4008,7 @@ end
 
 Shoulda::Matchers::ActiveModel::NumericalityMatchers::ComparisonMatcher::ERROR_MESSAGES = T.let(T.unsafe(nil), Hash)
 
+# @private
 class Shoulda::Matchers::ActiveModel::NumericalityMatchers::EvenNumberMatcher < ::Shoulda::Matchers::ActiveModel::NumericalityMatchers::NumericTypeMatcher
   def allowed_type_adjective; end
   def diff_to_compare; end
@@ -740,14 +4022,19 @@ end
 
 Shoulda::Matchers::ActiveModel::NumericalityMatchers::EvenNumberMatcher::NON_EVEN_NUMBER_VALUE = T.let(T.unsafe(nil), Integer)
 
+# @private
 class Shoulda::Matchers::ActiveModel::NumericalityMatchers::NumericTypeMatcher
   extend ::Forwardable
 
+  # @return [NumericTypeMatcher] a new instance of NumericTypeMatcher
   def initialize(numeric_type_matcher, attribute); end
 
   def allowed_type_adjective; end
   def allowed_type_name; end
+
+  # @raise [NotImplementedError]
   def diff_to_compare; end
+
   def does_not_match?(*args, &block); end
   def expects_custom_validation_message?(*args, &block); end
   def expects_strict?(*args, &block); end
@@ -762,8 +4049,13 @@ class Shoulda::Matchers::ActiveModel::NumericalityMatchers::NumericTypeMatcher
 
   protected
 
+  # Returns the value of attribute attribute.
   def attribute; end
+
+  # @raise [NotImplementedError]
   def disallowed_value; end
+
+  # @raise [NotImplementedError]
   def wrap_disallow_value_matcher(_matcher); end
 
   private
@@ -771,6 +4063,7 @@ class Shoulda::Matchers::ActiveModel::NumericalityMatchers::NumericTypeMatcher
   def disallow_value_matcher; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::NumericalityMatchers::OddNumberMatcher < ::Shoulda::Matchers::ActiveModel::NumericalityMatchers::NumericTypeMatcher
   def allowed_type_adjective; end
   def diff_to_compare; end
@@ -784,6 +4077,7 @@ end
 
 Shoulda::Matchers::ActiveModel::NumericalityMatchers::OddNumberMatcher::NON_ODD_NUMBER_VALUE = T.let(T.unsafe(nil), Integer)
 
+# @private
 class Shoulda::Matchers::ActiveModel::NumericalityMatchers::OnlyIntegerMatcher < ::Shoulda::Matchers::ActiveModel::NumericalityMatchers::NumericTypeMatcher
   def allowed_type_name; end
   def diff_to_compare; end
@@ -796,8 +4090,11 @@ class Shoulda::Matchers::ActiveModel::NumericalityMatchers::OnlyIntegerMatcher <
 end
 
 Shoulda::Matchers::ActiveModel::NumericalityMatchers::OnlyIntegerMatcher::NON_INTEGER_VALUE = T.let(T.unsafe(nil), Float)
+
+# @private
 module Shoulda::Matchers::ActiveModel::Qualifiers; end
 
+# @private
 module Shoulda::Matchers::ActiveModel::Qualifiers::AllowNil
   def initialize(*args); end
 
@@ -805,69 +4102,119 @@ module Shoulda::Matchers::ActiveModel::Qualifiers::AllowNil
 
   protected
 
+  # @return [Boolean]
   def expects_to_allow_nil?; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::Qualifiers::IgnoreInterferenceByWriter
+  # @return [IgnoreInterferenceByWriter] a new instance of IgnoreInterferenceByWriter
   def initialize(argument = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def always?; end
+
+  # @return [Boolean]
   def changed?; end
+
+  # Returns the value of attribute condition.
   def condition; end
+
+  # @return [Boolean]
   def considering?(value); end
+
   def default_to(argument); end
+
+  # @return [Boolean]
   def never?; end
+
   def set(argument); end
+
+  # Returns the value of attribute setting.
   def setting; end
 
   private
 
+  # @return [Boolean]
   def condition_matches?(value); end
+
   def invalid_argument_error(invalid_argument); end
 end
 
+# @private
 module Shoulda::Matchers::ActiveModel::Qualifiers::IgnoringInterferenceByWriter
   def initialize(*_arg0); end
 
+  # Returns the value of attribute ignore_interference_by_writer.
   def ignore_interference_by_writer; end
+
   def ignoring_interference_by_writer(value = T.unsafe(nil)); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidateAbsenceOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
+  # @return [ValidateAbsenceOfMatcher] a new instance of ValidateAbsenceOfMatcher
   def initialize(attribute); end
 
+  # @return [Boolean]
   def does_not_match?(subject); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
 
   private
 
+  # @return [Boolean]
   def array_column?; end
+
+  # @return [Boolean]
   def collection?; end
+
   def column_type; end
+
+  # @return [Boolean]
   def enum_column?; end
+
   def enum_values; end
   def reflection; end
   def value; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidateAcceptanceOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
+  # @return [ValidateAcceptanceOfMatcher] a new instance of ValidateAcceptanceOfMatcher
   def initialize(attribute); end
 
+  # @return [Boolean]
   def does_not_match?(subject); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidateConfirmationOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
   include ::Shoulda::Matchers::ActiveModel::Helpers
 
+  # @return [ValidateConfirmationOfMatcher] a new instance of ValidateConfirmationOfMatcher
   def initialize(attribute); end
 
+  # Returns the value of attribute attribute.
   def attribute; end
+
+  # Returns the value of attribute confirmation_attribute.
   def confirmation_attribute; end
+
+  # @return [Boolean]
   def does_not_match?(subject); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
 
   private
@@ -881,23 +4228,35 @@ class Shoulda::Matchers::ActiveModel::ValidateConfirmationOfMatcher < ::Shoulda:
   def qualify_matcher(matcher, confirmation_attribute_value); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidateExclusionOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
+  # @return [ValidateExclusionOfMatcher] a new instance of ValidateExclusionOfMatcher
   def initialize(attribute); end
 
+  # @return [Boolean]
   def does_not_match?(subject); end
+
   def in_array(array); end
   def in_range(range); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
 
   private
 
+  # @return [Boolean]
   def allows_any_values_in_array?; end
+
   def allows_higher_value; end
   def allows_lower_value; end
   def allows_maximum_value; end
   def allows_minimum_value; end
+
+  # @return [Boolean]
   def disallows_all_values_in_array?; end
+
   def disallows_higher_value; end
   def disallows_lower_value; end
   def disallows_maximum_value; end
@@ -906,15 +4265,25 @@ class Shoulda::Matchers::ActiveModel::ValidateExclusionOfMatcher < ::Shoulda::Ma
   def inspected_array; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
+  # @return [ValidateInclusionOfMatcher] a new instance of ValidateInclusionOfMatcher
   def initialize(attribute); end
 
   def allow_nil; end
+
+  # @return [Boolean]
   def does_not_match?(subject); end
+
+  # @return [Boolean]
   def expects_to_allow_nil?; end
+
   def in_array(array); end
   def in_range(range); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
   def with_high_message(message); end
   def with_low_message(message); end
@@ -922,30 +4291,56 @@ class Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher < ::Shoulda::Ma
 
   private
 
+  # @return [Boolean]
   def allows_all_values_in_array?; end
+
+  # @return [Boolean]
   def allows_any_value_outside_of_array?; end
+
   def allows_higher_value; end
   def allows_lower_value; end
   def allows_maximum_value; end
   def allows_minimum_value; end
+
+  # @return [Boolean]
   def allows_nil_value?; end
+
+  # @return [Boolean]
   def attribute_allows_nil?; end
+
   def attribute_column; end
   def attribute_type; end
   def boolean_outside_values; end
   def column_type_to_attribute_type(type); end
+
+  # @return [Boolean]
   def disallows_all_values_outside_of_array?; end
+
+  # @return [Boolean]
   def disallows_any_values_in_array?; end
+
   def disallows_higher_value; end
   def disallows_lower_value; end
   def disallows_maximum_value; end
   def disallows_minimum_value; end
+
+  # @return [Boolean]
   def disallows_nil_value?; end
+
+  # @return [Boolean]
   def does_not_match_for_array?; end
+
+  # @return [Boolean]
   def does_not_match_for_range?; end
+
   def inspected_array; end
+
+  # @return [Boolean]
   def matches_for_array?; end
+
+  # @return [Boolean]
   def matches_for_range?; end
+
   def outside_values; end
   def value_to_attribute_type(value); end
   def values_outside_of_array; end
@@ -961,17 +4356,25 @@ Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher::BLANK_VALUES = T.let
 Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher::BOOLEAN_ALLOWS_BOOLEAN_MESSAGE = T.let(T.unsafe(nil), String)
 Shoulda::Matchers::ActiveModel::ValidateInclusionOfMatcher::BOOLEAN_ALLOWS_NIL_MESSAGE = T.let(T.unsafe(nil), String)
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidateLengthOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
   include ::Shoulda::Matchers::ActiveModel::Helpers
 
+  # @return [ValidateLengthOfMatcher] a new instance of ValidateLengthOfMatcher
   def initialize(attribute); end
 
   def allow_nil; end
+
+  # @return [Boolean]
   def does_not_match?(subject); end
+
   def is_at_least(length); end
   def is_at_most(length); end
   def is_equal_to(length); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
   def with_long_message(message); end
   def with_message(message); end
@@ -979,51 +4382,105 @@ class Shoulda::Matchers::ActiveModel::ValidateLengthOfMatcher < ::Shoulda::Match
 
   private
 
+  # @return [Boolean]
   def allow_nil_does_not_match?; end
+
+  # @return [Boolean]
   def allow_nil_matches?; end
+
+  # @return [Boolean]
   def allows_higher_length?; end
+
+  # @return [Boolean]
   def allows_length_of?(length, message); end
+
+  # @return [Boolean]
   def allows_lower_length?; end
+
+  # @return [Boolean]
   def allows_maximum_length?; end
+
+  # @return [Boolean]
   def allows_minimum_length?; end
+
+  # @return [Boolean]
   def disallows_higher_length?; end
+
+  # @return [Boolean]
   def disallows_length_of?(length, message); end
+
+  # @return [Boolean]
   def disallows_lower_length?; end
+
+  # @return [Boolean]
   def disallows_maximum_length?; end
+
+  # @return [Boolean]
   def disallows_minimum_length?; end
+
+  # @return [Boolean]
   def expects_to_allow_nil?; end
+
+  # @return [Boolean]
   def lower_bound_does_not_match?; end
+
+  # @return [Boolean]
   def lower_bound_matches?; end
+
   def string_of_length(length); end
   def translated_long_message; end
   def translated_short_message; end
+
+  # @return [Boolean]
   def upper_bound_does_not_match?; end
+
+  # @return [Boolean]
   def upper_bound_matches?; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher
   include ::Shoulda::Matchers::ActiveModel::Qualifiers::IgnoringInterferenceByWriter
 
+  # @return [ValidateNumericalityOfMatcher] a new instance of ValidateNumericalityOfMatcher
   def initialize(attribute); end
 
   def allow_nil; end
   def description; end
+
+  # Returns the value of attribute diff_to_compare.
   def diff_to_compare; end
+
+  # @return [Boolean]
   def does_not_match?(subject); end
+
   def even; end
+
+  # @return [Boolean]
   def expects_custom_validation_message?; end
+
+  # @return [Boolean]
   def expects_strict?; end
+
+  # @return [Boolean]
   def expects_to_allow_nil?; end
+
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def given_numeric_column?; end
+
   def is_equal_to(value); end
   def is_greater_than(value); end
   def is_greater_than_or_equal_to(value); end
   def is_less_than(value); end
   def is_less_than_or_equal_to(value); end
   def is_other_than(value); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def odd; end
   def on(context); end
   def only_integer; end
@@ -1035,7 +4492,10 @@ class Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher
 
   def add_disallow_value_matcher; end
   def add_submatcher(submatcher); end
+
+  # @return [Boolean]
   def attribute_is_active_record_column?; end
+
   def build_submatcher_failure_message_for(submatcher, failure_message_method); end
   def column_type; end
   def columns_hash; end
@@ -1046,8 +4506,13 @@ class Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher
   def first_submatcher_that_fails_to_match; end
   def first_submatcher_that_fails_to_not_match; end
   def full_allowed_type; end
+
+  # @return [Boolean]
   def has_been_qualified?; end
+
+  # @return [Boolean]
   def matches_or_does_not_match?(subject); end
+
   def model; end
   def non_numeric_value; end
   def number_of_submatchers_for_failure_message; end
@@ -1061,97 +4526,174 @@ end
 Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher::DEFAULT_DIFF_TO_COMPARE = T.let(T.unsafe(nil), Integer)
 Shoulda::Matchers::ActiveModel::ValidateNumericalityOfMatcher::NUMERIC_NAME = T.let(T.unsafe(nil), String)
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidatePresenceOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
   include ::Shoulda::Matchers::ActiveModel::Qualifiers::AllowNil
 
+  # @return [ValidatePresenceOfMatcher] a new instance of ValidatePresenceOfMatcher
   def initialize(attribute); end
 
+  # @return [Boolean]
   def does_not_match?(subject); end
+
   def failure_message; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def simple_description; end
 
   private
 
   def allows_and_double_checks_value_of!(value); end
+
+  # @return [Boolean]
   def allows_original_or_typecast_value?(value); end
+
+  # @return [Boolean]
   def association?; end
+
   def association_name; end
   def association_options; end
   def association_reflection; end
+
+  # @return [Boolean]
   def attachment?; end
+
+  # @return [Boolean]
   def attribute_accepts_string_values?; end
+
   def attribute_serialization_coder; end
   def attribute_type; end
+
+  # @return [Boolean]
   def belongs_to_association_being_validated?; end
+
+  # @return [Boolean]
   def belongs_to_association_configured_to_be_required?; end
+
+  # @return [Boolean]
   def collection_association?; end
+
   def disallowed_values; end
   def disallows_and_double_checks_value_of!(value); end
+
+  # @return [Boolean]
   def disallows_original_or_typecast_value?(value); end
+
   def example_of_belongs_to(with: T.unsafe(nil)); end
   def model; end
+
+  # @return [Boolean]
   def model_has_associations?(associations); end
+
   def possibly_ignore_interference_by_writer; end
+
+  # @return [Boolean]
   def presence_validation_exists_on_attribute?; end
+
   def reason_for_existing_presence_validation; end
+
+  # @return [Boolean]
   def secure_password_being_validated?; end
+
+  # @return [Boolean]
   def should_add_footnote_about_belongs_to?; end
+
   def suggestions_for_belongs_to; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidationMatcher
   include ::Shoulda::Matchers::ActiveModel::Qualifiers::IgnoringInterferenceByWriter
 
+  # @return [ValidationMatcher] a new instance of ValidationMatcher
   def initialize(attribute); end
 
   def allow_blank; end
   def description; end
+
+  # @return [Boolean]
   def does_not_match?(subject); end
+
+  # @return [Boolean]
   def expects_custom_validation_message?; end
+
+  # @return [Boolean]
   def expects_strict?; end
+
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def on(context); end
   def strict; end
   def with_message(expected_message); end
 
   protected
 
+  # @return [Boolean]
   def allow_blank_does_not_match?; end
+
+  # @return [Boolean]
   def allow_blank_matches?; end
+
   def allow_value_matcher(value, message = T.unsafe(nil), &block); end
   def allows_value_of(value, message = T.unsafe(nil), &block); end
+
+  # Returns the value of attribute attribute.
   def attribute; end
+
+  # Returns the value of attribute context.
   def context; end
+
   def disallow_value_matcher(value, message = T.unsafe(nil), &block); end
   def disallows_value_of(value, message = T.unsafe(nil), &block); end
+
+  # Returns the value of attribute last_submatcher_run.
   def last_submatcher_run; end
+
   def model; end
+
+  # Returns the value of attribute subject.
   def subject; end
 
   private
 
   def blank_values; end
+
+  # @yield [matcher]
   def build_allow_or_disallow_value_matcher(args); end
+
+  # @return [Boolean]
   def expects_to_allow_blank?; end
+
   def failure_reason; end
   def failure_reason_when_negated; end
+
+  # Returns the value of attribute options.
   def options; end
+
   def overall_failure_message; end
   def overall_failure_message_when_negated; end
   def run_allow_or_disallow_matcher(matcher); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::ValidationMatcher::BuildDescription
+  # @return [BuildDescription] a new instance of BuildDescription
   def initialize(matcher, main_description); end
 
   def call; end
 
   protected
 
+  # Returns the value of attribute main_description.
   def main_description; end
+
+  # Returns the value of attribute matcher.
   def matcher; end
 
   private
@@ -1164,57 +4706,1948 @@ class Shoulda::Matchers::ActiveModel::ValidationMatcher::BuildDescription
   end
 end
 
+# @private
 class Shoulda::Matchers::ActiveModel::Validator
   include ::Shoulda::Matchers::ActiveModel::Helpers
 
+  # @return [Validator] a new instance of Validator
   def initialize(record, attribute, options = T.unsafe(nil)); end
 
   def all_formatted_validation_error_messages; end
   def call; end
+
+  # @return [Boolean]
   def captured_validation_exception?; end
+
+  # @return [Boolean]
   def has_messages?; end
+
+  # @return [Boolean]
   def type_of_message_matched?; end
+
   def validation_exception_message; end
 
   protected
 
+  # Returns the value of attribute attribute.
   def attribute; end
+
+  # Returns the value of attribute context.
   def context; end
+
+  # Returns the value of attribute record.
   def record; end
 
   private
 
   def all_validation_errors; end
+
+  # @return [Boolean]
   def captured_range_error?; end
+
+  # @return [Boolean]
   def expects_strict?; end
+
   def matched_messages; end
   def messages; end
+
+  # @return [Boolean]
   def messages_match?; end
+
   def perform_validation; end
   def validation_error_messages; end
   def validation_result; end
 end
 
+# This module provides matchers that are used to test behavior within
+# ActiveRecord classes.
 module Shoulda::Matchers::ActiveRecord
+  # The `accept_nested_attributes_for` matcher tests usage of the
+  # `accepts_nested_attributes_for` macro.
+  #
+  #     class Car < ActiveRecord::Base
+  #       accepts_nested_attributes_for :doors
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Car, type: :model do
+  #       it { should accept_nested_attributes_for(:doors) }
+  #     end
+  #
+  #     # Minitest (Shoulda) (using Shoulda)
+  #     class CarTest < ActiveSupport::TestCase
+  #       should accept_nested_attributes_for(:doors)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### allow_destroy
+  #
+  # Use `allow_destroy` to assert that the `:allow_destroy` option was
+  # specified.
+  #
+  #     class Car < ActiveRecord::Base
+  #       accepts_nested_attributes_for :mirrors, allow_destroy: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Car, type: :model do
+  #       it do
+  #         should accept_nested_attributes_for(:mirrors).
+  #           allow_destroy(true)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class CarTest < ActiveSupport::TestCase
+  #       should accept_nested_attributes_for(:mirrors).
+  #         allow_destroy(true)
+  #     end
+  #
+  # ##### limit
+  #
+  # Use `limit` to assert that the `:limit` option was specified.
+  #
+  #     class Car < ActiveRecord::Base
+  #       accepts_nested_attributes_for :windows, limit: 3
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Car, type: :model do
+  #       it do
+  #         should accept_nested_attributes_for(:windows).
+  #           limit(3)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class CarTest < ActiveSupport::TestCase
+  #       should accept_nested_attributes_for(:windows).
+  #         limit(3)
+  #     end
+  #
+  # ##### update_only
+  #
+  # Use `update_only` to assert that the `:update_only` option was
+  # specified.
+  #
+  #     class Car < ActiveRecord::Base
+  #       accepts_nested_attributes_for :engine, update_only: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Car, type: :model do
+  #       it do
+  #         should accept_nested_attributes_for(:engine).
+  #           update_only(true)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class CarTest < ActiveSupport::TestCase
+  #       should accept_nested_attributes_for(:engine).
+  #         update_only(true)
+  #     end
+  #
+  # @return [AcceptNestedAttributesForMatcher]
   def accept_nested_attributes_for(name); end
+
+  # The `belong_to` matcher is used to ensure that a `belong_to` association
+  # exists on your model.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :organization
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:organization) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:organization)
+  #     end
+  #
+  # Note that polymorphic associations are automatically detected and do not
+  # need any qualifiers:
+  #
+  #     class Comment < ActiveRecord::Base
+  #       belongs_to :commentable, polymorphic: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Comment, type: :model do
+  #       it { should belong_to(:commentable) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class CommentTest < ActiveSupport::TestCase
+  #       should belong_to(:commentable)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### conditions
+  #
+  # Use `conditions` if your association is defined with a scope that sets
+  # the `where` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :family, -> { where(everyone_is_perfect: false) }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should belong_to(:family).
+  #           conditions(everyone_is_perfect: false)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:family).
+  #         conditions(everyone_is_perfect: false)
+  #     end
+  #
+  # ##### order
+  #
+  # Use `order` if your association is defined with a scope that sets the
+  # `order` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :previous_company, -> { order('hired_on desc') }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:previous_company).order('hired_on desc') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:previous_company).order('hired_on desc')
+  #     end
+  #
+  # ##### class_name
+  #
+  # Use `class_name` to test usage of the `:class_name` option. This
+  # asserts that the model you're referring to actually exists.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :ancient_city, class_name: 'City'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:ancient_city).class_name('City') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:ancient_city).class_name('City')
+  #     end
+  #
+  # ##### with_primary_key
+  #
+  # Use `with_primary_key` to test usage of the `:primary_key` option.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :great_country, primary_key: 'country_id'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should belong_to(:great_country).
+  #           with_primary_key('country_id')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:great_country).
+  #         with_primary_key('country_id')
+  #     end
+  #
+  # ##### with_foreign_key
+  #
+  # Use `with_foreign_key` to test usage of the `:foreign_key` option.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :great_country, foreign_key: 'country_id'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should belong_to(:great_country).
+  #           with_foreign_key('country_id')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:great_country).
+  #         with_foreign_key('country_id')
+  #     end
+  #
+  # ##### dependent
+  #
+  # Use `dependent` to assert that the `:dependent` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :world, dependent: :destroy
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:world).dependent(:destroy) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:world).dependent(:destroy)
+  #     end
+  #
+  # To assert that *any* `:dependent` option was specified, use `true`:
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:world).dependent(true) }
+  #     end
+  #
+  # To assert that *no* `:dependent` option was specified, use `false`:
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :company
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:company).dependent(false) }
+  #     end
+  #
+  # ##### counter_cache
+  #
+  # Use `counter_cache` to assert that the `:counter_cache` option was
+  # specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :organization, counter_cache: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:organization).counter_cache(true) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:organization).counter_cache(true)
+  #     end
+  #
+  # ##### touch
+  #
+  # Use `touch` to assert that the `:touch` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :organization, touch: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should belong_to(:organization).touch(true) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:organization).touch(true)
+  #     end
+  #
+  # ##### autosave
+  #
+  # Use `autosave` to assert that the `:autosave` option was specified.
+  #
+  #     class Account < ActiveRecord::Base
+  #       belongs_to :bank, autosave: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Account, type: :model do
+  #       it { should belong_to(:bank).autosave(true) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class AccountTest < ActiveSupport::TestCase
+  #       should belong_to(:bank).autosave(true)
+  #     end
+  #
+  # ##### inverse_of
+  #
+  # Use `inverse_of` to assert that the `:inverse_of` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :organization, inverse_of: :employees
+  #     end
+  #
+  #     # RSpec
+  #     describe Person
+  #       it { should belong_to(:organization).inverse_of(:employees) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:organization).inverse_of(:employees)
+  #     end
+  #
+  # ##### required
+  #
+  # Use `required` to assert that the association is not allowed to be nil.
+  # (Enabled by default in Rails 5+.)
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :organization, required: true
+  #     end
+  #
+  #     # RSpec
+  #     describe Person
+  #       it { should belong_to(:organization).required }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:organization).required
+  #     end
+  #
+  # ##### without_validating_presence
+  #
+  # Use `without_validating_presence` with `belong_to` to prevent the
+  # matcher from checking whether the association disallows nil (Rails 5+
+  # only). This can be helpful if you have a custom hook that always sets
+  # the association to a meaningful value:
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :organization
+  #
+  #       before_validation :autoassign_organization
+  #
+  #       private
+  #
+  #       def autoassign_organization
+  #         self.organization = Organization.create!
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     describe Person
+  #       it { should belong_to(:organization).without_validating_presence }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:organization).without_validating_presence
+  #     end
+  #
+  # ##### optional
+  #
+  # Use `optional` to assert that the association is allowed to be nil.
+  # (Rails 5+ only.)
+  #
+  #     class Person < ActiveRecord::Base
+  #       belongs_to :organization, optional: true
+  #     end
+  #
+  #     # RSpec
+  #     describe Person
+  #       it { should belong_to(:organization).optional }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should belong_to(:organization).optional
+  #     end
+  #
+  # @return [AssociationMatcher]
   def belong_to(name); end
+
+  # The `define_enum_for` matcher is used to test that the `enum` macro has
+  # been used to decorate an attribute with enum capabilities.
+  #
+  #     class Process < ActiveRecord::Base
+  #       enum status: [:running, :stopped, :suspended]
+  #
+  #       alias_attribute :kind, :SomeLegacyField
+  #
+  #       enum kind: [:foo, :bar]
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Process, type: :model do
+  #       it { should define_enum_for(:status) }
+  #       it { should define_enum_for(:kind) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProcessTest < ActiveSupport::TestCase
+  #       should define_enum_for(:status)
+  #       should define_enum_for(:kind)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### with_values
+  #
+  # Use `with_values` to test that the attribute can only receive a certain
+  # set of possible values.
+  #
+  #     class Process < ActiveRecord::Base
+  #       enum status: [:running, :stopped, :suspended]
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Process, type: :model do
+  #       it do
+  #         should define_enum_for(:status).
+  #           with_values([:running, :stopped, :suspended])
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProcessTest < ActiveSupport::TestCase
+  #       should define_enum_for(:status).
+  #         with_values([:running, :stopped, :suspended])
+  #     end
+  #
+  # If the values backing your enum attribute are arbitrary instead of a
+  # series of integers starting from 0, pass a hash to `with_values` instead
+  # of an array:
+  #
+  #     class Process < ActiveRecord::Base
+  #       enum status: {
+  #         running: 0,
+  #         stopped: 1,
+  #         suspended: 3,
+  #         other: 99
+  #       }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Process, type: :model do
+  #       it do
+  #         should define_enum_for(:status).
+  #           with_values(running: 0, stopped: 1, suspended: 3, other: 99)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProcessTest < ActiveSupport::TestCase
+  #       should define_enum_for(:status).
+  #         with_values(running: 0, stopped: 1, suspended: 3, other: 99)
+  #     end
+  #
+  # ##### backed_by_column_of_type
+  #
+  # Use `backed_by_column_of_type` when the column backing your column type
+  # is a string instead of an integer:
+  #
+  #     class LoanApplication < ActiveRecord::Base
+  #       enum status: {
+  #         active: "active",
+  #         pending: "pending",
+  #         rejected: "rejected"
+  #       }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe LoanApplication, type: :model do
+  #       it do
+  #         should define_enum_for(:status).
+  #           with_values(
+  #             active: "active",
+  #             pending: "pending",
+  #             rejected: "rejected"
+  #           ).
+  #           backed_by_column_of_type(:string)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class LoanApplicationTest < ActiveSupport::TestCase
+  #       should define_enum_for(:status).
+  #         with_values(
+  #           active: "active",
+  #           pending: "pending",
+  #           rejected: "rejected"
+  #         ).
+  #         backed_by_column_of_type(:string)
+  #     end
+  #
+  # ##### with_prefix
+  #
+  # Use `with_prefix` to test that the enum is defined with a `_prefix`
+  # option (Rails 5 only). Can take either a boolean or a symbol:
+  #
+  #     class Issue < ActiveRecord::Base
+  #       enum status: [:open, :closed], _prefix: :old
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it do
+  #         should define_enum_for(:status).
+  #           with_values([:open, :closed]).
+  #           with_prefix(:old)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProcessTest < ActiveSupport::TestCase
+  #       should define_enum_for(:status).
+  #         with_values([:open, :closed]).
+  #         with_prefix(:old)
+  #     end
+  #
+  # ##### with_suffix
+  #
+  # Use `with_suffix` to test that the enum is defined with a `_suffix`
+  # option (Rails 5 only). Can take either a boolean or a symbol:
+  #
+  #     class Issue < ActiveRecord::Base
+  #       enum status: [:open, :closed], _suffix: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Issue, type: :model do
+  #       it do
+  #         should define_enum_for(:status).
+  #           with_values([:open, :closed]).
+  #           with_suffix
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProcessTest < ActiveSupport::TestCase
+  #       should define_enum_for(:status).
+  #         with_values([:open, :closed]).
+  #         with_suffix
+  #     end
+  #
+  # @return [DefineEnumForMatcher]
   def define_enum_for(attribute_name); end
+
+  # The `have_and_belong_to_many` matcher is used to test that a
+  # `has_and_belongs_to_many` association exists on your model and that the
+  # join table exists in the database.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_and_belongs_to_many :awards
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_and_belong_to_many(:awards) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_and_belong_to_many(:awards)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### conditions
+  #
+  # Use `conditions` if your association is defined with a scope that sets
+  # the `where` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_and_belongs_to_many :issues, -> { where(difficulty: 'hard') }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should have_and_belong_to_many(:issues).
+  #           conditions(difficulty: 'hard')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_and_belong_to_many(:issues).
+  #         conditions(difficulty: 'hard')
+  #     end
+  #
+  # ##### order
+  #
+  # Use `order` if your association is defined with a scope that sets the
+  # `order` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_and_belongs_to_many :projects, -> { order('time_spent') }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should have_and_belong_to_many(:projects).
+  #           order('time_spent')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_and_belong_to_many(:projects).
+  #         order('time_spent')
+  #     end
+  #
+  # ##### class_name
+  #
+  # Use `class_name` to test usage of the `:class_name` option. This
+  # asserts that the model you're referring to actually exists.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_and_belongs_to_many :places_visited, class_name: 'City'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should have_and_belong_to_many(:places_visited).
+  #           class_name('City')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_and_belong_to_many(:places_visited).
+  #         class_name('City')
+  #     end
+  #
+  # ##### join_table
+  #
+  # Use `join_table` to test usage of the `:join_table` option. This
+  # asserts that the table you're referring to actually exists.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_and_belongs_to_many :issues, join_table: :people_tickets
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should have_and_belong_to_many(:issues).
+  #           join_table(:people_tickets)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_and_belong_to_many(:issues).
+  #         join_table(:people_tickets)
+  #     end
+  #
+  # ##### validate
+  #
+  # Use `validate` to test that the `:validate` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_and_belongs_to_many :interviews, validate: false
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should have_and_belong_to_many(:interviews).
+  #           validate(false)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_and_belong_to_many(:interviews).
+  #         validate(false)
+  #     end
+  #
+  # ##### autosave
+  #
+  # Use `autosave` to assert that the `:autosave` option was specified.
+  #
+  #     class Publisher < ActiveRecord::Base
+  #       has_and_belongs_to_many :advertisers, autosave: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Publisher, type: :model do
+  #       it { should have_and_belong_to_many(:advertisers).autosave(true) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class AccountTest < ActiveSupport::TestCase
+  #       should have_and_belong_to_many(:advertisers).autosave(true)
+  #     end
+  #
+  # @return [AssociationMatcher]
   def have_and_belong_to_many(name); end
+
+  # The `have_db_column` matcher tests that the table that backs your model
+  # has a specific column.
+  #
+  #     class CreatePhones < ActiveRecord::Migration
+  #       def change
+  #         create_table :phones do |t|
+  #           t.string :supported_ios_version
+  #         end
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Phone, type: :model do
+  #       it { should have_db_column(:supported_ios_version) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PhoneTest < ActiveSupport::TestCase
+  #       should have_db_column(:supported_ios_version)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### of_type
+  #
+  # Use `of_type` to assert that a column is defined as a certain type.
+  #
+  #     class CreatePhones < ActiveRecord::Migration
+  #       def change
+  #         create_table :phones do |t|
+  #           t.decimal :camera_aperture
+  #         end
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Phone, type: :model do
+  #       it do
+  #         should have_db_column(:camera_aperture).of_type(:decimal)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PhoneTest < ActiveSupport::TestCase
+  #       should have_db_column(:camera_aperture).of_type(:decimal)
+  #     end
+  #
+  # ##### with_options
+  #
+  # Use `with_options` to assert that a column has been defined with
+  # certain options (`:precision`, `:limit`, `:default`, `:null`, `:scale`,
+  # `:primary` or `:array`).
+  #
+  #     class CreatePhones < ActiveRecord::Migration
+  #       def change
+  #         create_table :phones do |t|
+  #           t.decimal :camera_aperture, precision: 1, null: false
+  #         end
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Phone, type: :model do
+  #       it do
+  #         should have_db_column(:camera_aperture).
+  #           with_options(precision: 1, null: false)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PhoneTest < ActiveSupport::TestCase
+  #       should have_db_column(:camera_aperture).
+  #         with_options(precision: 1, null: false)
+  #     end
+  #
+  # @return [HaveDbColumnMatcher]
   def have_db_column(column); end
+
+  # The `have_db_index` matcher tests that the table that backs your model
+  # has a specific index.
+  #
+  # You can specify one column:
+  #
+  #     class CreateBlogs < ActiveRecord::Migration
+  #       def change
+  #         create_table :blogs do |t|
+  #           t.integer :user_id
+  #         end
+  #
+  #         add_index :blogs, :user_id
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Blog, type: :model do
+  #       it { should have_db_index(:user_id) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class BlogTest < ActiveSupport::TestCase
+  #       should have_db_index(:user_id)
+  #     end
+  #
+  # Or you can specify a group of columns:
+  #
+  #     class CreateBlogs < ActiveRecord::Migration
+  #       def change
+  #         create_table :blogs do |t|
+  #           t.integer :user_id
+  #           t.string :name
+  #         end
+  #
+  #         add_index :blogs, :user_id, :name
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Blog, type: :model do
+  #       it { should have_db_index([:user_id, :name]) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class BlogTest < ActiveSupport::TestCase
+  #       should have_db_index([:user_id, :name])
+  #     end
+  #
+  # Finally, if you're using Rails 5 and PostgreSQL, you can also specify an
+  # expression:
+  #
+  #     class CreateLoggedErrors < ActiveRecord::Migration
+  #       def change
+  #         create_table :logged_errors do |t|
+  #           t.string :code
+  #           t.jsonb :content
+  #         end
+  #
+  #         add_index :logged_errors, 'lower(code)::text'
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe LoggedError, type: :model do
+  #       it { should have_db_index('lower(code)::text') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class LoggedErrorTest < ActiveSupport::TestCase
+  #       should have_db_index('lower(code)::text')
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### unique
+  #
+  # Use `unique` to assert that the index is either unique or non-unique:
+  #
+  #     class CreateBlogs < ActiveRecord::Migration
+  #       def change
+  #         create_table :blogs do |t|
+  #           t.string :domain
+  #           t.integer :user_id
+  #         end
+  #
+  #         add_index :blogs, :domain, unique: true
+  #         add_index :blogs, :user_id
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Blog, type: :model do
+  #       it { should have_db_index(:name).unique }
+  #       it { should have_db_index(:name).unique(true) }   # if you want to be explicit
+  #       it { should have_db_index(:user_id).unique(false) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class BlogTest < ActiveSupport::TestCase
+  #       should have_db_index(:name).unique
+  #       should have_db_index(:name).unique(true)   # if you want to be explicit
+  #       should have_db_index(:user_id).unique(false)
+  #     end
+  #
+  # @return [HaveDbIndexMatcher]
   def have_db_index(columns); end
+
   def have_implicit_order_column(column_name); end
+
+  # The `have_many` matcher is used to test that a `has_many` or `has_many
+  # :through` association exists on your model.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :friends
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:friends) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:friends)
+  #     end
+  #
+  # Note that polymorphic associations are automatically detected and do not
+  # need any qualifiers:
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :pictures, as: :imageable
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:pictures) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:pictures)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### conditions
+  #
+  # Use `conditions` if your association is defined with a scope that sets
+  # the `where` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :coins, -> { where(quality: 'mint') }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:coins).conditions(quality: 'mint') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:coins).conditions(quality: 'mint')
+  #     end
+  #
+  # ##### order
+  #
+  # Use `order` if your association is defined with a scope that sets the
+  # `order` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :shirts, -> { order('color') }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:shirts).order('color') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:shirts).order('color')
+  #     end
+  #
+  # ##### class_name
+  #
+  # Use `class_name` to test usage of the `:class_name` option. This
+  # asserts that the model you're referring to actually exists.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :hopes, class_name: 'Dream'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:hopes).class_name('Dream') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:hopes).class_name('Dream')
+  #     end
+  #
+  # ##### with_primary_key
+  #
+  # Use `with_primary_key` to test usage of the `:primary_key` option.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :worries, primary_key: 'worrier_id'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:worries).with_primary_key('worrier_id') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:worries).with_primary_key('worrier_id')
+  #     end
+  #
+  # ##### with_foreign_key
+  #
+  # Use `with_foreign_key` to test usage of the `:foreign_key` option.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :worries, foreign_key: 'worrier_id'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:worries).with_foreign_key('worrier_id') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:worries).with_foreign_key('worrier_id')
+  #     end
+  #
+  # ##### dependent
+  #
+  # Use `dependent` to assert that the `:dependent` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :secret_documents, dependent: :destroy
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:secret_documents).dependent(:destroy) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:secret_documents).dependent(:destroy)
+  #     end
+  #
+  # ##### through
+  #
+  # Use `through` to test usage of the `:through` option. This asserts that
+  # the association you are going through actually exists.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :acquaintances, through: :friends
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:acquaintances).through(:friends) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:acquaintances).through(:friends)
+  #     end
+  #
+  # ##### source
+  #
+  # Use `source` to test usage of the `:source` option on a `:through`
+  # association.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :job_offers, through: :friends, source: :opportunities
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it do
+  #         should have_many(:job_offers).
+  #           through(:friends).
+  #           source(:opportunities)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:job_offers).
+  #         through(:friends).
+  #         source(:opportunities)
+  #     end
+  #
+  # ##### validate
+  #
+  # Use `validate` to assert that the `:validate` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_many :ideas, validate: false
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_many(:ideas).validate(false) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_many(:ideas).validate(false)
+  #     end
+  #
+  # ##### autosave
+  #
+  # Use `autosave` to assert that the `:autosave` option was specified.
+  #
+  #     class Player < ActiveRecord::Base
+  #       has_many :games, autosave: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Player, type: :model do
+  #       it { should have_many(:games).autosave(true) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PlayerTest < ActiveSupport::TestCase
+  #       should have_many(:games).autosave(true)
+  #     end
+  #
+  # ##### index_errors
+  #
+  # Use `index_errors` to assert that the `:index_errors` option was
+  # specified.
+  #
+  #     class Player < ActiveRecord::Base
+  #       has_many :games, index_errors: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Player, type: :model do
+  #       it { should have_many(:games).index_errors(true) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PlayerTest < ActiveSupport::TestCase
+  #       should have_many(:games).index_errors(true)
+  #     end
+  #
+  # ##### inverse_of
+  #
+  # Use `inverse_of` to assert that the `:inverse_of` option was specified.
+  #
+  #     class Organization < ActiveRecord::Base
+  #       has_many :employees, inverse_of: :company
+  #     end
+  #
+  #     # RSpec
+  #     describe Organization
+  #       it { should have_many(:employees).inverse_of(:company) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class OrganizationTest < ActiveSupport::TestCase
+  #       should have_many(:employees).inverse_of(:company)
+  #     end
+  #
+  # @return [AssociationMatcher]
   def have_many(name); end
+
+  # The `have_many_attached` matcher tests usage of the
+  # `has_many_attached` macro.
+  #
+  # #### Example
+  #
+  #     class Message < ApplicationRecord
+  #       has_many_attached :images
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Message, type: :model do
+  #       it { should have_many_attached(:images) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class MessageTest < ActiveSupport::TestCase
+  #       should have_many_attached(:images)
+  #     end
+  #
+  # @return [HaveAttachedMatcher]
   def have_many_attached(name); end
+
+  # The `have_one` matcher is used to test that a `has_one` or `has_one
+  # :through` association exists on your model.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :partner
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:partner) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:partner)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### conditions
+  #
+  # Use `conditions` if your association is defined with a scope that sets
+  # the `where` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :pet, -> { where('weight < 80') }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:pet).conditions('weight < 80') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:pet).conditions('weight < 80')
+  #     end
+  #
+  # ##### order
+  #
+  # Use `order` if your association is defined with a scope that sets the
+  # `order` clause.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :focus, -> { order('priority desc') }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:focus).order('priority desc') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:focus).order('priority desc')
+  #     end
+  #
+  # ##### class_name
+  #
+  # Use `class_name` to test usage of the `:class_name` option. This
+  # asserts that the model you're referring to actually exists.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :chance, class_name: 'Opportunity'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:chance).class_name('Opportunity') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:chance).class_name('Opportunity')
+  #     end
+  #
+  # ##### dependent
+  #
+  # Use `dependent` to test that the `:dependent` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :contract, dependent: :nullify
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:contract).dependent(:nullify) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:contract).dependent(:nullify)
+  #     end
+  #
+  # ##### with_primary_key
+  #
+  # Use `with_primary_key` to test usage of the `:primary_key` option.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :job, primary_key: 'worker_id'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:job).with_primary_key('worker_id') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:job).with_primary_key('worker_id')
+  #     end
+  #
+  # ##### with_foreign_key
+  #
+  # Use `with_foreign_key` to test usage of the `:foreign_key` option.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :job, foreign_key: 'worker_id'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:job).with_foreign_key('worker_id') }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:job).with_foreign_key('worker_id')
+  #     end
+  #
+  # ##### through
+  #
+  # Use `through` to test usage of the `:through` option. This asserts that
+  # the association you are going through actually exists.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :life, through: :partner
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:life).through(:partner) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:life).through(:partner)
+  #     end
+  #
+  # ##### source
+  #
+  # Use `source` to test usage of the `:source` option on a `:through`
+  # association.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :car, through: :partner, source: :vehicle
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:car).through(:partner).source(:vehicle) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:car).through(:partner).source(:vehicle)
+  #     end
+  #
+  # ##### validate
+  #
+  # Use `validate` to assert that the the `:validate` option was specified.
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :parking_card, validate: false
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Person, type: :model do
+  #       it { should have_one(:parking_card).validate(false) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:parking_card).validate(false)
+  #     end
+  #
+  # ##### autosave
+  #
+  # Use `autosave` to assert that the `:autosave` option was specified.
+  #
+  #     class Account < ActiveRecord::Base
+  #       has_one :bank, autosave: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Account, type: :model do
+  #       it { should have_one(:bank).autosave(true) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class AccountTest < ActiveSupport::TestCase
+  #       should have_one(:bank).autosave(true)
+  #     end
+  #
+  # ##### required
+  #
+  # Use `required` to assert that the association is not allowed to be nil.
+  # (Rails 5+ only.)
+  #
+  #     class Person < ActiveRecord::Base
+  #       has_one :brain, required: true
+  #     end
+  #
+  #     # RSpec
+  #     describe Person
+  #       it { should have_one(:brain).required }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PersonTest < ActiveSupport::TestCase
+  #       should have_one(:brain).required
+  #     end
+  #
+  # @return [AssociationMatcher]
   def have_one(name); end
+
+  # The `have_one_attached` matcher tests usage of the
+  # `has_one_attached` macro.
+  #
+  # #### Example
+  #
+  #     class User < ApplicationRecord
+  #       has_one_attached :avatar
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should have_one_attached(:avatar) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should have_one_attached(:avatar)
+  #     end
+  #
+  # @return [HaveAttachedMatcher]
   def have_one_attached(name); end
+
+  # The `have_readonly_attribute` matcher tests usage of the
+  # `attr_readonly` macro.
+  #
+  #     class User < ActiveRecord::Base
+  #       attr_readonly :password
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should have_readonly_attribute(:password) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should have_readonly_attribute(:password)
+  #     end
+  #
+  # @return [HaveReadonlyAttributeMatcher]
   def have_readonly_attribute(value); end
+
+  # The `have_rich_text` matcher tests usage of the
+  # `has_rich_text` macro.
+  #
+  # #### Example
+  #
+  #     class Post < ActiveRecord
+  #       has_rich_text :content
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should have_rich_text(:content) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should have_rich_text(:content)
+  #     end
+  #
+  # @return [HaveRichTextMatcher]
   def have_rich_text(rich_text_attribute); end
+
+  # The `have_secure_token` matcher tests usage of the
+  # `has_secure_token` macro.
+  #
+  #     class User < ActiveRecord
+  #       has_secure_token
+  #       has_secure_token :auth_token
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should have_secure_token }
+  #       it { should have_secure_token(:auth_token) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should have_secure_token
+  #       should have_secure_token(:auth_token)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### ignoring_check_for_db_index
+  #
+  # By default, this matcher tests that an index is defined on your token
+  # column. Use `ignoring_check_for_db_index` if this is not the case.
+  #
+  #     class User < ActiveRecord
+  #       has_secure_token :auth_token
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe User, type: :model do
+  #       it { should have_secure_token(:auth_token).ignoring_check_for_db_index }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class UserTest < ActiveSupport::TestCase
+  #       should have_secure_token(:auth_token).ignoring_check_for_db_index
+  #     end
+  #
+  # @return [HaveSecureToken]
   def have_secure_token(token_attribute = T.unsafe(nil)); end
+
+  # The `serialize` matcher tests usage of the `serialize` macro.
+  #
+  #     class Product < ActiveRecord::Base
+  #       serialize :customizations
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Product, type: :model do
+  #       it { should serialize(:customizations) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProductTest < ActiveSupport::TestCase
+  #       should serialize(:customizations)
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # ##### as
+  #
+  # Use `as` if you are using a custom serializer class.
+  #
+  #     class ProductSpecsSerializer
+  #       def load(string)
+  #         # ...
+  #       end
+  #
+  #       def dump(options)
+  #         # ...
+  #       end
+  #     end
+  #
+  #     class Product < ActiveRecord::Base
+  #       serialize :specifications, ProductSpecsSerializer
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Product, type: :model do
+  #       it do
+  #         should serialize(:specifications).
+  #           as(ProductSpecsSerializer)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProductTest < ActiveSupport::TestCase
+  #       should serialize(:specifications).
+  #         as(ProductSpecsSerializer)
+  #     end
+  #
+  # ##### as_instance_of
+  #
+  # Use `as_instance_of` if you are using a custom serializer object.
+  #
+  #     class ProductOptionsSerializer
+  #       def load(string)
+  #         # ...
+  #       end
+  #
+  #       def dump(options)
+  #         # ...
+  #       end
+  #     end
+  #
+  #     class Product < ActiveRecord::Base
+  #       serialize :options, ProductOptionsSerializer.new
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Product, type: :model do
+  #       it do
+  #         should serialize(:options).
+  #           as_instance_of(ProductOptionsSerializer)
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class ProductTest < ActiveSupport::TestCase
+  #       should serialize(:options).
+  #         as_instance_of(ProductOptionsSerializer)
+  #     end
+  #
+  # @return [SerializeMatcher]
   def serialize(name); end
+
+  # The `validate_uniqueness_of` matcher tests usage of the
+  # `validates_uniqueness_of` validation. It first checks for an existing
+  # instance of your model in the database, creating one if necessary. It
+  # then takes a new instance of that model and asserts that it fails
+  # validation if the attribute or attributes you've specified in the
+  # validation are set to values which are the same as those of the
+  # pre-existing record (thereby failing the uniqueness check).
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :permalink, uniqueness: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_uniqueness_of(:permalink) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:permalink)
+  #     end
+  #
+  # #### Caveat
+  #
+  # This matcher works a bit differently than other matchers. As noted
+  # before, it will create an instance of your model if one doesn't already
+  # exist. Sometimes this step fails, especially if you have database-level
+  # restrictions on any attributes other than the one which is unique. In
+  # this case, the solution is to populate these attributes with values
+  # before you call `validate_uniqueness_of`.
+  #
+  # For example, say you have the following migration and model:
+  #
+  #     class CreatePosts < ActiveRecord::Migration
+  #       def change
+  #         create_table :posts do |t|
+  #           t.string :title
+  #           t.text :content, null: false
+  #         end
+  #       end
+  #     end
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :title, uniqueness: true
+  #     end
+  #
+  # You may be tempted to test the model like this:
+  #
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_uniqueness_of(:title) }
+  #     end
+  #
+  # However, running this test will fail with an exception such as:
+  #
+  #     Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher::ExistingRecordInvalid:
+  #       validate_uniqueness_of works by matching a new record against an
+  #       existing record. If there is no existing record, it will create one
+  #       using the record you provide.
+  #
+  #       While doing this, the following error was raised:
+  #
+  #         PG::NotNullViolation: ERROR:  null value in column "content" violates not-null constraint
+  #         DETAIL:  Failing row contains (1, null, null).
+  #         : INSERT INTO "posts" DEFAULT VALUES RETURNING "id"
+  #
+  #       The best way to fix this is to provide the matcher with a record where
+  #       any required attributes are filled in with valid values beforehand.
+  #
+  # (The exact error message will differ depending on which database you're
+  # using, but you get the idea.)
+  #
+  # This happens because `validate_uniqueness_of` tries to create a new post
+  # but cannot do so because of the `content` attribute: though unrelated to
+  # this test, it nevertheless needs to be filled in. As indicated at the
+  # end of the error message, the solution is to build a custom Post object
+  # ahead of time with `content` filled in:
+  #
+  #     RSpec.describe Post, type: :model do
+  #       describe "validations" do
+  #         subject { Post.new(content: "Here is the content") }
+  #         it { should validate_uniqueness_of(:title) }
+  #       end
+  #     end
+  #
+  # Or, if you're using
+  # [FactoryBot](https://github.com/thoughtbot/factory_bot) and you have a
+  # `post` factory defined which automatically fills in `content`, you can
+  # say:
+  #
+  #     RSpec.describe Post, type: :model do
+  #       describe "validations" do
+  #         subject { FactoryBot.build(:post) }
+  #         it { should validate_uniqueness_of(:title) }
+  #       end
+  #     end
+  #
+  # #### Qualifiers
+  #
+  # Use `on` if your validation applies only under a certain context.
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :title, uniqueness: true, on: :create
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_uniqueness_of(:title).on(:create) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:title).on(:create)
+  #     end
+  #
+  # ##### with_message
+  #
+  # Use `with_message` if you are using a custom validation message.
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :title, uniqueness: true, message: 'Please choose another title'
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it do
+  #         should validate_uniqueness_of(:title).
+  #           with_message('Please choose another title')
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:title).
+  #         with_message('Please choose another title')
+  #     end
+  #
+  # ##### scoped_to
+  #
+  # Use `scoped_to` to test usage of the `:scope` option. This asserts that
+  # a new record fails validation if not only the primary attribute is not
+  # unique, but the scoped attributes are not unique either.
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :slug, uniqueness: { scope: :journal_id }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_uniqueness_of(:slug).scoped_to(:journal_id) }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:slug).scoped_to(:journal_id)
+  #     end
+  #
+  # NOTE: Support for testing uniqueness validation scoped to an array of
+  # associations is not available.
+  #
+  # For more information, please refer to
+  # https://github.com/thoughtbot/shoulda-matchers/issues/814
+  #
+  # ##### case_insensitive
+  #
+  # Use `case_insensitive` to test usage of the `:case_sensitive` option
+  # with a false value. This asserts that the uniquable attributes fail
+  # validation even if their values are a different case than corresponding
+  # attributes in the pre-existing record.
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :key, uniqueness: { case_sensitive: false }
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_uniqueness_of(:key).case_insensitive }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:key).case_insensitive
+  #     end
+  #
+  # ##### ignoring_case_sensitivity
+  #
+  # By default, `validate_uniqueness_of` will check that the
+  # validation is case sensitive: it asserts that uniquable attributes pass
+  # validation when their values are in a different case than corresponding
+  # attributes in the pre-existing record.
+  #
+  # Use `ignoring_case_sensitivity` to skip this check. This qualifier is
+  # particularly handy if your model has somehow changed the behavior of
+  # attribute you're testing so that it modifies the case of incoming values
+  # as they are set. For instance, perhaps you've overridden the writer
+  # method or added a `before_validation` callback to normalize the
+  # attribute.
+  #
+  #     class User < ActiveRecord::Base
+  #       validates :email, uniqueness: true
+  #
+  #       def email=(value)
+  #         super(value.downcase)
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it do
+  #         should validate_uniqueness_of(:email).ignoring_case_sensitivity
+  #       end
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:email).ignoring_case_sensitivity
+  #     end
+  #
+  # ##### allow_nil
+  #
+  # Use `allow_nil` to assert that the attribute allows nil.
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :author_id, uniqueness: true, allow_nil: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_uniqueness_of(:author_id).allow_nil }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:author_id).allow_nil
+  #     end
+  #
+  # ##### allow_blank
+  #
+  # Use `allow_blank` to assert that the attribute allows a blank value.
+  #
+  #     class Post < ActiveRecord::Base
+  #       validates :author_id, uniqueness: true, allow_blank: true
+  #     end
+  #
+  #     # RSpec
+  #     RSpec.describe Post, type: :model do
+  #       it { should validate_uniqueness_of(:author_id).allow_blank }
+  #     end
+  #
+  #     # Minitest (Shoulda)
+  #     class PostTest < ActiveSupport::TestCase
+  #       should validate_uniqueness_of(:author_id).allow_blank
+  #     end
+  #
+  # @return [ValidateUniquenessOfMatcher]
+  # @return [ValidateUniquenessOfMatcher]
   def validate_uniqueness_of(attr); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AcceptNestedAttributesForMatcher
+  # @return [AcceptNestedAttributesForMatcher] a new instance of AcceptNestedAttributesForMatcher
   def initialize(name); end
 
   def allow_destroy(allow_destroy); end
@@ -1222,24 +6655,40 @@ class Shoulda::Matchers::ActiveRecord::AcceptNestedAttributesForMatcher
   def failure_message; end
   def failure_message_when_negated; end
   def limit(limit); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def update_only(update_only); end
 
   protected
 
+  # @return [Boolean]
   def allow_destroy_correct?; end
+
   def config; end
+
+  # @return [Boolean]
   def exists?; end
+
   def expectation; end
+
+  # @return [Boolean]
   def limit_correct?; end
+
   def model_class; end
   def model_config; end
   def should_or_should_not(value); end
+
+  # @return [Boolean]
   def update_only_correct?; end
+
   def verify_option_is_correct(option, failure_message); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatcher
+  # @return [AssociationMatcher] a new instance of AssociationMatcher
   def initialize(macro, name); end
 
   def associated_class(*_arg0, &_arg1); end
@@ -1255,12 +6704,21 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
   def inverse_of(inverse_of); end
   def join_table(join_table_name); end
   def join_table_name; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def model_class(*_arg0, &_arg1); end
+
+  # Returns the value of attribute name.
   def name; end
+
   def option_verifier; end
   def optional(optional = T.unsafe(nil)); end
+
+  # Returns the value of attribute options.
   def options; end
+
   def order(order); end
   def polymorphic?(*_arg0, &_arg1); end
   def reflection(*_arg0, &_arg1); end
@@ -1278,126 +6736,289 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatcher
 
   def actual_foreign_key; end
   def add_submatcher(matcher_class, *args); end
+
+  # @return [Boolean]
   def association_exists?; end
+
+  # @return [Boolean]
   def autosave_correct?; end
+
+  # @return [Boolean]
   def belongs_foreign_key_missing?; end
+
+  # @return [Boolean]
   def belongs_to_required_by_default?; end
+
+  # @return [Boolean]
   def class_exists?; end
+
+  # @return [Boolean]
   def class_has_foreign_key?(klass); end
+
+  # @return [Boolean]
   def class_name_correct?; end
+
   def column_names_for(klass); end
+
+  # @return [Boolean]
   def conditions_correct?; end
+
   def expectation; end
   def failing_submatchers; end
+
+  # @return [Boolean]
   def foreign_key_correct?; end
+
+  # @return [Boolean]
   def foreign_key_exists?; end
+
   def foreign_key_failure_message(klass, foreign_key); end
   def foreign_key_reflection; end
+
+  # @return [Boolean]
   def has_column?(klass, column); end
+
+  # @return [Boolean]
   def has_foreign_key_missing?; end
+
+  # @return [Boolean]
   def index_errors_correct?; end
+
+  # @return [Boolean]
   def join_table_correct?; end
+
   def join_table_matcher; end
+
+  # Returns the value of attribute macro.
   def macro; end
+
+  # @return [Boolean]
   def macro_correct?; end
+
   def macro_description; end
+
+  # @return [Boolean]
   def macro_supports_primary_key?; end
+
+  # Returns the value of attribute missing.
   def missing; end
+
   def missing_options; end
   def missing_options_for_failing_submatchers; end
+
+  # @return [Boolean]
   def primary_key_correct?(klass); end
+
+  # @return [Boolean]
   def primary_key_exists?; end
+
   def reflector; end
   def remove_submatcher(matcher_class); end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # Returns the value of attribute submatchers.
   def submatchers; end
+
+  # @return [Boolean]
   def submatchers_match?; end
+
+  # @return [Boolean]
   def touch_correct?; end
+
+  # @return [Boolean]
   def validate_correct?; end
+
   def validate_foreign_key(klass); end
   def validate_inverse_of_through_association; end
 end
 
 Shoulda::Matchers::ActiveRecord::AssociationMatcher::MACROS = T.let(T.unsafe(nil), Hash)
+
+# @private
 module Shoulda::Matchers::ActiveRecord::AssociationMatchers; end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::CounterCacheMatcher
+  # @return [CounterCacheMatcher] a new instance of CounterCacheMatcher
   def initialize(counter_cache, name); end
 
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
+
+  # Sets the attribute missing_option
+  #
+  # @param value the value to set the attribute missing_option to.
   def missing_option=(_arg0); end
 
   protected
 
+  # Returns the value of attribute counter_cache.
   def counter_cache; end
+
+  # Sets the attribute counter_cache
+  #
+  # @param value the value to set the attribute counter_cache to.
   def counter_cache=(_arg0); end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
+
   def option_verifier; end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # Sets the attribute subject
+  #
+  # @param value the value to set the attribute subject to.
   def subject=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::DependentMatcher
+  # @return [DependentMatcher] a new instance of DependentMatcher
   def initialize(dependent, name); end
 
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
+
+  # Sets the attribute missing_option
+  #
+  # @param value the value to set the attribute missing_option to.
   def missing_option=(_arg0); end
 
   protected
 
+  # Returns the value of attribute dependent.
   def dependent; end
+
+  # Sets the attribute dependent
+  #
+  # @param value the value to set the attribute dependent to.
   def dependent=(_arg0); end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # Sets the attribute subject
+  #
+  # @param value the value to set the attribute subject to.
   def subject=(_arg0); end
 
   private
 
   def generate_missing_option; end
+
+  # @return [Boolean]
   def option_matches?; end
+
   def option_type; end
   def option_verifier; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::InverseOfMatcher
+  # @return [InverseOfMatcher] a new instance of InverseOfMatcher
   def initialize(inverse_of, name); end
 
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
+
+  # Sets the attribute missing_option
+  #
+  # @param value the value to set the attribute missing_option to.
   def missing_option=(_arg0); end
 
   protected
 
+  # Returns the value of attribute inverse_of.
   def inverse_of; end
+
+  # Sets the attribute inverse_of
+  #
+  # @param value the value to set the attribute inverse_of to.
   def inverse_of=(_arg0); end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
+
   def option_verifier; end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # Sets the attribute subject
+  #
+  # @param value the value to set the attribute subject to.
   def subject=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::JoinTableMatcher
+  # @return [JoinTableMatcher] a new instance of JoinTableMatcher
   def initialize(association_matcher, reflector); end
 
   def associated_class(*_arg0, &_arg1); end
   def association_foreign_key(*_arg0, &_arg1); end
   def connection(*_arg0, &_arg1); end
+
+  # Returns the value of attribute failure_message.
   def failure_message; end
+
   def foreign_key(*_arg0, &_arg1); end
+
+  # @return [Boolean]
   def join_table_exists?; end
+
+  # @return [Boolean]
   def join_table_has_correct_columns?; end
+
   def join_table_name(*_arg0, &_arg1); end
+
+  # @return [Boolean]
   def join_table_option_correct?; end
+
+  # @return [Boolean]
   def matches?(_subject); end
+
+  # Returns the value of attribute failure_message.
   def missing_option; end
+
   def model_class(*_arg0, &_arg1); end
   def name(*_arg0, &_arg1); end
   def option_verifier(*_arg0, &_arg1); end
@@ -1405,7 +7026,10 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::JoinTableMatcher
 
   protected
 
+  # Returns the value of attribute association_matcher.
   def association_matcher; end
+
+  # Returns the value of attribute reflector.
   def reflector; end
 
   private
@@ -1418,7 +7042,9 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::JoinTableMatcher
   def missing_table_message; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflection < ::SimpleDelegator
+  # @return [ModelReflection] a new instance of ModelReflection
   def initialize(reflection); end
 
   def associated_class; end
@@ -1427,13 +7053,21 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflection < ::
   def foreign_key; end
   def has_and_belongs_to_many_name; end
   def join_table_name; end
+
+  # @return [Boolean]
   def polymorphic?; end
+
+  # @return [Boolean]
   def through?; end
+
   def validate_inverse_of_through_association!; end
 
   protected
 
+  # Returns the value of attribute reflection.
   def reflection; end
+
+  # Returns the value of attribute subject.
   def subject; end
 
   private
@@ -1442,7 +7076,9 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflection < ::
   def has_and_belongs_to_many_reflection; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector
+  # @return [ModelReflector] a new instance of ModelReflector
   def initialize(subject, name); end
 
   def associated_class(*_arg0, &_arg1); end
@@ -1462,21 +7098,40 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ModelReflector
 
   protected
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Returns the value of attribute subject.
   def subject; end
+
   def value_as_sql(value); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier
+  # @return [OptionVerifier] a new instance of OptionVerifier
   def initialize(reflector); end
 
   def actual_value_for(name); end
+
+  # @return [Boolean]
   def correct_for?(*args); end
+
+  # @return [Boolean]
   def correct_for_boolean?(name, expected_value); end
+
+  # @return [Boolean]
   def correct_for_constant?(name, expected_unresolved_value); end
+
+  # @return [Boolean]
   def correct_for_hash?(name, expected_value); end
+
+  # @return [Boolean]
   def correct_for_relation_clause?(name, expected_value); end
+
+  # @return [Boolean]
   def correct_for_string?(name, expected_value); end
+
   def reflection(*_arg0, &_arg1); end
 
   protected
@@ -1487,113 +7142,239 @@ class Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier
   def expected_value_for(type, name, value); end
   def expected_value_for_constant(name); end
   def expected_value_for_relation_clause(name, value); end
+
+  # Returns the value of attribute reflector.
   def reflector; end
+
   def type_cast(type, value); end
 end
 
 Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier::DEFAULT_VALUE_OF_OPTIONS = T.let(T.unsafe(nil), Hash)
 Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionVerifier::RELATION_OPTIONS = T.let(T.unsafe(nil), Array)
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::OptionalMatcher
+  # @return [OptionalMatcher] a new instance of OptionalMatcher
   def initialize(attribute_name, optional); end
 
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
 
   private
 
+  # Returns the value of attribute attribute_name.
   def attribute_name; end
+
+  # Returns the value of attribute optional.
   def optional; end
+
+  # Returns the value of attribute submatcher.
   def submatcher; end
+
+  # @return [Boolean]
   def submatcher_passes?(subject); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::OrderMatcher
+  # @return [OrderMatcher] a new instance of OrderMatcher
   def initialize(order, name); end
 
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
+
+  # Sets the attribute missing_option
+  #
+  # @param value the value to set the attribute missing_option to.
   def missing_option=(_arg0); end
 
   protected
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
+
   def option_verifier; end
+
+  # Returns the value of attribute order.
   def order; end
+
+  # Sets the attribute order
+  #
+  # @param value the value to set the attribute order to.
   def order=(_arg0); end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # Sets the attribute subject
+  #
+  # @param value the value to set the attribute subject to.
   def subject=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::RequiredMatcher
+  # @return [RequiredMatcher] a new instance of RequiredMatcher
   def initialize(attribute_name, required); end
 
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
 
   private
 
+  # Returns the value of attribute attribute_name.
   def attribute_name; end
+
+  # Returns the value of attribute required.
   def required; end
+
+  # Returns the value of attribute submatcher.
   def submatcher; end
+
+  # @return [Boolean]
   def submatcher_passes?(subject); end
+
   def validation_message_key; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::SourceMatcher
+  # @return [SourceMatcher] a new instance of SourceMatcher
   def initialize(source, name); end
 
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
+
+  # Sets the attribute missing_option
+  #
+  # @param value the value to set the attribute missing_option to.
   def missing_option=(_arg0); end
 
   protected
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
+
   def option_verifier; end
+
+  # Returns the value of attribute source.
   def source; end
+
+  # Sets the attribute source
+  #
+  # @param value the value to set the attribute source to.
   def source=(_arg0); end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # Sets the attribute subject
+  #
+  # @param value the value to set the attribute subject to.
   def subject=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::AssociationMatchers::ThroughMatcher
+  # @return [ThroughMatcher] a new instance of ThroughMatcher
   def initialize(through, name); end
 
+  # @return [Boolean]
   def association_set_properly?; end
+
   def description; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute missing_option.
   def missing_option; end
+
+  # Sets the attribute missing_option
+  #
+  # @param value the value to set the attribute missing_option to.
   def missing_option=(_arg0); end
+
+  # @return [Boolean]
   def through_association_correct?; end
+
+  # @return [Boolean]
   def through_association_exists?; end
+
   def through_reflection; end
 
   protected
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
+
   def option_verifier; end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # Sets the attribute subject
+  #
+  # @param value the value to set the attribute subject to.
   def subject=(_arg0); end
+
+  # Returns the value of attribute through.
   def through; end
+
+  # Sets the attribute through
+  #
+  # @param value the value to set the attribute through to.
   def through=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::DefineEnumForMatcher
+  # @return [DefineEnumForMatcher] a new instance of DefineEnumForMatcher
   def initialize(attribute_name); end
 
   def backed_by_column_of_type(expected_column_type); end
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def with(expected_enum_values); end
   def with_prefix(expected_prefix = T.unsafe(nil)); end
   def with_suffix(expected_suffix = T.unsafe(nil)); end
@@ -1602,12 +7383,24 @@ class Shoulda::Matchers::ActiveRecord::DefineEnumForMatcher
   private
 
   def actual_enum_values; end
+
+  # Returns the value of attribute attribute_name.
   def attribute_name; end
+
   def column; end
+
+  # @return [Boolean]
   def column_type_matches?; end
+
+  # @return [Boolean]
   def enum_defined?; end
+
+  # @return [Boolean]
   def enum_value_methods_exist?; end
+
+  # @return [Boolean]
   def enum_values_match?; end
+
   def expectation; end
   def expected_column_type; end
   def expected_enum_value_names; end
@@ -1615,103 +7408,179 @@ class Shoulda::Matchers::ActiveRecord::DefineEnumForMatcher
   def expected_prefix; end
   def expected_singleton_methods; end
   def expected_suffix; end
+
+  # Returns the value of attribute failure_message_continuation.
   def failure_message_continuation; end
+
   def model; end
   def normalized_actual_enum_values; end
   def normalized_expected_enum_values; end
+
+  # Returns the value of attribute options.
   def options; end
+
   def presented_enum_mapping(enum_values); end
+
+  # Returns the value of attribute record.
   def record; end
+
   def simple_description; end
   def to_array(value); end
   def to_hash(value); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveAttachedMatcher
+  # @return [HaveAttachedMatcher] a new instance of HaveAttachedMatcher
   def initialize(macro, name); end
 
   def description; end
   def expectation; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute name.
   def name; end
 
   private
 
+  # @return [Boolean]
   def attachments_association_exists?; end
+
   def attachments_association_matcher; end
   def attachments_association_name; end
+
+  # @return [Boolean]
   def blobs_association_exists?; end
+
   def blobs_association_matcher; end
   def blobs_association_name; end
+
+  # @return [Boolean]
   def eager_loading_scope_exists?; end
+
+  # Returns the value of attribute macro.
   def macro; end
+
   def model_class; end
+
+  # @return [Boolean]
   def reader_attribute_exists?; end
+
+  # Returns the value of attribute subject.
   def subject; end
+
+  # @return [Boolean]
   def writer_attribute_exists?; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher
+  # @return [HaveDbColumnMatcher] a new instance of HaveDbColumnMatcher
   def initialize(column); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def of_type(column_type); end
   def with_options(opts = T.unsafe(nil)); end
 
   protected
 
+  # @return [Boolean]
   def actual_primary?; end
+
   def actual_scale; end
+
+  # @return [Boolean]
   def column_exists?; end
+
+  # @return [Boolean]
   def correct_array?; end
+
+  # @return [Boolean]
   def correct_column_type?; end
+
+  # @return [Boolean]
   def correct_default?; end
+
+  # @return [Boolean]
   def correct_limit?; end
+
+  # @return [Boolean]
   def correct_null?; end
+
+  # @return [Boolean]
   def correct_precision?; end
+
+  # @return [Boolean]
   def correct_primary?; end
+
+  # @return [Boolean]
   def correct_scale?; end
+
   def expectation; end
   def matched_column; end
   def model_class; end
   def validate_options(opts); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher::DecoratedColumn < ::SimpleDelegator
+  # @return [DecoratedColumn] a new instance of DecoratedColumn
   def initialize(model, column); end
 
+  # @return [Boolean]
   def primary?; end
+
   def type_cast_default; end
 
   protected
 
+  # Returns the value of attribute model.
   def model; end
 end
 
 Shoulda::Matchers::ActiveRecord::HaveDbColumnMatcher::OPTIONS = T.let(T.unsafe(nil), Array)
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveDbIndexMatcher
+  # @return [HaveDbIndexMatcher] a new instance of HaveDbIndexMatcher
   def initialize(columns); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def unique(unique = T.unsafe(nil)); end
 
   private
 
   def actual_indexes; end
+
+  # @return [Boolean]
   def correct_unique?; end
+
   def described_table_name; end
+
+  # Returns the value of attribute expected_columns.
   def expected_columns; end
+
   def formatted_expected_columns; end
+
+  # @return [Boolean]
   def index_exists?; end
+
   def index_type; end
   def inspected_expected_columns; end
   def matched_index; end
@@ -1719,39 +7588,66 @@ class Shoulda::Matchers::ActiveRecord::HaveDbIndexMatcher
   def negative_expectation; end
   def normalize_columns_to_array(columns); end
   def positive_expectation; end
+
+  # Returns the value of attribute qualifiers.
   def qualifiers; end
+
+  # Returns the value of attribute reason.
   def reason; end
+
+  # Returns the value of attribute subject.
   def subject; end
+
   def table_name; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveImplicitOrderColumnMatcher
+  # @return [HaveImplicitOrderColumnMatcher] a new instance of HaveImplicitOrderColumnMatcher
   def initialize(column_name); end
 
   def description; end
+
+  # Returns the value of attribute failure_message.
   def failure_message; end
+
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
 
   private
 
   def check_column_exists!; end
   def check_implicit_order_column_matches!; end
+
+  # Returns the value of attribute column_name.
   def column_name; end
+
   def expectation; end
   def model; end
+
+  # Returns the value of attribute subject.
   def subject; end
 end
 
 class Shoulda::Matchers::ActiveRecord::HaveImplicitOrderColumnMatcher::PrimaryCheckFailedError < ::StandardError; end
 class Shoulda::Matchers::ActiveRecord::HaveImplicitOrderColumnMatcher::SecondaryCheckFailedError < ::StandardError; end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveReadonlyAttributeMatcher
+  # @return [HaveReadonlyAttributeMatcher] a new instance of HaveReadonlyAttributeMatcher
   def initialize(attribute); end
 
   def description; end
+
+  # Returns the value of attribute failure_message.
   def failure_message; end
+
+  # Returns the value of attribute failure_message_when_negated.
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
 
   private
@@ -1760,46 +7656,75 @@ class Shoulda::Matchers::ActiveRecord::HaveReadonlyAttributeMatcher
   def readonly_attributes; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveRichTextMatcher
+  # @return [HaveRichTextMatcher] a new instance of HaveRichTextMatcher
   def initialize(rich_text_attribute); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
 
   private
 
+  # Returns the value of attribute error.
   def error; end
+
   def error_description; end
+
+  # @return [Boolean]
   def has_attribute?; end
+
+  # @return [Boolean]
   def has_expected_action_text?; end
+
+  # Returns the value of attribute rich_text_attribute.
   def rich_text_attribute; end
+
   def run_checks; end
+
+  # Returns the value of attribute subject.
   def subject; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::HaveSecureTokenMatcher
+  # @return [HaveSecureTokenMatcher] a new instance of HaveSecureTokenMatcher
   def initialize(token_attribute); end
 
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
   def ignoring_check_for_db_index; end
+
+  # @return [Boolean]
   def matches?(subject); end
+
+  # Returns the value of attribute token_attribute.
   def token_attribute; end
 
   private
 
+  # @return [Boolean]
   def has_expected_db_column?; end
+
+  # @return [Boolean]
   def has_expected_db_index?; end
+
+  # @return [Boolean]
   def has_expected_instance_methods?; end
+
   def run_checks; end
   def table_and_column; end
   def table_name; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::SerializeMatcher
+  # @return [SerializeMatcher] a new instance of SerializeMatcher
   def initialize(name); end
 
   def as(type); end
@@ -1807,34 +7732,55 @@ class Shoulda::Matchers::ActiveRecord::SerializeMatcher
   def description; end
   def failure_message; end
   def failure_message_when_negated; end
+
+  # @return [Boolean]
   def matches?(subject); end
 
   protected
 
+  # @return [Boolean]
   def attribute_is_serialized?; end
+
+  # @return [Boolean]
   def class_valid?; end
+
   def expectation; end
+
+  # @return [Boolean]
   def instance_class_valid?; end
+
   def model; end
   def model_class; end
   def serialization_coder; end
+
+  # @return [Boolean]
   def serialization_valid?; end
+
+  # @return [Boolean]
   def type_valid?; end
 end
 
+# @private
 module Shoulda::Matchers::ActiveRecord::Uniqueness; end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::Uniqueness::Model
+  # @return [Model] a new instance of Model
   def initialize(name, namespace); end
 
+  # @return [Boolean]
   def already_exists?; end
+
   def next; end
   def symlink_to(parent); end
   def to_s; end
 
   protected
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Returns the value of attribute namespace.
   def namespace; end
 
   class << self
@@ -1842,27 +7788,38 @@ class Shoulda::Matchers::ActiveRecord::Uniqueness::Model
   end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::Uniqueness::Namespace
+  # @return [Namespace] a new instance of Namespace
   def initialize(constant); end
 
   def clear; end
+
+  # @return [Boolean]
   def has?(name); end
+
   def set(name, value); end
   def to_s; end
 
   protected
 
+  # Returns the value of attribute constant.
   def constant; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::Uniqueness::TestModelCreator
+  # @return [TestModelCreator] a new instance of TestModelCreator
   def initialize(model_name, namespace); end
 
   def create; end
 
   protected
 
+  # Returns the value of attribute model_name.
   def model_name; end
+
+  # Returns the value of attribute namespace.
   def namespace; end
 
   private
@@ -1876,6 +7833,7 @@ class Shoulda::Matchers::ActiveRecord::Uniqueness::TestModelCreator
   end
 end
 
+# @private
 module Shoulda::Matchers::ActiveRecord::Uniqueness::TestModels
   class << self
     def create(model_name); end
@@ -1884,19 +7842,31 @@ module Shoulda::Matchers::ActiveRecord::Uniqueness::TestModels
   end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher < ::Shoulda::Matchers::ActiveModel::ValidationMatcher
   include ::Shoulda::Matchers::ActiveModel::Helpers
 
+  # @return [ValidateUniquenessOfMatcher] a new instance of ValidateUniquenessOfMatcher
   def initialize(attribute); end
 
   def allow_blank; end
   def allow_nil; end
   def case_insensitive; end
+
+  # @return [Boolean]
   def does_not_match?(given_record); end
+
+  # @return [Boolean]
   def expects_to_allow_blank?; end
+
+  # @return [Boolean]
   def expects_to_allow_nil?; end
+
   def ignoring_case_sensitivity; end
+
+  # @return [Boolean]
   def matches?(given_record); end
+
   def scoped_to(*scopes); end
   def simple_description; end
 
@@ -1909,37 +7879,69 @@ class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher < ::Shoulda::
   private
 
   def actual_sets_of_scopes; end
+
+  # @return [Boolean]
   def all_scopes_are_booleans?; end
+
   def arbitrary_non_blank_value; end
   def attribute_changed_value_message; end
   def attribute_names_under_test; end
+
+  # @return [Boolean]
   def attribute_present_on_model?; end
+
   def attribute_setter_descriptions_for_new_record; end
   def attribute_setter_for_existing_record; end
   def attribute_setters_for_new_record; end
   def available_enum_values_for(scope, previous_value); end
+
+  # @return [Boolean]
   def boolean_value?(value); end
+
   def build_attribute_setter(record, attribute_name, value); end
   def build_new_record; end
   def case_sensitivity_strategy; end
   def column_for(scope); end
   def column_limit_for(attribute); end
   def create_existing_record; end
+
+  # @return [Boolean]
   def defined_as_enum?(scope); end
+
   def description_for_attribute_setter(attribute_setter, same_as_existing: T.unsafe(nil)); end
   def description_for_case_sensitive_qualifier; end
   def descriptions_for_attribute_setters_for_new_record; end
+
+  # @return [Boolean]
   def does_not_match_allow_blank?; end
+
+  # @return [Boolean]
   def does_not_match_allow_nil?; end
+
+  # @return [Boolean]
   def does_not_match_presence_of_attribute?; end
+
+  # @return [Boolean]
   def does_not_match_presence_of_scopes?; end
+
+  # @return [Boolean]
   def does_not_match_scopes_configuration?; end
+
+  # @return [Boolean]
   def does_not_match_uniqueness_with_case_sensitivity_strategy?; end
+
+  # @return [Boolean]
   def does_not_match_uniqueness_with_scopes?; end
+
+  # @return [Boolean]
   def does_not_match_uniqueness_without_scopes?; end
+
   def dummy_scalar_value_for(column); end
   def dummy_value_for(scope); end
+
+  # @return [Boolean]
   def existing_and_new_values_are_same?; end
+
   def existing_record; end
   def existing_value_read; end
   def existing_value_written; end
@@ -1947,42 +7949,75 @@ class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher < ::Shoulda::
   def failure_message_preface; end
   def find_existing_record; end
   def find_or_create_existing_record; end
+
+  # @return [Boolean]
   def has_secure_password?; end
+
   def inspected_actual_scopes; end
   def inspected_actual_sets_of_scopes; end
   def inspected_expected_scopes; end
   def last_attribute_setter_used_on_new_record; end
   def last_value_set_on_new_record; end
+
+  # @return [Boolean]
   def matches_allow_blank?; end
+
+  # @return [Boolean]
   def matches_allow_nil?; end
+
+  # @return [Boolean]
   def matches_presence_of_attribute?; end
+
+  # @return [Boolean]
   def matches_presence_of_scopes?; end
+
+  # @return [Boolean]
   def matches_scopes_configuration?; end
+
+  # @return [Boolean]
   def matches_uniqueness_with_case_sensitivity_strategy?; end
+
+  # @return [Boolean]
   def matches_uniqueness_with_scopes?; end
+
+  # @return [Boolean]
   def matches_uniqueness_without_scopes?; end
+
   def model; end
+
+  # @return [Boolean]
   def model_class?(model_name); end
+
   def new_record; end
   def next_scalar_value_for(scope, previous_value); end
   def next_value_for(scope, previous_value); end
+
+  # @return [Boolean]
   def polymorphic_type_attribute?(scope, previous_value); end
+
+  # @return [Boolean]
   def scopes_match?; end
+
   def scopes_missing_on_model; end
   def scopes_present_on_model; end
   def set_attribute_on!(record_type, record, attribute_name, value); end
   def set_attribute_on_existing_record!(attribute_name, value); end
   def set_attribute_on_new_record!(attribute_name, value); end
   def setting_next_value_for(scope); end
+
+  # @return [Boolean]
   def should_test_case_sensitivity?; end
+
   def subject; end
   def update_existing_record!(value); end
   def validations; end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher::AttributeSetters
   include ::Enumerable
 
+  # @return [AttributeSetters] a new instance of AttributeSetters
   def initialize; end
 
   def +(other_attribute_setters); end
@@ -1995,39 +8030,74 @@ class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher::AttributeSet
   def find_index_of(given_attribute_setter); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher::ExistingRecordInvalid < ::Shoulda::Matchers::Error
   include ::Shoulda::Matchers::ActiveModel::Helpers
 
   def message; end
+
+  # Returns the value of attribute underlying_exception.
   def underlying_exception; end
+
+  # Sets the attribute underlying_exception
+  #
+  # @param value the value to set the attribute underlying_exception to.
   def underlying_exception=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::ActiveRecord::ValidateUniquenessOfMatcher::NonCaseSwappableValueError < ::Shoulda::Matchers::Error
+  # Returns the value of attribute attribute.
   def attribute; end
+
+  # Sets the attribute attribute
+  #
+  # @param value the value to set the attribute attribute to.
   def attribute=(_arg0); end
+
   def message; end
+
+  # Returns the value of attribute model.
   def model; end
+
+  # Sets the attribute model
+  #
+  # @param value the value to set the attribute model to.
   def model=(_arg0); end
+
+  # Returns the value of attribute value.
   def value; end
+
+  # Sets the attribute value
+  #
+  # @param value the value to set the attribute value to.
   def value=(_arg0); end
 end
 
+# @private
 class Shoulda::Matchers::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize; end
 
   def integrate(&block); end
+
+  # Returns the value of attribute integrations.
   def integrations; end
 end
 
+# @private
 class Shoulda::Matchers::Document
+  # @return [Document] a new instance of Document
   def initialize(document, indent: T.unsafe(nil)); end
 
   def wrap; end
 
   protected
 
+  # Returns the value of attribute document.
   def document; end
+
+  # Returns the value of attribute indent.
   def indent; end
 
   private
@@ -2036,40 +8106,64 @@ class Shoulda::Matchers::Document
   def wrapped_paragraphs; end
 end
 
+# @private
 module Shoulda::Matchers::Doublespeak
   class << self
     def debug(&block); end
+
+    # @return [Boolean]
     def debugging_enabled?; end
+
     def double_collection_for(*args, &block); end
     def with_doubles_activated(*args, &block); end
     def world; end
   end
 end
 
+# @private
 class Shoulda::Matchers::Doublespeak::Double
+  # @return [Double] a new instance of Double
   def initialize(world, klass, method_name, implementation); end
 
   def activate; end
+
+  # @return [Boolean]
   def activated?; end
+
   def call_original_method(call); end
+
+  # Returns the value of attribute calls.
   def calls; end
+
   def deactivate; end
   def record_call(call); end
   def to_return(value = T.unsafe(nil), &block); end
 
   protected
 
+  # Returns the value of attribute implementation.
   def implementation; end
+
+  # Returns the value of attribute klass.
   def klass; end
+
+  # Returns the value of attribute method_name.
   def method_name; end
+
+  # Returns the value of attribute original_method.
   def original_method; end
+
   def replace_method_with_double; end
   def restore_original_method; end
   def store_original_method; end
+
+  # Returns the value of attribute world.
   def world; end
 end
 
+# @private
 class Shoulda::Matchers::Doublespeak::DoubleCollection
+  # @return [DoubleCollection] a new instance of DoubleCollection
   def initialize(world, klass); end
 
   def activate; end
@@ -2081,12 +8175,19 @@ class Shoulda::Matchers::Doublespeak::DoubleCollection
 
   protected
 
+  # Returns the value of attribute doubles_by_method_name.
   def doubles_by_method_name; end
+
+  # Returns the value of attribute klass.
   def klass; end
+
   def register_double(method_name, implementation_type); end
+
+  # Returns the value of attribute world.
   def world; end
 end
 
+# @private
 module Shoulda::Matchers::Doublespeak::DoubleImplementationRegistry
   class << self
     def find(type); end
@@ -2099,43 +8200,75 @@ module Shoulda::Matchers::Doublespeak::DoubleImplementationRegistry
   end
 end
 
+# @private
 class Shoulda::Matchers::Doublespeak::MethodCall
+  # @return [MethodCall] a new instance of MethodCall
   def initialize(args); end
 
   def ==(other); end
+
+  # Returns the value of attribute args.
   def args; end
+
+  # Returns the value of attribute block.
   def block; end
+
+  # Returns the value of attribute caller.
   def caller; end
+
+  # Returns the value of attribute double.
   def double; end
+
   def inspect; end
+
+  # Returns the value of attribute method_name.
   def method_name; end
+
+  # Returns the value of attribute object.
   def object; end
+
+  # Returns the value of attribute return_value.
   def return_value; end
+
+  # Sets the attribute return_value
+  #
+  # @param value the value to set the attribute return_value to.
   def return_value=(_arg0); end
+
   def to_hash; end
   def with_return_value(return_value); end
 end
 
+# @private
 class Shoulda::Matchers::Doublespeak::ObjectDouble < ::BasicObject
+  # @return [ObjectDouble] a new instance of ObjectDouble
   def initialize; end
 
+  # Returns the value of attribute calls.
   def calls; end
+
   def calls_to(method_name); end
   def method_missing(method_name, *args, &block); end
+
+  # @return [Boolean]
   def respond_to?(_name, _include_private = T.unsafe(nil)); end
 
   protected
 
+  # Returns the value of attribute calls_by_method_name.
   def calls_by_method_name; end
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(_name, _include_all); end
 end
 
+# @private
 class Shoulda::Matchers::Doublespeak::ProxyImplementation
   extend ::Forwardable
 
+  # @return [ProxyImplementation] a new instance of ProxyImplementation
   def initialize(stub_implementation); end
 
   def call(call); end
@@ -2143,6 +8276,7 @@ class Shoulda::Matchers::Doublespeak::ProxyImplementation
 
   protected
 
+  # Returns the value of attribute stub_implementation.
   def stub_implementation; end
 
   class << self
@@ -2150,7 +8284,9 @@ class Shoulda::Matchers::Doublespeak::ProxyImplementation
   end
 end
 
+# @private
 class Shoulda::Matchers::Doublespeak::StubImplementation
+  # @return [StubImplementation] a new instance of StubImplementation
   def initialize; end
 
   def call(call); end
@@ -2158,6 +8294,7 @@ class Shoulda::Matchers::Doublespeak::StubImplementation
 
   protected
 
+  # Returns the value of attribute implementation.
   def implementation; end
 
   class << self
@@ -2165,11 +8302,16 @@ class Shoulda::Matchers::Doublespeak::StubImplementation
   end
 end
 
+# @private
 class Shoulda::Matchers::Doublespeak::World
+  # @return [World] a new instance of World
   def initialize; end
 
   def double_collection_for(klass); end
+
+  # @return [Boolean]
   def doubles_activated?; end
+
   def original_method_for(klass, method_name); end
   def store_original_method_for(klass, method_name); end
   def with_doubles_activated; end
@@ -2183,7 +8325,9 @@ class Shoulda::Matchers::Doublespeak::World
   def original_methods_for_class(klass); end
 end
 
+# @private
 class Shoulda::Matchers::Error < ::StandardError
+  # @return [Error] a new instance of Error
   def initialize(*args); end
 
   def inspect; end
@@ -2194,11 +8338,180 @@ class Shoulda::Matchers::Error < ::StandardError
   end
 end
 
+# This module provides matchers that are used to test behavior outside of
+# Rails-specific classes.
 module Shoulda::Matchers::Independent
+  # The `delegate_method` matcher tests that an object forwards messages
+  # to other, internal objects by way of delegation.
+  #
+  # In this example, we test that Courier forwards a call to #deliver onto
+  # its PostOffice instance:
+  #
+  #     require 'forwardable'
+  #
+  #     class Courier
+  #       extend Forwardable
+  #
+  #       attr_reader :post_office
+  #
+  #       def_delegators :post_office, :deliver
+  #
+  #       def initialize
+  #         @post_office = PostOffice.new
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     describe Courier do
+  #       it { should delegate_method(:deliver).to(:post_office) }
+  #     end
+  #
+  #     # Minitest
+  #     class CourierTest < Minitest::Test
+  #       should delegate_method(:deliver).to(:post_office)
+  #     end
+  #
+  # You can also use `delegate_method` with Rails's `delegate` macro:
+  #
+  #     class Courier
+  #       attr_reader :post_office
+  #       delegate :deliver, to: :post_office
+  #
+  #       def initialize
+  #         @post_office = PostOffice.new
+  #       end
+  #     end
+  #
+  #     describe Courier do
+  #       it { should delegate_method(:deliver).to(:post_office) }
+  #     end
+  #
+  # To employ some terminology, we would say that Courier's #deliver method
+  # is the *delegating method*, PostOffice is the *delegate object*, and
+  # PostOffice#deliver is the *delegate method*.
+  #
+  # #### Qualifiers
+  #
+  # ##### as
+  #
+  # Use `as` if the name of the delegate method is different from the name
+  # of the delegating method.
+  #
+  # Here, Courier has a #deliver method, but instead of calling #deliver on
+  # the PostOffice, it calls #ship:
+  #
+  #     class Courier
+  #       attr_reader :post_office
+  #
+  #       def initialize
+  #         @post_office = PostOffice.new
+  #       end
+  #
+  #       def deliver(package)
+  #         post_office.ship(package)
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     describe Courier do
+  #       it { should delegate_method(:deliver).to(:post_office).as(:ship) }
+  #     end
+  #
+  #     # Minitest
+  #     class CourierTest < Minitest::Test
+  #       should delegate_method(:deliver).to(:post_office).as(:ship)
+  #     end
+  #
+  # ##### with_prefix
+  #
+  # Use `with_prefix` when using Rails's `delegate` helper along with the
+  # `:prefix` option.
+  #
+  #     class Page < ActiveRecord::Base
+  #       belongs_to :site
+  #       delegate :name, to: :site, prefix: true
+  #       delegate :title, to: :site, prefix: :root
+  #     end
+  #
+  #     # RSpec
+  #     describe Page do
+  #       it { should delegate_method(:name).to(:site).with_prefix }
+  #       it { should delegate_method(:name).to(:site).with_prefix(true) }
+  #       it { should delegate_method(:title).to(:site).with_prefix(:root) }
+  #     end
+  #
+  #     # Minitest
+  #     class PageTest < Minitest::Test
+  #       should delegate_method(:name).to(:site).with_prefix
+  #       should delegate_method(:name).to(:site).with_prefix(true)
+  #       should delegate_method(:title).to(:site).with_prefix(:root)
+  #     end
+  #
+  # ##### with_arguments
+  #
+  # Use `with_arguments` to assert that the delegate method is called with
+  # certain arguments. Note that this qualifier can only be used when the
+  # delegating method takes no arguments; it does not support delegating
+  # or delegate methods that take arbitrary arguments.
+  #
+  # Here, when Courier#deliver_package calls PostOffice#deliver_package, it
+  # adds an options hash:
+  #
+  #     class Courier
+  #       attr_reader :post_office
+  #
+  #       def initialize
+  #         @post_office = PostOffice.new
+  #       end
+  #
+  #       def deliver_package
+  #         post_office.deliver_package(expedited: true)
+  #       end
+  #     end
+  #
+  #     # RSpec
+  #     describe Courier do
+  #       it do
+  #         should delegate_method(:deliver_package).
+  #           to(:post_office).
+  #           with_arguments(expedited: true)
+  #       end
+  #     end
+  #
+  #     # Minitest
+  #     class CourierTest < Minitest::Test
+  #       should delegate_method(:deliver_package).
+  #         to(:post_office).
+  #         with_arguments(expedited: true)
+  #     end
+  #
+  # ##### allow_nil
+  #
+  # Use `allow_nil` if the delegation accounts for the fact that your
+  # delegate object could be nil. (This is mostly intended as an analogue to
+  # the `allow_nil` option that Rails' `delegate` helper takes.)
+  #
+  #     class Account
+  #       delegate :plan, to: :subscription, allow_nil: true
+  #     end
+  #
+  #     # RSpec
+  #     describe Account do
+  #       it { should delegate_method(:plan).to(:subscription).allow_nil }
+  #     end
+  #
+  #     # Minitest
+  #     class PageTest < Minitest::Test
+  #       should delegate_method(:plan).to(:subscription).allow_nil
+  #     end
+  #
+  # @return [DelegateMethodMatcher]
   def delegate_method(delegating_method); end
 end
 
+# @private
 class Shoulda::Matchers::Independent::DelegateMethodMatcher
+  # @return [DelegateMethodMatcher] a new instance of DelegateMethodMatcher
   def initialize(delegating_method); end
 
   def allow_nil; end
@@ -2208,7 +8521,10 @@ class Shoulda::Matchers::Independent::DelegateMethodMatcher
   def failure_message; end
   def failure_message_when_negated; end
   def in_context(context); end
+
+  # @return [Boolean]
   def matches?(subject); end
+
   def to(delegate_object_reader_method); end
   def with_arguments(*arguments); end
   def with_prefix(prefix = T.unsafe(nil)); end
@@ -2220,37 +8536,74 @@ class Shoulda::Matchers::Independent::DelegateMethodMatcher
   def calls_to_delegate_method; end
   def class_or_instance_method_indicator; end
   def class_under_test; end
+
+  # Returns the value of attribute context.
   def context; end
+
+  # Returns the value of attribute delegate_method.
   def delegate_method; end
+
+  # Returns the value of attribute delegate_object.
   def delegate_object; end
+
+  # Returns the value of attribute delegate_object_reader_method.
   def delegate_object_reader_method; end
+
+  # @return [Boolean]
   def delegate_object_received_call?; end
+
+  # @return [Boolean]
   def delegate_object_received_call_with_delegated_arguments?; end
+
+  # Returns the value of attribute delegated_arguments.
   def delegated_arguments; end
+
+  # Returns the value of attribute delegating_method.
   def delegating_method; end
+
   def ensure_delegate_object_has_been_specified!; end
+
+  # @return [Boolean]
   def expects_to_allow_nil_delegate_object?; end
+
+  # @return [Boolean]
   def failed_to_allow_nil_delegate_object?; end
+
   def formatted_calls_on_delegate_object; end
   def formatted_delegate_method(options = T.unsafe(nil)); end
   def formatted_delegate_object_reader_method_name(options = T.unsafe(nil)); end
   def formatted_delegating_method_name(options = T.unsafe(nil)); end
   def formatted_method_name_for(method_name, options); end
+
+  # Returns the value of attribute method.
   def method; end
+
   def possible_class_under_test(options); end
   def register_subject_double_collection_to(returned_value); end
   def subject; end
+
+  # @return [Boolean]
   def subject_delegates_to_delegate_object_correctly?; end
+
+  # @return [Boolean]
   def subject_handles_nil_delegate_object?; end
+
+  # @return [Boolean]
   def subject_has_delegate_object_reader_method?; end
+
+  # @return [Boolean]
   def subject_has_delegating_method?; end
+
+  # @return [Boolean]
   def subject_is_a_class?; end
 end
 
+# @private
 class Shoulda::Matchers::Independent::DelegateMethodMatcher::DelegateObjectNotSpecified < ::StandardError
   def message; end
 end
 
+# @private
 module Shoulda::Matchers::Integrations
   class << self
     def find_library!(name); end
@@ -2265,18 +8618,26 @@ module Shoulda::Matchers::Integrations
   end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize(&block); end
 
   def apply; end
   def library(name); end
   def test_framework(name); end
+
+  # Returns the value of attribute test_frameworks.
   def test_frameworks; end
 
   private
 
   def clear_default_test_framework; end
+
+  # @return [Boolean]
   def no_libraries_added?; end
+
+  # @return [Boolean]
   def no_test_frameworks_added?; end
 
   class << self
@@ -2284,14 +8645,18 @@ class Shoulda::Matchers::Integrations::Configuration
   end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::ConfigurationError < ::StandardError; end
 
+# @private
 module Shoulda::Matchers::Integrations::Inclusion
   def include_into(mod, *other_mods, &block); end
 end
 
+# @private
 module Shoulda::Matchers::Integrations::Libraries; end
 
+# @private
 class Shoulda::Matchers::Integrations::Libraries::ActionController
   include ::Shoulda::Matchers::Integrations::Inclusion
   include ::Shoulda::Matchers::Integrations::Rails
@@ -2303,6 +8668,7 @@ class Shoulda::Matchers::Integrations::Libraries::ActionController
   def matchers_module; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::Libraries::ActiveModel
   include ::Shoulda::Matchers::Integrations::Inclusion
   include ::Shoulda::Matchers::Integrations::Rails
@@ -2314,6 +8680,7 @@ class Shoulda::Matchers::Integrations::Libraries::ActiveModel
   def matchers_module; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::Libraries::ActiveRecord
   include ::Shoulda::Matchers::Integrations::Inclusion
   include ::Shoulda::Matchers::Integrations::Rails
@@ -2325,11 +8692,15 @@ class Shoulda::Matchers::Integrations::Libraries::ActiveRecord
   def matchers_module; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::Libraries::MissingLibrary
   def integrate_with(test_framework); end
+
+  # @return [Boolean]
   def rails?; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::Libraries::Rails
   include ::Shoulda::Matchers::Integrations::Rails
 
@@ -2338,6 +8709,7 @@ end
 
 Shoulda::Matchers::Integrations::Libraries::Rails::SUB_LIBRARIES = T.let(T.unsafe(nil), Array)
 
+# @private
 class Shoulda::Matchers::Integrations::Libraries::Routing
   include ::Shoulda::Matchers::Integrations::Inclusion
   include ::Shoulda::Matchers::Integrations::Rails
@@ -2349,10 +8721,13 @@ class Shoulda::Matchers::Integrations::Libraries::Routing
   def matchers_module; end
 end
 
+# @private
 module Shoulda::Matchers::Integrations::Rails
+  # @return [Boolean]
   def rails?; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::Registry
   def find!(name); end
   def register(klass, name); end
@@ -2363,16 +8738,24 @@ class Shoulda::Matchers::Integrations::Registry
   def registry; end
 end
 
+# @private
 module Shoulda::Matchers::Integrations::TestFrameworks; end
 
+# @private
 class Shoulda::Matchers::Integrations::TestFrameworks::ActiveSupportTestCase
   def include(*modules, **_options); end
+
+  # @return [Boolean]
   def n_unit?; end
+
+  # @return [Boolean]
   def present?; end
+
   def validate!; end
 
   protected
 
+  # Returns the value of attribute configuration.
   def configuration; end
 
   private
@@ -2380,10 +8763,16 @@ class Shoulda::Matchers::Integrations::TestFrameworks::ActiveSupportTestCase
   def test_case_class; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::TestFrameworks::Minitest4
   def include(*modules, **_options); end
+
+  # @return [Boolean]
   def n_unit?; end
+
+  # @return [Boolean]
   def present?; end
+
   def validate!; end
 
   private
@@ -2391,10 +8780,16 @@ class Shoulda::Matchers::Integrations::TestFrameworks::Minitest4
   def test_case_class; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::TestFrameworks::Minitest5
   def include(*modules, **_options); end
+
+  # @return [Boolean]
   def n_unit?; end
+
+  # @return [Boolean]
   def present?; end
+
   def validate!; end
 
   private
@@ -2402,24 +8797,43 @@ class Shoulda::Matchers::Integrations::TestFrameworks::Minitest5
   def test_case_class; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::TestFrameworks::MissingTestFramework
   def include(*modules, **options); end
+
+  # @return [Boolean]
   def n_unit?; end
+
+  # @return [Boolean]
   def present?; end
+
+  # @raise [TestFrameworkNotConfigured]
   def validate!; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::TestFrameworks::Rspec
   def include(*modules, **options); end
+
+  # @return [Boolean]
   def n_unit?; end
+
+  # @return [Boolean]
   def present?; end
+
   def validate!; end
 end
 
+# @private
 class Shoulda::Matchers::Integrations::TestFrameworks::TestUnit
   def include(*modules, **_options); end
+
+  # @return [Boolean]
   def n_unit?; end
+
+  # @return [Boolean]
   def present?; end
+
   def validate!; end
 
   private
@@ -2427,17 +8841,28 @@ class Shoulda::Matchers::Integrations::TestFrameworks::TestUnit
   def test_case_class; end
 end
 
+# @private
 class Shoulda::Matchers::Line
+  # @return [Line] a new instance of Line
   def initialize(line, indent: T.unsafe(nil)); end
 
   def wrap; end
 
   protected
 
+  # Returns the value of attribute indent.
   def indent; end
+
+  # Returns the value of attribute indentation.
   def indentation; end
+
+  # Returns the value of attribute line_to_wrap.
   def line_to_wrap; end
+
+  # Returns the value of attribute original_line.
   def original_line; end
+
+  # Returns the value of attribute previous_line_to_wrap.
   def previous_line_to_wrap; end
 
   private
@@ -2450,30 +8875,43 @@ end
 
 Shoulda::Matchers::Line::OFFSETS = T.let(T.unsafe(nil), Hash)
 
+# @private
 class Shoulda::Matchers::MatcherContext
+  # @return [MatcherContext] a new instance of MatcherContext
   def initialize(context); end
 
+  # @return [Boolean]
   def subject_is_a_class?; end
 
   protected
 
+  # Returns the value of attribute context.
   def context; end
 
   private
 
   def assume_that_subject_is_not_a_class; end
+
+  # @return [Boolean]
   def inside_a_shoulda_context_project?; end
+
+  # @return [Boolean]
   def outside_a_should_block?; end
 end
 
+# @private
 class Shoulda::Matchers::Paragraph
+  # @return [Paragraph] a new instance of Paragraph
   def initialize(paragraph, indent: T.unsafe(nil)); end
 
   def wrap; end
 
   protected
 
+  # Returns the value of attribute indent.
   def indent; end
+
+  # Returns the value of attribute paragraph.
   def paragraph; end
 
   private
@@ -2486,21 +8924,31 @@ class Shoulda::Matchers::Paragraph
   def wrap_list_item; end
 end
 
+# @private
 module Shoulda::Matchers::RailsShim
   class << self
     def action_pack_version; end
+
+    # @return [Boolean]
     def active_record_gte_6?; end
+
     def active_record_version; end
     def attribute_serialization_coder_for(model, attribute_name); end
     def attribute_type_for(model, attribute_name); end
     def attribute_types_for(model); end
     def digestible_attributes_in(record); end
     def generate_validation_message(record, attribute, type, model_name, options); end
+
+    # @return [Boolean]
     def has_secure_password?(record, attribute_name); end
+
     def parent_of(mod); end
     def secure_password_module; end
     def serialized_attributes_for(model); end
+
+    # @return [Boolean]
     def supports_full_attributes_api?(model); end
+
     def verb_for_update; end
 
     private
@@ -2509,20 +8957,28 @@ module Shoulda::Matchers::RailsShim
   end
 end
 
+# @private
 module Shoulda::Matchers::Routing
   def route(method, path, port: T.unsafe(nil)); end
 end
 
+# @private
 Shoulda::Matchers::TERMINAL_MAX_WIDTH = T.let(T.unsafe(nil), Integer)
 
+# @private
 class Shoulda::Matchers::Text < ::String
+  # @return [Boolean]
   def indented?; end
+
+  # @return [Boolean]
   def list_item?; end
+
   def match_as_list_item; end
 end
 
 Shoulda::Matchers::Text::LIST_ITEM_REGEXP = T.let(T.unsafe(nil), Regexp)
 
+# @private
 module Shoulda::Matchers::Util
   class << self
     def a_or_an(next_word); end
@@ -2538,8 +8994,11 @@ module Shoulda::Matchers::Util
 end
 
 Shoulda::Matchers::Util::MAXIMUM_LENGTH_OF_VALUE_TO_DISPLAY = T.let(T.unsafe(nil), Integer)
+
+# @private
 Shoulda::Matchers::VERSION = T.let(T.unsafe(nil), String)
 
+# @private
 module Shoulda::Matchers::WordWrap
   def word_wrap(document, options = T.unsafe(nil)); end
 end

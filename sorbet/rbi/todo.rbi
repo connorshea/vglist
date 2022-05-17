@@ -4,9 +4,6 @@
 
 # typed: strict
 
-module ::Colorize::ClassMethods; end
-module ::Colorize::InstanceMethods; end
 module ::MakeMakefile; end
-module GraphQL::ScalarType; end
 module RDoc::Task; end
 module T::Private::Methods::Signature; end

@@ -6,12 +6,52 @@
 
 module FFI
   class << self
+    # Add a definition type to type definitions.
+    #
+    # @param old [Type, DataConverter, Symbol] type definition used by {FFI.find_type}
+    # @param add [Symbol] new type definition's name to add
+    # @return [Type]
     def add_typedef(old, add); end
+
+    # @see FFI::LastError.error
     def errno; end
+
+    # @see FFI::LastError.error=
     def errno=(error); end
+
+    # Find a type in +type_map+ ({FFI::TypeDefs}, by default) from
+    # a type objet, a type name (symbol). If +name+ is a {DataConverter},
+    # a new {Type::Mapped} is created.
+    #
+    # @param name [Type, DataConverter, Symbol]
+    # @param type_map [Hash] if nil, {FFI::TypeDefs} is used
+    # @return [Type]
     def find_type(name, type_map = T.unsafe(nil)); end
+
+    # Transform a generic library name to a platform library name
+    #
+    # @example
+    #   # Linux
+    #   FFI.map_library_name 'c'     # -> "libc.so.6"
+    #   FFI.map_library_name 'jpeg'  # -> "libjpeg.so"
+    #   # Windows
+    #   FFI.map_library_name 'c'     # -> "msvcrt.dll"
+    #   FFI.map_library_name 'jpeg'  # -> "jpeg.dll"
+    # @param lib [#to_s] library name
+    # @return [String] library name formatted for current platform
     def map_library_name(lib); end
+
+    # Get +type+ size, in bytes.
+    #
+    # @param type +type+ is an instance of class accepted by {FFI.find_type}
+    # @return [Numeric]
     def type_size(type); end
+
+    # Add a definition type to type definitions.
+    #
+    # @param old [Type, DataConverter, Symbol] type definition used by {FFI.find_type}
+    # @param add [Symbol] new type definition's name to add
+    # @return [Type]
     def typedef(old, add); end
   end
 end
@@ -163,7 +203,12 @@ class FFI::AbstractMemory
   def read_ulong_long; end
   def read_ushort; end
   def size; end
+
+  # Return +true+ if +self+ has a size limit.
+  #
+  # @return [Boolean]
   def size_limit?; end
+
   def total; end
   def type_size; end
   def write_array_of_char(_arg0); end
@@ -223,40 +268,153 @@ end
 class FFI::AutoPointer < ::FFI::Pointer
   extend ::FFI::DataConverter
 
+  # @note The safest, and therefore preferred, calling
+  #   idiom is to pass a Method as the second parameter. Example usage:
+  #
+  #   class PointerHelper
+  #   def self.release(pointer)
+  #   ...
+  #   end
+  #   end
+  #
+  #   p = AutoPointer.new(other_pointer, PointerHelper.method(:release))
+  #
+  #   The above code will cause PointerHelper#release to be invoked at GC time.
+  # @note The last calling idiom (only one parameter) is generally only
+  #   going to be useful if you subclass {AutoPointer}, and override
+  #   #release, which by default does nothing.
+  # @overload initialize
+  # @overload initialize
+  # @overload initialize
+  # @overload initialize
+  # @raise [TypeError]
+  # @return [AutoPointer] a new instance of AutoPointer
   def initialize(ptr, proc = T.unsafe(nil), &block); end
 
+  # Set +autorelease+ property. See {Pointer Autorelease section at Pointer}.
+  #
+  # @param autorelease [Boolean]
+  # @return [Boolean] +autorelease+
   def autorelease=(autorelease); end
+
+  # Get +autorelease+ property. See {Pointer Autorelease section at Pointer}.
+  #
+  # @return [Boolean] +autorelease+
   def autorelease?; end
+
+  # Free the pointer.
+  #
+  # @return [nil]
   def free; end
 
   class << self
+    # Create a new AutoPointer.
+    #
+    # Override {DataConverter#from_native}.
+    #
+    # @overload self.from_native
+    # @return [AutoPointer]
     def from_native(val, ctx); end
+
+    # Return native type of AutoPointer.
+    #
+    # Override {DataConverter#native_type}.
+    #
+    # @raise [RuntimeError] if class does not implement a +#release+ method
+    # @return [Type::POINTER]
     def native_type; end
   end
 end
 
+# CallableReleaser is a {Releaser} used when an {AutoPointer} is defined with a
+# Proc or a Method.
 class FFI::AutoPointer::CallableReleaser < ::FFI::AutoPointer::Releaser
+  # Release +ptr+ by using Proc or Method defined at +ptr+
+  # {AutoPointer#initialize initialization}.
+  #
+  # @param ptr [Pointer]
+  # @return [nil]
   def release(ptr); end
 end
 
+# DefaultReleaser is a {Releaser} used when an {AutoPointer} is defined
+# without Proc or Method. In this case, the pointer to release must be of
+# a class derived from AutoPointer with a {release} class method.
 class FFI::AutoPointer::DefaultReleaser < ::FFI::AutoPointer::Releaser
+  # Release +ptr+ using the {release} class method of its class.
+  #
+  # @param ptr [Pointer]
+  # @return [nil]
   def release(ptr); end
 end
 
+# A releaser is an object in charge of release an {AutoPointer}.
+#
+# @abstract Base class for {AutoPointer}'s releasers.
+#
+#   All subclasses of Releaser should define a +#release(ptr)+ method.
 class FFI::AutoPointer::Releaser
+  # A new instance of Releaser.
+  #
+  # @param ptr [Pointer]
+  # @param proc [#call]
+  # @return [nil]
   def initialize(ptr, proc); end
 
+  # Returns the value of attribute autorelease.
   def autorelease; end
+
+  # Sets the attribute autorelease
+  #
+  # @param value the value to set the attribute autorelease to.
   def autorelease=(_arg0); end
+
+  # Release pointer if +autorelease+ is set.
+  #
+  # @param args
   def call(*args); end
+
+  # Free pointer.
+  #
+  # @return [nil]
   def free; end
 end
 
+# Represents a C enum whose values are power of 2
+#
+# Contrary to classical enums, bitmask values are usually combined
+# when used.
+#
+# @example
+#   enum {
+#   red = (1<<0),
+#   green = (1<<1),
+#   blue = (1<<2)
+#   }
 class FFI::Bitmask < ::FFI::Enum
+  # @overload initialize
+  # @overload initialize
+  # @return [Bitmask] a new instance of Bitmask
   def initialize(*args); end
 
+  # Get a symbol list or a value from the bitmask
+  #
+  # @overload []
+  # @overload []
+  # @overload []
+  # @overload []
+  # @raise [ArgumentError]
   def [](*query); end
+
+  # @param val [Integer]
+  # @param ctx unused
+  # @return [Array<Symbol, Integer>] list of symbol names corresponding to val, plus an optional remainder if some bits don't match any constant
   def from_native(val, ctx); end
+
+  # Get the native value of a bitmask
+  #
+  # @overload to_native
+  # @overload to_native
   def to_native(query, ctx); end
 end
 
@@ -286,9 +444,20 @@ end
 FFI::CURRENT_PROCESS = T.let(T.unsafe(nil), Object)
 FFI::CallbackInfo = FFI::FunctionType
 
+# This module is used to extend somes classes and give then a common API.
+#
+# Most of methods defined here must be overriden.
 module FFI::DataConverter
+  # Convert from a native type.
   def from_native(value, ctx); end
+
+  # Get native type.
+  #
+  # @overload native_type
+  # @overload native_type
   def native_type(type = T.unsafe(nil)); end
+
+  # Convert to a native type.
   def to_native(value, ctx); end
 end
 
@@ -328,28 +497,90 @@ class FFI::DynamicLibrary::Symbol < ::FFI::Pointer
   def initialize_copy(_arg0); end
 end
 
+# Represents a C enum.
+#
+# For a C enum:
+#  enum fruits {
+#    apple,
+#    banana,
+#    orange,
+#    pineapple
+#  };
+# are defined this vocabulary:
+# * a _symbol_ is a word from the enumeration (ie. _apple_, by example);
+# * a _value_ is the value of a symbol in the enumeration (by example, apple has value _0_ and banana _1_).
 class FFI::Enum
   include ::FFI::DataConverter
 
+  # @overload initialize
+  # @overload initialize
+  # @return [Enum] a new instance of Enum
   def initialize(*args); end
 
+  # Get a symbol or a value from the enum.
+  #
+  # @overload []
+  # @overload []
   def [](query); end
+
+  # Get a symbol or a value from the enum.
+  #
+  # @overload []
+  # @overload []
   def find(query); end
+
+  # @param val
+  # @return symbol name if it exists for +val+.
   def from_native(val, ctx); end
+
+  # Returns the value of attribute native_type.
   def native_type; end
+
+  # Get the symbol map.
+  #
+  # @return [Hash]
   def symbol_map; end
+
+  # @return [Array] enum symbol names
   def symbols; end
+
+  # Returns the value of attribute tag.
   def tag; end
+
+  # Get the symbol map.
+  #
+  # @return [Hash]
   def to_h; end
+
+  # Get the symbol map.
+  #
+  # @return [Hash]
   def to_hash; end
+
+  # @param val [Symbol, Integer, #to_int]
+  # @param ctx unused
+  # @return [Integer] value of a enum symbol
   def to_native(val, ctx); end
 end
 
+# An instance of this class permits to manage {Enum}s. In fact, Enums is a collection of {Enum}s.
 class FFI::Enums
+  # @return [nil]
   def initialize; end
 
+  # Add an {Enum} to the collection.
+  #
+  # @param enum [Enum]
   def <<(enum); end
+
+  # @param symbol a symbol to find in merge symbol maps of all enums.
+  # @return a symbol
   def __map_symbol(symbol); end
+
+  # Find a {Enum} in collection.
+  #
+  # @param query enum tag or part of an enum name
+  # @return [Enum]
   def find(query); end
 end
 
@@ -377,9 +608,25 @@ class FFI::FunctionType < ::FFI::Type
   def result_type; end
 end
 
+# This module implements a couple of class methods to play with IO.
 module FFI::IO
   class << self
+    # Synonym for IO::for_fd.
+    #
+    # @param fd [Integer] file decriptor
+    # @param mode [String] mode string
+    # @return [::IO]
     def for_fd(fd, mode = T.unsafe(nil)); end
+
+    # A version of IO#read that reads data from an IO and put then into a native buffer.
+    #
+    # This will be optimized at some future time to eliminate the double copy.
+    #
+    # @param io [#read] io to read from
+    # @param buf [AbstractMemory] destination for data read from +io+
+    # @param len [nil, Numeric] maximul number of bytes to read from +io+. If +nil+,
+    #   read until end of file.
+    # @return [Numeric] length really read, in bytes
     def native_read(io, buf, len); end
   end
 end
@@ -396,39 +643,226 @@ module FFI::LastError
   end
 end
 
+# This module is the base to use native functions.
+#
+# A basic usage may be:
+#  require 'ffi'
+#
+#  module Hello
+#    extend FFI::Library
+#    ffi_lib FFI::Library::LIBC
+#    attach_function 'puts', [ :string ], :int
+#  end
+#
+#  Hello.puts("Hello, World")
 module FFI::Library
+  # Attach C function +func+ to this module.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @overload attach_function
+  # @overload attach_function
+  # @param name [#to_s] name of ruby method to attach as
+  # @param func [#to_s] name of C function to attach
+  # @param args [Array<Symbol>] an array of types
+  # @param returns [Symbol] type of return value
+  # @param options [Hash] a customizable set of options
+  # @raise [FFI::NotFoundError] if +func+ cannot be found in the attached libraries (see {#ffi_lib})
+  # @return [FFI::VariadicInvoker]
   def attach_function(name, func, args, returns = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Attach C variable +cname+ to this module.
+  #
+  # @overload attach_variable
+  # @overload attach_variable
+  # @raise [FFI::NotFoundError] if +cname+ cannot be found in libraries
+  # @return [DynamicLibrary::Symbol]
   def attach_variable(mname, a1, a2 = T.unsafe(nil)); end
+
+  # Create a new FFI::Bitmask
+  #
+  # @overload bitmask
+  # @overload bitmask
+  # @overload bitmask
+  # @overload bitmask
+  # @overload bitmask
+  # @overload bitmask
+  # @return [FFI::Bitmask]
   def bitmask(*args); end
+
+  # @overload callback
+  # @overload callback
+  # @raise [ArgumentError]
+  # @return [FFI::CallbackInfo]
   def callback(*args); end
+
+  # Create a new {FFI::Enum}.
+  #
+  # @overload enum
+  # @overload enum
+  # @overload enum
+  # @overload enum
+  # @overload enum
+  # @overload enum
+  # @return [FFI::Enum]
   def enum(*args); end
+
+  # Find an enum by name.
+  #
+  # @param name
+  # @return [FFI::Enum]
   def enum_type(name); end
+
+  # Find an enum by a symbol it contains.
+  #
+  # @param symbol
+  # @return [FFI::Enum]
   def enum_value(symbol); end
+
+  # Set the calling convention for {#attach_function} and {#callback}
+  #
+  # @note +:stdcall+ is typically used for attaching Windows API functions
+  # @param convention [Symbol] one of +:default+, +:stdcall+
+  # @return [Symbol] the new calling convention
+  # @see http://en.wikipedia.org/wiki/Stdcall#stdcall
   def ffi_convention(convention = T.unsafe(nil)); end
+
+  # Load native libraries.
+  #
+  # @param names [Array] names of libraries to load
+  # @raise [LoadError] if a library cannot be opened
+  # @return [Array<DynamicLibrary>]
   def ffi_lib(*names); end
+
+  # Sets library flags for {#ffi_lib}.
+  #
+  # @example
+  #   ffi_lib_flags(:lazy, :local) # => 5
+  # @param flags [Symbol, …] (see {FlagsMap})
+  # @return [Fixnum] the new value
   def ffi_lib_flags(*flags); end
+
+  # Get FFI libraries loaded using {#ffi_lib}.
+  #
+  # @raise [LoadError] if no libraries have been loaded (using {#ffi_lib})
+  # @return [Array<FFI::DynamicLibrary>] array of currently loaded FFI libraries
+  # @see #ffi_lib
   def ffi_libraries; end
+
+  # Find a type definition.
+  #
+  # @param t [DataConverter, Type, Struct, Symbol] type to find
+  # @return [Type]
   def find_type(t); end
+
+  # This function returns a list of possible names to lookup.
+  #
+  # @note Function names on windows may be decorated if they are using stdcall. See
+  #   * http://en.wikipedia.org/wiki/Name_mangling#C_name_decoration_in_Microsoft_Windows
+  #   * http://msdn.microsoft.com/en-us/library/zxk0tw93%28v=VS.100%29.aspx
+  #   * http://en.wikibooks.org/wiki/X86_Disassembly/Calling_Conventions#STDCALL
+  #   Note that decorated names can be overridden via def files.  Also note that the
+  #   windows api, although using, doesn't have decorated names.
+  # @param name [#to_s] function name
+  # @param arg_types [Array] function's argument types
+  # @return [Array<String>]
   def function_names(name, arg_types); end
+
+  # Register or get an already registered type definition.
+  #
+  # To register a new type definition, +old+ should be a {FFI::Type}. +add+
+  # is in this case the type definition.
+  #
+  # If +old+ is a {DataConverter}, a {Type::Mapped} is returned.
+  #
+  # If +old+ is +:enum+
+  # * and +add+ is an +Array+, a call to {#enum} is made with +add+ as single parameter;
+  # * in others cases, +info+ is used to create a named enum.
+  #
+  # If +old+ is a key for type map, #typedef get +old+ type definition.
+  #
+  # @param old [DataConverter, Symbol, Type]
+  # @param add [Symbol]
+  # @param info [Symbol]
+  # @return [FFI::Enum, FFI::Type]
   def typedef(old, add, info = T.unsafe(nil)); end
 
   private
 
+  # Generic enum builder
+  #  @param [Class] klass can be one of FFI::Enum or FFI::Bitmask
+  #  @param args (see #enum or #bitmask)
   def generic_enum(klass, *args); end
 
   class << self
+    # Test if extended object is a Module. If not, raise RuntimeError.
+    #
+    # @param mod extended object
+    # @raise [RuntimeError] if +mod+ is not a Module
+    # @return [nil]
     def extended(mod); end
   end
 end
 
 FFI::Library::CURRENT_PROCESS = T.let(T.unsafe(nil), Object)
+
+# Flags used in {#ffi_lib}.
+#
+# This map allows you to supply symbols to {#ffi_lib_flags} instead of
+# the actual constants.
 FFI::Library::FlagsMap = T.let(T.unsafe(nil), Hash)
+
 FFI::Library::LIBC = T.let(T.unsafe(nil), String)
 
+# FFI::ManagedStruct allows custom garbage-collection of your FFI::Structs.
+#
+# The typical use case would be when interacting with a library
+# that has a nontrivial memory management design, such as a linked
+# list or a binary tree.
+#
+# When the {Struct} instance is garbage collected, FFI::ManagedStruct will
+# invoke the class's release() method during object finalization.
+#
+# @example Example usage:
+#   module MyLibrary
+#   ffi_lib "libmylibrary"
+#   attach_function :new_dlist, [], :pointer
+#   attach_function :destroy_dlist, [:pointer], :void
+#   end
+#
+#   class DoublyLinkedList < FFI::ManagedStruct
+#   @@@
+#   struct do |s|
+#   s.name 'struct dlist'
+#   s.include 'dlist.h'
+#   s.field :head, :pointer
+#   s.field :tail, :pointer
+#   end
+#   @@@
+#
+#   def self.release ptr
+#   MyLibrary.destroy_dlist(ptr)
+#   end
+#   end
+#
+#   begin
+#   ptr = DoublyLinkedList.new(MyLibrary.new_dlist)
+#   #  do something with the list
+#   end
+#   # struct is out of scope, and will be GC'd using DoublyLinkedList#release
 class FFI::ManagedStruct < ::FFI::Struct
+  # A new instance of FFI::ManagedStruct.
+  #
+  # @overload initialize
+  # @overload initialize
+  # @raise [NoMethodError]
+  # @return [ManagedStruct] a new instance of ManagedStruct
   def initialize(pointer = T.unsafe(nil)); end
 end
 
+# missing on rubinius
 class FFI::MemoryPointer < ::FFI::Pointer
   def initialize(*_arg0); end
 
@@ -461,19 +895,47 @@ FFI::NativeType::ULONG = T.let(T.unsafe(nil), FFI::Type::Builtin)
 FFI::NativeType::VARARGS = T.let(T.unsafe(nil), FFI::Type::Builtin)
 FFI::NativeType::VOID = T.let(T.unsafe(nil), FFI::Type::Builtin)
 
+# Exception raised when a function is not found in libraries
 class FFI::NotFoundError < ::LoadError
+  # @return [NotFoundError] a new instance of NotFoundError
   def initialize(function, *libraries); end
 end
 
 class FFI::NullPointerError < ::RuntimeError; end
 
+# This module defines different constants and class methods to play with
+# various platforms.
 module FFI::Platform
   class << self
+    # Test if current OS is a *BSD (include MAC)
+    #
+    # @return [Boolean]
     def bsd?; end
+
+    # Test if current OS is +os+.
+    #
+    # @param os [String]
+    # @return [Boolean]
     def is_os(os); end
+
+    # Test if current OS is Mac OS
+    #
+    # @return [Boolean]
     def mac?; end
+
+    # Test if current OS is Solaris (Sun OS)
+    #
+    # @return [Boolean]
     def solaris?; end
+
+    # Test if current OS is a unix OS
+    #
+    # @return [Boolean]
     def unix?; end
+
+    # Test if current OS is Windows
+    #
+    # @return [Boolean]
     def windows?; end
   end
 end
@@ -507,7 +969,10 @@ FFI::Platform::LONG_ALIGN = T.let(T.unsafe(nil), Integer)
 FFI::Platform::LONG_DOUBLE_ALIGN = T.let(T.unsafe(nil), Integer)
 FFI::Platform::LONG_DOUBLE_SIZE = T.let(T.unsafe(nil), Integer)
 FFI::Platform::LONG_SIZE = T.let(T.unsafe(nil), Integer)
+
+# 64-bit inodes
 FFI::Platform::NAME = T.let(T.unsafe(nil), String)
+
 FFI::Platform::OS = T.let(T.unsafe(nil), String)
 FFI::Platform::OSVERSION = T.let(T.unsafe(nil), Integer)
 class FFI::PlatformError < ::LoadError; end
@@ -524,19 +989,95 @@ class FFI::Pointer < ::FFI::AbstractMemory
   def inspect; end
   def null?; end
   def order(*_arg0); end
+
+  # Read pointer's contents as +type+
+  #
+  # Same as:
+  #  ptr.get(type, 0)
+  #
+  # @param type [Symbol, Type] of data to read
+  # @return [Object]
   def read(type); end
+
+  # Read an array of +type+ of length +length+.
+  #
+  # @example
+  #   ptr.read_array_of_type(TYPE_UINT8, :read_uint8, 4) # -> [1, 2, 3, 4]
+  # @param type [Type] type of data to read from pointer's contents
+  # @param reader [Symbol] method to send to +self+ to read +type+
+  # @param length [Numeric]
+  # @return [Array]
   def read_array_of_type(type, reader, length); end
+
+  # Read pointer's contents as a string, or the first +len+ bytes of the
+  # equivalent string if +len+ is not +nil+.
+  #
+  # @param len [nil, Numeric] length of string to return
+  # @return [String]
   def read_string(len = T.unsafe(nil)); end
+
+  # Read the first +len+ bytes of pointer's contents as a string.
+  #
+  # Same as:
+  #  ptr.read_string(len)  # with len not nil
+  #
+  # @param len [Numeric] length of string to return
+  # @return [String]
   def read_string_length(len); end
+
+  # Read pointer's contents as a string.
+  #
+  # Same as:
+  #  ptr.read_string  # with no len
+  #
+  # @return [String]
   def read_string_to_null; end
+
   def slice(_arg0, _arg1); end
   def to_i; end
+
+  # @return [self]
   def to_ptr; end
+
   def to_s; end
   def type_size; end
+
+  # Write +value+ of type +type+ to pointer's content
+  #
+  # Same as:
+  #  ptr.put(type, 0)
+  #
+  # @param type [Symbol, Type] of data to read
+  # @param value [Object] to write
+  # @return [nil]
   def write(type, value); end
+
+  # Write +ary+ in pointer's contents as +type+.
+  #
+  # @example
+  #   ptr.write_array_of_type(TYPE_UINT8, :put_uint8, [1, 2, 3 ,4])
+  # @param type [Type] type of data to write to pointer's contents
+  # @param writer [Symbol] method to send to +self+ to write +type+
+  # @param ary [Array]
+  # @return [self]
   def write_array_of_type(type, writer, ary); end
+
+  # Write +str+ in pointer's contents, or first +len+ bytes if
+  # +len+ is not +nil+.
+  #
+  # @param str [String] string to write
+  # @param len [Numeric] length of string to return
+  # @return [self]
   def write_string(str, len = T.unsafe(nil)); end
+
+  # Write +len+ first bytes of +str+ in pointer's contents.
+  #
+  # Same as:
+  #  ptr.write_string(str, len)   # with len not nil
+  #
+  # @param str [String] string to write
+  # @param len [Numeric] length of string to return
+  # @return [self]
   def write_string_length(str, len); end
 
   private
@@ -544,18 +1085,36 @@ class FFI::Pointer < ::FFI::AbstractMemory
   def initialize_copy(_arg0); end
 
   class << self
+    # Return the size of a pointer on the current platform, in bytes
+    #
+    # @return [Numeric]
     def size; end
   end
 end
 
 FFI::Pointer::NULL = T.let(T.unsafe(nil), FFI::Pointer)
+
+# Pointer size
 FFI::Pointer::SIZE = T.let(T.unsafe(nil), Integer)
+
 FFI::SizeTypes = T.let(T.unsafe(nil), Hash)
 
+# This will convert a pointer to a Ruby string (just like `:string`), but
+# also allow to work with the pointer itself. This is useful when you want
+# a Ruby string already containing a copy of the data, but also the pointer
+# to the data for you to do something with it, like freeing it, in case the
+# library handed the memory off to the caller (Ruby-FFI).
+#
+# It's {typedef}'d as +:strptr+.
 class FFI::StrPtrConverter
   extend ::FFI::DataConverter
 
   class << self
+    # Returns a [ String, Pointer ] tuple so the C memory for the string can be freed
+    #
+    # @param val [Pointer]
+    # @param ctx not used
+    # @return [Array(String, Pointer)]
     def from_native(val, ctx); end
   end
 end
@@ -565,18 +1124,48 @@ class FFI::Struct
 
   def [](_arg0); end
   def []=(_arg0, _arg1); end
+
+  # @return [Fixnum] Struct alignment
   def align; end
+
+  # @return [Fixnum] Struct alignment
   def alignment; end
+
+  # Clear the struct content.
+  #
+  # @return [self]
   def clear; end
+
   def layout; end
   def members; end
   def null?; end
+
+  # Get the offset of a field.
+  #
+  # @return [Numeric]
   def offset_of(name); end
+
+  # Get an array of tuples (field name, offset of the field).
+  #
+  # @return [Array<Array(Symbol, Numeric)>] Array<Array(Symbol, Numeric)>
   def offsets; end
+
   def order(*_arg0); end
   def pointer; end
+
+  # Get struct size
+  #
+  # @return [Numeric]
   def size; end
+
+  # Get {Pointer} to struct content.
+  #
+  # @return [AbstractMemory]
   def to_ptr; end
+
+  # Get array of values from Struct fields.
+  #
+  # @return [Array]
   def values; end
 
   private
@@ -586,7 +1175,9 @@ class FFI::Struct
   def pointer=(_arg0); end
 
   class << self
+    # @return [Fixnum] Struct alignment
     def alignment; end
+
     def alloc_in(*_arg0); end
     def alloc_inout(*_arg0); end
     def alloc_out(*_arg0); end
@@ -594,17 +1185,42 @@ class FFI::Struct
     def by_ref(flags = T.unsafe(nil)); end
     def by_value; end
     def in; end
+
+    # @overload layout
+    # @overload layout
+    # @return [StructLayout]
     def layout(*spec); end
+
     def members; end
     def new_in(*_arg0); end
     def new_inout(*_arg0); end
     def new_out(*_arg0); end
+
+    # Get the offset of a field.
+    #
+    # @return [Numeric]
     def offset_of(name); end
+
+    # Get an array of tuples (field name, offset of the field).
+    #
+    # @return [Array<Array(Symbol, Numeric)>] Array<Array(Symbol, Numeric)>
     def offsets; end
+
     def out; end
     def ptr(flags = T.unsafe(nil)); end
+
+    # Get struct size
+    #
+    # @return [Numeric]
     def size; end
+
+    # set struct size
+    #
+    # @param size [Numeric]
+    # @raise [ArgumentError]
+    # @return [size]
     def size=(size); end
+
     def val; end
 
     protected
@@ -620,7 +1236,18 @@ class FFI::Struct
 
     private
 
+    # Add array +spec+ to +builder+.
+    #
+    # @param builder [StructLayoutBuilder]
+    # @param spec [Array<Symbol, Integer>]
+    # @return [builder]
     def array_layout(builder, spec); end
+
+    # Add hash +spec+ to +builder+.
+    #
+    # @param builder [StructLayoutBuilder]
+    # @param spec [Hash]
+    # @return [builder]
     def hash_layout(builder, spec); end
   end
 end
@@ -639,19 +1266,41 @@ class FFI::Struct::InlineArray
 end
 
 class FFI::Struct::ManagedStructConverter < ::FFI::StructByReference
+  # @param struct_class [Struct]
+  # @raise [NoMethodError]
+  # @return [ManagedStructConverter] a new instance of ManagedStructConverter
   def initialize(struct_class); end
 
+  # @param ptr [Pointer]
+  # @param ctx [nil]
+  # @return [Struct]
   def from_native(ptr, ctx); end
 end
 
+# This class includes the {FFI::DataConverter} module.
 class FFI::StructByReference
   include ::FFI::DataConverter
 
+  # @param struct_class [Struct]
+  # @return [StructByReference] a new instance of StructByReference
   def initialize(struct_class); end
 
+  # Create a struct from content of memory +value+.
+  #
+  # @param value [AbstractMemory]
+  # @param ctx [nil]
+  # @return [Struct]
   def from_native(value, ctx); end
+
+  # Always get {FFI::Type}::POINTER.
   def native_type; end
+
+  # Returns the value of attribute struct_class.
   def struct_class; end
+
+  # @param value [nil, Struct]
+  # @param ctx [nil]
+  # @return [AbstractMemory] Pointer on +value+.
   def to_native(value, ctx); end
 end
 
@@ -669,8 +1318,17 @@ class FFI::StructLayout < ::FFI::Type
   def __union!; end
   def fields; end
   def members; end
+
+  # Get the offset of a field.
+  #
+  # @return [Numeric]
   def offset_of(field_name); end
+
+  # Get an array of tuples (field name, offset of the field).
+  #
+  # @return [Array<Array(Symbol, Numeric)>] Array<Array(Symbol, Numeric)>
   def offsets; end
+
   def to_a; end
 end
 
@@ -684,8 +1342,19 @@ class FFI::StructLayout::CharArray < ::FFI::Struct::InlineArray
   def to_str; end
 end
 
+# An enum {Field} in a {StructLayout}.
 class FFI::StructLayout::Enum < ::FFI::StructLayout::Field
+  # Get an object of type {#type} from memory pointed by +ptr+.
+  #
+  # @param ptr [AbstractMemory] pointer on a {Struct}
+  # @return [Object]
   def get(ptr); end
+
+  # Set +value+ into memory pointed by +ptr+.
+  #
+  # @param ptr [AbstractMemory] pointer on a {Struct}
+  # @param value
+  # @return [nil]
   def put(ptr, value); end
 end
 
@@ -708,10 +1377,13 @@ end
 
 class FFI::StructLayout::InnerStruct < ::FFI::StructLayout::Field
   def get(ptr); end
+
+  # @raise [TypeError]
   def put(ptr, value); end
 end
 
 class FFI::StructLayout::Mapped < ::FFI::StructLayout::Field
+  # @return [Mapped] a new instance of Mapped
   def initialize(name, offset, type, orig_field); end
 
   def get(ptr); end
@@ -722,29 +1394,102 @@ class FFI::StructLayout::Number < ::FFI::StructLayout::Field; end
 class FFI::StructLayout::Pointer < ::FFI::StructLayout::Field; end
 class FFI::StructLayout::String < ::FFI::StructLayout::Field; end
 
+# Build a {StructLayout struct layout}.
 class FFI::StructLayoutBuilder
+  # @return [StructLayoutBuilder] a new instance of StructLayoutBuilder
   def initialize; end
 
+  # Add a field to the builder.
+  #
+  # @note Setting +offset+ to +nil+ or +-1+ is equivalent to +0+.
+  # @param name [String, Symbol] name of the field
+  # @param type [Array, DataConverter, Struct, StructLayout::Field, Symbol, Type] type of the field
+  # @param offset [Numeric, nil]
+  # @return [self]
   def add(name, type, offset = T.unsafe(nil)); end
+
+  # Add an array as a field to the builder.
+  #
+  # @param count [Numeric] array length
+  # @param name [String, Symbol] name of the field
+  # @param type [Array, DataConverter, Struct, StructLayout::Field, Symbol, Type] type of the field
+  # @param offset [Numeric, nil]
+  # @return [self]
   def add_array(name, type, count, offset = T.unsafe(nil)); end
+
+  # Same as {#add}.
+  #
+  # @param name [String, Symbol] name of the field
+  # @param type [Array, DataConverter, Struct, StructLayout::Field, Symbol, Type] type of the field
+  # @param offset [Numeric, nil]
+  # @return [self]
+  # @see #add
   def add_field(name, type, offset = T.unsafe(nil)); end
+
+  # Add a struct as a field to the builder.
+  #
+  # @param name [String, Symbol] name of the field
+  # @param type [Array, DataConverter, Struct, StructLayout::Field, Symbol, Type] type of the field
+  # @param offset [Numeric, nil]
+  # @return [self]
   def add_struct(name, type, offset = T.unsafe(nil)); end
+
+  # Returns the value of attribute alignment.
   def alignment; end
+
+  # Set alignment attribute with +align+ only if it is greater than attribute value.
+  #
+  # @param align [Numeric]
   def alignment=(align); end
+
+  # Build and return the struct layout.
+  #
+  # @return [StructLayout]
   def build; end
+
+  # Set packed attribute
+  #
+  # @overload packed=
+  # @overload packed=
   def packed=(packed); end
+
+  # Returns the value of attribute size.
   def size; end
+
+  # Set size attribute with +size+ only if +size+ is greater than attribute value.
+  #
+  # @param size [Numeric]
   def size=(size); end
+
+  # Set union attribute.
+  # Set to +true+ to build a {Union} instead of a {Struct}.
+  #
+  # @param is_union [Boolean]
+  # @return [is_union]
   def union=(is_union); end
+
+  # Building a {Union} or a {Struct} ?
+  #
+  # @return [Boolean]
   def union?; end
 
   private
 
+  # @param offset [Numeric]
+  # @param align [Numeric]
+  # @return [Numeric]
   def align(offset, align); end
+
+  # @param name [String, Symbol] name of the field
+  # @param type [Array, DataConverter, Struct, StructLayout::Field, Symbol, Type] type of the field
+  # @param offset [Numeric, nil]
+  # @return [StructLayout::Field]
   def field_for_type(name, offset, type); end
 end
 
+# List of number types
 FFI::StructLayoutBuilder::NUMBER_TYPES = T.let(T.unsafe(nil), Array)
+
 FFI::TYPE_BOOL = T.let(T.unsafe(nil), FFI::Type::Builtin)
 FFI::TYPE_BUFFER_IN = T.let(T.unsafe(nil), FFI::Type::Builtin)
 FFI::TYPE_BUFFER_INOUT = T.let(T.unsafe(nil), FFI::Type::Builtin)
@@ -843,7 +1588,9 @@ FFI::VERSION = T.let(T.unsafe(nil), String)
 class FFI::VariadicInvoker
   def initialize(_arg0, _arg1, _arg2, _arg3); end
 
+  # Attach the invoker to module +mod+ as +mname+
   def attach(mod, mname); end
+
   def call(*args, &block); end
   def invoke(_arg0, _arg1); end
 end

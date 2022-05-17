@@ -12,8 +12,10 @@ module Kaminari
   end
 end
 
+# = Helpers
 module Kaminari::ActionViewExtension; end
 
+# Monkey-patching AV::LogSubscriber not to log each render_partial
 module Kaminari::ActionViewExtension::LogSubscriberSilencer
   def render_partial(*_arg0); end
 end

@@ -5,9 +5,14 @@
 # Please instead update this file by running `bin/tapioca gem rdf`.
 
 class OptionParser
+  # Arguments remaining after extracting options
   def args; end
+
   def args=(value); end
+
+  # Actual parsed options
   def options; end
+
   def options=(value); end
 end
 
@@ -15,106 +20,587 @@ OptionParser::Version = T.let(T.unsafe(nil), String)
 
 module RDF
   class << self
+    # Alias for `RDF::Graph.new`.
+    #
+    # @param graph_name [RDF::Resource] The graph_name from the associated {RDF::Queryable} associated
+    #   with this graph as provided with the `:data` option
+    #   (only for {RDF::Queryable} instances supporting
+    #   named graphs).
+    # @param data [RDF::Queryable] (RDF::Repository.new)
+    #   Storage behind this graph.
+    # @return [RDF::Graph]
     def Graph(**options, &block); end
+
+    # @overload List
+    # @overload List
+    # @overload List
+    # @overload List
     def List(*args); end
+
+    # Alias for `RDF::Literal.new`.
+    #
+    # @param value [Object]
+    # @param language [Symbol] (nil)
+    #   Language is downcased to ensure proper matching
+    # @param lexical [String] (nil)
+    #   Supplied lexical representation of this literal,
+    #   otherwise it comes from transforming `value` to a string form..
+    # @param datatype [URI] (nil)
+    # @param validate [Boolean] (false)
+    # @param canonicalize [Boolean] (false)
+    # @return [RDF::Literal]
     def Literal(literal, **options); end
+
+    # Alias for `RDF::Node.new`.
+    #
+    # @param id [#to_s]
+    # @return [RDF::Node]
     def Node(*args); end
+
+    # Alias for `RDF::Resource.new`.
+    #
+    # @return [RDF::Resource]
     def Resource(*args); end
+
+    # @overload Statement
+    # @overload Statement
+    # @overload Statement
     def Statement(*args, **options); end
+
+    # Alias for `RDF::StrictVocabulary.create`.
+    #
+    # @param uri [RDF::URI, String, #to_s]
+    # @return [Class]
     def StrictVocabulary(uri); end
+
+    # Cast to a URI. If already a URI, return the passed argument.
+    #
+    # @return [RDF::URI]
     def URI(*args); end
+
+    # Alias for `RDF::Vocabulary.create`.
+    #
+    # @param uri [RDF::URI, String, #to_s]
+    # @return [Class]
     def Vocabulary(uri); end
+
+    # @return [#to_s] property
+    # @return [URI]
     def [](property); end
+
+    # Configuration, used open for configuring constants used within the codebase.
+    #
+    # Defaults:
+    #   * `cache_size`: -1
+    #   * `uri_cache_size`: `cache_size`
+    #   * `node_cache_size`: `cache_size`
+    #
+    # @example set default cache size to be at most 10,000 entries
+    #
+    #   RDF.config.cache_size = 10_000
+    # @example set cache size for interned URIs to 5,000 entries
+    #
+    #   RDF.config.uri_cache_size = 5_000
+    # @note cache configurations must be set before initial use, when the caches are allocated.
+    # @return [Object]
+    # @see RDF::Util::Cache.new
     def config; end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def enum_for(method = T.unsafe(nil), *args); end
+
+    # Delegate other methods to RDF::RDFV
     def method_missing(property, *args, &block); end
+
+    # respond to module or RDFV
+    #
+    # @return [Boolean]
     def respond_to?(method, include_all = T.unsafe(nil)); end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def to_enum(method = T.unsafe(nil), *args); end
   end
 end
 
+# Individual formats can modify options by updating {Reader.options} or {Writer.options}. Format-specific commands are taken from {Format.cli_commands} for each loaded format, which returns an array of lambdas taking arguments and options.
+#
+# Status updates should be logged to `opts[:logger].info`. More complicated information can be added to `:messages` key within `opts`, if present.
+#
+# Other than `help`, all commands parse an input file.
+#
+# Multiple commands may be added in sequence to execute a pipeline.
+#
+# Format-specific commands should verify that the reader and/or output format are appropriate for the command.
+#
+# @example Creating Reader-specific options:
+#   class Reader
+#   def self.options
+#   [
+#   RDF::CLI::Option.new(
+#   symbol: :canonicalize,
+#   on: ["--canonicalize"],
+#   description: "Canonicalize input/output.") {true},
+#   RDF::CLI::Option.new(
+#   symbol: :uri,
+#   on: ["--uri STRING"],
+#   description: "URI.") {|v| RDF::URI(v)},
+#   ]
+#   end
+# @example Creating Format-specific commands:
+#   class Format
+#   def self.cli_commands
+#   {
+#   count: {
+#   description: "",
+#   parse: true,
+#   lambda: ->(argv, opts) {}
+#   },
+#   }
+#   end
+# @example Adding a command manually
+#   class MyCommand
+#   RDF::CLI.add_command(:count, description: "Count statements") do |argv, opts|
+#   count = 0
+#   RDF::CLI.parse(argv, opts) do |reader|
+#   reader.each_statement do |statement|
+#   count += 1
+#   end
+#   end
+#   options[:logger].info "Parsed #{count} statements"
+#   end
+#   end
 class RDF::CLI
   class << self
+    # @param msg [String]
+    # @return [void]
     def abort(msg); end
+
+    # Add a command.
+    #
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @param options [Hash{Symbol => String}]
+    # @param command [#to_sym]
+    # @yield argv, opts
+    # @yieldparam argv [Array<String>]
+    # @yieldparam opts [Hash]
+    # @yieldreturn [void]
     def add_command(command, **options, &block); end
+
+    # @return [String]
     def basename; end
+
+    # @overload commands
+    # @overload commands
     def commands(format: T.unsafe(nil), **options); end
+
+    # Execute one or more commands, parsing input as necessary
+    #
+    # @param args [Array<String>]
+    # @param output [IO]
+    # @param option_parser [OptionParser]
+    # @param messages [Hash{Symbol => Hash{Symbol => Array[String]}}] used for conveying non primary-output which is structured.
+    # @param options [Hash{Symbol => Object}]
+    # @return [Boolean]
     def exec(args, output: T.unsafe(nil), option_parser: T.unsafe(nil), messages: T.unsafe(nil), **options); end
+
+    # @return [Array<String>] list of available formats
     def formats(reader: T.unsafe(nil), writer: T.unsafe(nil)); end
+
+    # Load commands from formats
+    #
+    # @return [Hash{Symbol => Hash{Symbol => Object}}]
     def load_commands; end
+
+    # Return OptionParser set with appropriate options
+    #
+    # The yield return should provide one or more commands from which additional options will be extracted.
+    #
+    # @overload options
+    # @overload options
     def options(argv, format: T.unsafe(nil)); end
+
+    # Parse each file, $stdin or specified string in `options[:evaluate]`
+    # yielding a reader
+    #
+    # @param files [Array<String>]
+    # @param evaluate [String] from command-line, rather than referenced file
+    # @param format [Symbol] (:ntriples) Reader symbol for finding reader
+    # @param encoding [Encoding] set on the input
+    # @param options [Hash{Symbol => Object}] sent to reader
+    # @return [nil]
+    # @yield [reader]
+    # @yieldparam [RDF::Reader]
     def parse(files, evaluate: T.unsafe(nil), format: T.unsafe(nil), encoding: T.unsafe(nil), **options, &block); end
+
+    # Repository containing parsed statements
+    #
+    # @return [RDF::Repository]
     def repository; end
+
+    # Repository containing parsed statements
+    #
+    # @return [RDF::Repository]
     def repository=(_arg0); end
+
+    # Output usage message
     def usage(options, cmd_opts: T.unsafe(nil), banner: T.unsafe(nil)); end
   end
 end
 
+# Built-in commands. Other commands are imported from the Format class of different readers/writers using {RDF::Format#cli_commands}. `COMMANDS` is a Hash who's keys are commands that may be executed by {RDF::CLI.exec}. The value is a hash containing the following keys:
+# * `description` used for providing information about the command.
+# * `parse` Boolean value to determine if input files should automatically be parsed into `repository`.
+# * `help` used for the CLI help output.
+# * `lambda` code run to execute command.
+# * `filter` Option values that must match for command to be used
+# * `control` Used to indicate how (if) command is displayed
+# * `repository` Use this repository, if set
+# * `options` an optional array of `RDF::CLI::Option` describing command-specific options.
+# * `option_use`: A hash of option symbol to option usage, used for overriding the default status of an option for this command.
+#
+# @return [Hash{Symbol => Hash{Symbol => Object}}]
 RDF::CLI::COMMANDS = T.let(T.unsafe(nil), Hash)
+
+# Options to setup, may be modified by selected command. Options are also read from {RDF::Reader#options} and {RDF::Writer#options}. When a specific input- or ouput-format is selected, options are also discovered from the associated subclass reader or writer.
+#
+# @return [Array<RDF::CLI::Option>]
 RDF::CLI::OPTIONS = T.let(T.unsafe(nil), Array)
 
+# Option description for use within Readers/Writers. See {RDF::Reader.options} and {RDF::Writer.options} for example usage.
 class RDF::CLI::Option
+  # Create a new option with optional callback.
+  #
+  # @param symbol [Symbol]
+  # @param on [Array<String>]
+  # @param datatype [String]
+  # @param default [Object]
+  # @param control [String]
+  # @param description [String]
+  # @param use [[:optional, :disabled, :removed, :required]]
+  # @raise [ArgumentError]
+  # @return [Option] a new instance of Option
+  # @yield value which may be used within `OptionParser#on`
+  # @yieldparam value [Object] The option value as parsed using `on` argument
+  # @yieldparam options [OptionParser] (nil) optional OptionParser
+  # @yieldreturn [Object] a possibly modified input value
   def initialize(symbol: T.unsafe(nil), on: T.unsafe(nil), datatype: T.unsafe(nil), control: T.unsafe(nil), description: T.unsafe(nil), use: T.unsafe(nil), default: T.unsafe(nil), **options, &block); end
 
   def call(arg, options = T.unsafe(nil)); end
+
+  # Associated HTML form control
+  #
+  # @return [:text, :textarea, :radio, :checkbox, :select, :url, :url2, :none]
   def control; end
+
+  # Potential values (for select or radio) or Ruby datatype
+  #
+  # @return [Class, Array<String>]
   def datatype; end
+
+  # Default value for this option
+  #
+  # @return [Object]
   def default; end
+
+  # Description of this option (optional)
+  #
+  # @return [String]
   def description; end
+
+  # Arguments passed to OptionParser#on
+  #
+  # @return [Array<String>]
   def on; end
+
+  # Symbol used for this option when calling `Reader.new`
+  #
+  # @return [Symbol]
   def symbol; end
+
+  # Return version of commands appropriate for use in JSON
   def to_hash; end
+
+  # Use of this option
+  #
+  # @return [:optional, :disabled, :removed, :required]
   def use; end
+
+  # Use of this option
+  #
+  # @return [:optional, :disabled, :removed, :required]
   def use=(_arg0); end
 end
 
+# An RDF changeset that can be applied to an {RDF::Mutable}.
+#
+# Changesets consist of a sequence of RDF statements to delete from and a
+# sequence of RDF statements to insert into a target dataset.
+#
+# @example Applying a Changeset with block syntax
+#   graph = RDF::Graph.new
+#   graph << [RDF::URI('s_del'), RDF::URI('p_del'), RDF::URI('o_del')]
+#
+#   RDF::Changeset.apply(graph) do |c|
+#   c.insert [RDF::URI('s1'), RDF::URI('p1'), RDF::URI('o1')]
+#   c.insert [RDF::URI('s2'), RDF::URI('p2'), RDF::URI('o2')]
+#   c.delete [RDF::URI('s_del'), RDF::URI('p_del'), RDF::URI('o_del')]
+#   end
+# @example Defining a changeset for later application to a Mutable
+#   changes = RDF::Changeset.new do |c|
+#   c.insert [RDF::URI('s1'), RDF::URI('p1'), RDF::URI('o1')]
+#   c.insert [RDF::URI('s2'), RDF::URI('p2'), RDF::URI('o2')]
+#   c.delete [RDF::URI('s_del'), RDF::URI('p_del'), RDF::URI('o_del')]
+#   end
+#
+#   graph = RDF::Graph.new
+#   graph << [RDF::URI('s_del'), RDF::URI('p_del'), RDF::URI('o_del')]
+#
+#   changes.apply(graph) # or graph.apply_changeset(changes)
+# @note When applying a Changeset, deletes are resolved before inserts.
+# @since 2.0.0
 class RDF::Changeset
   include ::RDF::Util::Coercions
 
+  # Initializes this changeset.
+  #
+  # @param insert [RDF::Enumerable] (RDF::Graph.new)
+  # @param delete [RDF::Enumerable] (RDF::Graph.new)
+  # @return [Changeset] a new instance of Changeset
+  # @since 2.0.0
+  # @yield [changes]
+  # @yieldparam changes [RDF::Changeset]
   def initialize(insert: T.unsafe(nil), delete: T.unsafe(nil), &block); end
 
+  # Append statements to `inserts`. Statements _should_ be constant
+  # as variable statements will at best be ignored or at worst raise
+  # an error when applied.
+  #
+  # @param statements [Enumerable, RDF::Statement] Some statements
+  # @return [self]
+  # @since 2.0.0
   def <<(*statements); end
+
+  # Append statements to `deletes`. Statements _may_ contain
+  # variables, although support will depend on the {RDF::Mutable}
+  # target.
+  #
+  # @param statements [Enumerable, RDF::Statement] Some statements
+  # @return [self]
+  # @since 2.0.0
   def >>(*statements); end
+
+  # Applies this changeset to the given mutable RDF::Enumerable.
+  #
+  # This operation executes as a single write transaction.
+  #
+  # @param mutable [RDF::Mutable]
+  # @param options [Hash{Symbol => Object}]
+  # @return [void]
+  # @since 2.0.0
   def apply(mutable, **options); end
+
+  # Returns the sum of both the `inserts` and `deletes` counts.
+  #
+  # @return [Integer]
+  # @since 2.0.0
   def count; end
+
+  # Append statements to `deletes`. Statements _may_ contain
+  # variables, although support will depend on the {RDF::Mutable}
+  # target.
+  #
+  # @param statements [Enumerable, RDF::Statement] Some statements
+  # @return [self]
+  # @since 2.0.0
   def delete(*statements); end
+
+  # Append statements to `deletes`. Statements _may_ contain
+  # variables, although support will depend on the {RDF::Mutable}
+  # target.
+  #
+  # @param statements [Enumerable, RDF::Statement] Some statements
+  # @return [self]
+  # @since 2.0.0
   def delete!(*statements); end
+
+  # RDF statements to delete when applied.
+  #
+  # @return [RDF::Enumerable]
+  # @since 2.0.0
   def deletes; end
+
+  # @return [Boolean] `true` iff inserts and deletes are both empty
+  # @since 2.0.0
   def empty?; end
+
+  # Append statements to `inserts`. Statements _should_ be constant
+  # as variable statements will at best be ignored or at worst raise
+  # an error when applied.
+  #
+  # @param statements [Enumerable, RDF::Statement] Some statements
+  # @return [self]
+  # @since 2.0.0
   def insert(*statements); end
+
+  # Append statements to `inserts`. Statements _should_ be constant
+  # as variable statements will at best be ignored or at worst raise
+  # an error when applied.
+  #
+  # @param statements [Enumerable, RDF::Statement] Some statements
+  # @return [self]
+  # @since 2.0.0
   def insert!(*statements); end
+
+  # RDF statements to insert when applied.
+  #
+  # @return [RDF::Enumerable]
+  # @since 2.0.0
   def inserts; end
+
+  # Returns a developer-friendly representation of this changeset.
+  #
+  # @return [String]
+  # @since 2.0.0
   def inspect; end
+
+  # Outputs a developer-friendly representation of this changeset to
+  # `$stderr`.
+  #
+  # @return [void]
+  # @since 2.0.0
   def inspect!; end
+
+  # Returns `false` as changesets are not {RDF::Mutable}.
+  #
+  # @return [Boolean]
+  # @see RDF::Mutable#mutable?
+  # @since 2.0.0
   def mutable?; end
+
+  # Any additional options for this changeset.
+  #
+  # @return [Hash{Symbol => Object}]
+  # @since 2.0.0
   def options; end
+
+  # Returns `false` to indicate that this changeset is append-only.
+  #
+  # Changesets do not support the `RDF::Enumerable` protocol directly.
+  # To enumerate the RDF statements to be inserted or deleted, use the
+  # {RDF::Changeset#inserts} and {RDF::Changeset#deletes} accessors.
+  #
+  # @return [Boolean]
+  # @see RDF::Readable#readable?
+  # @since 2.0.0
   def readable?; end
+
+  # Returns `false` as changesets are not {RDF::Writable}.
+  #
+  # @return [Boolean]
+  # @see RDF::Writable#writable?
+  # @since 2.0.0
   def writable?; end
 
   private
 
+  # Append statements to the appropriate target. This is a little
+  # shim to go in between the other shim and the target.
+  #
+  # @param target [Symbol] the method to send
+  # @param arg [Enumerable, RDF::Statement]
+  # @since 2.0.0
   def append_statements(target, arg); end
+
+  # This simply returns its argument as a query in order to trick
+  # {RDF::Mutable#delete} into working.
+  #
+  # @since 2.0.0
   def query(stmt); end
 
   class << self
+    # Applies a changeset to the given {RDF::Mutable} object.
+    #
+    # @param mutable [RDF::Mutable]
+    # @param options [Hash{Symbol => Object}]
+    # @return [void]
+    # @since 2.0.0
+    # @yield [changes]
+    # @yieldparam changes [RDF::Changeset]
     def apply(mutable, **options, &block); end
   end
 end
 
+# @since 0.2.0
 module RDF::Countable
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Returns the number of RDF statements in `self`.
+  #
+  # @return [Integer]
+  # @since 0.2.0
   def count; end
+
+  # Returns `true` if `self` contains no RDF statements.
+  #
+  # @return [Boolean]
+  # @since 0.2.0
   def empty?; end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
+  # @since 0.2.0
   def enum_for(method = T.unsafe(nil), *args); end
+
+  # Returns the number of RDF statements in `self`.
+  #
+  # @return [Integer]
+  # @since 0.2.0
   def size(*args, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
+  # @since 0.2.0
   def to_enum(*args, &block); end
 end
 
+# Extends Enumerator with {Countable}, which is used by {Countable#enum_for}
+#
+# @since 0.2.0
 class RDF::Countable::Enumerator < ::Enumerator
   include ::RDF::Countable
 end
 
+# An RDF Dataset
+#
+# Datasets are immutable by default. {RDF::Repository} provides an interface
+# for mutable Datasets.
+#
+# A Dataset functions as an a set of named RDF graphs with a default graph.
+# It implements {RDF::Enumerable} and {RDF::Queryable} over the whole set;
+# if no specific graph name is queried, enumerating and querying takes place
+# over the intersection of all the graphs in the Dataset.
+#
+# The default graph is named with a constant `DEFAULT_GRAPH`.
+#
+# @example initializing an RDF::Dataset with existing data
+#   statements = [RDF::Statement.new(RDF::URI(:s), RDF::URI(:p), :o)]
+#   dataset    = RDF::Dataset.new(statements: statements)
+#   dataset.count # => 1
+# @see https://www.w3.org/TR/rdf11-concepts/#section-dataset
+# @see https://www.w3.org/TR/rdf11-datasets/
 class RDF::Dataset
   include ::Enumerable
   include ::RDF::Countable
@@ -122,17 +608,48 @@ class RDF::Dataset
   include ::RDF::Durable
   include ::RDF::Queryable
 
+  # @param statements [RDF::Enumerable, Array<RDF::Statement>] the initial
+  #   contents of the dataset
+  # @return [Dataset] a new instance of Dataset
+  # @yield [dataset] yields itself when a block is given
+  # @yieldparam dataset [RDF::Dataset]
   def initialize(statements: T.unsafe(nil), **options, &block); end
 
+  # @private
+  # @return [Boolean]
+  # @see RDF::Durable#durable?
   def durable?; end
+
+  # @private
+  # @see RDF::Enumerable#each
   def each; end
+
+  # Returns a developer-friendly representation of this object.
+  #
+  # @return [String]
   def inspect; end
+
+  # Outputs a developer-friendly representation of this object to
+  # `stderr`.
+  #
+  # @return [void]
   def inspect!; end
+
+  # `:snapshot`, or `:serializable`.
+  #
+  # @return [Symbol] a representation of the isolation level for reads of this
+  #   Dataset. One of `:read_uncommitted`, `:read_committed`, `:repeatable_read`,
   def isolation_level; end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Enumerable#supports?
   def supports?(feature); end
 
   protected
 
+  # Implements basic query pattern matching over the Dataset, with handling
+  # for a default graph.
   def query_pattern(pattern, **options, &block); end
 end
 
@@ -141,135 +658,891 @@ RDF::Dataset::ISOLATION_LEVELS = T.let(T.unsafe(nil), Array)
 module RDF::Durable
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Returns `true` if `self` is durable.
+  #
+  # @return [Boolean]
+  # @see #nondurable?
   def durable?; end
+
+  # Returns `true` if `self` is nondurable.
+  #
+  # @return [Boolean]
+  # @see #durable?
   def ephemeral?(*args, &block); end
+
+  # Returns `true` if `self` is nondurable.
+  #
+  # @return [Boolean]
+  # @see #durable?
   def nondurable?; end
+
+  # Returns `true` if `self` is nondurable.
+  #
+  # @return [Boolean]
+  # @see #durable?
   def nonpersistent?(*args, &block); end
+
+  # Returns `true` if `self` is durable.
+  #
+  # @return [Boolean]
+  # @see #nondurable?
   def persistent?(*args, &block); end
+
+  # Returns `true` if `self` is nondurable.
+  #
+  # @return [Boolean]
+  # @see #durable?
   def transient?(*args, &block); end
+
+  # Returns `true` if `self` is nondurable.
+  #
+  # @return [Boolean]
+  # @see #durable?
   def volatile?(*args, &block); end
 end
 
+# An RDF statement enumeration mixin.
+#
+# Classes that include this module must implement an `#each` method that
+# yields {RDF::Statement RDF statements}.
+#
+# @example Checking whether any statements exist
+#   enumerable.empty?
+# @example Checking how many statements exist
+#   enumerable.count
+# @example Checking whether a specific statement exists
+#   enumerable.statement?(RDF::Statement(subject, predicate, object))
+#   enumerable.triple?([subject, predicate, object])
+#   enumerable.quad?([subject, predicate, object, graph_name])
+# @example Checking whether a specific value exists
+#   enumerable.subject?(RDF::URI("https://rubygems.org/gems/rdf"))
+#   enumerable.predicate?(RDF::RDFS.label)
+#   enumerable.object?(RDF::Literal("A Ruby library for working with Resource Description Framework (RDF) data.", language: :en))
+#   enumerable.graph?(RDF::URI("http://ar.to/#self"))
+# @example Enumerating all statements
+#   enumerable.each_statement do |statement|
+#   puts statement.inspect
+#   end
+# @example Enumerating all statements in the form of triples
+#   enumerable.each_triple do |subject, predicate, object|
+#   puts [subject, predicate, object].inspect
+#   end
+# @example Enumerating all statements in the form of quads
+#   enumerable.each_quad do |subject, predicate, object, graph_name|
+#   puts [subject, predicate, object, graph_name].inspect
+#   end
+# @example Enumerating all terms
+#   enumerable.each_subject   { |term| puts term.inspect }
+#   enumerable.each_predicate { |term| puts term.inspect }
+#   enumerable.each_object    { |term| puts term.inspect }
+#   enumerable.each_term      { |term| puts term.inspect }
+# @example Obtaining all statements
+#   enumerable.statements  #=> [RDF::Statement(subject1, predicate1, object1), ...]
+#   enumerable.triples     #=> [[subject1, predicate1, object1], ...]
+#   enumerable.quads       #=> [[subject1, predicate1, object1, graph_name1], ...]
+# @example Obtaining all unique values
+#   enumerable.subjects(unique: true)    #=> [subject1, subject2, subject3, ...]
+#   enumerable.predicates(unique: true)  #=> [predicate1, predicate2, predicate3, ...]
+#   enumerable.objects(unique: true)     #=> [object1, object2, object3, ...]
+#   enumerable.graph_names(unique: true) #=> [graph_name1, graph_name2, graph_name3, ...]
+# @see RDF::Graph
+# @see RDF::Repository
 module RDF::Enumerable
   include ::Enumerable
   include ::RDF::Countable
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Returns a serialized string representation of `self`.
+  #
+  # Before calling this method you may need to explicitly require a
+  # serialization extension for the specified format.
+  #
+  # @example Serializing into N-Triples format
+  #   require 'rdf/ntriples'
+  #   ntriples = enumerable.dump(:ntriples)
+  # @param args [Array<Object>] if the last argument is a hash, it is passed as options to
+  #   {RDF::Writer.dump}.
+  # @raise [RDF::WriterError] if no writer found
+  # @return [String]
+  # @see RDF::Writer.dump
+  # @since 0.2.0
   def dump(*args, **options); end
+
+  # Iterates the given block for each RDF graph in `self`.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which graphs are yielded is undefined.
+  #
+  # @overload each_graph
+  # @overload each_graph
+  # @see #enum_graph
+  # @since 0.1.9
   def each_graph; end
+
+  # Iterates the given block for each unique RDF object term.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which values are yielded is undefined.
+  #
+  # @overload each_object
+  # @overload each_object
+  # @see #enum_object
   def each_object; end
+
+  # Iterates the given block for each unique RDF predicate term.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which values are yielded is undefined.
+  #
+  # @overload each_predicate
+  # @overload each_predicate
+  # @see #enum_predicate
   def each_predicate; end
+
+  # Iterates the given block for each RDF quad.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which quads are yielded is undefined.
+  #
+  # @overload each_quad
+  # @overload each_quad
+  # @see #enum_quad
   def each_quad; end
+
+  # Iterates the given block for each RDF statement.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which statements are yielded is undefined.
+  #
+  # @overload each_statement
+  # @overload each_statement
+  # @see #enum_statement
   def each_statement(&block); end
+
+  # Iterates the given block for each unique RDF subject term.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which values are yielded is undefined.
+  #
+  # @overload each_subject
+  # @overload each_subject
+  # @see #enum_subject
   def each_subject; end
+
+  # Iterates the given block for each unique RDF term (subject, predicate, object, or graph_name).
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which values are yielded is undefined.
+  #
+  # @overload each_term
+  # @overload each_term
+  # @see #enum_term
+  # @since 2.0
   def each_term; end
+
+  # Iterates the given block for each RDF triple.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which triples are yielded is undefined.
+  #
+  # @overload each_triple
+  # @overload each_triple
+  # @see #enum_triple
   def each_triple; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_graph}.
+  #
+  # @return [Enumerator<RDF::Graph>]
+  # @see #each_graph
+  # @since 0.1.9
   def enum_graph; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_graph}.
+  #
+  # @return [Enumerator<RDF::Graph>]
+  # @see #each_graph
+  # @since 0.1.9
   def enum_graphs(*args, &block); end
+
+  # Returns an enumerator for {RDF::Enumerable#each_object}.
+  #
+  # @return [Enumerator<RDF::Term>]
+  # @see #each_object
   def enum_object; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_object}.
+  #
+  # @return [Enumerator<RDF::Term>]
+  # @see #each_object
   def enum_objects(*args, &block); end
+
+  # Returns an enumerator for {RDF::Enumerable#each_predicate}.
+  #
+  # @return [Enumerator<RDF::URI>]
+  # @see #each_predicate
   def enum_predicate; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_predicate}.
+  #
+  # @return [Enumerator<RDF::URI>]
+  # @see #each_predicate
   def enum_predicates(*args, &block); end
+
+  # Returns an enumerator for {RDF::Enumerable#each_quad}.
+  #
+  # @return [Enumerator<Array(RDF::Resource, RDF::URI, RDF::Term, RDF::Resource)>]
+  # @see #each_quad
   def enum_quad; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_quad}.
+  #
+  # @return [Enumerator<Array(RDF::Resource, RDF::URI, RDF::Term, RDF::Resource)>]
+  # @see #each_quad
   def enum_quads(*args, &block); end
+
+  # Returns an enumerator for {RDF::Enumerable#each_statement}.
+  # FIXME: enum_for doesn't seem to be working properly
+  # in JRuby 1.7, so specs are marked pending
+  #
+  # @return [Enumerator<RDF::Statement>]
+  # @see #each_statement
   def enum_statement; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_statement}.
+  # FIXME: enum_for doesn't seem to be working properly
+  # in JRuby 1.7, so specs are marked pending
+  #
+  # @return [Enumerator<RDF::Statement>]
+  # @see #each_statement
   def enum_statements(*args, &block); end
+
+  # Returns an enumerator for {RDF::Enumerable#each_subject}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_subject; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_subject}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_subjects(*args, &block); end
+
+  # Returns an enumerator for {RDF::Enumerable#each_term}.
+  #
+  # @return [Enumerator<RDF::Term>]
+  # @see #each_term
+  # @since 2.0
   def enum_term; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_term}.
+  #
+  # @return [Enumerator<RDF::Term>]
+  # @see #each_term
+  # @since 2.0
   def enum_terms(*args, &block); end
+
+  # Returns an enumerator for {RDF::Enumerable#each_triple}.
+  #
+  # @return [Enumerator<Array(RDF::Resource, RDF::URI, RDF::Term)>]
+  # @see #each_triple
   def enum_triple; end
+
+  # Returns an enumerator for {RDF::Enumerable#each_triple}.
+  #
+  # @return [Enumerator<Array(RDF::Resource, RDF::URI, RDF::Term)>]
+  # @see #each_triple
   def enum_triples(*args, &block); end
+
+  # Returns `true` if `self` contains the given RDF graph_name.
+  #
+  # @param graph_name [RDF::Resource, false] Use value `false` to query for the default graph_name
+  # @return [Boolean]
   def graph?(graph_name); end
+
+  # Returns all unique RDF graph names, other than the default graph.
+  #
+  # @param unique [true]
+  # @return [Array<RDF::Resource>]
+  # @see #each_graph
+  # @see #enum_graph
+  # @since 2.0
   def graph_names(unique: T.unsafe(nil)); end
+
+  # Returns `true` if `self` contains the given RDF graph_name.
+  #
+  # @param graph_name [RDF::Resource, false] Use value `false` to query for the default graph_name
+  # @return [Boolean]
   def has_graph?(*args, &block); end
+
+  # Returns `true` if `self` contains the given RDF object term.
+  #
+  # @param value [RDF::Term]
+  # @return [Boolean]
   def has_object?(*args, &block); end
+
+  # Returns `true` if `self` contains the given RDF predicate term.
+  #
+  # @param value [RDF::URI]
+  # @return [Boolean]
   def has_predicate?(*args, &block); end
+
+  # Returns `true` if `self` contains the given RDF quad.
+  #
+  # @param quad [Array(RDF::Resource, RDF::URI, RDF::Term, RDF::Resource)]
+  # @return [Boolean]
   def has_quad?(*args, &block); end
+
+  # @overload statement?
+  # @overload statement?
   def has_statement?(*args, &block); end
+
+  # Returns `true` if `self` contains the given RDF subject term.
+  #
+  # @param value [RDF::Resource]
+  # @return [Boolean]
   def has_subject?(*args, &block); end
+
+  # @overload term?
+  # @overload term?
   def has_term?(*args, &block); end
+
+  # Returns `true` if `self` contains the given RDF triple.
+  #
+  # @param triple [Array(RDF::Resource, RDF::URI, RDF::Term)]
+  # @return [Boolean]
   def has_triple?(*args, &block); end
+
+  # @overload statement?
+  # @overload statement?
   def include?(*args, &block); end
+
+  # Returns `true` if value is not valid
+  #
+  # @raise [NotImplementedError] unless enumerable supports validation
+  # @return [Boolean] `true` or `false`
+  # @since 0.2.1
   def invalid?; end
+
+  # Returns `true` if `self` contains the given RDF object term.
+  #
+  # @param value [RDF::Term]
+  # @return [Boolean]
   def object?(value); end
+
+  # Returns all unique RDF object terms.
+  #
+  # @param unique [true]
+  # @return [Array<RDF::Term>]
+  # @see #each_object
+  # @see #enum_object
   def objects(unique: T.unsafe(nil)); end
+
+  # Returns `true` if `self` contains the given RDF predicate term.
+  #
+  # @param value [RDF::URI]
+  # @return [Boolean]
   def predicate?(value); end
+
+  # Returns all unique RDF predicate terms.
+  #
+  # @param unique [true]
+  # @return [Array<RDF::URI>]
+  # @see #each_predicate
+  # @see #enum_predicate
   def predicates(unique: T.unsafe(nil)); end
+
+  # Limits statements to be from a specific graph.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which statements are yielded is undefined.
+  #
+  # @overload project_graph
+  # @overload project_graph
+  # @see #each_statement
+  # @since 3.0
   def project_graph(graph_name); end
+
+  # Returns `true` if `self` contains the given RDF quad.
+  #
+  # @param quad [Array(RDF::Resource, RDF::URI, RDF::Term, RDF::Resource)]
+  # @return [Boolean]
   def quad?(quad); end
+
+  # Returns all RDF quads.
+  #
+  # @param options [Hash{Symbol => Boolean}]
+  # @return [Array<Array(RDF::Resource, RDF::URI, RDF::Term, RDF::Resource)>]
+  # @see #each_quad
+  # @see #enum_quad
   def quads(**options); end
+
+  # @overload statement?
+  # @overload statement?
   def statement?(*args); end
+
+  # Returns all RDF statements.
+  #
+  # @param options [Hash{Symbol => Boolean}]
+  # @return [Array<RDF::Statement>]
+  # @see #each_statement
+  # @see #enum_statement
   def statements(**options); end
+
+  # Returns `true` if `self` contains the given RDF subject term.
+  #
+  # @param value [RDF::Resource]
+  # @return [Boolean]
   def subject?(value); end
+
+  # Returns all unique RDF subject terms.
+  #
+  # @param unique [true]
+  # @return [Array<RDF::Resource>]
+  # @see #each_subject
+  # @see #enum_subject
   def subjects(unique: T.unsafe(nil)); end
+
+  # Returns `true` if this enumerable supports the given `feature`.
+  #
+  # Supported features include:
+  #   * `:graph_name` supports statements with a graph_name, allowing multiple named graphs
+  #   * `:inference` supports RDFS inferrence of queryable contents.
+  #   * `:literal_equality' preserves [term-equality](https://www.w3.org/TR/rdf11-concepts/#dfn-literal-term-equality) for literals. Literals are equal only if their lexical values and datatypes are equal, character by character. Literals may be "inlined" to value-space for efficiency only if `:literal_equality` is `false`.
+  #   * `:validity` allows a concrete Enumerable implementation to indicate that it does or does not support valididty checking. By default implementations are assumed to support validity checking.
+  #   * `:skolemize` supports [Skolemization](https://www.w3.org/wiki/BnodeSkolemization) of an `Enumerable`. Implementations supporting this feature must implement a `#skolemize` method, taking a base URI used for minting URIs for BNodes as stable identifiers and a `#deskolemize` method, also taking a base URI used for turning URIs having that prefix back into the same BNodes which were originally skolemized.
+  #   * `:rdfstar` supports RDF* where statements may be subjects or objects of other statements.
+  #
+  # @param feature [Symbol, #to_sym]
+  # @return [Boolean]
+  # @since 0.3.5
   def supports?(feature); end
+
+  # @overload term?
+  # @overload term?
   def term?(*args); end
+
+  # Returns all unique RDF terms (subjects, predicates, objects, and graph_names).
+  #
+  # @example finding all Blank Nodes used within an enumerable
+  #   enumberable.terms.select(&:node?)
+  # @param unique [true]
+  # @return [Array<RDF::Resource>]
+  # @see #each_resource
+  # @see #enum_resource
+  # @since 2.0
   def terms(unique: T.unsafe(nil)); end
+
+  # Returns all RDF statements in `self` as an array.
+  #
+  # Mixes in `RDF::Enumerable` into the returned object.
+  #
+  # @return [Array]
+  # @since 0.2.0
   def to_a; end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def to_enum(*args, &block); end
+
+  # Returns all RDF object terms indexed by their subject and predicate
+  # terms.
+  #
+  # The return value is a `Hash` instance that has the structure:
+  # `{subject => {predicate => [*objects]}}`.
+  #
+  # @return [Hash]
   def to_h; end
+
+  # Returns all RDF statements in `self` as a set.
+  #
+  # Mixes in `RDF::Enumerable` into the returned object.
+  #
+  # @return [Set]
+  # @since 0.2.0
   def to_set; end
+
+  # Returns `true` if `self` contains the given RDF triple.
+  #
+  # @param triple [Array(RDF::Resource, RDF::URI, RDF::Term)]
+  # @return [Boolean]
   def triple?(triple); end
+
+  # Returns all RDF triples.
+  #
+  # @param options [Hash{Symbol => Boolean}]
+  # @return [Array<Array(RDF::Resource, RDF::URI, RDF::Term)>]
+  # @see #each_triple
+  # @see #enum_triple
   def triples(**options); end
+
+  # Returns `true` if all statements are valid
+  #
+  # @raise [NotImplementedError] unless enumerable supports validation
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.11
   def valid?; end
+
+  # Default validate! implementation, overridden in concrete classes
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [RDF::Enumerable] `self`
+  # @since 0.3.9
   def validate(*args, &block); end
+
+  # Default validate! implementation, overridden in concrete classes
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [RDF::Enumerable] `self`
+  # @since 0.3.9
   def validate!; end
 
   protected
 
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil), *args); end
+
+  # @overload
   def method_missing(meth, *args); end
 
   private
 
+  # @note this instantiates an writer; it could probably be done more
+  #   efficiently by refactoring `RDF::Reader` and/or `RDF::Format` to expose
+  #   a list of valid format symbols.
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+# Extends Enumerator with {Queryable} and {Enumerable}, which is used by {Enumerable#each_statement} and {Queryable#enum_for}
 class RDF::Enumerable::Enumerator < ::Enumerator
   include ::RDF::Queryable
   include ::RDF::Countable
   include ::RDF::Enumerable
 
+  # @note Make sure returned arrays are also queryable
+  # @return [Array]
   def to_a; end
 end
 
+# The base class for RDF serialization formats.
+#
+# @abstract
+# @example Loading an RDF serialization format implementation
+#   require 'rdf/ntriples'
+# @example Iterating over known RDF serialization formats
+#   RDF::Format.each { |klass| puts klass.name }
+# @example Getting a serialization format class
+#   RDF::Format.for(:ntriples)     #=> RDF::NTriples::Format
+#   RDF::Format.for("etc/doap.nt")
+#   RDF::Format.for(file_name: "etc/doap.nt")
+#   RDF::Format.for(file_extension: "nt")
+#   RDF::Format.for(content_type: "application/n-triples")
+# @example Obtaining serialization format MIME types
+#   RDF::Format.content_types      #=> {"application/n-triples" => [RDF::NTriples::Format]}
+# @example Obtaining serialization format file extension mappings
+#   RDF::Format.file_extensions    #=> {nt: [RDF::NTriples::Format]}
+# @example Instantiating an RDF reader or writer class (1)
+#   RDF::Format.for(:ntriples).reader.new($stdin)  { |reader| ... }
+#   RDF::Format.for(:ntriples).writer.new($stdout) { |writer| ... }
+# @example Instantiating an RDF reader or writer class (2)
+#   RDF::Reader.for(:ntriples).new($stdin)  { |reader| ... }
+#   RDF::Writer.for(:ntriples).new($stdout) { |writer| ... }
+# @example Defining a new RDF serialization format class
+#   class RDF::NTriples::Format < RDF::Format
+#   content_type     'application/n-triples',
+#   extension: :nt,
+#   uri: RDF::URI("http://www.w3.org/ns/formats/N-Triples")
+#   content_encoding 'utf-8'
+#
+#   reader RDF::NTriples::Reader
+#   writer RDF::NTriples::Writer
+#   end
+# @see RDF::Reader
+# @see RDF::Writer
+# @see http://en.wikipedia.org/wiki/Resource_Description_Framework#Serialization_formats
 class RDF::Format
   extend ::Enumerable
 
   class << self
+    # Returns an array of values appropriate for an Accept header.
+    # Same as `self.content_type`, if no parameter is given when defined.
+    #
+    # @return [Array<String>]
     def accept_type; end
+
+    # Returns the set of content types with quality for available RDF::Reader subclasses.
+    #
+    # @example
+    #
+    #   accept_types = RDF::Format.accept_types
+    #   # => %w(text/html;q=0.5 text/turtle ...)
+    # @return [Array<String>]
     def accept_types; end
+
+    # Hash of CLI commands appropriate for this format
+    #
+    # @return [Hash{Symbol => {description: String, lambda: Lambda(Array, Hash)}}]
     def cli_commands; end
+
+    # Defines the content encoding for this RDF serialization format.
+    #
+    # When called without an encoding, it returns the currently defined
+    # content encoding for this format
+    #
+    # @param encoding [#to_sym]
+    # @return [void]
     def content_encoding(encoding = T.unsafe(nil)); end
+
+    # Retrieves or defines MIME content types for this RDF serialization format.
+    #
+    # @overload content_type
+    # @overload content_type
     def content_type(type = T.unsafe(nil), options = T.unsafe(nil)); end
+
+    # Returns MIME content types for known RDF serialization formats.
+    #
+    # @example retrieving a list of supported Mime types
+    #
+    #   RDF::Format.content_types.keys
+    # @return [Hash{String => Array<Class>}]
     def content_types; end
+
+    # Use a text sample to detect the format of an input file. Sub-classes implement
+    # a matcher sufficient to detect probably format matches, including disambiguating
+    # between other similar formats.
+    #
+    # Used to determine format class from loaded formats by {RDF::Format.for} when a
+    # match cannot be unambigiously found otherwise.
+    #
+    # @example
+    #   RDF::NTriples::Format.detect("<a> <b> <c> .") #=> true
+    # @param sample [String] Beginning several bytes (~ 1K) of input.
+    # @return [Boolean]
     def detect(sample); end
+
+    # Enumerates known RDF serialization format classes.
+    #
+    # Given options from {Format.for}, it returns just those formats that match the specified criteria.
+    #
+    # @example finding all formats that have a writer supporting text/html
+    #   RDF::Format.each(content_type: 'text/html', has_writer: true).to_a
+    #   #=> RDF::RDFa::Format
+    # @param file_name [String, #to_s] (nil)
+    # @param file_extension [Symbol, #to_sym] (nil)
+    # @param content_type [String, #to_s] (nil)
+    #   Content type may include wildcard characters, which will select among matching formats.
+    #   Note that content_type will be taken from a URL opened using {RDF::Util::File.open_file}.
+    # @param has_reader [Boolean] (false)
+    #   Only return a format having a reader.
+    # @param sample [String, Proc] (nil)
+    #   A sample of input used for performing format detection. If we find no formats, or we find more than one, and we have a sample, we can perform format detection to find a specific format to use, in which case we pick the last one we find
+    # @param all_if_none [Boolean] (true)
+    #   Returns all formats if none match, otherwise no format. Note that having a `sample` overrides this, and will search through all formats, or all those filtered to find a sample that matches
+    # @param has_writer [Boolean] (false)
+    #   Only return a format having a writer.
+    # @return [Enumerator]
+    # @yield [klass]
+    # @yieldparam [Class]
     def each(file_name: T.unsafe(nil), file_extension: T.unsafe(nil), content_type: T.unsafe(nil), has_reader: T.unsafe(nil), has_writer: T.unsafe(nil), sample: T.unsafe(nil), all_if_none: T.unsafe(nil), **options, &block); end
+
+    # Retrieves file extensions for this RDF serialization format.
+    #
+    # The return is an array where the first element is the cannonical
+    # file extension for the format and following elements are alias file extensions.
+    #
+    # @return [Array<String>]
     def file_extension; end
+
+    # Returns file extensions for known RDF serialization formats.
+    #
+    # @example retrieving a list of supported file extensions
+    #
+    #   RDF::Format.file_extensions.keys
+    # @return [Hash{Symbol => Array<Class>}]
     def file_extensions; end
+
+    # Finds an RDF serialization format class based on the given criteria. If multiple formats are identified, the last one found is returned; this allows descrimination of equivalent formats based on load order.
+    #
+    # @overload for
+    # @overload for
+    # @overload for
+    # @return [Class]
     def for(*arg, &block); end
+
+    # @private
+    # @return [void]
     def inherited(child); end
+
+    # Returns a human-readable name for the format.
+    # Subclasses should override this to use something
+    # difererent than the Class name.
+    #
+    # @example
+    #
+    #   RDF::NTriples::Format.name => "N-Triples"
+    # @return [Symbol]
     def name; end
+
+    # Retrieves or defines the reader class for this RDF serialization
+    # format.
+    #
+    # @overload reader
+    # @overload reader
+    # @overload reader
+    # @return [void]
     def reader(klass = T.unsafe(nil), &block); end
+
+    # Retrieves or defines the reader class for this RDF serialization
+    # format.
+    #
+    # @overload reader
+    # @overload reader
+    # @overload reader
+    # @return [void]
     def reader_class(klass = T.unsafe(nil), &block); end
+
+    # Returns the set of format symbols for available RDF::Reader subclasses.
+    #
+    # @example
+    #
+    #   symbols = RDF::Format.reader_symbols
+    #   format = RDF::Format.for(symbols.first)
+    # @return [Array<Symbol>]
     def reader_symbols; end
+
+    # Returns the set of content types for available RDF::Reader subclasses.
+    #
+    # @example
+    #
+    #   content_types = RDF::Format.reader_types
+    #   format = RDF::Format.for(content_type: content_types.first)
+    # @return [Array<String>]
     def reader_types; end
+
+    # Defines a required Ruby library for this RDF serialization format.
+    #
+    # The given library will be required lazily, i.e. only when it is
+    # actually first needed, such as when instantiating a reader or parser
+    # instance for this format.
+    #
+    # @param library [String, #to_s]
+    # @return [void]
     def require(library); end
+
+    # Returns the set of symbols for a writer appropriate for use with with `RDF::Format.for()`
+    #
+    # @note Individual formats can override this to provide an array of symbols; otherwise, it uses `self.to_sym`
+    # @return [Array<Symbol>]
+    # @see to_sym
+    # @since 2.0
     def symbols; end
+
+    # Returns a symbol appropriate to use with `RDF::Format.for()`
+    #
+    # @note Defaults to the last element of the class name before `Format` downcased and made a symbol. Individual formats can override this.
+    # @return [Symbol]
     def to_sym; end
+
+    # Retrieves any format URI defined for this format..
+    #
+    # @return [URI]
     def to_uri; end
+
+    # Retrieves any format URI defined for this format..
+    #
+    # @return [URI]
     def uri; end
+
+    # Returns the unique URI for the format.
+    #
+    # @example retrieving a list of supported file format URIs
+    #
+    #   RDF::Format.uris.keys
+    # @return [Hash{Symbol => URI}]
+    # @see https://www.w3.org/ns/formats/
     def uris; end
+
+    # Retrieves or defines the writer class for this RDF serialization
+    # format.
+    #
+    # @overload writer
+    # @overload writer
+    # @overload writer
+    # @return [void]
     def writer(klass = T.unsafe(nil), &block); end
+
+    # Retrieves or defines the writer class for this RDF serialization
+    # format.
+    #
+    # @overload writer
+    # @overload writer
+    # @overload writer
+    # @return [void]
     def writer_class(klass = T.unsafe(nil), &block); end
+
+    # Returns the set of format symbols for available RDF::Writer subclasses.
+    #
+    # @example
+    #
+    #   symbols = RDF::Format.writer_symbols
+    #   format = RDF::Format.for(symbols.first)
+    # @return [Array<Symbol>]
     def writer_symbols; end
+
+    # Returns the set of content types for available RDF::Writer subclasses.
+    #
+    # @example
+    #
+    #   content_types = RDF::Format.writer_types
+    #   format = RDF::Format.for(content_type: content_types.first)
+    # @return [Array<String>]
     def writer_types; end
   end
 end
 
+# The base class for RDF serialization format errors.
 class RDF::FormatError < ::IOError; end
 
+# An RDF graph.
+#
+# An {RDF::Graph} contains a unique set of {RDF::Statement}. It is
+# based on an underlying data object, which may be specified when the
+# graph is initialized, and will default to a {RDF::Repository} without
+# support for named graphs otherwise.
+#
+# Note that in RDF 1.1, graphs are not named, but are associated with
+# a graph name in a Dataset, as a pair of <name, graph>.
+# This class allows a name to be associated with a graph when it is
+# a projection of an underlying {RDF::Repository} supporting graph_names.
+#
+# @example Creating an empty unnamed graph
+#   graph = RDF::Graph.new
+# @example Loading graph data from a URL
+#   graph = RDF::Graph.load("http://ruby-rdf.github.io/rdf/etc/doap.nt")
+# @example Loading graph data from a URL
+#   require 'rdf/rdfxml'  # for RDF/XML support
+#
+#   graph = RDF::Graph.load("http://www.bbc.co.uk/programmes/b0081dq5.rdf")
+# @example Accessing a specific named graph within a {RDF::Repository}
+#   require 'rdf/trig'  # for TriG support
+#
+#   repository = graph = RDF::Repository.load("https://raw.githubusercontent.com/ruby-rdf/rdf-trig/develop/etc/doap.trig", format: :trig))
+#   graph = RDF::Graph.new(graph_name: RDF::URI("http://greggkellogg.net/foaf#me"), data: repository)
 class RDF::Graph
   include ::RDF::Value
   include ::Enumerable
@@ -283,54 +1556,227 @@ class RDF::Graph
   include ::RDF::Mutable
   include ::RDF::Transactable
 
+  # @note Graph names are only useful when used as a projection
+  #   on a `:data` which supports named graphs. Otherwise, there is no
+  #   such thing as a named graph in RDF 1.1, a repository may have
+  #   graphs which are named, but the name is not a property of the graph.
+  # @param graph_name [RDF::Resource] The graph_name from the associated {RDF::Queryable} associated
+  #   with this graph as provided with the `:data` option
+  #   (only for {RDF::Queryable} instances supporting
+  #   named graphs).
+  # @param data [RDF::Queryable] (RDF::Repository.new)
+  #   Storage behind this graph.
+  # @raise [ArgumentError] if a `data` does not support named graphs.
+  # @return [Graph] a new instance of Graph
+  # @yield [graph]
+  # @yieldparam [Graph]
   def initialize(graph_name: T.unsafe(nil), data: T.unsafe(nil), **options, &block); end
 
+  # Graph equivalence based on the contents of each graph being _exactly_
+  # the same. To determine if the have the same _meaning_, consider
+  # [rdf-isomorphic](https://rubygems.org/gems/rdf-isomorphic).
+  #
+  # @param other [RDF::Graph]
+  # @return [Boolean]
+  # @see https://rubygems.org/gems/rdf-isomorphic
   def ==(other); end
+
+  # Returns `true` if this graph has an anonymous graph, `false` otherwise.
+  #
+  # @note The next release, graphs will not be named, this will return true
+  # @return [Boolean]
   def anonymous?; end
+
+  # Returns the number of RDF statements in this graph.
+  #
+  # @return [Integer]
+  # @see RDF::Enumerable#count
   def count; end
+
+  # {RDF::Queryable} backing this graph.
+  #
+  # @return [RDF::Queryable]
   def data; end
+
+  # {RDF::Queryable} backing this graph.
+  #
+  # @return [RDF::Queryable]
   def data=(_arg0); end
+
+  # A graph is durable if it's underlying data model is durable
+  #
+  # @return [Boolean]
+  # @see RDF::Durable#durable?
   def durable?; end
+
+  # Enumerates each RDF statement in this graph.
+  #
+  # @return [Enumerator]
+  # @see RDF::Enumerable#each_statement
+  # @yield [statement]
+  # @yieldparam statement [Statement]
   def each(&block); end
+
+  # @private
+  # @see RDF::Enumerable#each_graph
+  # @since 0.2.0
   def each_graph; end
+
+  # @overload graph?
+  # @overload graph?
   def graph?(*args); end
+
+  # Name of this graph, if it is part of an {RDF::Repository}
+  #
+  # @return [RDF::Resource]
+  # @since 1.1.18
   def graph_name; end
+
+  # Name of this graph, if it is part of an {RDF::Repository}
+  #
+  # @return [RDF::Resource]
+  # @since 1.1.18
   def graph_name=(_arg0); end
+
+  # Returns all unique RDF names for this graph.
+  #
+  # @return [Enumerator<RDF::Resource>]
   def graph_names(unique: T.unsafe(nil)); end
+
+  # @private
+  # @see RDF::Enumerable#graphs
+  # @since 0.2.0
   def graphs; end
+
+  # @overload statement?
+  # @overload statement?
   def has_statement?(*args); end
+
+  # @private
+  # @see RDF::Mutable#insert_statements
   def insert_statements(statements); end
+
+  # (re)loads the graph from the specified location, or from the location associated with the graph name, if any
+  #
+  # @return [void]
+  # @see RDF::Mutable#load
   def load!(*args); end
+
+  # Name of this graph, if it is part of an {RDF::Repository}
+  #
+  # @return [RDF::Resource]
+  # @since 1.1.18
   def name; end
+
+  # Name of this graph, if it is part of an {RDF::Repository}
+  #
+  # @return [RDF::Resource]
+  # @since 1.1.18
   def name=(_arg0); end
+
+  # Returns `true` if this is a named graph.
+  #
+  # @note The next release, graphs will not be named, this will return false
+  # @return [Boolean]
   def named?; end
+
+  # Returns the options passed to this graph when it was constructed.
+  #
+  # @return [Hash{Symbol => Object}]
   def options; end
+
+  # @private
+  # @see RDF::Enumerable#project_graph
   def project_graph(graph_name, &block); end
+
+  # @overload statement?
+  # @overload statement?
   def statement?(*args); end
+
+  # Returns a string representation of this graph.
+  #
+  # @return [String]
   def to_s; end
+
+  # Returns the {RDF::Resource} representation of this graph.
+  #
+  # @return [RDF::Resource]
   def to_uri; end
+
+  # Returns `true` if this is a unnamed graph.
+  #
+  # @note The next release, graphs will not be named, this will return true
+  # @return [Boolean]
   def unnamed?; end
 
   protected
 
+  # Opens a transaction over the graph
+  #
+  # @private
+  # @see RDF::Transactable#begin_transaction
   def begin_transaction(mutable: T.unsafe(nil), graph_name: T.unsafe(nil)); end
+
+  # @private
+  # @see RDF::Mutable#clear
   def clear_statements; end
+
+  # @private
+  # @see RDF::Mutable#delete
   def delete_statement(statement); end
+
+  # @private
+  # @see RDF::Mutable#insert
   def insert_statement(statement); end
+
+  # @private
+  # @see RDF::Queryable#query_pattern
   def query_pattern(pattern, **options, &block); end
 
   class << self
+    # Creates a new `Graph` instance populated by the RDF data returned by
+    # dereferencing the given graph_name Resource.
+    #
+    # @param url [String, #to_s]
+    # @param graph_name [RDF::Resource] Set set graph name of each loaded statement
+    # @param options [Hash{Symbol => Object}] Options from {RDF::Reader.open}
+    # @return [Graph]
+    # @since 0.1.7
+    # @yield [graph]
+    # @yieldparam graph [Graph]
     def load(url, graph_name: T.unsafe(nil), **options, &block); end
   end
 end
 
+# RDF::IRI is a synonym for RDF::URI
 RDF::IRI = RDF::URI
 
+# A mixin that can be used to mark RDF repository implementations as
+# indexable.
+#
+# @since 0.3.0
 module RDF::Indexable
+  # Indexes `self`.
+  #
+  # @abstract
+  # @raise [NotImplementedError]
+  # @return [self]
+  # @since 0.3.0
   def index!; end
+
+  # Returns `true` if `self` is indexed at present.
+  #
+  # @abstract
+  # @return [Boolean]
+  # @since 0.3.0
   def indexed?; end
 end
 
+# An RDF list.
+#
+# @example Constructing a new list
+#   RDF::List[1, 2, 3]
+# @since 0.2.3
 class RDF::List
   include ::Enumerable
   include ::RDF::Countable
@@ -338,82 +1784,676 @@ class RDF::List
   include ::RDF::Value
   include ::Comparable
 
+  # Initializes a newly-constructed list.
+  #
+  # Instantiates a new list based at `subject`, which **should** be an RDF::Node. List may be initialized using passed `values`.
+  #
+  # If a `values` initializer is set with an empty list, `subject`
+  # will be used as the first element in the list. Otherwise,
+  # if the list is not empty, `subject` identifies the first element
+  # of the list to which `values` are prepended yielding a new `subject`.
+  # Otherwise, if there are no initial `values`, and `subject` does
+  # not identify an existing list in `graph`, the list remains
+  # identified by `subject`, but will be invalid.
+  #
+  # @example use a transaction for block initialization
+  #   l = RDF::List(graph: graph, wrap_transaction: true) do |list|
+  #   list << RDF::Literal(1)
+  #   # list.graph.rollback will rollback all list changes within this block.
+  #   end
+  #   list.count #=> 1
+  # @example add constructed list to existing graph
+  #   l = RDF::List(values: (1, 2, 3))
+  #   g = RDF::Graph.new << l
+  #   g.count # => l.count
+  # @param graph [RDF::Graph] (RDF::Graph.new)
+  # @param values [Array<RDF::Term>] Any values which are not terms are coerced to `RDF::Literal`.
+  # @param wrap_transaction [Boolean] (false)
+  #   Wraps the callback in a transaction, and replaces the graph with that transaction for the duraction of the callback. This has the effect of allowing any list changes to be made atomically, or rolled back.
+  # @param subject [RDF::Resource] (RDF.nil)
+  #   Subject should be an {RDF::Node}, not a {RDF::URI}. A list with an IRI head will not validate, but is commonly used to detect if a list is valid.
+  # @return [List] a new instance of List
+  # @since 0.2.3
+  # @yield [list]
+  # @yieldparam list [RDF::List]
   def initialize(subject: T.unsafe(nil), graph: T.unsafe(nil), values: T.unsafe(nil), wrap_transaction: T.unsafe(nil), &block); end
 
+  # Returns the set intersection of this list and `other`.
+  #
+  # The resulting list contains the elements common to both lists, with no
+  # duplicates.
+  #
+  # @example
+  #   RDF::List[1, 2] & RDF::List[1, 2]       #=> RDF::List[1, 2]
+  #   RDF::List[1, 2] & RDF::List[2, 3]       #=> RDF::List[2]
+  #   RDF::List[1, 2] & RDF::List[3, 4]       #=> RDF::List[]
+  # @param other [RDF::List]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-26
+  # @since 0.2.3
   def &(other); end
+
+  # Returns either a repeated list or a string concatenation of the
+  # elements in this list.
+  #
+  # @overload *
+  # @overload *
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-2A
+  # @since 0.2.3
   def *(int_or_str); end
+
+  # Returns the concatenation of this list and `other`.
+  #
+  # @example
+  #   RDF::List[1, 2] + RDF::List[3, 4]       #=> RDF::List[1, 2, 3, 4]
+  # @param other [RDF::List]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-2B
+  # @since 0.2.3
   def +(other); end
+
+  # Returns the difference between this list and `other`, removing any
+  # elements that appear in both lists.
+  #
+  # @example
+  #   RDF::List[1, 2, 2, 3] - RDF::List[2]    #=> RDF::List[1, 3]
+  # @param other [RDF::List]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-2D
+  # @since 0.2.3
   def -(other); end
+
+  # Appends an element to the tail of this list.
+  #
+  # @example
+  #   RDF::List[] << 1 << 2 << 3              #=> RDF::List[1, 2, 3]
+  # @param value [RDF::Term]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-3C-3C
+  # @since 0.2.3
   def <<(value); end
+
+  # Compares this list to `other` for sorting purposes.
+  #
+  # @example
+  #   RDF::List[1] <=> RDF::List[1]           #=> 0
+  #   RDF::List[1] <=> RDF::List[2]           #=> -1
+  #   RDF::List[2] <=> RDF::List[1]           #=> 1
+  # @param other [RDF::List]
+  # @return [Integer]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-3C-3D-3E
+  # @since 0.2.3
   def <=>(other); end
+
+  # @see RDF::Value#==
+  # @since 0.2.3
   def ==(other); end
+
+  # Returns a slice of a list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].slice(0)    #=> RDF::Literal(1),
+  #   RDF::List[1, 2, 3].slice(0, 2) #=> RDF::List[1, 2],
+  #   RDF::List[1, 2, 3].slice(0..2) #=> RDF::List[1, 2, 3]
+  # @return [RDF::Term]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-slice
+  # @since 0.2.3
   def [](*args); end
+
+  # Element Assignment — Sets the element at `index`, or replaces a subarray from the `start` index for `length` elements, or replaces a subarray specified by the `range` of indices.
+  #
+  # If indices are greater than the current capacity of the array, the array grows automatically. Elements are inserted into the array at `start` if length is zero.
+  #
+  # Negative indices will count backward from the end of the array. For `start` and `range` cases the starting index is just before an element.
+  #
+  # An `IndexError` is raised if a negative index points past the beginning of the array.
+  #
+  # (see #unshift).
+  #
+  # @example
+  #   a = RDF::List.new
+  #   a[4] = "4";                 #=> [rdf:nil, rdf:nil, rdf:nil, rdf:nil, "4"]
+  #   a[0, 3] = [ 'a', 'b', 'c' ] #=> ["a", "b", "c", rdf:nil, "4"]
+  #   a[1..2] = [ 1, 2 ]          #=> ["a", 1, 2, rdf:nil, "4"]
+  #   a[0, 2] = "?"               #=> ["?", 2, rdf:nil, "4"]
+  #   a[0..2] = "A"               #=> ["A", "4"]
+  #   a[-1]   = "Z"               #=> ["A", "Z"]
+  #   a[1..-1] = nil              #=> ["A", rdf:nil]
+  #   a[1..-1] = []               #=> ["A"]
+  #   a[0, 0] = [ 1, 2 ]          #=> [1, 2, "A"]
+  #   a[3, 0] = "B"               #=> [1, 2, "A", "B"]
+  # @overload []=
+  # @overload []=
+  # @overload []=
+  # @since 1.1.15
   def []=(*args); end
+
+  # Returns the element at `index`.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].at(0)                #=> 1
+  #   RDF::List[1, 2, 3].at(4)                #=> nil
+  # @return [RDF::Term, nil]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-at
+  # @since 0.2.3
   def at(index); end
+
+  # Empties this list
+  #
+  # @example
+  #   RDF::List[1, 2, 2, 3].clear    #=> RDF::List[]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-clear
+  # @since 0.2.3
   def clear; end
+
+  # Yields each element in this list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].each do |value|
+  #   puts value.inspect
+  #   end
+  # @return [Enumerator]
+  # @see http://ruby-doc.org/core-1.9/classes/Enumerable.html
+  # @since 0.2.3
   def each; end
+
+  # Yields each statement constituting this list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].each_statement do |statement|
+  #   puts statement.inspect
+  #   end
+  # @return [Enumerator]
+  # @see RDF::Enumerable#each_statement
+  # @since 0.2.3
   def each_statement(&block); end
+
+  # Yields each subject term constituting this list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].each_subject do |subject|
+  #   puts subject.inspect
+  #   end
+  # @return [Enumerator]
+  # @see RDF::Enumerable#each
+  # @since 0.2.3
+  # @yield [subject]
   def each_subject; end
+
+  # Returns the eighth element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].eighth              #=> RDF::Literal(8)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def eighth; end
+
+  # Returns `true` if this list is empty.
+  #
+  # @example
+  #   RDF::List[].empty?                      #=> true
+  #   RDF::List[1, 2, 3].empty?               #=> false
+  # @return [Boolean]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-empty-3F
+  # @since 0.2.3
   def empty?; end
+
+  # Compares this list to `other` using eql? on each component.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].eql? RDF::List[1, 2, 3]  #=> true
+  #   RDF::List[1, 2, 3].eql? [1, 2, 3]           #=> true
+  # @param other [RDF::List]
+  # @return [Integer]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-3C-3D-3E
+  # @since 0.2.3
   def eql?(other); end
+
+  # Returns element at `index` with default.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].fetch(0)             #=> RDF::Literal(1)
+  #   RDF::List[1, 2, 3].fetch(4)             #=> IndexError
+  #   RDF::List[1, 2, 3].fetch(4, nil)        #=> nil
+  #   RDF::List[1, 2, 3].fetch(4) { |n| n*n } #=> 16
+  # @return [RDF::Term, nil]
+  # @see http://ruby-doc.org/core-1.9/classes/Array.html#M000420
+  # @since 0.2.3
   def fetch(index, default = T.unsafe(nil)); end
+
+  # Returns the fifth element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].fifth               #=> RDF::Literal(5)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def fifth; end
+
+  # Returns the first element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].first               #=> RDF::Literal(1)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def first; end
+
+  # Returns the first subject term constituting this list.
+  #
+  # This is equivalent to `subject`.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].first_subject        #=> RDF::Node(...)
+  # @return [RDF::Resource]
+  # @since 0.2.3
   def first_subject; end
+
+  # Returns the fourth element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].fourth              #=> RDF::Literal(4)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def fourth; end
+
+  # @return [RDF::Graph] the underlying graph storing the statements that constitute this list
+  # @since 0.2.3
   def graph; end
+
+  # Returns the index of the first element equal to `value`, or `nil` if
+  # no match was found.
+  #
+  # @example
+  #   RDF::List['a', 'b', 'c'].index('a')     #=> 0
+  #   RDF::List['a', 'b', 'c'].index('d')     #=> nil
+  # @param value [RDF::Term]
+  # @return [Integer]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-index
+  # @since 0.2.3
   def index(value); end
+
+  # Returns a developer-friendly representation of this list.
+  #
+  # @example
+  #   RDF::List[].inspect                     #=> "#<RDF::List(_:g2163790380)>"
+  # @return [String]
+  # @since 0.2.3
   def inspect; end
+
+  # Returns a string created by converting each element of this list into
+  # a string, separated by `sep`.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].join                 #=> "123"
+  #   RDF::List[1, 2, 3].join(", ")           #=> "1, 2, 3"
+  # @param sep [String]
+  # @return [String]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-join
+  # @since 0.2.3
   def join(sep = T.unsafe(nil)); end
+
+  # Returns the last element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].last                 #=> RDF::Literal(10)
+  # @return [RDF::Term]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-last
+  # @since 0.2.3
   def last; end
+
+  # Returns the last subject term constituting this list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].last_subject         #=> RDF::Node(...)
+  # @return [RDF::Resource]
+  # @since 0.2.3
   def last_subject; end
+
+  # Returns the length of this list.
+  #
+  # @example
+  #   RDF::List[].length                      #=> 0
+  #   RDF::List[1, 2, 3].length               #=> 3
+  # @return [Integer]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-length
+  # @since 0.2.3
   def length; end
+
+  # Is this a {RDF::List}?
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def list?; end
+
+  # Returns the ninth element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].ninth               #=> RDF::Literal(9)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def ninth; end
+
+  # Returns the element at `index`.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].at(0)                #=> 1
+  #   RDF::List[1, 2, 3].at(4)                #=> nil
+  # @return [RDF::Term, nil]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-at
+  # @since 0.2.3
   def nth(index); end
+
+  # Returns a list containing all but the first element of this list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].rest                 #=> RDF::List[2, 3]
+  # @return [RDF::List]
+  # @since 0.2.3
   def rest; end
+
+  # @example
+  #   RDF::List[1, 2, 3].rest_subject         #=> RDF::Node(...)
+  # @return [RDF::Resource]
+  # @since 0.2.3
   def rest_subject; end
+
+  # Returns the elements in this list in reversed order.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].reverse              #=> RDF::List[3, 2, 1]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-reverse
+  # @since 0.2.3
   def reverse; end
+
+  # Returns the second element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].second              #=> RDF::Literal(2)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def second; end
+
+  # Returns the seventh element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].seventh             #=> RDF::Literal(7)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def seventh; end
+
+  # Removes and returns the element at the head of this list.
+  #
+  # @example
+  #   RDF::List[1,2,3].shift              #=> 1
+  # @return [RDF::Term]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-shift
+  # @since 0.2.3
   def shift; end
+
+  # Returns the sixth element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].sixth               #=> RDF::Literal(6)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def sixth; end
+
+  # Returns the length of this list.
+  #
+  # @example
+  #   RDF::List[].length                      #=> 0
+  #   RDF::List[1, 2, 3].length               #=> 3
+  # @return [Integer]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-length
+  # @since 0.2.3
   def size; end
+
+  # Returns a slice of a list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].slice(0)    #=> RDF::Literal(1),
+  #   RDF::List[1, 2, 3].slice(0, 2) #=> RDF::List[1, 2],
+  #   RDF::List[1, 2, 3].slice(0..2) #=> RDF::List[1, 2, 3]
+  # @return [RDF::Term]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-slice
+  # @since 0.2.3
   def slice(*args); end
+
+  # Returns the elements in this list in sorted order.
+  #
+  # @example
+  #   RDF::List[2, 3, 1].sort                 #=> RDF::List[1, 2, 3]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-sort
+  # @since 0.2.3
   def sort(&block); end
+
+  # Returns the elements in this list in sorted order.
+  #
+  # @example
+  #   RDF::List[2, 3, 1].sort_by(&:to_i)      #=> RDF::List[1, 2, 3]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-sort_by
+  # @since 0.2.3
   def sort_by(&block); end
+
+  # @return [RDF::Resource] the subject term of this list.
+  # @since 0.2.3
   def subject; end
+
+  # Returns a list containing the last element of this list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].tail                 #=> RDF::List[3]
+  # @return [RDF::List]
+  # @since 0.2.3
   def tail; end
+
+  # Returns the tenth element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].tenth               #=> RDF::Literal(10)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def tenth; end
+
+  # Returns the third element in this list.
+  #
+  # @example
+  #   RDF::List[*(1..10)].third               #=> RDF::Literal(4)
+  # @return [RDF::Term]
+  # @since 0.2.3
   def third; end
+
+  # Returns the elements in this list as an array.
+  #
+  # @example
+  #   RDF::List[].to_a                        #=> []
+  #   RDF::List[1, 2, 3].to_a                 #=> [RDF::Literal(1), RDF::Literal(2), RDF::Literal(3)]
+  # @return [Array]
+  # @since 0.2.3
   def to_a; end
+
+  # Yields each statement constituting this list.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].each_statement do |statement|
+  #   puts statement.inspect
+  #   end
+  # @return [Enumerator]
+  # @see RDF::Enumerable#each_statement
+  # @since 0.2.3
   def to_rdf(&block); end
+
+  # Returns a string representation of this list.
+  #
+  # @example
+  #   RDF::List[].to_s                        #=> "RDF::List[]"
+  #   RDF::List[1, 2, 3].to_s                 #=> "RDF::List[1, 2, 3]"
+  # @return [String]
+  # @since 0.2.3
   def to_s; end
+
+  # Returns the elements in this list as a set.
+  #
+  # @example
+  #   RDF::List[1, 2, 3].to_set               #=> Set[RDF::Literal(1), RDF::Literal(2), RDF::Literal(3)]
+  # @return [Set]
+  # @since 0.2.3
   def to_set; end
+
+  # Returns the subject of the list.
+  #
+  # @example
+  #   RDF::List[].to_term                     #=> "RDF[:nil]"
+  #   RDF::List[1, 2, 3].to_term              #=> "RDF::Node"
+  # @return [RDF::Resource]
+  # @since 0.2.3
   def to_term; end
+
+  # Returns a new list with the duplicates in this list removed.
+  #
+  # @example
+  #   RDF::List[1, 2, 2, 3].uniq              #=> RDF::List[1, 2, 3]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-uniq
+  # @since 0.2.3
   def uniq; end
+
+  # Appends an element to the head of this list. Existing references are not updated, as the list subject changes as a side-effect.
+  #
+  # @example
+  #   RDF::List[].unshift(1).unshift(2).unshift(3) #=> RDF::List[3, 2, 1]
+  # @param value [RDF::Term, Array<RDF::Term>, RDF::List] A non-RDF::Term is coerced to a Literal
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-unshift
+  # @since 0.2.3
   def unshift(value); end
+
+  # Validate the list ensuring that
+  # * each node is referenced exactly once (except for the head, which may have no reference)
+  # * rdf:rest values are all BNodes are nil
+  # * each subject has exactly one value for `rdf:first` and
+  #   `rdf:rest`.
+  # * The value of `rdf:rest` must be either a BNode or `rdf:nil`.
+  # * only the list head may have any other properties
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def valid?; end
+
+  # Returns the set union of this list and `other`.
+  #
+  # The resulting list contains the elements from both lists, with no
+  # duplicates.
+  #
+  # @example
+  #   RDF::List[1, 2] | RDF::List[1, 2]       #=> RDF::List[1, 2]
+  #   RDF::List[1, 2] | RDF::List[2, 3]       #=> RDF::List[1, 2, 3]
+  #   RDF::List[1, 2] | RDF::List[3, 4]       #=> RDF::List[1, 2, 3, 4]
+  # @param other [RDF::List]
+  # @return [RDF::List]
+  # @see http://ruby-doc.org/core-2.2.2/Array.html#method-i-7C
+  # @since 0.2.3
   def |(other); end
 
   protected
 
+  # @private
+  # @since 0.2.3
   def slice_with_range(range); end
+
+  # @private
+  # @since 0.2.3
   def slice_with_start_and_length(start, length); end
 
   private
 
+  # Normalizes `Array` to `RDF::List` and `nil` to `RDF.nil`.
+  #
+  # @param value [Object]
+  # @return [RDF::Value, Object] normalized value
+  # @since 0.2.3
   def normalize_value(value); end
 
   class << self
+    # Constructs a new list from the given `values`.
+    #
+    # The list will be identified by a new autogenerated blank node, and
+    # backed by an initially empty in-memory graph.
+    #
+    # @example
+    #   RDF::List[]
+    #   RDF::List[*(1..10)]
+    #   RDF::List[1, 2, 3]
+    #   RDF::List["foo", "bar"]
+    #   RDF::List["a", 1, "b", 2, "c", 3]
+    # @param values [Array<RDF::Term>]
+    # @return [RDF::List]
+    # @since 0.2.3
     def [](*values); end
   end
 end
 
+# The canonical empty list.
+#
+# @since 0.2.3
 RDF::List::NIL = T.let(T.unsafe(nil), RDF::List)
+
+# @private
+# @since 0.2.3
 RDF::List::UNSET = T.let(T.unsafe(nil), Object)
 
+# An RDF literal.
+#
+# Subclasses of {RDF::Literal} should define DATATYPE and GRAMMAR constants, which are used for identifying the appropriate class to use for a datatype URI and to perform lexical matching on the value.
+#
+# Literal comparison with other {RDF::Value} instances call {RDF::Value#type_error}, which, returns false. Implementations wishing to have {RDF::TypeError} raised should mix-in {RDF::TypeCheck}. This is required for strict SPARQL conformance.
+#
+# Specific typed literals may have behavior different from the default implementation. See the following defined sub-classes for specific documentation. Additional sub-classes may be defined, and will interoperate by defining `DATATYPE` and `GRAMMAR` constants, in addition other required overrides of RDF::Literal behavior.
+#
+# In RDF 1.1, all literals are typed, including plain literals and language tagged literals. Internally, plain literals are given the `xsd:string` datatype and language tagged literals are given the `rdf:langString` datatype. Creating a plain literal, without a datatype or language, will automatically provide the `xsd:string` datatype; similar for language tagged literals. Note that most serialization formats will remove this datatype. Code which depends on a literal having the `xsd:string` datatype being different from a plain literal (formally, without a datatype) may break. However note that the `#has\_datatype?` will continue to return `false` for plain or language-tagged literals.
+#
+# * {RDF::Literal::Boolean}
+# * {RDF::Literal::Date}
+# * {RDF::Literal::DateTime}
+# * {RDF::Literal::Decimal}
+# * {RDF::Literal::Double}
+# * {RDF::Literal::Integer}
+# * {RDF::Literal::Time}
+#
+# @example Creating a plain literal
+#   value = RDF::Literal.new("Hello, world!")
+#   value.plain?                                   #=> true`
+# @example Creating a language-tagged literal (1)
+#   value = RDF::Literal.new("Hello!", language: :en)
+#   value.language?                                #=> true
+#   value.language                                 #=> :en
+# @example Creating a language-tagged literal (2)
+#   RDF::Literal.new("Wazup?", language: :"en-US")
+#   RDF::Literal.new("Hej!",   language: :sv)
+#   RDF::Literal.new("¡Hola!", language: :es)
+# @example Creating an explicitly datatyped literal
+#   value = RDF::Literal.new("2009-12-31", datatype: RDF::XSD.date)
+#   value.datatype?                                #=> true
+#   value.datatype                                 #=> RDF::XSD.date
+# @example Creating an implicitly datatyped literal
+#   value = RDF::Literal.new(Date.today)
+#   value.datatype?                                #=> true
+#   value.datatype                                 #=> RDF::XSD.date
+# @example Creating implicitly datatyped literals
+#   RDF::Literal.new(false).datatype               #=> XSD.boolean
+#   RDF::Literal.new(true).datatype                #=> XSD.boolean
+#   RDF::Literal.new(123).datatype                 #=> XSD.integer
+#   RDF::Literal.new(9223372036854775807).datatype #=> XSD.integer
+#   RDF::Literal.new(3.1415).datatype              #=> XSD.double
+#   RDF::Literal.new(Time.now).datatype            #=> XSD.dateTime
+#   RDF::Literal.new(Date.new(2010)).datatype      #=> XSD.date
+#   RDF::Literal.new(DateTime.new(2010)).datatype  #=> XSD.dateTime
+# @see http://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal
+# @see http://www.w3.org/TR/rdf11-concepts/#section-Datatypes
 class RDF::Literal
   include ::RDF::Value
   include ::Comparable
@@ -421,403 +2461,2169 @@ class RDF::Literal
   include ::SPARQL::Algebra::Expression
   include ::RDF::Term
 
+  # Literals without a datatype are given either xsd:string or rdf:langString
+  # depending on if there is language
+  #
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @raise [ArgumentError] if there is a language and datatype is no rdf:langString
+  #   or datatype is rdf:langString and there is no language
+  # @return [Literal] a new instance of Literal
+  # @see http://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal
+  # @see http://www.w3.org/TR/rdf11-concepts/#section-Datatypes
+  # @see #to_s
   def initialize(value, language: T.unsafe(nil), datatype: T.unsafe(nil), lexical: T.unsafe(nil), validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
 
+  # Compares `self` to `other` for sorting purposes (with type check).
+  #
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
   def <=>(other); end
+
+  # Returns `true` if this literal is equivalent to `other` (with type check).
+  #
+  # @example
+  #   RDF::Literal(1) == RDF::Literal(1.0)     #=> true
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+  # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
   def ==(other); end
+
+  # Returns `true` if this literal is equivalent to `other` (with type check).
+  #
+  # @example
+  #   RDF::Literal(1) == RDF::Literal(1.0)     #=> true
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+  # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
   def ===(other); end
+
+  # Converts this literal into its canonical lexical representation.
+  #
+  # Subclasses should override this as needed and appropriate.
+  #
+  # @return [RDF::Literal] `self`
+  # @since 0.3.0
   def canonicalize!; end
+
+  # Term compatibility according to SPARQL
+  #
+  # Compatibility of two arguments is defined as:
+  # * The arguments are simple literals or literals typed as xsd:string
+  # * The arguments are plain literals with identical language tags
+  # * The first argument is a plain literal with language tag and the second argument is a simple literal or literal typed as xsd:string
+  #
+  # @example
+  #   compatible?("abc"	"b")                         #=> true
+  #   compatible?("abc"	"b"^^xsd:string)             #=> true
+  #   compatible?("abc"^^xsd:string	"b")             #=> true
+  #   compatible?("abc"^^xsd:string	"b"^^xsd:string) #=> true
+  #   compatible?("abc"@en	"b")                     #=> true
+  #   compatible?("abc"@en	"b"^^xsd:string)         #=> true
+  #   compatible?("abc"@en	"b"@en)                  #=> true
+  #   compatible?("abc"@fr	"b"@ja)                  #=> false
+  #   compatible?("abc"	"b"@ja)                      #=> false
+  #   compatible?("abc"	"b"@en)                      #=> false
+  #   compatible?("abc"^^xsd:string	"b"@en)          #=> false
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/sparql11-query/#func-arg-compatibility
+  # @since 2.0
   def compatible?(other); end
+
+  # Returns `true` if the literals are comperable.
+  #
+  # Used for <=> operator.
+  #
+  # @return [Boolean]
   def comperable_datatype2?(other); end
+
+  # Returns `true` if the literal has a datatype and the comparison should
+  # return false instead of raise a type error.
+  #
+  # This behavior is intuited from SPARQL data-r2/expr-equal/eq-2-2
+  #
+  # @return [Boolean]
   def comperable_datatype?(other); end
+
+  # @return [URI] The XML Schema datatype URI (optional).
   def datatype; end
+
+  # @return [URI] The XML Schema datatype URI (optional).
   def datatype=(_arg0); end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def datatype?; end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def datatyped?; end
+
+  # Determins if `self` is the same term as `other`.
+  #
+  # @example
+  #   RDF::Literal(1).eql?(RDF::Literal(1.0))  #=> false
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
   def eql?(other); end
+
+  # Escape a literal using ECHAR escapes.
+  #
+  #    ECHAR ::= '\' [tbnrf"'\]
+  #
+  # @note N-Triples only requires '\"\n\r' to be escaped.
+  # @param string [String]
+  # @return [String]
+  # @see RDF::Term#escape
   def escape(string); end
+
+  # @private
   def freeze; end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def has_datatype?; end
+
+  # Returns `true` if this is a language-tagged literal.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-plain-literal
   def has_language?; end
+
+  # Returns a hash code for this literal.
+  #
+  # @return [Integer]
   def hash; end
+
+  # Returns a human-readable value for the literal
+  #
+  # @return [String]
+  # @since 1.1.6
   def humanize(lang = T.unsafe(nil)); end
+
+  # Returns a developer-friendly representation of `self`.
+  #
+  # @return [String]
   def inspect; end
+
+  # @return [Symbol] The language tag (optional).
   def language; end
+
+  # @return [Symbol] The language tag (optional).
   def language=(_arg0); end
+
+  # Returns `true` if this is a language-tagged literal.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-plain-literal
   def language?; end
+
+  # Returns `true`.
+  #
+  # @return [Boolean] `true` or `false`
   def literal?; end
+
+  # @return [Object]
   def object; end
+
+  # Returns `true` if this is a plain literal. A plain literal
+  # may have a language, but may not have a datatype. For
+  # all practical purposes, this includes xsd:string literals
+  # too.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-plain-literal
   def plain?; end
+
+  # Returns `true` if this is a simple literal.
+  # A simple literal has no datatype or language.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/sparql11-query/#simple_literal
   def simple?; end
+
+  # Returns the literal, first removing all whitespace on both ends of the value, and then changing remaining consecutive whitespace groups into one space each.
+  #
+  # Note that it handles both ASCII and Unicode whitespace.
+  #
+  # @return [RDF::Literal] a new literal based on `self`.
+  # @see [String#squish](http://apidock.com/rails/String/squish)
   def squish(*other_string); end
+
+  # Performs a destructive {#squish}.
+  #
+  # @return self
+  # @see [String#squish!](http://apidock.com/rails/String/squish%21)
   def squish!; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
   def to_s; end
+
   def to_sxp(**options); end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def typed?; end
+
+  # Returns `true` if the value adheres to the defined grammar of the
+  # datatype.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.2.1
   def valid?; end
+
+  # Validates the value using {RDF::Value#valid?}, raising an error if the value is
+  # invalid.
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [RDF::Literal] `self`
+  # @since 0.2.1
   def validate!; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
   def value; end
+
+  # Returns a hash code for the value.
+  #
+  # @return [Integer]
   def value_hash; end
 
   protected
 
+  # @overload
   def method_missing(name, *args); end
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   class << self
+    # Return Hash mapping from datatype URI to class
+    #
+    # @private
     def datatype_map; end
+
+    # Return datatype class for uri, or nil if none is found
+    #
+    # @private
     def datatyped_class(uri); end
+
+    # @private
+    # @return [void]
     def inherited(child); end
+
+    # @private
+    # @raise [ArgumentError]
     def new(value, language: T.unsafe(nil), datatype: T.unsafe(nil), lexical: T.unsafe(nil), validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
   end
 end
 
+# A boolean literal.
+#
+# @see http://www.w3.org/TR/xmlschema11-2/#boolean
+# @since 0.2.1
 class RDF::Literal::Boolean < ::RDF::Literal
+  # @param value [String, Boolean]
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @return [Boolean] a new instance of Boolean
+  # @since 0.2.1
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Compares this literal to `other` for sorting purposes.
+  #
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @since 0.3.0
   def <=>(other); end
+
+  # Returns `true` if this literal is equivalent to `other`.
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ==(other); end
+
+  # Converts this literal into its canonical lexical representation.
+  #
+  # @return [RDF::Literal] `self`
+  # @see http://www.w3.org/TR/xmlschema11-2/#boolean-canonical-representation
+  # @since 0.2.1
   def canonicalize!; end
+
+  # Returns `true` if this value is `false`.
+  #
+  # @return [Boolean]
+  # @since 0.2.1
   def false?; end
+
+  # Returns a developer-friendly representation of `self`.
+  #
+  # @return [String]
+  # @since 0.2.1
   def inspect; end
+
+  # Returns the value as an integer.
+  #
+  # @return [Integer] `0` or `1`
+  # @since 0.3.0
   def to_i; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
+  # @since 0.2.1
   def to_s; end
+
+  # Returns `true` if this value is `true`.
+  #
+  # @return [Boolean]
+  # @since 0.2.1
   def true?; end
 end
 
+# @since 0.2.1
 RDF::Literal::Boolean::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# @since 0.2.1
 RDF::Literal::Boolean::FALSES = T.let(T.unsafe(nil), Array)
+
+# @since 0.2.1
 RDF::Literal::Boolean::GRAMMAR = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.2.1
 RDF::Literal::Boolean::TRUES = T.let(T.unsafe(nil), Array)
 
+# A date literal.
+#
+# @see http://www.w3.org/TR/xmlschema11-2/#date
+# @since 0.2.1
 class RDF::Literal::Date < ::RDF::Literal::Temporal
+  # Internally, a `Date` is represented using a native `::DateTime` object at midnight. If initialized from a `::Date`, there is no timezone component, If initialized from a `::DateTime`, the timezone is taken from that native object, otherwise, a timezone (or no timezone) is taken from the string representation having a matching `zzzzzz` component.
+  #
+  # @note If initialized using the `#to_datetime` method, time component is unchanged. Otherewise, it is set to 00:00 (midnight).
+  # @param value [String, Date, #to_datetime]
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @param datatype [URI] (nil)
+  # @return [Date] a new instance of Date
+  # @since 0.2.1
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Returns a human-readable value for the literal
+  #
+  # @return [String]
+  # @since 1.1.6
   def humanize(lang = T.unsafe(nil)); end
 end
 
+# @since 0.2.1
 RDF::Literal::Date::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# @since 0.2.1
 RDF::Literal::Date::FORMAT = T.let(T.unsafe(nil), String)
+
+# @since 0.2.1
 RDF::Literal::Date::GRAMMAR = T.let(T.unsafe(nil), Regexp)
 
+# A date/time literal.
+#
+# @see http://www.w3.org/TR/xmlschema11-2/#dateTime
+# @since 0.2.1
 class RDF::Literal::DateTime < ::RDF::Literal::Temporal
+  # Internally, a `DateTime` is represented using a native `::DateTime`. If initialized from a `::Date`, there is no timezone component, If initialized from a `::DateTime`, the timezone is taken from that native object, otherwise, a timezone (or no timezone) is taken from the string representation having a matching `zzzzzz` component.
+  #
+  # @option options
+  # @param value [DateTime]
+  # @param options [Hash] a customizable set of options
+  # @return [DateTime] a new instance of DateTime
+  # @since 0.2.1
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Returns a human-readable value for the literal
+  #
+  # @return [String]
+  # @since 1.1.6
   def humanize(lang = T.unsafe(nil)); end
 end
 
+# @since 0.2.1
 RDF::Literal::DateTime::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# @since 0.2.1
 RDF::Literal::DateTime::FORMAT = T.let(T.unsafe(nil), String)
+
+# @since 0.2.1
 RDF::Literal::DateTime::GRAMMAR = T.let(T.unsafe(nil), Regexp)
 
+# A decimal literal.
+#
+# @example Arithmetic with decimal literals
+#   RDF::Literal(BigDecimal('1.0')) + 0.5   #=> RDF::Literal(BigDecimal('1.5'))
+#   RDF::Literal(BigDecimal('1.0')) - 0.5   #=> RDF::Literal(BigDecimal('0.5'))
+#   RDF::Literal(BigDecimal('1.0')) * 0.5   #=> RDF::Literal(BigDecimal('0.5'))
+#   RDF::Literal(BigDecimal('1.0')) / 0.5   #=> RDF::Literal(BigDecimal('2.0'))
+# @see http://www.w3.org/TR/xmlschema11-2/#decimal
+# @since 0.2.1
 class RDF::Literal::Decimal < ::RDF::Literal::Numeric
+  # @param value [String, BidDecimal, Numeric]
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @return [Decimal] a new instance of Decimal
+  # @since 0.2.1
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Returns the absolute value of `self`.
+  #
+  # From the XQuery function [fn:abs](https://www.w3.org/TR/xpath-functions/#func-abs).
+  #
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-abs
+  # @since 0.2.3
   def abs; end
+
+  # Converts this literal into its canonical lexical representation.
+  #
+  # @return [RDF::Literal] `self`
+  # @see http://www.w3.org/TR/xmlschema11-2/#decimal
+  # @since 0.2.1
   def canonicalize!; end
+
+  # Returns the smallest integer greater than or equal to `self`.
+  #
+  # From the XQuery function [fn:ceil](https://www.w3.org/TR/xpath-functions/#func-ceil).
+  #
+  # @example
+  #   RDF::Literal(1).ceil            #=> RDF::Literal(1)
+  # @return [RDF::Literal::Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-ceil
+  # @since 0.2.1
   def ceil; end
+
+  # Returns the largest integer less than or equal to `self`.
+  #
+  # From the XQuery function [fn:floor](https://www.w3.org/TR/xpath-functions/#func-floor).
+  #
+  # @example
+  #   RDF::Literal(1).floor            #=> RDF::Literal(1)
+  # @return [RDF::Literal::Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-floor
+  # @since 0.2.1
   def floor; end
+
+  # Returns `self` if the value is not zero, `nil` otherwise.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def nonzero?; end
+
+  # Returns the number with no fractional part that is closest to the argument. If there are two such numbers, then the one that is closest to positive infinity is returned. An error is raised if arg is not a numeric value.
+  #
+  # From the XQuery function [fn:round](https://www.w3.org/TR/xpath-functions/#func-round).
+  #
+  # @return [RDF::Literal::Decimal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-round
+  # @since 0.2.1
   def round; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
+  # @see BigDecimal#to_s
+  # @since 0.2.1
   def to_s; end
+
+  # Returns `true` if the value is zero.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def zero?; end
 end
 
+# @since 0.2.1
 RDF::Literal::Decimal::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# @since 0.2.1
 RDF::Literal::Decimal::GRAMMAR = T.let(T.unsafe(nil), Regexp)
 
+# An floating point number literal.
+#
+# @example Arithmetic with floating point literals
+#   RDF::Literal(1.0) + 0.5                 #=> RDF::Literal(1.5)
+#   RDF::Literal(3.0) - 6                   #=> RDF::Literal(-3.0)
+#   RDF::Literal(Math::PI) * 2              #=> RDF::Literal(Math::PI * 2)
+#   RDF::Literal(Math::PI) / 2              #=> RDF::Literal(Math::PI / 2)
+# @see http://www.w3.org/TR/xmlschema11-2/#double
+# @since 0.2.1
 class RDF::Literal::Double < ::RDF::Literal::Numeric
+  # @param value [String, Float, #to_f]
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @return [Double] a new instance of Double
+  # @since 0.2.1
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Compares this literal to `other` for sorting purposes.
+  #
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @since 0.3.0
   def <=>(other); end
+
+  # Returns `true` if this literal is equal to `other`.
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ==(other); end
+
+  # Returns the absolute value of `self`.
+  #
+  # From the XQuery function [fn:abs](https://www.w3.org/TR/xpath-functions/#func-abs).
+  #
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-abs
+  # @since 0.2.3
   def abs; end
+
+  # Converts this literal into its canonical lexical representation.
+  #
+  # @return [RDF::Literal] `self`
+  # @see http://www.w3.org/TR/xmlschema11-2/#double
+  # @since 0.2.1
   def canonicalize!; end
+
+  # Returns the smallest integer greater than or equal to `self`.
+  #
+  # From the XQuery function [fn:ceil](https://www.w3.org/TR/xpath-functions/#func-ceil).
+  #
+  # @example
+  #   RDF::Literal(1.2).ceil            #=> RDF::Literal(2)
+  #   RDF::Literal(-1.2).ceil           #=> RDF::Literal(-1)
+  #   RDF::Literal(2.0).ceil            #=> RDF::Literal(2)
+  #   RDF::Literal(-2.0).ceil           #=> RDF::Literal(-2)
+  # @return [RDF::Literal::Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-ceil
+  # @since 0.2.3
   def ceil; end
+
+  # Returns `true` if the value is a valid IEEE floating point number (it
+  # is not infinite, and `nan?` is `false`).
+  #
+  # @example
+  #   RDF::Literal(-1.0).finite?        #=> true
+  #   RDF::Literal(1.0/0.0).finite?     #=> false
+  #   RDF::Literal(0.0/0.0).finite?     #=> false
+  # @return [Boolean]
+  # @since 0.2.3
   def finite?; end
+
+  # Returns the largest integer less than or equal to `self`.
+  #
+  # From the XQuery function [fn:floor](https://www.w3.org/TR/xpath-functions/#func-floor).
+  #
+  # @example
+  #   RDF::Literal(1.2).floor           #=> RDF::Literal(1)
+  #   RDF::Literal(-1.2).floor          #=> RDF::Literal(-2)
+  #   RDF::Literal(2.0).floor           #=> RDF::Literal(2)
+  #   RDF::Literal(-2.0).floor          #=> RDF::Literal(-2)
+  # @return [RDF::Literal::Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-floor
+  # @since 0.2.3
   def floor; end
+
+  # Returns `nil`, `-1`, or `+1` depending on whether the value is finite,
+  # `-INF`, or `+INF`.
+  #
+  # @example
+  #   RDF::Literal(0.0/0.0).infinite?   #=> nil
+  #   RDF::Literal(-1.0/0.0).infinite?  #=> -1
+  #   RDF::Literal(+1.0/0.0).infinite?  #=> 1
+  # @return [Integer]
+  # @since 0.2.3
   def infinite?; end
+
+  # Returns `true` if the value is an invalid IEEE floating point number.
+  #
+  # @example
+  #   RDF::Literal(-1.0).nan?           #=> false
+  #   RDF::Literal(1.0/0.0).nan?        #=> false
+  #   RDF::Literal(0.0/0.0).nan?        #=> true
+  # @return [Boolean]
+  # @since 0.2.3
   def nan?; end
+
+  # Returns `self` if the value is not zero, `nil` otherwise.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def nonzero?; end
+
+  # Returns the number with no fractional part that is closest to the argument. If there are two such numbers, then the one that is closest to positive infinity is returned. An error is raised if arg is not a numeric value.
+  #
+  # From the XQuery function [fn:round](https://www.w3.org/TR/xpath-functions/#func-round).
+  #
+  # @return [RDF::Literal::Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-round
+  # @since 0.2.1
   def round; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
+  # @since 0.2.1
   def to_s; end
+
   def to_sxp(**options); end
+
+  # Returns `true` if the value is zero.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def zero?; end
 end
 
+# @since 0.2.1
 RDF::Literal::Double::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# @since 0.2.1
 RDF::Literal::Double::GRAMMAR = T.let(T.unsafe(nil), Regexp)
+
+# Approximation of the mathematical constant π
+#
+# From the XQuery function [math:pi](https://www.w3.org/TR/xpath-functions/#func-math-pi).
+#
+# @return [Double]
+# @see https://www.w3.org/TR/xpath-functions/#func-math-pi
+# @since 0.2.1
 RDF::Literal::Double::PI = T.let(T.unsafe(nil), RDF::Literal::Double)
+
 RDF::Literal::FALSE = T.let(T.unsafe(nil), RDF::Literal::Boolean)
 
+# An integer literal.
+#
+# @example Arithmetic with integer literals
+#   RDF::Literal(40) + 2                    #=> RDF::Literal(42)
+#   RDF::Literal(45) - 3                    #=> RDF::Literal(42)
+#   RDF::Literal(6) * 7                     #=> RDF::Literal(42)
+#   RDF::Literal(84) / 2                    #=> RDF::Literal(42)
+# @see http://www.w3.org/TR/xmlschema11-2/#integer
+# @see http://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#integer
+# @since 0.2.1
 class RDF::Literal::Integer < ::RDF::Literal::Decimal
+  # @param value [String, Integer, #to_i]
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @return [Integer] a new instance of Integer
+  # @since 0.2.1
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Returns the absolute value of `self`.
+  #
+  # From the XQuery function [fn:abs](https://www.w3.org/TR/xpath-functions/#func-abs).
+  #
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-abs
+  # @since 0.2.3
   def abs; end
+
+  # Converts this literal into its canonical lexical representation.
+  #
+  # @return [RDF::Literal] `self`
+  # @see http://www.w3.org/TR/xmlschema11-2/#integer
+  # @since 0.2.1
   def canonicalize!; end
+
+  # Returns `true` if the value is even.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def even?; end
+
+  # Returns the successor value of `self`.
+  #
+  # @return [RDF::Literal]
+  # @since 0.2.3
   def next; end
+
+  # Returns `self` if the value is not zero, `nil` otherwise.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def nonzero?; end
+
+  # Returns `true` if the value is odd.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def odd?; end
+
+  # Returns the predecessor value of `self`.
+  #
+  # @return [RDF::Literal]
+  # @since 0.2.3
   def pred; end
+
+  # Returns `self`.
+  #
+  # From the XQuery function [fn:round](https://www.w3.org/TR/xpath-functions/#func-round).
+  #
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-round
+  # @since 0.2.1
   def round; end
+
+  # Returns the successor value of `self`.
+  #
+  # @return [RDF::Literal]
+  # @since 0.2.3
   def succ; end
+
+  # Returns the value as an `OpenSSL::BN` instance.
+  #
+  # @return [OpenSSL::BN]
+  # @see http://ruby-doc.org/stdlib/libdoc/openssl/rdoc/classes/OpenSSL/BN.html
+  # @since 0.2.4
   def to_bn; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
+  # @since 0.2.1
   def to_s; end
+
+  # Returns `true` if the value is zero.
+  #
+  # @return [Boolean]
+  # @since 0.2.3
   def zero?; end
 end
 
+# @since 0.2.1
 RDF::Literal::Integer::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# @since 0.2.1
 RDF::Literal::Integer::GRAMMAR = T.let(T.unsafe(nil), Regexp)
 
+# Shared methods and class ancestry for numeric literal classes.
+#
+# @since 0.3.0
 class RDF::Literal::Numeric < ::RDF::Literal
+  # Exponent − Performs remainder of `self` divided by `other`.
+  #
+  # From the XQuery function [math:mod](https://www.w3.org/TR/xpath-functions/#func-numeric-mod).
+  #
+  # @param other [Literal::Numeric, #to_i, #to_f, #to_d]
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-numeric-mod
+  # @since 0.2.3
   def %(other); end
+
+  # Returns the product of `self` times `other`.
+  #
+  # From the XQuery function [op:numeric-multiply](https://www.w3.org/TR/xpath-functions/#func-numeric-multiply).
+  #
+  # @param other [Literal::Numeric, #to_i, #to_f, #to_d]
+  # @return [RDF::Literal::Numeric]
+  # @see http://www.w3.org/TR/xpath-functions/#func-numeric-multiply
+  # @since 0.2.3
   def *(other); end
+
+  # Exponent − Performs exponential (power) calculation on operators.
+  #
+  # Promotes values, as necessary, with the result type depending on the input values.
+  #
+  # From the XQuery function [math:pow](https://www.w3.org/TR/xpath-functions/#func-numeric-pow).
+  #
+  # @param other [Literal::Numeric, #to_i, #to_f, #to_d]
+  # @return [RDF::Literal::Numeric]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-pow
+  # @since 0.2.3
   def **(other); end
+
+  # Returns the sum of `self` plus `other`.
+  #
+  # From the XQuery function [op:numeric-add](https://www.w3.org/TR/xpath-functions/#func-numeric-add).
+  #
+  # @note For `xs:float` or `xs:double` values, if one of the operands is a zero or a finite number and the other is `INF` or `-INF`, `INF` or `-INF` is returned. If both operands are `INF`, `INF` is returned. If both operands are `-INF`, `-INF` is returned. If one of the operands is `INF` and the other is `-INF`, `NaN` is returned.
+  # @param other [Literal::Numeric, #to_i, #to_f, #to_d]
+  # @return [RDF::Literal::Numeric]
+  # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
+  # @since 0.2.3
   def +(other); end
+
+  # Returns `self`.
+  #
+  # @return [RDF::Literal::Numeric]
+  # @since 0.2.3
   def +@; end
+
+  # Returns the difference of `self` minus `other`.
+  #
+  # From the XQuery function [op:numeric-subtract](https://www.w3.org/TR/xpath-functions/#func-numeric-subtract).
+  #
+  # @param other [Literal::Numeric, #to_i, #to_f, #to_d]
+  # @return [RDF::Literal::Numeric]
+  # @see http://www.w3.org/TR/xpath-functions/#func-numeric-subtract
+  # @since 0.2.3
   def -(other); end
+
+  # Returns `self` negated.
+  #
+  # @return [RDF::Literal::Numeric]
+  # @since 0.2.3
   def -@; end
+
+  # Returns the quotient of `self` divided by `other`.
+  #
+  # As a special case, if the types of both $arg1 and $arg2 are xsd:integer,
+  # then the return type is xsd:decimal.
+  #
+  # From the XQuery function [op:numeric-divide](https://www.w3.org/TR/xpath-functions/#func-numeric-divide).
+  #
+  # @param other [Literal::Numeric, #to_i, #to_f, #to_d]
+  # @raise [ZeroDivisionError] if divided by zero
+  # @return [RDF::Literal::Numeric]
+  # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
+  # @since 0.2.3
   def /(other); end
+
+  # Compares this literal to `other` for sorting purposes.
+  #
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @since 0.3.0
   def <=>(other); end
+
+  # Returns `true` if this literal is equal to `other`.
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ==(other); end
+
+  # Returns the absolute value of `self`.
+  #
+  # From the XQuery function [fn:abs](https://www.w3.org/TR/xpath-functions/#func-abs).
+  #
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-abs
+  # @since 0.3.0
   def abs; end
+
+  # Returns the arc cosine of the argument.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-acos
+  # @since 0.3.0
   def acos; end
+
+  # Returns the arc sine of the argument.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-asin
+  # @since 0.3.0
   def asin; end
+
+  # Returns the arc tangent of the argument.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-atan
+  # @since 0.3.0
   def atan; end
+
+  # Returns the angle in radians subtended at the origin by the point on a plane with coordinates (x, y) and the positive x-axis.
+  #
+  # @param arg [#to_f]
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-atan2
+  # @since 0.3.0
   def atan2(arg); end
+
+  # Returns the smallest integer greater than or equal to `self`.
+  #
+  # From the XQuery function [fn:ceil](https://www.w3.org/TR/xpath-functions/#func-ceil).
+  #
+  # @example
+  #   RDF::Literal(1).ceil            #=> RDF::Literal(1)
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-ceil
+  # @since 0.3.0
   def ceil; end
+
+  # Returns the cosine of the argument. The argument is an angle in radians.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-cos
+  # @since 0.3.0
   def cos; end
+
+  # Returns the value of `e`<sup>`x`</sup>.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-exp
+  # @since 0.3.0
   def exp; end
+
+  # Returns the value of `10`<sup>`x`</sup>.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-exp10
+  # @since 0.3.0
   def exp10; end
+
+  # Returns the largest integer less than or equal to `self`.
+  #
+  # From the XQuery function [fn:floor](https://www.w3.org/TR/xpath-functions/#func-floor).
+  #
+  # @example
+  #   RDF::Literal(1).floor            #=> RDF::Literal(1)
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-floor
+  # @since 0.3.0
   def floor; end
+
+  # Returns the natural logarithm of the argument.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-log
+  # @since 0.3.0
   def log; end
+
+  # Returns the base-ten logarithm of the argument.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-log10
+  # @since 0.3.0
   def log10; end
+
+  # Returns the value as an integer.
+  #
+  # @return [Integer]
+  # @since 0.3.0
   def ord; end
+
+  # Returns the number with no fractional part that is closest to the argument. If there are two such numbers, then the one that is closest to positive infinity is returned. An error is raised if arg is not a numeric value.
+  #
+  # From the XQuery function [fn:round](https://www.w3.org/TR/xpath-functions/#func-round).
+  #
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-round
+  # @since 0.3.0
   def round; end
+
+  # Returns the sine of the argument. The argument is an angle in radians.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-sin
+  # @since 0.3.0
   def sin; end
+
+  # Returns the non-negative square root of the argument.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-sqrt
+  # @since 0.3.0
   def sqrt; end
+
+  # Returns the tangent of the argument. The argument is an angle in radians.
+  #
+  # @return [Double]
+  # @see https://www.w3.org/TR/xpath-functions/#func-math-tan
+  # @since 0.3.0
   def tan; end
+
+  # Returns the value as a decimal number.
+  #
+  # @return [BigDecimal]
+  # @since 0.3.0
   def to_d; end
+
+  # Returns the value as a floating point number.
+  #
+  # The usual accuracy limits and errors of binary float arithmetic apply.
+  #
+  # @return [Float]
+  # @see BigDecimal#to_f
+  # @since 0.3.0
   def to_f; end
+
+  # Returns the value as an integer.
+  #
+  # @return [Integer]
+  # @since 0.3.0
   def to_i; end
+
+  # Returns the value as an integer.
+  #
+  # @return [Integer]
+  # @since 0.3.0
   def to_int; end
+
+  # Returns the value as a rational number.
+  #
+  # @return [Rational]
+  # @since 0.3.0
   def to_r; end
 end
 
 RDF::Literal::TRUE = T.let(T.unsafe(nil), RDF::Literal::Boolean)
 
+# Shared methods and class ancestry for date, time, and dateTime literal classes.
+#
+# @since 3.1
 class RDF::Literal::Temporal < ::RDF::Literal
+  # Add a Duration to a Temporal.
+  #
+  # For YearMonthDuration, turns duration into months and adds to internal DateTime object.
+  #
+  # For DayTimeDuration, turns duration into rational days, and adds to internal DateTime object.
+  #
+  # @note This depends on the parameter responding to `#to_i` or `#to_r`, which for Duration types, is implemented in the rdf-xsd gem.
+  # @param other [YearMonthDuration, DayTimeDuration]
+  # @return [Temporal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-add-yearMonthDuration-to-dateTime
+  # @see https://www.w3.org/TR/xpath-functions/#func-add-dayTimeDuration-to-dateTime
+  # @since 3.1
   def +(other); end
+
+  # Subtract times or durations from a temporal.
+  #
+  # @overload +
+  # @since 3.1
   def -(other); end
+
+  # Compares this literal to `other` for sorting purposes.
+  #
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @since 3.1
   def <=>(other); end
+
+  # Returns `true` if this literal is equal to `other`.
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ==(other); end
+
+  # Functional version of `#adjust_to_timezone!`.
+  #
+  # @overload adjust_to_timezone
+  # @overload adjust_to_timezone
+  # @since 3.1
   def adjust_to_timezone(*args); end
+
+  # Adjust the timezone.
+  #
+  # From [fn:adjust-dateTime-to-timezone](https://www.w3.org/TR/xpath-functions/#func-adjust-dateTime-to-timezone)
+  #
+  # @overload adjust_to_timezone!
+  # @overload adjust_to_timezone!
+  # @see https://www.w3.org/TR/xpath-functions/#func-adjust-dateTime-to-timezone
+  # @since 3.1
   def adjust_to_timezone!(*args); end
+
+  # Converts this literal into its canonical lexical representation.
+  # with date and time normalized to UTC.
+  #
+  # @return [RDF::Literal] `self`
+  # @see http://www.w3.org/TR/xmlschema11-2/#dateTime
+  # @since 3.1
   def canonicalize!; end
+
+  # Days
+  #
+  # From the XQuery function [fn:day-from-dateTime](https://www.w3.org/TR/xpath-functions/#func-day-from-dateTime).
+  #
+  # @return [Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-day-from-dateTime
+  # @since 3.1
   def day; end
+
+  # Does the literal representation include millisectonds?
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def has_milliseconds?; end
+
+  # Does the literal representation include millisectonds?
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def has_ms?; end
+
+  # Does the literal representation include a timezone? Note that this is only possible if initialized using a string, or `:lexical` option.
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def has_timezone?; end
+
+  # Does the literal representation include a timezone? Note that this is only possible if initialized using a string, or `:lexical` option.
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def has_tz?; end
+
+  # Hours
+  #
+  # From the XQuery function [fn:hours-from-dateTime](https://www.w3.org/TR/xpath-functions/#func-hours-from-dateTime).
+  #
+  # @return [Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-hours-from-dateTime
+  # @since 3.1
   def hours; end
+
+  # Does the literal representation include millisectonds?
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def milliseconds?; end
+
+  # Minutes
+  #
+  # From the XQuery function [fn:minutes-from-dateTime](https://www.w3.org/TR/xpath-functions/#func-minutes-from-dateTime).
+  #
+  # @return [Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-minutes-from-dateTime
+  # @since 3.1
   def minutes; end
+
+  # Months
+  #
+  # From the XQuery function [fn:month-from-dateTime](https://www.w3.org/TR/xpath-functions/#func-month-from-dateTime).
+  #
+  # @return [Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-month-from-dateTime
+  # @since 3.1
   def month; end
+
+  # Does the literal representation include millisectonds?
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def ms?; end
+
+  # Seconds
+  #
+  # From the XQuery function [fn:seconds-from-dateTime](https://www.w3.org/TR/xpath-functions/#func-seconds-from-dateTime).
+  #
+  # @return [Decimal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-seconds-from-dateTime
+  # @since 3.1
   def seconds; end
+
+  # Returns the timezone part of arg as an xsd:dayTimeDuration, or `nil`
+  # if lexical form of literal does not include a timezone.
+  #
+  # From [fn:timezone-from-date](https://www.w3.org/TR/xpath-functions/#func-timezone-from-date).
+  #
+  # @return [RDF::Literal]
+  # @see https://www.w3.org/TR/xpath-functions/#func-timezone-from-date
+  # @since 3.1
   def timezone; end
+
+  # Does the literal representation include a timezone? Note that this is only possible if initialized using a string, or `:lexical` option.
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def timezone?; end
+
+  # Returns the `timezone` of the literal. If the
+  #
+  # Returns the value as a string.
+  #
+  # @return [String]
+  # @since 3.1
   def to_s; end
+
+  # Returns the timezone part of arg as a simple literal. Returns the empty string if there is no timezone.
+  #
+  # @return [RDF::Literal]
+  # @since 3.1
   def tz; end
+
+  # Does the literal representation include a timezone? Note that this is only possible if initialized using a string, or `:lexical` option.
+  #
+  # @return [Boolean]
+  # @since 1.1.6
   def tz?; end
+
+  # Returns `true` if the value adheres to the defined grammar of the
+  # datatype.
+  #
+  # Special case for date and dateTime, for which '0000' is not a valid year
+  #
+  # @return [Boolean]
+  # @since 0.2.1
   def valid?; end
+
+  # Years
+  #
+  # From the XQuery function [fn:year-from-dateTime](https://www.w3.org/TR/xpath-functions/#func-year-from-dateTime).
+  #
+  # @return [Integer]
+  # @see https://www.w3.org/TR/xpath-functions/#func-year-from-dateTime
+  # @since 3.1
   def year; end
 end
 
+# Matches either -10:00 or -P1H0M forms
+#
+# @since 3.1
 RDF::Literal::Temporal::ZONE_GRAMMAR = T.let(T.unsafe(nil), Regexp)
 
+# A time literal.
+#
+# The lexical representation for time is the left truncated lexical
+# representation for `xsd:dateTime`: "hh:mm:ss.sss" with an optional
+# following time zone indicator.
+#
+# @see http://www.w3.org/TR/xmlschema11-2/#time
+# @since 0.2.1
 class RDF::Literal::Time < ::RDF::Literal::Temporal
+  # Internally, a `DateTime` is represented using a native `::DateTime`. If initialized from a `::DateTime`, the timezone is taken from that native object, otherwise, a timezone (or no timezone) is taken from the string representation having a matching `zzzzzz` component.
+  #
+  # @param value [String, DateTime, #to_datetime]
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @return [Time] a new instance of Time
+  # @since 0.2.1
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Returns a human-readable value for the literal
+  #
+  # @return [String]
+  # @since 1.1.6
   def humanize(lang = T.unsafe(nil)); end
 end
 
+# @since 0.2.1
 RDF::Literal::Time::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# @since 0.2.1
 RDF::Literal::Time::FORMAT = T.let(T.unsafe(nil), String)
+
+# @since 0.2.1
 RDF::Literal::Time::GRAMMAR = T.let(T.unsafe(nil), Regexp)
 
+# A token literal.
+#
+# @see http://www.w3.org/TR/xmlschema11-2/#token
+# @since 0.2.3
 class RDF::Literal::Token < ::RDF::Literal
+  # @param value [String, Symbol, #to_sym]
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @return [Token] a new instance of Token
+  # @since 0.2.3
   def initialize(value, datatype: T.unsafe(nil), lexical: T.unsafe(nil), **options); end
 
+  # Converts this literal into its canonical lexical representation.
+  #
+  # @return [RDF::Literal] `self`
+  # @see http://www.w3.org/TR/xmlschema11-2/#boolean
+  # @since 0.2.3
   def canonicalize!; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
+  # @since 0.2.3
   def to_s; end
+
+  # Returns the value as a symbol.
+  #
+  # @return [Symbol]
+  # @since 0.2.3
   def to_sym; end
 end
 
+# @since 0.2.3
 RDF::Literal::Token::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
+
+# FIXME
+#
+# @since 0.2.3
 RDF::Literal::Token::GRAMMAR = T.let(T.unsafe(nil), Regexp)
+
 RDF::Literal::ZERO = T.let(T.unsafe(nil), RDF::Literal::Integer)
 
+# Classes that include this module must implement the methods
+# `#insert_statement`, `#delete_statement` and `#each_statement`.
+#
+# @see RDF::Graph
+# @see RDF::Repository
 module RDF::Mutable
   include ::RDF::Readable
   include ::RDF::Util::Coercions
   include ::RDF::Writable
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Inserts RDF data into `self`.
+  #
+  # @param data [RDF::Enumerable, RDF::Statement, #to_rdf]
+  # @raise [TypeError] if `self` is immutable
+  # @return [Mutable]
+  # @see RDF::Writable#<<
   def <<(data); end
+
+  # Applies the given changeset
+  #
+  # If `#supports?(:atomic_write)` is `true`, this must apply the changeset
+  # atomically. Otherwise, it should offer an efficient implementation of a
+  # combined delete/insert of the changeset.
+  #
+  # @param changeset [RDF::Changeset] the changeset to apply
+  # @return [Boolean] true if the changeset has been applied
   def apply_changeset(changeset); end
+
+  # Deletes all RDF statements from `self`.
+  #
+  # @raise [TypeError] if `self` is immutable
+  # @return [Mutable]
   def clear; end
+
+  # Deletes all RDF statements from `self`.
+  #
+  # @raise [TypeError] if `self` is immutable
+  # @return [Mutable]
   def clear!(*args, &block); end
+
+  # Deletes RDF statements from `self`.
+  # If any statement contains a {Query::Variable}, it is
+  # considered to be a pattern, and used to query
+  # self to find matching statements to delete.
+  #
+  # significantly affects performance. Use Enumerator form for large
+  # numbers of statements.
+  #
+  # @note using splat argument syntax with excessive arguments provided
+  # @overload delete
+  # @overload delete
+  # @raise [TypeError]
   def delete(*statements); end
+
+  # Deletes RDF statements from `self`.
+  # If any statement contains a {Query::Variable}, it is
+  # considered to be a pattern, and used to query
+  # self to find matching statements to delete.
+  #
+  # significantly affects performance. Use Enumerator form for large
+  # numbers of statements.
+  #
+  # @note using splat argument syntax with excessive arguments provided
+  # @overload delete
+  # @overload delete
+  # @raise [TypeError]
   def delete!(*args, &block); end
+
+  # Performs a set of deletes and inserts as a combined operation.
+  #
+  # @note in the base implementation, this is equivalent to calling `#delete`
+  #   and `#insert` sequentially. This method is preferred to take advantage
+  #   of (e.g.) `RDF::Repositories` that can execute the operation in a single
+  #   request.
+  # @param deletes [Enumerable<RDF::Statement>, Array<RDF::Statement>]
+  # @param inserts [Enumerable<RDF::Statement>, Array<RDF::Statement>]
+  # @raise [TypeError] if `self` is immutable
+  # @return [Mutable] self
+  # @see #delete
+  # @see #insert
   def delete_insert(deletes, inserts); end
+
+  # Performs a set of deletes and inserts as a combined operation.
+  #
+  # @note in the base implementation, this is equivalent to calling `#delete`
+  #   and `#insert` sequentially. This method is preferred to take advantage
+  #   of (e.g.) `RDF::Repositories` that can execute the operation in a single
+  #   request.
+  # @param deletes [Enumerable<RDF::Statement>, Array<RDF::Statement>]
+  # @param inserts [Enumerable<RDF::Statement>, Array<RDF::Statement>]
+  # @raise [TypeError] if `self` is immutable
+  # @return [Mutable] self
+  # @see #delete
+  # @see #insert
   def delete_insert!(*args, &block); end
+
+  # Returns `true` if `self` is immutable.
+  #
+  # @return [Boolean]
+  # @see #mutable?
   def immutable?; end
+
+  # Inserts RDF statements into `self`.
+  #
+  # significantly affects performance. Use Enumerator form for large
+  # numbers of statements.
+  #
+  # @note using splat argument syntax with excessive arguments provided
+  # @overload insert
+  # @overload insert
+  # @raise [TypeError]
+  # @see RDF::Writable#insert
   def insert(*statements); end
+
+  # Loads RDF statements from the given file or URL into `self`.
+  #
+  # @option options
+  # @param url [String, #to_s]
+  # @param options [Hash{Symbol => Object}] Options from {RDF::Reader.open}
+  # @raise [TypeError]
+  # @return [void]
   def load(url, graph_name: T.unsafe(nil), **options); end
+
+  # Loads RDF statements from the given file or URL into `self`.
+  #
+  # @option options
+  # @param url [String, #to_s]
+  # @param options [Hash{Symbol => Object}] Options from {RDF::Reader.open}
+  # @raise [TypeError]
+  # @return [void]
   def load!(*args, &block); end
+
+  # @overload
   def method_missing(meth, *args); end
+
+  # Returns `true` if `self` is mutable.
+  #
+  # @return [Boolean]
+  # @see #immutable?
   def mutable?; end
+
+  # A readable & queryable snapshot of the repository for isolated reads.
+  #
+  # This method must be implemented when `#supports(:snapshots)` is `true`.
+  #
+  # @raise [NotImplementederror] when snapshots aren't implemented for the
+  #   class
+  # @return [Dataset] an immutable Dataset containing a current snapshot of
+  #   the Repository contents.
   def snapshot; end
+
+  # Updates RDF statements in `self`.
+  #
+  # `#update([subject, predicate, object])` is equivalent to
+  # `#delete([subject, predicate, nil])` followed by
+  # `#insert([subject, predicate, object])` unless `object` is `nil`.
+  #
+  # significantly affects performance. Use Enumerator form for large
+  # numbers of statements.
+  #
+  # @note using splat argument syntax with excessive arguments provided
+  # @overload update
+  # @overload update
+  # @raise [TypeError]
   def update(*statements); end
+
+  # Updates RDF statements in `self`.
+  #
+  # `#update([subject, predicate, object])` is equivalent to
+  # `#delete([subject, predicate, nil])` followed by
+  # `#insert([subject, predicate, object])` unless `object` is `nil`.
+  #
+  # significantly affects performance. Use Enumerator form for large
+  # numbers of statements.
+  #
+  # @note using splat argument syntax with excessive arguments provided
+  # @overload update
+  # @overload update
+  # @raise [TypeError]
   def update!(*args, &block); end
 
   protected
 
+  # Deletes an RDF statement from the underlying storage.
+  #
+  # Subclasses of {RDF::Repository} must implement this method, except if
+  # they are immutable.
+  #
+  # @abstract
+  # @param statement [RDF::Statement]
+  # @raise [NotImplementedError]
+  # @return [void]
   def delete_statement(statement); end
+
+  # Deletes the given RDF statements from the underlying storage.
+  #
+  # Defaults to invoking {RDF::Mutable#delete_statement} for each given statement.
+  #
+  # Subclasses of {RDF::Repository} may wish to override this method if
+  # they are capable of more efficiently deleting multiple statements at
+  # once.
+  #
+  # @param statements [RDF::Enumerable]
+  # @return [void]
   def delete_statements(statements); end
 
   private
 
+  # @note this instantiates an entire reader; it could probably be done more
+  #   efficiently by refactoring `RDF::Reader` and/or `RDF::Format` to expose
+  #   a list of valid format symbols.
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+# **`RDF::NQuads`** provides support for the N-Quads serialization format.
+#
+# This has not yet been implemented as of RDF.rb 0.3.x.
 module RDF::NQuads
   include ::RDF::NTriples
 
   class << self
+    # Returns the serialized N-Triples representation of the given RDF
+    # value.
+    #
+    # @param value [RDF::Value]
+    # @return [String]
+    # @see RDF::NTriples::Writer.serialize
+    # @since 0.1.5
     def serialize(value); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @param data [String]
+    # @return [RDF::Value]
+    # @see RDF::NTriples::Reader.unserialize
+    # @since 0.1.5
     def unserialize(data); end
   end
 end
 
+# N-Quads format specification.
+#
+# @example Obtaining an NQuads format class
+#   RDF::Format.for(:nquads)     #=> RDF::NQuads::Format
+#   RDF::Format.for("etc/doap.nq")
+#   RDF::Format.for(file_name:      "etc/doap.nq")
+#   RDF::Format.for(file_extension: "nq")
+#   RDF::Format.for(content_type:   "application/n-quads")
+# @see http://www.w3.org/TR/n-quads/
+# @since 0.4.0
 class RDF::NQuads::Format < ::RDF::Format
   class << self
+    # Sample detection to see if it matches N-Quads (or N-Triples)
+    #
+    # Use a text sample to detect the format of an input file. Sub-classes implement
+    # a matcher sufficient to detect probably format matches, including disambiguating
+    # between other similar formats.
+    #
+    # @param sample [String] Beginning several bytes (about 1K) of input.
+    # @return [Boolean]
+    # @since 0.4.0
     def detect(sample); end
+
+    # Human readable name for this format
+    #
+    # @since 0.4.0
     def name; end
   end
 end
 
 class RDF::NQuads::Reader < ::RDF::NTriples::Reader
+  # Read a Quad, where the graph_name is optional
+  #
+  # @return [Array]
+  # @see http://sw.deri.org/2008/07/n-quads/#grammar
+  # @since 0.4.0
   def read_triple; end
 end
 
+# Reader
 class RDF::NQuads::Writer < ::RDF::NTriples::Writer
+  # Returns the N-Triples representation of a triple.
+  #
+  # @param subject [RDF::Resource]
+  # @param predicate [RDF::URI]
+  # @param object [RDF::Term]
+  # @param graph_name [RDF::Term]
+  # @param options [Hash{Symbol => Object}] = ({})
+  # @return [String]
   def format_quad(subject, predicate, object, graph_name, **options); end
+
+  # Returns the N-Quads representation of a statement.
+  #
+  # @param statement [RDF::Statement]
+  # @param options [Hash{Symbol => Object}] = ({})
+  # @return [String]
+  # @since 0.4.0
   def format_statement(statement, **options); end
+
+  # Outputs the N-Quads representation of a statement.
+  #
+  # @param subject [RDF::Resource]
+  # @param predicate [RDF::URI]
+  # @param object [RDF::Term]
+  # @return [void]
   def write_quad(subject, predicate, object, graph_name); end
 end
 
+# **`RDF::NTriples`** provides support for the N-Triples serialization
+# format.
+#
+# N-Triples is a line-based plain-text format for encoding an RDF graph.
+# It is a very restricted, explicit and well-defined subset of both
+# [Turtle](http://www.w3.org/TeamSubmission/turtle/) and
+# [Notation3](http://www.w3.org/TeamSubmission/n3/) (N3).
+#
+# The MIME content type for N-Triples files is `text/plain` and the
+# recommended file extension is `.nt`.
+#
+# An example of an RDF statement in N-Triples format:
+#
+#     <https://rubygems.org/gems/rdf> <http://purl.org/dc/terms/title> "rdf" .
+#
+# ## RDFStar (RDF*)
+#
+# Supports statements as resources using `<<s p o>>`.
+#
+# ## Installation
+#
+# This is the only RDF serialization format that is directly supported by
+# RDF.rb. Support for other formats is available in the form of add-on
+# gems, e.g. 'rdf-xml' or 'rdf-json'.
+#
+# ## Documentation
+#
+# * {RDF::NTriples::Format}
+# * {RDF::NTriples::Reader}
+# * {RDF::NTriples::Writer}
+#
+# @author [Arto Bendiken](http://ar.to/)
+# @example Requiring the `RDF::NTriples` module explicitly
+#   require 'rdf/ntriples'
+# @see http://www.w3.org/TR/n-triples/
+# @see http://en.wikipedia.org/wiki/N-Triples
 module RDF::NTriples
   class << self
+    # @param string [String]
+    # @return [String]
+    # @see RDF::NTriples::Writer.escape
+    # @since 0.2.2
     def escape(string); end
+
+    # Returns the serialized N-Triples representation of the given RDF
+    # value.
+    #
+    # @param value [RDF::Value]
+    # @return [String]
+    # @see RDF::NTriples::Writer.serialize
+    # @since 0.1.5
     def serialize(value); end
+
+    # @param string [String]
+    # @return [String]
+    # @see RDF::NTriples::Reader.unescape
+    # @since 0.2.2
     def unescape(string); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @param data [String]
+    # @return [RDF::Value]
+    # @see RDF::NTriples::Reader.unserialize
+    # @since 0.1.5
     def unserialize(data); end
   end
 end
 
+# N-Triples format specification.
+#
+# Note: Latest standards activities treat N-Triples as a subset
+# of Turtle. This includes application/n-triples mime type and a
+# new default encoding of utf-8.
+#
+# @example Obtaining an NTriples format class
+#   RDF::Format.for(:ntriples)     #=> RDF::NTriples::Format
+#   RDF::Format.for("etc/doap.nt")
+#   RDF::Format.for(file_name:      "etc/doap.nt")
+#   RDF::Format.for(file_extension: "nt")
+#   RDF::Format.for(content_type:   "application/n-triples")
+# @see http://www.w3.org/TR/rdf-testcases/#ntriples
+# @see http://www.w3.org/TR/n-triples/
 class RDF::NTriples::Format < ::RDF::Format
   class << self
+    # Sample detection to see if it matches N-Triples
+    #
+    # Use a text sample to detect the format of an input file. Sub-classes implement
+    # a matcher sufficient to detect probably format matches, including disambiguating
+    # between other similar formats.
+    #
+    # @param sample [String] Beginning several bytes (about 1K) of input.
+    # @return [Boolean]
     def detect(sample); end
+
+    # Human readable name for this format
     def name; end
   end
 end
 
+# N-Triples parser.
+#
+# ** RDFStar (RDF*)
+#
+# Supports statements as resources using `<<s p o>>`.
+#
+# @example Obtaining an NTriples reader class
+#   RDF::Reader.for(:ntriples)     #=> RDF::NTriples::Reader
+#   RDF::Reader.for("etc/doap.nt")
+#   RDF::Reader.for(file_name:      "etc/doap.nt")
+#   RDF::Reader.for(file_extension: "nt")
+#   RDF::Reader.for(content_type:   "application/n-triples")
+# @example Parsing RDF statements from an NTriples file
+#   RDF::NTriples::Reader.open("etc/doap.nt") do |reader|
+#   reader.each_statement do |statement|
+#   puts statement.inspect
+#   end
+#   end
+# @example Parsing RDF statements from an NTriples string
+#   data = StringIO.new(File.read("etc/doap.nt"))
+#   RDF::NTriples::Reader.new(data) do |reader|
+#   reader.each_statement do |statement|
+#   puts statement.inspect
+#   end
+#   end
+# @see http://www.w3.org/TR/rdf-testcases/#ntriples
+# @see http://www.w3.org/TR/n-triples/
 class RDF::NTriples::Reader < ::RDF::Reader
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/rdf-testcases/#ntrip_grammar (comment)
   def read_comment; end
+
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/rdf-testcases/#ntrip_grammar (triple)
   def read_eos; end
+
+  # @return [RDF::Literal]
+  # @see http://www.w3.org/TR/rdf-testcases/#ntrip_grammar (literal)
   def read_literal; end
+
+  # @return [RDF::Node]
+  # @see http://www.w3.org/TR/rdf-testcases/#ntrip_grammar (nodeID)
   def read_node; end
+
+  # @return [RDF::Statement]
   def read_quotedTriple; end
+
+  # @return [Array]
+  # @see http://www.w3.org/TR/rdf-testcases/#ntrip_grammar
   def read_triple; end
+
+  # @param intern [Boolean] (false) Use Interned Node
+  # @return [RDF::URI]
+  # @see http://www.w3.org/TR/rdf-testcases/#ntrip_grammar (uriref)
   def read_uriref(intern: T.unsafe(nil), **options); end
+
+  # @return [RDF::Term]
   def read_value; end
 
   class << self
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @option options
+    # @param input [String]
+    # @param options [{Symbol => Object}] From {RDF::Reader#initialize}
+    # @return [RDF::Term]
+    # @return [RDF::Literal]
     def parse_literal(input, **options); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @option options
+    # @param input [String]
+    # @param options [{Symbol => Object}] From {RDF::Reader#initialize}
+    # @return [RDF::Term]
+    # @return [RDF::Node]
     def parse_node(input, **options); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @option options
+    # @param input [String]
+    # @param options [{Symbol => Object}] From {RDF::Reader#initialize}
+    # @return [RDF::Term]
     def parse_object(input, **options); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @option options
+    # @param input [String]
+    # @param options [{Symbol => Object}] From {RDF::Reader#initialize}
+    # @return [RDF::Term]
+    # @return [RDF::URI]
     def parse_predicate(input, **options); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @option options
+    # @param input [String]
+    # @param options [{Symbol => Object}] From {RDF::Reader#initialize}
+    # @return [RDF::Term]
+    # @return [RDF::Resource]
     def parse_subject(input, **options); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @option options
+    # @param input [String]
+    # @param options [{Symbol => Object}] From {RDF::Reader#initialize}
+    # @param intern [Boolean] (false) Use Interned URI
+    # @return [RDF::Term]
+    # @return [RDF::URI]
     def parse_uri(input, intern: T.unsafe(nil), **options); end
+
+    # @param string [String]
+    # @return [String]
+    # @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
+    # @see http://blog.grayproductions.net/articles/understanding_m17n
+    # @see http://yehudakatz.com/2010/05/17/encodings-unabridged/
     def unescape(string); end
+
+    # Reconstructs an RDF value from its serialized N-Triples
+    # representation.
+    #
+    # @option options
+    # @param input [String]
+    # @param options [{Symbol => Object}] From {RDF::Reader#initialize}
+    # @return [RDF::Term]
     def unserialize(input, **options); end
   end
 end
 
+# 141s
 RDF::NTriples::Reader::BLANK_NODE_LABEL = T.let(T.unsafe(nil), Regexp)
+
+# @see http://www.w3.org/TR/rdf-testcases/#ntrip_grammar
 RDF::NTriples::Reader::COMMENT = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::DATATYPE_URI = T.let(T.unsafe(nil), Regexp)
+
+# 159s
 RDF::NTriples::Reader::ECHAR = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::END_OF_STATEMENT = T.let(T.unsafe(nil), Regexp)
+
+# @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
 RDF::NTriples::Reader::ESCAPE_CHARS = T.let(T.unsafe(nil), Array)
+
+# cache constants to optimize escaping the escape chars in self.unescape
 RDF::NTriples::Reader::ESCAPE_CHARS_ESCAPED = T.let(T.unsafe(nil), Hash)
+
 RDF::NTriples::Reader::ESCAPE_CHARS_ESCAPED_REGEXP = T.let(T.unsafe(nil), Regexp)
+
+# 18
 RDF::NTriples::Reader::IRIREF = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::IRI_RANGE = T.let(T.unsafe(nil), Regexp)
+
+# 144s
 RDF::NTriples::Reader::LANGTAG = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::LITERAL = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::LITERAL_PLAIN = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::LITERAL_WITH_DATATYPE = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::LITERAL_WITH_LANGUAGE = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::NODEID = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::OBJECT = T.let(T.unsafe(nil), Regexp)
+
+# 166s
 RDF::NTriples::Reader::PN_CHARS = T.let(T.unsafe(nil), Regexp)
+
+# 163s
 RDF::NTriples::Reader::PN_CHARS_BASE = T.let(T.unsafe(nil), Regexp)
+
+# 164s
 RDF::NTriples::Reader::PN_CHARS_U = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::PREDICATE = T.let(T.unsafe(nil), Regexp)
+
+# 22
 RDF::NTriples::Reader::STRING_LITERAL_QUOTE = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::ST_END = T.let(T.unsafe(nil), Regexp)
+
+# RDF*
 RDF::NTriples::Reader::ST_START = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::SUBJECT = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::UCHAR = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::UCHAR4 = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::UCHAR8 = T.let(T.unsafe(nil), Regexp)
 RDF::NTriples::Reader::URIREF = T.let(T.unsafe(nil), Regexp)
+
+# Terminals from rdf-turtle.
+#
+# Unicode regular expressions.
+#
+# @see http://www.w3.org/TR/n-triples/
+# @see http://www.w3.org/TR/turtle/
 RDF::NTriples::Reader::U_CHARS1 = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Reader::U_CHARS2 = T.let(T.unsafe(nil), Regexp)
 
+# N-Triples serializer.
+#
+# Output is serialized for UTF-8, to serialize as ASCII
+# an option to {RDF::NTriples::Writer#initialize}.
+#
+# @example Obtaining an NTriples writer class
+#   RDF::Writer.for(:ntriples)     #=> RDF::NTriples::Writer
+#   RDF::Writer.for("etc/test.nt")
+#   RDF::Writer.for(file_name:      "etc/test.nt")
+#   RDF::Writer.for(file_extension: "nt")
+#   RDF::Writer.for(content_type:   "application/n-triples")
+# @example Serializing RDF statements into an NTriples file
+#   RDF::NTriples::Writer.open("etc/test.nt") do |writer|
+#   graph.each_statement do |statement|
+#   writer << statement
+#   end
+#   end
+# @example Serializing RDF statements into an NTriples string
+#   RDF::NTriples::Writer.buffer do |writer|
+#   graph.each_statement do |statement|
+#   writer << statement
+#   end
+#   end
+# @example Serializing RDF statements into an NTriples string with escaped UTF-8
+#   RDF::NTriples::Writer.buffer(encoding: Encoding::ASCII) do |writer|
+#   graph.each_statement do |statement|
+#   writer << statement
+#   end
+#   end
+# @see http://www.w3.org/TR/rdf-testcases/#ntriples
+# @see http://www.w3.org/TR/n-triples/
 class RDF::NTriples::Writer < ::RDF::Writer
+  # Initializes the writer.
+  #
+  # @param output [IO, File] the output stream
+  # @param validate [Boolean] (true)
+  #   whether to validate terms when serializing
+  # @param options [Hash{Symbol => Object}] ({})
+  #   any additional options. See {RDF::Writer#initialize}
+  # @return [Writer] a new instance of Writer
+  # @yield [writer] `self`
+  # @yieldparam writer [RDF::Writer]
+  # @yieldreturn [void]
   def initialize(output = T.unsafe(nil), validate: T.unsafe(nil), **options, &block); end
 
+  # @private
   def escaped(string); end
+
+  # Returns the N-Triples representation of a literal.
+  #
+  # @param literal [RDF::Literal, String, #to_s]
+  # @param options [Hash{Symbol => Object}] ({})
+  # @return [String]
   def format_literal(literal, **options); end
+
+  # Returns the N-Triples representation of a blank node.
+  #
+  # @param node [RDF::Node]
+  # @param unique_bnodes [Boolean] (false)
+  #   Serialize node using unique identifier, rather than any used to create the node.
+  # @param options [Hash{Symbol => Object}] ({})
+  # @return [String]
   def format_node(node, unique_bnodes: T.unsafe(nil), **options); end
+
+  # Returns the N-Triples representation of an RDF* reified statement.
+  #
+  # @param statement [RDF::Statement]
+  # @param options [Hash{Symbol => Object}] ({})
+  # @return [String]
   def format_quotedTriple(statement, **options); end
+
+  # Returns the N-Triples representation of a statement.
+  #
+  # @param statement [RDF::Statement]
+  # @param options [Hash{Symbol => Object}] ({})
+  # @return [String]
   def format_statement(statement, **options); end
+
+  # Returns the N-Triples representation of a triple.
+  #
+  # @param subject [RDF::Resource]
+  # @param predicate [RDF::URI]
+  # @param object [RDF::Term]
+  # @param options [Hash{Symbol => Object}] ({})
+  # @return [String]
   def format_triple(subject, predicate, object, **options); end
+
+  # Returns the N-Triples representation of a URI reference using write encoding.
+  #
+  # @param uri [RDF::URI]
+  # @param options [Hash{Symbol => Object}] ({})
+  # @return [String]
   def format_uri(uri, **options); end
+
+  # Outputs an N-Triples comment line.
+  #
+  # @param text [String]
+  # @return [void]
   def write_comment(text); end
+
+  # Outputs the N-Triples representation of a triple.
+  #
+  # @param subject [RDF::Resource]
+  # @param predicate [RDF::URI]
+  # @param object [RDF::Term]
+  # @return [void]
   def write_triple(subject, predicate, object); end
 
   class << self
+    # Escape Literal and URI content. If encoding is ASCII, all unicode
+    # is escaped, otherwise only ASCII characters that must be escaped are
+    # escaped.
+    #
+    # @param string [String]
+    # @param encoding [Encoding]
+    # @return [String]
+    # @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
     def escape(string, encoding = T.unsafe(nil)); end
+
+    # Standard ASCII escape sequences. If encoding is ASCII, use Test-Cases
+    # sequences, otherwise, assume the test-cases escape sequences. Otherwise,
+    # the N-Triples recommendation includes `\b` and `\f` escape sequences.
+    #
+    # Within STRING_LITERAL_QUOTE, only the characters `U+0022`, `U+005C`, `U+000A`, `U+000D` are encoded using `ECHAR`. `ECHAR` must not be used for characters that are allowed directly in STRING_LITERAL_QUOTE.
+    #
+    # @param u [Integer, #ord]
+    # @raise [ArgumentError] if `u` is not a valid Unicode codepoint
+    # @return [String]
+    # @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
+    # @see http://www.w3.org/TR/n-triples/
     def escape_ascii(u, encoding); end
+
+    # Escape ascii and unicode characters.
+    # If encoding is UTF_8, only ascii characters are escaped.
+    #
+    # @param u [Integer, #ord]
+    # @param encoding [Encoding]
+    # @raise [ArgumentError] if `u` is not a valid Unicode codepoint
+    # @return [String]
+    # @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
     def escape_unicode(u, encoding); end
+
+    # @param u [Integer, #ord]
+    # @return [String]
+    # @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
     def escape_utf16(u); end
+
+    # @param u [Integer, #ord]
+    # @return [String]
+    # @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
     def escape_utf32(u); end
+
+    # Returns the serialized N-Triples representation of the given RDF
+    # value.
+    #
+    # @param value [RDF::Value]
+    # @raise [ArgumentError] if `value` is not an `RDF::Statement` or `RDF::Term`
+    # @return [String]
     def serialize(value); end
   end
 end
 
+# @see http://www.w3.org/TR/rdf-testcases/#ntrip_strings
 RDF::NTriples::Writer::ESCAPE_PLAIN = T.let(T.unsafe(nil), Regexp)
+
 RDF::NTriples::Writer::ESCAPE_PLAIN_U = T.let(T.unsafe(nil), Regexp)
 
+# An RDF blank node, also known as an anonymous or unlabeled node.
+#
+# @example Creating a blank node with an implicit identifier
+#   bnode = RDF::Node.new
+# @example Creating a blank node with an UUID identifier
+#   bnode = RDF::Node.uuid
+#   bnode.to_s #=> "_:504c0a30-0d11-012d-3f50-001b63cac539"
 class RDF::Node
   include ::RDF::Value
   include ::Comparable
@@ -826,34 +4632,154 @@ class RDF::Node
   include ::RDF::Term
   include ::RDF::Resource
 
+  # @param id [#to_s]
+  # @return [Node] a new instance of Node
   def initialize(id = T.unsafe(nil)); end
 
+  # Checks whether this blank node is equal to `other` (type checking).
+  #
+  # In this case, different nodes having the same id are considered the same.
+  #
+  # Per SPARQL data-r2/expr-equal/eq-2-2, numeric can't be compared with other types
+  #
+  # @param other [Object]
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   def ==(other); end
+
+  # Checks whether this blank node is equal to `other` (type checking).
+  #
+  # In this case, different nodes having the same id are considered the same.
+  #
+  # Per SPARQL data-r2/expr-equal/eq-2-2, numeric can't be compared with other types
+  #
+  # @param other [Object]
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   def ===(other); end
+
+  # Returns `true`.
+  #
+  # @return [Boolean]
   def anonymous?; end
+
+  # Override #dup to remember original object.
+  # This allows .eql? to determine that two nodes
+  # are the same thing, and not different nodes
+  # instantiated with the same identifier.
+  #
+  # @return [RDF::Node]
   def dup; end
+
+  # Determines if `self` is the same term as `other`.
+  #
+  # In this case, nodes must be the same object
+  #
+  # @param other [Node]
+  # @return [Boolean]
   def eql?(other); end
+
+  # Returns a hash code for this blank node.
+  #
+  # @return [Integer]
   def hash; end
+
+  # @return [String]
   def id; end
+
+  # @return [String]
   def id=(_arg0); end
+
+  # Returns `false`.
+  #
+  # @return [Boolean]
   def labeled?; end
+
+  # Make this term identifier unique, if it is found to be shared with another node having the same identifier
+  #
+  # @return [self]
   def make_unique!; end
+
+  # Returns `true`.
+  #
+  # @return [Boolean]
   def node?; end
+
+  # Originally instantiated node, if any
+  #
+  # @return [RDF::Node]
   def original; end
+
+  # Originally instantiated node, if any
+  #
+  # @return [RDF::Node]
   def original=(_arg0); end
+
+  # Returns a string representation of this blank node.
+  #
+  # @return [String]
   def to_s; end
+
   def to_sxp(**options); end
+
+  # Returns a symbol representation of this blank node.
+  #
+  # @return [Symbol]
+  # @since 0.2.0
   def to_sym; end
+
+  # Returns a representation of this node independent of any identifier used to initialize it
+  #
+  # @return [String]
   def to_unique_base; end
+
+  # Returns `true`.
+  #
+  # @return [Boolean]
   def unlabeled?; end
 
   class << self
+    # Cache size may be set through {RDF.config} using `node_cache_size`.
+    #
+    # @note caching interned nodes means that two different invocations using the same symbol will result in the same node, which may not be appropriate depending on the graph from which it is used. RDF requires that bnodes with the same label are, in fact, different bnodes, unless they are used within the same document.
+    # @private
+    # @return [RDF::Util::Cache]
     def cache; end
+
+    # Alias for `RDF::Node.new`, at the moment.
+    #
+    # @param id [#to_s]
+    # @private
+    # @return [RDF::Node]
+    # @since 0.2.0
     def intern(id); end
+
+    # Returns a blank node with a random UUID-based identifier.
+    #
+    # (Depends on availability of either `uuid` or `uuidtools` gems).
+    #
+    # Formats supported by the UUID generator:
+    #   * `:default` Produces 36 characters, including hyphens separating the UUID value parts
+    #   * `:compact` Produces a 32 digits (hexadecimal) value with no hyphens
+    #   * `:urn` Adds the prefix urn:uuid: to the default format
+    #
+    # Requires that the `uuid` gem be loadable to use `format`
+    #
+    # @param format [:default, :compact] (:default)
+    # @return [RDF::Node]
     def uuid(format: T.unsafe(nil)); end
   end
 end
 
+# Vocabulary for <http://www.w3.org/2002/07/owl#>
+#
+# The OWL 2 Schema vocabulary (OWL 2)
+#
+#  This ontology partially describes the built-in classes and properties that together form the basis of the RDF/XML syntax of OWL 2. The content of this ontology is based on Tables 6.1 and 6.2 in Section 6.4 of the OWL 2 RDF-Based Semantics specification, available at http://www.w3.org/TR/owl2-rdf-based-semantics/. Please note that those tables do not include the different annotations (labels, comments and rdfs:isDefinedBy links) used in this file. Also note that the descriptions provided in this ontology do not provide a complete and correct formal description of either the syntax or the semantics of the introduced terms (please see the OWL 2 recommendations for the complete and normative specifications). Furthermore, the information provided by this ontology may be misleading if not used with care. This ontology SHOULD NOT be imported into OWL ontologies. Importing this file into an OWL 2 DL ontology will cause it to become an OWL 2 Full ontology and may have other, unexpected, consequences.
+#
+# @see http://www.w3.org/TR/owl2-rdf-based-semantics/#table-axiomatic-classes
+# @see http://www.w3.org/TR/owl2-rdf-based-semantics/#table-axiomatic-properties
+# @version $Date: 2009/11/15 10:54:12 $
 class RDF::OWL < ::RDF::StrictVocabulary
   class << self
     def AllDifferent; end
@@ -936,226 +4862,1257 @@ class RDF::OWL < ::RDF::StrictVocabulary
   end
 end
 
+# An RDF basic graph pattern (BGP) query.
+#
+# Named queries either match against a specifically named
+# graph if the name is an RDF::Resource or bound RDF::Query::Variable.
+# Names that are against unbound variables match either default
+# or named graphs.
+# The name of `false` will only match against the default graph.
+#
+# Variable names cause the variable to be added to the solution set
+# elements.
+#
+# @example Constructing a basic graph pattern query (1)
+#   query = RDF::Query.new do
+#   pattern [:person, RDF.type,  FOAF.Person]
+#   pattern [:person, FOAF.name, :name]
+#   pattern [:person, FOAF.mbox, :email]
+#   end
+# @example Constructing a basic graph pattern query (2)
+#   query = RDF::Query.new({
+#   person: {
+#   RDF.type  => FOAF.Person,
+#   FOAF.name => :name,
+#   FOAF.mbox => :email,
+#   }
+#   })
+# @example Executing a basic graph pattern query
+#   graph = RDF::Graph.load('etc/doap.nt')
+#   query.execute(graph).each do |solution|
+#   puts solution.inspect
+#   end
+# @example Constructing and executing a query in one go (1)
+#   solutions = RDF::Query.execute(graph) do
+#   pattern [:person, RDF.type, FOAF.Person]
+#   end
+# @example Constructing and executing a query in one go (2)
+#   solutions = RDF::Query.execute(graph, {
+#   person: {
+#   RDF.type => FOAF.Person,
+#   }
+#   })
+# @example In this example, the default graph contains the names of the publishers of two named graphs. The triples in the named graphs are not visible in the default graph in this example.
+#   # default graph
+#   @prefix dc: <http://purl.org/dc/elements/1.1/
+#
+#   <http://example.org/bob>    dc:publisher  "Bob" .
+#   <http://example.org/alice>  dc:publisher  "Alice" .
+#
+#   # Named graph: http://example.org/bob
+#   @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+#
+#   _:a foaf:name "Bob" .
+#   _:a foaf:mbox <mailto:bob@oldcorp.example.org> .
+#
+#   # Named graph: http://example.org/alice
+#   @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+#
+#   _:a foaf:name "Alice" .
+#   _:a foaf:mbox <mailto:alice@work.example.org> .
+# @see http://www.w3.org/TR/rdf-sparql-query/#rdfDataset
+# @since 0.3.0
 class RDF::Query
   include ::Enumerable
   include ::RDF::Countable
   include ::RDF::Enumerable
 
+  # Initializes a new basic graph pattern query.
+  #
+  # @option options
+  # @overload initialize
+  # @overload initialize
+  # @param options [Hash] a customizable set of options
+  # @return [Query] a new instance of Query
+  # @since 0.3.0
   def initialize(*patterns, solutions: T.unsafe(nil), graph_name: T.unsafe(nil), name: T.unsafe(nil), validate: T.unsafe(nil), **options, &block); end
 
+  # Add patterns from another query to form a new Query
+  #
+  # @param other [RDF::Query]
+  # @return [RDF::Query]
+  # @since 0.3.0
   def +(other); end
+
+  # Appends the given query `pattern` to this query.
+  #
+  # @param pattern [RDF::Query::Pattern] a triple query pattern
+  # @return [void] self
+  # @since 0.3.0
   def <<(pattern); end
+
   def ==(other); end
+
+  # Apply the graph name specified (or configured) to all patterns that have no graph name
+  #
+  # @param graph_name [RDF::IRI, RDF::Query::Variable] (self.graph_name)
+  # @since 0.3.0
   def apply_graph_name(graph_name = T.unsafe(nil)); end
+
   def bind(solution); end
+
+  # Is this query scoped to the default graph?
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def default?; end
+
+  # Duplicate query, including patterns and solutions
+  #
+  # @return [RDF::Query]
+  # @since 0.3.0
   def dup; end
+
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each(&block); end
+
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each_solution(&block); end
+
+  # Enumerates over each statement (pattern).
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [RDF::Query::Pattern]
+  # @yieldparam pattern [::Query::Pattern]
   def each_statement(&block); end
+
+  # Query has no patterns
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def empty?; end
+
   def executable?; end
+
+  # Executes this query on the given `queryable` graph or repository.
+  #
+  # Named queries either match against a specifically named
+  # graphs if the name is an RDF::Resource or bound RDF::Query::Variable.
+  # Names that are against unbound variables match either detault
+  # or named graphs.
+  # The name of `false` will only match against the default graph.
+  #
+  # If the query nas no patterns, it returns a single empty solution as
+  # per SPARQL 1.1 _Empty Group Pattern_.
+  #
+  # @note solutions could be an Iterator, but this algorithm cycles over solutions, which requires them to be an array internally.
+  # @option options
+  # @option options
+  # @option options
+  # @param name [RDF::Resource, RDF::Query::Variable, false] (nil)
+  #   Alias for `:graph_name`.
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param solutions [RDF::Query::Solutions] (Solutions.new)
+  # @param graph_name [RDF::Resource, RDF::Query::Variable, false] (nil)
+  #   Default graph name for matching against queryable.
+  #   Named queries either match against a specifically named
+  #   graphs if the name is an {RDF::Resource} or bound {RDF::Query::Variable}.
+  #   Names that are against unbound variables match either default
+  #   or named graphs.
+  #   The name of `false` will only match against the default graph.
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see http://www.holygoat.co.uk/blog/entry/2005-10-25-1
+  # @see http://www.w3.org/TR/sparql11-query/#emptyGroupPattern
+  # @since 0.3.0
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, bindings: T.unsafe(nil), solutions: T.unsafe(nil), graph_name: T.unsafe(nil), name: T.unsafe(nil), **options, &block); end
+
+  # Returns `true` if this query did not match when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query failed to match or not.
+  #
+  # @return [Boolean]
+  # @see #matched?
+  # @since 0.3.0
   def failed?; end
+
+  # Scope the query to named graphs matching value
+  #
+  # @return [RDF::Resource, RDF::Query::Variable, false] graph_name
+  # @since 0.3.0
   def graph_name; end
+
+  # Scope the query to named graphs matching value
+  #
+  # @return [RDF::Resource, RDF::Query::Variable, false] graph_name
+  # @since 0.3.0
   def graph_name=(_arg0); end
+
+  # Returns `true` if any pattern contains a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def has_blank_nodes?; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # Returns `true` if this query matched when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query matched successfully or not.
+  #
+  # @return [Boolean]
+  # @see #failed?
+  # @since 0.3.0
   def matched?; end
+
+  # Is this query scoped to a named graph?
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def named?; end
+
   def ndvars; end
+
+  # Returns `true` if any pattern contains a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def node?; end
+
+  # Returns an optimized copy of this query.
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [RDF::Query] a copy of `self`
+  # @since 0.3.0
   def optimize(**options); end
+
+  # Optimizes this query by reordering its constituent triple patterns
+  # according to their cost estimates.
+  #
+  # Optional patterns have greater cost than non-optional patterns so they will always come after non-optional patterns
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [self]
+  # @see RDF::Query::Pattern#cost
+  # @since 0.3.0
   def optimize!(**options); end
+
   def optimize_without_expression!(**options); end
+
+  # Any additional options for this query.
+  #
+  # @return [Hash]
+  # @since 0.3.0
   def options; end
+
+  # Appends the given query `pattern` to this query.
+  #
+  # @option options
+  # @param pattern [RDF::Query::Pattern] a triple query pattern
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [void] self
+  # @since 0.3.0
   def pattern(pattern, **options); end
+
+  # The patterns that constitute this query.
+  #
+  # @return [Array<RDF::Query::Pattern>]
+  # @since 0.3.0
   def patterns; end
+
   def query_yields_boolean?; end
   def query_yields_solutions?; end
   def query_yields_statements?; end
   def rewrite(&block); end
+
+  # The solution sequence for this query.
+  #
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def solutions; end
+
   def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
   def to_sxp(**options); end
   def to_sxp_bin; end
+
+  # Is this query unscoped? This indicates that it can return results from
+  # either a named graph or the default graph.
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def unnamed?; end
+
+  # Determine if the query containts valid patterns
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.9
   def valid?; end
+
+  # Validate this query, making sure it can be executed by our query engine.
+  # This method is public so that it may be called by implementations of
+  # RDF::Queryable#query_execute that bypass our built-in query engine.
+  #
+  # @raise [ArgumentError] This query cannot be executed.
+  # @return [RDF::Query] `self`
+  # @since 0.3.0
   def validate!; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variable?(*args); end
+
+  # Returns the number of variables in this query.
+  #
+  # @return [Integer] (0..3)
+  # @since 0.3.0
   def variable_count; end
+
+  # The variables used in this query. This includes variables used in patterns along with the graph_name itself, if it is a variable.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
+  # @since 0.3.0
   def variables; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variables?(*args); end
+
   def vars; end
 
   protected
 
+  # @private
+  # @since 0.3.0
   def compile_hash_patterns(hash_patterns); end
 
   class << self
+    # Cast values as Solutions
+    #
+    # @overload Solutions
+    # @overload Solutions
+    # @overload Solutions
+    # @overload Solutions
+    # @since 0.3.0
     def Solutions(*args); end
+
+    # Executes a query on the given `queryable` graph or repository.
+    #
+    # @param queryable [RDF::Queryable] the graph or repository to query
+    # @param patterns [Hash{Object => Object}] optional hash patterns to initialize the query with
+    # @param options [Hash{Symbol => Object}] any additional keyword options (see {RDF::Query#initialize})
+    # @return [RDF::Query::Solutions] the resulting solution sequence
+    # @see RDF::Query#execute
+    # @since 0.3.0
+    # @yield [query]
+    # @yieldparam query [RDF::Query]
+    # @yieldreturn [void] ignored
     def execute(queryable, patterns = T.unsafe(nil), options = T.unsafe(nil), &block); end
   end
 end
 
+# An RDF query pattern normalizer.
 class RDF::Query::HashPatternNormalizer
+  # @option options
+  # @param options [Hash{Symbol => Object}] (Hash.new)
+  #   any additional normalization options.
+  # @return [HashPatternNormalizer] a new instance of HashPatternNormalizer
   def initialize(**options); end
 
+  # Equivalent to calling `self.class.normalize!(hash_pattern, self.options)`.
+  #
+  # @param hash_pattern [Hash{Symbol => Object}] the query pattern as a hash.
+  # @return [Hash{Symbol => Object}] the resulting query pattern as a normalized hash.
   def normalize!(hash_pattern); end
+
+  # The options for this hash pattern normalizer.
+  #
+  # @return [Hash{Symbol => Object}]
   def options; end
 
   class << self
+    # Returns the normalization of the specified `hash_pattern`.
+    #
+    # @overload normalize!
+    # @raise [ArgumentError]
     def normalize!(*args); end
 
     private
 
+    # @private
     def ensure_absence_of_duplicate_subjects!(acc, subject); end
+
+    # @private
+    # @raise [ArgumentError]
     def normalize_array!(array, *args); end
+
+    # @private
+    # @raise [ArgumentError]
     def normalize_hash!(hash, *args); end
+
+    # @private
     def normalize_object!(object, *args); end
+
+    # @private
+    # @raise [ArgumentError]
     def replace_hash_with_anonymous_subject!(hash, acc, counter, anonymous_subject_format); end
   end
 end
 
+# A counter that can be incremented and decremented.
 class RDF::Query::HashPatternNormalizer::Counter
+  # @param offset [Numeric] the offset (or initial value) for this counter.
+  # @param increment [Numeric] the increment for this counter.
+  # @return [Counter] a new instance of Counter
   def initialize(offset = T.unsafe(nil), increment = T.unsafe(nil)); end
 
+  # Decrements this counter, and returns the new value.
+  #
+  # @return [RDF::Query::HashPatternNormalizer::Counter]
   def decrement!; end
+
+  # The increment for this counter.
+  #
+  # @return [Numeric]
   def increment; end
+
+  # Increments this counter, and returns the new value.
+  #
+  # @return [RDF::Query::HashPatternNormalizer::Counter]
   def increment!; end
+
+  # The offset (or initial value) for this counter.
+  #
+  # @return [Numeric]
   def offset; end
+
+  # Returns a floating point representation of this counter.
+  #
+  # @return [Float]
   def to_f; end
+
+  # Returns an integer representation of this counter.
+  #
+  # @return [Integer]
   def to_i; end
+
+  # Returns a string representation of this counter.
+  #
+  # @return [String]
   def to_s; end
 end
 
+# An RDF query pattern.
 class RDF::Query::Pattern < ::RDF::Statement
+  # @note {Statement} treats symbols as interned {Node} instances, in a {Pattern}, they are treated as {Variable}.
+  # @overload initialize
+  # @overload initialize
+  # @return [Pattern] a new instance of Pattern
   def initialize(subject = T.unsafe(nil), predicate = T.unsafe(nil), object = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def arity; end
+
+  # Binds the pattern to a solution, making it no longer variable if all variables are resolved to bound variables
+  #
+  # @param solution [RDF::Query::Solution]
+  # @return [self]
   def bind(solution); end
+
+  # Returns the number of bindings in this pattern.
+  #
+  # @return [Integer] (0..3)
   def binding_count; end
+
+  # Returns all bindings in this pattern.
+  #
+  # @return [Hash{Symbol => RDF::Term}]
   def bindings; end
+
+  # Returns `true` if this pattern contains bindings.
+  #
+  # @return [Boolean] `true` or `false`
   def bindings?; end
+
+  # Returns `true` if this is a blank pattern, with all terms being `nil`.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def blank?; end
+
+  # Returns `true` if all variables in this pattern are bound.
+  #
+  # @return [Boolean] `true` or `false`
   def bound?; end
+
+  # Returns all bound variables in this pattern.
+  #
+  # @return [Hash{Symbol => Variable}]
   def bound_variables; end
+
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def cardinality; end
+
+  # The estimated cost of this pattern (for query optimization).
+  #
+  # @return [Numeric]
   def cost; end
+
+  # The estimated cost of this pattern (for query optimization).
+  #
+  # @return [Numeric]
   def cost=(_arg0); end
+
+  # Create a new pattern from the quads, recursivly dupping sub-patterns.
   def dup; end
+
+  # Checks pattern equality against a statement, considering nesting.
+  #
+  # * A pattern which has a pattern as a subject or an object, matches
+  #   a statement having a statement as a subject or an object using {#eql?}.
+  #
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def eql?(other); end
+
   def executable?; end
+
+  # Executes this query pattern on the given `queryable` object.
+  #
+  # Values are matched using using Queryable#query_pattern.
+  #
+  # If the optional `bindings` are given, variables will be substituted with their values when executing the query.
+  #
+  # To match triples only in the default graph, set graph_name to `false`.
+  #
+  # @example
+  #   Pattern.new(:s, :p, :o).execute(RDF::Repository.load('etc/doap.nt'))
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param bindings [Hash{Symbol => RDF::Term}] optional variable bindings to use
+  # @return [Enumerable<RDF::Query::Pattern>] an enumerator yielding matching statements
+  # @see RDF::Queryable#query
+  # @since 0.3.0
+  # @yield [statement] each matching statement
+  # @yieldparam statement [RDF::Statement] an RDF statement matching this pattern
   def execute(queryable, bindings = T.unsafe(nil), &block); end
+
+  # Returns `true` if this pattern contains any variables.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def has_variables?; end
+
+  # @private
   def initialize!; end
+
   def ndvars; end
+
+  # Returns `true` if this is an optional pattern.
+  #
+  # @example
+  #   Pattern.new(:s, :p, :o).optional?                     #=> false
+  #   Pattern.new(:s, :p, :o, optional: true).optional?  #=> true
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def optional?; end
+
+  # Any additional options for this pattern.
+  #
+  # @return [Hash]
   def options; end
+
+  # Returns a query solution constructed by binding any variables in this
+  # pattern with the corresponding terms in the given `statement`.
+  #
+  # @example
+  #   pattern = Pattern.new(:s, :p, :o)
+  #   solution = pattern.solution(statement)
+  #
+  #   pattern[:s] #=> statement.subject
+  #   pattern[:p] #=> statement.predicate
+  #   pattern[:o] #=> statement.object
+  # @param statement [RDF::Statement] an RDF statement to bind terms from
+  # @return [RDF::Query::Solution]
+  # @since 0.3.0
   def solution(statement); end
+
+  # Returns a string representation of this pattern.
+  #
+  # @return [String]
   def to_s; end
+
   def to_sxp(**options); end
+
+  # Returns `true` if all variables in this pattern are unbound.
+  #
+  # @return [Boolean] `true` or `false`
   def unbound?; end
+
+  # Returns all unbound variables in this pattern.
+  #
+  # @return [Hash{Symbol => Variable}]
   def unbound_variables; end
+
+  # Is this pattern composed only of valid components?
+  #
+  # @return [Boolean] `true` or `false`
   def valid?; end
+
+  # Returns all values the statement in the same pattern position
+  #
+  # @param var [Symbol]
+  # @param statement [RDF::Statement]
+  # @return [Array<RDF::Term>]
   def var_values(var, statement); end
+
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def variable_count; end
+
+  # Returns the variable terms in this pattern.
+  #
+  # @deprecated use {#var_values} instead
+  # @example
+  #   Pattern.new(RDF::Node.new, :p, 123).variable_terms    #=> [:predicate]
+  # @param name [Symbol, #to_sym] an optional variable name
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_terms(name = T.unsafe(nil)); end
+
+  # Returns all variables in this pattern.
+  #
+  # Note: this returns a hash containing distinct variables only.
+  #
+  # @return [Hash{Symbol => Variable}]
   def variables; end
+
+  # Returns `true` if this pattern contains any variables.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def variables?; end
+
   def vars; end
 
   class << self
+    # @private
+    # @since 0.2.2
     def from(pattern, graph_name: T.unsafe(nil), **options); end
   end
 end
 
+# An RDF query solution.
+#
+# @example Iterating over every binding in the solution
+#   solution.each_binding  { |name, value| puts value.inspect }
+#   solution.each_variable { |variable| puts variable.value.inspect }
+# @example Iterating over every value in the solution
+#   solution.each_value    { |value| puts value.inspect }
+# @example Checking whether a variable is bound or unbound
+#   solution.bound?(:title)
+#   solution.unbound?(:mbox)
+# @example Retrieving the value of a bound variable
+#   solution[:mbox]
+#   solution.mbox
+# @example Retrieving all bindings in the solution as a `Hash`
+#   solution.to_h       #=> {mbox: "jrhacker@example.org", ...}
 class RDF::Query::Solution
   include ::Enumerable
 
+  # Initializes the query solution.
+  #
+  # @param bindings [Hash{Symbol => RDF::Term}]
+  # @return [Solution] a new instance of Solution
+  # @yield [solution]
   def initialize(bindings = T.unsafe(nil), &block); end
 
+  # Equals of solution
   def ==(other); end
+
+  # Returns the value of the variable `name`.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [RDF::Term]
   def [](name); end
+
+  # Binds or rebinds the variable `name` to the given `value`.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @param value [RDF::Term]
+  # @return [RDF::Term]
+  # @since 0.3.0
   def []=(name, value); end
+
+  # Undefine all superfluous instance methods:
   def __send(*_arg0); end
+
+  # @private
   def bindings; end
+
+  # Returns `true` if the variable `name` is bound in this solution.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [Boolean] `true` or `false`
   def bound?(name); end
+
+  # Compatible Mappings
+  #
+  # Two solution mappings u1 and u2 are compatible if, for every variable v in dom(u1) and in dom(u2), u1(v) = u2(v).
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algCompatibleMapping
   def compatible?(other); end
+
+  # Disjoint mapping
+  #
+  # A solution is disjoint with another solution if it shares no common variables in their domains.
+  #
+  # @param other [RDF::Query::Solution]
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algMinus
   def disjoint?(other); end
+
+  # Duplicate solution, preserving patterns
+  #
+  # @return [RDF::Statement]
   def dup; end
+
+  # Enumerates over every variable binding in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name, value]
+  # @yieldparam name [Symbol]
+  # @yieldparam value [RDF::Term]
   def each(&block); end
+
+  # Enumerates over every variable binding in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name, value]
+  # @yieldparam name [Symbol]
+  # @yieldparam value [RDF::Term]
   def each_binding(&block); end
+
+  # Enumerates over every variable name in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name]
+  # @yieldparam name [Symbol]
   def each_key(&block); end
+
+  # Enumerates over every variable name in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name]
+  # @yieldparam name [Symbol]
   def each_name(&block); end
+
+  # Enumerates over every variable value in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [value]
+  # @yieldparam value [RDF::Term]
   def each_value(&block); end
+
+  # Enumerates over every variable in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [variable]
+  # @yieldparam [Variable]
   def each_variable; end
+
+  # Returns an enumerator for {#each_binding}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_binding; end
+
+  # Returns an enumerator for {#each_name}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_name; end
+
+  # Returns an enumerator for {#each_value}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_value; end
+
+  # Returns an enumerator for {#each_variable}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_variable; end
+
+  # Equivalence of solution
+  #
+  # @return [Boolean]
   def eql?(other); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # Integer hash of this solution
+  #
+  # @return [Integer]
   def hash; end
+
+  # @return [String]
   def inspect; end
+
+  # Isomorphic Mappings
+  # Two solution mappings u1 and u2 are isomorphic if,
+  # for every variable v in dom(u1) and in dom(u2), u1(v) = u2(v).
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [Boolean]
   def isomorphic_with?(other); end
+
+  # Merges the bindings from the given `other` query solution with a copy
+  # of this one.
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [RDF::Query::Solution]
+  # @since 0.3.0
   def merge(other); end
+
+  # Merges the bindings from the given `other` query solution into this
+  # one, overwriting any existing ones having the same name.
+  #
+  # ## RDFStar (RDF*)
+  #
+  # If merging a binding for a statement to a pattern,
+  # merge their embedded solutions.
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [void] self
+  # @since 0.3.0
   def merge!(other); end
+
+  # @return [Array<Array(Symbol, RDF::Term)>]
   def to_a; end
+
+  # @return [Hash{Symbol => RDF::Term}]
   def to_h; end
+
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
   def to_sxp_bin; end
+
+  # Returns `true` if the variable `name` is unbound in this solution.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [Boolean] `true` or `false`
   def unbound?(name); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variable?(*args); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variables?(*args); end
 
   protected
 
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil)); end
+
+  # @overload binding
   def method_missing(name, *args, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def to_enum(method = T.unsafe(nil)); end
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+# Temporarily remember instance method for deprecation message in `method_missing`.
 RDF::Query::Solution::INSTANCE_METHODS = T.let(T.unsafe(nil), Array)
 
+# An RDF basic graph pattern (BGP) query solution sequence.
+#
+# @example Filtering solutions using a hash
+#   solutions.filter(author:  RDF::URI("http://ar.to/#self"))
+#   solutions.filter(author:  "Gregg Kellogg")
+#   solutions.filter(author:  [RDF::URI("http://ar.to/#self"), "Gregg Kellogg"])
+#   solutions.filter(updated: RDF::Literal(Date.today))
+# @example Filtering solutions using a block
+#   solutions.filter { |solution| solution.author.literal? }
+#   solutions.filter { |solution| solution.title.to_s =~ /^SPARQL/ }
+#   solutions.filter { |solution| solution.price < 30.5 }
+#   solutions.filter { |solution| solution.bound?(:date) }
+#   solutions.filter { |solution| solution.age.datatype == RDF::XSD.integer }
+#   solutions.filter { |solution| solution.name.language == :es }
+# @example Reordering solutions based on a variable or proc
+#   solutions.order_by(:updated)
+#   solutions.order_by(:updated, :created)
+#   solutions.order_by(:updated, lambda {|a, b| b <=> a})
+# @example Selecting/Projecting particular variables only
+#   solutions.select(:title)
+#   solutions.select(:title, :description)
+#   solutions.project(:title)
+# @example Eliminating duplicate solutions
+#   solutions.distinct
+# @example Limiting the number of solutions
+#   solutions.offset(20).limit(10)
+# @example Counting the number of matching solutions
+#   solutions.count
+#   solutions.count { |solution| solution.price < 30.5 }
+# @example Iterating over all found solutions
+#   solutions.each { |solution| puts solution.inspect }
+# @since 0.3.0
 class RDF::Query::Solutions < ::Array
   include ::SPARQL::Results
 
+  # Equals of solution
+  #
+  # @since 0.3.0
   def ==(other); end
+
+  # Returns hash of bindings from each solution. Each bound variable will have
+  # an array of bound values representing those from each solution, where a given
+  # solution will have just a single value for each bound variable
+  #
+  # @return [Hash{Symbol => Array<RDF::Term>}]
+  # @since 0.3.0
   def bindings; end
+
+  # Returns the number of matching query solutions.
+  #
+  # @overload count
+  # @overload count
+  # @return [Integer]
+  # @since 0.3.0
   def count(&block); end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def distinct; end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def distinct!; end
+
+  # Duplicates each solution.
+  #
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def dup; end
+
+  # @since 0.3.0
   def each_solution; end
+
+  # Equivalence of solution
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def eql?(other); end
+
+  # Filters this solution sequence by the given `criteria`.
+  #
+  # @param criteria [Hash{Symbol => Object}]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [Boolean]
   def filter(expression = T.unsafe(nil), &block); end
+
+  # Filters this solution sequence by the given `criteria`.
+  #
+  # @param criteria [Hash{Symbol => Object}]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [Boolean]
   def filter!(expression = T.unsafe(nil), &block); end
+
   def filter_without_expression(criteria = T.unsafe(nil)); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def have_variables?(*args); end
+
+  # Limits the number of solutions in this solution sequence to a maximum
+  # of `length`.
+  #
+  # @param length [Integer, #to_i] zero or a positive integer
+  # @raise [ArgumentError] if `length` is negative
+  # @return [self]
+  # @since 0.3.0
   def limit(length); end
+
+  # Limits the number of solutions in this solution sequence to a maximum
+  # of `length`.
+  #
+  # @param length [Integer, #to_i] zero or a positive integer
+  # @raise [ArgumentError] if `length` is negative
+  # @return [self]
+  # @since 0.3.0
   def limit!(length); end
+
+  # Merge solutions in `other` into a new solutions instance. Each solution in `other` is merged into those solutions in `self` that are compatible.
+  #
+  # @param other [RDF::Query::Solutions]
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def merge(other); end
+
+  # Difference between solution sets, from SPARQL 1.1.
+  #
+  # The `minus` operation on solutions returns those solutions which either have no compatible solution in `other`, or the solution domains are disjoint.
+  #
+  # @param other [RDF::Query::Solutions]
+  # @return [RDF::Query::Solutions] a new solution set
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algMinus
+  # @since 0.3.0
   def minus(other); end
+
+  # Limits this solution sequence to bindings starting from the `start`
+  # offset in the overall solution sequence.
+  #
+  # @param start [Integer, #to_i] zero or a positive or negative integer
+  # @return [self]
+  # @since 0.3.0
   def offset(start); end
+
+  # Limits this solution sequence to bindings starting from the `start`
+  # offset in the overall solution sequence.
+  #
+  # @param start [Integer, #to_i] zero or a positive or negative integer
+  # @return [self]
+  # @since 0.3.0
   def offset!(start); end
+
+  # Reorders this solution sequence by the given `variables`.
+  #
+  # Variables may be symbols or {Query::Variable} instances.
+  # A variable may also be a Procedure/Lambda, compatible with `::Enumerable#sort`.
+  # This takes two arguments (solutions) and returns -1, 0, or 1 equivalently to <=>.
+  #
+  # If called with a block, variables are ignored, and the block is invoked with
+  # pairs of solutions. The block is expected to return -1, 0, or 1 equivalently to <=>.
+  #
+  # @param variables [Array<Proc, Query::Variable, Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam q [RDF::Query::Solution]
+  # @yieldparam b [RDF::Query::Solution]
+  # @yieldreturn [Integer] -1, 0, or 1 depending on value of comparator
   def order(*variables); end
+
+  # Reorders this solution sequence by the given `variables`.
+  #
+  # Variables may be symbols or {Query::Variable} instances.
+  # A variable may also be a Procedure/Lambda, compatible with `::Enumerable#sort`.
+  # This takes two arguments (solutions) and returns -1, 0, or 1 equivalently to <=>.
+  #
+  # If called with a block, variables are ignored, and the block is invoked with
+  # pairs of solutions. The block is expected to return -1, 0, or 1 equivalently to <=>.
+  #
+  # @param variables [Array<Proc, Query::Variable, Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam q [RDF::Query::Solution]
+  # @yieldparam b [RDF::Query::Solution]
+  # @yieldreturn [Integer] -1, 0, or 1 depending on value of comparator
   def order_by(*variables); end
+
+  # Restricts this solution sequence to the given `variables` only.
+  #
+  # @param variables [Array<Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
   def project(*variables); end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def reduced; end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def reduced!; end
+
+  # Restricts this solution sequence to the given `variables` only.
+  #
+  # @param variables [Array<Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
   def select(*variables); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def variable?(*args); end
+
+  # Returns an array of the distinct variable names used in this solution
+  # sequence.
+  #
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_names; end
+
+  # Sets variable names used in these solutions. If not set, the default is determined by the variables used in each solution.
+  #
+  # @param vars [Array<Symbol, RDF::Query::Variable>]
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_names=(vars); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def variables?(*args); end
 end
 
+# An RDF query variable.
+#
+# @example Getting the string representation of a variable
+#   var = RDF::Query::Variable.new(:x)
+#   var.to_s       #=> "?x"
+#   var = RDF::Query::Variable.new(:y, 123)
+#   var.to_s       #=> "?y=123"
+# @example Creating an anonymous unbound variable
+#   var = RDF::Query::Variable.new
+#   var.name       #=> :g2166151240
+# @example Unbound variables match any value
+#   var === RDF::Literal(42)     #=> true
+# @example Creating a bound variable
+#   var = RDF::Query::Variable.new(:y, 123)
+#   var.bound?     #=> true
+#   var.value      #=> 123
+# @example Bound variables match only their actual value
+#   var = RDF::Query::Variable.new(:y, 123)
+#   var === 42     #=> false
+#   var === 123    #=> true
+# @example Getting the variable name
+#   var = RDF::Query::Variable.new(:y, 123)
+#   var.named?     #=> true
+#   var.name       #=> :y
+#   var.to_sym     #=> :y
+# @example Rebinding a variable returns the previous value
+#   var.bind!(456) #=> 123
+#   var.value      #=> 456
+# @example Unbinding a previously bound variable
+#   var.unbind!
+#   var.unbound?   #=> true
+# @example Creating a named unbound variable
+#   var = RDF::Query::Variable.new(:x)
+#   var.unbound?   #=> true
+#   var.value      #=> nil
 class RDF::Query::Variable
   include ::RDF::Value
   include ::Comparable
@@ -1163,71 +6120,376 @@ class RDF::Query::Variable
   include ::SPARQL::Algebra::Expression
   include ::RDF::Term
 
+  # @param name [Symbol, #to_sym] the variable name
+  # @param value [RDF::Term] an optional variable value
+  # @param distinguished [Boolean] (true) Also interpreted by leading '?' or '$' in name. If non-distinguished, '??' or '$$'.
+  # @param existential [Boolean] (true) Also interpreted by leading '$' in name
+  # @return [Variable] a new instance of Variable
   def initialize(name = T.unsafe(nil), value = T.unsafe(nil), distinguished: T.unsafe(nil), existential: T.unsafe(nil)); end
 
+  # Returns `true` if this variable is equivalent to a given `other`
+  # variable. Or, to another Term if bound, or to any other Term
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ==(other); end
+
+  # Compares this variable with the given value.
+  #
+  # @param other [RDF::Term]
+  # @return [Boolean]
   def ===(other); end
+
+  # Rebinds this variable to the given `value`.
+  #
+  # @overload bind
+  # @overload bind
   def bind(value); end
+
+  # Rebinds this variable to the given `value`.
+  #
+  # @overload bind
+  # @overload bind
   def bind!(value); end
+
+  # Returns this variable's bindings (if any) as a `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Term}]
   def bindings; end
+
+  # Returns `true` if this variable is bound.
+  #
+  # @return [Boolean]
   def bound?; end
+
+  # Sets if variable is distinguished or non-distinguished.
+  # By default, variables are distinguished
+  #
+  # @return [Boolean]
   def distinguished=(value); end
+
+  # Returns `true` if this variable is distinguished.
+  #
+  # @return [Boolean]
   def distinguished?; end
+
+  # Returns `true` if this variable is equivalent to a given `other`
+  # variable. Or, to another Term if bound, or to any other Term
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def eql?(other); end
+
   def evaluate(bindings, **options); end
+
+  # Sets if variable is existential or univeresal.
+  # By default, variables are universal
+  #
+  # @return [Boolean]
   def existential=(value); end
+
+  # Returns `true` if this variable is existential.
+  #
+  # @return [Boolean]
   def existential?; end
+
+  # Returns a hash code for this variable.
+  #
+  # @return [Integer]
+  # @since 0.3.0
   def hash; end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def name; end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def name=(_arg0); end
+
+  # Returns `true` if this variable has a name.
+  #
+  # @return [Boolean]
   def named?; end
+
   def optimize(**options); end
+
+  # Returns a string representation of this variable.
+  #
+  # Distinguished variables are indicated with a single `?`.
+  #
+  # Non-distinguished variables are indicated with a double `??`
+  #
+  # Existential variables are indicated using a single `$`, or with `$$` if also non-distinguished
+  #
+  # @example
+  #   v = Variable.new("a")
+  #   v.to_s => '?a'
+  #   v.distinguished = false
+  #   v.to_s => '??a'
+  # @return [String]
   def to_base; end
+
+  # Returns this variable as `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def to_h; end
+
+  # Returns a string representation of this variable.
+  #
+  # Distinguished variables are indicated with a single `?`.
+  #
+  # Non-distinguished variables are indicated with a double `??`
+  #
+  # Existential variables are indicated using a single `$`, or with `$$` if also non-distinguished
+  #
+  # @example
+  #   v = Variable.new("a")
+  #   v.to_s => '?a'
+  #   v.distinguished = false
+  #   v.to_s => '??a'
+  # @return [String]
   def to_s; end
+
   def to_sparql(**options); end
   def to_sxp(**options); end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def to_sym; end
+
+  # Unbinds this variable, discarding any currently bound value.
+  #
+  # @return [RDF::Term] the previous value, if any.
   def unbind; end
+
+  # Unbinds this variable, discarding any currently bound value.
+  #
+  # @return [RDF::Term] the previous value, if any.
   def unbind!; end
+
+  # Returns `true` if this variable is unbound.
+  #
+  # @return [Boolean]
   def unbound?; end
+
+  # The variable's value.
+  #
+  # @return [RDF::Term]
   def value; end
+
+  # The variable's value.
+  #
+  # @return [RDF::Term]
   def value=(_arg0); end
+
+  # Returns term if var is the same as this variable.
+  #
+  # @param var [Symbol]
+  # @param term [RDF::Term]
+  # @return [RDF::Term]
   def var_values(var, term); end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.1.7
   def variable?(*args); end
+
+  # Returns this variable as `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
+# An RDF query mixin.
+#
+# Classes that include this module should implement a `#query_pattern` method that
+# yields {RDF::Statement RDF statements}. Classes may also implement an optimized
+# `#query_execute` method that yields {RDF::Statement RDF statements}.
+#
+# @see RDF::Graph
+# @see RDF::Repository
 module RDF::Queryable
   include ::Enumerable
 
   def concise_bounded_description(*terms, **options, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator<RDF::Statement, RDF::Query::Pattern>]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil), *args); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns that statement if found.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first
+  # @overload first
+  # @return [RDF::Statement]
+  # @since 0.1.9
   def first(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern` and
+  # returns the first found object literal.
+  #
+  # Returns `nil` if no statements match `pattern` or if none of the found
+  # statements have a literal as their object term.
+  #
+  # @overload first_literal
+  # @overload first_literal
+  # @return [RDF::Literal]
+  # @since 0.1.9
   def first_literal(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's object term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_object
+  # @overload first_object
+  # @since 0.1.9
   def first_object(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's predicate term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_predicate
+  # @overload first_predicate
+  # @since 0.1.9
   def first_predicate(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's subject term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_subject
+  # @overload first_subject
+  # @since 0.1.9
   def first_subject(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern` and
+  # returns the value of the first found object literal.
+  #
+  # Returns `nil` if no statements match `pattern` or if none of the found
+  # statements have a literal as their object term.
+  #
+  # @overload first_value
+  # @overload first_value
+  # @since 0.1.9
   def first_value(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern`.
+  #
+  # This method delegates to the protected {RDF::Queryable#query_pattern} method for the actual lower-level query pattern matching implementation.
+  #
+  # @example Querying for statements having a given predicate
+  #   queryable.query([nil, RDF::Vocab::DOAP.developer, nil])
+  #   queryable.query({predicate: RDF::Vocab::DOAP.developer}) do |statement|
+  #   puts statement.inspect
+  #   end
+  # @example Querying for solutions from a BGP
+  #   query = RDF::Query.new {pattern [:s, :p, :o]}
+  #   queryable.query(query) do |solution|
+  #   puts solution.inspect
+  #   end
+  # @note Since 2.0, this may return an Enumerable or an Enumerator in addition to Solutions
+  # @param pattern [RDF::Query, RDF::Statement, Array(RDF::Term), Hash]
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options passed to {#query_pattern} or {#query_execute}
+  # @raise [TypeError]
+  # @return [Enumerator<RDF::Statement>, RDF::Enumerable, Query::Solutions] Returns an enumerable of statements (may be an enumerator) or query solutions, if passed an {RDF::Query}
+  # @see RDF::Queryable#query_pattern
+  # @yield [statement] each matching statement
+  # @yieldparam statement [RDF::Statement, RDF::Query::Solution] Statement or Solution
+  # @yieldreturn [void] ignored
   def query(pattern, **options, &block); end
+
   def query_without_sparql(pattern, **options, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator<RDF::Statement, RDF::Query::Pattern>]
+  # @see Object#enum_for
   def to_enum(method = T.unsafe(nil), *args); end
+
   def to_sparql(**options); end
 
   protected
 
+  # Queries `self` using the given basic graph pattern (BGP) query,
+  # yielding each matched solution to the given block.
+  #
+  # Since RDF.rb 0.3.0, repository implementations can override this
+  # method in order to provide for storage-specific optimized graph
+  # pattern query execution.
+  #
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options passed to `query.execute`
+  # @param query [RDF::Query] the query to execute
+  # @return [void] ignored
+  # @see RDF::Query#execute
+  # @see RDF::Queryable#query
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def query_execute(query, **options, &block); end
+
+  # Queries `self` for RDF statements matching the given `pattern`,
+  # yielding each matched statement to the given block.
+  #
+  # Since RDF.rb 0.2.0, repository implementations should override this
+  # method in order to provide for storage-specific optimized triple
+  # pattern matching.
+  #
+  # ## RDFStar (RDF*)
+  #
+  # Statements may have embedded statements as either a subject or object, recursively.
+  #
+  # Patterns may also have embedded patterns as either a subject or object, recursively.
+  #
+  # When matching, match an embedded pattern against embedded statements, recursively. (see {RDF::Query::Pattern#eql?})
+  #
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options
+  # @param pattern [RDF::Query::Pattern] the query pattern to match
+  # @return [void] ignored
+  # @see RDF::Query::Pattern#execute
+  # @see RDF::Queryable#query
+  # @since 0.2.0
+  # @yield [statement]
+  # @yieldparam statement [RDF::Statement]
+  # @yieldreturn [void] ignored
   def query_pattern(pattern, **options, &block); end
 end
 
+# Extends Enumerator with {Queryable} and {Enumerable}, which is used by {Enumerable#each_statement} and {Queryable#enum_for}
 class RDF::Queryable::Enumerator < ::Enumerator
   include ::RDF::Queryable
   include ::RDF::Countable
   include ::RDF::Enumerable
 
+  # @note Make sure returned arrays are also queryable
+  # @return [Array]
   def to_a; end
 end
 
+# Vocabulary for <http://www.w3.org/2000/01/rdf-schema#>
+#
+# The RDF Schema vocabulary (RDFS)
+#
+# @see http://www.w3.org/2000/01/rdf-schema-more
 class RDF::RDFS < ::RDF::StrictVocabulary
   class << self
     def Class; end
@@ -1248,6 +6510,9 @@ class RDF::RDFS < ::RDF::StrictVocabulary
   end
 end
 
+# Vocabulary for <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#
+# This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.
 class RDF::RDFV < ::RDF::StrictVocabulary
   class << self
     def Alt; end
@@ -1290,9 +6555,43 @@ RDF::RDF_N_REGEXP = T.let(T.unsafe(nil), Regexp)
 module RDF::Readable
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Returns `true` if `self` is readable.
+  #
+  # @return [Boolean]
+  # @see RDF::Writable#writable?
   def readable?; end
 end
 
+# The base class for RDF parsers.
+#
+# @abstract
+# @example Loading an RDF reader implementation
+#   require 'rdf/ntriples'
+# @example Iterating over known RDF reader classes
+#   RDF::Reader.each { |klass| puts klass.name }
+# @example Obtaining an RDF reader class
+#   RDF::Reader.for(:ntriples)     #=> RDF::NTriples::Reader
+#   RDF::Reader.for("etc/doap.nt")
+#   RDF::Reader.for(file_name:      "etc/doap.nt")
+#   RDF::Reader.for(file_extension: "nt")
+#   RDF::Reader.for(content_type:   "application/n-triples")
+# @example Parsing RDF statements from a file
+#   RDF::Reader.open("etc/doap.nt") do |reader|
+#   reader.each_statement do |statement|
+#   puts statement.inspect
+#   end
+#   end
+# @example Parsing RDF statements from a string
+#   data = StringIO.new(File.read("etc/doap.nt"))
+#   RDF::Reader.for(:ntriples).new(data) do |reader|
+#   reader.each_statement do |statement|
+#   puts statement.inspect
+#   end
+#   end
+# @example Instantiating an RDF reader class
+#   RDF::Reader.for(:ntriples).new($stdin) { |reader| ... }
+# @see RDF::Format
+# @see RDF::Writer
 class RDF::Reader
   include ::RDF::Util::Logger
   include ::RDF::Readable
@@ -1302,65 +6601,419 @@ class RDF::Reader
   extend ::Enumerable
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Initializes the reader.
+  #
+  # @param input [IO, File, String] the input stream to read
+  # @param base_uri [#to_s] (nil)
+  #   the base URI to use when resolving relative URIs (not supported by
+  #   all readers)
+  # @param canonicalize [Boolean] (false)
+  #   whether to canonicalize parsed literals
+  # @param encoding [Encoding] (Encoding::UTF_8)
+  #   the encoding of the input stream
+  # @param intern [Boolean] (true)
+  #   whether to intern all parsed URIs
+  # @param rdfstar [Boolean] (false)
+  #   support parsing RDF* statement resources.
+  # @param prefixes [Hash] (Hash.new)
+  #   the prefix mappings to use (not supported by all readers)
+  # @param options [Hash{Symbol => Object}] any additional options
+  # @param validate [Boolean] (false)
+  #   whether to validate the parsed statements and values
+  # @return [Reader] a new instance of Reader
+  # @yield [reader] `self`
+  # @yieldparam reader [RDF::Reader]
+  # @yieldreturn [void] ignored
   def initialize(input = T.unsafe(nil), base_uri: T.unsafe(nil), canonicalize: T.unsafe(nil), encoding: T.unsafe(nil), intern: T.unsafe(nil), prefixes: T.unsafe(nil), rdfstar: T.unsafe(nil), validate: T.unsafe(nil), **options, &block); end
 
+  # Returns the base URI determined by this reader.
+  #
+  # @example
+  #   reader.prefixes[:dc]  #=> RDF::URI('http://purl.org/dc/terms/')
+  # @return [RDF::URI]
+  # @since 0.3.0
   def base_uri; end
+
+  # Returns `true` if parsed values should be canonicalized.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def canonicalize?; end
+
+  # Closes the input stream, after which an `IOError` will be raised for
+  # further read attempts.
+  #
+  # If the input stream is already closed, does nothing.
+  #
+  # @return [void]
+  # @see http://ruby-doc.org/core-2.2.2/IO.html#method-i-close
+  # @since 0.2.2
   def close; end
+
+  # Closes the input stream, after which an `IOError` will be raised for
+  # further read attempts.
+  #
+  # If the input stream is already closed, does nothing.
+  #
+  # @return [void]
+  # @see http://ruby-doc.org/core-2.2.2/IO.html#method-i-close
+  # @since 0.2.2
   def close!(*args, &block); end
+
+  # Iterates the given block for each RDF statement.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # Statements are yielded in the order that they are read from the input
+  # stream.
+  #
+  # @overload each_statement
+  # @overload each_statement
+  # @raise [RDF::ReaderError] on invalid data
+  # @return [void]
+  # @see RDF::Enumerable#each_statement
   def each(*args, &block); end
+
+  # Iterates the given block for each RDF statement.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # Statements are yielded in the order that they are read from the input
+  # stream.
+  #
+  # @overload each_statement
+  # @overload each_statement
+  # @raise [RDF::ReaderError] on invalid data
+  # @return [void]
+  # @see RDF::Enumerable#each_statement
   def each_statement(&block); end
+
+  # Iterates the given block for each RDF triple.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # Triples are yielded in the order that they are read from the input
+  # stream.
+  #
+  # @overload each_triple
+  # @overload each_triple
+  # @return [void]
+  # @see RDF::Enumerable#each_triple
   def each_triple(&block); end
+
+  # Returns the encoding of the input stream.
+  #
+  # @return [Encoding]
   def encoding; end
+
+  # Returns `true` if parsed URIs should be interned.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def intern?; end
+
+  # Current line number being processed. For formats that can associate generated {Statement} with a particular line number from input, this value reflects that line number.
+  #
+  # @return [Integer]
   def lineno; end
+
+  # Any additional options for this reader.
+  #
+  # @return [Hash]
+  # @since 0.3.0
   def options; end
+
+  # Defines the given named URI prefix for this reader.
+  #
+  # @example Defining a URI prefix
+  #   reader.prefix :dc, RDF::URI('http://purl.org/dc/terms/')
+  # @example Returning a URI prefix
+  #   reader.prefix(:dc)    #=> RDF::URI('http://purl.org/dc/terms/')
+  # @overload prefix
+  # @overload prefix
+  # @return [RDF::URI]
   def prefix(name, uri = T.unsafe(nil)); end
+
+  # Defines the given named URI prefix for this reader.
+  #
+  # @example Defining a URI prefix
+  #   reader.prefix :dc, RDF::URI('http://purl.org/dc/terms/')
+  # @example Returning a URI prefix
+  #   reader.prefix(:dc)    #=> RDF::URI('http://purl.org/dc/terms/')
+  # @overload prefix
+  # @overload prefix
+  # @return [RDF::URI]
   def prefix!(*args, &block); end
+
+  # Returns the URI prefixes currently defined for this reader.
+  #
+  # @example
+  #   reader.prefixes[:dc]  #=> RDF::URI('http://purl.org/dc/terms/')
+  # @return [Hash{Symbol => RDF::URI}]
+  # @since 0.3.0
   def prefixes; end
+
+  # Defines the given URI prefixes for this reader.
+  #
+  # @example
+  #   reader.prefixes = {
+  #   dc: RDF::URI('http://purl.org/dc/terms/'),
+  #   }
+  # @param prefixes [Hash{Symbol => RDF::URI}]
+  # @return [Hash{Symbol => RDF::URI}]
+  # @since 0.3.0
   def prefixes=(prefixes); end
+
+  # Rewinds the input stream to the beginning of input.
+  #
+  # @return [void]
+  # @see http://ruby-doc.org/core-2.2.2/IO.html#method-i-rewind
+  # @since 0.2.3
   def rewind; end
+
+  # Rewinds the input stream to the beginning of input.
+  #
+  # @return [void]
+  # @see http://ruby-doc.org/core-2.2.2/IO.html#method-i-rewind
+  # @since 0.2.3
   def rewind!(*args, &block); end
+
+  # Returns a symbol appropriate to use with RDF::Reader.for()
+  #
+  # @return [Symbol]
   def to_sym; end
+
+  # @example Parsing RDF statements from a file
+  #   RDF::NTriples::Reader.new("!!invalid input??") do |reader|
+  #   reader.valid? # => false
+  #   end
+  # @note this parses the full input and is valid only in the reader block.
+  #   Use `Reader.new(input, validate: true)` if you intend to capture the
+  #   result.
+  # @return [Boolean]
+  # @see RDF::Value#validate! for Literal & URI validation relevant to
+  #   error handling.
+  # @see Enumerable#valid?
   def valid?; end
+
+  # Returns `true` if parsed statements and values should be validated.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def validate?; end
 
   protected
 
+  # Recursively emit embedded statements in Property Graph mode
+  #
+  # @param statement [RDF::Statement]
   def each_pg_statement(statement, &block); end
+
+  # Raises an "expected object" parsing error on the current line.
+  #
+  # @raise [RDF::ReaderError]
+  # @return [void]
   def fail_object; end
+
+  # Raises an "expected predicate" parsing error on the current line.
+  #
+  # @raise [RDF::ReaderError]
+  # @return [void]
   def fail_predicate; end
+
+  # Raises an "expected subject" parsing error on the current line.
+  #
+  # @raise [RDF::ReaderError]
+  # @return [void]
   def fail_subject; end
+
+  # Reads a statement from the input stream.
+  #
+  # @abstract
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [RDF::Statement] a statement
   def read_statement; end
+
+  # Reads a triple from the input stream.
+  #
+  # @abstract
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [Array(RDF::Term)] a triple
   def read_triple; end
 
   private
 
+  # @return [Boolean]
   def blank?; end
+
+  # @private
+  # @return [String] The most recently read line of the input
   def current_line; end
+
+  # @param pattern [Regexp]
+  # @return [Object]
   def match(pattern); end
+
+  # @return [String]
   def readline; end
+
+  # @return [void]
   def strip!; end
 
   class << self
+    # Enumerates known RDF reader classes.
+    #
+    # @return [Enumerator]
+    # @yield [klass]
+    # @yieldparam klass [Class]
     def each(&block); end
+
+    # Finds an RDF reader class based on the given criteria.
+    #
+    # If the reader class has a defined format, use that.
+    #
+    # @overload for
+    # @overload for
+    # @overload for
+    # @return [Class]
     def for(*arg, &block); end
+
+    # Retrieves the RDF serialization format class for this reader class.
+    #
+    # @return [Class]
     def format(klass = T.unsafe(nil)); end
+
+    # Retrieves the RDF serialization format class for this reader class.
+    #
+    # @return [Class]
     def format_class(klass = T.unsafe(nil)); end
+
+    # @private
+    # @return [void]
     def inherited(child); end
+
+    # Parses input from the given file name or URL.
+    #
+    # @example Parsing RDF statements from a file
+    #   RDF::Reader.open("etc/doap.nt") do |reader|
+    #   reader.each_statement do |statement|
+    #   puts statement.inspect
+    #   end
+    #   end
+    # @note A reader returned via this method may not be readable depending on the processing model of the specific reader, as the file is only open during the scope of `open`. The reader is intended to be accessed through a block.
+    # @param format [Symbol]
+    # @param options [Hash{Symbol => Object}] any additional options (see {RDF::Util::File.open_file}, {RDF::Reader#initialize} and {RDF::Format.for})
+    # @param filename [String, #to_s]
+    # @raise [RDF::FormatError] if no reader found for the specified format
+    # @yield [reader]
+    # @yieldparam reader [RDF::Reader]
+    # @yieldreturn [void] ignored
     def open(filename, format: T.unsafe(nil), **options, &block); end
+
+    # Options suitable for automatic Reader provisioning.
+    #
+    # @return [Array<RDF::CLI::Option>]
     def options; end
+
+    # Returns a symbol appropriate to use with RDF::Reader.for()
+    #
+    # @return [Symbol]
     def to_sym; end
   end
 end
 
+# The base class for RDF parsing errors.
 class RDF::ReaderError < ::IOError
+  # Initializes a new lexer error instance.
+  #
+  # @param message [String, #to_s]
+  # @param token [String] (nil)
+  # @param lineno [Integer] (nil)
+  # @return [ReaderError] a new instance of ReaderError
   def initialize(message, token: T.unsafe(nil), lineno: T.unsafe(nil)); end
 
+  # The line number where the error occurred.
+  #
+  # @return [Integer]
   def lineno; end
+
+  # The invalid token which triggered the error.
+  #
+  # @return [String]
   def token; end
 end
 
+# An RDF repository.
+#
+# Repositories support transactions with a variety of ACID semantics:
+#
+# Atomicity is indicated by `#supports?(:atomic_write)`. When atomicity is
+# supported, writes through {#transaction}, {#apply_changeset} and
+# {#delete_insert} are applied atomically.
+#
+# Consistency should be guaranteed, in general. Repositories that don't
+# support consistency, or that have specialized definitions of consistency
+# above those declared by the RDF data model, should advertise this fact in
+# their documentation.
+#
+# Isolation may be supported at various levels, indicated by
+# {#isolation_level}:
+#   - `:read_uncommitted`: Inserts & deletes in an uncommitted transaction
+#      scope may be visible to other transactions (or via `#each`, etc...)
+#   - `:read_committed`: Inserts & deletes may be visible to other
+#      transactions once committed
+#   - `:repeatable_read`: Phantom reads may be possible
+#   - `:snapshot`: A transaction reads a consistent snapshot of the data.
+#      Write skew anomalies may occur (for various definitions of consistency)
+#   - `:serializable`: A transaction reads a consistent snapshot of the data.
+#      When two or more transactions attempt conflicting writes, only one of
+#      them may succeed.
+#
+# Durability is noted via {RDF::Durable} support and {#durable?}
+# /{#nondurable?}.
+#
+# @example Transational read/write of a repository
+#   repository.transaction(mutable: true) do |tx|
+#   tx.insert(*statements)
+#   tx.insert(statement)
+#   tx.insert([subject, predicate, object])
+#   tx.delete(*statements)
+#   tx.delete(statement)
+#   tx.delete([subject, predicate, object])
+#   end
+# @example Checking whether a repository is readable/writable
+#   repository.readable?
+#   repository.writable?
+# @example Checking whether a repository is persistent or transient
+#   repository.persistent?
+#   repository.transient?
+# @example Checking whether a repository is empty
+#   repository.empty?
+# @example Checking how many statements a repository contains
+#   repository.count
+# @example Checking whether a repository contains a specific statement
+#   repository.statement?(statement)
+# @example Enumerating statements in a repository
+#   repository.each_statement { |statement| statement.inspect! }
+# @example Inserting statements into a repository
+#   repository.insert(*statements)
+#   repository.insert(statement)
+#   repository.insert([subject, predicate, object])
+#   repository << statement
+#   repository << [subject, predicate, object]
+# @example Deleting statements from a repository
+#   repository.delete(*statements)
+#   repository.delete(statement)
+#   repository.delete([subject, predicate, object])
+# @example Deleting all statements from a repository
+#   repository.clear!
+# @example Transational read from a repository
+#   repository.transaction do |tx|
+#   tx.statement?(statement)
+#   tx.query([:s, :p, :o])
+#   end
+# @example Creating a transient in-memory repository
+#   repository = RDF::Repository.new
 class RDF::Repository < ::RDF::Dataset
   include ::RDF::Readable
   include ::RDF::Util::Coercions
@@ -1368,67 +7021,214 @@ class RDF::Repository < ::RDF::Dataset
   include ::RDF::Mutable
   include ::RDF::Transactable
 
+  # Initializes this repository instance.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @param title [String, #to_s] (nil)
+  # @param uri [URI, #to_s] (nil)
+  # @param options [Hash{Symbol => Object}]
+  # @return [Repository] a new instance of Repository
+  # @yield [repository]
+  # @yieldparam repository [Repository]
   def initialize(uri: T.unsafe(nil), title: T.unsafe(nil), **options, &block); end
 
+  # Performs a set of deletes and inserts as a combined operation within a
+  # transaction. The Repository's transaction semantics apply to updates made
+  # through this method.
+  #
+  # @see RDF::Mutable#delete_insert
   def delete_insert(deletes, inserts); end
+
+  # @see RDF::Dataset#isolation_level
   def isolation_level; end
+
+  # Returns the options passed to this repository when it was constructed.
+  #
+  # @return [Hash{Symbol => Object}]
   def options; end
+
+  # @private
+  # @see RDF::Enumerable#project_graph
   def project_graph(graph_name, &block); end
+
+  # A queryable snapshot of the repository for isolated reads.
+  #
+  # @raise [NotImplementedError]
+  # @return [Dataset] an immutable Dataset containing a current snapshot of
+  #   the Repository contents.
   def snapshot; end
+
+  # Returns `true` if this respository supports the given `feature`.
+  #
+  # Supported features include those from {RDF::Enumerable#supports?} along
+  #  with the following:
+  #   * `:atomic_write` supports atomic write in transaction scopes
+  #   * `:snapshots` supports creation of immutable snapshots of current
+  #        contents via #snapshot.
+  #
+  # @return [Boolean]
+  # @see RDF::Enumerable#supports?
   def supports?(feature); end
+
+  # Returns the title of this repository.
+  #
+  # @return [String]
   def title; end
+
+  # Returns the {URI} of this repository.
+  #
+  # @return [URI]
   def uri; end
+
+  # Returns the {URI} of this repository.
+  #
+  # @return [URI]
   def url; end
 
   protected
 
+  # @private
+  # @see RDF::Transactable#begin_transaction
+  # @since 0.3.0
   def begin_transaction(mutable: T.unsafe(nil), graph_name: T.unsafe(nil)); end
 
   class << self
+    # Loads one or more RDF files into a new transient in-memory repository.
+    #
+    # @param urls [String, Array<String>]
+    # @param options [Hash{Symbol => Object}] Options from {RDF::Repository#initialize} and {RDF::Mutable#load}
+    # @return [void]
+    # @yield [repository]
+    # @yieldparam [Repository]
     def load(urls, **options, &block); end
   end
 end
 
 RDF::Repository::DEFAULT_TX_CLASS = RDF::Transaction
 
+# A default Repository implementation supporting atomic writes and
+# serializable transactions.
+#
+# @see RDF::Repository
 module RDF::Repository::Implementation
+  # @see Mutable#apply_changeset
   def apply_changeset(changeset); end
+
+  # @private
+  # @see RDF::Countable#count
   def count; end
+
+  # @private
+  # @see RDF::Enumerable#each_statement
   def each(&block); end
+
+  # @private
+  # @see RDF::Enumerable#each_graph
   def each_graph(&block); end
+
+  # @private
+  # @see RDF::Enumerable#each_statement
   def each_statement(&block); end
+
+  # @overload graph?
+  # @overload graph?
   def graph?(*args); end
+
+  # @private
+  # @see RDF::Enumerable#each_graph
   def graph_names(options = T.unsafe(nil), &block); end
+
+  # @overload graph?
+  # @overload graph?
   def has_graph?(*args); end
+
+  # @overload statement?
+  # @overload statement?
   def has_statement?(*args); end
+
+  # @see RDF::Dataset#isolation_level
   def isolation_level; end
+
+  # A readable & queryable snapshot of the repository for isolated reads.
+  #
+  # @return [Dataset] an immutable Dataset containing a current snapshot of
+  #   the Repository contents.
+  # @see Mutable#snapshot
   def snapshot; end
+
+  # @overload statement?
+  # @overload statement?
   def statement?(*args); end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Enumerable#supports?
   def supports?(feature); end
 
   protected
 
+  # @private
+  # @see RDF::Mutable#clear
   def clear_statements; end
+
+  # @private
+  # @return [Hamster::Hash]
   def data; end
+
+  # @private
+  # @return [Hamster::Hash]
   def data=(hash); end
+
+  # @private
+  # @see RDF::Mutable#delete
   def delete_statement(statement); end
+
+  # @private
+  # @see RDF::Mutable#insert
   def insert_statement(statement); end
+
+  # Match elements with `eql?`, not `==`
+  #
+  # `graph_name` of `false` matches default graph. Unbound variable matches
+  # non-false graph name
+  #
+  # @private
+  # @see RDF::Queryable#query_pattern
   def query_pattern(pattern, **options, &block); end
 
   private
 
+  # @private
+  # @return [Hamster::Hash] a new, updated hamster hash
   def delete_from(data, statement); end
+
+  # @private
+  # @return [Boolean]
+  # @see #statement?
   def has_statement_in?(data, statement); end
+
+  # @private
+  # @raise [ArgumentError]
+  # @return [Hamster::Hash] a new, updated hamster hash
   def insert_to(data, statement); end
+
+  # @private
+  # @return [Boolean]
+  # @see #statement?
   def statement_in?(data, statement); end
 
   class << self
+    # @private
     def extend_object(obj); end
   end
 end
 
+# @deprecated moved to {RDF::Transaction::SerializedTransaction}
 RDF::Repository::Implementation::SerializedTransaction = RDF::Transaction::SerializedTransaction
 
+# An RDF resource.
 module RDF::Resource
   include ::RDF::Value
   include ::Comparable
@@ -1436,13 +7236,40 @@ module RDF::Resource
   include ::SPARQL::Algebra::Expression
   include ::RDF::Term
 
+  # Returns `true` to indicate that this value is a resource.
+  #
+  # @return [Boolean]
   def resource?; end
 
   class << self
+    # Instantiates an {RDF::Node} or an {RDF::URI}, depending on the given
+    # argument.
+    #
+    # @return [RDF::Resource]
     def new(*args, &block); end
   end
 end
 
+# An RDF statement.
+#
+# @example Creating an RDF statement
+#   s = RDF::URI.new("https://rubygems.org/gems/rdf")
+#   p = RDF::Vocab::DC.creator
+#   o = RDF::URI.new("http://ar.to/#self")
+#   RDF::Statement(s, p, o)
+# @example Creating an RDF statement with a graph_name
+#   uri = RDF::URI("http://example/")
+#   RDF::Statement(s, p, o, graph_name: uri)
+# @example Creating an RDF statement from a `Hash`
+#   RDF::Statement({
+#   subject:   RDF::URI.new("https://rubygems.org/gems/rdf"),
+#   predicate: RDF::Vocab::DC.creator,
+#   object:    RDF::URI.new("http://ar.to/#self"),
+#   })
+# @example Creating an RDF statement with interned nodes
+#   RDF::Statement(:s, p, :o)
+# @example Creating an RDF statement with a string
+#   RDF::Statement(s, p, "o")
 class RDF::Statement
   include ::RDF::Value
   include ::Comparable
@@ -1451,114 +7278,539 @@ class RDF::Statement
   include ::RDF::Term
   include ::RDF::Resource
 
+  # @overload initialize
+  # @overload initialize
+  # @return [Statement] a new instance of Statement
   def initialize(subject = T.unsafe(nil), predicate = T.unsafe(nil), object = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Checks statement equality as a triple.
+  #
+  # @param other [Object]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def ==(other); end
+
+  # Checks statement equality with patterns.
+  #
+  # Uses `#eql?` to compare each of `#subject`, `#predicate`, `#object`, and
+  # `#graph_name` to those of `other`. Any statement part which is not
+  # present in `self` is ignored.
+  #
+  # @example
+  #   statement = RDF::Statement.new(RDF::URI('s'), RDF::URI('p'), RDF::URI('o'))
+  #   pattern   = RDF::Statement.new(RDF::URI('s'), RDF::URI('p'), RDF::Query::Variable.new)
+  #
+  #   # true
+  #   statement === statement
+  #   pattern   === statement
+  #   RDF::Statement.new(nil, nil, nil) === statement
+  #
+  #   # false
+  #   statement === pattern
+  #   statement === RDF::Statement.new(nil, nil, nil)
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#eql?
+  # @see RDF::Node#eql?
+  # @see RDF::Literal#eql?
+  # @see RDF::Query::Variable#eql?
   def ===(other); end
+
+  # @param index [Integer]
+  # @return [RDF::Term]
   def [](index); end
+
+  # @param index [Integer]
+  # @param value [RDF::Term]
+  # @return [RDF::Term]
   def []=(index, value); end
+
+  # @return [Boolean]
   def asserted?; end
+
+  # Returns a version of the statement with each position in canonical form
+  #
+  # @return [RDF::Statement] `self` or nil if statement cannot be canonicalized
+  # @since 1.0.8
   def canonicalize; end
+
+  # Canonicalizes each unfrozen term in the statement
+  #
+  # @raise [ArgumentError] if any element cannot be canonicalized.
+  # @return [RDF::Statement] `self`
+  # @since 1.0.8
   def canonicalize!; end
+
+  # Determines if the statement is complete, vs. invalid. A complete statement is one in which none of `subject`, `predicate`, or `object`, are nil.
+  #
+  # @return [Boolean]
+  # @since 3.0
   def complete?; end
+
+  # Returns `true` if any element of the statement is, itself, a statement.
+  #
+  # @return [Boolean]
   def embedded?; end
+
+  # Checks statement equality as a quad.
+  #
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def eql?(other); end
+
   def executable?; end
+
+  # @overload graph?
+  # @overload graph?
   def graph?(*args); end
+
+  # @return [RDF::Resource]
   def graph_name; end
+
+  # @return [RDF::Resource]
   def graph_name=(_arg0); end
+
+  # Returns `true` if any resource of this statement is a blank node
+  # or has an embedded statement including a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def has_blank_nodes?; end
+
+  # @overload graph?
+  # @overload graph?
   def has_graph?(*args); end
+
+  # @overload graph?
+  # @overload graph?
   def has_name?(*args); end
+
+  # @return [Boolean]
   def has_object?; end
+
+  # @return [Boolean]
   def has_predicate?; end
+
+  # @return [Boolean]
   def has_subject?; end
+
+  # Generates a Integer hash value as a quad.
   def hash; end
+
+  # @return [Object]
   def id; end
+
+  # @return [Object]
   def id=(_arg0); end
+
+  # Determines if the statement is incomplete, vs. invalid. An incomplete statement is one in which any of `subject`, `predicate`, or `object`, are nil.
+  #
+  # @return [Boolean]
+  # @since 3.0
   def incomplete?; end
+
+  # @return [Boolean]
   def inferred?; end
+
+  # @private
   def initialize!; end
+
+  # @return [Boolean]
   def invalid?; end
+
+  # @overload graph?
+  # @overload graph?
   def name?(*args); end
+
+  # Returns `true` if any resource of this statement is a blank node
+  # or has an embedded statement including a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def node?; end
+
+  # @return [RDF::Term]
   def object; end
+
+  # @return [RDF::Term]
   def object=(_arg0); end
+
+  # @return [Boolean]
   def object?; end
+
   def optimize(**options); end
+
+  # @return [Hash{Symbol => Object}]
   def options; end
+
+  # @return [Hash{Symbol => Object}]
   def options=(_arg0); end
+
+  # @return [RDF::URI]
   def predicate; end
+
+  # @return [RDF::URI]
   def predicate=(_arg0); end
+
+  # @return [Boolean]
   def predicate?; end
+
+  # @return [Boolean]
   def quoted?; end
+
+  # Returns a graph containing this statement in reified form.
+  #
+  # @param subject [RDF::Term] (nil)
+  #   Subject of reification.
+  # @param id [RDF::Term] (nil)
+  #   Node identifier, when subject is anonymous
+  # @param graph_name [RDF::Term] (nil)
+  #   Note, in RDF 1.1, a graph name MUST be an {Resource}.
+  # @return [RDF::Graph]
+  # @see http://www.w3.org/TR/rdf-primer/#reification
   def reified(subject: T.unsafe(nil), id: T.unsafe(nil), graph_name: T.unsafe(nil)); end
+
+  # @overload statement?
+  # @overload statement?
   def statement?(*args); end
+
+  # @return [RDF::Resource]
   def subject; end
+
+  # @return [RDF::Resource]
   def subject=(_arg0); end
+
+  # @return [Boolean]
   def subject?; end
+
+  # Returns an array of all the non-nil non-statement terms.
+  #
+  # @return [Array(RDF::Term)]
   def terms; end
+
+  # @return [Array(RDF::Term)]
   def to_a; end
+
+  # Returns the terms of this statement as a `Hash`.
+  #
+  # @param subject_key [Symbol]
+  # @param predicate_key [Symbol]
+  # @param object_key [Symbol]
+  # @return [Hash{Symbol => RDF::Term}]
   def to_h(subject_key = T.unsafe(nil), predicate_key = T.unsafe(nil), object_key = T.unsafe(nil), graph_key = T.unsafe(nil)); end
+
+  # @return [Array(RDF::Term)]
   def to_quad; end
+
+  # Returns a string representation of this statement.
+  #
+  # @return [String]
   def to_s; end
+
   def to_sparql(**options); end
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
   def to_sxp_bin; end
+
+  # @return [Array(RDF::Term)]
   def to_triple; end
+
+  # @return [Boolean]
   def valid?; end
+
+  # URI, Node or Literal.
+  #
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
   def variable?(*args); end
 
   class << self
+    # @private
+    # @since 0.2.2
     def from(statement, graph_name: T.unsafe(nil), **options); end
   end
 end
 
+# Represents an RDF Vocabulary. The difference from {RDF::Vocabulary} is that
+# that every concept in the vocabulary is required to be declared. To assist
+# in this, an existing RDF representation of the vocabulary can be loaded as
+# the basis for concepts being available
 class RDF::StrictVocabulary < ::RDF::Vocabulary
   class << self
+    # Returns the URI for the term `property` in this vocabulary.
+    #
+    # @param name [#to_s]
+    # @raise [KeyError] if property not defined in vocabulary
+    # @return [RDF::URI]
     def [](name); end
+
     def method_missing(*_arg0); end
+
+    # Is this a strict vocabulary, or a liberal vocabulary allowing arbitrary properties?
+    #
+    # @return [Boolean]
     def strict?; end
   end
 end
 
+# An RDF term.
+#
+# Terms can be used as subjects, predicates, objects, and graph names of
+# statements.
+#
+# @since 0.3.0
 module RDF::Term
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
 
+  # Compares `self` to `other` for sorting purposes.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @since 0.3.0
   def <=>(other); end
+
+  # Compares `self` to `other` to implement RDFterm-equal.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+  # @since 0.3.0
   def ==(other); end
+
   def aggregate?; end
+
+  # Term compatibility according to SPARQL
+  #
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/sparql11-query/#func-arg-compatibility
+  # @since 2.0
   def compatible?(other); end
+
+  # Determins if `self` is the same term as `other`.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
+  # @since 0.3.0
   def eql?(other); end
+
   def evaluate(bindings, **options); end
   def ndvars; end
   def optimize(**options); end
+
+  # @overload term?
+  # @overload term?
+  # @since 0.3.0
   def term?(*args); end
+
+  # Returns an array including just itself.
+  #
+  # @return [Array<RDF::Value>]
+  # @since 0.3.0
   def terms; end
+
+  # Returns the base representation of this term.
+  #
+  # @return [Sring]
+  # @since 0.3.0
   def to_base; end
+
   def to_sparql(**options); end
+
+  # Returns itself.
+  #
+  # @return [RDF::Value]
+  # @since 0.3.0
   def to_term; end
+
   def vars; end
 
   protected
 
+  # Escape a term using escapes. This should be implemented as appropriate for the given type of term.
+  #
+  # @param string [String]
+  # @raise [NotImplementedError]
+  # @return [String]
+  # @since 0.3.0
   def escape(string); end
 end
 
+# A transaction application mixin.
+#
+# Classes that include this module must provide a `#begin_transaction` method
+# returning an {RDF::Transaction}.
+#
+# @example running a read/write transaction with block syntax
+#   repository = RDF::Repository.new # or other transactable
+#
+#   repository.transaction(mutable: true) do |tx|
+#   tx.insert [:node, RDF.type, RDF::OWL.Thing]
+#   # ...
+#   end
+# @see RDF::Transaction
+# @since 2.0.0
 module RDF::Transactable
+  # Executes the given block in a transaction.
+  #
+  # Raising an error within the transaction block causes automatic rollback.
+  #
+  # @example running a transaction
+  #   repository.transaction(mutable: true) do |tx|
+  #   tx.insert [RDF::URI("https://rubygems.org/gems/rdf"), RDF::RDFS.label, "RDF.rb"]
+  #   end
+  # @example manipulating a live transaction
+  #   tx = repository.transaction(mutable: true)
+  #   tx.insert [RDF::URI("https://rubygems.org/gems/rdf"), RDF::RDFS.label, "RDF.rb"]
+  #   tx.execute
+  # @overload transaction
+  # @overload transaction
+  # @see RDF::Transaction
+  # @since 0.3.0
   def transact(mutable: T.unsafe(nil), &block); end
+
+  # Executes the given block in a transaction.
+  #
+  # Raising an error within the transaction block causes automatic rollback.
+  #
+  # @example running a transaction
+  #   repository.transaction(mutable: true) do |tx|
+  #   tx.insert [RDF::URI("https://rubygems.org/gems/rdf"), RDF::RDFS.label, "RDF.rb"]
+  #   end
+  # @example manipulating a live transaction
+  #   tx = repository.transaction(mutable: true)
+  #   tx.insert [RDF::URI("https://rubygems.org/gems/rdf"), RDF::RDFS.label, "RDF.rb"]
+  #   tx.execute
+  # @overload transaction
+  # @overload transaction
+  # @see RDF::Transaction
+  # @since 0.3.0
   def transaction(mutable: T.unsafe(nil), &block); end
 
   protected
 
+  # Begins a new transaction.
+  #
+  # Subclasses implementing transaction-capable storage adapters may wish
+  # to override this method in order to begin a transaction against the
+  # underlying storage.
+  #
+  # @param mutable [Boolean] Create a mutable or immutable transaction.
+  # @param graph_name [Boolean] A default graph name for statements inserted
+  #   or deleted (default: nil)
+  # @raise [NotImplementedError]
+  # @return [RDF::Transaction]
+  # @since 2.0.0
   def begin_transaction(mutable: T.unsafe(nil), graph_name: T.unsafe(nil)); end
+
+  # Commits the given transaction.
+  #
+  # Subclasses implementing transaction-capable storage adapters may wish
+  # to override this method in order to commit the given transaction to
+  # the underlying storage.
+  #
+  # @param tx [RDF::Transaction]
+  # @return [void] ignored
+  # @since 0.3.0
   def commit_transaction(tx); end
+
+  # Rolls back the given transaction.
+  #
+  # @param tx [RDF::Transaction]
+  # @return [void] ignored
+  # @since 0.3.0
   def rollback_transaction(tx); end
 end
 
+# An RDF transaction.
+#
+# Transactions provide an ACID scope for queries and mutations.
+#
+# Repository implementations may provide support for transactional updates
+# by providing an atomic implementation of {Mutable#apply_changeset} and
+# responding to `#supports?(:atomic_write)` with `true`.
+#
+# We carefully distinguish between read-only and read/write transactions,
+# in order to enable repository implementations to take out the
+# appropriate locks for concurrency control. Transactions are read-only
+# by default; mutability must be explicitly requested on construction in
+# order to obtain a read/write transaction.
+#
+# Individual repositories may make their own sets of guarantees within the
+# transaction's scope. In case repository implementations should be unable
+# to provide full ACID guarantees for transactions, that must be clearly
+# indicated in their documentation. If update atomicity is not provided,
+# `#supports?(:atomic_write)` must respond `false`.
+#
+# The base class provides an atomic write implementation depending on
+# {RDF::Changeset} and using {Changeset#apply}. Custom {Repository} classes
+# can implement a minimial write-atomic transactions by overriding
+# {#apply_changeset}.
+#
+# Reads within a transaction run against the live repository by default
+# ({#isolation_level} is `:read_committed`). Repositories may provide support
+# for snapshots by implementing {Repository#snapshot} and responding `true` to
+# `#supports?(:snapshots)`. In this case, the transaction will use the
+# {RDF::Dataset} returned by {#snapshot} for reads (`:repeatable_read`).
+#
+# For datastores that support transactions natively, implementation of a
+# custom {Transaction} subclass is recommended. The {Repository} is
+# responsible for specifying snapshot support and isolation level as
+# appropriate. Note that repositories may provide the snapshot isolation level
+# without implementing {#snapshot}.
+#
+# @example Executing a read-only transaction
+#   repository = RDF::Repository.new
+#
+#   RDF::Transaction.begin(repository) do |tx|
+#   tx.query({predicate: RDF::Vocab::DOAP.developer}) do |statement|
+#   puts statement.inspect
+#   end
+#   end
+# @example Executing a read/write transaction
+#   repository = RDF::Repository.new
+#
+#   RDF::Transaction.begin(repository, mutable: true) do |tx|
+#   subject = RDF::URI("http://example.org/article")
+#   tx.delete [subject, RDF::RDFS.label, "Old title"]
+#   tx.insert [subject, RDF::RDFS.label, "New title"]
+#   end
+# @example A repository with a custom transaction class
+#   class MyRepository < RDF::Repository
+#   DEFAULT_TX_CLASS = MyTransaction
+#   # ...
+#   # custom repository logic
+#   # ...
+#   end
+# @see RDF::Changeset
+# @see RDF::Mutable#apply_changeset
+# @since 0.3.0
 class RDF::Transaction
   include ::RDF::Readable
   include ::RDF::Util::Coercions
@@ -1569,58 +7821,271 @@ class RDF::Transaction
   include ::RDF::Enumerable
   include ::RDF::Queryable
 
+  # Initializes this transaction.
+  #
+  # @param options [Hash{Symbol => Object}]
+  # @param mutable [Boolean] (false)
+  #   Whether this is a read-only or read/write transaction.
+  # @raise [TransactionError]
+  # @return [Transaction] a new instance of Transaction
+  # @since 0.3.0
+  # @yield [tx]
+  # @yieldparam tx [RDF::Transaction]
   def initialize(repository, graph_name: T.unsafe(nil), mutable: T.unsafe(nil), **options, &block); end
 
+  # RDF statement mutations to apply when executed.
+  #
+  # @return [RDF::Changeset]
+  # @since 2.0.0
   def changes; end
+
+  # @see RDF::Enumerable#each
+  # @since 0.3.0
   def each(*args, &block); end
+
+  # Executes the transaction
+  #
+  # @raise [TransactionError] if the transaction can't be applied
+  # @return [Boolean] `true` if the changes are successfully applied.
+  # @since 0.3.0
   def execute; end
+
+  # The default graph name to apply to statements inserted or deleted by the
+  # transaction.
+  #
+  # @return [RDF::Resource, nil]
+  # @since 2.0.0
   def graph_name; end
+
+  # @overload statement?
+  # @overload statement?
+  # @since 0.3.0
   def has_statement?(*args); end
+
+  # Returns a developer-friendly representation of this transaction.
+  #
+  # @return [String]
+  # @since 0.3.0
   def inspect; end
+
+  # Outputs a developer-friendly representation of this transaction to
+  # `stderr`.
+  #
+  # @return [void]
+  # @since 0.3.0
   def inspect!; end
+
+  # @see RDF::Dataset#isolation_level
+  # @since 0.3.0
   def isolation_level; end
+
+  # Returns `true` if this is a read/write transaction, `false` otherwise.
+  #
+  # @return [Boolean]
+  # @see RDF::Writable#mutable?
+  # @since 0.3.0
   def mutable?; end
+
+  # Indicates whether the transaction includes changes relative to the target
+  # repository's state at transaction start time.
+  #
+  # The response is guaranteed to be `true` if executing the transaction
+  # against the original repository state would cause a change. It may also
+  # return `true` in cases where the repository would not change (e.g.
+  # because the transaction would insert statements already present).
+  #
+  # @note `Transaction` implementers may choose to `NotImplementedError`
+  #   if the transaction implementation cannot be implemented efficiently.
+  # @raise [NotImplementedError] if a mutation check is not implemented
+  # @return [Boolean] true if the transaction has mutated (insert/delete)
+  #   since transaction start time
+  # @since 0.3.0
   def mutated?; end
+
+  # Any additional options for this transaction.
+  #
+  # @return [Hash{Symbol => Object}]
+  # @since 0.3.0
   def options; end
+
+  # Returns `true` to indicate that this transaction is readable.
+  #
+  # @return [Boolean]
+  # @see RDF::Readable#readable?
+  # @since 0.3.0
   def readable?; end
+
+  # The repository being operated upon.
+  #
+  # @return [RDF::Repository]
+  # @since 2.0.0
   def repository; end
+
+  # Rolls back the transaction
+  #
+  # @note: the base class simply replaces its current `Changeset` with a
+  #   fresh one. Other implementations may need to explictly rollback
+  #   at the supporting datastore.
+  #
+  # @note: clients should not rely on using same transaction instance after
+  #   rollback.
+  #
+  # @return [Boolean] `true` if the changes are successfully applied.
+  # @since 0.3.0
   def rollback; end
+
+  # @overload statement?
+  # @overload statement?
+  # @since 0.3.0
   def statement?(*args); end
+
+  # Returns `true` if this is a read/write transaction, `false` otherwise.
+  #
+  # @return [Boolean]
+  # @see RDF::Writable#writable?
+  # @since 0.3.0
   def writable?; end
 
   protected
 
+  # Appends an RDF statement to the sequence to delete when executed.
+  #
+  # @param statement [RDF::Statement]
+  # @return [void]
+  # @see RDF::Mutable#delete_statement
+  # @since 0.3.0
   def delete_statement(statement); end
+
+  # Appends an RDF statement to the sequence to insert when executed.
+  #
+  # @param statement [RDF::Statement]
+  # @return [void]
+  # @see RDF::Writable#insert_statement
+  # @since 0.3.0
   def insert_statement(statement); end
+
+  # @since 0.3.0
   def query_execute(*args, &block); end
+
+  # @since 0.3.0
   def query_pattern(*args, &block); end
 
   private
 
+  # @param statement [RDF::Statement]
+  # @private Adds the default graph_name to the statement, when one it does
+  #   not already have one.
+  # @return [RDF::Statement]
+  # @since 0.3.0
   def process_statement(statement); end
+
+  # @since 0.3.0
   def read_target; end
 
   class << self
+    # Executes a transaction against the given RDF repository.
+    #
+    # @param repository [RDF::Repository]
+    # @param mutable [Boolean] (false)
+    #   Whether this is a read-only or read/write transaction.
+    # @param options [Hash{Symbol => Object}]
+    # @return [void]
+    # @since 0.3.0
+    # @yield [tx]
+    # @yieldparam tx [RDF::Transaction]
     def begin(repository, mutable: T.unsafe(nil), **options, &block); end
   end
 end
 
+# A transaction with full serializability.
+#
+# @see RDF::Transaction
+# @since 0.3.0
+# @todo refactor me!
 class RDF::Transaction::SerializedTransaction < ::RDF::Transaction
+  # @return [SerializedTransaction] a new instance of SerializedTransaction
+  # @see Transaction#initialize
+  # @since 0.3.0
   def initialize(*args, **options, &block); end
 
+  # Deletes the statement from the transaction's working snapshot.
+  #
+  # @see Transaction#insert_statement
+  # @since 0.3.0
   def delete_statement(statement); end
+
+  # Replaces repository data with the transaction's snapshot in a safely
+  # serializable fashion.
+  #
+  # @note this transaction uses a pessimistic merge strategy which
+  #   fails the transaction if any data has changed in the repository
+  #   since transaction start time. However, the specific guarantee is
+  #   softer: multiple concurrent conflicting transactions will not
+  #   succeed. We may choose to implement a less pessimistic merge
+  #   strategy as a non-breaking change.
+  # @raise [TransactionError] when the transaction can't be merged.
+  # @see Transaction#execute
+  # @since 0.3.0
   def execute; end
+
+  # Inserts the statement to the transaction's working snapshot.
+  #
+  # @see Transaction#insert_statement
+  # @since 0.3.0
   def insert_statement(statement); end
+
+  # @see RDF::Dataset#isolation_level
+  # @since 0.3.0
   def isolation_level; end
+
+  # @note this is a simple object equality check.
+  # @return [Boolean]
+  # @see RDF::Transaction#mutated?
+  # @since 0.3.0
   def mutated?; end
 end
 
+# An error class for transaction failures.
+#
+# This error indicates that the transaction semantics have been violated in
+# some way.
+#
+# @since 0.3.0
 class RDF::Transaction::TransactionError < ::RuntimeError; end
 
+# An RDF type check mixin.
+#
+# This module implements #type_error, which will raise TypeError.
+#
+# @see RDF::Value
+# @see RDF::Literal
+# @see RDF::Literal
 module RDF::TypeCheck
+  # Default implementation of type_error, which returns false.
+  # Classes including RDF::TypeCheck will raise TypeError
+  # instead.
+  #
+  # @raise [TypeError]
   def type_error(message); end
 end
 
+# A Uniform Resource Identifier (URI).
+# Also compatible with International Resource Identifier (IRI)
+#
+# @example Creating an interned URI reference
+#   uri = RDF::URI.intern("https://rubygems.org/gems/rdf")
+# @example Getting the string representation of a URI
+#   uri.to_s #=> "https://rubygems.org/gems/rdf"
+# @example Creating a URI reference (2)
+#   uri = RDF::URI.new(scheme: 'http', host: 'rubygems.org', path: '/gems/rdf')
+#   #=> RDF::URI.new("https://rubygems.org/gems/rdf")
+# @example Creating a URI reference (1)
+#   uri = RDF::URI.new("https://rubygems.org/gems/rdf")
+# @see https://www.ietf.org/rfc/rfc3987.txt
+# @see https://rubydoc.info/gems/addressable
+# @see https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier
+# @see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+# @see https://www.ietf.org/rfc/rfc3986.txt
 class RDF::URI
   include ::RDF::Value
   include ::Comparable
@@ -1629,101 +8094,649 @@ class RDF::URI
   include ::RDF::Term
   include ::RDF::Resource
 
+  # @overload initialize
+  # @overload initialize
+  # @return [URI] a new instance of URI
   def initialize(*args, validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
 
+  # Simple concatenation operator.  Returns a URI formed from concatenating
+  # the string form of two elements.
+  #
+  # For building URIs from fragments, you may want to use the smart
+  # separator, `#/`.  `#join` implements another set of URI building
+  # semantics.
+  #
+  # @example Concatenating a string to a URI
+  #   RDF::URI.new('http://example.org/test') + 'test'
+  #   #=> RDF::URI('http://example.org/testtest')
+  # @example Concatenating two URIs
+  #   RDF::URI.new('http://example.org/test') + RDF::URI.new('test')
+  #   #=> RDF::URI('http://example.org/testtest')
+  # @param other [Any]
+  # @return [RDF::URI]
+  # @see RDF::URI#/
+  # @see RDF::URI#join
   def +(other); end
+
+  # 'Smart separator' URI builder
+  #
+  # This method attempts to use some understanding of the most common use
+  # cases for URLs and URNs to create a simple method for building new URIs
+  # from fragments.  This means that it will always insert a separator of
+  # some sort, will remove duplicate seperators, will always assume that a
+  # fragment argument represents a relative and not absolute path, and throws
+  # an exception when an absolute URI is received for a fragment argument.
+  #
+  # This is separate from the semantics for `#join`, which are well-defined by
+  # RFC3986 section 5.2 as part of the merging and normalization process;
+  # this method does not perform any normalization, removal of spurious
+  # paths, or removal of parent directory references `(/../)`.
+  #
+  # When `fragment` is a path segment containing a colon, best practice is to prepend a `./` and use {#join}, which resolves dot-segments.
+  #
+  # See also `#+`, which concatenates the string forms of two URIs without
+  # any sort of checking or processing.
+  #
+  # For an up-to-date list of edge case behavior, see the shared examples for
+  # RDF::URI in the rdf-spec project.
+  #
+  # @example Building a HTTP URL
+  #   RDF::URI.new('http://example.org') / 'jhacker' / 'foaf.ttl'
+  #   #=> RDF::URI('http://example.org/jhacker/foaf.ttl')
+  # @example Building a HTTP URL (absolute path components)
+  #   RDF::URI.new('http://example.org/') / '/jhacker/' / '/foaf.ttl'
+  #   #=> RDF::URI('http://example.org/jhacker/foaf.ttl')
+  # @example Using an anchored base URI
+  #   RDF::URI.new('http://example.org/users#') / 'jhacker'
+  #   #=> RDF::URI('http://example.org/users#jhacker')
+  # @example Building a URN
+  #   RDF::URI.new('urn:isbn') / 125235111
+  #   #=> RDF::URI('urn:isbn:125235111')
+  # @param fragment [Any] A URI fragment to be appended to this URI
+  # @raise [ArgumentError] if the URI is invalid
+  # @return [RDF::URI]
+  # @see RDF::URI#+
+  # @see RDF::URI#join
+  # @see <http://tools.ietf.org/html/rfc3986#section-5.2>
+  # @see <https://github.com/ruby-rdf/rdf-spec/blob/master/lib/rdf/spec/uri.rb>
   def /(fragment); end
+
+  # Checks whether this URI is equal to `other` (type checking).
+  #
+  # Per SPARQL data-r2/expr-equal/eq-2-2, numeric can't be compared with other types
+  #
+  # @example
+  #   RDF::URI('http://t.co/') == RDF::URI('http://t.co/')    #=> true
+  #   RDF::URI('http://t.co/') == 'http://t.co/'              #=> true
+  #   RDF::URI('http://www.w3.org/2000/01/rdf-schema#') == RDF::RDFS        #=> true
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   def ==(other); end
+
+  # Checks for case equality to the given `other` object.
+  #
+  # @example
+  #   RDF::URI('http://example.org/') === /example/           #=> true
+  #   RDF::URI('http://example.org/') === /foobar/            #=> false
+  #   RDF::URI('http://t.co/') === RDF::URI('http://t.co/')   #=> true
+  #   RDF::URI('http://t.co/') === 'http://t.co/'             #=> true
+  #   RDF::URI('http://www.w3.org/2000/01/rdf-schema#') === RDF::RDFS       #=> true
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ===(other); end
+
+  # Performs a pattern match using the given regular expression.
+  #
+  # @example
+  #   RDF::URI('http://example.org/') =~ /example/            #=> 7
+  #   RDF::URI('http://example.org/') =~ /foobar/             #=> nil
+  # @param pattern [Regexp]
+  # @return [Integer] the position the match starts
+  # @see String#=~
+  # @since 0.3.0
   def =~(pattern); end
+
+  # Dump of data needed to reconsitute this object using Marshal.load
+  # This override is needed to avoid serializing @mutex.
+  #
+  # @param level [Integer] The maximum depth of objects to dump.
+  # @return [String] The dump of data needed to reconsitute this object.
   def _dump(level); end
+
+  # A URI is absolute when it has a scheme
+  #
+  # @return [Boolean] `true` or `false`
   def absolute?; end
+
+  # Authority is a combination of user, password, host and port
   def authority; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def authority=(value); end
+
+  # Returns a copy of this URI converted into its canonical lexical
+  # representation.
+  #
+  # @return [RDF::URI]
+  # @since 0.3.0
   def canonicalize; end
+
+  # Converts this URI into its canonical lexical representation.
+  #
+  # @return [RDF::URI] `self`
+  # @since 0.3.0
   def canonicalize!; end
+
+  # Returns a duplicate copy of `self`.
+  #
+  # @return [RDF::URI]
   def dup; end
+
+  # Returns `true` if this URI ends with the given `string`.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').end_with?('/')          #=> true
+  #   RDF::URI('http://example.org/').end_with?('#')          #=> false
+  # @param string [String, #to_s]
+  # @return [Boolean] `true` or `false`
+  # @see String#end_with?
+  # @since 0.3.0
   def end_with?(string); end
+
+  # Returns `true` if this URI ends with the given `string`.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').end_with?('/')          #=> true
+  #   RDF::URI('http://example.org/').end_with?('#')          #=> false
+  # @param string [String, #to_s]
+  # @return [Boolean] `true` or `false`
+  # @see String#end_with?
+  # @since 0.3.0
   def ends_with?(string); end
+
+  # Checks whether this URI the same term as `other`.
+  #
+  # @example
+  #   RDF::URI('http://t.co/').eql?(RDF::URI('http://t.co/'))    #=> true
+  #   RDF::URI('http://t.co/').eql?('http://t.co/')              #=> false
+  #   RDF::URI('http://www.w3.org/2000/01/rdf-schema#').eql?(RDF::RDFS) #=> false
+  # @param other [RDF::URI]
+  # @return [Boolean] `true` or `false`
   def eql?(other); end
+
+  # @return [String]
   def fragment; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def fragment=(value); end
+
+  # @private
   def freeze; end
+
+  # Returns `true` if this URI is hierarchical and it's path component isn't equal to `/`.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').parent?             #=> false
+  #   RDF::URI('http://example.org/path/').parent?        #=> true
+  # @return [Boolean] `true` or `false`
   def has_parent?; end
+
+  # Returns a hash code for this URI.
+  #
+  # @return [Integer]
   def hash; end
+
+  # Returns `true` if the URI scheme is hierarchical.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').hier?                    #=> true
+  #   RDF::URI('urn:isbn:125235111').hier?                     #=> false
+  # @return [Boolean] `true` or `false`
+  # @see http://en.wikipedia.org/wiki/URI_scheme
+  # @see NON_HIER_SCHEMES
+  # @since 1.0.10
   def hier?; end
+
+  # @return [String]
   def host; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def host=(value); end
+
+  # Returns a <code>String</code> representation of the URI object's state.
+  #
+  # @return [String] The URI object's state, as a <code>String</code>.
   def inspect; end
+
+  # Joins several URIs together.
+  #
+  # This method conforms to join normalization semantics as per RFC3986,
+  # section 5.2.  This method normalizes URIs, removes some duplicate path
+  # information, such as double slashes, and other behavior specified in the
+  # RFC.
+  #
+  # Other URI building methods are `#/` and `#+`.
+  #
+  # For an up-to-date list of edge case behavior, see the shared examples for
+  # RDF::URI in the rdf-spec project.
+  #
+  # @example Joining two URIs
+  #   RDF::URI.new('http://example.org/foo/bar').join('/foo')
+  #   #=> RDF::URI('http://example.org/foo')
+  # @param uris [Array<String, RDF::URI, #to_s>] absolute or relative URIs.
+  # @return [RDF::URI]
+  # @see RDF::URI#/
+  # @see RDF::URI#+
+  # @see http://tools.ietf.org/html/rfc3986#section-5.2.2
+  # @see http://tools.ietf.org/html/rfc3986#section-5.2.3
+  # @see <https://github.com/ruby-rdf/rdf-spec/blob/master/lib/rdf/spec/uri.rb>
+  # @see <http://tools.ietf.org/html/rfc3986#section-5.2>
   def join(*uris); end
+
+  # Returns the string length of this URI.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').length                  #=> 19
+  # @return [Integer]
+  # @since 0.3.0
   def length; end
+
   def lexical; end
   def lexical=(value); end
+
+  # Returns a copy of this URI converted into its canonical lexical
+  # representation.
+  #
+  # @return [RDF::URI]
+  # @since 0.3.0
   def normalize; end
+
+  # Converts this URI into its canonical lexical representation.
+  #
+  # @return [RDF::URI] `self`
+  # @since 0.3.0
   def normalize!; end
+
+  # Return normalized version of authority, if any
+  #
+  # @return [String]
   def normalized_authority; end
+
+  # Normalized version of fragment
+  #
+  # @return [String]
   def normalized_fragment; end
+
+  # Normalized version of host
+  #
+  # @return [String]
   def normalized_host; end
+
+  # Normalized version of password
+  #
+  # @return [String]
   def normalized_password; end
+
+  # Normalized version of path
+  #
+  # @return [String]
   def normalized_path; end
+
+  # Normalized version of port
+  #
+  # @return [String]
   def normalized_port; end
+
+  # Normalized version of query
+  #
+  # @return [String]
   def normalized_query; end
+
+  # Return normalized version of scheme, if any
+  #
+  # @return [String]
   def normalized_scheme; end
+
+  # Normalized version of user
+  #
+  # @return [String]
   def normalized_user; end
+
+  # Normalized version of userinfo
+  #
+  # @return [String]
   def normalized_userinfo; end
+
+  # Returns object representation of this URI, broken into components
+  #
+  # @return [Hash{Symbol => String}]
   def object; end
+
+  # Returns a copy of this URI with the path component ascended to the
+  # parent directory, if any.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').parent                  #=> nil
+  #   RDF::URI('http://example.org/path/').parent             #=> RDF::URI('http://example.org/')
+  # @return [RDF::URI]
   def parent; end
+
+  # Returns `true` if this URI is hierarchical and it's path component isn't equal to `/`.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').parent?             #=> false
+  #   RDF::URI('http://example.org/path/').parent?        #=> true
+  # @return [Boolean] `true` or `false`
   def parent?; end
+
+  # {
+  # Parse a URI into it's components
+  #
+  # @param value [String, to_s]
+  # @return [Object{Symbol => String}]
   def parse(value); end
+
+  # @return [String]
   def password; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def password=(value); end
+
+  # @return [String]
   def path; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def path=(value); end
+
+  # Returns a Prefixed Name (PName) or the full IRI with any [reserved characters](https://www.w3.org/TR/turtle/#reserved) in the suffix escaped.
+  #
+  # @example Using a custom prefix for creating a PNname.
+  #   RDF::URI('http://purl.org/dc/terms/creator').
+  #   pname(prefixes: {dcterms: 'http://purl.org/dc/terms/'})
+  #   #=> "dcterms:creator"
+  # @param prefixes [Hash{Symbol => String}] Explicit set of prefixes to look for matches, defaults to loaded vocabularies.
+  # @return [String] or `nil`
+  # @see #qname
+  # @see https://www.w3.org/TR/rdf-sparql-query/#prefNames
   def pname(prefixes: T.unsafe(nil)); end
+
+  # @return [String]
   def port; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def port=(value); end
+
+  # Returns a qualified name (QName) as a tuple of `[prefix, suffix]` for this URI based on available vocabularies, if possible.
+  #
+  # @example
+  #   RDF::URI('http://www.w3.org/2000/01/rdf-schema#').qname       #=> [:rdfs, nil]
+  #   RDF::URI('http://www.w3.org/2000/01/rdf-schema#label').qname  #=> [:rdfs, :label]
+  #   RDF::RDFS.label.qname                                         #=> [:rdfs, :label]
+  #   RDF::Vocab::DC.title.qname(
+  #   prefixes: {dcterms: 'http://purl.org/dc/terms/'})           #=> [:dcterms, :title]
+  # @note within this software, the term QName is used to describe the tuple of prefix and suffix for a given IRI, where the prefix identifies some defined vocabulary. This somewhat contrasts with the notion of a [Qualified Name](https://www.w3.org/TR/2006/REC-xml-names11-20060816/#ns-qualnames) from XML, which are a subset of Prefixed Names.
+  # @param prefixes [Hash{Symbol => String}] Explicit set of prefixes to look for matches, defaults to loaded vocabularies.
+  # @return [Array(Symbol, Symbol)] or `nil` if no QName found. The suffix component will not have [reserved characters](https://www.w3.org/TR/turtle/#reserved) escaped.
   def qname(prefixes: T.unsafe(nil)); end
+
+  # @return [String]
   def query; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def query=(value); end
+
+  # Converts the query component to a Hash value.
+  #
+  # @example
+  #   RDF::URI.new("?one=1&two=2&three=3").query_values
+  #   #=> {"one" => "1", "two" => "2", "three" => "3"}
+  #   RDF::URI.new("?one=two&one=three").query_values(Array)
+  #   #=> [["one", "two"], ["one", "three"]]
+  #   RDF::URI.new("?one=two&one=three").query_values(Hash)
+  #   #=> {"one" => ["two", "three"]}
+  # @param return_type [Class] (Hash)
+  #   The return type desired. Value must be either #   `Hash` or `Array`.
+  # @raise [ArgumentError]
+  # @return [Hash, Array] The query string parsed as a Hash or Array object.
   def query_values(return_type = T.unsafe(nil)); end
+
+  # Sets the query component for this URI from a Hash object.
+  # An empty Hash or Array will result in an empty query string.
+  #
+  # @example Hash with single and array values
+  #   uri.query_values = {a: "a", b: ["c", "d", "e"]}
+  #   uri.query
+  #   # => "a=a&b=c&b=d&b=e"
+  # @example Array with Array values including repeated variables
+  #   uri.query_values = [['a', 'a'], ['b', 'c'], ['b', 'd'], ['b', 'e']]
+  #   uri.query
+  #   # => "a=a&b=c&b=d&b=e"
+  # @example Array with Array values including multiple elements
+  #   uri.query_values = [['a', 'a'], ['b', ['c', 'd', 'e']]]
+  #   uri.query
+  #   # => "a=a&b=c&b=d&b=e"
+  # @example Array with Array values having only one entry
+  #   uri.query_values = [['flag'], ['key', 'value']]
+  #   uri.query
+  #   # => "flag&key=value"
+  # @param value [Hash, #to_hash, Array] The new query values.
   def query_values=(value); end
+
+  # A URI is relative when it does not have a scheme
+  #
+  # @return [Boolean] `true` or `false`
   def relative?; end
+
+  # Attempt to make this URI relative to the provided `base_uri`. If successful, returns a relative URI, otherwise the original URI
+  #
+  # @param base_uri [#to_s]
+  # @return [RDF::URI]
   def relativize(base_uri); end
+
+  # The HTTP request URI for this URI.  This is the path and the
+  # query string.
+  #
+  # @return [String] The request URI required for an HTTP request.
   def request_uri; end
+
+  # Returns a copy of this URI with the path component set to `/`.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').root                    #=> RDF::URI('http://example.org/')
+  #   RDF::URI('http://example.org/path/').root               #=> RDF::URI('http://example.org/')
+  # @return [RDF::URI]
   def root; end
+
+  # Returns `true` if this URI's scheme is not hierarchical,
+  # or its path component is equal to `/`.
+  # Protocols not using hierarchical components are always considered
+  # to be at the root.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').root?                   #=> true
+  #   RDF::URI('http://example.org/path/').root?              #=> false
+  #   RDF::URI('urn:isbn').root?                              #=> true
+  # @return [Boolean] `true` or `false`
   def root?; end
+
+  # @return [String]
   def scheme; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def scheme=(value); end
+
+  # Returns the string length of this URI.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').length                  #=> 19
+  # @return [Integer]
+  # @since 0.3.0
   def size; end
+
+  # Returns object representation of this URI, broken into components
+  #
+  # @return [Hash{Symbol => String}]
   def to_h; end
+
+  # Returns the string representation of this URI.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').to_str                  #=> 'http://example.org/'
+  # @return [String]
   def to_s; end
+
+  # Returns the string representation of this URI.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').to_str                  #=> 'http://example.org/'
+  # @return [String]
   def to_str; end
+
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil), **options); end
+
+  # Returns `self`.
+  #
+  # @return [RDF::URI] `self`
   def to_uri; end
+
+  # Returns `true`.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://en.wikipedia.org/wiki/Uniform_Resource_Identifier
   def uri?; end
+
+  # Returns `true` if this URI is a URL.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').url?                    #=> true
+  # @return [Boolean] `true` or `false`
+  # @see http://en.wikipedia.org/wiki/Uniform_Resource_Locator
+  # @since 0.2.0
   def url?; end
+
+  # Returns `true` if this URI is a URN.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').urn?                    #=> false
+  # @return [Boolean] `true` or `false`
+  # @see http://en.wikipedia.org/wiki/Uniform_Resource_Name
+  # @since 0.2.0
   def urn?; end
+
+  # @return [String]
   def user; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def user=(value); end
+
+  # Userinfo is a combination of user and password
   def userinfo; end
+
+  # @param value [String, #to_s]
+  # @return [RDF::URI] self
   def userinfo=(value); end
+
+  # Determine if the URI is a valid according to RFC3987
+  #
+  # Note that RDF URIs syntactically can contain Unicode escapes, which are unencoded in the internal representation. To validate, %-encode specifically excluded characters from IRIREF
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.9
   def valid?; end
+
+  # Validates this URI, raising an error if it is invalid.
+  #
+  # @raise [ArgumentError] if the URI is invalid
+  # @return [RDF::URI] `self`
+  # @since 0.3.0
   def validate!; end
+
+  # lexical representation of URI, either absolute or relative
+  #
+  # @return [String]
   def value; end
 
   private
 
   def format_authority; end
   def format_userinfo(append = T.unsafe(nil)); end
+
+  # Normalize a segment using a character range
+  #
+  # @param value [String]
+  # @param expr [Regexp]
+  # @param downcase [Boolean]
+  # @return [String]
   def normalize_segment(value, expr, downcase = T.unsafe(nil)); end
 
   class << self
+    # Load dumped data to reconsitute marshaled object
+    # This override is needed to avoid serializing @mutex.
+    #
+    # @param data [String] The dump of data needed to reconsitute this object.
+    # @return [RDF::URI] The reconsituted object.
     def _load(data); end
+
+    # Cache size may be set through {RDF.config} using `uri_cache_size`.
+    #
+    # @private
+    # @return [RDF::Util::Cache]
     def cache; end
+
+    # URI decode escape sequences in value
+    # From URI gem, as this is now generally deprecated
     def decode(str); end
+
+    # URI encode matching characters in value
+    # From URI gem, as this is now generally deprecated
     def encode(str, expr); end
+
+    # Returns an interned `RDF::URI` instance based on the given `uri`
+    # string.
+    #
+    # The maximum number of cached interned URI references is given by the
+    # `CACHE_SIZE` constant. This value is unlimited by default, in which
+    # case an interned URI object will be purged only when the last strong
+    # reference to it is garbage collected (i.e., when its finalizer runs).
+    #
+    # Excepting special memory-limited circumstances, it should always be
+    # safe and preferred to construct new URI references using
+    # `RDF::URI.intern` instead of `RDF::URI.new`, since if an interned
+    # object can't be returned for some reason, this method will fall back
+    # to returning a freshly-allocated one.
+    #
+    # (see #initialize)
+    #
+    # @return [RDF::URI] an immutable, frozen URI object
     def intern(str, *args, **options); end
+
+    # Resolve paths to their simplest form.
+    #
+    # @param path [String]
+    # @return [String] normalized path
+    # @see http://tools.ietf.org/html/rfc3986#section-5.2.4
+    # @todo This process is correct, but overly iterative. It could be better done with a single regexp which handled most of the segment collapses all at once. Parent segments would still require iteration.
     def normalize_path(path); end
+
+    # Creates a new `RDF::URI` instance based on the given `uri` string.
+    #
+    # This is just an alias for {RDF::URI#initialize} for compatibity
+    # with `Addressable::URI.parse`. Actual parsing is defered
+    # until {#object} is accessed.
+    #
+    # @param str [String, #to_s]
+    # @return [RDF::URI]
     def parse(str); end
   end
 end
@@ -1741,26 +8754,45 @@ RDF::URI::IPATH_NOSCHEME = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IPATH_ROOTLESS = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IPCHAR = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IPRIVATE = T.let(T.unsafe(nil), Regexp)
+
+# Simplified, no IPvFuture
 RDF::URI::IP_literal = T.let(T.unsafe(nil), Regexp)
+
 RDF::URI::IQUERY = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IREG_NAME = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IRELATIVE_PART = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IRELATIVE_REF = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IRI = T.let(T.unsafe(nil), Regexp)
+
+# Split an IRI into it's component parts
+# scheme, authority, path, query, fragment
 RDF::URI::IRI_PARTS = T.let(T.unsafe(nil), Regexp)
+
 RDF::URI::ISEGMENT = T.let(T.unsafe(nil), Regexp)
 RDF::URI::ISEGMENT_NZ = T.let(T.unsafe(nil), Regexp)
 RDF::URI::ISEGMENT_NZ_NC = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IUNRESERVED = T.let(T.unsafe(nil), Regexp)
 RDF::URI::IUSERINFO = T.let(T.unsafe(nil), Regexp)
+
+# List of schemes known not to be hierarchical
 RDF::URI::NON_HIER_SCHEMES = T.let(T.unsafe(nil), Array)
+
 RDF::URI::PCT_ENCODED = T.let(T.unsafe(nil), Regexp)
 RDF::URI::PN_ESCAPES = T.let(T.unsafe(nil), Regexp)
+
+# Characters in a PName which must be escaped
+# Note: not all reserved characters need to be escaped in SPARQL/Turtle, but they must be unescaped when encountered
 RDF::URI::PN_ESCAPE_CHARS = T.let(T.unsafe(nil), Regexp)
+
 RDF::URI::PORT = T.let(T.unsafe(nil), Regexp)
 RDF::URI::PORT_FROM_AUTHORITY_RE = T.let(T.unsafe(nil), Regexp)
+
+# Remove port, if it is standard for the scheme when normalizing
 RDF::URI::PORT_MAPPING = T.let(T.unsafe(nil), Hash)
+
+# Remove dot expressions regular expressions
 RDF::URI::RDS_2A = T.let(T.unsafe(nil), Regexp)
+
 RDF::URI::RDS_2B1 = T.let(T.unsafe(nil), Regexp)
 RDF::URI::RDS_2B2 = T.let(T.unsafe(nil), Regexp)
 RDF::URI::RDS_2C1 = T.let(T.unsafe(nil), Regexp)
@@ -1770,118 +8802,563 @@ RDF::URI::RDS_2E = T.let(T.unsafe(nil), Regexp)
 RDF::URI::RESERVED = T.let(T.unsafe(nil), Regexp)
 RDF::URI::SCHEME = T.let(T.unsafe(nil), Regexp)
 RDF::URI::SUB_DELIMS = T.let(T.unsafe(nil), Regexp)
+
+# IRI components
 RDF::URI::UCSCHAR = T.let(T.unsafe(nil), Regexp)
+
 RDF::URI::UNRESERVED = T.let(T.unsafe(nil), Regexp)
 module RDF::Util; end
 module RDF::Util::Aliasing; end
 
+# Helpers for late-bound instance method aliasing.
+#
+# Anything that extends this module will obtain an `alias_method` class
+# method that creates late-bound instance method aliases instead of the
+# default early-bound aliases created by Ruby's `Module#alias_method`.
+#
+# This is useful because RDF.rb mixins typically alias a number of
+# overridable methods. For example, `RDF::Enumerable#count` has the
+# aliases `#size` and `#length`. Normally if implementing classes were
+# to override the default method, the aliased methods would still be
+# bound to the mixin's original reference implementation rather than the
+# new overridden method. Mixing in this module into the implementing
+# class fixes this problem.
+#
+# @example Using late-bound aliasing in a module
+#   module MyModule
+#   extend RDF::Util::Aliasing::LateBound
+#   end
+# @example Using late-bound aliasing in a class
+#   class MyClass
+#   extend RDF::Util::Aliasing::LateBound
+#   end
+# @see http://en.wikipedia.org/wiki/Name_binding
+# @since 0.2.0
 module RDF::Util::Aliasing::LateBound
+  # Makes `new_name` a late-bound alias of the method `old_name`.
+  #
+  # @example Aliasing the `#count` method to `#size` and `#length`
+  #   alias_method :size,   :count
+  #   alias_method :length, :count
+  # @param new_name [Symbol, #to_sym]
+  # @param old_name [Symbol, #to_sym]
+  # @return [void]
+  # @see http://ruby-doc.org/core/classes/Module.html#M001653
+  # @since 0.2.0
   def alias_method(new_name, old_name); end
 end
 
+# A `Hash`-like cache that holds only weak references to the values it
+# caches, meaning that values contained in the cache can be garbage
+# collected. This allows the cache to dynamically adjust to changing
+# memory conditions, caching more objects when memory is plentiful, but
+# evicting most objects if memory pressure increases to the point of
+# scarcity.
+#
+# While this cache is something of an internal implementation detail of
+# RDF.rb, some external libraries do currently make use of it as well,
+# including [SPARQL](https://github.com/ruby-rdf/sparql/) and
+# [Spira](https://github.com/ruby-rdf/spira). Do be sure to include any changes
+# here in the RDF.rb changelog.
+#
+# @see RDF::URI.intern
+# @see http://en.wikipedia.org/wiki/Weak_reference
+# @since 0.2.0
 class RDF::Util::Cache
+  # @param capacity [Integer]
+  # @return [Cache] a new instance of Cache
+  # @since 0.2.0
   def initialize(capacity = T.unsafe(nil)); end
 
+  # The configured cache capacity.
+  #
+  # @since 0.2.0
   def capacity; end
+
+  # @return [Boolean]
+  # @since 0.2.0
   def capacity?; end
+
+  # @return [Boolean]
+  # @since 0.2.0
   def has_capacity?; end
+
+  # @return [Integer]
+  # @since 0.2.0
   def size; end
 
   class << self
+    # @private
+    # @since 0.2.0
     def new(*args); end
   end
 end
 
+# This implementation relies on `ObjectSpace#_id2ref` and performs
+# optimally on Ruby >= 2.x; however, it does not work on JRuby
+# by default since much `ObjectSpace` functionality on that platform is
+# disabled unless the `-X+O` startup option is given.
+#
+# @see http://ruby-doc.org/core-2.2.2/ObjectSpace.html
+# @see http://ruby-doc.org/stdlib-2.2.0/libdoc/weakref/rdoc/WeakRef.html
+# @since 0.2.0
 class RDF::Util::Cache::ObjectSpaceCache < ::RDF::Util::Cache
+  # @param key [Object]
+  # @return [Object]
+  # @since 0.2.0
   def [](key); end
+
+  # @param key [Object]
+  # @param value [Object]
+  # @return [Object]
+  # @since 0.2.0
   def []=(key, value); end
+
+  # Remove cache entry for key
+  #
+  # @param key [Object]
+  # @return [Object] the previously referenced object
+  # @since 0.2.0
   def delete(key); end
 end
 
+# This implementation uses the `WeakRef` class from Ruby's standard
+# library, and provides adequate performance on JRuby and on Ruby 2.x.
+#
+# @see http://ruby-doc.org/stdlib-2.2.0/libdoc/weakref/rdoc/WeakRef.html
+# @since 0.2.0
 class RDF::Util::Cache::WeakRefCache < ::RDF::Util::Cache
+  # @param capacity [Integer]
+  # @return [WeakRefCache] a new instance of WeakRefCache
+  # @since 0.2.0
   def initialize(capacity = T.unsafe(nil)); end
 
+  # @param key [Object]
+  # @return [Object]
+  # @since 0.2.0
   def [](key); end
+
+  # @param key [Object]
+  # @param value [Object]
+  # @return [Object]
+  # @since 0.2.0
   def []=(key, value); end
+
+  # Remove cache entry for key
+  #
+  # @param key [Object]
+  # @return [Object] the previously referenced object
+  # @since 0.2.0
   def delete(key); end
 end
 
 module RDF::Util::Coercions
   protected
 
+  # Coerce an array of arguments into {RDF::Statement}, or
+  # {RDF::Enumerable} and then yield to a block. Note that this
+  # code was amalgamated from that which was sandwiched around
+  # both {RDF::Writable#insert_statements} and
+  # {RDF::Mutable#delete_statements}. The parameters `query` and
+  # `constant` are therefore present to handle the conditions
+  # where the statements contain wildcards and what to do about
+  # them.
+  #
+  # @example
+  #   coerce_statements(statements) { |value| do_something(value) }
+  # @param statements [#map] The arbitrary-ish input to be manipulated
+  # @param query [false, true] Whether to call `query` before the block
+  #   (as expected by {Mutable#delete_statements})
+  # @param constant [false, true] Whether to test if the statements
+  #   are constant (as expected by {Mutable#delete_statements})
+  # @raise [ArgumentError]
+  # @return statements
+  # @yield [RDF::Statement, RDF::Enumerable]
   def coerce_statements(statements, query: T.unsafe(nil), constant: T.unsafe(nil), &block); end
 end
 
+# Wrapper for retrieving RDF resources from HTTP(S) and file: scheme locations.
+#
+# By default, HTTP(S) resources are retrieved using Net::HTTP. However,
+# If the [Rest Client](https://rubygems.org/gems/rest-client) gem is included,
+# it will be used for retrieving resources, allowing for
+# sophisticated HTTP caching using [REST Client Components](https://rubygems.org/gems/rest-client-components)
+# allowing the use of `Rack::Cache` to avoid network access.
+#
+# To use other HTTP clients, consumers can subclass
+# {RDF::Util::File::HttpAdapter} and set the {RDF::Util::File.}.
+#
+# Also supports the file: scheme for access to local files.
+#
+# @since 0.2.4
 module RDF::Util::File
   class << self
+    # Get current HTTP adapter. If no adapter has been explicitly set,
+    # use RestClientAdapter (if RestClient is loaded), or the NetHttpAdapter
+    #
+    # @param use_net_http [Boolean] use the NetHttpAdapter, even if other
+    #   adapters have been configured
+    # @return [HttpAdapter]
+    # @since 1.2
     def http_adapter(use_net_http = T.unsafe(nil)); end
+
+    # Set the HTTP adapter
+    #
+    # @param http_adapter [HttpAdapter]
+    # @return [HttpAdapter]
+    # @see .http_adapter
+    # @since 1.2
     def http_adapter=(http_adapter); end
+
+    # Open the file, returning or yielding {RemoteDocument}.
+    #
+    # Input received as non-unicode, is transformed to UTF-8. With Ruby >= 2.2, all UTF is normalized to [Unicode Normalization Form C (NFC)](http://unicode.org/reports/tr15/#Norm_Forms).
+    #
+    # HTTP resources may be retrieved via proxy using the `proxy` option. If `RestClient` is loaded, they will use the proxy globally by setting something like the following:
+    #     `RestClient.proxy = "http://proxy.example.com/"`.
+    # When retrieving documents over HTTP(S), use the mechanism described in [Providing and Discovering URI Documentation](http://www.w3.org/2001/tag/awwsw/issue57/latest/) to pass the appropriate `base_uri` to the block or as the return.
+    #
+    # Applications needing HTTP caching may consider [Rest Client](https://rubygems.org/gems/rest-client) and [REST Client Components](https://rubygems.org/gems/rest-client-components) allowing the use of `Rack::Cache` as a local file cache.
+    #
+    # @example using a local HTTP cache
+    #   require 'restclient/components'
+    #   require 'rack/cache'
+    #   RestClient.enable Rack::Cache
+    #   RDF::Util::File.open_file("http://example.org/some/resource")
+    #   # => Cached resource if current, otherwise returned resource
+    # @param filename_or_url [String] to open
+    # @param proxy [String] HTTP Proxy to use for requests.
+    # @param headers [Array, String] ({})
+    #   HTTP Request headers
+    #
+    #   Defaults `Accept` header based on available reader content types to allow for content negotiation based on available readers.
+    #
+    #   Defaults  `User-Agent` header, unless one is specified.
+    # @param verify_none [Boolean] (false)
+    #   Don't verify SSL certificates
+    # @param options [Hash{Symbol => Object}] options are ignored in this implementation. Applications are encouraged
+    #   to override this implementation to provide more control over HTTP
+    #   headers and redirect following. If opening as a file,
+    #   options are passed to `Kernel.open`.
+    # @raise [IOError] if not found
+    # @return [RemoteDocument, Object] A {RemoteDocument}. If a block is given, the result of evaluating the block is returned.
+    # @since 0.2.4
+    # @yield [RemoteDocument] A {RemoteDocument} for local files
+    # @yieldreturn [Object] returned from open_file
     def open_file(filename_or_url, proxy: T.unsafe(nil), headers: T.unsafe(nil), verify_none: T.unsafe(nil), **options, &block); end
   end
 end
 
+# Use Faraday for retrieving resources
+#
+# @since 1.2
 class RDF::Util::File::FaradayAdapter < ::RDF::Util::File::HttpAdapter
   class << self
+    # Get the Faraday::Connection to use for retrieving RDF resources,
+    # or a default connect that follows redirects.
+    #
+    # @since 1.2
     def conn; end
+
+    # Set the Faraday::Connection to use for retrieving RDF resources
+    #
+    # @since 1.2
     def conn=(conn); end
+
+    # @abstract
+    # @param base_uri [String] to open
+    # @param proxy [String] HTTP Proxy to use for requests.
+    # @param headers [Array, String] ({})
+    #   HTTP Request headers
+    #
+    #   Defaults `Accept` header based on available reader content types to allow for content negotiation based on available readers.
+    #
+    #   Defaults  `User-Agent` header, unless one is specified.
+    # @param options [Hash{Symbol => Object}] options are ignored in this implementation. Applications are encouraged
+    #   to override this implementation to provide more control over HTTP
+    #   headers and redirect following.
+    # @param verify_none [Boolean] (false)
+    #   Don't verify SSL certificates
+    # @raise [IOError] if not found
+    # @return [RemoteDocument, Object] A {RemoteDocument}. If a block is given, the result of evaluating the block is returned.
+    # @since 1.2
     def open_url(base_uri, proxy: T.unsafe(nil), headers: T.unsafe(nil), verify_none: T.unsafe(nil), **options); end
   end
 end
 
+# @abstract Subclass and override {.open_url} to implement a custom adapter
+# @since 1.2
 class RDF::Util::File::HttpAdapter
   class << self
+    # @return [String] the value for an Accept header
+    # @since 1.2
     def default_accept_header; end
+
+    # @return [String] the default User-Agent used when fetching resources.
+    # @since 1.2
     def default_user_agent; end
+
+    # @param headers [Array, String] HTTP Request headers
+    # @return [Hash] A hash of HTTP request headers
+    # @since 1.2
     def headers(headers: T.unsafe(nil)); end
+
+    # @abstract
+    # @param base_uri [String] to open
+    # @param proxy [String] HTTP Proxy to use for requests.
+    # @param headers [Array, String] ({})
+    #   HTTP Request headers
+    #
+    #   Defaults `Accept` header based on available reader content types to allow for content negotiation based on available readers.
+    #
+    #   Defaults  `User-Agent` header, unless one is specified.
+    # @param options [Hash{Symbol => Object}] options are ignored in this implementation. Applications are encouraged
+    #   to override this implementation to provide more control over HTTP
+    #   headers and redirect following.
+    # @param verify_none [Boolean] (false)
+    #   Don't verify SSL certificates
+    # @raise [IOError] if not found
+    # @return [RemoteDocument, Object] A {RemoteDocument}. If a block is given, the result of evaluating the block is returned.
+    # @since 1.2
     def open_url(base_uri, proxy: T.unsafe(nil), headers: T.unsafe(nil), verify_none: T.unsafe(nil), **options); end
   end
 end
 
+# Net::HTTP adapter to retrieve resources without additional dependencies
+#
+# @since 1.2
 class RDF::Util::File::NetHttpAdapter < ::RDF::Util::File::HttpAdapter
   class << self
+    # @abstract
+    # @param base_uri [String] to open
+    # @param proxy [String] HTTP Proxy to use for requests.
+    # @param headers [Array, String] ({})
+    #   HTTP Request headers
+    #
+    #   Defaults `Accept` header based on available reader content types to allow for content negotiation based on available readers.
+    #
+    #   Defaults  `User-Agent` header, unless one is specified.
+    # @param options [Hash{Symbol => Object}] options are ignored in this implementation. Applications are encouraged
+    #   to override this implementation to provide more control over HTTP
+    #   headers and redirect following.
+    # @param verify_none [Boolean] (false)
+    #   Don't verify SSL certificates
+    # @raise [IOError] if not found
+    # @return [RemoteDocument, Object] A {RemoteDocument}. If a block is given, the result of evaluating the block is returned.
+    # @since 1.2
     def open_url(base_uri, proxy: T.unsafe(nil), headers: T.unsafe(nil), verify_none: T.unsafe(nil), **options); end
   end
 end
 
+# A RemoteDocument contains the body and headers of a remote resource.
+#
+# Link headers are parsed using the `LinkHeader` gem
+#
+# @see https://github.com/asplake/link_header
+# @since 0.2.4
 class RDF::Util::File::RemoteDocument < ::StringIO
+  # Set content
+  #
+  # @param body [String] entity content of request.
+  # @return [RemoteDocument] a new instance of RemoteDocument
+  # @since 0.2.4
   def initialize(body, options = T.unsafe(nil)); end
 
+  # Base URI based on resource location or returned Location header.
+  #
+  # @return [String]
+  # @since 0.2.4
   def base_uri; end
+
+  # Encoding of resource (from Content-Type), downcased. Also applied to content if it is UTF
+  #
+  # @return [String]
+  # @since 0.2.4
   def charset; end
+
+  # Response code
+  #
+  # @return [Integer]
+  # @since 0.2.4
   def code; end
+
+  # Returns a list of encodings in Content-Encoding field as an array of strings.
+  #
+  # The encodings are downcased for canonicalization.
+  #
+  # @return [Array<String>]
+  # @since 0.2.4
   def content_encoding; end
+
+  # Content-Type of the returned resource
+  #
+  # @return [String]
+  # @since 0.2.4
   def content_type; end
+
+  # ETag from headers
+  #
+  # @return [String]
+  # @since 0.2.4
   def etag; end
+
+  # Raw headers from response
+  #
+  # @return [Hash{Symbol => Object}]
+  # @since 0.2.4
   def headers; end
+
+  # Last-Modified time from headers
+  #
+  # @return [DateTime]
+  # @since 0.2.4
   def last_modified; end
+
+  # Return links from the Link header.
+  #
+  # Links can be returned in array form, or searched.
+  #
+  # @example
+  #
+  #   d = RemoteDocument.new(...)
+  #   describedby = links.find_link(['rel', 'describedby']).href
+  # @return [::LinkHeader]
+  # @since 0.2.4
   def links; end
+
+  # Parameters from Content-Type
+  #
+  # @return [Symbol => String] ]
+  # @since 0.2.4
   def parameters; end
+
+  # Originally requested URL
+  #
+  # @return [String]
+  # @since 0.2.4
   def requested_url; end
 end
 
+# If the [Rest Client](https://rubygems.org/gems/rest-client) gem is included,
+# it will be used for retrieving resources allowing for
+# sophisticated HTTP caching using [REST Client Components](https://rubygems.org/gems/rest-client-components)
+# allowing the use of `Rack::Cache` to avoid network access.
+#
+# @since 1.2
 class RDF::Util::File::RestClientAdapter < ::RDF::Util::File::HttpAdapter
   class << self
+    # @abstract
+    # @param base_uri [String] to open
+    # @param proxy [String] HTTP Proxy to use for requests.
+    # @param headers [Array, String] ({})
+    #   HTTP Request headers
+    #
+    #   Defaults `Accept` header based on available reader content types to allow for content negotiation based on available readers.
+    #
+    #   Defaults  `User-Agent` header, unless one is specified.
+    # @param options [Hash{Symbol => Object}] options are ignored in this implementation. Applications are encouraged
+    #   to override this implementation to provide more control over HTTP
+    #   headers and redirect following.
+    # @param verify_none [Boolean] (false)
+    #   Don't verify SSL certificates
+    # @raise [IOError] if not found
+    # @return [RemoteDocument, Object] A {RemoteDocument}. If a block is given, the result of evaluating the block is returned.
+    # @since 1.2
     def open_url(base_uri, proxy: T.unsafe(nil), headers: T.unsafe(nil), verify_none: T.unsafe(nil), **options); end
   end
 end
 
+# Helpers for logging errors, warnings and debug information.
+#
+# Modules must provide `@logger`, which returns an instance of `Logger`, or something responding to `#<<`. Logger may also be specified using an `@options` hash containing a `:logger` entry.
+#
+# @since 2.0.0
 module RDF::Util::Logger
+  # Debug message.
+  #
+  # @overload log_debug
+  # @since 2.0.0
   def log_debug(*args, level: T.unsafe(nil), **options, &block); end
+
+  # @overload log_depth
+  # @overload log_depth
+  # @since 2.0.0
   def log_depth(**options, &block); end
+
+  # Used for non-fatal errors where processing can continue. If `logger` is not configured, it logs to `$stderr`.
+  #
+  # As a side-effect of setting `@logger_in_error`, which will suppress further error messages until cleared using {#log_recover}.
+  #
+  # @overload log_error
+  # @raise []
+  # @since 2.0.0
   def log_error(*args, level: T.unsafe(nil), **options, &block); end
+
+  # Used for fatal errors where processing cannot continue. If `logger` is not configured, it logs to `$stderr`.
+  #
+  # @overload log_fatal
+  # @raise [options.fetch(:exception, StandardError)]
+  # @since 2.0.0
   def log_fatal(*args, level: T.unsafe(nil), **options, &block); end
+
+  # Informational message.
+  #
+  # @overload log_info
+  # @since 2.0.0
   def log_info(*args, level: T.unsafe(nil), **options, &block); end
+
+  # Recovers from an error condition. If `args` are passed, sent as an informational message
+  #
+  # As a side-effect of clearing `@logger_in_error`.
+  #
+  # @overload log_recover
+  # @since 2.0.0
   def log_recover(*args, level: T.unsafe(nil), **options, &block); end
+
+  # In recovery mode? When `log_error` is called, we enter recovery mode. This is cleared when `log_recover` is called.
+  #
+  # @option options
+  # @param options [Hash{Symbol => Object}]
+  # @return [Boolean]
+  # @since 2.0.0
   def log_recovering?(**options); end
+
+  # Number of times logger has been called at each level
+  #
+  # @option options
+  # @param options [Hash{Symbol => Object}]
+  # @return [Hash{Symbol => Integer}]
+  # @since 2.0.0
   def log_statistics(**options); end
+
+  # Warning message.
+  #
+  # @overload log_warn
+  # @since 2.0.0
   def log_warn(*args, level: T.unsafe(nil), **options, &block); end
+
+  # Logger instance, found using `options[:logger]`, `@logger`, or `@options[:logger]`
+  #
+  # @option options
+  # @param options [Hash{Symbol => Object}]
+  # @return [Logger, #write, #<<]
+  # @since 2.0.0
   def logger(logger: T.unsafe(nil), **options); end
 
   private
 
+  # Common method for logging messages
+  #
+  # The call is ignored, unless `@logger` or `@options[:logger]` is set, in which case it records tracing information as indicated.
+  #
+  # @overload logger_common
+  # @since 2.0.0
   def logger_common(*args, level:, **options); end
 end
 
+# The IOWrapper class is used to store per-logger state while wrapping an IO such as $stderr.
+#
+# @since 2.0.0
 class RDF::Util::Logger::IOWrapper
   def <<(*args, &block); end
   def <=>(*args, &block); end
@@ -2118,31 +9595,73 @@ class RDF::Util::Logger::IOWrapper
   end
 end
 
+# @since 2.0.0
 RDF::Util::Logger::LOGGER_COMMON_LEVELS = T.let(T.unsafe(nil), Hash)
+
+# @since 2.0.0
 RDF::Util::Logger::LOGGER_COMMON_LEVELS_REVERSE = T.let(T.unsafe(nil), Hash)
 
+# Module which is mixed-in to found logger to provide statistics and depth behavior
+#
+# @since 2.0.0
 module RDF::Util::Logger::LoggerBehavior
+  # @overload log_depth
+  # @overload log_depth
+  # @since 2.0.0
   def log_depth(depth: T.unsafe(nil), **options); end
+
+  # @since 2.0.0
   def log_statistics; end
+
+  # Give Logger like behavior to non-logger objects
+  #
+  # @since 2.0.0
   def method_missing(method, *args); end
+
+  # @since 2.0.0
   def recovering; end
+
+  # @since 2.0.0
   def recovering=(_arg0); end
 
   private
 
+  # @return [Boolean]
+  # @since 2.0.0
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+# Utilities for UUID handling.
+#
+# @see http://en.wikipedia.org/wiki/Universally_unique_identifier
 module RDF::Util::UUID
   class << self
+    # Generates a UUID string.
+    #
+    # This will make use of either the [UUID][] gem or the [UUIDTools][]
+    # gem, whichever of the two happens to be available.
+    #
+    # [UUID]:      https://rubygems.org/gems/uuid
+    # [UUIDTools]: https://rubygems.org/gems/uuidtools
+    #
+    # @param format [:default, :compact, :urn] (:default)
+    # @raise [LoadError] if no UUID library is available
+    # @return [String] a UUID string
+    # @see https://rubygems.org/gems/uuid
+    # @see https://rubygems.org/gems/uuidtools
     def generate(format: T.unsafe(nil)); end
   end
 end
 
 module RDF::VERSION
   class << self
+    # @return [Array(String, String, String, String)]
     def to_a; end
+
+    # @return [String]
     def to_s; end
+
+    # @return [String]
     def to_str; end
   end
 end
@@ -2154,45 +9673,289 @@ RDF::VERSION::STRING = T.let(T.unsafe(nil), String)
 RDF::VERSION::TINY = T.let(T.unsafe(nil), String)
 RDF::VOCABS = T.let(T.unsafe(nil), Hash)
 
+# Extensions for `RDF::Value`.
 module RDF::Value
+  # Is this value named?
+  #
+  # @return [Boolean] `true` or `false`
   def anonymous?; end
+
+  # Returns a copy of this value converted into its canonical
+  # representation.
+  #
+  # @return [RDF::Value]
+  # @since 1.0.8
   def canonicalize; end
+
+  # Converts this value into its canonical representation.
+  #
+  # Should be overridden by concrete classes.
+  #
+  # @return [RDF::Value] `self`
+  # @since 1.0.8
   def canonicalize!; end
+
+  # Is this constant, or are all of its components constant?
+  #
+  # Same as `!variable?`
+  #
+  # @return [Boolean] `true` or `false`
+  # @see #variable?
   def constant?; end
+
+  # @overload graph?
+  # @overload graph?
   def graph?(*args); end
+
+  # Returns a developer-friendly representation of `self`.
+  #
+  # The result will be of the format `#<RDF::Value::0x12345678(...)>`,
+  # where `...` is the string returned by `#to_s`.
+  #
+  # @return [String]
   def inspect; end
+
+  # Outputs a developer-friendly representation of `self` to `stderr`.
+  #
+  # @return [void]
   def inspect!; end
+
+  # Is this value invalid, or is it composed of any invalid components?
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.2.1
   def invalid?; end
+
+  # Is this an {RDF::IRI}?
+  #
+  # By default this is simply an alias for {RDF::Value#uri?}.
+  #
+  # @return [Boolean]
   def iri?; end
+
+  # Is this a {RDF::List}?
+  #
+  # @return [Boolean]
   def list?; end
+
+  # Is this a {RDF::Literal}?
+  #
+  # @return [Boolean]
   def literal?; end
+
+  # Is this a {RDF::Node}, or does it contain a node?
+  #
+  # @return [Boolean]
   def node?; end
+
+  # Is this a {RDF::Resource}?
+  #
+  # @return [Boolean]
   def resource?; end
+
+  # Returns `true` if this Value starts with the given `string`.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').start_with?('http')     #=> true
+  #   RDF::Node('_:foo').start_with?('_:bar')                 #=> false
+  #   RDF::Litera('Apple').start_with?('Orange')              #=> false
+  # @param string [String, #to_s]
+  # @return [Boolean] `true` or `false`
+  # @see String#start_with?
+  # @since 0.3.0
   def start_with?(string); end
+
+  # Returns `true` if this Value starts with the given `string`.
+  #
+  # @example
+  #   RDF::URI('http://example.org/').start_with?('http')     #=> true
+  #   RDF::Node('_:foo').start_with?('_:bar')                 #=> false
+  #   RDF::Litera('Apple').start_with?('Orange')              #=> false
+  # @param string [String, #to_s]
+  # @return [Boolean] `true` or `false`
+  # @see String#start_with?
+  # @since 0.3.0
   def starts_with?(string); end
+
+  # @overload statement?
+  # @overload statement?
   def statement?(*args); end
+
+  # @overload term?
+  # @overload term?
   def term?(*args); end
+
+  # Returns the N-Quads representation of this value.
+  #
+  # This method is only available when the 'rdf/nquads' serializer has
+  # been explicitly required.
+  #
+  # @return [String]
+  # @since 0.4.0
   def to_nquads; end
+
+  # Returns the N-Triples representation of this value.
+  #
+  # This method is only available when the 'rdf/ntriples' serializer has
+  # been explicitly required.
+  #
+  # @return [String]
+  # @since 0.2.1
   def to_ntriples; end
+
+  # Returns an `RDF::Value` representation of `self`.
+  #
+  # @return [RDF::Value]
   def to_rdf; end
+
+  # Returns an `RDF::Term` representation of `self`.
+  #
+  # @raise [NotImplementedError]
+  # @return [RDF::Value]
   def to_term; end
+
+  # Default implementation of `type_error`, which returns false.
+  # Classes including RDF::TypeCheck will raise TypeError
+  # instead.
+  #
+  # @return [false]
   def type_error(message); end
+
+  # Is this an {RDF::URI}?
+  #
+  # @return [Boolean]
   def uri?; end
+
+  # Is this value valid, and composed only of valid components?
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.9
   def valid?; end
+
+  # Default validate! implementation, overridden in concrete classes
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [RDF::Value] `self`
+  # @since 0.3.9
   def validate; end
+
+  # Default validate! implementation, overridden in concrete classes
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [RDF::Value] `self`
+  # @since 0.3.9
   def validate!; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.1.7
   def variable?(*args); end
 end
 
+# A {Vocabulary} represents an RDFS or OWL vocabulary.
+#
+# A {Vocabulary} can also serve as a Domain Specific Language (DSL) for generating an RDF Graph definition for the vocabulary (see {RDF::Vocabulary#to_enum}).
+#
+# ### Defining a vocabulary using the DSL
+# Vocabularies can be defined based on {RDF::Vocabulary} or {RDF::StrictVocabulary} using a simple Domain Specific Language (DSL).
+#
+# * Ontology information for the vocabulary itself can be specified using the {ontology} method.
+# * Terms of the vocabulary are specified using either `property` or `term` (alias), with the attributes of the term listed in a hash. See {property} for description of the hash. Term attributes become properties of the associated {RDF::Vocabulary::Term} (see {RDF::Vocabulary::Term#attributes}).
+#
+# Note that, by default, the prefix associated with the vocabulary for forming and interpreting PNames is created from the class name of the vocabulary. See {\_\_prefix\_\_=} for overriding this at runtime.
+#
+# The simplest way to generate a DSL representation of a vocabulary is using {RDF::Vocabulary::Writer} given an {RDF::Graph} representation of the vocabulary.
+#
+# ### Vocabularies:
+#
+# The following vocabularies are pre-defined for your convenience:
+#
+# * {RDF}         - Resource Description Framework (RDF)
+# * {RDF::OWL}    - Web Ontology Language (OWL)
+# * {RDF::RDFS}   - RDF Schema (RDFS)
+# * {RDF::XSD}    - XML Schema (XSD)
+#
+# Other vocabularies are defined in the [rdf-vocab](https://rubygems.org/gems/rdf-vocab) gem
+#
+# @example Using pre-defined RDF vocabularies
+#   include RDF
+#
+#   RDF.type      #=> RDF::URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+#   RDFS.seeAlso  #=> RDF::URI("http://www.w3.org/2000/01/rdf-schema#seeAlso")
+#   OWL.sameAs    #=> RDF::URI("http://www.w3.org/2002/07/owl#sameAs")
+#   XSD.dateTime  #=> RDF::URI("http://www.w3.org/2001/XMLSchema#dateTime")
+# @example Using ad-hoc RDF vocabularies
+#   foaf = RDF::Vocabulary.new("http://xmlns.com/foaf/0.1/")
+#   foaf.knows    #=> RDF::URI("http://xmlns.com/foaf/0.1/knows")
+#   foaf[:name]   #=> RDF::URI("http://xmlns.com/foaf/0.1/name")
+#   foaf['mbox']  #=> RDF::URI("http://xmlns.com/foaf/0.1/mbox")
+# @example Defining a simple vocabulary
+#   EX = Class.new(RDF::StrictVocabulay("http://example/ns#")) do
+#   # Ontology definition
+#   ontology :"http://example/ns#",
+#   label: "The RDF Example Vocablary",
+#   type: "http://www.w3.org/2002/07/owl#Ontology"
+#
+#   # Class definitions
+#   term :Class,
+#   label: "My Class",
+#   comment: "Good to use as an example",
+#   type: "rdfs:Class",
+#   subClassOf: "http://example/SuperClass",
+#   "ex:prop": "Some annotation property not having a shortcut"
+#
+#   # Property definitions
+#   property :prop,
+#   comment: "A description of the property",
+#   label: "property",
+#   domain: "http://example/ns#Class",
+#   range: "rdfs:Literal",
+#   isDefinedBy: %(ex:),
+#   type: "rdf:Property"
+#   end
+# @example Method calls are converted to the typical RDF camelcase convention
+#   foaf = RDF::Vocabulary.new("http://xmlns.com/foaf/0.1/")
+#   foaf.family_name    #=> RDF::URI("http://xmlns.com/foaf/0.1/familyName")
+#   owl.same_as         #=> RDF::URI("http://www.w3.org/2002/07/owl#sameAs")
+#   # []-style access is left as is
+#   foaf['family_name'] #=> RDF::URI("http://xmlns.com/foaf/0.1/family_name")
+#   foaf[:family_name]  #=> RDF::URI("http://xmlns.com/foaf/0.1/family_name")
+# @example Generating RDF from a vocabulary definition
+#   graph = RDF::Graph.new << RDF::RDFS.to_enum
+#   graph.dump(:ntriples)
+# @see https://www.w3.org/TR/rdf-sparql-query/#prefNames
 class RDF::Vocabulary
   extend ::Enumerable
 
+  # @param uri [RDF::URI, String, #to_s]
+  # @return [Vocabulary] a new instance of Vocabulary
   def initialize(uri); end
 
+  # Returns the URI for the term `property` in this vocabulary.
+  #
+  # @param property [#to_s]
+  # @return [URI]
   def [](property); end
+
+  # Returns a developer-friendly representation of this vocabulary.
+  #
+  # @return [String]
   def inspect; end
+
+  # Returns the base URI for this vocabulary.
+  # For IRI compatibility
+  #
+  # @return [URI]
   def to_iri; end
+
+  # Returns a string representation of this vocabulary.
+  #
+  # @return [String]
   def to_s; end
+
+  # Returns the base URI for this vocabulary.
+  #
+  # @return [URI]
   def to_uri; end
 
   protected
@@ -2200,44 +9963,219 @@ class RDF::Vocabulary
   def method_missing(property, *args, &block); end
 
   class << self
+    # Returns the URI for the term `property` in this vocabulary.
+    #
+    # @param property [#to_s]
+    # @return [RDF::URI]
     def [](property); end
+
+    # List of vocabularies this vocabulary `owl:imports`
+    #
+    # @note the alias {__imports__} guards against `RDF::OWL.imports` returning a term, rather than an array of vocabularies
+    # @return [Array<RDF::Vocabulary>]
     def __imports__; end
+
+    # Preserve the class name so that it can be obtained even for
+    # vocabularies that define a `name` property:
     def __name__; end
+
+    # @note If the ontology URI has the vocabulary namespace URI as a prefix, it may also be defined using `#property` or `#term`
+    # @overload ontology
+    # @overload ontology
     def __ontology__(*args); end
+
+    # Returns a suggested vocabulary prefix for this vocabulary class.
+    #
+    # @return [Symbol]
+    # @since 0.3.0
     def __prefix__; end
+
+    # Sets the vocabulary prefix to use for this vocabulary..
+    #
+    # @example Overriding a standard vocabulary prefix.
+    #   RDF::Vocab::DC.__prefix__ = :dcterms
+    #   RDF::Vocab::DC.title.pname #=> 'dcterms:title'
+    # @param prefix [Symbol]
+    # @return [Symbol]
+    # @since 3.2.3
     def __prefix__=(prefix); end
+
+    # @return [Array<RDF::URI>] a list of properties in the current vocabulary
     def __properties__; end
+
+    # @overload property
+    # @overload property
     def __property__(*args); end
+
     def camelize(str); end
+
+    # @private
     def create(uri); end
+
+    # Enumerates known RDF vocabulary classes.
+    #
+    # @return [Enumerator]
+    # @yield [klass]
+    # @yieldparam klass [Class]
     def each(&block); end
+
+    # Enumerate each statement constructed from the defined vocabulary terms
+    #
+    # If a property value is known to be a {URI}, or expands to a {URI}, the `object` is a URI, otherwise, it will be a {Literal}.
+    #
+    # @yield statement
+    # @yieldparam [RDF::Statement]
     def each_statement(&block); end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def enum_for(method = T.unsafe(nil), *args); end
+
+    # Attempt to expand a Compact IRI/PName using loaded vocabularies
+    #
+    # The local-part of the PName will will have [reserved character escapes](https://www.w3.org/TR/turtle/#reserved) unescaped.
+    #
+    # @param pname [String, #to_s]
+    # @raise [KeyError] if pname suffix not found in identified vocabulary.
+    # @raise [ArgumentError] if resulting URI is not valid
+    # @return [Term]
     def expand_pname(pname); end
+
+    # Return the Vocabulary associated with a URI. Allows the trailing '/' or '#' to be excluded
+    #
+    # @param uri [RDF::URI]
+    # @return [Vocabulary]
     def find(uri); end
+
+    # Return the Vocabulary term associated with a URI
+    #
+    # @param uri [RDF::URI, String] If `uri` has is a pname in a locded vocabulary, the suffix portion of the PName will have escape characters unescaped before resolving against the vocabulary.
+    # @return [Vocabulary::Term]
     def find_term(uri); end
+
+    # Create a vocabulary from a graph or enumerable
+    #
+    # @param graph [RDF::Enumerable]
+    # @param url [URI, #to_s]
+    # @param class_name [RDF::Vocabulary, String] The class_name associated with the vocabulary, used for creating the class name of the vocabulary. This will create a new class named with a top-level constant based on `class_name`. If given an existing vocabulary, it replaces the existing definitions for that vocabulary with those from the graph.
+    # @param extra [Array<Symbol>, Hash{Symbol => Hash}] Extra terms to add to the vocabulary. In the first form, it is an array of symbols, for which terms are created. In the second, it is a Hash mapping symbols to property attributes, as described in {RDF::Vocabulary.property}.
+    # @return [RDF::Vocabulary] the loaded vocabulary
     def from_graph(graph, url: T.unsafe(nil), class_name: T.unsafe(nil), extra: T.unsafe(nil)); end
+
+    # Return the vocabulary based on it's class_name symbol
+    #
+    # @param sym [Symbol]
+    # @return [RDF::Vocabulary]
     def from_sym(sym); end
+
+    # List of vocabularies which import this vocabulary
+    #
+    # @return [Array<RDF::Vocabulary>]
     def imported_from; end
+
+    # List of vocabularies this vocabulary `owl:imports`
+    #
+    # @note the alias {__imports__} guards against `RDF::OWL.imports` returning a term, rather than an array of vocabularies
+    # @return [Array<RDF::Vocabulary>]
     def imports; end
+
+    # Returns a developer-friendly representation of this vocabulary class.
+    #
+    # @return [String]
     def inspect; end
+
+    # Limits iteration over vocabularies to just those selected
+    #
+    # @example limit to set of vocabularies by symbol
+    #   RDF::Vocabulary.limit_vocabs(:rdf, :rdfs
+    #   RDF::Vocabulary.find_term('http://www.w3.org/2000/01/rdf-schema#Resource').pname
+    #   # => 'rdfs:Resource'
+    # @example limit to set of vocabularies by class name
+    #   RDF::Vocabulary.limit_vocabs(RDF::RDFV, RDF::RDFS)
+    #   RDF::Vocabulary.find_term('http://www.w3.org/2000/01/rdf-schema#Resource').pname
+    #   # => 'rdfs:Resource'
+    # @param vocabs [Array<symbol, RDF::Vocabulary>] A list of vocabularies (symbols or classes) which may
+    #   be returned by {Vocabulary.each}. Also limits
+    #   vocabularies that will be inspeced for other methods.
+    #   Set to nil, or an empty array to reset.
+    # @return [Array<RDF::Vocabulary>]
     def limit_vocabs(*vocabs); end
+
+    # @note If the ontology URI has the vocabulary namespace URI as a prefix, it may also be defined using `#property` or `#term`
+    # @overload ontology
+    # @overload ontology
     def ontology(*args); end
+
+    # @return [Array<RDF::URI>] a list of properties in the current vocabulary
     def properties; end
+
+    # @overload property
+    # @overload property
     def property(*args); end
+
+    # Register a vocabulary for internal prefix lookups. Parameters
+    # of interest include `:uri`, `:class_name`, `:source`, and `:skip`.
+    #
+    # @param prefix [Symbol] the prefix to use
+    # @param vocab [String, Class] either the URI or the vocab class
+    # @param params [Hash{Symbol => String}] Relevant parameters
+    # @raise [ArgumentError]
+    # @return [Hash] The parameter hash, but frozen
     def register(prefix, vocab, **params); end
+
+    # Is this a strict vocabulary, or a liberal vocabulary allowing arbitrary properties?
+    #
+    # @return [Boolean]
     def strict?; end
+
+    # Alternate use for vocabulary terms, functionally equivalent to {#property}.
+    #
+    # @overload property
+    # @overload property
     def term(*args); end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def to_enum(method = T.unsafe(nil), *args); end
+
+    # Returns the base URI for this vocabulary class.
+    # For IRI compatibility
+    #
+    # @return [RDF::URI]
     def to_iri; end
+
+    # Returns a string representation of this vocabulary class.
+    #
+    # @return [String]
     def to_s; end
+
+    # Returns the base URI for this vocabulary class.
+    #
+    # @return [RDF::URI]
     def to_uri; end
+
+    # A hash of all vocabularies by prefix showing relevant URI and
+    # associated vocabulary Class Name
+    #
+    # @return [Hash{Symbol => Hash{Symbol => String}}]
     def vocab_map; end
 
     protected
 
+    # @private
+    # @private
     def inherited(subclass); end
+
+    # Create a list of terms
+    #
+    # @param values [Array<String>] Each value treated as a URI or PName
+    # @return [RDF::List]
     def list(*values); end
+
     def method_missing(property, *args, &block); end
 
     private
@@ -2248,6 +10186,11 @@ end
 
 class RDF::Vocabulary::Format < ::RDF::Format; end
 
+# A Vocabulary Term is a {RDF::Resource} that can also act as an {Enumerable} to generate the RDF definition of vocabulary terms as defined within the vocabulary definition.
+#
+# Terms include {Term#attributes} where values a embedded resources, lists or other terms. This allows, for example, navigation of a concept heirarchy.
+#
+# Term attributes can also be accessed using {Term#properties} where the attribute values are transformed into different types of {RDF::Value}. Properties can be indexed by key, where a key is defined (See {Term::ATTR_URIs}), absolute URI, or PName, where the prefix is associated with a loaded vocabulary.
 module RDF::Vocabulary::Term
   include ::RDF::Value
   include ::Comparable
@@ -2256,52 +10199,286 @@ module RDF::Vocabulary::Term
   include ::RDF::Term
   include ::RDF::Resource
 
+  # Values of an attributes as {RDF::Value}.
+  #
+  # Attribute values are returned as either an {RDF::Value} or {Array<RDf::Value} if there is more than one value.
+  #
+  # Attribute values which are not already a {RDF::Value} (including strings and symbols) are converted by a heuristic loookup as follows:
+  #
+  # * An {RDF::URI} if it can be turned into a valid IRI using {RDF::Vocabulary.expand_pname}. This includes IRIs already in non-relative form.
+  # * A {Hash{Symbol=>String,Array<String>}} is interpreted as a datatype/language map. If the key contains a ':', it is treated as a PName or IRI datatype applied to the values. Otherwise, it is treated as a language-tag applied to the values.
+  # * {RDF::Literal::Date} if valid,
+  # * {RDF::Literal::DateTime} if valid,
+  # * {RDF::Literal::Integer} if valid,
+  # * {RDF::Literal::Decimal} if valid,
+  # * {RDF::Literal::Double} if valid,
+  # * {RDF::Literal::Boolean} if valid
+  # * Otherwise, {RDF::Literal} where type may be inferred by the class of the value.
+  #
+  # @param prop [Symbol]
+  # @return [RDF::Value, Array<RDF::Value>]
   def attribute_value(prop); end
+
+  # Attributes of this vocabulary term, used for finding `label` and `comment` and to serialize the term back to RDF.
+  #
+  # Attributes are indexed by symbol. Symbols directly interpreted by a term are the accessors defined for the {RDF::Vocabulary::Term} class, also in {Term::ATTR_URIs}. Other keys are interpreted as absolute URIs or PNames for properties defined on this term.
+  #
+  # Symbols which are accessors may also be looked up by their associated URI.
+  #
+  # Values may be Strings, Hash (Map), or Terms, or an Array including a combination of these. A Hash (Map) is used to create a datatype/language map to one or more string values which represent either datatyped literals, or language-tagged literals as interpreted by {#attribute_value}.
+  #
+  # In general, this accessor is used internally. The {#properties} method interprets these values as {RDF::Value}.
+  #
+  # @example looking up term label
+  #   RDF::RDFS.Literal.attributes[:label] #=> "Literal"
+  #   RDF::RDFS.Literal.attributes[:"rdfs:label"] #=> "Literal"
+  #   RDF::RDFS.Literal.attributes[RDF::RDFS.label] #=> "Literal"
+  #   RDF::RDFS.Literal.attributes["http://www.w3.org/2000/01/rdf-schema#label"] #=> "Literal"
+  #   RDF::RDFS.Literal.attributes[:"http://www.w3.org/2000/01/rdf-schema#label"] #=> "Literal"
+  # @note lookup by PName is DEPRECATED and will be removed in a future version.
+  # @return [Hash{Symbol => String, Term, Hash{Symbol => String}, Array<String, Term, Hash{Symbol => String}>}]
+  # @see #properties
   def attributes; end
+
+  # Is this a class term?
+  #
+  # @return [Boolean]
   def class?; end
+
+  # Is this a class term?
+  #
+  # @return [Boolean]
   def datatype?; end
+
+  # Accessor for `schema:domainIncludes`
+  #
+  # @return [RDF::URI]
   def domain_includes; end
+
+  # Returns a duplicate copy of `self`.
+  #
+  # @return [RDF::URI]
   def dup; end
+
+  # Enumerate each statement constructed from the defined vocabulary terms
+  #
+  # If a property value is known to be a {URI}, or expands to a {URI}, the `object` is a URI, otherwise, it will be a {Literal}.
+  #
+  # @yield statement
+  # @yieldparam [RDF::Statement]
   def each_statement; end
+
+  # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+  #
+  # @return [RDF::Enumerable::Enumerator]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil), *args); end
+
+  # Returns a <code>String</code> representation of the URI object's state.
+  #
+  # @return [String] The URI object's state, as a <code>String</code>.
   def inspect; end
+
+  # Is this neither a class, property or datatype term?
+  #
+  # @return [Boolean]
   def other?; end
+
+  # Enumerate attributes with values transformed into {RDF::Value} instances
+  # Uses an empty hash with a default_proc which looks up values in attributes. The prevents specific attributes from being evaluated until acessed.
+  #
+  # Properties are indexed by symbol. Symbols directly interpreted by a term are the accessors defined for the {RDF::Vocabulary::Term} class, also in {Term::ATTR_URIs}. Other keys are interpreted as absolute URIs or PNames for properties defined on this term.
+  #
+  # Symbols which are accessors may also be looked up by their associated URI.
+  #
+  # @example looking up term label
+  #   RDF::RDFS.Literal.label #=> RDF::Literal("Literal")
+  #   RDF::RDFS.Literal.properties[:label] #=> RDF::Literal("Literal")
+  #   RDF::RDFS.Literal.properties[:"rdfs:label"] #=> RDF::Literal("Literal")
+  #   RDF::RDFS.Literal.properties[RDF::RDFS.label] #=> RDF::Literal("Literal")
+  #   RDF::RDFS.Literal.properties["http://www.w3.org/2000/01/rdf-schema#label"] #=> RDF::Literal("Literal")
+  #   RDF::RDFS.Literal.properties[:"http://www.w3.org/2000/01/rdf-schema#label"] #=> RDF::Literal("Literal")
+  # @note lookup by PName is DEPRECATED and will be removed in a future version.
+  # @return [Hash{Symbol => Array<RDF::Value>}]
+  # @see #attribute_value
   def properties; end
+
+  # Is this a class term?
+  #
+  # @return [Boolean]
   def property?; end
+
+  # Accessor for `schema:rangeIncludes`
+  #
+  # @return [RDF::URI]
   def range_includes; end
+
+  # Implement accessor to symbol attributes
+  #
+  # @return [Boolean]
   def respond_to?(method, include_all = T.unsafe(nil)); end
+
+  # Is this a Restriction term?
+  #
+  # @return [Boolean]
   def restriction?; end
+
+  # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+  #
+  # @return [RDF::Enumerable::Enumerator]
+  # @see Object#enum_for
   def to_enum(method = T.unsafe(nil), *args); end
+
+  # Serialize back to a Ruby source initializer. This is used primarily by {RDF::Vocabulary::Writer}.
+  #
+  # @param indent [String]
+  # @return [String]
   def to_ruby(indent: T.unsafe(nil)); end
+
+  # Determine if the URI is a valid according to RFC3987
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.9
   def valid?; end
+
+  # Vocabulary of this term.
+  #
+  # @return [RDF::Vocabulary]
   def vocab; end
 
   protected
 
+  # Implement accessor to symbol attributes
   def method_missing(method, *args, &block); end
 
   class << self
+    # Returns an interned `RDF::URI` instance based on the given `uri`
+    # string.
+    #
+    # The maximum number of cached interned URI references is given by the
+    # `CACHE_SIZE` constant. This value is unlimited by default, in which
+    # case an interned URI object will be purged only when the last strong
+    # reference to it is garbage collected (i.e., when its finalizer runs).
+    #
+    # Excepting special memory-limited circumstances, it should always be
+    # safe and preferred to construct new URI references using
+    # `RDF::URI.intern` instead of `RDF::URI.new`, since if an interned
+    # object can't be returned for some reason, this method will fall back
+    # to returning a freshly-allocated one.
+    #
+    # @param uri [RDF::URI, String, #to_s]
+    # @return [RDF::URI] an immutable, frozen URI object
     def intern(str, *args, **options); end
+
+    # @overload new
+    # @overload new
     def new(*args, vocab: T.unsafe(nil), attributes: T.unsafe(nil), **options); end
   end
 end
 
+# Look up URIs for attribute symbols
+#
+# @return [Hash{Symbol => RDF::URI}]
 RDF::Vocabulary::Term::ATTR_URIs = T.let(T.unsafe(nil), Hash)
+
+# Look up attribute symbols from URIs
+#
+# @return [Hash{RDF::URI => Symbol}]
 RDF::Vocabulary::Term::URI_ATTRs = T.let(T.unsafe(nil), Hash)
 
+# Vocabulary format specification. This can be used to generate a Ruby class definition from a loaded vocabulary.
+#
+# Definitions can include recursive term definitions, when the value of a property is a blank-node term. They can also include list definitions, to provide a reasonable way to represent `owl:unionOf`-type relationships.
+#
+# @example a simple term definition
+#   property :comment,
+#   comment: %(A description of the subject resource.),
+#   domain: "rdfs:Resource",
+#   label: "comment",
+#   range: "rdfs:Literal",
+#   isDefinedBy: %(rdfs:),
+#   type: "rdf:Property"
+# @example an embedded skos:Concept
+#   term :ad,
+#   exactMatch: [term(
+#   type: "skos:Concept",
+#   inScheme: "country:iso3166-1-alpha-2",
+#   notation: %(ad)
+#   ), term(
+#   type: "skos:Concept",
+#   inScheme: "country:iso3166-1-alpha-3",
+#   notation: %(and)
+#   )],
+#   "foaf:name": "Andorra",
+#   isDefinedBy: "country:",
+#   type: "http://sweet.jpl.nasa.gov/2.3/humanJurisdiction.owl#Country"
+# @example owl:unionOf
+#   property :duration,
+#   comment: %(The duration of a track or a signal in ms),
+#   domain: term(
+#   "owl:unionOf": list("mo:Track", "mo:Signal"),
+#   type: "owl:Class"
+#   ),
+#   isDefinedBy: "mo:",
+#   "mo:level": "1",
+#   range: "xsd:float",
+#   type: "owl:DatatypeProperty",
+#   "vs:term_status": "testing"
+# @example term definition with language-tagged strings
+#   property :actor,
+#   comment: {en: "Subproperty of as:attributedTo that identifies the primary actor"},
+#   domain: "https://www.w3.org/ns/activitystreams#Activity",
+#   label: {en: "actor"},
+#   range: term(
+#   type: "http://www.w3.org/2002/07/owl#Class",
+#   unionOf: list("https://www.w3.org/ns/activitystreams#Object", "https://www.w3.org/ns/activitystreams#Link")
+#   ),
+#   subPropertyOf: "https://www.w3.org/ns/activitystreams#attributedTo",
+#   type: "http://www.w3.org/2002/07/owl#ObjectProperty"
 class RDF::Vocabulary::Writer < ::RDF::Writer
+  # Initializes the writer.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param base_uri [RDF::URI] URI of this vocabulary
+  # @param output [IO, File] the output stream
+  # @param options [Hash{Symbol => Object}] = ({})
+  #   any additional options. See {RDF::Writer#initialize}
+  # @return [Writer] a new instance of Writer
+  # @yield [writer] `self`
+  # @yieldparam writer [RDF::Writer]
+  # @yieldreturn [void]
   def initialize(output = T.unsafe(nil), base_uri:, **options, &block); end
 
+  # Returns the value of attribute class_name.
   def class_name; end
+
+  # Sets the attribute class_name
+  #
+  # @param value the value to set the attribute class_name to.
   def class_name=(_arg0); end
+
+  # Returns the value of attribute module_name.
   def module_name; end
+
+  # Sets the attribute module_name
+  #
+  # @param value the value to set the attribute module_name to.
   def module_name=(_arg0); end
+
+  # Generate vocabulary
   def write_epilogue; end
+
   def write_triple(subject, predicate, object); end
 
   private
 
+  # Turn a node definition into a property/term expression
   def from_node(name, attributes, term_type); end
+
   def serialize_value(value, key, indent: T.unsafe(nil)); end
 
   class << self
@@ -2309,23 +10486,153 @@ class RDF::Vocabulary::Writer < ::RDF::Writer
   end
 end
 
+# Classes that include this module must implement the methods
+# `#insert_statement`.
+#
+# @see RDF::Graph
+# @see RDF::Repository
 module RDF::Writable
   include ::RDF::Util::Coercions
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Inserts RDF data into `self`.
+  #
+  # @param data [RDF::Enumerable, RDF::Statement, #to_rdf]
+  # @return [self]
   def <<(data); end
+
+  # Inserts RDF statements into `self`.
+  #
+  # significantly affects performance. Use Enumerator form for large
+  # numbers of statements.
+  #
+  # @note using splat argument syntax with excessive arguments provided
+  # @overload insert
+  # @overload insert
   def insert(*statements); end
+
+  # Inserts RDF statements into `self`.
+  #
+  # significantly affects performance. Use Enumerator form for large
+  # numbers of statements.
+  #
+  # @note using splat argument syntax with excessive arguments provided
+  # @overload insert
+  # @overload insert
   def insert!(*args, &block); end
+
+  # Returns `true` if `self` is writable.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see RDF::Readable#readable?
   def writable?; end
 
   protected
 
+  # Inserts the given RDF graph into the underlying storage or output
+  # stream.
+  #
+  # Defaults to passing the graph to the {RDF::Writable#insert_statements} method.
+  #
+  # Subclasses of {RDF::Repository} may wish to override this method in
+  # case their underlying storage architecture is graph-centric rather
+  # than statement-oriented.
+  #
+  # Subclasses of {RDF::Writer} may wish to override this method if the
+  # output format they implement supports named graphs, in which case
+  # implementing this method may help in producing prettier and more
+  # concise output.
+  #
+  # @param graph [RDF::Graph]
+  # @return [void]
   def insert_graph(graph); end
+
+  # Inserts statements from the given RDF reader into the underlying
+  # storage or output stream.
+  #
+  # Defaults to passing the reader to the {RDF::Writable#insert_statements} method.
+  #
+  # Subclasses of {RDF::Repository} may wish to override this method in
+  # case their underlying storage can efficiently import RDF data directly
+  # in particular serialization formats, thus avoiding the intermediate
+  # parsing overhead.
+  #
+  # @param reader [RDF::Reader]
+  # @return [void]
+  # @since 0.2.3
   def insert_reader(reader); end
+
+  # Inserts an RDF statement into the underlying storage or output stream.
+  #
+  # Subclasses of {RDF::Repository} must implement this method, except if
+  # they are immutable.
+  #
+  # Subclasses of {RDF::Writer} must implement this method.
+  #
+  # @abstract
+  # @param statement [RDF::Statement]
+  # @raise [ArgumentError] on an attempt to insert an embedded statement when it is not supported
+  # @return [void]
   def insert_statement(statement); end
+
+  # Inserts the given RDF statements into the underlying storage or output
+  # stream.
+  #
+  # Defaults to invoking {RDF::Writable#insert_statement} for each given statement.
+  #
+  # Subclasses of {RDF::Repository} may wish to override this method if
+  # they are capable of more efficiently inserting multiple statements at
+  # once.
+  #
+  # Subclasses of {RDF::Writer} don't generally need to implement this
+  # method.
+  #
+  # @param statements [RDF::Enumerable]
+  # @raise [ArgumentError] on an attempt to insert an embedded statement when it is not supported
+  # @return [void]
+  # @since 0.1.6
   def insert_statements(statements); end
 end
 
+# The base class for RDF serializers.
+#
+# @abstract
+# @example Loading an RDF writer implementation
+#   require 'rdf/ntriples'
+# @example Iterating over known RDF writer classes
+#   RDF::Writer.each { |klass| puts klass.name }
+# @example Obtaining an RDF writer class
+#   RDF::Writer.for(:ntriples)     #=> RDF::NTriples::Writer
+#   RDF::Writer.for("spec/data/output.nt")
+#   RDF::Writer.for(file_name:      "spec/data/output.nt")
+#   RDF::Writer.for(file_extension: "nt")
+#   RDF::Writer.for(content_type:   "application/n-triples")
+# @example Instantiating an RDF writer class
+#   RDF::Writer.for(:ntriples).new($stdout) { |writer| ... }
+# @example Serializing RDF statements into a string
+#   RDF::Writer.for(:ntriples).buffer do |writer|
+#   graph.each_statement do |statement|
+#   writer << statement
+#   end
+#   end
+# @example Detecting invalid output
+#   logger = Logger.new([])
+#   RDF::Writer.for(:ntriples).buffer(logger: logger) do |writer|
+#   statement = RDF::Statement.new(
+#   RDF::URI("https://rubygems.org/gems/rdf"),
+#   RDF::URI("http://purl.org/dc/terms/creator"),
+#   nil)
+#   writer << statement
+#   end # => RDF::WriterError
+#   logger.empty? => false
+# @example Serializing RDF statements into a file
+#   RDF::Writer.open("spec/data/output.nt") do |writer|
+#   graph.each_statement do |statement|
+#   writer << statement
+#   end
+#   end
+# @see RDF::Format
+# @see RDF::Reader
 class RDF::Writer
   include ::RDF::Util::Logger
   include ::RDF::Util::Coercions
@@ -2333,59 +10640,305 @@ class RDF::Writer
   extend ::Enumerable
   extend ::RDF::Util::Aliasing::LateBound
 
+  # Initializes the writer.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param output [IO, File] the output stream
+  # @param options [Hash{Symbol => Object}] any additional options
+  # @return [Writer] a new instance of Writer
+  # @yield [writer] `self`
+  # @yieldparam writer [RDF::Writer]
+  # @yieldreturn [void]
   def initialize(output = T.unsafe(nil), **options, &block); end
 
+  # Returns the base URI used for this writer.
+  #
+  # @example
+  #   writer.prefixes[:dc]  #=> RDF::URI('http://purl.org/dc/terms/')
+  # @return [RDF::URI]
+  # @since 0.3.4
   def base_uri; end
+
+  # Returns `true` if terms should be canonicalized.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 1.0.8
   def canonicalize?; end
+
+  # Returns the encoding of the output stream.
+  #
+  # @return [Encoding]
   def encoding; end
+
+  # Flushes the underlying output buffer.
+  #
+  # @return [self]
   def flush; end
+
+  # Flushes the underlying output buffer.
+  #
+  # @return [self]
   def flush!(*args, &block); end
+
+  # @abstract
+  # @param value [RDF::List]
+  # @param options [Hash{Symbol => Object}] = ({})
+  # @return [String]
+  # @since 0.2.3
   def format_list(value, **options); end
+
+  # @abstract
+  # @param value [RDF::Literal, String, #to_s]
+  # @param options [Hash{Symbol => Object}] = ({})
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [String]
   def format_literal(value, **options); end
+
+  # @abstract
+  # @option options
+  # @param value [RDF::Node]
+  # @param options [Hash{Symbol => Object}] = ({})
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [String]
   def format_node(value, **options); end
+
+  # Formats a referenced triple.
+  #
+  # @abstract
+  # @example
+  #   <<<s> <p> <o>>> <p> <o> .
+  # @param value [RDF::Statement]
+  # @param options [Hash{Symbol => Object}] = ({})
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [String]
   def format_quotedTriple(value, **options); end
+
+  # @param term [RDF::Term]
+  # @return [String]
+  # @since 0.3.0
   def format_term(term, **options); end
+
+  # @abstract
+  # @param value [RDF::URI]
+  # @param options [Hash{Symbol => Object}] = ({})
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [String]
   def format_uri(value, **options); end
+
+  # Add a statement to the writer. This will check to ensure that the statement is complete (no nil terms) and is valid, if the `:validation` option is set.
+  #
+  # Additionally, it will de-duplicate BNode terms sharing a common identifier.
+  # support the RDF::Writable interface
+  #
+  # @note logs error if attempting to write an invalid {RDF::Statement} or if canonicalizing a statement which cannot be canonicalized.
+  # @param statement [RDF::Statement]
+  # @return [self]
   def insert_statement(*args, &block); end
+
+  # Any additional options for this writer.
+  #
+  # @return [Hash]
+  # @since 0.2.2
   def options; end
+
+  # Defines the given named URI prefix for this writer.
+  #
+  # @example Defining a URI prefix
+  #   writer.prefix :dc, RDF::URI('http://purl.org/dc/terms/')
+  # @example Returning a URI prefix
+  #   writer.prefix(:dc)    #=> RDF::URI('http://purl.org/dc/terms/')
+  # @overload prefix
+  # @overload prefix
+  # @return [RDF::URI]
   def prefix(name, uri = T.unsafe(nil)); end
+
+  # Defines the given named URI prefix for this writer.
+  #
+  # @example Defining a URI prefix
+  #   writer.prefix :dc, RDF::URI('http://purl.org/dc/terms/')
+  # @example Returning a URI prefix
+  #   writer.prefix(:dc)    #=> RDF::URI('http://purl.org/dc/terms/')
+  # @overload prefix
+  # @overload prefix
+  # @return [RDF::URI]
   def prefix!(*args, &block); end
+
+  # Returns the URI prefixes currently defined for this writer.
+  #
+  # @example
+  #   writer.prefixes[:dc]  #=> RDF::URI('http://purl.org/dc/terms/')
+  # @return [Hash{Symbol => RDF::URI}]
+  # @since 0.2.2
   def prefixes; end
+
+  # Defines the given URI prefixes for this writer.
+  #
+  # @example
+  #   writer.prefixes = {
+  #   dc: RDF::URI('http://purl.org/dc/terms/'),
+  #   }
+  # @param prefixes [Hash{Symbol => RDF::URI}]
+  # @return [Hash{Symbol => RDF::URI}]
+  # @since 0.3.0
   def prefixes=(prefixes); end
+
+  # Returns a symbol appropriate to use with RDF::Writer.for()
+  #
+  # @return [Symbol]
   def to_sym; end
+
+  # Returns `true` if statements and terms should be validated.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 1.0.8
   def validate?; end
+
+  # @abstract
+  # @param text [String]
+  # @return [self]
   def write_comment(text); end
+
+  # @abstract
+  # @raise [RDF::WriterError] if errors logged during processing.
+  # @return [self]
   def write_epilogue; end
+
+  # @abstract
+  # @return [self]
   def write_prologue; end
+
+  # Add a statement to the writer. This will check to ensure that the statement is complete (no nil terms) and is valid, if the `:validation` option is set.
+  #
+  # Additionally, it will de-duplicate BNode terms sharing a common identifier.
+  #
+  # @note logs error if attempting to write an invalid {RDF::Statement} or if canonicalizing a statement which cannot be canonicalized.
+  # @param statement [RDF::Statement]
+  # @return [self]
   def write_statement(statement); end
+
+  # @abstract
+  # @note logs error if attempting to write an invalid {RDF::Statement} or if canonicalizing a statement which cannot be canonicalized.
+  # @param subject [RDF::Resource]
+  # @param predicate [RDF::URI]
+  # @param object [RDF::Term]
+  # @raise [NotImplementedError] unless implemented in subclass
+  # @return [self]
   def write_triple(subject, predicate, object); end
+
+  # @note logs error if attempting to write an invalid {RDF::Statement} or if canonicalizing a statement which cannot be canonicalized.
+  # @param triples [Array<Array(RDF::Resource, RDF::URI, RDF::Term)>]
+  # @return [self]
   def write_triples(*triples); end
 
   protected
 
+  # @param string [String]
+  # @return [String]
   def escaped(string); end
+
+  # @return [String]
   def node_id; end
+
+  # @return [void]
   def puts(*args); end
+
+  # @param string [String]
+  # @return [String]
   def quoted(string); end
+
+  # @param term [RDF::Resource]
+  # @return [String]
   def uri_for(term); end
 
   class << self
+    # Use parameters from accept-params to determine if the parameters are acceptable to invoke this writer. The `accept_params` will subsequently be provided to the writer instance.
+    #
+    # @example rejecting a writer based on a profile
+    #   JSON::LD::Writer.accept?(profile: "http://www.w3.org/ns/json-ld#compacted http://example.org/black-listed")
+    #   # => false
+    # @param accept_params [Hash{Symbol => String}]
+    # @return [Boolean]
+    # @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
+    # @yield [accept_params] if a block is given, returns the result of evaluating that block
+    # @yieldparam accept_params [Hash{Symbol => String}]
     def accept?(accept_params); end
+
+    # Buffers output into a string buffer.
+    #
+    # @param options [Hash{Symbol => Object}] passed to {RDF::Writer#initialize}
+    # @raise [ArgumentError] if no block is provided
+    # @return [String]
+    # @yield [writer]
+    # @yieldparam writer [RDF::Writer]
+    # @yieldreturn [void]
     def buffer(*args, **options, &block); end
+
+    # @param data [RDF::Enumerable, #each] the graph or repository to dump
+    # @param io [IO, File, String] the output stream or file to write to
+    # @param options [Hash{Symbol => Object}] passed to {RDF::Writer#initialize} or {RDF::Writer.buffer}
+    # @return [void]
     def dump(data, io = T.unsafe(nil), **options); end
+
+    # Enumerates known RDF writer classes.
+    #
+    # @return [Enumerator]
+    # @yield [klass]
+    # @yieldparam klass [Class]
+    # @yieldreturn [void] ignored
     def each(&block); end
+
+    # Finds an RDF writer class based on the given criteria.
+    #
+    # @overload for
+    # @overload for
+    # @overload for
+    # @return [Class]
     def for(*arg, &block); end
+
+    # Retrieves the RDF serialization format class for this writer class.
+    #
+    # @return [Class]
     def format(klass = T.unsafe(nil)); end
+
+    # Retrieves the RDF serialization format class for this writer class.
+    #
+    # @return [Class]
     def format_class(klass = T.unsafe(nil)); end
+
+    # @private
+    # @return [void]
     def inherited(child); end
+
+    # Writes output to the given `filename`.
+    #
+    # @param filename [String, #to_s]
+    # @param format [Symbol] (nil)
+    # @param options [Hash{Symbol => Object}] any additional options (see {RDF::Writer#initialize} and {RDF::Format.for})
+    # @return [RDF::Writer]
     def open(filename, format: T.unsafe(nil), **options, &block); end
+
+    # Options suitable for automatic Writer provisioning.
+    #
+    # @return [Array<RDF::CLI::Option>]
     def options; end
+
+    # Returns a symbol appropriate to use with RDF::Writer.for()
+    #
+    # @return [Symbol]
     def to_sym; end
   end
 end
 
+# The base class for RDF serialization errors.
 class RDF::WriterError < ::IOError; end
 
+# Vocabulary for <http://www.w3.org/2001/XMLSchema#>
 class RDF::XSD < ::RDF::Vocabulary
   class << self
     def ENTITIES; end

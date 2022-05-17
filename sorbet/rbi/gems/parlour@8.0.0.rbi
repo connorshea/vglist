@@ -6,7 +6,10 @@
 
 module Parlour; end
 
+# Responsible for resolving conflicts (that is, multiple definitions with the
+# same name) between objects defined in the same namespace.
 class Parlour::ConflictResolver
+  # @return [ConflictResolver] a new instance of ConflictResolver
   def initialize; end
 
   sig do
@@ -31,9 +34,14 @@ end
 
 module Parlour::Conversion; end
 
+# An abstract class which converts between the node trees of two type
+# systems.
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Parlour::Conversion::Converter
   abstract!
 
+  # @return [Converter] a new instance of Converter
   def initialize; end
 
   sig { params(msg: ::String, node: ::Parlour::RbiGenerator::RbiObject).void }
@@ -43,6 +51,7 @@ class Parlour::Conversion::Converter
   def warnings; end
 end
 
+# Converts RBI types to RBS types.
 class Parlour::Conversion::RbiToRbs < ::Parlour::Conversion::Converter
   sig { params(rbs_gen: ::Parlour::RbsGenerator).void }
   def initialize(rbs_gen); end
@@ -57,43 +66,75 @@ class Parlour::Conversion::RbiToRbs < ::Parlour::Conversion::Converter
   def rbs_gen; end
 end
 
+# Contains methods to enable debugging facilities for Parlour.
 module Parlour::Debugging
   class << self
+    # Set whether debug messages should be printed.
     sig { params(value: T::Boolean).returns(T::Boolean) }
     def debug_mode=(value); end
 
+    # Whether debug messages sent by {.debug_puts} should be printed.
+    # Defaults to true if the PARLOUR_DEBUG environment variable is set.
     sig { returns(T::Boolean) }
     def debug_mode?; end
 
+    # Prints a message with a debugging prefix to STDOUT if {.debug_mode?} is
+    # true.
     sig { params(object: T.untyped, message: ::String).void }
     def debug_puts(object, message); end
 
+    # Converts the given object into a human-readable prefix to a debug message.
+    # For example, passing an instance of {ConflictResolver} returns
+    # "conflict resolver". If the object type is unknown, this returns its class
+    # name.
     sig { params(object: T.untyped).returns(::String) }
     def name_for_debug_caller(object); end
   end
 end
 
+# A module for generating a globally-consistent, nicely-formatted tree of
+# output using Unicode block characters.
 class Parlour::Debugging::Tree
   sig { params(colour: T::Boolean).void }
   def initialize(colour: T.unsafe(nil)); end
 
+  # Returns a new heading, and then decents the tree one level into it.
+  # (That is, future output will go under the new heading.)
   sig { params(message: ::String).returns(::String) }
   def begin(message); end
 
+  # Whether to colour output or not.
   sig { returns(T::Boolean) }
   def colour; end
 
+  # Prints the final tree element at the current level, then ascends one
+  # level.
   sig { params(message: ::String).returns(::String) }
   def end(message); end
 
+  # Prints a new tree element at the current level.
   sig { params(message: ::String).returns(::String) }
   def here(message); end
 
+  # Modifies the current indent level by the given offset.
   def indent!(offset); end
+
+  # The prefix which should be printed before anything else on this line of
+  # the tree, based on the current indent level.
+  #
+  # @return [String]
   def line_prefix; end
+
+  # The horizontal lines which should be printed between the beginning of
+  # the current element and its text, based on the specified number of
+  # spaces to use for indents.
+  #
+  # @return [String]
   def text_prefix; end
 end
 
+# The number of spaces to indent each layer of the tree by. Should be at
+# least 1.
 Parlour::Debugging::Tree::INDENT_SPACES = T.let(T.unsafe(nil), Integer)
 
 class Parlour::DetachedRbiGenerator < ::Parlour::RbiGenerator
@@ -131,6 +172,7 @@ class Parlour::Generator
   sig { overridable.returns(T.nilable(::Parlour::Plugin)) }
   def current_plugin; end
 
+  # @return [Plugin, nil]
   def current_plugin=(_arg0); end
 
   sig { overridable.returns(::Parlour::Options) }
@@ -139,6 +181,10 @@ end
 
 module Parlour::Mixin; end
 
+# Extends a particular type system's Namespace class to provide searchable
+# children.
+#
+# @abstract Subclasses must implement the `abstract` methods below.
 module Parlour::Mixin::Searchable
   extend T::Generic
 
@@ -146,6 +192,7 @@ module Parlour::Mixin::Searchable
 
   Child = type_member { { upper: Parlour::TypedObject } }
 
+  # @abstract
   sig { abstract.returns(T::Array[Child]) }
   def children; end
 
@@ -161,6 +208,7 @@ module Parlour::Mixin::Searchable
   def searchable_child_matches(child, name, type); end
 end
 
+# A set of immutable formatting options.
 class Parlour::Options
   sig { params(break_params: ::Integer, tab_size: ::Integer, sort_namespaces: T::Boolean).void }
   def initialize(break_params:, tab_size:, sort_namespaces:); end
@@ -179,6 +227,7 @@ class Parlour::Options
 end
 
 class Parlour::ParseError < ::StandardError
+  # @return [ParseError] a new instance of ParseError
   def initialize(buffer, range); end
 
   sig { returns(::Parser::Source::Buffer) }
@@ -188,18 +237,23 @@ class Parlour::ParseError < ::StandardError
   def range; end
 end
 
+# The base class for user-defined RBI generation plugins.
+#
+# @abstract
 class Parlour::Plugin
   abstract!
 
   sig { params(options: T::Hash[T.untyped, T.untyped]).void }
   def initialize(options); end
 
+  # @abstract
   sig { abstract.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
   sig { returns(T.nilable(::String)) }
   def strictness; end
 
+  # @return [String, nil]
   def strictness=(_arg0); end
 
   class << self
@@ -220,7 +274,9 @@ class Parlour::Plugin
   end
 end
 
+# The RBI generator.
 class Parlour::RbiGenerator < ::Parlour::Generator
+  # @return [RbiGenerator] a new instance of RbiGenerator
   def initialize(**hash); end
 
   sig { overridable.params(strictness: ::String).returns(::String) }
@@ -230,6 +286,7 @@ class Parlour::RbiGenerator < ::Parlour::Generator
   def root; end
 end
 
+# Represents miscellaneous Ruby code.
 class Parlour::RbiGenerator::Arbitrary < ::Parlour::RbiGenerator::RbiObject
   sig do
     params(
@@ -246,6 +303,7 @@ class Parlour::RbiGenerator::Arbitrary < ::Parlour::RbiGenerator::RbiObject
   sig { returns(::String) }
   def code; end
 
+  # @return [String]
   def code=(_arg0); end
 
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
@@ -264,6 +322,7 @@ class Parlour::RbiGenerator::Arbitrary < ::Parlour::RbiGenerator::RbiObject
   def mergeable?(others); end
 end
 
+# Represents an attribute reader, writer or accessor.
 class Parlour::RbiGenerator::Attribute < ::Parlour::RbiGenerator::Method
   sig do
     params(
@@ -301,6 +360,7 @@ class Parlour::RbiGenerator::Attribute < ::Parlour::RbiGenerator::Method
   def generate_definition(indent_level, options); end
 end
 
+# Represents a class definition.
 class Parlour::RbiGenerator::ClassNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
 
@@ -341,6 +401,7 @@ class Parlour::RbiGenerator::ClassNamespace < ::Parlour::RbiGenerator::Namespace
   def superclass; end
 end
 
+# Represents a constant definition.
 class Parlour::RbiGenerator::Constant < ::Parlour::RbiGenerator::RbiObject
   sig do
     params(
@@ -359,6 +420,8 @@ class Parlour::RbiGenerator::Constant < ::Parlour::RbiGenerator::RbiObject
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
+  # @return [Boolean] Whether this constant is defined on the eigenclass
+  #   of the current namespace.
   def eigen_constant; end
 
   sig { override.void }
@@ -377,6 +440,7 @@ class Parlour::RbiGenerator::Constant < ::Parlour::RbiGenerator::RbiObject
   def value; end
 end
 
+# Represents an enum definition; that is, a class with an +enum+ call.
 class Parlour::RbiGenerator::EnumClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
 
@@ -414,6 +478,7 @@ class Parlour::RbiGenerator::EnumClassNamespace < ::Parlour::RbiGenerator::Class
   def mergeable?(others); end
 end
 
+# Represents an +extend+ call.
 class Parlour::RbiGenerator::Extend < ::Parlour::RbiGenerator::RbiObject
   sig do
     params(
@@ -443,6 +508,7 @@ class Parlour::RbiGenerator::Extend < ::Parlour::RbiGenerator::RbiObject
   def mergeable?(others); end
 end
 
+# Represents an +include+ call.
 class Parlour::RbiGenerator::Include < ::Parlour::RbiGenerator::RbiObject
   sig do
     params(
@@ -472,6 +538,7 @@ class Parlour::RbiGenerator::Include < ::Parlour::RbiGenerator::RbiObject
   def mergeable?(others); end
 end
 
+# Represents a method definition.
 class Parlour::RbiGenerator::Method < ::Parlour::RbiGenerator::RbiObject
   sig do
     params(
@@ -545,6 +612,7 @@ class Parlour::RbiGenerator::Method < ::Parlour::RbiGenerator::RbiObject
   def qualifiers; end
 end
 
+# Represents a module definition.
 class Parlour::RbiGenerator::ModuleNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
 
@@ -585,6 +653,8 @@ class Parlour::RbiGenerator::ModuleNamespace < ::Parlour::RbiGenerator::Namespac
   def mergeable?(others); end
 end
 
+# A generic namespace. This shouldn't be used, except as the type of
+# {RbiGenerator#root}.
 class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
@@ -614,7 +684,20 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   sig { returns(T::Array[::Parlour::RbiGenerator::Constant]) }
   def constants; end
 
+  # Creates a new arbitrary code section.
+  # You should rarely have to use this!
+  #
+  # @param code [String] The code to insert.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Arbitrary]
   def create_arbitrary(code:, &block); end
+
+  # @param name [String]
+  # @param kind [Symbol]
+  # @param type [Types::TypeLike]
+  # @param class_attribute [Boolean]
+  # @param block [T.proc.params(x: Attribute).void, nil]
+  # @return [Attribute]
   def create_attr(*args, &blk); end
 
   sig do
@@ -795,6 +878,7 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   sig { returns(T::Boolean) }
   def sealed; end
 
+  # @return [Array<RbiGenerator::TypeAlias>]
   def type_aliases(*args, &blk); end
 
   private
@@ -806,8 +890,11 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   def move_next_comments(object); end
 end
 
+# For backwards compatibility.
+# Before Parlour 5.0, Parlour::Options was Parlour::RbiGenerator::Options.
 Parlour::RbiGenerator::Options = Parlour::Options
 
+# Represents a method parameter with a Sorbet type signature.
 class Parlour::RbiGenerator::Parameter
   sig do
     params(
@@ -849,30 +936,43 @@ class Parlour::RbiGenerator::Parameter
   def type; end
 end
 
+# A mapping of {kind} values to the characteristic prefixes each kind has.
 Parlour::RbiGenerator::Parameter::PREFIXES = T.let(T.unsafe(nil), Hash)
 
+# An abstract class which is subclassed by any classes which can generate
+# entire lines of an RBI, such as {Namespace} and {Method}. (As an example,
+# {Parameter} is _not_ a subclass because it does not generate lines, only
+# segments of definition and signature lines.)
+#
+# @abstract
 class Parlour::RbiGenerator::RbiObject < ::Parlour::TypedObject
   abstract!
 
   sig { params(generator: ::Parlour::Generator, name: ::String).void }
   def initialize(generator, name); end
 
+  # @abstract
   sig { abstract.void }
   def generalize_from_rbi!; end
 
+  # @abstract
   sig { abstract.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
   sig { returns(::Parlour::Generator) }
   def generator; end
 
+  # @abstract
   sig { abstract.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
+  # @abstract
   sig { abstract.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
+# Represents an struct definition; that is, a class which subclasses
+# +T::Struct+ and declares `prop` members.
 class Parlour::RbiGenerator::StructClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
 
@@ -910,6 +1010,7 @@ class Parlour::RbiGenerator::StructClassNamespace < ::Parlour::RbiGenerator::Cla
   def props; end
 end
 
+# Represents a +T::Struct+ property.
 class Parlour::RbiGenerator::StructProp
   sig do
     params(
@@ -975,8 +1076,10 @@ class Parlour::RbiGenerator::StructProp
   def type; end
 end
 
+# The optional properties available on instances of this class.
 Parlour::RbiGenerator::StructProp::EXTRA_PROPERTIES = T.let(T.unsafe(nil), Array)
 
+# Represents a type alias.
 class Parlour::RbiGenerator::TypeAlias < ::Parlour::RbiGenerator::RbiObject
   sig do
     params(
@@ -1010,7 +1113,9 @@ class Parlour::RbiGenerator::TypeAlias < ::Parlour::RbiGenerator::RbiObject
   def type; end
 end
 
+# The RBS generator.
 class Parlour::RbsGenerator < ::Parlour::Generator
+  # @return [RbsGenerator] a new instance of RbsGenerator
   def initialize(**hash); end
 
   sig { overridable.returns(::String) }
@@ -1020,6 +1125,7 @@ class Parlour::RbsGenerator < ::Parlour::Generator
   def root; end
 end
 
+# Represents miscellaneous Ruby code.
 class Parlour::RbsGenerator::Arbitrary < ::Parlour::RbsGenerator::RbsObject
   sig do
     params(
@@ -1036,6 +1142,7 @@ class Parlour::RbsGenerator::Arbitrary < ::Parlour::RbsGenerator::RbsObject
   sig { returns(::String) }
   def code; end
 
+  # @return [String]
   def code=(_arg0); end
 
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
@@ -1051,6 +1158,7 @@ class Parlour::RbsGenerator::Arbitrary < ::Parlour::RbsGenerator::RbsObject
   def mergeable?(others); end
 end
 
+# Represents an attribute reader, writer or accessor.
 class Parlour::RbsGenerator::Attribute < ::Parlour::RbsGenerator::Method
   sig do
     params(
@@ -1079,6 +1187,8 @@ class Parlour::RbsGenerator::Attribute < ::Parlour::RbsGenerator::Method
   def type; end
 end
 
+# Represents a block in a method signature.
+# (This is not an RbsObject because it doesn't generate a full line.)
 class Parlour::RbsGenerator::Block
   sig { params(type: ::Parlour::Types::Proc, required: T::Boolean).void }
   def initialize(type, required); end
@@ -1096,6 +1206,7 @@ class Parlour::RbsGenerator::Block
   def type; end
 end
 
+# Represents a class definition.
 class Parlour::RbsGenerator::ClassNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
 
@@ -1127,6 +1238,7 @@ class Parlour::RbsGenerator::ClassNamespace < ::Parlour::RbsGenerator::Namespace
   def superclass; end
 end
 
+# Represents a constant definition.
 class Parlour::RbsGenerator::Constant < ::Parlour::RbsGenerator::RbsObject
   sig do
     params(
@@ -1157,6 +1269,7 @@ class Parlour::RbsGenerator::Constant < ::Parlour::RbsGenerator::RbsObject
   def type; end
 end
 
+# Represents an +extend+ call.
 class Parlour::RbsGenerator::Extend < ::Parlour::RbsGenerator::RbsObject
   sig do
     params(
@@ -1186,6 +1299,7 @@ class Parlour::RbsGenerator::Extend < ::Parlour::RbsGenerator::RbsObject
   def type; end
 end
 
+# Represents an +include+ call.
 class Parlour::RbsGenerator::Include < ::Parlour::RbsGenerator::RbsObject
   sig do
     params(
@@ -1215,6 +1329,7 @@ class Parlour::RbsGenerator::Include < ::Parlour::RbsGenerator::RbsObject
   def type; end
 end
 
+# Represents an interface definition.
 class Parlour::RbsGenerator::InterfaceNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
 
@@ -1227,6 +1342,7 @@ class Parlour::RbsGenerator::InterfaceNamespace < ::Parlour::RbsGenerator::Names
   def generate_rbs(indent_level, options); end
 end
 
+# Represents a method definition.
 class Parlour::RbsGenerator::Method < ::Parlour::RbsGenerator::RbsObject
   sig do
     params(
@@ -1261,6 +1377,8 @@ class Parlour::RbsGenerator::Method < ::Parlour::RbsGenerator::RbsObject
   def signatures; end
 end
 
+# Represents one signature in a method definition.
+# (This is not an RbsObject because it doesn't generate a full line.)
 class Parlour::RbsGenerator::MethodSignature
   sig do
     params(
@@ -1294,6 +1412,7 @@ class Parlour::RbsGenerator::MethodSignature
   def type_parameters; end
 end
 
+# Represents a module definition.
 class Parlour::RbsGenerator::ModuleNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
 
@@ -1306,6 +1425,8 @@ class Parlour::RbsGenerator::ModuleNamespace < ::Parlour::RbsGenerator::Namespac
   def generate_rbs(indent_level, options); end
 end
 
+# A generic namespace. This shouldn't be used, except as the type of
+# {RbsGenerator#root}.
 class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
@@ -1333,7 +1454,19 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   sig { returns(T::Array[::Parlour::RbsGenerator::Constant]) }
   def constants; end
 
+  # Creates a new arbitrary code section.
+  # You should rarely have to use this!
+  #
+  # @param code [String] The code to insert.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Arbitrary]
   def create_arbitrary(code:, &block); end
+
+  # @param name [String]
+  # @param kind [Symbol]
+  # @param type [Types::TypeLike]
+  # @param block [T.proc.params(x: Attribute).void, nil]
+  # @return [Attribute]
   def create_attr(*args, &blk); end
 
   sig do
@@ -1477,6 +1610,7 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   sig { params(object: T.untyped, block: T.proc.params(x: Parlour::RbsGenerator::Namespace).void).void }
   def path(object, &block); end
 
+  # @return [Array<RbsGenerator::TypeAlias>]
   def type_aliases(*args, &blk); end
 
   private
@@ -1488,6 +1622,7 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   def move_next_comments(object); end
 end
 
+# Represents a method parameter with a Sorbet type signature.
 class Parlour::RbsGenerator::Parameter
   sig { params(name: ::String, type: T.nilable(T.any(::Parlour::Types::Type, ::String)), required: T::Boolean).void }
   def initialize(name, type: T.unsafe(nil), required: T.unsafe(nil)); end
@@ -1514,28 +1649,43 @@ class Parlour::RbsGenerator::Parameter
   def type; end
 end
 
+# A mapping of {kind} values to the characteristic prefixes each kind has.
 Parlour::RbsGenerator::Parameter::PREFIXES = T.let(T.unsafe(nil), Hash)
+
+# An array of reserved keywords in RBS which may be used as parameter
+# names in standard Ruby.
+# TODO: probably incomplete
 Parlour::RbsGenerator::Parameter::RBS_KEYWORDS = T.let(T.unsafe(nil), Array)
 
+# An abstract class which is subclassed by any classes which can generate
+# entire lines of an RBS, such as {Namespace} and {Method}. (As an example,
+# {Parameter} is _not_ a subclass because it does not generate lines, only
+# segments of definition lines.)
+#
+# @abstract
 class Parlour::RbsGenerator::RbsObject < ::Parlour::TypedObject
   abstract!
 
   sig { params(generator: ::Parlour::Generator, name: ::String).void }
   def initialize(generator, name); end
 
+  # @abstract
   sig { abstract.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
   sig { returns(::Parlour::Generator) }
   def generator; end
 
+  # @abstract
   sig { abstract.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
+  # @abstract
   sig { abstract.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
+# Represents a type alias.
 class Parlour::RbsGenerator::TypeAlias < ::Parlour::RbsGenerator::RbsObject
   sig do
     params(
@@ -1586,6 +1736,8 @@ module Parlour::TypeLoader
     end
     def load_project(root, inclusions: T.unsafe(nil), exclusions: T.unsafe(nil), generator: T.unsafe(nil)); end
 
+    # TODO: make this into a class which stores configuration and passes it to
+    # all typeparsers
     sig do
       params(
         source: ::String,
@@ -1597,6 +1749,7 @@ module Parlour::TypeLoader
   end
 end
 
+# Parses Ruby source to find Sorbet type signatures.
 class Parlour::TypeParser
   sig do
     params(
@@ -1610,13 +1763,16 @@ class Parlour::TypeParser
   sig { returns(::Parser::AST::Node) }
   def ast; end
 
+  # @return [Parser::AST::Node]
   def ast=(_arg0); end
 
   sig { returns(::Parlour::RbiGenerator) }
   def generator; end
 
+  # @return [RbiGenerator]
   def generator=(_arg0); end
 
+  # Parses the entire source file and returns the resulting root namespace.
   sig { returns(Parlour::RbiGenerator::Namespace) }
   def parse_all; end
 
@@ -1631,6 +1787,12 @@ class Parlour::TypeParser
   sig { params(node: ::Parser::AST::Node).returns(::Parlour::Types::Type) }
   def parse_node_to_type(node); end
 
+  # Given a path to a node in the AST, parses the object definitions it
+  # represents and returns it, recursing to any child namespaces and parsing
+  # any methods within.
+  #
+  # If the node directly represents several nodes, such as being a
+  # (begin ...) node, they are all returned.
   sig do
     params(
       path: ::Parlour::TypeParser::NodePath,
@@ -1667,6 +1829,7 @@ class Parlour::TypeParser
   sig { params(node: T.nilable(::Parser::AST::Node)).returns(T.nilable(::String)) }
   def node_to_s(node); end
 
+  # @raise [ParseError.new(buffer, range)]
   sig { params(desc: ::String, node: T.any(::Parlour::TypeParser::NodePath, ::Parser::AST::Node)).returns(T.noreturn) }
   def parse_err(desc, node); end
 
@@ -1679,6 +1842,7 @@ class Parlour::TypeParser
   sig { params(msg: ::String, node: ::Parser::AST::Node).void }
   def warning(msg, node); end
 
+  # @raise [ArgumentError]
   sig do
     type_parameters(:A, :B)
       .params(
@@ -1705,6 +1869,7 @@ class Parlour::TypeParser
   end
 end
 
+# A parsed sig, not associated with a method.
 class Parlour::TypeParser::IntermediateSig < ::T::Struct
   prop :abstract, T::Boolean
   prop :final, T::Boolean
@@ -1719,6 +1884,8 @@ class Parlour::TypeParser::IntermediateSig < ::T::Struct
   end
 end
 
+# Represents a path of indices which can be traversed to reach a specific
+# node in an AST.
 class Parlour::TypeParser::NodePath
   sig { params(indices: T::Array[::Integer]).void }
   def initialize(indices); end
@@ -1739,6 +1906,10 @@ class Parlour::TypeParser::NodePath
   def traverse(start); end
 end
 
+# A generic superclass of all objects which form part of type definitions in,
+# specific formats, such as RbiObject and RbsObject.
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Parlour::TypedObject
   abstract!
 
@@ -1748,6 +1919,8 @@ class Parlour::TypedObject
   sig { params(comment: T.any(::String, T::Array[::String])).void }
   def add_comment(comment); end
 
+  # @param comment [String, Array<String>]
+  # @return [void]
   def add_comments(*args, &blk); end
 
   sig { returns(T::Array[::String]) }
@@ -1762,15 +1935,18 @@ class Parlour::TypedObject
   sig { returns(T.nilable(::Parlour::Plugin)) }
   def generated_by; end
 
+  # @return [String]
   def inspect(*args, &blk); end
 
   sig { returns(::String) }
   def name; end
 
+  # @return [String]
   def to_s(*args, &blk); end
 
   protected
 
+  # @abstract
   sig { abstract.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
@@ -1778,8 +1954,10 @@ class Parlour::TypedObject
   def generate_comments(indent_level, options); end
 end
 
+# Contains structured types which can be used in type signatures.
 module Parlour::Types; end
 
+# An array with known element types.
 class Parlour::Types::Array < ::Parlour::Types::SingleElementCollection
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -1788,6 +1966,7 @@ class Parlour::Types::Array < ::Parlour::Types::SingleElementCollection
   def collection_name; end
 end
 
+# Type for a boolean.
 class Parlour::Types::Boolean < ::Parlour::Types::Type
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -1802,6 +1981,9 @@ class Parlour::Types::Boolean < ::Parlour::Types::Type
   def generate_rbs; end
 end
 
+# A type which represents the class of a type, rather than an instance.
+# For example, "String" means an instance of String, but "Class(String)"
+# means the actual String class.
 class Parlour::Types::Class < ::Parlour::Types::Type
   sig { params(type: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(type); end
@@ -1822,6 +2004,7 @@ class Parlour::Types::Class < ::Parlour::Types::Type
   def type; end
 end
 
+# An enumerable with known element types.
 class Parlour::Types::Enumerable < ::Parlour::Types::SingleElementCollection
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -1830,6 +2013,7 @@ class Parlour::Types::Enumerable < ::Parlour::Types::SingleElementCollection
   def collection_name; end
 end
 
+# An enumerator with known element types.
 class Parlour::Types::Enumerator < ::Parlour::Types::SingleElementCollection
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -1838,6 +2022,9 @@ class Parlour::Types::Enumerator < ::Parlour::Types::SingleElementCollection
   def collection_name; end
 end
 
+# A user-defined generic class with an arbitrary number of type
+# parameters. This class assumes at least one type_param is
+# provided, otherwise output will have empty type param lists.
 class Parlour::Types::Generic < ::Parlour::Types::Type
   sig do
     params(
@@ -1866,6 +2053,7 @@ class Parlour::Types::Generic < ::Parlour::Types::Type
   def type_params; end
 end
 
+# A hash with known key and value types.
 class Parlour::Types::Hash < ::Parlour::Types::Type
   sig { params(key: T.any(::Parlour::Types::Type, ::String), value: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(key, value); end
@@ -1889,6 +2077,7 @@ class Parlour::Types::Hash < ::Parlour::Types::Type
   def value; end
 end
 
+# A type which matches all of the wrapped types.
 class Parlour::Types::Intersection < ::Parlour::Types::Type
   sig { params(types: T::Array[T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(types); end
@@ -1909,6 +2098,7 @@ class Parlour::Types::Intersection < ::Parlour::Types::Type
   def types; end
 end
 
+# A type which can be either the wrapped type, or nil.
 class Parlour::Types::Nilable < ::Parlour::Types::Type
   sig { params(type: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(type); end
@@ -1929,6 +2119,7 @@ class Parlour::Types::Nilable < ::Parlour::Types::Type
   def type; end
 end
 
+# A type which can be called as a function.
 class Parlour::Types::Proc < ::Parlour::Types::Type
   sig do
     params(
@@ -1957,6 +2148,7 @@ class Parlour::Types::Proc < ::Parlour::Types::Type
   def return_type; end
 end
 
+# A parameter to a proc.
 class Parlour::Types::Proc::Parameter
   sig { params(name: ::String, type: T.any(::Parlour::Types::Type, ::String), default: T.nilable(::String)).void }
   def initialize(name, type, default = T.unsafe(nil)); end
@@ -1974,6 +2166,7 @@ class Parlour::Types::Proc::Parameter
   def type; end
 end
 
+# A range with known element types.
 class Parlour::Types::Range < ::Parlour::Types::SingleElementCollection
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -1982,6 +2175,7 @@ class Parlour::Types::Range < ::Parlour::Types::SingleElementCollection
   def collection_name; end
 end
 
+# A basic type as a raw string.
 class Parlour::Types::Raw < ::Parlour::Types::Type
   sig { params(str: ::String).void }
   def initialize(str); end
@@ -2002,6 +2196,7 @@ class Parlour::Types::Raw < ::Parlour::Types::Type
   def str; end
 end
 
+# A record/shape; a hash with a fixed set of keys with given types.
 class Parlour::Types::Record < ::Parlour::Types::Type
   sig { params(keys_to_types: T::Hash[::Symbol, T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(keys_to_types); end
@@ -2022,6 +2217,7 @@ class Parlour::Types::Record < ::Parlour::Types::Type
   def keys_to_types; end
 end
 
+# Type equivalent to the receiver.
 class Parlour::Types::Self < ::Parlour::Types::Type
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -2036,6 +2232,7 @@ class Parlour::Types::Self < ::Parlour::Types::Type
   def generate_rbs; end
 end
 
+# A set with known element types.
 class Parlour::Types::Set < ::Parlour::Types::SingleElementCollection
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -2044,12 +2241,14 @@ class Parlour::Types::Set < ::Parlour::Types::SingleElementCollection
   def collection_name; end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Parlour::Types::SingleElementCollection < ::Parlour::Types::Type
   abstract!
 
   sig { params(element: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(element); end
 
+  # @abstract
   sig { abstract.returns(::String) }
   def collection_name; end
 
@@ -2066,6 +2265,7 @@ class Parlour::Types::SingleElementCollection < ::Parlour::Types::Type
   def generate_rbs; end
 end
 
+# A fixed-length array of items, each with a known type.
 class Parlour::Types::Tuple < ::Parlour::Types::Type
   sig { params(types: T::Array[T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(types); end
@@ -2086,17 +2286,24 @@ class Parlour::Types::Tuple < ::Parlour::Types::Type
   def types; end
 end
 
+# The top-level, abstract class for a generalised type. All of the other
+# types inherit from this. Do not instantiate.
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Parlour::Types::Type
   abstract!
 
   def initialize(*args, &blk); end
 
+  # @abstract
   sig { abstract.returns(::String) }
   def describe; end
 
+  # @abstract
   sig { abstract.returns(::String) }
   def generate_rbi; end
 
+  # @abstract
   sig { abstract.returns(::String) }
   def generate_rbs; end
 
@@ -2113,6 +2320,7 @@ end
 
 Parlour::Types::TypeLike = T.type_alias { T.any(::Parlour::Types::Type, ::String) }
 
+# A type which is (at least) one of the wrapped types.
 class Parlour::Types::Union < ::Parlour::Types::Type
   sig { params(types: T::Array[T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(types); end
@@ -2133,6 +2341,7 @@ class Parlour::Types::Union < ::Parlour::Types::Type
   def types; end
 end
 
+# The explicit lack of a type.
 class Parlour::Types::Untyped < ::Parlour::Types::Type
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
@@ -2147,4 +2356,5 @@ class Parlour::Types::Untyped < ::Parlour::Types::Type
   def generate_rbs; end
 end
 
+# The library version.
 Parlour::VERSION = T.let(T.unsafe(nil), String)

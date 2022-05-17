@@ -114,7 +114,10 @@ class Sentry::Configuration
   def propagate_traces=(_arg0); end
   def rack_env_whitelist; end
   def rack_env_whitelist=(_arg0); end
+
+  # Returns the value of attribute rails.
   def rails; end
+
   def release; end
   def release=(_arg0); end
   def sample_allowed?; end
@@ -179,6 +182,7 @@ module Sentry::Rails
 end
 
 class Sentry::Rails::BacktraceCleaner < ::ActiveSupport::BacktraceCleaner
+  # @return [BacktraceCleaner] a new instance of BacktraceCleaner
   def initialize; end
 end
 
@@ -186,6 +190,7 @@ Sentry::Rails::BacktraceCleaner::APP_DIRS_PATTERN = T.let(T.unsafe(nil), Regexp)
 Sentry::Rails::BacktraceCleaner::RENDER_TEMPLATE_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 class Sentry::Rails::CaptureExceptions < ::Sentry::Rack::CaptureExceptions
+  # @return [CaptureExceptions] a new instance of CaptureExceptions
   def initialize(app); end
 
   private
@@ -197,15 +202,47 @@ class Sentry::Rails::CaptureExceptions < ::Sentry::Rack::CaptureExceptions
 end
 
 class Sentry::Rails::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize; end
 
+  # Rails 7.0 introduced a new error reporter feature, which the SDK once opted-in by default.
+  # But after receiving multiple issue reports, the integration seemed to cause serious troubles to some users.
+  # So the integration is now controlled by this configuration, which is disabled (false) by default.
+  # More information can be found from: https://github.com/rails/rails/pull/43625#issuecomment-1072514175
   def register_error_subscriber; end
+
+  # Rails 7.0 introduced a new error reporter feature, which the SDK once opted-in by default.
+  # But after receiving multiple issue reports, the integration seemed to cause serious troubles to some users.
+  # So the integration is now controlled by this configuration, which is disabled (false) by default.
+  # More information can be found from: https://github.com/rails/rails/pull/43625#issuecomment-1072514175
   def register_error_subscriber=(_arg0); end
+
+  # Rails catches exceptions in the ActionDispatch::ShowExceptions or
+  # ActionDispatch::DebugExceptions middlewares, depending on the environment.
+  # When `rails_report_rescued_exceptions` is true (it is by default), Sentry
+  # will report exceptions even when they are rescued by these middlewares.
   def report_rescued_exceptions; end
+
+  # Rails catches exceptions in the ActionDispatch::ShowExceptions or
+  # ActionDispatch::DebugExceptions middlewares, depending on the environment.
+  # When `rails_report_rescued_exceptions` is true (it is by default), Sentry
+  # will report exceptions even when they are rescued by these middlewares.
   def report_rescued_exceptions=(_arg0); end
+
+  # Some adapters, like sidekiq, already have their own sentry integration.
+  # In those cases, we should skip ActiveJob's reporting to avoid duplicated reports.
   def skippable_job_adapters; end
+
+  # Some adapters, like sidekiq, already have their own sentry integration.
+  # In those cases, we should skip ActiveJob's reporting to avoid duplicated reports.
   def skippable_job_adapters=(_arg0); end
+
+  # Returns the value of attribute tracing_subscribers.
   def tracing_subscribers; end
+
+  # Sets the attribute tracing_subscribers
+  #
+  # @param value the value to set the attribute tracing_subscribers to.
   def tracing_subscribers=(_arg0); end
 end
 
@@ -218,16 +255,23 @@ end
 Sentry::Rails::InstrumentPayloadCleanupHelper::IGNORED_DATA_TYPES = T.let(T.unsafe(nil), Array)
 
 class Sentry::Rails::RescuedExceptionInterceptor
+  # @return [RescuedExceptionInterceptor] a new instance of RescuedExceptionInterceptor
   def initialize(app); end
 
   def call(env); end
+
+  # @return [Boolean]
   def report_rescued_exceptions?; end
 end
 
 module Sentry::Rails::Tracing
   class << self
     def get_current_transaction; end
+
+    # this is necessary because instrumentation events don't record absolute start/finish time
+    # so we need to retrieve the correct time this way
     def patch_active_support_notifications; end
+
     def register_subscribers(subscribers); end
     def remove_active_support_notifications_patch; end
     def subscribe_tracing_events; end
@@ -240,7 +284,10 @@ end
 class Sentry::Rails::Tracing::AbstractSubscriber
   class << self
     def record_on_current_span(duration:, **options); end
+
+    # @raise [NotImplementedError]
     def subscribe!; end
+
     def subscribe_to_event(event_names); end
     def unsubscribe!; end
   end
@@ -283,7 +330,10 @@ end
 
 Sentry::Rails::Tracing::ActiveStorageSubscriber::EVENT_NAMES = T.let(T.unsafe(nil), Array)
 Sentry::Rails::Tracing::START_TIMESTAMP_NAME = T.let(T.unsafe(nil), Symbol)
+
+# it's just a container for the extended method
 module Sentry::Rails::Tracing::SentryNotificationExtension; end
+
 Sentry::Rails::VERSION = T.let(T.unsafe(nil), String)
 
 class Sentry::Railtie < ::Rails::Railtie

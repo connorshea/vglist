@@ -5,6 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem web-console`.
 
 class SourceLocation
+  # @return [SourceLocation] a new instance of SourceLocation
   def initialize(binding); end
 
   def lineno; end
@@ -19,9 +20,16 @@ module WebConsole
   end
 end
 
+# A context lets you get object names related to the current session binding.
 class WebConsole::Context
+  # @return [Context] a new instance of Context
   def initialize(binding); end
 
+  # Extracts entire objects which can be called by the current session unless
+  # the inputs is present.
+  #
+  # Otherwise, it extracts methods and constants of the object specified by
+  # the input.
   def extract(input = T.unsafe(nil)); end
 
   private
@@ -32,10 +40,20 @@ class WebConsole::Context
 end
 
 WebConsole::Context::GLOBAL_OBJECTS = T.let(T.unsafe(nil), Array)
+
+# Raised when there is an attempt to render a console more than once.
 class WebConsole::DoubleRenderError < ::WebConsole::Error; end
+
+# The base class for every Web Console related error.
 class WebConsole::Error < ::StandardError; end
 
+# Simple Ruby code evaluator.
+#
+# This class wraps a +Binding+ object and evaluates code inside of it. The
+# difference of a regular +Binding+ eval is that +Evaluator+ will always
+# return a string and will format exception output.
 class WebConsole::Evaluator
+  # @return [Evaluator] a new instance of Evaluator
   def initialize(binding = T.unsafe(nil)); end
 
   def cleaner; end
@@ -51,10 +69,14 @@ class WebConsole::Evaluator
 end
 
 class WebConsole::ExceptionMapper
+  # @return [ExceptionMapper] a new instance of ExceptionMapper
   def initialize(exception); end
 
   def [](index); end
+
+  # Returns the value of attribute exc.
   def exc; end
+
   def first; end
 
   private
@@ -68,7 +90,9 @@ class WebConsole::ExceptionMapper
   end
 end
 
+# Injects content into a Rack body.
 class WebConsole::Injector
+  # @return [Injector] a new instance of Injector
   def initialize(body, headers); end
 
   def inject(content); end
@@ -81,6 +105,7 @@ module WebConsole::Interceptor
 end
 
 class WebConsole::Middleware
+  # @return [Middleware] a new instance of Middleware
   def initialize(app); end
 
   def call(env); end
@@ -91,7 +116,9 @@ class WebConsole::Middleware
 
   private
 
+  # @return [Boolean]
   def acceptable_content_type?(headers); end
+
   def binding_change_re; end
   def call_app(env); end
   def change_stack_trace(id, request); end
@@ -117,9 +144,12 @@ end
 WebConsole::Middleware::TEMPLATES_PATH = T.let(T.unsafe(nil), String)
 
 class WebConsole::Permissions
+  # @return [Permissions] a new instance of Permissions
   def initialize(networks = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def include?(network); end
+
   def to_s; end
 
   private
@@ -129,6 +159,7 @@ class WebConsole::Permissions
   def normalize_networks(networks); end
 end
 
+# IPv4 and IPv6 localhost should be always allowed.
 WebConsole::Permissions::ALWAYS_PERMITTED_NETWORKS = T.let(T.unsafe(nil), Array)
 
 class WebConsole::Railtie < ::Rails::Railtie
@@ -138,7 +169,10 @@ end
 class WebConsole::Request < ::ActionDispatch::Request
   def permissions; end
   def permissions=(val); end
+
+  # @return [Boolean]
   def permitted?; end
+
   def strict_remote_ip; end
 
   class << self
@@ -148,18 +182,41 @@ class WebConsole::Request < ::ActionDispatch::Request
 end
 
 class WebConsole::Request::GetSecureIp < ::ActionDispatch::RemoteIp::GetIp
+  # @return [GetSecureIp] a new instance of GetSecureIp
   def initialize(req, proxies); end
 
   def filter_proxies(ips); end
 end
 
+# A session lets you persist an +Evaluator+ instance in memory associated
+# with multiple bindings.
+#
+# Each newly created session is persisted into memory and you can find it
+# later by its +id+.
+#
+# A session may be associated with multiple bindings. This is used by the
+# error pages only, as currently, this is the only client that needs to do
+# that.
 class WebConsole::Session
+  # @return [Session] a new instance of Session
   def initialize(exception_mappers); end
 
+  # Returns context of the current binding
   def context(objpath); end
+
+  # Evaluate +input+ on the current Evaluator associated binding.
+  #
+  # Returns a string of the Evaluator output.
   def eval(input); end
+
+  # An unique identifier for every REPL.
   def id; end
+
   def inmemory_storage; end
+
+  # Switches the current binding to the one at specified +index+.
+  #
+  # Returns nothing.
   def switch_binding_to(index, exception_object_id); end
 
   private
@@ -167,16 +224,36 @@ class WebConsole::Session
   def store_into_memory; end
 
   class << self
+    # Finds a persisted session in memory by its id.
+    #
+    # Returns a persisted session if found in memory.
+    # Raises NotFound error unless found in memory.
     def find(id); end
+
+    # Create a Session from an binding or exception in a storage.
+    #
+    # The storage is expected to respond to #[]. The binding is expected in
+    # :__web_console_binding and the exception in :__web_console_exception.
+    #
+    # Can return nil, if no binding or exception have been preserved in the
+    # storage.
     def from(storage); end
+
     def inmemory_storage; end
   end
 end
 
+# A facade that handles template rendering and composition.
+#
+# It introduces template helpers to ease the inclusion of scripts only on
+# Rails error pages.
 class WebConsole::Template
+  # @return [Template] a new instance of Template
   def initialize(env, session); end
 
+  # Render a template (inferred from +template_paths+) as a plain string.
   def render(template); end
+
   def template_paths; end
   def template_paths=(val); end
 
@@ -187,15 +264,48 @@ class WebConsole::Template
 end
 
 class WebConsole::View < ::ActionView::Base
+  # Execute a block only on error pages.
+  #
+  # The error pages are special, because they are the only pages that
+  # currently require multiple bindings. We get those from exceptions.
   def only_on_error_page(*args); end
+
+  # Execute a block only on regular, non-error, pages.
   def only_on_regular_page(*args); end
+
+  # Custom ActionView::Base#render wrapper which silences all the log
+  # printings.
+  #
+  # Helps to keep the Rails logs clean during errors.
   def render(*_arg0); end
+
+  # Render inlined string to be used inside of JavaScript code.
+  #
+  # The inlined string is returned as an actual JavaScript string. You
+  # don't need to wrap the result yourself.
   def render_inlined_string(template); end
+
+  # Render JavaScript inside a script tag and a closure.
+  #
+  # This one lets write JavaScript that will automatically get wrapped in a
+  # script tag and enclosed in a closure, so you don't have to worry for
+  # leaking globals, unless you explicitly want to.
   def render_javascript(template); end
+
+  # Override method for ActionView::Helpers::TranslationHelper#t.
+  #
+  # This method escapes the original return value for JavaScript, since the
+  # method returns a HTML tag with some attributes when the key is not found,
+  # so it could cause a syntax error if we use the value in the string literals.
   def t(key, options = T.unsafe(nil)); end
 end
 
+# Noisy wrapper around +Request+.
+#
+# If any calls to +permitted?+ and +acceptable_content_type?+
+# return false, an info log message will be displayed in users' logs.
 class WebConsole::WhinyRequest < ::SimpleDelegator
+  # @return [Boolean]
   def permitted?; end
 
   private

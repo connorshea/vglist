@@ -6,61 +6,166 @@
 
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
+# Extensions for Ruby's `Array` class.
 class Array
   include ::Enumerable
   include ::JSON::Ext::Generator::GeneratorMethods::Array
   include ::MessagePack::CoreExt
   include ::FriendlyId::UnfriendlyUtils
 
+  # @return [Boolean]
   def aggregate?; end
+
+  # Binds the pattern to a solution, making it no longer variable if all variables are resolved to bound variables
+  #
+  # @param solution [RDF::Query::Solution]
+  # @return [self]
   def bind(solution); end
+
+  # @return [Boolean]
   def constant?; end
+
+  # Deep duplicate
   def deep_dup; end
+
+  # @return [Boolean]
   def evaluatable?; end
+
+  # @return [Boolean]
   def executable?; end
+
+  # If `#execute` is invoked, it implies that a non-implemented Algebra operator
+  # is being invoked
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}]
+  # @raise [NotImplementedError] If an attempt is made to perform an unsupported operation
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
   def execute(queryable, **options); end
+
+  # Return the non-destinguished variables contained within this Array
+  #
+  # @return [Array<RDF::Query::Variable>]
   def ndvars; end
+
+  # Does this contain any nodes?
+  #
+  # @return [Boolean]
   def node?; end
+
+  # Return an optimized version of this array.
+  #
+  # @return [Array] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
+
+  # Recursively re-map operators to replace aggregates with temporary variables returned from the block
+  #
+  # @return [SPARQL::Algebra::Evaluatable, RDF::Query::Variable] self
+  # @yield agg
+  # @yieldparam agg [SPARQL::Algebra::Aggregate]
+  # @yieldreturn [RDF::Query::Variable]
   def replace_aggregate!(&block); end
+
+  # Replace operators which are variables with the result of the block
+  # descending into operators which are also evaluatable
+  #
+  # @return [SPARQL::Algebra::Evaluatable] self
+  # @yield var
+  # @yieldparam var [RDF::Query::Variable]
+  # @yieldreturn [RDF::Query::Variable, SPARQL::Algebra::Evaluatable]
   def replace_vars!(&block); end
+
+  # Returns a partial SPARQL grammar for this array.
+  #
+  # @param delimiter [String] (" ")
+  #   If the first element is an IRI, treat it as an extension function
+  # @return [String]
   def to_sparql(delimiter: T.unsafe(nil), **options); end
+
+  # Returns the SXP representation of this object, defaults to `self`.
+  #
+  # @return [String]
   def to_sxp_bin; end
+
+  # Is this value composed only of valid components?
+  #
+  # @return [Boolean] `true` or `false`
   def valid?; end
+
+  # Validate all components.
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [Array] `self`
   def validate!; end
+
+  # Returns `true` if any of the operands are variables, `false`
+  # otherwise.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see #constant?
   def variable?; end
+
+  # The variables used in this array.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
+
+  # Return the variables contained within this Array
+  #
+  # @return [Array<RDF::Query::Variable>]
   def vars; end
 end
 
+# Extensions for Ruby's `FalseClass` class.
 class FalseClass
   include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
   include ::MessagePack::CoreExt
   include ::FriendlyId::UnfriendlyUtils
   include ::SafeType::BooleanMixin
 
+  # Returns the SXP representation of this object.
+  #
+  # @return [String]
   def to_sxp(**options); end
 end
 
+# Extensions for Ruby's `Hash` class.
 class Hash
   include ::Enumerable
   include ::JSON::Ext::Generator::GeneratorMethods::Hash
   include ::MessagePack::CoreExt
   include ::FriendlyId::UnfriendlyUtils
 
+  # Deep duplicate
   def deep_dup; end
+
+  # A duplicate of this hash.
+  #
+  # @return [Hash] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
 end
 
+# Extensions for Ruby's `NilClass` class.
 class NilClass
   include ::JSON::Ext::Generator::GeneratorMethods::NilClass
   include ::MessagePack::CoreExt
   include ::FriendlyId::UnfriendlyUtils
+  include ::FriendlyId::Reserved::Configuration
+  include ::FriendlyId::Scoped::Configuration
+  include ::FriendlyId::SimpleI18n::Configuration
+  include ::FriendlyId::Slugged::Configuration
 
   def evaluate(bindings, **options); end
+
+  # Returns the SXP representation of this object.
+  #
+  # @return [String]
   def to_sxp(**options); end
 end
 
+# Extensions for Ruby's `Object` class.
 class Object < ::BasicObject
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::ForkTracker::CoreExt
@@ -75,202 +180,1218 @@ class Object < ::BasicObject
   include ::PP::ObjectMixin
   include ::MakeMakefile
 
+  # Default for deep_dup is shallow dup
+  #
+  # @return [Object]
   def deep_dup; end
+
+  # A duplicate of this object.
+  #
+  # @return [Object] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Make sure the object is in SXP form and transform it to a string form
+  #
+  # @return String
   def to_sse; end
+
+  # Returns the SXP binary representation of this object, defaults to `self`.
+  #
+  # @return [String]
   def to_sxp_bin; end
 end
 
+# An RDF basic graph pattern (BGP) query.
+#
+# Named queries either match against a specifically named
+# graph if the name is an RDF::Resource or bound RDF::Query::Variable.
+# Names that are against unbound variables match either default
+# or named graphs.
+# The name of `false` will only match against the default graph.
+#
+# Variable names cause the variable to be added to the solution set
+# elements.
+#
+# @example Constructing a basic graph pattern query (1)
+#   query = RDF::Query.new do
+#   pattern [:person, RDF.type,  FOAF.Person]
+#   pattern [:person, FOAF.name, :name]
+#   pattern [:person, FOAF.mbox, :email]
+#   end
+# @example Constructing a basic graph pattern query (2)
+#   query = RDF::Query.new({
+#   person: {
+#   RDF.type  => FOAF.Person,
+#   FOAF.name => :name,
+#   FOAF.mbox => :email,
+#   }
+#   })
+# @example Executing a basic graph pattern query
+#   graph = RDF::Graph.load('etc/doap.nt')
+#   query.execute(graph).each do |solution|
+#   puts solution.inspect
+#   end
+# @example Constructing and executing a query in one go (1)
+#   solutions = RDF::Query.execute(graph) do
+#   pattern [:person, RDF.type, FOAF.Person]
+#   end
+# @example Constructing and executing a query in one go (2)
+#   solutions = RDF::Query.execute(graph, {
+#   person: {
+#   RDF.type => FOAF.Person,
+#   }
+#   })
+# @example In this example, the default graph contains the names of the publishers of two named graphs. The triples in the named graphs are not visible in the default graph in this example.
+#   # default graph
+#   @prefix dc: <http://purl.org/dc/elements/1.1/
+#
+#   <http://example.org/bob>    dc:publisher  "Bob" .
+#   <http://example.org/alice>  dc:publisher  "Alice" .
+#
+#   # Named graph: http://example.org/bob
+#   @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+#
+#   _:a foaf:name "Bob" .
+#   _:a foaf:mbox <mailto:bob@oldcorp.example.org> .
+#
+#   # Named graph: http://example.org/alice
+#   @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+#
+#   _:a foaf:name "Alice" .
+#   _:a foaf:mbox <mailto:alice@work.example.org> .
+# @see http://www.w3.org/TR/rdf-sparql-query/#rdfDataset
+# @since 0.3.0
 class RDF::Query
   include ::Enumerable
   include ::RDF::Countable
   include ::RDF::Enumerable
 
+  # Initializes a new basic graph pattern query.
+  #
+  # @option options
+  # @overload initialize
+  # @overload initialize
+  # @param options [Hash] a customizable set of options
+  # @return [Query] a new instance of Query
+  # @since 0.3.0
   def initialize(*patterns, solutions: T.unsafe(nil), graph_name: T.unsafe(nil), name: T.unsafe(nil), validate: T.unsafe(nil), **options, &block); end
 
+  # Add patterns from another query to form a new Query
+  #
+  # @param other [RDF::Query]
+  # @return [RDF::Query]
+  # @since 0.3.0
   def +(other); end
+
+  # Appends the given query `pattern` to this query.
+  #
+  # @param pattern [RDF::Query::Pattern] a triple query pattern
+  # @return [void] self
+  # @since 0.3.0
   def <<(pattern); end
+
+  # Equivalence for Queries:
+  #   Same Patterns
+  #   Same Context
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def ==(other); end
+
+  # Apply the graph name specified (or configured) to all patterns that have no graph name
+  #
+  # @param graph_name [RDF::IRI, RDF::Query::Variable] (self.graph_name)
+  # @since 0.3.0
   def apply_graph_name(graph_name = T.unsafe(nil)); end
+
+  # Binds the pattern to a solution, making it no longer variable if all variables are resolved to bound variables
+  #
+  # @param solution [RDF::Query::Solution]
+  # @return [self]
+  # @since 0.3.0
   def bind(solution); end
+
+  # Is this query scoped to the default graph?
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def default?; end
+
+  # Duplicate query, including patterns and solutions
+  #
+  # @return [RDF::Query]
+  # @since 0.3.0
   def dup; end
+
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each(&block); end
+
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each_solution(&block); end
+
+  # Enumerates over each statement (pattern).
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [RDF::Query::Pattern]
+  # @yieldparam pattern [::Query::Pattern]
   def each_statement(&block); end
+
+  # Query has no patterns
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def empty?; end
+
+  # Returns `true` as this is executable.
+  #
+  # @return [Boolean] `true`
+  # @since 0.3.0
   def executable?; end
+
+  # Executes this query on the given `queryable` graph or repository.
+  #
+  # Named queries either match against a specifically named
+  # graphs if the name is an RDF::Resource or bound RDF::Query::Variable.
+  # Names that are against unbound variables match either detault
+  # or named graphs.
+  # The name of `false` will only match against the default graph.
+  #
+  # If the query nas no patterns, it returns a single empty solution as
+  # per SPARQL 1.1 _Empty Group Pattern_.
+  #
+  # @note solutions could be an Iterator, but this algorithm cycles over solutions, which requires them to be an array internally.
+  # @option options
+  # @option options
+  # @option options
+  # @param name [RDF::Resource, RDF::Query::Variable, false] (nil)
+  #   Alias for `:graph_name`.
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param solutions [RDF::Query::Solutions] (Solutions.new)
+  # @param graph_name [RDF::Resource, RDF::Query::Variable, false] (nil)
+  #   Default graph name for matching against queryable.
+  #   Named queries either match against a specifically named
+  #   graphs if the name is an {RDF::Resource} or bound {RDF::Query::Variable}.
+  #   Names that are against unbound variables match either default
+  #   or named graphs.
+  #   The name of `false` will only match against the default graph.
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see http://www.holygoat.co.uk/blog/entry/2005-10-25-1
+  # @see http://www.w3.org/TR/sparql11-query/#emptyGroupPattern
+  # @since 0.3.0
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, bindings: T.unsafe(nil), solutions: T.unsafe(nil), graph_name: T.unsafe(nil), name: T.unsafe(nil), **options, &block); end
+
+  # Returns `true` if this query did not match when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query failed to match or not.
+  #
+  # @return [Boolean]
+  # @see #matched?
+  # @since 0.3.0
   def failed?; end
+
+  # Scope the query to named graphs matching value
+  #
+  # @return [RDF::Resource, RDF::Query::Variable, false] graph_name
+  # @since 0.3.0
   def graph_name; end
+
+  # Scope the query to named graphs matching value
+  #
+  # @return [RDF::Resource, RDF::Query::Variable, false] graph_name
+  # @since 0.3.0
   def graph_name=(_arg0); end
+
+  # Returns `true` if any pattern contains a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def has_blank_nodes?; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # Returns `true` if this query matched when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query matched successfully or not.
+  #
+  # @return [Boolean]
+  # @see #failed?
+  # @since 0.3.0
   def matched?; end
+
+  # Is this query scoped to a named graph?
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def named?; end
+
+  # Return the non-destinguished variables contained within patterns and graph name
+  #
+  # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def ndvars; end
+
+  # Returns `true` if any pattern contains a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def node?; end
+
+  # Returns an optimized copy of this query.
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [RDF::Query] a copy of `self`
+  # @since 0.3.0
   def optimize(**options); end
+
+  # Optimize the query, removing lexical shortcuts in URIs
+  #
+  # @return [self]
+  # @see SPARQL::Algebra::Expression#optimize!
+  # @since 0.3.0
   def optimize!(**options); end
+
+  # Optimizes this query by reordering its constituent triple patterns
+  # according to their cost estimates.
+  #
+  # Optional patterns have greater cost than non-optional patterns so they will always come after non-optional patterns
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [self]
+  # @see RDF::Query::Pattern#cost
+  # @since 0.3.0
   def optimize_without_expression!(**options); end
+
+  # Any additional options for this query.
+  #
+  # @return [Hash]
+  # @since 0.3.0
   def options; end
+
+  # Appends the given query `pattern` to this query.
+  #
+  # @option options
+  # @param pattern [RDF::Query::Pattern] a triple query pattern
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [void] self
+  # @since 0.3.0
   def pattern(pattern, **options); end
+
+  # The patterns that constitute this query.
+  #
+  # @return [Array<RDF::Query::Pattern>]
+  # @since 0.3.0
   def patterns; end
+
+  # Query results in a boolean result (e.g., ASK)
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def query_yields_boolean?; end
+
+  # Query results solutions (e.g., SELECT)
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def query_yields_solutions?; end
+
+  # Query results statements (e.g., CONSTRUCT, DESCRIBE, CREATE)
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def query_yields_statements?; end
+
+  # Don't do any more rewriting
+  #
+  # @return [SPARQL::Algebra::Expression] `self`
+  # @since 0.3.0
   def rewrite(&block); end
+
+  # The solution sequence for this query.
+  #
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def solutions; end
+
+  # Returns a partial SPARQL grammar for this query.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @param filter_ops [Array<Operator>] ([])
+  #   Filter Operations
+  # @return [String]
+  # @since 0.3.0
   def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
+
   def to_sxp(**options); end
+
+  # Transform Query into an Array form of an SSE
+  #
+  # If Query has the `as_container` option set, serialize as Quads
+  # Otherwise, If Query is named, serialize as a GroupGraphPattern.
+  # Otherise, serialize as a BGP
+  #
+  # @return [Array]
+  # @since 0.3.0
   def to_sxp_bin; end
+
+  # Is this query unscoped? This indicates that it can return results from
+  # either a named graph or the default graph.
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def unnamed?; end
+
+  # Determine if the query containts valid patterns
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.9
   def valid?; end
+
+  # Validate this query, making sure it can be executed by our query engine.
+  # This method is public so that it may be called by implementations of
+  # RDF::Queryable#query_execute that bypass our built-in query engine.
+  #
+  # @raise [ArgumentError] This query cannot be executed.
+  # @return [RDF::Query] `self`
+  # @since 0.3.0
   def validate!; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variable?(*args); end
+
+  # Returns the number of variables in this query.
+  #
+  # @return [Integer] (0..3)
+  # @since 0.3.0
   def variable_count; end
+
+  # The variables used in this query. This includes variables used in patterns along with the graph_name itself, if it is a variable.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
+  # @since 0.3.0
   def variables; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variables?(*args); end
+
+  # Return the variables contained within patterns and graph name
+  #
+  # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def vars; end
 
   protected
 
+  # @private
+  # @since 0.3.0
   def compile_hash_patterns(hash_patterns); end
 
   class << self
+    # Cast values as Solutions
+    #
+    # @overload Solutions
+    # @overload Solutions
+    # @overload Solutions
+    # @overload Solutions
+    # @since 0.3.0
     def Solutions(*args); end
+
+    # Executes a query on the given `queryable` graph or repository.
+    #
+    # @param queryable [RDF::Queryable] the graph or repository to query
+    # @param patterns [Hash{Object => Object}] optional hash patterns to initialize the query with
+    # @param options [Hash{Symbol => Object}] any additional keyword options (see {RDF::Query#initialize})
+    # @return [RDF::Query::Solutions] the resulting solution sequence
+    # @see RDF::Query#execute
+    # @since 0.3.0
+    # @yield [query]
+    # @yieldparam query [RDF::Query]
+    # @yieldreturn [void] ignored
     def execute(queryable, patterns = T.unsafe(nil), options = T.unsafe(nil), &block); end
   end
 end
 
+# An RDF query pattern.
+#
+# @since 0.3.0
 class RDF::Query::Pattern < ::RDF::Statement
+  # @note {Statement} treats symbols as interned {Node} instances, in a {Pattern}, they are treated as {Variable}.
+  # @overload initialize
+  # @overload initialize
+  # @return [Pattern] a new instance of Pattern
   def initialize(subject = T.unsafe(nil), predicate = T.unsafe(nil), object = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def arity; end
+
+  # Binds the pattern to a solution, making it no longer variable if all variables are resolved to bound variables
+  #
+  # @param solution [RDF::Query::Solution]
+  # @return [self]
   def bind(solution); end
+
+  # Returns the number of bindings in this pattern.
+  #
+  # @return [Integer] (0..3)
   def binding_count; end
+
+  # Returns all bindings in this pattern.
+  #
+  # @return [Hash{Symbol => RDF::Term}]
   def bindings; end
+
+  # Returns `true` if this pattern contains bindings.
+  #
+  # @return [Boolean] `true` or `false`
   def bindings?; end
+
+  # Returns `true` if this is a blank pattern, with all terms being `nil`.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def blank?; end
+
+  # Returns `true` if all variables in this pattern are bound.
+  #
+  # @return [Boolean] `true` or `false`
   def bound?; end
+
+  # Returns all bound variables in this pattern.
+  #
+  # @return [Hash{Symbol => Variable}]
   def bound_variables; end
+
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def cardinality; end
+
+  # The estimated cost of this pattern (for query optimization).
+  #
+  # @return [Numeric]
   def cost; end
+
+  # The estimated cost of this pattern (for query optimization).
+  #
+  # @return [Numeric]
   def cost=(_arg0); end
+
+  # Create a new pattern from the quads, recursivly dupping sub-patterns.
   def dup; end
+
+  # Checks pattern equality against a statement, considering nesting.
+  #
+  # * A pattern which has a pattern as a subject or an object, matches
+  #   a statement having a statement as a subject or an object using {#eql?}.
+  #
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def eql?(other); end
+
+  # Returns `true` as this is executable.
+  #
+  # @return [Boolean] `true`
+  # @since 0.3.0
   def executable?; end
+
+  # Executes this query pattern on the given `queryable` object.
+  #
+  # Values are matched using using Queryable#query_pattern.
+  #
+  # If the optional `bindings` are given, variables will be substituted with their values when executing the query.
+  #
+  # To match triples only in the default graph, set graph_name to `false`.
+  #
+  # @example
+  #   Pattern.new(:s, :p, :o).execute(RDF::Repository.load('etc/doap.nt'))
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param bindings [Hash{Symbol => RDF::Term}] optional variable bindings to use
+  # @return [Enumerable<RDF::Query::Pattern>] an enumerator yielding matching statements
+  # @see RDF::Queryable#query
+  # @since 0.3.0
+  # @yield [statement] each matching statement
+  # @yieldparam statement [RDF::Statement] an RDF statement matching this pattern
   def execute(queryable, bindings = T.unsafe(nil), &block); end
+
+  # Returns `true` if this pattern contains any variables.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def has_variables?; end
+
+  # @private
   def initialize!; end
+
+  # Return the non-destinguished variables contained within this pattern
+  #
+  # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def ndvars; end
+
+  # Returns `true` if this is an optional pattern.
+  #
+  # @example
+  #   Pattern.new(:s, :p, :o).optional?                     #=> false
+  #   Pattern.new(:s, :p, :o, optional: true).optional?  #=> true
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def optional?; end
+
+  # Any additional options for this pattern.
+  #
+  # @return [Hash]
   def options; end
+
+  # Returns a query solution constructed by binding any variables in this
+  # pattern with the corresponding terms in the given `statement`.
+  #
+  # @example
+  #   pattern = Pattern.new(:s, :p, :o)
+  #   solution = pattern.solution(statement)
+  #
+  #   pattern[:s] #=> statement.subject
+  #   pattern[:p] #=> statement.predicate
+  #   pattern[:o] #=> statement.object
+  # @param statement [RDF::Statement] an RDF statement to bind terms from
+  # @return [RDF::Query::Solution]
+  # @since 0.3.0
   def solution(statement); end
+
+  # Returns a string representation of this pattern.
+  #
+  # @return [String]
   def to_s; end
+
   def to_sxp(**options); end
+
+  # Returns `true` if all variables in this pattern are unbound.
+  #
+  # @return [Boolean] `true` or `false`
   def unbound?; end
+
+  # Returns all unbound variables in this pattern.
+  #
+  # @return [Hash{Symbol => Variable}]
   def unbound_variables; end
+
+  # Is this pattern composed only of valid components?
+  #
+  # @return [Boolean] `true` or `false`
   def valid?; end
+
+  # Returns all values the statement in the same pattern position
+  #
+  # @param var [Symbol]
+  # @param statement [RDF::Statement]
+  # @return [Array<RDF::Term>]
   def var_values(var, statement); end
+
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def variable_count; end
+
+  # Returns the variable terms in this pattern.
+  #
+  # @deprecated use {#var_values} instead
+  # @example
+  #   Pattern.new(RDF::Node.new, :p, 123).variable_terms    #=> [:predicate]
+  # @param name [Symbol, #to_sym] an optional variable name
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_terms(name = T.unsafe(nil)); end
+
+  # Returns all variables in this pattern.
+  #
+  # Note: this returns a hash containing distinct variables only.
+  #
+  # @return [Hash{Symbol => Variable}]
   def variables; end
+
+  # Returns `true` if this pattern contains any variables.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def variables?; end
+
+  # Return the variables contained within this pattern
+  #
+  # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def vars; end
 
   class << self
+    # @private
+    # @since 0.2.2
     def from(pattern, graph_name: T.unsafe(nil), **options); end
   end
 end
 
+# Extensions for `RDF::Query::Solution`.
+#
+# @since 0.3.0
 class RDF::Query::Solution
   include ::Enumerable
 
+  # Initializes the query solution.
+  #
+  # @param bindings [Hash{Symbol => RDF::Term}]
+  # @return [Solution] a new instance of Solution
+  # @yield [solution]
   def initialize(bindings = T.unsafe(nil), &block); end
 
+  # Equals of solution
   def ==(other); end
+
+  # Returns the value of the variable `name`.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [RDF::Term]
   def [](name); end
+
+  # Binds or rebinds the variable `name` to the given `value`.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @param value [RDF::Term]
+  # @return [RDF::Term]
+  # @since 0.3.0
   def []=(name, value); end
+
+  # Undefine all superfluous instance methods:
   def __send(*_arg0); end
+
+  # @private
   def bindings; end
+
+  # Returns `true` if the variable `name` is bound in this solution.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [Boolean] `true` or `false`
   def bound?(name); end
+
+  # Compatible Mappings
+  #
+  # Two solution mappings u1 and u2 are compatible if, for every variable v in dom(u1) and in dom(u2), u1(v) = u2(v).
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algCompatibleMapping
   def compatible?(other); end
+
+  # Disjoint mapping
+  #
+  # A solution is disjoint with another solution if it shares no common variables in their domains.
+  #
+  # @param other [RDF::Query::Solution]
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algMinus
   def disjoint?(other); end
+
+  # Duplicate solution, preserving patterns
+  #
+  # @return [RDF::Statement]
   def dup; end
+
+  # Enumerates over every variable binding in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name, value]
+  # @yieldparam name [Symbol]
+  # @yieldparam value [RDF::Term]
   def each(&block); end
+
+  # Enumerates over every variable binding in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name, value]
+  # @yieldparam name [Symbol]
+  # @yieldparam value [RDF::Term]
   def each_binding(&block); end
+
+  # Enumerates over every variable name in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name]
+  # @yieldparam name [Symbol]
   def each_key(&block); end
+
+  # Enumerates over every variable name in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name]
+  # @yieldparam name [Symbol]
   def each_name(&block); end
+
+  # Enumerates over every variable value in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [value]
+  # @yieldparam value [RDF::Term]
   def each_value(&block); end
+
+  # Enumerates over every variable in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [variable]
+  # @yieldparam [Variable]
   def each_variable; end
+
+  # Returns an enumerator for {#each_binding}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_binding; end
+
+  # Returns an enumerator for {#each_name}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_name; end
+
+  # Returns an enumerator for {#each_value}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_value; end
+
+  # Returns an enumerator for {#each_variable}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_variable; end
+
+  # Equivalence of solution
+  #
+  # @return [Boolean]
   def eql?(other); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # Integer hash of this solution
+  #
+  # @return [Integer]
   def hash; end
+
+  # @return [String]
   def inspect; end
+
+  # Isomorphic Mappings
+  # Two solution mappings u1 and u2 are isomorphic if,
+  # for every variable v in dom(u1) and in dom(u2), u1(v) = u2(v).
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [Boolean]
   def isomorphic_with?(other); end
+
+  # Merges the bindings from the given `other` query solution with a copy
+  # of this one.
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [RDF::Query::Solution]
+  # @since 0.3.0
   def merge(other); end
+
+  # Merges the bindings from the given `other` query solution into this
+  # one, overwriting any existing ones having the same name.
+  #
+  # ## RDFStar (RDF*)
+  #
+  # If merging a binding for a statement to a pattern,
+  # merge their embedded solutions.
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [void] self
+  # @since 0.3.0
   def merge!(other); end
+
+  # @return [Array<Array(Symbol, RDF::Term)>]
   def to_a; end
+
+  # @return [Hash{Symbol => RDF::Term}]
   def to_h; end
+
+  # Transform Solution into an SXP
+  #
+  # @param prefixes [Hash{Symbol => RDF::URI}] (nil)
+  # @param base_uri [RDF::URI] (nil)
+  # @return [String]
+  # @since 0.3.0
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
+
+  # Returns the SXP representation of this object, defaults to `self`.
+  #
+  # @return [String]
+  # @since 0.3.0
   def to_sxp_bin; end
+
+  # Returns `true` if the variable `name` is unbound in this solution.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [Boolean] `true` or `false`
   def unbound?(name); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variable?(*args); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variables?(*args); end
 
   protected
 
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil)); end
+
+  # @overload binding
   def method_missing(name, *args, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def to_enum(method = T.unsafe(nil)); end
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+# Temporarily remember instance method for deprecation message in `method_missing`.
 RDF::Query::Solution::INSTANCE_METHODS = T.let(T.unsafe(nil), Array)
 
+# Extensions for `RDF::Query::Solutions`.
+#
+# @since 0.3.0
 class RDF::Query::Solutions < ::Array
   include ::SPARQL::Results
 
+  # Equals of solution
+  #
+  # @since 0.3.0
   def ==(other); end
+
+  # Returns hash of bindings from each solution. Each bound variable will have
+  # an array of bound values representing those from each solution, where a given
+  # solution will have just a single value for each bound variable
+  #
+  # @return [Hash{Symbol => Array<RDF::Term>}]
+  # @since 0.3.0
   def bindings; end
+
+  # Returns the number of matching query solutions.
+  #
+  # @overload count
+  # @overload count
+  # @return [Integer]
+  # @since 0.3.0
   def count(&block); end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def distinct; end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def distinct!; end
+
+  # Duplicates each solution.
+  #
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def dup; end
+
+  # @since 0.3.0
   def each_solution; end
+
+  # Equivalence of solution
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def eql?(other); end
+
+  # Filters this solution sequence by the given `criteria`.
+  #
+  # @param expression [SPARQL::Algebra::Expression]
+  # @return [void] `self`
+  # @since 0.3.0
+  # @yield [solution] each solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [Boolean]
   def filter(expression = T.unsafe(nil), &block); end
+
+  # Filters this solution sequence by the given `criteria`.
+  #
+  # @param expression [SPARQL::Algebra::Expression]
+  # @return [void] `self`
+  # @since 0.3.0
+  # @yield [solution] each solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [Boolean]
   def filter!(expression = T.unsafe(nil), &block); end
+
+  # Filters this solution sequence by the given `criteria`.
+  #
+  # @param criteria [Hash{Symbol => Object}]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [Boolean]
   def filter_without_expression(criteria = T.unsafe(nil)); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def have_variables?(*args); end
+
+  # Limits the number of solutions in this solution sequence to a maximum
+  # of `length`.
+  #
+  # @param length [Integer, #to_i] zero or a positive integer
+  # @raise [ArgumentError] if `length` is negative
+  # @return [self]
+  # @since 0.3.0
   def limit(length); end
+
+  # Limits the number of solutions in this solution sequence to a maximum
+  # of `length`.
+  #
+  # @param length [Integer, #to_i] zero or a positive integer
+  # @raise [ArgumentError] if `length` is negative
+  # @return [self]
+  # @since 0.3.0
   def limit!(length); end
+
+  # Merge solutions in `other` into a new solutions instance. Each solution in `other` is merged into those solutions in `self` that are compatible.
+  #
+  # @param other [RDF::Query::Solutions]
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def merge(other); end
+
+  # Difference between solution sets, from SPARQL 1.1.
+  #
+  # The `minus` operation on solutions returns those solutions which either have no compatible solution in `other`, or the solution domains are disjoint.
+  #
+  # @param other [RDF::Query::Solutions]
+  # @return [RDF::Query::Solutions] a new solution set
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algMinus
+  # @since 0.3.0
   def minus(other); end
+
+  # Limits this solution sequence to bindings starting from the `start`
+  # offset in the overall solution sequence.
+  #
+  # @param start [Integer, #to_i] zero or a positive or negative integer
+  # @return [self]
+  # @since 0.3.0
   def offset(start); end
+
+  # Limits this solution sequence to bindings starting from the `start`
+  # offset in the overall solution sequence.
+  #
+  # @param start [Integer, #to_i] zero or a positive or negative integer
+  # @return [self]
+  # @since 0.3.0
   def offset!(start); end
+
+  # Reorders this solution sequence by the given `variables`.
+  #
+  # Variables may be symbols or {Query::Variable} instances.
+  # A variable may also be a Procedure/Lambda, compatible with `::Enumerable#sort`.
+  # This takes two arguments (solutions) and returns -1, 0, or 1 equivalently to <=>.
+  #
+  # If called with a block, variables are ignored, and the block is invoked with
+  # pairs of solutions. The block is expected to return -1, 0, or 1 equivalently to <=>.
+  #
+  # @param variables [Array<Proc, Query::Variable, Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam q [RDF::Query::Solution]
+  # @yieldparam b [RDF::Query::Solution]
+  # @yieldreturn [Integer] -1, 0, or 1 depending on value of comparator
   def order(*variables); end
+
+  # Reorders this solution sequence by the given `variables`.
+  #
+  # Variables may be symbols or {Query::Variable} instances.
+  # A variable may also be a Procedure/Lambda, compatible with `::Enumerable#sort`.
+  # This takes two arguments (solutions) and returns -1, 0, or 1 equivalently to <=>.
+  #
+  # If called with a block, variables are ignored, and the block is invoked with
+  # pairs of solutions. The block is expected to return -1, 0, or 1 equivalently to <=>.
+  #
+  # @param variables [Array<Proc, Query::Variable, Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam q [RDF::Query::Solution]
+  # @yieldparam b [RDF::Query::Solution]
+  # @yieldreturn [Integer] -1, 0, or 1 depending on value of comparator
   def order_by(*variables); end
+
+  # Restricts this solution sequence to the given `variables` only.
+  #
+  # @param variables [Array<Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
   def project(*variables); end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def reduced; end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def reduced!; end
+
+  # Restricts this solution sequence to the given `variables` only.
+  #
+  # @param variables [Array<Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
   def select(*variables); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def variable?(*args); end
+
+  # Returns an array of the distinct variable names used in this solution
+  # sequence.
+  #
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_names; end
+
+  # Sets variable names used in these solutions. If not set, the default is determined by the variables used in each solution.
+  #
+  # @param vars [Array<Symbol, RDF::Query::Variable>]
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_names=(vars); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def variables?(*args); end
 end
 
+# Extensions for `RDF::Query::Variable`.
+#
+# @since 0.3.0
 class RDF::Query::Variable
   include ::RDF::Value
   include ::Comparable
@@ -278,63 +1399,441 @@ class RDF::Query::Variable
   include ::SPARQL::Algebra::Expression
   include ::RDF::Term
 
+  # @param name [Symbol, #to_sym] the variable name
+  # @param value [RDF::Term] an optional variable value
+  # @param distinguished [Boolean] (true) Also interpreted by leading '?' or '$' in name. If non-distinguished, '??' or '$$'.
+  # @param existential [Boolean] (true) Also interpreted by leading '$' in name
+  # @return [Variable] a new instance of Variable
   def initialize(name = T.unsafe(nil), value = T.unsafe(nil), distinguished: T.unsafe(nil), existential: T.unsafe(nil)); end
 
+  # Returns `true` if this variable is equivalent to a given `other`
+  # variable. Or, to another Term if bound, or to any other Term
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ==(other); end
+
+  # Compares this variable with the given value.
+  #
+  # @param other [RDF::Term]
+  # @return [Boolean]
   def ===(other); end
+
+  # Rebinds this variable to the given `value`.
+  #
+  # @overload bind
+  # @overload bind
   def bind(value); end
+
+  # Rebinds this variable to the given `value`.
+  #
+  # @overload bind
+  # @overload bind
   def bind!(value); end
+
+  # Returns this variable's bindings (if any) as a `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Term}]
   def bindings; end
+
+  # Returns `true` if this variable is bound.
+  #
+  # @return [Boolean]
   def bound?; end
+
+  # Sets if variable is distinguished or non-distinguished.
+  # By default, variables are distinguished
+  #
+  # @return [Boolean]
   def distinguished=(value); end
+
+  # Returns `true` if this variable is distinguished.
+  #
+  # @return [Boolean]
   def distinguished?; end
+
+  # Returns `true` if this variable is equivalent to a given `other`
+  # variable. Or, to another Term if bound, or to any other Term
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def eql?(other); end
+
+  # Returns the value of this variable in the given `bindings`.
+  #
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if the variable is not bound
+  # @return [RDF::Term] the value of this variable
+  # @since 0.3.0
   def evaluate(bindings, **options); end
+
+  # Sets if variable is existential or univeresal.
+  # By default, variables are universal
+  #
+  # @return [Boolean]
   def existential=(value); end
+
+  # Returns `true` if this variable is existential.
+  #
+  # @return [Boolean]
   def existential?; end
+
+  # Returns a hash code for this variable.
+  #
+  # @return [Integer]
+  # @since 0.3.0
   def hash; end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def name; end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def name=(_arg0); end
+
+  # Returns `true` if this variable has a name.
+  #
+  # @return [Boolean]
   def named?; end
+
+  # Return self
+  #
+  # @return [RDF::Query::Variable] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
+  # @since 0.3.0
   def optimize(**options); end
+
+  # Returns a string representation of this variable.
+  #
+  # Distinguished variables are indicated with a single `?`.
+  #
+  # Non-distinguished variables are indicated with a double `??`
+  #
+  # Existential variables are indicated using a single `$`, or with `$$` if also non-distinguished
+  #
+  # @example
+  #   v = Variable.new("a")
+  #   v.to_s => '?a'
+  #   v.distinguished = false
+  #   v.to_s => '??a'
+  # @return [String]
   def to_base; end
+
+  # Returns this variable as `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def to_h; end
+
+  # Returns a string representation of this variable.
+  #
+  # Distinguished variables are indicated with a single `?`.
+  #
+  # Non-distinguished variables are indicated with a double `??`
+  #
+  # Existential variables are indicated using a single `$`, or with `$$` if also non-distinguished
+  #
+  # @example
+  #   v = Variable.new("a")
+  #   v.to_s => '?a'
+  #   v.distinguished = false
+  #   v.to_s => '??a'
+  # @return [String]
   def to_s; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # The Non-distinguished form (`??xxx`) is not part of the grammar, so replace with a blank-node
+  #
+  # @return [String]
+  # @since 0.3.0
   def to_sparql(**options); end
+
   def to_sxp(**options); end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def to_sym; end
+
+  # Unbinds this variable, discarding any currently bound value.
+  #
+  # @return [RDF::Term] the previous value, if any.
   def unbind; end
+
+  # Unbinds this variable, discarding any currently bound value.
+  #
+  # @return [RDF::Term] the previous value, if any.
   def unbind!; end
+
+  # Returns `true` if this variable is unbound.
+  #
+  # @return [Boolean]
   def unbound?; end
+
+  # The variable's value.
+  #
+  # @return [RDF::Term]
   def value; end
+
+  # The variable's value.
+  #
+  # @return [RDF::Term]
   def value=(_arg0); end
+
+  # Returns term if var is the same as this variable.
+  #
+  # @param var [Symbol]
+  # @param term [RDF::Term]
+  # @return [RDF::Term]
   def var_values(var, term); end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.1.7
   def variable?(*args); end
+
+  # Returns this variable as `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
+# Extensions for `RDF::Queryable`
 module RDF::Queryable
   include ::Enumerable
 
+  # Concise Bounded Description
+  #
+  # Given a particular node (the starting node) in a particular RDF graph (the source graph), a subgraph of
+  # that particular graph, taken to comprise a concise bounded description of the resource denoted by the
+  # starting node, can be identified as follows:
+  #
+  #   1. Include in the subgraph all statements in the source graph where the subject of the statement is the
+  #      starting node;
+  #   2. Recursively, for all statements identified in the subgraph thus far having a blank node object,
+  #      include in the subgraph all statements in the source graph where the subject of the statement is the
+  #      blank node in question and which are not already included in the subgraph.
+  #   3. Recursively, for all statements included in the subgraph thus far, for all reifications of each
+  #      statement in the source graph, include the concise bounded description beginning from the
+  #      rdf:Statement node of each reification. (we skip this step)
+  #
+  # This results in a subgraph where the object nodes are either URI references, literals, or blank nodes not
+  # serving as the subject of any statement in the graph.
+  #
+  # Used to implement the SPARQL `DESCRIBE` operator.
+  #
+  # @overload concise_bounded_description
+  # @return [RDF::Graph]
+  # @see https://www.w3.org/Submission/CBD/
+  # @yield [statement]
+  # @yieldparam statement [RDF::Statement]
+  # @yieldreturn [void] ignored
   def concise_bounded_description(*terms, **options, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator<RDF::Statement, RDF::Query::Pattern>]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil), *args); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns that statement if found.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first
+  # @overload first
+  # @return [RDF::Statement]
+  # @since 0.1.9
   def first(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern` and
+  # returns the first found object literal.
+  #
+  # Returns `nil` if no statements match `pattern` or if none of the found
+  # statements have a literal as their object term.
+  #
+  # @overload first_literal
+  # @overload first_literal
+  # @return [RDF::Literal]
+  # @since 0.1.9
   def first_literal(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's object term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_object
+  # @overload first_object
+  # @since 0.1.9
   def first_object(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's predicate term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_predicate
+  # @overload first_predicate
+  # @since 0.1.9
   def first_predicate(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's subject term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_subject
+  # @overload first_subject
+  # @since 0.1.9
   def first_subject(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern` and
+  # returns the value of the first found object literal.
+  #
+  # Returns `nil` if no statements match `pattern` or if none of the found
+  # statements have a literal as their object term.
+  #
+  # @overload first_value
+  # @overload first_value
+  # @since 0.1.9
   def first_value(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern`.
+  #
+  # Monkey patch to RDF::Queryable#query to execute a {SPARQL::Algebra::Operator}
+  # in addition to an {RDF::Query} object.
+  #
+  # @example
+  #   queryable.query([nil, RDF::DOAP.developer, nil])
+  #   queryable.query({predicate: RDF::DOAP.developer})
+  #
+  #   op = SPARQL::Algebra::Expression.parse(%q((bgp (triple ?a doap:developer ?b))))
+  #   queryable.query(op)
+  # @param pattern [RDF::Query, RDF::Statement, Array(RDF::Term), Hash, SPARQL::Operator]
+  # @raise [TypeError]
+  # @return [Enumerator]
+  # @see RDF::Queryable#query_pattern
+  # @yield [statement] each matching statement
+  # @yieldparam statement [RDF::Statement]
+  # @yieldreturn [void] ignored
   def query(pattern, **options, &block); end
+
+  # Queries `self` for RDF statements matching the given `pattern`.
+  #
+  # This method delegates to the protected {RDF::Queryable#query_pattern} method for the actual lower-level query pattern matching implementation.
+  #
+  # @example Querying for statements having a given predicate
+  #   queryable.query([nil, RDF::Vocab::DOAP.developer, nil])
+  #   queryable.query({predicate: RDF::Vocab::DOAP.developer}) do |statement|
+  #   puts statement.inspect
+  #   end
+  # @example Querying for solutions from a BGP
+  #   query = RDF::Query.new {pattern [:s, :p, :o]}
+  #   queryable.query(query) do |solution|
+  #   puts solution.inspect
+  #   end
+  # @note Since 2.0, this may return an Enumerable or an Enumerator in addition to Solutions
+  # @param pattern [RDF::Query, RDF::Statement, Array(RDF::Term), Hash]
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options passed to {#query_pattern} or {#query_execute}
+  # @raise [TypeError]
+  # @return [Enumerator<RDF::Statement>, RDF::Enumerable, Query::Solutions] Returns an enumerable of statements (may be an enumerator) or query solutions, if passed an {RDF::Query}
+  # @see RDF::Queryable#query_pattern
+  # @yield [statement] each matching statement
+  # @yieldparam statement [RDF::Statement, RDF::Query::Solution] Statement or Solution
+  # @yieldreturn [void] ignored
   def query_without_sparql(pattern, **options, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator<RDF::Statement, RDF::Query::Pattern>]
+  # @see Object#enum_for
   def to_enum(method = T.unsafe(nil), *args); end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @raise [NotImplementedError]
+  # @return [String]
   def to_sparql(**options); end
 
   protected
 
+  # Queries `self` using the given basic graph pattern (BGP) query,
+  # yielding each matched solution to the given block.
+  #
+  # Since RDF.rb 0.3.0, repository implementations can override this
+  # method in order to provide for storage-specific optimized graph
+  # pattern query execution.
+  #
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options passed to `query.execute`
+  # @param query [RDF::Query] the query to execute
+  # @return [void] ignored
+  # @see RDF::Query#execute
+  # @see RDF::Queryable#query
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def query_execute(query, **options, &block); end
+
+  # Queries `self` for RDF statements matching the given `pattern`,
+  # yielding each matched statement to the given block.
+  #
+  # Since RDF.rb 0.2.0, repository implementations should override this
+  # method in order to provide for storage-specific optimized triple
+  # pattern matching.
+  #
+  # ## RDFStar (RDF*)
+  #
+  # Statements may have embedded statements as either a subject or object, recursively.
+  #
+  # Patterns may also have embedded patterns as either a subject or object, recursively.
+  #
+  # When matching, match an embedded pattern against embedded statements, recursively. (see {RDF::Query::Pattern#eql?})
+  #
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options
+  # @param pattern [RDF::Query::Pattern] the query pattern to match
+  # @return [void] ignored
+  # @see RDF::Query::Pattern#execute
+  # @see RDF::Queryable#query
+  # @since 0.2.0
+  # @yield [statement]
+  # @yieldparam statement [RDF::Statement]
+  # @yieldreturn [void] ignored
   def query_pattern(pattern, **options, &block); end
 end
 
+# An RDF statement.
+#
+# @example Creating an RDF statement
+#   s = RDF::URI.new("https://rubygems.org/gems/rdf")
+#   p = RDF::Vocab::DC.creator
+#   o = RDF::URI.new("http://ar.to/#self")
+#   RDF::Statement(s, p, o)
+# @example Creating an RDF statement with a graph_name
+#   uri = RDF::URI("http://example/")
+#   RDF::Statement(s, p, o, graph_name: uri)
+# @example Creating an RDF statement from a `Hash`
+#   RDF::Statement({
+#   subject:   RDF::URI.new("https://rubygems.org/gems/rdf"),
+#   predicate: RDF::Vocab::DC.creator,
+#   object:    RDF::URI.new("http://ar.to/#self"),
+#   })
+# @example Creating an RDF statement with interned nodes
+#   RDF::Statement(:s, p, :o)
+# @example Creating an RDF statement with a string
+#   RDF::Statement(s, p, "o")
 class RDF::Statement
   include ::RDF::Value
   include ::Comparable
@@ -343,159 +1842,1166 @@ class RDF::Statement
   include ::RDF::Term
   include ::RDF::Resource
 
+  # @overload initialize
+  # @overload initialize
+  # @return [Statement] a new instance of Statement
   def initialize(subject = T.unsafe(nil), predicate = T.unsafe(nil), object = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Checks statement equality as a triple.
+  #
+  # @param other [Object]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def ==(other); end
+
+  # Checks statement equality with patterns.
+  #
+  # Uses `#eql?` to compare each of `#subject`, `#predicate`, `#object`, and
+  # `#graph_name` to those of `other`. Any statement part which is not
+  # present in `self` is ignored.
+  #
+  # @example
+  #   statement = RDF::Statement.new(RDF::URI('s'), RDF::URI('p'), RDF::URI('o'))
+  #   pattern   = RDF::Statement.new(RDF::URI('s'), RDF::URI('p'), RDF::Query::Variable.new)
+  #
+  #   # true
+  #   statement === statement
+  #   pattern   === statement
+  #   RDF::Statement.new(nil, nil, nil) === statement
+  #
+  #   # false
+  #   statement === pattern
+  #   statement === RDF::Statement.new(nil, nil, nil)
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#eql?
+  # @see RDF::Node#eql?
+  # @see RDF::Literal#eql?
+  # @see RDF::Query::Variable#eql?
   def ===(other); end
+
+  # @param index [Integer]
+  # @return [RDF::Term]
   def [](index); end
+
+  # @param index [Integer]
+  # @param value [RDF::Term]
+  # @return [RDF::Term]
   def []=(index, value); end
+
+  # @return [Boolean]
   def asserted?; end
+
+  # Returns a version of the statement with each position in canonical form
+  #
+  # @return [RDF::Statement] `self` or nil if statement cannot be canonicalized
+  # @since 1.0.8
   def canonicalize; end
+
+  # Canonicalizes each unfrozen term in the statement
+  #
+  # @raise [ArgumentError] if any element cannot be canonicalized.
+  # @return [RDF::Statement] `self`
+  # @since 1.0.8
   def canonicalize!; end
+
+  # Determines if the statement is complete, vs. invalid. A complete statement is one in which none of `subject`, `predicate`, or `object`, are nil.
+  #
+  # @return [Boolean]
+  # @since 3.0
   def complete?; end
+
+  # Returns `true` if any element of the statement is, itself, a statement.
+  #
+  # @return [Boolean]
   def embedded?; end
+
+  # Checks statement equality as a quad.
+  #
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def eql?(other); end
+
+  # @return [Boolean]
   def executable?; end
+
+  # @overload graph?
+  # @overload graph?
   def graph?(*args); end
+
+  # @return [RDF::Resource]
   def graph_name; end
+
+  # @return [RDF::Resource]
   def graph_name=(_arg0); end
+
+  # Returns `true` if any resource of this statement is a blank node
+  # or has an embedded statement including a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def has_blank_nodes?; end
+
+  # @overload graph?
+  # @overload graph?
   def has_graph?(*args); end
+
+  # @overload graph?
+  # @overload graph?
   def has_name?(*args); end
+
+  # @return [Boolean]
   def has_object?; end
+
+  # @return [Boolean]
   def has_predicate?; end
+
+  # @return [Boolean]
   def has_subject?; end
+
+  # Generates a Integer hash value as a quad.
   def hash; end
+
+  # @return [Object]
   def id; end
+
+  # @return [Object]
   def id=(_arg0); end
+
+  # Determines if the statement is incomplete, vs. invalid. An incomplete statement is one in which any of `subject`, `predicate`, or `object`, are nil.
+  #
+  # @return [Boolean]
+  # @since 3.0
   def incomplete?; end
+
+  # @return [Boolean]
   def inferred?; end
+
+  # @private
   def initialize!; end
+
+  # @return [Boolean]
   def invalid?; end
+
+  # @overload graph?
+  # @overload graph?
   def name?(*args); end
+
+  # Returns `true` if any resource of this statement is a blank node
+  # or has an embedded statement including a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def node?; end
+
+  # @return [RDF::Term]
   def object; end
+
+  # @return [RDF::Term]
   def object=(_arg0); end
+
+  # @return [Boolean]
   def object?; end
+
+  # A duplicate of this Statement.
+  #
+  # @return [RDF::Statement] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
+
+  # @return [Hash{Symbol => Object}]
   def options; end
+
+  # @return [Hash{Symbol => Object}]
   def options=(_arg0); end
+
+  # @return [RDF::URI]
   def predicate; end
+
+  # @return [RDF::URI]
   def predicate=(_arg0); end
+
+  # @return [Boolean]
   def predicate?; end
+
+  # @return [Boolean]
   def quoted?; end
+
+  # Returns a graph containing this statement in reified form.
+  #
+  # @param subject [RDF::Term] (nil)
+  #   Subject of reification.
+  # @param id [RDF::Term] (nil)
+  #   Node identifier, when subject is anonymous
+  # @param graph_name [RDF::Term] (nil)
+  #   Note, in RDF 1.1, a graph name MUST be an {Resource}.
+  # @return [RDF::Graph]
+  # @see http://www.w3.org/TR/rdf-primer/#reification
   def reified(subject: T.unsafe(nil), id: T.unsafe(nil), graph_name: T.unsafe(nil)); end
+
+  # @overload statement?
+  # @overload statement?
   def statement?(*args); end
+
+  # @return [RDF::Resource]
   def subject; end
+
+  # @return [RDF::Resource]
   def subject=(_arg0); end
+
+  # @return [Boolean]
   def subject?; end
+
+  # Returns an array of all the non-nil non-statement terms.
+  #
+  # @return [Array(RDF::Term)]
   def terms; end
+
+  # @return [Array(RDF::Term)]
   def to_a; end
+
+  # Returns the terms of this statement as a `Hash`.
+  #
+  # @param subject_key [Symbol]
+  # @param predicate_key [Symbol]
+  # @param object_key [Symbol]
+  # @return [Hash{Symbol => RDF::Term}]
   def to_h(subject_key = T.unsafe(nil), predicate_key = T.unsafe(nil), object_key = T.unsafe(nil), graph_key = T.unsafe(nil)); end
+
+  # @return [Array(RDF::Term)]
   def to_quad; end
+
+  # Returns a string representation of this statement.
+  #
+  # @return [String]
   def to_s; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Returns an S-Expression (SXP) representation
+  #
+  # @param prefixes [Hash{Symbol => RDF::URI}] (nil)
+  # @param base_uri [RDF::URI] (nil)
+  # @return [String]
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
+
+  # Transform Statement Pattern into an SXP
+  #
+  # @return [Array]
   def to_sxp_bin; end
+
+  # @return [Array(RDF::Term)]
   def to_triple; end
+
+  # @return [Boolean]
   def valid?; end
+
+  # URI, Node or Literal.
+  #
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
   def variable?(*args); end
 
   class << self
+    # @private
+    # @since 0.2.2
     def from(statement, graph_name: T.unsafe(nil), **options); end
   end
 end
 
+# Extensions for `RDF::Term`.
 module RDF::Term
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
 
+  # Compares `self` to `other` for sorting purposes.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @since 0.3.0
   def <=>(other); end
+
+  # Compares `self` to `other` to implement RDFterm-equal.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+  # @since 0.3.0
   def ==(other); end
+
+  # @return [Boolean]
   def aggregate?; end
+
+  # Term compatibility according to SPARQL
+  #
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/sparql11-query/#func-arg-compatibility
+  # @since 2.0
   def compatible?(other); end
+
+  # Determins if `self` is the same term as `other`.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
+  # @since 0.3.0
   def eql?(other); end
+
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @return [RDF::Term]
   def evaluate(bindings, **options); end
+
+  # Return the non-destinguished variables contained within this operator
+  #
+  # @return [Array<RDF::Query::Variable>]
   def ndvars; end
+
+  # A duplicate of this term.
+  #
+  # @return [RDF::Term] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
+
+  # @overload term?
+  # @overload term?
+  # @since 0.3.0
   def term?(*args); end
+
+  # Returns an array including just itself.
+  #
+  # @return [Array<RDF::Value>]
+  # @since 0.3.0
   def terms; end
+
+  # Returns the base representation of this term.
+  #
+  # @return [Sring]
+  # @since 0.3.0
   def to_base; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Returns itself.
+  #
+  # @return [RDF::Value]
+  # @since 0.3.0
   def to_term; end
+
+  # Return the variables contained within this operator
+  #
+  # @return [Array<RDF::Query::Variable>]
   def vars; end
 
   protected
 
+  # Escape a term using escapes. This should be implemented as appropriate for the given type of term.
+  #
+  # @param string [String]
+  # @raise [NotImplementedError]
+  # @return [String]
+  # @since 0.3.0
   def escape(string); end
 end
 
+# A SPARQL for RDF.rb.
+#
+# @see https://www.w3.org/TR/sparql11-query
 module SPARQL
   private
 
+  # Find a content_type from a list using an ordered list of acceptable content types
+  # using wildcard matching
+  #
+  # @param acceptable [Array<String>]
+  # @param available [Array<String>]
+  # @return [String]
+  # @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
   def first_content_type(acceptable, available); end
+
+  # Serialize error results
+  #
+  # Returns appropriate content based upon an execution exception
+  #
+  # @option options
+  # @option options
+  # @param exception [Exception]
+  # @param options [Hash{Symbol => Object}]
+  # @return [String] String with serialized results and #content_type
   def serialize_exception(exception, **options); end
+
+  # Serialize solutions using the determined format
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @param solutions [RDF::Query::Solutions, RDF::Queryable, Boolean] Solutions as either a solution set, a Queryable object (such as a graph) or a Boolean value
+  # @param options [Hash{Symbol => Object}]
+  # @raise [RDF::WriterError] when inappropriate formatting options are used
+  # @return [String] String with serialized results and `#content_type`
   def serialize_results(solutions, **options); end
 
   class << self
+    # Parse and execute the given SPARQL `query` string against `queriable`.
+    #
+    # Requires a queryable object (such as an RDF::Repository), into which the dataset will be loaded.
+    #
+    # Optionally takes a list of URIs to load as default or named graphs
+    # into `queryable`.
+    #
+    # Note, if default or named graphs are specified as options (protocol elements),
+    # or the query references specific default or named graphs the graphs are either
+    # presumed to be existant in `queryable` or are loaded into `queryable` depending
+    # on the presense and value of the :load_datasets option.
+    #
+    # Attempting to load into an immutable `queryable` will result in a TypeError.
+    #
+    # @example
+    #   repository = RDF::Repository.new
+    #   results = SPARQL.execute("SELECT * WHERE { ?s ?p ?o }", repository)
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @param query [IO, StringIO, String, #to_s]
+    # @param queryable [RDF::Queryable]
+    # @param options [Hash{Symbol => Object}]
+    # @raise [SPARQL::MalformedQuery] on invalid input
+    # @return [RDF::Graph, Boolean, RDF::Query::Solutions] Note, results may be used with {SPARQL.serialize_results} to obtain appropriate output encoding.
+    # @yield [solution] each matching solution, statement or boolean
+    # @yieldparam solution [RDF::Statement, RDF::Query::Solution, Boolean]
+    # @yieldreturn [void] ignored
     def execute(query, queryable, **options, &block); end
+
+    # Find a content_type from a list using an ordered list of acceptable content types
+    # using wildcard matching
+    #
+    # @param acceptable [Array<String>]
+    # @param available [Array<String>]
+    # @return [String]
+    # @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
     def first_content_type(acceptable, available); end
+
+    # Parse the given SPARQL `query` string.
+    #
+    # @example
+    #   query = SPARQL.parse("SELECT * WHERE { ?s ?p ?o }")
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @param query [IO, StringIO, String, #to_s]
+    # @param options [Hash{Symbol => Object}]
+    # @raise [SPARQL::Grammar::Parser::Error] on invalid input
+    # @return [RDF::Queryable] The resulting query may be executed against
+    #   a `queryable` object such as an RDF::Graph
+    #   or RDF::Repository.
     def parse(query, **options); end
+
+    # Serialize error results
+    #
+    # Returns appropriate content based upon an execution exception
+    #
+    # @option options
+    # @option options
+    # @param exception [Exception]
+    # @param options [Hash{Symbol => Object}]
+    # @return [String] String with serialized results and #content_type
     def serialize_exception(exception, **options); end
+
+    # Serialize solutions using the determined format
+    #
+    # @option options
+    # @option options
+    # @option options
+    # @param solutions [RDF::Query::Solutions, RDF::Queryable, Boolean] Solutions as either a solution set, a Queryable object (such as a graph) or a Boolean value
+    # @param options [Hash{Symbol => Object}]
+    # @raise [RDF::WriterError] when inappropriate formatting options are used
+    # @return [String] String with serialized results and `#content_type`
     def serialize_results(solutions, **options); end
   end
 end
 
+# A SPARQL algebra for RDF.rb.
+#
+# Parses Sparql S-Expressions (SSE) into SPARQL Algebra operators.
+#
+# Operators implementing {SPARQL::Algebra::Query#execute} may directly
+# execute an object implementing {RDF::Queryable}, and so may be treated
+# equivalently to {RDF::Query}.
+#
+# Operators implementing {SPARQL::Algebra::Expression#evaluate} may be
+# evaluated with RDF::Query::Solution bindings to yield an appropriate result.
+#
+# An entire SSE expression is parsed into a recursive set of {SPARQL::Algebra::Operator}
+# instances, with each operand representing an additional operator.
+#
+# {RDF::Query} and {RDF::Query::Pattern} are used as primitives for `bgp` and `triple` expressions.
+#
+# # Background
+#
+# The SPARQL Algebra, and the S-Expressions used to represent it, are based on those of [Jena](https://jena.apache.org/documentation/notes/sse.html). Generally, an S-Expression generated by this Gem can be used as an SSE input to Jena, or an SSE output from Jena can also be used as input to this Gem.
+#
+# S-Expressions generally follow a standardized nesting resulting from parsing the original SPARQL Grammar. The individual operators map to SPARQL Grammar productions, and in most cases, the SPARQL Grammar can be reproduced by turning the S-Expression back into SPARQL (see {SPARQL::Algebra::Operator#to_sparql}). The order of operations will typically be as follows:
+#
+#  * {SPARQL::Algebra::Operator::Base}
+#  * {SPARQL::Algebra::Operator::Prefix}
+#  * {SPARQL::Algebra::Operator::Slice}
+#  * {SPARQL::Algebra::Operator::Distinct}
+#  * {SPARQL::Algebra::Operator::Reduced}
+#  * {SPARQL::Algebra::Operator::Project}
+#  * {SPARQL::Algebra::Operator::Order}
+#  * {SPARQL::Algebra::Operator::Filter}
+#  * {SPARQL::Algebra::Operator::Extend}
+#  * {SPARQL::Algebra::Operator::Group}
+#  * {SPARQL::Algebra::Query} (many classes implement Query)
+#
+# # Queries
+#
+#     require 'sparql/algebra'
+#
+#     include SPARQL::Algebra
+#
+# ## Basic Query
+#     BASE <http://example.org/x/>
+#     PREFIX : <>
+#
+#     SELECT * WHERE { :x ?p ?v }
+#
+# is equivalent to
+#
+#     (base <http://example.org/x/>
+#       (prefix ((: <>))
+#         (bgp (triple :x ?p ?v))))
+#
+# ## Prefixes
+#
+#     PREFIX ns: <http://example.org/ns#>
+#     PREFIX x:  <http://example.org/x/>
+#
+#     SELECT * WHERE { x:x ns:p ?v }
+#
+# is equivalent to
+#
+#     (prefix ((ns: <http://example.org/ns#>)
+#              (x: <http://example.org/x/>))
+#       (bgp (triple x:x ns:p ?v)))
+#
+# ## Ask
+#
+#     PREFIX :  <http://example/>
+#
+#     ASK WHERE { :x :p ?x }
+#
+# is equivalent to
+#
+#     (prefix ((: <http://example/>))
+#       (ask
+#         (bgp (triple :x :p ?x))))
+#
+# ## Datasets
+#
+#     PREFIX : <http://example/>
+#
+#     SELECT *
+#     FROM <data-g1.ttl>
+#     FROM NAMED <data-g2.ttl>
+#     { ?s ?p ?o }
+#
+# is equivalent to
+#
+#     (prefix ((: <http://example/>))
+#       (dataset (<data-g1.ttl> (named <data-g2.ttl>))
+#         (bgp (triple ?s ?p ?o))))
+#
+# ## Join
+#
+#     PREFIX : <http://example/>
+#
+#     SELECT *
+#     {
+#        ?s ?p ?o
+#        GRAPH ?g { ?s ?q ?v }
+#     }
+#
+# is equivalent to
+#
+#     (prefix ((: <http://example/>))
+#       (join
+#         (bgp (triple ?s ?p ?o))
+#         (graph ?g
+#           (bgp (triple ?s ?q ?v)))))
+#
+# ## Union
+#
+#     PREFIX : <http://example/>
+#
+#     SELECT *
+#     {
+#        { ?s ?p ?o }
+#       UNION
+#        { GRAPH ?g { ?s ?p ?o } }
+#     }
+#
+# is equivalent to
+#
+#     (prefix ((: <http://example/>))
+#       (union
+#         (bgp (triple ?s ?p ?o))
+#         (graph ?g
+#           (bgp (triple ?s ?p ?o)))))
+#
+# ## LeftJoin
+#
+#     PREFIX :    <http://example/>
+#
+#     SELECT *
+#     {
+#       ?x :p ?v .
+#       OPTIONAL
+#       {
+#         ?y :q ?w .
+#         FILTER(?v=2)
+#       }
+#     }
+#
+# is equivalent to
+#
+#     (prefix ((: <http://example/>))
+#       (leftjoin
+#         (bgp (triple ?x :p ?v))
+#         (bgp (triple ?y :q ?w))
+#         (= ?v 2)))
+#
+# # Expressions
+#
+# ## Constructing operator expressions manually
+#
+#     Operator(:isBlank).new(RDF::Node(:foobar)).to_sxp                        #=> "(isBlank _:foobar)"
+#     Operator(:isIRI).new(RDF::URI('https://rubygems.org/gems/rdf/')).to_sxp       #=> "(isIRI <https://rubygems.org/gems/rdf/>)"
+#     Operator(:isLiteral).new(RDF::Literal(3.1415)).to_sxp                    #=> "(isLiteral 3.1415e0)"
+#     Operator(:str).new(Operator(:datatype).new(RDF::Literal(3.1415))).to_sxp #=> "(str (datatype 3.1415e0))"
+#
+# ## Constructing operator expressions using SSE forms
+#
+#     SPARQL::Algebra::Expression[:isBlank, RDF::Node(:foobar)].to_sxp                          #=> "(isBlank _:foobar)"
+#     SPARQL::Algebra::Expression[:isIRI, RDF::URI('https://rubygems.org/gems/rdf/')].to_sxp         #=> "(isIRI <https://rubygems.org/gems/rdf/>)"
+#     SPARQL::Algebra::Expression[:isLiteral, RDF::Literal(3.1415)].to_sxp                      #=> "(isLiteral 3.1415e0)"
+#     SPARQL::Algebra::Expression[:str, [:datatype, RDF::Literal(3.1415)]].to_sxp               #=> "(str (datatype 3.1415e0))"
+#
+# ## Constructing operator expressions using SSE strings
+#
+#     SPARQL::Algebra::Expression.parse('(isBlank _:foobar)')
+#     SPARQL::Algebra::Expression.parse('(isIRI <https://rubygems.org/gems/rdf/>)')
+#     SPARQL::Algebra::Expression.parse('(isLiteral 3.1415)')
+#     SPARQL::Algebra::Expression.parse('(str (datatype 3.1415))')
+#
+# ## Evaluating operators standalone
+#
+#     Operator(:isBlank).evaluate(RDF::Node(:foobar))                          #=> RDF::Literal::TRUE
+#     Operator(:isIRI).evaluate(RDF::Vocab::DC.title)                                 #=> RDF::Literal::TRUE
+#     Operator(:isLiteral).evaluate(RDF::Literal(3.1415))                      #=> RDF::Literal::TRUE
+#
+# ## Evaluating expressions on a solution sequence
+#
+#     # Find all people and their names & e-mail addresses:
+#     solutions = RDF::Query.execute(RDF::Graph.load('etc/doap.ttl')) do |query|
+#       query.pattern [:person, RDF.type,  RDF::Vocab::FOAF.Person]
+#       query.pattern [:person, RDF::Vocab::FOAF.name, :name]
+#       query.pattern [:person, RDF::Vocab::FOAF.mbox, :email], optional: true
+#     end
+#
+#     # Find people who have a name but don't have a known e-mail address:
+#     expression = SPARQL::Algebra::Expression[:not, [:bound, Variable(:email)]]    # ...or just...
+#     expression = SPARQL::Algebra::Expression.parse('(not (bound ?email))')
+#     solutions.filter!(expression)
+#
+# Some very simple optimizations are currently implemented for `FILTER`
+# expressions. Use the following to obtain optimized SSE forms:
+#
+#     SPARQL::Algebra::Expression.parse(sse).optimize.to_sxp_bin
+#
+# ## Constant comparison folding
+#
+#     (sameTerm ?x ?x)   #=> true
+#
+# ## Constant arithmetic folding
+#
+#     (!= ?x (+ 123))    #=> (!= ?x 123)
+#     (!= ?x (- -1.0))   #=> (!= ?x 1.0)
+#     (!= ?x (+ 1 2))    #=> (!= ?x 3)
+#     (!= ?x (- 4 5))    #=> (!= ?x -1)
+#     (!= ?x (* 6 7))    #=> (!= ?x 42)
+#     (!= ?x (/ 0 0.0))  #=> (!= ?x NaN)
+#
+# ## Memoization
+#
+# Expressions can optionally be [memoized][memoization], which can speed up
+# repeatedly executing the expression on a solution sequence:
+#
+#     SPARQL::Algebra::Expression.parse(sse, memoize: true)
+#     Operator.new(*operands, memoize: true)
+#
+# Memoization is implemented using RDF.rb's [RDF::Util::Cache][] utility
+# library, a weak-reference cache that allows values contained in the cache to
+# be garbage collected. This allows the cache to dynamically adjust to
+# changing memory conditions, caching more objects when memory is plentiful,
+# but evicting most objects if memory pressure increases to the point of
+# scarcity.
+#
+# [memoization]:      http://en.wikipedia.org/wiki/Memoization
+# [RDF::Util::Cache]: https://ruby-rdf.github.io/rdf/RDF/Util/Cache
+#
+# ## Documentation
+#
+# * {SPARQL::Algebra}
+#   * {SPARQL::Algebra::Aggregate}
+#   * {SPARQL::Algebra::Evaluatable}
+#   * {SPARQL::Algebra::Expression}
+#   * {SPARQL::Algebra::Query}
+#   * {SPARQL::Algebra::Update}
+#   * {SPARQL::Algebra::Operator}
+#     * {SPARQL::Algebra::Operator::Abs}
+#     * {SPARQL::Algebra::Operator::Add}
+#     * {SPARQL::Algebra::Operator::Adjust}
+#     * {SPARQL::Algebra::Operator::Alt}
+#     * {SPARQL::Algebra::Operator::And}
+#     * {SPARQL::Algebra::Operator::Asc}
+#     * {SPARQL::Algebra::Operator::Ask}
+#     * {SPARQL::Algebra::Operator::Avg}
+#     * {SPARQL::Algebra::Operator::Base}
+#     * {SPARQL::Algebra::Operator::BGP}
+#     * {SPARQL::Algebra::Operator::Bnode}
+#     * {SPARQL::Algebra::Operator::Bound}
+#     * {SPARQL::Algebra::Operator::Ceil}
+#     * {SPARQL::Algebra::Operator::Clear}
+#     * {SPARQL::Algebra::Operator::Coalesce}
+#     * {SPARQL::Algebra::Operator::Compare}
+#     * {SPARQL::Algebra::Operator::Concat}
+#     * {SPARQL::Algebra::Operator::Construct}
+#     * {SPARQL::Algebra::Operator::Contains}
+#     * {SPARQL::Algebra::Operator::Copy}
+#     * {SPARQL::Algebra::Operator::Count}
+#     * {SPARQL::Algebra::Operator::Create}
+#     * {SPARQL::Algebra::Operator::Dataset}
+#     * {SPARQL::Algebra::Operator::Datatype}
+#     * {SPARQL::Algebra::Operator::Day}
+#     * {SPARQL::Algebra::Operator::DeleteData}
+#     * {SPARQL::Algebra::Operator::DeleteWhere}
+#     * {SPARQL::Algebra::Operator::Delete}
+#     * {SPARQL::Algebra::Operator::Desc}
+#     * {SPARQL::Algebra::Operator::Describe}
+#     * {SPARQL::Algebra::Operator::Distinct}
+#     * {SPARQL::Algebra::Operator::Divide}
+#     * {SPARQL::Algebra::Operator::Drop}
+#     * {SPARQL::Algebra::Operator::EncodeForURI}
+#     * {SPARQL::Algebra::Operator::Equal}
+#     * {SPARQL::Algebra::Operator::Exists}
+#     * {SPARQL::Algebra::Operator::Exprlist}
+#     * {SPARQL::Algebra::Operator::Extend}
+#     * {SPARQL::Algebra::Operator::Filter}
+#     * {SPARQL::Algebra::Operator::Floor}
+#     * {SPARQL::Algebra::Operator::FunctionCall}
+#     * {SPARQL::Algebra::Operator::Graph}
+#     * {SPARQL::Algebra::Operator::GreaterThan}
+#     * {SPARQL::Algebra::Operator::GreaterThanOrEqual}
+#     * {SPARQL::Algebra::Operator::Group}
+#     * {SPARQL::Algebra::Operator::GroupConcat}
+#     * {SPARQL::Algebra::Operator::Hours}
+#     * {SPARQL::Algebra::Operator::If}
+#     * {SPARQL::Algebra::Operator::In}
+#     * {SPARQL::Algebra::Operator::Insert}
+#     * {SPARQL::Algebra::Operator::InsertData}
+#     * {SPARQL::Algebra::Operator::IRI}
+#     * {SPARQL::Algebra::Operator::IsBlank}
+#     * {SPARQL::Algebra::Operator::IsIRI}
+#     * {SPARQL::Algebra::Operator::IsLiteral}
+#     * {SPARQL::Algebra::Operator::IsNumeric}
+#     * {SPARQL::Algebra::Operator::IsTriple}
+#     * {SPARQL::Algebra::Operator::Join}
+#     * {SPARQL::Algebra::Operator::Lang}
+#     * {SPARQL::Algebra::Operator::LangMatches}
+#     * {SPARQL::Algebra::Operator::LCase}
+#     * {SPARQL::Algebra::Operator::LeftJoin}
+#     * {SPARQL::Algebra::Operator::LessThan}
+#     * {SPARQL::Algebra::Operator::LessThanOrEqual}
+#     * {SPARQL::Algebra::Operator::Max}
+#     * {SPARQL::Algebra::Operator::MD5}
+#     * {SPARQL::Algebra::Operator::Min}
+#     * {SPARQL::Algebra::Operator::Minus}
+#     * {SPARQL::Algebra::Operator::Minutes}
+#     * {SPARQL::Algebra::Operator::Modify}
+#     * {SPARQL::Algebra::Operator::Month}
+#     * {SPARQL::Algebra::Operator::Move}
+#     * {SPARQL::Algebra::Operator::Multiply}
+#     * {SPARQL::Algebra::Operator::Negate}
+#     * {SPARQL::Algebra::Operator::Not}
+#     * {SPARQL::Algebra::Operator::NotEqual}
+#     * {SPARQL::Algebra::Operator::NotExists}
+#     * {SPARQL::Algebra::Operator::NotIn}
+#     * {SPARQL::Algebra::Operator::NotOneOf}
+#     * {SPARQL::Algebra::Operator::Now}
+#     * {SPARQL::Algebra::Operator::Object}
+#     * {SPARQL::Algebra::Operator::Or}
+#     * {SPARQL::Algebra::Operator::Order}
+#     * {SPARQL::Algebra::Operator::Path}
+#     * {SPARQL::Algebra::Operator::PathOpt}
+#     * {SPARQL::Algebra::Operator::PathPlus}
+#     * {SPARQL::Algebra::Operator::PathRange}
+#     * {SPARQL::Algebra::Operator::PathStar}
+#     * {SPARQL::Algebra::Operator::PathZero}
+#     * {SPARQL::Algebra::Operator::Plus}
+#     * {SPARQL::Algebra::Operator::Predicate}
+#     * {SPARQL::Algebra::Operator::Prefix}
+#     * {SPARQL::Algebra::Operator::Project}
+#     * {SPARQL::Algebra::Operator::Rand}
+#     * {SPARQL::Algebra::Operator::Reduced}
+#     * {SPARQL::Algebra::Operator::Regex}
+#     * {SPARQL::Algebra::Operator::Replace}
+#     * {SPARQL::Algebra::Operator::Reverse}
+#     * {SPARQL::Algebra::Operator::Round}
+#     * {SPARQL::Algebra::Operator::SameTerm}
+#     * {SPARQL::Algebra::Operator::Sample}
+#     * {SPARQL::Algebra::Operator::Seconds}
+#     * {SPARQL::Algebra::Operator::Seq}
+#     * {SPARQL::Algebra::Operator::Sequence}
+#     * {SPARQL::Algebra::Operator::SHA1}
+#     * {SPARQL::Algebra::Operator::SHA256}
+#     * {SPARQL::Algebra::Operator::SHA384}
+#     * {SPARQL::Algebra::Operator::SHA512}
+#     * {SPARQL::Algebra::Operator::Slice}
+#     * {SPARQL::Algebra::Operator::Str}
+#     * {SPARQL::Algebra::Operator::StrAfter}
+#     * {SPARQL::Algebra::Operator::StrBefore}
+#     * {SPARQL::Algebra::Operator::StrDT}
+#     * {SPARQL::Algebra::Operator::StrEnds}
+#     * {SPARQL::Algebra::Operator::StrLang}
+#     * {SPARQL::Algebra::Operator::StrLen}
+#     * {SPARQL::Algebra::Operator::StrStarts}
+#     * {SPARQL::Algebra::Operator::StrUUID}
+#     * {SPARQL::Algebra::Operator::SubStr}
+#     * {SPARQL::Algebra::Operator::Subtract}
+#     * {SPARQL::Algebra::Operator::Sum}
+#     * {SPARQL::Algebra::Operator::Table}
+#     * {SPARQL::Algebra::Operator::Timezone}
+#     * {SPARQL::Algebra::Operator::Triple}
+#     * {SPARQL::Algebra::Operator::TZ}
+#     * {SPARQL::Algebra::Operator::Ucase}
+#     * {SPARQL::Algebra::Operator::Union}
+#     * {SPARQL::Algebra::Operator::Update}
+#     * {SPARQL::Algebra::Operator::Using}
+#     * {SPARQL::Algebra::Operator::UUID}
+#     * {SPARQL::Algebra::Operator::With}
+#     * {SPARQL::Algebra::Operator::Year}
+#
+# @example Optimizations
+# @see http://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+# @see https://jena.apache.org/documentation/notes/sse.html
 module SPARQL::Algebra
   include ::RDF
 
   private
 
+  # @example
+  #   Expression(:isLiteral, RDF::Literal(3.1415))
+  # @param sse [Array] a SPARQL S-Expression (SSE) form
+  # @return [SPARQL::Algebra::Expression]
   def Expression(*sse); end
+
+  # @example
+  #   Operator(:isLiteral)
+  # @param name [Symbol, #to_sym]
+  # @return [Class]
   def Operator(name, arity = T.unsafe(nil)); end
+
+  # @example
+  #   Variable(:foobar)
+  # @param name [Symbol, #to_sym]
+  # @return [Variable]
+  # @see https://ruby-rdf.github.io/rdf/RDF/Query/Variable
   def Variable(name); end
+
+  # Parses input from the given file name or URL.
+  #
+  # @option options
+  # @param sse [String, #to_s]
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @return [Expression]
+  # @yield [expression]
+  # @yieldparam expression [SPARQL::Algebra::Expression]
+  # @yieldreturn [void] ignored
   def open(sse, **options); end
+
+  # @example
+  #   sse = (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+  #   (project (?name ?mbox)
+  #   (join
+  #   (bgp (triple ?x foaf:name ?name))
+  #   (bgp (triple ?x foaf:mbox ?mbox)))))
+  #   }
+  # @param sse [String] a SPARQL S-Expression (SSE) string
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @return [SPARQL::Algebra::Operator]
   def parse(sse, **options); end
 
   class << self
+    # @example
+    #   Expression(:isLiteral, RDF::Literal(3.1415))
+    # @param sse [Array] a SPARQL S-Expression (SSE) form
+    # @return [SPARQL::Algebra::Expression]
     def Expression(*sse); end
+
+    # @example
+    #   Operator(:isLiteral)
+    # @param name [Symbol, #to_sym]
+    # @return [Class]
     def Operator(name, arity = T.unsafe(nil)); end
+
+    # @example
+    #   Variable(:foobar)
+    # @param name [Symbol, #to_sym]
+    # @return [Variable]
+    # @see https://ruby-rdf.github.io/rdf/RDF/Query/Variable
     def Variable(name); end
+
+    # Parses input from the given file name or URL.
+    #
+    # @option options
+    # @param sse [String, #to_s]
+    # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+    # @return [Expression]
+    # @yield [expression]
+    # @yieldparam expression [SPARQL::Algebra::Expression]
+    # @yieldreturn [void] ignored
     def open(sse, **options); end
+
+    # @example
+    #   sse = (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+    #   (project (?name ?mbox)
+    #   (join
+    #   (bgp (triple ?x foaf:name ?name))
+    #   (bgp (triple ?x foaf:mbox ?mbox)))))
+    #   }
+    # @param sse [String] a SPARQL S-Expression (SSE) string
+    # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+    # @return [SPARQL::Algebra::Operator]
     def parse(sse, **options); end
   end
 end
 
+# A SPARQL algebra aggregate.
+#
+# Aggregates are for SPARQL set functions. Aggregates take one
+# or more operands which are `Enumerable` lists of `RDF::Term`
+# and return a single `RDF::Term` or `TypeError`.
+#
+# @abstract
+# @see https://www.w3.org/TR/sparql11-query/#setFunctions
+# @see https://www.w3.org/TR/sparql11-query/#aggregates
 module SPARQL::Algebra::Aggregate
+  # Aggregates this operator accross its operands using
+  # a solutions enumerable.
+  #
+  # The first operand may be :distinct, in which case the result of applying the rest of the operands is uniqued before applying the expression.
+  #
+  # @abstract
+  # @param solutions [Enumerable<RDF::Query::Solution>] ([])
+  #   an enumerable set of query solutions
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError]
+  # @return [RDF::Term]
   def aggregate(solutions = T.unsafe(nil), **options); end
+
+  # @abstract
+  # @param enum [Enumerable<Array<RDF::Term>>] Enumerable yielding evaluated operands
+  # @raise [NotImplementedError]
+  # @return [RDF::Term]
   def apply(enum, **options); end
+
+  # Replace ourselves with a variable returned from the block
+  #
+  # @return [RDF::Query::Variable] the returned variable
+  # @yield agg
+  # @yieldparam agg [SPARQL::Algebra::Aggregate]
+  # @yieldreturn [RDF::Query::Variable]
   def replace_aggregate!(&block); end
+
+  # This is a no-op for Aggregates.
+  #
+  # @return [SPARQL::Algebra::Evaluatable] self
   def replace_vars!(&block); end
 end
 
+# Mixin for Algebra::Operator sub-classes that evaluate bindings to return a result
+#
+# @abstract
 module SPARQL::Algebra::Evaluatable
+  # @abstract
+  # @param operands [Array<RDF::Term>] evaluated operands
+  # @raise [NotImplementedError]
+  # @return [RDF::Term]
   def apply(*operands, **options); end
+
+  # Evaluates this operator using the given variable `bindings`.
+  #
+  # @abstract
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @return [RDF::Term]
   def evaluate(bindings, **options); end
+
+  # @param operands [Array<RDF::Term>] evaluated operands
+  # @return [RDF::Term] the memoized result
   def memoize(*operands, **options); end
+
+  # Recursively re-map operators to replace aggregates with temporary variables returned from the block
+  #
+  # @return [SPARQL::Algebra::Evaluatable, RDF::Query::Variable] self
+  # @yield agg
+  # @yieldparam agg [SPARQL::Algebra::Aggregate]
+  # @yieldreturn [RDF::Query::Variable]
   def replace_aggregate!(&block); end
+
+  # Replace operators which are variables with the result of the block
+  # descending into operators which are also evaluatable
+  #
+  # @return [SPARQL::Algebra::Evaluatable] self
+  # @yield var
+  # @yieldparam var [RDF::Query::Variable]
+  # @yieldreturn [RDF::Query::Variable, SPARQL::Algebra::Evaluatable]
   def replace_vars!(&block); end
 end
 
+# A SPARQL algebra expression.
+#
+# @abstract
 module SPARQL::Algebra::Expression
   include ::RDF::Util::Logger
 
+  # Returns `true`.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see #variable?
   def constant?; end
+
+  # Evaluates this expression using the given variable `bindings`.
+  #
+  # This is the default implementation, which simply returns `self`.
+  # Subclasses can override this method in order to implement something
+  # more useful.
+  #
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @return [Expression] `self`
   def evaluate(bindings, **options); end
+
+  # Is this value invalid, or is it composed of any invalid components?
+  #
+  # @return [Boolean] `true` or `false`
   def invalid?; end
+
+  # Returns `false`.
+  #
+  # @return [Boolean]
   def node?; end
+
+  # Returns an optimized version of this expression.
+  #
+  # This is the default implementation, which simply returns a copy of `self`.
+  # Subclasses can override this method in order to implement something
+  # more useful.
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [Expression] a copy of `self`
+  # @see RDF::Query#optimize
   def optimize(**options); end
+
+  # Optimizes this query.
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [self]
+  # @see RDF::Query#optimize!
   def optimize!(**options); end
+
+  # Returns the SPARQL S-Expression (SSE) representation of this expression.
+  #
+  # This is the default implementation, which simply returns `self`.
+  # Subclasses can override this method in order to implement something
+  # more useful.
+  #
+  # @return [Array] `self`
+  # @see https://openjena.org/wiki/SSE
   def to_sxp_bin; end
+
+  # Is this value valid, and composed only of valid components?
+  #
+  # @return [Boolean] `true` or `false`
   def valid?; end
+
+  # Default validate! implementation, overridden in concrete classes
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [SPARQL::Algebra::Expression] `self`
   def validate; end
+
+  # Default validate! implementation, overridden in concrete classes
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [SPARQL::Algebra::Expression] `self`
   def validate!; end
+
+  # Returns `false`.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see #variable?
   def variable?; end
 
   private
@@ -503,1392 +3009,6742 @@ module SPARQL::Algebra::Expression
   def debug(*args, &block); end
 
   class << self
+    # @example
+    #   Expression.for(:isLiteral, RDF::Literal(3.1415))
+    #   Expression[:isLiteral, RDF::Literal(3.1415)]
+    # @param sse [Array] a SPARQL S-Expression (SSE) form
+    # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+    # @return [Expression]
     def [](*sse, **options); end
+
+    # Casts operand as the specified datatype
+    #
+    # @param datatype [RDF::URI] Datatype to evaluate, one of:
+    #   xsd:integer, xsd:decimal xsd:float, xsd:double, xsd:string, xsd:boolean, xsd:dateTime, xsd:duration, xsd:dayTimeDuration, xsd:yearMonthDuration
+    # @param value [RDF::Term] Value, which should be a typed literal, where the type must be that specified
+    # @raise [TypeError] if datatype is not a URI or value cannot be cast to datatype
+    # @return [RDF::Term]
+    # @see https://www.w3.org/TR/sparql11-query/#FunctionMapping
     def cast(datatype, value); end
+
+    # @overload: May be called with node, message and an option hash
+    #   @param [String] node processing node
+    #   @param [String] message
+    #   @param [Hash{Symbol => Object}] options
+    #   @option options [Logger] :logger for logging progress
+    #   @option options [Integer] :depth (@productions.length)
+    #     Processing depth for indenting message output.
+    #   @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
+    #
+    # @overload: May be called with node and an option hash
+    #   @param [String] node processing node
+    #   @param [Hash{Symbol => Object}] options
+    #   @option options [Logger] :logger for logging progress
+    #   @option options [Integer] :depth (@productions.length)
+    #     Processing depth for indenting message output.
+    #   @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
+    #
+    # @overload: May be called with only options, in which case the block is used to return the output message
+    #   @param [String] node processing node
+    #   @param [Hash{Symbol => Object}] options
+    #   @option options [Logger] :logger for logging progress
+    #   @option options [Integer] :depth (@productions.length)
+    #     Processing depth for indenting message output.
+    #   @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
     def debug(*args, &block); end
+
+    # Invoke an extension function.
+    #
+    # Applies a registered extension function, if registered.
+    # Otherwise, if it is an XSD Constructor function, apply
+    # that.
+    #
+    # @param function [RDF::URI]
+    # @param args [Array<RDF::Term>] splat of args to function
+    # @return [RDF::Term]
+    # @see https://www.w3.org/TR/sparql11-query/#extensionFunctions
+    # @see https://www.w3.org/TR/sparql11-query/#FunctionMapping
     def extension(function, *args); end
+
+    # Is an extension function available?
+    #
+    # It's either a registered extension, or an XSD casting function
+    #
+    # @param function [RDF::URI]
+    # @return [Boolean]
     def extension?(function); end
+
+    # Registered extensions
+    #
+    # @return [Hash{RDF:URI: Proc}]
     def extensions; end
+
+    # @example
+    #   Expression.for(:isLiteral, RDF::Literal(3.1415))
+    #   Expression[:isLiteral, RDF::Literal(3.1415)]
+    # @param sse [Array] a SPARQL S-Expression (SSE) form
+    # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+    # @return [Expression]
     def for(*sse, **options); end
+
+    # @example
+    #   Expression.new([:isLiteral, RDF::Literal(3.1415)], version: 1.0)
+    # @param sse [Array] a SPARQL S-Expression (SSE) form
+    # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+    # @raise [TypeError] if any of the operands is invalid
+    # @return [Expression]
     def new(sse, parent_operator: T.unsafe(nil), **options); end
+
+    # Parses input from the given file name or URL.
+    #
+    # @option options
+    # @param filename [String, #to_s]
+    # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+    # @return [Expression]
+    # @yield [expression]
+    # @yieldparam expression [SPARQL::Algebra::Expression]
+    # @yieldreturn [void] ignored
     def open(filename, **options, &block); end
+
+    # @example
+    #   Expression.parse('(isLiteral 3.1415)')
+    # @option options
+    # @param sse [IO, String, #read, #to_s] a SPARQL S-Expression (SSE) string or IO object responding to #read
+    # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+    # @return [Expression]
+    # @yield [expression]
+    # @yieldparam expression [SPARQL::Algebra::Expression]
+    # @yieldreturn [void] ignored
     def parse(sse, **options, &block); end
+
+    # Register an extension function.
+    #
+    # Extension functions take zero or more arguments of type `RDF::Term`
+    # and return an argument of type `RDF::Term`, or raise `TypeError`.
+    #
+    # Functions are identified using the `uri` parameter and specified using a block.
+    #
+    # Arguments are evaluated, and the block is called with argument values (if a variable was unbound, an error will have been generated).
+    #
+    # It is possible to get unevaluated arguments but care must be taken not to violate the rules of function evaluation.
+    #
+    # Normally, block should be a pure evaluation based on it's arguments. It should not access a graph nor return different values for the same arguments (to allow expression optimization). Blocks can't bind a variables.
+    #
+    # @example registering a function definition applying the Ruby `crypt` method to its unary argument.
+    #   SPARQL::Algebra::Expression.register_extension(RDF::URI("http://example/crypt") do |literal|
+    #   raise TypeError, "argument must be a literal" unless literal.literal?
+    #   RDF::Literal(literal.to_s.crypt("salt"))
+    #   end
+    # @param uri [RDF::URI]
+    # @raise [TypeError] if `uri` is not an RDF::URI or no block is given
+    # @return [void]
+    # @yield *args
+    # @yieldparam *args [Array<RDF::Term>]
+    # @yieldreturn [RDF::Term]
     def register_extension(uri, &block); end
   end
 end
 
+# Operators for which `:triple` denotes a pattern, not a builtin
 SPARQL::Algebra::Expression::PATTERN_PARENTS = T.let(T.unsafe(nil), Array)
 
+# A SPARQL operator.
+#
+# @abstract
 class SPARQL::Algebra::Operator
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
 
+  # Initializes a new operator instance.
+  #
+  # @overload initialize
+  # @overload initialize
+  # @raise [TypeError] if any operand is invalid
+  # @return [Operator] a new instance of Operator
   def initialize(*operands, **options); end
 
+  # @param other [Statement]
+  # @return [Boolean]
   def ==(other); end
+
+  # Returns `true` if this is an aggregate
+  #
+  # Overridden in evaluatables which are aggregates
+  #
+  # @return [Boolean] `true` or `false`
   def aggregate?; end
+
+  # Base URI used for reading data sources with relative URIs
+  #
+  # @return [RDF::URI]
   def base_uri; end
+
+  # Binds the pattern to a solution, making it no longer variable if all variables are resolved to bound variables
+  #
+  # @param solution [RDF::Query::Solution]
+  # @return [self]
   def bind(solution); end
+
+  # Returns `true` if none of the operands are variables, `false`
+  # otherwise.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see #variable?
   def constant?; end
+
+  # Deep duplicate operands
   def deep_dup; end
+
+  # Enumerate via depth-first recursive descent over operands, yielding each operator
+  #
+  # @return [Enumerator]
+  # @yield operator
+  # @yieldparam operator [Object]
   def descendants(&block); end
+
+  # Enumerate via depth-first recursive descent over operands, yielding each operator
+  #
+  # @return [Enumerator]
+  # @yield operator
+  # @yieldparam operator [Object]
   def each(&block); end
+
+  # Enumerate via depth-first recursive descent over operands, yielding each operator
+  #
+  # @return [Enumerator]
+  # @yield operator
+  # @yieldparam operator [Object]
   def each_descendant(&block); end
+
+  # @param other [Statement]
+  # @return [Boolean]
   def eql?(other); end
+
+  # Returns `true` if this is evaluatable (i.e., returns values for a binding), `false`
+  # otherwise.
+  #
+  # @return [Boolean] `true` or `false`
   def evaluatable?; end
+
+  # Returns `true` if this is executable (i.e., contains a graph patterns), `false`
+  # otherwise.
+  #
+  # @return [Boolean] `true` or `false`
   def executable?; end
+
+  # First ancestor operator of type `klass`
+  #
+  # @param klass [Class]
+  # @return [Operator]
   def first_ancestor(klass); end
+
+  # Returns a developer-friendly representation of this operator.
+  #
+  # @return [String]
   def inspect; end
+
+  # Return the non-destinguished variables contained within this operator
+  #
+  # @return [Array<RDF::Query::Variable>]
   def ndvars; end
+
+  # Returns `true` if any of the operands are nodes, `false`
+  # otherwise.
+  #
+  # @return [Boolean]
   def node?; end
+
+  # Returns the operand at the given `index`.
+  #
+  # @param index [Integer] an operand index in the range `(0...(operands.count))`
+  # @return [RDF::Term]
   def operand(index = T.unsafe(nil)); end
+
+  # The operands to this operator.
+  #
+  # @return [Array]
   def operands; end
+
+  # Returns an optimized version of this expression.
+  #
+  # For constant expressions containing no variables, returns the result
+  # of evaluating the expression with empty bindings; otherwise returns
+  # a copy of `self`.
+  #
+  # Optimization is not possible if the expression raises an exception,
+  # such as a `TypeError` or `ZeroDivisionError`, which must be conserved
+  # at runtime.
+  #
+  # @return [SPARQL::Algebra::Expression]
+  # @see RDF::Query#optimize
   def optimize(**options); end
+
+  # Optimizes this query by optimizing its constituent operands
+  # according to their cost estimates.
+  #
+  # @return [self]
+  # @see RDF::Query#optimize!
   def optimize!(**options); end
+
+  # Parent expression, if any
+  #
+  # @return [Operator]
   def parent; end
+
+  # Parent operator, if any
+  #
+  # @return [Operator]
   def parent=(operator); end
+
+  # Prefixes useful for future serialization
+  #
+  # @return [Hash{Symbol => RDF::URI}] Prefix definitions
   def prefixes; end
+
+  # Rewrite operands by yielding each operand. Recursively descends
+  # through operands implementing this method.
+  #
+  # @return [SPARQL::Algebra::Expression] `self`
+  # @yield operand
+  # @yieldparam [] operand
+  # @yieldreturn [SPARQL::Algebra::Expression] the re-written operand
   def rewrite(&block); end
+
+  # Returns a partial SPARQL grammar for the operator.
+  #
+  # @raise [NotImplementedError]
+  # @return [String]
   def to_sparql(**options); end
+
+  # Returns an S-Expression (SXP) representation of this operator
+  #
+  # @param prefixes [Hash{Symbol => RDF::URI}] (nil)
+  # @param base_uri [RDF::URI] (nil)
+  # @return [String]
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
+
+  # Returns the SPARQL S-Expression (SSE) representation of this operator.
+  #
+  # @return [Array]
+  # @see https://openjena.org/wiki/SSE
   def to_sxp_bin; end
+
+  # Validate all operands, operator specific classes should override for operator-specific validation
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [SPARQL::Algebra::Expression] `self`
   def validate!; end
+
+  # Returns `true` if any of the operands are variables, `false`
+  # otherwise.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see #constant?
   def variable?; end
+
+  # The variables used in this query.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
+
+  # Return the variables contained within this operator
+  #
+  # @return [Array<RDF::Query::Variable>]
   def vars; end
 
   protected
 
+  # Returns the effective boolean value (EBV) of the given `literal`.
+  #
+  # @param literal [RDF::Literal]
+  # @raise [TypeError] if the literal could not be coerced to an `RDF::Literal::Boolean`
+  # @return [RDF::Literal::Boolean] `true` or `false`
+  # @see https://www.w3.org/TR/sparql11-query/#ebv
   def boolean(literal); end
+
+  # Transform an array of expressions into a recursive set
+  # of binary operations
+  # e.g.: a || b || c => (|| a (|| b c))
+  #
+  # @param klass [Class] Binary Operator class
+  # @param expressions [Array<SPARQL::Algebra::Expression>]
+  # @return [SPARQL::Algebra::Expression]
   def to_binary(klass, *expressions); end
 
   class << self
+    # Returns the arity of this operator class.
+    #
+    # @example
+    #   Operator.arity           #=> -1
+    #   Operator::Nullary.arity  #=> 0
+    #   Operator::Unary.arity    #=> 1
+    #   Operator::Binary.arity   #=> 2
+    #   Operator::Ternary.arity  #=> 3
+    # @return [Integer] an integer in the range `(-1..3)`
     def arity; end
+
+    # Base URI used for reading data sources with relative URIs
+    #
+    # @return [RDF::URI]
     def base_uri; end
+
+    # Set Base URI associated with SPARQL document, typically done
+    # when reading SPARQL from a URI
+    #
+    # @param uri [RDF::URI]
+    # @return [RDF::URI]
     def base_uri=(uri); end
+
+    # @param operands [Array<RDF::Term>]
+    # @return [RDF::Term]
+    # @see Operator#evaluate
     def evaluate(*operands, **options); end
+
+    # Returns an operator class for the given operator `name`.
+    #
+    # @param name [Symbol, #to_s]
+    # @param arity [Integer]
+    # @return [Class] an operator class, or `nil` if an operator was not found
     def for(name, arity = T.unsafe(nil)); end
+
+    # @private
+    # @return [void]
     def inherited(child); end
+
+    # Prefixes useful for future serialization
+    #
+    # @return [Hash{Symbol => RDF::URI}] Prefix definitions
     def prefixes; end
+
+    # Prefixes useful for future serialization
+    #
+    # @param hash [Hash{Symbol => RDF::URI}] Prefix definitions
+    # @return [Hash{Symbol => RDF::URI}]
     def prefixes=(hash); end
+
+    # Generate a top-level Grammar, using collected options
+    #
+    # @param content [String]
+    # @param datasets [Operator] ([])
+    # @param distinct [Operator] (false)
+    # @param extensions [Hash{String => Operator}] Variable bindings
+    # @param filter_ops [Array<Operator>] ([])
+    #   Filter Operations
+    # @param limit [Integer] (nil)
+    # @param group_ops [Array<Operator>] ([])
+    # @param having_ops [Array<Operator>] ([])
+    # @param offset [Integer] (nil)
+    # @param order_ops [Array<Operator>] ([])
+    #   Order Operations
+    # @param project [Array<Symbol,Operator>] (%i(*))
+    #   Terms to project
+    # @param reduced [Operator] (false)
+    # @param values_clause [Operator] (nil)
+    #   Top-level Values clause
+    # @param where_clause [Operator] (true)
+    #   Emit 'WHERE' before GroupGraphPattern
+    # @param options [Hash{Symbol => Object}]
+    # @return [String]
     def to_sparql(content, datasets: T.unsafe(nil), distinct: T.unsafe(nil), extensions: T.unsafe(nil), filter_ops: T.unsafe(nil), group_ops: T.unsafe(nil), having_ops: T.unsafe(nil), limit: T.unsafe(nil), offset: T.unsafe(nil), order_ops: T.unsafe(nil), project: T.unsafe(nil), reduced: T.unsafe(nil), values_clause: T.unsafe(nil), where_clause: T.unsafe(nil), **options); end
   end
 end
 
+# variable arity
 SPARQL::Algebra::Operator::ARITY = T.let(T.unsafe(nil), Integer)
 
+# The SPARQL logical `abs` operator.
+#
+# [121] BuiltInCall ::= ... | 'ABS' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT * WHERE {
+#   ?s :num ?num
+#   FILTER(ABS(?num) >= 2)
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (filter (>= (abs ?num) 2)
+#   (bgp (triple ?s :num ?num))))
+# @see https://www.w3.org/TR/sparql11-query/#func-abs
+# @see https://www.w3.org/TR/xpath-functions/#func-abs
 class SPARQL::Algebra::Operator::Abs < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the absolute value of `arg`. An error is raised if `arg` is not a numeric value.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a numeric value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Abs::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL UPDATE `add` operator.
+#
+# The ADD operation is a shortcut for inserting all data from an input graph into a destination graph. Data from the input graph is not affected, and initial data from the destination graph, if any, is kept intact.
+#
+# [35]	Add	::=	"ADD" "SILENT"? GraphOrDefault "TO" GraphOrDefault
+#
+# @example SPARQL Update
+#   PREFIX : <http://example.org/>
+#   ADD DEFAULT TO :g1
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (update (add default :g1)))
+# @see https://www.w3.org/TR/sparql11-update/#add
 class SPARQL::Algebra::Operator::Add < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Add::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `adjust` operator.
+#
+# [121] BuiltInCall ::= ... | 'ADJUST' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?id (ADJUST(?d, ?tz) AS ?adjusted) WHERE {
+#   VALUES (?id ?tz ?d) {
+#   (1 "-PT10H"^^xsd:dayTimeDuration "2002-03-07"^^xsd:date)
+#   }
+#   }
+# @example SSE
+#   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?id ?adjusted)
+#   (extend ((?adjusted (adjust ?d ?tz)))
+#   (table (vars ?id ?tz ?d)
+#   (row
+#   (?id 1)
+#   (?tz "-PT10H"^^xsd:dayTimeDuration)
+#   (?d "2002-03-07"^^xsd:date))))))
+# @see https://www.w3.org/TR/sparql11-query/#func-abs
+# @see https://www.w3.org/TR/xpath-functions/#func-abs
 class SPARQL::Algebra::Operator::Adjust < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the first operand adjusted by the dayTimeDuration of the second operand
+  #
+  # @param operand [RDF::Literal::Temporal] the operand
+  # @param duration [RDF::Literal, String] the dayTimeDuration or an empty string.
+  # @raise [TypeError] if the operand is not a numeric value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, duration, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Adjust::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL Property Path `alt` (Alternative Property Path) operator.
+#
+# Let P and Q be property path expressions.
+#
+#     eval(Path(X, alt(P,Q), Y)) = Union(eval(Path(X, P, Y)), eval(Path(X, Q, Y)))
+#
+# [89] PathAlternative ::= PathSequence ( '|' PathSequence )*
+#
+# @example SPARQL Query
+#   PREFIX :  <http://www.example.org/>
+#   SELECT ?t
+#   WHERE {
+#   :a :p1|:p2/:p3|:p4 ?t
+#   }
+# @example SSE
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?t)
+#   (path :a
+#   (alt
+#   (alt :p1 (seq :p2 :p3))
+#   :p4)
+#   ?t)))
+# @see https://www.w3.org/TR/sparql11-query/#defn_evalPP_alternative
 class SPARQL::Algebra::Operator::Alt < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Equivalent to:
+  #
+  #    (path x (alt :p :q) y)
+  #     => (union (bgp (x :p y)) (bgp (x :q y)))
+  #
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Alt::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `and` operator.
+#
+# [112] ConditionalAndExpression::= ValueLogical ( '&&' ValueLogical )*
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/ns#>
+#   SELECT  ?a
+#   WHERE { ?a :p ?v .
+#   FILTER ("true"^^xsd:boolean && ?v) .
+#   }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>) (: <http://example.org/ns#>))
+#   (project (?a)
+#   (filter (&& true ?v)
+#   (bgp (triple ?a :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-logical-and
+# @see https://www.w3.org/TR/sparql11-query/#evaluation
 class SPARQL::Algebra::Operator::And < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Initializes a new operator instance.
+  #
+  # @param left [RDF::Literal::Boolean] the left operand
+  # @param right [RDF::Literal::Boolean] the right operand
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @raise [TypeError] if any operand is invalid
+  # @return [And] a new instance of And
   def initialize(left, right, **options); end
 
+  # Returns a logical `AND` of `left` and `right`. Note that logical-and operates on the effective boolean value of its arguments.
+  #
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if the operands could not be coerced to boolean literals
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::And::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL ascending sort operator.
+#
+# [24]  OrderCondition          ::= ( ( 'ASC' | 'DESC' ) BrackettedExpression ) | ( Constraint | Var )
+#
+# @example SPARQL Query
+#   PREFIX foaf:    <http://xmlns.com/foaf/0.1/>
+#   SELECT ?name
+#   WHERE { ?x foaf:name ?name }
+#   ORDER BY ASC(?name)
+# @example SSE
+#   (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+#   (project (?name)
+#   (order ((asc ?name))
+#   (bgp (triple ?x foaf:name ?name)))))
+# @see https://www.w3.org/TR/sparql11-query/#modOrderBy
 class SPARQL::Algebra::Operator::Asc < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the evaluation of its operand. Default comparison is in
+  # ascending order. Ordering is applied in {Order}.
+  #
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @return [RDF::Term]
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Provides order to descendant query.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Asc::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `ask` operator.
+#
+# Applications can use the ASK form to test whether or not a query pattern has a solution. No information is returned about the possible query solutions, just whether or not a solution exists.
+#
+# [12]  AskQuery                ::= 'ASK' DatasetClause* WhereClause ValuesClause
+#
+# @example SPARQL Query
+#   PREFIX :    <http://example/>
+#   ASK  { :x :p  ?x }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (ask
+#   (bgp (triple :x :p ?x))))
+# @see https://www.w3.org/TR/sparql11-query/#ask
 class SPARQL::Algebra::Operator::Ask < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Returns true if any solutions are found, false otherwise.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Literal::Boolean] \
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [RDF::Literal::Boolean]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options); end
+
+  # Query results in a boolean result (e.g., ASK)
+  #
+  # @return [Boolean]
   def query_yields_boolean?; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Ask::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `avg` set function.
+#
+# [127] Aggregate::= ... | 'AVG' '(' 'DISTINCT'? Expression ')'
+#
+# @example SPARQL Query
+#   PREFIX : <http://www.example.org/>
+#   SELECT (AVG(?o) AS ?avg)
+#   WHERE { ?s :dec ?o }
+# @example SSE
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?avg)
+#   (extend ((?avg ??.0))
+#   (group () ((??.0 (avg ?o)))
+#   (bgp (triple ?s :dec ?o))))))
+# @see https://www.w3.org/TR/sparql11-query/#defn_aggAvg
 class SPARQL::Algebra::Operator::Avg < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Aggregate
 
+  # @raise [ArgumentError]
+  # @return [Avg] a new instance of Avg
   def initialize(*operands, **options); end
 
+  # The Avg set function calculates the average value for an expression over a group. It is defined in terms of Sum and Count.
+  #
+  # @param enum [Enumerable<Array<RDF::Term>>] enum of evaluated operand
+  # @return [RDF::Literal::Numeric] The numeric average of the terms
   def apply(enum, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Avg::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `bgp` operator.
+#
+# Query with `graph_name` set to false.
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   SELECT * { ?s ?p ?o }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (bgp (triple ?s ?p ?o)))
+# @example SPARQL Grammar (sparql-star)
+#   PREFIX : <http://example.com/ns#>
+#   SELECT * {<< :a :b :c >> :p1 :o1.}
+# @example SSE (sparql-star)
+#   (prefix ((: <http://example.com/ns#>))
+#   (bgp (triple (qtriple :a :b :c) :p1 :o1)))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::BGP < ::SPARQL::Algebra::Operator
   class << self
+    # A `graph` is an RDF::Query with a graph_name.
+    #
+    # @overload self.new
+    # @return [RDF::Query]
+    # @yield [solution] each matching solution
+    # @yieldparam solution [RDF::Query::Solution]
+    # @yieldreturn [void] ignored
     def new(*patterns, **options, &block); end
   end
 end
 
 SPARQL::Algebra::Operator::BGP::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `bnode` operator.
+#
+# The BNODE function constructs a blank node that is distinct from all blank nodes in the dataset being queried and distinct from all blank nodes created by calls to this constructor for other query solutions. If the no argument form is used, every call results in a distinct blank node. If the form with a simple literal is used, every call results in distinct blank nodes for different simple literals, and the same blank node for calls with the same simple literal within expressions for one solution mapping.
+#
+# [121] BuiltInCall ::= ... | 'BNODE' ( '(' Expression ')' | NIL )
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s1 ?s2 (BNODE(?s1) AS ?b1) (BNODE(?s2) AS ?b2)
+#   WHERE {
+#   ?a :str ?s1 .
+#   ?b :str ?s2 .
+#   FILTER (?a = :s1 || ?a = :s3)
+#   FILTER (?b = :s1 || ?b = :s3)
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>) (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s1 ?s2 ?b1 ?b2)
+#   (extend
+#   ((?b1 (bnode ?s1)) (?b2 (bnode ?s2)))
+#   (filter
+#   (exprlist
+#   (|| (= ?a :s1) (= ?a :s3))
+#   (|| (= ?b :s1) (= ?b :s3)))
+#   (bgp (triple ?a :str ?s1) (triple ?b :str ?s2))) )) )
+# @see https://www.w3.org/TR/sparql11-query/#func-bnode
 class SPARQL::Algebra::Operator::BNode < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Initializes a new operator instance.
+  #
+  # @param literal [RDF::Literal] (false)
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @raise [TypeError] if any operand is invalid
+  # @return [BNode] a new instance of BNode
   def initialize(literal = T.unsafe(nil), **options); end
 
+  # The BNODE function constructs a blank node that is distinct from all blank nodes in the dataset being queried and distinct from all blank nodes created by calls to this constructor for other query solutions. If the no argument form is used, every call results in a distinct blank node. If the form with a simple literal is used, every call results in distinct blank nodes for different simple literals, and the same blank node for calls with the same simple literal within expressions for one solution mapping.
+  #
+  # This functionality is compatible with the treatment of blank nodes in SPARQL CONSTRUCT templates.
+  #
+  # @param literal [RDF::Literal] (nil)
+  # @param bindings [RDF::Query::Solution, #[]] a query solution containing zero or more variable bindings
+  # @raise [TypeError] if the operand is not a simple literal or nil
+  # @return [RDF::Node]
   def apply(literal, bindings, **options); end
+
+  # Evaluates this operator using the given variable `bindings`.
+  #
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @return [RDF::Term]
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Returns the SPARQL S-Expression (SSE) representation of this expression.
+  #
+  # Remove the optional argument.
+  #
+  # @return [Array] `self`
+  # @see https://openjena.org/wiki/SSE
   def to_sxp_bin; end
 end
 
 SPARQL::Algebra::Operator::BNode::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `base` operator.
+#
+# [5]   BaseDecl                ::= 'BASE' IRIREF
+#
+# @example SPARQL Grammar
+#   BASE <http://example.org/>
+#   SELECT * { <a> <b> 123.0 }
+# @example SSE
+#   (base <http://example.org/>
+#   (bgp (triple <a> <b> 123.0)))
+# @see https://www.w3.org/TR/sparql11-query/#QSynIRI
 class SPARQL::Algebra::Operator::Base < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Really a pass-through, as this is a syntactic object used for providing
+  # context for relative URIs.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Queryable, RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution, statement or boolean
+  # @yieldparam solution [RDF::Statement, RDF::Query::Solution, Boolean]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Return optimized query
+  #
+  # @return [Base] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
+
+  # Query results in a boolean result (e.g., ASK)
+  #
+  # @return [Boolean]
   def query_yields_boolean?; end
+
+  # Query results statements (e.g., CONSTRUCT, DESCRIBE, CREATE)
+  #
+  # @return [Boolean]
   def query_yields_statements?; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Base::NAME = T.let(T.unsafe(nil), Array)
 
+# A SPARQL binary operator.
+#
+# Operators of this kind take two operands.
+#
+# @abstract
 class SPARQL::Algebra::Operator::Binary < ::SPARQL::Algebra::Operator
+  # @param arg1 [RDF::Term] the first operand
+  # @param arg2 [RDF::Term] the second operand
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @return [Binary] a new instance of Binary
   def initialize(arg1, arg2, **options); end
 end
 
 SPARQL::Algebra::Operator::Binary::ARITY = T.let(T.unsafe(nil), Integer)
 
+# The SPARQL `bound` operator.
+#
+# [121] BuiltInCall ::= ... | 'BOUND' '(' Var ')'
+#
+# @example SPARQL Grammar
+#   PREFIX  : <http://example.org/ns#>
+#   SELECT  ?a ?c
+#   WHERE
+#   { ?a :b ?c .
+#   OPTIONAL
+#   { ?c :d ?e } .
+#   FILTER (! bound(?e))
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/ns#>))
+#   (project (?a ?c)
+#   (filter (! (bound ?e))
+#   (leftjoin
+#   (bgp (triple ?a :b ?c))
+#   (bgp (triple ?c :d ?e))))))
+# @see https://www.w3.org/TR/sparql11-query/#func-bound
 class SPARQL::Algebra::Operator::Bound < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Initializes a new operator instance.
+  #
+  # @param var [RDF::Query::Variable] a variable
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @raise [TypeError] if any operand is invalid
+  # @return [Bound] a new instance of Bound
   def initialize(var, **options); end
 
+  # Returns `true` if `var` is bound to a value. Returns false otherwise. Variables with the value NaN or INF are considered bound.
+  #
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if the operand is not a variable
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Bound::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `ceil` operator.
+#
+# [121] BuiltInCall ::= ... 'CEIL' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s ?num (CEIL(?num) AS ?ceil) WHERE {
+#   ?s :num ?num
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s ?num ?ceil)
+#   (extend ((?ceil (ceil ?num)))
+#   (bgp (triple ?s :num ?num)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-ceil
+# @see https://www.w3.org/TR/xpath-functions/#func-ceil
 class SPARQL::Algebra::Operator::Ceil < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the smallest (closest to negative infinity) number with no fractional part that is not less than the value of `arg`. An error is raised if `arg` is not a numeric value.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a numeric value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Ceil::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL UPDATE `clear` operator.
+#
+# The CLEAR operation removes all the triples in the specified graph(s) in the Graph Store.
+#
+# [32]  Clear                   ::= 'CLEAR' 'SILENT'? GraphRefAll
+#
+# @example SPARQL Grammar (SILENT DEFAULT)
+#   CLEAR SILENT DEFAULT
+# @example SSE (SILENT DEFAULT)
+#   (update (clear silent default))
+# @example SPARQL Grammar (IRI)
+#   CLEAR GRAPH <http://example.com/>
+# @example SSE (IRI)
+#   (update (clear <http://example.com/>))
+# @see https://www.w3.org/TR/sparql11-update/#clear
 class SPARQL::Algebra::Operator::Clear < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Clear::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `coalesce` function.
+#
+# [121] BuiltInCall ::= ... | 'COALESCE' ExpressionList
+#
+# @example SPARQL Grammar
+#   PREFIX :        <http://example/>
+#   PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+#
+#   SELECT ?X (SAMPLE(?v) AS ?S)
+#   {
+#   ?s :p ?v .
+#   OPTIONAL { ?s :q ?w }
+#   }
+#   GROUP BY (COALESCE(?w, "1605-11-05"^^xsd:date) AS ?X)
+# @example SSE
+#   (prefix
+#   ((: <http://example/>) (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?X ?S)
+#   (extend ((?S ??.0))
+#   (group
+#   ((?X (coalesce ?w "1605-11-05"^^xsd:date)))
+#   ((??.0 (sample ?v)))
+#   (leftjoin
+#   (bgp (triple ?s :p ?v))
+#   (bgp (triple ?s :q ?w)))))))
+# @see https://www.w3.org/TR/sparql11-query/#func-coalesce
 class SPARQL::Algebra::Operator::Coalesce < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # The COALESCE function form returns the RDF term value of the first expression that evaluates without error. In SPARQL, evaluating an unbound variable raises an error.
+  #
+  # If none of the arguments evaluates to an RDF term, an error is raised. If no expressions are evaluated without error, an error is raised.
+  #
+  # @example
+  #   Suppose ?x = 2 and ?y is not bound in some query solution:
+  #
+  #   COALESCE(?x, 1/0) #=> 2, the value of x
+  #   COALESCE(1/0, ?x) #=> 2
+  #   COALESCE(5, ?x) #=> 5
+  #   COALESCE(?y, 3) #=> 3
+  #   COALESCE(?y) #=> raises an error because y is not bound.
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if none of the operands succeeds
+  # @return [RDF::Term]
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Coalesce::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL relational `<=>` comparison operator.
+#
+# @example
+#   (<=> ?x ?y)
+# @see https://www.w3.org/TR/sparql11-query/#OperatorMapping
+# @see https://www.w3.org/TR/xpath-functions/#func-compare
 class SPARQL::Algebra::Operator::Compare < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns -1, 0, or 1, depending on whether the first operand is
+  # respectively less than, equal to, or greater than the second
+  # operand.
+  #
+  # SPARQL also fixes an order between some kinds of RDF terms that would not otherwise be ordered:
+  #
+  #   (Lowest) no value assigned to the variable or expression in this solution.
+  #   Blank nodes
+  #   IRIs
+  #   RDF literals
+  #
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if either operand is not a term
+  # @return [RDF::Literal::Integer] `-1`, `0`, or `1`
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 
   private
 
+  # Define <=> as private for recursive statements
   def spaceship(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::Compare::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL `concat` operator.
+#
+# The CONCAT function corresponds to the XPath fn:concat function. The function accepts string literals as arguments.
+#
+# [121] BuiltInCall ::= ... 'CONCAT' ExpressionList
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT (CONCAT(?str1,?str2) AS ?str) WHERE {
+#   :s6 :str ?str1 .
+#   :s7 :str ?str2 .
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?str)
+#   (extend ((?str (concat ?str1 ?str2)))
+#   (bgp
+#   (triple :s6 :str ?str1)
+#   (triple :s7 :str ?str2)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-concat
+# @see https://www.w3.org/TR/xpath-functions/#func-concat
 class SPARQL::Algebra::Operator::Concat < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # The lexical form of the returned literal is obtained by concatenating the lexical forms of its inputs. If all input literals are typed literals of type xsd:string, then the returned literal is also of type `xsd:string`, if all input literals are plain literals with identical language tag, then the returned literal is a plain literal with the same language tag, in all other cases, the returned literal is a simple literal.
+  #
+  # @example
+  #   concat("foo", "bar")                         #=> "foobar"
+  #   concat("foo"@en, "bar"@en)                   #=> "foobar"@en
+  #   concat("foo"^^xsd:string, "bar"^^xsd:string) #=> "foobar"^^xsd:string
+  #   concat("foo", "bar"^^xsd:string)             #=> "foobar"
+  #   concat("foo"@en, "bar")                      #=> "foobar"
+  #   concat("foo"@en, "bar"^^xsd:string)          #=> "foobar"
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if any operand is not a literal
+  # @return [RDF::Term]
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Concat::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `construct` operator.
+#
+# The CONSTRUCT query form returns a single RDF graph specified by a graph template. The result is an RDF graph formed by taking each query solution in the solution sequence, substituting for the variables in the graph template, and combining the triples into a single RDF graph by set union.
+#
+# [10]  ConstructQuery          ::= 'CONSTRUCT' ( ConstructTemplate DatasetClause* WhereClause SolutionModifier | DatasetClause* 'WHERE' '{' TriplesTemplate? '}' SolutionModifier ) ValuesClause
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   CONSTRUCT { ?x :p2 ?v }
+#   WHERE {
+#   ?x :p ?o .
+#   OPTIONAL {?o :q ?v }
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (construct ((triple ?x :p2 ?v))
+#   (leftjoin
+#   (bgp (triple ?x :p ?o))
+#   (bgp (triple ?o :q ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#construct
 class SPARQL::Algebra::Operator::Construct < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given {RDF::Queryable} object.
+  # Binds variables to the array of patterns in the first operand and returns the resulting RDF::Graph object
+  #
+  # If any such instantiation produces a triple containing an unbound variable or an illegal RDF construct, such as a literal in subject or predicate position, then that triple is not included in the output RDF graph. The graph template can contain triples with no variables (known as ground or explicit triples), and these also appear in the output RDF graph returned by the CONSTRUCT query form.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Queryable] A Queryable with constructed triples
+  # @see https://www.w3.org/TR/sparql11-query/#construct
+  # @yield [statement] each matching statement
+  # @yieldparam solution [RDF::Statement]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Query results statements (e.g., CONSTRUCT, DESCRIBE, CREATE)
+  #
+  # @return [Boolean]
   def query_yields_statements?; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Construct::NAME = T.let(T.unsafe(nil), Array)
 
+# A SPARQL `contains` operator.
+#
+# [121] BuiltInCall ::= ... | 'CONTAINS' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s ?str WHERE {
+#   ?s :str ?str
+#   FILTER CONTAINS(?str, "a")
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?str)
+#   (filter (contains ?str "a")
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-contains
+# @see https://www.w3.org/TR/xpath-functions/#func-contains
 class SPARQL::Algebra::Operator::Contains < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The `CONTAINS` function corresponds to the XPath fn:contains. The arguments must be argument compatible otherwise an error is raised.
+  #
+  # @example
+  #   contains("foobar", "bar") #=> true
+  #   contains("foobar"@en, "foo"@en) #=> true
+  #   contains("foobar"^^xsd:string, "bar"^^xsd:string) #=> true
+  #   contains("foobar"^^xsd:string, "foo") #=> true
+  #   contains("foobar", "bar"^^xsd:string) #=> true
+  #   contains("foobar"@en, "foo") #=> true
+  #   contains("foobar"@en, "bar"^^xsd:string) #=> true
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if operands are not compatible
+  # @return [RDF::Literal::Boolean]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Contains::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `copy` operator.
+#
+# The COPY operation is a shortcut for inserting all data from an input graph into a destination graph. Data from the input graph is not affected, but data from the destination graph, if any, is removed before insertion.
+#
+# [37]  Copy                    ::= 'COPY' 'SILENT'? GraphOrDefault 'TO' GraphOrDefault
+#
+# @example SPARQL Grammar
+#   COPY SILENT GRAPH <http://www.example.com/g1> TO DEFAULT
+# @example SSE
+#   (update (copy silent <http://www.example.com/g1> default))
+# @see https://www.w3.org/TR/sparql11-update/#copy
 class SPARQL::Algebra::Operator::Copy < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Copy::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `count` set function.
+#
+# [127] Aggregate::= 'COUNT' '(' 'DISTINCT'? ( '*' | Expression ) ')' ...
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://www.example.org/>
+#   SELECT (COUNT(?O) AS ?C)
+#   WHERE { ?S ?P ?O }
+# @example SSE
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?C)
+#   (extend ((?C ??.0))
+#   (group () ((??.0 (count ?O)))
+#   (bgp (triple ?S ?P ?O))))))
+# @example SPARQL Grammar (count(*))
+#   PREFIX : <http://www.example.org>
+#
+#   SELECT (COUNT(*) AS ?C)
+#   WHERE { ?S ?P ?O }
+# @example SSE (count(*))
+#   (prefix
+#   ((: <http://www.example.org>))
+#   (project (?C)
+#   (extend ((?C ??.0))
+#   (group () ((??.0 (count)))
+#   (bgp (triple ?S ?P ?O))))))
+# @example SPARQL Grammar (count(distinct *))
+#   PREFIX : <http://www.example.org>
+#
+#   SELECT (COUNT(DISTINCT *) AS ?C)
+#   WHERE { ?S ?P ?O }
+# @example SSE (count(distinct *))
+#   (prefix
+#   ((: <http://www.example.org>))
+#   (project (?C)
+#   (extend ((?C ??.0))
+#   (group () ((??.0 (count distinct)))
+#   (bgp (triple ?S ?P ?O))))))
+# @see https://www.w3.org/TR/sparql11-query/#defn_aggCount
 class SPARQL::Algebra::Operator::Count < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Aggregate
 
+  # Count is a SPARQL set function which counts the number of times a given expression has a bound, and non-error value within the aggregate group.
+  #
+  # @param enum [Enumerable<Array<RDF::Term>>] enum of evaluated operand
+  # @return [RDF::Literal::Integer] The number of non-error terms in the multiset
   def apply(enum, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Count::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `create` operator.
+#
+# This operation creates a graph in the Graph Store
+#
+# This is a no-op for RDF.rb implementations, unless the graph exists
+#
+# [34]  Create                  ::= 'CREATE' 'SILENT'? GraphRef
+#
+# @example SPARQL Grammar
+#   CREATE SILENT GRAPH <http://example.org/g1>
+# @example SSE
+#   (update (create silent <http://example.org/g1>))
+# @see https://www.w3.org/TR/sparql11-update/#create
 class SPARQL::Algebra::Operator::Create < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Create::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `dataset` operator.
+#
+# Instantiated with two operands, the first being an array of data source URIs,
+# either bare, indicating a default dataset, or expressed as an array `\[:named, \<uri\>\]`,
+# indicating that it represents a named data source.
+#
+# This operator loads from the datasource, unless a graph named by
+# the datasource URI already exists in the repository.
+#
+# The contained BGP queries are then performed against the specified
+# default and named graphs. Rather than using the actual default
+# graph of the dataset, queries against the default dataset are
+# run against named graphs matching a non-distinctive variable
+# and the results are filtered against those URIs included in
+# the default dataset.
+#
+# Specifically, each BGP which is not part of a graph pattern
+# is replaced with a union of graph patterns with that BGP repeated
+# for each graph URI in the default dataset. This requires recursively
+# updating the operator.
+#
+# Each graph pattern containing a variable graph name is replaced
+# by a filter on that variable such that the variable must match
+# only those named datasets specified.
+#
+# If no default or no named graphs are specified, these queries
+# are eliminated.
+#
+# Multiple default graphs union the information from a graph query
+# on each default datasource.
+#
+# Multiple named graphs place a filter on all variables used
+# to identify those named graphs so that they are restricted
+# to come only from the specified set. Note that this requires
+# descending through expressions to find graph patterns using
+# variables and placing a filter on each identified variable.
+#
+# @example Dataset with one default and one named data source
+#
+#   (prefix ((: <http://example/>))
+#   (dataset (<data-g1.ttl> (named <data-g2.ttl>))
+#   (union
+#   (bgp (triple ?s ?p ?o))
+#   (graph ?g (bgp (triple ?s ?p ?o))))))
+#
+#   is effectively re-written to the following:
+#
+#   (prefix ((: <http://example/>))
+#   (union
+#   (graph <data-g1.ttl> (bgp (triple ?s ?p ?o)))
+#   (filter (= ?g <data-g2.ttl>)
+#   (graph ?g (bgp (triple ?s ?p ?o))))))
+# @example Dataset with one default no named data sources
+#
+#   (prefix ((: <http://example/>))
+#   (dataset (<data-g1.ttl>)
+#   (union
+#   (bgp (triple ?s ?p ?o))
+#   (graph ?g (bgp (triple ?s ?p ?o))))))
+#
+#   is effectively re-written to the following:
+#
+#   (prefix ((: <http://example/>))
+#   (union
+#   (graph <data-g1.ttl> (bgp (triple ?s ?p ?o)))
+#   (bgp))
+# @example Dataset with two default data sources
+#
+#   (prefix ((: <http://example/>))
+#   (dataset (<data-g1.ttl> <data-g2.ttl)
+#   (bgp (triple ?s ?p ?o))))
+#
+#   is effectively re-written to the following:
+#
+#   (prefix ((: <http://example/>))
+#   (union
+#   (graph <data-g1.ttl> (bgp (triple ?s ?p ?o)))
+#   (graph <data-g2.ttl> (bgp (triple ?s ?p ?o)))))
+# @example Dataset with two named data sources
+#
+#   (prefix ((: <http://example/>))
+#   (dataset ((named <data-g1.ttl>) (named <data-g2.ttl>))
+#   (graph ?g (bgp (triple ?s ?p ?o)))))
+#
+#   is effectively re-written to the following:
+#
+#   (prefix ((: <http://example/>))
+#   (filter ((= ?g <data-g1.ttl>) || (= ?g <data-g2.ttl>))
+#   (graph ?g (bgp (triple ?s ?p ?o))))))
+# @example SPARQL Grammar
+#   BASE     <http://example.org/>
+#   PREFIX : <http://example.com/>
+#
+#   SELECT *
+#   FROM <data-g1.ttl>
+#   { ?s ?p ?o }
+# @example SSE
+#   (base <http://example.org/>
+#   (prefix ((: <http://example.com/>))
+#   (dataset (<data-g1.ttl>)
+#   (bgp (triple ?s ?p ?o)))))
+# @see https://www.w3.org/TR/sparql11-query/#specifyingDataset
 class SPARQL::Algebra::Operator::Dataset < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Reads specified data sources into queryable. Named data sources
+  # are added using a _context_ of the data source URI.
+  #
+  # Datasets are specified in operand(1), which is an array of default or named graph URIs.
+  #
+  # If `options` contains any of the Protocol attributes, the dataset is constructed on creation, and these operations should be ignored:
+  #
+  # * `default-graph-uri`
+  # * `named-graph-uri`
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &base); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Extracts datasets
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Dataset::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `datatype` operator.
+#
+# [121] BuiltInCall ::= ... | 'DATATYPE' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x ?v
+#   WHERE
+#   { ?x :p ?v .
+#   FILTER ( datatype(?v) = xsd:double ) .
+#   }
+# @example SSE
+#   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+#   (: <http://example.org/things#>))
+#   (project (?x ?v)
+#   (filter (= (datatype ?v) xsd:double)
+#   (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-datatype
 class SPARQL::Algebra::Operator::Datatype < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the datatype IRI of the operand.
+  #
+  # If the operand is a simple literal, returns a datatype of
+  # `xsd:string`.
+  #
+  # @param literal [RDF::Literal] a typed or simple literal
+  # @raise [TypeError] if the operand is not a typed or simple literal
+  # @return [RDF::URI] the datatype IRI, or `xsd:string` for simple literals
   def apply(literal, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Datatype::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `day` operator.
+#
+# [121] BuiltInCall ::= ... | 'DAY' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (DAY(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (day ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-day
 class SPARQL::Algebra::Operator::Day < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the day part of `arg` as an integer.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal::Temporal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Day::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `delete` operator.
+#
+# The DELETE operation is a form of the DELETE/INSERT operation having no INSERT section
+#
+# [42]  DeleteClause            ::= 'DELETE' QuadPattern
+#
+# @example SPARQL Grammar
+#   PREFIX     : <http://example.org/>
+#   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+#
+#   DELETE { ?s ?p ?o }
+#   WHERE  { :a foaf:knows ?s . ?s ?p ?o }
+# @example SSE
+#   (prefix ((: <http://example.org/>)
+#   (foaf: <http://xmlns.com/foaf/0.1/>))
+#   (update
+#   (modify
+#   (bgp
+#   (triple :a foaf:knows ?s)
+#   (triple ?s ?p ?o))
+#   (delete ((triple ?s ?p ?o))))))
+# @see https://www.w3.org/TR/sparql11-update/#delete
 class SPARQL::Algebra::Operator::Delete < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param solutions [RDF::Query::Solutions] Solutions to map to patterns for this operation
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, solutions: T.unsafe(nil), **options); end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Delete::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL UPDATE `deleteData` operator.
+#
+# The DELETE DATA operation removes some triples, given inline in the request, if the respective graphs in the Graph Store contain those
+#
+# [39]  DeleteData              ::= 'DELETE DATA' QuadData
+#
+# @example SPARQL Grammar
+#   PREFIX     : <http://example.org/>
+#   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+#   DELETE DATA {
+#   :a foaf:knows :b .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>) (foaf: <http://xmlns.com/foaf/0.1/>))
+#   (update (deleteData ((triple :a foaf:knows :b)))))
+# @see https://www.w3.org/TR/sparql11-update/#deleteData
 class SPARQL::Algebra::Operator::DeleteData < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::DeleteData::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL UPDATE `deleteWhere` operator.
+#
+# The DELETE WHERE operation is a shortcut form for the DELETE/INSERT operation where bindings matched by the WHERE clause are used to define the triples in a graph that will be deleted.
+#
+# [40]  DeleteWhere             ::= 'DELETE WHERE' QuadPattern
+#
+# @example SPARQL Grammar
+#   PREFIX     : <http://example.org/>
+#   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+#   DELETE WHERE { :a foaf:knows ?b }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>)
+#   (foaf: <http://xmlns.com/foaf/0.1/>))
+#   (update
+#   (deleteWhere ((triple :a foaf:knows ?b)))))
+# @see https://www.w3.org/TR/sparql11-update/#deleteWhere
 class SPARQL::Algebra::Operator::DeleteWhere < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Update
 
+  # Query the operand, and delete all statements created by binding each solution to the patterns
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::DeleteWhere::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL descending sort operator.
+#
+# [24]  OrderCondition          ::= ( ( 'ASC' | 'DESC' ) BrackettedExpression ) | ( Constraint | Var )
+#
+# @example SPARQL Grammar
+#   PREFIX foaf:    <http://xmlns.com/foaf/0.1/>
+#   SELECT ?name
+#   WHERE { ?x foaf:name ?name }
+#   ORDER BY DESC(?name)
+# @example SSE
+#   (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+#   (project (?name)
+#   (order ((desc ?name))
+#   (bgp (triple ?x foaf:name ?name)))))
+# @see https://www.w3.org/TR/sparql11-query/#modOrderBy
 class SPARQL::Algebra::Operator::Desc < ::SPARQL::Algebra::Operator::Asc
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Provides order to descendant query.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Desc::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `describe` operator.
+#
+# Generages a graph across specified terms using {RDF::Queryable}`#concise_bounded_description`.
+#
+# [11]  DescribeQuery           ::= 'DESCRIBE' ( VarOrIri+ | '*' ) DatasetClause* WhereClause? SolutionModifier ValuesClause
+#
+# @example SPARQL Grammar
+#   BASE <http://example.org/>
+#   DESCRIBE <u> ?u WHERE { <x> <q> ?u . }
+# @example SSE
+#   (base <http://example.org/>
+#   (describe (<u> ?u)
+#   (bgp (triple <x> <q> ?u))))
+# @see https://www.w3.org/TR/sparql11-query/#describe
 class SPARQL::Algebra::Operator::Describe < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given {RDF::Queryable} object.
+  # Generates a graph containing the Concise Bounded Description
+  # variables and URIs listed in the first operand.
+  #
+  # @example
+  #   (describe (<http://example/>))
+  # @example
+  #   (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+  #   (describe (?x)
+  #   (bgp (triple ?x foaf:mbox <mailto:alice@org>))))
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Graph] containing the constructed triples
+  # @see https://www.w3.org/TR/sparql11-query/#describe
+  # @yield [statement] each matching statement
+  # @yieldparam solution [RDF::Statement]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Query results statements (e.g., CONSTRUCT, DESCRIBE, CREATE)
+  #
+  # @return [Boolean]
   def query_yields_statements?; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Describe::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `distinct` operator.
+#
+# [9] SelectClause ::= 'SELECT' ( 'DISTINCT' | 'REDUCED' )? ( ( Var | ( '(' Expression 'AS' Var ')' ) )+ | '*' )
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT DISTINCT ?v
+#   WHERE { ?x ?p ?v }
+# @example SSE
+#   (prefix ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (distinct
+#   (project (?v)
+#   (bgp (triple ?x ?p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlDistinct
 class SPARQL::Algebra::Operator::Distinct < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Removes duplicate solutions from the solution set.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Distinct::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL numeric `divide` operator.
+#
+# [117] MultiplicativeExpression::= UnaryExpression ( '*' UnaryExpression | '/' UnaryExpression )*
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o .
+#   ?s2 :p ?o2 .
+#   FILTER(?o / ?o2 = 4) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s)
+#   (filter (= (/ ?o ?o2) 4)
+#   (bgp
+#   (triple ?s :p ?o)
+#   (triple ?s2 :p ?o2)))))
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-divide
 class SPARQL::Algebra::Operator::Divide < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the arithmetic quotient of the operands.
+  #
+  # @param left [RDF::Literal::Numeric] a numeric literal
+  # @param right [RDF::Literal::Numeric] a numeric literal
+  # @raise [TypeError] if either operand is not a numeric literal
+  # @return [RDF::Literal::Numeric]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Divide::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL UPDATE `drop` operator.
+#
+# The DROP operation removes the specified graph(s) from the Graph Store
+#
+# Equivalent to `clear` in this implementation
+#
+# [33]  Drop                    ::= 'DROP' 'SILENT'? GraphRefAll
+#
+# @example SPARQL Grammar (SILENT DEFAULT)
+#   DROP SILENT DEFAULT
+# @example SSE (SILENT DEFAULT)
+#   (update
+#   (drop silent default))
+# @example SPARQL Grammar (IRI)
+#   DROP GRAPH <http://example.com/>
+# @example SSE (IRI)
+#   (update (drop <http://example.com/>))
+# @see https://www.w3.org/TR/sparql11-update/#drop
 class SPARQL::Algebra::Operator::Drop < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Drop::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL logical `abs` operator.
+#
+# [121] BuiltInCall ::= ... | 'ENCODE_FOR_URI' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s ?str (ENCODE_FOR_URI(?str) AS ?encoded) WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s ?str ?encoded)
+#   (extend ((?encoded (encode_for_uri ?str)))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-encode
+# @see https://www.w3.org/TR/xpath-functions/#func-abs
 class SPARQL::Algebra::Operator::EncodeForURI < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The `ENCODE_FOR_URI` function corresponds to the XPath fn:encode-for-uri function. It returns a simple literal with the lexical form obtained from the lexical form of its input after translating reserved characters according to the fn:encode-for-uri function.
+  #
+  # @example
+  #   encode_for_uri("Los Angeles")	"Los%20Angeles"
+  #   encode_for_uri("Los Angeles"@en)	"Los%20Angeles"
+  #   encode_for_uri("Los Angeles"^^xsd:string)	"Los%20Angeles"
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a literal value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::EncodeForURI::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL relational `=` (equal) comparison operator.
+#
+# [114] RelationalExpression    ::= NumericExpression ('=' NumericExpression)?
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x
+#   WHERE { ?x :p ?v . FILTER ( ?v = 1 ) }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>) (: <http://example.org/things#>))
+#   (project (?x) (filter (= ?v 1) (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#OperatorMapping
+# @see https://www.w3.org/TR/sparql11-query/#func-RDFterm-equal
 class SPARQL::Algebra::Operator::Equal < ::SPARQL::Algebra::Operator::Compare
+  # Returns TRUE if `term1` and `term2` are the same RDF term as defined in Resource Description Framework (RDF): Concepts and Abstract Syntax [CONCEPTS]; produces a type error if the arguments are both literal but are not the same RDF term *; returns FALSE otherwise. `term1` and `term2` are the same if any of the following is true:
+  #
+  # * term1 and term2 are equivalent IRIs as defined in 6.4 RDF URI References of [CONCEPTS].
+  # * term1 and term2 are equivalent literals as defined in 6.5.1 Literal Equality of [CONCEPTS].
+  # * term1 and term2 are the same blank node as described in 6.6 Blank Nodes of [CONCEPTS].
+  #
+  # @param term1 [RDF::Term] an RDF term
+  # @param term2 [RDF::Term] an RDF term
+  # @raise [TypeError] if either operand is not an RDF term or operands are not comperable
+  # @return [RDF::Literal::Boolean] `true` or `false`
+  # @see RDF::Term#==
   def apply(term1, term2, **options); end
 end
 
 SPARQL::Algebra::Operator::Equal::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `exists` operator.
+#
+# There is a filter operator EXISTS that takes a graph pattern. EXISTS returns `true`/`false` depending on whether the pattern matches the dataset given the bindings in the current group graph pattern, the dataset and the active graph at this point in the query evaluation. No additional binding of variables occurs. The `NOT EXISTS` form translates into `fn:not(EXISTS{...})`.
+#
+# [125] ExistsFunc              ::= 'EXISTS' GroupGraphPattern
+#
+# @example SPARQL Grammar
+#   PREFIX :    <http://example/>
+#   SELECT *
+#   WHERE {
+#   ?set a :Set .
+#   FILTER EXISTS { ?set :member 9 }
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (filter
+#   (exists (bgp (triple ?set :member 9)))
+#   (bgp (triple ?set a :Set))))
+# @see https://www.w3.org/TR/sparql11-query/#func-filter-exists
 class SPARQL::Algebra::Operator::Exists < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Exvaluating this operator executes the query in the first operator passing in each existing bindings.
+  #
+  # @option options[RDF::Queryable]
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @param options[RDF::Queryable] [Hash] a customizable set of options
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::Exists::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `exprlist` operator.
+#
+# Used for filters with more than one expression.
+#
+# [72]  ExpressionList ::= NIL | '(' Expression ( ',' Expression )* ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#
+#   SELECT ?v ?w
+#   {
+#   FILTER (?v = 2)
+#   FILTER (?w = 3)
+#   ?s :p ?v .
+#   ?s :q ?w .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?v ?w)
+#   (filter (exprlist (= ?v 2) (= ?w 3))
+#   (bgp
+#   (triple ?s :p ?v)
+#   (triple ?s :q ?w)
+#   ))))
+# @see https://www.w3.org/TR/sparql11-query/#evaluation
 class SPARQL::Algebra::Operator::Exprlist < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if all operands evaluate to `true`.
+  #
+  # Note that this operator operates on the effective boolean value
+  # (EBV) of its operands.
+  #
+  # @example
+  #
+  #   (exprlist (= 1 1) (!= 1 0))
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if the operands could not be coerced to a boolean literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
 end
 
 SPARQL::Algebra::Operator::Exprlist::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `Extend` operator.
+#
+# Extends a solution
+#
+# [60]  Bind ::= 'BIND' '(' Expression 'AS' Var ')'
+#
+# @example SPARQL Grammar
+#   SELECT ?z
+#   {
+#   ?x <http://example.org/p> ?o
+#   BIND(?o+10 AS ?z)
+#   }
+# @example SSE
+#   (project (?z)
+#   (extend ((?z (+ ?o 10)))
+#   (bgp (triple ?x <http://example.org/p> ?o))))
+# @example SPARQL Grammar (cast as boolean)
+#   PREFIX : <http://example.org/>
+#   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?a ?v (xsd:boolean(?v) AS ?boolean)
+#   WHERE { ?a :p ?v . }
+# @example SSE (cast as boolean)
+#   (prefix ((: <http://example.org/>)
+#   (rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?a ?v ?boolean)
+#   (extend ((?boolean (xsd:boolean ?v)))
+#   (bgp (triple ?a :p ?v)))))
+# @example SPARQL Grammar (inner bind)
+#   PREFIX : <http://example.org/>
+#
+#   SELECT ?z ?s1
+#   {
+#   ?s ?p ?o .
+#   BIND(?o+1 AS ?z)
+#   ?s1 ?p1 ?z
+#   }
+# @example SSE (inner bind)
+#   (prefix ((: <http://example.org/>))
+#   (project (?z ?s1)
+#   (join
+#   (extend ((?z (+ ?o 1)))
+#   (bgp (triple ?s ?p ?o)))
+#   (bgp (triple ?s1 ?p1 ?z)))))
+# @see https://www.w3.org/TR/sparql11-query/#evaluation
 class SPARQL::Algebra::Operator::Extend < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Let μ be a solution mapping, Ω a multiset of solution mappings, var a variable and expr be an expression, then we define:
+  #
+  # Extend(μ, var, expr) = μ ∪ { (var,value) | var not in dom(μ) and value = expr(μ) }
+  #
+  # Extend(μ, var, expr) = μ if var not in dom(μ) and expr(μ) is an error
+  #
+  # Extend is undefined when var in dom(μ).
+  #
+  # Extend(Ω, var, expr) = { Extend(μ, var, expr) | μ in Ω }
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#evaluation
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Extracts bindings.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # The variable introduced by the BIND clause must not have been used in the group graph pattern up to the point of use in BIND
+  #
+  # Also, variables used in a binding expression must be projected by the query.
   def validate!; end
+
+  # The variables used in the extension.
+  # Includes extended variables.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
 SPARQL::Algebra::Operator::Extend::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `filter` operator.
+#
+# [68]  Filter ::= 'FILTER' Constraint
+#
+# @example SPARQL Grammar
+#   SELECT ?v
+#   {
+#   ?s <http://example/p> ?v
+#   FILTER(?v = 2)
+#   }
+# @example SSE
+#   (project (?v)
+#   (filter (= ?v 2)
+#   (bgp (triple ?s <http://example/p> ?v))))
+# @see https://www.w3.org/TR/sparql11-query/#evaluation
 class SPARQL::Algebra::Operator::Filter < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Then it passes each solution through one or more filters and removes
+  # those that evaluate to false or generate a _TypeError_.
+  #
+  # Note that the last operand returns a solution set, while the first
+  # is an expression. This may be a variable, simple expression,
+  # or exprlist.
+  #
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#ebv
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Provides filters to descendant query.
+  #
+  # If filter operation is an Exprlist, then separate into multiple filter ops.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # If filtering a join of two BGPs (having the same graph name), don't worry about validating, for shared ndvars, anyway,
+  #
+  #       (filter (regex ?homepage "^http://example.org/" "")
+  #         (join
+  #           (bgp (triple ??who :homepage ?homepage))
+  #           (bgp (triple ??who :schoolHomepage ?schoolPage))))))
+  #
+  # is legitimate
   def validate!; end
 end
 
 SPARQL::Algebra::Operator::Filter::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL logical `floor` operator.
+#
+# [121] BuiltInCall ::= ... 'FLOOR' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s ?num (FLOOR(?num) AS ?floor) WHERE {
+#   ?s :num ?num
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s ?num ?floor)
+#   (extend ((?floor (floor ?num)))
+#   (bgp (triple ?s :num ?num)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-floor
+# @see https://www.w3.org/TR/xpath-functions/#func-floor
 class SPARQL::Algebra::Operator::Floor < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the largest (closest to positive infinity) number with no fractional part that is not greater than the value of `arg`. An error is raised if `arg` is not a numeric value.
+  #
+  # If type of $arg is one of the four numeric types xs:float, xs:double, xs:decimal or xs:integer the type of the result is the same as the type of $arg. If the type of $arg is a type derived from one of the numeric types, the result is an instance of the base numeric type.
+  #
+  # For float and double arguments, if the argument is positive zero, then positive zero is returned. If the argument is negative zero, then negative zero is returned.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a numeric value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Floor::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `function_call` operator.
+#
+# [70]  FunctionCall ::= iri ArgList
+#
+# @example SPARQL Grammar
+#   PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
+#   SELECT *
+#   WHERE { ?s ?p ?o . FILTER xsd:integer(?o) }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (filter (xsd:integer ?o)
+#   (bgp (triple ?s ?p ?o))))
+# @see https://www.w3.org/TR/sparql11-query/#funcex-regex
+# @see https://www.w3.org/TR/xpath-functions/#func-matches
 class SPARQL::Algebra::Operator::FunctionCall < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # Invokes the function with the passed arguments.
+  #
+  # @param iri [RDF::IRI] Identifies the function
+  # @param args [Array<RDF::Term>]
+  # @return [RDF::Term]
   def apply(iri, *args, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Returns the SPARQL S-Expression (SSE) representation of this expression.
+  #
+  # Remove the optional argument.
+  #
+  # @return [Array] `self`
+  # @see https://openjena.org/wiki/SSE
   def to_sxp_bin; end
 end
 
 SPARQL::Algebra::Operator::FunctionCall::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `graph` operator.
+#
+# This is a wrapper to add a `graph_name` to the query, or an array of statements.
+#
+# [58]  GraphGraphPattern       ::= 'GRAPH' VarOrIri GroupGraphPattern
+#
+# @example SPARQL Grammar (query)
+#   PREFIX : <http://example/>
+#   SELECT * {
+#   GRAPH ?g { ?s ?p ?o }
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (graph ?g
+#   (bgp (triple ?s ?p ?o))))
+# @example SPARQL Grammar (named set of statements)
+#   PREFIX : <http://example/>
+#   SELECT * {
+#   GRAPH :g { :s :p :o }
+#   }
+# @example SSE (named set of statements)
+#   (prefix ((: <http://example/>))
+#   (graph :g
+#   (bgp (triple :s :p :o))))
+# @example SPARQL Grammar (syntax-graph-05.rq)
+#   PREFIX : <http://example.org/>
+#   SELECT *
+#   WHERE
+#   {
+#   :x :p :z
+#   GRAPH ?g { :x :b ?a . GRAPH ?g2 { :x :p ?x } }
+#   }
+# @example SSE (syntax-graph-05.rq)
+#   (prefix ((: <http://example.org/>))
+#   (join
+#   (bgp (triple :x :p :z))
+#   (graph ?g
+#   (join
+#   (bgp (triple :x :b ?a))
+#   (graph ?g2
+#   (bgp (triple :x :p ?x)))))))
+# @example SPARQL Grammar (pp06.rq)
+#   prefix ex:	<http://www.example.org/schema#>
+#   prefix in:	<http://www.example.org/instance#>
+#
+#   select ?x where {
+#   graph ?g {in:a ex:p1/ex:p2 ?x}
+#   }
+# @example SSE (syntax-graph-05.rq)
+#   (prefix ((ex: <http://www.example.org/schema#>)
+#   (in: <http://www.example.org/instance#>))
+#   (project (?x)
+#   (graph ?g
+#   (path in:a (seq ex:p1 ex:p2) ?x))))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::Graph < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # If the second operand is a Query operator:
+  #   Executes this query on the given `queryable` graph or repository.
+  #   Applies the given `graph_name` to the query, limiting the scope of the query to the specified `graph`, which may be an `RDF::URI` or `RDF::Query::Variable`.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Don't do any more rewriting
+  #
+  # @return [SPARQL::Algebra::Expression] `self`
   def rewrite(&block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), **options); end
 
   class << self
+    # A `graph` is an RDF::Query with a graph_name. It can also be used as a container of statements or patterns, or other queryable operators (see GraphGraphPattern)
+    #
+    # @overload self.new
+    # @overload self.new
+    # @overload self.new
+    # @return [RDF::Query]
     def new(name, patterns, **options, &block); end
   end
 end
 
 SPARQL::Algebra::Operator::Graph::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL relational `>` (greater than) comparison operator.
+#
+# [114] RelationalExpression    ::= NumericExpression ('>' NumericExpression)?
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x
+#   WHERE { ?x :p ?v . FILTER ( ?v > 1 ) }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>) (: <http://example.org/things#>))
+#   (project (?x) (filter (> ?v 1) (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#OperatorMapping
+# @see https://www.w3.org/TR/xpath-functions/#func-compare
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-greater-than
+# @see https://www.w3.org/TR/xpath-functions/#func-boolean-greater-than
+# @see https://www.w3.org/TR/xpath-functions/#func-dateTime-greater-than
 class SPARQL::Algebra::Operator::GreaterThan < ::SPARQL::Algebra::Operator::Compare
+  # Returns `true` if the first operand is greater than the second
+  # operand; returns `false` otherwise.
+  #
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if either operand is not a literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::GreaterThan::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL relational `>=` (greater than or equal) comparison
+# operator.
+#
+# [114] RelationalExpression    ::= NumericExpression ('>=' NumericExpression)?
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x
+#   WHERE { ?x :p ?v . FILTER ( ?v >= 1 ) }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>) (: <http://example.org/things#>))
+#   (project (?x) (filter (>= ?v 1) (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#OperatorMapping
+# @see https://www.w3.org/TR/xpath-functions/#func-compare
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-greater-than
+# @see https://www.w3.org/TR/xpath-functions/#func-boolean-greater-than
+# @see https://www.w3.org/TR/xpath-functions/#func-dateTime-greater-than
 class SPARQL::Algebra::Operator::GreaterThanOrEqual < ::SPARQL::Algebra::Operator::Compare
+  # Returns `true` if the first operand is greater than or equal to the
+  # second operand; returns `false` otherwise.
+  #
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if either operand is not a literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::GreaterThanOrEqual::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `group` operator.
+#
+# `group` takes either two or three operands. The first operand
+# is an array of grouped variables. The last operand is the
+# query to be grouped. If three operands are provided,
+# the second is an array of temporary bindings.
+#
+# [19]  GroupClause             ::= 'GROUP' 'BY' GroupCondition+
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://www.example.org>
+#
+#   SELECT ?P (COUNT(?O) AS ?C)
+#   WHERE { ?S ?P ?O }
+#   GROUP BY ?P
+# @example SSE
+#   (prefix
+#   ((: <http://www.example.org>))
+#   (project (?P ?C)
+#   (extend ((?C ??.0))
+#   (group (?P) ((??.0 (count ?O)))
+#   (bgp (triple ?S ?P ?O))))))
+# @example SPARQL Grammar (HAVING aggregate)
+#   PREFIX : <http://www.example.org/>
+#   SELECT ?s (AVG(?o) AS ?avg)
+#   WHERE { ?s ?p ?o }
+#   GROUP BY ?s
+#   HAVING (AVG(?o) <= 2.0)
+# @example SSE (HAVING aggregate)
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?s ?avg)
+#   (filter (<= ??.0 2.0)
+#   (extend ((?avg ??.0))
+#   (group (?s) ((??.0 (avg ?o)))
+#   (bgp (triple ?s ?p ?o)))))) )
+# @example SPARQL Grammar (non-trivial filters)
+#   PREFIX : <http://example.com/data/#>
+#   SELECT ?g (AVG(?p) AS ?avg) ((MIN(?p) + MAX(?p)) / 2 AS ?c)
+#   WHERE { ?g :p ?p . }
+#   GROUP BY ?g
+# @example SSE (non-trivial filters)
+#   (prefix ((: <http://example.com/data/#>))
+#   (project (?g ?avg ?c)
+#   (extend ((?avg ??.0) (?c (/ (+ ??.1 ??.2) 2)))
+#   (group (?g)
+#   ((??.0 (avg ?p))
+#   (??.1 (min ?p))
+#   (??.2 (max ?p)))
+#   (bgp (triple ?g :p ?p)))) ))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::Group < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
+  # Executes `query` with `queryable` and groups results based
+  # on the first operand.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlGroupAggregate
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # The variables used within the query
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def internal_variables; end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param extensions [Hash{String => Operator}] Variable bindings
+  # @param filter_ops [Array<Operator>] ([])
+  #   Filter Operations
+  # @return [String]
   def to_sparql(extensions: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
+
+  # It is an error for aggregates to project variables with a name already used in other aggregate projections, or in the WHERE clause.
+  #
+  # It is also an error to project ungrouped variables
   def validate!; end
+
+  # The variables used in the extension.
+  # Includes grouped variables and temporary, but not those in the query, itself
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
 SPARQL::Algebra::Operator::Group::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `groupconcat` set function.
+#
+# GroupConcat is a set function which performs a string concatenation across the values of an expression with a group. The order of the strings is not specified. The separator character used in the concatenation may be given with the scalar argument SEPARATOR.
+#
+# [127] Aggregate::= ... | 'GROUP_CONCAT' '(' 'DISTINCT'? Expression ( ';' 'SEPARATOR' '=' String )? ')'
+#
+# @example SPARQL Grammar
+#   SELECT (GROUP_CONCAT(?x) AS ?y) {}
+# @example SSE
+#   (project (?y)
+#   (extend ((?y ??.0))
+#   (group () ((??.0 (group_concat ?x)))
+#   (bgp))))
+# @example SPARQL Grammar (DISTINCT)
+#   SELECT (GROUP_CONCAT(DISTINCT ?x) AS ?y) {}
+# @example SSE (DISTINCT)
+#   (project (?y)
+#   (extend ((?y ??.0))
+#   (group () ((??.0 (group_concat distinct ?x)))
+#   (bgp))))
+# @example SPARQL Grammar (SEPARATOR)
+#   SELECT (GROUP_CONCAT(?x; SEPARATOR=';') AS ?y) {}
+# @example SSE (SEPARATOR)
+#   (project (?y)
+#   (extend ((?y ??.0))
+#   (group () ((??.0 (group_concat (separator ";") ?x)))
+#   (bgp))))
+# @see https://www.w3.org/TR/sparql11-query/#defn_aggGroupConcat
 class SPARQL::Algebra::Operator::GroupConcat < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Aggregate
 
+  # One, two or three operands, the first may be `distinct`, the last operand, if it exists, is a separator, defaulting to ' '.
+  #
+  # @abstract
+  # @param solutions [Enumerable<RDF::Query::Solution>] ([])
+  #   an enumerable set of query solutions
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError]
+  # @return [RDF::Term]
   def aggregate(solutions = T.unsafe(nil), **options); end
+
+  # GroupConcat is a set function which performs a string concatenation across the values of an expression with a group. The order of the strings is not specified. The separator character used in the concatenation may be given with the scalar argument SEPARATOR.
+  #
+  # @param enum [Enumerable<Array<RDF::Term>>] enum of evaluated operand
+  # @raise [TypeError] If enum is empty
+  # @return [RDF::Term] An arbitrary term
   def apply(enum, separator, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::GroupConcat::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `hours` operator.
+#
+# [121] BuiltInCall ::= ... | 'HOURS' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (HOURS(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (hours ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-hours
 class SPARQL::Algebra::Operator::Hours < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the hours part of `arg` as an integer. The value is as given in the lexical form of the XSD dateTime.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal::Temporal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Hours::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `iri` operator.
+#
+# [121] BuiltInCall ::= ... | 'IRI' '(' Expression ')' | 'URI' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   BASE <http://example.org/>
+#   SELECT (URI("uri") AS ?uri) (IRI("iri") AS ?iri)
+#   WHERE {}
+# @example SSE
+#   (base <http://example.org/>
+#   (project (?uri ?iri)
+#   (extend ((?uri (iri "uri")) (?iri (iri "iri")))
+#   (bgp))))
+# @see https://www.w3.org/TR/sparql11-query/#func-iri
 class SPARQL::Algebra::Operator::IRI < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The IRI function constructs an IRI by resolving the string argument (see RFC 3986 and RFC 3987 or any later RFC that superceeds RFC 3986 or RFC 3987). The IRI is resolved against the base IRI of the query and must result in an absolute IRI.
+  #
+  # The URI function is a synonym for IRI.
+  #
+  # If the function is passed an IRI, it returns the IRI unchanged.
+  #
+  # Passing any RDF term other than a simple literal, xsd:string or an IRI is an error.
+  #
+  # An implementation may normalize the IRI.
+  #
+  # @param literal [RDF::Term] a simple literal
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::URI]
   def apply(literal, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::IRI::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `if` function.
+#
+# [121] BuiltInCall ::= ... | 'IF' '(' Expression ',' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   BASE <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?o (IF(lang(?o) = "ja", true, false) AS ?integer)
+#   WHERE { ?s ?p ?o }
+# @example SSE
+#   (base <http://example.org/>
+#   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?o ?integer)
+#   (extend ((?integer (if (= (lang ?o) "ja") true false)))
+#   (bgp (triple ?s ?p ?o))))))
+# @see https://www.w3.org/TR/sparql11-query/#func-if
 class SPARQL::Algebra::Operator::If < ::SPARQL::Algebra::Operator::Ternary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The IF function form evaluates the first argument, interprets it as a effective boolean value, then returns the value of `expression2` if the EBV is true, otherwise it returns the value of `expression3`. Only one of `expression2` and `expression3` is evaluated. If evaluating the first argument raises an error, then an error is raised for the evaluation of the IF expression.
+  #
+  # Evaluates the first operand and returns the evaluation of either the second or third operands
+  #
+  # @example
+  #
+  #   IF(?x = 2, "yes", "no") #=> "yes"
+  #   IF(bound(?y), "yes", "no") #=> "no"
+  #   IF(?x=2, "yes", 1/?z) #=> "yes", the expression 1/?z is not evaluated
+  #   IF(?x=1, "yes", 1/?z) #=> raises an error
+  #   IF("2" > 1, "yes", "no") #=> raises an error
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @raise [TypeError]
+  # @return [RDF::Term]
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::If::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `in` operator.
+#
+# [114] RelationalExpression    ::= NumericExpression ('IN' ExpressionList)?
+#
+# @example SPARQL Grammar
+#   ASK { FILTER(2 IN (1, 2, 3)) }
+# @example SSE
+#   (ask (filter (in 2 1 2 3) (bgp)))
+# @see https://www.w3.org/TR/sparql11-query/#func-in
 class SPARQL::Algebra::Operator::In < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # The IN operator tests whether the RDF term on the left-hand side is found in the values of list of expressions on the right-hand side. The test is done with "=" operator, which tests for the same value, as determined by the operator mapping.
+  #
+  # A list of zero terms on the right-hand side is legal.
+  #
+  # Errors in comparisons cause the IN expression to raise an error if the RDF term being tested is not found elsewhere in the list of terms.
+  #
+  # The IN operator is equivalent to the SPARQL expression:
+  #
+  #     (lhs = expression1) || (lhs = expression2) || ...
+  #
+  # @example
+  #
+  #   2 IN (1, 2, 3) #=> true
+  #   2 IN () #=> false
+  #   2 IN (<http://example/iri>, "str", 2.0) #=> true
+  #   2 IN (1/0, 2) #=> true
+  #   2 IN (2, 1/0) #=> true
+  #   2 IN (3, 1/0) #=> raises an error
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if term is not found and any operand raises an error
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::In::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `insertData` operator.
+#
+# The INSERT operation is a form of the DELETE/INSERT operation having no DELETE section
+#
+# [43]  InsertClause            ::= 'INSERT' QuadPattern
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   INSERT { ?s ?p "q" }
+#   WHERE { ?s ?p ?o }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (update
+#   (modify (bgp (triple ?s ?p ?o))
+#   (insert ((triple ?s ?p "q"))))))
+# @see https://www.w3.org/TR/sparql11-update/#insert
 class SPARQL::Algebra::Operator::Insert < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param solutions [RDF::Query::Solutions] Solution to map to patterns for this operation
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, solutions: T.unsafe(nil), **options); end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Insert::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL UPDATE `insertData` operator.
+#
+# The INSERT DATA operation adds some triples, given inline in the request, into the Graph Store
+#
+# [38]  InsertData              ::= 'INSERT DATA' QuadData
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/ns#>
+#   INSERT DATA { GRAPH <http://example.org/g1> { :s :p :o } }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/ns#>))
+#   (update
+#   (insertData (
+#   (graph <http://example.org/g1> ((triple :s :p :o)))))))
+# @see https://www.w3.org/TR/sparql11-update/#insertData
 class SPARQL::Algebra::Operator::InsertData < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::InsertData::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `isBlank` operator.
+#
+# [121] BuiltInCall ::= ... | 'isBlank' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX     :    <http://example.org/things#>
+#   SELECT ?x ?v WHERE {
+#   ?x :p ?v .
+#   FILTER isBlank(?v) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/things#>))
+#   (project (?x ?v)
+#   (filter (isBlank ?v)
+#   (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-isBlank
 class SPARQL::Algebra::Operator::IsBlank < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if the operand is an `RDF::Node`, `false` otherwise.
+  #
+  # @param term [RDF::Term] an RDF term
+  # @raise [TypeError] if the operand is not an RDF term
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(term, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::IsBlank::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `isIRI`/`isURI` operator.
+#
+# [121] BuiltInCall ::= ... | 'isIRI' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX     :    <http://example.org/things#>
+#   SELECT ?x ?v WHERE {
+#   ?x :p ?v .
+#   FILTER isIRI(?v) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/things#>))
+#   (project (?x ?v)
+#   (filter (isIRI ?v)
+#   (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-isIRI
 class SPARQL::Algebra::Operator::IsIRI < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if the operand is an `RDF::URI`, `false` otherwise.
+  #
+  # @param term [RDF::Term] an RDF term
+  # @raise [TypeError] if the operand is not an RDF term
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(term, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::IsIRI::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `isLiteral` operator.
+#
+# [121] BuiltInCall ::= ... | 'isLiteral' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX     :    <http://example.org/things#>
+#   SELECT ?x ?v WHERE {
+#   ?x :p ?v .
+#   FILTER isLiteral(?v) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/things#>))
+#   (project (?x ?v)
+#   (filter (isLiteral ?v)
+#   (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-isLiteral
 class SPARQL::Algebra::Operator::IsLiteral < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if the operand is an `RDF::Literal`, `false`
+  # otherwise.
+  #
+  # @param term [RDF::Term] an RDF term
+  # @raise [TypeError] if the operand is not an RDF term
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(term, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::IsLiteral::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `isNumeric` operator.
+#
+# Note numeric denotes typed literals with datatypes `xsd:integer`, `xsd:decimal`, `xsd:float`, and `xsd:double`, not derived types.
+#
+# [121] BuiltInCall ::= ... | 'isNumeric' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX     :    <http://example.org/things#>
+#   SELECT ?x ?v WHERE {
+#   ?x :p ?v .
+#   FILTER isNumeric(?v) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/things#>))
+#   (project (?x ?v)
+#   (filter (isNumeric ?v)
+#   (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-isNumeric
 class SPARQL::Algebra::Operator::IsNumeric < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if the operand is an `RDF::Literal::Numeric`, `false`
+  # otherwise.
+  #
+  # @param term [RDF::Term] an RDF term
+  # @raise [TypeError] if the operand is not an RDF term
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(term, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::IsNumeric::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `isTRIPLE` operator.
+#
+# Returns true if term is an RDF-star triple. Returns false otherwise.
+#
+# [121] BuiltInCall ::= ... | 'isTreiple' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.com/ns#>
+#   SELECT * {
+#   ?t :source :g
+#   FILTER(isTriple(?t))
+#   FILTER(SUBJECT(?t) = :s)
+#   FILTER(PREDICATE(?t) = :p)
+#   FILTER(OBJECT(?t) = :o)
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.com/ns#>))
+#   (filter
+#   (exprlist
+#   (isTRIPLE ?t)
+#   (= (subject ?t) :s)
+#   (= (predicate ?t) :p)
+#   (= (object ?t) :o))
+#   (bgp (triple ?t :source :g))) )
+# @see https://w3c.github.io/rdf-star/rdf-star-cg-spec.html#istriple
 class SPARQL::Algebra::Operator::IsTriple < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if the operand is an `RDF::Statement`, `false` otherwise.
+  #
+  # @param term [RDF::Term] an RDF term
+  # @raise [TypeError] if the operand is not an RDF term
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(term, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::IsTriple::NAME = T.let(T.unsafe(nil), Symbol)
 SPARQL::Algebra::Operator::IsURI = SPARQL::Algebra::Operator::IsIRI
 
+# The SPARQL GraphPattern `join` operator.
+#
+# [54]	GroupGraphPatternSub	::=	TriplesBlock? (GraphPatternNotTriples "."? TriplesBlock? )*
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   SELECT * {
+#   ?s ?p ?o
+#   GRAPH ?g { ?s ?q ?v }
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (join
+#   (bgp (triple ?s ?p ?o))
+#   (graph ?g
+#   (bgp (triple ?s ?q ?v)))))
+# @example SPARQL Grammar (inline filter)
+#   PREFIX : <http://xmlns.com/foaf/0.1/>
+#   ASK {
+#   :who :homepage ?homepage
+#   FILTER REGEX(?homepage, "^http://example.org/")
+#   :who :schoolHomepage ?schoolPage
+#   }
+# @example SSE (inline filter)
+#   (prefix ((: <http://xmlns.com/foaf/0.1/>))
+#   (ask
+#   (filter (regex ?homepage "^http://example.org/")
+#   (join
+#   (bgp (triple :who :homepage ?homepage))
+#   (bgp (triple :who :schoolHomepage ?schoolPage))))))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::Join < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes each operand with `queryable` and performs the `join` operation
+  # by creating a new solution set containing the `merge` of all solutions
+  # from each set that are `compatible` with each other.
+  #
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://ruby-rdf.github.io/rdf/RDF/Query/Solution#merge-instance_method
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @see https://ruby-rdf.github.io/rdf/RDF/Query/Solution#compatible%3F-instance_method
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Optimizes this query.
+  #
+  # Groups of one graph pattern (not a filter) become join(Z, A) and can be replaced by A.
+  # The empty graph pattern Z is the identity for join:
+  #   Replace join(Z, A) by A
+  #   Replace join(A, Z) by A
+  #
+  # @return [Join, RDF::Query] `self`
+  # @return [self]
+  # @see SPARQL::Algebra::Expression#optimize!
   def optimize!(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @param extensions [Hash{String => Operator}] Variable bindings
+  # @param filter_ops [Array<Operator>] ([])
+  #   Filter Operations
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), extensions: T.unsafe(nil), **options); end
+
+  # The same blank node label cannot be used in two different basic graph patterns in the same query
   def validate!; end
 end
 
 SPARQL::Algebra::Operator::Join::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL logical `lcase` operator.
+#
+# [121] BuiltInCall ::= ... | 'LCASE' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (LCASE(?str) AS ?lstr) WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s ?lstr)
+#   (extend ((?lstr (lcase ?str)))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-lcase
+# @see https://www.w3.org/TR/xpath-functions/#func-lcase
 class SPARQL::Algebra::Operator::LCase < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The LCASE function corresponds to the XPath fn:lower-case function. It returns a string literal whose lexical form is the lower case of the lexcial form of the argument.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a literal value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::LCase::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `lang` operator.
+#
+# [121] BuiltInCall ::= ... | 'LANG' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#
+#   SELECT ?x
+#   { ?x :p ?v .
+#   FILTER ( lang(?v) != '@NotALangTag@' )
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (project (?x)
+#   (filter (!= (lang ?v) "@NotALangTag@")
+#   (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-lang
 class SPARQL::Algebra::Operator::Lang < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the language tag of the operand, if it has one.
+  #
+  # If the operand has no language tag, returns `""`.
+  #
+  # @param literal [RDF::Literal] a literal
+  # @raise [TypeError] if the operand is not a literal
+  # @return [RDF::Literal] a simple literal
   def apply(literal, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Lang::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `langMatches` operator.
+#
+# [121] BuiltInCall ::= ... | 'LANGMATCHES' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/#>
+#
+#   SELECT *
+#   { :x ?p ?v . FILTER langMatches(lang(?v), "en-GB") . }
+# @example SSE
+#   (prefix ((: <http://example.org/#>))
+#   (filter (langMatches (lang ?v) "en-GB")
+#   (bgp (triple :x ?p ?v))))
+# @see https://www.w3.org/TR/sparql11-query/#func-langMatches
+# @see https://tools.ietf.org/html/rfc4647#section-3.3.1
 class SPARQL::Algebra::Operator::LangMatches < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if the language tag (the first operand) matches the
+  # language range (the second operand).
+  #
+  # @param language_tag [RDF::Literal] a simple literal containing a language tag
+  # @param language_range [RDF::Literal] a simple literal containing a language range, per
+  #   [RFC 4647 section 2.1](https://tools.ietf.org/html/rfc4647#section-2.1)
+  # @raise [TypeError] if either operand is unbound
+  # @raise [TypeError] if either operand is not a simple literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(language_tag, language_range, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::LangMatches::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `leftjoin` operator.
+#
+# [57]  OptionalGraphPattern    ::= 'OPTIONAL' GroupGraphPattern
+#
+# @example SPARQL Grammar
+#   PREFIX :    <http://example/>
+#   SELECT * {
+#   ?x :p ?v .
+#   OPTIONAL {
+#   ?y :q ?w .
+#   FILTER(?v=2)
+#   }
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (leftjoin
+#   (bgp (triple ?x :p ?v))
+#   (bgp (triple ?y :q ?w))
+#   (= ?v 2)))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::LeftJoin < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
+  # Executes each operand with `queryable` and performs the `leftjoin` operation
+  # by adding every solution from the left, merging compatible solutions from the right
+  # that match an optional filter.
+  #
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @raise [ArgumentError]
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://ruby-rdf.github.io/rdf/RDF/Query/Solution#merge-instance_method
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @see https://ruby-rdf.github.io/rdf/RDF/Query/Solution#compatible%3F-instance_method
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Optimizes this query.
+  #
+  # If optimize operands, and if the first two operands are both Queries, replace
+  # with the unique sum of the query elements
+  #
+  # FIXME
+  #
+  # @return [Object] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize!(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @param extensions [Hash{String => Operator}] Variable bindings
+  # @param filter_ops [Array<Operator>] ([])
+  #   Filter Operations
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), extensions: T.unsafe(nil), **options); end
+
+  # The same blank node label cannot be used in two different basic graph patterns in the same query
   def validate!; end
 end
 
 SPARQL::Algebra::Operator::LeftJoin::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL relational `<` (less than) comparison operator.
+#
+# [114] RelationalExpression    ::= NumericExpression ('<' NumericExpression)?
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x
+#   WHERE { ?x :p ?v . FILTER ( ?v < 1 ) }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>) (: <http://example.org/things#>))
+#   (project (?x) (filter (< ?v 1) (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#OperatorMapping
+# @see https://www.w3.org/TR/xpath-functions/#func-compare
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-less-than
+# @see https://www.w3.org/TR/xpath-functions/#func-boolean-less-than
+# @see https://www.w3.org/TR/xpath-functions/#func-dateTime-less-than
 class SPARQL::Algebra::Operator::LessThan < ::SPARQL::Algebra::Operator::Compare
+  # Returns `true` if the first operand is less than the second
+  # operand; returns `false` otherwise.
+  #
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if either operand is not a literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::LessThan::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL relational `<=` (less than or equal) comparison operator.
+#
+# [114] RelationalExpression    ::= NumericExpression ('<=' NumericExpression)?
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x
+#   WHERE { ?x :p ?v . FILTER ( ?v <= 1 ) }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>) (: <http://example.org/things#>))
+#   (project (?x) (filter (<= ?v 1) (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#OperatorMapping
+# @see https://www.w3.org/TR/xpath-functions/#func-compare
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-less-than
+# @see https://www.w3.org/TR/xpath-functions/#func-boolean-less-than
+# @see https://www.w3.org/TR/xpath-functions/#func-dateTime-less-than
 class SPARQL::Algebra::Operator::LessThanOrEqual < ::SPARQL::Algebra::Operator::Compare
+  # Returns `true` if the first operand is less than or equal to the
+  # second operand; returns `false` otherwise.
+  #
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if either operand is not a literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(left, right, **options); end
 end
 
 SPARQL::Algebra::Operator::LessThanOrEqual::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `load` operator.
+#
+# The LOAD operation reads an RDF document from a IRI and inserts its triples into the specified graph in the Graph Store. The specified destination graph should be created if required; again, implementations providing an update service over a fixed set of graphs must return with failure for a request that would create a disallowed graph. If the destination graph already exists, then no data in that graph will be removed.
+#
+#
+# [31]  Load                    ::= 'LOAD' 'SILENT'? iri ( 'INTO' GraphRef )?
+#
+# @example SPARQL Grammar
+#   LOAD <http://example.org/remote> INTO GRAPH <http://example.org/g> ;
+# @example SSE
+#   (update (load <http://example.org/remote> <http://example.org/g>))
+# @see https://www.w3.org/TR/sparql11-update/#load
 class SPARQL::Algebra::Operator::Load < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Load::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL logical `md5` operator.
+#
+# Returns the MD5 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the `xsd:string`. Hex digits `SHOULD` be in lower case.
+#
+# [121] BuiltInCall ::= ... | 'MD5' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT (MD5(?l) AS ?hash) WHERE {
+#   :s1 :str ?l
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?hash)
+#   (extend ((?hash (md5 ?l)))
+#   (bgp (triple :s1 :str ?l)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-md5
 class SPARQL::Algebra::Operator::MD5 < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the MD5 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits should be in lower case.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::MD5::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `max` set function.
+#
+# [127] Aggregate::= ... | 'MAX' '(' 'DISTINCT'? Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://www.example.org/>
+#   SELECT (MAX(?o) AS ?max)
+#   WHERE { ?s ?p ?o }
+# @example SSE
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?max)
+#   (extend ((?max ??.0))
+#   (group () ((??.0 (max ?o)))
+#   (bgp (triple ?s ?p ?o))))))
+# @see https://www.w3.org/TR/sparql11-query/#defn_aggMax
 class SPARQL::Algebra::Operator::Max < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Aggregate
 
+  # @raise [ArgumentError]
+  # @return [Max] a new instance of Max
   def initialize(*operands, **options); end
 
+  # Max is a SPARQL set function that return the maximum value from a group respectively.
+  #
+  # It makes use of the SPARQL ORDER BY ordering definition, to allow ordering over arbitrarily typed expressions.
+  #
+  # @param enum [Enumerable<Array<RDF::Term>>] enum of evaluated operand
+  # @return [RDF::Literal] The maximum value of the terms
   def apply(enum, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Max::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `min` set function.
+#
+# [127] Aggregate::= ... | 'MIN' '(' 'DISTINCT'? Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://www.example.org/>
+#   SELECT (MIN(?o) AS ?min)
+#   WHERE { ?s :dec ?o }
+# @example SSE
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?min)
+#   (extend ((?min ??.0))
+#   (group () ((??.0 (min ?o)))
+#   (bgp (triple ?s :dec ?o))))))
+# @see https://www.w3.org/TR/sparql11-query/#defn_aggMin
 class SPARQL::Algebra::Operator::Min < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Aggregate
 
+  # @raise [ArgumentError]
+  # @return [Min] a new instance of Min
   def initialize(*operands, **options); end
 
+  # Min is a SPARQL set function that return the minimum value from a group respectively.
+  #
+  # It makes use of the SPARQL ORDER BY ordering definition, to allow ordering over arbitrarily typed expressions.
+  #
+  # @param enum [Enumerable<Array<RDF::Term>>] enum of evaluated operand
+  # @return [RDF::Literal] The maximum value of the terms
   def apply(enum, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Min::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `minus` operator.
+#
+# [66]  MinusGraphPattern       ::= 'MINUS' GroupGraphPattern
+#
+# @example SPARQL Grammar
+#   SELECT * { ?s ?p ?o MINUS { ?s ?q ?v } }
+# @example SSE
+#   (minus
+#   (bgp
+#   (triple ?s ?p ?o))
+#   (bgp (triple ?s ?q ?v)))
+# @example SPARQL Grammar (inline filter)
+#   PREFIX :    <http://example/>
+#   SELECT (?s1 AS ?subset) (?s2 AS ?superset)
+#   WHERE {
+#   ?s2 a :Set .
+#   ?s1 a :Set .
+#   FILTER(?s1 != ?s2)
+#   MINUS {
+#   ?s1 a :Set .
+#   ?s2 a :Set .
+#   FILTER(?s1 != ?s2)
+#   }
+#   }
+# @example SSE (inline filter)
+#   (prefix ((: <http://example/>))
+#   (project (?subset ?superset)
+#   (extend ((?subset ?s1) (?superset ?s2))
+#   (filter (!= ?s1 ?s2)
+#   (minus
+#   (bgp (triple ?s2 a :Set) (triple ?s1 a :Set))
+#   (filter (!= ?s1 ?s2)
+#   (bgp
+#   (triple ?s1 a :Set)
+#   (triple ?s2 a :Set))))))))
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-unary-minus
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::Minus < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes each operand with `queryable` and performs the `join` operation
+  # by creating a new solution set containing the `merge` of all solutions
+  # from each set that are `compatible` with each other.
+  #
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#negation
+  # @see https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algMinus
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Optimizes this query.
+  #
+  # Groups of one graph pattern (not a filter) become join(Z, A) and can be replaced by A.
+  # The empty graph pattern Z is the identity for join:
+  #   Replace join(Z, A) by A
+  #   Replace join(A, Z) by A
+  #
+  # @return [self]
+  # @see SPARQL::Algebra::Expression#optimize!
   def optimize!(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param extensions [Hash{String => Operator}] Variable bindings
+  # @param filter_ops [Array<Operator>] ([])
+  #   Filter Operations
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), extensions: T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::Minus::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `minutes` operator.
+#
+# Returns the minutes part of the lexical form of `arg`. The value is as given in the lexical form of the XSD dateTime.
+#
+# [121] BuiltInCall ::= ... | 'MINUTES' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (MINUTES(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (minutes ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-minutes
 class SPARQL::Algebra::Operator::Minutes < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the minutes part of arg as an integer.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal::Temporal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Minutes::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `modify` operator.
+#
+# Wraps delete/insert
+#
+# If `options` contains any of the Protocol attributes, it is treated as if there is a USING or USING NAMED clause inserted.
+#
+# * `using-graph-uri`
+# * `using-named-graph-uri`
+#
+# [41]  Modify ::= ( 'WITH' iri )? ( DeleteClause InsertClause? | InsertClause ) UsingClause* 'WHERE' GroupGraphPattern
+#
+# @example SPARQL Grammar
+#   PREFIX     : <http://example.org/>
+#   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+#   DELETE  { ?a foaf:knows ?b }
+#   INSERT { ?b foaf:knows ?a }
+#   WHERE { ?a foaf:knows ?b }
+# @example SSE
+#   (prefix ((: <http://example.org/>)
+#   (foaf: <http://xmlns.com/foaf/0.1/>))
+#   (update
+#   (modify
+#   (bgp (triple ?a foaf:knows ?b))
+#   (delete ((triple ?a foaf:knows ?b)))
+#   (insert ((triple ?b foaf:knows ?a)))) ))
+# @see XXX
 class SPARQL::Algebra::Operator::Modify < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # Execute the first operand to get solutions, and apply those solutions to the subsequent operators.
+  #
+  # If `options` contains any of the Protocol attributes, any `using` clause is removed and a new `using` clause is added with entries taken from the `using-graph-uri` and `using-named-graph-uri`.
+  #
+  # It is an error to supply the using-graph-uri or using-named-graph-uri parameters when using this protocol to convey a SPARQL 1.1 Update request that contains an operation that uses the USING, USING NAMED, or WITH clause.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Modify::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL logical `month` operator.
+#
+# Returns the month part of `arg` as an integer.
+#
+# [121] BuiltInCall ::= ... | 'MONTH' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (MONTH(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (month ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-month
 class SPARQL::Algebra::Operator::Month < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the month part of arg as an integer.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal::Temporal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Month::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `move` operator.
+#
+# The MOVE operation is a shortcut for moving all data from an input graph into a destination graph. The input graph is removed after insertion and data from the destination graph, if any, is removed before insertion.
+#
+# [36]  Move                    ::= 'MOVE' 'SILENT'? GraphOrDefault 'TO' GraphOrDefault
+#
+# @example SPARQL Grammar
+#   MOVE SILENT GRAPH <http://www.example.com/g1> TO DEFAULT
+# @example SSE
+#   (update
+#   (move silent <http://www.example.com/g1> default))
+# @see https://www.w3.org/TR/sparql11-update/#move
 class SPARQL::Algebra::Operator::Move < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Move::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL numeric `multiply` operator.
+#
+# [117] MultiplicativeExpression::= UnaryExpression ( '*' UnaryExpression | '/' UnaryExpression )*
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o .
+#   ?s2 :p ?o2 .
+#   FILTER(?o * ?o2 = 4) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s)
+#   (filter (= (* ?o ?o2) 4)
+#   (bgp
+#   (triple ?s :p ?o)
+#   (triple ?s2 :p ?o2)))))
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-multiply
 class SPARQL::Algebra::Operator::Multiply < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the arithmetic product of the operands.
+  #
+  # @param left [RDF::Literal::Numeric] a numeric literal
+  # @param right [RDF::Literal::Numeric] a numeric literal
+  # @raise [TypeError] if either operand is not a numeric literal
+  # @return [RDF::Literal::Numeric]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Multiply::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL numeric unary `-` (negation) operator.
+#
+# [118] UnaryExpression ::=	... | '-' PrimaryExpression
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o .
+#   FILTER(-?o = -2) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s)
+#   (filter (= (- ?o) -2)
+#   (bgp (triple ?s :p ?o)))))
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-unary-minus
 class SPARQL::Algebra::Operator::Negate < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the operand with its sign reversed.
+  #
+  # @param term [RDF::Literal::Numeric] a numeric literal
+  # @raise [TypeError] if the operand is not a numeric literal
+  # @return [RDF::Literal::Numeric]
   def apply(term, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Negate::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL logical `not` operator.
+#
+# [118] UnaryExpression ::=	... | '!' PrimaryExpression
+#
+# @example SPARQL Grammar
+#   PREFIX  : <http://example.org/ns#>
+#   SELECT  ?a
+#   WHERE {
+#   ?a :p ?v .
+#   FILTER ( ! ?v ) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/ns#>))
+#   (project (?a)
+#   (filter (! ?v)
+#   (bgp (triple ?a :p ?v)))))
+# @see https://www.w3.org/TR/xpath-functions/#func-not
 class SPARQL::Algebra::Operator::Not < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the logical `NOT` (inverse) of the operand.
+  #
+  # Note that this operator operates on the effective boolean value
+  # (EBV) of its operand.
+  #
+  # @param operand [RDF::Literal::Boolean] the operand
+  # @raise [TypeError] if the operand could not be coerced to a boolean literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Not::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL relational `!=` (not equal) comparison operator.
+#
+# [114] RelationalExpression    ::= NumericExpression ('!=' NumericExpression)?
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x
+#   WHERE { ?x :p ?v . FILTER ( ?v != 1 ) }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>) (: <http://example.org/things#>))
+#   (project (?x) (filter (!= ?v 1) (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#OperatorMapping
+# @see https://www.w3.org/TR/sparql11-query/#func-RDFterm-equal
 class SPARQL::Algebra::Operator::NotEqual < ::SPARQL::Algebra::Operator::Equal
+  # Returns `true` if the operands are not equal; returns `false`
+  # otherwise.
+  #
+  # Comparing unknown datatypes might have different lexical forms but be the same value.
+  #
+  # @param term1 [RDF::Term] an RDF term
+  # @param term2 [RDF::Term] an RDF term
+  # @raise [TypeError] if either operand is not an RDF term
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(term1, term2, **options); end
 end
 
 SPARQL::Algebra::Operator::NotEqual::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `exists` operator.
+#
+# There is a filter operator EXISTS that takes a graph pattern. EXISTS returns `true`/`false` depending on whether the pattern matches the dataset given the bindings in the current group graph pattern, the dataset and the active graph at this point in the query evaluation. No additional binding of variables occurs. The `NOT EXISTS` form translates into `fn:not(EXISTS{...})`.
+#
+# [126] NotExistsFunc           ::= 'NOT' 'EXISTS' GroupGraphPattern
+#
+# @example SPARQL Grammar
+#   PREFIX ex: <http://www.w3.org/2009/sparql/docs/tests/data-sparql11/negation#>
+#   SELECT ?animal {
+#   ?animal a ex:Animal
+#   FILTER NOT EXISTS { ?animal a ex:Insect }
+#   }
+# @example SSE
+#   (prefix
+#   ((ex: <http://www.w3.org/2009/sparql/docs/tests/data-sparql11/negation#>))
+#   (project (?animal)
+#   (filter
+#   (notexists
+#   (bgp (triple ?animal a ex:Insect)))
+#   (bgp (triple ?animal a ex:Animal)))) )
+# @see https://www.w3.org/TR/sparql11-query/#func-abs
+# @see https://www.w3.org/TR/xpath-functions/#func-abs
 class SPARQL::Algebra::Operator::NotExists < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Exvaluating this operator executes the query in the first operator passing in each existing bindings.
+  #
+  # @option options[RDF::Queryable]
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @param options[RDF::Queryable] [Hash] a customizable set of options
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::NotExists::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `in` operator.
+#
+# Used for filters with more than one expression.
+#
+# [114] RelationalExpression    ::= NumericExpression ('NOT' 'IN' ExpressionList)?
+#
+# @example SPARQL Grammar
+#   ASK { FILTER(2 NOT IN ()) }
+# @example SSE
+#   (ask (filter (notin 2) (bgp)))
+# @see https://www.w3.org/TR/sparql11-query/#func-notin
 class SPARQL::Algebra::Operator::NotIn < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # The NOT IN operator tests whether the RDF term on the left-hand side is not found in the values of list of expressions on the right-hand side. The test is done with "!=" operator, which tests for not the same value, as determined by the operator mapping.
+  #
+  # A list of zero terms on the right-hand side is legal.
+  #
+  # Errors in comparisons cause the NOT IN expression to raise an error if the RDF term being tested is not found to be in the list elsewhere in the list of terms.
+  #
+  # The NOT IN operator is equivalent to the SPARQL expression:
+  #
+  #     (lhs != expression1) && (lhs != expression2) && ...
+  #
+  # NOT IN (...) is equivalent to !(IN (...)).
+  #
+  # @example
+  #
+  #   2 NOT IN (1, 2, 3)	false
+  #   2 NOT IN ()	true
+  #   2 NOT IN (<http://example/iri>, "str", 2.0)	false
+  #   2 NOT IN (1/0, 2)	false
+  #   2 NOT IN (2, 1/0)	false
+  #   2 NOT IN (3, 1/0)	raises an error
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if term is not found and any operand raises an error
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::NotIn::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL Property Path `notoneof` (NegatedPropertySet) operator.
+#
+# [96]  PathOneInPropertySet ::= iri | 'a' | '^' ( iri | 'a' )
+#
+# @example SPARQL Grammar
+#   PREFIX ex:	<http://www.example.org/schema#>
+#   PREFIX in:	<http://www.example.org/instance#>
+#   ASK { in:a !(ex:p1|ex:p2) ?x }
+# @example SSE
+#   (prefix ((ex: <http://www.example.org/schema#>)
+#   (in: <http://www.example.org/instance#>))
+#   (ask
+#   (path in:a (notoneof ex:p1 ex:p2) ?x)))
+# @see https://www.w3.org/TR/sparql11-query/#eval_negatedPropertySet
 class SPARQL::Algebra::Operator::NotOneOf < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
+  # Equivalant to:
+  #
+  #   (path (:x (noteoneof :p :q) :y))
+  #   => (filter (notin ??p :p :q) (bgp (:x ??p :y)))
+  #
+  # @note all operands are terms, and not operators, so this can be done by filtering results usin
+  # @option options
+  # @option options
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::NotOneOf::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `now` operator.
+#
+# Returns an XSD dateTime value for the current query execution. All calls to this function in any one query execution must return the same value. The exact moment returned is not specified.
+#
+# [121] BuiltInCall ::= ... | 'NOW' NIL
+#
+# @example SPARQL Grammar
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   ASK {
+#   BIND(NOW() AS ?n)
+#   FILTER(DATATYPE(?n) = xsd:dateTime)
+#   }
+# @example SSE
+#   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (ask
+#   (filter (= (datatype ?n) xsd:dateTime)
+#   (extend ((?n (now)))
+#   (bgp)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-now
 class SPARQL::Algebra::Operator::Now < ::SPARQL::Algebra::Operator::Nullary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns an XSD dateTime value for the current query execution. All calls to this function in any one query execution must return the same value. The exact moment returned is not specified.
+  #
+  # @return [RDF::Literal::Double] random value
   def apply(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Now::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL nullary operator.
+#
+# Operators of this kind take no operands.
+#
+# @abstract
 class SPARQL::Algebra::Operator::Nullary < ::SPARQL::Algebra::Operator
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @return [Nullary] a new instance of Nullary
   def initialize(**options); end
 end
 
 SPARQL::Algebra::Operator::Nullary::ARITY = T.let(T.unsafe(nil), Integer)
 
+# The SPARQL `OBJECT` operator.
+#
+# If triple is an RDF-star triple, the function returns the object of this triple. Passing anything other than an RDF-star triple is an error.
+#
+# [121] BuiltInCall ::= ... | 'OBJECT' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.com/ns#>
+#   SELECT * {
+#   ?t :source :g
+#   FILTER(isTriple(?t))
+#   FILTER(SUBJECT(?t) = :s)
+#   FILTER(PREDICATE(?t) = :p)
+#   FILTER(OBJECT(?t) = :o)
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.com/ns#>))
+#   (filter
+#   (exprlist
+#   (isTRIPLE ?t)
+#   (= (subject ?t) :s)
+#   (= (predicate ?t) :p)
+#   (= (object ?t) :o))
+#   (bgp (triple ?t :source :g))) )
+# @see https://w3c.github.io/rdf-star/rdf-star-cg-spec.html#object
 class SPARQL::Algebra::Operator::Object < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the object part of arg.
+  #
+  # @param operand [RDF::Statement] the operand
+  # @raise [TypeError] if the operand is not a statement
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Object::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `or` operator.
+#
+# [111] ConditionalOrExpression ::= ConditionalAndExpression ( '||' ConditionalAndExpression )*
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/ns#>
+#   SELECT  ?a
+#   WHERE {
+#   ?a :p ?v .
+#   FILTER ("false"^^xsd:boolean || ?v) .
+#   }
+# @example SSE
+#   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+#   (: <http://example.org/ns#>))
+#   (project (?a)
+#   (filter (|| false ?v)
+#   (bgp (triple ?a :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-logical-or
+# @see https://www.w3.org/TR/sparql11-query/#evaluation
 class SPARQL::Algebra::Operator::Or < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Initializes a new operator instance.
+  #
+  # @param left [RDF::Literal::Boolean] the left operand
+  # @param right [RDF::Literal::Boolean] the right operand
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @raise [TypeError] if any operand is invalid
+  # @return [Or] a new instance of Or
   def initialize(left, right, **options); end
 
+  # Returns the logical `OR` of the left operand and the right operand.
+  #
+  # Note that this operator operates on the effective boolean value
+  # (EBV) of its operands.
+  #
+  # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
+  # @param options [Hash{Symbol => Object}] ({})
+  #   options passed from query
+  # @raise [TypeError] if the operands could not be coerced to a boolean literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def evaluate(bindings, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Or::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `order` operator.
+#
+# [23]  OrderClause             ::= 'ORDER' 'BY' OrderCondition+
+#
+# @example SPARQL Grammar
+#   PREFIX foaf:    <http://xmlns.com/foaf/0.1/>
+#   SELECT ?name
+#   WHERE { ?x foaf:name ?name }
+#   ORDER BY ASC(?name)
+# @example SSE
+#   (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+#   (project (?name)
+#   (order ((asc ?name))
+#   (bgp (triple ?x foaf:name ?name)))))
+# @example SPARQL Grammar (with builtin)
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o .
+#   }
+#   ORDER BY str(?o)
+# @example SSE (with builtin)
+#   (prefix ((: <http://example.org/>))
+#   (project (?s)
+#   (order ((str ?o))
+#   (bgp (triple ?s :p ?o)))))
+# @example SPARQL Grammar (with bracketed expression)
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o1 ; :q ?o2 .
+#   } ORDER BY (?o1 + ?o2)
+# @example SSE (with bracketed expression)
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s)
+#   (order ((+ ?o1 ?o2))
+#   (bgp
+#   (triple ?s :p ?o1)
+#   (triple ?s :q ?o2)))))
+# @example SPARQL Grammar (with function call)
+#   PREFIX :      <http://example.org/ns#>
+#   PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
+#   SELECT *
+#   { ?s ?p ?o }
+#   ORDER BY
+#   DESC(?o+57) xsd:string(?o) ASC(?s)
+# @example SSE (with function call)
+#   (prefix ((: <http://example.org/ns#>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (order ((desc (+ ?o 57))
+#   (xsd:string ?o)
+#   (asc ?s))
+#   (bgp (triple ?s ?p ?o))))
+# @see https://www.w3.org/TR/sparql11-query/#modOrderBy
 class SPARQL::Algebra::Operator::Order < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Orders a solution set returned by executing operand(1) using
+  # an array of expressions and/or variables specified in operand(0)
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Provides order to descendant query.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Order::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL Property Path `path` operator.
+#
+# [88]  Path ::= PathAlternative
+#
+# @example SPARQL Grammar
+#   PREFIX :  <http://www.example.org/>
+#   SELECT ?t
+#   WHERE {
+#   :a :p1|:p2/:p3|:p4 ?t
+#   }
+# @example SSE
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?t)
+#   (path :a
+#   (alt
+#   (alt :p1 (seq :p2 :p3))
+#   :p4)
+#   ?t)))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlTranslatePathExpressions
 class SPARQL::Algebra::Operator::Path < ::SPARQL::Algebra::Operator::Ternary
   include ::SPARQL::Algebra::Query
 
+  # Finds solutions from `queryable` matching the path.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), **options); end
 end
 
 SPARQL::Algebra::Operator::Path::NAME = T.let(T.unsafe(nil), Symbol)
 
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   SELECT * WHERE {
+#   :a (:p/:p)? ?t
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (path :a (path? (seq :p :p)) ?t))
+# @see https://www.w3.org/TR/sparql11-query/#defn_evalPP_ZeroOrOnePath
 class SPARQL::Algebra::Operator::PathOpt < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Optional path:
+  #
+  #    (path x (path? :p) y)
+  #     => (union (bgp ((x :p y))) (filter (x = y) (solution x y)))
+  #
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::PathOpt::NAME = T.let(T.unsafe(nil), Symbol)
 
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   SELECT * WHERE {
+#   :a :p+ ?z
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (path :a (path+ :p) ?z))
+# @see https://www.w3.org/TR/sparql11-query/#defn_evalPP_OneOrMorePath
 class SPARQL::Algebra::Operator::PathPlus < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Match on simple relation of subject to object, and then recurse on solutions
+  #
+  # Path including at least one:
+  #
+  #    (path :a (path+ :p) :b)
+  #
+  # into
+  #
+  #    (union
+  #     (bgp (triple :a :p :b))
+  #     (path :a (path* :p) :b))
+  #
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::PathPlus::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL Property Path `pathRange` (NonCountingPath) operator.
+#
+# Property path ranges allow specific path lenghts to be queried. The minimum range describes the minimum path length that will yield solutions, and the maximum range the maximum path that will be returned. A minumum of zero is similar to the `path?` operator. The maximum range of `*` is similar to the `path*` or `path+` operators.
+#
+# For example, the two queries are functionally equivalent:
+#
+#     SELECT * WHERE {:a :p{1,2} :b}
+#
+#     SELECT * WHERE {:a (:p/:p?) :b}
+#
+# [91]  PathElt ::= PathPrimary PathMod?
+# [93]  PathMod ::= '*' | '?' | '+' | '{' INTEGER? (',' INTEGER?)? '}'
+#
+# @example SSE range with min and max
+#   (prefix ((: <http://example/>))
+#   (path :a (pathRange 1 2 :p) ?z))
+# @example SSE range with fixed length only
+#   (prefix ((: <http://example/>))
+#   (path :a (pathRange 2 2 :p) ?z))
+# @example SPARQL Grammar range with min only
+#   PREFIX : <http://example/>
+#   SELECT * WHERE {
+#   :a :p{1,} ?z
+#   }
+# @example SSE range with min only
+#   (prefix ((: <http://example/>))
+#   (path :a (pathRange 1 * :p) ?z))
+# @example SPARQL Grammar range with max only
+#   PREFIX : <http://example/>
+#   SELECT * WHERE {
+#   :a :p{,2} ?z
+#   }
+# @example SSE range with max only
+#   (prefix ((: <http://example/>))
+#   (path :a (pathRange 0 2 :p) ?z))
+# @example SPARQL Grammar range with min and max
+#   PREFIX : <http://example/>
+#   SELECT * WHERE {
+#   :a :p{1,2} ?z
+#   }
+# @example SPARQL Grammar range with fixed length
+#   PREFIX : <http://example/>
+#   SELECT * WHERE {
+#   :a :p{2} ?z
+#   }
 class SPARQL::Algebra::Operator::PathRange < ::SPARQL::Algebra::Operator::Ternary
   include ::SPARQL::Algebra::Query
 
+  # Initializes a new operator instance.
+  #
+  # @param max [RDF::Literal::Integer] the range minimum
+  # @param min [RDF::Literal::Integer, Symbol] the range maximum (may be `*`)
+  # @param path [SPARQL::Operator] the query
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @raise [TypeError] if any operand is invalid
+  # @raise [ArgumentError] range element is invalid
+  # @return [PathRange] a new instance of PathRange
   def initialize(min, max, path, **options); end
 
+  # Path with lower and upper bounds on lenghts:
+  #
+  #    (path :a (pathRange 1 2 :p) :b)
+  #    => (path)
+  #
+  # @option options
+  # @option options
+  # @param accumulator [RDF::Query::Solutions] (RDF::Query::Solutions.new)
+  #   For previous solutions to avoid duplicates.
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, accumulator: T.unsafe(nil), index: T.unsafe(nil), **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::PathRange::NAME = T.let(T.unsafe(nil), Symbol)
 
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   SELECT * WHERE {
+#   :a :p* ?z
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (path :a (path* :p) ?z))
+# @see https://www.w3.org/TR/sparql11-query/#defn_evalPP_ZeroOrMorePath
 class SPARQL::Algebra::Operator::PathStar < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Path including at zero length:
+  #
+  #    (path :a (path* :p) :b)
+  #
+  # into
+  #
+  #    (path :a (path? (path+ :p)) :b)
+  #
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::PathStar::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL Property Path `path0` (ZeroLengthPath) operator.
+#
+# A zero length path matches all subjects and objects in the graph, and also any RDF terms explicitly given as endpoints of the path pattern.
+#
+# @see https://www.w3.org/TR/sparql11-query/#defn_evalPP_ZeroOrOnePath
 class SPARQL::Algebra::Operator::PathZero < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Zero length path:
+  #
+  #    (path x (path0 :p) y)
+  #     => (filter (x = y) (solution x y))
+  #
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
 end
 
 SPARQL::Algebra::Operator::PathZero::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL numeric binary/unary `+` operator.
+#
+# [118] UnaryExpression ::=	... | '+' PrimaryExpression
+#
+# [116] AdditiveExpression ::=	MultiplicativeExpression ( '+' MultiplicativeExpression )?
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o .
+#   FILTER(-?o = +3) .
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s)
+#   (filter (= (- ?o) +3)
+#   (bgp (triple ?s :p ?o)))))
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o .
+#   ?s2 :p ?o2 .
+#   FILTER(?o + ?o2 = 3) .
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s)
+#   (filter (= (+ ?o ?o2) 3)
+#   (bgp
+#   (triple ?s :p ?o)
+#   (triple ?s2 :p ?o2)))))
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-add
 class SPARQL::Algebra::Operator::Plus < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the arithmetic sum of the operands, unless there is no `right`.
+  #
+  # @param left [RDF::Literal::Numeric, RDF::Literal::Temporal] a numeric literal
+  # @param right [RDF::Literal::Numeric, RDF::Literal::Duration] a numeric literal
+  # @raise [TypeError] if either operand is neither a numeric nor a temporal literal
+  # @return [RDF::Literal::Numeric, RDF::Literal::Temporal]
   def apply(left, right = T.unsafe(nil), **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Plus::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `PREDICATE` operator.
+#
+# If triple is an RDF-star triple, the function returns the predicate of this triple. Passing anything other than an RDF-star triple is an error.
+#
+# [121] BuiltInCall ::= ... | 'PREDICATE' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.com/ns#>
+#   SELECT * {
+#   ?t :source :g
+#   FILTER(isTriple(?t))
+#   FILTER(SUBJECT(?t) = :s)
+#   FILTER(PREDICATE(?t) = :p)
+#   FILTER(OBJECT(?t) = :o)
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.com/ns#>))
+#   (filter
+#   (exprlist
+#   (isTRIPLE ?t)
+#   (= (subject ?t) :s)
+#   (= (predicate ?t) :p)
+#   (= (object ?t) :o))
+#   (bgp (triple ?t :source :g))) )
+# @see https://w3c.github.io/rdf-star/rdf-star-cg-spec.html#predicate
 class SPARQL::Algebra::Operator::Predicate < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the predicate part of arg.
+  #
+  # @param operand [RDF::Statement] the operand
+  # @raise [TypeError] if the operand is not a statement
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Predicate::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `prefix` operator.
+#
+# [6]   PrefixDecl              ::= 'PREFIX' PNAME_NS IRIREF
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   SELECT * { :s :p :o }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (bgp (triple :s :p :o)))
+# @see https://www.w3.org/TR/sparql11-query/#QSynIRI
 class SPARQL::Algebra::Operator::Prefix < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Really a pass-through, as this is a syntactic object used for providing
+  # graph_name for URIs.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution, statement or boolean
+  # @yieldparam solution [RDF::Statement, RDF::Query::Solution, Boolean]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Combine two prefix definitions, merging their definitions
+  #
+  # @param other [Prefix]
+  # @return [Prefix] self
   def merge!(other); end
+
+  # Returns an optimized version of this query.
+  #
+  # Replace with the query with URIs having their lexical shortcut removed
+  #
+  # @return [Prefix] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
+
+  # Query results in a boolean result (e.g., ASK)
+  #
+  # @return [Boolean]
   def query_yields_boolean?; end
+
+  # Query results statements (e.g., CONSTRUCT, DESCRIBE, CREATE)
+  #
+  # @return [Boolean]
   def query_yields_statements?; end
+
+  # Returns a partial SPARQL grammar for this term.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Prefix::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `project` operator.
+#
+# [9] SelectClause ::= 'SELECT' ( 'DISTINCT' | 'REDUCED' )?  ( ( Var | ( '(' Expression 'AS' Var ')' ) )+ | '*' )
+#
+# ## Basic Projection
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#   SELECT ?v  {
+#   ?s :p ?v .
+#   FILTER (?v = 2)
+#   }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (project (?v)
+#   (filter (= ?v 2)
+#   (bgp (triple ?s :p ?v)))))
+# @example SPARQL Grammar (Sub select)
+#   SELECT (1 AS ?X ) {
+#   SELECT (2 AS ?Y ) {}
+#   }
+# @example SSE (Sub select)
+#   (project (?X)
+#   (extend ((?X 1))
+#   (project (?Y)
+#   (extend ((?Y 2))
+#   (bgp)))))
+# @example SPARQL Grammar (filter projection)
+#   PREFIX : <http://www.example.org/>
+#   ASK {
+#   {SELECT (GROUP_CONCAT(?o) AS ?g) WHERE {
+#   :a :p1 ?o
+#   }}
+#   FILTER(?g = "1 22" || ?g = "22 1")
+#   }
+# @example SSE (filter projection)
+#   (prefix ((: <http://www.example.org/>))
+#   (ask
+#   (filter
+#   (|| (= ?g "1 22") (= ?g "22 1"))
+#   (project (?g)
+#   (extend ((?g ??.0))
+#   (group () ((??.0 (group_concat ?o)))
+#   (bgp (triple :a :p1 ?o)))))) ))
+# @see https://www.w3.org/TR/sparql11-query/#modProjection
 class SPARQL::Algebra::Operator::Project < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Reduces the result set to the variables listed in the first operand
+  #
+  # If the first operand is empty, this indicates a `SPARQL *`, and all in-scope variables are projected.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Extracts projections
+  #
+  # If there are already extensions or filters, then this is a sub-select.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Can only project in-scope variables.
+  #
+  # @return [Operator] a new instance of Operator
   def validate!; end
+
+  # In-scope variables for a select are limited to those projected.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
 SPARQL::Algebra::Operator::Project::NAME = T.let(T.unsafe(nil), Array)
 
+# A SPARQL quaternary operator.
+#
+# Operators of this kind take four operands.
+#
+# @abstract
 class SPARQL::Algebra::Operator::Quaternary < ::SPARQL::Algebra::Operator
+  # @param arg1 [RDF::Term] the first operand
+  # @param arg2 [RDF::Term] the second operand
+  # @param arg3 [RDF::Term] the third operand
+  # @param arg4 [RDF::Term] the forth operand
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @return [Quaternary] a new instance of Quaternary
   def initialize(arg1, arg2, arg3, arg4, **options); end
 end
 
 SPARQL::Algebra::Operator::Quaternary::ARITY = T.let(T.unsafe(nil), Integer)
 
+# The SPARQL logical `rand` operator.
+#
+# Returns a pseudo-random number between 0 (inclusive) and 1.0e0 (exclusive). Different numbers can be produced every time this function is invoked. Numbers should be produced with approximately equal probability.
+#
+# [121] BuiltInCall ::= ... | 'RAND' NIL
+#
+# @example SPARQL Grammar
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   ASK {
+#   BIND(RAND() AS ?r)
+#   FILTER(DATATYPE(?r) = xsd:double && ?r >= 0.0 && ?r < 1.0)
+#   }
+# @example SSE
+#   (prefix
+#   ((xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (ask
+#   (filter
+#   (&&
+#   (&& (= (datatype ?r) xsd:double) (>= ?r 0.0))
+#   (< ?r 1.0))
+#   (extend ((?r (rand)))
+#   (bgp)))))
+# @see https://www.w3.org/TR/sparql11-query/#idp2130040
 class SPARQL::Algebra::Operator::Rand < ::SPARQL::Algebra::Operator::Nullary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns a pseudo-random number between 0 (inclusive) and 1.0e0 (exclusive). Different numbers can be produced every time this function is invoked. Numbers should be produced with approximately equal probability.
+  #
+  # @return [RDF::Literal::Double] random value
   def apply(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # Extracts projections
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Rand::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `reduced` operator.
+#
+# [9] SelectClause ::= 'SELECT' ( 'DISTINCT' | 'REDUCED' )? ( ( Var | ( '(' Expression 'AS' Var ')' ) )+ | '*' )
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT REDUCED ?v
+#   WHERE { ?x ?p ?v }
+# @example SSE
+#   (prefix ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (reduced
+#   (project (?v)
+#   (bgp (triple ?x ?p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::Reduced < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Removes duplicate solutions from the solution set.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Reduced::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `regex` operator.
+#
+# [122] RegexExpression         ::= 'REGEX' '(' Expression ',' Expression ( ',' Expression )? ')'
+#
+# @example SPARQL Grammar
+#   PREFIX  ex: <http://example.com/#>
+#   PREFIX  rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#   SELECT ?val
+#   WHERE {
+#   ex:foo rdf:value ?val .
+#   FILTER regex(?val, "GHI")
+#   }
+# @example SSE
+#   (prefix ((ex: <http://example.com/#>)
+#   (rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>))
+#   (project (?val)
+#   (filter (regex ?val "GHI")
+#   (bgp (triple ex:foo rdf:value ?val)))))
+# @see https://www.w3.org/TR/sparql11-query/#funcex-regex
+# @see https://www.w3.org/TR/xpath-functions/#func-matches
 class SPARQL::Algebra::Operator::Regex < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Evaluatable
 
+  # Matches `text` against a regular expression `pattern`.
+  #
+  # @param text [RDF::Literal] a simple literal
+  # @param pattern [RDF::Literal] a simple literal
+  # @param flags [RDF::Literal] a simple literal (defaults to an empty string)
+  # @raise [TypeError] if any operand is unbound
+  # @raise [TypeError] if any operand is not a simple literal
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(text, pattern, flags = T.unsafe(nil), **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Regex::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `replace` operator.
+#
+# [124] StrReplaceExpression ::= 'REPLACE' '(' Expression ',' Expression ',' Expression ( ',' Expression )? ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s (REPLACE(?str,"[^a-z0-9]", "-") AS ?new)
+#   WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s ?new)
+#   (extend ((?new (replace ?str "[^a-z0-9]" "-")))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#funcex-replace
+# @see https://www.w3.org/TR/xpath-functions/#func-replace
 class SPARQL::Algebra::Operator::Replace < ::SPARQL::Algebra::Operator::Quaternary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Initializes a new operator instance.
+  #
+  # @param text [RDF::Literal]
+  # @param pattern [RDF::Literal]
+  # @param replacement [RDF::Literal]
+  # @param flags [RDF::Literal]
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @raise [TypeError] if any operand is invalid
+  # @return [Replace] a new instance of Replace
   def initialize(text, pattern, replacement, flags = T.unsafe(nil), **options); end
 
+  # Matches `text` against a regular expression `pattern`.
+  #
+  # @param text [RDF::Literal] a simple literal
+  # @param pattern [RDF::Literal] a simple literal
+  # @param replacement [RDF::Literal]
+  # @param flags [RDF::Literal] a simple literal (defaults to an empty string)
+  # @raise [TypeError] if any operand is unbound
+  # @raise [TypeError] if any operand is not a plain literal
+  # @return [RDF::Literal]
   def apply(text, pattern, replacement, flags = T.unsafe(nil), **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Returns the SPARQL S-Expression (SSE) representation of this expression.
+  #
+  # Remove the optional argument.
+  #
+  # @return [Array] `self`
+  # @see https://openjena.org/wiki/SSE
   def to_sxp_bin; end
 end
 
 SPARQL::Algebra::Operator::Replace::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL Property Path `reverse` (NegatedPropertySet) operator.
+#
+# [92]  PathEltOrInverse        ::= PathElt | '^' PathElt
+#
+# @example SPARQL Grammar
+#   PREFIX ex:	<http://www.example.org/schema#>
+#   PREFIX in:	<http://www.example.org/instance#>
+#   ASK { in:b ^ex:p in:a }
+# @example SSE
+#   (prefix ((ex: <http://www.example.org/schema#>)
+#   (in: <http://www.example.org/instance#>))
+#   (ask (path in:b (reverse ex:p) in:a)))
+# @example SPARQL Grammar
+#   prefix ex:	<http://www.example.org/schema#>
+#   prefix in:	<http://www.example.org/instance#>
+#
+#   select  * where { in:c ^(ex:p1/ex:p2) ?x }
+# @example SSE
+#   (prefix ((ex: <http://www.example.org/schema#>)
+#   (in: <http://www.example.org/instance#>))
+#   (path in:c (reverse (seq ex:p1 ex:p2)) ?x))
+# @see https://www.w3.org/TR/sparql11-query/#defn_evalPP_inverse
 class SPARQL::Algebra::Operator::Reverse < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Query
 
+  # Equivliant to:
+  #
+  #   (path (:a (reverse :p) :b))
+  #   => (bgp (:b :p :a))
+  #
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Reverse::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `round` operator.
+#
+# Returns the number with no fractional part that is closest to the argument. If there are two such numbers, then the one that is closest to positive infinity is returned. An error is raised if `arg` is not a numeric value.
+#
+# [121] BuiltInCall ::= ... 'ROUND' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s ?num (ROUND(?num) AS ?round) WHERE {
+#   ?s :num ?num
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s ?num ?round)
+#   (extend ((?round (round ?num)))
+#   (bgp (triple ?s :num ?num)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-round
+# @see https://www.w3.org/TR/xpath-functions/#func-round
 class SPARQL::Algebra::Operator::Round < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the number with no fractional part that is closest to the argument. If there are two such numbers, then the one that is closest to positive infinity is returned. An error is raised if arg is not a numeric value.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a numeric value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, **options); end
 end
 
 SPARQL::Algebra::Operator::Round::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL logical `sha1` operator.
+#
+# Returns the SHA1 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the `xsd:string`. Hex digits `SHOULD` be in lower case.
+#
+# [121] BuiltInCall ::= ... | 'SHA1' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT (SHA1(?l) AS ?hash) WHERE {
+#   :s1 :str ?l
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?hash)
+#   (extend ((?hash (sha1 ?l)))
+#   (bgp (triple :s1 :str ?l)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-sha1
 class SPARQL::Algebra::Operator::SHA1 < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the SHA1 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits should be in lower case.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::SHA1::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `sha256` operator.
+#
+# Returns the SHA256 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the `xsd:string`. Hex digits `SHOULD` be in lower case.
+#
+# [121] BuiltInCall ::= ... | 'SHA256' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT (SHA256(?l) AS ?hash) WHERE {
+#   :s1 :str ?l
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?hash)
+#   (extend ((?hash (sha256 ?l)))
+#   (bgp (triple :s1 :str ?l)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-sha256
 class SPARQL::Algebra::Operator::SHA256 < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the SHA256 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits should be in lower case.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::SHA256::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `sha1` operator.
+#
+# Returns the SHA384 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the `xsd:string`. Hex digits `SHOULD` be in lower case.
+#
+# [121] BuiltInCall ::= ... | 'SHA384' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT (SHA384(?l) AS ?hash) WHERE {
+#   :s1 :str ?l
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?hash)
+#   (extend ((?hash (sha384 ?l)))
+#   (bgp (triple :s1 :str ?l)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-sha384
 class SPARQL::Algebra::Operator::SHA384 < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the SHA384 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits should be in lower case.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::SHA384::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `sha512` operator.
+#
+# Returns the SHA512 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the `xsd:string`. Hex digits `SHOULD` be in lower case.
+#
+# [121] BuiltInCall ::= ... | 'SHA512' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT (SHA512(?l) AS ?hash) WHERE {
+#   :s1 :str ?l
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?hash)
+#   (extend ((?hash (sha512 ?l)))
+#   (bgp (triple :s1 :str ?l)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-sha512
 class SPARQL::Algebra::Operator::SHA512 < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the SHA512 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits should be in lower case.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::SHA512::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `sameTerm` operator.
+#
+# [121] BuiltInCall ::= ... | 'sameTerm' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX     :    <http://example.org/things#>
+#   SELECT * {
+#   ?x1 :p ?v1 .
+#   ?x2 :p ?v2 .
+#   FILTER sameTerm(?v1, ?v2)
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/things#>))
+#   (filter (sameTerm ?v1 ?v2)
+#   (bgp (triple ?x1 :p ?v1) (triple ?x2 :p ?v2))))
+# @see https://www.w3.org/TR/sparql11-query/#func-sameTerm
 class SPARQL::Algebra::Operator::SameTerm < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns `true` if the operands are the same RDF term; returns
+  # `false` otherwise.
+  #
+  # @param term1 [RDF::Term] an RDF term
+  # @param term2 [RDF::Term] an RDF term
+  # @raise [TypeError] if either operand is unbound
+  # @return [RDF::Literal::Boolean] `true` or `false`
   def apply(term1, term2, **options); end
+
+  # Returns an optimized version of this expression.
+  #
+  # Return true if variable operand1 is a bound variable and equals operand2
+  #
+  # @return [SameTerm] a copy of `self`
+  # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::SameTerm::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `sample` set function.
+#
+# [127] Aggregate::= ... | 'SAMPLE' '(' 'DISTINCT'? Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example/>
+#
+#   SELECT ?w (SAMPLE(?v) AS ?S)
+#   {
+#   ?s :p ?v .
+#   OPTIONAL { ?s :q ?w }
+#   }
+#   GROUP BY ?w
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (project (?w ?S)
+#   (extend ((?S ??.0))
+#   (group (?w) ((??.0 (sample ?v)))
+#   (leftjoin
+#   (bgp (triple ?s :p ?v))
+#   (bgp (triple ?s :q ?w))))) ))
+# @see https://www.w3.org/TR/sparql11-query/#defn_aggSample
 class SPARQL::Algebra::Operator::Sample < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Aggregate
 
+  # @raise [ArgumentError]
+  # @return [Sample] a new instance of Sample
   def initialize(*operands, **options); end
 
+  # Sample is a set function which returns an arbitrary value from the multiset passed to it.
+  #
+  # @param enum [Enumerable<Array<RDF::Term>>] enum of evaluated operand
+  # @raise [TypeError] If enum is empty
+  # @return [RDF::Term] An arbitrary term
   def apply(enum, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Sample::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `seconds` operator.
+#
+# Returns the seconds part of the lexical form of `arg`.
+#
+# [121] BuiltInCall ::= ... | 'SECONDS' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (SECONDS(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (seconds ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-seconds
 class SPARQL::Algebra::Operator::Seconds < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the seconds part of arg as an integer.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal::Temporal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Seconds::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL Property Path `sequence` (SequencePath) operator.
+#
+# # [90] PathSequence ::= PathEltOrInverse ( '/' PathEltOrInverse )*
+#
+# @example SPARQL Grammar
+#   PREFIX ex:	<http://www.example.org/schema#>
+#   PREFIX in:	<http://www.example.org/instance#>
+#   SELECT * WHERE {  in:a ex:p1/ex:p2 ?x }
+# @example SSE
+#   (prefix ((ex: <http://www.example.org/schema#>)
+#   (in: <http://www.example.org/instance#>))
+#   (path in:a (seq ex:p1 ex:p2) ?x))
+# @see https://www.w3.org/TR/sparql11-query/#defn_evalPP_sequence
 class SPARQL::Algebra::Operator::Seq < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Join solution sets
+  #
+  #   (path :x (seq :p :q) :y)
+  #   => (join (bgp (:x :p ??1)) (bgp (??1 :q :y)))
+  #
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Seq::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `sequence` operator.
+#
+# Sequences through each operand.
+#
+# [103] CollectionPath          ::= '(' GraphNodePath+ ')'
+#
+# @see https://www.w3.org/TR/sparql11-query/#collections
 class SPARQL::Algebra::Operator::Sequence < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Basically a JOIN across multiple operands
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Sequence::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL GraphPattern `slice` operator.
+#
+# [25]  LimitOffsetClauses      ::= LimitClause OffsetClause? | OffsetClause LimitClause?
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/ns#>
+#
+#   SELECT ?v
+#   WHERE { :a ?p ?v }
+#   ORDER BY ?v
+#   OFFSET 100
+#   LIMIT 1
+# @example SSE
+#   (prefix ((: <http://example.org/ns#>))
+#   (slice 100 1
+#   (project (?v)
+#   (order (?v)
+#   (bgp (triple :a ?p ?v))))))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::Slice < ::SPARQL::Algebra::Operator::Ternary
   include ::SPARQL::Algebra::Query
 
+  # Executes this query on the given `queryable` graph or repository.
+  # Returns a subset of the solutions resulting from executing
+  # the third operand, an RDF::Queryable object by indexing in to the
+  # result set by the amount specified in the first operand and limiting
+  # the total number of solutions returned by the amount specified in the
+  # second operand.
+  #
+  # If either the first or second operands are `:_`, they are not considered.
+  #
+  # @example
+  #
+  #   (slice 1 2 (bgp (triple ?s ?p ?o)))   # Returns at most two solutions starting with the second solution.
+  #   (slice _ 2 (bgp (triple ?s ?p ?o)))   # Returns at most two solutions starting with the first solution.
+  #   (slice 1 _ (bgp (triple ?s ?p ?o)))   # Returns all solution after the first.
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Extracts OFFSET and LIMIT.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Slice::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `str` operator.
+#
+# [121] BuiltInCall ::= ... | 'STR' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+#   PREFIX  : <http://example.org/things#>
+#   SELECT  ?x ?v
+#   WHERE
+#   { ?x :p ?v .
+#   FILTER ( str(?v) = "1" ) .
+#   }
+# @example SSE
+#   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+#   (: <http://example.org/things#>))
+#   (project (?x ?v)
+#   (filter (= (str ?v) "1")
+#   (bgp (triple ?x :p ?v)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-str
 class SPARQL::Algebra::Operator::Str < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the string form of the operand.
+  #
+  # @param term [RDF::Literal, RDF::URI] a literal or IRI
+  # @raise [TypeError] if the operand is not a literal or IRI
+  # @return [RDF::Literal] a simple literal
   def apply(term, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Str::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL `strafter` operator.
+#
+# [121] BuiltInCall ::= ... | 'STRAFTER' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s (STRAFTER(?str,"e") AS ?suffix) WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s ?suffix)
+#   (extend ((?suffix (strafter ?str "e")))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-strafter
+# @see https://www.w3.org/TR/xpath-functions/#func-substring-after
 class SPARQL::Algebra::Operator::StrAfter < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The STRAFTER function corresponds to the XPath fn:substring-after function. The arguments must be argument compatible otherwise an error is raised.
+  #
+  # For compatible arguments, if the lexical part of the second argument occurs as a substring of the lexical part of the first argument, the function returns a literal of the same kind as the first argument arg1 (simple literal, plain literal same language tag, xsd:string). The lexical form of the result is the substring of the lexcial form of arg1 that follows the first occurrence of the lexical form of arg2. If the lexical form of arg2 is the empty string, this is considered to be a match and the lexical form of the result is the lexical form of arg1.
+  #
+  # If there is no such occurrence, an empty simple literal is returned.
+  #
+  # @example
+  #   strafter("abc","b") #=> "c"
+  #   strafter("abc"@en,"ab") #=> "c"@en
+  #   strafter("abc"@en,"b"@cy) #=> error
+  #   strafter("abc"^^xsd:string,"") #=> "abc"^^xsd:string
+  #   strafter("abc","xyz") #=> ""
+  #   strafter("abc"@en, "z"@en) #=> ""
+  #   strafter("abc"@en, "z") #=> ""
+  #   strafter("abc"@en, ""@en) #=> "abc"@en
+  #   strafter("abc"@en, "") #=> "abc"@en
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if operands are not compatible
+  # @return [RDF::Literal]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrAfter::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL `strbefore` operator.
+#
+# [121] BuiltInCall ::= ... | 'STRBEFORE' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s (STRBEFORE(?str,"s") AS ?prefix) WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>)
+#   (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s ?prefix)
+#   (extend ((?prefix (strbefore ?str "s")))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-strbefore
+# @see https://www.w3.org/TR/xpath-functions/#func-substring-before
 class SPARQL::Algebra::Operator::StrBefore < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The STRBEFORE function corresponds to the XPath fn:substring-before function. The arguments must be argument compatible otherwise an error is raised.
+  #
+  # For compatible arguments, if the lexical part of the second argument occurs as a substring of the lexical part of the first argument, the function returns a literal of the same kind as the first argument arg1 (simple literal, plain literal same language tag, xsd:string). The lexical form of the result is the substring of the lexical form of arg1 that precedes the first occurrence of the lexical form of arg2. If the lexical form of arg2 is the empty string, this is considered to be a match and the lexical form of the result is the empty string.
+  #
+  # If there is no such occurrence, an empty simple literal is returned.
+  #
+  # @example
+  #   strbefore("abc","b") #=> "a"
+  #   strbefore("abc"@en,"bc") #=> "a"@en
+  #   strbefore("abc"@en,"b"@cy) #=> error
+  #   strbefore("abc"^^xsd:string,"") #=> ""^^xsd:string
+  #   strbefore("abc","xyz") #=> ""
+  #   strbefore("abc"@en, "z"@en) #=> ""
+  #   strbefore("abc"@en, "z") #=> ""
+  #   strbefore("abc"@en, ""@en) #=> ""@en
+  #   strbefore("abc"@en, "") #=> ""@en
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if operands are not compatible
+  # @return [RDF::Literal]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrBefore::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `strdt` operator.
+#
+# [121] BuiltInCall ::= ... | 'STRDT' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT ?s (STRDT(?str,xsd:string) AS ?str1) WHERE {
+#   ?s :str ?str
+#   FILTER(LANGMATCHES(LANG(?str), "en"))
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>) (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?s ?str1)
+#   (extend ((?str1 (strdt ?str xsd:string)))
+#   (filter (langMatches (lang ?str) "en")
+#   (bgp (triple ?s :str ?str))))))
+# @see https://www.w3.org/TR/sparql11-query/#func-strdt
 class SPARQL::Algebra::Operator::StrDT < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Constructs a literal with lexical form and type as specified by the arguments.
+  #
+  # @param value [RDF::Literal] a literal
+  # @param datatypeIRI [RDF::URI] datatype
+  # @raise [TypeError]
+  # @return [RDF::Literal] a datatyped literal
+  # @see https://www.w3.org/TR/sparql11-query/#func-strdt
   def apply(value, datatypeIRI, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrDT::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL `strends` operator.
+#
+# [121] BuiltInCall ::= ... | 'STRENDS' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s ?str WHERE {
+#   ?s :str ?str
+#   FILTER STRENDS(?str, "a")
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?str)
+#   (filter (strends ?str "a")
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-strends
+# @see https://wwww.w3.org/TR/xpath-functions/#func-ends-with
 class SPARQL::Algebra::Operator::StrEnds < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The STRENDS function corresponds to the XPath fn:ends-with function. The arguments must be argument compatible otherwise an error is raised.
+  #
+  # For such input pairs, the function returns true if the lexical form of arg1 ends with the lexical form of arg2, otherwise it returns false.
+  #
+  # @example
+  #   strEnds("foobar", "bar") #=> true
+  #   strEnds("foobar"@en, "bar"@en) #=> true
+  #   strEnds("foobar"^^xsd:string, "bar"^^xsd:string) #=> true
+  #   strEnds("foobar"^^xsd:string, "bar") #=> true
+  #   strEnds("foobar", "bar"^^xsd:string) #=> true
+  #   strEnds("foobar"@en, "bar") #=> true
+  #   strEnds("foobar"@en, "bar"^^xsd:string) #=> true
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if operands are not compatible
+  # @return [RDF::Literal::Boolean]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrEnds::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `strlang` operator.
+#
+# [121] BuiltInCall ::= ... | 'STRLANG' '(' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (STRLANG(?str,"en-US") AS ?s2) WHERE {
+#   ?s :str ?str
+#   FILTER(LANGMATCHES(LANG(?str), "en"))
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s ?s2)
+#   (extend ((?s2 (strlang ?str "en-US")))
+#   (filter (langMatches (lang ?str) "en")
+#   (bgp (triple ?s :str ?str))))))
+# @see https://www.w3.org/TR/sparql11-query/#func-strlang
 class SPARQL::Algebra::Operator::StrLang < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Constructs a literal with lexical form and type as specified by the arguments.
+  #
+  # @param value [RDF::Literal] a literal
+  # @param langTag [RDF::Literal] datatype
+  # @raise [TypeError]
+  # @return [RDF::Literal] a datatyped literal
+  # @see https://www.w3.org/TR/sparql11-query/#func-strlang
   def apply(value, langTag, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrLang::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `strlen` operator.
+#
+# [121] BuiltInCall ::= ... 'STRLEN' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?str (STRLEN(?str) AS ?len) WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?str ?len)
+#   (extend ((?len (strlen ?str)))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-strlen
+# @see https://www.w3.org/TR/xpath-functions/#func-string-length
 class SPARQL::Algebra::Operator::StrLen < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The strlen function corresponds to the XPath fn:string-length function and returns an xsd:integer equal to the length in characters of the lexical form of the literal.
+  #
+  # @example
+  #   strlen("chat")	4
+  #   strlen("chat"@en)	4
+  #   strlen("chat"^^xsd:string)	4
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a numeric value
+  # @return [RDF::Literal::Integer] length of string
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrLen::NAME = T.let(T.unsafe(nil), Symbol)
 
+# SELECT ?s ?str WHERE {
+#     ?s :str ?str
+#     FILTER STRSTARTS(?str, "a")
+#   }
+#
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?str)
+#   (filter (strstarts ?str "a")
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-strstarts
+# @see https://www.w3.org/TR/xpath-functions/#func-starts-with
 class SPARQL::Algebra::Operator::StrStarts < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The STRSTARTS function corresponds to the XPath fn:starts-with function. The arguments must be argument compatible otherwise an error is raised.
+  #
+  # For such input pairs, the function returns true if the lexical form of arg1 starts with the lexical form of arg2, otherwise it returns false.
+  #
+  # @example
+  #   strStarts("foobar", "foo") #=> true
+  #   strStarts("foobar"@en, "foo"@en) #=> true
+  #   strStarts("foobar"^^xsd:string, "foo"^^xsd:string) #=> true
+  #   strStarts("foobar"^^xsd:string, "foo") #=> true
+  #   strStarts("foobar", "foo"^^xsd:string) #=> true
+  #   strStarts("foobar"@en, "foo") #=> true
+  #   strStarts("foobar"@en, "foo"^^xsd:string) #=> true
+  # @param left [RDF::Literal] a literal
+  # @param right [RDF::Literal] a literal
+  # @raise [TypeError] if operands are not compatible
+  # @return [RDF::Literal::Boolean]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrStarts::NAME = T.let(T.unsafe(nil), Symbol)
 
+# [121] BuiltInCall ::= ... | 'STRUUID' NIL
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   SELECT (STRLEN(?uuid) AS ?length)
+#   WHERE {
+#   BIND(STRUUID() AS ?uuid)
+#   FILTER(ISLITERAL(?uuid) && REGEX(?uuid, "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$", "i"))
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>) (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (project (?length)
+#   (extend ((?length (strlen ?uuid)))
+#   (filter
+#   (&&
+#   (isLiteral ?uuid)
+#   (regex ?uuid "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$" "i"))
+#   (extend ((?uuid (struuid)))
+#   (bgp))))))
+# @see https://www.w3.org/TR/sparql11-query/#func-struuid
 class SPARQL::Algebra::Operator::StrUUID < ::SPARQL::Algebra::Operator::Nullary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Return a string that is the scheme specific part of UUID. That is, as a simple literal, the result of generating a UUID, converting to a simple literal and removing the initial urn:uuid:.
+  #
+  # @return [RDF::URI]
   def apply(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::StrUUID::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL `substr` operator.
+#
+# [123] SubstringExpression ::= 'SUBSTR' '(' Expression ',' Expression ( ',' Expression )? ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s ?str (SUBSTR(?str,1,1) AS ?substr)
+#   WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix ((: <http://example.org/>))
+#   (project (?s ?str ?substr)
+#   (extend ((?substr (substr ?str 1 1)))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-substr
+# @see https://www.w3.org/TR/xpath-functions/#func-substring
 class SPARQL::Algebra::Operator::SubStr < ::SPARQL::Algebra::Operator::Ternary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Initializes a new operator instance.
+  #
+  # @param source [RDF::Literal]
+  # @param startingLoc [RDF::Litereal::Integer]
+  # @param length [RDF::Litereal::Integer] (-1)
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @raise [TypeError] if any operand is invalid
+  # @return [SubStr] a new instance of SubStr
   def initialize(source, startingLoc, length = T.unsafe(nil), **options); end
 
+  # The substr function corresponds to the XPath fn:substring function and returns a literal of the same kind (simple literal, literal with language tag, xsd:string typed literal) as the source input parameter but with a lexical form formed from the substring of the lexcial form of the source.
+  #
+  # The arguments startingLoc and length may be derived types of xsd:integer.
+  #
+  # The index of the first character in a strings is 1.
+  #
+  # @example
+  #   substr("foobar", 4) #=> "bar"
+  #   substr("foobar"@en, 4) #=> "bar"@en
+  #   substr("foobar"^^xsd:string, 4) #=> "bar"^^xsd:string
+  #   substr("foobar", 4, 1) #=> "b"
+  #   substr("foobar"@en, 4, 1) #=> "b"@en
+  #   substr("foobar"^^xsd:string, 4, 1) #=> "b"^^xsd:string
+  # @param source [RDF::Literal] a literal
+  # @param startingLoc [RDF::Literal] an 1-based integer offset into source
+  # @param length [RDF::Literal::Integer] (-1)
+  #   an optional length of the substring.
+  # @raise [TypeError] if operands are not compatible
+  # @return [RDF::Literal]
   def apply(source, startingLoc, length, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
+
+  # Returns the SPARQL S-Expression (SSE) representation of this expression.
+  #
+  # Remove the optional argument.
+  #
+  # @return [Array] `self`
+  # @see https://openjena.org/wiki/SSE
   def to_sxp_bin; end
 end
 
 SPARQL::Algebra::Operator::SubStr::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `SUBJECT` operator.
+#
+# Returns the subject part of `arg` as a term.
+#
+# If triple is an RDF-star triple, the function returns the subject of this triple. Passing anything other than an RDF-star triple is an error.
+#
+# [121] BuiltInCall ::= ... | 'SUBJECT' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.com/ns#>
+#   SELECT * {
+#   ?t :source :g
+#   FILTER(isTriple(?t))
+#   FILTER(SUBJECT(?t) = :s)
+#   FILTER(PREDICATE(?t) = :p)
+#   FILTER(OBJECT(?t) = :o)
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.com/ns#>))
+#   (filter
+#   (exprlist
+#   (isTRIPLE ?t)
+#   (= (subject ?t) :s)
+#   (= (predicate ?t) :p)
+#   (= (object ?t) :o))
+#   (bgp (triple ?t :source :g))) )
+# @see https://w3c.github.io/rdf-star/rdf-star-cg-spec.html#subject
 class SPARQL::Algebra::Operator::Subject < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the subject part of arg.
+  #
+  # @param operand [RDF::Statement] the operand
+  # @raise [TypeError] if the operand is not a statement
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Subject::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL numeric `subtract` operator.
+#
+# [116] AdditiveExpression ::=	MultiplicativeExpression ( '-' MultiplicativeExpression )?
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s WHERE {
+#   ?s :p ?o .
+#   ?s2 :p ?o2 .
+#   FILTER(?o - ?o2 = 3) .
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s)
+#   (filter (= (- ?o ?o2) 3)
+#   (bgp
+#   (triple ?s :p ?o)
+#   (triple ?s2 :p ?o2)))))
+# @see https://www.w3.org/TR/xpath-functions/#func-numeric-subtract
 class SPARQL::Algebra::Operator::Subtract < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the arithmetic difference of the operands.
+  #
+  # @param left [RDF::Literal::Numeric, RDF::Literal::Temporal] a numeric literal
+  # @param right [RDF::Literal::Numeric, RDF::Literal::Temporal, RDF::Literal::Duration] a numeric literal
+  # @raise [TypeError] if either operand is neither a numeric nor a temporal literal
+  # @return [RDF::Literal::Numeric, RDF::Literal::Temporal, RDF::Literal::Duration]
   def apply(left, right, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Subtract::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL `sum` set function.
+#
+# [127] Aggregate::= ... | 'SUM' '(' 'DISTINCT'? Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://www.example.org/>
+#   SELECT (SUM(?o) AS ?sum)
+#   WHERE { ?s :dec ?o }
+# @example SSE
+#   (prefix ((: <http://www.example.org/>))
+#   (project (?sum)
+#   (extend ((?sum ??.0))
+#   (group () ((??.0 (sum ?o)))
+#   (bgp (triple ?s :dec ?o))))))
+# @see https://www.w3.org/TR/sparql11-query/#defn_aggSum
 class SPARQL::Algebra::Operator::Sum < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Aggregate
 
+  # Sum is a SPARQL set function that will return the numeric value obtained by summing the values within the aggregate group. Type promotion happens as per the op:numeric-add function, applied transitively, (see definition below) so the value of SUM(?x), in an aggregate group where ?x has values 1 (integer), 2.0e0 (float), and 3.0 (decimal) will be 6.0 (float).
+  #
+  # @param enum [Enumerable<Array<RDF::Term>>] enum of evaluated operand
+  # @return [RDF::Literal::Numeric] The sum of the terms
   def apply(enum, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Sum::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `tz` operator.
+#
+# Returns the timezone part of `arg` as a simple literal. Returns the empty string if there is no timezone.
+#
+# [121] BuiltInCall ::= ... | 'TZ' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (TZ(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (tz ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-tz
 class SPARQL::Algebra::Operator::TZ < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the timezone part of arg as a simple literal. Returns the empty string if there is no timezone.
+  #
+  # @param operand [RDF::Literal::Temporal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::TZ::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL Table operator.
+#
+# This is used to provide inline values. Each row becomes
+# a solution.
+#
+# [28]  ValuesClause            ::= ( 'VALUES' DataBlock )?
+#
+# [61]  InlineData              ::= 'VALUES' DataBlock
+#
+# @example SPARQL Grammar (ValuesClause)
+#   PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+#   PREFIX :     <http://example.org/book/>
+#   PREFIX ns:   <http://example.org/ns#>
+#   SELECT ?book ?title ?price {
+#   ?book dc:title ?title ;
+#   ns:price ?price .
+#   }
+#   VALUES ?book { :book1 }
+# @example SSE (ValuesClause)
+#   (prefix ((dc: <http://purl.org/dc/elements/1.1/>)
+#   (: <http://example.org/book/>)
+#   (ns: <http://example.org/ns#>))
+#   (project (?book ?title ?price)
+#   (join
+#   (bgp (triple ?book dc:title ?title) (triple ?book ns:price ?price))
+#   (table (vars ?book) (row (?book :book1)))) ))
+# @example SPARQL Grammar (empty query no values)
+#   SELECT * { } VALUES () { }
+# @example SSE (empty query no values)
+#   (join (bgp) (table empty))
+# @example SPARQL Grammar (InlineData)
+#   PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+#   PREFIX :     <http://example.org/book/>
+#   PREFIX ns:   <http://example.org/ns#>
+#
+#   SELECT ?book ?title ?price
+#   {
+#   VALUES ?book { :book1 }
+#   ?book dc:title ?title ;
+#   ns:price ?price .
+#   }
+# @example SSE (InlineData)
+#   (prefix ((dc: <http://purl.org/dc/elements/1.1/>)
+#   (: <http://example.org/book/>)
+#   (ns: <http://example.org/ns#>))
+#   (project (?book ?title ?price)
+#   (join
+#   (table (vars ?book) (row (?book :book1)))
+#   (bgp (triple ?book dc:title ?title) (triple ?book ns:price ?price))) ))
+# @example empty table
+#   (table unit)
+# @see https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#inline-data
 class SPARQL::Algebra::Operator::Table < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
+  # Returns solutions for each row
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), **options); end
+
+  # In-scope variables for a table are the variables operand
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
 SPARQL::Algebra::Operator::Table::NAME = T.let(T.unsafe(nil), Array)
 
+# A SPARQL ternary operator.
+#
+# Operators of this kind take three operands.
+#
+# @abstract
 class SPARQL::Algebra::Operator::Ternary < ::SPARQL::Algebra::Operator
+  # @param arg1 [RDF::Term] the first operand
+  # @param arg2 [RDF::Term] the second operand
+  # @param arg3 [RDF::Term] the third operand
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @return [Ternary] a new instance of Ternary
   def initialize(arg1, arg2, arg3, **options); end
 end
 
 SPARQL::Algebra::Operator::Ternary::ARITY = T.let(T.unsafe(nil), Integer)
 
+# The SPARQL logical `timezone` operator.
+#
+# Returns the timezone part of `arg` as an xsd:dayTimeDuration. Raises an error if there is no timezone.
+#
+# [121] BuiltInCall ::= ... | 'TIMEZONE' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (TIMEZONE(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (timezone ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-timezone
 class SPARQL::Algebra::Operator::Timezone < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the timezone part of arg as an xsd:dayTimeDuration. Raises an error if there is no timezone.
+  #
+  # This function corresponds to fn:timezone-from-dateTime except for the treatment of literals with no timezone.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal::Temporal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Timezone::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL `triple` operator.
+#
+# If the 3-tuple (term1, term2, term3) is an RDF-star triple, the function returns this triple. If the 3-tuple is not an RDF-star triple, then the function raises an error.
+#
+# [121] BuiltInCall ::= ... | 'TRIPLE' '(' Expression ',' Expression ',' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.com/ns#>
+#   SELECT * {
+#   ?s ?p ?o .
+#   BIND(TRIPLE(?s, ?p, ?o) AS ?t1)
+#   }
+# @example SSE
+#   (prefix ((: <http://example.com/ns#>))
+#   (extend ((?t1 (triple ?s ?p ?o)))
+#   (bgp (triple ?s ?p ?o))))
+# @note This operator overlaps with RDF::Query::Pattern as used as an operand to a BGP.
+# @see https://w3c.github.io/rdf-star/rdf-star-cg-spec.html#triple
 class SPARQL::Algebra::Operator::Triple < ::SPARQL::Algebra::Operator::Ternary
   include ::SPARQL::Algebra::Evaluatable
 
+  # @param subject [RDF::Term]
+  # @param predicate [RDF::Term]
+  # @param object [RDF::Term]
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::URI]
   def apply(subject, predicate, object, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Triple::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `ucase` operator.
+#
+# [121] BuiltInCall ::= ... | 'UCASE' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (UCASE(?str) AS ?ustr) WHERE {
+#   ?s :str ?str
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?ustr)
+#   (extend ((?ustr (ucase ?str)))
+#   (bgp (triple ?s :str ?str)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-ucase
+# @see https://www.w3.org/TR/xpath-functions/#func-ucase
 class SPARQL::Algebra::Operator::UCase < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # The LCASE function corresponds to the XPath fn:lower-case function. It returns a string literal whose lexical form is the lower case of the lexcial form of the argument.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a literal value
+  # @return [RDF::Literal] literal of same type
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::UCase::NAME = T.let(T.unsafe(nil), Symbol)
 SPARQL::Algebra::Operator::URI = SPARQL::Algebra::Operator::IRI
 
+# The SPARQL `uuid` function.
+#
+# [121] BuiltInCall ::= ... | 'UUID' NIL
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#   ASK {
+#   BIND(UUID() AS ?u1)
+#   BIND(UUID() AS ?u2)
+#   FILTER(?u1 != ?u2)
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>) (xsd: <http://www.w3.org/2001/XMLSchema#>))
+#   (ask
+#   (filter (!= ?u1 ?u2)
+#   (extend ((?u1 (uuid)) (?u2 (uuid)))
+#   (bgp)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-uuid
 class SPARQL::Algebra::Operator::UUID < ::SPARQL::Algebra::Operator::Nullary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Return a fresh IRI from the UUID URN scheme. Each call of UUID() returns a different UUID. It must not be the "nil" UUID (all zeroes). The variant and version of the UUID is implementation dependent.
+  #
+  # @return [RDF::URI]
   def apply(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::UUID::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL unary operator.
+#
+# Operators of this kind take one operand.
+#
+# @abstract
 class SPARQL::Algebra::Operator::Unary < ::SPARQL::Algebra::Operator
+  # @param arg [RDF::Term] the operand
+  # @param options [Hash{Symbol => Object}] any additional options (see {Operator#initialize})
+  # @return [Unary] a new instance of Unary
   def initialize(arg, **options); end
 end
 
 SPARQL::Algebra::Operator::Unary::ARITY = T.let(T.unsafe(nil), Integer)
 
+# The SPARQL GraphPattern `union` operator.
+#
+# [67]  GroupOrUnionGraphPattern::= GroupGraphPattern ( 'UNION' GroupGraphPattern )*
+#
+# @example SPARQL Grammar
+#   SELECT * {
+#   { ?s ?p ?o }
+#   UNION
+#   { GRAPH ?g { ?s ?p ?o } }}
+# @example SSE
+#   (union
+#   (bgp (triple ?s ?p ?o))
+#   (graph ?g
+#   (bgp (triple ?s ?p ?o))))
+# @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
 class SPARQL::Algebra::Operator::Union < ::SPARQL::Algebra::Operator::Binary
   include ::SPARQL::Algebra::Query
 
+  # Executes each operand with `queryable` and performs the `union` operation
+  # by creating a new solution set consiting of all solutions from both operands.
+  #
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Optimizes this query.
+  #
+  # Optimize operands and remove any which are empty.
+  #
+  # @return [self]
+  # @see SPARQL::Algebra::Expression#optimize!
   def optimize!(**options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @param top_level [Boolean] (true)
+  #   Treat this as a top-level, generating SELECT ... WHERE {}
+  # @return [String]
   def to_sparql(top_level: T.unsafe(nil), **options); end
+
+  # The same blank node label cannot be used in two different basic graph patterns in the same query
   def validate!; end
 end
 
 SPARQL::Algebra::Operator::Union::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL GraphPattern `prefix` operator.
+#
+# [29]  Update                  ::= Prologue ( Update1 ( ';' Update )? )?
+#
+# @example SPARQL Grammar
+#   PREFIX     : <http://example.org/>
+#   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+#   DELETE  { ?a foaf:knows ?b }
+#   INSERT { ?b foaf:knows ?a }
+#   WHERE { ?a foaf:knows ?b }
+# @example SSE
+#   (prefix ((: <http://example.org/>)
+#   (foaf: <http://xmlns.com/foaf/0.1/>))
+#   (update
+#   (modify
+#   (bgp (triple ?a foaf:knows ?b))
+#   (delete ((triple ?a foaf:knows ?b)))
+#   (insert ((triple ?b foaf:knows ?a)))) ))
+# @example SPARQL Grammar (update multiple)
+#   PREFIX     : <http://example.org/>
+#   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+#
+#   DELETE { ?a foaf:knows ?b . }
+#   WHERE { ?a foaf:knows ?b . }
+#   ;
+#   INSERT { ?b foaf:knows ?a . }
+#   WHERE { ?a foaf:knows ?b .}
+# @example SSE (update multiple)
+#   (prefix ((: <http://example.org/>)
+#   (foaf: <http://xmlns.com/foaf/0.1/>))
+#   (update
+#   (modify
+#   (bgp (triple ?a foaf:knows ?b))
+#   (delete ((triple ?a foaf:knows ?b))))
+#   (modify
+#   (bgp (triple ?a foaf:knows ?b))
+#   (insert ((triple ?b foaf:knows ?a))))))
+# @see https://www.w3.org/TR/sparql11-update/#graphUpdate
 class SPARQL::Algebra::Operator::Update < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `queryable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [NotImplementedError] If an attempt is made to perform an unsupported operation
+  # @raise [IOError] If `queryable` is immutable
+  # @return [RDF::Queryable] Returns the dataset.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Update::NAME = T.let(T.unsafe(nil), Array)
 
+# The SPARQL UPDATE `using` operator.
+#
+# The USING and USING NAMED clauses affect the RDF Dataset used while evaluating the WHERE clause. This describes a dataset in the same way as FROM and FROM NAMED clauses describe RDF Datasets in the SPARQL 1.1 Query Language
+#
+# [44]  UsingClause             ::= 'USING' ( iri | 'NAMED' iri )
+#
+# @example SPARQL Grammar
+#   PREFIX     : <http://example.org/>
+#   PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+#
+#   DELETE { ?s ?p ?o }
+#   USING <http://example.org/g2>
+#   WHERE {
+#   :a foaf:knows ?s .
+#   ?s ?p ?o
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>) (foaf: <http://xmlns.com/foaf/0.1/>))
+#   (update
+#   (modify
+#   (using (:g2)
+#   (bgp (triple :a foaf:knows ?s) (triple ?s ?p ?o)))
+#   (delete ((triple ?s ?p ?o)))) ))
+# @example SPARQL Grammar (multiple clauses)
+#   PREFIX     : <http://example.org/>
+#
+#   INSERT { ?s ?p "q" }
+#   USING :g1
+#   USING :g2
+#   WHERE { ?s ?p ?o }
+# @example SSE (multiple clauses)
+#   (prefix ((: <http://example.org/>))
+#   (update
+#   (modify
+#   (using (:g1 :g2) (bgp (triple ?s ?p ?o)))
+#   (insert ((triple ?s ?p "q"))))))
+# @see https://www.w3.org/TR/sparql11-update/#add
 class SPARQL::Algebra::Operator::Using < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Query
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # Delegates to Dataset
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options, &block); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Using::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL UPDATE `with` operator.
+#
+# The WITH clause provides a convenience for when an operation primarily refers to a single graph.
+#
+# [41]  Modify ::= ( 'WITH' iri )? ( DeleteClause InsertClause? | InsertClause ) UsingClause* 'WHERE' GroupGraphPattern
+#
+# @example SPARQL Grammar
+#   PREFIX  :     <http://example/>
+#   WITH :g
+#   DELETE { <base:s> ?p ?o . }
+#   WHERE { ?s ?p ?o }
+# @example SSE
+#   (prefix ((: <http://example/>))
+#   (update
+#   (modify
+#   (with :g
+#   (bgp (triple ?s ?p ?o))
+#   (delete ((triple <base:s> ?p ?o)))))))
+# @see https://www.w3.org/TR/sparql11-update/#deleteInsert
 class SPARQL::Algebra::Operator::With < ::SPARQL::Algebra::Operator
   include ::SPARQL::Algebra::Update
 
+  # Executes this upate on the given `writable` graph or repository.
+  #
+  # Effectively filters results by setting a default `__graph_name__` variable so that it is used when binding to perform update operations on the appropriate triples.
+  #
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [IOError] If `from` does not exist, unless the `silent` operator is present
+  # @return [RDF::Queryable] Returns queryable.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::With::NAME = T.let(T.unsafe(nil), Symbol)
 
+# The SPARQL logical `year` operator.
+#
+# Returns the year part of `arg` as an integer.
+#
+# [121] BuiltInCall ::= ... | 'YEAR' '(' Expression ')'
+#
+# @example SPARQL Grammar
+#   PREFIX : <http://example.org/>
+#   SELECT ?s (YEAR(?date) AS ?x) WHERE {
+#   ?s :date ?date
+#   }
+# @example SSE
+#   (prefix
+#   ((: <http://example.org/>))
+#   (project (?s ?x)
+#   (extend ((?x (year ?date)))
+#   (bgp (triple ?s :date ?date)))))
+# @see https://www.w3.org/TR/sparql11-query/#func-year
 class SPARQL::Algebra::Operator::Year < ::SPARQL::Algebra::Operator::Unary
   include ::SPARQL::Algebra::Evaluatable
 
+  # Returns the year part of arg as an integer.
+  #
+  # @param operand [RDF::Literal] the operand
+  # @raise [TypeError] if the operand is not a simple literal
+  # @return [RDF::Literal::Temporal]
   def apply(operand, **options); end
+
+  # Returns a partial SPARQL grammar for this operator.
+  #
+  # @return [String]
   def to_sparql(**options); end
 end
 
 SPARQL::Algebra::Operator::Year::NAME = T.let(T.unsafe(nil), Symbol)
 
+# A SPARQL algebra query, may be duck-typed as RDF::Query.
+#
+# Mixin with SPARQL::Algebra::Operator to provide query-like operations on graphs and filters
+#
+# @abstract
 module SPARQL::Algebra::Query
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each_solution(&block); end
+
+  # Determine if this is an empty query, having no operands
+  #
+  # @return [Boolean]
   def empty?; end
+
+  # Executes this query on the given `queryable` graph or repository.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [NotImplementedError] If an attempt is made to perform an unsupported operation
+  # @return [RDF::Graph, Boolean, RDF::Query::Solutions::Enumerator] Note, results may be used with {SPARQL.serialize_results} to obtain appropriate output encoding.
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @yield [solution] each matching solution, statement or boolean
+  # @yieldparam solution [RDF::Statement, RDF::Query::Solution, Boolean]
+  # @yieldreturn [void] ignored
   def execute(queryable, **options, &block); end
+
+  # Returns `true` if this query did not match when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query failed to match or not.
+  #
+  # @return [Boolean]
+  # @see #matched?
   def failed?; end
+
+  # Add graph_name to sub-items, unless they already have a graph_name
+  #
+  # @param value [RDF::URI, RDF::Query::Variable]
+  # @return [RDF::URI, RDF::Query::Variable]
   def graph_name=(value); end
+
+  # Returns `true` if this query matched when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query matched successfully or not.
+  #
+  # @return [Boolean]
+  # @see #failed?
   def matched?; end
+
+  # Query results in a boolean result (e.g., ASK)
+  #
+  # @return [Boolean]
   def query_yields_boolean?; end
+
+  # Query results solutions (e.g., SELECT)
+  #
+  # @return [Boolean]
   def query_yields_solutions?; end
+
+  # Query results statements (e.g., CONSTRUCT, DESCRIBE, CREATE)
+  #
+  # @return [Boolean]
   def query_yields_statements?; end
+
+  # The solution sequence for this query. This is only set
+  #
+  # @return [RDF::Query::Solutions]
   def solutions; end
+
+  # Prepends an operator.
+  #
+  # @param query [RDF::Query] a query
+  # @return [void] self
   def unshift(query); end
+
+  # The variables used in this query.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
+# A SPARQL algebra Update can make modifications to it's dataset
+#
+# Mixin with SPARQL::Algebra::Operator to provide update-like operations on graphs
+#
+# @abstract
 module SPARQL::Algebra::Update
+  # Executes this upate on the given `queryable` graph or repository.
+  #
+  # @option options
+  # @param queryable [RDF::Writable] the graph or repository to write
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @raise [NotImplementedError] If an attempt is made to perform an unsupported operation
+  # @return [RDF::Writable] Returns the dataset.
+  # @see https://www.w3.org/TR/sparql11-update/
   def execute(queryable, **options, &block); end
+
+  # Add graph_name to sub-items, unless they already have a graph_name
+  #
+  # @param value [RDF::URI, RDF::Query::Variable]
+  # @return [RDF::URI, RDF::Query::Variable]
   def graph_name=(value); end
+
+  # Prepends an operator.
+  #
+  # @param query [RDF::Query] a query
+  # @return [void] self
   def unshift(query); end
+
+  # The variables used in this update.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
 SPARQL::Algebra::Variable = RDF::Query::Variable
 SPARQL::ERROR_MESSAGE = T.let(T.unsafe(nil), String)
 
+# ## Implementation Notes
+# The parser is driven through a rules table contained in lib/sparql/grammar/meta.rb. This includes branch rules to indicate productions to be taken based on a current production.
+#
+# The meta.rb file is generated from etc/sparql11.bnf using the `ebnf` gem.
+#
+#     ebnf --ll1 Query --format rb \
+#       --mod-name SPARQL::Grammar::Meta \
+#       --output lib/sparql/grammar/meta.rb \
+#       etc/sparql11.bnf
+#
+# @see http://www.w3.org/TR/sparql11-query/#grammar
+# @see https://rubygems.org/gems/ebnf
 module SPARQL::Grammar
   class << self
+    # Parses input from the given file name or URL.
+    #
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @param filename [String, #to_s]
+    # @param options [Hash{Symbol => Object}] any additional options (see `RDF::Reader#initialize` and `RDF::Format.for`)
+    # @raise [RDF::FormatError] if no reader found for the specified format
+    # @yield [reader]
+    # @yieldparam reader [RDF::Reader]
+    # @yieldreturn [void] ignored
     def open(filename, **options, &block); end
+
+    # Parse the given SPARQL `query` string.
+    #
+    # @example
+    #   result = SPARQL::Grammar.parse("SELECT * WHERE { ?s ?p ?o }")
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @param query [IO, StringIO, Lexer, Array, String, #to_s] Query may be an array of lexed tokens, a lexer, or a
+    #   string or open file.
+    # @param options [Hash{Symbol => Object}]
+    # @raise [Parser::Error] on invalid input
+    # @return [Parser]
     def parse(query, **options, &block); end
+
+    # Tokenizes the given SPARQL `query` string.
+    #
+    # @example
+    #   lexer = SPARQL::Grammar.tokenize("SELECT * WHERE { ?s ?p ?o }")
+    #   lexer.each_token do |token|
+    #   puts token.inspect
+    #   end
+    # @param query [String, #to_s]
+    # @param options [Hash{Symbol => Object}]
+    # @raise [Lexer::Error] on invalid input
+    # @return [Lexer]
+    # @yield [lexer]
+    # @yieldparam lexer [Lexer]
     def tokenize(query, **options, &block); end
+
+    # Returns `true` if the given SPARQL `query` string is valid.
+    #
+    # @example
+    #   SPARQL::Grammar.valid?("SELECT ?s WHERE { ?s ?p ?o }")  #=> true
+    #   SPARQL::Grammar.valid?("SELECT s WHERE { ?s ?p ?o }")   #=> false
+    # @param query [String, #to_s]
+    # @param options [Hash{Symbol => Object}]
+    # @return [Boolean]
     def valid?(query, **options); end
   end
 end
 
+# This file is automatically generated by ebnf version 2.3.1
+# Derived from etc/sparql11.bnf
 module SPARQL::Grammar::Meta; end
+
 SPARQL::Grammar::Meta::BRANCH = T.let(T.unsafe(nil), Hash)
 SPARQL::Grammar::Meta::CLEANUP = T.let(T.unsafe(nil), Hash)
 SPARQL::Grammar::Meta::FIRST = T.let(T.unsafe(nil), Hash)
@@ -1896,113 +9752,408 @@ SPARQL::Grammar::Meta::FOLLOW = T.let(T.unsafe(nil), Hash)
 SPARQL::Grammar::Meta::START = T.let(T.unsafe(nil), Symbol)
 SPARQL::Grammar::Meta::TERMINALS = T.let(T.unsafe(nil), Array)
 
+# A parser for the SPARQL 1.1 grammar.
+#
+# @see https://www.w3.org/TR/sparql11-query/#grammar
+# @see https://en.wikipedia.org/wiki/LR_parser
 class SPARQL::Grammar::Parser
   include ::SPARQL::Grammar::Meta
   include ::SPARQL::Grammar::Terminals
   include ::EBNF::LL1::Parser
   extend ::EBNF::LL1::Parser::ClassMethods
 
+  # Initializes a new parser instance.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param input [String, IO, StringIO, #to_s]
+  # @param options [Hash{Symbol => Object}]
+  # @return [SPARQL::Grammar::Parser]
+  # @yield [parser] `self`
+  # @yieldparam parser [SPARQL::Grammar::Parser]
+  # @yieldreturn [void] ignored
   def initialize(input = T.unsafe(nil), **options, &block); end
 
+  # The current input string being processed.
+  #
+  # @return [String]
   def input; end
+
+  # The current input string being processed.
+  #
+  # @return [String]
   def input=(_arg0); end
+
   def ll1_parse(input = T.unsafe(nil), start = T.unsafe(nil), **options, &block); end
+
+  # Any additional options for the parser.
+  #
+  # @return [Hash]
   def options; end
+
+  # Parse query
+  #
+  # The result is a SPARQL Algebra S-List. Productions return an array such as the following:
+  #
+  #   (prefix ((: <http://example/>))
+  #     (union
+  #       (bgp (triple ?s ?p ?o))
+  #       (graph ?g
+  #         (bgp (triple ?s ?p ?o)))))
+  #
+  # @param prod [Symbol, #to_s] The starting production for the parser.
+  #   It may be a URI from the grammar, or a symbol representing the local_name portion of the grammar URI.
+  # @return [RDF::Queryable]
+  # @see https://www.w3.org/TR/sparql11-query/#sparqlAlgebra
+  # @see https://axel.deri.ie/sparqltutorial/ESWC2007_SPARQL_Tutorial_unit2b.pdf
   def parse(prod = T.unsafe(nil)); end
+
+  # The internal representation of the result using hierarchy of RDF objects and SPARQL::Algebra::Operator
+  # objects.
+  #
+  # @return [Array]
   def result; end
+
+  # The internal representation of the result using hierarchy of RDF objects and SPARQL::Algebra::Operator
+  # objects.
+  #
+  # @return [Array]
   def result=(_arg0); end
+
   def to_s; end
+
+  # @return [String]
   def to_sxp_bin; end
+
+  # The current input tokens being processed.
+  #
+  # @return [Array<Token>]
   def tokens; end
+
+  # Returns `true` if the input string is syntactically valid.
+  #
+  # @return [Boolean]
   def valid?; end
 
   private
 
+  # Accumulate joined expressions in for prod1 (op prod2)* to form (op (op 1 2) 3)
   def accumulate_operator_expressions(operator, production, data); end
+
+  # Add joined expressions in for prod1 (op prod2)* to form (op (op 1 2) 3)
   def add_operator_expressions(production, data); end
+
+  # add a pattern
+  #
+  # @param production [String] Production generating pattern
+  # @param quoted [Boolean] For quoted triple
+  # @param options [Hash{Symbol => Object}]
   def add_pattern(production, quoted: T.unsafe(nil), **options); end
+
+  # Returns the Base URI defined for the parser,
+  # as specified or when parsing a BASE prologue element.
+  #
+  # @example
+  #   base  #=> RDF::URI('http://example.com/')
+  # @return [HRDF::URI]
   def base_uri; end
+
+  # Set the Base URI to use for this parser.
+  #
+  # @example
+  #   base_uri = RDF::URI('http://purl.org/dc/terms/')
+  # @param iri [RDF::URI, #to_s]
+  # @return [RDF::URI]
   def base_uri=(iri); end
+
+  # Generate a BNode identifier
   def bnode(id = T.unsafe(nil)); end
+
+  # Clear cached BNodes
+  #
+  # @return [void]
   def clear_bnode_cache; end
+
+  # Take collection of objects and create RDF Collection using rdf:first, rdf:rest and rdf:nil
+  #
+  # @param data [Hash] Production Data
   def expand_collection(data); end
+
+  # Flatten a Data in form of filter: [op+ bgp?], without a query into filter and query creating exprlist, if necessary
+  #
+  # @return [Array[:expr, query]]
   def flatten_filter(data); end
+
+  # Freeze BNodes, which allows us to detect if they're re-used
+  #
+  # @return [void]
   def freeze_bnodes; end
+
+  # Generate BNodes, not non-distinguished variables
+  #
+  # @param value [Boolean]
+  # @return [void]
   def gen_bnodes(value = T.unsafe(nil)); end
+
+  # Create URIs
   def iri(value); end
+
+  # Create a literal
   def literal(value, **options); end
+
+  # Merge query modifiers, datasets, and projections
+  #
+  # This includes tranforming aggregates if also used with a GROUP BY
+  #
+  # @see http://www.w3.org/TR/sparql11-query/#convertGroupAggSelectExpressions
   def merge_modifiers(data); end
+
+  # Used for generating BNode labels
   def nd_var_gen; end
+
+  # Used for generating BNode labels
   def nd_var_gen=(_arg0); end
+
   def ns(prefix, suffix); end
+
+  # Defines the given named URI prefix for this parser.
+  #
+  # @example Defining a URI prefix
+  #   prefix :dc, RDF::URI('http://purl.org/dc/terms/')
+  # @example Returning a URI prefix
+  #   prefix(:dc)    #=> RDF::URI('http://purl.org/dc/terms/')
+  # @overload prefix
+  # @overload prefix
+  # @return [RDF::URI]
   def prefix(name, iri = T.unsafe(nil)); end
+
+  # Returns the URI prefixes currently defined for this parser.
+  #
+  # @example
+  #   prefixes[:dc]  #=> RDF::URI('http://purl.org/dc/terms/')
+  # @return [Hash{Symbol => RDF::URI}]
+  # @since 0.3.0
   def prefixes; end
+
+  # Defines the given URI prefixes for this parser.
+  #
+  # @example
+  #   prefixes = {
+  #   dc: RDF::URI('http://purl.org/dc/terms/'),
+  #   }
+  # @param prefixes [Hash{Symbol => RDF::URI}]
+  # @return [Hash{Symbol => RDF::URI}]
+  # @since 0.3.0
   def prefixes=(prefixes); end
+
+  # Returns `true` if parsed statements and values should be validated.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def resolve_iris?; end
+
+  # Returns `true` when resolving IRIs, otherwise BASE and PREFIX are retained in the output algebra.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 1.0.3
   def validate?; end
+
+  # Return variable allocated to an ID.
+  # If no ID is provided, a new variable
+  # is allocated. Otherwise, any previous assignment will be used.
+  #
+  # The variable has a #distinguished? method applied depending on if this
+  # is a disinguished or non-distinguished variable. Non-distinguished
+  # variables are effectively the same as BNodes.
+  #
+  # @return [RDF::Query::Variable]
   def variable(id, distinguished = T.unsafe(nil)); end
 end
 
 SPARQL::Grammar::Parser::AGGREGATE_RULES = T.let(T.unsafe(nil), Array)
+
+# Builtin functions
 SPARQL::Grammar::Parser::BUILTINS = T.let(T.unsafe(nil), Array)
+
 SPARQL::Grammar::Parser::BUILTIN_RULES = T.let(T.unsafe(nil), Array)
 module SPARQL::Grammar::Terminals; end
+
+# 152
 SPARQL::Grammar::Terminals::ANON = T.let(T.unsafe(nil), Regexp)
+
+# 131
 SPARQL::Grammar::Terminals::BLANK_NODE_LABEL = T.let(T.unsafe(nil), Regexp)
+
+# 136
 SPARQL::Grammar::Terminals::DECIMAL = T.let(T.unsafe(nil), Regexp)
+
+# 142
 SPARQL::Grammar::Terminals::DECIMAL_NEGATIVE = T.let(T.unsafe(nil), Regexp)
+
+# 139
 SPARQL::Grammar::Terminals::DECIMAL_POSITIVE = T.let(T.unsafe(nil), Regexp)
+
+# 137
 SPARQL::Grammar::Terminals::DOUBLE = T.let(T.unsafe(nil), Regexp)
+
+# 143
 SPARQL::Grammar::Terminals::DOUBLE_NEGATIVE = T.let(T.unsafe(nil), Regexp)
+
+# 140
 SPARQL::Grammar::Terminals::DOUBLE_POSITIVE = T.let(T.unsafe(nil), Regexp)
+
+# 149
 SPARQL::Grammar::Terminals::ECHAR = T.let(T.unsafe(nil), Regexp)
+
+# 144
 SPARQL::Grammar::Terminals::EXPONENT = T.let(T.unsafe(nil), Regexp)
+
+# 135
 SPARQL::Grammar::Terminals::INTEGER = T.let(T.unsafe(nil), Regexp)
+
+# 141
 SPARQL::Grammar::Terminals::INTEGER_NEGATIVE = T.let(T.unsafe(nil), Regexp)
+
+# 138
 SPARQL::Grammar::Terminals::INTEGER_POSITIVE = T.let(T.unsafe(nil), Regexp)
+
+# 18
 SPARQL::Grammar::Terminals::IRIREF = T.let(T.unsafe(nil), Regexp)
+
 SPARQL::Grammar::Terminals::IRI_RANGE = T.let(T.unsafe(nil), Regexp)
+
+# 134
 SPARQL::Grammar::Terminals::LANGTAG = T.let(T.unsafe(nil), Regexp)
+
+# 150
 SPARQL::Grammar::Terminals::NIL = T.let(T.unsafe(nil), Regexp)
+
+# 170s
 SPARQL::Grammar::Terminals::PERCENT = T.let(T.unsafe(nil), Regexp)
+
+# 169s
 SPARQL::Grammar::Terminals::PLX = T.let(T.unsafe(nil), Regexp)
+
+# 130
 SPARQL::Grammar::Terminals::PNAME_LN = T.let(T.unsafe(nil), Regexp)
+
+# 129
 SPARQL::Grammar::Terminals::PNAME_NS = T.let(T.unsafe(nil), Regexp)
+
+# 156
 SPARQL::Grammar::Terminals::PN_CHARS = T.let(T.unsafe(nil), Regexp)
+
+# 153
 SPARQL::Grammar::Terminals::PN_CHARS_BASE = T.let(T.unsafe(nil), Regexp)
+
 SPARQL::Grammar::Terminals::PN_CHARS_BODY = T.let(T.unsafe(nil), Regexp)
+
+# 154
 SPARQL::Grammar::Terminals::PN_CHARS_U = T.let(T.unsafe(nil), Regexp)
+
+# 158
 SPARQL::Grammar::Terminals::PN_LOCAL = T.let(T.unsafe(nil), Regexp)
+
 SPARQL::Grammar::Terminals::PN_LOCAL_BODY = T.let(T.unsafe(nil), Regexp)
+
+# 172s
 SPARQL::Grammar::Terminals::PN_LOCAL_ESC = T.let(T.unsafe(nil), Regexp)
+
+# 157
 SPARQL::Grammar::Terminals::PN_PREFIX = T.let(T.unsafe(nil), Regexp)
+
+# 145
 SPARQL::Grammar::Terminals::STRING_LITERAL1 = T.let(T.unsafe(nil), Regexp)
+
+# 146
 SPARQL::Grammar::Terminals::STRING_LITERAL2 = T.let(T.unsafe(nil), Regexp)
+
+# 147
 SPARQL::Grammar::Terminals::STRING_LITERAL_LONG1 = T.let(T.unsafe(nil), Regexp)
+
+# 148
 SPARQL::Grammar::Terminals::STRING_LITERAL_LONG2 = T.let(T.unsafe(nil), Regexp)
+
+# String terminals, case insensitive
 SPARQL::Grammar::Terminals::STR_EXPR = T.let(T.unsafe(nil), Regexp)
+
+# Map terminals to canonical form
 SPARQL::Grammar::Terminals::STR_MAP = T.let(T.unsafe(nil), Hash)
+
+# 26
 SPARQL::Grammar::Terminals::UCHAR = T.let(T.unsafe(nil), Regexp)
+
+# Unicode regular expressions for Ruby 1.9+ with the Oniguruma engine.
 SPARQL::Grammar::Terminals::U_CHARS1 = T.let(T.unsafe(nil), Regexp)
+
 SPARQL::Grammar::Terminals::U_CHARS2 = T.let(T.unsafe(nil), Regexp)
+
+# 132
 SPARQL::Grammar::Terminals::VAR1 = T.let(T.unsafe(nil), Regexp)
+
+# 133
 SPARQL::Grammar::Terminals::VAR2 = T.let(T.unsafe(nil), Regexp)
+
+# 155
 SPARQL::Grammar::Terminals::VARNAME = T.let(T.unsafe(nil), Regexp)
+
+# 151
 SPARQL::Grammar::Terminals::WS = T.let(T.unsafe(nil), Regexp)
 
+# MalformedQuery
+#
+# When the value of the query type is not a legal sequence of characters in the language defined by the
+# SPARQL grammar, the MalformedQuery or QueryRequestRefused fault message must be returned. According to the
+# Fault Replaces Message Rule, if a WSDL fault is returned, including MalformedQuery, an Out Message must not
+# be returned.
 class SPARQL::MalformedQuery < ::Exception
   def title; end
 end
 
+# QueryRequestRefused
+#
+# returned when a client submits a request that the service refuses to process.
 class SPARQL::QueryRequestRefused < ::Exception
   def title; end
 end
 
+# Generate SPARQL Results as Boolean, XML or JSON
+#
+# This module is a mixin for RDF::Query::Solutions
 module SPARQL::Results
+  # Generate Solutions as CSV
+  #
+  # @return [String]
+  # @see https://www.w3.org/TR/2013/REC-sparql11-results-csv-tsv-20130321/
   def to_csv(bnode_map: T.unsafe(nil)); end
+
+  # Generate Solutions as HTML
+  #
+  # @return [String]
+  # @see http://www.w3.org/TR/rdf-sparql-XMLres/
   def to_html; end
+
+  # Generate Solutions as JSON
+  #
+  # @return [String]
+  # @see https://www.w3.org/TR/rdf-sparql-json-res/
   def to_json; end
+
+  # Generate Solutions as TSV
+  #
+  # @return [String]
+  # @see https://www.w3.org/TR/2013/REC-sparql11-results-csv-tsv-20130321/
   def to_tsv; end
+
+  # Generate Solutions as XML
+  #
+  # @return [String]
+  # @see https://www.w3.org/TR/rdf-sparql-XMLres/
   def to_xml; end
 end
 
@@ -2010,8 +10161,13 @@ SPARQL::Results::MIME_TYPES = T.let(T.unsafe(nil), Hash)
 
 module SPARQL::VERSION
   class << self
+    # @return [Array(Integer, Integer, Integer)]
     def to_a; end
+
+    # @return [String]
     def to_s; end
+
+    # @return [String]
     def to_str; end
   end
 end
@@ -2022,11 +10178,15 @@ SPARQL::VERSION::STRING = T.let(T.unsafe(nil), String)
 SPARQL::VERSION::TINY = T.let(T.unsafe(nil), String)
 SPARQL::VERSION::VERSION_FILE = T.let(T.unsafe(nil), String)
 
+# Extensions for Ruby's `TrueClass` class.
 class TrueClass
   include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
   include ::MessagePack::CoreExt
   include ::FriendlyId::UnfriendlyUtils
   include ::SafeType::BooleanMixin
 
+  # Returns the SXP representation of this object.
+  #
+  # @return [String]
   def to_sxp(**options); end
 end

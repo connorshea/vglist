@@ -6,43 +6,173 @@
 
 module Aws
   class << self
+    # @return [Hash] Returns a hash of default configuration options shared
+    #   by all constructed clients.
     def config; end
+
+    # @param config [Hash]
     def config=(config); end
+
+    # @api private
     def eager_autoload!(*args); end
+
+    # Close any long-lived connections maintained by the SDK's internal
+    # connection pool.
+    #
+    # Applications that rely heavily on the `fork()` system call on POSIX systems
+    # should call this method in the child process directly after fork to ensure
+    # there are no race conditions between the parent
+    # process and its children
+    # for the pooled TCP connections.
+    #
+    # Child processes that make multi-threaded calls to the SDK should block on
+    # this call before beginning work.
+    #
+    # @return [nil]
     def empty_connection_pools!; end
+
+    # @see (Aws::Partitions.partition)
     def partition(partition_name); end
+
+    # @see (Aws::Partitions.partitions)
     def partitions; end
+
+    # @api private
     def shared_config; end
+
+    # The SDK ships with a ca certificate bundle to use when verifying SSL
+    # peer certificates. By default, this cert bundle is *NOT* used. The
+    # SDK will rely on the default cert available to OpenSSL. This ensures
+    # the cert provided by your OS is used.
+    #
+    # For cases where the default cert is unavailable, e.g. Windows, you
+    # can call this method.
+    #
+    #     Aws.use_bundled_cert!
+    #
+    # @return [String] Returns the path to the bundled cert.
     def use_bundled_cert!; end
   end
 end
 
+# Create and provide access to components of Amazon Resource Names (ARN).
+#
+# You can create an ARN and access it's components like the following:
+#
+#   arn = Aws::ARN.new(
+#     partition: 'aws',
+#     service: 's3',
+#     region: 'us-west-2',
+#     account_id: '12345678910',
+#     resource: 'foo/bar'
+#   )
+#   # => #<Aws::ARN ...>
+#
+#   arn.to_s
+#   # => "arn:aws:s3:us-west-2:12345678910:foo/bar"
+#
+#   arn.partition
+#   # => 'aws'
+#   arn.service
+#   # => 's3'
+#   arn.resource
+#   # => foo/bar
+#
+#   # Note: parser available for parsing resource details
+#   @see Aws::ARNParser#parse_resource
+#
+# @see https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-arns
 class Aws::ARN
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash]
+  # @return [ARN] a new instance of ARN
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [String]
   def account_id; end
+
+  # @return [String]
   def partition; end
+
+  # @return [String]
   def region; end
+
+  # @return [String]
   def resource; end
+
+  # @return [String]
   def service; end
+
+  # Return the ARN as a hash
+  #
+  # @return [Hash]
   def to_h; end
+
+  # Return the ARN format in string
+  #
+  # @return [String]
   def to_s; end
+
+  # Validates ARN contains non-empty required components.
+  # Region and account_id can be optional.
+  #
+  # @return [Boolean]
   def valid?; end
 end
 
 module Aws::ARNParser
   class << self
+    # Checks whether a String could be a ARN or not. An ARN starts with 'arn:'
+    # and has at least 6 segments separated by a colon (:).
+    #
+    # @param str [String]
+    # @return [Boolean]
     def arn?(str); end
+
+    # Parse a string with an ARN format into an {Aws::ARN} object.
+    # `InvalidARNError` would be raised when encountering a parsing error or the
+    # ARN object contains invalid components (nil/empty).
+    #
+    # @param arn_str [String]
+    # @raise [Aws::Errors::InvalidARNError]
+    # @return [Aws::ARN]
+    # @see https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-arns
     def parse(arn_str); end
   end
 end
 
+# An auto-refreshing credential provider that works by assuming
+# a role via {Aws::STS::Client#assume_role}.
+#
+#     role_credentials = Aws::AssumeRoleCredentials.new(
+#       client: Aws::STS::Client.new(...),
+#       role_arn: "linked::account::arn",
+#       role_session_name: "session-name"
+#     )
+#
+#     ec2 = Aws::EC2::Client.new(credentials: role_credentials)
+#
+# If you omit `:client` option, a new {STS::Client} object will be
+# constructed.
 class Aws::AssumeRoleCredentials
   include ::Aws::CredentialProvider
   include ::Aws::RefreshingCredentials
 
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [AssumeRoleCredentials] a new instance of AssumeRoleCredentials
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [STS::Client]
   def client; end
 
   private
@@ -50,16 +180,40 @@ class Aws::AssumeRoleCredentials
   def refresh; end
 
   class << self
+    # @api private
     def assume_role_options; end
   end
 end
 
+# An auto-refreshing credential provider that works by assuming
+# a role via {Aws::STS::Client#assume_role_with_web_identity}.
+#
+#     role_credentials = Aws::AssumeRoleWebIdentityCredentials.new(
+#       client: Aws::STS::Client.new(...),
+#       role_arn: "linked::account::arn",
+#       web_identity_token_file: "/path/to/token/file",
+#       role_session_name: "session-name"
+#       ...
+#     )
+#     For full list of parameters accepted
+#     @see Aws::STS::Client#assume_role_with_web_identity
+#
+#
+# If you omit `:client` option, a new {STS::Client} object will be
+# constructed.
 class Aws::AssumeRoleWebIdentityCredentials
   include ::Aws::CredentialProvider
   include ::Aws::RefreshingCredentials
 
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash]
+  # @return [AssumeRoleWebIdentityCredentials] a new instance of AssumeRoleWebIdentityCredentials
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [STS::Client]
   def client; end
 
   private
@@ -69,6 +223,7 @@ class Aws::AssumeRoleWebIdentityCredentials
   def refresh; end
 
   class << self
+    # @api private
     def assume_role_web_identity_options; end
   end
 end
@@ -77,198 +232,597 @@ module Aws::AsyncClientStubs
   include ::Aws::ClientStubs
 
   def send_events; end
+
+  # @api private
   def setup_stubbing; end
 end
 
 class Aws::AsyncClientStubs::StubStream
+  # @return [StubStream] a new instance of StubStream
   def initialize; end
 
   def close; end
+
+  # @return [Boolean]
   def closed?; end
+
   def data(bytes, options = T.unsafe(nil)); end
+
+  # Returns the value of attribute send_events.
   def send_events; end
+
+  # Sets the attribute send_events
+  #
+  # @param value the value to set the attribute send_events to.
   def send_events=(_arg0); end
+
+  # Returns the value of attribute state.
   def state; end
 end
 
 module Aws::Binary; end
 
+# @api private
 class Aws::Binary::DecodeHandler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def attach_eventstream_listeners(context, rules); end
+
+  # @api private
+  # @return [Boolean]
   def eventstream?(ctx); end
 end
 
+# @api private
 class Aws::Binary::EncodeHandler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def eventstream_input?(ctx); end
 end
 
+# @api private
 class Aws::Binary::EventBuilder
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param serializer_class [Class]
+  # @param rules [Seahorse::Model::ShapeRef] (of eventstream member)
+  # @return [EventBuilder] a new instance of EventBuilder
   def initialize(serializer_class, rules); end
 
+  # @api private
   def apply(event_type, params); end
 
   private
 
+  # @api private
   def _build_payload(streaming, ref, value); end
+
+  # @api private
   def _content_type(shape); end
+
+  # @api private
   def _event_stream_message(event_ref, params); end
+
+  # @api private
   def _header_value_type(shape, value); end
 end
 
+# @api private
 class Aws::Binary::EventParser
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param parser_class [Class]
+  # @param rules [Seahorse::Model::ShapeRef] (of eventstream member)
+  # @param error_refs [Array] array of errors ShapeRef
+  # @param output_ref [Seahorse::Model::ShapeRef]
+  # @return [EventParser] a new instance of EventParser
   def initialize(parser_class, rules, error_refs, output_ref); end
 
+  # Parse raw event message into event struct
+  # based on its ShapeRef
+  #
+  # @api private
+  # @return [Struct] Event Struct
   def apply(raw_event); end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def eventpayload_streaming?(ref); end
+
+  # @api private
   def parse(raw_event); end
+
+  # @api private
   def parse_error_event(raw_event); end
+
+  # @api private
   def parse_event(raw_event); end
+
+  # @api private
   def parse_exception(raw_event); end
+
+  # @api private
   def parse_payload(body, rules); end
 end
 
+# @api private
 class Aws::Binary::EventStreamDecoder
+  # that registered with callbacks for processing events when they arrive
+  #
+  # @api private
+  # @param protocol [String]
+  # @param rules [ShapeRef] ShapeRef of the eventstream member
+  # @param output_ref [ShapeRef] ShapeRef of output shape
+  # @param error_refs [Array] array of ShapeRefs for errors
+  # @param event_stream_handler [EventStream|nil] A Service EventStream object
+  # @return [EventStreamDecoder] a new instance of EventStreamDecoder
   def initialize(protocol, rules, output_ref, error_refs, io, event_stream_handler = T.unsafe(nil)); end
 
+  # @api private
+  # @return [Array] events Array of arrived event objects
   def events; end
+
+  # @api private
   def write(chunk); end
 
   private
 
+  # @api private
   def emit_event(raw_event); end
+
+  # @api private
   def extract_stream_class(type_class); end
+
+  # @api private
   def parser_class(protocol); end
 end
 
+# @api private
 class Aws::Binary::EventStreamEncoder
+  # @api private
+  # @param protocol [String]
+  # @param rules [ShapeRef] ShapeRef of the eventstream member
+  # @param input_ref [ShapeRef] ShapeRef of the input shape
+  # @param signer [Aws::Sigv4::Signer]
+  # @return [EventStreamEncoder] a new instance of EventStreamEncoder
   def initialize(protocol, rules, input_ref, signer); end
 
+  # @api private
   def encode(event_type, params); end
+
+  # @api private
   def prior_signature; end
+
+  # @api private
   def prior_signature=(_arg0); end
+
+  # @api private
   def rules; end
 
   private
 
+  # @api private
   def serializer_class(protocol); end
 end
 
 Aws::CORE_GEM_VERSION = T.let(T.unsafe(nil), String)
 module Aws::ClientSideMonitoring; end
 
+# @api private
 class Aws::ClientSideMonitoring::Publisher
+  # @api private
+  # @return [Publisher] a new instance of Publisher
   def initialize(opts = T.unsafe(nil)); end
 
+  # @api private
   def agent_host; end
+
+  # @api private
   def agent_host=(value); end
+
+  # @api private
   def agent_port; end
+
+  # @api private
   def agent_port=(value); end
+
+  # @api private
   def publish(request_metrics); end
+
+  # @api private
   def send_datagram(msg); end
 end
 
+# @api private
 class Aws::ClientSideMonitoring::RequestMetrics
+  # @api private
+  # @return [RequestMetrics] a new instance of RequestMetrics
   def initialize(opts = T.unsafe(nil)); end
 
+  # @api private
   def add_call_attempt(attempt); end
+
+  # @api private
   def api_call; end
+
+  # @api private
   def api_call_attempts; end
+
+  # @api private
   def build_call_attempt(opts = T.unsafe(nil)); end
 end
 
+# @api private
 class Aws::ClientSideMonitoring::RequestMetrics::ApiCall
+  # @api private
+  # @return [ApiCall] a new instance of ApiCall
   def initialize(service, api, client_id, version, timestamp, region); end
 
+  # @api private
   def api; end
+
+  # @api private
   def attempt_count; end
+
+  # @api private
   def client_id; end
+
+  # @api private
   def complete(opts = T.unsafe(nil)); end
+
+  # @api private
   def final_aws_exception; end
+
+  # @api private
   def final_aws_exception_message; end
+
+  # @api private
   def final_http_status_code; end
+
+  # @api private
   def final_sdk_exception; end
+
+  # @api private
   def final_sdk_exception_message; end
+
+  # @api private
   def latency; end
+
+  # @api private
   def max_retries_exceeded; end
+
+  # @api private
   def region; end
+
+  # @api private
   def service; end
+
+  # @api private
   def timestamp; end
+
+  # @api private
   def to_json(*a); end
+
+  # @api private
   def user_agent; end
+
+  # @api private
   def version; end
 
   private
 
+  # @api private
   def _truncate(document); end
 end
 
+# @api private
 class Aws::ClientSideMonitoring::RequestMetrics::ApiCallAttempt
+  # @api private
+  # @return [ApiCallAttempt] a new instance of ApiCallAttempt
   def initialize(service, api, client_id, version, timestamp, fqdn, region, user_agent, access_key, session_token); end
 
+  # @api private
   def access_key; end
+
+  # @api private
   def api; end
+
+  # @api private
   def aws_exception; end
+
+  # @api private
   def aws_exception=(_arg0); end
+
+  # @api private
   def aws_exception_msg; end
+
+  # @api private
   def aws_exception_msg=(_arg0); end
+
+  # @api private
   def client_id; end
+
+  # @api private
   def fqdn; end
+
+  # @api private
   def fqdn=(_arg0); end
+
+  # @api private
   def http_status_code; end
+
+  # @api private
   def http_status_code=(_arg0); end
+
+  # @api private
   def region; end
+
+  # @api private
   def region=(_arg0); end
+
+  # @api private
   def request_latency; end
+
+  # @api private
   def request_latency=(_arg0); end
+
+  # @api private
   def sdk_exception; end
+
+  # @api private
   def sdk_exception=(_arg0); end
+
+  # @api private
   def sdk_exception_msg; end
+
+  # @api private
   def sdk_exception_msg=(_arg0); end
+
+  # @api private
   def service; end
+
+  # @api private
   def session_token; end
+
+  # @api private
   def timestamp; end
+
+  # @api private
   def to_json(*a); end
+
+  # @api private
   def user_agent; end
+
+  # @api private
   def version; end
+
+  # @api private
   def x_amz_id_2; end
+
+  # @api private
   def x_amz_id_2=(_arg0); end
+
+  # @api private
   def x_amz_request_id; end
+
+  # @api private
   def x_amz_request_id=(_arg0); end
+
+  # @api private
   def x_amzn_request_id; end
+
+  # @api private
   def x_amzn_request_id=(_arg0); end
 
   private
 
+  # @api private
   def _truncate(document); end
 end
 
+# @api private
 Aws::ClientSideMonitoring::RequestMetrics::FIELD_MAX_LENGTH = T.let(T.unsafe(nil), Hash)
 
+# This module provides the ability to specify the data and/or errors to
+# return when a client is using stubbed responses. Pass
+# `:stub_responses => true` to a client constructor to enable this
+# behavior.
+#
+# Also allows you to see the requests made by the client by reading the
+# api_requests instance variable
 module Aws::ClientStubs
+  # Allows you to access all of the requests that the stubbed client has made.
+  #
+  # @option options
+  # @param options [Hash] The options for the api requests.
+  # @raise [NotImplementedError] Raises `NotImplementedError` when the client
+  #   is not stubbed.
+  # @return [Array] Returns an array of the api requests made. Each request
+  #   object contains the :operation_name, :params, and :context.
   def api_requests(options = T.unsafe(nil)); end
+
+  # @api private
   def next_stub(context); end
+
+  # @api private
   def setup_stubbing; end
+
+  # Generates and returns stubbed response data from the named operation.
+  #
+  #     s3 = Aws::S3::Client.new
+  #     s3.stub_data(:list_buckets)
+  #     #=> #<struct Aws::S3::Types::ListBucketsOutput buckets=[], owner=#<struct Aws::S3::Types::Owner display_name="DisplayName", id="ID">>
+  #
+  # In addition to generating default stubs, you can provide data to
+  # apply to the response stub.
+  #
+  #     s3.stub_data(:list_buckets, buckets:[{name:'aws-sdk'}])
+  #     #=> #<struct Aws::S3::Types::ListBucketsOutput
+  #       buckets=[#<struct Aws::S3::Types::Bucket name="aws-sdk", creation_date=nil>],
+  #       owner=#<struct Aws::S3::Types::Owner display_name="DisplayName", id="ID">>
+  #
+  # @param operation_name [Symbol]
+  # @param data [Hash]
+  # @return [Structure] Returns a stubbed response data structure. The
+  #   actual class returned will depend on the given `operation_name`.
   def stub_data(operation_name, data = T.unsafe(nil)); end
+
+  # Configures what data / errors should be returned from the named operation
+  # when response stubbing is enabled.
+  #
+  # ## Basic usage
+  #
+  # When you enable response stubbing, the client will generate fake
+  # responses and will not make any HTTP requests.
+  #
+  #     client = Aws::S3::Client.new(stub_responses: true)
+  #     client.list_buckets
+  #     #=> #<struct Aws::S3::Types::ListBucketsOutput buckets=[], owner=nil>
+  #
+  # You can provide stub data that will be returned by the client.
+  #
+  #     # stub data in the constructor
+  #     client = Aws::S3::Client.new(stub_responses: {
+  #       list_buckets: { buckets: [{name: 'my-bucket' }] },
+  #       get_object: { body: 'data' },
+  #     })
+  #
+  #     client.list_buckets.buckets.map(&:name) #=> ['my-bucket']
+  #     client.get_object(bucket:'name', key:'key').body.read #=> 'data'
+  #
+  # You can also specify the stub data using {#stub_responses}
+  #
+  #     client = Aws::S3::Client.new(stub_responses: true)
+  #     client.stub_responses(:list_buckets, {
+  #       buckets: [{ name: 'my-bucket' }]
+  #     })
+  #
+  #     client.list_buckets.buckets.map(&:name)
+  #     #=> ['my-bucket']
+  #
+  # With a Resource class {#stub_responses} on the corresponding client:
+  #
+  #     s3 = Aws::S3::Resource.new(stub_responses: true)
+  #     s3.client.stub_responses(:list_buckets, {
+  #       buckets: [{ name: 'my-bucket' }]
+  #     })
+  #
+  #     s3.buckets.map(&:name)
+  #     #=> ['my-bucket']
+  #
+  # Lastly, default stubs can be configured via `Aws.config`:
+  #
+  #     Aws.config[:s3] = {
+  #       stub_responses: {
+  #         list_buckets: { buckets: [{name: 'my-bucket' }] }
+  #       }
+  #     }
+  #
+  #     Aws::S3::Client.new.list_buckets.buckets.map(&:name)
+  #     #=> ['my-bucket']
+  #
+  #     Aws::S3::Resource.new.buckets.map(&:name)
+  #     #=> ['my-bucket']
+  #
+  # ## Dynamic Stubbing
+  #
+  # In addition to creating static stubs, it's also possible to generate
+  # stubs dynamically based on the parameters with which operations were
+  # called, by passing a `Proc` object:
+  #
+  #     s3 = Aws::S3::Resource.new(stub_responses: true)
+  #     s3.client.stub_responses(:put_object, -> (context) {
+  #       s3.client.stub_responses(:get_object, content_type: context.params[:content_type])
+  #     })
+  #
+  # The yielded object is an instance of {Seahorse::Client::RequestContext}.
+  #
+  # ## Stubbing Errors
+  #
+  # When stubbing is enabled, the SDK will default to generate
+  # fake responses with placeholder values. You can override the data
+  # returned. You can also specify errors it should raise.
+  #
+  #     # simulate service errors, give the error code
+  #     client.stub_responses(:get_object, 'NotFound')
+  #     client.get_object(bucket:'aws-sdk', key:'foo')
+  #     #=> raises Aws::S3::Errors::NotFound
+  #
+  #     # to simulate other errors, give the error class, you must
+  #     # be able to construct an instance with `.new`
+  #     client.stub_responses(:get_object, Timeout::Error)
+  #     client.get_object(bucket:'aws-sdk', key:'foo')
+  #     #=> raises new Timeout::Error
+  #
+  #     # or you can give an instance of an error class
+  #     client.stub_responses(:get_object, RuntimeError.new('custom message'))
+  #     client.get_object(bucket:'aws-sdk', key:'foo')
+  #     #=> raises the given runtime error object
+  #
+  # ## Stubbing HTTP Responses
+  #
+  # As an alternative to providing the response data, you can provide
+  # an HTTP response.
+  #
+  #     client.stub_responses(:get_object, {
+  #       status_code: 200,
+  #       headers: { 'header-name' => 'header-value' },
+  #       body: "...",
+  #     })
+  #
+  # To stub a HTTP response, pass a Hash with all three of the following
+  # keys set:
+  #
+  # * **`:status_code`** - <Integer> - The HTTP status code
+  # * **`:headers`** - Hash<String,String> - A hash of HTTP header keys and values
+  # * **`:body`** - <String,IO> - The HTTP response body.
+  #
+  # ## Stubbing Multiple Responses
+  #
+  # Calling an operation multiple times will return similar responses.
+  # You can configure multiple stubs and they will be returned in sequence.
+  #
+  #     client.stub_responses(:head_object, [
+  #       'NotFound',
+  #       { content_length: 150 },
+  #     ])
+  #
+  #     client.head_object(bucket:'aws-sdk', key:'foo')
+  #     #=> raises Aws::S3::Errors::NotFound
+  #
+  #     resp = client.head_object(bucket:'aws-sdk', key:'foo')
+  #     resp.content_length #=> 150
+  #
+  # @param operation_name [Symbol]
+  # @param stubs [Mixed] One or more responses to return from the named
+  #   operation.
+  # @raise [RuntimeError] Raises a runtime error when called
+  #   on a client that has not enabled response stubbing via
+  #   `:stub_responses => true`.
+  # @return [void]
   def stub_responses(operation_name, *stubs); end
 
   private
 
+  # This method converts the given stub data and converts it to a
+  # HTTP response (when possible). This enables the response stubbing
+  # plugin to provide a HTTP response that triggers all normal events
+  # during response handling.
   def apply_stubs(operation_name, stubs); end
+
   def convert_stub(operation_name, stub); end
   def data_to_http_resp(operation_name, data); end
   def default_stub(operation_name); end
@@ -279,72 +833,342 @@ module Aws::ClientStubs
 end
 
 module Aws::CredentialProvider
+  # @return [Credentials]
   def credentials; end
+
+  # @return [Boolean]
   def set?; end
 end
 
+# @api private
 class Aws::CredentialProviderChain
+  # @api private
+  # @return [CredentialProviderChain] a new instance of CredentialProviderChain
   def initialize(config = T.unsafe(nil)); end
 
+  # @api private
+  # @return [CredentialProvider, nil]
   def resolve; end
 
   private
 
+  # @api private
   def assume_role_credentials(options); end
+
+  # @api private
   def assume_role_web_identity_credentials(options); end
+
+  # @api private
   def assume_role_with_profile(options, profile_name); end
+
+  # @api private
   def determine_profile_name(options); end
+
+  # @api private
   def env_credentials(_options); end
+
+  # @api private
   def envar(keys); end
+
+  # @api private
   def instance_profile_credentials(options); end
+
+  # @api private
   def process_credentials(options); end
+
+  # @api private
   def providers; end
+
+  # @api private
   def shared_credentials(options); end
+
+  # @api private
   def sso_credentials(options); end
+
+  # @api private
   def static_credentials(options); end
+
+  # @api private
   def static_profile_assume_role_credentials(options); end
+
+  # @api private
   def static_profile_assume_role_web_identity_credentials(options); end
+
+  # @api private
   def static_profile_credentials(options); end
+
+  # @api private
   def static_profile_process_credentials(options); end
+
+  # @api private
   def static_profile_sso_credentials(options); end
 end
 
 class Aws::Credentials
+  # @param access_key_id [String]
+  # @param secret_access_key [String]
+  # @param session_token [String] (nil)
+  # @return [Credentials] a new instance of Credentials
   def initialize(access_key_id, secret_access_key, session_token = T.unsafe(nil)); end
 
+  # @return [String, nil]
   def access_key_id; end
+
+  # @return [Credentials]
   def credentials; end
+
+  # Removing the secret access key from the default inspect string.
+  #
+  # @api private
   def inspect; end
+
+  # @return [String, nil]
   def secret_access_key; end
+
+  # @return [String, nil]
   def session_token; end
+
+  # @return [Boolean] Returns `true` if the access key id and secret
+  #   access key are both set.
   def set?; end
 end
 
+# @api private
 class Aws::DefaultsModeConfigResolver
+  # @api private
+  # @return [DefaultsModeConfigResolver] a new instance of DefaultsModeConfigResolver
   def initialize(sdk_defaults, cfg); end
 
+  # option_name should be the symbolized ruby name to resolve
+  # returns the ruby appropriate value or nil if none are resolved
+  #
+  # @api private
   def resolve(option_name); end
 
   private
 
+  # @api private
   def application_current_region; end
+
+  # @api private
+  # @return [Boolean]
   def env_mobile?; end
+
+  # @api private
   def resolve_auto_mode; end
+
+  # @api private
   def resolve_for_mode(name, mode); end
+
+  # @api private
   def resolved_mode; end
 end
 
+# mappings from Ruby SDK configuration names to the
+# sdk defaults option names and (optional) scale modifiers
+#
+# @api private
 Aws::DefaultsModeConfigResolver::CFG_OPTIONS = T.let(T.unsafe(nil), Hash)
+
+# A defaults mode determines how certain default configuration options are resolved in the SDK.
+#
+# *Note*: For any mode other than `'legacy'` the vended default values might change as best practices may
+# evolve. As a result, it is encouraged to perform testing when upgrading the SDK if you are using a mode other than
+# `'legacy'`.  While the `'legacy'` defaults mode is specific to Ruby,
+# other modes are standardized across all of the AWS SDKs.
+#
+#  The defaults mode can be configured:
+#
+#  * Directly on a client via `:defaults_mode`
+#
+#  * On a configuration profile via the "defaults_mode" profile file property.
+#
+#  * Globally via the "AWS_DEFAULTS_MODE" environment variable.
+#
+#
+# The following `:default_mode` values are supported:
+#
+# * `'standard'` -
+#   The STANDARD mode provides the latest recommended default values
+#   that should be safe to run in most scenarios
+#
+#   Note that the default values vended from this mode might change as
+#   best practices may evolve. As a result, it is encouraged to perform
+#   tests when upgrading the SDK
+#
+# * `'in-region'` -
+#   The IN\_REGION mode builds on the standard mode and includes
+#   optimization tailored for applications which call AWS services from
+#   within the same AWS region
+#
+#   Note that the default values vended from this mode might change as
+#   best practices may evolve. As a result, it is encouraged to perform
+#   tests when upgrading the SDK
+#
+# * `'cross-region'` -
+#   The CROSS\_REGION mode builds on the standard mode and includes
+#   optimization tailored for applications which call AWS services in a
+#   different region
+#
+#   Note that the default values vended from this mode might change as
+#   best practices may evolve. As a result, it is encouraged to perform
+#   tests when upgrading the SDK
+#
+# * `'mobile'` -
+#   The MOBILE mode builds on the standard mode and includes
+#   optimization tailored for mobile applications
+#
+#   Note that the default values vended from this mode might change as
+#   best practices may evolve. As a result, it is encouraged to perform
+#   tests when upgrading the SDK
+#
+# * `'auto'` -
+#   The AUTO mode is an experimental mode that builds on the standard
+#   mode. The SDK will attempt to discover the execution environment to
+#   determine the appropriate settings automatically.
+#
+#   Note that the auto detection is heuristics-based and does not
+#   guarantee 100% accuracy. STANDARD mode will be used if the execution
+#   environment cannot be determined. The auto detection might query
+#   [EC2 Instance Metadata service][1], which might introduce latency.
+#   Therefore we recommend choosing an explicit defaults\_mode instead
+#   if startup latency is critical to your application
+#
+# * `'legacy'` -
+#   The LEGACY mode provides default settings that vary per SDK and were
+#   used prior to establishment of defaults\_mode
+#
+# Based on the provided mode, the SDK will vend sensible default values
+# tailored to the mode for the following settings:
+#
+# * `:retry_mode` -
+#   A retry mode specifies how the SDK attempts retries. See [Retry
+#   Mode][2]
+#
+# * `:sts_regional_endpoints` -
+#   Specifies how the SDK determines the AWS service endpoint that it
+#   uses to talk to the AWS Security Token Service (AWS STS). See
+#   [Setting STS Regional endpoints][3]
+#
+# * `:s3_us_east_1_regional_endpoint` -
+#   Specifies how the SDK determines the AWS service endpoint that it
+#   uses to talk to the Amazon S3 for the us-east-1 region
+#
+# * `:http_open_timeout` -
+#   The amount of time after making an initial connection attempt on a
+#   socket, where if the client does not receive a completion of the
+#   connect handshake, the client gives up and fails the operation
+#
+# * `:ssl_timeout` -
+#   The maximum amount of time that a TLS handshake is allowed to take
+#   from the time the CLIENT HELLO message is sent to ethe time the
+#   client and server have fully negotiated ciphers and exchanged keys
+#
+#  All options above can be configured by users, and the overridden value will take precedence.
+#
+# [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
+# [2]: https://docs.aws.amazon.com/sdkref/latest/guide/setting-global-retry_mode.html
+# [3]: https://docs.aws.amazon.com/sdkref/latest/guide/setting-global-sts_regional_endpoints.html
 module Aws::DefaultsModeConfiguration; end
+
+# @api private
 Aws::DefaultsModeConfiguration::SDK_DEFAULT_CONFIGURATION = T.let(T.unsafe(nil), Hash)
 
+# A utility module that provides a class method that wraps
+# a method such that it generates a deprecation warning when called.
+# Given the following class:
+#
+#     class Example
+#
+#       def do_something
+#       end
+#
+#     end
+#
+# If you want to deprecate the `#do_something` method, you can extend
+# this module and then call `deprecated` on the method (after it
+# has been defined).
+#
+#     class Example
+#
+#       extend Aws::Deprecations
+#
+#       def do_something
+#       end
+#
+#       def do_something_else
+#       end
+#
+#       deprecated :do_something
+#
+#     end
+#
+# The `#do_something` method will continue to function, but will
+# generate a deprecation warning when called.
+#
+# @api private
 module Aws::Deprecations
+  # @api private
+  # @option options
+  # @option options
+  # @option options
+  # @param method [Symbol] The name of the deprecated method.
+  # @param options [Hash] a customizable set of options
   def deprecated(method, options = T.unsafe(nil)); end
 end
 
+# A client that can query version 2 of the EC2 Instance Metadata
 class Aws::EC2Metadata
+  # Creates a client that can query version 2 of the EC2 Instance Metadata
+  #   service (IMDS).
+  #
+  # @note Customers using containers may need to increase their hop limit
+  #   to access IMDSv2.
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash]
+  # @return [EC2Metadata] a new instance of EC2Metadata
+  # @see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html#instance-metadata-transition-to-version-2
   def initialize(options = T.unsafe(nil)); end
 
+  # Fetches a given metadata category using a String path, and returns the
+  #   result as a String. A path starts with the API version (usually
+  #   "/latest/"). See the instance data categories for possible paths.
+  #
+  # @example Fetching and parsing JSON meta-data
+  #
+  #   require 'json'
+  #   data = ec2_metadata.get('/latest/dynamic/instance-identity/document')
+  #   JSON.parse(data)
+  #   => {"accountId"=>"012345678912", ... }
+  # @example Fetching the instance ID
+  #
+  #   ec2_metadata = Aws::EC2Metadata.new
+  #   ec2_metadata.get('/latest/meta-data/instance-id')
+  #   => "i-023a25f10a73a0f79"
+  # @example Fetching and parsing directory listings
+  #
+  #   listing = ec2_metadata.get('/latest/meta-data')
+  #   listing.split(10.chr)
+  #   => ["ami-id", "ami-launch-index", ...]
+  # @note Unlike other services, IMDS does not have a service API model. This
+  #   means that we cannot confidently generate code with methods and
+  #   response structures. This implementation ensures that new IMDS features
+  #   are always supported by being deployed to the instance and does not
+  #   require code changes.
+  # @note This implementation always returns a String and will not parse any
+  #   responses. Parsable responses may include JSON objects or directory
+  #   listings, which are strings separated by line feeds (ASCII 10).
+  # @param path [String] The full path to the metadata.
+  # @see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-categories.html
+  # @see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
   def get(path); end
 
   private
@@ -358,26 +1182,68 @@ class Aws::EC2Metadata
   def retry_errors(options = T.unsafe(nil), &_block); end
 end
 
+# Path for PUT request for token
+#
+# @api private
 Aws::EC2Metadata::METADATA_TOKEN_PATH = T.let(T.unsafe(nil), String)
+
+# The requested metadata path does not exist.
+#
+# @api private
 class Aws::EC2Metadata::MetadataNotFoundError < ::RuntimeError; end
+
+# The request is not allowed or IMDS is turned off.
+#
+# @api private
 class Aws::EC2Metadata::RequestForbiddenError < ::RuntimeError; end
 
+# @api private
 class Aws::EC2Metadata::Token
+  # @api private
+  # @return [Token] a new instance of Token
   def initialize(options = T.unsafe(nil)); end
 
+  # [Boolean] Returns true if the token expired.
+  #
+  # @api private
+  # @return [Boolean]
   def expired?; end
+
+  # [String] Returns the token value.
+  #
+  # @api private
   def value; end
 end
 
+# Token has expired, and the request can be retried with a new token.
+#
+# @api private
 class Aws::EC2Metadata::TokenExpiredError < ::RuntimeError; end
+
+# Raised when the PUT request is not valid. This would be thrown if
+# `token_ttl` is not an Integer.
+#
+# @api private
 class Aws::EC2Metadata::TokenRetrievalError < ::RuntimeError; end
 
 class Aws::ECSCredentials
   include ::Aws::CredentialProvider
   include ::Aws::RefreshingCredentials
 
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash]
+  # @return [ECSCredentials] a new instance of ECSCredentials
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [Integer] The number of times to retry failed attempts to
+  #   fetch credentials from the instance metadata service. Defaults to 0.
   def retries; end
 
   private
@@ -390,100 +1256,292 @@ class Aws::ECSCredentials
   def retry_errors(error_classes, options = T.unsafe(nil), &block); end
 end
 
+# These are the errors we trap when attempting to talk to the
+# instance metadata service.  Any of these imply the service
+# is not present, no responding or some other non-recoverable
+# error.
+#
+# @api private
 Aws::ECSCredentials::NETWORK_ERRORS = T.let(T.unsafe(nil), Array)
+
+# @api private
 class Aws::ECSCredentials::Non200Response < ::RuntimeError; end
 
+# @api private
 class Aws::EagerLoader
+  # @api private
+  # @return [EagerLoader] a new instance of EagerLoader
   def initialize; end
 
+  # @api private
+  # @param klass_or_module [Module]
+  # @return [self]
   def load(klass_or_module); end
+
+  # @api private
+  # @return [Set<Module>]
   def loaded; end
 end
 
+# @api private
 class Aws::EmptyStructure < ::Struct
   include ::Aws::Structure
 end
 
+# a LRU cache caching endpoints data
+#
+# @api private
 class Aws::EndpointCache
+  # @api private
+  # @return [EndpointCache] a new instance of EndpointCache
   def initialize(options = T.unsafe(nil)); end
 
+  # @api private
+  # @param key [String]
+  # @return [Endpoint]
   def [](key); end
+
+  # @api private
+  # @param key [String]
+  # @param value [Hash]
   def []=(key, value); end
+
+  # remove entry only
+  #
+  # @api private
+  # @param key [String]
   def delete(key); end
+
+  # kill the old polling thread and remove it from pool
+  #
+  # @api private
+  # @param key [String]
   def delete_polling_thread(key); end
+
+  # extract the key to be used in the cache from request context
+  #
+  # @api private
+  # @param ctx [RequestContext]
+  # @return [String]
   def extract_key(ctx); end
+
+  # checking whether an unexpired endpoint key exists in cache
+  #
+  # @api private
+  # @param key [String]
+  # @return [Boolean]
   def key?(key); end
+
+  # @api private
+  # @return [Integer] Max size limit of cache
   def max_entries; end
+
+  # @api private
+  # @return [Integer] Max count of polling threads
   def max_threads; end
+
+  # return [Hash] Polling threads pool
+  #
+  # @api private
   def pool; end
+
+  # kill all polling threads
+  #
+  # @api private
   def stop_polling!; end
+
+  # checking whether an polling thread exist for the key
+  #
+  # @api private
+  # @param key [String]
+  # @return [Boolean]
   def threads_key?(key); end
+
+  # update cache with requests (using service endpoint operation)
+  # to fetch endpoint list (with identifiers when available)
+  #
+  # @api private
+  # @param key [String]
+  # @param ctx [RequestContext]
   def update(key, ctx); end
+
+  # update polling threads pool
+  # param [String] key
+  # param [Thread] thread
+  #
+  # @api private
   def update_polling_pool(key, thread); end
 
   private
 
+  # @api private
   def _endpoint_operation_identifier(ctx); end
+
+  # @api private
   def _request_endpoint(ctx); end
 end
 
+# @api private
 class Aws::EndpointCache::Endpoint
+  # @api private
+  # @return [Endpoint] a new instance of Endpoint
   def initialize(options); end
 
+  # [String] valid URI address (with path)
+  #
+  # @api private
   def address; end
+
+  # @api private
+  # @return [Boolean]
   def expired?; end
 end
 
+# default endpoint cache time, 1 minute
+#
+# @api private
 Aws::EndpointCache::Endpoint::CACHE_PERIOD = T.let(T.unsafe(nil), Integer)
+
+# default cache entries limit
+#
+# @api private
 Aws::EndpointCache::MAX_ENTRIES = T.let(T.unsafe(nil), Integer)
+
+# default max threads pool size
+#
+# @api private
 Aws::EndpointCache::MAX_THREADS = T.let(T.unsafe(nil), Integer)
+
 module Aws::Errors; end
+
+# Various plugins perform client-side checksums of responses.
+# This error indicates a checksum failed.
 class Aws::Errors::ChecksumError < ::RuntimeError; end
+
+# Raised when a client is constructed with Assume Role credentials, but
+# the profile has both source_profile and credential_source.
 class Aws::Errors::CredentialSourceConflictError < ::RuntimeError; end
 
+# This module is mixed into another module, providing dynamic
+# error classes.  Error classes all inherit from {ServiceError}.
+#
+#     # creates and returns the class
+#     Aws::S3::Errors::MyNewErrorClass
+#
+# Since the complete list of possible AWS errors returned by services
+# is not known, this allows us to create them as needed.  This also
+# allows users to rescue errors by class without them being concrete
+# classes beforehand.
+#
+# @api private
 module Aws::Errors::DynamicErrors
+  # @api private
   def const_missing(constant); end
+
+  # Given the name of a service and an error code, this method
+  # returns an error class (that extends {ServiceError}.
+  #
+  #     Aws::S3::Errors.error_class('NoSuchBucket').new
+  #     #=> #<Aws::S3::Errors::NoSuchBucket>
+  #
+  # @api private
   def error_class(error_code); end
 
   private
 
+  # Convert an error code to an error class name/constant.
+  # This requires filtering non-safe characters from the constant
+  # name and ensuring it begins with an uppercase letter.
+  #
+  # @api private
+  # @param error_code [String]
+  # @return [Symbol] Returns a symbolized constant name for the given
+  #   `error_code`.
   def error_class_constant(error_code); end
+
+  # @api private
+  # @return [Boolean]
   def error_const_set?(constant); end
+
+  # @api private
   def set_error_constant(constant); end
 
   class << self
+    # @api private
+    # @private
     def extended(submodule); end
   end
 end
 
+# Rasied when endpoint discovery failed for operations
+# that requires endpoints from endpoint discovery
 class Aws::Errors::EndpointDiscoveryError < ::RuntimeError
+  # @return [EndpointDiscoveryError] a new instance of EndpointDiscoveryError
   def initialize(*args); end
 end
 
+# Error event in an event stream which has event_type :error
+# error code and error message can be retrieved when available.
+#
+# example usage:
+#
+#   client.stream_foo(name: 'bar') do |event|
+#     stream.on_error_event do |event|
+#       puts "Error #{event.error_code}: #{event.error_message}"
+#       raise event
+#     end
+#   end
 class Aws::Errors::EventError < ::RuntimeError
+  # @return [EventError] a new instance of EventError
   def initialize(event_type, code, message); end
 
+  # @return [String]
   def error_code; end
+
+  # @return [String]
   def error_message; end
+
+  # @return [Symbol]
   def event_type; end
 end
 
+# Raise when EventStream Builder failed to build
+# an event message with parameters provided
 class Aws::Errors::EventStreamBuilderError < ::RuntimeError; end
+
+# Raised when EventStream Parser failed to parse
+# a raw event message
 class Aws::Errors::EventStreamParserError < ::RuntimeError; end
+
+# Raised when ARN string input doesn't follow the standard:
+# https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-arns
 class Aws::Errors::InvalidARNError < ::RuntimeError; end
 
+# Raised when the partition of the ARN region is different than the
+# partition of the :region configured on the service client.
 class Aws::Errors::InvalidARNPartitionError < ::RuntimeError
+  # @return [InvalidARNPartitionError] a new instance of InvalidARNPartitionError
   def initialize(*args); end
 end
 
+# Raised when the region from the ARN string is different from the :region
+# configured on the service client.
 class Aws::Errors::InvalidARNRegionError < ::RuntimeError
+  # @return [InvalidARNRegionError] a new instance of InvalidARNRegionError
   def initialize(*args); end
 end
 
+# Raised when a client is constructed with Assume Role credentials using
+# a credential_source, and that source type is unsupported.
 class Aws::Errors::InvalidCredentialSourceError < ::RuntimeError; end
+
+# Raised when a credentials provider process returns a JSON
+# payload with either invalid version number or malformed contents
 class Aws::Errors::InvalidProcessCredentialsPayload < ::RuntimeError; end
 
+# Raised when a client is contsructed and the region is not valid.
 class Aws::Errors::InvalidRegionError < ::ArgumentError
+  # @return [InvalidRegionError] a new instance of InvalidRegionError
   def initialize(*args); end
 
   private
@@ -491,40 +1549,74 @@ class Aws::Errors::InvalidRegionError < ::ArgumentError
   def possible_regions; end
 end
 
+# Raised when SSO Credentials are invalid
 class Aws::Errors::InvalidSSOCredentials < ::RuntimeError; end
 
+# Raised when InstanceProfileCredentialsProvider or
+# EcsCredentialsProvider fails to parse the metadata response after retries
 class Aws::Errors::MetadataParserError < ::RuntimeError
+  # @return [MetadataParserError] a new instance of MetadataParserError
   def initialize(*args); end
 end
 
+# Raised when a `streaming` operation has `requiresLength` trait
+# enabled but request payload size/length cannot be calculated
 class Aws::Errors::MissingContentLength < ::RuntimeError
+  # @return [MissingContentLength] a new instance of MissingContentLength
   def initialize(*args); end
 end
 
+# Raised when a client is constructed and credentials are not
+# set, or the set credentials are empty.
 class Aws::Errors::MissingCredentialsError < ::RuntimeError
+  # @return [MissingCredentialsError] a new instance of MissingCredentialsError
   def initialize(*args); end
 end
 
+# raised when hostLabel member is not provided
+# at operation input when endpoint trait is available
+# with 'hostPrefix' requirement
 class Aws::Errors::MissingEndpointHostLabelValue < ::RuntimeError
+  # @return [MissingEndpointHostLabelValue] a new instance of MissingEndpointHostLabelValue
   def initialize(name); end
 end
 
+# Raised when a client is constructed and region is not specified.
 class Aws::Errors::MissingRegionError < ::ArgumentError
+  # @return [MissingRegionError] a new instance of MissingRegionError
   def initialize(*args); end
 end
 
+# Raised when :web_identity_token_file parameter is not
+# provided or the file doesn't exist when initializing
+# AssumeRoleWebIdentityCredentials credential provider
 class Aws::Errors::MissingWebIdentityTokenFile < ::RuntimeError
+  # @return [MissingWebIdentityTokenFile] a new instance of MissingWebIdentityTokenFile
   def initialize(*args); end
 end
 
+# Raised when a client is constructed with Assume Role credentials using
+# a credential_source, and that source doesn't provide credentials.
 class Aws::Errors::NoSourceCredentialsError < ::RuntimeError; end
+
+# Raised when a client is constructed, where Assume Role credentials are
+# expected, and there is no source profile specified.
 class Aws::Errors::NoSourceProfileError < ::RuntimeError; end
 
+# Raised when attempting to connect to an endpoint and a `SocketError`
+# is received from the HTTP client. This error is typically the result
+# of configuring an invalid `:region`.
 class Aws::Errors::NoSuchEndpointError < ::RuntimeError
+  # @return [NoSuchEndpointError] a new instance of NoSuchEndpointError
   def initialize(options = T.unsafe(nil)); end
 
+  # Returns the value of attribute context.
   def context; end
+
+  # Returns the value of attribute endpoint.
   def endpoint; end
+
+  # Returns the value of attribute original_error.
   def original_error; end
 
   private
@@ -532,53 +1624,116 @@ class Aws::Errors::NoSuchEndpointError < ::RuntimeError
   def possible_regions; end
 end
 
+# Raised when a client is constructed and the specified shared
+# credentials profile does not exist.
 class Aws::Errors::NoSuchProfileError < ::RuntimeError; end
+
 class Aws::Errors::NonSupportedRubyVersionError < ::RuntimeError; end
 
+# Raised when attempting to retry a request
+# and no capacity is available to retry (See adaptive retry_mode)
 class Aws::Errors::RetryCapacityNotAvailableError < ::RuntimeError
+  # @return [RetryCapacityNotAvailableError] a new instance of RetryCapacityNotAvailableError
   def initialize(*args); end
 end
 
+# The base class for all errors returned by an Amazon Web Service.
+# All ~400 level client errors and ~500 level server errors are raised
+# as service errors.  This indicates it was an error returned from the
+# service and not one generated by the client.
 class Aws::Errors::ServiceError < ::RuntimeError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::Structure]
+  # @return [ServiceError] a new instance of ServiceError
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def code; end
+
+  # @return [Seahorse::Client::RequestContext] The context of the request
+  #   that triggered the remote service to return this error.
   def context; end
+
+  # @return [Aws::Structure]
   def data; end
+
+  # @api private undocumented
+  # @return [Boolean]
   def retryable?; end
+
+  # @api private undocumented
+  # @return [Boolean]
   def throttling?; end
 
   class << self
+    # @return [String]
     def code; end
+
+    # @return [String]
     def code=(_arg0); end
   end
 end
 
+# Raised when attempting to #signal an event before
+# making an async request
 class Aws::Errors::SignalEventError < ::RuntimeError; end
+
+# Raised when there is a circular reference in chained
+# source_profiles
 class Aws::Errors::SourceProfileCircularReferenceError < ::RuntimeError; end
 
 class Aws::EventEmitter
+  # @return [EventEmitter] a new instance of EventEmitter
   def initialize; end
 
   def emit(type, params); end
+
+  # Returns the value of attribute encoder.
   def encoder; end
+
+  # Sets the attribute encoder
+  #
+  # @param value the value to set the attribute encoder to.
   def encoder=(_arg0); end
+
   def on(type, callback); end
   def signal(type, event); end
+
+  # Returns the value of attribute signal_queue.
   def signal_queue; end
+
+  # Sets the attribute signal_queue
+  #
+  # @param value the value to set the attribute signal_queue to.
   def signal_queue=(_arg0); end
+
+  # Returns the value of attribute stream.
   def stream; end
+
+  # Sets the attribute stream
+  #
+  # @param value the value to set the attribute stream to.
   def stream=(_arg0); end
+
+  # Returns the value of attribute validate_event.
   def validate_event; end
+
+  # Sets the attribute validate_event
+  #
+  # @param value the value to set the attribute validate_event to.
   def validate_event=(_arg0); end
 
   private
 
+  # @return [Boolean]
   def _ready_for_events?; end
 end
 
+# @api private
 class Aws::IniParser
   class << self
+    # @api private
     def ini_parse(raw); end
   end
 end
@@ -587,48 +1742,111 @@ class Aws::InstanceProfileCredentials
   include ::Aws::CredentialProvider
   include ::Aws::RefreshingCredentials
 
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash]
+  # @return [InstanceProfileCredentials] a new instance of InstanceProfileCredentials
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [Integer] Number of times to retry when retrieving credentials
+  #   from the instance metadata service. Defaults to 0 when resolving from
+  #   the default credential chain ({Aws::CredentialProviderChain}).
   def retries; end
 
   private
 
+  # @return [Boolean]
   def _metadata_disabled?; end
+
   def backoff(backoff); end
   def get_credentials; end
+
+  # GET request fetch profile and credentials
+  #
+  # @raise [Non200Response]
   def http_get(connection, path, token = T.unsafe(nil)); end
+
+  # PUT request fetch token with ttl
   def http_put(connection, path, ttl); end
+
   def open_connection; end
   def refresh; end
   def resolve_endpoint(options, endpoint_mode); end
   def resolve_endpoint_mode(options); end
   def retry_errors(error_classes, options = T.unsafe(nil), &_block); end
+
+  # @return [Boolean]
   def token_set?; end
 end
 
+# Path base for GET request for profile and credentials
+#
+# @api private
 Aws::InstanceProfileCredentials::METADATA_PATH_BASE = T.let(T.unsafe(nil), String)
+
+# Path for PUT request for token
+#
+# @api private
 Aws::InstanceProfileCredentials::METADATA_TOKEN_PATH = T.let(T.unsafe(nil), String)
+
+# These are the errors we trap when attempting to talk to the
+# instance metadata service.  Any of these imply the service
+# is not present, no responding or some other non-recoverable
+# error.
+#
+# @api private
 Aws::InstanceProfileCredentials::NETWORK_ERRORS = T.let(T.unsafe(nil), Array)
+
+# @api private
 class Aws::InstanceProfileCredentials::Non200Response < ::RuntimeError; end
 
+# Token used to fetch IMDS profile and credentials
+#
+# @api private
 class Aws::InstanceProfileCredentials::Token
+  # @api private
+  # @return [Token] a new instance of Token
   def initialize(value, ttl); end
 
+  # @api private
+  # @return [Boolean]
   def expired?; end
+
+  # [String] token value
+  #
+  # @api private
   def value; end
 end
 
+# @api private
 class Aws::InstanceProfileCredentials::TokenExpiredError < ::RuntimeError; end
+
+# @api private
 class Aws::InstanceProfileCredentials::TokenRetrivalError < ::RuntimeError; end
 
+# @api private
 module Aws::Json
   class << self
+    # @api private
     def dump(value); end
+
+    # @api private
     def load(json); end
+
+    # @api private
     def load_file(path); end
 
     private
 
+    # @api private
     def select_engine; end
   end
 end
@@ -636,6 +1854,7 @@ end
 class Aws::Json::Builder
   include ::Seahorse::Model::Shapes
 
+  # @return [Builder] a new instance of Builder
   def initialize(rules); end
 
   def serialize(params); end
@@ -651,9 +1870,12 @@ class Aws::Json::Builder
   def timestamp(ref, value); end
 end
 
+# @api private
 Aws::Json::ENGINE = Aws::Json::JSONEngine
 
 class Aws::Json::ErrorHandler < ::Aws::Xml::ErrorHandler
+  # @param context [Seahorse::Client::RequestContext]
+  # @return [Seahorse::Client::Response]
   def call(context); end
 
   private
@@ -665,6 +1887,8 @@ class Aws::Json::ErrorHandler < ::Aws::Xml::ErrorHandler
 end
 
 class Aws::Json::Handler < ::Seahorse::Client::Handler
+  # @param context [Seahorse::Client::RequestContext]
+  # @return [Seahorse::Client::Response]
   def call(context); end
 
   private
@@ -675,7 +1899,10 @@ class Aws::Json::Handler < ::Seahorse::Client::Handler
   def content_type(context); end
   def parse_body(context); end
   def parse_response(response); end
+
+  # @return [Boolean]
   def simple_json?(context); end
+
   def target(context); end
 end
 
@@ -695,24 +1922,36 @@ module Aws::Json::OjEngine
 
     private
 
+    # Oj before 1.4.0 does not define Oj::ParseError and instead raises
+    # SyntaxError on failure
     def detect_oj_parse_errors; end
   end
 end
 
+# @api private
 Aws::Json::OjEngine::DUMP_OPTIONS = T.let(T.unsafe(nil), Hash)
+
+# @api private
 Aws::Json::OjEngine::LOAD_OPTIONS = T.let(T.unsafe(nil), Hash)
 
+# @api private
 class Aws::Json::ParseError < ::StandardError
+  # @api private
+  # @return [ParseError] a new instance of ParseError
   def initialize(error); end
 
+  # @api private
   def error; end
 end
 
 class Aws::Json::Parser
   include ::Seahorse::Model::Shapes
 
+  # @param rules [Seahorse::Model::ShapeRef]
+  # @return [Parser] a new instance of Parser
   def initialize(rules); end
 
+  # @param json [String<JSON>]
   def parse(json, target = T.unsafe(nil)); end
 
   private
@@ -721,16 +1960,97 @@ class Aws::Json::Parser
   def map(ref, values, target = T.unsafe(nil)); end
   def parse_ref(ref, value, target = T.unsafe(nil)); end
   def structure(ref, values, target = T.unsafe(nil)); end
+
+  # @param value [String, Integer]
+  # @return [Time]
   def time(value); end
 end
 
 module Aws::Log; end
 
+# A log formatter generates a string for logging from a response. This
+# accomplished with a log pattern string:
+#
+#     pattern = ':operation :http_response_status_code :time'
+#     formatter = Aws::Log::Formatter.new(pattern)
+#     formatter.format(response)
+#     #=> 'get_bucket 200 0.0352'
+#
+# # Canned Formatters
+#
+# Instead of providing your own pattern, you can choose a canned log
+# formatter.
+#
+# * {Formatter.default}
+# * {Formatter.colored}
+# * {Formatter.short}
+#
+# # Pattern Substitutions
+#
+# You can put any of these placeholders into you pattern.
+#
+#   * `:client_class` - The name of the client class.
+#
+#   * `:operation` - The name of the client request method.
+#
+#   * `:request_params` - The user provided request parameters. Long
+#     strings are truncated/summarized if they exceed the
+#     `:max_string_size`.  Other objects are inspected.
+#
+#   * `:time` - The total time in seconds spent on the
+#     request.  This includes client side time spent building
+#     the request and parsing the response.
+#
+#   * `:retries` - The number of times a client request was retried.
+#
+#   * `:http_request_method` - The http request verb, e.g., `POST`,
+#     `PUT`, `GET`, etc.
+#
+#   * `:http_request_endpoint` - The request endpoint.  This includes
+#      the scheme, host and port, but not the path.
+#
+#   * `:http_request_scheme` - This is replaced by `http` or `https`.
+#
+#   * `:http_request_host` - The host name of the http request
+#     endpoint (e.g. 's3.amazon.com').
+#
+#   * `:http_request_port` - The port number (e.g. '443' or '80').
+#
+#   * `:http_request_headers` - The http request headers, inspected.
+#
+#   * `:http_request_body` - The http request payload.
+#
+#   * `:http_response_status_code` - The http response status
+#     code, e.g., `200`, `404`, `500`, etc.
+#
+#   * `:http_response_headers` - The http response headers, inspected.
+#
+#   * `:http_response_body` - The http response body contents.
+#
+#   * `:error_class`
+#
+#   * `:error_message`
 class Aws::Log::Formatter
+  # @option options
+  # @option options
+  # @option options
+  # @param pattern [String] The log format pattern should be a string
+  #   and may contain substitutions.
+  # @param options [Hash] a customizable set of options
+  # @return [Formatter] a new instance of Formatter
   def initialize(pattern, options = T.unsafe(nil)); end
 
+  # Given a response, this will format a log message and return it as a
+  #   string according to {#pattern}.
+  #
+  # @param response [Seahorse::Client::Response]
+  # @return [String]
   def format(response); end
+
+  # @api private
   def method_missing(method_name, *args); end
+
+  # @return [String]
   def pattern; end
 
   private
@@ -754,13 +2074,49 @@ class Aws::Log::Formatter
   def _time(response); end
 
   class << self
+    # The default log format with ANSI colors.
+    #
+    # @example A sample of the colored format (sans the ansi colors).
+    #
+    #   [ClientClass 200 0.580066 0 retries] list_objects(:bucket_name => 'bucket')
+    # @option options
+    # @option options
+    # @option options
+    # @param options [Hash] a customizable set of options
+    # @return [Formatter]
     def colored(options = T.unsafe(nil)); end
+
+    # The default log format.
+    #
+    # @example A sample of the default format.
+    #
+    #   [ClientClass 200 0.580066 0 retries] list_objects(:bucket_name => 'bucket')
+    # @option options
+    # @option options
+    # @option options
+    # @param options [Hash] a customizable set of options
+    # @return [Formatter]
     def default(options = T.unsafe(nil)); end
+
+    # The short log format.  Similar to default, but it does not
+    # inspect the request params or report on retries.
+    #
+    # @example A sample of the short format
+    #
+    #   [ClientClass 200 0.494532] list_buckets
+    # @option options
+    # @option options
+    # @option options
+    # @param options [Hash] a customizable set of options
+    # @return [Formatter]
     def short(options = T.unsafe(nil)); end
   end
 end
 
 class Aws::Log::ParamFilter
+  # end
+  #
+  # @return [ParamFilter] a new instance of ParamFilter
   def initialize(options = T.unsafe(nil)); end
 
   def filter(values, type); end
@@ -772,527 +2128,1228 @@ class Aws::Log::ParamFilter
   def filter_struct(values, type); end
 end
 
+# DEPRECATED - This must exist for backwards compatibility. Sensitive
+# members are now computed for each request/response type. This can be
+# removed in a new major version. This list is no longer updated.
+#
+# A managed list of sensitive parameters that should be filtered from
+# logs. This is updated automatically as part of each release. See the
+# `tasks/update-sensitive-params.rake` for more information.
+#
+# begin
+#
+# @api private
 Aws::Log::ParamFilter::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @api private
 class Aws::Log::ParamFormatter
+  # @api private
+  # @return [ParamFormatter] a new instance of ParamFormatter
   def initialize(options = T.unsafe(nil)); end
 
+  # @api private
   def summarize(value); end
 
   private
 
+  # @api private
   def summarize_array(array); end
+
+  # @api private
   def summarize_file(path); end
+
+  # @api private
   def summarize_hash(hash); end
+
+  # @api private
   def summarize_string(str); end
+
+  # @api private
   def summarize_string_hash(hash); end
+
+  # @api private
   def summarize_symbol_hash(hash); end
+
+  # @api private
   def summarize_value(value); end
 end
 
+# String longer than the max string size are truncated
+#
+# @api private
 Aws::Log::ParamFormatter::MAX_STRING_SIZE = T.let(T.unsafe(nil), Integer)
 
+# Decorates a {Seahorse::Client::Response} with paging convenience methods.
+# Some AWS calls provide paged responses to limit the amount of data returned
+# with each response. To optimize for latency, some APIs may return an
+# inconsistent number of responses per page. You should rely on the values of
+# the `next_page?` method or using enumerable methods such as `each` rather
+# than the number of items returned to iterate through results. See below for
+# examples.
+#
+# # Paged Responses Are Enumerable
+# The simplest way to handle paged response data is to use the built-in
+# enumerator in the response object, as shown in the following example.
+#
+#     s3 = Aws::S3::Client.new
+#
+#     s3.list_objects(bucket:'aws-sdk').each do |response|
+#       puts response.contents.map(&:key)
+#     end
+#
+# This yields one response object per API call made, and enumerates objects
+# in the named bucket. The SDK retrieves additional pages of data to
+# complete the request.
+#
+# # Handling Paged Responses Manually
+# To handle paging yourself, use the response’s `next_page?` method to verify
+# there are more pages to retrieve, or use the last_page? method to verify
+# there are no more pages to retrieve.
+#
+# If there are more pages, use the `next_page` method to retrieve the
+# next page of results, as shown in the following example.
+#
+#     s3 = Aws::S3::Client.new
+#
+#     # Get the first page of data
+#     response = s3.list_objects(bucket:'aws-sdk')
+#
+#     # Get additional pages
+#     while response.next_page? do
+#       response = response.next_page
+#       # Use the response data here...
+#       puts response.contents.map(&:key)
+#     end
+#
+# @note Methods such as `to_json` will enumerate all of the responses before
+#   returning the full response as JSON.
 module Aws::PageableResponse
+  # Yields the current and each following response to the given block.
+  #
+  # @return [Enumerable, nil] Returns a new Enumerable if no block is given.
+  # @yieldparam response [Response]
   def each(&block); end
+
+  # Yields the current and each following response to the given block.
+  #
+  # @return [Enumerable, nil] Returns a new Enumerable if no block is given.
+  # @yieldparam response [Response]
   def each_page(&block); end
+
+  # Returns `true` if there are no more results.  Calling {#next_page}
+  # when this method returns `false` will raise an error.
+  #
+  # @return [Boolean]
   def last_page?; end
+
+  # @return [Seahorse::Client::Response]
   def next_page(params = T.unsafe(nil)); end
+
+  # Returns `true` if there are more results.  Calling {#next_page} will
+  # return the next response.
+  #
+  # @return [Boolean]
   def next_page?; end
+
+  # @return [Paging::Pager]
   def pager; end
+
+  # @return [Paging::Pager]
   def pager=(_arg0); end
 
   private
 
+  # @param params [Hash] A hash of additional request params to
+  #   merge into the next page request.
+  # @return [Hash] Returns the hash of request parameters for the
+  #   next page, merging any given params.
   def next_page_params(params); end
+
+  # @param params [Hash] A hash of additional request params to
+  #   merge into the next page request.
+  # @return [Seahorse::Client::Response] Returns the next page of
+  #   results.
   def next_response(params); end
 
   class << self
+    # @private
     def extended(base); end
   end
 end
 
+# Raised when calling {PageableResponse#next_page} on a pager that
+# is on the last page of results.  You can call {PageableResponse#last_page?}
+# or {PageableResponse#next_page?} to know if there are more pages.
 class Aws::PageableResponse::LastPageError < ::RuntimeError
+  # @param response [Seahorse::Client::Response]
+  # @return [LastPageError] a new instance of LastPageError
   def initialize(response); end
 
+  # @return [Seahorse::Client::Response]
   def response; end
 end
 
+# A handful of Enumerable methods, such as #count are not safe
+# to call on a pageable response, as this would trigger n api calls
+# simply to count the number of response pages, when likely what is
+# wanted is to access count on the data. Same for #to_h.
+#
+# @api private
 module Aws::PageableResponse::UnsafeEnumerableMethods
+  # @api private
   def count; end
+
+  # @api private
+  # @return [Boolean]
   def respond_to?(method_name, *args); end
+
+  # @api private
   def to_h; end
 end
 
+# @api private
 class Aws::Pager
+  # @api private
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Pager] a new instance of Pager
   def initialize(options); end
 
+  # @api private
+  # @return [Symbol, nil]
   def limit_key; end
+
+  # @api private
+  # @param response [Seahorse::Client::Response]
+  # @return [Hash]
   def next_tokens(response); end
+
+  # @api private
   def prev_tokens(response); end
+
+  # @api private
+  # @return [Hash, nil]
   def tokens; end
+
+  # @api private
+  # @param response [Seahorse::Client::Response]
+  # @return [Boolean]
   def truncated?(response); end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def empty_value?(value); end
 end
 
+# @api private
 class Aws::Pager::NullPager
+  # @api private
+  # @return [nil]
   def limit_key; end
+
+  # @api private
   def next_tokens; end
+
+  # @api private
   def prev_tokens; end
+
+  # @api private
+  # @return [Boolean]
   def truncated?(response); end
 end
 
+# @api private
 class Aws::ParamConverter
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @return [ParamConverter] a new instance of ParamConverter
   def initialize(rules); end
 
+  # @api private
   def close_opened_files; end
+
+  # @api private
+  # @param params [Hash]
+  # @return [Hash]
   def convert(params); end
+
+  # @api private
   def opened_files; end
 
   private
 
+  # @api private
   def c(ref, value); end
+
+  # @api private
   def list(ref, values); end
+
+  # @api private
   def map(ref, values); end
+
+  # @api private
   def member(ref, value); end
+
+  # @api private
   def structure(ref, values); end
 
   class << self
+    # Registers a new value converter.  Converters run in the context
+    # of a shape and value class.
+    #
+    #     # add a converter that stringifies integers
+    #     shape_class = Seahorse::Model::Shapes::StringShape
+    #     ParamConverter.add(shape_class, Integer) { |i| i.to_s }
+    #
+    # @api private
+    # @param shape_class [Class<Model::Shapes::Shape>]
+    # @param value_class [Class]
+    # @param converter [#call] (nil) An object that responds to `#call`
+    #   accepting a single argument.  This function should perform
+    #   the value conversion if possible, returning the result.
+    #   If the conversion is not possible, the original value should
+    #   be returned.
+    # @return [void]
     def add(shape_class, value_class, converter = T.unsafe(nil), &block); end
+
+    # @api private
     def c(shape, value, instance = T.unsafe(nil)); end
+
+    # @api private
     def convert(shape, params); end
+
+    # @api private
     def ensure_open(file, converter); end
 
     private
 
+    # @api private
     def converter_for(shape_class, value); end
+
+    # @api private
     def each_base_class(shape_class, &block); end
+
+    # @api private
     def find(shape_class, value); end
   end
 end
 
+# @api private
 class Aws::ParamValidator
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @option options
+  # @param rules [Seahorse::Model::Shapes::ShapeRef]
+  # @param options [Hash] a customizable set of options
+  # @return [ParamValidator] a new instance of ParamValidator
   def initialize(rules, options = T.unsafe(nil)); end
 
+  # @api private
+  # @param params [Hash]
+  # @raise [ArgumentError]
+  # @return [void]
   def validate!(params); end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def correct_type?(ref, value, errors, context); end
+
+  # @api private
   def document(ref, value, errors, context); end
+
+  # @api private
   def error_messages(errors); end
+
+  # @api private
   def expected_got(context, expected, got); end
+
+  # @api private
+  # @return [Boolean]
   def io_like?(value, require_size = T.unsafe(nil)); end
+
+  # @api private
   def list(ref, values, errors, context); end
+
+  # @api private
   def map(ref, values, errors, context); end
+
+  # @api private
   def shape(ref, value, errors, context); end
+
+  # @api private
+  # @return [Boolean]
   def streaming_input?(ref); end
+
+  # @api private
   def structure(ref, values, errors, context); end
 
   class << self
+    # @api private
+    # @param rules [Seahorse::Model::Shapes::ShapeRef]
+    # @param params [Hash]
+    # @return [void]
     def validate!(rules, params); end
   end
 end
 
+# @api private
 Aws::ParamValidator::EXPECTED_GOT = T.let(T.unsafe(nil), String)
+
+# @api private
 module Aws::Plugins; end
 
+# @api private
 class Aws::Plugins::ClientMetricsPlugin < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 
   class << self
+    # @api private
     def resolve_client_id(cfg); end
+
+    # @api private
     def resolve_client_side_monitoring(cfg); end
+
+    # @api private
     def resolve_client_side_monitoring_host(cfg); end
+
+    # @api private
     def resolve_client_side_monitoring_port(cfg); end
+
+    # @api private
     def resolve_publisher(cfg); end
   end
 end
 
+# @api private
 class Aws::Plugins::ClientMetricsPlugin::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def _calculate_service_id(context); end
+
+  # @api private
   def _fallback_service_id(id); end
 end
 
+# @api private
 class Aws::Plugins::ClientMetricsSendPlugin < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 end
 
+# @api private
 class Aws::Plugins::ClientMetricsSendPlugin::AttemptHandler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def _extract_error_name(error); end
 end
 
+# @api private
 class Aws::Plugins::ClientMetricsSendPlugin::LatencyHandler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 class Aws::Plugins::CredentialsConfiguration < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::DefaultsMode < ::Seahorse::Client::Plugin
   class << self
     private
 
+    # @api private
     def resolve_defaults_mode(cfg); end
   end
 end
 
+# @api private
 class Aws::Plugins::EndpointDiscovery < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 
   class << self
+    # @api private
     def resolve_endpoint_discovery(cfg); end
   end
 end
 
+# @api private
 class Aws::Plugins::EndpointDiscovery::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def _apply_endpoint_discovery_user_agent(ctx); end
+
+  # @api private
   def _discover_endpoint(ctx, required); end
+
+  # @api private
   def _valid_uri(address); end
 end
 
+# @api private
 class Aws::Plugins::EndpointPattern < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 end
 
+# @api private
 class Aws::Plugins::EndpointPattern::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def _apply_endpoint_trait(context, trait); end
+
+  # @api private
   def _replace_label_value(ori, label, input_ref, params); end
 end
 
+# @api private
 class Aws::Plugins::EventStreamConfiguration < ::Seahorse::Client::Plugin; end
 
+# This plugin provides the ability to provide global configuration for
+# all AWS classes or specific ones.
+#
+# ## Global AWS configuration
+#
+# You can specify global configuration defaults via `Aws.config`
+#
+#     Aws.config[:region] = 'us-west-2'
+#
+# Options applied to `Aws.config` are merged with constructed
+# service interfaces.
+#
+#     # uses the global configuration
+#     Aws::EC2.new.config.region #=> 'us-west-2'
+#
+#     # constructor args have priority over global configuration
+#     Aws::EC2.new(region: 'us-east-1').config.region #=> 'us-east-1'
+#
+# ## Service Specific Global Configuration
+#
+# Some services have very specific configuration options that are not
+# shared by other services.
+#
+#     # oops, this option is only recognized by Aws::S3
+#     Aws.config[:force_path_style] = true
+#     Aws::EC2.new
+#     #=> raises ArgumentError: invalid configuration option `:force_path_style'
+#
+# To avoid this issue, you can nest service specific options
+#
+#     Aws.config[:s3] = { force_path_style: true }
+#
+#     Aws::EC2.new # no error this time
+#     Aws::S3.new.config.force_path_style #=> true
+#
+# @api private
 class Aws::Plugins::GlobalConfiguration < ::Seahorse::Client::Plugin
+  # @api private
   def before_initialize(client_class, options); end
 
   private
 
+  # @api private
   def apply_aws_defaults(client_class, options); end
+
+  # @api private
   def apply_service_defaults(client_class, options); end
 
   class << self
+    # Registers an additional service identifier.
+    #
+    # @api private
     def add_identifier(identifier); end
+
+    # @api private
+    # @return [Set<String>]
     def identifiers; end
   end
 end
 
+# @api private
 class Aws::Plugins::HelpfulSocketErrors < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::HelpfulSocketErrors::Handler < ::Seahorse::Client::Handler
+  # Wrap `SocketError` errors with `Aws::Errors::NoSuchEndpointError`
+  #
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def no_such_endpoint_error(context, error); end
+
+  # @api private
+  # @return [Boolean]
   def socket_endpoint_error?(error); end
 end
 
+# @api private
 class Aws::Plugins::HttpChecksum < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, _config); end
 end
 
+# @api private
 class Aws::Plugins::HttpChecksum::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
+  # @param value [File, Tempfile, IO#read, String]
+  # @return [String<MD5>]
   def md5(value); end
+
+  # @api private
   def update_in_chunks(digest, io); end
 end
 
+# one MB
+#
+# @api private
 Aws::Plugins::HttpChecksum::Handler::CHUNK_SIZE = T.let(T.unsafe(nil), Integer)
+
+# Provides support for auto filling operation parameters
+# that enabled with `idempotencyToken` trait  with random UUID v4
+# when no value is provided
+#
+# @api private
 class Aws::Plugins::IdempotencyToken < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::IdempotencyToken::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def auto_fill(params, ref); end
 end
 
+# Converts input value to JSON Syntax for members with jsonvalue trait
+#
+# @api private
 class Aws::Plugins::JsonvalueConverter < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::JsonvalueConverter::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
+# @see Log::Formatter
 class Aws::Plugins::Logging < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 end
 
+# @api private
 class Aws::Plugins::Logging::Handler < ::Seahorse::Client::Handler
+  # @api private
+  # @param context [RequestContext]
+  # @return [Response]
   def call(context); end
 
   private
 
+  # @api private
+  # @param config [Configuration]
+  # @param response [Response]
+  # @return [String]
   def format(config, response); end
+
+  # @api private
+  # @param config [Configuration]
+  # @param response [Response]
+  # @return [void]
   def log(config, response); end
 end
 
+# @api private
 class Aws::Plugins::ParamConverter < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 end
 
+# @api private
 class Aws::Plugins::ParamConverter::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 class Aws::Plugins::ParamValidator < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 end
 
+# @api private
 class Aws::Plugins::ParamValidator::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 module Aws::Plugins::Protocols; end
+
+# @api private
 class Aws::Plugins::Protocols::JsonRpc < ::Seahorse::Client::Plugin; end
+
+# @api private
 class Aws::Plugins::Protocols::Query < ::Seahorse::Client::Plugin; end
+
+# @api private
 class Aws::Plugins::Protocols::RestJson < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::Protocols::RestJson::ContentTypeHandler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 class Aws::Plugins::Protocols::RestXml < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::RegionalEndpoint < ::Seahorse::Client::Plugin
+  # @api private
   def after_initialize(client); end
 
   class << self
     private
 
+    # @api private
     def resolve_region(cfg); end
+
+    # @api private
     def resolve_use_dualstack_endpoint(cfg); end
+
+    # @api private
     def resolve_use_fips_endpoint(cfg); end
   end
 end
 
+# @api private
 class Aws::Plugins::ResponsePaging < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::ResponsePaging::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 module Aws::Plugins::Retries; end
 
+# Used only in 'adaptive' retry mode
+#
+# @api private
 class Aws::Plugins::Retries::ClientRateLimiter
+  # @api private
+  # @return [ClientRateLimiter] a new instance of ClientRateLimiter
   def initialize; end
 
+  # @api private
   def token_bucket_acquire(amount, wait_to_fill = T.unsafe(nil)); end
+
+  # @api private
   def update_sending_rate(is_throttling_error); end
 
   private
 
+  # @api private
   def calculate_time_window; end
+
+  # @api private
   def cubic_success(timestamp); end
+
+  # @api private
   def cubic_throttle(rate_to_use); end
+
+  # @api private
   def enable_token_bucket; end
+
+  # @api private
   def token_bucket_refill; end
+
+  # @api private
   def token_bucket_update_rate(new_rps); end
+
+  # @api private
   def update_measured_rate; end
 end
 
+# How much to scale back after a throttling response
+#
+# @api private
 Aws::Plugins::Retries::ClientRateLimiter::BETA = T.let(T.unsafe(nil), Float)
+
+# @api private
 Aws::Plugins::Retries::ClientRateLimiter::MIN_CAPACITY = T.let(T.unsafe(nil), Integer)
+
+# @api private
 Aws::Plugins::Retries::ClientRateLimiter::MIN_FILL_RATE = T.let(T.unsafe(nil), Float)
+
+# Controls how aggressively we scale up after being throttled
+#
+# @api private
 Aws::Plugins::Retries::ClientRateLimiter::SCALE_CONSTANT = T.let(T.unsafe(nil), Float)
+
+# @api private
 Aws::Plugins::Retries::ClientRateLimiter::SMOOTH = T.let(T.unsafe(nil), Float)
 
+# @api private
 class Aws::Plugins::Retries::ClockSkew
+  # @api private
+  # @return [ClockSkew] a new instance of ClockSkew
   def initialize; end
 
+  # Gets the clock_correction in seconds to apply to a given endpoint
+  #
+  # @api private
+  # @param endpoint [URI / String]
   def clock_correction(endpoint); end
+
+  # Determines whether a request has clock skew by comparing
+  # the current time against the server's time in the response
+  #
+  # @api private
+  # @param context [Seahorse::Client::RequestContext]
+  # @return [Boolean]
   def clock_skewed?(context); end
+
+  # The estimated skew factors in any clock skew from
+  # the service along with any network latency.
+  # This provides a more accurate value for the ttl,
+  # which should represent when the client will stop
+  # waiting for a request.
+  # Estimated Skew should not be used to correct clock skew errors
+  # it should only be used to estimate TTL for a request
+  #
+  # @api private
   def estimated_skew(endpoint); end
+
+  # Called only on clock skew related errors
+  # Update the stored clock skew correction value for an endpoint
+  # from the server's time in the response
+  #
+  # @api private
+  # @param context [Seahorse::Client::RequestContext]
   def update_clock_correction(context); end
+
+  # Called for every request
+  # Update our estimated clock skew for the endpoint
+  # from the servers time in the response
+  #
+  # @api private
+  # @param context [Seahorse::Client::RequestContext]
   def update_estimated_skew(context); end
 
   private
 
+  # @api private
+  # @param response [Seahorse::Client::Http::Response:]
   def server_time(response); end
+
+  # Sets the clock correction for an endpoint
+  #
+  # @api private
+  # @param endpoint [URI / String]
+  # @param correction [Number]
   def set_clock_correction(endpoint, correction); end
 end
 
+# five minutes
+#
+# @api private
 Aws::Plugins::Retries::ClockSkew::CLOCK_SKEW_THRESHOLD = T.let(T.unsafe(nil), Integer)
 
+# This class will be obsolete when APIs contain modeled exceptions
+#
+# @api private
 class Aws::Plugins::Retries::ErrorInspector
+  # @api private
+  # @return [ErrorInspector] a new instance of ErrorInspector
   def initialize(error, http_status_code); end
 
+  # @api private
+  # @return [Boolean]
   def checksum?; end
+
+  # @api private
+  # @return [Boolean]
   def clock_skew?(context); end
+
+  # @api private
+  # @return [Boolean]
   def endpoint_discovery?(context); end
+
+  # @api private
+  # @return [Boolean]
   def expired_credentials?; end
+
+  # @api private
+  # @return [Boolean]
   def modeled_retryable?; end
+
+  # @api private
+  # @return [Boolean]
   def modeled_throttling?; end
+
+  # @api private
+  # @return [Boolean]
   def networking?; end
+
+  # @api private
+  # @return [Boolean]
   def retryable?(context); end
+
+  # @api private
+  # @return [Boolean]
   def server?; end
+
+  # @api private
+  # @return [Boolean]
   def throttling_error?; end
 
   private
 
+  # @api private
   def extract_name(error); end
+
+  # @api private
+  # @return [Boolean]
   def refreshable_credentials?(context); end
 end
 
+# @api private
 Aws::Plugins::Retries::ErrorInspector::CHECKSUM_ERRORS = T.let(T.unsafe(nil), Set)
+
+# See: https://github.com/aws/aws-sdk-net/blob/5810dfe401e0eac2e59d02276d4b479224b4538e/sdk/src/Core/Amazon.Runtime/Pipeline/RetryHandler/RetryPolicy.cs#L78
+#
+# @api private
 Aws::Plugins::Retries::ErrorInspector::CLOCK_SKEW_ERRORS = T.let(T.unsafe(nil), Set)
+
+# @api private
 Aws::Plugins::Retries::ErrorInspector::EXPIRED_CREDS = T.let(T.unsafe(nil), Set)
+
+# @api private
 Aws::Plugins::Retries::ErrorInspector::NETWORKING_ERRORS = T.let(T.unsafe(nil), Set)
+
+# @api private
 Aws::Plugins::Retries::ErrorInspector::THROTTLING_ERRORS = T.let(T.unsafe(nil), Set)
 
+# Used in 'standard' and 'adaptive' retry modes.
+#
+# @api private
 class Aws::Plugins::Retries::RetryQuota
+  # @api private
+  # @return [RetryQuota] a new instance of RetryQuota
   def initialize(opts = T.unsafe(nil)); end
 
+  # check if there is sufficient capacity to retry
+  # and return it.  If there is insufficient capacity
+  # return 0
+  #
+  # @api private
+  # @return [Integer] The amount of capacity checked out
   def checkout_capacity(error_inspector); end
+
+  # capacity_amount refers to the amount of capacity requested from
+  # the last retry.  It can either be RETRY_COST, TIMEOUT_RETRY_COST,
+  # or unset.
+  #
+  # @api private
   def release(capacity_amount); end
 end
 
+# @api private
 Aws::Plugins::Retries::RetryQuota::INITIAL_RETRY_TOKENS = T.let(T.unsafe(nil), Integer)
+
+# @api private
 Aws::Plugins::Retries::RetryQuota::NO_RETRY_INCREMENT = T.let(T.unsafe(nil), Integer)
+
+# @api private
 Aws::Plugins::Retries::RetryQuota::RETRY_COST = T.let(T.unsafe(nil), Integer)
+
+# @api private
 Aws::Plugins::Retries::RetryQuota::TIMEOUT_RETRY_COST = T.let(T.unsafe(nil), Integer)
 
+# @api private
 class Aws::Plugins::RetryErrors < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 
   class << self
+    # @api private
     def resolve_adaptive_retry_wait_to_fill(cfg); end
+
+    # @api private
     def resolve_correct_clock_skew(cfg); end
+
+    # @api private
     def resolve_max_attempts(cfg); end
+
+    # @api private
     def resolve_retry_mode(cfg); end
   end
 end
 
+# @api private
 Aws::Plugins::RetryErrors::DEFAULT_BACKOFF = T.let(T.unsafe(nil), Proc)
+
+# BEGIN LEGACY OPTIONS
+#
+# @api private
 Aws::Plugins::RetryErrors::EQUAL_JITTER = T.let(T.unsafe(nil), Proc)
+
+# @api private
 Aws::Plugins::RetryErrors::FULL_JITTER = T.let(T.unsafe(nil), Proc)
 
+# @api private
 class Aws::Plugins::RetryErrors::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def add_retry_headers(context); end
+
+  # @api private
   def compute_request_ttl(context); end
+
+  # @api private
   def exponential_backoff(retries); end
+
+  # @api private
   def get_send_token(config); end
+
+  # maxsendrate is updated if on adaptive mode and based on response
+  # retry quota is updated if the request is successful (both modes)
+  #
+  # @api private
   def request_bookkeeping(context, response, error_inspector); end
+
+  # @api private
   def retry_request(context, error); end
+
+  # @api private
+  # @return [Boolean]
   def retryable?(context, response, error_inspector); end
 end
 
+# Max backoff (in seconds)
+#
+# @api private
 Aws::Plugins::RetryErrors::Handler::MAX_BACKOFF = T.let(T.unsafe(nil), Integer)
+
+# @api private
 Aws::Plugins::RetryErrors::JITTERS = T.let(T.unsafe(nil), Hash)
 
+# @api private
 class Aws::Plugins::RetryErrors::LegacyHandler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def delay_retry(context); end
+
+  # @api private
+  # @return [Boolean]
   def response_truncatable?(context); end
+
+  # @api private
   def retry_if_possible(response, error_inspector); end
+
+  # @api private
   def retry_limit(context); end
+
+  # @api private
   def retry_request(context, error); end
+
+  # @api private
+  # @return [Boolean]
   def should_retry?(context, error); end
 end
 
+# @api private
 Aws::Plugins::RetryErrors::NO_JITTER = T.let(T.unsafe(nil), Proc)
 
+# @api private
 class Aws::Plugins::SignatureV4 < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, cfg); end
 
   class << self
+    # @api private
     def apply_authtype(context); end
+
+    # @api private
     def apply_signature(options = T.unsafe(nil)); end
+
+    # @api private
     def build_signer(cfg); end
   end
 end
 
+# @api private
 class Aws::Plugins::SignatureV4::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 class Aws::Plugins::SignatureV4::MissingCredentialsSigner
+  # @api private
+  # @raise [Errors::MissingCredentialsError]
   def sign_request(*args); end
 end
 
+# @api private
 class Aws::Plugins::StubResponses < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
+
+  # @api private
   def after_initialize(client); end
 end
 
+# @api private
 class Aws::Plugins::StubResponses::Handler < ::Seahorse::Client::Handler
+  # @api private
   def apply_stub(stub, response, async_mode = T.unsafe(nil)); end
+
+  # @api private
   def call(context); end
+
+  # @api private
   def signal_error(error, http_resp); end
+
+  # @api private
+  # @param stub [Seahorse::Client::Http::Response]
+  # @param http_resp [Seahorse::Client::Http::Response | Seahorse::Client::Http::AsyncResponse]
+  # @param async_mode [Boolean]
   def signal_http(stub, http_resp, async_mode = T.unsafe(nil)); end
 end
 
+# For Streaming Input Operations, when `requiresLength` is enabled
+# checking whether `Content-Length` header can be set,
+# for `v4-unsigned-body` operations, set `Transfer-Encoding` header
+#
+# @api private
 class Aws::Plugins::TransferEncoding < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::TransferEncoding::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def requires_length?(ref); end
+
+  # @api private
+  # @return [Boolean]
   def streaming?(ref); end
 end
 
+# @api private
 class Aws::Plugins::UserAgent < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Aws::Plugins::UserAgent::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
+
+  # @api private
   def set_user_agent(context); end
 end
 
+# A credential provider that executes a given process and attempts
+# to read its stdout to recieve a JSON payload containing the credentials
+#
+# Automatically handles refreshing credentials if an Expiration time is
+# provided in the credentials payload
+#
+#     credentials = Aws::ProcessCredentials.new('/usr/bin/credential_proc').credentials
+#
+#     ec2 = Aws::EC2::Client.new(credentials: credentials)
+#
+# More documentation on process based credentials can be found here:
+# https://docs.aws.amazon.com/cli/latest/topic/config-vars.html#sourcing-credentials-from-external-processes
 class Aws::ProcessCredentials
   include ::Aws::CredentialProvider
   include ::Aws::RefreshingCredentials
 
+  # Creates a new ProcessCredentials object, which allows an
+  # external process to be used as a credential provider.
+  #
+  # credentials provider.
+  #
+  # @param process [String] Invocation string for process
+  # @return [ProcessCredentials] a new instance of ProcessCredentials
   def initialize(process); end
 
   private
 
+  # @raise [Errors::InvalidProcessCredentialsPayload]
   def _parse_payload_format_v1(creds_json); end
+
   def credentials_from_process(proc_invocation); end
+
+  # @return [Boolean]
   def near_expiration?; end
+
   def refresh; end
 end
 
+# @api private
 module Aws::Query; end
 
 class Aws::Query::EC2ParamBuilder
   include ::Seahorse::Model::Shapes
 
+  # @return [EC2ParamBuilder] a new instance of EC2ParamBuilder
   def initialize(param_list); end
 
   def apply(ref, params); end
+
+  # Returns the value of attribute params.
   def params; end
 
   private
@@ -1307,26 +3364,53 @@ class Aws::Query::EC2ParamBuilder
   def ucfirst(str); end
 end
 
+# @api private
 class Aws::Query::Handler < ::Seahorse::Client::Handler
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param context [Seahorse::Client::RequestContext]
+  # @return [Seahorse::Client::Response]
   def call(context); end
 
   private
 
+  # @api private
   def apply_params(param_list, params, rules); end
+
+  # @api private
   def build_request(context); end
+
+  # @api private
   def parse_xml(context); end
+
+  # @api private
   def remove_wrapper(data, context); end
+
+  # @api private
   def rules(context); end
+
+  # @api private
   def xml(context); end
 end
 
+# @api private
 Aws::Query::Handler::CONTENT_TYPE = T.let(T.unsafe(nil), String)
+
+# @api private
 Aws::Query::Handler::METADATA_REF = T.let(T.unsafe(nil), Seahorse::Model::Shapes::ShapeRef)
 
+# @api private
 class Aws::Query::Handler::METADATA_STRUCT < ::Struct
+  # Returns the value of attribute request_id
+  #
+  # @return [Object] the current value of request_id
   def request_id; end
+
+  # Sets the attribute request_id
+  #
+  # @param value [Object] the value to set the attribute request_id to.
+  # @return [Object] the newly set value
   def request_id=(_); end
 
   class << self
@@ -1337,10 +3421,28 @@ class Aws::Query::Handler::METADATA_STRUCT < ::Struct
   end
 end
 
+# @api private
 class Aws::Query::Handler::WRAPPER_STRUCT < ::Struct
+  # Returns the value of attribute response_metadata
+  #
+  # @return [Object] the current value of response_metadata
   def response_metadata; end
+
+  # Sets the attribute response_metadata
+  #
+  # @param value [Object] the value to set the attribute response_metadata to.
+  # @return [Object] the newly set value
   def response_metadata=(_); end
+
+  # Returns the value of attribute result
+  #
+  # @return [Object] the current value of result
   def result; end
+
+  # Sets the attribute result
+  #
+  # @param value [Object] the value to set the attribute result to.
+  # @return [Object] the newly set value
   def result=(_); end
 
   class << self
@@ -1351,76 +3453,196 @@ class Aws::Query::Handler::WRAPPER_STRUCT < ::Struct
   end
 end
 
+# @api private
 class Aws::Query::Param
+  # @api private
+  # @param name [String]
+  # @param value [String, nil] (nil)
+  # @return [Param] a new instance of Param
   def initialize(name, value = T.unsafe(nil)); end
 
+  # @api private
   def <=>(other); end
+
+  # @api private
   def ==(other); end
+
+  # @api private
+  # @return [String]
   def name; end
+
+  # @api private
+  # @return [String]
   def to_s; end
+
+  # @api private
+  # @return [String, nil]
   def value; end
 
   private
 
+  # @api private
   def escape(str); end
 end
 
+# @api private
 class Aws::Query::ParamBuilder
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @return [ParamBuilder] a new instance of ParamBuilder
   def initialize(param_list); end
 
+  # @api private
   def apply(ref, params); end
+
+  # @api private
   def params; end
 
   private
 
+  # @api private
   def blob(value); end
+
+  # @api private
+  # @return [Boolean]
   def flat?(ref); end
+
+  # @api private
   def format(ref, value, prefix); end
+
+  # @api private
   def list(ref, values, prefix); end
+
+  # @api private
   def map(ref, values, prefix); end
+
+  # @api private
   def query_name(ref, default = T.unsafe(nil)); end
+
+  # @api private
   def set(name, value); end
+
+  # @api private
   def structure(ref, values, prefix); end
+
+  # @api private
   def timestamp(ref, value); end
 end
 
+# @api private
 class Aws::Query::ParamList
   include ::Enumerable
 
+  # @api private
+  # @return [ParamList] a new instance of ParamList
   def initialize; end
 
+  # @api private
+  # @return [Param, nil]
   def [](param_name); end
+
+  # @api private
+  # @param param_name [String]
+  # @param param_value [String, nil]
+  # @return [Param]
   def []=(param_name, param_value = T.unsafe(nil)); end
+
+  # @api private
+  # @param param_name [String]
+  # @return [Param, nil]
   def delete(param_name); end
+
+  # @api private
+  # @return [Enumerable]
   def each(&block); end
+
+  # @api private
+  # @return [Boolean]
   def empty?; end
+
+  # @api private
+  # @param param_name [String]
+  # @param param_value [String, nil]
+  # @return [Param]
   def set(param_name, param_value = T.unsafe(nil)); end
+
+  # @api private
+  # @return [Array<Param>] Returns an array of sorted {Param} objects.
   def to_a; end
+
+  # @api private
+  # @return [#read, #rewind, #size]
   def to_io; end
+
+  # @api private
+  # @return [String]
   def to_s; end
 end
 
+# @api private
 class Aws::Query::ParamList::IoWrapper
+  # @api private
+  # @param param_list [ParamList]
+  # @return [IoWrapper] a new instance of IoWrapper
   def initialize(param_list); end
 
+  # @api private
+  # @return [ParamList]
   def param_list; end
+
+  # @api private
+  # @return [String, nil]
   def read(bytes = T.unsafe(nil), output_buffer = T.unsafe(nil)); end
+
+  # @api private
+  # @return [void]
   def rewind; end
+
+  # @api private
+  # @return [Integer]
   def size; end
 end
 
+# Base class used credential classes that can be refreshed. This
+# provides basic refresh logic in a thread-safe manner. Classes mixing in
+# this module are expected to implement a #refresh method that populates
+# the following instance variables:
+#
+# * `@access_key_id`
+# * `@secret_access_key`
+# * `@session_token`
+# * `@expiration`
+#
+# @api private
 module Aws::RefreshingCredentials
+  # @api private
   def initialize(options = T.unsafe(nil)); end
 
+  # @api private
+  # @return [Credentials]
   def credentials; end
+
+  # @api private
+  # @return [Time, nil]
   def expiration; end
+
+  # Refresh credentials.
+  #
+  # @api private
+  # @return [void]
   def refresh!; end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def near_expiration?; end
+
+  # Refreshes instance metadata credentials if they are within
+  # 5 minutes of expiration.
+  #
+  # @api private
   def refresh_if_near_expiration; end
 end
 
@@ -1430,14 +3652,45 @@ class Aws::Resources::Collection
   include ::Enumerable
   extend ::Aws::Deprecations
 
+  # @api private
+  # @option options
+  # @option options
+  # @param batches [Enumerator<Array>]
+  # @param options [Hash] a customizable set of options
+  # @return [Collection] a new instance of Collection
   def initialize(batches, options = T.unsafe(nil)); end
 
+  # @api private
+  # @deprecated
   def [](*args, &block); end
+
+  # @api private
+  # @deprecated
   def batches; end
+
+  # @return [Enumerator<Band>]
   def each(&block); end
+
+  # @param count [Integer]
+  # @return [Resource, Collection]
   def first(count = T.unsafe(nil)); end
+
+  # @return [Integer, nil] Returns the size of this collection if known, returns `nil` when
+  #   an API call is necessary to enumerate items in this collection.
   def length; end
+
+  # Returns a new collection that will enumerate a limited number of items.
+  #
+  #     collection.limit(10).each do |band|
+  #       # yields at most 10 times
+  #     end
+  #
+  # @param limit [Integer]
+  # @return [Collection]
   def limit(limit); end
+
+  # @return [Integer, nil] Returns the size of this collection if known, returns `nil` when
+  #   an API call is necessary to enumerate items in this collection.
   def size; end
 
   private
@@ -1447,321 +3700,838 @@ class Aws::Resources::Collection
   def non_empty_batches; end
 end
 
+# @api private
 module Aws::Rest; end
 
+# @api private
 class Aws::Rest::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def apply_request_id(context); end
 end
 
+# @api private
 module Aws::Rest::Request; end
 
+# @api private
 class Aws::Rest::Request::Body
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param serializer_class [Class]
+  # @param rules [Seahorse::Model::ShapeRef]
+  # @return [Body] a new instance of Body
   def initialize(serializer_class, rules); end
 
+  # @api private
+  # @param http_req [Seahorse::Client::Http::Request]
+  # @param params [Hash]
   def apply(http_req, params); end
 
   private
 
+  # @api private
   def body_params(params); end
+
+  # @api private
   def build_body(params); end
+
+  # operation is modeled for body when it is modeled for a payload
+  # either with payload trait or normal members.
+  #
+  # @api private
+  # @return [Boolean]
   def modeled_body?; end
+
+  # @api private
   def serialize(rules, params); end
+
+  # @api private
+  # @return [Boolean]
   def streaming?; end
 end
 
+# @api private
 class Aws::Rest::Request::Builder
+  # @api private
   def apply(context); end
 
   private
 
+  # @api private
   def populate_body(context); end
+
+  # @api private
   def populate_endpoint(context); end
+
+  # @api private
   def populate_headers(context); end
+
+  # @api private
   def populate_http_method(context); end
+
+  # @api private
   def serializer_class(context); end
 end
 
+# @api private
 class Aws::Rest::Request::Endpoint
+  # @api private
+  # @param rules [Seahorse::Model::Shapes::ShapeRef]
+  # @param request_uri_pattern [String]
+  # @return [Endpoint] a new instance of Endpoint
   def initialize(rules, request_uri_pattern); end
 
+  # @api private
+  # @param base_uri [URI::HTTPS, URI::HTTP]
+  # @param params [Hash, Struct]
+  # @return [URI::HTTPS, URI::HTTP]
   def uri(base_uri, params); end
 
   private
 
+  # @api private
   def apply_path_params(uri, params); end
+
+  # @api private
   def apply_querystring_params(uri, params); end
+
+  # @api private
   def escape(string); end
+
+  # @api private
   def param_name(placeholder); end
+
+  # @api private
+  # @raise [ArgumentError]
   def param_value_for_placeholder(placeholder, params); end
 end
 
+# @api private
 class Aws::Rest::Request::Headers
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param rules [Seahorse::Model::ShapeRef]
+  # @return [Headers] a new instance of Headers
   def initialize(rules); end
 
+  # @api private
+  # @param http_req [Seahorse::Client::Http::Request]
+  # @param params [Hash]
   def apply(http_req, params); end
 
   private
 
+  # @api private
   def apply_header_map(headers, ref, values); end
+
+  # @api private
   def apply_header_value(headers, ref, value); end
+
+  # With complex headers value in json syntax,
+  # base64 encodes value to avoid weird characters
+  # causing potential issues in headers
+  #
+  # @api private
   def apply_json_trait(value); end
+
+  # @api private
   def list(_ref, value); end
+
+  # @api private
   def timestamp(ref, value); end
 end
 
+# @api private
 class Aws::Rest::Request::QuerystringBuilder
   include ::Seahorse::Model::Shapes
 
+  # Provide shape references and param values:
+  #
+  #     [
+  #       [shape_ref1, 123],
+  #       [shape_ref2, "text"]
+  #     ]
+  #
+  # Returns a querystring:
+  #
+  #   "Count=123&Words=text"
+  #
+  # @api private
+  # @param params [Array<Array<Seahorse::Model::ShapeRef, Object>>] An array of
+  #   model shape references and request parameter value pairs.
+  # @return [String] Returns a built querystring
   def build(params); end
 
   private
 
+  # @api private
   def build_part(shape_ref, param_value); end
+
+  # @api private
   def escape(string); end
+
+  # @api private
   def list_of_strings(name, values); end
+
+  # @api private
   def query_map_of_string(hash); end
+
+  # @api private
   def query_map_of_string_list(hash); end
+
+  # @api private
   def timestamp(ref, value); end
 end
 
+# @api private
 module Aws::Rest::Response; end
 
+# @api private
 class Aws::Rest::Response::Body
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param parser_class [Class]
+  # @param rules [Seahorse::Model::ShapeRef]
+  # @return [Body] a new instance of Body
   def initialize(parser_class, rules); end
 
+  # @api private
+  # @param body [IO]
+  # @param data [Hash, Struct]
   def apply(body, data); end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def event_stream?; end
+
+  # @api private
   def parse(body, rules, target = T.unsafe(nil)); end
+
+  # @api private
   def parse_eventstream(body); end
+
+  # @api private
+  # @return [Boolean]
   def streaming?; end
 end
 
+# @api private
 class Aws::Rest::Response::Headers
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param rules [Seahorse::Model::ShapeRef]
+  # @return [Headers] a new instance of Headers
   def initialize(rules); end
 
+  # @api private
+  # @param http_resp [Seahorse::Client::Http::Response]
+  # @param target [Hash, Struct]
   def apply(http_resp, target); end
+
+  # @api private
   def cast_value(ref, value); end
+
+  # @api private
   def extract_header_map(headers, name, ref, data); end
+
+  # @api private
   def extract_header_value(headers, name, ref, data); end
+
+  # @api private
   def extract_json_trait(value); end
 end
 
+# @api private
 class Aws::Rest::Response::Parser
+  # @api private
   def apply(response); end
 
   private
 
+  # @api private
   def extract_body(rules, response); end
+
+  # @api private
   def extract_headers(rules, response); end
+
+  # @api private
   def extract_status_code(rules, response); end
+
+  # @api private
   def parser_class(response); end
 end
 
+# @api private
 class Aws::Rest::Response::StatusCode
+  # @api private
+  # @param rules [Seahorse::Model::Shapes::ShapeRef]
+  # @return [StatusCode] a new instance of StatusCode
   def initialize(rules); end
 
+  # @api private
+  # @param http_resp [Seahorse::Client::Http::Response]
+  # @param data [Hash, Struct]
   def apply(http_resp, data); end
 end
 
+# This module provides support for AWS Single Sign-On. This module is available in the
+# `aws-sdk-core` gem.
+#
+# # Client
+#
+# The {Client} class provides one method for each API operation. Operation
+# methods each accept a hash of request parameters and return a response
+# structure.
+#
+#     sso = Aws::SSO::Client.new
+#     resp = sso.get_role_credentials(params)
+#
+# See {Client} for more information.
+#
+# # Errors
+#
+# Errors returned from AWS Single Sign-On are defined in the
+# {Errors} module and all extend {Errors::ServiceError}.
+#
+#     begin
+#       # do stuff
+#     rescue Aws::SSO::Errors::ServiceError
+#       # rescues all AWS Single Sign-On API errors
+#     end
+#
+# See {Errors} for more information.
 module Aws::SSO; end
 
+# An API client for SSO.  To construct a client, you need to configure a `:region` and `:credentials`.
+#
+#     client = Aws::SSO::Client.new(
+#       region: region_name,
+#       credentials: credentials,
+#       # ...
+#     )
+#
+# For details on configuring region and credentials see
+# the [developer guide](/sdk-for-ruby/v3/developer-guide/setup-config.html).
+#
+# See {#initialize} for a full list of supported configuration options.
 class Aws::SSO::Client < ::Seahorse::Client::Base
   include ::Aws::ClientStubs
 
+  # @overload initialize
+  # @return [Client] a new instance of Client
   def initialize(*args); end
 
+  # @api private
+  # @param params [{}]
   def build_request(operation_name, params = T.unsafe(nil)); end
+
+  # Returns the STS short-term credentials for a given role name that is
+  # assigned to the user.
+  #
+  # @example Response structure
+  #
+  #   resp.role_credentials.access_key_id #=> String
+  #   resp.role_credentials.secret_access_key #=> String
+  #   resp.role_credentials.session_token #=> String
+  #   resp.role_credentials.expiration #=> Integer
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.get_role_credentials({
+  #   role_name: "RoleNameType", # required
+  #   account_id: "AccountIdType", # required
+  #   access_token: "AccessTokenType", # required
+  #   })
+  # @option params
+  # @option params
+  # @option params
+  # @overload get_role_credentials
+  # @param params [Hash] ({})
+  # @return [Types::GetRoleCredentialsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::GetRoleCredentialsResponse#role_credentials #role_credentials} => Types::RoleCredentials
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/GetRoleCredentials AWS API Documentation
   def get_role_credentials(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Lists all roles that are assigned to the user for a given AWS account.
+  #
+  # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+  #
+  # @example Response structure
+  #
+  #   resp.next_token #=> String
+  #   resp.role_list #=> Array
+  #   resp.role_list[0].role_name #=> String
+  #   resp.role_list[0].account_id #=> String
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.list_account_roles({
+  #   next_token: "NextTokenType",
+  #   max_results: 1,
+  #   access_token: "AccessTokenType", # required
+  #   account_id: "AccountIdType", # required
+  #   })
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @overload list_account_roles
+  # @param params [Hash] ({})
+  # @return [Types::ListAccountRolesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::ListAccountRolesResponse#next_token #next_token} => String
+  #   * {Types::ListAccountRolesResponse#role_list #role_list} => Array&lt;Types::RoleInfo&gt;
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/ListAccountRoles AWS API Documentation
   def list_account_roles(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Lists all AWS accounts assigned to the user. These AWS accounts are
+  # assigned by the administrator of the account. For more information,
+  # see [Assign User Access][1] in the *AWS SSO User Guide*. This
+  # operation returns a paginated response.
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/useraccess.html#assignusers
+  #
+  # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+  #
+  # @example Response structure
+  #
+  #   resp.next_token #=> String
+  #   resp.account_list #=> Array
+  #   resp.account_list[0].account_id #=> String
+  #   resp.account_list[0].account_name #=> String
+  #   resp.account_list[0].email_address #=> String
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.list_accounts({
+  #   next_token: "NextTokenType",
+  #   max_results: 1,
+  #   access_token: "AccessTokenType", # required
+  #   })
+  # @option params
+  # @option params
+  # @option params
+  # @overload list_accounts
+  # @param params [Hash] ({})
+  # @return [Types::ListAccountsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::ListAccountsResponse#next_token #next_token} => String
+  #   * {Types::ListAccountsResponse#account_list #account_list} => Array&lt;Types::AccountInfo&gt;
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/ListAccounts AWS API Documentation
   def list_accounts(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Removes the client- and server-side session that is associated with
+  # the user.
+  #
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.logout({
+  #   access_token: "AccessTokenType", # required
+  #   })
+  # @option params
+  # @overload logout
+  # @param params [Hash] ({})
+  # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/Logout AWS API Documentation
   def logout(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # @api private
+  # @deprecated
   def waiter_names; end
 
   class << self
+    # @api private
     def errors_module; end
+
+    # @api private
     def identifier; end
   end
 end
 
+# @api private
 module Aws::SSO::ClientApi
   include ::Seahorse::Model
 end
 
+# @api private
 Aws::SSO::ClientApi::API = T.let(T.unsafe(nil), Seahorse::Model::Api)
+
+# @api private
 Aws::SSO::ClientApi::AccessKeyType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::AccessTokenType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::AccountIdType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::AccountInfo = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::AccountListType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::ListShape)
+
+# @api private
 Aws::SSO::ClientApi::AccountNameType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::EmailAddressType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::ErrorDescription = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::ExpirationTimestampType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::IntegerShape)
+
+# @api private
 Aws::SSO::ClientApi::GetRoleCredentialsRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::GetRoleCredentialsResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::InvalidRequestException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::ListAccountRolesRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::ListAccountRolesResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::ListAccountsRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::ListAccountsResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::LogoutRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::MaxResultType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::IntegerShape)
+
+# @api private
 Aws::SSO::ClientApi::NextTokenType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::ResourceNotFoundException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::RoleCredentials = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::RoleInfo = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::RoleListType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::ListShape)
+
+# @api private
 Aws::SSO::ClientApi::RoleNameType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::SecretAccessKeyType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::SessionTokenType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::SSO::ClientApi::TooManyRequestsException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::SSO::ClientApi::UnauthorizedException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
 
+# When SSO returns an error response, the Ruby SDK constructs and raises an error.
+# These errors all extend Aws::SSO::Errors::ServiceError < {Aws::Errors::ServiceError}
+#
+# You can rescue all SSO errors using ServiceError:
+#
+#     begin
+#       # do stuff
+#     rescue Aws::SSO::Errors::ServiceError
+#       # rescues all SSO API errors
+#     end
+#
+#
+# ## Request Context
+# ServiceError objects have a {Aws::Errors::ServiceError#context #context} method that returns
+# information about the request that generated the error.
+# See {Seahorse::Client::RequestContext} for more information.
+#
+# ## Error Classes
+# * {InvalidRequestException}
+# * {ResourceNotFoundException}
+# * {TooManyRequestsException}
+# * {UnauthorizedException}
+#
+# Additionally, error classes are dynamically generated for service errors based on the error code
+# if they are not defined above.
 module Aws::SSO::Errors
   extend ::Aws::Errors::DynamicErrors
 end
 
 class Aws::SSO::Errors::InvalidRequestException < ::Aws::SSO::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::SSO::Types::InvalidRequestException]
+  # @return [InvalidRequestException] a new instance of InvalidRequestException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::SSO::Errors::ResourceNotFoundException < ::Aws::SSO::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::SSO::Types::ResourceNotFoundException]
+  # @return [ResourceNotFoundException] a new instance of ResourceNotFoundException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::SSO::Errors::ServiceError < ::Aws::Errors::ServiceError; end
 
 class Aws::SSO::Errors::TooManyRequestsException < ::Aws::SSO::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::SSO::Types::TooManyRequestsException]
+  # @return [TooManyRequestsException] a new instance of TooManyRequestsException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::SSO::Errors::UnauthorizedException < ::Aws::SSO::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::SSO::Types::UnauthorizedException]
+  # @return [UnauthorizedException] a new instance of UnauthorizedException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 Aws::SSO::GEM_VERSION = T.let(T.unsafe(nil), String)
 
 class Aws::SSO::Resource
+  # @option options
+  # @param options [{}]
+  # @return [Resource] a new instance of Resource
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [Client]
   def client; end
 end
 
 module Aws::SSO::Types; end
 
+# Provides information about your AWS account.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/AccountInfo AWS API Documentation
 class Aws::SSO::Types::AccountInfo < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::AccountInfo::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass GetRoleCredentialsRequest
+#   data as a hash:
+#
+#   {
+#   role_name: "RoleNameType", # required
+#   account_id: "AccountIdType", # required
+#   access_token: "AccessTokenType", # required
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/GetRoleCredentialsRequest AWS API Documentation
 class Aws::SSO::Types::GetRoleCredentialsRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::GetRoleCredentialsRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/GetRoleCredentialsResponse AWS API Documentation
 class Aws::SSO::Types::GetRoleCredentialsResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::GetRoleCredentialsResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Indicates that a problem occurred with the input to the request. For
+# example, a required parameter might be missing or out of range.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/InvalidRequestException AWS API Documentation
 class Aws::SSO::Types::InvalidRequestException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::InvalidRequestException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass ListAccountRolesRequest
+#   data as a hash:
+#
+#   {
+#   next_token: "NextTokenType",
+#   max_results: 1,
+#   access_token: "AccessTokenType", # required
+#   account_id: "AccountIdType", # required
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/ListAccountRolesRequest AWS API Documentation
 class Aws::SSO::Types::ListAccountRolesRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::ListAccountRolesRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/ListAccountRolesResponse AWS API Documentation
 class Aws::SSO::Types::ListAccountRolesResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::ListAccountRolesResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass ListAccountsRequest
+#   data as a hash:
+#
+#   {
+#   next_token: "NextTokenType",
+#   max_results: 1,
+#   access_token: "AccessTokenType", # required
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/ListAccountsRequest AWS API Documentation
 class Aws::SSO::Types::ListAccountsRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::ListAccountsRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/ListAccountsResponse AWS API Documentation
 class Aws::SSO::Types::ListAccountsResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::ListAccountsResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass LogoutRequest
+#   data as a hash:
+#
+#   {
+#   access_token: "AccessTokenType", # required
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/LogoutRequest AWS API Documentation
 class Aws::SSO::Types::LogoutRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::LogoutRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The specified resource doesn't exist.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/ResourceNotFoundException AWS API Documentation
 class Aws::SSO::Types::ResourceNotFoundException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::ResourceNotFoundException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Provides information about the role credentials that are assigned to
+# the user.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/RoleCredentials AWS API Documentation
 class Aws::SSO::Types::RoleCredentials < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::RoleCredentials::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Provides information about the role that is assigned to the user.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/RoleInfo AWS API Documentation
 class Aws::SSO::Types::RoleInfo < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::RoleInfo::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Indicates that the request is being made too frequently and is more
+# than what the server can handle.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/TooManyRequestsException AWS API Documentation
 class Aws::SSO::Types::TooManyRequestsException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::TooManyRequestsException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Indicates that the request is not authorized. This can happen due to
+# an invalid access token in the request.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sso-2019-06-10/UnauthorizedException AWS API Documentation
 class Aws::SSO::Types::UnauthorizedException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::SSO::Types::UnauthorizedException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# An auto-refreshing credential provider that works by assuming a
+# role via {Aws::SSO::Client#get_role_credentials} using a cached access
+# token.  This class does NOT implement the SSO login token flow - tokens
+# must generated and refreshed separately by running `aws login` from the
+# AWS CLI with the correct profile.
+#
+# For more background on AWS SSO see the official
+# {https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html what is SSO Userguide}
+#
+# ## Refreshing Credentials from SSO
+#
+# The `SSOCredentials` will auto-refresh the AWS credentials from SSO. In
+# addition to AWS credentials expiring after a given amount of time, the
+# access token generated and cached from `aws login` will also expire.
+# Once this token expires, it will not be usable to refresh AWS credentials,
+# and another token will be needed. The SDK does not manage refreshing of
+# the token value, but this can be done by running `aws login` with the
+# correct profile.
+#
+#
+#     # You must first run aws sso login --profile your-sso-profile
+#     sso_credentials = Aws::SSOCredentials.new(
+#       sso_account_id: '123456789',
+#       sso_role_name: "role_name",
+#       sso_region: "us-east-1",
+#       sso_start_url: 'https://your-start-url.awsapps.com/start'
+#     )
+#
+#     ec2 = Aws::EC2::Client.new(credentials: sso_credentials)
+#
+# If you omit `:client` option, a new {SSO::Client} object will be
+# constructed.
 class Aws::SSOCredentials
   include ::Aws::CredentialProvider
   include ::Aws::RefreshingCredentials
 
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [SSOCredentials] a new instance of SSOCredentials
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [SSO::Client]
   def client; end
 
   private
@@ -1771,122 +4541,1482 @@ class Aws::SSOCredentials
   def sso_cache_file; end
 end
 
+# @api private
 Aws::SSOCredentials::SSO_LOGIN_GUIDANCE = T.let(T.unsafe(nil), String)
+
+# @api private
 Aws::SSOCredentials::SSO_REQUIRED_OPTS = T.let(T.unsafe(nil), Array)
+
+# This module provides support for AWS Security Token Service. This module is available in the
+# `aws-sdk-core` gem.
+#
+# # Client
+#
+# The {Client} class provides one method for each API operation. Operation
+# methods each accept a hash of request parameters and return a response
+# structure.
+#
+#     sts = Aws::STS::Client.new
+#     resp = sts.assume_role(params)
+#
+# See {Client} for more information.
+#
+# # Errors
+#
+# Errors returned from AWS Security Token Service are defined in the
+# {Errors} module and all extend {Errors::ServiceError}.
+#
+#     begin
+#       # do stuff
+#     rescue Aws::STS::Errors::ServiceError
+#       # rescues all AWS Security Token Service API errors
+#     end
+#
+# See {Errors} for more information.
 module Aws::STS; end
 
+# An API client for STS.  To construct a client, you need to configure a `:region` and `:credentials`.
+#
+#     client = Aws::STS::Client.new(
+#       region: region_name,
+#       credentials: credentials,
+#       # ...
+#     )
+#
+# For details on configuring region and credentials see
+# the [developer guide](/sdk-for-ruby/v3/developer-guide/setup-config.html).
+#
+# See {#initialize} for a full list of supported configuration options.
 class Aws::STS::Client < ::Seahorse::Client::Base
   include ::Aws::ClientStubs
 
+  # @overload initialize
+  # @return [Client] a new instance of Client
   def initialize(*args); end
 
+  # Returns a set of temporary security credentials that you can use to
+  # access Amazon Web Services resources that you might not normally have
+  # access to. These temporary credentials consist of an access key ID, a
+  # secret access key, and a security token. Typically, you use
+  # `AssumeRole` within your account or for cross-account access. For a
+  # comparison of `AssumeRole` with other API operations that produce
+  # temporary credentials, see [Requesting Temporary Security
+  # Credentials][1] and [Comparing the Amazon Web Services STS API
+  # operations][2] in the *IAM User Guide*.
+  #
+  # **Permissions**
+  #
+  # The temporary security credentials created by `AssumeRole` can be used
+  # to make API calls to any Amazon Web Services service with the
+  # following exception: You cannot call the Amazon Web Services STS
+  # `GetFederationToken` or `GetSessionToken` API operations.
+  #
+  # (Optional) You can pass inline or managed [session policies][3] to
+  # this operation. You can pass a single JSON policy document to use as
+  # an inline session policy. You can also specify up to 10 managed
+  # policies to use as managed session policies. The plaintext that you
+  # use for both inline and managed session policies can't exceed 2,048
+  # characters. Passing policies to this operation returns new temporary
+  # credentials. The resulting session's permissions are the intersection
+  # of the role's identity-based policy and the session policies. You can
+  # use the role's temporary credentials in subsequent Amazon Web
+  # Services API calls to access resources in the account that owns the
+  # role. You cannot use session policies to grant more permissions than
+  # those allowed by the identity-based policy of the role that is being
+  # assumed. For more information, see [Session Policies][3] in the *IAM
+  # User Guide*.
+  #
+  # When you create a role, you create two policies: A role trust policy
+  # that specifies *who* can assume the role and a permissions policy that
+  # specifies *what* can be done with the role. You specify the trusted
+  # principal who is allowed to assume the role in the role trust policy.
+  #
+  # To assume a role from a different account, your Amazon Web Services
+  # account must be trusted by the role. The trust relationship is defined
+  # in the role's trust policy when the role is created. That trust
+  # policy states which accounts are allowed to delegate that access to
+  # users in the account.
+  #
+  # A user who wants to access a role in a different account must also
+  # have permissions that are delegated from the user account
+  # administrator. The administrator must attach a policy that allows the
+  # user to call `AssumeRole` for the ARN of the role in the other
+  # account.
+  #
+  # To allow a user to assume a role in the same account, you can do
+  # either of the following:
+  #
+  # * Attach a policy to the user that allows the user to call
+  #   `AssumeRole` (as long as the role's trust policy trusts the
+  #   account).
+  #
+  # * Add the user as a principal directly in the role's trust policy.
+  #
+  # You can do either because the role’s trust policy acts as an IAM
+  # resource-based policy. When a resource-based policy grants access to a
+  # principal in the same account, no additional identity-based policy is
+  # required. For more information about trust policies and resource-based
+  # policies, see [IAM Policies][4] in the *IAM User Guide*.
+  #
+  # **Tags**
+  #
+  # (Optional) You can pass tag key-value pairs to your session. These
+  # tags are called session tags. For more information about session tags,
+  # see [Passing Session Tags in STS][5] in the *IAM User Guide*.
+  #
+  # An administrator must grant you the permissions necessary to pass
+  # session tags. The administrator can also create granular permissions
+  # to allow you to pass only specific session tags. For more information,
+  # see [Tutorial: Using Tags for Attribute-Based Access Control][6] in
+  # the *IAM User Guide*.
+  #
+  # You can set the session tags as transitive. Transitive tags persist
+  # during role chaining. For more information, see [Chaining Roles with
+  # Session Tags][7] in the *IAM User Guide*.
+  #
+  # **Using MFA with AssumeRole**
+  #
+  # (Optional) You can include multi-factor authentication (MFA)
+  # information when you call `AssumeRole`. This is useful for
+  # cross-account scenarios to ensure that the user that assumes the role
+  # has been authenticated with an Amazon Web Services MFA device. In that
+  # scenario, the trust policy of the role being assumed includes a
+  # condition that tests for MFA authentication. If the caller does not
+  # include valid MFA information, the request to assume the role is
+  # denied. The condition in a trust policy that tests for MFA
+  # authentication might look like the following example.
+  #
+  # `"Condition": \{"Bool": \{"aws:MultiFactorAuthPresent": true\}\}`
+  #
+  # For more information, see [Configuring MFA-Protected API Access][8] in
+  # the *IAM User Guide* guide.
+  #
+  # To use MFA with `AssumeRole`, you pass values for the `SerialNumber`
+  # and `TokenCode` parameters. The `SerialNumber` value identifies the
+  # user's hardware or virtual MFA device. The `TokenCode` is the
+  # time-based one-time password (TOTP) that the MFA device produces.
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html
+  # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#stsapi_comparison
+  # [3]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#policies_session
+  # [4]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html
+  # [5]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html
+  # [6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control.html
+  # [7]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html#id_session-tags_role-chaining
+  # [8]: https://docs.aws.amazon.com/IAM/latest/UserGuide/MFAProtectedAPI.html
+  #
+  # @example Response structure
+  #
+  #   resp.credentials.access_key_id #=> String
+  #   resp.credentials.secret_access_key #=> String
+  #   resp.credentials.session_token #=> String
+  #   resp.credentials.expiration #=> Time
+  #   resp.assumed_role_user.assumed_role_id #=> String
+  #   resp.assumed_role_user.arn #=> String
+  #   resp.packed_policy_size #=> Integer
+  #   resp.source_identity #=> String
+  # @example Example: To assume a role
+  #
+  #   resp = client.assume_role({
+  #   external_id: "123ABC",
+  #   policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}",
+  #   role_arn: "arn:aws:iam::123456789012:role/demo",
+  #   role_session_name: "testAssumeRoleSession",
+  #   tags: [
+  #   {
+  #   key: "Project",
+  #   value: "Unicorn",
+  #   },
+  #   {
+  #   key: "Team",
+  #   value: "Automation",
+  #   },
+  #   {
+  #   key: "Cost-Center",
+  #   value: "12345",
+  #   },
+  #   ],
+  #   transitive_tag_keys: [
+  #   "Project",
+  #   "Cost-Center",
+  #   ],
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   assumed_role_user: {
+  #   arn: "arn:aws:sts::123456789012:assumed-role/demo/Bob",
+  #   assumed_role_id: "ARO123EXAMPLE123:Bob",
+  #   },
+  #   credentials: {
+  #   access_key_id: "AKIAIOSFODNN7EXAMPLE",
+  #   expiration: Time.parse("2011-07-15T23:28:33.359Z"),
+  #   secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+  #   session_token: "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==",
+  #   },
+  #   packed_policy_size: 8,
+  #   }
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.assume_role({
+  #   role_arn: "arnType", # required
+  #   role_session_name: "roleSessionNameType", # required
+  #   policy_arns: [
+  #   {
+  #   arn: "arnType",
+  #   },
+  #   ],
+  #   policy: "sessionPolicyDocumentType",
+  #   duration_seconds: 1,
+  #   tags: [
+  #   {
+  #   key: "tagKeyType", # required
+  #   value: "tagValueType", # required
+  #   },
+  #   ],
+  #   transitive_tag_keys: ["tagKeyType"],
+  #   external_id: "externalIdType",
+  #   serial_number: "serialNumberType",
+  #   token_code: "tokenCodeType",
+  #   source_identity: "sourceIdentityType",
+  #   })
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @overload assume_role
+  # @param params [Hash] ({})
+  # @return [Types::AssumeRoleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::AssumeRoleResponse#credentials #credentials} => Types::Credentials
+  #   * {Types::AssumeRoleResponse#assumed_role_user #assumed_role_user} => Types::AssumedRoleUser
+  #   * {Types::AssumeRoleResponse#packed_policy_size #packed_policy_size} => Integer
+  #   * {Types::AssumeRoleResponse#source_identity #source_identity} => String
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRole AWS API Documentation
   def assume_role(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Returns a set of temporary security credentials for users who have
+  # been authenticated via a SAML authentication response. This operation
+  # provides a mechanism for tying an enterprise identity store or
+  # directory to role-based Amazon Web Services access without
+  # user-specific credentials or configuration. For a comparison of
+  # `AssumeRoleWithSAML` with the other API operations that produce
+  # temporary credentials, see [Requesting Temporary Security
+  # Credentials][1] and [Comparing the Amazon Web Services STS API
+  # operations][2] in the *IAM User Guide*.
+  #
+  # The temporary security credentials returned by this operation consist
+  # of an access key ID, a secret access key, and a security token.
+  # Applications can use these temporary security credentials to sign
+  # calls to Amazon Web Services services.
+  #
+  # **Session Duration**
+  #
+  # By default, the temporary security credentials created by
+  # `AssumeRoleWithSAML` last for one hour. However, you can use the
+  # optional `DurationSeconds` parameter to specify the duration of your
+  # session. Your role session lasts for the duration that you specify, or
+  # until the time specified in the SAML authentication response's
+  # `SessionNotOnOrAfter` value, whichever is shorter. You can provide a
+  # `DurationSeconds` value from 900 seconds (15 minutes) up to the
+  # maximum session duration setting for the role. This setting can have a
+  # value from 1 hour to 12 hours. To learn how to view the maximum value
+  # for your role, see [View the Maximum Session Duration Setting for a
+  # Role][3] in the *IAM User Guide*. The maximum session duration limit
+  # applies when you use the `AssumeRole*` API operations or the
+  # `assume-role*` CLI commands. However the limit does not apply when you
+  # use those operations to create a console URL. For more information,
+  # see [Using IAM Roles][4] in the *IAM User Guide*.
+  #
+  # <note markdown="1"> [Role chaining][5] limits your CLI or Amazon Web Services API role
+  # session to a maximum of one hour. When you use the `AssumeRole` API
+  # operation to assume a role, you can specify the duration of your role
+  # session with the `DurationSeconds` parameter. You can specify a
+  # parameter value of up to 43200 seconds (12 hours), depending on the
+  # maximum session duration setting for your role. However, if you assume
+  # a role using role chaining and provide a `DurationSeconds` parameter
+  # value greater than one hour, the operation fails.
+  #
+  #  </note>
+  #
+  # **Permissions**
+  #
+  # The temporary security credentials created by `AssumeRoleWithSAML` can
+  # be used to make API calls to any Amazon Web Services service with the
+  # following exception: you cannot call the STS `GetFederationToken` or
+  # `GetSessionToken` API operations.
+  #
+  # (Optional) You can pass inline or managed [session policies][6] to
+  # this operation. You can pass a single JSON policy document to use as
+  # an inline session policy. You can also specify up to 10 managed
+  # policies to use as managed session policies. The plaintext that you
+  # use for both inline and managed session policies can't exceed 2,048
+  # characters. Passing policies to this operation returns new temporary
+  # credentials. The resulting session's permissions are the intersection
+  # of the role's identity-based policy and the session policies. You can
+  # use the role's temporary credentials in subsequent Amazon Web
+  # Services API calls to access resources in the account that owns the
+  # role. You cannot use session policies to grant more permissions than
+  # those allowed by the identity-based policy of the role that is being
+  # assumed. For more information, see [Session Policies][6] in the *IAM
+  # User Guide*.
+  #
+  # Calling `AssumeRoleWithSAML` does not require the use of Amazon Web
+  # Services security credentials. The identity of the caller is validated
+  # by using keys in the metadata document that is uploaded for the SAML
+  # provider entity for your identity provider.
+  #
+  # Calling `AssumeRoleWithSAML` can result in an entry in your CloudTrail
+  # logs. The entry includes the value in the `NameID` element of the SAML
+  # assertion. We recommend that you use a `NameIDType` that is not
+  # associated with any personally identifiable information (PII). For
+  # example, you could instead use the persistent identifier
+  # (`urn:oasis:names:tc:SAML:2.0:nameid-format:persistent`).
+  #
+  # **Tags**
+  #
+  # (Optional) You can configure your IdP to pass attributes into your
+  # SAML assertion as session tags. Each session tag consists of a key
+  # name and an associated value. For more information about session tags,
+  # see [Passing Session Tags in STS][7] in the *IAM User Guide*.
+  #
+  # You can pass up to 50 session tags. The plaintext session tag keys
+  # can’t exceed 128 characters and the values can’t exceed 256
+  # characters. For these and additional limits, see [IAM and STS
+  # Character Limits][8] in the *IAM User Guide*.
+  #
+  # <note markdown="1"> An Amazon Web Services conversion compresses the passed session
+  # policies and session tags into a packed binary format that has a
+  # separate limit. Your request can fail for this limit even if your
+  # plaintext meets the other requirements. The `PackedPolicySize`
+  # response element indicates by percentage how close the policies and
+  # tags for your request are to the upper size limit.
+  #
+  #  </note>
+  #
+  # You can pass a session tag with the same key as a tag that is attached
+  # to the role. When you do, session tags override the role's tags with
+  # the same key.
+  #
+  # An administrator must grant you the permissions necessary to pass
+  # session tags. The administrator can also create granular permissions
+  # to allow you to pass only specific session tags. For more information,
+  # see [Tutorial: Using Tags for Attribute-Based Access Control][9] in
+  # the *IAM User Guide*.
+  #
+  # You can set the session tags as transitive. Transitive tags persist
+  # during role chaining. For more information, see [Chaining Roles with
+  # Session Tags][10] in the *IAM User Guide*.
+  #
+  # **SAML Configuration**
+  #
+  # Before your application can call `AssumeRoleWithSAML`, you must
+  # configure your SAML identity provider (IdP) to issue the claims
+  # required by Amazon Web Services. Additionally, you must use Identity
+  # and Access Management (IAM) to create a SAML provider entity in your
+  # Amazon Web Services account that represents your identity provider.
+  # You must also create an IAM role that specifies this SAML provider in
+  # its trust policy.
+  #
+  # For more information, see the following resources:
+  #
+  # * [About SAML 2.0-based Federation][11] in the *IAM User Guide*.
+  #
+  # * [Creating SAML Identity Providers][12] in the *IAM User Guide*.
+  #
+  # * [Configuring a Relying Party and Claims][13] in the *IAM User
+  #   Guide*.
+  #
+  # * [Creating a Role for SAML 2.0 Federation][14] in the *IAM User
+  #   Guide*.
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html
+  # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#stsapi_comparison
+  # [3]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html#id_roles_use_view-role-max-session
+  # [4]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html
+  # [5]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_terms-and-concepts.html#iam-term-role-chaining
+  # [6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#policies_session
+  # [7]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html
+  # [8]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-limits.html#reference_iam-limits-entity-length
+  # [9]: https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control.html
+  # [10]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html#id_session-tags_role-chaining
+  # [11]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html
+  # [12]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml.html
+  # [13]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml_relying-party.html
+  # [14]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_saml.html
+  #
+  # @example Example: To assume a role using a SAML assertion
+  #
+  #   resp = client.assume_role_with_saml({
+  #   duration_seconds: 3600,
+  #   principal_arn: "arn:aws:iam::123456789012:saml-provider/SAML-test",
+  #   role_arn: "arn:aws:iam::123456789012:role/TestSaml",
+  #   saml_assertion: "VERYLONGENCODEDASSERTIONEXAMPLExzYW1sOkF1ZGllbmNlPmJsYW5rPC9zYW1sOkF1ZGllbmNlPjwvc2FtbDpBdWRpZW5jZVJlc3RyaWN0aW9uPjwvc2FtbDpDb25kaXRpb25zPjxzYW1sOlN1YmplY3Q+PHNhbWw6TmFtZUlEIEZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOm5hbWVpZC1mb3JtYXQ6dHJhbnNpZW50Ij5TYW1sRXhhbXBsZTwvc2FtbDpOYW1lSUQ+PHNhbWw6U3ViamVjdENvbmZpcm1hdGlvbiBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPjxzYW1sOlN1YmplY3RDb25maXJtYXRpb25EYXRhIE5vdE9uT3JBZnRlcj0iMjAxOS0xMS0wMVQyMDoyNTowNS4xNDVaIiBSZWNpcGllbnQ9Imh0dHBzOi8vc2lnbmluLmF3cy5hbWF6b24uY29tL3NhbWwiLz48L3NhbWw6U3ViamVjdENvbmZpcm1hdGlvbj48L3NhbWw6U3ViamVjdD48c2FtbDpBdXRoblN0YXRlbWVudCBBdXRoPD94bWwgdmpSZXNwb25zZT4=",
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   assumed_role_user: {
+  #   arn: "arn:aws:sts::123456789012:assumed-role/TestSaml",
+  #   assumed_role_id: "ARO456EXAMPLE789:TestSaml",
+  #   },
+  #   audience: "https://signin.aws.amazon.com/saml",
+  #   credentials: {
+  #   access_key_id: "ASIAV3ZUEFP6EXAMPLE",
+  #   expiration: Time.parse("2019-11-01T20:26:47Z"),
+  #   secret_access_key: "8P+SQvWIuLnKhh8d++jpw0nNmQRBZvNEXAMPLEKEY",
+  #   session_token: "IQoJb3JpZ2luX2VjEOz////////////////////wEXAMPLEtMSJHMEUCIDoKK3JH9uGQE1z0sINr5M4jk+Na8KHDcCYRVjJCZEvOAiEA3OvJGtw1EcViOleS2vhs8VdCKFJQWPQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==",
+  #   },
+  #   issuer: "https://integ.example.com/idp/shibboleth",
+  #   name_qualifier: "SbdGOnUkh1i4+EXAMPLExL/jEvs=",
+  #   packed_policy_size: 6,
+  #   subject: "SamlExample",
+  #   subject_type: "transient",
+  #   }
+  # @example Response structure
+  #
+  #   resp.credentials.access_key_id #=> String
+  #   resp.credentials.secret_access_key #=> String
+  #   resp.credentials.session_token #=> String
+  #   resp.credentials.expiration #=> Time
+  #   resp.assumed_role_user.assumed_role_id #=> String
+  #   resp.assumed_role_user.arn #=> String
+  #   resp.packed_policy_size #=> Integer
+  #   resp.subject #=> String
+  #   resp.subject_type #=> String
+  #   resp.issuer #=> String
+  #   resp.audience #=> String
+  #   resp.name_qualifier #=> String
+  #   resp.source_identity #=> String
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.assume_role_with_saml({
+  #   role_arn: "arnType", # required
+  #   principal_arn: "arnType", # required
+  #   saml_assertion: "SAMLAssertionType", # required
+  #   policy_arns: [
+  #   {
+  #   arn: "arnType",
+  #   },
+  #   ],
+  #   policy: "sessionPolicyDocumentType",
+  #   duration_seconds: 1,
+  #   })
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @overload assume_role_with_saml
+  # @param params [Hash] ({})
+  # @return [Types::AssumeRoleWithSAMLResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::AssumeRoleWithSAMLResponse#credentials #credentials} => Types::Credentials
+  #   * {Types::AssumeRoleWithSAMLResponse#assumed_role_user #assumed_role_user} => Types::AssumedRoleUser
+  #   * {Types::AssumeRoleWithSAMLResponse#packed_policy_size #packed_policy_size} => Integer
+  #   * {Types::AssumeRoleWithSAMLResponse#subject #subject} => String
+  #   * {Types::AssumeRoleWithSAMLResponse#subject_type #subject_type} => String
+  #   * {Types::AssumeRoleWithSAMLResponse#issuer #issuer} => String
+  #   * {Types::AssumeRoleWithSAMLResponse#audience #audience} => String
+  #   * {Types::AssumeRoleWithSAMLResponse#name_qualifier #name_qualifier} => String
+  #   * {Types::AssumeRoleWithSAMLResponse#source_identity #source_identity} => String
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleWithSAML AWS API Documentation
   def assume_role_with_saml(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Returns a set of temporary security credentials for users who have
+  # been authenticated in a mobile or web application with a web identity
+  # provider. Example providers include Amazon Cognito, Login with Amazon,
+  # Facebook, Google, or any OpenID Connect-compatible identity provider.
+  #
+  # <note markdown="1"> For mobile applications, we recommend that you use Amazon Cognito. You
+  # can use Amazon Cognito with the [Amazon Web Services SDK for iOS
+  # Developer Guide][1] and the [Amazon Web Services SDK for Android
+  # Developer Guide][2] to uniquely identify a user. You can also supply
+  # the user with a consistent identity throughout the lifetime of an
+  # application.
+  #
+  #  To learn more about Amazon Cognito, see [Amazon Cognito Overview][3]
+  # in *Amazon Web Services SDK for Android Developer Guide* and [Amazon
+  # Cognito Overview][4] in the *Amazon Web Services SDK for iOS Developer
+  # Guide*.
+  #
+  #  </note>
+  #
+  # Calling `AssumeRoleWithWebIdentity` does not require the use of Amazon
+  # Web Services security credentials. Therefore, you can distribute an
+  # application (for example, on mobile devices) that requests temporary
+  # security credentials without including long-term Amazon Web Services
+  # credentials in the application. You also don't need to deploy
+  # server-based proxy services that use long-term Amazon Web Services
+  # credentials. Instead, the identity of the caller is validated by using
+  # a token from the web identity provider. For a comparison of
+  # `AssumeRoleWithWebIdentity` with the other API operations that produce
+  # temporary credentials, see [Requesting Temporary Security
+  # Credentials][5] and [Comparing the Amazon Web Services STS API
+  # operations][6] in the *IAM User Guide*.
+  #
+  # The temporary security credentials returned by this API consist of an
+  # access key ID, a secret access key, and a security token. Applications
+  # can use these temporary security credentials to sign calls to Amazon
+  # Web Services service API operations.
+  #
+  # **Session Duration**
+  #
+  # By default, the temporary security credentials created by
+  # `AssumeRoleWithWebIdentity` last for one hour. However, you can use
+  # the optional `DurationSeconds` parameter to specify the duration of
+  # your session. You can provide a value from 900 seconds (15 minutes) up
+  # to the maximum session duration setting for the role. This setting can
+  # have a value from 1 hour to 12 hours. To learn how to view the maximum
+  # value for your role, see [View the Maximum Session Duration Setting
+  # for a Role][7] in the *IAM User Guide*. The maximum session duration
+  # limit applies when you use the `AssumeRole*` API operations or the
+  # `assume-role*` CLI commands. However the limit does not apply when you
+  # use those operations to create a console URL. For more information,
+  # see [Using IAM Roles][8] in the *IAM User Guide*.
+  #
+  # **Permissions**
+  #
+  # The temporary security credentials created by
+  # `AssumeRoleWithWebIdentity` can be used to make API calls to any
+  # Amazon Web Services service with the following exception: you cannot
+  # call the STS `GetFederationToken` or `GetSessionToken` API operations.
+  #
+  # (Optional) You can pass inline or managed [session policies][9] to
+  # this operation. You can pass a single JSON policy document to use as
+  # an inline session policy. You can also specify up to 10 managed
+  # policies to use as managed session policies. The plaintext that you
+  # use for both inline and managed session policies can't exceed 2,048
+  # characters. Passing policies to this operation returns new temporary
+  # credentials. The resulting session's permissions are the intersection
+  # of the role's identity-based policy and the session policies. You can
+  # use the role's temporary credentials in subsequent Amazon Web
+  # Services API calls to access resources in the account that owns the
+  # role. You cannot use session policies to grant more permissions than
+  # those allowed by the identity-based policy of the role that is being
+  # assumed. For more information, see [Session Policies][9] in the *IAM
+  # User Guide*.
+  #
+  # **Tags**
+  #
+  # (Optional) You can configure your IdP to pass attributes into your web
+  # identity token as session tags. Each session tag consists of a key
+  # name and an associated value. For more information about session tags,
+  # see [Passing Session Tags in STS][10] in the *IAM User Guide*.
+  #
+  # You can pass up to 50 session tags. The plaintext session tag keys
+  # can’t exceed 128 characters and the values can’t exceed 256
+  # characters. For these and additional limits, see [IAM and STS
+  # Character Limits][11] in the *IAM User Guide*.
+  #
+  # <note markdown="1"> An Amazon Web Services conversion compresses the passed session
+  # policies and session tags into a packed binary format that has a
+  # separate limit. Your request can fail for this limit even if your
+  # plaintext meets the other requirements. The `PackedPolicySize`
+  # response element indicates by percentage how close the policies and
+  # tags for your request are to the upper size limit.
+  #
+  #  </note>
+  #
+  # You can pass a session tag with the same key as a tag that is attached
+  # to the role. When you do, the session tag overrides the role tag with
+  # the same key.
+  #
+  # An administrator must grant you the permissions necessary to pass
+  # session tags. The administrator can also create granular permissions
+  # to allow you to pass only specific session tags. For more information,
+  # see [Tutorial: Using Tags for Attribute-Based Access Control][12] in
+  # the *IAM User Guide*.
+  #
+  # You can set the session tags as transitive. Transitive tags persist
+  # during role chaining. For more information, see [Chaining Roles with
+  # Session Tags][13] in the *IAM User Guide*.
+  #
+  # **Identities**
+  #
+  # Before your application can call `AssumeRoleWithWebIdentity`, you must
+  # have an identity token from a supported identity provider and create a
+  # role that the application can assume. The role that your application
+  # assumes must trust the identity provider that is associated with the
+  # identity token. In other words, the identity provider must be
+  # specified in the role's trust policy.
+  #
+  # Calling `AssumeRoleWithWebIdentity` can result in an entry in your
+  # CloudTrail logs. The entry includes the [Subject][14] of the provided
+  # web identity token. We recommend that you avoid using any personally
+  # identifiable information (PII) in this field. For example, you could
+  # instead use a GUID or a pairwise identifier, as [suggested in the OIDC
+  # specification][15].
+  #
+  # For more information about how to use web identity federation and the
+  # `AssumeRoleWithWebIdentity` API, see the following resources:
+  #
+  # * [Using Web Identity Federation API Operations for Mobile Apps][16]
+  #   and [Federation Through a Web-based Identity Provider][17].
+  #
+  # * [ Web Identity Federation Playground][18]. Walk through the process
+  #   of authenticating through Login with Amazon, Facebook, or Google,
+  #   getting temporary security credentials, and then using those
+  #   credentials to make a request to Amazon Web Services.
+  #
+  # * [Amazon Web Services SDK for iOS Developer Guide][1] and [Amazon Web
+  #   Services SDK for Android Developer Guide][2]. These toolkits contain
+  #   sample apps that show how to invoke the identity providers. The
+  #   toolkits then show how to use the information from these providers
+  #   to get and use temporary security credentials.
+  #
+  # * [Web Identity Federation with Mobile Applications][19]. This article
+  #   discusses web identity federation and shows an example of how to use
+  #   web identity federation to get access to content in Amazon S3.
+  #
+  #
+  #
+  # [1]: http://aws.amazon.com/sdkforios/
+  # [2]: http://aws.amazon.com/sdkforandroid/
+  # [3]: https://docs.aws.amazon.com/mobile/sdkforandroid/developerguide/cognito-auth.html#d0e840
+  # [4]: https://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth.html#d0e664
+  # [5]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html
+  # [6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#stsapi_comparison
+  # [7]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html#id_roles_use_view-role-max-session
+  # [8]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html
+  # [9]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#policies_session
+  # [10]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html
+  # [11]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-limits.html#reference_iam-limits-entity-length
+  # [12]: https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control.html
+  # [13]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html#id_session-tags_role-chaining
+  # [14]: http://openid.net/specs/openid-connect-core-1_0.html#Claims
+  # [15]: http://openid.net/specs/openid-connect-core-1_0.html#SubjectIDTypes
+  # [16]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc_manual.html
+  # [17]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_assumerolewithwebidentity
+  # [18]: https://aws.amazon.com/blogs/aws/the-aws-web-identity-federation-playground/
+  # [19]: http://aws.amazon.com/articles/web-identity-federation-with-mobile-applications
+  #
+  # @example Example: To assume a role as an OpenID Connect-federated user
+  #
+  #   resp = client.assume_role_with_web_identity({
+  #   duration_seconds: 3600,
+  #   policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}",
+  #   provider_id: "www.amazon.com",
+  #   role_arn: "arn:aws:iam::123456789012:role/FederatedWebIdentityRole",
+  #   role_session_name: "app1",
+  #   web_identity_token: "Atza%7CIQEBLjAsAhRFiXuWpUXuRvQ9PZL3GMFcYevydwIUFAHZwXZXXXXXXXXJnrulxKDHwy87oGKPznh0D6bEQZTSCzyoCtL_8S07pLpr0zMbn6w1lfVZKNTBdDansFBmtGnIsIapjI6xKR02Yc_2bQ8LZbUXSGm6Ry6_BG7PrtLZtj_dfCTj92xNGed-CrKqjG7nPBjNIL016GGvuS5gSvPRUxWES3VYfm1wl7WTI7jn-Pcb6M-buCgHhFOzTQxod27L9CqnOLio7N3gZAGpsp6n1-AJBOCJckcyXe2c6uD0srOJeZlKUm2eTDVMf8IehDVI0r1QOnTV6KzzAI3OY87Vd_cVMQ",
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   assumed_role_user: {
+  #   arn: "arn:aws:sts::123456789012:assumed-role/FederatedWebIdentityRole/app1",
+  #   assumed_role_id: "AROACLKWSDQRAOEXAMPLE:app1",
+  #   },
+  #   audience: "client.5498841531868486423.1548@apps.example.com",
+  #   credentials: {
+  #   access_key_id: "AKIAIOSFODNN7EXAMPLE",
+  #   expiration: Time.parse("2014-10-24T23:00:23Z"),
+  #   secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+  #   session_token: "AQoDYXdzEE0a8ANXXXXXXXXNO1ewxE5TijQyp+IEXAMPLE",
+  #   },
+  #   packed_policy_size: 123,
+  #   provider: "www.amazon.com",
+  #   subject_from_web_identity_token: "amzn1.account.AF6RHO7KZU5XRVQJGXK6HEXAMPLE",
+  #   }
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.assume_role_with_web_identity({
+  #   role_arn: "arnType", # required
+  #   role_session_name: "roleSessionNameType", # required
+  #   web_identity_token: "clientTokenType", # required
+  #   provider_id: "urlType",
+  #   policy_arns: [
+  #   {
+  #   arn: "arnType",
+  #   },
+  #   ],
+  #   policy: "sessionPolicyDocumentType",
+  #   duration_seconds: 1,
+  #   })
+  # @example Response structure
+  #
+  #   resp.credentials.access_key_id #=> String
+  #   resp.credentials.secret_access_key #=> String
+  #   resp.credentials.session_token #=> String
+  #   resp.credentials.expiration #=> Time
+  #   resp.subject_from_web_identity_token #=> String
+  #   resp.assumed_role_user.assumed_role_id #=> String
+  #   resp.assumed_role_user.arn #=> String
+  #   resp.packed_policy_size #=> Integer
+  #   resp.provider #=> String
+  #   resp.audience #=> String
+  #   resp.source_identity #=> String
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @overload assume_role_with_web_identity
+  # @param params [Hash] ({})
+  # @return [Types::AssumeRoleWithWebIdentityResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::AssumeRoleWithWebIdentityResponse#credentials #credentials} => Types::Credentials
+  #   * {Types::AssumeRoleWithWebIdentityResponse#subject_from_web_identity_token #subject_from_web_identity_token} => String
+  #   * {Types::AssumeRoleWithWebIdentityResponse#assumed_role_user #assumed_role_user} => Types::AssumedRoleUser
+  #   * {Types::AssumeRoleWithWebIdentityResponse#packed_policy_size #packed_policy_size} => Integer
+  #   * {Types::AssumeRoleWithWebIdentityResponse#provider #provider} => String
+  #   * {Types::AssumeRoleWithWebIdentityResponse#audience #audience} => String
+  #   * {Types::AssumeRoleWithWebIdentityResponse#source_identity #source_identity} => String
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleWithWebIdentity AWS API Documentation
   def assume_role_with_web_identity(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # @api private
+  # @param params [{}]
   def build_request(operation_name, params = T.unsafe(nil)); end
+
+  # Decodes additional information about the authorization status of a
+  # request from an encoded message returned in response to an Amazon Web
+  # Services request.
+  #
+  # For example, if a user is not authorized to perform an operation that
+  # he or she has requested, the request returns a
+  # `Client.UnauthorizedOperation` response (an HTTP 403 response). Some
+  # Amazon Web Services operations additionally return an encoded message
+  # that can provide details about this authorization failure.
+  #
+  # <note markdown="1"> Only certain Amazon Web Services operations return an encoded
+  # authorization message. The documentation for an individual operation
+  # indicates whether that operation returns an encoded message in
+  # addition to returning an HTTP code.
+  #
+  #  </note>
+  #
+  # The message is encoded because the details of the authorization status
+  # can contain privileged information that the user who requested the
+  # operation should not see. To decode an authorization status message, a
+  # user must be granted permissions through an IAM [policy][1] to request
+  # the `DecodeAuthorizationMessage` (`sts:DecodeAuthorizationMessage`)
+  # action.
+  #
+  # The decoded message includes the following type of information:
+  #
+  # * Whether the request was denied due to an explicit deny or due to the
+  #   absence of an explicit allow. For more information, see [Determining
+  #   Whether a Request is Allowed or Denied][2] in the *IAM User Guide*.
+  #
+  # * The principal who made the request.
+  #
+  # * The requested action.
+  #
+  # * The requested resource.
+  #
+  # * The values of condition keys in the context of the user's request.
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html
+  # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow
+  #
+  # @example Example: To decode information about an authorization status of a request
+  #
+  #   resp = client.decode_authorization_message({
+  #   encoded_message: "<encoded-message>",
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   decoded_message: "{\"allowed\": \"false\",\"explicitDeny\": \"false\",\"matchedStatements\": \"\",\"failures\": \"\",\"context\": {\"principal\": {\"id\": \"AIDACKCEVSQ6C2EXAMPLE\",\"name\": \"Bob\",\"arn\": \"arn:aws:iam::123456789012:user/Bob\"},\"action\": \"ec2:StopInstances\",\"resource\": \"arn:aws:ec2:us-east-1:123456789012:instance/i-dd01c9bd\",\"conditions\": [{\"item\": {\"key\": \"ec2:Tenancy\",\"values\": [\"default\"]},{\"item\": {\"key\": \"ec2:ResourceTag/elasticbeanstalk:environment-name\",\"values\": [\"Default-Environment\"]}},(Additional items ...)]}}",
+  #   }
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.decode_authorization_message({
+  #   encoded_message: "encodedMessageType", # required
+  #   })
+  # @example Response structure
+  #
+  #   resp.decoded_message #=> String
+  # @option params
+  # @overload decode_authorization_message
+  # @param params [Hash] ({})
+  # @return [Types::DecodeAuthorizationMessageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::DecodeAuthorizationMessageResponse#decoded_message #decoded_message} => String
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/DecodeAuthorizationMessage AWS API Documentation
   def decode_authorization_message(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Returns the account identifier for the specified access key ID.
+  #
+  # Access keys consist of two parts: an access key ID (for example,
+  # `AKIAIOSFODNN7EXAMPLE`) and a secret access key (for example,
+  # `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`). For more information
+  # about access keys, see [Managing Access Keys for IAM Users][1] in the
+  # *IAM User Guide*.
+  #
+  # When you pass an access key ID to this operation, it returns the ID of
+  # the Amazon Web Services account to which the keys belong. Access key
+  # IDs beginning with `AKIA` are long-term credentials for an IAM user or
+  # the Amazon Web Services account root user. Access key IDs beginning
+  # with `ASIA` are temporary credentials that are created using STS
+  # operations. If the account in the response belongs to you, you can
+  # sign in as the root user and review your root user access keys. Then,
+  # you can pull a [credentials report][2] to learn which IAM user owns
+  # the keys. To learn who requested the temporary credentials for an
+  # `ASIA` access key, view the STS events in your [CloudTrail logs][3] in
+  # the *IAM User Guide*.
+  #
+  # This operation does not indicate the state of the access key. The key
+  # might be active, inactive, or deleted. Active keys might not have
+  # permissions to perform an operation. Providing a deleted access key
+  # might return an error that the key doesn't exist.
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
+  # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_getting-report.html
+  # [3]: https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html
+  #
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.get_access_key_info({
+  #   access_key_id: "accessKeyIdType", # required
+  #   })
+  # @example Response structure
+  #
+  #   resp.account #=> String
+  # @option params
+  # @overload get_access_key_info
+  # @param params [Hash] ({})
+  # @return [Types::GetAccessKeyInfoResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::GetAccessKeyInfoResponse#account #account} => String
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetAccessKeyInfo AWS API Documentation
   def get_access_key_info(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Returns details about the IAM user or role whose credentials are used
+  # to call the operation.
+  #
+  # <note markdown="1"> No permissions are required to perform this operation. If an
+  # administrator adds a policy to your IAM user or role that explicitly
+  # denies access to the `sts:GetCallerIdentity` action, you can still
+  # perform this operation. Permissions are not required because the same
+  # information is returned when an IAM user or role is denied access. To
+  # view an example response, see [I Am Not Authorized to Perform:
+  # iam:DeleteVirtualMFADevice][1] in the *IAM User Guide*.
+  #
+  #  </note>
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_access-denied-delete-mfa
+  #
+  # @example Example: To get details about a calling IAM user
+  #
+  #   # This example shows a request and response made with the credentials for a user named Alice in the AWS account
+  #   # 123456789012.
+  #
+  #   resp = client.get_caller_identity({
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   account: "123456789012",
+  #   arn: "arn:aws:iam::123456789012:user/Alice",
+  #   user_id: "AKIAI44QH8DHBEXAMPLE",
+  #   }
+  # @example Example: To get details about a calling user federated with AssumeRole
+  #
+  #   # This example shows a request and response made with temporary credentials created by AssumeRole. The name of the assumed
+  #   # role is my-role-name, and the RoleSessionName is set to my-role-session-name.
+  #
+  #   resp = client.get_caller_identity({
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   account: "123456789012",
+  #   arn: "arn:aws:sts::123456789012:assumed-role/my-role-name/my-role-session-name",
+  #   user_id: "AKIAI44QH8DHBEXAMPLE:my-role-session-name",
+  #   }
+  # @example Example: To get details about a calling user federated with GetFederationToken
+  #
+  #   # This example shows a request and response made with temporary credentials created by using GetFederationToken. The Name
+  #   # parameter is set to my-federated-user-name.
+  #
+  #   resp = client.get_caller_identity({
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   account: "123456789012",
+  #   arn: "arn:aws:sts::123456789012:federated-user/my-federated-user-name",
+  #   user_id: "123456789012:my-federated-user-name",
+  #   }
+  # @example Response structure
+  #
+  #   resp.user_id #=> String
+  #   resp.account #=> String
+  #   resp.arn #=> String
+  # @overload get_caller_identity
+  # @param params [Hash] ({})
+  # @return [Types::GetCallerIdentityResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::GetCallerIdentityResponse#user_id #user_id} => String
+  #   * {Types::GetCallerIdentityResponse#account #account} => String
+  #   * {Types::GetCallerIdentityResponse#arn #arn} => String
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetCallerIdentity AWS API Documentation
   def get_caller_identity(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Returns a set of temporary security credentials (consisting of an
+  # access key ID, a secret access key, and a security token) for a
+  # federated user. A typical use is in a proxy application that gets
+  # temporary security credentials on behalf of distributed applications
+  # inside a corporate network. You must call the `GetFederationToken`
+  # operation using the long-term security credentials of an IAM user. As
+  # a result, this call is appropriate in contexts where those credentials
+  # can be safely stored, usually in a server-based application. For a
+  # comparison of `GetFederationToken` with the other API operations that
+  # produce temporary credentials, see [Requesting Temporary Security
+  # Credentials][1] and [Comparing the Amazon Web Services STS API
+  # operations][2] in the *IAM User Guide*.
+  #
+  # <note markdown="1"> You can create a mobile-based or browser-based app that can
+  # authenticate users using a web identity provider like Login with
+  # Amazon, Facebook, Google, or an OpenID Connect-compatible identity
+  # provider. In this case, we recommend that you use [Amazon Cognito][3]
+  # or `AssumeRoleWithWebIdentity`. For more information, see [Federation
+  # Through a Web-based Identity Provider][4] in the *IAM User Guide*.
+  #
+  #  </note>
+  #
+  # You can also call `GetFederationToken` using the security credentials
+  # of an Amazon Web Services account root user, but we do not recommend
+  # it. Instead, we recommend that you create an IAM user for the purpose
+  # of the proxy application. Then attach a policy to the IAM user that
+  # limits federated users to only the actions and resources that they
+  # need to access. For more information, see [IAM Best Practices][5] in
+  # the *IAM User Guide*.
+  #
+  # **Session duration**
+  #
+  # The temporary credentials are valid for the specified duration, from
+  # 900 seconds (15 minutes) up to a maximum of 129,600 seconds (36
+  # hours). The default session duration is 43,200 seconds (12 hours).
+  # Temporary credentials obtained by using the Amazon Web Services
+  # account root user credentials have a maximum duration of 3,600 seconds
+  # (1 hour).
+  #
+  # **Permissions**
+  #
+  # You can use the temporary credentials created by `GetFederationToken`
+  # in any Amazon Web Services service except the following:
+  #
+  # * You cannot call any IAM operations using the CLI or the Amazon Web
+  #   Services API.
+  #
+  # * You cannot call any STS operations except `GetCallerIdentity`.
+  #
+  # You must pass an inline or managed [session policy][6] to this
+  # operation. You can pass a single JSON policy document to use as an
+  # inline session policy. You can also specify up to 10 managed policies
+  # to use as managed session policies. The plaintext that you use for
+  # both inline and managed session policies can't exceed 2,048
+  # characters.
+  #
+  # Though the session policy parameters are optional, if you do not pass
+  # a policy, then the resulting federated user session has no
+  # permissions. When you pass session policies, the session permissions
+  # are the intersection of the IAM user policies and the session policies
+  # that you pass. This gives you a way to further restrict the
+  # permissions for a federated user. You cannot use session policies to
+  # grant more permissions than those that are defined in the permissions
+  # policy of the IAM user. For more information, see [Session
+  # Policies][6] in the *IAM User Guide*. For information about using
+  # `GetFederationToken` to create temporary security credentials, see
+  # [GetFederationToken—Federation Through a Custom Identity Broker][7].
+  #
+  # You can use the credentials to access a resource that has a
+  # resource-based policy. If that policy specifically references the
+  # federated user session in the `Principal` element of the policy, the
+  # session has the permissions allowed by the policy. These permissions
+  # are granted in addition to the permissions granted by the session
+  # policies.
+  #
+  # **Tags**
+  #
+  # (Optional) You can pass tag key-value pairs to your session. These are
+  # called session tags. For more information about session tags, see
+  # [Passing Session Tags in STS][8] in the *IAM User Guide*.
+  #
+  # <note markdown="1"> You can create a mobile-based or browser-based app that can
+  # authenticate users using a web identity provider like Login with
+  # Amazon, Facebook, Google, or an OpenID Connect-compatible identity
+  # provider. In this case, we recommend that you use [Amazon Cognito][3]
+  # or `AssumeRoleWithWebIdentity`. For more information, see [Federation
+  # Through a Web-based Identity Provider][4] in the *IAM User Guide*.
+  #
+  #  </note>
+  #
+  # An administrator must grant you the permissions necessary to pass
+  # session tags. The administrator can also create granular permissions
+  # to allow you to pass only specific session tags. For more information,
+  # see [Tutorial: Using Tags for Attribute-Based Access Control][9] in
+  # the *IAM User Guide*.
+  #
+  # Tag key–value pairs are not case sensitive, but case is preserved.
+  # This means that you cannot have separate `Department` and `department`
+  # tag keys. Assume that the user that you are federating has the
+  # `Department`=`Marketing` tag and you pass the
+  # `department`=`engineering` session tag. `Department` and `department`
+  # are not saved as separate tags, and the session tag passed in the
+  # request takes precedence over the user tag.
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html
+  # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#stsapi_comparison
+  # [3]: http://aws.amazon.com/cognito/
+  # [4]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_assumerolewithwebidentity
+  # [5]: https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html
+  # [6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#policies_session
+  # [7]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_getfederationtoken
+  # [8]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html
+  # [9]: https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control.html
+  #
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.get_federation_token({
+  #   name: "userNameType", # required
+  #   policy: "sessionPolicyDocumentType",
+  #   policy_arns: [
+  #   {
+  #   arn: "arnType",
+  #   },
+  #   ],
+  #   duration_seconds: 1,
+  #   tags: [
+  #   {
+  #   key: "tagKeyType", # required
+  #   value: "tagValueType", # required
+  #   },
+  #   ],
+  #   })
+  # @example Example: To get temporary credentials for a role by using GetFederationToken
+  #
+  #   resp = client.get_federation_token({
+  #   duration_seconds: 3600,
+  #   name: "testFedUserSession",
+  #   policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}",
+  #   tags: [
+  #   {
+  #   key: "Project",
+  #   value: "Pegasus",
+  #   },
+  #   {
+  #   key: "Cost-Center",
+  #   value: "98765",
+  #   },
+  #   ],
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   credentials: {
+  #   access_key_id: "AKIAIOSFODNN7EXAMPLE",
+  #   expiration: Time.parse("2011-07-15T23:28:33.359Z"),
+  #   secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+  #   session_token: "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==",
+  #   },
+  #   federated_user: {
+  #   arn: "arn:aws:sts::123456789012:federated-user/Bob",
+  #   federated_user_id: "123456789012:Bob",
+  #   },
+  #   packed_policy_size: 8,
+  #   }
+  # @example Response structure
+  #
+  #   resp.credentials.access_key_id #=> String
+  #   resp.credentials.secret_access_key #=> String
+  #   resp.credentials.session_token #=> String
+  #   resp.credentials.expiration #=> Time
+  #   resp.federated_user.federated_user_id #=> String
+  #   resp.federated_user.arn #=> String
+  #   resp.packed_policy_size #=> Integer
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @option params
+  # @overload get_federation_token
+  # @param params [Hash] ({})
+  # @return [Types::GetFederationTokenResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::GetFederationTokenResponse#credentials #credentials} => Types::Credentials
+  #   * {Types::GetFederationTokenResponse#federated_user #federated_user} => Types::FederatedUser
+  #   * {Types::GetFederationTokenResponse#packed_policy_size #packed_policy_size} => Integer
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetFederationToken AWS API Documentation
   def get_federation_token(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Returns a set of temporary credentials for an Amazon Web Services
+  # account or IAM user. The credentials consist of an access key ID, a
+  # secret access key, and a security token. Typically, you use
+  # `GetSessionToken` if you want to use MFA to protect programmatic calls
+  # to specific Amazon Web Services API operations like Amazon EC2
+  # `StopInstances`. MFA-enabled IAM users would need to call
+  # `GetSessionToken` and submit an MFA code that is associated with their
+  # MFA device. Using the temporary security credentials that are returned
+  # from the call, IAM users can then make programmatic calls to API
+  # operations that require MFA authentication. If you do not supply a
+  # correct MFA code, then the API returns an access denied error. For a
+  # comparison of `GetSessionToken` with the other API operations that
+  # produce temporary credentials, see [Requesting Temporary Security
+  # Credentials][1] and [Comparing the Amazon Web Services STS API
+  # operations][2] in the *IAM User Guide*.
+  #
+  # **Session Duration**
+  #
+  # The `GetSessionToken` operation must be called by using the long-term
+  # Amazon Web Services security credentials of the Amazon Web Services
+  # account root user or an IAM user. Credentials that are created by IAM
+  # users are valid for the duration that you specify. This duration can
+  # range from 900 seconds (15 minutes) up to a maximum of 129,600 seconds
+  # (36 hours), with a default of 43,200 seconds (12 hours). Credentials
+  # based on account credentials can range from 900 seconds (15 minutes)
+  # up to 3,600 seconds (1 hour), with a default of 1 hour.
+  #
+  # **Permissions**
+  #
+  # The temporary security credentials created by `GetSessionToken` can be
+  # used to make API calls to any Amazon Web Services service with the
+  # following exceptions:
+  #
+  # * You cannot call any IAM API operations unless MFA authentication
+  #   information is included in the request.
+  #
+  # * You cannot call any STS API *except* `AssumeRole` or
+  #   `GetCallerIdentity`.
+  #
+  # <note markdown="1"> We recommend that you do not call `GetSessionToken` with Amazon Web
+  # Services account root user credentials. Instead, follow our [best
+  # practices][3] by creating one or more IAM users, giving them the
+  # necessary permissions, and using IAM users for everyday interaction
+  # with Amazon Web Services.
+  #
+  #  </note>
+  #
+  # The credentials that are returned by `GetSessionToken` are based on
+  # permissions associated with the user whose credentials were used to
+  # call the operation. If `GetSessionToken` is called using Amazon Web
+  # Services account root user credentials, the temporary credentials have
+  # root user permissions. Similarly, if `GetSessionToken` is called using
+  # the credentials of an IAM user, the temporary credentials have the
+  # same permissions as the IAM user.
+  #
+  # For more information about using `GetSessionToken` to create temporary
+  # credentials, go to [Temporary Credentials for Users in Untrusted
+  # Environments][4] in the *IAM User Guide*.
+  #
+  #
+  #
+  # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html
+  # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#stsapi_comparison
+  # [3]: https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users
+  # [4]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_getsessiontoken
+  #
+  # @example Request syntax with placeholder values
+  #
+  #   resp = client.get_session_token({
+  #   duration_seconds: 1,
+  #   serial_number: "serialNumberType",
+  #   token_code: "tokenCodeType",
+  #   })
+  # @example Response structure
+  #
+  #   resp.credentials.access_key_id #=> String
+  #   resp.credentials.secret_access_key #=> String
+  #   resp.credentials.session_token #=> String
+  #   resp.credentials.expiration #=> Time
+  # @example Example: To get temporary credentials for an IAM user or an AWS account
+  #
+  #   resp = client.get_session_token({
+  #   duration_seconds: 3600,
+  #   serial_number: "YourMFASerialNumber",
+  #   token_code: "123456",
+  #   })
+  #
+  #   resp.to_h outputs the following:
+  #   {
+  #   credentials: {
+  #   access_key_id: "AKIAIOSFODNN7EXAMPLE",
+  #   expiration: Time.parse("2011-07-11T19:55:29.611Z"),
+  #   secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+  #   session_token: "AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT+FvwqnKwRcOIfrRh3c/LTo6UDdyJwOOvEVPvLXCrrrUtdnniCEXAMPLE/IvU1dYUg2RVAJBanLiHb4IgRmpRV3zrkuWJOgQs8IZZaIv2BXIa2R4OlgkBN9bkUDNCJiBeb/AXlzBBko7b15fjrBs2+cTQtpZ3CYWFXG8C5zqx37wnOE49mRl/+OtkIKGO7fAE",
+  #   },
+  #   }
+  # @option params
+  # @option params
+  # @option params
+  # @overload get_session_token
+  # @param params [Hash] ({})
+  # @return [Types::GetSessionTokenResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+  #
+  #   * {Types::GetSessionTokenResponse#credentials #credentials} => Types::Credentials
+  # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetSessionToken AWS API Documentation
   def get_session_token(params = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # @api private
+  # @deprecated
   def waiter_names; end
 
   class << self
+    # @api private
     def errors_module; end
+
+    # @api private
     def identifier; end
   end
 end
 
+# @api private
 module Aws::STS::ClientApi
   include ::Seahorse::Model
 end
 
+# @api private
 Aws::STS::ClientApi::API = T.let(T.unsafe(nil), Seahorse::Model::Api)
+
+# @api private
 Aws::STS::ClientApi::AssumeRoleRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::AssumeRoleResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::AssumeRoleWithSAMLRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::AssumeRoleWithSAMLResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::AssumeRoleWithWebIdentityRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::AssumeRoleWithWebIdentityResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::AssumedRoleUser = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::Audience = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::STS::ClientApi::Credentials = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::DecodeAuthorizationMessageRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::DecodeAuthorizationMessageResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::ExpiredTokenException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::FederatedUser = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetAccessKeyInfoRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetAccessKeyInfoResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetCallerIdentityRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetCallerIdentityResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetFederationTokenRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetFederationTokenResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetSessionTokenRequest = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::GetSessionTokenResponse = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::IDPCommunicationErrorException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::IDPRejectedClaimException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::InvalidAuthorizationMessageException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::InvalidIdentityTokenException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::Issuer = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::STS::ClientApi::MalformedPolicyDocumentException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::NameQualifier = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::STS::ClientApi::PackedPolicyTooLargeException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::PolicyDescriptorType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::RegionDisabledException = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
+
+# @api private
 Aws::STS::ClientApi::SAMLAssertionType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::STS::ClientApi::Subject = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::STS::ClientApi::SubjectType = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StringShape)
+
+# @api private
 Aws::STS::ClientApi::Tag = T.let(T.unsafe(nil), Seahorse::Model::Shapes::StructureShape)
 
+# When STS returns an error response, the Ruby SDK constructs and raises an error.
+# These errors all extend Aws::STS::Errors::ServiceError < {Aws::Errors::ServiceError}
+#
+# You can rescue all STS errors using ServiceError:
+#
+#     begin
+#       # do stuff
+#     rescue Aws::STS::Errors::ServiceError
+#       # rescues all STS API errors
+#     end
+#
+#
+# ## Request Context
+# ServiceError objects have a {Aws::Errors::ServiceError#context #context} method that returns
+# information about the request that generated the error.
+# See {Seahorse::Client::RequestContext} for more information.
+#
+# ## Error Classes
+# * {ExpiredTokenException}
+# * {IDPCommunicationErrorException}
+# * {IDPRejectedClaimException}
+# * {InvalidAuthorizationMessageException}
+# * {InvalidIdentityTokenException}
+# * {MalformedPolicyDocumentException}
+# * {PackedPolicyTooLargeException}
+# * {RegionDisabledException}
+#
+# Additionally, error classes are dynamically generated for service errors based on the error code
+# if they are not defined above.
 module Aws::STS::Errors
   extend ::Aws::Errors::DynamicErrors
 end
 
 class Aws::STS::Errors::ExpiredTokenException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::ExpiredTokenException]
+  # @return [ExpiredTokenException] a new instance of ExpiredTokenException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::STS::Errors::IDPCommunicationErrorException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::IDPCommunicationErrorException]
+  # @return [IDPCommunicationErrorException] a new instance of IDPCommunicationErrorException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::STS::Errors::IDPRejectedClaimException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::IDPRejectedClaimException]
+  # @return [IDPRejectedClaimException] a new instance of IDPRejectedClaimException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::STS::Errors::InvalidAuthorizationMessageException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::InvalidAuthorizationMessageException]
+  # @return [InvalidAuthorizationMessageException] a new instance of InvalidAuthorizationMessageException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::STS::Errors::InvalidIdentityTokenException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::InvalidIdentityTokenException]
+  # @return [InvalidIdentityTokenException] a new instance of InvalidIdentityTokenException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::STS::Errors::MalformedPolicyDocumentException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::MalformedPolicyDocumentException]
+  # @return [MalformedPolicyDocumentException] a new instance of MalformedPolicyDocumentException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::STS::Errors::PackedPolicyTooLargeException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::PackedPolicyTooLargeException]
+  # @return [PackedPolicyTooLargeException] a new instance of PackedPolicyTooLargeException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
 class Aws::STS::Errors::RegionDisabledException < ::Aws::STS::Errors::ServiceError
+  # @param context [Seahorse::Client::RequestContext]
+  # @param message [String]
+  # @param data [Aws::STS::Types::RegionDisabledException]
+  # @return [RegionDisabledException] a new instance of RegionDisabledException
   def initialize(context, message, data = T.unsafe(nil)); end
 
+  # @return [String]
   def message; end
 end
 
@@ -1900,202 +6030,531 @@ class Aws::STS::Plugins::STSRegionalEndpoints < ::Seahorse::Client::Plugin
   end
 end
 
+# Allows you to create presigned URLs for STS operations.
+#
+# @example
+#
+#   signer = Aws::STS::Presigner.new
+#   url = signer.get_caller_identity_presigned_url(
+#   headers: {"X-K8s-Aws-Id" => 'my-eks-cluster'}
+#   )
 class Aws::STS::Presigner
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Presigner] a new instance of Presigner
   def initialize(options = T.unsafe(nil)); end
 
+  # Returns a presigned url for get_caller_identity.
+  #
+  # This can be easily converted to a token used by the EKS service:
+  # {https://ruby-doc.org/stdlib-2.3.1/libdoc/base64/rdoc/Base64.html#method-i-encode64}
+  # "k8s-aws-v1." + Base64.urlsafe_encode64(url).chomp("==")
+  #
+  # @example
+  #
+  #   url = signer.get_caller_identity_presigned_url(
+  #   headers: {"X-K8s-Aws-Id" => 'my-eks-cluster'},
+  #   )
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [String] A presigned url string.
   def get_caller_identity_presigned_url(options = T.unsafe(nil)); end
 end
 
 class Aws::STS::Resource
+  # @option options
+  # @param options [{}]
+  # @return [Resource] a new instance of Resource
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [Client]
   def client; end
 end
 
 module Aws::STS::Types; end
 
+# @note When making an API call, you may pass AssumeRoleRequest
+#   data as a hash:
+#
+#   {
+#   role_arn: "arnType", # required
+#   role_session_name: "roleSessionNameType", # required
+#   policy_arns: [
+#   {
+#   arn: "arnType",
+#   },
+#   ],
+#   policy: "sessionPolicyDocumentType",
+#   duration_seconds: 1,
+#   tags: [
+#   {
+#   key: "tagKeyType", # required
+#   value: "tagValueType", # required
+#   },
+#   ],
+#   transitive_tag_keys: ["tagKeyType"],
+#   external_id: "externalIdType",
+#   serial_number: "serialNumberType",
+#   token_code: "tokenCodeType",
+#   source_identity: "sourceIdentityType",
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleRequest AWS API Documentation
 class Aws::STS::Types::AssumeRoleRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::AssumeRoleRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Contains the response to a successful AssumeRole request, including
+# temporary Amazon Web Services credentials that can be used to make
+# Amazon Web Services requests.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleResponse AWS API Documentation
 class Aws::STS::Types::AssumeRoleResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::AssumeRoleResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass AssumeRoleWithSAMLRequest
+#   data as a hash:
+#
+#   {
+#   role_arn: "arnType", # required
+#   principal_arn: "arnType", # required
+#   saml_assertion: "SAMLAssertionType", # required
+#   policy_arns: [
+#   {
+#   arn: "arnType",
+#   },
+#   ],
+#   policy: "sessionPolicyDocumentType",
+#   duration_seconds: 1,
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleWithSAMLRequest AWS API Documentation
 class Aws::STS::Types::AssumeRoleWithSAMLRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::AssumeRoleWithSAMLRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Contains the response to a successful AssumeRoleWithSAML request,
+# including temporary Amazon Web Services credentials that can be used
+# to make Amazon Web Services requests.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleWithSAMLResponse AWS API Documentation
 class Aws::STS::Types::AssumeRoleWithSAMLResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::AssumeRoleWithSAMLResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass AssumeRoleWithWebIdentityRequest
+#   data as a hash:
+#
+#   {
+#   role_arn: "arnType", # required
+#   role_session_name: "roleSessionNameType", # required
+#   web_identity_token: "clientTokenType", # required
+#   provider_id: "urlType",
+#   policy_arns: [
+#   {
+#   arn: "arnType",
+#   },
+#   ],
+#   policy: "sessionPolicyDocumentType",
+#   duration_seconds: 1,
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleWithWebIdentityRequest AWS API Documentation
 class Aws::STS::Types::AssumeRoleWithWebIdentityRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::AssumeRoleWithWebIdentityRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Contains the response to a successful AssumeRoleWithWebIdentity
+# request, including temporary Amazon Web Services credentials that can
+# be used to make Amazon Web Services requests.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleWithWebIdentityResponse AWS API Documentation
 class Aws::STS::Types::AssumeRoleWithWebIdentityResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::AssumeRoleWithWebIdentityResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The identifiers for the temporary security credentials that the
+# operation returns.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumedRoleUser AWS API Documentation
 class Aws::STS::Types::AssumedRoleUser < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::AssumedRoleUser::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Amazon Web Services credentials for API authentication.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/Credentials AWS API Documentation
 class Aws::STS::Types::Credentials < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::Credentials::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass DecodeAuthorizationMessageRequest
+#   data as a hash:
+#
+#   {
+#   encoded_message: "encodedMessageType", # required
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/DecodeAuthorizationMessageRequest AWS API Documentation
 class Aws::STS::Types::DecodeAuthorizationMessageRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::DecodeAuthorizationMessageRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# A document that contains additional information about the
+# authorization status of a request from an encoded message that is
+# returned in response to an Amazon Web Services request.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/DecodeAuthorizationMessageResponse AWS API Documentation
 class Aws::STS::Types::DecodeAuthorizationMessageResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::DecodeAuthorizationMessageResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The web identity token that was passed is expired or is not valid. Get
+# a new identity token from the identity provider and then retry the
+# request.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/ExpiredTokenException AWS API Documentation
 class Aws::STS::Types::ExpiredTokenException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::ExpiredTokenException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Identifiers for the federated user that is associated with the
+# credentials.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/FederatedUser AWS API Documentation
 class Aws::STS::Types::FederatedUser < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::FederatedUser::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass GetAccessKeyInfoRequest
+#   data as a hash:
+#
+#   {
+#   access_key_id: "accessKeyIdType", # required
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetAccessKeyInfoRequest AWS API Documentation
 class Aws::STS::Types::GetAccessKeyInfoRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::GetAccessKeyInfoRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetAccessKeyInfoResponse AWS API Documentation
 class Aws::STS::Types::GetAccessKeyInfoResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::GetAccessKeyInfoResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
+
+# @api private
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetCallerIdentityRequest AWS API Documentation
 class Aws::STS::Types::GetCallerIdentityRequest < ::Aws::EmptyStructure; end
 
+# Contains the response to a successful GetCallerIdentity request,
+# including information about the entity making the request.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetCallerIdentityResponse AWS API Documentation
 class Aws::STS::Types::GetCallerIdentityResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::GetCallerIdentityResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass GetFederationTokenRequest
+#   data as a hash:
+#
+#   {
+#   name: "userNameType", # required
+#   policy: "sessionPolicyDocumentType",
+#   policy_arns: [
+#   {
+#   arn: "arnType",
+#   },
+#   ],
+#   duration_seconds: 1,
+#   tags: [
+#   {
+#   key: "tagKeyType", # required
+#   value: "tagValueType", # required
+#   },
+#   ],
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetFederationTokenRequest AWS API Documentation
 class Aws::STS::Types::GetFederationTokenRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::GetFederationTokenRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Contains the response to a successful GetFederationToken request,
+# including temporary Amazon Web Services credentials that can be used
+# to make Amazon Web Services requests.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetFederationTokenResponse AWS API Documentation
 class Aws::STS::Types::GetFederationTokenResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::GetFederationTokenResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @note When making an API call, you may pass GetSessionTokenRequest
+#   data as a hash:
+#
+#   {
+#   duration_seconds: 1,
+#   serial_number: "serialNumberType",
+#   token_code: "tokenCodeType",
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetSessionTokenRequest AWS API Documentation
 class Aws::STS::Types::GetSessionTokenRequest < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::GetSessionTokenRequest::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# Contains the response to a successful GetSessionToken request,
+# including temporary Amazon Web Services credentials that can be used
+# to make Amazon Web Services requests.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetSessionTokenResponse AWS API Documentation
 class Aws::STS::Types::GetSessionTokenResponse < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::GetSessionTokenResponse::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The request could not be fulfilled because the identity provider (IDP)
+# that was asked to verify the incoming identity token could not be
+# reached. This is often a transient error caused by network conditions.
+# Retry the request a limited number of times so that you don't exceed
+# the request rate. If the error persists, the identity provider might
+# be down or not responding.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/IDPCommunicationErrorException AWS API Documentation
 class Aws::STS::Types::IDPCommunicationErrorException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::IDPCommunicationErrorException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The identity provider (IdP) reported that authentication failed. This
+# might be because the claim is invalid.
+#
+# If this error is returned for the `AssumeRoleWithWebIdentity`
+# operation, it can also mean that the claim has expired or has been
+# explicitly revoked.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/IDPRejectedClaimException AWS API Documentation
 class Aws::STS::Types::IDPRejectedClaimException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::IDPRejectedClaimException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The error returned if the message passed to
+# `DecodeAuthorizationMessage` was invalid. This can happen if the token
+# contains invalid characters, such as linebreaks.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/InvalidAuthorizationMessageException AWS API Documentation
 class Aws::STS::Types::InvalidAuthorizationMessageException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::InvalidAuthorizationMessageException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The web identity token that was passed could not be validated by
+# Amazon Web Services. Get a new identity token from the identity
+# provider and then retry the request.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/InvalidIdentityTokenException AWS API Documentation
 class Aws::STS::Types::InvalidIdentityTokenException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::InvalidIdentityTokenException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The request was rejected because the policy document was malformed.
+# The error message describes the specific error.
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/MalformedPolicyDocumentException AWS API Documentation
 class Aws::STS::Types::MalformedPolicyDocumentException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::MalformedPolicyDocumentException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# The request was rejected because the total packed size of the session
+# policies and session tags combined was too large. An Amazon Web
+# Services conversion compresses the session policy document, session
+# policy ARNs, and session tags into a packed binary format that has a
+# separate limit. The error message indicates by percentage how close
+# the policies and tags are to the upper size limit. For more
+# information, see [Passing Session Tags in STS][1] in the *IAM User
+# Guide*.
+#
+# You could receive this error even though you meet other defined
+# session policy and session tag limits. For more information, see [IAM
+# and STS Entity Character Limits][2] in the *IAM User Guide*.
+#
+#
+#
+# [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html
+# [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-quotas.html#reference_iam-limits-entity-length
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/PackedPolicyTooLargeException AWS API Documentation
 class Aws::STS::Types::PackedPolicyTooLargeException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::PackedPolicyTooLargeException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# A reference to the IAM managed policy that is passed as a session
+# policy for a role session or a federated user session.
+#
+# @note When making an API call, you may pass PolicyDescriptorType
+#   data as a hash:
+#
+#   {
+#   arn: "arnType",
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/PolicyDescriptorType AWS API Documentation
 class Aws::STS::Types::PolicyDescriptorType < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::PolicyDescriptorType::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# STS is not activated in the requested region for the account that is
+# being asked to generate credentials. The account administrator must
+# use the IAM console to activate STS in that region. For more
+# information, see [Activating and Deactivating Amazon Web Services STS
+# in an Amazon Web Services Region][1] in the *IAM User Guide*.
+#
+#
+#
+# [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html
+#
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/RegionDisabledException AWS API Documentation
 class Aws::STS::Types::RegionDisabledException < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::RegionDisabledException::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# You can pass custom key-value pair attributes when you assume a role
+# or federate a user. These are called session tags. You can then use
+# the session tags to control access to resources. For more information,
+# see [Tagging Amazon Web Services STS Sessions][1] in the *IAM User
+# Guide*.
+#
+#
+#
+# [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html
+#
+# @note When making an API call, you may pass Tag
+#   data as a hash:
+#
+#   {
+#   key: "tagKeyType", # required
+#   value: "tagValueType", # required
+#   }
+# @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/Tag AWS API Documentation
 class Aws::STS::Types::Tag < ::Struct
   include ::Aws::Structure
 end
 
 Aws::STS::Types::Tag::SENSITIVE = T.let(T.unsafe(nil), Array)
 
+# @api private
 class Aws::SharedConfig
+  # Constructs a new SharedConfig provider object. This will load the shared
+  # credentials file, and optionally the shared configuration file, as ini
+  # files which support profiles.
+  #
+  # By default, the shared credential file (the default path for which is
+  # `~/.aws/credentials`) and the shared config file (the default path for
+  # which is `~/.aws/config`) are loaded. However, if you set the
+  # `ENV['AWS_SDK_CONFIG_OPT_OUT']` environment variable, only the shared
+  # credential file will be loaded. You can specify the shared credential
+  # file path with the `ENV['AWS_SHARED_CREDENTIALS_FILE']` environment
+  # variable or with the `:credentials_path` option. Similarly, you can
+  # specify the shared config file path with the `ENV['AWS_CONFIG_FILE']`
+  # environment variable or with the `:config_path` option.
+  #
+  # The default profile name is 'default'. You can specify the profile name
+  # with the `ENV['AWS_PROFILE']` environment variable or with the
+  # `:profile_name` option.
+  #
+  # @api private
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash]
+  # @return [SharedConfig] a new instance of SharedConfig
   def initialize(options = T.unsafe(nil)); end
 
   def adaptive_retry_wait_to_fill(opts = T.unsafe(nil)); end
+
+  # Attempts to assume a role from shared config or shared credentials file.
+  # Will always attempt first to assume a role from the shared credentials
+  # file, if present.
+  #
+  # @api private
   def assume_role_credentials_from_config(opts = T.unsafe(nil)); end
+
+  # @api private
   def assume_role_web_identity_credentials_from_config(opts = T.unsafe(nil)); end
+
   def ca_bundle(opts = T.unsafe(nil)); end
+
+  # @api private
+  # @return [Boolean] returns `true` if use of the shared config file is
+  #   enabled.
   def config_enabled?; end
+
+  # @api private
+  # @return [String]
   def config_path; end
+
   def correct_clock_skew(opts = T.unsafe(nil)); end
   def credential_process(opts = T.unsafe(nil)); end
+
+  # Sources static credentials from shared credential/config files.
+  #
+  # @api private
+  # @option options
+  # @param opts [Hash]
+  # @param options [Hash] a customizable set of options
+  # @return [Aws::Credentials] credentials sourced from configuration values,
+  #   or `nil` if no valid credentials were found.
   def credentials(opts = T.unsafe(nil)); end
+
+  # @api private
+  # @return [String]
   def credentials_path; end
+
   def csm_client_id(opts = T.unsafe(nil)); end
   def csm_enabled(opts = T.unsafe(nil)); end
   def csm_host(opts = T.unsafe(nil)); end
@@ -2104,87 +6563,223 @@ class Aws::SharedConfig
   def ec2_metadata_service_endpoint(opts = T.unsafe(nil)); end
   def ec2_metadata_service_endpoint_mode(opts = T.unsafe(nil)); end
   def endpoint_discovery_enabled(opts = T.unsafe(nil)); end
+
+  # @api private
   def fresh(options = T.unsafe(nil)); end
+
+  # @api private
+  # @note This method does not indicate if the file found at {#path}
+  #   will be parsable, only if it can be read.
+  # @return [Boolean] Returns `true` if a credential file
+  #   exists and has appropriate read permissions at {#path}.
   def loadable?(path); end
+
   def max_attempts(opts = T.unsafe(nil)); end
+
+  # @api private
+  # @return [String]
   def profile_name; end
+
   def region(opts = T.unsafe(nil)); end
   def retry_mode(opts = T.unsafe(nil)); end
   def s3_disable_multiregion_access_points(opts = T.unsafe(nil)); end
   def s3_us_east_1_regional_endpoint(opts = T.unsafe(nil)); end
   def s3_use_arn_region(opts = T.unsafe(nil)); end
+
+  # Attempts to load from shared config or shared credentials file.
+  # Will always attempt first to load from the shared credentials
+  # file, if present.
+  #
+  # @api private
   def sso_credentials_from_config(opts = T.unsafe(nil)); end
+
   def sts_regional_endpoints(opts = T.unsafe(nil)); end
   def use_dualstack_endpoint(opts = T.unsafe(nil)); end
   def use_fips_endpoint(opts = T.unsafe(nil)); end
 
   private
 
+  # @api private
   def assume_role_from_profile(cfg, profile, opts, chain_config); end
+
+  # @api private
   def assume_role_process_credentials_from_config(profile); end
+
+  # @api private
   def credentials_from_config(profile, _opts); end
+
+  # @api private
   def credentials_from_profile(prof_config); end
+
+  # @api private
   def credentials_from_shared(profile, _opts); end
+
+  # @api private
   def credentials_from_source(credential_source, config); end
+
+  # @api private
+  # @return [Boolean]
   def credentials_present?; end
+
+  # @api private
   def default_shared_config_path(file); end
+
+  # @api private
   def determine_config_path; end
+
+  # @api private
   def determine_credentials_path; end
+
+  # @api private
   def determine_profile(options); end
+
+  # Get a config value from from shared credential/config files.
+  # Only loads a value when config_enabled is true
+  # Return a value from credentials preferentially over config
+  #
+  # @api private
   def get_config_value(key, opts); end
+
+  # @api private
   def load_config_file; end
+
+  # @api private
   def load_credentials_file; end
+
+  # @api private
   def resolve_source_profile(profile, opts = T.unsafe(nil)); end
+
+  # If any of the sso_ profile values are present, attempt to construct
+  # SSOCredentials
+  #
+  # @api private
   def sso_credentials_from_profile(cfg, profile); end
+
+  # @api private
   def validate_profile_exists(profile); end
 
   class << self
+    # Add an accessor method (similar to attr_reader) to return a configuration value
+    # Uses the get_config_value below to control where
+    # values are loaded from
+    #
+    # @api private
     def config_reader(*attrs); end
   end
 end
 
+# @api private
 Aws::SharedConfig::SSO_PROFILE_KEYS = T.let(T.unsafe(nil), Array)
 
 class Aws::SharedCredentials
   include ::Aws::CredentialProvider
 
+  # Constructs a new SharedCredentials object. This will load static
+  # (access_key_id, secret_access_key and session_token) AWS access
+  # credentials from an ini file, which supports profiles. The default
+  # profile name is 'default'. You can specify the profile name with the
+  # `ENV['AWS_PROFILE']` or with the `:profile_name` option.
+  #
+  # To use credentials from the default credential resolution chain
+  # create a client without the credential option specified.
+  # You may access the resolved credentials through
+  # `client.config.credentials`.
+  #
+  # @option [String]
+  # @option [String]
+  # @param [String] [Hash] a customizable set of options
+  # @return [SharedCredentials] a new instance of SharedCredentials
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [Credentials]
   def credentials; end
+
+  # @api private
   def inspect; end
+
+  # @deprecated This method is no longer used.
+  # @note This method does not indicate if the file found at {#path}
+  #   will be parsable, only if it can be read.
+  # @return [Boolean] Returns `true` if a credential file
+  #   exists and has appropriate read permissions at {#path}.
   def loadable?; end
+
+  # @return [String]
   def path; end
+
+  # @return [String]
   def profile_name; end
 end
 
+# @api private
 Aws::SharedCredentials::KEY_MAP = T.let(T.unsafe(nil), Hash)
 
+# @api private
 module Aws::Structure
+  # @api private
   def initialize(values = T.unsafe(nil)); end
 
+  # @api private
+  # @return [Boolean] Returns `true` if all of the member values are `nil`.
   def empty?; end
+
+  # @api private
+  # @return [Boolean] Returns `true` if this structure has a value
+  #   set for the given member.
   def key?(member_name); end
+
+  # Deeply converts the Structure into a hash.  Structure members that
+  # are `nil` are omitted from the resultant hash.
+  #
+  # You can call #orig_to_h to get vanilla #to_h behavior as defined
+  # in stdlib Struct.
+  #
+  # @api private
+  # @return [Hash]
   def to_h(obj = T.unsafe(nil)); end
+
+  # Deeply converts the Structure into a hash.  Structure members that
+  # are `nil` are omitted from the resultant hash.
+  #
+  # You can call #orig_to_h to get vanilla #to_h behavior as defined
+  # in stdlib Struct.
+  #
+  # @api private
+  # @return [Hash]
   def to_hash(obj = T.unsafe(nil)); end
+
+  # Wraps the default #to_s logic with filtering of sensitive parameters.
+  #
+  # @api private
   def to_s(obj = T.unsafe(nil)); end
 
   class << self
+    # @api private
     def new(*args); end
   end
 end
 
+# @api private
 module Aws::Structure::Union
+  # @api private
   def member; end
+
+  # @api private
   def value; end
 end
 
+# @api private
 module Aws::Stubbing; end
 
 class Aws::Stubbing::DataApplicator
   include ::Seahorse::Model::Shapes
 
+  # @param rules [Seahorse::Models::Shapes::ShapeRef]
+  # @return [DataApplicator] a new instance of DataApplicator
   def initialize(rules); end
 
+  # @param data [Hash]
+  # @param stub [Structure]
   def apply_data(data, stub); end
 
   private
@@ -2196,8 +6791,11 @@ end
 class Aws::Stubbing::EmptyStub
   include ::Seahorse::Model::Shapes
 
+  # @param rules [Seahorse::Models::Shapes::ShapeRef]
+  # @return [EmptyStub] a new instance of EmptyStub
   def initialize(rules); end
 
+  # @return [Structure]
   def stub; end
 
   private
@@ -2255,9 +6853,14 @@ class Aws::Stubbing::Protocols::Rest
   def encode_eventstream_response(rules, data, builder); end
   def encode_modeled_event(opts, rules, event_type, event_data, builder); end
   def encode_unknown_event(opts, event_type, event_data); end
+
+  # @return [Boolean]
   def eventstream?(rules); end
+
   def head_operation(operation); end
   def new_http_response; end
+
+  # @return [Boolean]
   def streaming?(ref); end
 end
 
@@ -2272,36 +6875,63 @@ class Aws::Stubbing::Protocols::RestXml < ::Aws::Stubbing::Protocols::Rest
   def xmlns(api); end
 end
 
+# @api private
 class Aws::Stubbing::StubData
+  # @api private
+  # @return [StubData] a new instance of StubData
   def initialize(operation); end
 
+  # @api private
   def stub(data = T.unsafe(nil)); end
 
   private
 
+  # @api private
   def apply_data(data, stub); end
+
+  # @api private
   def remove_paging_tokens(stub); end
 end
 
+# @api private
 class Aws::Stubbing::XmlError
+  # @api private
+  # @return [XmlError] a new instance of XmlError
   def initialize(error_code); end
 
+  # @api private
   def to_xml; end
 end
 
+# @api private
 class Aws::TypeBuilder
+  # @api private
+  # @return [TypeBuilder] a new instance of TypeBuilder
   def initialize(svc_module); end
 
+  # @api private
   def build_type(shape, shapes); end
 end
 
+# @api private
 module Aws::Util
   class << self
+    # @api private
     def copy_hash(hash); end
+
+    # @api private
     def deep_copy(obj); end
+
+    # @api private
     def deep_merge(left, right); end
+
+    # @api private
     def monotonic_milliseconds; end
+
+    # @api private
     def monotonic_seconds; end
+
+    # @api private
     def str_2_bool(str); end
   end
 end
@@ -2310,84 +6940,247 @@ module Aws::Waiters; end
 module Aws::Waiters::Errors; end
 
 class Aws::Waiters::Errors::FailureStateError < ::Aws::Waiters::Errors::WaiterFailed
+  # @return [FailureStateError] a new instance of FailureStateError
   def initialize(response); end
 
+  # @return [Seahorse::Client::Response] The response that matched
+  #   the failure state.
   def response; end
 end
 
 Aws::Waiters::Errors::FailureStateError::MSG = T.let(T.unsafe(nil), String)
 
+# Raised when attempting to get a waiter by name and the waiter has not
+# been defined.
 class Aws::Waiters::Errors::NoSuchWaiterError < ::ArgumentError
+  # @return [NoSuchWaiterError] a new instance of NoSuchWaiterError
   def initialize(waiter_name, waiter_names); end
 end
 
 Aws::Waiters::Errors::NoSuchWaiterError::MSG = T.let(T.unsafe(nil), String)
 
 class Aws::Waiters::Errors::TooManyAttemptsError < ::Aws::Waiters::Errors::WaiterFailed
+  # @return [TooManyAttemptsError] a new instance of TooManyAttemptsError
   def initialize(attempts); end
 
+  # @return [Integer]
   def attempts; end
 end
 
 Aws::Waiters::Errors::TooManyAttemptsError::MSG = T.let(T.unsafe(nil), String)
 
 class Aws::Waiters::Errors::UnexpectedError < ::Aws::Waiters::Errors::WaiterFailed
+  # @return [UnexpectedError] a new instance of UnexpectedError
   def initialize(error); end
 
+  # @return [Exception] The unexpected error.
   def error; end
 end
 
 Aws::Waiters::Errors::UnexpectedError::MSG = T.let(T.unsafe(nil), String)
+
+# Raised when a waiter detects a condition where the waiter can never
+# succeed.
 class Aws::Waiters::Errors::WaiterFailed < ::StandardError; end
 
+# Polls a single API operation inspecting the response data and/or error
+# for states matching one of its acceptors.
+#
+# @api private
 class Aws::Waiters::Poller
+  # @api private
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Poller] a new instance of Poller
   def initialize(options = T.unsafe(nil)); end
 
+  # Makes an API call, returning the resultant state and the response.
+  #
+  # * `:success` - A success state has been matched.
+  # * `:failure` - A terminate failure state has been matched.
+  # * `:retry`   - The waiter may be retried.
+  # * `:error`   - The waiter encountered an un-expected error.
+  #
+  # @api private
+  # @example A trival (bad) example of a waiter that polls indefinetly.
+  #
+  #   loop do
+  #
+  #   state, resp = poller.call(client:client, params:{})
+  #
+  #   case state
+  #   when :success then return true
+  #   when :failure then return false
+  #   when :retry   then next
+  #   when :error   then raise 'oops'
+  #   end
+  #
+  #   end
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Array<Symbol,Response>]
   def call(options = T.unsafe(nil)); end
+
+  # @api private
+  # @return [Symbol]
   def operation_name; end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def acceptor_matches?(acceptor, response); end
+
+  # @api private
+  # @return [Boolean]
   def matches_error?(acceptor, response); end
+
+  # @api private
+  # @return [Boolean]
   def matches_path?(acceptor, response); end
+
+  # @api private
+  # @return [Boolean]
   def matches_pathAll?(acceptor, response); end
+
+  # @api private
+  # @return [Boolean]
   def matches_pathAny?(acceptor, response); end
+
+  # @api private
+  # @return [Boolean]
   def matches_status?(acceptor, response); end
+
+  # @api private
   def non_empty_array(acceptor, response, &block); end
+
+  # @api private
   def path(acceptor); end
+
+  # @api private
   def send_request(options); end
 end
 
+# @api private
 Aws::Waiters::Poller::RAISE_HANDLER = Seahorse::Client::Plugins::RaiseResponseErrors::Handler
 
+# @api private
 class Aws::Waiters::Waiter
+  # @api private
+  # @return [Waiter] a new instance of Waiter
   def initialize(options = T.unsafe(nil)); end
 
+  # Register a callback that is invoked before every polling attempt.
+  # Yields the number of attempts made so far.
+  #
+  #     waiter.before_attempt do |attempts|
+  #       puts "#{attempts} made, about to make attempt #{attempts + 1}"
+  #     end
+  #
+  # Throwing `:success` or `:failure` from the given block will stop
+  # the waiter and return or raise. You can pass a custom message to the
+  # throw:
+  #
+  #     # raises Aws::Waiters::Errors::WaiterFailed
+  #     waiter.before_attempt do |attempts|
+  #       throw :failure, 'custom-error-message'
+  #     end
+  #
+  #     # cause the waiter to stop polling and return
+  #     waiter.before_attempt do |attempts|
+  #       throw :success
+  #     end
+  #
+  # @api private
+  # @yieldparam attempts [Integer] The number of attempts made.
   def before_attempt(&block); end
+
+  # Register a callback that is invoked after an attempt but before
+  # sleeping. Yields the number of attempts made and the previous response.
+  #
+  #     waiter.before_wait do |attempts, response|
+  #       puts "#{attempts} made"
+  #       puts response.error.inspect
+  #       puts response.data.inspect
+  #     end
+  #
+  # Throwing `:success` or `:failure` from the given block will stop
+  # the waiter and return or raise. You can pass a custom message to the
+  # throw:
+  #
+  #     # raises Aws::Waiters::Errors::WaiterFailed
+  #     waiter.before_attempt do |attempts|
+  #       throw :failure, 'custom-error-message'
+  #     end
+  #
+  #     # cause the waiter to stop polling and return
+  #     waiter.before_attempt do |attempts|
+  #       throw :success
+  #     end
+  #
+  # @api private
+  # @yieldparam attempts [Integer] The number of attempts already made.
+  # @yieldparam response [Seahorse::Client::Response] The response from
+  #   the previous polling attempts.
   def before_wait(&block); end
+
+  # @api private
+  # @return [Float]
   def delay; end
+
+  # @api private
+  # @return [Float]
   def delay=(_arg0); end
+
+  # @api private
+  # @return [Float]
   def interval; end
+
+  # @api private
+  # @return [Float]
   def interval=(_arg0); end
+
+  # @api private
+  # @return [Integer]
   def max_attempts; end
+
+  # @api private
+  # @return [Integer]
   def max_attempts=(_arg0); end
+
+  # @api private
   def poller; end
+
+  # @api private
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
   def wait(options); end
 
   private
 
+  # @api private
   def poll(options); end
+
+  # @api private
   def trigger_before_attempt(attempts); end
+
+  # @api private
   def trigger_before_wait(attempts, response); end
 end
 
+# @api private
 Aws::Waiters::Waiter::RAISE_HANDLER = Seahorse::Client::Plugins::RaiseResponseErrors::Handler
+
+# @api private
 module Aws::Xml; end
 
 class Aws::Xml::Builder
   include ::Seahorse::Model::Shapes
 
+  # @return [Builder] a new instance of Builder
   def initialize(rules, options = T.unsafe(nil)); end
 
   def serialize(params); end
@@ -2399,26 +7192,54 @@ class Aws::Xml::Builder
   def list(name, ref, values); end
   def map(name, ref, hash); end
   def member(name, ref, value); end
+
+  # The `args` list may contain:
+  #
+  #   * [] - empty, no value or attributes
+  #   * [value] - inline element, no attributes
+  #   * [value, attributes_hash] - inline element with attributes
+  #   * [attributes_hash] - self closing element with attributes
+  #
+  # Pass a block if you want to nest XML nodes inside.  When doing this,
+  # you may *not* pass a value to the `args` list.
   def node(name, ref, *args, &block); end
+
   def shape_attrs(ref); end
   def structure(name, ref, values); end
   def structure_attrs(ref, values); end
   def timestamp(ref, value); end
+
+  # @return [Boolean]
   def xml_attribute?(ref); end
 end
 
+# @api private
 class Aws::Xml::DefaultList < ::Array
+  # @api private
   def nil?; end
 end
 
+# @api private
 class Aws::Xml::DefaultMap < ::Hash
+  # @api private
   def nil?; end
 end
 
 class Aws::Xml::DocBuilder
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [DocBuilder] a new instance of DocBuilder
   def initialize(options = T.unsafe(nil)); end
 
+  # @overload node
+  # @overload node
+  # @overload node
+  # @return [void]
   def node(name, *args, &block); end
+
+  # Returns the value of attribute target.
   def target; end
 
   private
@@ -2447,21 +7268,69 @@ class Aws::Xml::ErrorHandler < ::Seahorse::Client::Handler
   def unescape(str); end
 end
 
+# A SAX-style XML parser that uses a shape context to handle types.
+#
+# @api private
 class Aws::Xml::Parser
   include ::Seahorse::Model::Shapes
 
+  # @api private
+  # @param rules [Seahorse::Model::ShapeRef]
+  # @return [Parser] a new instance of Parser
   def initialize(rules, options = T.unsafe(nil)); end
 
+  # Parses the XML document, returning a parsed structure.
+  #
+  # If you pass a block, this will yield for XML
+  # elements that are not modeled in the rules given
+  # to the constructor.
+  #
+  #   parser.parse(xml) do |path, value|
+  #     puts "uhandled: #{path.join('/')} - #{value}"
+  #   end
+  #
+  # The purpose of the unhandled callback block is to
+  # allow callers to access values such as the EC2
+  # request ID that are part of the XML body but not
+  # part of the operation result.
+  #
+  # @api private
+  # @param xml [String] An XML document string to parse.
+  # @param target [Structure] (nil)
+  # @return [Structure]
   def parse(xml, target = T.unsafe(nil), &unhandled_callback); end
 
   class << self
+    # @api private
+    # @return [Class] Returns the default parsing engine.
+    #   One of:
+    #
+    #   * {OxEngine}
+    #   * {OgaEngine}
+    #   * {LibxmlEngine}
+    #   * {NokogiriEngine}
+    #   * {RexmlEngine}
     def engine; end
+
+    # @api private
+    # @param engine [Symbol, Class] Must be one of the following values:
+    #
+    #   * :ox
+    #   * :oga
+    #   * :libxml
+    #   * :nokogiri
+    #   * :rexml
     def engine=(engine); end
+
+    # @api private
     def set_default_engine; end
 
     private
 
+    # @api private
     def load_engine(name); end
+
+    # @api private
     def try_load_engine(name); end
   end
 end
@@ -2477,6 +7346,7 @@ end
 Aws::Xml::Parser::FRAME_CLASSES = T.let(T.unsafe(nil), Hash)
 
 class Aws::Xml::Parser::FlatListFrame < ::Aws::Xml::Parser::Frame
+  # @return [FlatListFrame] a new instance of FlatListFrame
   def initialize(xml_name, *args); end
 
   def child_frame(xml_name); end
@@ -2492,15 +7362,27 @@ end
 class Aws::Xml::Parser::Frame
   include ::Seahorse::Model::Shapes
 
+  # @return [Frame] a new instance of Frame
   def initialize(path, parent, ref, result); end
 
   def child_frame(xml_name); end
   def consume_child_frame(child); end
+
+  # Returns the value of attribute parent.
   def parent; end
+
+  # @api private
   def path; end
+
+  # Returns the value of attribute ref.
   def ref; end
+
+  # Returns the value of attribute result.
   def result; end
+
   def set_text(value); end
+
+  # @api private
   def yield_unhandled_value(path, value); end
 
   class << self
@@ -2517,6 +7399,7 @@ class Aws::Xml::Parser::IntegerFrame < ::Aws::Xml::Parser::Frame
 end
 
 class Aws::Xml::Parser::ListFrame < ::Aws::Xml::Parser::Frame
+  # @return [ListFrame] a new instance of ListFrame
   def initialize(*args); end
 
   def child_frame(xml_name); end
@@ -2524,14 +7407,20 @@ class Aws::Xml::Parser::ListFrame < ::Aws::Xml::Parser::Frame
 end
 
 class Aws::Xml::Parser::MapEntryFrame < ::Aws::Xml::Parser::Frame
+  # @return [MapEntryFrame] a new instance of MapEntryFrame
   def initialize(xml_name, *args); end
 
   def child_frame(xml_name); end
+
+  # @return [StringFrame]
   def key; end
+
+  # @return [Frame]
   def value; end
 end
 
 class Aws::Xml::Parser::MapFrame < ::Aws::Xml::Parser::Frame
+  # @return [MapFrame] a new instance of MapFrame
   def initialize(*args); end
 
   def child_frame(xml_name); end
@@ -2539,6 +7428,7 @@ class Aws::Xml::Parser::MapFrame < ::Aws::Xml::Parser::Frame
 end
 
 class Aws::Xml::Parser::NokogiriEngine
+  # @return [NokogiriEngine] a new instance of NokogiriEngine
   def initialize(stack); end
 
   def characters(chars); end
@@ -2561,24 +7451,38 @@ class Aws::Xml::Parser::NullFrame < ::Aws::Xml::Parser::Frame
 end
 
 class Aws::Xml::Parser::ParsingError < ::RuntimeError
+  # @return [ParsingError] a new instance of ParsingError
   def initialize(msg, line, column); end
 
+  # @return [Integer, nil]
   def column; end
+
+  # @return [Integer, nil]
   def line; end
 end
 
 class Aws::Xml::Parser::Stack
+  # @return [Stack] a new instance of Stack
   def initialize(ref, result = T.unsafe(nil), &unhandled_callback); end
 
   def attr(name, value); end
   def child_frame(name); end
   def consume_child_frame(frame); end
   def end_element(*args); end
+
+  # @raise [ParsingError]
   def error(msg, line = T.unsafe(nil), column = T.unsafe(nil)); end
+
+  # Returns the value of attribute frame.
   def frame; end
+
+  # Returns the value of attribute result.
   def result; end
+
   def start_element(name); end
   def text(value); end
+
+  # @api private
   def yield_unhandled_value(path, value); end
 end
 
@@ -2587,6 +7491,7 @@ class Aws::Xml::Parser::StringFrame < ::Aws::Xml::Parser::Frame
 end
 
 class Aws::Xml::Parser::StructureFrame < ::Aws::Xml::Parser::Frame
+  # @return [StructureFrame] a new instance of StructureFrame
   def initialize(xml_name, parent, ref, result = T.unsafe(nil)); end
 
   def child_frame(xml_name); end
@@ -2595,7 +7500,10 @@ class Aws::Xml::Parser::StructureFrame < ::Aws::Xml::Parser::Frame
   private
 
   def apply_default_value(name, ref); end
+
+  # @return [Boolean]
   def flattened_list?(ref); end
+
   def xml_name(ref); end
 end
 
@@ -2612,16 +7520,31 @@ module Seahorse; end
 module Seahorse::Client; end
 
 class Seahorse::Client::AsyncBase < ::Seahorse::Client::Base
+  # @return [AsyncBase] a new instance of AsyncBase
   def initialize(plugins, options); end
 
+  # Closes the underlying HTTP2 Connection for the client
+  #
+  # @return [Symbol] Returns the status of the connection (:closed)
   def close_connection; end
+
+  # @return [H2::Connection]
   def connection; end
+
   def connection_errors; end
+
+  # Creates a new HTTP2 Connection for the client
+  #
+  # @return [Seahorse::Client::H2::Connection]
   def new_connection; end
+
+  # @return [Array<Symbol>] Returns a list of valid async request
+  #   operation names.
   def operation_names; end
 end
 
 class Seahorse::Client::AsyncResponse
+  # @return [AsyncResponse] a new instance of AsyncResponse
   def initialize(options = T.unsafe(nil)); end
 
   def context; end
@@ -2635,31 +7558,118 @@ end
 class Seahorse::Client::Base
   include ::Seahorse::Client::HandlerBuilder
 
+  # @api private
+  # @return [Base] a new instance of Base
   def initialize(plugins, options); end
 
+  # Builds and returns a {Request} for the named operation.  The request
+  # will not have been sent.
+  #
+  # @param operation_name [Symbol, String]
+  # @return [Request]
   def build_request(operation_name, params = T.unsafe(nil)); end
+
+  # @return [Configuration<Struct>]
   def config; end
+
+  # @return [HandlerList]
   def handlers; end
+
+  # @api private
   def inspect; end
+
+  # @return [Array<Symbol>] Returns a list of valid request operation
+  #   names. These are valid arguments to {#build_request} and are also
+  #   valid methods.
   def operation_names; end
 
   private
 
+  # Gives each plugin the opportunity to modify this client.
   def after_initialize(plugins); end
+
+  # Constructs a {Configuration} object and gives each plugin the
+  # opportunity to register options with default values.
   def build_config(plugins, options); end
+
+  # Gives each plugin the opportunity to register handlers for this client.
   def build_handler_list(plugins); end
+
+  # @return [RequestContext]
   def context_for(operation_name, params); end
 
   class << self
+    # Registers a plugin with this client.
+    #
+    # @example Register a plugin
+    #
+    #   ClientClass.add_plugin(PluginClass)
+    # @example Register a plugin by name
+    #
+    #   ClientClass.add_plugin('gem-name.PluginClass')
+    # @example Register a plugin with an object
+    #
+    #   plugin = MyPluginClass.new(options)
+    #   ClientClass.add_plugin(plugin)
+    # @param plugin [Class, Symbol, String, Object]
+    # @return [void]
+    # @see .clear_plugins
+    # @see .set_plugins
+    # @see .remove_plugin
+    # @see .plugins
     def add_plugin(plugin); end
+
+    # @return [Model::Api]
     def api; end
+
+    # @return [void]
+    # @see .set_plugins
+    # @see .add_plugin
+    # @see .remove_plugin
+    # @see .plugins
     def clear_plugins; end
+
+    # @option options
+    # @option options
+    # @param options [Hash] a customizable set of options
+    # @return [Class<Client::Base>]
     def define(options = T.unsafe(nil)); end
+
+    # @option options
+    # @option options
+    # @param options [Hash] a customizable set of options
+    # @return [Class<Client::Base>]
     def extend(options = T.unsafe(nil)); end
+
     def new(options = T.unsafe(nil)); end
+
+    # Returns the list of registered plugins for this Client.  Plugins are
+    # inherited from the client super class when the client is defined.
+    #
+    # @return [Array<Plugin>]
+    # @see .clear_plugins
+    # @see .set_plugins
+    # @see .add_plugin
+    # @see .remove_plugin
     def plugins; end
+
+    # @return [void]
+    # @see .clear_plugins
+    # @see .set_plugins
+    # @see .add_plugin
+    # @see .plugins
     def remove_plugin(plugin); end
+
+    # @param api [Model::Api]
+    # @return [Model::Api]
     def set_api(api); end
+
+    # @param plugins [Array<Plugin>]
+    # @return [void]
+    # @see .clear_plugins
+    # @see .add_plugin
+    # @see .remove_plugin
+    # @see .plugins
     def set_plugins(plugins); end
 
     private
@@ -2667,22 +7677,141 @@ class Seahorse::Client::Base
     def before_initialize(plugins, options); end
     def build_plugins; end
     def define_operation_methods; end
+
+    # @private
     def inherited(subclass); end
   end
 end
 
 class Seahorse::Client::BlockIO
+  # @return [BlockIO] a new instance of BlockIO
   def initialize(headers = T.unsafe(nil), &block); end
 
+  # @param bytes [Integer] (nil)
+  # @param output_buffer [String] (nil)
+  # @return [String, nil]
   def read(bytes = T.unsafe(nil), output_buffer = T.unsafe(nil)); end
+
+  # @return [Integer]
   def size; end
+
+  # @param chunk [String]
+  # @return [Integer]
   def write(chunk); end
 end
 
+# Configuration is used to define possible configuration options and
+# then build read-only structures with user-supplied data.
+#
+# ## Adding Configuration Options
+#
+# Add configuration options with optional default values.  These are used
+# when building configuration objects.
+#
+#     configuration = Configuration.new
+#
+#     configuration.add_option(:max_retries, 3)
+#     configuration.add_option(:use_ssl, true)
+#
+#     cfg = configuration.build!
+#     #=> #<struct max_retires=3 use_ssl=true>
+#
+# ## Building Configuration Objects
+#
+# Calling {#build!} on a {Configuration} object causes it to return
+# a read-only (frozen) struct.  Options passed to {#build!} are merged
+# on top of any default options.
+#
+#     configuration = Configuration.new
+#     configuration.add_option(:color, 'red')
+#
+#     # default
+#     cfg1 = configuration.build!
+#     cfg1.color #=> 'red'
+#
+#     # supplied color
+#     cfg2 = configuration.build!(color: 'blue')
+#     cfg2.color #=> 'blue'
+#
+# ## Accepted Options
+#
+# If you try to {#build!} a {Configuration} object with an unknown
+# option, an `ArgumentError` is raised.
+#
+#     configuration = Configuration.new
+#     configuration.add_option(:color)
+#     configuration.add_option(:size)
+#     configuration.add_option(:category)
+#
+#     configuration.build!(price: 100)
+#     #=> raises an ArgumentError, :price was not added as an option
 class Seahorse::Client::Configuration
+  # @api private
+  # @return [Configuration] a new instance of Configuration
   def initialize; end
 
+  # Adds a getter method that returns the named option or a default
+  # value.  Default values can be passed as a static positional argument
+  # or via a block.
+  #
+  #    # defaults to nil
+  #    configuration.add_option(:name)
+  #
+  #    # with a string default
+  #    configuration.add_option(:name, 'John Doe')
+  #
+  #    # with a dynamic default value, evaluated once when calling #build!
+  #    configuration.add_option(:name, 'John Doe')
+  #    configuration.add_option(:username) do |config|
+  #       config.name.gsub(/\W+/, '').downcase
+  #    end
+  #    cfg = configuration.build!
+  #    cfg.name #=> 'John Doe'
+  #    cfg.username #=> 'johndoe'
+  #
+  # @param name [Symbol] The name of the configuration option.  This will
+  #   be used to define a getter by the same name.
+  # @param default The default value for this option.  You can specify
+  #   a default by passing a value, a `Proc` object or a block argument.
+  #   Procs and blocks are evaluated when {#build!} is called.
+  # @return [self]
   def add_option(name, default = T.unsafe(nil), &block); end
+
+  # Constructs and returns a configuration structure.
+  # Values not present in `options` will default to those supplied via
+  # add option.
+  #
+  #     configuration = Configuration.new
+  #     configuration.add_option(:enabled, true)
+  #
+  #     cfg1 = configuration.build!
+  #     cfg1.enabled #=> true
+  #
+  #     cfg2 = configuration.build!(enabled: false)
+  #     cfg2.enabled #=> false
+  #
+  # If you pass in options to `#build!` that have not been defined,
+  # then an `ArgumentError` will be raised.
+  #
+  #     configuration = Configuration.new
+  #     configuration.add_option(:enabled, true)
+  #
+  #     # oops, spelling error for :enabled
+  #     cfg = configuration.build!(enabld: true)
+  #     #=> raises ArgumentError
+  #
+  # The object returned is a frozen `Struct`.
+  #
+  #     configuration = Configuration.new
+  #     configuration.add_option(:enabled, true)
+  #
+  #     cfg = configuration.build!
+  #     cfg.enabled #=> true
+  #     cfg[:enabled] #=> true
+  #     cfg['enabled'] #=> true
+  #
+  # @param options [Hash] ({}) A hash of configuration options.
+  # @return [Struct] Returns a frozen configuration `Struct`.
   def build!(options = T.unsafe(nil)); end
 
   private
@@ -2692,117 +7821,311 @@ class Seahorse::Client::Configuration
   def empty_struct; end
 end
 
+# @api private
 class Seahorse::Client::Configuration::DefaultResolver
+  # @api private
+  # @return [DefaultResolver] a new instance of DefaultResolver
   def initialize(struct); end
 
+  # @api private
   def override_config(k, v); end
+
+  # @api private
   def resolve; end
+
+  # @api private
+  # @return [Boolean]
   def respond_to?(method_name, *args); end
 
   private
 
+  # @api private
   def method_missing(method_name, *args); end
+
+  # @api private
   def resolve_defaults(opt_name, defaults); end
+
+  # @api private
   def value_at(opt_name); end
 end
 
+# @api private
 class Seahorse::Client::Configuration::Defaults < ::Array
   def each(&block); end
 end
 
+# @api private
 class Seahorse::Client::Configuration::DynamicDefault
+  # @api private
+  # @return [DynamicDefault] a new instance of DynamicDefault
   def initialize(block = T.unsafe(nil)); end
 
+  # @api private
   def block; end
+
+  # @api private
   def block=(_arg0); end
+
+  # @api private
   def call(*args); end
 end
 
+# @api private
 module Seahorse::Client::H2; end
 
+# H2 Connection build on top of `http/2` gem
+# (requires Ruby >= 2.1)
+# with TLS layer plus ALPN, requires:
+# Ruby >= 2.3 and OpenSSL >= 1.0.2
+#
+# @api private
 class Seahorse::Client::H2::Connection
+  # @api private
+  # @return [Connection] a new instance of Connection
   def initialize(options = T.unsafe(nil)); end
 
+  # @api private
   def close!; end
+
+  # @api private
+  # @return [Boolean]
   def closed?; end
+
+  # @api private
   def connect(endpoint); end
+
   def connection_read_timeout; end
   def connection_timeout; end
+
+  # @api private
   def debug_output(msg, type = T.unsafe(nil)); end
+
   def enable_alpn; end
+
+  # @api private
   def errors; end
+
   def http_wire_trace; end
+
+  # @api private
   def input_signal_thread; end
+
+  # @api private
   def input_signal_thread=(_arg0); end
+
   def logger; end
   def max_concurrent_streams; end
+
+  # @api private
   def new_stream; end
+
   def ssl_ca_bundle; end
   def ssl_ca_directory; end
   def ssl_ca_store; end
   def ssl_verify_peer; end
+
+  # @api private
   def ssl_verify_peer?; end
+
+  # @api private
   def start(stream); end
 
   private
 
+  # @api private
   def _debug_entry(str); end
+
+  # @api private
   def _default_ca_bundle; end
+
+  # @api private
   def _default_ca_directory; end
+
+  # @api private
   def _nonblocking_connect(tcp, addr); end
+
+  # @api private
   def _register_h2_callbacks; end
+
+  # @api private
   def _tcp_socket(endpoint); end
+
+  # @api private
   def _tls_context; end
 end
 
+# chunk read size at socket
+#
+# @api private
 Seahorse::Client::H2::Connection::CHUNKSIZE = T.let(T.unsafe(nil), Integer)
+
+# @api private
 Seahorse::Client::H2::Connection::OPTIONS = T.let(T.unsafe(nil), Hash)
+
+# @api private
 Seahorse::Client::H2::Connection::SOCKET_FAMILY = T.let(T.unsafe(nil), Integer)
+
+# @api private
 Seahorse::Client::H2::DNS_ERROR_MESSAGES = T.let(T.unsafe(nil), Array)
 
+# @api private
 class Seahorse::Client::H2::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # H2 pseudo headers
+  # https://http2.github.io/http2-spec/#rfc.section.8.1.2.3
+  #
+  # @api private
   def _h2_headers(req); end
+
+  # @api private
   def _register_callbacks(resp, stream, stream_mutex, close_condition, sync_queue); end
+
+  # @api private
   def _send_initial_data(req, stream); end
+
+  # @api private
   def _send_initial_headers(req, stream); end
+
+  # @api private
   def error_message(req, error); end
 end
 
+# @api private
 Seahorse::Client::H2::NETWORK_ERRORS = T.let(T.unsafe(nil), Array)
 
 class Seahorse::Client::Handler
+  # @param handler [Handler] (nil) The next handler in the stack that
+  #   should be called from within the {#call} method.  This value
+  #   must only be nil for send handlers.
+  # @return [Handler] a new instance of Handler
   def initialize(handler = T.unsafe(nil)); end
 
+  # @param context [RequestContext]
+  # @return [Response]
   def call(context); end
+
+  # @return [Handler, nil]
   def handler; end
+
+  # @return [Handler, nil]
   def handler=(_arg0); end
+
   def inspect; end
 end
 
+# This module provides the ability to add handlers to a class or
+# module.  The including class or extending module must respond to
+# `#handlers`, returning a {HandlerList}.
 module Seahorse::Client::HandlerBuilder
   def handle(*args, &block); end
   def handle_request(*args, &block); end
   def handle_response(*args, &block); end
   def handler(*args, &block); end
+
+  # @api private
   def handler_for(name = T.unsafe(nil), &block); end
+
+  # @api private
   def new_handler(block); end
 end
 
 class Seahorse::Client::HandlerList
   include ::Enumerable
 
+  # @api private
+  # @return [HandlerList] a new instance of HandlerList
   def initialize(options = T.unsafe(nil)); end
 
+  # Registers a handler.  Handlers are used to build a handler stack.
+  # Handlers default to the `:build` step with default priority of 50.
+  # The step and priority determine where in the stack a handler
+  # will be.
+  #
+  # ## Handler Stack Ordering
+  #
+  # A handler stack is built from the inside-out.  The stack is
+  # seeded with the send handler.  Handlers are constructed recursively
+  # in reverse step and priority order so that the highest priority
+  # handler is on the outside.
+  #
+  # By constructing the stack from the inside-out, this ensures
+  # that the validate handlers will be called first and the sign handlers
+  # will be called just before the final and only send handler is called.
+  #
+  # ## Steps
+  #
+  # Handlers are ordered first by step.  These steps represent the
+  # life-cycle of a request.  Valid steps are:
+  #
+  # * `:initialize`
+  # * `:validate`
+  # * `:build`
+  # * `:sign`
+  # * `:send`
+  #
+  # Many handlers can be added to the same step, except for `:send`.
+  # There can be only one `:send` handler.  Adding an additional
+  # `:send` handler replaces the previous one.
+  #
+  # ## Priorities
+  #
+  # Handlers within a single step are executed in priority order.  The
+  # higher the priority, the earlier in the stack the handler will
+  # be called.
+  #
+  # * Handler priority is an integer between 0 and 99, inclusively.
+  # * Handler priority defaults to 50.
+  # * When multiple handlers are added to the same step with the same
+  #   priority, the last one added will have the highest priority and
+  #   the first one added will have the lowest priority.
+  #
+  # @note There can be only one `:send` handler.  Adding an additional
+  #   send handler replaces the previous.
+  # @option options
+  # @option options
+  # @option options
+  # @param handler_class [Class<Handler>] This should be a subclass
+  #   of {Handler}.
+  # @param options [Hash] a customizable set of options
+  # @raise [InvalidStepError]
+  # @raise [InvalidPriorityError]
+  # @return [Class<Handler>] Returns the handler class that was added.
   def add(handler_class, options = T.unsafe(nil)); end
+
+  # Copies handlers from the `source_list` onto the current handler list.
+  # If a block is given, only the entries that return a `true` value
+  # from the block will be copied.
+  #
+  # @param source_list [HandlerList]
+  # @return [void]
   def copy_from(source_list, &block); end
+
+  # Yields the handlers in stack order, which is reverse priority.
   def each(&block); end
+
+  # @return [Array<HandlerListEntry>]
   def entries; end
+
+  # Returns a handler list for the given operation.  The returned
+  # will have the operation specific handlers merged with the common
+  # handlers.
+  #
+  # @param operation [String] The name of an operation.
+  # @return [HandlerList]
   def for(operation); end
+
+  # @param handler_class [Class<Handler>]
   def remove(handler_class); end
+
+  # Constructs the handlers recursively, building a handler stack.
+  # The `:send` handler will be at the top of the stack and the
+  # `:validate` handlers will be at the bottom.
+  #
+  # @return [Handler]
   def to_stack; end
 
   private
@@ -2813,16 +8136,53 @@ class Seahorse::Client::HandlerList
   def next_index; end
 end
 
+# A container for an un-constructed handler. A handler entry has the
+# handler class, and information about handler priority/order.
+#
+# This class is an implementation detail of the {HandlerList} class.
+# Do not rely on public interfaces of this class.
 class Seahorse::Client::HandlerListEntry
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [HandlerListEntry] a new instance of HandlerListEntry
   def initialize(options); end
 
+  # @api private
   def <=>(other); end
+
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [HandlerListEntry]
   def copy(options = T.unsafe(nil)); end
+
+  # @return [Handler, Class<Handler>] Returns the handler.  This may
+  #   be a constructed handler object or a handler class.
   def handler_class; end
+
+  # @return [Integer] The insertion order/position.  This is used to
+  #   determine sort order when two entries have the same priority.
+  #   Entries inserted later (with a higher inserted value) have a
+  #   lower priority.
   def inserted; end
+
+  # @return [Set<String>]
   def operations; end
+
+  # @return [Integer]
   def priority; end
+
+  # @return [Symbol]
   def step; end
+
+  # @return [Integer]
   def weight; end
 
   private
@@ -2835,84 +8195,230 @@ end
 
 Seahorse::Client::HandlerListEntry::STEPS = T.let(T.unsafe(nil), Hash)
 module Seahorse::Client::Http; end
+
+# Rasied when trying to use an closed connection
 class Seahorse::Client::Http2ConnectionClosedError < ::StandardError; end
 
+# Raised when sending initial headers and data failed
+# for event stream requests over Http2
 class Seahorse::Client::Http2InitialRequestError < ::StandardError
+  # @return [Http2InitialRequestError] a new instance of Http2InitialRequestError
   def initialize(error); end
 
+  # @return [HTTP2::Error]
   def original_error; end
 end
 
+# Raised when connection failed to initialize a new stream
 class Seahorse::Client::Http2StreamInitializeError < ::StandardError
+  # @return [Http2StreamInitializeError] a new instance of Http2StreamInitializeError
   def initialize(error); end
 
+  # @return [HTTP2::Error]
   def original_error; end
 end
 
 class Seahorse::Client::Http::AsyncResponse < ::Seahorse::Client::Http::Response
+  # @return [AsyncResponse] a new instance of AsyncResponse
   def initialize(options = T.unsafe(nil)); end
 
   def signal_done(options = T.unsafe(nil)); end
   def signal_headers(headers); end
 end
 
+# Provides a Hash-like interface for HTTP headers.  Header names
+# are treated indifferently as lower-cased strings.  Header values
+# are cast to strings.
+#
+#     headers = Http::Headers.new
+#     headers['Content-Length'] = 100
+#     headers[:Authorization] = 'Abc'
+#
+#     headers.keys
+#     #=> ['content-length', 'authorization']
+#
+#     headers.values
+#     #=> ['100', 'Abc']
+#
+# You can get the header values as a vanilla hash by calling {#to_h}:
+#
+#     headers.to_h
+#     #=> { 'content-length' => '100', 'authorization' => 'Abc' }
 class Seahorse::Client::Http::Headers
   include ::Enumerable
 
+  # @api private
+  # @return [Headers] a new instance of Headers
   def initialize(headers = T.unsafe(nil)); end
 
+  # @param key [String]
+  # @return [String]
   def [](key); end
+
+  # @param key [String]
+  # @param value [String]
   def []=(key, value); end
+
   def clear; end
+
+  # @param key [String]
   def delete(key); end
+
+  # @return [nil]
+  # @yield [key, value]
+  # @yieldparam key [String]
+  # @yieldparam value [String]
   def each(&block); end
+
+  # @return [nil]
+  # @yield [key, value]
+  # @yieldparam key [String]
+  # @yieldparam value [String]
   def each_pair(&block); end
+
+  # @return [Boolean] Returns `true` if the header is set.
   def has_key?(key); end
+
+  # @return [Boolean] Returns `true` if the header is set.
   def include?(key); end
+
+  # @api private
   def inspect; end
+
+  # @return [Boolean] Returns `true` if the header is set.
   def key?(key); end
+
+  # @return [Array<String>]
   def keys; end
+
+  # @return [Hash]
   def to_h; end
+
+  # @return [Hash]
   def to_hash; end
+
+  # @param headers [Hash]
+  # @return [Headers]
   def update(headers); end
+
+  # @return [Array<String>]
   def values; end
+
+  # @return [Array<String>]
   def values_at(*keys); end
 end
 
 class Seahorse::Client::Http::Request
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Request] a new instance of Request
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [IO]
   def body; end
+
+  # @param io [#read, #size, #rewind]
   def body=(io); end
+
+  # @return [String]
   def body_contents; end
+
+  # @return [URI::HTTP, URI::HTTPS, nil]
   def endpoint; end
+
+  # @param endpoint [String, URI::HTTP, URI::HTTPS, nil]
   def endpoint=(endpoint); end
+
+  # @return [Headers] The hash of request headers.
   def headers; end
+
+  # @return [Headers] The hash of request headers.
   def headers=(_arg0); end
+
+  # @return [String] The HTTP request method, e.g. `GET`, `PUT`, etc.
   def http_method; end
+
+  # @return [String] The HTTP request method, e.g. `GET`, `PUT`, etc.
   def http_method=(_arg0); end
 end
 
 class Seahorse::Client::Http::Response
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Response] a new instance of Response
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [IO]
   def body; end
+
+  # @param io [#read, #size, #rewind]
   def body=(io); end
+
+  # @return [String|Array]
   def body_contents; end
+
+  # @return [StandardError, nil]
   def error; end
+
+  # @return [Headers]
   def headers; end
+
+  # @return [Headers]
   def headers=(_arg0); end
+
   def on_data(&callback); end
   def on_done(status_code_range = T.unsafe(nil), &callback); end
   def on_error(&callback); end
   def on_headers(status_code_range = T.unsafe(nil), &block); end
   def on_success(status_code_range = T.unsafe(nil), &callback); end
   def reset; end
+
+  # @param chunk [string]
   def signal_data(chunk); end
+
+  # Completes the http response.
+  #
+  # @example Completing the response in a single call
+  #
+  #   http_response.signal_done(
+  #   status_code: 200,
+  #   headers: {},
+  #   body: ''
+  #   )
+  # @example Complete the response in parts
+  #
+  #   # signal headers straight-way
+  #   http_response.signal_headers(200, {})
+  #
+  #   # signal data as it is received from the socket
+  #   http_response.signal_data("...")
+  #   http_response.signal_data("...")
+  #   http_response.signal_data("...")
+  #
+  #   # signal done once the body data is all written
+  #   http_response.signal_done
+  # @overload signal_done
+  # @overload signal_done
   def signal_done(options = T.unsafe(nil)); end
+
+  # @param networking_error [StandardError]
   def signal_error(networking_error); end
+
+  # @param status_code [Integer]
+  # @param headers [Hash<String,String>]
   def signal_headers(status_code, headers); end
+
+  # @return [Integer] Returns `0` if the request failed to generate
+  #   any response.
   def status_code; end
+
+  # @return [Integer] Returns `0` if the request failed to generate
+  #   any response.
   def status_code=(_arg0); end
 
   private
@@ -2921,230 +8427,730 @@ class Seahorse::Client::Http::Response
   def listener(range, callback); end
 end
 
+# @api private
+# @deprecated Use Aws::Logging instead.
 module Seahorse::Client::Logging; end
 
+# A log formatter receives a {Response} object and return
+# a log message as a string. When you construct a {Formatter}, you provide
+# a pattern string with substitutions.
+#
+#     pattern = ':operation :http_response_status_code :time'
+#     formatter = Seahorse::Client::Logging::Formatter.new(pattern)
+#     formatter.format(response)
+#     #=> 'get_bucket 200 0.0352'
+#
+# # Canned Formatters
+#
+# Instead of providing your own pattern, you can choose a canned log
+# formatter.
+#
+# * {Formatter.default}
+# * {Formatter.colored}
+# * {Formatter.short}
+#
+# # Pattern Substitutions
+#
+# You can put any of these placeholders into you pattern.
+#
+#   * `:client_class` - The name of the client class.
+#
+#   * `:operation` - The name of the client request method.
+#
+#   * `:request_params` - The user provided request parameters. Long
+#     strings are truncated/summarized if they exceed the
+#     {#max_string_size}.  Other objects are inspected.
+#
+#   * `:time` - The total time in seconds spent on the
+#     request.  This includes client side time spent building
+#     the request and parsing the response.
+#
+#   * `:retries` - The number of times a client request was retried.
+#
+#   * `:http_request_method` - The http request verb, e.g., `POST`,
+#     `PUT`, `GET`, etc.
+#
+#   * `:http_request_endpoint` - The request endpoint.  This includes
+#      the scheme, host and port, but not the path.
+#
+#   * `:http_request_scheme` - This is replaced by `http` or `https`.
+#
+#   * `:http_request_host` - The host name of the http request
+#     endpoint (e.g. 's3.amazon.com').
+#
+#   * `:http_request_port` - The port number (e.g. '443' or '80').
+#
+#   * `:http_request_headers` - The http request headers, inspected.
+#
+#   * `:http_request_body` - The http request payload.
+#
+#   * `:http_response_status_code` - The http response status
+#     code, e.g., `200`, `404`, `500`, etc.
+#
+#   * `:http_response_headers` - The http response headers, inspected.
+#
+#   * `:http_response_body` - The http response body contents.
+#
+#   * `:error_class`
+#
+#   * `:error_message`
+#
+# @api private
 class Seahorse::Client::Logging::Formatter
+  # @api private
+  # @option options
+  # @param pattern [String] The log format pattern should be a string
+  #   and may contain substitutions.
+  # @param options [Hash] a customizable set of options
+  # @return [Formatter] a new instance of Formatter
   def initialize(pattern, options = T.unsafe(nil)); end
 
+  # @api private
+  # @return [Boolean]
   def ==(other); end
+
+  # @api private
+  # @return [Boolean]
   def eql?(other); end
+
+  # Given a {Response}, this will format a log message and return it
+  #   as a string.
+  #
+  # @api private
+  # @param response [Response]
+  # @return [String]
   def format(response); end
+
+  # @api private
+  # @return [Integer]
   def max_string_size; end
+
+  # @api private
+  # @return [String]
   def pattern; end
 
   private
 
+  # @api private
   def _client_class(response); end
+
+  # @api private
   def _error_class(response); end
+
+  # @api private
   def _error_message(response); end
+
+  # @api private
   def _http_request_body(response); end
+
+  # @api private
   def _http_request_endpoint(response); end
+
+  # @api private
   def _http_request_headers(response); end
+
+  # @api private
   def _http_request_host(response); end
+
+  # @api private
   def _http_request_method(response); end
+
+  # @api private
   def _http_request_port(response); end
+
+  # @api private
   def _http_request_scheme(response); end
+
+  # @api private
   def _http_response_body(response); end
+
+  # @api private
   def _http_response_headers(response); end
+
+  # @api private
   def _http_response_status_code(response); end
+
+  # @api private
   def _operation(response); end
+
+  # @api private
   def _request_params(response); end
+
+  # @api private
   def _retries(response); end
+
+  # @api private
   def _time(response); end
+
+  # @api private
   def method_missing(method_name, *args); end
+
+  # @api private
+  # @param array [Array]
+  # @return [String]
   def summarize_array(array); end
+
+  # Given the path to a file on disk, this method returns a summarized
+  # inspecton string that includes the file size.
+  #
+  # @api private
+  # @param path [String]
+  # @return [String]
   def summarize_file(path); end
+
+  # @api private
+  # @param hash [Hash]
+  # @return [String]
   def summarize_hash(hash); end
+
+  # @api private
+  # @param str [String]
+  # @return [String]
   def summarize_string(str); end
+
+  # @api private
   def summarize_string_hash(hash); end
+
+  # @api private
   def summarize_symbol_hash(hash); end
+
+  # @api private
+  # @param value [Object]
+  # @return [String]
   def summarize_value(value); end
 
   class << self
+    # The default log format with ANSI colors.
+    #
+    # @api private
+    # @example A sample of the colored format (sans the ansi colors).
+    #
+    #   [ClientClass 200 0.580066 0 retries] list_objects(:bucket_name => 'bucket')
+    # @return [Formatter]
     def colored; end
+
+    # The default log format.
+    #
+    # @api private
+    # @example A sample of the default format.
+    #
+    #   [ClientClass 200 0.580066 0 retries] list_objects(:bucket_name => 'bucket')
+    # @return [Formatter]
     def default; end
+
+    # The short log format.  Similar to default, but it does not
+    # inspect the request params or report on retries.
+    #
+    # @api private
+    # @example A sample of the short format
+    #
+    #   [ClientClass 200 0.494532] list_buckets
+    # @return [Formatter]
     def short; end
   end
 end
 
+# @api private
 class Seahorse::Client::Logging::Handler < ::Seahorse::Client::Handler
+  # @api private
+  # @param context [RequestContext]
+  # @return [Response]
   def call(context); end
 
   private
 
+  # @api private
+  # @param config [Configuration]
+  # @param response [Response]
+  # @return [String]
   def format(config, response); end
+
+  # @api private
+  # @param config [Configuration]
+  # @param response [Response]
+  # @return [void]
   def log(config, response); end
 end
 
+# This utility class is used to track files opened by Seahorse.
+# This allows Seahorse to know what files it needs to close.
 class Seahorse::Client::ManagedFile < ::File
+  # @return [Boolean]
   def open?; end
 end
 
+# @api private
 module Seahorse::Client::NetHttp; end
 
+# @api private
 class Seahorse::Client::NetHttp::ConnectionPool
+  # @api private
+  # @return [ConnectionPool] a new instance of ConnectionPool
   def initialize(options = T.unsafe(nil)); end
 
+  # Removes stale http sessions from the pool (that have exceeded
+  # the idle timeout).
+  #
+  # @api private
+  # @return [nil]
   def clean!; end
+
+  # Closes and removes all sessions from the pool.
+  # If empty! is called while there are outstanding requests they may
+  # get checked back into the pool, leaving the pool in a non-empty
+  # state.
+  #
+  # @api private
+  # @return [nil]
   def empty!; end
+
   def http_continue_timeout; end
   def http_idle_timeout; end
   def http_open_timeout; end
   def http_proxy; end
   def http_read_timeout; end
   def http_wire_trace; end
+
+  # @api private
   def http_wire_trace?; end
+
   def logger; end
+
+  # Makes an HTTP request, yielding a Net::HTTPResponse object.
+  #
+  #   pool.request(URI.parse('http://domain'), Net::HTTP::Get.new('/')) do |resp|
+  #     puts resp.code # status code
+  #     puts resp.to_h.inspect # dump the headers
+  #     puts resp.body
+  #   end
+  #
+  # @api private
+  # @param endpoint [URI::HTTP, URI::HTTPS] The HTTP(S) endpoint
+  #   to connect to (e.g. 'https://domain.com').
+  # @param request [Net::HTTPRequest] The request to make.  This can be
+  #   any request object from Net::HTTP (e.g. Net::HTTP::Get,
+  #   Net::HTTP::POST, etc).
+  # @return [nil]
+  # @yieldparam net_http_response [Net::HTTPResponse]
   def request(endpoint, request, &block); end
+
+  # @api private
+  # @param endpoint [URI::HTTP, URI::HTTPS] The HTTP(S) endpoint
+  #   to connect to (e.g. 'https://domain.com').
+  # @return [nil]
+  # @yieldparam session [Net::HTTPSession]
   def session_for(endpoint, &block); end
+
+  # @api private
+  # @return [Integer] Returns the count of sessions currently in the
+  #   pool, not counting those currently in use.
   def size; end
+
   def ssl_ca_bundle; end
   def ssl_ca_directory; end
   def ssl_ca_store; end
   def ssl_timeout; end
   def ssl_verify_peer; end
+
+  # @api private
   def ssl_verify_peer?; end
 
   private
 
+  # Removes stale sessions from the pool.  This method *must* be called
+  #
+  # @api private
+  # @note **Must** be called behind a `@pool_mutex` synchronize block.
   def _clean; end
+
+  # Extract the parts of the http_proxy URI
+  #
+  # @api private
+  # @return [Array(String)]
   def http_proxy_parts; end
+
+  # @api private
   def remove_path_and_query(endpoint); end
+
+  # Starts and returns a new HTTP(S) session.
+  #
+  # @api private
+  # @param endpoint [String]
+  # @return [Net::HTTPSession]
   def start_session(endpoint); end
 
   class << self
+    # Returns a connection pool constructed from the given options.
+    # Calling this method twice with the same options will return
+    # the same pool.
+    #
+    # @api private
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @param options [Hash] a customizable set of options
+    # @return [ConnectionPool]
     def for(options = T.unsafe(nil)); end
+
+    # @api private
+    # @return [Array<ConnectionPool>] Returns a list of the
+    #   constructed connection pools.
     def pools; end
 
     private
 
+    # Filters an option hash, merging in default values.
+    #
+    # @api private
+    # @return [Hash]
     def pool_options(options); end
   end
 end
 
+# Helper methods extended onto Net::HTTPSession objects opened by the
+# connection pool.
+#
+# @api private
 class Seahorse::Client::NetHttp::ConnectionPool::ExtendedSession
+  # @api private
+  # @return [ExtendedSession] a new instance of ExtendedSession
   def initialize(http); end
 
+  # @api private
   def __getobj__; end
+
+  # @api private
   def __setobj__(obj); end
+
+  # Attempts to close/finish the session without raising an error.
+  #
+  # @api private
   def finish; end
+
+  # @api private
+  # @return [Integer, nil]
   def last_used; end
+
+  # Sends the request and tracks that this session has been used.
+  #
+  # @api private
   def request(*args, &block); end
 end
 
+# @api private
 Seahorse::Client::NetHttp::ConnectionPool::OPTIONS = T.let(T.unsafe(nil), Hash)
 
+# The default HTTP handler for Seahorse::Client.  This is based on
+# the Ruby's `Net::HTTP`.
+#
+# @api private
 class Seahorse::Client::NetHttp::Handler < ::Seahorse::Client::Handler
+  # @api private
+  # @param context [RequestContext]
+  # @return [Response]
   def call(context); end
+
+  # @api private
+  # @param config [Configuration]
+  # @return [ConnectionPool]
   def pool_for(config); end
 
   private
 
+  # Constructs and returns a Net::HTTP::Request object from
+  # a {Http::Request}.
+  #
+  # @api private
+  # @param request [Http::Request]
+  # @return [Net::HTTP::Request]
   def build_net_request(request); end
+
+  # @api private
   def complete_response(req, resp, bytes_received); end
+
+  # @api private
   def error_message(req, error); end
+
+  # @api private
+  # @param response [Net::HTTP::Response]
+  # @return [Hash<String, String>]
   def extract_headers(response); end
+
+  # @api private
+  # @param request [Http::Request]
+  # @return [Hash] Returns a vanilla hash of headers to send with the
+  #   HTTP request.
   def headers(request); end
+
+  # @api private
+  # @param request [Http::Request]
+  # @raise [InvalidHttpVerbError]
+  # @return Returns a base `Net::HTTP::Request` class, e.g.,
+  #   `Net::HTTP::Get`, `Net::HTTP::Post`, etc.
   def net_http_request_class(request); end
+
+  # Extracts the {ConnectionPool} configuration options.
+  #
+  # @api private
+  # @param config [Configuration]
+  # @return [Hash]
   def pool_options(config); end
+
+  # @api private
   def session(config, req, &block); end
+
+  # @api private
+  # @return [Boolean]
   def should_verify_bytes?(req, resp); end
+
+  # @api private
+  # @param config [Configuration]
+  # @param req [Http::Request]
+  # @param resp [Http::Response]
+  # @return [void]
   def transmit(config, req, resp); end
+
+  # @api private
   def verify_bytes_received(resp, bytes_received); end
 end
 
+# @api private
 Seahorse::Client::NetHttp::Handler::DNS_ERROR_MESSAGES = T.let(T.unsafe(nil), Array)
+
+# Raised when a {Handler} cannot construct a `Net::HTTP::Request`
+# from the given http verb.
+#
+# @api private
 class Seahorse::Client::NetHttp::Handler::InvalidHttpVerbError < ::StandardError; end
+
+# @api private
 Seahorse::Client::NetHttp::Handler::NETWORK_ERRORS = T.let(T.unsafe(nil), Array)
 
+# @api private
 class Seahorse::Client::NetHttp::Handler::TruncatedBodyError < ::IOError
+  # @api private
+  # @return [TruncatedBodyError] a new instance of TruncatedBodyError
   def initialize(bytes_expected, bytes_received); end
 end
 
+# @api private
 module Seahorse::Client::NetHttp::Patches
   class << self
+    # @api private
     def apply!; end
   end
 end
 
+# For requests with bodys, Net::HTTP sets a default content type of:
+#   'application/x-www-form-urlencoded'
+# There are cases where we should not send content type at all.
+# Even when no body is supplied, Net::HTTP uses a default empty body
+# and sets it anyway. This patch disables the behavior when a Thread
+# local variable is set.
+#
+# @api private
 module Seahorse::Client::NetHttp::Patches::PatchDefaultContentType
+  # @api private
   def supply_default_content_type; end
 end
 
 class Seahorse::Client::NetworkingError < ::StandardError
+  # @return [NetworkingError] a new instance of NetworkingError
   def initialize(error, msg = T.unsafe(nil)); end
 
+  # Returns the value of attribute original_error.
   def original_error; end
 end
 
 class Seahorse::Client::Plugin
   extend ::Seahorse::Client::HandlerBuilder
 
+  # @param handlers [HandlerList]
+  # @param config [Configuration]
+  # @return [void]
   def add_handlers(handlers, config); end
+
+  # @param config [Configuration]
+  # @return [void]
   def add_options(config); end
+
+  # @param client [Client::Base]
+  # @return [void]
   def after_initialize(client); end
+
+  # @param client_class [Class<Client::Base>]
+  # @param options [Hash]
+  # @return [void]
   def before_initialize(client_class, options); end
 
   class << self
     def after_initialize(&block); end
+
+    # @api private
     def after_initialize_hooks; end
+
     def before_initialize(&block); end
+
+    # @api private
     def before_initialize_hooks; end
+
+    # @api private
     def handlers; end
+
+    # @api private
     def literal(string); end
+
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @option options
+    # @overload option
+    # @param options [Hash] a customizable set of options
+    # @return [void]
     def option(name, default = T.unsafe(nil), options = T.unsafe(nil), &block); end
+
+    # @api private
     def options; end
   end
 end
 
+# @api private
 class Seahorse::Client::Plugin::PluginOption
+  # @api private
+  # @return [PluginOption] a new instance of PluginOption
   def initialize(name, options = T.unsafe(nil)); end
 
+  # @api private
   def default; end
+
+  # @api private
   def default=(_arg0); end
+
+  # @api private
   def default_block; end
+
+  # @api private
   def default_block=(_arg0); end
+
+  # @api private
   def doc_default(options); end
+
+  # @api private
   def doc_default=(_arg0); end
+
+  # @api private
   def doc_type; end
+
+  # @api private
   def doc_type=(_arg0); end
+
+  # @api private
   def docstring; end
+
+  # @api private
   def docstring=(_arg0); end
+
+  # @api private
+  # @return [Boolean]
   def documented?; end
+
+  # @api private
   def name; end
+
+  # @api private
   def required; end
+
+  # @api private
   def required=(_arg0); end
 end
 
 class Seahorse::Client::PluginList
   include ::Enumerable
 
+  # @option options
+  # @param plugins [Array, Set]
+  # @param options [Hash] a customizable set of options
+  # @return [PluginList] a new instance of PluginList
   def initialize(plugins = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Adds and returns the `plugin`.
+  #
+  # @param plugin [Plugin]
+  # @return [void]
   def add(plugin); end
+
+  # Enumerates the plugins.
+  #
+  # @return [Enumerator]
   def each(&block); end
+
+  # Removes and returns the `plugin`.
+  #
+  # @param plugin [Plugin]
+  # @return [void]
   def remove(plugin); end
+
+  # Replaces the existing list of plugins.
+  #
+  # @param plugins [Array<Plugin>]
+  # @return [void]
   def set(plugins); end
 
   private
 
+  # Not safe to call outside the mutex.
   def _add(plugin); end
+
+  # Yield each PluginDetail behind the mutex
   def each_plugin(&block); end
 end
 
+# A utility class that computes the canonical name for a plugin
+# and defers requiring the plugin until the plugin class is
+# required.
+#
+# @api private
 class Seahorse::Client::PluginList::PluginWrapper
+  # @api private
+  # @param plugin [String, Symbol, Module, Class]
+  # @return [PluginWrapper] a new instance of PluginWrapper
   def initialize(plugin); end
 
+  # @api private
+  # @return [String]
   def canonical_name; end
+
+  # @api private
+  # @return [Boolean]
   def eql?(other); end
+
+  # @api private
+  # @return [String]
   def hash; end
+
+  # @api private
+  # @return [Class<Plugin>]
   def plugin; end
 
   private
 
+  # @api private
+  # @return [Class<Plugin>]
   def require_plugin; end
 
   class << self
+    # Returns the given plugin if it is already a PluginWrapper.
+    #
+    # @api private
     def new(plugin); end
   end
 end
@@ -3152,10 +9158,17 @@ end
 module Seahorse::Client::Plugins; end
 class Seahorse::Client::Plugins::ContentLength < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Seahorse::Client::Plugins::ContentLength::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# https://github.com/ruby/net-http/blob/master/lib/net/http/requests.rb
+# Methods without body are forwards compatible, because content-length
+# may be set for requests without body but is technically incorrect.
+#
+# @api private
 Seahorse::Client::Plugins::ContentLength::Handler::METHODS_WITHOUT_BODY = T.let(T.unsafe(nil), Set)
 
 class Seahorse::Client::Plugins::Endpoint < ::Seahorse::Client::Plugin
@@ -3169,7 +9182,9 @@ end
 
 class Seahorse::Client::Plugins::H2 < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Seahorse::Client::Plugins::Logging < ::Seahorse::Client::Plugin
+  # @api private
   def add_handlers(handlers, config); end
 end
 
@@ -3185,101 +9200,278 @@ class Seahorse::Client::Plugins::RaiseResponseErrors < ::Seahorse::Client::Plugi
   def add_handlers(handlers, config); end
 end
 
+# @api private
 class Seahorse::Client::Plugins::RaiseResponseErrors::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 class Seahorse::Client::Plugins::ReadCallbackIO
   extend ::Forwardable
 
+  # @api private
+  # @return [ReadCallbackIO] a new instance of ReadCallbackIO
   def initialize(io, on_read = T.unsafe(nil)); end
 
+  # @api private
   def io; end
+
+  # @api private
   def read(*args); end
+
   def size(*args, &block); end
 
   private
 
+  # @api private
   def handle_chunk(chunk); end
 end
 
+# @api private
 class Seahorse::Client::Plugins::RequestCallback < ::Seahorse::Client::Plugin; end
 
+# @api private
 class Seahorse::Client::Plugins::RequestCallback::OptionHandler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 end
 
+# @api private
 class Seahorse::Client::Plugins::RequestCallback::ReadCallbackHandler < ::Seahorse::Client::Handler
+  # @api private
   def add_event_listeners(context); end
+
+  # @api private
   def call(context); end
 end
 
+# @api private
 class Seahorse::Client::Plugins::ResponseTarget < ::Seahorse::Client::Plugin; end
 
+# This handler is responsible for replacing the HTTP response body IO
+# object with custom targets, such as a block, or a file. It is important
+# to not write data to the custom target in the case of a non-success
+# response. We do not want to write an XML error message to someone's
+# file.
+#
+# @api private
 class Seahorse::Client::Plugins::ResponseTarget::Handler < ::Seahorse::Client::Handler
+  # @api private
   def call(context); end
 
   private
 
+  # @api private
   def add_event_listeners(context, target); end
+
+  # @api private
   def io(target, headers); end
 end
 
 class Seahorse::Client::Request
   include ::Seahorse::Client::HandlerBuilder
 
+  # @param handlers [HandlerList]
+  # @param context [RequestContext]
+  # @return [Request] a new instance of Request
   def initialize(handlers, context); end
 
+  # @return [RequestContext]
   def context; end
+
+  # @return [HandlerList]
   def handlers; end
+
+  # Sends the request, returning a {Response} object.
+  #
+  #     response = request.send_request
+  #
+  # # Streaming Responses
+  #
+  # By default, HTTP responses are buffered into memory.  This can be
+  # bad if you are downloading large responses, e.g. large files.
+  # You can avoid this by streaming the response to a block or some other
+  # target.
+  #
+  # ## Streaming to a File
+  #
+  # You can stream the raw HTTP response body to a File, or any IO-like
+  # object, by passing the `:target` option.
+  #
+  #     # create a new file at the given path
+  #     request.send_request(target: '/path/to/target/file')
+  #
+  #     # or provide an IO object to write to
+  #     File.open('photo.jpg', 'wb') do |file|
+  #       request.send_request(target: file)
+  #     end
+  #
+  # **Please Note**: The target IO object may receive `#truncate(0)`
+  # if the request generates a networking error and bytes have already
+  # been written to the target.
+  #
+  # ## Block Streaming
+  #
+  # Pass a block to `#send_request` and the response will be yielded in
+  # chunks to the given block.
+  #
+  #     # stream the response data
+  #     request.send_request do |chunk|
+  #       file.write(chunk)
+  #     end
+  #
+  # **Please Note**: When streaming to a block, it is not possible to
+  # retry failed requests.
+  #
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Response]
   def send_request(options = T.unsafe(nil), &block); end
 end
 
 class Seahorse::Client::RequestContext
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [RequestContext] a new instance of RequestContext
   def initialize(options = T.unsafe(nil)); end
 
+  # Returns the metadata for the given `key`.
+  #
+  # @param key [Symbol]
+  # @return [Object]
   def [](key); end
+
+  # Sets the request context metadata for the given `key`.  Request metadata
+  # useful for handlers that need to keep state on the request, without
+  # sending that data with the request over HTTP.
+  #
+  # @param key [Symbol]
+  # @param value [Object]
   def []=(key, value); end
+
+  # @return [Model::Authorizer] APIG SDKs only
   def authorizer; end
+
+  # @return [Model::Authorizer] APIG SDKs only
   def authorizer=(_arg0); end
+
+  # @return [Seahorse::Client::Base]
   def client; end
+
+  # @return [Seahorse::Client::Base]
   def client=(_arg0); end
+
+  # @return [Configuration] The client configuration.
   def config; end
+
+  # @return [Configuration] The client configuration.
   def config=(_arg0); end
+
+  # @return [Http::Request]
   def http_request; end
+
+  # @return [Http::Request]
   def http_request=(_arg0); end
+
+  # @return [Http::Response]
   def http_response; end
+
+  # @return [Http::Response]
   def http_response=(_arg0); end
+
+  # @return [Hash]
   def metadata; end
+
+  # @return [Model::Operation]
   def operation; end
+
+  # @return [Model::Operation]
   def operation=(_arg0); end
+
+  # @return [Symbol] Name of the API operation called.
   def operation_name; end
+
+  # @return [Symbol] Name of the API operation called.
   def operation_name=(_arg0); end
+
+  # @return [Hash] The hash of request parameters.
   def params; end
+
+  # @return [Hash] The hash of request parameters.
   def params=(_arg0); end
+
+  # @return [Integer]
   def retries; end
+
+  # @return [Integer]
   def retries=(_arg0); end
 end
 
 class Seahorse::Client::Response
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Response] a new instance of Response
   def initialize(options = T.unsafe(nil)); end
 
+  # Necessary to define as a subclass of Delegator
+  #
+  # @api private
   def __getobj__; end
+
+  # Necessary to define as a subclass of Delegator
+  #
+  # @api private
   def __setobj__(obj); end
+
+  # @return [RequestContext]
   def context; end
+
+  # @return The response data.  This may be `nil` if the response contains
+  #   an {#error}.
   def data; end
+
+  # @return The response data.  This may be `nil` if the response contains
+  #   an {#error}.
   def data=(_arg0); end
+
+  # @return [StandardError, nil]
   def error; end
+
+  # @return [StandardError, nil]
   def error=(_arg0); end
+
+  # @overload on
+  # @overload on
+  # @return [self]
   def on(range, &_block); end
+
+  # @api private
   def on_complete(&block); end
+
+  # Yields to the block if the response has a 200 level status code.
+  #
+  # @return [self]
   def on_success(&block); end
+
+  # @return [Boolean] Returns `true` if the response is complete with
+  #   a ~ 200 level http status code.
   def successful?; end
 end
 
 module Seahorse::Model; end
 
 class Seahorse::Model::Api
+  # @return [Api] a new instance of Api
   def initialize; end
 
   def add_authorizer(name, authorizer); end
@@ -3288,74 +9480,176 @@ class Seahorse::Model::Api
   def authorizer(name); end
   def authorizer_names; end
   def authorizers(&block); end
+
+  # @return [Symbol|nil]
   def endpoint_operation; end
+
+  # @return [Symbol|nil]
   def endpoint_operation=(_arg0); end
+
   def inspect(*args); end
+
+  # @return [Hash]
   def metadata; end
+
+  # @return [Hash]
   def metadata=(_arg0); end
+
   def operation(name); end
   def operation_names; end
   def operations(&block); end
+
+  # @return [Boolean|nil]
   def require_endpoint_discovery; end
+
+  # @return [Boolean|nil]
   def require_endpoint_discovery=(_arg0); end
+
+  # @return [String, nil]
   def version; end
+
+  # @return [String, nil]
   def version=(_arg0); end
 end
 
 class Seahorse::Model::Authorizer
+  # @return [Authorizer] a new instance of Authorizer
   def initialize; end
 
+  # @return [String]
   def name; end
+
+  # @return [String]
   def name=(_arg0); end
+
+  # @return [Hash]
   def placement; end
+
+  # @return [Hash]
   def placement=(_arg0); end
+
+  # @return [String]
   def type; end
+
+  # @return [String]
   def type=(_arg0); end
 end
 
 class Seahorse::Model::Operation
+  # @return [Operation] a new instance of Operation
   def initialize; end
 
   def [](key); end
   def []=(key, value); end
+
+  # @return [Boolean]
   def async; end
+
+  # @return [Boolean]
   def async=(_arg0); end
+
+  # @return [String, nil]
   def authorizer; end
+
+  # @return [String, nil]
   def authorizer=(_arg0); end
+
+  # @return [Boolean]
   def deprecated; end
+
+  # @return [Boolean]
   def deprecated=(_arg0); end
+
+  # @return [String, nil]
   def documentation; end
+
+  # @return [String, nil]
   def documentation=(_arg0); end
+
+  # @return [Hash]
   def endpoint_discovery; end
+
+  # @return [Hash]
   def endpoint_discovery=(_arg0); end
+
+  # @return [Boolean]
   def endpoint_operation; end
+
+  # @return [Boolean]
   def endpoint_operation=(_arg0); end
+
+  # @return [Hash, nil]
   def endpoint_pattern; end
+
+  # @return [Hash, nil]
   def endpoint_pattern=(_arg0); end
+
+  # @return [Array<ShapeRef>]
   def errors; end
+
+  # @return [Array<ShapeRef>]
   def errors=(_arg0); end
+
+  # @return [Boolean]
   def http_checksum_required; end
+
+  # @return [Boolean]
   def http_checksum_required=(_arg0); end
+
+  # @return [String]
   def http_method; end
+
+  # @return [String]
   def http_method=(_arg0); end
+
+  # @return [String]
   def http_request_uri; end
+
+  # @return [String]
   def http_request_uri=(_arg0); end
+
+  # @return [ShapeRef, nil]
   def input; end
+
+  # @return [ShapeRef, nil]
   def input=(_arg0); end
+
+  # @return [String, nil]
   def name; end
+
+  # @return [String, nil]
   def name=(_arg0); end
+
+  # @return [ShapeRef, nil]
   def output; end
+
+  # @return [ShapeRef, nil]
   def output=(_arg0); end
+
+  # APIG only
+  #
+  # @return [Boolean]
   def require_apikey; end
+
+  # APIG only
+  #
+  # @return [Boolean]
   def require_apikey=(_arg0); end
 end
 
 module Seahorse::Model::Shapes; end
 
 class Seahorse::Model::Shapes::BlobShape < ::Seahorse::Model::Shapes::Shape
+  # @return [Integer, nil]
   def max; end
+
+  # @return [Integer, nil]
   def max=(_arg0); end
+
+  # @return [Integer, nil]
   def min; end
+
+  # @return [Integer, nil]
   def min=(_arg0); end
 end
 
@@ -3363,126 +9657,294 @@ class Seahorse::Model::Shapes::BooleanShape < ::Seahorse::Model::Shapes::Shape; 
 class Seahorse::Model::Shapes::DocumentShape < ::Seahorse::Model::Shapes::Shape; end
 
 class Seahorse::Model::Shapes::FloatShape < ::Seahorse::Model::Shapes::Shape
+  # @return [Integer, nil]
   def max; end
+
+  # @return [Integer, nil]
   def max=(_arg0); end
+
+  # @return [Integer, nil]
   def min; end
+
+  # @return [Integer, nil]
   def min=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::IntegerShape < ::Seahorse::Model::Shapes::Shape
+  # @return [Integer, nil]
   def max; end
+
+  # @return [Integer, nil]
   def max=(_arg0); end
+
+  # @return [Integer, nil]
   def min; end
+
+  # @return [Integer, nil]
   def min=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::ListShape < ::Seahorse::Model::Shapes::Shape
+  # @return [Boolean]
   def flattened; end
+
+  # @return [Boolean]
   def flattened=(_arg0); end
+
+  # @return [Integer, nil]
   def max; end
+
+  # @return [Integer, nil]
   def max=(_arg0); end
+
+  # @return [ShapeRef]
   def member; end
+
+  # @return [ShapeRef]
   def member=(_arg0); end
+
+  # @return [Integer, nil]
   def min; end
+
+  # @return [Integer, nil]
   def min=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::MapShape < ::Seahorse::Model::Shapes::Shape
+  # @return [Boolean]
   def flattened; end
+
+  # @return [Boolean]
   def flattened=(_arg0); end
+
+  # @return [ShapeRef]
   def key; end
+
+  # @return [ShapeRef]
   def key=(_arg0); end
+
+  # @return [Integer, nil]
   def max; end
+
+  # @return [Integer, nil]
   def max=(_arg0); end
+
+  # @return [Integer, nil]
   def min; end
+
+  # @return [Integer, nil]
   def min=(_arg0); end
+
+  # @return [ShapeRef]
   def value; end
+
+  # @return [ShapeRef]
   def value=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::Shape
+  # @return [Shape] a new instance of Shape
   def initialize(options = T.unsafe(nil)); end
 
+  # Gets metadata for the given `key`.
   def [](key); end
+
+  # Sets metadata for the given `key`.
   def []=(key, value); end
+
+  # @return [String, nil]
   def documentation; end
+
+  # @return [String, nil]
   def documentation=(_arg0); end
+
+  # @return [String]
   def name; end
+
+  # @return [String]
   def name=(_arg0); end
+
+  # @return [Boolean]
   def union; end
+
+  # @return [Boolean]
   def union=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::ShapeRef
+  # @return [ShapeRef] a new instance of ShapeRef
   def initialize(options = T.unsafe(nil)); end
 
+  # Gets metadata for the given `key`.
   def [](key); end
+
+  # Sets metadata for the given `key`.
   def []=(key, value); end
+
+  # @return [Boolean]
   def deprecated; end
+
+  # @return [Boolean]
   def deprecated=(_arg0); end
+
+  # @return [Boolean]
   def document; end
+
+  # @return [Boolean]
   def document=(_arg0); end
+
+  # @return [String, nil]
   def documentation; end
+
+  # @return [String, nil]
   def documentation=(_arg0); end
+
+  # @return [Boolean]
   def event; end
+
+  # @return [Boolean]
   def event=(_arg0); end
+
+  # @return [Boolean]
   def eventheader; end
+
+  # @return [Boolean]
   def eventheader=(_arg0); end
+
+  # @return [Boolean]
   def eventheader_type; end
+
+  # @return [Boolean]
   def eventheader_type=(_arg0); end
+
+  # @return [Boolean]
   def eventpayload; end
+
+  # @return [Boolean]
   def eventpayload=(_arg0); end
+
+  # @return [String]
   def eventpayload_type; end
+
+  # @return [String]
   def eventpayload_type=(_arg0); end
+
+  # @return [Boolean]
   def eventstream; end
+
+  # @return [Boolean]
   def eventstream=(_arg0); end
+
+  # @return [String, nil]
   def location; end
+
   def location=(location); end
+
+  # @return [String, nil]
   def location_name; end
+
   def location_name=(location_name); end
+
+  # @return [Boolean]
   def required; end
+
+  # @return [Boolean]
   def required=(_arg0); end
+
+  # @return [Shape]
   def shape; end
+
+  # @return [Shape]
   def shape=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::StringShape < ::Seahorse::Model::Shapes::Shape
+  # @return [Set<String>, nil]
   def enum; end
+
+  # @return [Set<String>, nil]
   def enum=(_arg0); end
+
+  # @return [Integer, nil]
   def max; end
+
+  # @return [Integer, nil]
   def max=(_arg0); end
+
+  # @return [Integer, nil]
   def min; end
+
+  # @return [Integer, nil]
   def min=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::StructureShape < ::Seahorse::Model::Shapes::Shape
+  # @return [StructureShape] a new instance of StructureShape
   def initialize(options = T.unsafe(nil)); end
 
+  # @param name [Symbol]
+  # @param shape_ref [ShapeRef]
   def add_member(name, shape_ref); end
+
+  # @param name [Symbol]
+  # @return [ShapeRef]
   def member(name); end
+
+  # @param member_name [Symbol]
+  # @return [Boolean] Returns `true` if there exists a member with
+  #   the given name.
   def member?(member_name); end
+
+  # @api private
   def member_by_location_name(location_name); end
+
+  # @return [Array<Symbol>]
   def member_names; end
+
+  # @return [Enumerator<[Symbol,ShapeRef]>]
   def members; end
+
+  # @return [Set<Symbol>]
   def required; end
+
+  # @return [Set<Symbol>]
   def required=(_arg0); end
+
+  # @return [Class<Struct>]
   def struct_class; end
+
+  # @return [Class<Struct>]
   def struct_class=(_arg0); end
 end
 
 class Seahorse::Model::Shapes::TimestampShape < ::Seahorse::Model::Shapes::Shape; end
 
 class Seahorse::Model::Shapes::UnionShape < ::Seahorse::Model::Shapes::StructureShape
+  # @return [UnionShape] a new instance of UnionShape
   def initialize(options = T.unsafe(nil)); end
 
+  # @api private
   def add_member_subclass(member, subclass); end
+
+  # @api private
   def member_subclass(member); end
 end
 
+# @api private
 module Seahorse::Util
   class << self
+    # Checks for a valid host label
+    #
+    # @api private
+    # @return [Boolean]
+    # @see https://tools.ietf.org/html/rfc3986#section-3.2.2
+    # @see https://tools.ietf.org/html/rfc1123#page-13
     def host_label?(str); end
+
+    # @api private
     def uri_escape(string); end
+
+    # @api private
     def uri_path_escape(path); end
   end
 end
