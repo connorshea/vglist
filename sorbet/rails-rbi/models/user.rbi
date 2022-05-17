@@ -2095,6 +2095,15 @@ module User::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def encrypted_password?; end
 
+  sig { returns(T.nilable(T::Boolean)) }
+  def hide_total_played; end
+
+  sig { params(value: T.nilable(T::Boolean)).void }
+  def hide_total_played=(value); end
+
+  sig { returns(T::Boolean) }
+  def hide_total_played?; end
+
   sig { returns(Integer) }
   def id; end
 
@@ -3291,6 +3300,51 @@ module User::GeneratedAttributeMethods
 
   sig { params(args: T.untyped).returns(T::Boolean) }
   def encrypted_api_token_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_hide_total_played?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_hide_total_played(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_hide_total_played?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def hide_total_played_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def hide_total_played_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_hide_total_played!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def hide_total_played_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def hide_total_played_came_from_user?(*args); end
 end
 
 module User::GeneratedAssociationMethods
