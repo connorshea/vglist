@@ -1,4 +1,5 @@
 # typed: false
+# rubocop:disable Rails/PluckInWhere
 namespace :vglist do
   namespace :unmatched_games do
     desc "Clean out the unmatched_games table."
@@ -21,3 +22,4 @@ namespace :vglist do
     end
   end
 end
+# rubocop:enable Rails/PluckInWhere
