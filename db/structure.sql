@@ -1414,7 +1414,7 @@ CREATE TABLE public.users (
     privacy integer DEFAULT 0 NOT NULL,
     banned boolean DEFAULT false NOT NULL,
     encrypted_api_token character varying,
-    hide_total_played boolean DEFAULT false
+    hide_days_played boolean DEFAULT false
 );
 
 
