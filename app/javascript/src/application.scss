@@ -259,6 +259,8 @@ nav.navbar {
   max-height: 400px;
   height: auto;
   overflow: scroll;
+  // Don't display a horizontal scrollbar.
+  overflow-x: hidden;
 }
 
 // Customization for bulma dropdowns.
