@@ -3095,6 +3095,7 @@ module RuboCop::Cop::EnforceSuperclass
   class << self
     # @api private
     # @private
+    # @private
     def included(base); end
   end
 end

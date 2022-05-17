@@ -20,52 +20,327 @@ module SPARQL
   end
 end
 
+# A SPARQL 1.0/1.1 client for RDF.rb.
+#
+# @see https://www.w3.org/TR/sparql11-query/
+# @see https://www.w3.org/TR/sparql11-protocol/
+# @see https://www.w3.org/TR/sparql11-results-json/
+# @see https://www.w3.org/TR/sparql11-results-csv-tsv/
 class SPARQL::Client
+  # Initialize a new sparql client, either using the URL of
+  # a SPARQL endpoint or an `RDF::Queryable` instance to use
+  # the native SPARQL gem.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param url [String, RDF::Queryable, #to_s] URL of endpoint, or queryable object.
+  # @param options [Hash{Symbol => Object}]
+  # @return [Client] a new instance of Client
   def initialize(url, **options, &block); end
 
+  # Executes a boolean `ASK` query.
+  #
+  # @param options [Hash{Symbol => Object}] (see {#initialize})
+  # @return [Query]
   def ask(*args, **options); end
+
+  # @private
   def call_query_method(meth, *args, **options); end
+
+  # Executes a `CLEAR` operation.
+  #
+  # This requires that the endpoint support SPARQL 1.1 Update.
+  #
+  # @example `CLEAR GRAPH <http://example.org/>`
+  #   client.clear(:graph, RDF::URI("http://example.org/"))
+  # @example `CLEAR DEFAULT`
+  #   client.clear(:default)
+  # @example `CLEAR NAMED`
+  #   client.clear(:named)
+  # @example `CLEAR ALL`
+  #   client.clear(:all)
+  # @overload clear
+  # @overload clear
+  # @see https://www.w3.org/TR/sparql11-update/#clear
   def clear(what, *arguments); end
+
+  # Executes a `CLEAR GRAPH` operation.
+  #
+  # This is a convenience wrapper for the {#clear} method.
+  #
+  # @example `CLEAR GRAPH <http://example.org/>`
+  #   client.clear_graph("http://example.org/")
+  # @option options
+  # @param graph_uri [RDF::URI, String]
+  # @param options [Hash{Symbol => Object}]
+  # @return [void] `self`
+  # @see https://www.w3.org/TR/sparql11-update/#clear
   def clear_graph(graph_uri, **options); end
+
+  # Closes a client instance by finishing the connection.
+  # The client is unavailable for any further data operations; an IOError is raised if such an attempt is made. I/O streams are automatically closed when they are claimed by the garbage collector.
+  #
+  # @return [void] `self`
   def close; end
+
+  # Executes a graph `CONSTRUCT` query.
+  #
+  # @param patterns [Array<RDF::Query::Pattern, Array>]
+  # @return [Query]
   def construct(*args, **options); end
+
+  # Executes a `DELETE DATA` operation.
+  #
+  # This requires that the endpoint support SPARQL 1.1 Update.
+  #
+  # @example Deleting data sourced from a file or URL
+  #   data = RDF::Graph.load("https://raw.githubusercontent.com/ruby-rdf/rdf/develop/etc/doap.nt")
+  #   client.delete_data(data)
+  # @example Deleting data from a named graph
+  #   client.delete_data(data, graph: "http://example.org/")
+  # @option options
+  # @param data [RDF::Enumerable]
+  # @param options [Hash{Symbol => Object}]
+  # @return [void] `self`
+  # @see https://www.w3.org/TR/sparql11-update/#deleteData
   def delete_data(data, **options); end
+
+  # Executes a `DELETE/INSERT` operation.
+  #
+  # This requires that the endpoint support SPARQL 1.1 Update.
+  #
+  # @option options
+  # @param delete_graph [RDF::Enumerable]
+  # @param insert_graph [RDF::Enumerable]
+  # @param where_graph [RDF::Enumerable]
+  # @param options [Hash{Symbol => Object}]
+  # @return [void] `self`
+  # @see https://www.w3.org/TR/sparql11-update/#deleteInsert
   def delete_insert(delete_graph, insert_graph = T.unsafe(nil), where_graph = T.unsafe(nil), **options); end
+
+  # Executes a `DESCRIBE` query.
+  #
+  # @param variables [Array<Symbol, RDF::URI>]
+  # @return [Query]
   def describe(*args, **options); end
+
+  # The HTTP headers that will be sent in requests to the endpoint.
+  #
+  # @return [Hash{String => String}]
   def headers; end
+
+  # Executes an `INSERT DATA` operation.
+  #
+  # This requires that the endpoint support SPARQL 1.1 Update.
+  #
+  # Note that for inserting non-trivial amounts of data, you probably
+  # ought to consider using the RDF store's native bulk-loading facilities
+  # or APIs, as `INSERT DATA` operations entail comparably higher
+  # parsing overhead.
+  #
+  # @example Inserting data constructed ad-hoc
+  #   client.insert_data(RDF::Graph.new { |graph|
+  #   graph << [:jhacker, RDF::Vocab::FOAF.name, "J. Random Hacker"]
+  #   })
+  # @example Inserting data sourced from a file or URL
+  #   data = RDF::Graph.load("https://raw.githubusercontent.com/ruby-rdf/rdf/develop/etc/doap.nt")
+  #   client.insert_data(data)
+  # @example Inserting data into a named graph
+  #   client.insert_data(data, graph: "http://example.org/")
+  # @option options
+  # @param data [RDF::Enumerable]
+  # @param options [Hash{Symbol => Object}]
+  # @return [void] `self`
+  # @see https://www.w3.org/TR/sparql11-update/#insertData
   def insert_data(data, **options); end
+
+  # Returns a developer-friendly representation of this object.
+  #
+  # @return [String]
   def inspect; end
+
+  # Outputs a developer-friendly representation of this object to `stderr`.
+  #
+  # @return [void]
   def inspect!; end
+
+  # Returns a mapping of blank node results for this client.
+  #
+  # @private
   def nodes; end
+
+  # Any miscellaneous configuration.
+  #
+  # @return [Hash{Symbol => Object}]
   def options; end
+
+  # @param response [Net::HTTPSuccess]
+  # @param options [Hash{Symbol => Object}]
+  # @return [RDF::Enumerable]
   def parse_rdf_serialization(response, **options); end
+
+  # @param response [Net::HTTPSuccess]
+  # @param options [Hash{Symbol => Object}]
+  # @return [Object]
   def parse_response(response, **options); end
+
+  # Executes a SPARQL query and returns the parsed results.
+  #
+  # @option options
+  # @option options
+  # @param query [String, #to_s]
+  # @param options [Hash{Symbol => Object}]
+  # @raise [IOError] if connection is closed
+  # @return [Array<RDF::Query::Solution>]
+  # @see https://www.w3.org/TR/sparql11-protocol/#query-operation
   def query(query, **options); end
+
+  # Executes a SPARQL query and returns the Net::HTTP::Response of the
+  # result.
+  #
+  # @option options
+  # @option options
+  # @param query [String, #to_s]
+  # @param options [Hash{Symbol => Object}]
+  # @raise [IOError] if connection is closed
+  # @return [String]
   def response(query, **options); end
+
+  # Executes a tuple `SELECT` query.
+  #
+  # @param variables [Array<Symbol>]
+  # @return [Query]
   def select(*args, **options); end
+
+  # Executes a SPARQL update operation.
+  #
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash{Symbol => Object}]
+  # @param query [String, #to_s]
+  # @raise [IOError] if connection is closed
+  # @return [void] `self`
+  # @see https://www.w3.org/TR/sparql11-protocol/#update-operation
   def update(query, **options); end
+
+  # The SPARQL endpoint URL, or an RDF::Queryable instance, to use the native SPARQL engine.
+  #
+  # @return [RDF::URI, RDF::Queryable]
   def url; end
 
   protected
 
+  # Returns an HTTP class or HTTP proxy class based on the `http_proxy`
+  # and `https_proxy` environment variables.
+  #
+  # @param scheme [String]
+  # @return [Net::HTTP::Proxy]
   def http_klass(scheme); end
+
+  # Constructs an HTTP GET request according to the SPARQL Protocol.
+  #
+  # @param query [String, #to_s]
+  # @param headers [Hash{String => String}]
+  # @return [Net::HTTPRequest]
+  # @see https://www.w3.org/TR/sparql11-protocol/#query-via-get
   def make_get_request(query, headers = T.unsafe(nil)); end
+
+  # Constructs an HTTP POST request according to the SPARQL Protocol.
+  #
+  # @param query [String, #to_s]
+  # @param headers [Hash{String => String}]
+  # @return [Net::HTTPRequest]
+  # @see https://www.w3.org/TR/sparql11-protocol/#query-via-post-direct
+  # @see https://www.w3.org/TR/sparql11-protocol/#query-via-post-urlencoded
   def make_post_request(query, headers = T.unsafe(nil)); end
+
+  # @raise [IOError] if connection is closed
+  # @return [Net::HTTPResponse]
+  # @see https://www.w3.org/TR/sparql11-protocol/#query-operation
+  # @yield [response]
+  # @yieldparam response [Net::HTTPResponse]
   def request(query, headers = T.unsafe(nil), &block); end
+
+  # Return the HTTP verb for posting this request.
+  # this is useful if you need to override the HTTP verb based on the request being made.
+  # (e.g. Marmotta 3.3.0 requires GET for DELETE requests, but can accept POST for INSERT)
   def request_method(query); end
+
+  # Setup url query parameter to use a specified default graph
+  #
+  # @see https://www.w3.org/TR/sparql11-protocol/#query-operation
+  # @see https://www.w3.org/TR/sparql11-protocol/#update-operation
   def set_url_default_graph(url); end
 
   class << self
+    # Close the http connection when object is deallocated
     def finalize(klass); end
+
+    # @param csv [String, Array<Array<String>>]
+    # @return [<RDF::Query::Solutions>]
+    # @see https://www.w3.org/TR/sparql11-results-csv-tsv/
     def parse_csv_bindings(csv, nodes = T.unsafe(nil)); end
+
+    # @param json [String, Hash]
+    # @return [<RDF::Query::Solutions>]
+    # @see https://www.w3.org/TR/rdf-sparql-json-res/#results
     def parse_json_bindings(json, nodes = T.unsafe(nil)); end
+
+    # @param value [Hash{String => String}]
+    # @return [RDF::Value]
+    # @see https://www.w3.org/TR/sparql11-results-json/#select-encode-terms
+    # @see https://www.w3.org/TR/rdf-sparql-json-res/#variable-binding-results
     def parse_json_value(value, nodes = T.unsafe(nil)); end
+
+    # @param tsv [String, Array<Array<String>>]
+    # @return [<RDF::Query::Solutions>]
+    # @see https://www.w3.org/TR/sparql11-results-csv-tsv/
     def parse_tsv_bindings(tsv, nodes = T.unsafe(nil)); end
+
+    # @param xml [String, IO, Nokogiri::XML::Node, REXML::Element]
+    # @param library [Symbol] (:nokogiri)
+    #   One of :nokogiri or :rexml.
+    # @return [<RDF::Query::Solutions>]
+    # @see https://www.w3.org/TR/rdf-sparql-json-res/#results
     def parse_xml_bindings(xml, nodes = T.unsafe(nil), library: T.unsafe(nil)); end
+
+    # @param value [Nokogiri::XML::Element, REXML::Element]
+    # @return [RDF::Value]
+    # @see https://www.w3.org/TR/rdf-sparql-json-res/#variable-binding-results
     def parse_xml_value(value, nodes = T.unsafe(nil)); end
+
+    # Serializes a SPARQL graph
+    #
+    # @param patterns [RDF::Enumerable]
+    # @param use_vars [Boolean] (false) Use variables in place of BNodes
+    # @private
+    # @return [String]
     def serialize_patterns(patterns, use_vars = T.unsafe(nil)); end
+
+    # Serializes a SPARQL predicate
+    #
+    # @param value [RDF::Value, Array, String]
+    # @param rdepth [Fixnum]
+    # @private
+    # @return [String]
     def serialize_predicate(value, rdepth = T.unsafe(nil)); end
+
+    # Serializes a URI or URI string into SPARQL syntax.
+    #
+    # @param uri [RDF::URI, String]
+    # @private
+    # @return [String]
     def serialize_uri(uri); end
+
+    # Serializes an `RDF::Value` into SPARQL syntax.
+    #
+    # @param value [RDF::Value]
+    # @param use_vars [Boolean] (false) Use variables in place of BNodes
+    # @private
+    # @return [String]
     def serialize_value(value, use_vars = T.unsafe(nil)); end
   end
 end
@@ -83,209 +358,926 @@ SPARQL::Client::DEFAULT_PROTOCOL = T.let(T.unsafe(nil), Float)
 SPARQL::Client::GRAPH_ALL = T.let(T.unsafe(nil), String)
 class SPARQL::Client::MalformedQuery < ::SPARQL::Client::ClientError; end
 
+# A SPARQL query builder.
+#
+# @example Iterating over all found solutions
+#   query.each_solution { |solution| puts solution.inspect }
 class SPARQL::Client::Query < ::RDF::Query
+  # @overload self.construct
+  # @param form [Symbol, #to_s]
+  # @return [Query] a new instance of Query
+  # @yield [query]
+  # @yieldparam [Query]
   def initialize(form = T.unsafe(nil), **options, &block); end
 
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ASC(?o)
+  #   query.select.where([:s, :p, :o]).order.asc(:o)
+  #   query.select.where([:s, :p, :o]).asc(:o)
+  # @param var [Array<Symbol, String>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modOrderBy
   def asc(var); end
+
+  # @example ASK WHERE { ?s ?p ?o . }
+  #   query.ask.where([:s, :p, :o])
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#ask
   def ask; end
+
+  # @private
   def build_patterns(patterns); end
+
+  # @example CONSTRUCT { ?s ?p ?o . } WHERE { ?s ?p ?o . }
+  #   query.construct([:s, :p, :o]).where([:s, :p, :o])
+  # @param patterns [Array<RDF::Query::Pattern, Array>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#construct
   def construct(*patterns); end
+
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY DESC(?o)
+  #   query.select.where([:s, :p, :o]).order.desc(:o)
+  #   query.select.where([:s, :p, :o]).desc(:o)
+  # @param var [Array<Symbol, String>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modOrderBy
   def desc(var); end
+
+  # @example DESCRIBE * WHERE { ?s ?p ?o . }
+  #   query.describe.where([:s, :p, :o])
+  # @param variables [Array<Symbol>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#describe
   def describe(*variables); end
+
+  # @example SELECT DISTINCT ?s WHERE { ?s ?p ?o . }
+  #   query.select(:s).distinct.where([:s, :p, :o])
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modDuplicates
   def distinct(state = T.unsafe(nil)); end
+
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each_solution(&block); end
+
+  # @return [Enumerator]
+  # @yield [statement]
+  # @yieldparam [RDF::Statement]
   def each_statement(&block); end
+
+  # @raise [NotImplementedError]
+  # @return [Object]
   def execute; end
+
+  # @return [Boolean] expects_statements?
   def expects_statements?; end
+
+  # @return [Boolean]
   def false?; end
+
+  # @example ASK WHERE { ?s ?p ?o . FILTER(regex(?s, 'Abiline, Texas')) }
+  #   query.ask.where([:s, :p, :o]).filter("regex(?s, 'Abiline, Texas')")
+  # @return [Query]
   def filter(string); end
+
+  # The form of the query.
+  #
+  # @return [:select, :ask, :construct, :describe]
+  # @see https://www.w3.org/TR/sparql11-query/#QueryForms
   def form; end
+
+  # @example SELECT * FROM <a> WHERE \{ ?s ?p ?o . \}
+  #   query.select.from(RDF::URI.new(a)).where([:s, :p, :o])
+  # @param uri [RDF::URI]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#specifyingDataset
   def from(uri); end
+
+  # @example SELECT * WHERE { GRAPH ?g { ?s ?p ?o . } }
+  #   query.select.graph(:g).where([:s, :p, :o])
+  # @param graph_uri_or_var [RDF::Value]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#queryDataset
   def graph(graph_uri_or_var); end
+
+  # @example SELECT ?s WHERE { ?s ?p ?o . } GROUP BY ?s
+  #   query.select(:s).where([:s, :p, :o]).group_by(:s)
+  # @param variables [Array<Symbol, String>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#groupby
   def group(*variables); end
+
+  # @example SELECT ?s WHERE { ?s ?p ?o . } GROUP BY ?s
+  #   query.select(:s).where([:s, :p, :o]).group_by(:s)
+  # @param variables [Array<Symbol, String>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#groupby
   def group_by(*variables); end
+
+  # Returns a developer-friendly representation of this query.
+  #
+  # @return [String]
   def inspect; end
+
+  # Outputs a developer-friendly representation of this query to `stderr`.
+  #
+  # @return [void]
   def inspect!; end
+
+  # @example SELECT * WHERE { ?s ?p ?o . } LIMIT 10
+  #   query.select.where([:s, :p, :o]).limit(10)
+  # @param length [Integer, #to_i]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modResultLimit
   def limit(length); end
+
+  # The block form can be used for more complicated queries, using the `select` form (note, use either block or argument forms, not both):
+  #
+  # @example SELECT * WHERE \{ ?book dc:title ?title . MINUS \{ ?book dc11:title ?title \} \}
+  #   query.select.where([:book, RDF::Vocab::DC.title, :title]).
+  #   minus([:book, RDF::Vocab::DC11.title, :title])
+  # @example SELECT * WHERE \{ ?book dc:title ?title MINUS \{ ?book dc11:title ?title . FILTER(langmatches(lang(?title), 'EN')) \} \}
+  #   query1 = SPARQL::Client::Query.select.
+  #   where([:book, RDF::Vocab::DC11.title, :title]).
+  #   filter("langmatches(?title, 'en')")
+  #   query.select.where([:book, RDF::Vocab::DC.title, :title]).minus(query1)
+  # @example SELECT * WHERE \{ ?book dc:title ?title MINUS \{ ?book dc11:title ?title . FILTER(langmatches(lang(?title), 'EN'))\} \}
+  #   query1 = SPARQL::Client::Query.select.where([:book, RDF::Vocab::DC11.title, :title]).filter("langmatches(?title, 'en')")
+  #   query.select.where([:book, RDF::Vocab::DC.title, :title]).minus do |q|
+  #   q.select.
+  #   where([:book, RDF::Vocab::DC11.title, :title]).
+  #   filter("langmatches(?title, 'en')")
+  #   end
+  # @param patterns [Array<RDF::Query::Pattern, Array>] splat of zero or more patterns followed by zero or more queries.
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#optionals
+  # @yield [query] Yield form with or without argument; without an argument, evaluates within the query.
+  # @yieldparam query [SPARQL::Client::Query] used for adding select clauses.
   def minus(*patterns, &block); end
+
+  # @example SELECT * WHERE { ?s ?p ?o . } OFFSET 100
+  #   query.select.where([:s, :p, :o]).offset(100)
+  # @param start [Integer, #to_i]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modOffset
   def offset(start); end
+
+  # The block form can be used for adding filters:
+  #
+  # @example SELECT * WHERE \{ ?s ?p ?o . OPTIONAL \{ ?s a ?o . ?s \<http://purl.org/dc/terms/abstract\> ?o . \} \}
+  #   query.select.where([:s, :p, :o]).
+  #   optional([:s, RDF.type, :o], [:s, RDF::Vocab::DC.abstract, :o])
+  # @example ASK WHERE { ?s ?p ?o . OPTIONAL { ?s ?p ?o . FILTER(regex(?s, 'Abiline, Texas'))} }
+  #   query.ask.where([:s, :p, :o]).optional([:s, :p, :o]) do
+  #   filter("regex(?s, 'Abiline, Texas')")
+  #   end
+  # @param patterns [Array<RDF::Query::Pattern, Array>] splat of zero or more patterns followed by zero or more queries.
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#optionals
+  # @yield [query] Yield form with or without argument; without an argument, evaluates within the query.
+  # @yieldparam query [SPARQL::Client::Query] used for creating filters on the optional patterns.
   def optional(*patterns, &block); end
+
+  # @return [Hash{Symbol => Object}]
   def options; end
+
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ?o
+  #   query.select.where([:s, :p, :o]).order(:o)
+  #   query.select.where([:s, :p, :o]).order_by(:o)
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ?o ?p
+  #   query.select.where([:s, :p, :o]).order_by(:o, :p)
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ASC(?o) DESC(?p)
+  #   query.select.where([:s, :p, :o]).order_by(o: :asc, p: :desc)
+  # @param variables [Array<Symbol, String>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modOrderBy
   def order(*variables); end
+
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ?o
+  #   query.select.where([:s, :p, :o]).order(:o)
+  #   query.select.where([:s, :p, :o]).order_by(:o)
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ?o ?p
+  #   query.select.where([:s, :p, :o]).order_by(:o, :p)
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ASC(?o) DESC(?p)
+  #   query.select.where([:s, :p, :o]).order_by(o: :asc, p: :desc)
+  # @param variables [Array<Symbol, String>]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modOrderBy
   def order_by(*variables); end
+
+  # @overload prefix
+  # @overload prefix
+  # @see https://www.w3.org/TR/sparql11-query/#prefNames
   def prefix(val); end
+
+  # @example SELECT REDUCED ?s WHERE { ?s ?p ?o . }
+  #   query.select(:s).reduced.where([:s, :p, :o])
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#modDuplicates
   def reduced(state = T.unsafe(nil)); end
+
+  # @return [Object]
   def result; end
+
+  # @example `SELECT * WHERE { ?s ?p ?o . }`
+  #   query.select.where([:s, :p, :o])
+  # @example `SELECT ?s WHERE {?s ?p ?o .}`
+  #   query.select(:s).where([:s, :p, :o])
+  # @example `SELECT COUNT(?uri as ?c) WHERE {?uri a owl:Class}`
+  #   query.select(count: {uri: :c}).where([:uri, RDF.type, RDF::OWL.Class])
+  # @param variables [Array<Symbol>, Hash{Symbol => RDF::Query::Variable}]
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#select
   def select(*variables); end
+
+  # @example SELECT * WHERE { ?s ?p ?o . } OFFSET 100 LIMIT 10
+  #   query.select.where([:s, :p, :o]).slice(100, 10)
+  # @param start [Integer, #to_i]
+  # @param length [Integer, #to_i]
+  # @return [Query]
   def slice(start, length); end
+
+  # @return [Enumerable<RDF::Query::Solution>]
   def solutions; end
+
+  # Returns the string representation of this query.
+  #
+  # @return [String]
   def to_s; end
+
+  # Serialize a Group Graph Pattern
+  #
+  # @private
   def to_s_ggp; end
+
+  # @return [Boolean]
   def true?; end
+
+  # The block form can be used for more complicated queries, using the `select` form (note, use either block or argument forms, not both):
+  #
+  # @example SELECT * WHERE \{ ?book dc:title ?title \} UNION \{ ?book dc11:title ?title \}
+  #   query.select.where([:book, RDF::Vocab::DC.title, :title]).
+  #   union([:book, RDF::Vocab::DC11.title, :title])
+  # @example SELECT * WHERE \{ ?book dc:title ?title \} UNION \{ ?book dc11:title ?title . FILTER(langmatches(lang(?title), 'EN'))\}
+  #   query1 = SPARQL::Client::Query.select.
+  #   where([:book, RDF::Vocab::DC11.title, :title]).
+  #   filter("langmatches(?title, 'en')")
+  #   query.select.where([:book, RDF::Vocab::DC.title, :title]).union(query1)
+  # @example SELECT * WHERE \{ ?book dc:title ?title \} UNION \{ ?book dc11:title ?title . FILTER(langmatches(lang(?title), 'EN'))\}
+  #   query1 = SPARQL::Client::Query.select.where([:book, RDF::Vocab::DC11.title, :title]).filter("langmatches(?title, 'en')")
+  #   query.select.where([:book, RDF::Vocab::DC.title, :title]).union do |q|
+  #   q.select.
+  #   where([:book, RDF::Vocab::DC11.title, :title]).
+  #   filter("langmatches(?title, 'en')")
+  #   end
+  # @param patterns [Array<RDF::Query::Pattern, Array>] splat of zero or more patterns followed by zero or more queries.
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#optionals
+  # @yield [query] Yield form with or without argument; without an argument, evaluates within the query.
+  # @yieldparam query [SPARQL::Client::Query] used for adding select clauses.
   def union(*patterns, &block); end
+
+  # Specify inline data for a query
+  #
+  # @overload values
+  # @overload values
   def values(*args); end
+
+  # Block form can be used for chaining calls in addition to creating sub-select queries.
+  #
+  # @example SELECT * WHERE { ?s ?p ?o . }
+  #   query.select.where([:s, :p, :o])
+  #   query.select.whether([:s, :p, :o])
+  # @example SELECT * WHERE { { SELECT * WHERE { ?s ?p ?o . } } . ?s ?p ?o . }
+  #   subquery = query.select.where([:s, :p, :o])
+  #   query.select.where([:s, :p, :o], subquery)
+  # @example SELECT * WHERE { { SELECT * WHERE { ?s ?p ?o . } } . ?s ?p ?o . }
+  #   query.select.where([:s, :p, :o]) do |q|
+  #   q.select.where([:s, :p, :o])
+  #   end
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ?o
+  #   query.select.where([:s, :p, :o]) do
+  #   order(:o)
+  #   end
+  # @param patterns_queries [Array<RDF::Query::Pattern, Array>] splat of zero or more patterns followed by zero or more queries.
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#GraphPattern
+  # @yield [query] Yield form with or without argument; without an argument, evaluates within the query.
+  # @yieldparam query [SPARQL::Client::Query] Actually a delegator to query. Methods other than `#select` are evaluated against `self`. For `#select`, a new Query is created, and the result added as a subquery.
   def where(*patterns_queries, &block); end
+
+  # Block form can be used for chaining calls in addition to creating sub-select queries.
+  #
+  # @example SELECT * WHERE { ?s ?p ?o . }
+  #   query.select.where([:s, :p, :o])
+  #   query.select.whether([:s, :p, :o])
+  # @example SELECT * WHERE { { SELECT * WHERE { ?s ?p ?o . } } . ?s ?p ?o . }
+  #   subquery = query.select.where([:s, :p, :o])
+  #   query.select.where([:s, :p, :o], subquery)
+  # @example SELECT * WHERE { { SELECT * WHERE { ?s ?p ?o . } } . ?s ?p ?o . }
+  #   query.select.where([:s, :p, :o]) do |q|
+  #   q.select.where([:s, :p, :o])
+  #   end
+  # @example SELECT * WHERE { ?s ?p ?o . } ORDER BY ?o
+  #   query.select.where([:s, :p, :o]) do
+  #   order(:o)
+  #   end
+  # @param patterns_queries [Array<RDF::Query::Pattern, Array>] splat of zero or more patterns followed by zero or more queries.
+  # @return [Query]
+  # @see https://www.w3.org/TR/sparql11-query/#GraphPattern
+  # @yield [query] Yield form with or without argument; without an argument, evaluates within the query.
+  # @yieldparam query [SPARQL::Client::Query] Actually a delegator to query. Methods other than `#select` are evaluated against `self`. For `#select`, a new Query is created, and the result added as a subquery.
   def whether(*patterns_queries, &block); end
 
   class << self
+    # Creates a boolean `ASK` query.
+    #
+    # @example ASK WHERE { ?s ?p ?o . }
+    #   Query.ask.where([:s, :p, :o])
+    # @param options [Hash{Symbol => Object}] (see {#initialize})
+    # @return [Query]
+    # @see https://www.w3.org/TR/sparql11-query/#ask
     def ask(**options); end
+
+    # Creates a graph `CONSTRUCT` query.
+    #
+    # @example CONSTRUCT { ?s ?p ?o . } WHERE { ?s ?p ?o . }
+    #   Query.construct([:s, :p, :o]).where([:s, :p, :o])
+    # @overload self.construct
+    # @param patterns [Array<RDF::Query::Pattern, Array>]
+    # @return [Query]
+    # @see https://www.w3.org/TR/sparql11-query/#construct
     def construct(*patterns, **options); end
+
+    # Creates a `DESCRIBE` query.
+    #
+    # @example DESCRIBE * WHERE { ?s ?p ?o . }
+    #   Query.describe.where([:s, :p, :o])
+    # @overload self.describe
+    # @param variables [Array<Symbol, RDF::URI>]
+    # @return [Query]
+    # @see https://www.w3.org/TR/sparql11-query/#describe
     def describe(*variables, **options); end
+
+    # Creates a tuple `SELECT` query.
+    #
+    # @example `SELECT * WHERE { ?s ?p ?o . }`
+    #   Query.select.where([:s, :p, :o])
+    # @example `SELECT ?s WHERE {?s ?p ?o .}`
+    #   Query.select(:s).where([:s, :p, :o])
+    # @example `SELECT COUNT(?uri as ?c) WHERE {?uri a owl:Class}`
+    #   Query.select(count: {uri: :c}).where([:uri, RDF.type, RDF::OWL.Class])
+    # @overload self.select
+    # @param variables [Array<Symbol>]
+    # @return [Query]
+    # @see https://www.w3.org/TR/sparql11-query/#select
     def select(*variables, **options); end
   end
 end
 
+# Allow Filters to be
 class SPARQL::Client::Query::Filter < ::SPARQL::Client::QueryElement
+  # @return [Filter] a new instance of Filter
   def initialize(*args); end
 
   def to_s; end
 end
 
+# @private
 class SPARQL::Client::Query::WhereDecorator < ::SimpleDelegator
   def select(*variables); end
 end
 
+# A query element can be used as a component of a query. It may be initialized with a string, which is wrapped in an appropriate container depending on the type of QueryElement. Implements {#to_s} to property serialize when generating a SPARQL query.
 class SPARQL::Client::QueryElement
+  # @return [QueryElement] a new instance of QueryElement
   def initialize(*args); end
 
+  # Returns the value of attribute elements.
   def elements; end
+
+  # @raise [NotImplemented]
   def to_s; end
 end
 
 SPARQL::Client::RESULT_ALL = T.let(T.unsafe(nil), String)
+
+# Sesame-specific
 SPARQL::Client::RESULT_BOOL = T.let(T.unsafe(nil), String)
+
+# Sesame-specific
 SPARQL::Client::RESULT_BRTR = T.let(T.unsafe(nil), String)
+
 SPARQL::Client::RESULT_CSV = T.let(T.unsafe(nil), String)
 SPARQL::Client::RESULT_JSON = T.let(T.unsafe(nil), String)
 SPARQL::Client::RESULT_TSV = T.let(T.unsafe(nil), String)
 SPARQL::Client::RESULT_XML = T.let(T.unsafe(nil), String)
 
+# A read-only repository view of a SPARQL endpoint.
+#
+# @see `RDF::Repository`
 class SPARQL::Client::Repository < ::RDF::Repository
+  # @param uri [URI, #to_s] Endpoint of this repository
+  # @param options [Hash{Symbol => Object}] passed to RDF::Repository
+  # @raise [ArgumentError]
+  # @return [Repository] a new instance of Repository
   def initialize(uri: T.unsafe(nil), **options, &block); end
 
+  # @private
+  # @see RDF::Mutable#clear
   def clear_statements; end
+
+  # @return [SPARQL::Client]
   def client; end
+
+  # Returns the number of statements in this repository.
+  #
+  # @return [Integer]
+  # @see RDF::Repository#count?
   def count; end
+
+  # Deletes RDF statements from `self`.
+  # If any statement contains an `RDF::Query::Variable`, it is
+  # considered to be a pattern, and used to query
+  # self to find matching statements to delete.
+  #
+  # @overload delete
+  # @overload delete
+  # @see RDF::Mutable#delete
   def delete(*statements); end
+
+  # Enumerates each RDF statement in this repository.
+  #
+  # @see RDF::Repository#each
+  # @yield [statement]
+  # @yieldparam statement [RDF::Statement]
   def each(&block); end
+
+  # Iterates over each object in this repository.
+  #
+  # @return [Enumerator]
+  # @see RDF::Repository#each_object?
+  # @yield [object]
+  # @yieldparam object [RDF::Value]
   def each_object(&block); end
+
+  # Iterates over each predicate in this repository.
+  #
+  # @return [Enumerator]
+  # @see RDF::Repository#each_predicate?
+  # @yield [predicate]
+  # @yieldparam predicate [RDF::URI]
   def each_predicate(&block); end
+
+  # Iterates the given block for each RDF statement.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which statements are yielded is undefined.
+  #
+  # @overload each_statement
+  # @overload each_statement
   def each_statement(&block); end
+
+  # Iterates over each subject in this repository.
+  #
+  # @return [Enumerator]
+  # @see RDF::Repository#each_subject?
+  # @yield [subject]
+  # @yieldparam subject [RDF::Resource]
   def each_subject(&block); end
+
+  # Returns `true` if this repository contains no statements.
+  #
+  # @return [Boolean]
+  # @see RDF::Repository#empty?
   def empty?; end
+
+  # Returns `true` if this repository contains the given object.
+  #
+  # @param object [RDF::Value]
+  # @return [Boolean]
+  # @see RDF::Repository#has_object?
   def has_object?(object); end
+
+  # Returns `true` if this repository contains the given predicate.
+  #
+  # @param predicate [RDF::URI]
+  # @return [Boolean]
+  # @see RDF::Repository#has_predicate?
   def has_predicate?(predicate); end
+
+  # Returns `true` if this repository contains the given `statement`.
+  #
+  # @param statement [RDF::Statement]
+  # @return [Boolean]
+  # @see RDF::Repository#has_statement?
   def has_statement?(statement); end
+
+  # Returns `true` if this repository contains the given subject.
+  #
+  # @param subject [RDF::Resource]
+  # @return [Boolean]
+  # @see RDF::Repository#has_subject?
   def has_subject?(subject); end
+
+  # Returns `true` if this repository contains the given `triple`.
+  #
+  # @param triple [Array<RDF::Resource, RDF::URI, RDF::Value>]
+  # @return [Boolean]
+  # @see RDF::Repository#has_triple?
   def has_triple?(triple); end
+
+  # Returns the number of statements in this repository.
+  #
+  # @return [Integer]
+  # @see RDF::Repository#count?
   def length; end
+
+  # Returns the number of statements in this repository.
+  #
+  # @return [Integer]
+  # @see RDF::Repository#count?
   def size; end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Enumerable#supports?
   def supports?(feature); end
+
+  # Returns the client for the update_endpoint if specified, otherwise the
+  # {#client}.
+  #
+  # @return [SPARQL::Client]
   def update_client; end
+
+  # Returns `false` to indicate that this is a read-only repository.
+  #
+  # @return [Boolean]
+  # @see RDF::Mutable#mutable?
   def writable?; end
 
   protected
 
+  # Deletes the given RDF statements from the underlying storage.
+  #
+  # Overridden here to use SPARQL/UPDATE
+  #
+  # @param statements [RDF::Enumerable]
+  # @return [void]
   def delete_statements(statements); end
+
+  # @private
+  # @raise [ArgumentError]
+  # @see RDF::Mutable#insert
   def insert_statement(statement); end
+
+  # Inserts the given RDF statements into the underlying storage or output
+  # stream.
+  #
+  # Overridden here to use SPARQL/UPDATE
+  #
+  # @param statements [RDF::Enumerable]
+  # @raise [ArgumentError]
+  # @return [void]
+  # @since 0.1.6
   def insert_statements(statements); end
+
+  # Queries `self` using the given basic graph pattern (BGP) query,
+  # yielding each matched solution to the given block.
+  #
+  # Overrides Queryable::query_execute to use SPARQL::Client::query
+  #
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options passed to `query.execute`
+  # @param query [RDF::Query] the query to execute
+  # @return [void] ignored
+  # @see RDF::Query#execute
+  # @see RDF::Queryable#query
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def query_execute(query, **options, &block); end
+
+  # Queries `self` for RDF statements matching the given `pattern`.
+  #
+  # @example
+  #   repository.query([nil, RDF::DOAP.developer, nil])
+  #   repository.query({predicate: RDF::DOAP.developer})
+  # @param pattern [Pattern]
+  # @return [Enumerable<Statement>]
+  # @see RDF::Queryable#query_pattern
+  # @todo This should use basic SPARQL query mechanism.
+  # @yield [statement]
+  # @yieldparam [Statement]
   def query_pattern(pattern, **options, &block); end
 end
 
 class SPARQL::Client::ServerError < ::StandardError; end
 
+# SPARQL 1.1 Update operation builders.
 module SPARQL::Client::Update
   class << self
+    # Clear the graph
+    #
+    # @example CLEAR GRAPH <http://example.org/data.rdf>
+    #   clear.graph(RDF::URI(http://example.org/data.rdf))
+    #   clear(:graph, RDF::URI(http://example.org/data.rdf))
+    # @example CLEAR DEFAULT
+    #   clear.default
+    #   clear(:default)
+    # @example CLEAR NAMED
+    #   clear.named
+    #   clear(:named)
+    # @example CLEAR ALL
+    #   clear.all
+    #   clear(:all)
+    # @example CLEAR SILENT ALL
+    #   clear.all.silent
+    #   clear(:all, silent: true)
     def clear(*arguments, **options); end
+
+    # Create a graph
+    #
+    # @example CREATE GRAPH <http://example.org/data.rdf>
+    #   create(RDF::URI(http://example.org/data.rdf))
+    # @example CREATE SILENT GRAPH <http://example.org/data.rdf>
+    #   create(RDF::URI(http://example.org/data.rdf)).silent
+    #   create(RDF::URI(http://example.org/data.rdf), silent: true)
+    # @param options [Hash{Symbol => Object}]
     def create(*arguments, **options); end
+
+    # Delete statements from the graph
+    #
+    # @example DELETE DATA \{ <http://example.org/jhacker> <http://xmlns.com/foaf/0.1/name> \"J. Random Hacker\" .\}
+    #   data = RDF::Graph.new do |graph|
+    #   graph << [RDF::URI('http://example.org/jhacker'), RDF::Vocab::FOAF.name, "J. Random Hacker"]
+    #   end
+    #   delete_data(data)
+    # @example DELETE DATA \{ GRAPH <http://example.org/> \{\}\}
+    #   delete_data(RDF::Graph.new, graph: 'http://example.org/')
+    #   delete_data(RDF::Graph.new).graph('http://example.org/')
+    # @param data [Array<RDF::Statement>, RDF::Enumerable]
+    # @param options [Hash{Symbol => Object}]
     def delete_data(*arguments, **options); end
+
+    # Drop a graph
+    #
+    # @example DROP GRAPH <http://example.org/data.rdf>
+    #   drop.graph(RDF::URI(http://example.org/data.rdf))
+    #   drop(:graph, RDF::URI(http://example.org/data.rdf))
+    # @example DROP DEFAULT
+    #   drop.default
+    #   drop(:default)
+    # @example DROP NAMED
+    #   drop.named
+    #   drop(:named)
+    # @example DROP ALL
+    #   drop.all
+    #   drop(:all)
+    # @example DROP ALL SILENT
+    #   drop.all.silent
+    #   drop(:all, silent: true)
     def drop(*arguments, **options); end
+
+    # Insert statements into the graph
+    #
+    # @example INSERT DATA \{ <http://example.org/jhacker> <http://xmlns.com/foaf/0.1/name> \"J. Random Hacker\" .\}
+    #   data = RDF::Graph.new do |graph|
+    #   graph << [RDF::URI('http://example.org/jhacker'), RDF::Vocab::FOAF.name, "J. Random Hacker"]
+    #   end
+    #   insert_data(data)
+    # @example INSERT DATA \{ GRAPH <http://example.org/> \{\}\}
+    #   insert_data(RDF::Graph.new, graph: 'http://example.org/')
+    #   insert_data(RDF::Graph.new).graph('http://example.org/')
+    # @param data [Array<RDF::Statement>, RDF::Enumerable]
+    # @param options [Hash{Symbol => Object}]
     def insert_data(*arguments, **options); end
+
+    # Load statements into the graph
+    #
+    # @example LOAD <http://example.org/data.rdf>
+    #   load(RDF::URI(http://example.org/data.rdf))
+    # @example LOAD SILENT <http://example.org/data.rdf>
+    #   load(RDF::URI(http://example.org/data.rdf)).silent
+    #   load(RDF::URI(http://example.org/data.rdf), silent: true)
+    # @example LOAD <http://example.org/data.rdf> INTO <http://example.org/data.rdf>
+    #   load(RDF::URI(http://example.org/data.rdf)).into(RDF::URI(http://example.org/data.rdf))
+    #   load(RDF::URI(http://example.org/data.rdf), into: RDF::URI(http://example.org/data.rdf))
+    # @param from [RDF::URI]
+    # @param options [Hash{Symbol => Object}]
+    # @param [RDF::URI] [Hash] a customizable set of options
+    # @param [Boolean] [Hash] a customizable set of options
     def load(*arguments, **options); end
   end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#add
 class SPARQL::Client::Update::Add < ::SPARQL::Client::Update::Operation
   def to_s; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#clear
 class SPARQL::Client::Update::Clear < ::SPARQL::Client::Update::Operation
+  # Cause data to be cleared from all graphs
+  #
+  # @return [self]
   def all; end
+
+  # Cause data to be cleared from the default graph
+  #
+  # @return [self]
   def default; end
+
+  # Clear always returns statements
+  #
+  # @return [false]
   def expects_statements?; end
+
+  # Cause data to be cleared from graph specified by `uri`
+  #
+  # @param uri [RDF::URI]
+  # @return [self]
   def graph(uri); end
+
+  # Cause data to be cleared from named graphs
+  #
+  # @return [self]
   def named; end
+
   def to_s; end
+
+  # Returns the value of attribute uri.
   def uri; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#copy
 class SPARQL::Client::Update::Copy < ::SPARQL::Client::Update::Operation
   def to_s; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#create
 class SPARQL::Client::Update::Create < ::SPARQL::Client::Update::Operation
+  # @param options [Hash{Symbol => Object}]
+  # @return [Create] a new instance of Create
   def initialize(uri, **options); end
 
   def to_s; end
+
+  # Returns the value of attribute uri.
   def uri; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#deleteData
 class SPARQL::Client::Update::DeleteData < ::SPARQL::Client::Update::Operation
+  # Delete statements from the graph
+  #
+  # @example DELETE DATA \{ <http://example.org/jhacker> <http://xmlns.com/foaf/0.1/name> \"J. Random Hacker\" .\}
+  #   data = RDF::Graph.new do |graph|
+  #   graph << [RDF::URI('http://example.org/jhacker'), RDF::Vocab::FOAF.name, "J. Random Hacker"]
+  #   end
+  #   delete_data(data)
+  # @param data [Array<RDF::Statement>, RDF::Enumerable]
+  # @param options [Hash{Symbol => Object}]
+  # @return [DeleteData] a new instance of DeleteData
   def initialize(data, **options); end
 
+  # @return [RDF::Enumerable]
   def data; end
+
+  # Cause data to be deleted from the graph specified by `uri`
+  #
+  # @param uri [RDF::URI]
+  # @return [self]
   def graph(uri); end
+
   def to_s; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#deleteInsert
 class SPARQL::Client::Update::DeleteInsert < ::SPARQL::Client::Update::Operation
+  # @return [DeleteInsert] a new instance of DeleteInsert
   def initialize(_delete_graph, _insert_graph = T.unsafe(nil), _where_graph = T.unsafe(nil), **options); end
 
+  # Returns the value of attribute delete_graph.
   def delete_graph; end
+
+  # Cause data to be deleted and inserted from the graph specified by `uri`
+  #
+  # @param uri [RDF::URI]
+  # @return [self]
   def graph(uri); end
+
+  # Returns the value of attribute insert_graph.
   def insert_graph; end
+
   def to_s; end
+
+  # Returns the value of attribute where_graph.
   def where_graph; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#drop
 class SPARQL::Client::Update::Drop < ::SPARQL::Client::Update::Clear
   def to_s; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#insertData
 class SPARQL::Client::Update::InsertData < ::SPARQL::Client::Update::Operation
+  # Insert statements into the graph
+  #
+  # @example INSERT DATA \{ <http://example.org/jhacker> <http://xmlns.com/foaf/0.1/name> \"J. Random Hacker\" .\}
+  #   data = RDF::Graph.new do |graph|
+  #   graph << [RDF::URI('http://example.org/jhacker'), RDF::Vocab::FOAF.name, "J. Random Hacker"]
+  #   end
+  #   insert_data(data)
+  # @param data [Array<RDF::Statement>, RDF::Enumerable]
+  # @param options [Hash{Symbol => Object}]
+  # @return [InsertData] a new instance of InsertData
   def initialize(data, **options); end
 
+  # @return [RDF::Enumerable]
   def data; end
+
+  # InsertData always returns result set
+  #
+  # @return [true]
   def expects_statements?; end
+
+  # Cause data to be inserted into the graph specified by `uri`
+  #
+  # @param uri [RDF::URI]
+  # @return [self]
   def graph(uri); end
+
   def to_s; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#load
 class SPARQL::Client::Update::Load < ::SPARQL::Client::Update::Operation
+  # Load statements into the graph
+  #
+  # @example LOAD <http://example.org/data.rdf>
+  #   load(RDF::URI(http://example.org/data.rdf))
+  # @example LOAD SILENT<http://example.org/data.rdf>
+  #   load(RDF::URI(http://example.org/data.rdf)).silent
+  #   load(RDF::URI(http://example.org/data.rdf), silent: true)
+  # @example LOAD <http://example.org/data.rdf> INTO <http://example.org/data.rdf>
+  #   load(RDF::URI(http://example.org/data.rdf)).into(RDF::URI(http://example.org/data.rdf))
+  #   load(RDF::URI(http://example.org/data.rdf), into: RDF::URI(http://example.org/data.rdf))
+  # @option [RDF::URI]
+  # @option [Boolean]
+  # @param from [RDF::URI]
+  # @param options [Hash{Symbol => Object}]
+  # @param [RDF::URI] [Hash] a customizable set of options
+  # @param [Boolean] [Hash] a customizable set of options
+  # @return [Load] a new instance of Load
   def initialize(from, into: T.unsafe(nil), **options); end
 
+  # Returns the value of attribute from.
   def from; end
+
+  # Cause data to be loaded into graph specified by `uri`
+  #
+  # @param uri [RDF::URI]
+  # @return [self]
   def into(uri); end
+
   def to_s; end
 end
 
+# @see https://www.w3.org/TR/sparql11-update/#move
 class SPARQL::Client::Update::Move < ::SPARQL::Client::Update::Operation
   def to_s; end
 end
 
 class SPARQL::Client::Update::Operation
+  # @return [Operation] a new instance of Operation
   def initialize(*arguments, **options); end
 
+  # Generic Update always returns statements
+  #
+  # @return [true]
   def expects_statements?; end
+
+  # Returns the value of attribute options.
   def options; end
+
+  # Set `silent` option
   def silent; end
 end
 
 module SPARQL::Client::VERSION
   class << self
+    # @return [Array(Integer, Integer, Integer)]
     def to_a; end
+
+    # @return [String]
     def to_s; end
+
+    # @return [String]
     def to_str; end
   end
 end

@@ -24,36 +24,184 @@ module RDF
   end
 end
 
+# An aggregated RDF datset.
+#
+# Aggregates the default and named graphs from one or more instances
+# implementing RDF::Queryable. By default, the aggregate projects
+# no default or named graphs, which must be added explicitly.
+#
+# Adding the existing default graph (identified with the name `false`)
+# adds the merge of all default graphs from the specified `queryable`
+# instances.
+#
+# Adding a named graph, adds the last graph found having that name
+# from the specified `queryable` instances.
+#
+# Updating a previously non-existing named graph, appends to the last source. Updating the default graph updates to the merge of the graphs.
+#
+# @example Constructing an aggregate with arguments
+#   aggregate = RDF::AggregateRepo.new(repo1, repo2)
+# @example Constructing an aggregate with closure
+#   aggregate = RDF::AggregateRepo.new do
+#   source repo1
+#   source repo2
+#   default false
+#   named   RDF::URI("http://example/")
+#   named   RDF::URI("http://other/")
+#   end
+# @todo Allow graph names to reassigned with queryable
 class RDF::AggregateRepo < ::RDF::Dataset
+  # Create a new aggregation instance.
+  #
+  # @overload initialize
+  # @return [AggregateRepo] a new instance of AggregateRepo
   def initialize(*queryable, &block); end
 
+  # Add a queryable to the set of constituent queryable instances
+  #
+  # @param queryable [RDF::Queryable]
+  # @return [RDF::AggregateRepo] self
   def add(queryable); end
+
+  # Returns the number of RDF statements in all constituent graphs.
+  #
+  # @return [Integer]
+  # @see RDF::Countable#count
   def count; end
+
+  # Set the default graph based on zero or more
+  # named graphs, or the merge of all default graphs if `false`
+  #
+  # @param names [Array<RDF::Resource>, false]
+  # @return [RDF::AggregateRepo] self
   def default(*names); end
+
+  # Default graph of this aggregate, either a projection of the source
+  # default graph (if `false`), a particular named graph from the
+  # last source in which it appears, or a MergeGraph composed of the
+  # graphs which compose it.
+  #
+  # @return [RDF::Graph]
   def default_graph; end
+
+  # Names of the named graphs making up the default graph, or
+  # false, if it is made up from the merger of all default
+  # graphs
+  #
+  # @return [Array<RDF::URI, false>]
   def defaults; end
+
+  # Returns `true` all constituent graphs are durable.
+  #
+  # @return [Boolean]
+  # @see RDF::Durable#durable?
   def durable?; end
+
+  # Enumerates each RDF statement in constituent graphs
+  #
+  # @return [Enumerator]
+  # @see RDF::Enumerable#each
+  # @yield [statement]
+  # @yieldparam statement [Statement]
   def each(&block); end
+
+  # Iterate over each graph, in order, finding named graphs from the most recently added `source`.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which graphs are yielded is undefined.
+  #
+  # @overload each_graph
+  # @overload each_graph
+  # @see RDF::Enumerable#each_graph
   def each_graph(&block); end
+
+  # Iterates the given block for each RDF statement.
+  #
+  # If no block was given, returns an enumerator.
+  #
+  # The order in which statements are yielded is undefined.
+  #
+  # @overload each_statement
+  # @overload each_statement
+  # @return [void]
+  # @see RDF::Repository#each_statement
+  # @see RDF::Enumerable#each_statement
   def each_statement(&block); end
+
+  # Returns `true` if all constituent graphs are empty.
+  #
+  # @return [Boolean]
+  # @see RDF::Countable#empty?
   def empty?; end
+
+  # Returns `true` if any constituent grahp contains the given RDF graph.
+  #
+  # @param value [RDF::Resource, false] Use value `false` to query for the default graph
+  # @return [Boolean]
+  # @see RDF::Enumerable#has_graph?
   def has_graph?(value); end
+
+  # Returns `true` if any constituent graph contains the given RDF statement.
+  #
+  # @param statement [RDF::Statement]
+  # @return [Boolean]
+  # @see RDF::Enumerable#has_statement?
   def has_statement?(statement); end
+
+  # Add a named graph projection. Dynamically binds to the
+  # last `queryable` having a matching graph.
+  #
+  # @param name [RDF::Resource]
+  # @raise [ArgumentError]
+  # @return [RDF::AggregateRepo] self
   def named(name); end
+
+  # Add a queryable to the set of constituent queryable instances
+  #
+  # @param queryable [RDF::Queryable]
+  # @return [RDF::AggregateRepo] self
   def source(queryable); end
+
+  # The set of aggregated `queryable` instances included in this aggregate
+  #
+  # @return [Array<RDF::Queryable>]
   def sources; end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Enumerable#supports?
   def supports?(feature); end
+
+  # Not writable
+  #
+  # @return [false]
   def writable?; end
 
   protected
 
+  # Queries each constituent graph for RDF statements matching the given `pattern`, yielding each matched statement to the given block.
+  #
+  # If called without a block, returns an enumerator
+  #
+  # @param pattern [RDF::Query::Pattern] the query pattern to match
+  # @return [void] ignored
+  # @see RDF::Queryable#query_pattern
+  # @yield [statement]
+  # @yieldparam statement [RDF::Statement]
+  # @yieldreturn [void] ignored
   def query_pattern(pattern, **options, &block); end
 end
 
 module RDF::AggregateRepo::VERSION
   class << self
+    # @return [Array(Integer, Integer, Integer)]
     def to_a; end
+
+    # @return [String]
     def to_s; end
+
+    # @return [String]
     def to_str; end
   end
 end
@@ -65,6 +213,21 @@ RDF::AggregateRepo::VERSION::TINY = T.let(T.unsafe(nil), String)
 RDF::AggregateRepo::VERSION::VERSION_FILE = T.let(T.unsafe(nil), String)
 RDF::IRI = RDF::URI
 
+# A Merged graph.
+#
+# Implements a merged graph, containing statements from one or more source graphs. This is done through lazy evaluation of the sources, so that a copy of each source isn't required.
+#
+# This class can also be used to change the context (graph name) of triples from the name used in the source.
+#
+# @example Constructing a merge with arguments
+#   aggregate = RDF::AggregateRepo.new(repo1, repo2)
+# @example Constructing an aggregate with closure
+#   aggregate = RDF::MergeGraph.new do
+#   source graph1, context1
+#   source graph2, context2
+#   name false
+#   end
+# @see https://www.w3.org/TR/rdf11-mt/#dfn-merge
 class RDF::MergeGraph
   include ::RDF::Value
   include ::Enumerable
@@ -72,27 +235,104 @@ class RDF::MergeGraph
   include ::RDF::Enumerable
   include ::RDF::Queryable
 
+  # Create a new aggregation instance.
+  #
+  # @param graph_name [RDF::Resource]
+  # @param name [RDF::Resource] alias for `graph_name`
+  # @return [MergeGraph] a new instance of MergeGraph
+  # @yield merger
+  # @yieldparam self [RDF::MergeGraph]
+  # @yieldreturn [void] ignored
   def initialize(graph_name: T.unsafe(nil), name: T.unsafe(nil), &block); end
 
+  # Add a queryable to the set of constituent queryable instances
+  #
+  # @param queryable [RDF::Queryable]
+  # @param graph_name [RDF::Resource]
+  # @return [RDF::MergeGraph] self
   def add(queryable, graph_name); end
+
+  # @private
+  # @see RDF::Countable#count
   def count; end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Durable#durable?
   def durable?; end
+
+  # @see RDF::Enumerable#each_statement
   def each(&block); end
+
+  # Iterate over each graph, in order, finding named graphs from the most recently added `source`.
+  #
+  # @see RDF::Enumerable#each_graph
   def each_graph(&block); end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Countable#empty?
   def empty?; end
+
+  # Returns `true` to indicate that this is a graph.
+  #
+  # @return [Boolean]
   def graph?; end
+
+  # Name of this graph, used for setting the context on returned `Statements`.
+  #
+  # @return [Array<RDF::URI, false>]
   def graph_name; end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Enumerable#has_graph?
   def has_graph?(value); end
+
+  # @private
+  # @return [Boolean]
+  # @see RDF::Enumerable#has_statement?
   def has_statement?(statement); end
+
+  # Set the graph_name for statements in this graph
+  #
+  # @param name [RDF::Resource, false]
+  # @return [RDF::MergeGraph] self
   def name(name); end
+
+  # Returns `true` if this is a named graph.
+  #
+  # @note The next release, graphs will not be named, this will return false
+  # @return [Boolean]
   def named?; end
+
+  # Add a queryable to the set of constituent queryable instances
+  #
+  # @param queryable [RDF::Queryable]
+  # @param graph_name [RDF::Resource]
+  # @return [RDF::MergeGraph] self
   def source(queryable, graph_name); end
+
+  # The set of aggregated `queryable` instances included in this aggregate
+  #
+  # @return [Array<Array<(RDF::Queryable, RDF::Resource)>>]
   def sources; end
+
+  # Returns `true` if this is a unnamed graph.
+  #
+  # @note The next release, graphs will not be named, this will return true
+  # @return [Boolean]
   def unnamed?; end
+
+  # MergeGraph is writable if any source is writable. Updates go to the last writable source.
+  #
+  # @return [Boolean]
   def writable?; end
 
   protected
 
+  # @private
+  # @see RDF::Queryable#query_pattern
   def query_pattern(pattern, **options, &block); end
 end
 

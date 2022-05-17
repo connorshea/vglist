@@ -9,17 +9,49 @@ module FactoryBot
   extend ::FactoryBot::Syntax::Default
 
   class << self
+    # Returns the value of attribute aliases.
     def aliases; end
+
+    # Sets the attribute aliases
+    #
+    # @param value the value to set the attribute aliases to.
     def aliases=(_arg0); end
+
     def aliases_for(attribute); end
     def automatically_define_enum_traits; end
     def automatically_define_enum_traits=(val); end
+
+    # Set the starting value for ids when using the build_stubbed strategy
+    #
+    # Arguments:
+    # * starting_id +Integer+
+    #   The new starting id value.
     def build_stubbed_starting_id=(starting_id); end
+
+    # An Array of strings specifying locations that should be searched for
+    # factory definitions. By default, factory_bot will attempt to require
+    # "factories", "test/factories" and "spec/factories". Only the first
+    # existing file will be loaded.
     def definition_file_paths; end
+
+    # An Array of strings specifying locations that should be searched for
+    # factory definitions. By default, factory_bot will attempt to require
+    # "factories", "test/factories" and "spec/factories". Only the first
+    # existing file will be loaded.
     def definition_file_paths=(_arg0); end
+
     def factories(*_arg0, &_arg1); end
     def find_definitions; end
+
+    # Look for errors in factories and (optionally) their traits.
+    # Parameters:
+    # factories - which factories to lint; omit for all factories
+    # options:
+    #   traits: true - to lint traits as well as factories
+    #   strategy: :create - to specify the strategy for linting
+    #   verbose: true - to include full backtraces for each linting error
     def lint(*args); end
+
     def register_strategy(*_arg0, &_arg1); end
     def reload; end
     def rewind_sequences(*_arg0, &_arg1); end
@@ -29,96 +61,196 @@ module FactoryBot
   end
 end
 
+# Raised when attempting to pass a block to an association definition
 class FactoryBot::AssociationDefinitionError < ::RuntimeError; end
 
+# @api private
 class FactoryBot::Attribute
+  # @api private
+  # @return [Attribute] a new instance of Attribute
   def initialize(name, ignored); end
 
+  # @api private
+  # @return [Boolean]
   def alias_for?(attr); end
+
+  # @api private
+  # @return [Boolean]
   def association?; end
+
+  # @api private
   def ignored; end
+
+  # @api private
   def name; end
+
+  # @api private
   def to_proc; end
 end
 
+# @api private
 class FactoryBot::Attribute::Association < ::FactoryBot::Attribute
+  # @api private
+  # @return [Association] a new instance of Association
   def initialize(name, factory, overrides); end
 
+  # @api private
+  # @return [Boolean]
   def association?; end
+
+  # @api private
   def factory; end
+
+  # @api private
   def to_proc; end
 end
 
+# @api private
 class FactoryBot::Attribute::Dynamic < ::FactoryBot::Attribute
+  # @api private
+  # @return [Dynamic] a new instance of Dynamic
   def initialize(name, ignored, block); end
 
+  # @api private
   def to_proc; end
 end
 
+# @api private
 class FactoryBot::Attribute::Sequence < ::FactoryBot::Attribute
+  # @api private
+  # @return [Sequence] a new instance of Sequence
   def initialize(name, sequence, ignored); end
 
+  # @api private
   def to_proc; end
 end
 
+# @api private
 class FactoryBot::AttributeAssigner
+  # @api private
+  # @return [AttributeAssigner] a new instance of AttributeAssigner
   def initialize(evaluator, build_class, &instance_builder); end
 
+  # @api private
   def hash; end
+
+  # @api private
   def object; end
 
   private
 
+  # @api private
   def alias_names_to_ignore; end
+
+  # @api private
   def association_names; end
+
+  # @api private
   def attribute_names_to_assign; end
+
+  # @api private
   def attributes_to_set_on_hash; end
+
+  # @api private
   def attributes_to_set_on_instance; end
+
+  # @api private
   def build_class_instance; end
+
+  # @api private
   def build_hash; end
+
+  # @api private
   def decorated_evaluator; end
+
+  # @api private
   def get(attribute_name); end
+
+  # @api private
   def hash_instance_methods_to_respond_to; end
+
+  # @api private
+  # @return [Boolean]
   def ignorable_alias?(attribute, override); end
+
+  # @api private
   def ignored_attribute_names; end
+
+  # @api private
   def method_tracking_evaluator; end
+
+  # @api private
   def methods_invoked_on_evaluator; end
+
+  # @api private
   def non_ignored_attribute_names; end
+
+  # @api private
   def override_names; end
 end
 
+# Raised when defining an attribute twice in the same factory
 class FactoryBot::AttributeDefinitionError < ::RuntimeError; end
 
+# @api private
 class FactoryBot::AttributeList
   include ::Enumerable
 
+  # @api private
+  # @return [AttributeList] a new instance of AttributeList
   def initialize(name = T.unsafe(nil), attributes = T.unsafe(nil)); end
 
+  # @api private
   def apply_attributes(attributes_to_apply); end
+
+  # @api private
   def associations; end
+
+  # @api private
   def define_attribute(attribute); end
+
+  # @api private
   def each(&block); end
+
+  # @api private
   def ignored; end
+
+  # @api private
   def names; end
+
+  # @api private
   def non_ignored; end
 
   private
 
+  # @api private
   def add_attribute(attribute); end
+
+  # @api private
+  # @return [Boolean]
   def attribute_defined?(attribute_name); end
+
+  # @api private
   def ensure_attribute_not_defined!(attribute); end
+
+  # @api private
   def ensure_attribute_not_self_referencing!(attribute); end
 end
 
 class FactoryBot::Callback
+  # @return [Callback] a new instance of Callback
   def initialize(name, block); end
 
   def ==(other); end
+
+  # Returns the value of attribute name.
   def name; end
+
   def run(instance, evaluator); end
 
   protected
 
+  # Returns the value of attribute block.
   def block; end
 
   private
@@ -126,110 +258,185 @@ class FactoryBot::Callback
   def syntax_runner; end
 end
 
+# @api private
 class FactoryBot::CallbacksObserver
+  # @api private
+  # @return [CallbacksObserver] a new instance of CallbacksObserver
   def initialize(callbacks, evaluator); end
 
+  # @api private
   def update(name, result_instance); end
 
   private
 
+  # @api private
   def callbacks_by_name(name); end
 end
 
+# @api private
 class FactoryBot::Configuration
+  # @api private
+  # @return [Configuration] a new instance of Configuration
   def initialize; end
 
   def after(*_arg0, &_arg1); end
   def before(*_arg0, &_arg1); end
   def callback(*_arg0, &_arg1); end
+
+  # @api private
   def callback_names; end
+
   def callbacks(*_arg0, &_arg1); end
   def constructor(*_arg0, &_arg1); end
+
+  # @api private
   def factories; end
+
+  # @api private
   def initialize_with(&block); end
+
+  # @api private
   def inline_sequences; end
+
+  # @api private
   def sequences; end
+
   def skip_create(*_arg0, &_arg1); end
+
+  # @api private
   def strategies; end
+
   def to_create(*_arg0, &_arg1); end
+
+  # @api private
   def traits; end
 end
 
+# @api private
 class FactoryBot::Declaration
+  # @api private
+  # @return [Declaration] a new instance of Declaration
   def initialize(name, ignored = T.unsafe(nil)); end
 
+  # @api private
   def name; end
+
+  # @api private
   def to_attributes; end
 
   protected
 
+  # @api private
   def ignored; end
 end
 
+# @api private
 class FactoryBot::Declaration::Association < ::FactoryBot::Declaration
+  # @api private
+  # @return [Association] a new instance of Association
   def initialize(name, *options); end
 
+  # @api private
   def ==(other); end
 
   protected
 
+  # @api private
   def options; end
 
   private
 
+  # @api private
   def build; end
+
+  # @api private
   def factory_name; end
+
+  # @api private
   def overrides; end
+
+  # @api private
   def raise_if_arguments_are_declarations!; end
+
+  # @api private
   def traits; end
 end
 
+# @api private
 class FactoryBot::Declaration::Dynamic < ::FactoryBot::Declaration
+  # @api private
+  # @return [Dynamic] a new instance of Dynamic
   def initialize(name, ignored = T.unsafe(nil), block = T.unsafe(nil)); end
 
+  # @api private
   def ==(other); end
 
   protected
 
+  # @api private
   def block; end
 
   private
 
+  # @api private
   def build; end
 end
 
+# @api private
 class FactoryBot::Declaration::Implicit < ::FactoryBot::Declaration
+  # @api private
+  # @return [Implicit] a new instance of Implicit
   def initialize(name, factory = T.unsafe(nil), ignored = T.unsafe(nil)); end
 
+  # @api private
   def ==(other); end
 
   protected
 
+  # @api private
   def factory; end
 
   private
 
+  # @api private
   def build; end
 end
 
+# @api private
 class FactoryBot::DeclarationList
   include ::Enumerable
 
+  # @api private
+  # @return [DeclarationList] a new instance of DeclarationList
   def initialize(name = T.unsafe(nil)); end
 
+  # @api private
   def attributes; end
+
+  # @api private
   def declare_attribute(declaration); end
+
+  # @api private
   def each(&block); end
+
+  # @api private
   def overridable; end
 
   private
 
+  # @api private
   def delete_declaration(declaration); end
+
+  # @api private
+  # @return [Boolean]
   def overridable?; end
+
+  # @api private
   def to_attributes; end
 end
 
 class FactoryBot::Decorator < ::BasicObject
+  # @return [Decorator] a new instance of Decorator
   def initialize(component); end
 
   def method_missing(*_arg0, &_arg1); end
@@ -237,6 +444,7 @@ class FactoryBot::Decorator < ::BasicObject
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   class << self
@@ -245,6 +453,7 @@ class FactoryBot::Decorator < ::BasicObject
 end
 
 class FactoryBot::Decorator::AttributeHash < ::FactoryBot::Decorator
+  # @return [AttributeHash] a new instance of AttributeHash
   def initialize(component, attributes = T.unsafe(nil)); end
 
   def attributes; end
@@ -255,6 +464,7 @@ class FactoryBot::Decorator::DisallowsDuplicatesRegistry < ::FactoryBot::Decorat
 end
 
 class FactoryBot::Decorator::InvocationTracker < ::FactoryBot::Decorator
+  # @return [InvocationTracker] a new instance of InvocationTracker
   def initialize(component); end
 
   def __invoked_methods__; end
@@ -262,47 +472,111 @@ class FactoryBot::Decorator::InvocationTracker < ::FactoryBot::Decorator
 end
 
 class FactoryBot::Decorator::NewConstructor < ::FactoryBot::Decorator
+  # @return [NewConstructor] a new instance of NewConstructor
   def initialize(component, build_class); end
 
   def new(*_arg0, &_arg1); end
 end
 
+# @api private
 class FactoryBot::Definition
+  # @api private
+  # @return [Definition] a new instance of Definition
   def initialize(name, base_traits = T.unsafe(nil)); end
 
+  # @api private
   def add_callback(callback); end
+
+  # @api private
   def after(*names, &block); end
+
+  # @api private
   def append_traits(new_traits); end
+
+  # @api private
   def attributes; end
+
+  # @api private
   def before(*names, &block); end
+
+  # @api private
   def callback(*names, &block); end
+
+  # @api private
   def callbacks; end
+
+  # @api private
   def compile(klass = T.unsafe(nil)); end
+
+  # @api private
   def constructor; end
+
+  # @api private
   def declarations; end
+
   def declare_attribute(*_arg0, &_arg1); end
+
+  # @api private
   def define_constructor(&block); end
+
+  # @api private
   def define_trait(trait); end
+
+  # @api private
   def defined_traits; end
+
+  # @api private
   def inherit_traits(new_traits); end
+
+  # @api private
   def name; end
+
+  # @api private
   def overridable; end
+
+  # @api private
   def register_enum(enum); end
+
+  # @api private
   def registered_enums; end
+
+  # @api private
   def skip_create; end
+
+  # @api private
   def to_create(&block); end
 
   private
 
+  # @api private
   def additional_traits; end
+
+  # @api private
   def aggregate_from_traits_and_self(method_name, &block); end
+
+  # @api private
   def automatically_register_defined_enums(klass); end
+
+  # @api private
+  # @return [Boolean]
   def automatically_register_defined_enums?(klass); end
+
+  # @api private
   def base_traits; end
+
+  # @api private
   def error_with_definition_name(error); end
+
+  # @api private
   def expand_enum_traits(klass); end
+
+  # @api private
   def initialize_copy(source); end
+
+  # @api private
   def trait_by_name(name); end
+
+  # @api private
   def trait_for(name); end
 end
 
@@ -323,49 +597,212 @@ class FactoryBot::DefinitionHierarchy
 end
 
 class FactoryBot::DefinitionProxy
+  # @return [DefinitionProxy] a new instance of DefinitionProxy
   def initialize(definition, ignore = T.unsafe(nil)); end
 
+  # Adds an attribute to the factory.
+  # The attribute value will be generated "lazily"
+  # by calling the block whenever an instance is generated.
+  # The block will not be called if the
+  # attribute is overridden for a specific instance.
+  #
+  # Arguments:
+  # * name: +Symbol+ or +String+
+  #   The name of this attribute. This will be assigned using "name=" for
+  #   generated instances.
   def add_attribute(name, &block); end
+
   def after(*_arg0, &_arg1); end
+
+  # Adds an attribute that builds an association. The associated instance will
+  # be built using the same build strategy as the parent instance.
+  #
+  # Example:
+  #   factory :user do
+  #     name 'Joey'
+  #   end
+  #
+  #   factory :post do
+  #     association :author, factory: :user
+  #   end
+  #
+  # Arguments:
+  # * name: +Symbol+
+  #   The name of this attribute.
+  # * options: +Hash+
+  #
+  # Options:
+  # * factory: +Symbol+ or +String+
+  #    The name of the factory to use when building the associated instance.
+  #    If no name is given, the name of the attribute is assumed to be the
+  #    name of the factory. For example, a "user" association will by
+  #    default use the "user" factory.
   def association(name, *options); end
+
   def before(*_arg0, &_arg1); end
   def callback(*_arg0, &_arg1); end
+
+  # Returns the value of attribute child_factories.
   def child_factories; end
+
   def factory(name, options = T.unsafe(nil), &block); end
   def initialize_with(&block); end
+
+  # Calls add_attribute using the missing method name as the name of the
+  # attribute, so that:
+  #
+  #   factory :user do
+  #     name { 'Billy Idol' }
+  #   end
+  #
+  # and:
+  #
+  #   factory :user do
+  #     add_attribute(:name) { 'Billy Idol' }
+  #   end
+  #
+  # are equivalent.
+  #
+  # If no argument or block is given, factory_bot will first look for an
+  # association, then for a sequence, and finally for a trait with the same
+  # name. This means that given an "admin" trait, an "email" sequence, and an
+  # "account" factory:
+  #
+  #   factory :user, traits: [:admin] do
+  #     email { generate(:email) }
+  #     association :account
+  #   end
+  #
+  # and:
+  #
+  #   factory :user do
+  #     admin
+  #     email
+  #     account
+  #   end
+  #
+  # are equivalent.
   def method_missing(name, *args, &block); end
+
+  # Adds an attribute that will have unique values generated by a sequence with
+  # a specified format.
+  #
+  # The result of:
+  #   factory :user do
+  #     sequence(:email) { |n| "person#{n}@example.com" }
+  #   end
+  #
+  # Is equal to:
+  #   sequence(:email) { |n| "person#{n}@example.com" }
+  #
+  #   factory :user do
+  #     email { FactoryBot.generate(:email) }
+  #   end
+  #
+  # Except that no globally available sequence will be defined.
   def sequence(name, *args, &block); end
+
+  # @raise [FactoryBot::MethodDefinitionError]
   def singleton_method_added(name); end
+
   def skip_create; end
   def to_create(&block); end
   def trait(name, &block); end
+
+  # Creates traits for enumerable values.
+  #
+  # Example:
+  #   factory :task do
+  #     traits_for_enum :status, [:started, :finished]
+  #   end
+  #
+  # Equivalent to:
+  #   factory :task do
+  #     trait :started do
+  #       status { :started }
+  #     end
+  #
+  #     trait :finished do
+  #       status { :finished }
+  #     end
+  #   end
+  #
+  # Example:
+  #   factory :task do
+  #     traits_for_enum :status, {started: 1, finished: 2}
+  #   end
+  #
+  # Example:
+  #   class Task
+  #     def statuses
+  #       {started: 1, finished: 2}
+  #     end
+  #   end
+  #
+  #   factory :task do
+  #     traits_for_enum :status
+  #   end
+  #
+  # Both equivalent to:
+  #   factory :task do
+  #     trait :started do
+  #       status { 1 }
+  #     end
+  #
+  #     trait :finished do
+  #       status { 2 }
+  #     end
+  #   end
+  #
+  #
+  # Arguments:
+  #   attribute_name: +Symbol+ or +String+
+  #     the name of the attribute these traits will set the value of
+  #   values: +Array+, +Hash+, or other +Enumerable+
+  #     An array of trait names, or a mapping of trait names to values for
+  #     those traits. When this argument is not provided, factory_bot will
+  #     attempt to get the values by calling the pluralized `attribute_name`
+  #     class method.
   def traits_for_enum(attribute_name, values = T.unsafe(nil)); end
+
   def transient(&block); end
 
   private
 
   def __declare_attribute__(name, block); end
+
+  # @return [Boolean]
   def __valid_association_options?(options); end
 end
 
 FactoryBot::DefinitionProxy::UNPROXIED_METHODS = T.let(T.unsafe(nil), Array)
 FactoryBot::Deprecation = T.let(T.unsafe(nil), ActiveSupport::Deprecation)
+
+# Raised when a factory is defined with the same name as a previously-defined factory.
 class FactoryBot::DuplicateDefinitionError < ::RuntimeError; end
 
+# @api private
 class FactoryBot::Enum
+  # @api private
+  # @return [Enum] a new instance of Enum
   def initialize(attribute_name, values = T.unsafe(nil)); end
 
+  # @api private
   def build_traits(klass); end
 
   private
 
+  # @api private
   def build_trait(trait_name, attribute_name, value); end
+
+  # @api private
   def enum_values(klass); end
 end
 
 class FactoryBot::Evaluation
   include ::Observable
 
+  # @return [Evaluation] a new instance of Evaluation
   def initialize(evaluator, attribute_assigner, to_create); end
 
   def create(result_instance); end
@@ -374,119 +811,255 @@ class FactoryBot::Evaluation
   def object(*_arg0, &_arg1); end
 end
 
+# @api private
 class FactoryBot::Evaluator
+  # @api private
+  # @return [Evaluator] a new instance of Evaluator
   def initialize(build_strategy, overrides = T.unsafe(nil)); end
 
+  # @api private
   def __override_names__; end
+
+  # @api private
   def association(factory_name, *traits_and_overrides); end
+
   def attribute_lists; end
   def attribute_lists=(_arg0); end
   def attribute_lists?; end
+
+  # @api private
   def increment_sequence(sequence); end
+
+  # @api private
   def instance; end
+
+  # @api private
   def instance=(_arg0); end
+
+  # @api private
   def method_missing(method_name, *args, &block); end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def respond_to_missing?(method_name, _include_private = T.unsafe(nil)); end
 
   class << self
+    # @api private
     def attribute_list; end
+
     def attribute_lists; end
     def attribute_lists=(value); end
     def attribute_lists?; end
+
+    # @api private
     def define_attribute(name, &block); end
   end
 end
 
+# @api private
 class FactoryBot::EvaluatorClassDefiner
+  # @api private
+  # @return [EvaluatorClassDefiner] a new instance of EvaluatorClassDefiner
   def initialize(attributes, parent_class); end
 
+  # @api private
   def evaluator_class; end
 end
 
+# @api private
 class FactoryBot::Factory
+  # @api private
+  # @return [Factory] a new instance of Factory
   def initialize(name, options = T.unsafe(nil)); end
 
   def add_callback(*_arg0, &_arg1); end
   def append_traits(*_arg0, &_arg1); end
+
+  # @api private
   def associations; end
+
+  # @api private
   def build_class; end
+
+  # @api private
   def compile; end
+
   def constructor(*_arg0, &_arg1); end
   def declare_attribute(*_arg0, &_arg1); end
   def define_trait(*_arg0, &_arg1); end
   def defined_traits(*_arg0, &_arg1); end
+
+  # @api private
   def definition; end
+
+  # @api private
   def human_names; end
+
   def inherit_traits(*_arg0, &_arg1); end
+
+  # @api private
   def name; end
+
+  # Names for this factory, including aliases.
+  #
+  # Example:
+  #
+  #   factory :user, aliases: [:author] do
+  #     # ...
+  #   end
+  #
+  #   FactoryBot.create(:author).class
+  #   # => User
+  #
+  # Because an attribute defined without a value or block will build an
+  # association with the same name, this allows associations to be defined
+  # without factories, such as:
+  #
+  #   factory :user, aliases: [:author] do
+  #     # ...
+  #   end
+  #
+  #   factory :post do
+  #     author
+  #   end
+  #
+  #   FactoryBot.create(:post).author.class
+  #   # => User
+  #
+  # @api private
   def names; end
+
+  # @api private
   def run(build_strategy, overrides, &block); end
+
   def to_create(*_arg0, &_arg1); end
+
+  # @api private
   def with_traits(traits); end
 
   protected
 
+  # @api private
   def attributes; end
+
+  # @api private
   def build_hierarchy; end
+
+  # @api private
   def callbacks; end
+
+  # @api private
   def class_name; end
+
+  # @api private
   def compiled_constructor; end
+
+  # @api private
   def compiled_to_create; end
+
+  # @api private
   def evaluator_class; end
+
+  # @api private
   def hierarchy_class; end
+
+  # @api private
   def hierarchy_instance; end
 
   private
 
+  # @api private
   def assert_valid_options(options); end
+
+  # @api private
   def initialize_copy(source); end
+
+  # @api private
   def parent; end
 end
 
 class FactoryBot::FactoryRunner
+  # @return [FactoryRunner] a new instance of FactoryRunner
   def initialize(name, strategy, traits_and_overrides); end
 
   def run(runner_strategy = T.unsafe(nil), &block); end
 end
 
+# @api private
 module FactoryBot::Internal
   class << self
     def after(*_arg0, &_arg1); end
     def before(*_arg0, &_arg1); end
     def callbacks(*_arg0, &_arg1); end
+
+    # @api private
     def configuration; end
+
     def constructor(*_arg0, &_arg1); end
     def factories(*_arg0, &_arg1); end
+
+    # @api private
     def factory_by_name(name); end
+
     def initialize_with(*_arg0, &_arg1); end
     def inline_sequences(*_arg0, &_arg1); end
+
+    # @api private
     def register_default_strategies; end
+
+    # @api private
     def register_factory(factory); end
+
+    # @api private
     def register_inline_sequence(sequence); end
+
+    # @api private
     def register_sequence(sequence); end
+
+    # @api private
     def register_strategy(strategy_name, strategy_class); end
+
+    # @api private
     def register_trait(trait); end
+
+    # @api private
     def reset_configuration; end
+
+    # @api private
     def rewind_inline_sequences; end
+
+    # @api private
     def rewind_sequences; end
+
+    # @api private
     def sequence_by_name(name); end
+
     def sequences(*_arg0, &_arg1); end
     def skip_create(*_arg0, &_arg1); end
     def strategies(*_arg0, &_arg1); end
+
+    # @api private
     def strategy_by_name(name); end
+
     def to_create(*_arg0, &_arg1); end
+
+    # @api private
     def trait_by_name(name); end
+
     def traits(*_arg0, &_arg1); end
   end
 end
 
+# Raised when a callback is defined that has an invalid name
 class FactoryBot::InvalidCallbackNameError < ::RuntimeError; end
+
+# Raised when any factory is considered invalid
 class FactoryBot::InvalidFactoryError < ::RuntimeError; end
 
 class FactoryBot::Linter
+  # @return [Linter] a new instance of Linter
   def initialize(factories, strategy: T.unsafe(nil), traits: T.unsafe(nil), verbose: T.unsafe(nil)); end
 
   def lint!; end
@@ -496,15 +1069,23 @@ class FactoryBot::Linter
   def calculate_invalid_factories; end
   def error_message; end
   def error_message_type; end
+
+  # Returns the value of attribute factories_to_lint.
   def factories_to_lint; end
+
+  # Returns the value of attribute factory_strategy.
   def factory_strategy; end
+
+  # Returns the value of attribute invalid_factories.
   def invalid_factories; end
+
   def lint(factory); end
   def lint_factory(factory); end
   def lint_traits(factory); end
 end
 
 class FactoryBot::Linter::FactoryError
+  # @return [FactoryError] a new instance of FactoryError
   def initialize(wrapped_error, factory); end
 
   def location; end
@@ -513,46 +1094,76 @@ class FactoryBot::Linter::FactoryError
 end
 
 class FactoryBot::Linter::FactoryTraitError < ::FactoryBot::Linter::FactoryError
+  # @return [FactoryTraitError] a new instance of FactoryTraitError
   def initialize(wrapped_error, factory, trait_name); end
 
   def location; end
 end
 
+# Raised when a method is defined in a factory or trait with arguments
 class FactoryBot::MethodDefinitionError < ::RuntimeError; end
 
+# @api private
 class FactoryBot::NullFactory
+  # @api private
+  # @return [NullFactory] a new instance of NullFactory
   def initialize; end
 
   def attributes(*_arg0, &_arg1); end
   def callbacks(*_arg0, &_arg1); end
+
+  # @api private
   def class_name; end
+
+  # @api private
   def compile; end
+
   def constructor(*_arg0, &_arg1); end
   def defined_traits(*_arg0, &_arg1); end
+
+  # @api private
   def definition; end
+
+  # @api private
   def evaluator_class; end
+
+  # @api private
   def hierarchy_class; end
+
   def to_create(*_arg0, &_arg1); end
 end
 
+# @api private
 class FactoryBot::NullObject < ::BasicObject
+  # @api private
+  # @return [NullObject] a new instance of NullObject
   def initialize(methods_to_respond_to); end
 
+  # @api private
   def method_missing(name, *args, &block); end
+
+  # @api private
+  # @return [Boolean]
   def respond_to?(method); end
 end
 
 class FactoryBot::Registry
   include ::Enumerable
 
+  # @return [Registry] a new instance of Registry
   def initialize(name); end
 
   def [](name); end
   def clear; end
   def each(&block); end
   def find(name); end
+
+  # Returns the value of attribute name.
   def name; end
+
   def register(name, item); end
+
+  # @return [Boolean]
   def registered?(name); end
 
   private
@@ -560,29 +1171,55 @@ class FactoryBot::Registry
   def key_error_with_custom_message(key_error); end
 end
 
+# Sequences are defined using sequence within a FactoryBot.define block.
+# Sequence values are generated using next.
+#
+# @api private
 class FactoryBot::Sequence
+  # @api private
+  # @return [Sequence] a new instance of Sequence
   def initialize(name, *args, &proc); end
 
+  # @api private
   def name; end
+
+  # @api private
   def names; end
+
+  # @api private
   def next(scope = T.unsafe(nil)); end
+
+  # @api private
   def rewind; end
 
   private
 
+  # @api private
   def increment_value; end
+
+  # @api private
   def value; end
 end
 
+# @api private
 class FactoryBot::Sequence::EnumeratorAdapter
+  # @api private
+  # @return [EnumeratorAdapter] a new instance of EnumeratorAdapter
   def initialize(value); end
 
+  # @api private
   def next; end
+
+  # @api private
   def peek; end
+
+  # @api private
   def rewind; end
 end
 
+# Raised when attempting to register a sequence from a dynamic attribute block
 class FactoryBot::SequenceAbuseError < ::RuntimeError; end
+
 module FactoryBot::Strategy; end
 
 class FactoryBot::Strategy::AttributesFor
@@ -617,9 +1254,16 @@ class FactoryBot::Strategy::Stub
   private
 
   def clear_changes_information(result_instance); end
+
+  # @return [Boolean]
   def has_settable_id?(result_instance); end
+
+  # @return [Boolean]
   def missing_created_at?(result_instance); end
+
+  # @return [Boolean]
   def missing_updated_at?(result_instance); end
+
   def next_id; end
   def set_timestamps(result_instance); end
   def stub_database_interaction_on_result(result_instance); end
@@ -631,30 +1275,50 @@ end
 
 FactoryBot::Strategy::Stub::DISABLED_PERSISTENCE_METHODS = T.let(T.unsafe(nil), Array)
 
+# @api private
 class FactoryBot::StrategyCalculator
+  # @api private
+  # @return [StrategyCalculator] a new instance of StrategyCalculator
   def initialize(name_or_object); end
 
+  # @api private
   def strategy; end
 
   private
 
+  # @api private
+  # @return [Boolean]
   def strategy_is_object?; end
+
+  # @api private
   def strategy_name_to_object; end
 end
 
+# @api private
 class FactoryBot::StrategySyntaxMethodRegistrar
+  # @api private
+  # @return [StrategySyntaxMethodRegistrar] a new instance of StrategySyntaxMethodRegistrar
   def initialize(strategy_name); end
 
+  # @api private
   def define_strategy_methods; end
 
   private
 
+  # @api private
   def define_list_strategy_method; end
+
+  # @api private
   def define_pair_strategy_method; end
+
+  # @api private
   def define_singular_strategy_method; end
+
+  # @api private
   def define_syntax_method(name, &block); end
 
   class << self
+    # @api private
     def with_index(block, index); end
   end
 end
@@ -692,49 +1356,166 @@ class FactoryBot::Syntax::Default::ModifyDSL
   end
 end
 
+# This module is a container for all strategy methods provided by
+# FactoryBot. This includes all the default strategies provided ({Methods#build},
+# {Methods#create}, {Methods#build_stubbed}, and {Methods#attributes_for}), as
+# well as the complementary *_list and *_pair methods.
+#
+# @example singular factory execution
+#   # basic use case
+#   build(:completed_order)
+#
+#   # factory yielding its result to a block
+#   create(:post) do |post|
+#   create(:comment, post: post)
+#   end
+#
+#   # factory with attribute override
+#   attributes_for(:post, title: "I love Ruby!")
+#
+#   # factory with traits and attribute override
+#   build_stubbed(:user, :admin, :male, name: "John Doe")
+# @example multiple factory execution
+#   # basic use case
+#   build_list(:completed_order, 2)
+#   create_list(:completed_order, 2)
+#
+#   # factory with attribute override
+#   attributes_for_list(:post, 4, title: "I love Ruby!")
+#
+#   # factory with traits and attribute override
+#   build_stubbed_list(:user, 15, :admin, :male, name: "John Doe")
 module FactoryBot::Syntax::Methods
+  # (see #strategy_method)
+  # Generates a hash of attributes for a registered factory by name.
+  #
+  # @return [Hash] hash of attributes for the factory
   def attributes_for(name, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_list)
+  #
+  # @return [Array<Hash>] array of attribute hashes for the factory
   def attributes_for_list(name, amount, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_pair)
+  #
+  # @return [Array<Hash>] pair of attribute hashes for the factory
   def attributes_for_pair(name, *traits_and_overrides, &block); end
+
+  # (see #strategy_method)
+  # Builds a registered factory by name.
+  #
+  # @return [Object] instantiated object defined by the factory
   def build(name, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_list)
+  #
+  # @return [Array] array of built objects defined by the factory
   def build_list(name, amount, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_pair)
+  #
+  # @return [Array] pair of built objects defined by the factory
   def build_pair(name, *traits_and_overrides, &block); end
+
+  # (see #strategy_method)
+  # Builds a stubbed registered factory by name.
+  #
+  # @return [Object] instantiated object defined by the factory
   def build_stubbed(name, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_list)
+  #
+  # @return [Array] array of stubbed objects defined by the factory
   def build_stubbed_list(name, amount, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_pair)
+  #
+  # @return [Array] pair of stubbed objects defined by the factory
   def build_stubbed_pair(name, *traits_and_overrides, &block); end
+
+  # (see #strategy_method)
+  # Creates a registered factory by name.
+  #
+  # @return [Object] instantiated object defined by the factory
   def create(name, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_list)
+  #
+  # @return [Array] array of created objects defined by the factory
   def create_list(name, amount, *traits_and_overrides, &block); end
+
+  # (see #strategy_method_pair)
+  #
+  # @return [Array] pair of created objects defined by the factory
   def create_pair(name, *traits_and_overrides, &block); end
+
+  # Generates and returns the next value in a sequence.
+  #
+  # Arguments:
+  #   name: (Symbol)
+  #     The name of the sequence that a value should be generated for.
+  #
+  # Returns:
+  #   The next value in the sequence. (Object)
   def generate(name); end
+
+  # Generates and returns the list of values in a sequence.
+  #
+  # Arguments:
+  #   name: (Symbol)
+  #     The name of the sequence that a value should be generated for.
+  #   count: (Fixnum)
+  #     Count of values
+  #
+  # Returns:
+  #   The next value in the sequence. (Object)
   def generate_list(name, count); end
+
   def null(name, *traits_and_overrides, &block); end
   def null_list(name, amount, *traits_and_overrides, &block); end
   def null_pair(name, *traits_and_overrides, &block); end
 end
 
+# @api private
 class FactoryBot::SyntaxRunner
   include ::FactoryBot::Syntax::Methods
 end
 
+# @api private
 class FactoryBot::Trait
+  # @api private
+  # @return [Trait] a new instance of Trait
   def initialize(name, &block); end
 
+  # @api private
   def ==(other); end
+
   def add_callback(*_arg0, &_arg1); end
   def attributes(*_arg0, &_arg1); end
   def callbacks(*_arg0, &_arg1); end
   def constructor(*_arg0, &_arg1); end
   def declare_attribute(*_arg0, &_arg1); end
   def define_trait(*_arg0, &_arg1); end
+
+  # @api private
   def definition; end
+
+  # @api private
   def name; end
+
+  # @api private
   def names; end
+
   def to_create(*_arg0, &_arg1); end
 
   protected
 
+  # @api private
   def block; end
 end
 
+# Raised when a trait is defined that references itself.
 class FactoryBot::TraitDefinitionError < ::RuntimeError; end
+
 FactoryBot::VERSION = T.let(T.unsafe(nil), String)

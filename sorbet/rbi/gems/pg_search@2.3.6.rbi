@@ -16,9 +16,15 @@ module PgSearch
 
   class << self
     def disable_multisearch; end
+
+    # @private
     def included(base); end
+
     def multisearch(*args); end
+
+    # @return [Boolean]
     def multisearch_enabled?; end
+
     def multisearch_options; end
     def multisearch_options=(val); end
     def unaccent_function; end
@@ -27,6 +33,7 @@ module PgSearch
 end
 
 class PgSearch::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize(options, model); end
 
   def associated_columns; end
@@ -35,7 +42,10 @@ class PgSearch::Configuration
   def feature_options; end
   def features; end
   def ignore; end
+
+  # Returns the value of attribute model.
   def model; end
+
   def order_within_rank; end
   def query; end
   def ranking_sql; end
@@ -45,7 +55,11 @@ class PgSearch::Configuration
 
   def assert_valid_options(options); end
   def default_options; end
+
+  # Returns the value of attribute options.
   def options; end
+
+  # @return [Boolean]
   def using_tsvector_column?(options); end
 
   class << self
@@ -54,9 +68,12 @@ class PgSearch::Configuration
 end
 
 class PgSearch::Configuration::Association
+  # @return [Association] a new instance of Association
   def initialize(model, name, column_names); end
 
+  # Returns the value of attribute columns.
   def columns; end
+
   def join(primary_key); end
   def subselect_alias; end
   def table_name; end
@@ -67,15 +84,23 @@ class PgSearch::Configuration::Association
   def selects; end
   def selects_for_multiple_association; end
   def selects_for_singular_association; end
+
+  # @return [Boolean]
   def singular_association?; end
 end
 
 class PgSearch::Configuration::Column
+  # @return [Column] a new instance of Column
   def initialize(column_name, weight, model); end
 
   def full_name; end
+
+  # Returns the value of attribute name.
   def name; end
+
   def to_sql; end
+
+  # Returns the value of attribute weight.
   def weight; end
 
   private
@@ -86,9 +111,12 @@ class PgSearch::Configuration::Column
 end
 
 class PgSearch::Configuration::ForeignColumn < ::PgSearch::Configuration::Column
+  # @return [ForeignColumn] a new instance of ForeignColumn
   def initialize(column_name, weight, model, association); end
 
   def alias; end
+
+  # Returns the value of attribute weight.
   def weight; end
 
   private
@@ -116,7 +144,11 @@ class PgSearch::Document < ::ActiveRecord::Base
     def _reflections; end
     def _validators; end
     def defined_enums; end
+
+    # The logger might not have loaded yet.
+    # https://github.com/Casecommons/pg_search/issues/26
     def logger; end
+
     def page(num = T.unsafe(nil)); end
     def search(*args); end
   end
@@ -132,6 +164,7 @@ module PgSearch::Document::GeneratedAttributeMethods; end
 module PgSearch::Features; end
 
 class PgSearch::Features::DMetaphone
+  # @return [DMetaphone] a new instance of DMetaphone
   def initialize(query, options, columns, model, normalizer); end
 
   def conditions(*_arg0, &_arg1); end
@@ -139,20 +172,25 @@ class PgSearch::Features::DMetaphone
 
   private
 
+  # Returns the value of attribute tsearch.
   def tsearch; end
 end
 
+# Decorates a normalizer with dmetaphone processing.
 class PgSearch::Features::DMetaphone::Normalizer
+  # @return [Normalizer] a new instance of Normalizer
   def initialize(normalizer_to_wrap); end
 
   def add_normalization(original_sql); end
 
   private
 
+  # Returns the value of attribute normalizer_to_wrap.
   def normalizer_to_wrap; end
 end
 
 class PgSearch::Features::Feature
+  # @return [Feature] a new instance of Feature
   def initialize(query, options, all_columns, model, normalizer); end
 
   def connection(*_arg0, &_arg1); end
@@ -160,13 +198,24 @@ class PgSearch::Features::Feature
 
   private
 
+  # Returns the value of attribute all_columns.
   def all_columns; end
+
   def columns; end
   def document; end
+
+  # Returns the value of attribute model.
   def model; end
+
   def normalize(expression); end
+
+  # Returns the value of attribute normalizer.
   def normalizer; end
+
+  # Returns the value of attribute options.
   def options; end
+
+  # Returns the value of attribute query.
   def query; end
 
   class << self
@@ -187,14 +236,30 @@ class PgSearch::Features::TSearch < ::PgSearch::Features::Feature
   def deprecated_headline_options; end
   def dictionary; end
   def headline_options; end
+
+  # From http://www.postgresql.org/docs/8.3/static/textsearch-controls.html
+  #   0 (the default) ignores the document length
+  #   1 divides the rank by 1 + the logarithm of the document length
+  #   2 divides the rank by the document length
+  #   4 divides the rank by the mean harmonic distance between extents (this is implemented only by ts_rank_cd)
+  #   8 divides the rank by the number of unique words in document
+  #   16 divides the rank by 1 + the logarithm of the number of unique words in document
+  #   32 divides the rank by itself + 1
+  # The integer option controls several behaviors, so it is a bit mask: you can specify one or more behaviors
   def normalization; end
+
   def ts_headline; end
   def ts_headline_option_value(value); end
   def ts_headline_options; end
   def tsdocument; end
   def tsearch_rank; end
   def tsquery; end
+
+  # After this, the SQL expression evaluates to a string containing the term surrounded by single-quotes.
+  # If :prefix is true, then the term will have :* appended to the end.
+  # If :negated is true, then the term will have ! prepended to the front.
   def tsquery_expression(term_sql, negated:, prefix:); end
+
   def tsquery_for_term(unsanitized_term); end
 
   class << self
@@ -215,6 +280,8 @@ class PgSearch::Features::Trigram < ::PgSearch::Features::Feature
   def normalized_query; end
   def similarity; end
   def similarity_function; end
+
+  # @return [Boolean]
   def word_similarity?; end
 
   class << self
@@ -231,6 +298,7 @@ module PgSearch::Model
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(symbol, *args); end
 end
 
@@ -250,28 +318,41 @@ module PgSearch::Multisearch
 end
 
 class PgSearch::Multisearch::ModelNotMultisearchable < ::StandardError
+  # @return [ModelNotMultisearchable] a new instance of ModelNotMultisearchable
   def initialize(model_class); end
 
   def message; end
 end
 
 class PgSearch::Multisearch::Rebuilder
+  # @raise [ModelNotMultisearchable]
+  # @return [Rebuilder] a new instance of Rebuilder
   def initialize(model, time_source = T.unsafe(nil)); end
 
   def rebuild; end
 
   private
 
+  # @return [Boolean]
   def additional_attributes?; end
+
   def base_model_name; end
   def columns; end
+
+  # @return [Boolean]
   def conditional?; end
+
   def connection; end
   def content_expressions; end
   def current_time; end
   def documents_table; end
+
+  # @return [Boolean]
   def dynamic?; end
+
+  # Returns the value of attribute model.
   def model; end
+
   def model_name; end
   def model_table; end
   def primary_key; end
@@ -285,21 +366,27 @@ module PgSearch::Multisearchable
   def create_or_update_pg_search_document; end
   def pg_search_document_attrs; end
   def searchable_text; end
+
+  # @return [Boolean]
   def should_update_pg_search_document?; end
+
   def update_pg_search_document; end
 
   class << self
+    # @private
     def included(mod); end
   end
 end
 
 class PgSearch::Normalizer
+  # @return [Normalizer] a new instance of Normalizer
   def initialize(config); end
 
   def add_normalization(sql_expression); end
 
   private
 
+  # Returns the value of attribute config.
   def config; end
 end
 
@@ -314,19 +401,31 @@ end
 class PgSearch::Railtie < ::Rails::Railtie; end
 
 class PgSearch::ScopeOptions
+  # @return [ScopeOptions] a new instance of ScopeOptions
   def initialize(config); end
 
   def apply(scope); end
+
+  # Returns the value of attribute config.
   def config; end
+
   def connection(*_arg0, &_arg1); end
+
+  # Returns the value of attribute feature_options.
   def feature_options; end
+
+  # Returns the value of attribute model.
   def model; end
+
   def quoted_table_name(*_arg0, &_arg1); end
 
   private
 
   def conditions; end
+
+  # @raise [ArgumentError]
   def feature_for(feature_name); end
+
   def include_table_aliasing_for_rank(scope); end
   def order_within_rank; end
   def primary_key; end
@@ -348,7 +447,10 @@ end
 
 module PgSearch::ScopeOptions::WithPgSearchHighlight
   def highlight; end
+
+  # @raise [TypeError]
   def tsearch; end
+
   def with_pg_search_highlight; end
 
   class << self

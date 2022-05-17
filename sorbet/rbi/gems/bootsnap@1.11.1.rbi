@@ -7,6 +7,7 @@
 module Bootsnap
   extend ::Bootsnap
 
+  # @return [Boolean]
   def bundler?; end
 
   private
@@ -19,19 +20,33 @@ module Bootsnap
     def default_setup; end
     def instrumentation=(callback); end
     def instrumentation_enabled=(_arg0); end
+
+    # @return [Boolean]
     def iseq_cache_supported?; end
+
     def log!; end
+
+    # Returns the value of attribute logger.
     def logger; end
+
     def logger=(logger); end
+
+    # Allow the C extension to redefine `rb_get_path` without warning.
+    # Allow the C extension to redefine `rb_get_path` without warning.
     def rb_get_path(_arg0); end
+
     def setup(cache_dir:, development_mode: T.unsafe(nil), load_path_cache: T.unsafe(nil), autoload_paths_cache: T.unsafe(nil), disable_trace: T.unsafe(nil), compile_cache_iseq: T.unsafe(nil), compile_cache_yaml: T.unsafe(nil), compile_cache_json: T.unsafe(nil)); end
   end
 end
 
 module Bootsnap::CompileCache
   class << self
+    # @raise [PermissionError]
     def permission_error(path); end
+
     def setup(cache_dir:, iseq:, yaml:, json:); end
+
+    # @return [Boolean]
     def supported?; end
   end
 end
@@ -40,7 +55,9 @@ class Bootsnap::CompileCache::Error < ::StandardError; end
 
 module Bootsnap::CompileCache::ISeq
   class << self
+    # Returns the value of attribute cache_dir.
     def cache_dir; end
+
     def cache_dir=(cache_dir); end
     def compile_option_updated; end
     def fetch(path, cache_dir: T.unsafe(nil)); end
@@ -59,17 +76,32 @@ end
 
 module Bootsnap::CompileCache::JSON
   class << self
+    # Returns the value of attribute cache_dir.
     def cache_dir; end
+
     def cache_dir=(cache_dir); end
     def init!; end
     def input_to_output(data, kwargs); end
     def input_to_storage(payload, _); end
     def install!(cache_dir); end
+
+    # Returns the value of attribute msgpack_factory.
     def msgpack_factory; end
+
+    # Sets the attribute msgpack_factory
+    #
+    # @param value the value to set the attribute msgpack_factory to.
     def msgpack_factory=(_arg0); end
+
     def precompile(path); end
     def storage_to_output(data, kwargs); end
+
+    # Returns the value of attribute supported_options.
     def supported_options; end
+
+    # Sets the attribute supported_options
+    #
+    # @param value the value to set the attribute supported_options to.
     def supported_options=(_arg0); end
   end
 end
@@ -99,19 +131,43 @@ Bootsnap::CompileCache::UNCOMPILABLE = T.let(T.unsafe(nil), BasicObject)
 
 module Bootsnap::CompileCache::YAML
   class << self
+    # Returns the value of attribute cache_dir.
     def cache_dir; end
+
     def cache_dir=(cache_dir); end
+
+    # Returns the value of attribute implementation.
     def implementation; end
+
     def init!; end
     def install!(cache_dir); end
+
+    # Returns the value of attribute msgpack_factory.
     def msgpack_factory; end
+
+    # Sets the attribute msgpack_factory
+    #
+    # @param value the value to set the attribute msgpack_factory to.
     def msgpack_factory=(_arg0); end
+
     def patch; end
     def precompile(path); end
     def strict_load(payload); end
     def strict_visitor; end
+
+    # Psych coerce strings to `Encoding.default_internal` but Message Pack only support
+    # UTF-8, US-ASCII and BINARY. So if Encoding.default_internal is set to anything else
+    # we can't safely use the cache
+    #
+    # @return [Boolean]
     def supported_internal_encoding?; end
+
+    # Returns the value of attribute supported_options.
     def supported_options; end
+
+    # Sets the attribute supported_options
+    #
+    # @param value the value to set the attribute supported_options to.
     def supported_options=(_arg0); end
   end
 end
@@ -165,6 +221,13 @@ module Bootsnap::ExplicitRequire
     def from_archdir(feature); end
     def from_rubylibdir(feature); end
     def from_self(feature); end
+
+    # Given a set of gems, run a block with the LOAD_PATH narrowed to include
+    # only core ruby source paths and these gems -- that is, roughly,
+    # temporarily remove all gems not listed in this call from the LOAD_PATH.
+    #
+    # This is useful before bootsnap is fully-initialized to load gems that it
+    # depends on, without forcing full LOAD_PATH traversals.
     def with_gems(*gems); end
   end
 end
@@ -176,9 +239,15 @@ class Bootsnap::InvalidConfiguration < ::StandardError; end
 
 module Bootsnap::LoadPathCache
   class << self
+    # Returns the value of attribute load_path_cache.
     def load_path_cache; end
+
+    # Returns the value of attribute loaded_features_index.
     def loaded_features_index; end
+
     def setup(cache_path:, development_mode:); end
+
+    # @return [Boolean]
     def supported?; end
   end
 end
@@ -186,29 +255,45 @@ end
 Bootsnap::LoadPathCache::CACHED_EXTENSIONS = T.let(T.unsafe(nil), Array)
 
 class Bootsnap::LoadPathCache::Cache
+  # @return [Cache] a new instance of Cache
   def initialize(store, path_obj, development_mode: T.unsafe(nil)); end
 
+  # Try to resolve this feature to an absolute path without traversing the
+  # loadpath.
   def find(feature, try_extensions: T.unsafe(nil)); end
+
+  # What is the path item that contains the dir as child?
+  # e.g. given "/a/b/c/d" exists, and the path is ["/a/b"], load_dir("c/d")
+  # is "/a/b".
   def load_dir(dir); end
+
   def push_paths(sender, *paths); end
   def reinitialize(path_obj = T.unsafe(nil)); end
   def unshift_paths(sender, *paths); end
 
   private
 
+  # @return [Boolean]
   def dir_changed?; end
+
   def expand_path(feature); end
   def maybe_append_extension(feature); end
   def now; end
   def push_paths_locked(*paths); end
   def search_index(feature, try_extensions: T.unsafe(nil)); end
+
+  # @return [Boolean]
   def stale?; end
+
   def try_ext(feature); end
   def try_index(feature); end
   def unshift_paths_locked(*paths); end
 end
 
+# seconds
 Bootsnap::LoadPathCache::Cache::AGE_THRESHOLD = T.let(T.unsafe(nil), Integer)
+
+# { 'enumerator' => nil, 'enumerator.so' => nil, ... }
 Bootsnap::LoadPathCache::Cache::BUILTIN_FEATURES = T.let(T.unsafe(nil), Hash)
 
 module Bootsnap::LoadPathCache::ChangeObserver
@@ -218,7 +303,11 @@ module Bootsnap::LoadPathCache::ChangeObserver
 end
 
 module Bootsnap::LoadPathCache::ChangeObserver::ArrayMixin
+  # For each method that adds items to one end or another of the array
+  # (<<, push, unshift, concat), override that method to also notify the
+  # observer of the change.
   def <<(entry); end
+
   def []=(*args, &block); end
   def append(*entries); end
   def clear(*args, &block); end
@@ -246,7 +335,11 @@ module Bootsnap::LoadPathCache::ChangeObserver::ArrayMixin
   def slice!(*args, &block); end
   def sort!(*args, &block); end
   def sort_by!(*args, &block); end
+
+  # uniq! keeps the first occurrence of each path, otherwise preserving
+  # order, preserving the effective load path
   def uniq!(*args); end
+
   def unshift(*entries); end
 end
 
@@ -256,46 +349,146 @@ Bootsnap::LoadPathCache::DOT_RB = T.let(T.unsafe(nil), String)
 Bootsnap::LoadPathCache::DOT_SO = T.let(T.unsafe(nil), String)
 Bootsnap::LoadPathCache::FALLBACK_SCAN = T.let(T.unsafe(nil), BasicObject)
 
+# LoadedFeaturesIndex partially mirrors an internal structure in ruby that
+# we can't easily obtain an interface to.
+#
+# This works around an issue where, without bootsnap, *ruby* knows that it
+# has already required a file by its short name (e.g. require 'bundler') if
+# a new instance of bundler is added to the $LOAD_PATH which resolves to a
+# different absolute path. This class makes bootsnap smart enough to
+# realize that it has already loaded 'bundler', and not just
+# '/path/to/bundler'.
+#
+# If you disable LoadedFeaturesIndex, you can see the problem this solves by:
+#
+# 1. `require 'a'`
+# 2. Prepend a new $LOAD_PATH element containing an `a.rb`
+# 3. `require 'a'`
+#
+# Ruby returns false from step 3.
+# With bootsnap but with no LoadedFeaturesIndex, this loads two different
+#   `a.rb`s.
+# With bootsnap and with LoadedFeaturesIndex, this skips the second load,
+#   returning false like ruby.
 class Bootsnap::LoadPathCache::LoadedFeaturesIndex
+  # @return [LoadedFeaturesIndex] a new instance of LoadedFeaturesIndex
   def initialize; end
 
   def cursor(short); end
   def identify(short, cursor); end
+
+  # @return [Boolean]
   def key?(feature); end
+
+  # We've optimized for initialize and register to be fast, and purge to be tolerable.
+  # If access patterns make this not-okay, we can lazy-invert the LFI on
+  # first purge and work from there.
   def purge(feature); end
+
   def purge_multi(features); end
+
+  # There is a relatively uncommon case where we could miss adding an
+  # entry:
+  #
+  # If the user asked for e.g. `require 'bundler'`, and we went through the
+  # `FALLBACK_SCAN` pathway in `kernel_require.rb` and therefore did not
+  # pass `long` (the full expanded absolute path), then we did are not able
+  # to confidently add the `bundler.rb` form to @lfi.
+  #
+  # We could either:
+  #
+  # 1. Just add `bundler.rb`, `bundler.so`, and so on, which is close but
+  #    not quite right; or
+  # 2. Inspect $LOADED_FEATURES upon return from yield to find the matching
+  #    entry.
   def register(short, long); end
 
   private
 
+  # Might Ruby automatically search for this extension if
+  # someone tries to 'require' the file without it? E.g. Ruby
+  # will implicitly try 'x.rb' if you ask for 'x'.
+  #
+  # This is complex and platform-dependent, and the Ruby docs are a little
+  # handwavy about what will be tried when and in what order.
+  # So optimistically pretend that all known elidable extensions
+  # will be tried on all platforms, and that people are unlikely
+  # to name files in a way that assumes otherwise.
+  # (E.g. It's unlikely that someone will know that their code
+  # will _never_ run on MacOS, and therefore think they can get away
+  # with calling a Ruby file 'x.dylib.rb' and then requiring it as 'x.dylib'.)
+  #
+  # See <https://ruby-doc.org/core-2.6.4/Kernel.html#method-i-require>.
+  #
+  # @return [Boolean]
   def extension_elidable?(feature); end
+
   def strip_extension_if_elidable(feature); end
 end
 
 Bootsnap::LoadPathCache::LoadedFeaturesIndex::STRIP_EXTENSION = T.let(T.unsafe(nil), Regexp)
 
 class Bootsnap::LoadPathCache::Path
+  # @return [Path] a new instance of Path
   def initialize(path, real: T.unsafe(nil)); end
 
+  # Return a list of all the requirable files and all of the subdirectories
+  # of this +Path+.
   def entries_and_dirs(store); end
+
   def expanded_path; end
+
+  # True if the path exists, but represents a non-directory object
+  #
+  # @return [Boolean]
   def non_directory?; end
+
+  # Returns the value of attribute path.
   def path; end
+
+  # @return [Boolean]
   def relative?; end
+
+  # A path is considered 'stable' if it is part of a Gem.path or the ruby
+  # distribution. When adding or removing files in these paths, the cache
+  # must be cleared before the change will be noticed.
+  #
+  # @return [Boolean]
   def stable?; end
+
   def to_realpath; end
+
+  # A path is considered volatile if it doesn't live under a Gem.path or
+  # the ruby distribution root. These paths are scanned for new additions
+  # more frequently.
+  #
+  # @return [Boolean]
   def volatile?; end
 
   private
 
+  # last time a directory was modified in this subtree. +dirs+ should be a
+  # list of relative paths to directories under +path+. e.g. for /a/b and
+  # /a/b/c, pass ('/a/b', ['c'])
   def latest_mtime(path, dirs); end
+
+  # (expensive) returns [entries, dirs]
   def scan!; end
+
   def stability; end
 end
 
+# Built-in ruby lib stuff doesn't change, but things can occasionally be
+# installed into sitedir, which generally lives under libdir.
 Bootsnap::LoadPathCache::Path::RUBY_LIBDIR = T.let(T.unsafe(nil), String)
+
 Bootsnap::LoadPathCache::Path::RUBY_SITEDIR = T.let(T.unsafe(nil), String)
+
+# a Path can be either stable of volatile, depending on how frequently we
+# expect its contents may change. Stable paths aren't rescanned nearly as
+# often.
 Bootsnap::LoadPathCache::Path::STABLE = T.let(T.unsafe(nil), Symbol)
+
 Bootsnap::LoadPathCache::Path::VOLATILE = T.let(T.unsafe(nil), Symbol)
 
 module Bootsnap::LoadPathCache::PathScanner
@@ -313,11 +506,18 @@ Bootsnap::LoadPathCache::PathScanner::REQUIRABLE_EXTENSIONS = T.let(T.unsafe(nil
 Bootsnap::LoadPathCache::SLASH = T.let(T.unsafe(nil), String)
 
 class Bootsnap::LoadPathCache::Store
+  # @return [Store] a new instance of Store
   def initialize(store_path); end
 
+  # @raise [SetOutsideTransactionNotAllowed]
   def fetch(key); end
+
   def get(key); end
+
+  # @raise [SetOutsideTransactionNotAllowed]
   def set(key, value); end
+
+  # @raise [NestedTransactionError]
   def transaction; end
 
   private
@@ -347,6 +547,12 @@ module Kernel
   end
 end
 
+# Extends the module object with class/module and instance accessors for
+# class/module attributes, just like the native attr* accessors for instance
+# attributes, but does so on a per-thread basis.
+#
+# So the values are scoped within the Thread.current space under the class name
+# of the module.
 class Module
   include ::ActiveSupport::Dependencies::ModuleConstMissing
   include ::Module::Concerning
