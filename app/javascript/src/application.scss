@@ -523,6 +523,7 @@ nav.navbar {
 .modal-card {
   max-height: calc(100vh - 120px);
   overflow: scroll;
+  overflow-x: hidden;
 
   // When the modal card title is too long, make sure it
   // gets a trailing ellipsis instead of causing horizontal scrolling.
