@@ -18,6 +18,8 @@ module Types
     field :unban_user, mutation: Mutations::Users::UnbanUser
     field :update_user_role, mutation: Mutations::Users::UpdateUserRole
     field :remove_user_avatar, mutation: Mutations::Users::RemoveUserAvatar
+    field :reset_user_library, mutation: Mutations::Users::ResetUserLibrary
+    field :delete_user, mutation: Mutations::Users::DeleteUser
 
     # GamePurchase mutations
     field :add_game_to_library, mutation: Mutations::GamePurchases::AddGameToLibrary
