@@ -10,7 +10,7 @@ class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
   def resolve(user_id:)
     user = User.find_by(id: user_id)
 
-    raise GraphQL::ExecutionError, "User does not exist" unless user.present?
+    raise GraphQL::ExecutionError, "User does not exist." if user.blank?
 
     game_purchases = GamePurchase.where(user_id: user.id)
 

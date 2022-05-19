@@ -33,7 +33,7 @@ RSpec.describe "DeleteUser Mutation API", type: :request do
         user
 
         expect do
-          result = api_request(query_string, variables: { id: user.id }, token: access_token)
+          api_request(query_string, variables: { id: user.id }, token: access_token)
         end.to change(User, :count).by(-1)
       end
     end
@@ -56,7 +56,7 @@ RSpec.describe "DeleteUser Mutation API", type: :request do
         user
 
         expect do
-          result = api_request(query_string, variables: { id: user.id }, token: access_token)
+          api_request(query_string, variables: { id: user.id }, token: access_token)
         end.to change(User, :count).by(-1)
       end
     end

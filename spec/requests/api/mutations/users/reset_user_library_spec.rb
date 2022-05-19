@@ -34,7 +34,7 @@ RSpec.describe "ResetUserLibrary Mutation API", type: :request do
         user_games
 
         expect do
-          result = api_request(query_string, variables: { id: user.id }, token: access_token)
+          api_request(query_string, variables: { id: user.id }, token: access_token)
         end.to change(GamePurchase, :count).by(-10)
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe "ResetUserLibrary Mutation API", type: :request do
         user_games
 
         expect do
-          result = api_request(query_string, variables: { id: user.id }, token: access_token)
+          api_request(query_string, variables: { id: user.id }, token: access_token)
         end.to change(GamePurchase, :count).by(-10)
       end
     end
