@@ -14,6 +14,7 @@ module Types
     # User mutations
     field :follow_user, mutation: Mutations::Users::FollowUser
     field :unfollow_user, mutation: Mutations::Users::UnfollowUser
+    field :import_steam_library, mutation: Mutations::Users::ImportSteamLibrary
     field :ban_user, mutation: Mutations::Users::BanUser
     field :unban_user, mutation: Mutations::Users::UnbanUser
     field :update_user_role, mutation: Mutations::Users::UpdateUserRole
