@@ -45,7 +45,7 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
 
     return false if user.nil?
 
-    raise GraphQL::ExecutionError, "You aren't allowed to update this user's Steam account." unless UserPolicy.new(@context[:current_user], user).connect_steam?
+    raise GraphQL::ExecutionError, "You aren't allowed to connect this user's Steam account." unless UserPolicy.new(@context[:current_user], user).connect_steam?
 
     return true
   end
