@@ -10,7 +10,6 @@ namespace :graphql do
     # Error out if no vglist-frontend sister directory exists.
     raise StandardError, 'No sister vglist-frontend directory could be found.' unless Dir.exist?('../vglist-frontend')
 
-
     # Copy schema.graphql to vglist-frontend sister directory.
     FileUtils.cp(Rails.root.join('schema.graphql'), '../vglist-frontend')
 
