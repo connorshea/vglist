@@ -22,6 +22,16 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
       end
     end
 
+    before(:each) do
+      stub_request(:get, /api.steampowered.com/).to_return(
+        status: 200,
+        body: {
+          'response': { 'steamid': '123' }
+        }.to_json,
+        headers: {}
+      )
+    end
+
     context 'when the current user is an admin' do
       let!(:user) { create(:confirmed_admin) }
       let!(:user2) { create(:confirmed_user) }
@@ -33,7 +43,7 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
         end.not_to change(ExternalAccount, :count)
       end
 
-      xit "can connect their own account" do
+      it "can connect their own account" do
         expect do
           result = api_request(query_string, variables: { id: user.id, steam_username: 'foobar' }, token: access_token)
           expect(result.graphql_dig(:connect_steam)).to eq(
@@ -56,7 +66,7 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
         end.not_to change(ExternalAccount, :count)
       end
 
-      xit "they are able to connect their own Steam account" do
+      it "they are able to connect their own Steam account" do
         expect do
           result = api_request(query_string, variables: { id: user.id, steam_username: 'foobar' }, token: access_token)
           expect(result.graphql_dig(:connect_steam)).to eq(
