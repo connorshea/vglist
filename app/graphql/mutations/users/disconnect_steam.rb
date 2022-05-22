@@ -17,7 +17,7 @@ class Mutations::Users::DisconnectSteam < Mutations::BaseMutation
     raise GraphQL::ExecutionError, 'Unable to disconnect Steam account for this user.' unless steam_account.destroy
 
     {
-      connected: true
+      disconnected: true
     }
   end
 
