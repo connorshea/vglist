@@ -3869,10 +3869,10 @@ graphql-language-service@^5.0.0, graphql-language-service@^5.0.3:
     nullthrows "^1.0.0"
     vscode-languageserver-types "^3.15.1"
 
-graphql-schema-linter@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-3.0.0.tgz#8e88afa994a75a21a0f6e217449c0d33d08ce092"
-  integrity sha512-nXsyFvcqrD9/QWgimvJjvRBsUXHw8O7XoPLhpnGZd9eX6r2ZXsOBCGhTzF9ZrFtWosCBEfBGU2xpFUPe0qCHVg==
+graphql-schema-linter@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/graphql-schema-linter/-/graphql-schema-linter-3.0.1.tgz#9b98d38357727c35bc6161bbda33f78a6956286e"
+  integrity sha512-+k4TGaWu1Ry740XiI/OZbzAC4omna5+S1rLjE0puPFSB99yORRdlX4U0+CWnwJuxh8FxLj5Ek2pDhsrSh9j5cQ==
   dependencies:
     chalk "^2.0.1"
     columnify "^1.5.4"
