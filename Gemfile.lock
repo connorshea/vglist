@@ -299,7 +299,7 @@ GEM
       unparser
     rdf (3.2.8)
       link_header (~> 0.0, >= 0.0.8)
-    rdf-aggregate-repo (3.2.0)
+    rdf-aggregate-repo (3.2.1)
       rdf (~> 3.2)
     rdf-xsd (3.2.1)
       rdf (~> 3.2)
