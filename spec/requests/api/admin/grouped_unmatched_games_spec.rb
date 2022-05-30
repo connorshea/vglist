@@ -7,11 +7,10 @@ RSpec.describe "Grouped Unmatched Games API", type: :request do
       let(:user) { create(:confirmed_user) }
       let(:application) { build(:application, owner: user) }
       let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
-      let!(:unmatched_games) { create_list(:unmatched_game, 3, name: 'Half-Life', external_service_id: '123') }
-      let!(:unmatched_game1) { create(:unmatched_game, name: 'Half-Life 2', external_service_id: '124') }
-
-      it "returns basic data for unmatched games entries" do
-        query_string = <<-GRAPHQL
+      let(:unmatched_games) { create_list(:unmatched_game, 3, name: 'Half-Life', external_service_id: '123') }
+      let(:unmatched_game1) { create(:unmatched_game, name: 'Half-Life 2', external_service_id: '124') }
+      let(:query_string) do
+        <<-GRAPHQL
           query {
             groupedUnmatchedGames {
               nodes {
@@ -23,6 +22,11 @@ RSpec.describe "Grouped Unmatched Games API", type: :request do
             }
           }
         GRAPHQL
+      end
+
+      it "returns basic data for unmatched games entries" do
+        unmatched_games
+        unmatched_game1
 
         result = api_request(query_string, token: access_token)
 
