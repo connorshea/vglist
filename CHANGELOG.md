@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2022.05.30
+### Added
+- Add a query and mutation for UnmatchedGames to the GraphQL API. ([#2716])
+
+## v2022.05.22
+### Added
+- Add GraphQL mutations for connecting and disconnecting a Steam account. ([#2698])
+
+## v2022.05.18
+### Added
+- Add GraphQL mutations for importing a user's Steam library, deleting a user, and resetting a user's library. ([#2692], [#2693])
+
 ## v2022.05.16
 ### Added
 - Add a User setting that allows users to hide the "Days Played" value on their user profile. ([#2687])
@@ -913,3 +925,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#2420]: https://github.com/connorshea/vglist/pull/2420
 [#2633]: https://github.com/connorshea/vglist/pull/2633
 [#2687]: https://github.com/connorshea/vglist/pull/2687
+[#2692]: https://github.com/connorshea/vglist/pull/2692
+[#2693]: https://github.com/connorshea/vglist/pull/2693
+[#2698]: https://github.com/connorshea/vglist/pull/2698
+[#2716]: https://github.com/connorshea/vglist/pull/2716
