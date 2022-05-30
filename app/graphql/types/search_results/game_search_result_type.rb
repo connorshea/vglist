@@ -7,7 +7,7 @@ module Types
       description "A game search result."
 
       field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
-        argument :size, GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
+        argument :size, Enums::GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
       end
       field :developer_name, String, null: true, description: 'The name of the game\'s developer, will choose the first if there are multiple developers.'
       field :release_date, GraphQL::Types::ISO8601Date, null: true, description: 'The release date of the game, if one exists.'

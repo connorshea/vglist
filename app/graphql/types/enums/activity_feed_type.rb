@@ -1,5 +1,5 @@
 # typed: strict
-module Types
+module Types::Enums
   class ActivityFeedType < Types::BaseEnum
     description "Options for filtering events in the activity feed."
 

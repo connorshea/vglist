@@ -12,7 +12,7 @@ module Resolvers
     MARKDOWN
 
     argument :query, String, required: true, description: 'The query to search for records with.'
-    argument :searchable_types, [Types::SearchableEnum], required: false do
+    argument :searchable_types, [Types::Enums::SearchableEnum], required: false do
       description 'The types of records that multisearch should return. By default, it will return all types of searchable records.'
       validates length: { minimum: 1 }
     end

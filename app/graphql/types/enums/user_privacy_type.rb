@@ -1,5 +1,5 @@
 # typed: strict
-module Types
+module Types::Enums
   class UserPrivacyType < Types::BaseEnum
     description "An enum describing the privacy level of a given user. Most users will be `PUBLIC_ACCOUNT`."
 

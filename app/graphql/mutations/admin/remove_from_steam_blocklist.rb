@@ -8,9 +8,9 @@ class Mutations::Admin::RemoveFromSteamBlocklist < Mutations::BaseMutation
 
   sig { params(steam_blocklist_entry_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(steam_blocklist_entry_id:)
-    steam_blocklist_entry = SteamBlocklist.find_by(id: steam_blocklist_entry_id)
+    steam_blocklist_entry = SteamBlocklist.find(steam_blocklist_entry_id)
 
-    raise GraphQL::ExecutionError, steam_blocklist_entry&.errors&.full_messages&.join(", ") unless steam_blocklist_entry&.destroy
+    raise GraphQL::ExecutionError, steam_blocklist_entry.errors.full_messages.join(", ") unless steam_blocklist_entry.destroy
 
     {
       deleted: true

@@ -3,7 +3,7 @@ class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
   description "Update a game in the current user's library."
 
   argument :game_purchase_id, ID, required: true, description: "ID of game purchase to modify."
-  argument :completion_status, Types::GamePurchaseCompletionStatusType, required: false, description: "How far the user has gotten in the game."
+  argument :completion_status, Types::Enums::GamePurchaseCompletionStatusType, required: false, description: "How far the user has gotten in the game."
   argument :rating, Integer, required: false, description: "The game rating (out of 100)."
   argument :hours_played, Float, required: false, description: "The number of hours a game has been played."
   argument :replay_count, Integer, required: false, description: "The number of times a game has been replayed."

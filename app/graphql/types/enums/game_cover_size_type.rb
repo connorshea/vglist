@@ -1,5 +1,5 @@
 # typed: strict
-module Types
+module Types::Enums
   class GameCoverSizeType < Types::BaseEnum
     description <<~DESCRIPTION
       The size of the game cover. Game covers are downsized to fit

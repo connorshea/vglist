@@ -3,7 +3,7 @@ class Mutations::Users::UpdateUserRole < Mutations::BaseMutation
   description "Update a user's role. **Only available to admins using a first-party OAuth Application.**"
 
   argument :user_id, ID, required: true, description: "ID of user to update the role of."
-  argument :role, Types::UserRoleType, required: true, description: "The role to assign to the user."
+  argument :role, Types::Enums::UserRoleType, required: true, description: "The role to assign to the user."
 
   field :user, Types::UserType, null: true, description: "The user that has been updated."
 

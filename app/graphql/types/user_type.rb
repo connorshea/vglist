@@ -7,8 +7,8 @@ module Types
     field :username, String, null: false, description: "Username of the user."
     field :bio, String, null: true, description: "User profile description, aka 'bio'."
     field :slug, String, null: false, description: "The user's slug, used for their profile URL."
-    field :role, UserRoleType, null: false, description: "User permission level."
-    field :privacy, UserPrivacyType, null: false, description: "The user's level of privacy."
+    field :role, Enums::UserRoleType, null: false, description: "User permission level."
+    field :privacy, Enums::UserPrivacyType, null: false, description: "The user's level of privacy."
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this user was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this user was last updated."
     field :banned, Boolean, null: false, description: "Whether this user has been banned."
@@ -21,7 +21,7 @@ module Types
     field :activity, EventType.connection_type, null: false, description: "Activity Events that refer to this user."
 
     field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar." do
-      argument :size, UserAvatarSizeType, required: false, default_value: :small, description: "The size of the avatar image being requested."
+      argument :size, Enums::UserAvatarSizeType, required: false, default_value: :small, description: "The size of the avatar image being requested."
     end
 
     field :is_followed, Boolean, null: true, resolver_method: :followed?, description: "Whether the current user is following this user. `null` if there is no logged-in user or the current user is querying on themselves."
