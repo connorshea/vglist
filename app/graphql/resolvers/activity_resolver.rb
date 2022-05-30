@@ -5,7 +5,7 @@ module Resolvers
 
     description "View recent activity."
 
-    argument :feed_type, Types::ActivityFeedType, required: false
+    argument :feed_type, Types::Enums::ActivityFeedType, required: false
 
     sig { params(feed_type: String).returns(T.nilable(Event::RelationType)) }
     def resolve(feed_type: 'following')

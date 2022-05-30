@@ -6,7 +6,7 @@ module Resolvers
 
       description "List all users."
 
-      argument :sort_by, Types::UserSortType, required: false, description: "The order to sort the users in, if any."
+      argument :sort_by, Types::Enums::UserSortType, required: false, description: "The order to sort the users in, if any."
 
       sig { params(sort_by: T.nilable(String)).returns(User::RelationType) }
       def resolve(sort_by: nil)

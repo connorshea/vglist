@@ -1,5 +1,5 @@
 # typed: strict
-module Types
+module Types::Enums
   class GamePurchaseCompletionStatusType < Types::BaseEnum
     description "Completion Status options for game purchases (games in a user's library)."
 

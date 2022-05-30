@@ -1,5 +1,5 @@
 # typed: strict
-module Types
+module Types::Enums
   class SortDirectionType < Types::BaseEnum
     description "Direction for sorting a list of records."
 

@@ -4,7 +4,7 @@ module Types
     description "Represents events in the Activity Feed."
 
     field :id, ID, null: false, description: "The ID of the event, keep in mind that Events - unlike all other models - use UUIDs."
-    field :event_category, EventCategoryType, null: false, description: "The type of event."
+    field :event_category, Enums::EventCategoryType, null: false, description: "The type of event."
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this event was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this event was last updated."
 

@@ -1,5 +1,5 @@
 # typed: strict
-module Types
+module Types::Enums
   class UserRoleType < Types::BaseEnum
     description "Roles that a user can have, these define permissions levels. Most users will be `MEMBER`."
 

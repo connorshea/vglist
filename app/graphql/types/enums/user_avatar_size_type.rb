@@ -1,5 +1,5 @@
 # typed: strict
-module Types
+module Types::Enums
   class UserAvatarSizeType < Types::BaseEnum
     description "The size of the user avatar."
 

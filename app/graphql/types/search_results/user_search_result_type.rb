@@ -7,7 +7,7 @@ module Types
       description "A user search result."
 
       field :avatar_url, String, null: true, description: "URL for the user's avatar image. `null` means the user has the default avatar." do
-        argument :size, UserAvatarSizeType, required: false, default_value: :small, description: "The size of the avatar image being requested."
+        argument :size, Enums::UserAvatarSizeType, required: false, default_value: :small, description: "The size of the avatar image being requested."
       end
       field :slug, String, null: false, description: "The slug for usage defining the user's profile URL."
 

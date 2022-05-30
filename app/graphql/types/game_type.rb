@@ -32,7 +32,7 @@ module Types
     field :favoriters, UserType.connection_type, null: false, description: "Users who have favorited this game."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
-      argument :size, GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
+      argument :size, Enums::GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
     end
 
     field :is_favorited, Boolean, null: true, resolver_method: :favorited?, description: "Whether the game is in the current user's favorites, or `null` if there is no logged-in user."
