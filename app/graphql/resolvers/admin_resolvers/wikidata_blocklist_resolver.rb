@@ -1,5 +1,5 @@
 # typed: true
-module Resolvers
+module Resolvers::AdminResolvers
   class WikidataBlocklistResolver < Resolvers::BaseResolver
     type Types::WikidataBlocklistEntryType.connection_type, null: true
 
