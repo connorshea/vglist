@@ -12,7 +12,8 @@ class VideoGameListSchema < GraphQL::Schema
   max_depth 13
   # max_complexity 50
 
-  default_max_page_size 30
+  default_max_page_size 100
+  default_page_size 30
 
   # Return a valid response when an ActiveRecord record can't be found.
   rescue_from(ActiveRecord::RecordNotFound) do |err, _obj, _args, _ctx, _field|
