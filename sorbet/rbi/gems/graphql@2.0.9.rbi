@@ -3060,9 +3060,11 @@ class GraphQL::Language::Parser < ::Racc::Parser
   def _reduce_175(val, _values, result); end
   def _reduce_176(val, _values, result); end
   def _reduce_177(val, _values, result); end
+  def _reduce_178(val, _values, result); end
+  def _reduce_179(val, _values, result); end
   def _reduce_18(val, _values, result); end
-  def _reduce_180(val, _values, result); end
-  def _reduce_181(val, _values, result); end
+  def _reduce_182(val, _values, result); end
+  def _reduce_183(val, _values, result); end
   def _reduce_19(val, _values, result); end
   def _reduce_2(val, _values, result); end
   def _reduce_20(val, _values, result); end
@@ -3519,9 +3521,10 @@ class GraphQL::Pagination::Connection
   # @param last [Integer, nil] Limit parameter from the client, if provided
   # @param before [String, nil] A cursor for pagination, if the client provided one.
   # @param arguments [Hash] The arguments to the field that returned the collection wrapped by this connection
-  # @param max_page_size [Integer, nil] A configured value to cap the result size. Applied as `first` if neither first or last are given.
+  # @param max_page_size [Integer, nil] A configured value to cap the result size. Applied as `first` if neither first or last are given and no `default_page_size` is set.
+  # @param default_page_size [Integer, nil] A configured value to determine the result size when neither first or last are given.
   # @return [Connection] a new instance of Connection
-  def initialize(items, parent: T.unsafe(nil), field: T.unsafe(nil), context: T.unsafe(nil), first: T.unsafe(nil), after: T.unsafe(nil), max_page_size: T.unsafe(nil), last: T.unsafe(nil), before: T.unsafe(nil), edge_class: T.unsafe(nil), arguments: T.unsafe(nil)); end
+  def initialize(items, parent: T.unsafe(nil), field: T.unsafe(nil), context: T.unsafe(nil), first: T.unsafe(nil), after: T.unsafe(nil), max_page_size: T.unsafe(nil), default_page_size: T.unsafe(nil), last: T.unsafe(nil), before: T.unsafe(nil), edge_class: T.unsafe(nil), arguments: T.unsafe(nil)); end
 
   # @return [String, nil] the client-provided cursor. `""` is treated as `nil`.
   def after; end
@@ -3560,6 +3563,9 @@ class GraphQL::Pagination::Connection
   # @return [String]
   def cursor_for(item); end
 
+  def default_page_size; end
+  def default_page_size=(new_value); end
+
   # @return [Class] A wrapper class for edges of this connection
   def edge_class; end
 
@@ -3585,7 +3591,10 @@ class GraphQL::Pagination::Connection
 
   # @return [Integer, nil] A clamped `first` value.
   #   (The underlying instance variable doesn't have limits on it.)
-  #   If neither `first` nor `last` is given, but `max_page_size` is present, max_page_size is used for first.
+  #   If neither `first` nor `last` is given, but `default_page_size` is
+  #   present, default_page_size is used for first. If `default_page_size`
+  #   is greater than `max_page_size``, it'll be clamped down to
+  #   `max_page_size`. If `default_page_size` is nil, use `max_page_size`.
   def first; end
 
   # Sets the attribute first
@@ -3598,6 +3607,9 @@ class GraphQL::Pagination::Connection
 
   # Raw access to client-provided values. (`max_page_size` not applied to first or last.)
   def first_value=(_arg0); end
+
+  # @return [Boolean]
+  def has_default_page_size_override?; end
 
   # @return [Boolean]
   def has_max_page_size_override?; end
@@ -4557,6 +4569,7 @@ class GraphQL::Schema
     def default_filter; end
     def default_mask(new_mask = T.unsafe(nil)); end
     def default_max_page_size(new_default_max_page_size = T.unsafe(nil)); end
+    def default_page_size(new_default_page_size = T.unsafe(nil)); end
     def deprecated_graphql_definition; end
 
     # @return [String, nil]
@@ -5515,6 +5528,7 @@ class GraphQL::Schema::Field
   # @param connection [Boolean] `true` if this field should get automagic connection behavior; default is to infer by `*Connection` in the return type name
   # @param connection_extension [Class] The extension to add, to implement connections. If `nil`, no extension is added.
   # @param max_page_size [Integer, nil] For connections, the maximum number of items to return from this field, or `nil` to allow unlimited results.
+  # @param default_page_size [Integer, nil] For connections, the default number of items to return from this field, or `nil` to return unlimited results.
   # @param introspection [Boolean] If true, this field will be marked as `#introspection?` and the name may begin with `__`
   # @param resolver_class [Class] (Private) A {Schema::Resolver} which this field was derived from. Use `resolver:` to create a field with a resolver.
   # @param arguments [{String=>GraphQL::Schema::Argument, Hash}] Arguments for this field (may be added in the block, also)
@@ -5530,7 +5544,7 @@ class GraphQL::Schema::Field
   # @param method_conflict_warning [Boolean] If false, skip the warning if this field's method conflicts with a built-in method
   # @param validates [Array<Hash>] Configurations for validating this field
   # @return [Field] a new instance of Field
-  def initialize(type: T.unsafe(nil), name: T.unsafe(nil), owner: T.unsafe(nil), null: T.unsafe(nil), description: T.unsafe(nil), deprecation_reason: T.unsafe(nil), method: T.unsafe(nil), hash_key: T.unsafe(nil), dig: T.unsafe(nil), resolver_method: T.unsafe(nil), connection: T.unsafe(nil), max_page_size: T.unsafe(nil), scope: T.unsafe(nil), introspection: T.unsafe(nil), camelize: T.unsafe(nil), trace: T.unsafe(nil), complexity: T.unsafe(nil), ast_node: T.unsafe(nil), extras: T.unsafe(nil), extensions: T.unsafe(nil), connection_extension: T.unsafe(nil), resolver_class: T.unsafe(nil), subscription_scope: T.unsafe(nil), relay_node_field: T.unsafe(nil), relay_nodes_field: T.unsafe(nil), method_conflict_warning: T.unsafe(nil), broadcastable: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), validates: T.unsafe(nil), &definition_block); end
+  def initialize(type: T.unsafe(nil), name: T.unsafe(nil), owner: T.unsafe(nil), null: T.unsafe(nil), description: T.unsafe(nil), deprecation_reason: T.unsafe(nil), method: T.unsafe(nil), hash_key: T.unsafe(nil), dig: T.unsafe(nil), resolver_method: T.unsafe(nil), connection: T.unsafe(nil), max_page_size: T.unsafe(nil), default_page_size: T.unsafe(nil), scope: T.unsafe(nil), introspection: T.unsafe(nil), camelize: T.unsafe(nil), trace: T.unsafe(nil), complexity: T.unsafe(nil), ast_node: T.unsafe(nil), extras: T.unsafe(nil), extensions: T.unsafe(nil), connection_extension: T.unsafe(nil), resolver_class: T.unsafe(nil), subscription_scope: T.unsafe(nil), relay_node_field: T.unsafe(nil), relay_nodes_field: T.unsafe(nil), method_conflict_warning: T.unsafe(nil), broadcastable: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), validates: T.unsafe(nil), fallback_value: T.unsafe(nil), &definition_block); end
 
   # @return [Boolean]
   def accessible?(context); end
@@ -5551,6 +5565,9 @@ class GraphQL::Schema::Field
   #
   # @return [Boolean] if true, this field will be wrapped with Relay connection behavior
   def connection?; end
+
+  # @return [Integer, nil] Applied to connections if {#has_default_page_size?}
+  def default_page_size; end
 
   # @param text [String]
   # @return [String]
@@ -5601,6 +5618,9 @@ class GraphQL::Schema::Field
 
   # @return [String] the GraphQL name for this field, camelized unless `camelize: false` is provided
   def graphql_name; end
+
+  # @return [Boolean] True if this field's {#default_page_size} should override the schema default.
+  def has_default_page_size?; end
 
   # @return [Boolean] True if this field's {#max_page_size} should override the schema default.
   def has_max_page_size?; end
@@ -6977,6 +6997,13 @@ class GraphQL::Schema::Resolver
     # @return [Integer, Proc]
     def complexity(new_complexity = T.unsafe(nil)); end
 
+    # Get or set the `default_page_size:` which will be configured for fields using this resolver
+    # (`nil` means "unlimited default page size".)
+    #
+    # @param default_page_size [Integer, nil] Set a new value
+    # @return [Integer, nil] The `default_page_size` assigned to fields that use this resolver
+    def default_page_size(new_default_page_size = T.unsafe(nil)); end
+
     # Registers new extension
     #
     # @param extension [Class] Extension class
@@ -6993,6 +7020,9 @@ class GraphQL::Schema::Resolver
 
     def field_arguments(context = T.unsafe(nil)); end
     def get_field_argument(name, context = T.unsafe(nil)); end
+
+    # @return [Boolean] `true` if this resolver or a superclass has an assigned `default_page_size`
+    def has_default_page_size?; end
 
     # @return [Boolean] `true` if this resolver or a superclass has an assigned `max_page_size`
     def has_max_page_size?; end
@@ -9783,6 +9813,14 @@ class GraphQL::Tracing::DataDogTracing < ::GraphQL::Tracing::PlatformTracing
   def platform_field_key(type, field); end
   def platform_resolve_type_key(type); end
   def platform_trace(platform_key, key, data); end
+
+  # Implement this method in a subclass to apply custom tags to datadog spans
+  #
+  # @param key [String] The event being traced
+  # @param data [Hash] The runtime data for this event (@see GraphQL::Tracing for keys for each event)
+  # @param span [Datadog::Tracing::SpanOperation] The datadog span for this event
+  def prepare_span(key, data, span); end
+
   def service_name; end
   def tracer; end
 end
@@ -9839,6 +9877,24 @@ module GraphQL::Tracing::NullTracer
   end
 end
 
+class GraphQL::Tracing::OpenTelemetryTracing < ::GraphQL::Tracing::PlatformTracing
+  def platform_authorized_key(type); end
+  def platform_field_key(type, field); end
+  def platform_resolve_type_key(type); end
+  def platform_trace(platform_key, key, data); end
+
+  private
+
+  def attributes_for(key, data); end
+  def cached_platform_key(ctx, key, trace_phase); end
+  def config; end
+
+  # @return [Boolean]
+  def platform_key_enabled?(ctx, key); end
+
+  def tracer; end
+end
+
 # Each platform provides:
 # - `.platform_keys`
 # - `#platform_trace`
@@ -9867,7 +9923,7 @@ class GraphQL::Tracing::PlatformTracing
   #
   # @api private
   # @return [String]
-  def cached_platform_key(ctx, key); end
+  def cached_platform_key(ctx, key, trace_phase); end
 
   # @api private
   def fallback_transaction_name(context); end
@@ -9882,6 +9938,10 @@ class GraphQL::Tracing::PlatformTracing
   def transaction_name(query); end
 
   class << self
+    # @api private
+    # @private
+    def inherited(child_class); end
+
     # @api private
     def platform_keys; end
 

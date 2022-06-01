@@ -6,20 +6,110 @@
 
 module RDF
   class << self
+    # Alias for `RDF::Graph.new`.
+    #
+    # @param graph_name [RDF::Resource] The graph_name from the associated {RDF::Queryable} associated
+    #   with this graph as provided with the `:data` option
+    #   (only for {RDF::Queryable} instances supporting
+    #   named graphs).
+    # @param data [RDF::Queryable] (RDF::Repository.new)
+    #   Storage behind this graph.
+    # @return [RDF::Graph]
     def Graph(**options, &block); end
+
+    # @overload List
+    # @overload List
+    # @overload List
+    # @overload List
     def List(*args); end
+
+    # Alias for `RDF::Literal.new`.
+    #
+    # @param value [Object]
+    # @param language [Symbol] (nil)
+    #   Language is downcased to ensure proper matching
+    # @param lexical [String] (nil)
+    #   Supplied lexical representation of this literal,
+    #   otherwise it comes from transforming `value` to a string form..
+    # @param datatype [URI] (nil)
+    # @param validate [Boolean] (false)
+    # @param canonicalize [Boolean] (false)
+    # @return [RDF::Literal]
     def Literal(literal, **options); end
+
+    # Alias for `RDF::Node.new`.
+    #
+    # @param id [#to_s]
+    # @return [RDF::Node]
     def Node(*args); end
+
+    # Alias for `RDF::Resource.new`.
+    #
+    # @return [RDF::Resource]
     def Resource(*args); end
+
+    # @overload Statement
+    # @overload Statement
+    # @overload Statement
     def Statement(*args, **options); end
+
+    # Alias for `RDF::StrictVocabulary.create`.
+    #
+    # @param uri [RDF::URI, String, #to_s]
+    # @return [Class]
     def StrictVocabulary(uri); end
+
+    # Cast to a URI. If already a URI, return the passed argument.
+    #
+    # @return [RDF::URI]
     def URI(*args); end
+
+    # Alias for `RDF::Vocabulary.create`.
+    #
+    # @param uri [RDF::URI, String, #to_s]
+    # @return [Class]
     def Vocabulary(uri); end
+
+    # @return [#to_s] property
+    # @return [URI]
     def [](property); end
+
+    # Configuration, used open for configuring constants used within the codebase.
+    #
+    # Defaults:
+    #   * `cache_size`: -1
+    #   * `uri_cache_size`: `cache_size`
+    #   * `node_cache_size`: `cache_size`
+    #
+    # @example set default cache size to be at most 10,000 entries
+    #
+    #   RDF.config.cache_size = 10_000
+    # @example set cache size for interned URIs to 5,000 entries
+    #
+    #   RDF.config.uri_cache_size = 5_000
+    # @note cache configurations must be set before initial use, when the caches are allocated.
+    # @return [Object]
+    # @see RDF::Util::Cache.new
     def config; end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def enum_for(method = T.unsafe(nil), *args); end
+
+    # Delegate other methods to RDF::RDFV
     def method_missing(property, *args, &block); end
+
+    # respond to module or RDFV
+    #
+    # @return [Boolean]
     def respond_to?(method, include_all = T.unsafe(nil)); end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def to_enum(method = T.unsafe(nil), *args); end
   end
 end
@@ -211,6 +301,8 @@ RDF::AggregateRepo::VERSION::MINOR = T.let(T.unsafe(nil), String)
 RDF::AggregateRepo::VERSION::STRING = T.let(T.unsafe(nil), String)
 RDF::AggregateRepo::VERSION::TINY = T.let(T.unsafe(nil), String)
 RDF::AggregateRepo::VERSION::VERSION_FILE = T.let(T.unsafe(nil), String)
+
+# RDF::IRI is a synonym for RDF::URI
 RDF::IRI = RDF::URI
 
 # A Merged graph.
@@ -336,6 +428,15 @@ class RDF::MergeGraph
   def query_pattern(pattern, **options, &block); end
 end
 
+# Vocabulary for <http://www.w3.org/2002/07/owl#>
+#
+# The OWL 2 Schema vocabulary (OWL 2)
+#
+#  This ontology partially describes the built-in classes and properties that together form the basis of the RDF/XML syntax of OWL 2. The content of this ontology is based on Tables 6.1 and 6.2 in Section 6.4 of the OWL 2 RDF-Based Semantics specification, available at http://www.w3.org/TR/owl2-rdf-based-semantics/. Please note that those tables do not include the different annotations (labels, comments and rdfs:isDefinedBy links) used in this file. Also note that the descriptions provided in this ontology do not provide a complete and correct formal description of either the syntax or the semantics of the introduced terms (please see the OWL 2 recommendations for the complete and normative specifications). Furthermore, the information provided by this ontology may be misleading if not used with care. This ontology SHOULD NOT be imported into OWL ontologies. Importing this file into an OWL 2 DL ontology will cause it to become an OWL 2 Full ontology and may have other, unexpected, consequences.
+#
+# @see http://www.w3.org/TR/owl2-rdf-based-semantics/#table-axiomatic-classes
+# @see http://www.w3.org/TR/owl2-rdf-based-semantics/#table-axiomatic-properties
+# @version $Date: 2009/11/15 10:54:12 $
 class RDF::OWL < ::RDF::StrictVocabulary
   class << self
     def AllDifferent; end
@@ -418,6 +519,11 @@ class RDF::OWL < ::RDF::StrictVocabulary
   end
 end
 
+# Vocabulary for <http://www.w3.org/2000/01/rdf-schema#>
+#
+# The RDF Schema vocabulary (RDFS)
+#
+# @see http://www.w3.org/2000/01/rdf-schema-more
 class RDF::RDFS < ::RDF::StrictVocabulary
   class << self
     def Class; end
@@ -438,6 +544,9 @@ class RDF::RDFS < ::RDF::StrictVocabulary
   end
 end
 
+# Vocabulary for <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#
+# This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.
 class RDF::RDFV < ::RDF::StrictVocabulary
   class << self
     def Alt; end
@@ -478,6 +587,7 @@ end
 RDF::RDF_N_REGEXP = T.let(T.unsafe(nil), Regexp)
 RDF::VOCABS = T.let(T.unsafe(nil), Hash)
 
+# Vocabulary for <http://www.w3.org/2001/XMLSchema#>
 class RDF::XSD < ::RDF::Vocabulary
   class << self
     def ENTITIES; end

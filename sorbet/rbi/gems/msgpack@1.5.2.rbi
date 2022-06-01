@@ -49,7 +49,6 @@ class Hash
   def to_msgpack_with_packer(packer); end
 end
 
-# Enhance the Integer class with a XML escaped character conversion.
 class Integer < ::Numeric
   include ::ActiveSupport::NumericWithFormat
   include ::JSON::Ext::Generator::GeneratorMethods::Integer
@@ -197,10 +196,6 @@ class NilClass
   include ::JSON::Ext::Generator::GeneratorMethods::NilClass
   include ::MessagePack::CoreExt
   include ::FriendlyId::UnfriendlyUtils
-  include ::FriendlyId::Reserved::Configuration
-  include ::FriendlyId::Scoped::Configuration
-  include ::FriendlyId::SimpleI18n::Configuration
-  include ::FriendlyId::Slugged::Configuration
 
   private
 
