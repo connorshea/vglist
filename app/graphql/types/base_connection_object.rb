@@ -9,6 +9,6 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
 
   sig { returns(Integer) }
   def total_count
-    object.items.size
+    object.items.count
   end
 end

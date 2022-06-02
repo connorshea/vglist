@@ -14,7 +14,7 @@ module Types
     field :banned, Boolean, null: false, description: "Whether this user has been banned."
 
     # Associations
-    field :game_purchases, GamePurchaseType.connection_type, null: false, max_page_size: 100, description: "Games in this user's library."
+    field :game_purchases, GamePurchaseType.connection_type, null: false, description: "Games in this user's library."
     field :followers, UserType.connection_type, null: false, description: "Users that are following this user."
     field :following, UserType.connection_type, null: false, description: "Users that this user is following."
     field :favorited_games, GameType.connection_type, null: false, description: "Games that this user has favorited."

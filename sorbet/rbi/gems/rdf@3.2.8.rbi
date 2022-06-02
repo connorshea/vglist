@@ -5422,7 +5422,7 @@ class RDF::Query::Pattern < ::RDF::Statement
   # @example
   #   Pattern.new(:s, :p, :o).execute(RDF::Repository.load('etc/doap.nt'))
   # @param queryable [RDF::Queryable] the graph or repository to query
-  # @param bindings [Hash{Symbol => RDF::Term}] optional variable bindings to use
+  # @param bindings [Hash{Symbol => RDF::Term}, RDF::Query::Solution] optional variable bindings to use
   # @return [Enumerable<RDF::Query::Pattern>] an enumerator yielding matching statements
   # @see RDF::Queryable#query
   # @since 0.3.0

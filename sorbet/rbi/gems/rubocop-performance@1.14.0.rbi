@@ -9,8 +9,7 @@ module RuboCop::Cop; end
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 module RuboCop::Cop::Performance; end
 
-# This cop is used to identify usages of `ancestors.include?` and
-# change them to use `<=` instead.
+# Identifies usages of `ancestors.include?` and change them to use `<=` instead.
 #
 # @example
 #   # bad
@@ -33,7 +32,7 @@ end
 RuboCop::Cop::Performance::AncestorsInclude::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::AncestorsInclude::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where slicing arrays with semi-infinite ranges
+# Identifies places where slicing arrays with semi-infinite ranges
 # can be replaced by `Array#take` and `Array#drop`.
 # This cop was created due to a mistake in microbenchmark and hence is disabled by default.
 # Refer https://github.com/rubocop/rubocop-performance/pull/175#issuecomment-731892717
@@ -70,7 +69,7 @@ RuboCop::Cop::Performance::ArraySemiInfiniteRangeSlice::MSG = T.let(T.unsafe(nil
 RuboCop::Cop::Performance::ArraySemiInfiniteRangeSlice::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 RuboCop::Cop::Performance::ArraySemiInfiniteRangeSlice::SLICE_METHODS = T.let(T.unsafe(nil), Set)
 
-# This cop identifies places where numeric argument to BigDecimal should be
+# Identifies places where numeric argument to BigDecimal should be
 # converted to string. Initializing from String is faster
 # than from Numeric for BigDecimal.
 #
@@ -130,7 +129,7 @@ end
 RuboCop::Cop::Performance::BindCall::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::BindCall::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies unnecessary use of a `block_given?` where explicit check
+# Identifies unnecessary use of a `block_given?` where explicit check
 # of block argument would suffice.
 #
 # @example
@@ -160,8 +159,7 @@ end
 RuboCop::Cop::Performance::BlockGivenWithExplicitBlock::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::BlockGivenWithExplicitBlock::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `caller[n]`
-# can be replaced by `caller(n..n).first`.
+# Identifies places where `caller[n]` can be replaced by `caller(n..n).first`.
 #
 # @example
 #   # bad
@@ -267,7 +265,7 @@ end
 RuboCop::Cop::Performance::CaseWhenSplat::ARRAY_MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::CaseWhenSplat::MSG = T.let(T.unsafe(nil), String)
 
-# This cop identifies places where a case-insensitive string comparison
+# Identifies places where a case-insensitive string comparison
 # can better be implemented using `casecmp`.
 #
 # @example
@@ -291,8 +289,8 @@ class RuboCop::Cop::Performance::Casecmp < ::RuboCop::Cop::Base
 
   private
 
-  def build_good_method(arg, variable); end
-  def correction(corrector, node, method, arg, variable); end
+  def autocorrect(corrector, node, replacement); end
+  def build_good_method(method, arg, variable); end
   def take_method_apart(node); end
 end
 
@@ -300,7 +298,7 @@ RuboCop::Cop::Performance::Casecmp::CASE_METHODS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Performance::Casecmp::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::Casecmp::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop is used to identify usages of `array.compact.flatten.map { |x| x.downcase }`.
+# Identifies usages of `array.compact.flatten.map { |x| x.downcase }`.
 # Each of these methods (`compact`, `flatten`, `map`) will generate a new intermediate array
 # that is promptly thrown away. Instead it is faster to mutate when we know it's safe.
 #
@@ -343,8 +341,8 @@ RuboCop::Cop::Performance::ChainArrayAllocation::RETURNS_NEW_ARRAY_WHEN_NO_BLOCK
 #   [1,2].first(1) # => [1]
 RuboCop::Cop::Performance::ChainArrayAllocation::RETURN_NEW_ARRAY_WHEN_ARGS = T.let(T.unsafe(nil), Set)
 
-# This cop identifies places where Array and Hash literals are used
-# within loops. It is better to extract them into a local variable or constant
+# Identifies places where Array and Hash literals are used within loops.
+# It is better to extract them into a local variable or constant
 # to avoid unnecessary allocations on each iteration.
 #
 # You can set the minimum number of elements to consider
@@ -410,7 +408,7 @@ RuboCop::Cop::Performance::CollectionLiteralInLoop::NONMUTATING_ARRAY_METHODS = 
 RuboCop::Cop::Performance::CollectionLiteralInLoop::NONMUTATING_HASH_METHODS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Performance::CollectionLiteralInLoop::POST_CONDITION_LOOP_TYPES = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `sort { |a, b| a.foo <=> b.foo }`
+# Identifies places where `sort { |a, b| a.foo <=> b.foo }`
 # can be replaced by `sort_by(&:foo)`.
 # This cop also checks `max` and `min` methods.
 #
@@ -449,7 +447,7 @@ end
 
 RuboCop::Cop::Performance::CompareWithBlock::MSG = T.let(T.unsafe(nil), String)
 
-# This cop identifies places where `Concurrent.monotonic_time`
+# Identifies places where `Concurrent.monotonic_time`
 # can be replaced by `Process.clock_gettime(Process::CLOCK_MONOTONIC)`.
 #
 # @example
@@ -469,7 +467,7 @@ end
 RuboCop::Cop::Performance::ConcurrentMonotonicTime::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::ConcurrentMonotonicTime::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop finds regular expressions with dynamic components that are all constants.
+# Finds regular expressions with dynamic components that are all constants.
 #
 # Ruby allocates a new Regexp object every time it executes a code containing such
 # a regular expression. It is more efficient to extract it into a constant,
@@ -515,7 +513,7 @@ end
 
 RuboCop::Cop::Performance::ConstantRegexp::MSG = T.let(T.unsafe(nil), String)
 
-# This cop is used to identify usages of `count` on an `Enumerable` that
+# Identifies usages of `count` on an `Enumerable` that
 # follow calls to `select`, `find_all`, `filter` or `reject`. Querying logic can instead be
 # passed to the `count` call.
 #
@@ -596,6 +594,7 @@ RuboCop::Cop::Performance::Count::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 class RuboCop::Cop::Performance::DeletePrefix < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RegexpMetacharacter
   extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
 
   def delete_prefix_candidate?(param0 = T.unsafe(nil)); end
   def on_send(node); end
@@ -645,6 +644,7 @@ RuboCop::Cop::Performance::DeletePrefix::RESTRICT_ON_SEND = T.let(T.unsafe(nil),
 class RuboCop::Cop::Performance::DeleteSuffix < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RegexpMetacharacter
   extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
 
   def delete_suffix_candidate?(param0 = T.unsafe(nil)); end
   def on_send(node); end
@@ -654,7 +654,7 @@ RuboCop::Cop::Performance::DeleteSuffix::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::DeleteSuffix::PREFERRED_METHODS = T.let(T.unsafe(nil), Hash)
 RuboCop::Cop::Performance::DeleteSuffix::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop is used to identify usages of `first`, `last`, `[0]` or `[-1]`
+# Identifies usages of `first`, `last`, `[0]` or `[-1]`
 # chained to `select`, `find_all` or `filter` and change them to use
 # `detect` instead.
 #
@@ -701,7 +701,7 @@ RuboCop::Cop::Performance::Detect::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::Detect::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Performance::Detect::REVERSE_MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for double `#start_with?` or `#end_with?` calls
+# Checks for double `#start_with?` or `#end_with?` calls
 # separated by `||`. In some cases such calls can be replaced
 # with an single `#start_with?`/`#end_with?` call.
 #
@@ -754,7 +754,7 @@ end
 
 RuboCop::Cop::Performance::DoubleStartEndWith::MSG = T.let(T.unsafe(nil), String)
 
-# This cop identifies unnecessary use of a regex where `String#end_with?` would suffice.
+# Identifies unnecessary use of a regex where `String#end_with?` would suffice.
 #
 # This cop has `SafeMultiline` configuration option that `true` by default because
 # `end$` is unsafe as it will behave incompatible with `end_with?`
@@ -870,7 +870,7 @@ end
 RuboCop::Cop::Performance::FixedSize::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::FixedSize::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop is used to identify usages of `map { ... }.flatten` and
+# Identifies usages of `map { ... }.flatten` and
 # change them to use `flat_map { ... }` instead.
 #
 # @example
@@ -901,7 +901,7 @@ RuboCop::Cop::Performance::FlatMap::FLATTEN_MULTIPLE_LEVELS = T.let(T.unsafe(nil
 RuboCop::Cop::Performance::FlatMap::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::FlatMap::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for inefficient searching of keys and values within
+# Checks for inefficient searching of keys and values within
 # hashes.
 #
 # `Hash#keys.include?` is less efficient than `Hash#key?` because
@@ -951,7 +951,7 @@ end
 
 RuboCop::Cop::Performance::InefficientHashSearch::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where inefficient `readlines` method
+# Identifies places where inefficient `readlines` method
 # can be replaced by `each_line` to avoid fully loading file content into memory.
 #
 # @example
@@ -1035,7 +1035,7 @@ end
 RuboCop::Cop::Performance::MapCompact::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::MapCompact::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where methods are converted to blocks, with the
+# Identifies places where methods are converted to blocks, with the
 # use of `&method`, and passed as arguments to method calls.
 # It is faster to replace those with explicit blocks, calling those methods inside.
 #
@@ -1054,7 +1054,7 @@ end
 
 RuboCop::Cop::Performance::MethodObjectAsBlock::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for `OpenStruct.new` calls.
+# Checks for `OpenStruct.new` calls.
 # Instantiation of an `OpenStruct` invalidates
 # Ruby global method cache as it causes dynamic method
 # definition during program runtime.
@@ -1085,7 +1085,7 @@ end
 RuboCop::Cop::Performance::OpenStruct::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::OpenStruct::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies uses of `Range#include?` and `Range#member?`, which iterates over each
+# Identifies uses of `Range#include?` and `Range#member?`, which iterates over each
 # item in a `Range` to see if a specified item is there. In contrast,
 # `Range#cover?` simply compares the target item with the beginning and
 # end points of the `Range`. In a great majority of cases, this is what
@@ -1113,7 +1113,7 @@ end
 RuboCop::Cop::Performance::RangeInclude::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::RangeInclude::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies the use of a `&block` parameter and `block.call`
+# Identifies the use of a `&block` parameter and `block.call`
 # where `yield` would do just as well.
 #
 # @example
@@ -1161,7 +1161,7 @@ RuboCop::Cop::Performance::RedundantBlockCall::OPEN_PAREN = T.let(T.unsafe(nil),
 RuboCop::Cop::Performance::RedundantBlockCall::SPACE = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::RedundantBlockCall::YIELD = T.let(T.unsafe(nil), String)
 
-# This cop checks for uses `Enumerable#all?`, `Enumerable#any?`, `Enumerable#one?`,
+# Checks for uses `Enumerable#all?`, `Enumerable#any?`, `Enumerable#one?`,
 # and `Enumerable#none?` are compared with `===` or similar methods in block.
 #
 # By default, `Object#===` behaves the same as `Object#==`, but this
@@ -1179,6 +1179,7 @@ RuboCop::Cop::Performance::RedundantBlockCall::YIELD = T.let(T.unsafe(nil), Stri
 #   items.all?(pattern)
 class RuboCop::Cop::Performance::RedundantEqualityComparisonBlock < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
 
   def on_block(node); end
 
@@ -1205,7 +1206,7 @@ RuboCop::Cop::Performance::RedundantEqualityComparisonBlock::IS_A_METHODS = T.le
 RuboCop::Cop::Performance::RedundantEqualityComparisonBlock::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::RedundantEqualityComparisonBlock::TARGET_METHODS = T.let(T.unsafe(nil), Array)
 
-# This cop identifies the use of `Regexp#match` or `String#match`, which
+# Identifies the use of `Regexp#match` or `String#match`, which
 # returns `#<MatchData>`/`nil`. The return value of `=~` is an integral
 # index/`nil` and is more performant.
 #
@@ -1234,8 +1235,7 @@ end
 RuboCop::Cop::Performance::RedundantMatch::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::RedundantMatch::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `Hash#merge!` can be replaced by
-# `Hash#[]=`.
+# Identifies places where `Hash#merge!` can be replaced by `Hash#[]=`.
 # You can set the maximum number of key-value pairs to consider
 # an offense with `MaxKeyValuePairs`.
 #
@@ -1322,8 +1322,7 @@ RuboCop::Cop::Performance::RedundantMerge::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::RedundantMerge::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Performance::RedundantMerge::WITH_MODIFIER_CORRECTION = T.let(T.unsafe(nil), String)
 
-# This cop identifies places where `sort { |a, b| a <=> b }`
-# can be replaced with `sort`.
+# Identifies places where `sort { |a, b| a <=> b }` can be replaced with `sort`.
 #
 # @example
 #   # bad
@@ -1345,7 +1344,7 @@ end
 
 RuboCop::Cop::Performance::RedundantSortBlock::MSG = T.let(T.unsafe(nil), String)
 
-# This cop identifies places where `split` argument can be replaced from
+# Identifies places where `split` argument can be replaced from
 # a deterministic regexp to a string.
 #
 # @example
@@ -1373,7 +1372,7 @@ RuboCop::Cop::Performance::RedundantSplitRegexpArgument::MSG = T.let(T.unsafe(ni
 RuboCop::Cop::Performance::RedundantSplitRegexpArgument::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Performance::RedundantSplitRegexpArgument::STR_SPECIAL_CHARS = T.let(T.unsafe(nil), Array)
 
-# This cop checks for redundant `String#chars`.
+# Checks for redundant `String#chars`.
 #
 # @example
 #   # bad
@@ -1549,8 +1548,7 @@ RuboCop::Cop::Performance::RegexpMatch::MSG = T.let(T.unsafe(nil), String)
 # someone will store `nil` as a constant and then use it for comparison
 RuboCop::Cop::Performance::RegexpMatch::TYPES_IMPLEMENTING_MATCH = T.let(T.unsafe(nil), Array)
 
-# This cop is used to identify usages of `reverse.each` and
-# change them to use `reverse_each` instead.
+# Identifies usages of `reverse.each` and change them to use `reverse_each` instead.
 #
 # If the return value is used, it will not be detected because the result will be different.
 #
@@ -1584,7 +1582,7 @@ end
 RuboCop::Cop::Performance::ReverseEach::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::ReverseEach::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `reverse.first(n)` and `reverse.first`
+# Identifies places where `reverse.first(n)` and `reverse.first`
 # can be replaced by `last(n).reverse` and `last`.
 #
 # @example
@@ -1641,8 +1639,7 @@ end
 RuboCop::Cop::Performance::SelectMap::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::SelectMap::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop is used to identify usages of `count` on an
-# `Array` and `Hash` and change them to `size`.
+# Identifies usages of `count` on an `Array` and `Hash` and change them to `size`.
 #
 # TODO: Add advanced detection of variables that could
 # have been assigned to an array or a hash.
@@ -1686,7 +1683,7 @@ end
 RuboCop::Cop::Performance::Size::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::Size::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `sort { |a, b| b <=> a }`
+# Identifies places where `sort { |a, b| b <=> a }`
 # can be replaced by a faster `sort.reverse`.
 #
 # @example
@@ -1709,7 +1706,7 @@ end
 
 RuboCop::Cop::Performance::SortReverse::MSG = T.let(T.unsafe(nil), String)
 
-# This cop identifies places where `gsub(/a+/, 'a')` and `gsub!(/a+/, 'a')`
+# Identifies places where `gsub(/a+/, 'a')` and `gsub!(/a+/, 'a')`
 # can be replaced by `squeeze('a')` and `squeeze!('a')`.
 #
 # The `squeeze('a')` method is faster than `gsub(/a+/, 'a')`.
@@ -1739,7 +1736,7 @@ RuboCop::Cop::Performance::Squeeze::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::Squeeze::PREFERRED_METHODS = T.let(T.unsafe(nil), Hash)
 RuboCop::Cop::Performance::Squeeze::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies unnecessary use of a regex where `String#start_with?` would suffice.
+# Identifies unnecessary use of a regex where `String#start_with?` would suffice.
 #
 # This cop has `SafeMultiline` configuration option that `true` by default because
 # `^start` is unsafe as it will behave incompatible with `start_with?`
@@ -1786,7 +1783,7 @@ end
 RuboCop::Cop::Performance::StartWith::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::StartWith::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where string identifier argument can be replaced
+# Identifies places where string identifier argument can be replaced
 # by symbol identifier argument.
 # It prevents the redundancy of the internal string-to-symbol conversion.
 #
@@ -1817,8 +1814,7 @@ RuboCop::Cop::Performance::StringIdentifierArgument::MSG = T.let(T.unsafe(nil), 
 # https://github.com/rubocop/rubocop-performance/issues/278
 RuboCop::Cop::Performance::StringIdentifierArgument::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies unnecessary use of a regex where
-# `String#include?` would suffice.
+# Identifies unnecessary use of a regex where `String#include?` would suffice.
 #
 # @example
 #   # bad
@@ -1847,8 +1843,7 @@ end
 RuboCop::Cop::Performance::StringInclude::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::StringInclude::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `gsub` can be replaced by
-# `tr` or `delete`.
+# Identifies places where `gsub` can be replaced by `tr` or `delete`.
 #
 # @example
 #   # bad
@@ -1897,7 +1892,7 @@ RuboCop::Cop::Performance::StringReplacement::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::StringReplacement::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Performance::StringReplacement::TR = T.let(T.unsafe(nil), String)
 
-# This cop identifies places where custom code finding the sum of elements
+# Identifies places where custom code finding the sum of elements
 # in some Enumerable object can be replaced by `Enumerable#sum` method.
 #
 # @example OnlySumOrWithInitialValue: false (default)
@@ -1965,7 +1960,7 @@ RuboCop::Cop::Performance::Sum::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::Sum::MSG_IF_NO_INIT_VALUE = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::Sum::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for .times.map calls.
+# Checks for .times.map calls.
 # In most cases such calls can be replaced
 # with an explicit array creation.
 #
@@ -2026,8 +2021,7 @@ end
 RuboCop::Cop::Performance::UnfreezeString::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Performance::UnfreezeString::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `URI::Parser.new`
-# can be replaced by `URI::DEFAULT_PARSER`.
+# Identifies places where `URI::Parser.new` can be replaced by `URI::DEFAULT_PARSER`.
 #
 # @example
 #   # bad

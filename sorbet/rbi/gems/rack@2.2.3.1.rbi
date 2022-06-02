@@ -1557,8 +1557,7 @@ Rack::Multipart::ATTRIBUTE = T.let(T.unsafe(nil), Regexp)
 # Updated definitions from RFC 2231
 Rack::Multipart::ATTRIBUTE_CHAR = T.let(T.unsafe(nil), Regexp)
 
-Rack::Multipart::BROKEN_QUOTED = T.let(T.unsafe(nil), Regexp)
-Rack::Multipart::BROKEN_UNQUOTED = T.let(T.unsafe(nil), Regexp)
+Rack::Multipart::BROKEN = T.let(T.unsafe(nil), Regexp)
 Rack::Multipart::CONDISP = T.let(T.unsafe(nil), Regexp)
 Rack::Multipart::DISPPARM = T.let(T.unsafe(nil), Regexp)
 Rack::Multipart::EOL = T.let(T.unsafe(nil), String)

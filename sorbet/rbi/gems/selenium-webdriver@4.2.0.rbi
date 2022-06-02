@@ -44,19 +44,22 @@ end
 class Selenium::WebDriver::ActionBuilder
   include ::Selenium::WebDriver::KeyActions
   include ::Selenium::WebDriver::PointerActions
+  include ::Selenium::WebDriver::WheelActions
 
   # Initialize a W3C Action Builder. Differs from previous by requiring a bridge and allowing asynchronous actions.
   # The W3C implementation allows asynchronous actions per device. e.g. A key can be pressed at the same time that
   # the mouse is moving. Keep in mind that pauses must be added for other devices in order to line up the actions
   # correctly when using asynchronous.
   #
-  # @param bridge [Selenium::WebDriver::Remote::Bridge] the bridge for the current driver instance
-  # @param mouse [Selenium::WebDriver::Interactions::PointerInput] PointerInput for the mouse.
-  # @param keyboard [Selenium::WebDriver::Interactions::KeyInput] KeyInput for the keyboard.
-  # @param async [Boolean] Whether to perform the actions asynchronously per device. Defaults to false for
-  #   backwards compatibility.
+  # @param bridge [Selenium::WebDriver::Remote::Bridge] the bridge for the current driver instance.
+  # @param deprecated_mouse [Selenium::WebDriver::Interactions::PointerInput] PointerInput for the mouse.
+  # @param deprecated_keyboard [Selenium::WebDriver::Interactions::KeyInput] KeyInput for the keyboard.
+  # @param deprecated_async [Boolean] Whether to perform the actions asynchronously per device.
+  #   Defaults to false for backwards compatibility.
+  # @param devices [Array<Selenium::WebDriver::Interactions::InputDevices>] list of valid sources of input.
+  # @param async [Boolean] Whether to perform the actions asynchronously per device.
   # @return [ActionBuilder] A self reference.
-  def initialize(bridge, mouse, keyboard, async = T.unsafe(nil)); end
+  def initialize(bridge, deprecated_mouse = T.unsafe(nil), deprecated_keyboard = T.unsafe(nil), deprecated_async = T.unsafe(nil), devices: T.unsafe(nil), async: T.unsafe(nil), duration: T.unsafe(nil)); end
 
   # Adds a KeyInput device
   #
@@ -79,8 +82,26 @@ class Selenium::WebDriver::ActionBuilder
   # @return [Interactions::PointerInput] The pointer input added
   def add_pointer_input(kind, name); end
 
+  # Adds a WheelInput device
+  #
+  # @example Add a wheel input device
+  #
+  #   builder = device.action
+  #   builder.add_wheel_input('wheel2')
+  # @param name [String] name for the device
+  # @return [Interactions::WheelInput] The wheel input added
+  def add_wheel_input(name); end
+
   # Clears all actions from the builder.
   def clear_all_actions; end
+
+  # Retrieves the input device for the given name or type
+  #
+  # @param name [String] name of the input device
+  # @param type [String] name of the input device
+  # @raise [ArgumentError]
+  # @return [Selenium::WebDriver::Interactions::InputDevice] input device with given name or type
+  def device(name: T.unsafe(nil), type: T.unsafe(nil)); end
 
   # Returns the value of attribute devices.
   def devices; end
@@ -108,7 +129,7 @@ class Selenium::WebDriver::ActionBuilder
   # @param device [InputDevice] Input device to pause
   # @param duration [Float] Duration to pause
   # @return [ActionBuilder] A self reference.
-  def pause(device, duration = T.unsafe(nil)); end
+  def pause(deprecated_device = T.unsafe(nil), deprecated_duration = T.unsafe(nil), device: T.unsafe(nil), duration: T.unsafe(nil)); end
 
   # Creates multiple pauses for the given device of the given duration.
   #
@@ -122,7 +143,7 @@ class Selenium::WebDriver::ActionBuilder
   # @param number [Integer] of pauses to add for the device
   # @param duration [Float] Duration to pause
   # @return [ActionBuilder] A self reference.
-  def pauses(device, number, duration = T.unsafe(nil)); end
+  def pauses(deprecated_device = T.unsafe(nil), deprecated_number = T.unsafe(nil), deprecated_duration = T.unsafe(nil), device: T.unsafe(nil), number: T.unsafe(nil), duration: T.unsafe(nil)); end
 
   # Executes the actions added to the builder.
   def perform; end
@@ -135,10 +156,19 @@ class Selenium::WebDriver::ActionBuilder
   # Releases all action states from the browser.
   def release_actions; end
 
+  # Retrieves the current WheelInput device
+  #
+  # @return [Selenium::WebDriver::Interactions::InputDevice] current WheelInput devices
+  def wheel_inputs; end
+
   private
 
   # Adds an InputDevice
+  #
+  # @raise [TypeError]
   def add_input(device); end
+
+  def deprecate_method(device = T.unsafe(nil), duration = T.unsafe(nil), number = T.unsafe(nil), method: T.unsafe(nil)); end
 
   # Adds pauses for all devices but the given devices
   #
@@ -161,6 +191,58 @@ module Selenium::WebDriver::Atoms
 
   def execute_atom(function_name, *arguments); end
   def read_atom(function); end
+end
+
+class Selenium::WebDriver::BiDi
+  # @return [BiDi] a new instance of BiDi
+  def initialize(url:); end
+
+  def callbacks; end
+  def close; end
+  def error_message(message); end
+
+  # @raise [Error::WebDriverError]
+  def send_cmd(method, **params); end
+
+  def session; end
+end
+
+class Selenium::WebDriver::BiDi::Session
+  # @return [Session] a new instance of Session
+  def initialize(bidi); end
+
+  def status; end
+end
+
+class Selenium::WebDriver::BiDi::Session::Status < ::Struct
+  # Returns the value of attribute message
+  #
+  # @return [Object] the current value of message
+  def message; end
+
+  # Sets the attribute message
+  #
+  # @param value [Object] the value to set the attribute message to.
+  # @return [Object] the newly set value
+  def message=(_); end
+
+  # Returns the value of attribute ready
+  #
+  # @return [Object] the current value of ready
+  def ready; end
+
+  # Sets the attribute ready
+  #
+  # @param value [Object] the value to set the attribute ready to.
+  # @return [Object] the newly set value
+  def ready=(_); end
+
+  class << self
+    def [](*_arg0); end
+    def inspect; end
+    def members; end
+    def new(*_arg0); end
+  end
 end
 
 module Selenium::WebDriver::Chrome
@@ -207,6 +289,7 @@ module Selenium::WebDriver::Chrome::Features
   def network_conditions=(conditions); end
   def send_command(command_params); end
   def set_permission(name, value); end
+  def start_cast_desktop_mirroring(name); end
   def start_cast_tab_mirroring(name); end
   def stop_casting(name); end
 end
@@ -232,8 +315,8 @@ class Selenium::WebDriver::Chrome::Options < ::Selenium::WebDriver::Options
   # @option opts
   # @option opts
   # @option opts
-  # @param :profile [Profile] An instance of a Chrome::Profile Class
-  # @param :encoded_extensions [Array] List of extensions that do not need to be Base64 encoded
+  # @option opts
+  # @param profile [Profile] An instance of a Chrome::Profile Class
   # @param opts [Hash] the pre-defined options to create the Chrome::Options with
   # @return [Options] a new instance of Options
   def initialize(profile: T.unsafe(nil), **opts); end
@@ -306,7 +389,7 @@ class Selenium::WebDriver::Chrome::Options < ::Selenium::WebDriver::Options
   #   extensions = ['/path/to/extension.crx', '/path/to/other.crx']
   #   options = Selenium::WebDriver::Chrome::Options.new
   #   options.extensions = extensions
-  # @param :extensions [Array<String>] A list of paths to (.crx) Chrome extensions to install on startup
+  # @param extensions [Array<String>] A list of paths to (.crx) Chrome extensions to install on startup
   def extensions=(extensions); end
 
   # Run Chrome in headless mode.
@@ -411,21 +494,12 @@ class Selenium::WebDriver::DevTools
 
   private
 
-  def attach_socket_listener; end
-  def callback_thread(params); end
   def error_message(error); end
-  def incoming_frame; end
-  def next_id; end
-  def process_frame(frame); end
-  def process_handshake; end
 
   # @return [Boolean]
   def respond_to_missing?(method, *_args); end
 
-  def socket; end
   def start_session; end
-  def wait; end
-  def ws; end
 end
 
 class Selenium::WebDriver::DevTools::ConsoleEvent
@@ -560,9 +634,6 @@ class Selenium::WebDriver::DevTools::PinnedScript
   # @api private
   def to_json(*_arg0); end
 end
-
-Selenium::WebDriver::DevTools::RESPONSE_WAIT_INTERVAL = T.let(T.unsafe(nil), Float)
-Selenium::WebDriver::DevTools::RESPONSE_WAIT_TIMEOUT = T.let(T.unsafe(nil), Integer)
 
 class Selenium::WebDriver::DevTools::Request
   # @return [Request] a new instance of Request
@@ -720,7 +791,7 @@ class Selenium::WebDriver::Driver
 
   # @return [ActionBuilder]
   # @see ActionBuilder
-  def action; end
+  def action(**opts); end
 
   # driver.all(class: 'bar') #=> [#<WebDriver::Element:0x1011c3b88, ...]
   def all(*args); end
@@ -914,6 +985,13 @@ module Selenium::WebDriver::DriverExtensions::HasAuthentication
   def authenticate(request_id, url); end
 end
 
+module Selenium::WebDriver::DriverExtensions::HasBiDi
+  # Retrieves WebDriver BiDi connection.
+  #
+  # @return [BiDi]
+  def bidi; end
+end
+
 module Selenium::WebDriver::DriverExtensions::HasCDP
   # Returns network conditions.
   #
@@ -940,6 +1018,11 @@ module Selenium::WebDriver::DriverExtensions::HasCasting
   # Starts a tab mirroring session on a specific receiver target.
   #
   # @param name [String] the sink to use as the target
+  def start_cast_desktop_mirroring(name); end
+
+  # Starts a tab mirroring session on a specific receiver target.
+  #
+  # @param name [String] the sink to use as the target
   def start_cast_tab_mirroring(name); end
 
   # Stops the existing Cast session on a specific receiver target.
@@ -955,8 +1038,7 @@ module Selenium::WebDriver::DriverExtensions::HasContext
   #         a `with` statement. The state of the context on the server is
   #         saved before entering the block, and restored upon exiting it.
   #
-  # @param name [String] which permission to set
-  # @param value [String] what to set the permission to
+  # @param value [String] which context gets set (either 'chrome' or 'content')
   def context=(value); end
 end
 
@@ -1149,7 +1231,7 @@ module Selenium::WebDriver::DriverExtensions::HasPinnedScripts
 
   # Unpins script making it undefined for the subsequent calls.
   #
-  # @param [DevTools::PinnedScript]
+  # @param script [DevTools::PinnedScript]
   def unpin_script(script); end
 end
 
@@ -1843,7 +1925,7 @@ end
 
 Selenium::WebDriver::Firefox::Options::BROWSER = T.let(T.unsafe(nil), String)
 
-# see: https://firefox-source-docs.mozilla.org/testing/geckodriver/Capabilities.html
+# see: https://developer.mozilla.org/en-US/docs/Web/WebDriver/Capabilities/firefoxOptions
 Selenium::WebDriver::Firefox::Options::CAPABILITIES = T.let(T.unsafe(nil), Hash)
 
 Selenium::WebDriver::Firefox::Options::KEY = T.let(T.unsafe(nil), String)
@@ -1908,10 +1990,6 @@ class Selenium::WebDriver::Firefox::Profile
   def read_model_prefs; end
   def read_user_prefs(path); end
   def set_manual_proxy_preference(key, value); end
-
-  # @return [Boolean]
-  def stringified?(str); end
-
   def update_user_prefs_in(directory); end
   def write_prefs(prefs, path); end
 
@@ -1959,6 +2037,27 @@ end
 Selenium::WebDriver::Firefox::Service::DEFAULT_PORT = T.let(T.unsafe(nil), Integer)
 Selenium::WebDriver::Firefox::Service::EXECUTABLE = T.let(T.unsafe(nil), String)
 Selenium::WebDriver::Firefox::Service::MISSING_TEXT = T.let(T.unsafe(nil), String)
+
+# @api private
+module Selenium::WebDriver::Firefox::Util
+  private
+
+  # @api private
+  def app_data_path; end
+
+  # @api private
+  def stringified?(str); end
+
+  class << self
+    # @api private
+    def app_data_path; end
+
+    # @api private
+    # @return [Boolean]
+    def stringified?(str); end
+  end
+end
+
 module Selenium::WebDriver::HTML5; end
 
 class Selenium::WebDriver::HTML5::LocalStorage
@@ -2096,142 +2195,295 @@ Selenium::WebDriver::IE::Service::SHUTDOWN_SUPPORTED = T.let(T.unsafe(nil), True
 
 module Selenium::WebDriver::Interactions
   class << self
-    def key(name); end
+    def key(name = T.unsafe(nil)); end
+    def mouse(name: T.unsafe(nil)); end
     def none(name = T.unsafe(nil)); end
-    def pointer(kind, **kwargs); end
+    def pen(name: T.unsafe(nil)); end
+    def pointer(kind = T.unsafe(nil), name: T.unsafe(nil)); end
+    def touch(name: T.unsafe(nil)); end
+    def wheel(name = T.unsafe(nil)); end
   end
 end
 
+# Superclass for the input device sources
+# Manages Array of Interaction instances for the device
+#
+# @api private
 class Selenium::WebDriver::Interactions::InputDevice
+  # @api private
   # @return [InputDevice] a new instance of InputDevice
   def initialize(name = T.unsafe(nil)); end
 
-  # Returns the value of attribute actions.
+  # @api private
   def actions; end
 
+  # @api private
   # @raise [TypeError]
   def add_action(action); end
 
+  # @api private
   def clear_actions; end
+
+  # @api private
   def create_pause(duration = T.unsafe(nil)); end
 
-  # Returns the value of attribute name.
+  # @api private
+  def encode; end
+
+  # @api private
   def name; end
 
-  # Determine if only pauses are present
-  #
-  # @return [Boolean]
-  def no_actions?; end
+  # @api private
+  def type; end
 end
 
+# Superclass for classes defining actions
+# Do not initialize directly, only use subclass
+#
+# @api private
 class Selenium::WebDriver::Interactions::Interaction
+  # @api private
   # @return [Interaction] a new instance of Interaction
   def initialize(source); end
 
-  # Returns the value of attribute source.
-  def source; end
+  # @api private
+  # @raise [NotImplementedError]
+  def assert_source(_source); end
+
+  # @api private
+  def type; end
 end
 
-Selenium::WebDriver::Interactions::Interaction::PAUSE = T.let(T.unsafe(nil), Symbol)
 Selenium::WebDriver::Interactions::KEY = T.let(T.unsafe(nil), Symbol)
 
+# Creates actions specific to Key Input devices
+#
+# @api private
 class Selenium::WebDriver::Interactions::KeyInput < ::Selenium::WebDriver::Interactions::InputDevice
+  # @api private
+  # @return [KeyInput] a new instance of KeyInput
+  def initialize(name = T.unsafe(nil)); end
+
+  # @api private
   def create_key_down(key); end
+
+  # @api private
   def create_key_up(key); end
-  def encode; end
-  def type; end
 end
 
+# @api private
 Selenium::WebDriver::Interactions::KeyInput::SUBTYPES = T.let(T.unsafe(nil), Hash)
 
-class Selenium::WebDriver::Interactions::KeyInput::TypingInteraction < ::Selenium::WebDriver::Interactions::Interaction
-  # @return [TypingInteraction] a new instance of TypingInteraction
-  def initialize(source, type, key); end
-
-  # @raise [TypeError]
-  def assert_type(type); end
-
-  def encode; end
-
-  # Returns the value of attribute type.
-  def type; end
-end
+# Backward compatibility in case anyone called this directly
+#
+# @api private
+class Selenium::WebDriver::Interactions::KeyInput::TypingInteraction < ::Selenium::WebDriver::Interactions::TypingInteraction; end
 
 Selenium::WebDriver::Interactions::NONE = T.let(T.unsafe(nil), Symbol)
 
+# Creates actions specific to null input source
+# This is primarily used for adding pauses
+#
+# @api private
 class Selenium::WebDriver::Interactions::NoneInput < ::Selenium::WebDriver::Interactions::InputDevice
-  def encode; end
-  def type; end
+  # @api private
+  # @return [NoneInput] a new instance of NoneInput
+  def initialize(name = T.unsafe(nil)); end
 end
 
 Selenium::WebDriver::Interactions::POINTER = T.let(T.unsafe(nil), Symbol)
 
+# Action to create a waiting period between actions
+# Also used for synchronizing actions across devices
+#
+# @api private
 class Selenium::WebDriver::Interactions::Pause < ::Selenium::WebDriver::Interactions::Interaction
+  # @api private
   # @return [Pause] a new instance of Pause
   def initialize(source, duration = T.unsafe(nil)); end
 
+  # @api private
+  # @raise [TypeError]
+  def assert_source(source); end
+
+  # @api private
   def encode; end
-  def type; end
 end
 
-# Move
+# Action to cancel any other Pointer Action.
+#
+# @api private
 class Selenium::WebDriver::Interactions::PointerCancel < ::Selenium::WebDriver::Interactions::Interaction
+  # @api private
+  # @return [PointerCancel] a new instance of PointerCancel
+  def initialize(source); end
+
+  # @api private
+  # @raise [TypeError]
+  def assert_source(source); end
+
+  # @api private
   def encode; end
-  def type; end
 end
 
+module Selenium::WebDriver::Interactions::PointerEventProperties
+  # @raise [ArgumentError]
+  def process_opts; end
+
+  private
+
+  # @raise [TypeError]
+  def assert_number(num, min, max = T.unsafe(nil)); end
+end
+
+Selenium::WebDriver::Interactions::PointerEventProperties::VALID = T.let(T.unsafe(nil), Hash)
+
+# Creates actions specific to Pointer Input devices
+#
+# @api private
 class Selenium::WebDriver::Interactions::PointerInput < ::Selenium::WebDriver::Interactions::InputDevice
+  # @api private
   # @return [PointerInput] a new instance of PointerInput
   def initialize(kind, name: T.unsafe(nil)); end
 
+  # @api private
   # @raise [TypeError]
   def assert_kind(pointer); end
 
+  # @api private
   def create_pointer_cancel; end
-  def create_pointer_down(button); end
-  def create_pointer_move(duration: T.unsafe(nil), x: T.unsafe(nil), y: T.unsafe(nil), element: T.unsafe(nil), origin: T.unsafe(nil)); end
-  def create_pointer_up(button); end
+
+  # @api private
+  def create_pointer_down(button, **opts); end
+
+  # @api private
+  def create_pointer_move(duration: T.unsafe(nil), x: T.unsafe(nil), y: T.unsafe(nil), origin: T.unsafe(nil), **opts); end
+
+  # @api private
+  def create_pointer_up(button, **opts); end
+
+  # @api private
   def encode; end
 
-  # Returns the value of attribute kind.
+  # @api private
   def kind; end
-
-  def type; end
 end
 
+# @api private
 Selenium::WebDriver::Interactions::PointerInput::KIND = T.let(T.unsafe(nil), Hash)
 
-# PointerPress
+# Action related to moving the pointer.
+#
+# @api private
 class Selenium::WebDriver::Interactions::PointerMove < ::Selenium::WebDriver::Interactions::Interaction
-  # @return [PointerMove] a new instance of PointerMove
-  def initialize(source, duration, x, y, element: T.unsafe(nil), origin: T.unsafe(nil)); end
+  include ::Selenium::WebDriver::Interactions::PointerEventProperties
 
+  # @api private
+  # @return [PointerMove] a new instance of PointerMove
+  def initialize(source, duration, x, y, element: T.unsafe(nil), origin: T.unsafe(nil), **opts); end
+
+  # @api private
+  # @raise [TypeError]
+  def assert_source(source); end
+
+  # @api private
   def encode; end
-  def type; end
 end
 
+# @api private
 Selenium::WebDriver::Interactions::PointerMove::ORIGINS = T.let(T.unsafe(nil), Array)
+
+# @api private
 Selenium::WebDriver::Interactions::PointerMove::POINTER = T.let(T.unsafe(nil), Symbol)
+
+# @api private
 Selenium::WebDriver::Interactions::PointerMove::VIEWPORT = T.let(T.unsafe(nil), Symbol)
 
-# PointerInput
+# Actions related to clicking, tapping or pressing the pointer.
+#
+# @api private
 class Selenium::WebDriver::Interactions::PointerPress < ::Selenium::WebDriver::Interactions::Interaction
-  # @return [PointerPress] a new instance of PointerPress
-  def initialize(source, direction, button); end
+  include ::Selenium::WebDriver::Interactions::PointerEventProperties
 
-  # @raise [ArgumentError]
+  # @api private
+  # @return [PointerPress] a new instance of PointerPress
+  def initialize(source, direction, button, **opts); end
+
+  # @api private
+  def encode; end
+
+  private
+
+  # @api private
   def assert_button(button); end
 
-  # @raise [TypeError]
+  # @api private
+  # @raise [ArgumentError]
   def assert_direction(direction); end
 
+  # @api private
+  # @raise [TypeError]
+  def assert_source(source); end
+end
+
+# @api private
+Selenium::WebDriver::Interactions::PointerPress::BUTTONS = T.let(T.unsafe(nil), Hash)
+
+# @api private
+Selenium::WebDriver::Interactions::PointerPress::DIRECTIONS = T.let(T.unsafe(nil), Hash)
+
+# Action related to scrolling a wheel.
+#
+# @api private
+class Selenium::WebDriver::Interactions::Scroll < ::Selenium::WebDriver::Interactions::Interaction
+  # @api private
+  # @return [Scroll] a new instance of Scroll
+  def initialize(source:, x: T.unsafe(nil), y: T.unsafe(nil), delta_x: T.unsafe(nil), delta_y: T.unsafe(nil), origin: T.unsafe(nil), duration: T.unsafe(nil)); end
+
+  # @api private
+  # @raise [TypeError]
+  def assert_source(source); end
+
+  # @api private
   def encode; end
+end
+
+# Actions related to pressing keys.
+#
+# @api private
+class Selenium::WebDriver::Interactions::TypingInteraction < ::Selenium::WebDriver::Interactions::Interaction
+  # @api private
+  # @return [TypingInteraction] a new instance of TypingInteraction
+  def initialize(source, type, key); end
+
+  # @api private
+  # @raise [TypeError]
+  def assert_source(source); end
+
+  # @api private
+  # @raise [TypeError]
+  def assert_type(type); end
+
+  # @api private
+  def encode; end
+
+  # @api private
   def type; end
 end
 
-Selenium::WebDriver::Interactions::PointerPress::BUTTONS = T.let(T.unsafe(nil), Hash)
-Selenium::WebDriver::Interactions::PointerPress::DIRECTIONS = T.let(T.unsafe(nil), Hash)
-Selenium::WebDriver::Interactions::SOURCE_TYPES = T.let(T.unsafe(nil), Array)
+Selenium::WebDriver::Interactions::WHEEL = T.let(T.unsafe(nil), Symbol)
+
+# Creates actions specific to Pointer Input devices
+#
+# @api private
+class Selenium::WebDriver::Interactions::WheelInput < ::Selenium::WebDriver::Interactions::InputDevice
+  # @api private
+  # @return [WheelInput] a new instance of WheelInput
+  def initialize(name = T.unsafe(nil)); end
+
+  # @api private
+  def create_scroll(**opts); end
+end
 
 module Selenium::WebDriver::KeyActions
   # Performs a key press. Does not release the key - subsequent interactions may assume it's kept pressed.
@@ -2295,6 +2547,8 @@ module Selenium::WebDriver::KeyActions
   # @param device [Symbol, String] optional name of the KeyInput device to press the key on
   # @return [ActionBuilder] A self reference
   def key_action(*args, action: T.unsafe(nil), device: T.unsafe(nil)); end
+
+  def key_input(name = T.unsafe(nil)); end
 end
 
 module Selenium::WebDriver::Keys
@@ -2851,7 +3105,8 @@ module Selenium::WebDriver::PointerActions
   # @return [ActionBuilder] A self reference.
   def context_click(element = T.unsafe(nil), device: T.unsafe(nil)); end
 
-  # The overridable duration for movement used by methods in this module
+  # By default this is set to 250ms in the ActionBuilder constructor
+  # It can be overridden with default_move_duration=
   def default_move_duration; end
 
   # Sets the attribute default_move_duration
@@ -2910,31 +3165,31 @@ module Selenium::WebDriver::PointerActions
   # @return [ActionBuilder] A self reference.
   def drag_and_drop_by(source, right_by, down_by, device: T.unsafe(nil)); end
 
-  # Moves the mouse from its current position by the given offset.
-  # If the coordinates provided are outside the viewport (the mouse will
-  # end up outside the browser window) then the viewport is scrolled to
-  # match.
+  # Moves the pointer from its current position by the given offset.
   #
-  # @example Move the mouse to a certain offset from its current position
+  # The viewport is not scrolled if the coordinates provided are outside the viewport.
+  # MoveTargetOutOfBoundsError will be raised if the offsets are outside the viewport
+  #
+  # @example Move the pointer to a certain offset from its current position
   #
   #   driver.action.move_by(100, 100).perform
-  # @param right_by [Integer] horizontal offset. A negative value means moving the mouse left.
-  # @param down_by [Integer] vertical offset. A negative value means moving the mouse up.
+  # @param right_by [Integer] horizontal offset. A negative value means moving the pointer left.
+  # @param down_by [Integer] vertical offset. A negative value means moving the pointer up.
   # @param device [Symbol || String] optional name of the PointerInput device to move
   # @raise [MoveTargetOutOfBoundsError] if the provided offset is outside the document's boundaries.
   # @return [ActionBuilder] A self reference.
-  def move_by(right_by, down_by, device: T.unsafe(nil)); end
+  def move_by(right_by, down_by, device: T.unsafe(nil), duration: T.unsafe(nil), **opts); end
 
-  # Moves the mouse to the middle of the given element. The element is scrolled into
-  # view and its location is calculated using getBoundingClientRect.  Then the
-  # mouse is moved to optional offset coordinates from the element.
+  # Moves the pointer to the middle of the given element.
+  # its location is calculated using getBoundingClientRect.
+  # Then the pointer is moved to optional offset coordinates from the element.
   #
-  # This is adapted to be backward compatible from non- actions.  calculates offset from the center point
-  # of the element
+  # The element is not scrolled into view.
+  # MoveTargetOutOfBoundsError will be raised if element with offset is outside the viewport
   #
-  # Note that when using offsets, both coordinates need to be passed.
+  # When using offsets, both coordinates need to be passed.
   #
-  # @example Scroll element into view and move the mouse to it
+  # @example Move the pointer to element
   #
   #   el = driver.find_element(id: "some_id")
   #   driver.action.move_to(el).perform
@@ -2949,14 +3204,14 @@ module Selenium::WebDriver::PointerActions
   #   coordinates above the element.
   # @param device [Symbol || String] optional name of the PointerInput device to move.
   # @return [ActionBuilder] A self reference.
-  def move_to(element, right_by = T.unsafe(nil), down_by = T.unsafe(nil), device: T.unsafe(nil)); end
+  def move_to(element, right_by = T.unsafe(nil), down_by = T.unsafe(nil), device: T.unsafe(nil), duration: T.unsafe(nil), **opts); end
 
-  # Moves the mouse to a given location in the viewport.
-  # If the coordinates provided are outside the viewport (the mouse will
-  # end up outside the browser window) then the viewport is scrolled to
-  # match.
+  # Moves the pointer to a given location in the viewport.
   #
-  # @example Move the mouse to a certain position in the viewport
+  # The viewport is not scrolled if the coordinates provided are outside the viewport.
+  # MoveTargetOutOfBoundsError will be raised if the offsets are outside the viewport
+  #
+  # @example Move the pointer to a certain position in the viewport
   #
   #   driver.action.move_to_location(100, 100).perform
   # @param x [Integer] horizontal position. Equivalent to a css 'left' value.
@@ -2964,7 +3219,7 @@ module Selenium::WebDriver::PointerActions
   # @param device [Symbol || String] optional name of the PointerInput device to move
   # @raise [MoveTargetOutOfBoundsError] if the provided x or y value is outside the document's boundaries.
   # @return [ActionBuilder] A self reference.
-  def move_to_location(x, y, device: T.unsafe(nil)); end
+  def move_to_location(x, y, device: T.unsafe(nil), duration: T.unsafe(nil), **opts); end
 
   # Presses (without releasing) at the current location of the PointerInput device. This is equivalent to:
   #
@@ -2977,7 +3232,7 @@ module Selenium::WebDriver::PointerActions
   # @param device [Symbol || String] optional name of the PointerInput device with the button
   #   that will be pressed
   # @return [ActionBuilder] A self reference.
-  def pointer_down(button, device: T.unsafe(nil)); end
+  def pointer_down(button = T.unsafe(nil), device: T.unsafe(nil), **opts); end
 
   # Releases the pressed mouse button at the current mouse location of the PointerInput device.
   #
@@ -2988,7 +3243,7 @@ module Selenium::WebDriver::PointerActions
   # @param device [Symbol || String] optional name of the PointerInput device with the button that will
   #   be released
   # @return [ActionBuilder] A self reference.
-  def pointer_up(button, device: T.unsafe(nil)); end
+  def pointer_up(button = T.unsafe(nil), device: T.unsafe(nil), **opts); end
 
   # Releases the depressed left mouse button at the current mouse location.
   #
@@ -3003,8 +3258,8 @@ module Selenium::WebDriver::PointerActions
 
   private
 
-  def button_action(button, action: T.unsafe(nil), device: T.unsafe(nil)); end
-  def get_pointer(device = T.unsafe(nil)); end
+  def button_action(button, action, device: T.unsafe(nil), **opts); end
+  def pointer_input(name = T.unsafe(nil)); end
 end
 
 class Selenium::WebDriver::PortProber
@@ -3163,8 +3418,8 @@ class Selenium::WebDriver::Remote::Bridge
   # Initializes the bridge with the given server URL
   #
   # @api private
-  # @param :url [String, URI] url for the remote server
-  # @param :http_client [Object] an HTTP client instance that implements the same protocol as Http::Default
+  # @param url [String, URI] url for the remote server
+  # @param http_client [Object] an HTTP client instance that implements the same protocol as Http::Default
   # @return [Bridge] a new instance of Bridge
   def initialize(url:, http_client: T.unsafe(nil)); end
 
@@ -3172,10 +3427,10 @@ class Selenium::WebDriver::Remote::Bridge
   def accept_alert; end
 
   # actions
-  def action(async = T.unsafe(nil)); end
+  def action(deprecated_async = T.unsafe(nil), async: T.unsafe(nil), devices: T.unsafe(nil), duration: T.unsafe(nil)); end
 
   # actions
-  def actions(async = T.unsafe(nil)); end
+  def actions(deprecated_async = T.unsafe(nil), async: T.unsafe(nil), devices: T.unsafe(nil), duration: T.unsafe(nil)); end
 
   # finding elements
   def active_element; end
@@ -3711,6 +3966,7 @@ module Selenium::WebDriver::SearchContext
 
   # Find all elements matching the given arguments
   #
+  # @raise [ArgumentError]
   # @see SearchContext#find_element
   def find_elements(*args); end
 
@@ -4330,6 +4586,111 @@ end
 
 Selenium::WebDriver::Wait::DEFAULT_INTERVAL = T.let(T.unsafe(nil), Float)
 Selenium::WebDriver::Wait::DEFAULT_TIMEOUT = T.let(T.unsafe(nil), Integer)
+
+class Selenium::WebDriver::WebSocketConnection
+  # @return [WebSocketConnection] a new instance of WebSocketConnection
+  def initialize(url:); end
+
+  def callbacks; end
+  def close; end
+  def send_cmd(**payload); end
+
+  private
+
+  def attach_socket_listener; end
+  def callback_thread(params); end
+  def incoming_frame; end
+  def next_id; end
+  def process_frame(frame); end
+  def process_handshake; end
+  def socket; end
+  def wait; end
+  def ws; end
+end
+
+Selenium::WebDriver::WebSocketConnection::RESPONSE_WAIT_INTERVAL = T.let(T.unsafe(nil), Float)
+Selenium::WebDriver::WebSocketConnection::RESPONSE_WAIT_TIMEOUT = T.let(T.unsafe(nil), Integer)
+
+module Selenium::WebDriver::WheelActions
+  # By default this is set to 250ms in the ActionBuilder constructor
+  # It can be overridden with default_scroll_duration=
+  def default_scroll_duration; end
+
+  # Sets the attribute default_scroll_duration
+  #
+  # @param value the value to set the attribute default_scroll_duration to.
+  def default_scroll_duration=(_arg0); end
+
+  # Scrolls by provided amounts with the origin in the top left corner of the viewport.
+  #
+  # @example Scroll viewport by a specified amount
+  #   el = driver.find_element(id: "some_id")
+  #   driver.action.scroll_by(100, 200).perform
+  # @param delta_x [Integer] Distance along X axis to scroll using the wheel. A negative value scrolls left.
+  # @param delta_y [Integer] Distance along Y axis to scroll using the wheel. A negative value scrolls up.
+  # @return [Selenium::WebDriver::WheelActions] A self reference.
+  def scroll_by(delta_x, delta_y, device: T.unsafe(nil)); end
+
+  # Scrolls by provided amount based on a provided origin.
+  #
+  # The scroll origin is either the center of an element or the upper left of the viewport plus any offsets.
+  # If the origin is an element, and the element is not in the viewport, the bottom of the element will first
+  #   be scrolled to the bottom of the viewport.
+  #
+  # @example Scroll from element by a specified amount with an offset
+  #   el = driver.find_element(id: "some_id")
+  #   origin = WheelActions::ScrollOrigin.element(el, 10, 10)
+  #   driver.action.scroll_from(origin, 100, 200).perform
+  # @example Scroll from element by a specified amount
+  #   el = driver.find_element(id: "some_id")
+  #   origin = WheelActions::ScrollOrigin.element(el)
+  #   driver.action.scroll_from(origin, 0, 200).perform
+  # @example Scroll viewport by a specified amount with an offset
+  #   origin = WheelActions::ScrollOrigin.viewport(10, 10)
+  #   driver.action.scroll_from(origin, 0, 200).perform
+  # @param delta_x [Integer] Distance along X axis to scroll using the wheel. A negative value scrolls left.
+  # @param scroll_origin [ScrollOrigin] Where scroll originates (viewport or element center) plus provided offsets.
+  # @param delta_y [Integer] Distance along Y axis to scroll using the wheel. A negative value scrolls up.
+  # @raise [Error::MoveTargetOutOfBoundsError] If the origin with offset is outside the viewport.
+  # @return [Selenium::WebDriver::WheelActions] A self reference.
+  def scroll_from(scroll_origin, delta_x, delta_y, device: T.unsafe(nil)); end
+
+  # If the element is outside the viewport, scrolls the bottom of the element to the bottom of the viewport.
+  #
+  # @example Scroll to element
+  #   el = driver.find_element(id: "some_id")
+  #   driver.action.scroll_to(element).perform
+  # @param Which [Object] element to scroll into the viewport.
+  # @return [Selenium::WebDriver::WheelActions] A self reference.
+  def scroll_to(element, device: T.unsafe(nil)); end
+
+  private
+
+  def scroll(**opts); end
+  def wheel_input(name = T.unsafe(nil)); end
+end
+
+class Selenium::WebDriver::WheelActions::ScrollOrigin
+  # Use a static method to access
+  #
+  # @api private
+  # @return [ScrollOrigin] a new instance of ScrollOrigin
+  def initialize(origin, x_offset, y_offset); end
+
+  # Returns the value of attribute origin.
+  def origin; end
+
+  # Returns the value of attribute x_offset.
+  def x_offset; end
+
+  # Returns the value of attribute y_offset.
+  def y_offset; end
+
+  class << self
+    def element(element, x_offset = T.unsafe(nil), y_offset = T.unsafe(nil)); end
+    def viewport(x_offset = T.unsafe(nil), y_offset = T.unsafe(nil)); end
+  end
+end
 
 class Selenium::WebDriver::Window
   # @api private
