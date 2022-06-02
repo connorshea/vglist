@@ -7,7 +7,8 @@ RSpec.describe "API", type: :request do
     let(:application) { build(:application, owner: user) }
     let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
     let(:games) { create_list(:game, 31) }
-    context 'hasNextPage' do
+
+    context 'with hasNextPage' do
       let(:query_string) do
         <<-GRAPHQL
           query {
@@ -35,7 +36,7 @@ RSpec.describe "API", type: :request do
       end
     end
 
-    context 'totalCount' do
+    context 'with totalCount' do
       let(:query_string) do
         <<-GRAPHQL
           query {
