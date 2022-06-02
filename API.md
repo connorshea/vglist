@@ -185,6 +185,23 @@ query {
 }
 ```
 
+By default, pages in the GraphQL API return sets of 30 items. You can increase or decrease the number of returned items by passing a `first` argument. The maximum number of records that can be requested per page is 100. If you try to go any higher than that, it'll clamp it back down to 100. You can use `first` and `after` in the same query.
+
+```graphql
+query {
+  # This will return the first 100 records, instead of just the first 30.
+  games(first: 100) {
+    nodes {
+      id
+      name
+    }
+    totalCount
+  }
+}
+```
+
+Please be thoughtful about your API usage, and don't request the maximum number of records per page unless it's necessary. If your use-case works fine with 30 records at a time, just use 30 records.
+
 ## Mutations
 
 In GraphQL, API requests that are intended to change the data in the API (e.g. adding a game to a user's library) are called [Mutations](https://graphql.org/learn/queries/#mutations). Unlike queries, which only _read_ data, mutations can be used to _write_ data.
