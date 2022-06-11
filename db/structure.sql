@@ -320,6 +320,63 @@ CREATE TABLE public.events (
 
 
 --
+-- Name: events_favorite_game_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_favorite_game_events (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    user_id bigint NOT NULL,
+    eventable_id bigint NOT NULL,
+    event_category integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: events_game_purchase_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_game_purchase_events (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    user_id bigint NOT NULL,
+    eventable_id bigint NOT NULL,
+    differences jsonb,
+    event_category integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: events_relationship_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_relationship_events (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    user_id bigint NOT NULL,
+    eventable_id bigint NOT NULL,
+    event_category integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: events_user_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_user_events (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    user_id bigint NOT NULL,
+    eventable_id bigint NOT NULL,
+    event_category integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: external_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1801,11 +1858,43 @@ ALTER TABLE ONLY public.engines
 
 
 --
+-- Name: events_favorite_game_events events_favorite_game_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_favorite_game_events
+    ADD CONSTRAINT events_favorite_game_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_game_purchase_events events_game_purchase_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_game_purchase_events
+    ADD CONSTRAINT events_game_purchase_events_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_relationship_events events_relationship_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_relationship_events
+    ADD CONSTRAINT events_relationship_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_user_events events_user_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_user_events
+    ADD CONSTRAINT events_user_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -2121,6 +2210,34 @@ CREATE UNIQUE INDEX index_engines_on_wikidata_id ON public.engines USING btree (
 
 
 --
+-- Name: index_events_favorite_game_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_favorite_game_events_on_eventable_id ON public.events_favorite_game_events USING btree (eventable_id);
+
+
+--
+-- Name: index_events_favorite_game_events_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_favorite_game_events_on_user_id ON public.events_favorite_game_events USING btree (user_id);
+
+
+--
+-- Name: index_events_game_purchase_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_game_purchase_events_on_eventable_id ON public.events_game_purchase_events USING btree (eventable_id);
+
+
+--
+-- Name: index_events_game_purchase_events_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_game_purchase_events_on_user_id ON public.events_game_purchase_events USING btree (user_id);
+
+
+--
 -- Name: index_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2139,6 +2256,34 @@ CREATE INDEX index_events_on_id_type_and_user_id ON public.events USING btree (e
 --
 
 CREATE INDEX index_events_on_user_id ON public.events USING btree (user_id);
+
+
+--
+-- Name: index_events_relationship_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_relationship_events_on_eventable_id ON public.events_relationship_events USING btree (eventable_id);
+
+
+--
+-- Name: index_events_relationship_events_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_relationship_events_on_user_id ON public.events_relationship_events USING btree (user_id);
+
+
+--
+-- Name: index_events_user_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_user_events_on_eventable_id ON public.events_user_events USING btree (eventable_id);
+
+
+--
+-- Name: index_events_user_events_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_user_events_on_user_id ON public.events_user_events USING btree (user_id);
 
 
 --
@@ -2653,6 +2798,14 @@ CREATE UNIQUE INDEX index_wikidata_blocklist_on_wikidata_id ON public.wikidata_b
 
 
 --
+-- Name: events_relationship_events fk_rails_05a7410ab8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_relationship_events
+    ADD CONSTRAINT fk_rails_05a7410ab8 FOREIGN KEY (eventable_id) REFERENCES public.relationships(id);
+
+
+--
 -- Name: game_purchase_platforms fk_rails_0727c9e126; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2701,6 +2854,14 @@ ALTER TABLE ONLY public.game_publishers
 
 
 --
+-- Name: events_favorite_game_events fk_rails_31a149f860; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_favorite_game_events
+    ADD CONSTRAINT fk_rails_31a149f860 FOREIGN KEY (eventable_id) REFERENCES public.favorite_games(id);
+
+
+--
 -- Name: oauth_access_grants fk_rails_330c32d8d9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2722,6 +2883,14 @@ ALTER TABLE ONLY public.favorite_games
 
 ALTER TABLE ONLY public.game_developers
     ADD CONSTRAINT fk_rails_4a2c4562f8 FOREIGN KEY (company_id) REFERENCES public.companies(id) ON DELETE CASCADE;
+
+
+--
+-- Name: events_game_purchase_events fk_rails_54d9eb6aa1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_game_purchase_events
+    ADD CONSTRAINT fk_rails_54d9eb6aa1 FOREIGN KEY (eventable_id) REFERENCES public.game_purchases(id);
 
 
 --
@@ -2858,6 +3027,14 @@ ALTER TABLE ONLY public.game_genres
 
 ALTER TABLE ONLY public.active_storage_attachments
     ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: events_user_events fk_rails_d08547655e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_user_events
+    ADD CONSTRAINT fk_rails_d08547655e FOREIGN KEY (eventable_id) REFERENCES public.users(id);
 
 
 --
@@ -3017,6 +3194,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220415022658'),
 ('20220415044554'),
 ('20220418015453'),
-('20220517025337');
+('20220517025337'),
+('20220611221953'),
+('20220611223002'),
+('20220611223008'),
+('20220611223015');
 
 
