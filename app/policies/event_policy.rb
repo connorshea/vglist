@@ -2,10 +2,10 @@
 class EventPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Event)) }
+  sig { returns(T.nilable(NewEventType)) }
   attr_reader :event
 
-  sig { params(user: T.nilable(User), event: T.nilable(Event)).void }
+  sig { params(user: T.nilable(User), event: T.nilable(NewEventType)).void }
   def initialize(user, event)
     @user = user
     @event = event
