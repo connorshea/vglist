@@ -12,7 +12,10 @@ class GamePurchase < ApplicationRecord
   has_many :game_purchase_stores
   has_many :stores, through: :game_purchase_stores, source: :store
 
+  # Old events
   has_many :events, as: :eventable, dependent: :destroy
+  # New events
+  has_many :game_purchase_events, as: :eventable, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
 
   enum completion_status: {
     unplayed: 0,
@@ -57,9 +60,8 @@ class GamePurchase < ApplicationRecord
 
   sig { void }
   def game_purchase_create
-    Event.create!(
+    Events::GamePurchaseEvent.create!(
       eventable_id: id,
-      eventable_type: 'GamePurchase',
       user_id: user.id,
       event_category: :add_to_library
     )
@@ -73,9 +75,8 @@ class GamePurchase < ApplicationRecord
 
     return unless saved_changes.key?('completion_status')
 
-    Event.create!(
+    Events::GamePurchaseEvent.create!(
       eventable_id: id,
-      eventable_type: 'GamePurchase',
       user_id: user.id,
       event_category: :change_completion_status,
       # We don't need the updated_at value

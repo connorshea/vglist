@@ -7,7 +7,10 @@ class Relationship < ApplicationRecord
   # The user being followed.
   belongs_to :followed, class_name: 'User'
 
+  # Old events
   has_many :events, as: :eventable, dependent: :destroy
+  # New events
+  has_many :relationship_events, as: :eventable, class_name: 'Events::RelationshipEvent', dependent: :destroy
 
   validates :followed_id,
     presence: true
@@ -28,8 +31,7 @@ class Relationship < ApplicationRecord
   # Create an event when following a user.
   sig { void }
   def create_follow_event
-    Event.create!(
-      eventable_type: 'Relationship',
+    Events::RelationshipEvent.create!(
       eventable_id: id,
       user_id: follower_id,
       event_category: :following

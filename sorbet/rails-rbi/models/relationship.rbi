@@ -193,6 +193,84 @@ class Relationship < ApplicationRecord
   sig { params(args: T.untyped).returns(T.untyped) }
   def validate_associated_records_for_events(*args); end
 
+  sig { returns(T.untyped) }
+  def self.after_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_relationship_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_relationship_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_relationship_events(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Relationship::ActiveRecord_Relation) }
   def self.page(num = nil); end
 
@@ -800,11 +878,23 @@ module Relationship::GeneratedAssociationMethods
   sig { returns(::User) }
   def reload_follower; end
 
+  sig { returns(::Events::RelationshipEvent::ActiveRecord_Associations_CollectionProxy) }
+  def relationship_events; end
+
+  sig { returns(T::Array[String]) }
+  def relationship_event_ids; end
+
+  sig { params(value: T::Enumerable[::Events::RelationshipEvent]).void }
+  def relationship_events=(value); end
+
   sig { params(ids: T.untyped).returns(T.untyped) }
   def followed_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def event_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def relationship_event_ids=(ids); end
 end
 
 class Relationship::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy

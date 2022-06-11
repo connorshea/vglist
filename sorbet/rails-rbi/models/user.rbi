@@ -843,6 +843,84 @@ class User < ApplicationRecord
   def validate_associated_records_for_events(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_user_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_user_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_user_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_user_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_user_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_user_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_user_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_user_events; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_user_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_user_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_user_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_user_events(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_wikidata_blocklists; end
 
   sig { returns(T::Boolean) }
@@ -3537,6 +3615,15 @@ module User::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::SteamBlocklist]).void }
   def steam_blocklists=(value); end
 
+  sig { returns(::Events::UserEvent::ActiveRecord_Associations_CollectionProxy) }
+  def user_events; end
+
+  sig { returns(T::Array[String]) }
+  def user_event_ids; end
+
+  sig { params(value: T::Enumerable[::Events::UserEvent]).void }
+  def user_events=(value); end
+
   sig { returns(::WikidataBlocklist::ActiveRecord_Associations_CollectionProxy) }
   def wikidata_blocklists; end
 
@@ -3578,6 +3665,9 @@ module User::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def event_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def user_event_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def wikidata_blocklist_ids=(ids); end

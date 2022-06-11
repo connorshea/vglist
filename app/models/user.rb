@@ -43,7 +43,10 @@ class User < ApplicationRecord
   has_many :events, dependent: :destroy
 
   # Users have an event for their creation.
+  # Old events.
   has_many :events, as: :eventable, dependent: :destroy
+  # New events
+  has_many :user_events, as: :eventable, class_name: 'Events::UserEvent', dependent: :destroy
 
   # Users create wikidata and steam blocklist entries.
   # We want to keep the entry even if the user that created it is deleted.
@@ -224,8 +227,7 @@ class User < ApplicationRecord
 
   sig { void }
   def on_user_creation
-    Event.create!(
-      eventable_type: 'User',
+    Events::UserEvent.create!(
       eventable_id: id,
       user_id: id,
       event_category: :new_user
