@@ -15,5 +15,15 @@ module Views
       new_user: 3,
       following: 4
     }
+
+    # Get a specific event subclass record based on the ID.
+    sig { params(id: String).returns(T.nilable(NewEventType)) }
+    def self.find_event_subclass_by_id(id)
+      event =   Events::GamePurchaseEvent.find_by(id: id)
+      event ||= Events::FavoriteGameEvent.find_by(id: id)
+      event ||= Events::UserEvent.find_by(id: id)
+      event ||= Events::RelationshipEvent.find_by(id: id)
+      event
+    end
   end
 end
