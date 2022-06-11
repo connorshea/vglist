@@ -1,3 +1,4 @@
+# typed: false
 class CreateEventsGamePurchaseEvents < ActiveRecord::Migration[6.1]
   def change
     create_table :events_game_purchase_events, id: :uuid do |t|

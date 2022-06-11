@@ -1,3 +1,4 @@
+# typed: true
 class CreateEventsUserEvents < ActiveRecord::Migration[6.1]
   def change
     create_table :events_user_events, id: :uuid do |t|

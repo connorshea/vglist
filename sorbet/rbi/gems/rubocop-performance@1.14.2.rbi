@@ -1499,6 +1499,7 @@ RuboCop::Cop::Performance::RedundantStringChars::RESTRICT_ON_SEND = T.let(T.unsa
 #   end
 class RuboCop::Cop::Performance::RegexpMatch < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
 
   def last_matches(param0); end
   def match_method?(param0 = T.unsafe(nil)); end
