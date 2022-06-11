@@ -950,6 +950,52 @@ CREATE VIEW public.grouped_unmatched_games AS
 
 
 --
+-- Name: new_events; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.new_events AS
+ SELECT events_game_purchase_events.id,
+    events_game_purchase_events.user_id,
+    events_game_purchase_events.eventable_id,
+    events_game_purchase_events.differences,
+    events_game_purchase_events.event_category,
+    events_game_purchase_events.created_at,
+    events_game_purchase_events.updated_at,
+    'GamePurchase'::text AS eventable_type
+   FROM public.events_game_purchase_events
+UNION ALL
+ SELECT events_favorite_game_events.id,
+    events_favorite_game_events.user_id,
+    events_favorite_game_events.eventable_id,
+    NULL::jsonb AS differences,
+    events_favorite_game_events.event_category,
+    events_favorite_game_events.created_at,
+    events_favorite_game_events.updated_at,
+    'FavoriteGame'::text AS eventable_type
+   FROM public.events_favorite_game_events
+UNION ALL
+ SELECT events_user_events.id,
+    events_user_events.user_id,
+    events_user_events.eventable_id,
+    NULL::jsonb AS differences,
+    events_user_events.event_category,
+    events_user_events.created_at,
+    events_user_events.updated_at,
+    'User'::text AS eventable_type
+   FROM public.events_user_events
+UNION ALL
+ SELECT events_relationship_events.id,
+    events_relationship_events.user_id,
+    events_relationship_events.eventable_id,
+    NULL::jsonb AS differences,
+    events_relationship_events.event_category,
+    events_relationship_events.created_at,
+    events_relationship_events.updated_at,
+    'Relationship'::text AS eventable_type
+   FROM public.events_relationship_events;
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3198,6 +3244,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220611221953'),
 ('20220611223002'),
 ('20220611223008'),
-('20220611223015');
+('20220611223015'),
+('20220611224027');
 
 
