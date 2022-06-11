@@ -24,7 +24,7 @@ RSpec.describe "DeleteEvent Mutation API", type: :request do
 
       expect do
         api_request(query_string, variables: { id: event.id }, token: access_token)
-      end.to change(Event, :count).by(-1)
+      end.to change(Views::NewEvent, :count).by(-1)
     end
 
     it "does not delete an event we do not own" do
@@ -33,7 +33,7 @@ RSpec.describe "DeleteEvent Mutation API", type: :request do
       expect do
         result = api_request(query_string, variables: { id: other_event.id }, token: access_token)
         expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to delete this event.")
-      end.to change(Event, :count).by(0)
+      end.to change(Views::NewEvent, :count).by(0)
     end
 
     it "returns a deleted boolean after deleting the event" do

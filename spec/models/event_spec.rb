@@ -53,17 +53,17 @@ RSpec.describe Event, type: :model do
 
     it 'Event should be deleted when GamePurchase is deleted' do
       game_purchase
-      expect { game_purchase.destroy }.to change(Event, :count).by(-1)
+      expect { game_purchase.destroy }.to change(Views::NewEvent, :count).by(-1)
     end
 
     it 'Event should be deleted when User is deleted' do
       game_purchase_event
-      expect { user.destroy }.to change(Event, :count).by(-1)
+      expect { user.destroy }.to change(Views::NewEvent, :count).by(-1)
     end
 
     it 'Event should be deleted when Game is deleted' do
       game_purchase
-      expect { game.destroy }.to change(Event, :count).by(-1)
+      expect { game.destroy }.to change(Views::NewEvent, :count).by(-1)
     end
   end
 
@@ -90,17 +90,17 @@ RSpec.describe Event, type: :model do
 
     it 'Event should be deleted when FavoriteGame is deleted' do
       favorite_game
-      expect { favorite_game.destroy }.to change(Event, :count).by(-1)
+      expect { favorite_game.destroy }.to change(Views::NewEvent, :count).by(-1)
     end
 
     it 'FavoriteGame Event should be deleted when Game is deleted' do
       favorite_game
-      expect { game.destroy }.to change(Event, :count).by(-1)
+      expect { game.destroy }.to change(Views::NewEvent, :count).by(-1)
     end
 
     it 'FavoriteGame Event should be deleted when User is deleted' do
       favorite_game
-      expect { user.destroy }.to change(Event.where(eventable_type: 'FavoriteGame'), :count).by(-1)
+      expect { user.destroy }.to change(Events::FavoriteGameEvent, :count).by(-1)
     end
   end
 
@@ -108,7 +108,7 @@ RSpec.describe Event, type: :model do
     let!(:user) { create(:confirmed_user) }
 
     it 'Event should be deleted when User is deleted' do
-      expect { user.destroy }.to change(Event.where(eventable_type: 'User'), :count).by(-1)
+      expect { user.destroy }.to change(Events::UserEvent, :count).by(-1)
     end
   end
 
@@ -119,17 +119,17 @@ RSpec.describe Event, type: :model do
 
     it 'Event should be deleted when Following User is deleted' do
       relationship_follower
-      expect { user.destroy }.to change(Event.where(eventable_type: 'Relationship'), :count).by(-1)
+      expect { user.destroy }.to change(Events::RelationshipEvent, :count).by(-1)
     end
 
     it 'Event should be deleted when Followed User is deleted' do
       relationship_followed
-      expect { user.destroy }.to change(Event.where(eventable_type: 'Relationship'), :count).by(-1)
+      expect { user.destroy }.to change(Events::RelationshipEvent, :count).by(-1)
     end
 
     it 'Event should be deleted when Relationship is deleted' do
       relationship_followed
-      expect { relationship_followed.destroy }.to change(Event.where(eventable_type: 'Relationship'), :count).by(-1)
+      expect { relationship_followed.destroy }.to change(Events::RelationshipEvent, :count).by(-1)
     end
   end
 end

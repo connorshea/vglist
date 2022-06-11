@@ -285,7 +285,7 @@ class UsersController < ApplicationController
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).activity?
 
-    @events = Event.recently_created
+    @events = Views::NewEvent.recently_created
                    .joins(:user)
                    .where(user_id: @user.id)
                    .includes(eventable: [:game])
