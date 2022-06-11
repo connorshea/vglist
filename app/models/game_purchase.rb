@@ -15,7 +15,7 @@ class GamePurchase < ApplicationRecord
   # Old events
   has_many :events, as: :eventable, dependent: :destroy
   # New events
-  has_many :game_purchase_events, as: :eventable, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
+  has_many :game_purchase_events, foreign_key: :eventable_id, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
 
   enum completion_status: {
     unplayed: 0,

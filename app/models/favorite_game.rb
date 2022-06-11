@@ -8,7 +8,7 @@ class FavoriteGame < ApplicationRecord
   # Old events
   has_many :events, as: :eventable, dependent: :destroy
   # New events
-  has_many :favorite_game_events, as: :eventable, class_name: 'Events::FavoriteGameEvent', dependent: :destroy
+  has_many :favorite_game_events, foreign_key: :eventable_id, class_name: 'Events::FavoriteGameEvent', dependent: :destroy
 
   validates :user_id, uniqueness: {
     scope: :game_id, message: 'can only favorite a game once'
@@ -19,7 +19,6 @@ class FavoriteGame < ApplicationRecord
   sig { void }
   def favorite_game_create_event
     Events::FavoriteGameEvent.create!(
-      eventable_type: 'FavoriteGame',
       eventable_id: id,
       user_id: user.id,
       event_category: :favorite_game
