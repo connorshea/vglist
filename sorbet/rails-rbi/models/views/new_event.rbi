@@ -39,80 +39,6 @@ module Views::NewEvent::ActiveRelation_WhereNot
   def not(opts, *rest); end
 end
 
-module Views::NewEvent::GeneratedAttributeMethods
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def created_at; end
-
-  sig { params(value: T.nilable(T.any(Date, Time, ActiveSupport::TimeWithZone))).void }
-  def created_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def created_at?; end
-
-  sig { returns(T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))) }
-  def differences; end
-
-  sig { params(value: T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))).void }
-  def differences=(value); end
-
-  sig { returns(T::Boolean) }
-  def differences?; end
-
-  sig { returns(T.nilable(String)) }
-  def event_category; end
-
-  sig { params(value: T.nilable(T.any(Integer, String, Symbol))).void }
-  def event_category=(value); end
-
-  sig { returns(T::Boolean) }
-  def event_category?; end
-
-  sig { returns(T.nilable(Integer)) }
-  def eventable_id; end
-
-  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
-  def eventable_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def eventable_id?; end
-
-  sig { returns(T.nilable(String)) }
-  def eventable_type; end
-
-  sig { params(value: T.nilable(T.any(String, Symbol))).void }
-  def eventable_type=(value); end
-
-  sig { returns(T::Boolean) }
-  def eventable_type?; end
-
-  sig { returns(T.nilable(String)) }
-  def id; end
-
-  sig { params(value: T.nilable(T.any(String, Symbol))).void }
-  def id=(value); end
-
-  sig { returns(T::Boolean) }
-  def id?; end
-
-  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
-  def updated_at; end
-
-  sig { params(value: T.nilable(T.any(Date, Time, ActiveSupport::TimeWithZone))).void }
-  def updated_at=(value); end
-
-  sig { returns(T::Boolean) }
-  def updated_at?; end
-
-  sig { returns(T.nilable(Integer)) }
-  def user_id; end
-
-  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
-  def user_id=(value); end
-
-  sig { returns(T::Boolean) }
-  def user_id?; end
-end
-
 module Views::NewEvent::CustomFinderMethods
   sig { params(limit: Integer).returns(T::Array[Views::NewEvent]) }
   def first_n(limit); end
@@ -133,6 +59,7 @@ end
 class Views::NewEvent < ApplicationRecord
   include Views::NewEvent::EnumInstanceMethods
   include Views::NewEvent::GeneratedAttributeMethods
+  include Views::NewEvent::GeneratedAssociationMethods
   extend Views::NewEvent::CustomFinderMethods
   extend Views::NewEvent::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(Views::NewEvent::ActiveRecord_Relation, Views::NewEvent::ActiveRecord_Associations_CollectionProxy, Views::NewEvent::ActiveRecord_AssociationRelation) }
@@ -170,6 +97,9 @@ class Views::NewEvent < ApplicationRecord
   sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_Relation) }
   def self.not_new_user(*args); end
 
+  sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_Relation) }
+  def self.recently_created(*args); end
+
   sig { returns(T.nilable(Views::NewEvent::EventCategory)) }
   def typed_event_category; end
 
@@ -186,6 +116,12 @@ class Views::NewEvent < ApplicationRecord
     end
 
   end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_user(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_user(*args); end
 
   sig { params(num: T.nilable(Integer)).returns(Views::NewEvent::ActiveRecord_Relation) }
   def self.page(num = nil); end
@@ -236,6 +172,9 @@ class Views::NewEvent::ActiveRecord_Relation < ActiveRecord::Relation
   sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_Relation) }
   def not_new_user(*args); end
 
+  sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_Relation) }
+  def recently_created(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Views::NewEvent::ActiveRecord_Relation) }
   def page(num = nil); end
 
@@ -285,6 +224,9 @@ class Views::NewEvent::ActiveRecord_AssociationRelation < ActiveRecord::Associat
   sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_AssociationRelation) }
   def not_new_user(*args); end
 
+  sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_AssociationRelation) }
+  def recently_created(*args); end
+
   sig { params(num: T.nilable(Integer)).returns(Views::NewEvent::ActiveRecord_AssociationRelation) }
   def page(num = nil); end
 
@@ -332,6 +274,9 @@ class Views::NewEvent::ActiveRecord_Associations_CollectionProxy < ActiveRecord:
 
   sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_AssociationRelation) }
   def not_new_user(*args); end
+
+  sig { params(args: T.untyped).returns(Views::NewEvent::ActiveRecord_AssociationRelation) }
+  def recently_created(*args); end
 
   sig { params(records: T.any(Views::NewEvent, T::Array[Views::NewEvent])).returns(T.self_type) }
   def <<(*records); end
@@ -594,4 +539,458 @@ module Views::NewEvent::QueryMethodsReturningAssociationRelation
     ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
+end
+
+module Views::NewEvent::GeneratedAttributeMethods
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def created_at; end
+
+  sig { params(value: T.nilable(T.any(Date, Time, ActiveSupport::TimeWithZone))).void }
+  def created_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def created_at?; end
+
+  sig { returns(T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))) }
+  def differences; end
+
+  sig { params(value: T.nilable(T.any(T::Array[T.untyped], T::Boolean, Float, T::Hash[T.untyped, T.untyped], Integer, String))).void }
+  def differences=(value); end
+
+  sig { returns(T::Boolean) }
+  def differences?; end
+
+  sig { returns(T.nilable(String)) }
+  def event_category; end
+
+  sig { params(value: T.nilable(T.any(Integer, String, Symbol))).void }
+  def event_category=(value); end
+
+  sig { returns(T::Boolean) }
+  def event_category?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def eventable_id; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def eventable_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def eventable_id?; end
+
+  sig { returns(T.nilable(String)) }
+  def eventable_type; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def eventable_type=(value); end
+
+  sig { returns(T::Boolean) }
+  def eventable_type?; end
+
+  sig { returns(T.nilable(String)) }
+  def id; end
+
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
+  def id=(value); end
+
+  sig { returns(T::Boolean) }
+  def id?; end
+
+  sig { returns(T.nilable(ActiveSupport::TimeWithZone)) }
+  def updated_at; end
+
+  sig { params(value: T.nilable(T.any(Date, Time, ActiveSupport::TimeWithZone))).void }
+  def updated_at=(value); end
+
+  sig { returns(T::Boolean) }
+  def updated_at?; end
+
+  sig { returns(T.nilable(Integer)) }
+  def user_id; end
+
+  sig { params(value: T.nilable(T.any(Numeric, ActiveSupport::Duration))).void }
+  def user_id=(value); end
+
+  sig { returns(T::Boolean) }
+  def user_id?; end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_user_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_user_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_user_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def user_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def user_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_user_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def user_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def user_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_eventable_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_eventable_id(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_eventable_id?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def eventable_id_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def eventable_id_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_eventable_id!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_id_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def eventable_id_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_differences?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_differences(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_differences?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def differences_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def differences_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_differences!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def differences_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def differences_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_event_category?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_event_category(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_event_category?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def event_category_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def event_category_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_event_category!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def event_category_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def event_category_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_created_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_created_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_created_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def created_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def created_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_updated_at(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_updated_at?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def updated_at_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def updated_at_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_updated_at!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def updated_at_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def updated_at_came_from_user?(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def saved_change_to_eventable_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def saved_change_to_eventable_type(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_before_last_save(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def will_save_change_to_eventable_type?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_change_to_be_saved(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_in_database(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def eventable_type_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_will_change!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_was(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def eventable_type_previously_changed?(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_previous_change(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def restore_eventable_type!(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def eventable_type_before_type_cast(*args); end
+
+  sig { params(args: T.untyped).returns(T::Boolean) }
+  def eventable_type_came_from_user?(*args); end
+end
+
+module Views::NewEvent::GeneratedAssociationMethods
+  sig { returns(::User) }
+  def user; end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def build_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_user(*args, &block); end
+
+  sig { params(args: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
+  def create_user!(*args, &block); end
+
+  sig { params(value: ::User).void }
+  def user=(value); end
+
+  sig { returns(::User) }
+  def reload_user; end
 end
