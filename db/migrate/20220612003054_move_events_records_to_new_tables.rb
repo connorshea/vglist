@@ -5,6 +5,7 @@ class MoveEventsRecordsToNewTables < ActiveRecord::Migration[6.1]
   def up
     columns = [:user_id, :eventable_id, :created_at, :updated_at, :event_category]
 
+    # rubocop:disable Rails/SkipsModelValidations
     Events::FavoriteGameEvent.insert_all(
       Event.where(eventable_type: 'FavoriteGame').as_json(only: columns)
     )
@@ -20,6 +21,7 @@ class MoveEventsRecordsToNewTables < ActiveRecord::Migration[6.1]
     Events::GamePurchaseEvent.insert_all(
       Event.where(eventable_type: 'GamePurchase').as_json(only: columns.concat([:differences]))
     )
+    # rubocop:enable Rails/SkipsModelValidations
   end
 
   def down

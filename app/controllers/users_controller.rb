@@ -286,9 +286,9 @@ class UsersController < ApplicationController
     redirect_to user_path(@user) unless policy(@user).activity?
 
     @events = Views::NewEvent.recently_created
-                   .joins(:user)
-                   .where(user_id: @user.id)
-                   .page helpers.page_param
+                             .joins(:user)
+                             .where(user_id: @user.id)
+                             .page helpers.page_param
   end
 
   def favorites

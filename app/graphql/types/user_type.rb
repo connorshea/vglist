@@ -32,8 +32,8 @@ module Types
       return [] unless user_visible?
 
       Views::NewEvent.recently_created
-           .joins(:user)
-           .where(user_id: @object.id)
+                     .joins(:user)
+                     .where(user_id: @object.id)
     end
 
     # This causes an N+2 query, figure out a better way to do this.

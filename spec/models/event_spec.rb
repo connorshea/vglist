@@ -1,6 +1,7 @@
 # typed: false
 require 'rails_helper'
 
+# rubocop:disable RSpec/FilePath
 RSpec.describe Views::NewEvent, type: :model do
   subject(:event) { create(:event) }
 
@@ -133,3 +134,4 @@ RSpec.describe Views::NewEvent, type: :model do
     end
   end
 end
+# rubocop:enable RSpec/FilePath
