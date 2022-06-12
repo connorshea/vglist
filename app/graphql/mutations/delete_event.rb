@@ -8,7 +8,7 @@ class Mutations::DeleteEvent < Mutations::BaseMutation
 
   sig { params(event_id: String).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(event_id:)
-    event = Event.find_by(id: event_id)
+    event = Views::NewEvent.find_event_subclass_by_id(event_id)
 
     raise GraphQL::ExecutionError, "Event does not exist or could not be deleted." unless event&.destroy
 
