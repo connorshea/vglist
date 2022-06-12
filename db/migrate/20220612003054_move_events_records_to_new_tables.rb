@@ -3,23 +3,21 @@
 # per-eventable type.
 class MoveEventsRecordsToNewTables < ActiveRecord::Migration[6.1]
   def up
-    columns = [:id, :user_id, :eventable_id, :created_at, :updated_at, :event_category]
-
     # rubocop:disable Rails/SkipsModelValidations
     Events::FavoriteGameEvent.insert_all(
-      Event.where(eventable_type: 'FavoriteGame').as_json(only: columns)
+      ActiveRecord::Base.connection.exec_query("SELECT id, user_id, eventable_id, created_at, updated_at, event_category FROM events WHERE eventable_type = 'FavoriteGame';").to_a
     )
 
     Events::RelationshipEvent.insert_all(
-      Event.where(eventable_type: 'Relationship').as_json(only: columns)
+      ActiveRecord::Base.connection.exec_query("SELECT id, user_id, eventable_id, created_at, updated_at, event_category FROM events WHERE eventable_type = 'Relationship';").to_a
     )
 
     Events::UserEvent.insert_all(
-      Event.where(eventable_type: 'User').as_json(only: columns)
+      ActiveRecord::Base.connection.exec_query("SELECT id, user_id, eventable_id, created_at, updated_at, event_category FROM events WHERE eventable_type = 'User';").to_a
     )
 
     Events::GamePurchaseEvent.insert_all(
-      Event.where(eventable_type: 'GamePurchase').as_json(only: columns.concat([:differences]))
+      ActiveRecord::Base.connection.exec_query("SELECT id, user_id, eventable_id, created_at, updated_at, event_category, differences FROM events WHERE eventable_type = 'GamePurchase';").to_a
     )
     # rubocop:enable Rails/SkipsModelValidations
   end
