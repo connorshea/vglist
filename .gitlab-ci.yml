@@ -39,9 +39,9 @@ before_script:
   - echo -e "section_start:`date +%s`:db_create[collapsed=true]\r\e[0Kbundle exec rails db:create"
   - bundle exec rails db:create
   - echo -e "section_end:`date +%s`:db_create\r\e[0K"
-  - echo -e "section_start:`date +%s`:db_migration[collapsed=true]\r\e[0Kbundle exec rails db:migrate"
-  - bundle exec rails db:migrate --trace
-  - echo -e "section_end:`date +%s`:db_migration\r\e[0K"
+  - echo -e "section_start:`date +%s`:db_schema_load[collapsed=true]\r\e[0Kbundle exec rails db:schema:load"
+  - bundle exec rails db:schema:load --trace
+  - echo -e "section_end:`date +%s`:db_schema_load\r\e[0K"
 
 .no_db_template:
   before_script: &no_db_necessary

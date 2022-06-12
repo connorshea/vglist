@@ -7,9 +7,6 @@ class Relationship < ApplicationRecord
   # The user being followed.
   belongs_to :followed, class_name: 'User'
 
-  # Old events
-  has_many :events, as: :eventable, dependent: :destroy
-  # New events
   has_many :relationship_events, foreign_key: :eventable_id, inverse_of: :eventable, class_name: 'Events::RelationshipEvent', dependent: :destroy
 
   validates :followed_id,

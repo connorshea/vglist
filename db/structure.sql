@@ -303,23 +303,6 @@ ALTER SEQUENCE public.engines_id_seq OWNED BY public.engines.id;
 
 
 --
--- Name: events; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.events (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    user_id bigint NOT NULL,
-    eventable_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    event_category integer NOT NULL,
-    differences jsonb,
-    eventable_type character varying,
-    CONSTRAINT event_category_type_check CHECK ((((event_category = ANY (ARRAY[0, 1])) AND ((eventable_type)::text = 'GamePurchase'::text)) OR ((event_category = 2) AND ((eventable_type)::text = 'FavoriteGame'::text)) OR ((event_category = 3) AND ((eventable_type)::text = 'User'::text)) OR ((event_category = 4) AND ((eventable_type)::text = 'Relationship'::text))))
-);
-
-
---
 -- Name: events_favorite_game_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1920,14 +1903,6 @@ ALTER TABLE ONLY public.events_game_purchase_events
 
 
 --
--- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.events
-    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
-
-
---
 -- Name: events_relationship_events events_relationship_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2281,27 +2256,6 @@ CREATE INDEX index_events_game_purchase_events_on_eventable_id ON public.events_
 --
 
 CREATE INDEX index_events_game_purchase_events_on_user_id ON public.events_game_purchase_events USING btree (user_id);
-
-
---
--- Name: index_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_on_eventable_id ON public.events USING btree (eventable_id);
-
-
---
--- Name: index_events_on_id_type_and_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_on_id_type_and_user_id ON public.events USING btree (eventable_id, eventable_type, user_id);
-
-
---
--- Name: index_events_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_on_user_id ON public.events USING btree (user_id);
 
 
 --
@@ -3250,6 +3204,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220612003054'),
 ('20220612160612'),
 ('20220612160618'),
-('20220612160627');
+('20220612160627'),
+('20220612192154');
 
 

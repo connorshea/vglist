@@ -18,7 +18,7 @@
 1. `yarn install`
 1. `bundle exec rails db:setup`
    - This is the equivalent of running `bundle exec rails db:create && bundle exec rails db:structure:load && bundle exec rails db:seed`, so it will create the databases, seed them with fake data, and create a user with the email `admin@example.com` and the password `password`.
-   - If you would like more control, run only `bundle exec rails db:create` and `bundle exec rails db:structure:load`.
+   - If you would like more control, run only `bundle exec rails db:create` and `bundle exec rails db:schema:load`.
    - If you run into an error about the database password being wrong, the application will try to use `'password'` by default, but you can set the password for your database user via the `VGLIST_DATABASE_PASSWORD` environment variable.
 1. `bundle exec rails server` to start the server.
 1. Visit <http://localhost:3000> in your browser and you should see the base application.
