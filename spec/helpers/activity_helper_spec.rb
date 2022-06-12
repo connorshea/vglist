@@ -16,47 +16,47 @@ RSpec.describe ActivityHelper, type: :helper do
     let(:following_event) { create(:following_event) }
 
     it 'returns true for a library event' do
-      expect(helper.handleable_event?(game_purchase_library_event)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_library_event.id))).to be(true)
     end
 
     it 'returns false for an unplayed completion event' do
-      expect(helper.handleable_event?(game_purchase_completion_event1)).to be(false)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_completion_event1.id))).to be(false)
     end
 
     it 'returns false for an in_progress completion event' do
-      expect(helper.handleable_event?(game_purchase_completion_event2)).to be(false)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_completion_event2.id))).to be(false)
     end
 
     it 'returns true for a dropped completion event' do
-      expect(helper.handleable_event?(game_purchase_completion_event3)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_completion_event3.id))).to be(true)
     end
 
     it 'returns true for a completed completion event' do
-      expect(helper.handleable_event?(game_purchase_completion_event4)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_completion_event4.id))).to be(true)
     end
 
     it 'returns true for a fully completed completion event' do
-      expect(helper.handleable_event?(game_purchase_completion_event5)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_completion_event5.id))).to be(true)
     end
 
     it 'returns false for a not_applicable completion event' do
-      expect(helper.handleable_event?(game_purchase_completion_event6)).to be(false)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_completion_event6.id))).to be(false)
     end
 
     it 'returns true for a paused completion event' do
-      expect(helper.handleable_event?(game_purchase_completion_event7)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(game_purchase_completion_event7.id))).to be(true)
     end
 
     it 'returns true for a favorite game event' do
-      expect(helper.handleable_event?(favorite_game_event)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(favorite_game_event.id))).to be(true)
     end
 
     it 'returns true for a new user event' do
-      expect(helper.handleable_event?(new_user_event)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(new_user_event.id))).to be(true)
     end
 
     it 'returns true for a following event' do
-      expect(helper.handleable_event?(following_event)).to be(true)
+      expect(helper.handleable_event?(Views::NewEvent.find(following_event.id))).to be(true)
     end
   end
 
@@ -82,31 +82,31 @@ RSpec.describe ActivityHelper, type: :helper do
 
     it 'returns the correct text for a game library event' do
       expect(
-        strip_tags(helper.event_text(game_purchase_library_event))
+        strip_tags(helper.event_text(Views::NewEvent.find(game_purchase_library_event.id)))
       ).to eq "#{user.username} added #{game.name} to their library."
     end
 
     it 'returns the correct text for a completion status dropped event' do
       expect(
-        strip_tags(helper.event_text(game_purchase_completion_event_dropped))
+        strip_tags(helper.event_text(Views::NewEvent.find(game_purchase_completion_event_dropped.id)))
       ).to eq "#{user.username} dropped #{game.name}."
     end
 
     it 'returns the correct text for a favorite game event' do
       expect(
-        strip_tags(helper.event_text(favorite_game_event))
+        strip_tags(helper.event_text(Views::NewEvent.find(favorite_game_event.id)))
       ).to eq "#{user.username} favorited #{game.name}."
     end
 
     it 'returns the correct text for a new user event' do
       expect(
-        strip_tags(helper.event_text(new_user_event))
+        strip_tags(helper.event_text(Views::NewEvent.find(new_user_event.id)))
       ).to eq "#{user.username} created their account."
     end
 
     it 'returns the correct text for a following event' do
       expect(
-        strip_tags(helper.event_text(following_event))
+        strip_tags(helper.event_text(Views::NewEvent.find(following_event.id)))
       ).to eq "#{user.username} started following #{user2.username}."
     end
   end
@@ -150,25 +150,25 @@ RSpec.describe ActivityHelper, type: :helper do
 
     it 'returns the correct text for dropped' do
       expect(
-        strip_tags(helper.completion_status_event_text(game_purchase_completion_event_dropped))
+        strip_tags(helper.completion_status_event_text(Views::NewEvent.find(game_purchase_completion_event_dropped.id)))
       ).to eq "#{user.username} dropped #{game.name}."
     end
 
     it 'returns the correct text for paused' do
       expect(
-        strip_tags(helper.completion_status_event_text(game_purchase_completion_event_paused))
+        strip_tags(helper.completion_status_event_text(Views::NewEvent.find(game_purchase_completion_event_paused.id)))
       ).to eq "#{user.username} paused #{game.name}."
     end
 
     it 'returns the correct text for completed' do
       expect(
-        strip_tags(helper.completion_status_event_text(game_purchase_completion_event_completed))
+        strip_tags(helper.completion_status_event_text(Views::NewEvent.find(game_purchase_completion_event_completed.id)))
       ).to eq "#{user.username} completed #{game.name}."
     end
 
     it 'returns the correct text for fully_completed' do
       expect(
-        strip_tags(helper.completion_status_event_text(game_purchase_completion_event_fully_completed))
+        strip_tags(helper.completion_status_event_text(Views::NewEvent.find(game_purchase_completion_event_fully_completed.id)))
       ).to eq "#{user.username} 100% completed #{game.name}."
     end
   end
@@ -181,7 +181,7 @@ RSpec.describe ActivityHelper, type: :helper do
 
     it 'returns a sensible piece of text' do
       expect(
-        strip_tags(helper.add_to_library_event_text(game_purchase_library_event))
+        strip_tags(helper.add_to_library_event_text(Views::NewEvent.find(game_purchase_library_event.id)))
       ).to eq "#{user.username} added #{game.name} to their library."
     end
   end
@@ -194,7 +194,7 @@ RSpec.describe ActivityHelper, type: :helper do
 
     it 'returns a sensible piece of text' do
       expect(
-        strip_tags(helper.favorite_game_event_text(favorite_game_event))
+        strip_tags(helper.favorite_game_event_text(Views::NewEvent.find(favorite_game_event.id)))
       ).to eq "#{user.username} favorited #{game.name}."
     end
   end
@@ -205,7 +205,7 @@ RSpec.describe ActivityHelper, type: :helper do
 
     it 'returns a sensible piece of text' do
       expect(
-        strip_tags(helper.new_user_event_text(new_user_event))
+        strip_tags(helper.new_user_event_text(Views::NewEvent.find(new_user_event.id)))
       ).to eq "#{user.username} created their account."
     end
   end
@@ -218,7 +218,7 @@ RSpec.describe ActivityHelper, type: :helper do
 
     it 'returns a sensible piece of text' do
       expect(
-        strip_tags(helper.following_event_text(following_event))
+        strip_tags(helper.following_event_text(Views::NewEvent.find(following_event.id)))
       ).to eq "#{user.username} started following #{user2.username}."
     end
   end

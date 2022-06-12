@@ -222,7 +222,7 @@ RSpec.describe "Users API", type: :request do
           activity: {
             nodes: [
               {
-                id: user.events.first.id,
+                id: user.new_events.first.id,
                 eventable: {
                   id: user.id.to_s,
                   __typename: "User"

@@ -58,7 +58,7 @@ RSpec.describe Event, type: :model do
 
     it 'Event should be deleted when User is deleted' do
       game_purchase_event
-      expect { user.destroy }.to change(Views::NewEvent, :count).by(-1)
+      expect { user.destroy }.to change(Events::GamePurchaseEvent, :count).by(-1)
     end
 
     it 'Event should be deleted when Game is deleted' do

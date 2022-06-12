@@ -288,7 +288,6 @@ class UsersController < ApplicationController
     @events = Views::NewEvent.recently_created
                    .joins(:user)
                    .where(user_id: @user.id)
-                   .includes(eventable: [:game])
                    .page helpers.page_param
   end
 

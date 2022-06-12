@@ -765,6 +765,318 @@ class User < ApplicationRecord
   def validate_associated_records_for_followers(*args); end
 
   sig { returns(T.untyped) }
+  def self.after_add_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_new_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_new_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_new_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_new_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_new_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_new_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_new_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_new_events; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_new_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_new_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_new_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_new_events(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_game_purchase_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_game_purchase_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_game_purchase_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_game_purchase_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_game_purchase_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_game_purchase_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_game_purchase_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_game_purchase_events; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_game_purchase_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_game_purchase_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_game_purchase_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_game_purchase_events(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_relationship_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_relationship_events; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_relationship_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_relationship_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_relationship_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_relationship_events(*args); end
+
+  sig { returns(T.untyped) }
+  def self.after_add_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_add_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_add_for_favorite_game_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.after_remove_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def self.after_remove_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.after_remove_for_favorite_game_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_add_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_add_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_add_for_favorite_game_events=(val); end
+
+  sig { returns(T.untyped) }
+  def self.before_remove_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def self.before_remove_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def self.before_remove_for_favorite_game_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_add_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def after_add_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_add_for_favorite_game_events=(val); end
+
+  sig { returns(T.untyped) }
+  def after_remove_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def after_remove_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def after_remove_for_favorite_game_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_add_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def before_add_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_add_for_favorite_game_events=(val); end
+
+  sig { returns(T.untyped) }
+  def before_remove_for_favorite_game_events; end
+
+  sig { returns(T::Boolean) }
+  def before_remove_for_favorite_game_events?; end
+
+  sig { params(val: T.untyped).returns(T.untyped) }
+  def before_remove_for_favorite_game_events=(val); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def autosave_associated_records_for_favorite_game_events(*args); end
+
+  sig { params(args: T.untyped).returns(T.untyped) }
+  def validate_associated_records_for_favorite_game_events(*args); end
+
+  sig { returns(T.untyped) }
   def self.after_add_for_events; end
 
   sig { returns(T::Boolean) }
@@ -3516,6 +3828,15 @@ module User::GeneratedAssociationMethods
   sig { returns(T.nilable(::ExternalAccount)) }
   def reload_external_account; end
 
+  sig { returns(::Events::FavoriteGameEvent::ActiveRecord_Associations_CollectionProxy) }
+  def favorite_game_events; end
+
+  sig { returns(T::Array[String]) }
+  def favorite_game_event_ids; end
+
+  sig { params(value: T::Enumerable[::Events::FavoriteGameEvent]).void }
+  def favorite_game_events=(value); end
+
   sig { returns(::FavoriteGame::ActiveRecord_Associations_CollectionProxy) }
   def favorite_games; end
 
@@ -3552,6 +3873,15 @@ module User::GeneratedAssociationMethods
   sig { params(value: T::Enumerable[::User]).void }
   def following=(value); end
 
+  sig { returns(::Events::GamePurchaseEvent::ActiveRecord_Associations_CollectionProxy) }
+  def game_purchase_events; end
+
+  sig { returns(T::Array[String]) }
+  def game_purchase_event_ids; end
+
+  sig { params(value: T::Enumerable[::Events::GamePurchaseEvent]).void }
+  def game_purchase_events=(value); end
+
   sig { returns(::GamePurchase::ActiveRecord_Associations_CollectionProxy) }
   def game_purchases; end
 
@@ -3569,6 +3899,15 @@ module User::GeneratedAssociationMethods
 
   sig { params(value: T::Enumerable[::Game]).void }
   def games=(value); end
+
+  sig { returns(::Views::NewEvent::ActiveRecord_Associations_CollectionProxy) }
+  def new_events; end
+
+  sig { returns(T::Array[T.untyped]) }
+  def new_event_ids; end
+
+  sig { params(value: T::Enumerable[::Views::NewEvent]).void }
+  def new_events=(value); end
 
   sig { returns(::Doorkeeper::Application::ActiveRecord_Associations_CollectionProxy) }
   def oauth_applications; end
@@ -3605,6 +3944,15 @@ module User::GeneratedAssociationMethods
 
   sig { returns(T.untyped) }
   def reload_pg_search_document; end
+
+  sig { returns(::Events::RelationshipEvent::ActiveRecord_Associations_CollectionProxy) }
+  def relationship_events; end
+
+  sig { returns(T::Array[String]) }
+  def relationship_event_ids; end
+
+  sig { params(value: T::Enumerable[::Events::RelationshipEvent]).void }
+  def relationship_events=(value); end
 
   sig { returns(::SteamBlocklist::ActiveRecord_Associations_CollectionProxy) }
   def steam_blocklists; end
@@ -3662,6 +4010,18 @@ module User::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def follower_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def new_event_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def game_purchase_event_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def relationship_event_ids=(ids); end
+
+  sig { params(ids: T.untyped).returns(T.untyped) }
+  def favorite_game_event_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def event_ids=(ids); end

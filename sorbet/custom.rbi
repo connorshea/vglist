@@ -68,7 +68,3 @@ class Doorkeeper::AuthorizationsController < ApplicationController; end
 class ApplicationRecord
   include PaperTrail::Model
 end
-
-# Create a type alias for representing a method that can take/return any of the
-# event subclasses.
-NewEventType = T.type_alias { T.any(Events::FavoriteGameEvent, Events::RelationshipEvent, Events::UserEvent, Events::GamePurchaseEvent) }
