@@ -8,7 +8,7 @@ module Views
 
     # Create a type alias for representing a method that can take/return any of the
     # event subclasses.
-    NewEventType = T.type_alias { T.any(Events::FavoriteGameEvent, Events::RelationshipEvent, Events::UserEvent, Events::GamePurchaseEvent) }
+    NewEventSubclasses = T.type_alias { T.any(Events::FavoriteGameEvent, Events::RelationshipEvent, Events::UserEvent, Events::GamePurchaseEvent) }
     Eventables = T.type_alias { T.any(User, GamePurchase, Relationship, FavoriteGame) }
 
     # Readonly since this is a view and we can't edit it.
@@ -28,7 +28,7 @@ module Views
     }
 
     # Get a specific event subclass record based on the ID.
-    sig { params(id: String).returns(T.nilable(NewEventType)) }
+    sig { params(id: String).returns(T.nilable(NewEventSubclasses)) }
     def self.find_event_subclass_by_id(id)
       event =   Events::GamePurchaseEvent.find_by(id: id)
       event ||= Events::FavoriteGameEvent.find_by(id: id)
@@ -37,7 +37,7 @@ module Views
       event
     end
 
-    sig { returns(T.nilable(NewEventType)) }
+    sig { returns(T.nilable(NewEventSubclasses)) }
     def subclass
       Views::NewEvent.find_event_subclass_by_id(T.must(id))
     end
