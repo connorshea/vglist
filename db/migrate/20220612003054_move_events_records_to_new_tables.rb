@@ -3,7 +3,7 @@
 # per-eventable type.
 class MoveEventsRecordsToNewTables < ActiveRecord::Migration[6.1]
   def up
-    columns = [:user_id, :eventable_id, :created_at, :updated_at, :event_category]
+    columns = [:id, :user_id, :eventable_id, :created_at, :updated_at, :event_category]
 
     # rubocop:disable Rails/SkipsModelValidations
     Events::FavoriteGameEvent.insert_all(
