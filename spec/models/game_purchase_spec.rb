@@ -107,7 +107,7 @@ RSpec.describe GamePurchase, type: :model do
 
       it 'Event should be created when GamePurchase is created' do
         user
-        expect { game_purchase }.to change(Event, :count).by(1)
+        expect { game_purchase }.to change(Events::GamePurchaseEvent, :count).by(1)
       end
 
       it 'Event should be created when GamePurchase is modified' do
@@ -115,7 +115,7 @@ RSpec.describe GamePurchase, type: :model do
         expect do
           game_purchase.completion_status = :dropped
           game_purchase.save
-        end.to change(Event.where(eventable_type: 'GamePurchase'), :count).by(1)
+        end.to change(Events::GamePurchaseEvent, :count).by(1)
       end
     end
 

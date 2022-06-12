@@ -10,7 +10,7 @@ RSpec.describe "Events", type: :request do
       sign_in(user)
       expect do
         delete event_path(id: event.id)
-      end.to change(Event, :count).by(-1)
+      end.to change(Views::NewEvent, :count).by(-1)
     end
   end
 end

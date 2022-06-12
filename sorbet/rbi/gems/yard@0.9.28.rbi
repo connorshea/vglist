@@ -327,12 +327,6 @@ class Insertion
   def insertion(val, rel, recursive = T.unsafe(nil), list = T.unsafe(nil)); end
 end
 
-# We need to do the alias-method-chain dance since Bootsnap does the same,
-# and prepended modules and alias-method-chain don't play well together.
-#
-# So, why does Bootsnap do alias-method-chain and not prepend? Glad you asked!
-# That's because RubyGems does alias-method-chain for Kernel#require and such,
-# so, if Bootsnap were to do prepend, it might end up breaking RubyGems.
 class Module
   include ::ActiveSupport::Dependencies::ModuleConstMissing
   include ::Module::Concerning
@@ -355,7 +349,6 @@ class Rack::Request
   include ::Rack::Request::Env
   include ::Rack::Request::Helpers
 
-  # @return [Request] a new instance of Request
   def initialize(env); end
 
   def delete_param(k); end
@@ -375,12 +368,7 @@ class Rack::Request
   def xhr?; end
 
   class << self
-    # Returns the value of attribute ip_filter.
     def ip_filter; end
-
-    # Sets the attribute ip_filter
-    #
-    # @param value the value to set the attribute ip_filter to.
     def ip_filter=(_arg0); end
   end
 end
@@ -388,7 +376,6 @@ end
 Rack::Request::ALLOWED_SCHEMES = T.let(T.unsafe(nil), Array)
 Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
 
-# Extensions for Ruby's `String` class.
 class String
   include ::Comparable
   include ::JSON::Ext::Generator::GeneratorMethods::String
@@ -488,7 +475,6 @@ class WEBrick::HTTPRequest
   def xhr?; end
 end
 
-# same as Mongrel, Thin and Puma
 WEBrick::HTTPRequest::MAX_HEADER_LENGTH = T.let(T.unsafe(nil), Integer)
 
 # Gem::YARDoc provides methods to generate YARDoc and yri data for installed gems
@@ -527,6 +513,9 @@ module YARD
 
     # @return [Boolean] whether YARD is being run in Ruby 2.0
     def ruby2?; end
+
+    # @return [Boolean] whether YARD is being run in Ruby 3.1
+    def ruby31?; end
 
     # @return [Boolean] whether YARD is being run in Ruby 3.0
     def ruby3?; end
@@ -7305,6 +7294,7 @@ class YARD::Parser::Ruby::ModuleNode < ::YARD::Parser::Ruby::KeywordNode
 end
 
 class YARD::Parser::Ruby::ParameterNode < ::YARD::Parser::Ruby::AstNode
+  def args_forward; end
   def block_param; end
   def double_splat_param; end
   def named_params; end

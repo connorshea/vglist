@@ -1555,6 +1555,14 @@ class Rouge::Lexers::ISBL < ::Rouge::RegexLexer
   end
 end
 
+class Rouge::Lexers::Idris < ::Rouge::RegexLexer
+  class << self
+    def ascii; end
+    def prelude_functions; end
+    def reserved_keywords; end
+  end
+end
+
 class Rouge::Lexers::IgorPro < ::Rouge::RegexLexer
   class << self
     def igorConstants; end
@@ -1709,6 +1717,14 @@ class Rouge::Lexers::Lasso < ::Rouge::TemplateLexer
 
     # self-modifying method that loads the keywords file
     def keywords; end
+  end
+end
+
+class Rouge::Lexers::Lean < ::Rouge::RegexLexer
+  class << self
+    def keywords; end
+    def operators; end
+    def types; end
   end
 end
 
@@ -1972,6 +1988,15 @@ class Rouge::Lexers::PHP < ::Rouge::TemplateLexer
     def detect?(text); end
 
     def keywords; end
+  end
+end
+
+class Rouge::Lexers::PLSQL < ::Rouge::RegexLexer
+  class << self
+    def keywords; end
+    def keywords_func; end
+    def keywords_reserved; end
+    def keywords_type; end
   end
 end
 
@@ -2361,6 +2386,19 @@ end
 
 class Rouge::Lexers::Swift < ::Rouge::RegexLexer; end
 class Rouge::Lexers::SystemD < ::Rouge::RegexLexer; end
+
+class Rouge::Lexers::Syzlang < ::Rouge::RegexLexer
+  class << self
+    def keywords; end
+    def keywords_type; end
+  end
+end
+
+class Rouge::Lexers::Syzprog < ::Rouge::RegexLexer
+  class << self
+    def keywords; end
+  end
+end
 
 class Rouge::Lexers::TCL < ::Rouge::RegexLexer
   class << self

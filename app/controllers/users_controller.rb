@@ -285,11 +285,10 @@ class UsersController < ApplicationController
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).activity?
 
-    @events = Event.recently_created
-                   .joins(:user)
-                   .where(user_id: @user.id)
-                   .includes(eventable: [:game])
-                   .page helpers.page_param
+    @events = Views::NewEvent.recently_created
+                             .joins(:user)
+                             .where(user_id: @user.id)
+                             .page helpers.page_param
   end
 
   def favorites
