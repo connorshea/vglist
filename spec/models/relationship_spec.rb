@@ -28,6 +28,7 @@ RSpec.describe Relationship, type: :model do
   describe "Associations" do
     it { should belong_to(:follower).class_name('User') }
     it { should belong_to(:followed).class_name('User') }
+    it { should have_many(:relationship_events).dependent(:destroy) }
   end
 
   describe "Indexes" do

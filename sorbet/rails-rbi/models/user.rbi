@@ -1077,84 +1077,6 @@ class User < ApplicationRecord
   def validate_associated_records_for_favorite_game_events(*args); end
 
   sig { returns(T.untyped) }
-  def self.after_add_for_events; end
-
-  sig { returns(T::Boolean) }
-  def self.after_add_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def self.after_add_for_events=(val); end
-
-  sig { returns(T.untyped) }
-  def self.after_remove_for_events; end
-
-  sig { returns(T::Boolean) }
-  def self.after_remove_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def self.after_remove_for_events=(val); end
-
-  sig { returns(T.untyped) }
-  def self.before_add_for_events; end
-
-  sig { returns(T::Boolean) }
-  def self.before_add_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def self.before_add_for_events=(val); end
-
-  sig { returns(T.untyped) }
-  def self.before_remove_for_events; end
-
-  sig { returns(T::Boolean) }
-  def self.before_remove_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def self.before_remove_for_events=(val); end
-
-  sig { returns(T.untyped) }
-  def after_add_for_events; end
-
-  sig { returns(T::Boolean) }
-  def after_add_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def after_add_for_events=(val); end
-
-  sig { returns(T.untyped) }
-  def after_remove_for_events; end
-
-  sig { returns(T::Boolean) }
-  def after_remove_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def after_remove_for_events=(val); end
-
-  sig { returns(T.untyped) }
-  def before_add_for_events; end
-
-  sig { returns(T::Boolean) }
-  def before_add_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def before_add_for_events=(val); end
-
-  sig { returns(T.untyped) }
-  def before_remove_for_events; end
-
-  sig { returns(T::Boolean) }
-  def before_remove_for_events?; end
-
-  sig { params(val: T.untyped).returns(T.untyped) }
-  def before_remove_for_events=(val); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def autosave_associated_records_for_events(*args); end
-
-  sig { params(args: T.untyped).returns(T.untyped) }
-  def validate_associated_records_for_events(*args); end
-
-  sig { returns(T.untyped) }
   def self.after_add_for_user_events; end
 
   sig { returns(T::Boolean) }
@@ -3801,15 +3723,6 @@ module User::GeneratedAssociationMethods
   sig { returns(T.nilable(::ActiveStorage::Blob)) }
   def reload_avatar_blob; end
 
-  sig { returns(::Event::ActiveRecord_Associations_CollectionProxy) }
-  def events; end
-
-  sig { returns(T::Array[String]) }
-  def event_ids; end
-
-  sig { params(value: T::Enumerable[::Event]).void }
-  def events=(value); end
-
   sig { returns(T.nilable(::ExternalAccount)) }
   def external_account; end
 
@@ -4022,9 +3935,6 @@ module User::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def favorite_game_event_ids=(ids); end
-
-  sig { params(ids: T.untyped).returns(T.untyped) }
-  def event_ids=(ids); end
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def user_event_ids=(ids); end

@@ -61,7 +61,7 @@ RSpec.describe GamePurchase, type: :model do
     it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
     it { should have_many(:game_purchase_stores) }
     it { should have_many(:stores).through(:game_purchase_stores).source(:store) }
-    it { should have_many(:events).dependent(:destroy) }
+    it { should have_many(:game_purchase_events).dependent(:destroy) }
   end
 
   describe 'Destructions' do

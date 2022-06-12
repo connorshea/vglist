@@ -12,9 +12,6 @@ class GamePurchase < ApplicationRecord
   has_many :game_purchase_stores
   has_many :stores, through: :game_purchase_stores, source: :store
 
-  # Old events
-  has_many :events, as: :eventable, dependent: :destroy
-  # New events
   has_many :game_purchase_events, foreign_key: :eventable_id, inverse_of: :eventable, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
 
   enum completion_status: {
