@@ -3903,7 +3903,7 @@ module User::GeneratedAssociationMethods
   sig { returns(::Views::NewEvent::ActiveRecord_Associations_CollectionProxy) }
   def new_events; end
 
-  sig { returns(T::Array[T.untyped]) }
+  sig { returns(T::Array[T.nilable(String)]) }
   def new_event_ids; end
 
   sig { params(value: T::Enumerable[::Views::NewEvent]).void }
