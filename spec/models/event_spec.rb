@@ -1,8 +1,8 @@
 # typed: false
 require 'rails_helper'
 
-RSpec.describe Event, type: :model do
-  subject(:event) { build(:event) }
+RSpec.describe Views::NewEvent, type: :model do
+  subject(:event) { create(:event) }
 
   describe "Validations" do
     it "is valid with valid attributes" do
@@ -12,7 +12,7 @@ RSpec.describe Event, type: :model do
     it { should validate_presence_of(:event_category) }
 
     it 'has an event category enum' do
-      expect(event).to define_enum_for(:event_category)
+      expect(Views::NewEvent.find(event.id)).to define_enum_for(:event_category)
         .with_values(
           [
             :add_to_library,
