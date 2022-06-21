@@ -212,7 +212,7 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.16.0)
+    minitest (5.16.1)
     msgpack (1.5.2)
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
