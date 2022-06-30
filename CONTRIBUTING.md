@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - Ruby 3.0
-- Postgres 12.x
+- Postgres 14.x
 - Node.js 14.x
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
