@@ -137,7 +137,10 @@ namespace :import do
         next
       end
 
-      cover_url = json.dig('title', 'Cover URL')
+      # For some cursed reason, Cargo will return an empty array when no data
+      # is found, so we need to handle that...
+      cover_url = json['title']
+      cover_url = cover_url.is_a?(Array) ? nil : cover_url['Cover URL']
 
       if cover_url.nil?
         progress_bar.log "#{game[:name].ljust(40)} | Not finding any covers, skipping."
