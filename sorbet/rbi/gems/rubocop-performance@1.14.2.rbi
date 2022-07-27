@@ -6,7 +6,10 @@
 
 module RuboCop; end
 module RuboCop::Cop; end
+
+# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
+
 module RuboCop::Cop::Performance; end
 
 # Identifies usages of `ancestors.include?` and change them to use `<=` instead.

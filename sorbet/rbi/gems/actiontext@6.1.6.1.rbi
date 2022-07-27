@@ -571,3 +571,165 @@ ActionText::TrixAttachment::ATTRIBUTE_TYPES = T.let(T.unsafe(nil), Hash)
 ActionText::TrixAttachment::COMPOSED_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 ActionText::TrixAttachment::SELECTOR = T.let(T.unsafe(nil), String)
 ActionText::TrixAttachment::TAG_NAME = T.let(T.unsafe(nil), String)
+
+module ActionView::Helpers
+  include ::ActionView::Helpers::SanitizeHelper
+  include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::TextHelper
+  include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::AssetTagHelper
+  include ::ActionView::Helpers::UrlHelper
+  include ::ActionView::Helpers::SanitizeHelper
+  include ::ActionView::Helpers::TextHelper
+  include ::ActionView::Helpers::FormTagHelper
+  include ::ActionView::Helpers::FormHelper
+  include ::ActionView::Helpers::TranslationHelper
+
+  mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
+  mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
+
+  class << self
+    def eager_load!; end
+  end
+end
+
+class ActionView::Helpers::FormBuilder
+  def initialize(object_name, object, template, options); end
+
+  def button(value = T.unsafe(nil), options = T.unsafe(nil), &block); end
+  def check_box(method, options = T.unsafe(nil), checked_value = T.unsafe(nil), unchecked_value = T.unsafe(nil)); end
+  def collection_check_boxes(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
+  def collection_radio_buttons(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
+  def collection_select(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
+  def color_field(method, options = T.unsafe(nil)); end
+  def date_field(method, options = T.unsafe(nil)); end
+  def date_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
+  def datetime_field(method, options = T.unsafe(nil)); end
+  def datetime_local_field(method, options = T.unsafe(nil)); end
+  def datetime_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
+  def email_field(method, options = T.unsafe(nil)); end
+  def emitted_hidden_id?; end
+  def field_helpers; end
+  def field_helpers=(_arg0); end
+  def field_helpers?; end
+  def fields(scope = T.unsafe(nil), model: T.unsafe(nil), **options, &block); end
+  def fields_for(record_name, record_object = T.unsafe(nil), fields_options = T.unsafe(nil), &block); end
+  def file_field(method, options = T.unsafe(nil)); end
+  def grouped_collection_select(method, collection, group_method, group_label_method, option_key_method, option_value_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
+  def hidden_field(method, options = T.unsafe(nil)); end
+  def index; end
+  def label(method, text = T.unsafe(nil), options = T.unsafe(nil), &block); end
+  def month_field(method, options = T.unsafe(nil)); end
+  def multipart; end
+  def multipart=(multipart); end
+  def multipart?; end
+  def number_field(method, options = T.unsafe(nil)); end
+  def object; end
+  def object=(_arg0); end
+  def object_name; end
+  def object_name=(_arg0); end
+  def options; end
+  def options=(_arg0); end
+  def password_field(method, options = T.unsafe(nil)); end
+  def phone_field(method, options = T.unsafe(nil)); end
+  def radio_button(method, tag_value, options = T.unsafe(nil)); end
+  def range_field(method, options = T.unsafe(nil)); end
+  def rich_text_area(method, options = T.unsafe(nil)); end
+  def search_field(method, options = T.unsafe(nil)); end
+  def select(method, choices = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
+  def submit(value = T.unsafe(nil), options = T.unsafe(nil)); end
+  def telephone_field(method, options = T.unsafe(nil)); end
+  def text_area(method, options = T.unsafe(nil)); end
+  def text_field(method, options = T.unsafe(nil)); end
+  def time_field(method, options = T.unsafe(nil)); end
+  def time_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
+  def time_zone_select(method, priority_zones = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
+  def to_model; end
+  def to_partial_path; end
+  def url_field(method, options = T.unsafe(nil)); end
+  def week_field(method, options = T.unsafe(nil)); end
+
+  private
+
+  def convert_to_legacy_options(options); end
+  def fields_for_nested_model(name, object, fields_options, block); end
+  def fields_for_with_nested_attributes(association_name, association, options, block); end
+  def nested_attributes_association?(association_name); end
+  def nested_child_index(name); end
+  def objectify_options(options); end
+  def submit_default_value; end
+
+  class << self
+    def _to_partial_path; end
+    def field_helpers; end
+    def field_helpers=(value); end
+    def field_helpers?; end
+  end
+end
+
+module ActionView::Helpers::FormHelper
+  include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::UrlHelper
+  include ::ActionView::Helpers::SanitizeHelper
+  include ::ActionView::Helpers::TextHelper
+  include ::ActionView::Helpers::FormTagHelper
+
+  mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
+  mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
+
+  def check_box(object_name, method, options = T.unsafe(nil), checked_value = T.unsafe(nil), unchecked_value = T.unsafe(nil)); end
+  def color_field(object_name, method, options = T.unsafe(nil)); end
+  def date_field(object_name, method, options = T.unsafe(nil)); end
+  def datetime_field(object_name, method, options = T.unsafe(nil)); end
+  def datetime_local_field(object_name, method, options = T.unsafe(nil)); end
+  def default_form_builder; end
+  def default_form_builder=(_arg0); end
+  def email_field(object_name, method, options = T.unsafe(nil)); end
+  def fields(scope = T.unsafe(nil), model: T.unsafe(nil), **options, &block); end
+  def fields_for(record_name, record_object = T.unsafe(nil), options = T.unsafe(nil), &block); end
+  def file_field(object_name, method, options = T.unsafe(nil)); end
+  def form_for(record, options = T.unsafe(nil), &block); end
+  def form_with(model: T.unsafe(nil), scope: T.unsafe(nil), url: T.unsafe(nil), format: T.unsafe(nil), **options, &block); end
+  def form_with_generates_ids; end
+  def form_with_generates_ids=(val); end
+  def form_with_generates_remote_forms; end
+  def form_with_generates_remote_forms=(val); end
+  def hidden_field(object_name, method, options = T.unsafe(nil)); end
+  def label(object_name, method, content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
+  def month_field(object_name, method, options = T.unsafe(nil)); end
+  def number_field(object_name, method, options = T.unsafe(nil)); end
+  def password_field(object_name, method, options = T.unsafe(nil)); end
+  def phone_field(object_name, method, options = T.unsafe(nil)); end
+  def radio_button(object_name, method, tag_value, options = T.unsafe(nil)); end
+  def range_field(object_name, method, options = T.unsafe(nil)); end
+  def rich_text_area(object_name, method, options = T.unsafe(nil)); end
+  def search_field(object_name, method, options = T.unsafe(nil)); end
+  def telephone_field(object_name, method, options = T.unsafe(nil)); end
+  def text_area(object_name, method, options = T.unsafe(nil)); end
+  def text_field(object_name, method, options = T.unsafe(nil)); end
+  def time_field(object_name, method, options = T.unsafe(nil)); end
+  def url_field(object_name, method, options = T.unsafe(nil)); end
+  def week_field(object_name, method, options = T.unsafe(nil)); end
+
+  private
+
+  def apply_form_for_options!(record, object, options); end
+  def default_form_builder_class; end
+  def html_options_for_form_with(url_for_options = T.unsafe(nil), model = T.unsafe(nil), html: T.unsafe(nil), local: T.unsafe(nil), skip_enforcing_utf8: T.unsafe(nil), **options); end
+  def instantiate_builder(record_name, record_object, options); end
+
+  class << self
+    def form_with_generates_ids; end
+    def form_with_generates_ids=(val); end
+    def form_with_generates_remote_forms; end
+    def form_with_generates_remote_forms=(val); end
+  end
+end
+
+class ActionView::Helpers::Tags::ActionText < ::ActionView::Helpers::Tags::Base
+  include ::ActionView::Helpers::Tags::Placeholderable
+
+  def dom_id(*_arg0, &_arg1); end
+  def editable_value; end
+  def render; end
+end

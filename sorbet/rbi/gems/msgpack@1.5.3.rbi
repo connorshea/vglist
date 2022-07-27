@@ -6,9 +6,7 @@
 
 class Array
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
   include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   private
 
@@ -18,10 +16,7 @@ end
 Bignum = Integer
 
 class FalseClass
-  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
   include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
 
   private
 
@@ -29,8 +24,6 @@ class FalseClass
 end
 
 class Float < ::Numeric
-  include ::ActiveSupport::NumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Float
   include ::MessagePack::CoreExt
 
   private
@@ -40,18 +33,15 @@ end
 
 class Hash
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Hash
   include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   private
 
   def to_msgpack_with_packer(packer); end
 end
 
+# Enhance the Integer class with a XML escaped character conversion.
 class Integer < ::Numeric
-  include ::ActiveSupport::NumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Integer
   include ::MessagePack::CoreExt
 
   private
@@ -193,9 +183,11 @@ class MessagePack::Unpacker
 end
 
 class NilClass
-  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
   include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
+  include ::FriendlyId::Reserved::Configuration
+  include ::FriendlyId::Scoped::Configuration
+  include ::FriendlyId::SimpleI18n::Configuration
+  include ::FriendlyId::Slugged::Configuration
 
   private
 
@@ -204,9 +196,7 @@ end
 
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
   include ::MessagePack::CoreExt
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   private
 
@@ -219,7 +209,6 @@ String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
 class Symbol
   include ::Comparable
   include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   private
 
@@ -231,10 +220,7 @@ class Symbol
 end
 
 class TrueClass
-  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
   include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
 
   private
 

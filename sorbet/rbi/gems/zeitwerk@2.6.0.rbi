@@ -70,6 +70,23 @@ class Zeitwerk::GemInflector < ::Zeitwerk::Inflector
   def camelize(basename, abspath); end
 end
 
+# @private
+class Zeitwerk::GemLoader < ::Zeitwerk::Loader
+  # @return [GemLoader] a new instance of GemLoader
+  def initialize(root_file, warn_on_extra_files:); end
+
+  def setup; end
+
+  private
+
+  def warn_on_extra_files; end
+
+  class << self
+    # @private
+    def _new(root_file, warn_on_extra_files:); end
+  end
+end
+
 class Zeitwerk::Inflector
   # Very basic snake case -> camel case conversion.
   #
@@ -259,13 +276,10 @@ class Zeitwerk::Loader
     #
     # except that this method returns the same object in subsequent calls from
     # the same file, in the unlikely case the gem wants to be able to reload.
-    def for_gem; end
-
-    # @private
-    def mutex; end
-
-    # @private
-    def mutex=(_arg0); end
+    #
+    # This method returns a subclass of Zeitwerk::Loader, but the exact type
+    # is private, client code can only rely on the interface.
+    def for_gem(warn_on_extra_files: T.unsafe(nil)); end
   end
 end
 
@@ -456,8 +470,6 @@ module Zeitwerk::Loader::Config
   def tag; end
 
   # Sets a tag for the loader, useful for logging.
-  #
-  # @param tag [#to_s]
   def tag=(tag); end
 
   private
@@ -496,6 +508,9 @@ module Zeitwerk::Loader::Helpers
   def dir?(path); end
 
   # @return [Boolean]
+  def has_at_least_one_ruby_file?(dir); end
+
+  # @return [Boolean]
   def hidden?(basename); end
 
   def log(message); end
@@ -507,6 +522,7 @@ module Zeitwerk::Loader::Helpers
   def strict_autoload_path(parent, cname); end
 end
 
+Zeitwerk::Loader::MUTEX = T.let(T.unsafe(nil), Thread::Mutex)
 class Zeitwerk::NameError < ::NameError; end
 
 module Zeitwerk::RealModName
@@ -524,6 +540,11 @@ module Zeitwerk::Registry
     #
     # @private
     def autoloads; end
+
+    # Registers gem loaders to let `for_gem` be idempotent in case of reload.
+    #
+    # @private
+    def gem_loaders_by_root_file; end
 
     # @private
     # @return [Boolean]
@@ -574,19 +595,13 @@ module Zeitwerk::Registry
     # file. That is how Zeitwerk::Loader.for_gem is idempotent.
     #
     # @private
-    def loader_for_gem(root_file); end
+    def loader_for_gem(root_file, warn_on_extra_files:); end
 
     # Keeps track of all loaders. Useful to broadcast messages and to prevent
     # them from being garbage collected.
     #
     # @private
     def loaders; end
-
-    # Registers loaders created with `for_gem` to make the method idempotent
-    # in case of reload.
-    #
-    # @private
-    def loaders_managing_gems; end
 
     # @private
     def on_unload(loader); end
@@ -610,5 +625,9 @@ module Zeitwerk::Registry
   end
 end
 
-class Zeitwerk::ReloadingDisabledError < ::Zeitwerk::Error; end
+class Zeitwerk::ReloadingDisabledError < ::Zeitwerk::Error
+  # @return [ReloadingDisabledError] a new instance of ReloadingDisabledError
+  def initialize; end
+end
+
 Zeitwerk::VERSION = T.let(T.unsafe(nil), String)

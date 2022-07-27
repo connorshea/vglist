@@ -7,6 +7,5 @@
 module ::MakeMakefile; end
 module DeleteInvalidEventsRecords::Event; end
 module MoveGamePurchaseEvents::Event; end
-module RDoc::Task; end
 module RenameGamePurchaseEventsToEvents::Event; end
 module T::Private::Methods::Signature; end

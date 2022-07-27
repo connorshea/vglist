@@ -7,9 +7,6 @@
 # RSpec's top level namespace. All of rspec-expectations is contained
 # in the `RSpec::Expectations` and `RSpec::Matchers` namespaces.
 module RSpec
-  extend ::RSpec::Support::Warnings
-  extend ::RSpec::Core::Warnings
-
   class << self
     # Used to ensure examples get reloaded between multiple runs in the same
     # process and ensures user configuration is persisted.
@@ -1178,9 +1175,7 @@ RSpec::MODULES_TO_AUTOLOAD = T.let(T.unsafe(nil), Hash)
 # best to find a more positive name for the negated form, such as
 # `avoid_changing` rather than `not_change`.
 module RSpec::Matchers
-  include ::Capybara::RSpecMatcherProxyInstaller
   extend ::RSpec::Matchers::DSL
-  extend ::Capybara::RSpecMatcherProxyInstaller::ClassMethods
 
   # Applied to a proc, specifies that its execution will cause some value to
   # change.

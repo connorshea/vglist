@@ -241,10 +241,6 @@ end
 
 class SignedGlobalID::ExpiredMessage < ::StandardError; end
 
-module URI
-  include ::URI::RFC2396_REGEXP
-end
-
 class URI::GID < ::URI::Generic
   # URI::GID encodes an app unique reference to a specific model as an URI.
   # It has the components: app name, model class name, model id and params.
@@ -354,6 +350,3 @@ class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
 
 # Extracts model_name and model_id from the URI path.
 URI::GID::PATH_REGEXP = T.let(T.unsafe(nil), Regexp)
-
-URI::Parser = URI::RFC2396_Parser
-URI::REGEXP = URI::RFC2396_REGEXP

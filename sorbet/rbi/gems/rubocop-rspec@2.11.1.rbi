@@ -5,8 +5,16 @@
 # Please instead update this file by running `bin/tapioca gem rubocop-rspec`.
 
 module RuboCop; end
+
+class RuboCop::AST::Node < ::Parser::AST::Node
+  include ::RuboCop::RSpec::Node
+end
+
 module RuboCop::Cop; end
+
+# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
+
 module RuboCop::Cop::RSpec; end
 
 # Checks that left braces for adjacent single line lets are aligned.

@@ -10,7 +10,7 @@ module PG
 
   class << self
     # Convenience alias for PG::Connection.new.
-    def connect(*args, **kwargs); end
+    def connect(*args, &block); end
 
     def init_openssl(_arg0, _arg1); end
     def init_ssl(_arg0); end
@@ -838,6 +838,7 @@ class PG::Connection
   # See also corresponding {libpq function}[https://www.postgresql.org/docs/current/libpq-misc.html#LIBPQ-PQENCRYPTPASSWORDCONN].
   def encrypt_password(password, username, algorithm = T.unsafe(nil)); end
 
+  def enter_pipeline_mode; end
   def error_message; end
   def escape(_arg0); end
   def escape_bytea(_arg0); end
@@ -847,6 +848,7 @@ class PG::Connection
   def exec(*_arg0); end
   def exec_params(*_arg0); end
   def exec_prepared(*_arg0); end
+  def exit_pipeline_mode; end
   def external_encoding; end
   def field_name_type; end
   def field_name_type=(_arg0); end
@@ -892,6 +894,7 @@ class PG::Connection
   def get_result; end
 
   def host; end
+  def hostaddr; end
   def internal_encoding; end
   def internal_encoding=(_arg0); end
   def is_busy; end
@@ -943,6 +946,8 @@ class PG::Connection
   def options; end
   def parameter_status(_arg0); end
   def pass; end
+  def pipeline_status; end
+  def pipeline_sync; end
   def port; end
   def prepare(*_arg0); end
   def protocol_version; end
@@ -994,6 +999,7 @@ class PG::Connection
   def reset_start; end
   def send_describe_portal(_arg0); end
   def send_describe_prepared(_arg0); end
+  def send_flush_request; end
   def send_prepare(*_arg0); end
   def send_query(*_arg0); end
   def send_query_params(*_arg0); end
@@ -1155,9 +1161,7 @@ class PG::Connection
     # connection will have its +client_encoding+ set accordingly.
     #
     # Raises a PG::Error if the connection fails.
-    #
-    # @raise [PG::ConnectionBad]
-    def async_connect(*args, **kwargs); end
+    def async_connect(*args); end
 
     # call-seq:
     #    PG::Connection.ping(connection_hash)       -> Integer
@@ -1239,9 +1243,7 @@ class PG::Connection
     # connection will have its +client_encoding+ set accordingly.
     #
     # Raises a PG::Error if the connection fails.
-    #
-    # @raise [PG::ConnectionBad]
-    def connect(*args, **kwargs); end
+    def connect(*args); end
 
     # Convert Hash options to connection String
     #
@@ -1249,12 +1251,7 @@ class PG::Connection
     def connect_hash_to_string(hash); end
 
     def connect_start(*_arg0); end
-
-    # Decode a connection string to Hash options
-    #
-    # Value are properly unquoted and unescaped.
-    def connect_string_to_hash(str); end
-
+    def conninfo_parse(_arg0); end
     def encrypt_password(_arg0, _arg1); end
     def escape(_arg0); end
     def escape_bytea(_arg0); end
@@ -1312,9 +1309,7 @@ class PG::Connection
     # connection will have its +client_encoding+ set accordingly.
     #
     # Raises a PG::Error if the connection fails.
-    #
-    # @raise [PG::ConnectionBad]
-    def new(*args, **kwargs); end
+    def new(*args); end
 
     # call-seq:
     #    PG::Connection.new -> conn
@@ -1367,9 +1362,7 @@ class PG::Connection
     # connection will have its +client_encoding+ set accordingly.
     #
     # Raises a PG::Error if the connection fails.
-    #
-    # @raise [PG::ConnectionBad]
-    def open(*args, **kwargs); end
+    def open(*args); end
 
     # Parse the connection +args+ into a connection-parameter string.
     # See PG::Connection.new for valid arguments.
@@ -1381,9 +1374,8 @@ class PG::Connection
     # * URI object
     # * positional arguments
     #
-    # The method adds the option "hostaddr" and "fallback_application_name" if they aren't already set.
-    # The URI and the options string is passed through and "hostaddr" as well as "fallback_application_name"
-    # are added to the end.
+    # The method adds the option "fallback_application_name" if it isn't already set.
+    # It returns a connection string with "key=value" pairs.
     def parse_connect_args(*args); end
 
     # call-seq:
@@ -1462,9 +1454,7 @@ class PG::Connection
     # connection will have its +client_encoding+ set accordingly.
     #
     # Raises a PG::Error if the connection fails.
-    #
-    # @raise [PG::ConnectionBad]
-    def setdb(*args, **kwargs); end
+    def setdb(*args); end
 
     # call-seq:
     #    PG::Connection.new -> conn
@@ -1517,25 +1507,23 @@ class PG::Connection
     # connection will have its +client_encoding+ set accordingly.
     #
     # Raises a PG::Error if the connection fails.
-    #
-    # @raise [PG::ConnectionBad]
-    def setdblogin(*args, **kwargs); end
+    def setdblogin(*args); end
 
     def sync_connect(*_arg0); end
     def sync_ping(*_arg0); end
     def unescape_bytea(_arg0); end
+
+    private
+
+    def connect_internal(opts, errors = T.unsafe(nil)); end
+    def connect_to_hosts(*args); end
+    def host_is_named_pipe?(host_string); end
   end
 end
 
 # The order the options are passed to the ::connect method.
 PG::Connection::CONNECT_ARGUMENT_ORDER = T.let(T.unsafe(nil), Array)
 
-# URI defined in RFC3986
-# This regexp is modified to allow host to specify multiple comma separated components captured as <hostports> and to disallow comma in hostnames.
-# Taken from: https://github.com/ruby/ruby/blob/be04006c7d2f9aeb7e9d8d09d945b3a9c7850202/lib/uri/rfc3986_parser.rb#L6
-PG::Connection::HOST_AND_PORT = T.let(T.unsafe(nil), Regexp)
-
-PG::Connection::POSTGRESQL_URI = T.let(T.unsafe(nil), Regexp)
 class PG::ConnectionBad < ::PG::Error; end
 class PG::ConnectionDoesNotExist < ::PG::ConnectionException; end
 class PG::ConnectionException < ::PG::ServerError; end
@@ -1544,6 +1532,11 @@ module PG::Constants; end
 PG::Constants::CONNECTION_AUTH_OK = T.let(T.unsafe(nil), Integer)
 PG::Constants::CONNECTION_AWAITING_RESPONSE = T.let(T.unsafe(nil), Integer)
 PG::Constants::CONNECTION_BAD = T.let(T.unsafe(nil), Integer)
+PG::Constants::CONNECTION_CHECK_STANDBY = T.let(T.unsafe(nil), Integer)
+PG::Constants::CONNECTION_CHECK_TARGET = T.let(T.unsafe(nil), Integer)
+PG::Constants::CONNECTION_CHECK_WRITABLE = T.let(T.unsafe(nil), Integer)
+PG::Constants::CONNECTION_CONSUME = T.let(T.unsafe(nil), Integer)
+PG::Constants::CONNECTION_GSS_STARTUP = T.let(T.unsafe(nil), Integer)
 PG::Constants::CONNECTION_MADE = T.let(T.unsafe(nil), Integer)
 PG::Constants::CONNECTION_NEEDED = T.let(T.unsafe(nil), Integer)
 PG::Constants::CONNECTION_OK = T.let(T.unsafe(nil), Integer)
@@ -1562,6 +1555,8 @@ PG::Constants::PGRES_COPY_OUT = T.let(T.unsafe(nil), Integer)
 PG::Constants::PGRES_EMPTY_QUERY = T.let(T.unsafe(nil), Integer)
 PG::Constants::PGRES_FATAL_ERROR = T.let(T.unsafe(nil), Integer)
 PG::Constants::PGRES_NONFATAL_ERROR = T.let(T.unsafe(nil), Integer)
+PG::Constants::PGRES_PIPELINE_ABORTED = T.let(T.unsafe(nil), Integer)
+PG::Constants::PGRES_PIPELINE_SYNC = T.let(T.unsafe(nil), Integer)
 PG::Constants::PGRES_POLLING_FAILED = T.let(T.unsafe(nil), Integer)
 PG::Constants::PGRES_POLLING_OK = T.let(T.unsafe(nil), Integer)
 PG::Constants::PGRES_POLLING_READING = T.let(T.unsafe(nil), Integer)
@@ -1602,6 +1597,9 @@ PG::Constants::PQTRANS_IDLE = T.let(T.unsafe(nil), Integer)
 PG::Constants::PQTRANS_INERROR = T.let(T.unsafe(nil), Integer)
 PG::Constants::PQTRANS_INTRANS = T.let(T.unsafe(nil), Integer)
 PG::Constants::PQTRANS_UNKNOWN = T.let(T.unsafe(nil), Integer)
+PG::Constants::PQ_PIPELINE_ABORTED = T.let(T.unsafe(nil), Integer)
+PG::Constants::PQ_PIPELINE_OFF = T.let(T.unsafe(nil), Integer)
+PG::Constants::PQ_PIPELINE_ON = T.let(T.unsafe(nil), Integer)
 PG::Constants::SEEK_CUR = T.let(T.unsafe(nil), Integer)
 PG::Constants::SEEK_END = T.let(T.unsafe(nil), Integer)
 PG::Constants::SEEK_SET = T.let(T.unsafe(nil), Integer)
@@ -1658,6 +1656,9 @@ class PG::ERIETriggerProtocolViolated < ::PG::ExternalRoutineInvocationException
 PG::ERROR_CLASSES = T.let(T.unsafe(nil), Hash)
 
 class PG::Error < ::StandardError
+  # @return [Error] a new instance of Error
+  def initialize(msg = T.unsafe(nil), connection: T.unsafe(nil), result: T.unsafe(nil)); end
+
   def connection; end
   def error; end
   def result; end

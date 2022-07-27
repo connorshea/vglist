@@ -12157,8 +12157,6 @@ end
 
 # :stopdoc:
 class ActionDispatch::Routing::RouteSet
-  include ::Devise::RouteSet
-
   # @return [RouteSet] a new instance of RouteSet
   def initialize(config = T.unsafe(nil)); end
 
@@ -13491,6 +13489,7 @@ end
 module ActionPack::VERSION; end
 ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -13701,6 +13700,7 @@ Rack::HTTP_HOST = T.let(T.unsafe(nil), String)
 Rack::HTTP_PORT = T.let(T.unsafe(nil), String)
 Rack::HTTP_VERSION = T.let(T.unsafe(nil), String)
 Rack::LINK = T.let(T.unsafe(nil), String)
+Rack::MockSession = Rack::Test::Session
 Rack::OPTIONS = T.let(T.unsafe(nil), String)
 Rack::PATCH = T.let(T.unsafe(nil), String)
 Rack::PATH_INFO = T.let(T.unsafe(nil), String)

@@ -202,9 +202,6 @@ Scanf::FormatString::SPECIFIERS = T.let(T.unsafe(nil), String)
 # Extensions to the core String class
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  include ::MessagePack::CoreExt
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   # Scans the current string until the match is exhausted
   # yielding each match as it is encountered in the string.

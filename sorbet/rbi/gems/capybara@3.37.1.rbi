@@ -6427,10 +6427,12 @@ end
 
 class Capybara::WindowError < ::Capybara::CapybaraError; end
 
-module XPath
-  include ::XPath::DSL
-  extend ::XPath::DSL
+module RSpec::Matchers
+  include ::Capybara::RSpecMatcherProxyInstaller
+  extend ::Capybara::RSpecMatcherProxyInstaller::ClassMethods
+end
 
+module XPath
   class << self
     def generate; end
   end

@@ -5,8 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem responders`.
 
 module ActionController
-  extend ::ActiveSupport::Autoload
-
   class << self
     # See <tt>Renderers.add</tt>
     def add_renderer(key, &block); end

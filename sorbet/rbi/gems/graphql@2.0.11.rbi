@@ -1277,13 +1277,6 @@ class GraphQL::Execution::Lazy
     # @param lazies [Array<Object>] Maybe-lazy objects
     # @return [Lazy] A lazy which will sync all of `lazies`
     def all(lazies); end
-
-    # Traverse `val`, lazily resolving any values along the way
-    #
-    # @api private
-    # @param val [Object] A data structure containing mixed plain values and `Lazy` instances
-    # @return void
-    def resolve(val); end
   end
 end
 
@@ -2199,7 +2192,6 @@ GraphQL::Language::Lexer::ESCAPES_REPLACE = T.let(T.unsafe(nil), Hash)
 GraphQL::Language::Lexer::PACK_DIRECTIVE = T.let(T.unsafe(nil), String)
 GraphQL::Language::Lexer::UTF_8 = T.let(T.unsafe(nil), Regexp)
 GraphQL::Language::Lexer::UTF_8_ENCODING = T.let(T.unsafe(nil), String)
-GraphQL::Language::Lexer::UTF_8_REPLACE = T.let(T.unsafe(nil), Proc)
 GraphQL::Language::Lexer::VALID_STRING = T.let(T.unsafe(nil), Regexp)
 module GraphQL::Language::Nodes; end
 
@@ -4761,10 +4753,9 @@ class GraphQL::Schema
     def subscription_execution_strategy(new_subscription_execution_strategy = T.unsafe(nil)); end
 
     # @return [GraphQL::Subscriptions]
-    def subscriptions; end
+    def subscriptions(inherited: T.unsafe(nil)); end
 
-    # @return [GraphQL::Subscriptions]
-    def subscriptions=(_arg0); end
+    def subscriptions=(new_implementation); end
 
     # Override this method to handle lazy objects in a custom way.
     #
@@ -5665,6 +5656,9 @@ class GraphQL::Schema::Field
 
   # @return Boolean
   def relay_node_field; end
+
+  # @return Boolean
+  def relay_nodes_field; end
 
   # This method is called by the interpreter for each field.
   # You can extend it in your base field classes.
@@ -9877,24 +9871,6 @@ module GraphQL::Tracing::NullTracer
   end
 end
 
-class GraphQL::Tracing::OpenTelemetryTracing < ::GraphQL::Tracing::PlatformTracing
-  def platform_authorized_key(type); end
-  def platform_field_key(type, field); end
-  def platform_resolve_type_key(type); end
-  def platform_trace(platform_key, key, data); end
-
-  private
-
-  def attributes_for(key, data); end
-  def cached_platform_key(ctx, key, trace_phase); end
-  def config; end
-
-  # @return [Boolean]
-  def platform_key_enabled?(ctx, key); end
-
-  def tracer; end
-end
-
 # Each platform provides:
 # - `.platform_keys`
 # - `#platform_trace`
@@ -9922,6 +9898,9 @@ class GraphQL::Tracing::PlatformTracing
   # If the key isn't present, the given block is called and the result is cached for `key`.
   #
   # @api private
+  # @param ctx [GraphQL::Query::Context]
+  # @param key [Class, GraphQL::Field] A part of the schema
+  # @param trace_phase [Symbol] The stage of execution being traced (used by OpenTelementry tracing)
   # @return [String]
   def cached_platform_key(ctx, key, trace_phase); end
 

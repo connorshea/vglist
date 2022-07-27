@@ -26,20 +26,22 @@ class TypeCoerce::Converter
   # @return [Converter] a new instance of Converter
   def initialize(type); end
 
-  def from(args, raise_coercion_error: T.unsafe(nil)); end
+  def from(args, raise_coercion_error: T.unsafe(nil), coerce_empty_to_nil: T.unsafe(nil)); end
   def new; end
   def to_s; end
 
   private
 
-  def _build_args(args, type, raise_coercion_error); end
-  def _convert(value, type, raise_coercion_error); end
-  def _convert_enum(value, type, raise_coercion_error); end
-  def _convert_simple(value, type, raise_coercion_error); end
-  def _convert_to_a(ary, type, raise_coercion_error); end
+  def _build_args(args, type, raise_coercion_error, coerce_empty_to_nil); end
+  def _convert(value, type, raise_coercion_error, coerce_empty_to_nil); end
+  def _convert_enum(value, type, raise_coercion_error, coerce_empty_to_nil); end
+  def _convert_simple(value, type, raise_coercion_error, coerce_empty_to_nil); end
+  def _convert_to_a(ary, type, raise_coercion_error, coerce_empty_to_nil); end
 
   # @return [Boolean]
-  def _nil_like?(value, type); end
+  def _nil_like?(value, type, coerce_empty_to_nil); end
+
+  def coerce_nil(value, type, coerce_empty_to_nil); end
 end
 
 TypeCoerce::Converter::PRIMITIVE_TYPES = T.let(T.unsafe(nil), Set)

@@ -63,7 +63,10 @@ end
 
 # Common functionality for enforcing a specific superclass.
 module RuboCop::Cop::EnforceSuperclass
+  # @api private
   def on_class(node); end
+
+  # @api private
   def on_send(node); end
 
   private
@@ -71,11 +74,14 @@ module RuboCop::Cop::EnforceSuperclass
   def register_offense(offense_node); end
 
   class << self
+    # @api private
+    # @private
     # @private
     def included(base); end
   end
 end
 
+# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # Common functionality for Rails/IndexBy and Rails/IndexWith
@@ -246,7 +252,7 @@ end
 
 RuboCop::Cop::Rails::ActionControllerTestCase::MSG = T.let(T.unsafe(nil), String)
 
-# This cop enforces the consistent use of action filter methods.
+# Enforces the consistent use of action filter methods.
 #
 # The cop is configurable and can enforce the use of the older
 # something_filter methods or the newer something_action methods.
@@ -311,7 +317,7 @@ RuboCop::Cop::Rails::ActiveRecordAliases::ALIASES = T.let(T.unsafe(nil), Hash)
 RuboCop::Cop::Rails::ActiveRecordAliases::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ActiveRecordAliases::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks that Active Record callbacks are declared
+# Checks that Active Record callbacks are declared
 # in the order in which they will be executed.
 #
 # @example
@@ -393,7 +399,7 @@ RuboCop::Cop::Rails::ActiveRecordOverride::ACTIVE_RECORD_CLASSES = T.let(T.unsaf
 RuboCop::Cop::Rails::ActiveRecordOverride::BAD_METHODS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::ActiveRecordOverride::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks that ActiveSupport aliases to core ruby methods
+# Checks that ActiveSupport aliases to core ruby methods
 # are not used.
 #
 # @example
@@ -422,7 +428,7 @@ RuboCop::Cop::Rails::ActiveSupportAliases::ALIASES = T.let(T.unsafe(nil), Hash)
 RuboCop::Cop::Rails::ActiveSupportAliases::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ActiveSupportAliases::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for migrations using `add_column` that have an `index`
+# Checks for migrations using `add_column` that have an `index`
 # key. `add_column` does not accept `index`, but also does not raise an
 # error for extra keys, so it is possible to mistakenly add the key without
 # realizing it will not actually add an index.
@@ -449,7 +455,7 @@ end
 RuboCop::Cop::Rails::AddColumnIndex::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::AddColumnIndex::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces that there is only one call to `after_commit`
+# Enforces that there is only one call to `after_commit`
 # (and its aliases - `after_create_commit`, `after_update_commit`,
 # and `after_destroy_commit`) with the same callback name per model.
 #
@@ -495,7 +501,7 @@ end
 RuboCop::Cop::Rails::AfterCommitOverride::AFTER_COMMIT_CALLBACKS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::AfterCommitOverride::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks that controllers subclass `ApplicationController`.
+# Checks that controllers subclass `ApplicationController`.
 #
 # @example
 #
@@ -520,7 +526,7 @@ RuboCop::Cop::Rails::ApplicationController::BASE_PATTERN = T.let(T.unsafe(nil), 
 RuboCop::Cop::Rails::ApplicationController::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ApplicationController::SUPERCLASS = T.let(T.unsafe(nil), String)
 
-# This cop checks that jobs subclass `ApplicationJob` with Rails 5.0.
+# Checks that jobs subclass `ApplicationJob` with Rails 5.0.
 #
 # @example
 #
@@ -547,7 +553,7 @@ RuboCop::Cop::Rails::ApplicationJob::BASE_PATTERN = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ApplicationJob::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ApplicationJob::SUPERCLASS = T.let(T.unsafe(nil), String)
 
-# This cop checks that mailers subclass `ApplicationMailer` with Rails 5.0.
+# Checks that mailers subclass `ApplicationMailer` with Rails 5.0.
 #
 # @example
 #
@@ -573,7 +579,7 @@ RuboCop::Cop::Rails::ApplicationMailer::BASE_PATTERN = T.let(T.unsafe(nil), Stri
 RuboCop::Cop::Rails::ApplicationMailer::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ApplicationMailer::SUPERCLASS = T.let(T.unsafe(nil), String)
 
-# This cop checks that models subclass `ApplicationRecord` with Rails 5.0.
+# Checks that models subclass `ApplicationRecord` with Rails 5.0.
 #
 # @example
 #
@@ -599,7 +605,7 @@ RuboCop::Cop::Rails::ApplicationRecord::BASE_PATTERN = T.let(T.unsafe(nil), Stri
 RuboCop::Cop::Rails::ApplicationRecord::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ApplicationRecord::SUPERCLASS = T.let(T.unsafe(nil), String)
 
-# This cop prevents usage of `"*"` on an Arel::Table column reference.
+# Prevents usage of `"*"` on an Arel::Table column reference.
 #
 # Using `arel_table["*"]` causes the outputted string to be a literal
 # quoted asterisk (e.g. <tt>`my_model`.`*`</tt>). This causes the
@@ -644,7 +650,7 @@ end
 RuboCop::Cop::Rails::AssertNot::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::AssertNot::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for `attribute` class methods that specify a `:default` option
+# Looks for `attribute` class methods that specify a `:default` option
 # which value is an array, string literal or method call without a block.
 # It will accept all other values, such as string, symbol, integer and float literals
 # as well as constants.
@@ -712,7 +718,7 @@ RuboCop::Cop::Rails::AttributeDefaultBlockValue::MSG = T.let(T.unsafe(nil), Stri
 RuboCop::Cop::Rails::AttributeDefaultBlockValue::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::AttributeDefaultBlockValue::TYPE_OFFENDERS = T.let(T.unsafe(nil), Array)
 
-# This cop looks for belongs_to associations where we control whether the
+# Looks for belongs_to associations where we control whether the
 # association is required via the deprecated `required` option instead.
 #
 # Since Rails 5, belongs_to associations are required by default and this
@@ -770,13 +776,13 @@ RuboCop::Cop::Rails::BelongsTo::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::BelongsTo::SUPERFLOUS_REQUIRE_FALSE_MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::BelongsTo::SUPERFLOUS_REQUIRE_TRUE_MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for code that can be written with simpler conditionals
+# Checks for code that can be written with simpler conditionals
 # using `Object#blank?` defined by Active Support.
 #
 # Interaction with `Style/UnlessElse`:
 # The configuration of `NotPresent` will not produce an offense in the
 # context of `unless else` if `Style/UnlessElse` is inabled. This is
-# to prevent interference between the auto-correction of the two cops.
+# to prevent interference between the autocorrection of the two cops.
 #
 # @example NilOrEmpty: true (default)
 #   # Converts usages of `nil? || empty?` to `blank?`
@@ -841,7 +847,7 @@ RuboCop::Cop::Rails::Blank::MSG_NOT_PRESENT = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Blank::MSG_UNLESS_PRESENT = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Blank::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This Cop checks whether alter queries are combinable.
+# Checks whether alter queries are combinable.
 # If combinable queries are detected, it suggests to you
 # to use `change_table` with `bulk: true` instead.
 # This option causes the migration to generate a single
@@ -1003,7 +1009,7 @@ end
 RuboCop::Cop::Rails::CompactBlank::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::CompactBlank::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks legacy syntax usage of `tag`
+# Checks legacy syntax usage of `tag`
 #
 # NOTE: Allow `tag` when the first argument is a variable because
 # `tag(name)` is simpler rather than `tag.public_send(name)`.
@@ -1046,7 +1052,7 @@ end
 RuboCop::Cop::Rails::ContentTag::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ContentTag::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks the migration for which timestamps are not included
+# Checks the migration for which timestamps are not included
 # when creating a new table.
 # In many cases, timestamps are useful information and should be added.
 #
@@ -1100,7 +1106,7 @@ end
 RuboCop::Cop::Rails::CreateTableWithTimestamps::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::CreateTableWithTimestamps::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the correct use of Date methods,
+# Checks for the correct use of Date methods,
 # such as Date.today, Date.current etc.
 #
 # Using `Date.today` is dangerous, because it doesn't know anything about
@@ -1119,15 +1125,6 @@ RuboCop::Cop::Rails::CreateTableWithTimestamps::RESTRICT_ON_SEND = T.let(T.unsaf
 # And you can set a warning for `to_time` with `AllowToTime: false`.
 # `AllowToTime` is `true` by default to prevent false positive on `DateTime` object.
 #
-# @example EnforcedStyle: strict
-#   # bad
-#   Date.current
-#   Date.yesterday
-#   Date.today
-#
-#   # good
-#   Time.zone.today
-#   Time.zone.today - 1.day
 # @example EnforcedStyle: flexible (default)
 #   # bad
 #   Date.today
@@ -1138,6 +1135,15 @@ RuboCop::Cop::Rails::CreateTableWithTimestamps::RESTRICT_ON_SEND = T.let(T.unsaf
 #   Date.current
 #   Date.yesterday
 #   date.in_time_zone
+# @example EnforcedStyle: strict
+#   # bad
+#   Date.current
+#   Date.yesterday
+#   Date.today
+#
+#   # good
+#   Time.zone.today
+#   Time.zone.today - 1.day
 # @example AllowToTime: true (default)
 #   # good
 #   date.to_time
@@ -1184,7 +1190,7 @@ RuboCop::Cop::Rails::Date::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Date::MSG_SEND = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Date::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for uses of `default_scope`.
+# Looks for uses of `default_scope`.
 #
 # @example
 #   # bad
@@ -1214,7 +1220,7 @@ end
 RuboCop::Cop::Rails::DefaultScope::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::DefaultScope::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for delegations that could have been created
+# Looks for delegations that could have been created
 # automatically with the `delegate` method.
 #
 # Safe navigation `&.` is ignored because Rails' `allow_nil`
@@ -1290,7 +1296,7 @@ end
 
 RuboCop::Cop::Rails::Delegate::MSG = T.let(T.unsafe(nil), String)
 
-# This cop looks for delegations that pass :allow_blank as an option
+# Looks for delegations that pass :allow_blank as an option
 # instead of :allow_nil. :allow_blank is not a valid option to pass
 # to ActiveSupport#delegate.
 #
@@ -1310,7 +1316,7 @@ end
 RuboCop::Cop::Rails::DelegateAllowBlank::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::DelegateAllowBlank::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks direct manipulation of ActiveModel#errors as hash.
+# Checks direct manipulation of ActiveModel#errors as hash.
 # These operations are deprecated in Rails 6.1 and will not work in Rails 7.
 #
 # @example
@@ -1327,8 +1333,18 @@ RuboCop::Cop::Rails::DelegateAllowBlank::RESTRICT_ON_SEND = T.let(T.unsafe(nil),
 #
 #   # good
 #   user.errors.delete(:name)
+#
+#   # bad
+#   user.errors.keys.include?(:attr)
+#
+#   # good
+#   user.errors.attribute_names.include?(:attr)
 class RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::RangeHelp
+  extend ::RuboCop::Cop::AutoCorrector
+
   def any_manipulation?(param0 = T.unsafe(nil)); end
+  def errors_keys?(param0 = T.unsafe(nil)); end
   def messages_details_assignment?(param0 = T.unsafe(nil)); end
   def messages_details_manipulation?(param0 = T.unsafe(nil)); end
   def on_send(node); end
@@ -1339,16 +1355,52 @@ class RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods < ::RuboCop::Cop::
 
   private
 
+  def autocorrect(corrector, node); end
+
   # @return [Boolean]
   def model_file?; end
 
+  def offense_range(node, receiver); end
   def receiver_matcher(node); end
+  def replacement(node, receiver); end
 end
 
+RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::AUTOCORECTABLE_METHODS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::MANIPULATIVE_METHODS = T.let(T.unsafe(nil), Set)
 RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::MSG = T.let(T.unsafe(nil), String)
 
-# This cop looks for associations that have been defined multiple times in the same file.
+# Enforces the use of dot-separated locale keys instead of specifying the `:scope` option
+# with an array or a single symbol in `I18n` translation methods.
+# Dot-separated notation is easier to read and trace the hierarchy.
+#
+# @example
+#   # bad
+#   I18n.t :record_invalid, scope: [:activerecord, :errors, :messages]
+#   I18n.t :title, scope: :invitation
+#
+#   # good
+#   I18n.t 'activerecord.errors.messages.record_invalid'
+#   I18n.t :record_invalid, scope: 'activerecord.errors.messages'
+class RuboCop::Cop::Rails::DotSeparatedKeys < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::RangeHelp
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def on_send(node); end
+  def translate_with_scope?(param0 = T.unsafe(nil)); end
+
+  private
+
+  def new_key(key_node, scope_node); end
+  def scopes(scope_node); end
+
+  # @return [Boolean]
+  def should_convert_scope?(scope_node); end
+end
+
+RuboCop::Cop::Rails::DotSeparatedKeys::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::DotSeparatedKeys::TRANSLATE_METHODS = T.let(T.unsafe(nil), Array)
+
+# Looks for associations that have been defined multiple times in the same file.
 #
 # When an association is defined multiple times on a model, Active Record overrides the
 # previously defined association with the new one. Because of this, this cop's autocorrection
@@ -1379,7 +1431,7 @@ end
 
 RuboCop::Cop::Rails::DuplicateAssociation::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for multiple scopes in a model that have the same `where` clause. This
+# Checks for multiple scopes in a model that have the same `where` clause. This
 # often means you copy/pasted a scope, updated the name, and forgot to change the condition.
 #
 # @example
@@ -1404,7 +1456,7 @@ end
 
 RuboCop::Cop::Rails::DuplicateScope::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks if a duration is added to or subtracted from `Time.current`.
+# Checks if a duration is added to or subtracted from `Time.current`.
 #
 # @example
 #   # bad
@@ -1463,7 +1515,7 @@ RuboCop::Cop::Rails::DurationArithmetic::DURATIONS = T.let(T.unsafe(nil), Set)
 RuboCop::Cop::Rails::DurationArithmetic::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::DurationArithmetic::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks dynamic `find_by_*` methods.
+# Checks dynamic `find_by_*` methods.
 # Use `find_by` instead of dynamic method.
 # See. https://rails.rubystyle.guide#find_by
 #
@@ -1526,7 +1578,7 @@ RuboCop::Cop::Rails::DynamicFindBy::IGNORED_ARGUMENT_TYPES = T.let(T.unsafe(nil)
 RuboCop::Cop::Rails::DynamicFindBy::METHOD_PATTERN = T.let(T.unsafe(nil), Regexp)
 RuboCop::Cop::Rails::DynamicFindBy::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks that blocks are used for interpolated strings passed to
+# Checks that blocks are used for interpolated strings passed to
 # `Rails.logger.debug`.
 #
 # By default, Rails production environments use the `:info` log level.
@@ -1557,7 +1609,7 @@ end
 RuboCop::Cop::Rails::EagerEvaluationLogMessage::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::EagerEvaluationLogMessage::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for enums written with array syntax.
+# Looks for enums written with array syntax.
 #
 # When using array syntax, adding an element in a
 # position other than the last causes all previous
@@ -1586,7 +1638,7 @@ end
 RuboCop::Cop::Rails::EnumHash::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::EnumHash::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for duplicate values in enum declarations.
+# Looks for duplicate values in enum declarations.
 #
 # @example
 #   # bad
@@ -1615,7 +1667,7 @@ end
 RuboCop::Cop::Rails::EnumUniqueness::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::EnumUniqueness::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks that Rails.env is compared using `.production?`-like
+# Checks that Rails.env is compared using `.production?`-like
 # methods instead of equality against a string or symbol.
 #
 # @example
@@ -1652,7 +1704,7 @@ RuboCop::Cop::Rails::EnvironmentComparison::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::EnvironmentComparison::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::EnvironmentComparison::SYM_MSG = T.let(T.unsafe(nil), String)
 
-# This cop looks for direct access to environment variables through the
+# Looks for direct access to environment variables through the
 # `ENV` variable within the application code. This can lead to runtime
 # errors due to misconfiguration that could have been discovered at boot
 # time if the environment variables were loaded as part of initialization
@@ -1696,7 +1748,7 @@ end
 RuboCop::Cop::Rails::EnvironmentVariableAccess::READ_MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::EnvironmentVariableAccess::WRITE_MSG = T.let(T.unsafe(nil), String)
 
-# This cop enforces that `exit` calls are not used within a rails app.
+# Enforces that `exit` calls are not used within a rails app.
 # Valid options are instead to raise an error, break, return, or some
 # other form of stopping execution of current request.
 #
@@ -1743,7 +1795,7 @@ RuboCop::Cop::Rails::Exit::EXPLICIT_RECEIVERS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::Exit::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Exit::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for expanded date range. It only compatible `..` range is targeted.
+# Checks for expanded date range. It only compatible `..` range is targeted.
 # Incompatible `...` range is ignored.
 #
 # @example
@@ -1780,18 +1832,10 @@ RuboCop::Cop::Rails::ExpandedDateRange::MAPPED_DATE_RANGE_METHODS = T.let(T.unsa
 RuboCop::Cop::Rails::ExpandedDateRange::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ExpandedDateRange::PREFERRED_METHODS = T.let(T.unsafe(nil), Hash)
 
-# This cop is used to identify usages of file path joining process
+# Identifies usages of file path joining process
 # to use `Rails.root.join` clause. It is used to add uniformity when
 # joining paths.
 #
-# @example EnforcedStyle: arguments
-#   # bad
-#   Rails.root.join('app/models/goober')
-#   File.join(Rails.root, 'app/models/goober')
-#   "#{Rails.root}/app/models/goober"
-#
-#   # good
-#   Rails.root.join('app', 'models', 'goober')
 # @example EnforcedStyle: slashes (default)
 #   # bad
 #   Rails.root.join('app', 'models', 'goober')
@@ -1800,6 +1844,14 @@ RuboCop::Cop::Rails::ExpandedDateRange::PREFERRED_METHODS = T.let(T.unsafe(nil),
 #
 #   # good
 #   Rails.root.join('app/models/goober')
+# @example EnforcedStyle: arguments
+#   # bad
+#   Rails.root.join('app/models/goober')
+#   File.join(Rails.root, 'app/models/goober')
+#   "#{Rails.root}/app/models/goober"
+#
+#   # good
+#   Rails.root.join('app', 'models', 'goober')
 class RuboCop::Cop::Rails::FilePath < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RangeHelp
@@ -1826,7 +1878,7 @@ RuboCop::Cop::Rails::FilePath::MSG_ARGUMENTS = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::FilePath::MSG_SLASHES = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::FilePath::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop is used to identify usages of `where.take` and change them to use `find_by` instead.
+# Identifies usages of `where.take` and change them to use `find_by` instead.
 #
 # And `where(...).first` can return different results from `find_by`.
 # (They order records differently, so the "first" record can be different.)
@@ -1868,7 +1920,7 @@ end
 RuboCop::Cop::Rails::FindBy::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::FindBy::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces that `ActiveRecord#find` is used instead of
+# Enforces that `ActiveRecord#find` is used instead of
 # `where.take!`, `find_by!`, and `find_by_id!` to retrieve a single record
 # by primary key when you expect it to be found.
 #
@@ -1901,7 +1953,7 @@ end
 RuboCop::Cop::Rails::FindById::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::FindById::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop is used to identify usages of `all.each` and
+# Identifies usages of `all.each` and
 # change them to use `all.find_each` instead.
 #
 # @example
@@ -1935,7 +1987,7 @@ RuboCop::Cop::Rails::FindEach::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::FindEach::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::FindEach::SCOPE_METHODS = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the use of the has_and_belongs_to_many macro.
+# Checks for the use of the has_and_belongs_to_many macro.
 #
 # @example
 #   # bad
@@ -1950,7 +2002,7 @@ end
 RuboCop::Cop::Rails::HasAndBelongsToMany::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::HasAndBelongsToMany::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for `has_many` or `has_one` associations that don't
+# Looks for `has_many` or `has_one` associations that don't
 # specify a `:dependent` option.
 #
 # It doesn't register an offense if `:through` or `dependent: nil`
@@ -1998,6 +2050,8 @@ class RuboCop::Cop::Rails::HasManyOrHasOneDependent < ::RuboCop::Cop::Base
   # @return [Boolean]
   def contain_valid_options_in_with_options_block?(node); end
 
+  def extract_option_if_kwsplat(options); end
+
   # @return [Boolean]
   def readonly_model?(node); end
 
@@ -2011,14 +2065,14 @@ end
 RuboCop::Cop::Rails::HasManyOrHasOneDependent::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::HasManyOrHasOneDependent::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for use of the helper methods which reference
+# Checks for use of the helper methods which reference
 # instance variables.
 #
 # Relying on instance variables makes it difficult to re-use helper
 # methods.
 #
 # If it seems awkward to explicitly pass in each dependent
-# variable, consider moving the behaviour elsewhere, for
+# variable, consider moving the behavior elsewhere, for
 # example to a model, decorator or presenter.
 #
 # Provided that a class inherits `ActionView::Helpers::FormBuilder`,
@@ -2052,7 +2106,7 @@ end
 
 RuboCop::Cop::Rails::HelperInstanceVariable::MSG = T.let(T.unsafe(nil), String)
 
-# This cop is used to identify usages of http methods like `get`, `post`,
+# Identifies usages of http methods like `get`, `post`,
 # `put`, `patch` without the usage of keyword arguments in your tests and
 # change them to use keyword args. This cop only applies to Rails >= 5.
 # If you are running Rails < 5 you should disable the
@@ -2199,7 +2253,7 @@ end
 RuboCop::Cop::Rails::HttpStatus::SymbolicStyleChecker::DEFAULT_MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::HttpStatus::SymbolicStyleChecker::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for places where I18n "lazy" lookup can be used.
+# Checks for places where I18n "lazy" lookup can be used.
 #
 # @example
 #   # en.yml
@@ -2239,7 +2293,7 @@ end
 
 RuboCop::Cop::Rails::I18nLazyLookup::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for the use of `I18n.locale=` method.
+# Checks for the use of `I18n.locale=` method.
 #
 # The `locale` attribute persists for the rest of the Ruby runtime, potentially causing
 # unexpected behavior at a later time.
@@ -2334,7 +2388,7 @@ end
 RuboCop::Cop::Rails::I18nLocaleTexts::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::I18nLocaleTexts::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks that `if` and `only` (or `except`) are not used together
+# Checks that `if` and `only` (or `except`) are not used together
 # as options of `skip_*` action filter.
 #
 # The `if` option will be ignored when `if` and `only` are used together.
@@ -2385,7 +2439,7 @@ RuboCop::Cop::Rails::IgnoredSkipActionFilterOption::FILTERS = T.let(T.unsafe(nil
 RuboCop::Cop::Rails::IgnoredSkipActionFilterOption::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::IgnoredSkipActionFilterOption::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for uses of `each_with_object({}) { ... }`,
+# Looks for uses of `each_with_object({}) { ... }`,
 # `map { ... }.to_h`, and `Hash[map { ... }]` that are transforming
 # an enumerable into a hash where the values are the original elements.
 # Rails provides the `index_by` method for this purpose.
@@ -2413,7 +2467,7 @@ class RuboCop::Cop::Rails::IndexBy < ::RuboCop::Cop::Base
   def new_method_name; end
 end
 
-# This cop looks for uses of `each_with_object({}) { ... }`,
+# Looks for uses of `each_with_object({}) { ... }`,
 # `map { ... }.to_h`, and `Hash[map { ... }]` that are transforming
 # an enumerable into a hash where the keys are the original elements.
 # Rails provides the `index_with` method for this purpose.
@@ -2442,7 +2496,7 @@ class RuboCop::Cop::Rails::IndexWith < ::RuboCop::Cop::Base
   def new_method_name; end
 end
 
-# This cop checks that Active Support's `inquiry` method is not used.
+# Checks that Active Support's `inquiry` method is not used.
 #
 # @example
 #   # bad - String#inquiry
@@ -2467,7 +2521,7 @@ end
 RuboCop::Cop::Rails::Inquiry::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Inquiry::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop looks for has_(one|many) and belongs_to associations where
+# Looks for has_(one|many) and belongs_to associations where
 # Active Record can't automatically determine the inverse association
 # because of a scope or the options used. Using the blog with order scope
 # example below, traversing the a Blog's association in both directions
@@ -2641,7 +2695,7 @@ RuboCop::Cop::Rails::InverseOf::NIL_MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::InverseOf::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::InverseOf::SPECIFY_MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks that methods specified in the filter's `only` or
+# Checks that methods specified in the filter's `only` or
 # `except` options are defined within the same class or module.
 #
 # @example
@@ -2698,7 +2752,7 @@ RuboCop::Cop::Rails::InverseOf::SPECIFY_MSG = T.let(T.unsafe(nil), String)
 #   class ArticlesController < ContentController
 #   before_action :load_article, only: [:update]
 #
-#   # the cop requires this method, but it relies on behaviour defined
+#   # the cop requires this method, but it relies on behavior defined
 #   # in the superclass, so needs to invoke `super`
 #   def update
 #   super
@@ -2734,7 +2788,7 @@ RuboCop::Cop::Rails::LexicallyScopedActionFilter::FILTERS = T.let(T.unsafe(nil),
 RuboCop::Cop::Rails::LexicallyScopedActionFilter::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::LexicallyScopedActionFilter::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for calls to `link_to` that contain a
+# Checks for calls to `link_to` that contain a
 # `target: '_blank'` but no `rel: 'noopener'`. This can be a security
 # risk as the loaded page will have control over the previous page
 # and could change its location for phishing purposes.
@@ -2772,7 +2826,7 @@ end
 RuboCop::Cop::Rails::LinkToBlank::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::LinkToBlank::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces that mailer names end with `Mailer` suffix.
+# Enforces that mailer names end with `Mailer` suffix.
 #
 # Without the `Mailer` suffix it isn't immediately apparent what's a mailer
 # and which views are related to the mailer.
@@ -2810,7 +2864,7 @@ end
 
 RuboCop::Cop::Rails::MailerName::MSG = T.let(T.unsafe(nil), String)
 
-# This cop identifies places where defining routes with `match`
+# Identifies places where defining routes with `match`
 # can be replaced with a specific HTTP method.
 #
 # Don't use `match` to define any routes unless there is a need to map multiple request types
@@ -2853,7 +2907,7 @@ RuboCop::Cop::Rails::MatchRoute::HTTP_METHODS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::MatchRoute::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::MatchRoute::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop makes sure that each migration file defines a migration class
+# Makes sure that each migration file defines a migration class
 # whose name matches the file name.
 # (e.g. `20220224111111_create_users.rb` should define `CreateUsers` class.)
 #
@@ -2884,7 +2938,7 @@ end
 
 RuboCop::Cop::Rails::MigrationClassName::MSG = T.let(T.unsafe(nil), String)
 
-# This cop enforces the use of `collection.exclude?(obj)`
+# Enforces the use of `collection.exclude?(obj)`
 # over `!collection.include?(obj)`.
 #
 # @example
@@ -2905,7 +2959,7 @@ end
 RuboCop::Cop::Rails::NegateInclude::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::NegateInclude::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for add_column call with NOT NULL constraint
+# Checks for add_column call with NOT NULL constraint
 # in migration file.
 #
 # @example
@@ -2935,7 +2989,7 @@ end
 RuboCop::Cop::Rails::NotNullColumn::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::NotNullColumn::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for places where ordering by `id` column is used.
+# Checks for places where ordering by `id` column is used.
 #
 # Don't use the `id` column for ordering. The sequence of ids is not guaranteed
 # to be in any particular order, despite often (incidentally) being chronological.
@@ -2965,7 +3019,7 @@ end
 RuboCop::Cop::Rails::OrderById::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::OrderById::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the use of output calls like puts and print
+# Checks for the use of output calls like puts and print
 #
 # @example
 #   # bad
@@ -2994,7 +3048,7 @@ end
 RuboCop::Cop::Rails::Output::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Output::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the use of output safety calls like `html_safe`,
+# Checks for the use of output safety calls like `html_safe`,
 # `raw`, and `safe_concat`. These methods do not escape content. They
 # simply return a SafeBuffer containing the content as is. Instead,
 # use `safe_join` to join content and escape it and concat to
@@ -3075,7 +3129,7 @@ end
 RuboCop::Cop::Rails::OutputSafety::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::OutputSafety::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces the use of `pick` over `pluck(...).first`.
+# Enforces the use of `pick` over `pluck(...).first`.
 #
 # Using `pluck` followed by `first` creates an intermediate array, which
 # `pick` avoids. When called on an Active Record relation, `pick` adds a
@@ -3104,7 +3158,7 @@ end
 RuboCop::Cop::Rails::Pick::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Pick::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces the use of `pluck` over `map`.
+# Enforces the use of `pluck` over `map`.
 #
 # `pluck` can be used instead of `map` to extract a single key from each
 # element in an enumerable. When called on an Active Record relation, it
@@ -3134,7 +3188,7 @@ end
 
 RuboCop::Cop::Rails::Pluck::MSG = T.let(T.unsafe(nil), String)
 
-# This cop enforces the use of `ids` over `pluck(:id)` and `pluck(primary_key)`.
+# Enforces the use of `ids` over `pluck(:id)` and `pluck(primary_key)`.
 #
 # @example
 #   # bad
@@ -3168,7 +3222,7 @@ end
 RuboCop::Cop::Rails::PluckId::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::PluckId::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `pluck` is used in `where` query methods
+# Identifies places where `pluck` is used in `where` query methods
 # and can be replaced with `select`.
 #
 # Since `pluck` is an eager method and hits the database immediately,
@@ -3206,7 +3260,7 @@ end
 RuboCop::Cop::Rails::PluckInWhere::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::PluckInWhere::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for correct grammar when using ActiveSupport's
+# Checks for correct grammar when using ActiveSupport's
 # core extensions to the numeric classes.
 #
 # @example
@@ -3259,7 +3313,7 @@ RuboCop::Cop::Rails::PluralizationGrammar::PLURAL_DURATION_METHODS = T.let(T.uns
 RuboCop::Cop::Rails::PluralizationGrammar::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::PluralizationGrammar::SINGULAR_DURATION_METHODS = T.let(T.unsafe(nil), Hash)
 
-# This cop checks code that can be written more easily using
+# Checks code that can be written more easily using
 # `Object#presence` defined by Active Support.
 #
 # @example
@@ -3317,13 +3371,13 @@ end
 
 RuboCop::Cop::Rails::Presence::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for code that can be written with simpler conditionals
+# Checks for code that can be written with simpler conditionals
 # using `Object#present?` defined by Active Support.
 #
 # Interaction with `Style/UnlessElse`:
 # The configuration of `NotBlank` will not produce an offense in the
 # context of `unless else` if `Style/UnlessElse` is inabled. This is
-# to prevent interference between the auto-correction of the two cops.
+# to prevent interference between the autocorrection of the two cops.
 #
 # @example NotNilAndNotEmpty: true (default)
 #   # Converts usages of `!nil? && !empty?` to `present?`
@@ -3378,7 +3432,7 @@ RuboCop::Cop::Rails::Present::MSG_NOT_BLANK = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Present::MSG_UNLESS_BLANK = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Present::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for Rake tasks without the `:environment` task
+# Checks for Rake tasks without the `:environment` task
 # dependency. The `:environment` task loads application code for other
 # Rake tasks. Without it, tasks cannot make use of application code like
 # models.
@@ -3419,7 +3473,7 @@ end
 
 RuboCop::Cop::Rails::RakeEnvironment::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for the use of the `read_attribute` or `write_attribute`
+# Checks for the use of the `read_attribute` or `write_attribute`
 # methods and recommends square brackets instead.
 #
 # If an attribute is missing from the instance (for example, when
@@ -3512,7 +3566,7 @@ RuboCop::Cop::Rails::RedundantAllowNil::MSG_ALLOW_NIL_FALSE = T.let(T.unsafe(nil
 RuboCop::Cop::Rails::RedundantAllowNil::MSG_SAME = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RedundantAllowNil::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop detects cases where the `:foreign_key` option on associations
+# Detects cases where the `:foreign_key` option on associations
 # is redundant.
 #
 # @example
@@ -3660,7 +3714,7 @@ end
 RuboCop::Cop::Rails::RedundantPresenceValidationOnBelongsTo::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RedundantPresenceValidationOnBelongsTo::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for redundant receiver in `with_options`.
+# Checks for redundant receiver in `with_options`.
 # Receiver is implicit from Rails 4.2 or higher.
 #
 # @example
@@ -3732,7 +3786,7 @@ end
 
 RuboCop::Cop::Rails::RedundantReceiverInWithOptions::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for redundant `travel_back` calls.
+# Checks for redundant `travel_back` calls.
 # Since Rails 5.2, `travel_back` is automatically called at the end of the test.
 #
 # @example
@@ -3769,7 +3823,7 @@ end
 RuboCop::Cop::Rails::RedundantTravelBack::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RedundantTravelBack::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks if the value of the option `class_name`, in
+# Checks if the value of the option `class_name`, in
 # the definition of a reflection is a string.
 #
 # @example
@@ -3838,7 +3892,7 @@ RuboCop::Cop::Rails::RefuteMethods::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RefuteMethods::REFUTE_METHODS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::RefuteMethods::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks whether constant value isn't relative date.
+# Checks whether constant value isn't relative date.
 # Because the relative date will be evaluated only once.
 #
 # @example
@@ -3883,7 +3937,7 @@ end
 RuboCop::Cop::Rails::RelativeDateConstant::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RelativeDateConstant::RELATIVE_DATE_METHODS = T.let(T.unsafe(nil), Set)
 
-# This cop looks for inline rendering within controller actions.
+# Looks for inline rendering within controller actions.
 #
 # @example
 #   # bad
@@ -3911,7 +3965,7 @@ end
 RuboCop::Cop::Rails::RenderInline::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RenderInline::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where `render text:` can be
+# Identifies places where `render text:` can be
 # replaced with `render plain:`.
 #
 # @example
@@ -3947,7 +4001,7 @@ end
 RuboCop::Cop::Rails::RenderPlainText::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RenderPlainText::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for consistent uses of `request.referer` or
+# Checks for consistent uses of `request.referer` or
 # `request.referrer`, depending on the cop's configuration.
 #
 # @example EnforcedStyle: referer (default)
@@ -3978,7 +4032,7 @@ end
 RuboCop::Cop::Rails::RequestReferer::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RequestReferer::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the usage of `require_dependency`.
+# Checks for the usage of `require_dependency`.
 #
 # `require_dependency` is an obsolete method for Rails applications running in Zeitwerk mode.
 # In Zeitwerk mode, the semantics should match Ruby's and no need to be defensive with load order,
@@ -4002,7 +4056,7 @@ end
 RuboCop::Cop::Rails::RequireDependency::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RequireDependency::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks whether the change method of the migration file is
+# Checks whether the change method of the migration file is
 # reversible.
 #
 # @example
@@ -4206,7 +4260,7 @@ end
 
 RuboCop::Cop::Rails::ReversibleMigration::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks whether the migration implements
+# Checks whether the migration implements
 # either a `change` method or both an `up` and a `down`
 # method.
 #
@@ -4285,8 +4339,37 @@ end
 RuboCop::Cop::Rails::RootJoinChain::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RootJoinChain::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 
-# This cop converts usages of `try!` to `&.`. It can also be configured
-# to convert `try`. It will convert code to use safe navigation.
+# Favor `Rails.public_path` over `Rails.root` with `'public'`
+#
+# @example
+#   # bad
+#   Rails.root.join('public')
+#   Rails.root.join('public/file.pdf')
+#   Rails.root.join('public', 'file.pdf')
+#
+#   # good
+#   Rails.public_path
+#   Rails.public_path.join('file.pdf')
+#   Rails.public_path.join('file.pdf')
+class RuboCop::Cop::Rails::RootPublicPath < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def on_send(node); end
+  def rails_root_public(param0 = T.unsafe(nil)); end
+
+  private
+
+  # @return [Boolean]
+  def public_path?(string); end
+end
+
+RuboCop::Cop::Rails::RootPublicPath::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::RootPublicPath::PATTERN = T.let(T.unsafe(nil), Regexp)
+RuboCop::Cop::Rails::RootPublicPath::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
+
+# Converts usages of `try!` to `&.`. It can also be configured
+# to convert `try`. It will convert code to use safe navigation
+# if the target Ruby version is set to 2.3+
 #
 # @example ConvertTry: false (default)
 #   # bad
@@ -4320,6 +4403,7 @@ RuboCop::Cop::Rails::RootJoinChain::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 class RuboCop::Cop::Rails::SafeNavigation < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
   extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
 
   def on_send(node); end
   def try_call(param0 = T.unsafe(nil)); end
@@ -4337,7 +4421,7 @@ end
 RuboCop::Cop::Rails::SafeNavigation::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::SafeNavigation::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks to make sure safe navigation isn't used with `blank?` in
+# Checks to make sure safe navigation isn't used with `blank?` in
 # a conditional.
 #
 # @example
@@ -4357,7 +4441,7 @@ end
 
 RuboCop::Cop::Rails::SafeNavigationWithBlank::MSG = T.let(T.unsafe(nil), String)
 
-# This cop identifies possible cases where Active Record save! or related
+# Identifies possible cases where Active Record save! or related
 # should be used instead of save because the model might have failed to
 # save and an exception is better than unhandled failure.
 #
@@ -4539,7 +4623,7 @@ RuboCop::Cop::Rails::SaveBang::MODIFY_PERSIST_METHODS = T.let(T.unsafe(nil), Arr
 RuboCop::Cop::Rails::SaveBang::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::SaveBang::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces the use of the `comment` option when adding a new table or column
+# Enforces the use of the `comment` option when adding a new table or column
 # to the database during a migration.
 #
 # @example
@@ -4585,7 +4669,7 @@ RuboCop::Cop::Rails::SchemaComment::CREATE_TABLE_COLUMN_METHODS = T.let(T.unsafe
 RuboCop::Cop::Rails::SchemaComment::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::SchemaComment::TABLE_MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for scope calls where it was passed
+# Checks for scope calls where it was passed
 # a method (usually a scope) instead of a lambda/proc.
 #
 # @example
@@ -4605,7 +4689,7 @@ end
 RuboCop::Cop::Rails::ScopeArgs::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ScopeArgs::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces that short forms of `I18n` methods are used:
+# Enforces that short forms of `I18n` methods are used:
 # `t` instead of `translate` and `l` instead of `localize`.
 #
 # This cop has two different enforcement modes. When the EnforcedStyle
@@ -4649,7 +4733,7 @@ RuboCop::Cop::Rails::ShortI18n::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ShortI18n::PREFERRED_METHODS = T.let(T.unsafe(nil), Hash)
 RuboCop::Cop::Rails::ShortI18n::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the use of methods which skip
+# Checks for the use of methods which skip
 # validations which are listed in
 # https://guides.rubyonrails.org/active_record_validations.html#skipping-validations
 #
@@ -4757,7 +4841,39 @@ RuboCop::Cop::Rails::SquishedSQLHeredocs::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::SquishedSQLHeredocs::SQL = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::SquishedSQLHeredocs::SQUISH = T.let(T.unsafe(nil), String)
 
-# This cop enforces the absence of explicit table name assignment.
+# Enforces the use of squiggly heredoc over `strip_heredoc`.
+#
+# @example
+#
+#   # bad
+#   <<EOS.strip_heredoc
+#   some text
+#   EOS
+#
+#   # bad
+#   <<-EOS.strip_heredoc
+#   some text
+#   EOS
+#
+#   # good
+#   <<~EOS
+#   some text
+#   EOS
+class RuboCop::Cop::Rails::StripHeredoc < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
+
+  def on_send(node); end
+
+  private
+
+  def register_offense(node, heredoc); end
+end
+
+RuboCop::Cop::Rails::StripHeredoc::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::StripHeredoc::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Enforces the absence of explicit table name assignment.
 #
 # `self.table_name=` should only be used for very good reasons,
 # such as not having control over the database, or working
@@ -4787,7 +4903,7 @@ end
 
 RuboCop::Cop::Rails::TableNameAssignment::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for the use of Time methods without zone.
+# Checks for the use of Time methods without zone.
 #
 # Built on top of Ruby on Rails style guide (https://rails.rubystyle.guide#time)
 # and the article http://danilenko.org/2012/7/6/rails_timezones/
@@ -4808,15 +4924,15 @@ RuboCop::Cop::Rails::TableNameAssignment::MSG = T.let(T.unsafe(nil), String)
 #   Time.zone.now
 #   Time.zone.parse('2015-03-02T19:05:37')
 #   Time.zone.parse('2015-03-02T19:05:37Z') # Respect ISO 8601 format with timezone specifier.
-# @example EnforcedStyle: strict
-#   # `strict` means that `Time` should be used with `zone`.
-#
-#   # bad
-#   Time.at(timestamp).in_time_zone
 # @example EnforcedStyle: flexible (default)
 #   # `flexible` allows usage of `in_time_zone` instead of `zone`.
 #
 #   # good
+#   Time.at(timestamp).in_time_zone
+# @example EnforcedStyle: strict
+#   # `strict` means that `Time` should be used with `zone`.
+#
+#   # bad
 #   Time.at(timestamp).in_time_zone
 class RuboCop::Cop::Rails::TimeZone < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
@@ -4886,7 +5002,7 @@ RuboCop::Cop::Rails::TimeZone::MSG_ACCEPTABLE = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::TimeZone::MSG_LOCALTIME = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::TimeZone::TIMEZONE_SPECIFIER = T.let(T.unsafe(nil), Regexp)
 
-# This cop checks for the use of `Time.zone=` method.
+# Checks for the use of `Time.zone=` method.
 #
 # The `zone` attribute persists for the rest of the Ruby runtime, potentially causing
 # unexpected behavior at a later time.
@@ -4902,16 +5018,45 @@ RuboCop::Cop::Rails::TimeZone::TIMEZONE_SPECIFIER = T.let(T.unsafe(nil), Regexp)
 #   end
 class RuboCop::Cop::Rails::TimeZoneAssignment < ::RuboCop::Cop::Base
   def on_send(node); end
-  def time_zone_assignement?(param0 = T.unsafe(nil)); end
+  def time_zone_assignment?(param0 = T.unsafe(nil)); end
 end
 
 RuboCop::Cop::Rails::TimeZoneAssignment::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::TimeZoneAssignment::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the use of exit statements (namely `return`,
+# Checks for consistent uses of `to_fs` or `to_formatted_s`,
+# depending on the cop's configuration.
+#
+# @example EnforcedStyle: to_fs (default)
+#
+#   # bad
+#   time.to_formatted_s(:db)
+#
+#   # good
+#   time.to_fs(:db)
+# @example EnforcedStyle: to_formatted_s
+#
+#   # bad
+#   time.to_fs(:db)
+#
+#   # good
+#   time.to_formatted_s(:db)
+class RuboCop::Cop::Rails::ToFormattedS < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::ConfigurableEnforcedStyle
+  extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRailsVersion
+
+  def on_csend(node); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::Rails::ToFormattedS::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::ToFormattedS::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Checks for the use of exit statements (namely `return`,
 # `break` and `throw`) in transactions. This is due to the eventual
 # unexpected behavior when using ActiveRecord >= 7, where transactions
-# exitted using these statements are being rollbacked rather than
+# exited using these statements are being rollbacked rather than
 # committed (pre ActiveRecord 7 behavior).
 #
 # As alternatives, it would be more intuitive to explicitly raise an
@@ -4934,6 +5079,11 @@ RuboCop::Cop::Rails::TimeZoneAssignment::RESTRICT_ON_SEND = T.let(T.unsafe(nil),
 #   throw if user.active?
 #   end
 #
+#   # bad, as `with_lock` implicitly opens a transaction too
+#   user.with_lock do
+#   throw if user.active?
+#   end
+#
 #   # good
 #   ApplicationRecord.transaction do
 #   # Rollback
@@ -4949,11 +5099,9 @@ RuboCop::Cop::Rails::TimeZoneAssignment::RESTRICT_ON_SEND = T.let(T.unsafe(nil),
 class RuboCop::Cop::Rails::TransactionExitStatement < ::RuboCop::Cop::Base
   def exit_statements(param0); end
   def on_send(node); end
+  def rescue_body_return_node?(param0 = T.unsafe(nil)); end
 
   private
-
-  # @return [Boolean]
-  def in_rescue?(statement_node); end
 
   # @return [Boolean]
   def nested_block?(statement_node); end
@@ -5070,7 +5218,7 @@ end
 RuboCop::Cop::Rails::UniqueValidationWithoutIndex::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::UniqueValidationWithoutIndex::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks that environments called with `Rails.env` predicates
+# Checks that environments called with `Rails.env` predicates
 # exist.
 # By default the cop allows three environments which Rails ships with:
 # `development`, `test`, and `production`.
@@ -5106,7 +5254,7 @@ end
 RuboCop::Cop::Rails::UnknownEnv::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::UnknownEnv::MSG_SIMILAR = T.let(T.unsafe(nil), String)
 
-# This cop suggests you remove a column that does not exist in the schema from `ignored_columns`.
+# Suggests you remove a column that does not exist in the schema from `ignored_columns`.
 # `ignored_columns` is necessary to drop a column from RDBMS, but you don't need it after the migration
 # to drop the column. You avoid forgetting to remove `ignored_columns` by this cop.
 #
@@ -5137,7 +5285,7 @@ end
 RuboCop::Cop::Rails::UnusedIgnoredColumns::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::UnusedIgnoredColumns::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for the use of old-style attribute validation macros.
+# Checks for the use of old-style attribute validation macros.
 #
 # @example
 #   # bad
@@ -5190,7 +5338,7 @@ RuboCop::Cop::Rails::Validation::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::Validation::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::Validation::TYPES = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where manually constructed SQL
+# Identifies places where manually constructed SQL
 # in `where` can be replaced with `where(attribute: value)`.
 #
 # @example
@@ -5239,7 +5387,7 @@ RuboCop::Cop::Rails::WhereEquals::IS_NULL_RE = T.let(T.unsafe(nil), Regexp)
 RuboCop::Cop::Rails::WhereEquals::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::WhereEquals::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop enforces consistent style when using `exists?`.
+# Enforces consistent style when using `exists?`.
 #
 # Two styles are supported for this cop. When EnforcedStyle is 'exists'
 # then the cop enforces `exists?(...)` over `where(...).exists?`.
@@ -5302,7 +5450,7 @@ end
 RuboCop::Cop::Rails::WhereExists::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::WhereExists::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop identifies places where manually constructed SQL
+# Identifies places where manually constructed SQL
 # in `where` can be replaced with `where.not(...)`.
 #
 # @example
@@ -5459,10 +5607,10 @@ class RuboCop::Rails::SchemaLoader::Schema
   # @return [Schema] a new instance of Schema
   def initialize(ast); end
 
-  # Returns the value of attribute add_indicies.
-  def add_indicies; end
+  # Returns the value of attribute add_indices.
+  def add_indices; end
 
-  def add_indicies_by(table_name:); end
+  def add_indices_by(table_name:); end
   def table_by(name:); end
 
   # Returns the value of attribute tables.

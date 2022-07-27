@@ -8,7 +8,6 @@
 module Rake
   extend ::FileUtils::StreamUtils_
   extend ::FileUtils
-  extend ::Rake::FileUtilsExt
 
   class << self
     # Add files to the rakelib list
@@ -60,8 +59,6 @@ end
 # @api private
 class Rake::Application
   include ::Sentry::Rake::Application
-  include ::Rake::TaskManager
-  include ::Rake::TraceOutput
 
   # Initialize a Rake::Application object.
   #
@@ -252,7 +249,6 @@ class Rake::Application
 end
 
 Rake::Application::DEFAULT_RAKEFILES = T.let(T.unsafe(nil), Array)
-class Rake::CommandLineOptionError < ::StandardError; end
 Rake::EARLY = T.let(T.unsafe(nil), Rake::EarlyTime)
 Rake::EMPTY_TASK_ARGS = T.let(T.unsafe(nil), Rake::TaskArguments)
 Rake::LATE = T.let(T.unsafe(nil), Rake::LateTime)

@@ -247,8 +247,6 @@ end
 
 module Selenium::WebDriver::Chrome
   class << self
-    def driver_path; end
-    def driver_path=(path); end
     def path; end
     def path=(path); end
   end
@@ -899,12 +897,10 @@ class Selenium::WebDriver::Driver
   # Returns the value of attribute bridge.
   def bridge; end
 
-  # @raise [ArgumentError]
-  def create_bridge(**opts); end
-
-  def generate_capabilities(cap_array); end
+  def create_bridge(capabilities: T.unsafe(nil), options: T.unsafe(nil), url: T.unsafe(nil), service: T.unsafe(nil), http_client: T.unsafe(nil)); end
+  def generate_capabilities(capabilities); end
   def screenshot; end
-  def service_url(opts); end
+  def service_url(service); end
 
   class << self
     # @api private
@@ -1233,10 +1229,6 @@ module Selenium::WebDriver::DriverExtensions::HasPinnedScripts
   #
   # @param script [DevTools::PinnedScript]
   def unpin_script(script); end
-end
-
-module Selenium::WebDriver::DriverExtensions::HasRemoteStatus
-  def remote_status; end
 end
 
 # @api private
@@ -1759,8 +1751,6 @@ end
 
 module Selenium::WebDriver::Firefox
   class << self
-    def driver_path; end
-    def driver_path=(path); end
     def path; end
     def path=(path); end
   end
@@ -2113,12 +2103,7 @@ module Selenium::WebDriver::HTML5::SharedWebStorage
   def member?(key); end
 end
 
-module Selenium::WebDriver::IE
-  class << self
-    def driver_path; end
-    def driver_path=(path); end
-  end
-end
+module Selenium::WebDriver::IE; end
 
 # Driver implementation for Internet Explorer supporting
 # both OSS and W3C dialects of JSON wire protocol.
@@ -2750,12 +2735,6 @@ class Selenium::WebDriver::Manager
   # @param name [String] the name of the cookie to delete
   def delete_cookie(name); end
 
-  def logs; end
-
-  # @param type [Symbol] Supports two values: :tab and :window.
-  # @return [String] The value of the window handle
-  def new_window(type = T.unsafe(nil)); end
-
   def timeouts; end
   def window; end
 
@@ -2788,7 +2767,7 @@ end
 
 class Selenium::WebDriver::Options
   # @return [Options] a new instance of Options
-  def initialize(options: T.unsafe(nil), **opts); end
+  def initialize(**opts); end
 
   def ==(other); end
 
@@ -3071,7 +3050,7 @@ module Selenium::WebDriver::PointerActions
   # @param device [Symbol || String] optional name of the PointerInput device with the button
   #   that will be clicked
   # @return [ActionBuilder] A self reference.
-  def click(element = T.unsafe(nil), device: T.unsafe(nil)); end
+  def click(element = T.unsafe(nil), button: T.unsafe(nil), device: T.unsafe(nil)); end
 
   # Clicks (without releasing) in the middle of the given element. This is
   # equivalent to:
@@ -3085,7 +3064,7 @@ module Selenium::WebDriver::PointerActions
   # @param element [Selenium::WebDriver::Element] the element to move to and click.
   # @param device [Symbol || String] optional name of the PointerInput device to click with
   # @return [ActionBuilder] A self reference.
-  def click_and_hold(element = T.unsafe(nil), device: T.unsafe(nil)); end
+  def click_and_hold(element = T.unsafe(nil), button: T.unsafe(nil), device: T.unsafe(nil)); end
 
   # Performs a context-click at middle of the given element. First performs
   # a move_to to the location of the element.
@@ -3254,7 +3233,7 @@ module Selenium::WebDriver::PointerActions
   # @param device [Symbol || String] optional name of the PointerInput device with the button
   #   that will be released
   # @return [ActionBuilder] A self reference.
-  def release(device: T.unsafe(nil)); end
+  def release(button: T.unsafe(nil), device: T.unsafe(nil)); end
 
   private
 
@@ -3742,7 +3721,6 @@ Selenium::WebDriver::Remote::Capabilities::KNOWN = T.let(T.unsafe(nil), Array)
 class Selenium::WebDriver::Remote::Driver < ::Selenium::WebDriver::Driver
   include ::Selenium::WebDriver::DriverExtensions::UploadsFiles
   include ::Selenium::WebDriver::DriverExtensions::HasSessionId
-  include ::Selenium::WebDriver::DriverExtensions::HasRemoteStatus
 
   # @api private
   # @return [Driver] a new instance of Driver
@@ -3883,9 +3861,6 @@ end
 
 module Selenium::WebDriver::Safari
   class << self
-    def driver_path; end
-    def driver_path=(path); end
-
     # @raise [Error::WebDriverError]
     def path; end
 

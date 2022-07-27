@@ -8994,6 +8994,7 @@ end
 module ActiveSupport::VERSION; end
 ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -9166,9 +9167,6 @@ ActiveSupport::XmlMini_REXML::CONTENT_KEY = T.let(T.unsafe(nil), String)
 
 class Array
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   def as_json(options = T.unsafe(nil)); end
 
@@ -10505,6 +10503,10 @@ class DateTime < ::Date
   end
 end
 
+class Delegator < ::BasicObject
+  include ::ActiveSupport::Tryable
+end
+
 module Digest::UUID
   class << self
     # Generates a v5 non-random UUID (Universally Unique IDentifier).
@@ -10855,18 +10857,12 @@ end
 Enumerable::INDEX_WITH_DEFAULT = T.let(T.unsafe(nil), Object)
 
 class Exception
-  include ::BetterErrors::ExceptionExtension
   include ::ActiveSupport::Dependencies::Blamable
 
   def as_json(options = T.unsafe(nil)); end
 end
 
 class FalseClass
-  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
-
   def as_json(options = T.unsafe(nil)); end
 
   # +false+ is blank:
@@ -10882,8 +10878,6 @@ end
 
 class Float < ::Numeric
   include ::ActiveSupport::NumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Float
-  include ::MessagePack::CoreExt
 
   # Encoding Infinity or NaN to JSON should return "null". The default returns
   # "Infinity" or "NaN" which are not valid JSON.
@@ -10894,9 +10888,6 @@ end
 
 class Hash
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Hash
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   def as_json(options = T.unsafe(nil)); end
 
@@ -11279,8 +11270,6 @@ HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
 
 # :enddoc:
 module I18n
-  extend ::I18n::Base
-
   class << self
     def cache_key_digest; end
     def cache_key_digest=(key_digest); end
@@ -11361,15 +11350,11 @@ IO::READABLE = T.let(T.unsafe(nil), Integer)
 IO::WRITABLE = T.let(T.unsafe(nil), Integer)
 
 class IPAddr
-  include ::Comparable
-
   def as_json(options = T.unsafe(nil)); end
 end
 
 class Integer < ::Numeric
   include ::ActiveSupport::NumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Integer
-  include ::MessagePack::CoreExt
 
   # Returns a Duration instance matching the number of months provided.
   #
@@ -11514,10 +11499,11 @@ class LoadError < ::ScriptError
   def is_missing?(location); end
 end
 
-class Method
-  include ::MethodSource::SourceLocation::MethodExtensions
-  include ::MethodSource::MethodExtensions
+module Marshal
+  extend ::ActiveSupport::MarshalWithAutoloading
+end
 
+class Method
   # Methods are not duplicable:
   #
   #  method(:puts).duplicable? # => false
@@ -12559,10 +12545,6 @@ end
 NameError::UNBOUND_METHOD_MODULE_NAME = T.let(T.unsafe(nil), UnboundMethod)
 
 class NilClass
-  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-
   def as_json(options = T.unsafe(nil)); end
 
   # +nil+ is blank:
@@ -12595,7 +12577,6 @@ end
 
 class Numeric
   include ::Comparable
-  include ::FriendlyId::UnfriendlyUtils
 
   def as_json(options = T.unsafe(nil)); end
 
@@ -12778,13 +12759,8 @@ class Object < ::BasicObject
   include ::ActiveSupport::ForkTracker::CoreExt
   include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
-  include ::JSON::Ext::Generator::GeneratorMethods::Object
   include ::ActiveSupport::Tryable
   include ::ActiveSupport::Dependencies::Loadable
-  include ::FriendlyId::ObjectUtils
-  include ::PP::ObjectMixin
   include ::MakeMakefile
 
   # A duck-type assistant method. For example, Active Support extends Date
@@ -13034,41 +13010,7 @@ end
 
 Regexp::TOKEN_KEYS = T.let(T.unsafe(nil), Array)
 
-class Regexp::Token < ::Struct
-  def conditional_level; end
-  def conditional_level=(_); end
-  def length; end
-  def level; end
-  def level=(_); end
-  def next; end
-  def next=(_arg0); end
-  def offset; end
-  def previous; end
-  def previous=(_arg0); end
-  def set_level; end
-  def set_level=(_); end
-  def te; end
-  def te=(_); end
-  def text; end
-  def text=(_); end
-  def token; end
-  def token=(_); end
-  def ts; end
-  def ts=(_); end
-  def type; end
-  def type=(_); end
-
-  class << self
-    def [](*_arg0); end
-    def inspect; end
-    def members; end
-    def new(*_arg0); end
-  end
-end
-
 module SecureRandom
-  extend ::Random::Formatter
-
   class << self
     # SecureRandom.base36 generates a random base36 string in lowercase.
     #
@@ -13106,9 +13048,6 @@ SecureRandom::BASE58_ALPHABET = T.let(T.unsafe(nil), Array)
 #   'ScaleScore'.tableize # => "scale_scores"
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  include ::MessagePack::CoreExt
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   # Enables more predictable duck-typing on String-like classes. See <tt>Object#acts_like?</tt>.
   #
@@ -13740,8 +13679,6 @@ Struct::Passwd = Etc::Passwd
 
 class Symbol
   include ::Comparable
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   def as_json(options = T.unsafe(nil)); end
 end
@@ -14115,11 +14052,6 @@ Time::COMMON_YEAR_DAYS_IN_MONTH = T.let(T.unsafe(nil), Array)
 Time::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
 
 class TrueClass
-  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
-
   def as_json(options = T.unsafe(nil)); end
 
   # +true+ is not blank:
@@ -14134,8 +14066,6 @@ class TrueClass
 end
 
 module URI
-  include ::URI::RFC2396_REGEXP
-
   class << self
     def parser; end
   end
@@ -14143,7 +14073,6 @@ end
 
 class URI::Generic
   include ::URI::RFC2396_REGEXP
-  include ::URI
 
   def as_json(options = T.unsafe(nil)); end
 end
@@ -14152,9 +14081,6 @@ URI::Parser = URI::RFC2396_Parser
 URI::REGEXP = URI::RFC2396_REGEXP
 
 class UnboundMethod
-  include ::MethodSource::SourceLocation::UnboundMethodExtensions
-  include ::MethodSource::MethodExtensions
-
   # Unbound methods are not duplicable:
   #
   #  method(:puts).unbind.duplicable? # => false

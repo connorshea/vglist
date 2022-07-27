@@ -317,8 +317,6 @@ end
 
 # The main container tag
 class Kaminari::Helpers::Paginator < ::Kaminari::Helpers::Tag
-  include ::ActionView::Context
-
   # @return [Paginator] a new instance of Paginator
   def initialize(template, window: T.unsafe(nil), outer_window: T.unsafe(nil), left: T.unsafe(nil), right: T.unsafe(nil), inner_window: T.unsafe(nil), **options); end
 

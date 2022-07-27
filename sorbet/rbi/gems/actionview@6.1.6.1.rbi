@@ -9267,8 +9267,6 @@ end
 #
 # Provides functionality so that Rails can output logs from Action View.
 class ActionView::LogSubscriber < ::ActiveSupport::LogSubscriber
-  include ::Kaminari::ActionViewExtension::LogSubscriberSilencer
-
   # @return [LogSubscriber] a new instance of LogSubscriber
   def initialize; end
 
@@ -9961,7 +9959,6 @@ class ActionView::Railtie < ::Rails::Engine; end
 #   end
 module ActionView::RecordIdentifier
   include ::ActionView::ModelNaming
-  extend ::ActionView::ModelNaming
   extend ::ActionView::RecordIdentifier
   extend ::ActionView::ModelNaming
 
@@ -11015,6 +11012,7 @@ end
 module ActionView::VERSION; end
 ActionView::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionView::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActionView::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionView::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionView::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

@@ -5876,7 +5876,6 @@ class ActiveRecord::Base
   extend ::ActiveRecord::Suppressor::ClassMethods
   extend ::OrmAdapter::ToAdapter
   extend ::Kaminari::ActiveRecordExtension::ClassMethods
-  extend ::Devise::Models
 
   def __callbacks; end
   def __callbacks?; end
@@ -5972,9 +5971,11 @@ class ActiveRecord::Base
   def time_zone_aware_types?; end
   def timestamped_migrations; end
   def type_for_attribute(*_arg0, &_arg1); end
+  def use_yaml_unsafe_load; end
   def validation_context; end
   def verbose_query_logs; end
   def warn_on_records_fetched_greater_than; end
+  def yaml_column_permitted_classes; end
 
   private
 
@@ -6180,12 +6181,16 @@ class ActiveRecord::Base
     def time_zone_aware_types?; end
     def timestamped_migrations; end
     def timestamped_migrations=(val); end
+    def use_yaml_unsafe_load; end
+    def use_yaml_unsafe_load=(val); end
     def verbose_query_logs; end
     def verbose_query_logs=(val); end
     def warn_on_records_fetched_greater_than; end
     def warn_on_records_fetched_greater_than=(val); end
     def writing_role; end
     def writing_role=(val); end
+    def yaml_column_permitted_classes; end
+    def yaml_column_permitted_classes=(val); end
   end
 end
 
@@ -14127,8 +14132,27 @@ class ActiveRecord::InternalMetadata < ::ActiveRecord::Base
   end
 end
 
+class ActiveRecord::InternalMetadata::ActiveRecord_AssociationRelation < ::ActiveRecord::AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveRecord::InternalMetadata::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveRecord::InternalMetadata::ActiveRecord_Relation < ::ActiveRecord::Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::InternalMetadata::GeneratedRelationMethods
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module ActiveRecord::InternalMetadata::GeneratedAssociationMethods; end
 module ActiveRecord::InternalMetadata::GeneratedAttributeMethods; end
+module ActiveRecord::InternalMetadata::GeneratedRelationMethods; end
 
 # Raised when a record cannot be inserted or updated because it references a non-existent record,
 # or when a record cannot be deleted because a parent record references it.
@@ -20264,8 +20288,27 @@ class ActiveRecord::SchemaMigration < ::ActiveRecord::Base
   end
 end
 
+class ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation < ::ActiveRecord::AssociationRelation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::SchemaMigration::GeneratedRelationMethods
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveRecord::SchemaMigration::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::SchemaMigration::GeneratedRelationMethods
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
+class ActiveRecord::SchemaMigration::ActiveRecord_Relation < ::ActiveRecord::Relation
+  include ::ActiveRecord::Delegation::ClassSpecificRelation
+  include ::ActiveRecord::SchemaMigration::GeneratedRelationMethods
+  extend ::ActiveRecord::Delegation::ClassSpecificRelation::ClassMethods
+end
+
 module ActiveRecord::SchemaMigration::GeneratedAssociationMethods; end
 module ActiveRecord::SchemaMigration::GeneratedAttributeMethods; end
+module ActiveRecord::SchemaMigration::GeneratedRelationMethods; end
 
 # = Active Record \Named \Scopes
 module ActiveRecord::Scoping
@@ -20588,10 +20631,6 @@ class ActiveRecord::Scoping::ScopeRegistry
   private
 
   def raise_invalid_scope_type!(scope_type); end
-
-  class << self
-    def value_for(*_arg0, &_arg1); end
-  end
 end
 
 ActiveRecord::Scoping::ScopeRegistry::VALID_SCOPE_TYPES = T.let(T.unsafe(nil), Array)
@@ -22323,6 +22362,7 @@ end
 module ActiveRecord::VERSION; end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

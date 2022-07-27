@@ -7,9 +7,6 @@
 # Extensions for Ruby's `Array` class.
 class Array
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   # Places values before or after another object (by value) in
   # an array. This is used in tandem with the before and after
@@ -327,10 +324,13 @@ class Insertion
   def insertion(val, rel, recursive = T.unsafe(nil), list = T.unsafe(nil)); end
 end
 
+# We need to do the alias-method-chain dance since Bootsnap does the same,
+# and prepended modules and alias-method-chain don't play well together.
+#
+# So, why does Bootsnap do alias-method-chain and not prepend? Glad you asked!
+# That's because RubyGems does alias-method-chain for Kernel#require and such,
+# so, if Bootsnap were to do prepend, it might end up breaking RubyGems.
 class Module
-  include ::ActiveSupport::Dependencies::ModuleConstMissing
-  include ::Module::Concerning
-
   # Returns the class name of a full module namespace path
   #
   # @example
@@ -346,9 +346,7 @@ RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
 # @private
 class Rack::Request
-  include ::Rack::Request::Env
-  include ::Rack::Request::Helpers
-
+  # @return [Request] a new instance of Request
   def initialize(env); end
 
   def delete_param(k); end
@@ -368,7 +366,12 @@ class Rack::Request
   def xhr?; end
 
   class << self
+    # Returns the value of attribute ip_filter.
     def ip_filter; end
+
+    # Sets the attribute ip_filter
+    #
+    # @param value the value to set the attribute ip_filter to.
     def ip_filter=(_arg0); end
   end
 end
@@ -376,11 +379,9 @@ end
 Rack::Request::ALLOWED_SCHEMES = T.let(T.unsafe(nil), Array)
 Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
 
+# Extensions for Ruby's `String` class.
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  include ::MessagePack::CoreExt
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   # Splits text into tokens the way a shell would, handling quoted
   # text as a single token. Use '\"' and "\'" to escape quotes and
@@ -475,6 +476,7 @@ class WEBrick::HTTPRequest
   def xhr?; end
 end
 
+# same as Mongrel, Thin and Puma
 WEBrick::HTTPRequest::MAX_HEADER_LENGTH = T.let(T.unsafe(nil), Integer)
 
 # Gem::YARDoc provides methods to generate YARDoc and yri data for installed gems
@@ -4718,7 +4720,6 @@ end
 # Handles class declarations
 class YARD::Handlers::Ruby::ClassHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::StructHandlerMethods
-  include ::YARDSorbet::Handlers::StructClassHandler
 
   private
 

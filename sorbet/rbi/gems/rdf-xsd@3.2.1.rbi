@@ -7,9 +7,6 @@
 # REXML C14N
 class Array
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   # Canonicalize the NodeSet. Return a new NodeSet marked
   # as being canonical with all child nodes canonicalized.
@@ -410,12 +407,6 @@ end
 #
 # @see # @see   https://www.w3.org/TR/xml-exc-c14n/
 class Nokogiri::XML::Node
-  include ::Nokogiri::HTML5::Node
-  include ::Nokogiri::XML::PP::Node
-  include ::Nokogiri::XML::Searchable
-  include ::Nokogiri::ClassResolver
-  include ::Enumerable
-
   # :call-seq:
   #   new(name, document) -> Nokogiri::XML::Node
   #   new(name, document) { |node| ... } -> Nokogiri::XML::Node
@@ -1547,9 +1538,6 @@ Nokogiri::XML::Node::XINCLUDE_START = T.let(T.unsafe(nil), Integer)
 # a NodeSet is return as a result of searching a Document via
 # Nokogiri::XML::Searchable#css or Nokogiri::XML::Searchable#xpath
 class Nokogiri::XML::NodeSet
-  include ::Nokogiri::XML::Searchable
-  include ::Enumerable
-
   # Create a NodeSet with +document+ defaulting to +list+
   #
   # @return [NodeSet] a new instance of NodeSet
@@ -1884,83 +1872,454 @@ Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0 = T.let(T.unsafe(nil), Integer)
 
 module RDF
   class << self
+    # Alias for `RDF::Graph.new`.
+    #
+    # @param graph_name [RDF::Resource] The graph_name from the associated {RDF::Queryable} associated
+    #   with this graph as provided with the `:data` option
+    #   (only for {RDF::Queryable} instances supporting
+    #   named graphs).
+    # @param data [RDF::Queryable] (RDF::Repository.new)
+    #   Storage behind this graph.
+    # @return [RDF::Graph]
     def Graph(**options, &block); end
+
+    # @overload List
+    # @overload List
+    # @overload List
+    # @overload List
     def List(*args); end
+
+    # Alias for `RDF::Literal.new`.
+    #
+    # @param value [Object]
+    # @param language [Symbol] (nil)
+    #   Language is downcased to ensure proper matching
+    # @param lexical [String] (nil)
+    #   Supplied lexical representation of this literal,
+    #   otherwise it comes from transforming `value` to a string form..
+    # @param datatype [URI] (nil)
+    # @param validate [Boolean] (false)
+    # @param canonicalize [Boolean] (false)
+    # @return [RDF::Literal]
     def Literal(literal, **options); end
+
+    # Alias for `RDF::Node.new`.
+    #
+    # @param id [#to_s]
+    # @return [RDF::Node]
     def Node(*args); end
+
+    # Alias for `RDF::Resource.new`.
+    #
+    # @return [RDF::Resource]
     def Resource(*args); end
+
+    # @overload Statement
+    # @overload Statement
+    # @overload Statement
     def Statement(*args, **options); end
+
+    # Alias for `RDF::StrictVocabulary.create`.
+    #
+    # @param uri [RDF::URI, String, #to_s]
+    # @return [Class]
     def StrictVocabulary(uri); end
+
+    # Cast to a URI. If already a URI, return the passed argument.
+    #
+    # @return [RDF::URI]
     def URI(*args); end
+
+    # Alias for `RDF::Vocabulary.create`.
+    #
+    # @param uri [RDF::URI, String, #to_s]
+    # @return [Class]
     def Vocabulary(uri); end
+
+    # @return [#to_s] property
+    # @return [URI]
     def [](property); end
+
+    # Configuration, used open for configuring constants used within the codebase.
+    #
+    # Defaults:
+    #   * `cache_size`: -1
+    #   * `uri_cache_size`: `cache_size`
+    #   * `node_cache_size`: `cache_size`
+    #
+    # @example set default cache size to be at most 10,000 entries
+    #
+    #   RDF.config.cache_size = 10_000
+    # @example set cache size for interned URIs to 5,000 entries
+    #
+    #   RDF.config.uri_cache_size = 5_000
+    # @note cache configurations must be set before initial use, when the caches are allocated.
+    # @return [Object]
+    # @see RDF::Util::Cache.new
     def config; end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def enum_for(method = T.unsafe(nil), *args); end
+
+    # Delegate other methods to RDF::RDFV
     def method_missing(property, *args, &block); end
+
+    # respond to module or RDFV
+    #
+    # @return [Boolean]
     def respond_to?(method, include_all = T.unsafe(nil)); end
+
+    # Return an enumerator over {RDF::Statement} defined for this vocabulary.
+    #
+    # @return [RDF::Enumerable::Enumerator]
+    # @see Object#enum_for
     def to_enum(method = T.unsafe(nil), *args); end
   end
 end
 
+# RDF::IRI is a synonym for RDF::URI
 RDF::IRI = RDF::URI
 
+# An RDF literal.
+#
+# Subclasses of {RDF::Literal} should define DATATYPE and GRAMMAR constants, which are used for identifying the appropriate class to use for a datatype URI and to perform lexical matching on the value.
+#
+# Literal comparison with other {RDF::Value} instances call {RDF::Value#type_error}, which, returns false. Implementations wishing to have {RDF::TypeError} raised should mix-in {RDF::TypeCheck}. This is required for strict SPARQL conformance.
+#
+# Specific typed literals may have behavior different from the default implementation. See the following defined sub-classes for specific documentation. Additional sub-classes may be defined, and will interoperate by defining `DATATYPE` and `GRAMMAR` constants, in addition other required overrides of RDF::Literal behavior.
+#
+# In RDF 1.1, all literals are typed, including plain literals and language tagged literals. Internally, plain literals are given the `xsd:string` datatype and language tagged literals are given the `rdf:langString` datatype. Creating a plain literal, without a datatype or language, will automatically provide the `xsd:string` datatype; similar for language tagged literals. Note that most serialization formats will remove this datatype. Code which depends on a literal having the `xsd:string` datatype being different from a plain literal (formally, without a datatype) may break. However note that the `#has\_datatype?` will continue to return `false` for plain or language-tagged literals.
+#
+# * {RDF::Literal::Boolean}
+# * {RDF::Literal::Date}
+# * {RDF::Literal::DateTime}
+# * {RDF::Literal::Decimal}
+# * {RDF::Literal::Double}
+# * {RDF::Literal::Integer}
+# * {RDF::Literal::Time}
+#
+# @example Creating a plain literal
+#   value = RDF::Literal.new("Hello, world!")
+#   value.plain?                                   #=> true`
+# @example Creating a language-tagged literal (1)
+#   value = RDF::Literal.new("Hello!", language: :en)
+#   value.language?                                #=> true
+#   value.language                                 #=> :en
+# @example Creating a language-tagged literal (2)
+#   RDF::Literal.new("Wazup?", language: :"en-US")
+#   RDF::Literal.new("Hej!",   language: :sv)
+#   RDF::Literal.new("¡Hola!", language: :es)
+# @example Creating an explicitly datatyped literal
+#   value = RDF::Literal.new("2009-12-31", datatype: RDF::XSD.date)
+#   value.datatype?                                #=> true
+#   value.datatype                                 #=> RDF::XSD.date
+# @example Creating an implicitly datatyped literal
+#   value = RDF::Literal.new(Date.today)
+#   value.datatype?                                #=> true
+#   value.datatype                                 #=> RDF::XSD.date
+# @example Creating implicitly datatyped literals
+#   RDF::Literal.new(false).datatype               #=> XSD.boolean
+#   RDF::Literal.new(true).datatype                #=> XSD.boolean
+#   RDF::Literal.new(123).datatype                 #=> XSD.integer
+#   RDF::Literal.new(9223372036854775807).datatype #=> XSD.integer
+#   RDF::Literal.new(3.1415).datatype              #=> XSD.double
+#   RDF::Literal.new(Time.now).datatype            #=> XSD.dateTime
+#   RDF::Literal.new(Date.new(2010)).datatype      #=> XSD.date
+#   RDF::Literal.new(DateTime.new(2010)).datatype  #=> XSD.dateTime
+# @see http://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal
+# @see http://www.w3.org/TR/rdf11-concepts/#section-Datatypes
 class RDF::Literal
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
-  include ::RDF::Term
 
+  # Literals without a datatype are given either xsd:string or rdf:langString
+  # depending on if there is language
+  #
+  # @param value [Object]
+  # @param language [Symbol] (nil)
+  #   Language is downcased to ensure proper matching
+  # @param lexical [String] (nil)
+  #   Supplied lexical representation of this literal,
+  #   otherwise it comes from transforming `value` to a string form..
+  # @param datatype [URI] (nil)
+  # @param validate [Boolean] (false)
+  # @param canonicalize [Boolean] (false)
+  # @raise [ArgumentError] if there is a language and datatype is no rdf:langString
+  #   or datatype is rdf:langString and there is no language
+  # @return [Literal] a new instance of Literal
+  # @see http://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal
+  # @see http://www.w3.org/TR/rdf11-concepts/#section-Datatypes
+  # @see #to_s
   def initialize(value, language: T.unsafe(nil), datatype: T.unsafe(nil), lexical: T.unsafe(nil), validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
 
+  # Compares `self` to `other` for sorting purposes (with type check).
+  #
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
   def <=>(other); end
+
+  # Returns `true` if this literal is equivalent to `other` (with type check).
+  #
+  # @example
+  #   RDF::Literal(1) == RDF::Literal(1.0)     #=> true
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+  # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
   def ==(other); end
+
+  # Returns `true` if this literal is equivalent to `other` (with type check).
+  #
+  # @example
+  #   RDF::Literal(1) == RDF::Literal(1.0)     #=> true
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+  # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
   def ===(other); end
+
+  # Converts this literal into its canonical lexical representation.
+  #
+  # Subclasses should override this as needed and appropriate.
+  #
+  # @return [RDF::Literal] `self`
+  # @since 0.3.0
   def canonicalize!; end
+
+  # Term compatibility according to SPARQL
+  #
+  # Compatibility of two arguments is defined as:
+  # * The arguments are simple literals or literals typed as xsd:string
+  # * The arguments are plain literals with identical language tags
+  # * The first argument is a plain literal with language tag and the second argument is a simple literal or literal typed as xsd:string
+  #
+  # @example
+  #   compatible?("abc"	"b")                         #=> true
+  #   compatible?("abc"	"b"^^xsd:string)             #=> true
+  #   compatible?("abc"^^xsd:string	"b")             #=> true
+  #   compatible?("abc"^^xsd:string	"b"^^xsd:string) #=> true
+  #   compatible?("abc"@en	"b")                     #=> true
+  #   compatible?("abc"@en	"b"^^xsd:string)         #=> true
+  #   compatible?("abc"@en	"b"@en)                  #=> true
+  #   compatible?("abc"@fr	"b"@ja)                  #=> false
+  #   compatible?("abc"	"b"@ja)                      #=> false
+  #   compatible?("abc"	"b"@en)                      #=> false
+  #   compatible?("abc"^^xsd:string	"b"@en)          #=> false
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/sparql11-query/#func-arg-compatibility
+  # @since 2.0
   def compatible?(other); end
+
+  # Returns `true` if the literals are comperable.
+  #
+  # Used for <=> operator.
+  #
+  # @return [Boolean]
   def comperable_datatype2?(other); end
+
+  # Returns `true` if the literal has a datatype and the comparison should
+  # return false instead of raise a type error.
+  #
+  # This behavior is intuited from SPARQL data-r2/expr-equal/eq-2-2
+  #
+  # @return [Boolean]
   def comperable_datatype?(other); end
+
+  # @return [URI] The XML Schema datatype URI (optional).
   def datatype; end
+
+  # @return [URI] The XML Schema datatype URI (optional).
   def datatype=(_arg0); end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def datatype?; end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def datatyped?; end
+
+  # Determins if `self` is the same term as `other`.
+  #
+  # @example
+  #   RDF::Literal(1).eql?(RDF::Literal(1.0))  #=> false
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
   def eql?(other); end
+
+  # Escape a literal using ECHAR escapes.
+  #
+  #    ECHAR ::= '\' [tbnrf"'\]
+  #
+  # @note N-Triples only requires '\"\n\r' to be escaped.
+  # @param string [String]
+  # @return [String]
+  # @see RDF::Term#escape
   def escape(string); end
+
+  # @private
   def freeze; end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def has_datatype?; end
+
+  # Returns `true` if this is a language-tagged literal.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-plain-literal
   def has_language?; end
+
+  # Returns a hash code for this literal.
+  #
+  # @return [Integer]
   def hash; end
+
+  # Returns a human-readable value for the literal
+  #
+  # @return [String]
+  # @since 1.1.6
   def humanize(lang = T.unsafe(nil)); end
+
+  # Returns a developer-friendly representation of `self`.
+  #
+  # @return [String]
   def inspect; end
+
+  # @return [Symbol] The language tag (optional).
   def language; end
+
+  # @return [Symbol] The language tag (optional).
   def language=(_arg0); end
+
+  # Returns `true` if this is a language-tagged literal.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-plain-literal
   def language?; end
+
+  # Returns `true`.
+  #
+  # @return [Boolean] `true` or `false`
   def literal?; end
+
+  # @return [Object]
   def object; end
+
+  # Returns `true` if this is a plain literal. A plain literal
+  # may have a language, but may not have a datatype. For
+  # all practical purposes, this includes xsd:string literals
+  # too.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-plain-literal
   def plain?; end
+
+  # Returns `true` if this is a simple literal.
+  # A simple literal has no datatype or language.
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/sparql11-query/#simple_literal
   def simple?; end
+
+  # Returns the literal, first removing all whitespace on both ends of the value, and then changing remaining consecutive whitespace groups into one space each.
+  #
+  # Note that it handles both ASCII and Unicode whitespace.
+  #
+  # @return [RDF::Literal] a new literal based on `self`.
+  # @see [String#squish](http://apidock.com/rails/String/squish)
   def squish(*other_string); end
+
+  # Performs a destructive {#squish}.
+  #
+  # @return self
+  # @see [String#squish!](http://apidock.com/rails/String/squish%21)
   def squish!; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
   def to_s; end
+
   def to_sxp(**options); end
+
+  # Returns `true` if this is a datatyped literal.
+  #
+  # For historical reasons, this excludes xsd:string and rdf:langString
+  #
+  # @return [Boolean] `true` or `false`
+  # @see http://www.w3.org/TR/rdf-concepts/#dfn-typed-literal
   def typed?; end
+
+  # Returns `true` if the value adheres to the defined grammar of the
+  # datatype.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.2.1
   def valid?; end
+
+  # Validates the value using {RDF::Value#valid?}, raising an error if the value is
+  # invalid.
+  #
+  # @raise [ArgumentError] if the value is invalid
+  # @return [RDF::Literal] `self`
+  # @since 0.2.1
   def validate!; end
+
+  # Returns the value as a string.
+  #
+  # @return [String]
   def value; end
+
+  # Returns a hash code for the value.
+  #
+  # @return [Integer]
   def value_hash; end
 
   protected
 
+  # @overload
   def method_missing(name, *args); end
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   class << self
+    # Return Hash mapping from datatype URI to class
+    #
+    # @private
     def datatype_map; end
+
+    # Return datatype class for uri, or nil if none is found
+    #
+    # @private
     def datatyped_class(uri); end
+
+    # @private
+    # @return [void]
     def inherited(child); end
+
+    # @private
+    # @raise [ArgumentError]
     def new(value, language: T.unsafe(nil), datatype: T.unsafe(nil), lexical: T.unsafe(nil), validate: T.unsafe(nil), canonicalize: T.unsafe(nil), **options); end
   end
 end
@@ -2615,203 +2974,8 @@ end
 RDF::Literal::YearMonthDuration::DATATYPE = T.let(T.unsafe(nil), RDF::URI)
 RDF::Literal::YearMonthDuration::GRAMMAR = T.let(T.unsafe(nil), Regexp)
 RDF::Literal::ZERO = T.let(T.unsafe(nil), RDF::Literal::Integer)
-
-class RDF::OWL < ::RDF::StrictVocabulary
-  class << self
-    def AllDifferent; end
-    def AllDisjointClasses; end
-    def AllDisjointProperties; end
-    def Annotation; end
-    def AnnotationProperty; end
-    def AsymmetricProperty; end
-    def Axiom; end
-    def Class; end
-    def DataRange; end
-    def DatatypeProperty; end
-    def DeprecatedClass; end
-    def DeprecatedProperty; end
-    def FunctionalProperty; end
-    def InverseFunctionalProperty; end
-    def IrreflexiveProperty; end
-    def NamedIndividual; end
-    def NegativePropertyAssertion; end
-    def Nothing; end
-    def ObjectProperty; end
-    def Ontology; end
-    def OntologyProperty; end
-    def ReflexiveProperty; end
-    def Restriction; end
-    def SymmetricProperty; end
-    def Thing; end
-    def TransitiveProperty; end
-    def allValuesFrom; end
-    def annotatedProperty; end
-    def annotatedSource; end
-    def annotatedTarget; end
-    def assertionProperty; end
-    def backwardCompatibleWith; end
-    def bottomDataProperty; end
-    def bottomObjectProperty; end
-    def cardinality; end
-    def complementOf; end
-    def datatypeComplementOf; end
-    def deprecated; end
-    def differentFrom; end
-    def disjointUnionOf; end
-    def disjointWith; end
-    def distinctMembers; end
-    def equivalentClass; end
-    def equivalentProperty; end
-    def hasKey; end
-    def hasSelf; end
-    def hasValue; end
-    def imports; end
-    def incompatibleWith; end
-    def intersectionOf; end
-    def inverseOf; end
-    def maxCardinality; end
-    def maxQualifiedCardinality; end
-    def members; end
-    def minCardinality; end
-    def minQualifiedCardinality; end
-    def onClass; end
-    def onDataRange; end
-    def onDatatype; end
-    def onProperties; end
-    def onProperty; end
-    def oneOf; end
-    def priorVersion; end
-    def propertyChainAxiom; end
-    def propertyDisjointWith; end
-    def qualifiedCardinality; end
-    def sameAs; end
-    def someValuesFrom; end
-    def sourceIndividual; end
-    def targetIndividual; end
-    def targetValue; end
-    def topDataProperty; end
-    def topObjectProperty; end
-    def unionOf; end
-    def versionIRI; end
-    def versionInfo; end
-    def withRestrictions; end
-  end
-end
-
-class RDF::RDFS < ::RDF::StrictVocabulary
-  class << self
-    def Class; end
-    def Container; end
-    def ContainerMembershipProperty; end
-    def Datatype; end
-    def Literal; end
-    def Resource; end
-    def comment; end
-    def domain; end
-    def isDefinedBy; end
-    def label; end
-    def member; end
-    def range; end
-    def seeAlso; end
-    def subClassOf; end
-    def subPropertyOf; end
-  end
-end
-
-class RDF::RDFV < ::RDF::StrictVocabulary
-  class << self
-    def Alt; end
-    def Bag; end
-    def CompoundLiteral; end
-    def Description; end
-    def HTML; end
-    def ID; end
-    def JSON; end
-    def List; end
-    def PlainLiteral; end
-    def Property; end
-    def Seq; end
-    def Statement; end
-    def XMLLiteral; end
-    def __name__; end
-    def about; end
-    def datatype; end
-    def direction; end
-    def first; end
-    def langString; end
-    def language; end
-    def li; end
-    def name; end
-    def nil; end
-    def nodeID; end
-    def object; end
-    def parseType; end
-    def predicate; end
-    def resource; end
-    def rest; end
-    def subject; end
-    def type; end
-    def value; end
-  end
-end
-
 RDF::RDF_N_REGEXP = T.let(T.unsafe(nil), Regexp)
 RDF::VOCABS = T.let(T.unsafe(nil), Hash)
-
-class RDF::XSD < ::RDF::Vocabulary
-  class << self
-    def ENTITIES; end
-    def ENTITY; end
-    def ID; end
-    def IDREF; end
-    def IDREFS; end
-    def NCName; end
-    def NMTOKEN; end
-    def NMTOKENS; end
-    def NOTATION; end
-    def Name; end
-    def QName; end
-    def anyAtomicType; end
-    def anySimpleType; end
-    def anyType; end
-    def anyURI; end
-    def base64Binary; end
-    def boolean; end
-    def byte; end
-    def date; end
-    def dateTime; end
-    def dateTimeStamp; end
-    def dayTimeDuration; end
-    def decimal; end
-    def double; end
-    def duration; end
-    def float; end
-    def gDay; end
-    def gMonth; end
-    def gMonthDay; end
-    def gYear; end
-    def gYearMonth; end
-    def hexBinary; end
-    def int; end
-    def integer; end
-    def language; end
-    def long; end
-    def negativeInteger; end
-    def nonNegativeInteger; end
-    def nonPositiveInteger; end
-    def normalizedString; end
-    def positiveInteger; end
-    def short; end
-    def string; end
-    def time; end
-    def token; end
-    def unsignedByte; end
-    def unsignedInt; end
-    def unsignedLong; end
-    def unsignedShort; end
-    def yearMonthDuration; end
-  end
-end
 
 module RDF::XSD::VERSION
   class << self
@@ -2834,7 +2998,6 @@ RDF::XSD::VERSION::VERSION_FILE = T.let(T.unsafe(nil), String)
 
 class REXML::Element < ::REXML::Parent
   include ::REXML::XMLTokens
-  include ::REXML::Namespace
 
   # Canonicalize the Element. Return a new instance of this node
   # which is canonicalized and marked as such.

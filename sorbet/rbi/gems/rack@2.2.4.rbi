@@ -1541,6 +1541,8 @@ class Rack::MockResponse < ::Rack::Response
   end
 end
 
+Rack::MockSession = Rack::Test::Session
+
 # A multipart form data parser, adapted from IOWA.
 #
 # Usually, Rack::Request#POST takes care of calling this.
@@ -1801,7 +1803,7 @@ class Rack::QueryParser
   # the structural types represented by two different parameter names are in
   # conflict, a ParameterTypeError is raised.
   #
-  # @raise [RangeError]
+  # @raise [ParamsTooDeepError]
   def normalize_params(params, name, v, depth); end
 
   # Returns the value of attribute param_depth_limit.
@@ -1854,7 +1856,7 @@ class Rack::QueryParser::Params
 
   def [](key); end
 
-  # @raise [RangeError]
+  # @raise [ParamsTooDeepError]
   def []=(key, value); end
 
   # @return [Boolean]
@@ -1898,6 +1900,10 @@ class Rack::QueryParser::Params
   #      key to it is non-deterministic.
   def to_params_hash; end
 end
+
+# ParamsTooDeepError is the error that is raised when params are recursively
+# nested over the specified limit.
+class Rack::QueryParser::ParamsTooDeepError < ::RangeError; end
 
 Rack::RACK_ERRORS = T.let(T.unsafe(nil), String)
 Rack::RACK_HIJACK = T.let(T.unsafe(nil), String)
@@ -3718,6 +3724,8 @@ Rack::Utils::KeySpaceConstrainedParams = Rack::QueryParser::Params
 Rack::Utils::NULL_BYTE = T.let(T.unsafe(nil), String)
 Rack::Utils::PATH_SEPS = T.let(T.unsafe(nil), Regexp)
 Rack::Utils::ParameterTypeError = Rack::QueryParser::ParameterTypeError
+Rack::Utils::RFC2822_DAY_NAME = T.let(T.unsafe(nil), Array)
+Rack::Utils::RFC2822_MONTH_NAME = T.let(T.unsafe(nil), Array)
 
 # Responses with HTTP status codes that should not have an entity body
 Rack::Utils::STATUS_WITH_NO_ENTITY_BODY = T.let(T.unsafe(nil), Hash)

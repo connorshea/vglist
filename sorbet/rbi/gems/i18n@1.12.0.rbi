@@ -29,7 +29,7 @@ GetText::PoParser::Racc_debug_parser = T.let(T.unsafe(nil), TrueClass)
 GetText::PoParser::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 
 # Simple Locale tag implementation that computes subtags by simply splitting
-# the locale tag at '-' occurences.
+# the locale tag at '-' occurrences.
 module I18n
   extend ::I18n::Base
 
@@ -328,7 +328,7 @@ module I18n::Backend::Fallbacks
   private
 
   # Overwrite on_fallback to add specified logic when the fallback succeeds.
-  def on_fallback(_original_locale, _fallback_locale, _key, _optoins); end
+  def on_fallback(_original_locale, _fallback_locale, _key, _options); end
 end
 
 # This module contains several helpers to assist flattening translations.
@@ -1223,11 +1223,12 @@ module I18n::Base
   def handle_exception(handling, exception, locale, key, options); end
 
   def normalize_key(key, separator); end
+  def translate_key(key, throw, raise, locale, backend, options); end
 end
 
 class I18n::Config
   # Returns an array of locales for which translations are available.
-  # Unless you explicitely set these through I18n.available_locales=
+  # Unless you explicitly set these through I18n.available_locales=
   # the call will be delegated to the backend.
   def available_locales; end
 
@@ -1318,7 +1319,7 @@ class I18n::Config
   # if you don't care about arity.
   #
   # == Example:
-  # You can supress raising an exception and return string instead:
+  # You can suppress raising an exception and return string instead:
   #
   #   I18n.config.missing_interpolation_argument_handler = Proc.new do |key|
   #     "#{key} is missing"

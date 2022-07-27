@@ -2999,7 +2999,6 @@ end
 # @api public
 class Parser::Source::Range
   include ::Comparable
-  include ::RuboCop::AST::Ext::Range
 
   # @api public
   # @param source_buffer [Buffer]

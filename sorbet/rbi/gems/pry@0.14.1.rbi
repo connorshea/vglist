@@ -20,17 +20,8 @@ class BasicObject
 end
 
 class Object < ::BasicObject
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
-  include ::JSON::Ext::Generator::GeneratorMethods::Object
-  include ::ActiveSupport::Tryable
-  include ::ActiveSupport::Dependencies::Loadable
-  include ::FriendlyId::ObjectUtils
-  include ::PP::ObjectMixin
   include ::MakeMakefile
 
   # Return a binding object for the receiver.
