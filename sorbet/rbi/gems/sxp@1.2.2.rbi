@@ -9,9 +9,6 @@
 # Extensions for Ruby's `Array` class.
 class Array
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   # Returns the SXP representation of this object.
   #
@@ -21,9 +18,6 @@ end
 
 # Extensions for Ruby's `BigDecimal` class.
 class BigDecimal < ::Numeric
-  include ::ActiveSupport::BigDecimalWithDefaultFormat
-  include ::ActiveSupport::NumericWithFormat
-
   # Returns the SXP representation of this object.
   #
   # @return [String]
@@ -33,20 +27,8 @@ end
 BigDecimal::EXCEPTION_NaN = T.let(T.unsafe(nil), Integer)
 BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 
-# Extensions for Ruby's `FalseClass` class.
-class FalseClass
-  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
-end
-
 # Extensions for Ruby's `Float` class.
 class Float < ::Numeric
-  include ::ActiveSupport::NumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Float
-  include ::MessagePack::CoreExt
-
   # Returns the SXP representation of this object.
   #
   # @return [String]
@@ -56,9 +38,6 @@ end
 # Extensions for Ruby's `Hash` class.
 class Hash
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Hash
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   # Returns the SXP representation of this object.
   #
@@ -68,10 +47,6 @@ end
 
 # Extensions for Ruby's `Integer` class.
 class Integer < ::Numeric
-  include ::ActiveSupport::NumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Integer
-  include ::MessagePack::CoreExt
-
   # Returns the SXP representation of this object.
   #
   # @return [String]
@@ -80,9 +55,6 @@ end
 
 # Extensions for Ruby's `NilClass` class.
 class NilClass
-  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
   include ::FriendlyId::Reserved::Configuration
   include ::FriendlyId::Scoped::Configuration
   include ::FriendlyId::SimpleI18n::Configuration
@@ -91,17 +63,8 @@ end
 
 # Extensions for Ruby's `Object` class.
 class Object < ::BasicObject
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
-  include ::JSON::Ext::Generator::GeneratorMethods::Object
-  include ::ActiveSupport::Tryable
-  include ::ActiveSupport::Dependencies::Loadable
-  include ::FriendlyId::ObjectUtils
-  include ::PP::ObjectMixin
   include ::MakeMakefile
 
   # Returns the SXP representation of this object.
@@ -163,7 +126,6 @@ class RDF::Literal
   include ::Comparable
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
-  include ::RDF::Term
 
   # Literals without a datatype are given either xsd:string or rdf:langString
   # depending on if there is language
@@ -628,7 +590,6 @@ class RDF::Node
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
   include ::RDF::Term
-  include ::RDF::Resource
 
   # @param id [#to_s]
   # @return [Node] a new instance of Node
@@ -832,7 +793,6 @@ end
 class RDF::Query
   include ::Enumerable
   include ::RDF::Countable
-  include ::RDF::Enumerable
 
   # Initializes a new basic graph pattern query.
   #
@@ -1309,7 +1269,7 @@ class RDF::Query::Pattern < ::RDF::Statement
   # @example
   #   Pattern.new(:s, :p, :o).execute(RDF::Repository.load('etc/doap.nt'))
   # @param queryable [RDF::Queryable] the graph or repository to query
-  # @param bindings [Hash{Symbol => RDF::Term}] optional variable bindings to use
+  # @param bindings [Hash{Symbol => RDF::Term}, RDF::Query::Solution] optional variable bindings to use
   # @return [Enumerable<RDF::Query::Pattern>] an enumerator yielding matching statements
   # @see RDF::Queryable#query
   # @since 0.3.0
@@ -1441,8 +1401,6 @@ class RDF::Query::Variable
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
-  include ::SPARQL::Algebra::Expression
-  include ::RDF::Term
 
   # @param name [Symbol, #to_sym] the variable name
   # @param value [RDF::Term] an optional variable value
@@ -1673,7 +1631,6 @@ class RDF::URI
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
   include ::RDF::Term
-  include ::RDF::Resource
 
   # @overload initialize
   # @overload initialize
@@ -2398,52 +2355,6 @@ class Regexp
 end
 
 Regexp::TOKEN_KEYS = T.let(T.unsafe(nil), Array)
-
-class Regexp::Token < ::Struct
-  def conditional_level; end
-  def conditional_level=(_); end
-  def length; end
-  def level; end
-  def level=(_); end
-
-  # Returns the value of attribute next.
-  def next; end
-
-  # Sets the attribute next
-  #
-  # @param value the value to set the attribute next to.
-  def next=(_arg0); end
-
-  def offset; end
-
-  # Returns the value of attribute previous.
-  def previous; end
-
-  # Sets the attribute previous
-  #
-  # @param value the value to set the attribute previous to.
-  def previous=(_arg0); end
-
-  def set_level; end
-  def set_level=(_); end
-  def te; end
-  def te=(_); end
-  def text; end
-  def text=(_); end
-  def token; end
-  def token=(_); end
-  def ts; end
-  def ts=(_); end
-  def type; end
-  def type=(_); end
-
-  class << self
-    def [](*_arg0); end
-    def inspect; end
-    def members; end
-    def new(*_arg0); end
-  end
-end
 
 module SXP
   class << self
@@ -3393,9 +3304,6 @@ SXP::VERSION::VERSION_FILE = T.let(T.unsafe(nil), String)
 # Extensions for Ruby's `String` class.
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  include ::MessagePack::CoreExt
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   # Returns the SXP representation of this object. Uses SPARQL-like escaping.
   #
@@ -3409,8 +3317,6 @@ String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
 # Extensions for Ruby's `Symbol` class.
 class Symbol
   include ::Comparable
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   # Returns `true` if this is a keyword symbol.
   #
@@ -3426,9 +3332,6 @@ end
 # Extensions for Ruby's `Time` class.
 class Time
   include ::Comparable
-  include ::DateAndTime::Zones
-  include ::DateAndTime::Calculations
-  include ::DateAndTime::Compatibility
 
   # Returns the SXP representation of this object.
   #
@@ -3439,21 +3342,8 @@ end
 Time::COMMON_YEAR_DAYS_IN_MONTH = T.let(T.unsafe(nil), Array)
 Time::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
 
-# Extensions for Ruby's `TrueClass` class.
-class TrueClass
-  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
-end
-
 # Extensions for Ruby's `Vector` class.
 class Vector
-  include ::ExceptionForMatrix
-  include ::Enumerable
-  include ::Matrix::CoercionHelper
-  extend ::Matrix::ConversionHelper
-
   # Returns the SXP representation of this object.
   #
   # @return [String]

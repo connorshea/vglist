@@ -6,8 +6,6 @@
 
 # @private
 module Rails
-  extend ::ActiveSupport::Autoload
-
   class << self
     # Returns the value of attribute app_class.
     def app_class; end
@@ -1192,9 +1190,6 @@ Rails::Application::INITIAL_VARIABLES = T.let(T.unsafe(nil), Array)
 #   # load Blog::Engine with highest priority, followed by application and other railties
 #   config.railties_order = [Blog::Engine, :main_app, :all]
 class Rails::Engine < ::Rails::Railtie
-  include ::ActiveSupport::Callbacks
-  extend ::ActiveSupport::Callbacks::ClassMethods
-
   # @return [Engine] a new instance of Engine
   def initialize; end
 
@@ -1330,6 +1325,7 @@ class Rails::Engine < ::Rails::Railtie
   end
 end
 
+# Define some basic Sprockets error classes
 module Sprockets
   extend ::Sprockets::Utils
   extend ::Sprockets::URIUtils
@@ -1339,13 +1335,11 @@ module Sprockets
   extend ::Sprockets::Dependencies
   extend ::Sprockets::Compressing
   extend ::Sprockets::Exporting
-  extend ::Sprockets::ProcessorUtils
   extend ::Sprockets::Processing
   extend ::Sprockets::HTTPUtils
   extend ::Sprockets::Transformers
   extend ::Sprockets::Mime
   extend ::Sprockets::Paths
-  extend ::Sprockets::Configuration
 end
 
 module Sprockets::Rails; end

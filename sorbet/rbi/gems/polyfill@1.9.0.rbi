@@ -49,7 +49,6 @@ end
 Polyfill::InternalUtils::VERSIONS = T.let(T.unsafe(nil), Hash)
 module Polyfill::Module; end
 module Polyfill::Module::MezpFbnVtZXJhYmxlPT5bIiNjaHVua193aGlsZSJdLCA6dmVyc2lvbj0_1IjIuNCJ9; end
-module Polyfill::Module::MezpIYXNoPT5bIiNzbGljZSJdfQ__; end
 module Polyfill::Module::MezpJbnRlZ2VyPT5bIiNjZWlsIiwgIiNmbG9vciIsICIjcm91bmQiLCAiI3RydW5jYXRlIl0sIDp2ZXJzaW9uPT4iMi40In0_; end
 module Polyfill::Module::MezpLZXJuZWw9PlsiI3lpZWxkX3NlbGYiXSwgOnZlcnNpb249PiIyLjUifQ__; end
 module Polyfill::Module::MezpOdW1lcmljPT5bIiNkdXAiXSwgOnZlcnNpb249PiIyLjQifQ__; end

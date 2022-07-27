@@ -6,9 +6,6 @@
 
 # Namespace for all core RSpec projects.
 module RSpec
-  extend ::RSpec::Support::Warnings
-  extend ::RSpec::Core::Warnings
-
   class << self
     # Used to ensure examples get reloaded between multiple runs in the same
     # process and ensures user configuration is persisted.

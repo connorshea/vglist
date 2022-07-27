@@ -438,3 +438,7 @@ end
 
 BetterErrors::VERSION = T.let(T.unsafe(nil), String)
 class BetterErrors::ValueLargerThanConfiguredMaximum < ::StandardError; end
+
+class Exception
+  include ::BetterErrors::ExceptionExtension
+end

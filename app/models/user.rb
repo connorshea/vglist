@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 class User < ApplicationRecord
   extend FriendlyId
   include PgSearch::Model

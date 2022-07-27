@@ -5,8 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem sorbet-rails`.
 
 # @abstract Subclasses must implement the `abstract` methods below.
-#
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert_interface.rb:4
 module ITypeAssert
   extend T::Generic
 
@@ -15,153 +13,109 @@ module ITypeAssert
   Elem = type_member(:out)
 
   # @abstract
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert_interface.rb:13
   sig { abstract.params(val: T.untyped).returns(Elem) }
   def assert(val); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert_interface.rb:15
   def get_type; end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails.rb:2
 module SorbetRails
   class << self
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:19
     sig { returns(::SorbetRails::Config) }
     def config; end
 
     # @yield [config]
-    #
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:10
     sig { params(blk: T.proc.params(arg0: ::SorbetRails::Config).void).void }
     def configure(&blk); end
 
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:24
     sig { void }
     def register_configured_plugins; end
   end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:31
 class SorbetRails::Config
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:50
   sig { void }
   def initialize; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:35
   sig { returns(T::Array[::Symbol]) }
   def enabled_gem_plugins; end
 
   # @return [Array<Symbol>]
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:35
   def enabled_gem_plugins=(_arg0); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:38
   sig { returns(T::Array[::Symbol]) }
   def enabled_model_plugins; end
 
   # @return [Array<Symbol>]
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:38
   def enabled_model_plugins=(_arg0); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:70
   sig { returns(T::Array[::Symbol]) }
   def enabled_plugins; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:41
   sig { returns(T::Array[::String]) }
   def extra_helper_includes; end
 
   # @return [Array<String>]
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:41
   def extra_helper_includes=(_arg0); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:44
   sig { returns(T.class_of(SorbetRails::JobRbiFormatter)) }
   def job_generator_class; end
 
   # @return [T.class_of(SorbetRails::JobRbiFormatter)]
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:44
   def job_generator_class=(_arg0); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:47
   sig { returns(T.class_of(SorbetRails::MailerRbiFormatter)) }
   def mailer_generator_class; end
 
   # @return [T.class_of(SorbetRails::MailerRbiFormatter)]
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/config.rb:47
   def mailer_generator_class=(_arg0); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/job_rbi_formatter.rb:6
 class SorbetRails::JobRbiFormatter
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/job_rbi_formatter.rb:18
   sig { params(job_class: T.class_of(ActiveJob::Base)).void }
   def initialize(job_class); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/job_rbi_formatter.rb:82
   sig { returns(::String) }
   def generate_rbi; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/job_rbi_formatter.rb:15
   sig { returns(T.class_of(ActiveJob::Base)) }
   def job_class; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/job_rbi_formatter.rb:24
   sig { void }
   def populate_rbi; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/job_rbi_formatter.rb:12
   sig { returns(::Parlour::RbiGenerator) }
   def rbi_generator; end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/job_rbi_formatter.rb:9
 SorbetRails::JobRbiFormatter::Parameter = Parlour::RbiGenerator::Parameter
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/mailer_rbi_formatter.rb:6
 class SorbetRails::MailerRbiFormatter
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/mailer_rbi_formatter.rb:18
   sig { params(mailer_class: T.class_of(ActionMailer::Base)).void }
   def initialize(mailer_class); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/mailer_rbi_formatter.rb:45
   sig { returns(::String) }
   def generate_rbi; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/mailer_rbi_formatter.rb:15
   sig { returns(T.class_of(ActionMailer::Base)) }
   def mailer_class; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/mailer_rbi_formatter.rb:24
   sig { void }
   def populate_rbi; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/mailer_rbi_formatter.rb:12
   sig { returns(::Parlour::RbiGenerator) }
   def rbi_generator; end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/mailer_rbi_formatter.rb:9
 SorbetRails::MailerRbiFormatter::Parameter = Parlour::RbiGenerator::Parameter
 
 # @abstract Subclasses must implement the `abstract` methods below.
-#
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:2
 module SorbetRails::ModelColumnUtils
   abstract!
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:86
   sig { params(klass: ::Object, time_zone_aware: T::Boolean).returns(T.any(::Class, ::String)) }
   def active_record_type_to_sorbet_type(klass, time_zone_aware: T.unsafe(nil)); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:119
   sig { params(attribute: T.any(::String, ::Symbol)).returns(T::Boolean) }
   def attribute_has_unconditional_presence_validation?(attribute); end
 
@@ -169,115 +123,87 @@ module SorbetRails::ModelColumnUtils
   # i'm not sure how to explain that to sorbet other than T.class_of(Class).
   #
   # @abstract
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:28
   sig { abstract.returns(T.any(T.class_of(ActiveRecord::Base), T.class_of(Class))) }
   def model_class; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:76
   sig { params(column_def: T.untyped).returns(T::Boolean) }
   def nilable_column?(column_def); end
 
   # True if this column is "time zone aware", which means it'll be converted on
   # access from its original class (e.g. `DateTime`) to something with better
   # support for time zones (usually `ActiveSupport::TimeWithZone`)
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:60
   sig { params(column_def: T.untyped, cast_type: T.untyped).returns(T::Boolean) }
   def time_zone_aware_column?(column_def, cast_type); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:31
   sig { params(column_def: T.untyped).returns(::SorbetRails::ModelColumnUtils::ColumnType) }
   def type_for_column_def(column_def); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:8
 class SorbetRails::ModelColumnUtils::ColumnType < ::T::Struct
   const :array_type, T.nilable(T::Boolean)
   const :base_type, T.any(::Class, ::String)
   const :nilable, T.nilable(T::Boolean)
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_column_utils.rb:16
   sig { returns(::String) }
   def to_s; end
 
   class << self
-    # source://sorbet-runtime-0.5.10219/lib/types/struct.rb:13
     def inherited(s); end
   end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/base.rb:4
 module SorbetRails::ModelPlugins
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/plugins.rb:41
   sig { params(plugin_name: ::Symbol).returns(T.class_of(SorbetRails::ModelPlugins::Base)) }
   def get_plugin_by_name(plugin_name); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/plugins.rb:31
   sig { returns(T::Array[T.class_of(SorbetRails::ModelPlugins::Base)]) }
   def get_plugins; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/plugins.rb:21
   sig { params(plugin: T.class_of(SorbetRails::ModelPlugins::Base)).void }
   def register_plugin(plugin); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/plugins.rb:36
   sig { params(plugin_name: ::Symbol).void }
   def register_plugin_by_name(plugin_name); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/plugins.rb:26
   sig { params(plugins: T::Array[T.class_of(SorbetRails::ModelPlugins::Base)]).void }
   def set_plugins(plugins); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:3
 class SorbetRails::ModelPlugins::ActiveRecordAssoc < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:5
   sig { params(model_class: T.class_of(ActiveRecord::Base), available_classes: T::Set[::String]).void }
   def initialize(model_class, available_classes); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:171
   sig { params(reflection: T.untyped).returns(T.nilable(T::Boolean)) }
   def assoc_should_be_untyped?(reflection); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:11
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:190
   sig { params(reflection: T.untyped).returns(T.nilable(T::Boolean)) }
   def polymorphic_assoc?(reflection); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:129
   sig { params(assoc_module_rbi: T.untyped, assoc_name: T.untyped, reflection: T.untyped).void }
   def populate_collection_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:34
   sig { params(assoc_module_rbi: T.untyped, assoc_name: T.untyped, reflection: T.untyped).void }
   def populate_single_assoc_getter_setter(assoc_module_rbi, assoc_name, reflection); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:184
   sig { params(reflection: T.untyped).returns(T.nilable(T::Boolean)) }
   def relation_should_be_untyped?(reflection); end
 
   private
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:77
   sig { params(reflection: T.untyped).returns(T::Boolean) }
   def belongs_to_and_required?(reflection); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_assoc.rb:118
   sig { params(reflection: T.untyped).returns(T::Boolean) }
   def has_one_and_required?(reflection); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_attribute.rb:3
 class SorbetRails::ModelPlugins::ActiveRecordAttribute < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_attribute.rb:6
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_attribute.rb:61
   sig do
     params(
       root: Parlour::RbiGenerator::Namespace,
@@ -290,167 +216,125 @@ class SorbetRails::ModelPlugins::ActiveRecordAttribute < ::SorbetRails::ModelPlu
   end
   def generate_enum_methods(root, model_class_rbi, attribute_module_rbi, model_defined_enums, column_name, column_def); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_attribute.rb:129
   sig { params(column_type: ::SorbetRails::ModelColumnUtils::ColumnType).returns(::String) }
   def value_type_for_attr_writer(column_type); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_enum.rb:4
 class SorbetRails::ModelPlugins::ActiveRecordEnum < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_enum.rb:7
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_named_scope.rb:4
 class SorbetRails::ModelPlugins::ActiveRecordNamedScope < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_named_scope.rb:7
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_querying.rb:3
 class SorbetRails::ModelPlugins::ActiveRecordQuerying < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_querying.rb:6
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
   private
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_querying.rb:117
   sig { params(root: Parlour::RbiGenerator::Namespace, inner_type: ::String).void }
   def create_in_batches_method(root, inner_type:); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_serialized_attribute.rb:3
 class SorbetRails::ModelPlugins::ActiveRecordSerializedAttribute < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_serialized_attribute.rb:44
   sig { params(columns_hash: T::Hash[::String, ::ActiveRecord::ConnectionAdapters::Column]).returns(T::Boolean) }
   def any_serialized_columns?(columns_hash); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_serialized_attribute.rb:51
   sig { params(serialization_coder: T.nilable(::Class)).returns(::String) }
   def attr_types_for_coder(serialization_coder); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_serialized_attribute.rb:6
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_relation_where_not.rb:3
 class SorbetRails::ModelPlugins::ActiveRelationWhereNot < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_relation_where_not.rb:6
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_storage_methods.rb:3
 class SorbetRails::ModelPlugins::ActiveStorageMethods < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_storage_methods.rb:5
   sig { params(model_class: T.class_of(ActiveRecord::Base), available_classes: T::Set[::String]).void }
   def initialize(model_class, available_classes); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_storage_methods.rb:46
   sig { params(assoc_name: ::String, mod: Parlour::RbiGenerator::Namespace).void }
   def create_has_many_methods(assoc_name, mod); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_storage_methods.rb:30
   sig { params(assoc_name: ::String, mod: Parlour::RbiGenerator::Namespace).void }
   def create_has_one_methods(assoc_name, mod); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_storage_methods.rb:10
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
 # @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/base.rb:5
 class SorbetRails::ModelPlugins::Base < ::Parlour::Plugin
   include ::SorbetRails::ModelColumnUtils
   include ::SorbetRails::ModelUtils
 
   abstract!
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/base.rb:28
   sig { params(model_class: T.class_of(ActiveRecord::Base), available_classes: T::Set[::String]).void }
   def initialize(model_class, available_classes); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/base.rb:19
   sig { returns(T::Set[::String]) }
   def available_classes; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/base.rb:16
   sig { override.returns(T.class_of(ActiveRecord::Base)) }
   def model_class; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/base.rb:34
   sig { params(column_name: ::String).returns(T.nilable(::Class)) }
   def serialization_coder_for_column(column_name); end
 end
 
 # convenient rename
-#
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/base.rb:13
 SorbetRails::ModelPlugins::Base::Parameter = Parlour::RbiGenerator::Parameter
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/custom_finder_methods.rb:3
 class SorbetRails::ModelPlugins::CustomFinderMethods < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/custom_finder_methods.rb:6
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/enumerable_collections.rb:3
 class SorbetRails::ModelPlugins::EnumerableCollections < ::SorbetRails::ModelPlugins::Base
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/enumerable_collections.rb:6
   sig { override.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/plugins.rb:104
 class SorbetRails::ModelPlugins::UnrecognizedPluginName < ::StandardError; end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_rbi_formatter.rb:6
 class SorbetRails::ModelRbiFormatter
   include ::SorbetRails::ModelColumnUtils
   include ::SorbetRails::ModelUtils
   extend ::SorbetRails::ModelPlugins
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_rbi_formatter.rb:24
   sig { params(model_class: T.class_of(ActiveRecord::Base), available_classes: T::Set[::String]).void }
   def initialize(model_class, available_classes); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_rbi_formatter.rb:15
   sig { returns(T::Set[::String]) }
   def available_classes; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_rbi_formatter.rb:73
   sig { params(root: Parlour::RbiGenerator::Namespace).void }
   def generate_base_rbi(root); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_rbi_formatter.rb:39
   sig { returns(::String) }
   def generate_rbi; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_rbi_formatter.rb:12
   sig { override.returns(T.class_of(ActiveRecord::Base)) }
   def model_class; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_rbi_formatter.rb:124
   sig { params(plugins: T::Array[::Parlour::Plugin], generator: ::Parlour::RbiGenerator).void }
   def run_plugins(plugins, generator); end
 end
 
 # @abstract Subclasses must implement the `abstract` methods below.
-#
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:3
 module SorbetRails::ModelUtils
   include ::SorbetRails::ModelColumnUtils
 
   abstract!
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:96
   sig do
     params(
       root: Parlour::RbiGenerator::Namespace,
@@ -462,11 +346,9 @@ module SorbetRails::ModelUtils
   end
   def add_relation_query_method(root, method_name, parameters: T.unsafe(nil), builtin_query_method: T.unsafe(nil), custom_return_value: T.unsafe(nil)); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:80
   sig { params(method_name: T.any(::String, ::Symbol)).returns(T::Boolean) }
   def exists_class_method?(method_name); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:75
   sig { params(method_name: T.any(::String, ::Symbol)).returns(T::Boolean) }
   def exists_instance_method?(method_name); end
 
@@ -475,55 +357,41 @@ module SorbetRails::ModelUtils
   # This is also defined in ModelColumnUtils
   # sig { abstract.returns(T.any(T.class_of(ActiveRecord::Base), T.class_of(Class))) }
   # def model_class; end
-  #
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:17
   sig { returns(T::Boolean) }
   def habtm_class?; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:34
   sig { returns(::String) }
   def model_assoc_proxy_class_name; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:39
   sig { returns(::String) }
   def model_assoc_relation_class_name; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:24
   sig { returns(::String) }
   def model_class_name; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:70
   sig { params(module_name: ::String).returns(::String) }
   def model_module_name(module_name); end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:49
   sig { returns(::String) }
   def model_query_methods_returning_assoc_relation_module_name; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:44
   sig { returns(::String) }
   def model_query_methods_returning_relation_module_name; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:29
   sig { returns(::String) }
   def model_relation_class_name; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:54
   sig { returns(::String) }
   def model_relation_type_alias; end
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/model_utils.rb:65
   sig { returns(::String) }
   def model_relation_type_class_name; end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/railtie.rb:6
 class SorbetRails::Railtie < ::Rails::Railtie; end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/sorbet_utils.rb:9
 module SorbetRails::SorbetUtils
   class << self
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/sorbet_utils.rb:129
     sig do
       params(
         parsed_params: T::Array[::SorbetRails::SorbetUtils::ParsedParamDef],
@@ -532,7 +400,6 @@ module SorbetRails::SorbetUtils
     end
     def extract_default_value_for_params!(parsed_params, method_def); end
 
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/sorbet_utils.rb:75
     sig do
       params(
         signature: ::T::Private::Methods::Signature
@@ -543,18 +410,14 @@ module SorbetRails::SorbetUtils
     # Given an AST node, returns the source code from which it was constructed.
     # If the given AST node is nil, this returns nil.
     # Taken from https://github.com/AaronC81/parlour/blob/master/lib/parlour/type_parser.rb#L506
-    #
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/sorbet_utils.rb:165
     sig { params(node: T.nilable(::Parser::AST::Node)).returns(T.nilable(::String)) }
     def node_to_s(node); end
 
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/sorbet_utils.rb:23
     sig { params(method_def: ::UnboundMethod).returns(T::Array[::Parlour::RbiGenerator::Parameter]) }
     def parameters_from_method_def(method_def); end
   end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/sorbet_utils.rb:13
 class SorbetRails::SorbetUtils::ParsedParamDef < ::T::Struct
   prop :default, T.nilable(::String), default: T.unsafe(nil)
   const :kind, ::Symbol
@@ -564,28 +427,22 @@ class SorbetRails::SorbetUtils::ParsedParamDef < ::T::Struct
   const :type_str, ::String
 
   class << self
-    # source://sorbet-runtime-0.5.10219/lib/types/struct.rb:13
     def inherited(s); end
   end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/sorbet_utils.rb:172
 class SorbetRails::SorbetUtils::UnexpectedParam < ::StandardError; end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/utils.rb:3
 module SorbetRails::Utils
   class << self
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/utils.rb:7
     sig { void }
     def rails_eager_load_all!; end
 
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/utils.rb:22
     sig { params(method_name: ::String).returns(T::Boolean) }
     def valid_method_name?(method_name); end
   end
 end
 
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert_impl.rb:23
 class TA
   extend T::Generic
   include ::TypeAssertImpl
@@ -593,25 +450,19 @@ class TA
 
   Elem = type_member
 
-  # source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert.rb:19
   sig { override.params(val: T.untyped).returns(Elem) }
   def assert(val); end
 
   class << self
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert_impl.rb:7
     def [](type); end
   end
 end
 
 # Make this type visible even when the concrete
 # implementation cannot be loaded.
-#
-# source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert_impl.rb:5
 module TypeAssertImpl
   class << self
     # @private
-    #
-    # source://sorbet-rails-0.7.34/lib/sorbet-rails/type_assert/type_assert_impl.rb:6
     def included(klass); end
   end
 end

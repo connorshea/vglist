@@ -7,11 +7,29 @@
 module GraphQL
   class << self
     def default_parser; end
+
+    # Sets the attribute default_parser
+    #
+    # @param value the value to set the attribute default_parser to.
     def default_parser=(_arg0); end
+
+    # Turn a query string or schema definition into an AST
+    #
+    # @param graphql_string [String] a GraphQL query string or schema definition
+    # @return [GraphQL::Language::Nodes::Document]
     def parse(graphql_string, tracer: T.unsafe(nil)); end
+
+    # Read the contents of `filename` and parse them as GraphQL
+    #
+    # @param filename [String] Path to a `.graphql` file containing IDL or query
+    # @return [GraphQL::Language::Nodes::Document]
     def parse_file(filename); end
+
     def parse_with_racc(string, filename: T.unsafe(nil), tracer: T.unsafe(nil)); end
+
+    # @return [Array<GraphQL::Language::Token>]
     def scan(graphql_string); end
+
     def scan_with_ragel(graphql_string); end
   end
 end

@@ -78,7 +78,7 @@ namespace :sorbet do
         ['rspec-core', 'rake', 'rubocop', 'parlour'].each do |gem|
           FileUtils.remove_dir(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}")) if Dir.exist?(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}"))
         end
-        system('bundle exec tapioca gem')
+        system('bundle exec tapioca gem --no-loc')
         # Generate Sorbet Rails RBIs.
         system('bundle exec rake rails_rbi:all')
         system('bundle exec tapioca todo')

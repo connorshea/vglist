@@ -536,6 +536,10 @@ class Bootsnap::LoadPathCache::Store::SetOutsideTransactionNotAllowed < ::Standa
 Bootsnap::LoadPathCache::Store::VERSION_KEY = T.let(T.unsafe(nil), String)
 Bootsnap::VERSION = T.let(T.unsafe(nil), String)
 
+module JSON
+  extend ::Bootsnap::CompileCache::JSON::Patch
+end
+
 module Kernel
   private
 
@@ -545,4 +549,12 @@ module Kernel
   class << self
     def load(path, wrap = T.unsafe(nil)); end
   end
+end
+
+module Psych
+  extend ::Bootsnap::CompileCache::YAML::Psych3::Patch
+end
+
+class RubyVM::InstructionSequence
+  extend ::Bootsnap::CompileCache::ISeq::InstructionSequenceMixin
 end

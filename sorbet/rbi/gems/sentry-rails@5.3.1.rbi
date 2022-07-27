@@ -55,9 +55,6 @@ end
 Sentry::CAPTURED_SIGNATURE = T.let(T.unsafe(nil), Symbol)
 
 class Sentry::Configuration
-  include ::Sentry::CustomInspection
-  include ::Sentry::LoggingHelper
-
   def initialize; end
 
   def app_dirs_pattern; end
@@ -350,7 +347,7 @@ end
 
 Sentry::SENTRY_TRACE_HEADER_NAME = T.let(T.unsafe(nil), String)
 
-class Sentry::SendEventJob < ::ApplicationJob
+class Sentry::SendEventJob < ::ActiveJob::Base
   def perform(event, hint = T.unsafe(nil)); end
 
   class << self

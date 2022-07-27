@@ -5830,8 +5830,6 @@ RDF::Query::Solution::INSTANCE_METHODS = T.let(T.unsafe(nil), Array)
 #   solutions.each { |solution| puts solution.inspect }
 # @since 0.3.0
 class RDF::Query::Solutions < ::Array
-  include ::SPARQL::Results
-
   # Equals of solution
   #
   # @since 0.3.0
@@ -6117,7 +6115,6 @@ class RDF::Query::Variable
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
-  include ::SPARQL::Algebra::Expression
   include ::RDF::Term
 
   # @param name [Symbol, #to_sym] the variable name
@@ -7571,7 +7568,6 @@ module RDF::Term
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
-  include ::SPARQL::Algebra::Expression
 
   # Compares `self` to `other` for sorting purposes.
   #

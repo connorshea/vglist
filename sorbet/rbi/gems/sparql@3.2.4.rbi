@@ -9,9 +9,6 @@
 # Extensions for Ruby's `Array` class.
 class Array
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   # @return [Boolean]
   def aggregate?; end
@@ -119,11 +116,6 @@ end
 
 # Extensions for Ruby's `FalseClass` class.
 class FalseClass
-  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
-
   # Returns the SXP representation of this object.
   #
   # @return [String]
@@ -133,9 +125,6 @@ end
 # Extensions for Ruby's `Hash` class.
 class Hash
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Hash
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
 
   # Deep duplicate
   def deep_dup; end
@@ -149,9 +138,10 @@ end
 
 # Extensions for Ruby's `NilClass` class.
 class NilClass
-  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
+  include ::FriendlyId::Reserved::Configuration
+  include ::FriendlyId::Scoped::Configuration
+  include ::FriendlyId::SimpleI18n::Configuration
+  include ::FriendlyId::Slugged::Configuration
 
   def evaluate(bindings, **options); end
 
@@ -163,17 +153,8 @@ end
 
 # Extensions for Ruby's `Object` class.
 class Object < ::BasicObject
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
-  include ::JSON::Ext::Generator::GeneratorMethods::Object
-  include ::ActiveSupport::Tryable
-  include ::ActiveSupport::Dependencies::Loadable
-  include ::FriendlyId::ObjectUtils
-  include ::PP::ObjectMixin
   include ::MakeMakefile
 
   # Default for deep_dup is shallow dup
@@ -203,14 +184,92 @@ class Object < ::BasicObject
   def to_sxp_bin; end
 end
 
+# An RDF basic graph pattern (BGP) query.
+#
+# Named queries either match against a specifically named
+# graph if the name is an RDF::Resource or bound RDF::Query::Variable.
+# Names that are against unbound variables match either default
+# or named graphs.
+# The name of `false` will only match against the default graph.
+#
+# Variable names cause the variable to be added to the solution set
+# elements.
+#
+# @example Constructing a basic graph pattern query (1)
+#   query = RDF::Query.new do
+#   pattern [:person, RDF.type,  FOAF.Person]
+#   pattern [:person, FOAF.name, :name]
+#   pattern [:person, FOAF.mbox, :email]
+#   end
+# @example Constructing a basic graph pattern query (2)
+#   query = RDF::Query.new({
+#   person: {
+#   RDF.type  => FOAF.Person,
+#   FOAF.name => :name,
+#   FOAF.mbox => :email,
+#   }
+#   })
+# @example Executing a basic graph pattern query
+#   graph = RDF::Graph.load('etc/doap.nt')
+#   query.execute(graph).each do |solution|
+#   puts solution.inspect
+#   end
+# @example Constructing and executing a query in one go (1)
+#   solutions = RDF::Query.execute(graph) do
+#   pattern [:person, RDF.type, FOAF.Person]
+#   end
+# @example Constructing and executing a query in one go (2)
+#   solutions = RDF::Query.execute(graph, {
+#   person: {
+#   RDF.type => FOAF.Person,
+#   }
+#   })
+# @example In this example, the default graph contains the names of the publishers of two named graphs. The triples in the named graphs are not visible in the default graph in this example.
+#   # default graph
+#   @prefix dc: <http://purl.org/dc/elements/1.1/
+#
+#   <http://example.org/bob>    dc:publisher  "Bob" .
+#   <http://example.org/alice>  dc:publisher  "Alice" .
+#
+#   # Named graph: http://example.org/bob
+#   @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+#
+#   _:a foaf:name "Bob" .
+#   _:a foaf:mbox <mailto:bob@oldcorp.example.org> .
+#
+#   # Named graph: http://example.org/alice
+#   @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+#
+#   _:a foaf:name "Alice" .
+#   _:a foaf:mbox <mailto:alice@work.example.org> .
+# @see http://www.w3.org/TR/rdf-sparql-query/#rdfDataset
+# @since 0.3.0
 class RDF::Query
   include ::Enumerable
   include ::RDF::Countable
-  include ::RDF::Enumerable
 
+  # Initializes a new basic graph pattern query.
+  #
+  # @option options
+  # @overload initialize
+  # @overload initialize
+  # @param options [Hash] a customizable set of options
+  # @return [Query] a new instance of Query
+  # @since 0.3.0
   def initialize(*patterns, solutions: T.unsafe(nil), graph_name: T.unsafe(nil), name: T.unsafe(nil), validate: T.unsafe(nil), **options, &block); end
 
+  # Add patterns from another query to form a new Query
+  #
+  # @param other [RDF::Query]
+  # @return [RDF::Query]
+  # @since 0.3.0
   def +(other); end
+
+  # Appends the given query `pattern` to this query.
+  #
+  # @param pattern [RDF::Query::Pattern] a triple query pattern
+  # @return [void] self
+  # @since 0.3.0
   def <<(pattern); end
 
   # Equivalence for Queries:
@@ -218,76 +277,241 @@ class RDF::Query
   #   Same Context
   #
   # @return [Boolean]
+  # @since 0.3.0
   def ==(other); end
 
+  # Apply the graph name specified (or configured) to all patterns that have no graph name
+  #
+  # @param graph_name [RDF::IRI, RDF::Query::Variable] (self.graph_name)
+  # @since 0.3.0
   def apply_graph_name(graph_name = T.unsafe(nil)); end
 
   # Binds the pattern to a solution, making it no longer variable if all variables are resolved to bound variables
   #
   # @param solution [RDF::Query::Solution]
   # @return [self]
+  # @since 0.3.0
   def bind(solution); end
 
+  # Is this query scoped to the default graph?
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def default?; end
+
+  # Duplicate query, including patterns and solutions
+  #
+  # @return [RDF::Query]
+  # @since 0.3.0
   def dup; end
+
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each(&block); end
+
+  # Enumerates over each matching query solution.
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
   def each_solution(&block); end
+
+  # Enumerates over each statement (pattern).
+  #
+  # @return [Enumerator]
+  # @since 0.3.0
+  # @yield [RDF::Query::Pattern]
+  # @yieldparam pattern [::Query::Pattern]
   def each_statement(&block); end
+
+  # Query has no patterns
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def empty?; end
 
   # Returns `true` as this is executable.
   #
   # @return [Boolean] `true`
+  # @since 0.3.0
   def executable?; end
 
+  # Executes this query on the given `queryable` graph or repository.
+  #
+  # Named queries either match against a specifically named
+  # graphs if the name is an RDF::Resource or bound RDF::Query::Variable.
+  # Names that are against unbound variables match either detault
+  # or named graphs.
+  # The name of `false` will only match against the default graph.
+  #
+  # If the query nas no patterns, it returns a single empty solution as
+  # per SPARQL 1.1 _Empty Group Pattern_.
+  #
+  # @note solutions could be an Iterator, but this algorithm cycles over solutions, which requires them to be an array internally.
+  # @option options
+  # @option options
+  # @option options
+  # @param name [RDF::Resource, RDF::Query::Variable, false] (nil)
+  #   Alias for `:graph_name`.
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param solutions [RDF::Query::Solutions] (Solutions.new)
+  # @param graph_name [RDF::Resource, RDF::Query::Variable, false] (nil)
+  #   Default graph name for matching against queryable.
+  #   Named queries either match against a specifically named
+  #   graphs if the name is an {RDF::Resource} or bound {RDF::Query::Variable}.
+  #   Names that are against unbound variables match either default
+  #   or named graphs.
+  #   The name of `false` will only match against the default graph.
+  # @return [RDF::Query::Solutions] the resulting solution sequence
+  # @see http://www.holygoat.co.uk/blog/entry/2005-10-25-1
+  # @see http://www.w3.org/TR/sparql11-query/#emptyGroupPattern
+  # @since 0.3.0
+  # @yield [solution] each matching solution
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def execute(queryable, bindings: T.unsafe(nil), solutions: T.unsafe(nil), graph_name: T.unsafe(nil), name: T.unsafe(nil), **options, &block); end
+
+  # Returns `true` if this query did not match when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query failed to match or not.
+  #
+  # @return [Boolean]
+  # @see #matched?
+  # @since 0.3.0
   def failed?; end
+
+  # Scope the query to named graphs matching value
+  #
+  # @return [RDF::Resource, RDF::Query::Variable, false] graph_name
+  # @since 0.3.0
   def graph_name; end
+
+  # Scope the query to named graphs matching value
+  #
+  # @return [RDF::Resource, RDF::Query::Variable, false] graph_name
+  # @since 0.3.0
   def graph_name=(_arg0); end
+
+  # Returns `true` if any pattern contains a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def has_blank_nodes?; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # Returns `true` if this query matched when last executed.
+  #
+  # When the solution sequence is empty, this method can be used to
+  # determine whether the query matched successfully or not.
+  #
+  # @return [Boolean]
+  # @see #failed?
+  # @since 0.3.0
   def matched?; end
+
+  # Is this query scoped to a named graph?
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def named?; end
 
   # Return the non-destinguished variables contained within patterns and graph name
   #
   # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def ndvars; end
 
+  # Returns `true` if any pattern contains a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def node?; end
+
+  # Returns an optimized copy of this query.
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [RDF::Query] a copy of `self`
+  # @since 0.3.0
   def optimize(**options); end
 
   # Optimize the query, removing lexical shortcuts in URIs
   #
   # @return [self]
   # @see SPARQL::Algebra::Expression#optimize!
+  # @since 0.3.0
   def optimize!(**options); end
 
+  # Optimizes this query by reordering its constituent triple patterns
+  # according to their cost estimates.
+  #
+  # Optional patterns have greater cost than non-optional patterns so they will always come after non-optional patterns
+  #
+  # @param options [Hash{Symbol => Object}] any additional options for optimization
+  # @return [self]
+  # @see RDF::Query::Pattern#cost
+  # @since 0.3.0
   def optimize_without_expression!(**options); end
+
+  # Any additional options for this query.
+  #
+  # @return [Hash]
+  # @since 0.3.0
   def options; end
+
+  # Appends the given query `pattern` to this query.
+  #
+  # @option options
+  # @param pattern [RDF::Query::Pattern] a triple query pattern
+  # @param options [Hash{Symbol => Object}] any additional keyword options
+  # @return [void] self
+  # @since 0.3.0
   def pattern(pattern, **options); end
+
+  # The patterns that constitute this query.
+  #
+  # @return [Array<RDF::Query::Pattern>]
+  # @since 0.3.0
   def patterns; end
 
   # Query results in a boolean result (e.g., ASK)
   #
   # @return [Boolean]
+  # @since 0.3.0
   def query_yields_boolean?; end
 
   # Query results solutions (e.g., SELECT)
   #
   # @return [Boolean]
+  # @since 0.3.0
   def query_yields_solutions?; end
 
   # Query results statements (e.g., CONSTRUCT, DESCRIBE, CREATE)
   #
   # @return [Boolean]
+  # @since 0.3.0
   def query_yields_statements?; end
 
   # Don't do any more rewriting
   #
   # @return [SPARQL::Algebra::Expression] `self`
+  # @since 0.3.0
   def rewrite(&block); end
 
+  # The solution sequence for this query.
+  #
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def solutions; end
 
   # Returns a partial SPARQL grammar for this query.
@@ -297,6 +521,7 @@ class RDF::Query
   # @param filter_ops [Array<Operator>] ([])
   #   Filter Operations
   # @return [String]
+  # @since 0.3.0
   def to_sparql(top_level: T.unsafe(nil), filter_ops: T.unsafe(nil), **options); end
 
   def to_sxp(**options); end
@@ -308,119 +533,508 @@ class RDF::Query
   # Otherise, serialize as a BGP
   #
   # @return [Array]
+  # @since 0.3.0
   def to_sxp_bin; end
 
+  # Is this query unscoped? This indicates that it can return results from
+  # either a named graph or the default graph.
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def unnamed?; end
+
+  # Determine if the query containts valid patterns
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.9
   def valid?; end
+
+  # Validate this query, making sure it can be executed by our query engine.
+  # This method is public so that it may be called by implementations of
+  # RDF::Queryable#query_execute that bypass our built-in query engine.
+  #
+  # @raise [ArgumentError] This query cannot be executed.
+  # @return [RDF::Query] `self`
+  # @since 0.3.0
   def validate!; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variable?(*args); end
+
+  # Returns the number of variables in this query.
+  #
+  # @return [Integer] (0..3)
+  # @since 0.3.0
   def variable_count; end
+
+  # The variables used in this query. This includes variables used in patterns along with the graph_name itself, if it is a variable.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
+  # @since 0.3.0
   def variables; end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variables?(*args); end
 
   # Return the variables contained within patterns and graph name
   #
   # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def vars; end
 
   protected
 
+  # @private
+  # @since 0.3.0
   def compile_hash_patterns(hash_patterns); end
 
   class << self
+    # Cast values as Solutions
+    #
+    # @overload Solutions
+    # @overload Solutions
+    # @overload Solutions
+    # @overload Solutions
+    # @since 0.3.0
     def Solutions(*args); end
+
+    # Executes a query on the given `queryable` graph or repository.
+    #
+    # @param queryable [RDF::Queryable] the graph or repository to query
+    # @param patterns [Hash{Object => Object}] optional hash patterns to initialize the query with
+    # @param options [Hash{Symbol => Object}] any additional keyword options (see {RDF::Query#initialize})
+    # @return [RDF::Query::Solutions] the resulting solution sequence
+    # @see RDF::Query#execute
+    # @since 0.3.0
+    # @yield [query]
+    # @yieldparam query [RDF::Query]
+    # @yieldreturn [void] ignored
     def execute(queryable, patterns = T.unsafe(nil), options = T.unsafe(nil), &block); end
   end
 end
 
+# An RDF query pattern.
+#
+# @since 0.3.0
 class RDF::Query::Pattern < ::RDF::Statement
+  # @note {Statement} treats symbols as interned {Node} instances, in a {Pattern}, they are treated as {Variable}.
+  # @overload initialize
+  # @overload initialize
+  # @return [Pattern] a new instance of Pattern
   def initialize(subject = T.unsafe(nil), predicate = T.unsafe(nil), object = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def arity; end
+
+  # Binds the pattern to a solution, making it no longer variable if all variables are resolved to bound variables
+  #
+  # @param solution [RDF::Query::Solution]
+  # @return [self]
   def bind(solution); end
+
+  # Returns the number of bindings in this pattern.
+  #
+  # @return [Integer] (0..3)
   def binding_count; end
+
+  # Returns all bindings in this pattern.
+  #
+  # @return [Hash{Symbol => RDF::Term}]
   def bindings; end
+
+  # Returns `true` if this pattern contains bindings.
+  #
+  # @return [Boolean] `true` or `false`
   def bindings?; end
+
+  # Returns `true` if this is a blank pattern, with all terms being `nil`.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def blank?; end
+
+  # Returns `true` if all variables in this pattern are bound.
+  #
+  # @return [Boolean] `true` or `false`
   def bound?; end
+
+  # Returns all bound variables in this pattern.
+  #
+  # @return [Hash{Symbol => Variable}]
   def bound_variables; end
+
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def cardinality; end
+
+  # The estimated cost of this pattern (for query optimization).
+  #
+  # @return [Numeric]
   def cost; end
+
+  # The estimated cost of this pattern (for query optimization).
+  #
+  # @return [Numeric]
   def cost=(_arg0); end
+
+  # Create a new pattern from the quads, recursivly dupping sub-patterns.
   def dup; end
+
+  # Checks pattern equality against a statement, considering nesting.
+  #
+  # * A pattern which has a pattern as a subject or an object, matches
+  #   a statement having a statement as a subject or an object using {#eql?}.
+  #
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def eql?(other); end
 
   # Returns `true` as this is executable.
   #
   # @return [Boolean] `true`
+  # @since 0.3.0
   def executable?; end
 
+  # Executes this query pattern on the given `queryable` object.
+  #
+  # Values are matched using using Queryable#query_pattern.
+  #
+  # If the optional `bindings` are given, variables will be substituted with their values when executing the query.
+  #
+  # To match triples only in the default graph, set graph_name to `false`.
+  #
+  # @example
+  #   Pattern.new(:s, :p, :o).execute(RDF::Repository.load('etc/doap.nt'))
+  # @param queryable [RDF::Queryable] the graph or repository to query
+  # @param bindings [Hash{Symbol => RDF::Term}, RDF::Query::Solution] optional variable bindings to use
+  # @return [Enumerable<RDF::Query::Pattern>] an enumerator yielding matching statements
+  # @see RDF::Queryable#query
+  # @since 0.3.0
+  # @yield [statement] each matching statement
+  # @yieldparam statement [RDF::Statement] an RDF statement matching this pattern
   def execute(queryable, bindings = T.unsafe(nil), &block); end
+
+  # Returns `true` if this pattern contains any variables.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def has_variables?; end
+
+  # @private
   def initialize!; end
 
   # Return the non-destinguished variables contained within this pattern
   #
   # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def ndvars; end
 
+  # Returns `true` if this is an optional pattern.
+  #
+  # @example
+  #   Pattern.new(:s, :p, :o).optional?                     #=> false
+  #   Pattern.new(:s, :p, :o, optional: true).optional?  #=> true
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def optional?; end
+
+  # Any additional options for this pattern.
+  #
+  # @return [Hash]
   def options; end
+
+  # Returns a query solution constructed by binding any variables in this
+  # pattern with the corresponding terms in the given `statement`.
+  #
+  # @example
+  #   pattern = Pattern.new(:s, :p, :o)
+  #   solution = pattern.solution(statement)
+  #
+  #   pattern[:s] #=> statement.subject
+  #   pattern[:p] #=> statement.predicate
+  #   pattern[:o] #=> statement.object
+  # @param statement [RDF::Statement] an RDF statement to bind terms from
+  # @return [RDF::Query::Solution]
+  # @since 0.3.0
   def solution(statement); end
+
+  # Returns a string representation of this pattern.
+  #
+  # @return [String]
   def to_s; end
+
   def to_sxp(**options); end
+
+  # Returns `true` if all variables in this pattern are unbound.
+  #
+  # @return [Boolean] `true` or `false`
   def unbound?; end
+
+  # Returns all unbound variables in this pattern.
+  #
+  # @return [Hash{Symbol => Variable}]
   def unbound_variables; end
+
+  # Is this pattern composed only of valid components?
+  #
+  # @return [Boolean] `true` or `false`
   def valid?; end
+
+  # Returns all values the statement in the same pattern position
+  #
+  # @param var [Symbol]
+  # @param statement [RDF::Statement]
+  # @return [Array<RDF::Term>]
   def var_values(var, statement); end
+
+  # Returns the number of variables in this pattern.
+  #
+  # Note: this does not count distinct variables, and will therefore e.g.
+  # return 3 even if two terms are actually the same variable.
+  #
+  # @return [Integer] (0..3)
   def variable_count; end
+
+  # Returns the variable terms in this pattern.
+  #
+  # @deprecated use {#var_values} instead
+  # @example
+  #   Pattern.new(RDF::Node.new, :p, 123).variable_terms    #=> [:predicate]
+  # @param name [Symbol, #to_sym] an optional variable name
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_terms(name = T.unsafe(nil)); end
+
+  # Returns all variables in this pattern.
+  #
+  # Note: this returns a hash containing distinct variables only.
+  #
+  # @return [Hash{Symbol => Variable}]
   def variables; end
+
+  # Returns `true` if this pattern contains any variables.
+  #
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def variables?; end
 
   # Return the variables contained within this pattern
   #
   # @return [Array<RDF::Query::Variable>]
+  # @since 0.3.0
   def vars; end
 
   class << self
+    # @private
+    # @since 0.2.2
     def from(pattern, graph_name: T.unsafe(nil), **options); end
   end
 end
 
 # Extensions for `RDF::Query::Solution`.
+#
+# @since 0.3.0
 class RDF::Query::Solution
-  include ::Enumerable
-
+  # Initializes the query solution.
+  #
+  # @param bindings [Hash{Symbol => RDF::Term}]
+  # @return [Solution] a new instance of Solution
+  # @yield [solution]
   def initialize(bindings = T.unsafe(nil), &block); end
 
+  # Equals of solution
   def ==(other); end
+
+  # Returns the value of the variable `name`.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [RDF::Term]
   def [](name); end
+
+  # Binds or rebinds the variable `name` to the given `value`.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @param value [RDF::Term]
+  # @return [RDF::Term]
+  # @since 0.3.0
   def []=(name, value); end
+
+  # Undefine all superfluous instance methods:
   def __send(*_arg0); end
+
+  # @private
   def bindings; end
+
+  # Returns `true` if the variable `name` is bound in this solution.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [Boolean] `true` or `false`
   def bound?(name); end
+
+  # Compatible Mappings
+  #
+  # Two solution mappings u1 and u2 are compatible if, for every variable v in dom(u1) and in dom(u2), u1(v) = u2(v).
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algCompatibleMapping
   def compatible?(other); end
+
+  # Disjoint mapping
+  #
+  # A solution is disjoint with another solution if it shares no common variables in their domains.
+  #
+  # @param other [RDF::Query::Solution]
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algMinus
   def disjoint?(other); end
+
+  # Duplicate solution, preserving patterns
+  #
+  # @return [RDF::Statement]
   def dup; end
+
+  # Enumerates over every variable binding in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name, value]
+  # @yieldparam name [Symbol]
+  # @yieldparam value [RDF::Term]
   def each(&block); end
+
+  # Enumerates over every variable binding in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name, value]
+  # @yieldparam name [Symbol]
+  # @yieldparam value [RDF::Term]
   def each_binding(&block); end
+
+  # Enumerates over every variable name in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name]
+  # @yieldparam name [Symbol]
   def each_key(&block); end
+
+  # Enumerates over every variable name in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [name]
+  # @yieldparam name [Symbol]
   def each_name(&block); end
+
+  # Enumerates over every variable value in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [value]
+  # @yieldparam value [RDF::Term]
   def each_value(&block); end
+
+  # Enumerates over every variable in this solution.
+  #
+  # @return [Enumerator]
+  # @yield [variable]
+  # @yieldparam [Variable]
   def each_variable; end
+
+  # Returns an enumerator for {#each_binding}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_binding; end
+
+  # Returns an enumerator for {#each_name}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_name; end
+
+  # Returns an enumerator for {#each_value}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_value; end
+
+  # Returns an enumerator for {#each_variable}.
+  #
+  # @return [Enumerator<RDF::Resource>]
+  # @see #each_subject
   def enum_variable; end
+
+  # Equivalence of solution
+  #
+  # @return [Boolean]
   def eql?(other); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # Integer hash of this solution
+  #
+  # @return [Integer]
   def hash; end
+
+  # @return [String]
   def inspect; end
+
+  # Isomorphic Mappings
+  # Two solution mappings u1 and u2 are isomorphic if,
+  # for every variable v in dom(u1) and in dom(u2), u1(v) = u2(v).
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [Boolean]
   def isomorphic_with?(other); end
+
+  # Merges the bindings from the given `other` query solution with a copy
+  # of this one.
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [RDF::Query::Solution]
+  # @since 0.3.0
   def merge(other); end
+
+  # Merges the bindings from the given `other` query solution into this
+  # one, overwriting any existing ones having the same name.
+  #
+  # ## RDFStar (RDF*)
+  #
+  # If merging a binding for a statement to a pattern,
+  # merge their embedded solutions.
+  #
+  # @param other [RDF::Query::Solution, #to_h] another query solution or hash bindings
+  # @return [void] self
+  # @since 0.3.0
   def merge!(other); end
+
+  # @return [Array<Array(Symbol, RDF::Term)>]
   def to_a; end
+
+  # @return [Hash{Symbol => RDF::Term}]
   def to_h; end
 
   # Transform Solution into an SXP
@@ -428,47 +1042,126 @@ class RDF::Query::Solution
   # @param prefixes [Hash{Symbol => RDF::URI}] (nil)
   # @param base_uri [RDF::URI] (nil)
   # @return [String]
+  # @since 0.3.0
   def to_sxp(prefixes: T.unsafe(nil), base_uri: T.unsafe(nil)); end
 
   # Returns the SXP representation of this object, defaults to `self`.
   #
   # @return [String]
+  # @since 0.3.0
   def to_sxp_bin; end
 
+  # Returns `true` if the variable `name` is unbound in this solution.
+  #
+  # @param name [Symbol, #to_sym] the variable name
+  # @return [Boolean] `true` or `false`
   def unbound?(name); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variable?(*args); end
+
+  # `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @since 0.3.0
   def variables?(*args); end
 
   protected
 
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil)); end
+
+  # @overload binding
   def method_missing(name, *args, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator]
+  # @see Object#enum_for
   def to_enum(method = T.unsafe(nil)); end
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
+# Temporarily remember instance method for deprecation message in `method_missing`.
 RDF::Query::Solution::INSTANCE_METHODS = T.let(T.unsafe(nil), Array)
 
 # Extensions for `RDF::Query::Solutions`.
+#
+# @since 0.3.0
 class RDF::Query::Solutions < ::Array
   include ::SPARQL::Results
 
+  # Equals of solution
+  #
+  # @since 0.3.0
   def ==(other); end
+
+  # Returns hash of bindings from each solution. Each bound variable will have
+  # an array of bound values representing those from each solution, where a given
+  # solution will have just a single value for each bound variable
+  #
+  # @return [Hash{Symbol => Array<RDF::Term>}]
+  # @since 0.3.0
   def bindings; end
+
+  # Returns the number of matching query solutions.
+  #
+  # @overload count
+  # @overload count
+  # @return [Integer]
+  # @since 0.3.0
   def count(&block); end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def distinct; end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def distinct!; end
+
+  # Duplicates each solution.
+  #
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def dup; end
+
+  # @since 0.3.0
   def each_solution; end
+
+  # Equivalence of solution
+  #
+  # @return [Boolean]
+  # @since 0.3.0
   def eql?(other); end
 
   # Filters this solution sequence by the given `criteria`.
   #
   # @param expression [SPARQL::Algebra::Expression]
   # @return [void] `self`
+  # @since 0.3.0
   # @yield [solution] each solution
   # @yieldparam solution [RDF::Query::Solution]
   # @yieldreturn [Boolean]
@@ -478,50 +1171,267 @@ class RDF::Query::Solutions < ::Array
   #
   # @param expression [SPARQL::Algebra::Expression]
   # @return [void] `self`
+  # @since 0.3.0
   # @yield [solution] each solution
   # @yieldparam solution [RDF::Query::Solution]
   # @yieldreturn [Boolean]
   def filter!(expression = T.unsafe(nil), &block); end
 
+  # Filters this solution sequence by the given `criteria`.
+  #
+  # @param criteria [Hash{Symbol => Object}]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [Boolean]
   def filter_without_expression(criteria = T.unsafe(nil)); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def has_variables?(*args); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def have_variables?(*args); end
+
+  # Limits the number of solutions in this solution sequence to a maximum
+  # of `length`.
+  #
+  # @param length [Integer, #to_i] zero or a positive integer
+  # @raise [ArgumentError] if `length` is negative
+  # @return [self]
+  # @since 0.3.0
   def limit(length); end
+
+  # Limits the number of solutions in this solution sequence to a maximum
+  # of `length`.
+  #
+  # @param length [Integer, #to_i] zero or a positive integer
+  # @raise [ArgumentError] if `length` is negative
+  # @return [self]
+  # @since 0.3.0
   def limit!(length); end
+
+  # Merge solutions in `other` into a new solutions instance. Each solution in `other` is merged into those solutions in `self` that are compatible.
+  #
+  # @param other [RDF::Query::Solutions]
+  # @return [RDF::Query::Solutions]
+  # @since 0.3.0
   def merge(other); end
+
+  # Difference between solution sets, from SPARQL 1.1.
+  #
+  # The `minus` operation on solutions returns those solutions which either have no compatible solution in `other`, or the solution domains are disjoint.
+  #
+  # @param other [RDF::Query::Solutions]
+  # @return [RDF::Query::Solutions] a new solution set
+  # @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#defn_algMinus
+  # @since 0.3.0
   def minus(other); end
+
+  # Limits this solution sequence to bindings starting from the `start`
+  # offset in the overall solution sequence.
+  #
+  # @param start [Integer, #to_i] zero or a positive or negative integer
+  # @return [self]
+  # @since 0.3.0
   def offset(start); end
+
+  # Limits this solution sequence to bindings starting from the `start`
+  # offset in the overall solution sequence.
+  #
+  # @param start [Integer, #to_i] zero or a positive or negative integer
+  # @return [self]
+  # @since 0.3.0
   def offset!(start); end
+
+  # Reorders this solution sequence by the given `variables`.
+  #
+  # Variables may be symbols or {Query::Variable} instances.
+  # A variable may also be a Procedure/Lambda, compatible with `::Enumerable#sort`.
+  # This takes two arguments (solutions) and returns -1, 0, or 1 equivalently to <=>.
+  #
+  # If called with a block, variables are ignored, and the block is invoked with
+  # pairs of solutions. The block is expected to return -1, 0, or 1 equivalently to <=>.
+  #
+  # @param variables [Array<Proc, Query::Variable, Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam q [RDF::Query::Solution]
+  # @yieldparam b [RDF::Query::Solution]
+  # @yieldreturn [Integer] -1, 0, or 1 depending on value of comparator
   def order(*variables); end
+
+  # Reorders this solution sequence by the given `variables`.
+  #
+  # Variables may be symbols or {Query::Variable} instances.
+  # A variable may also be a Procedure/Lambda, compatible with `::Enumerable#sort`.
+  # This takes two arguments (solutions) and returns -1, 0, or 1 equivalently to <=>.
+  #
+  # If called with a block, variables are ignored, and the block is invoked with
+  # pairs of solutions. The block is expected to return -1, 0, or 1 equivalently to <=>.
+  #
+  # @param variables [Array<Proc, Query::Variable, Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam q [RDF::Query::Solution]
+  # @yieldparam b [RDF::Query::Solution]
+  # @yieldreturn [Integer] -1, 0, or 1 depending on value of comparator
   def order_by(*variables); end
+
+  # Restricts this solution sequence to the given `variables` only.
+  #
+  # @param variables [Array<Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
   def project(*variables); end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def reduced; end
+
+  # Ensures that the solutions in this solution sequence are unique.
+  #
+  # @return [self]
+  # @since 0.3.0
   def reduced!; end
+
+  # Restricts this solution sequence to the given `variables` only.
+  #
+  # @param variables [Array<Symbol, #to_sym>]
+  # @return [self]
+  # @since 0.3.0
   def select(*variables); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def variable?(*args); end
+
+  # Returns an array of the distinct variable names used in this solution
+  # sequence.
+  #
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_names; end
+
+  # Sets variable names used in these solutions. If not set, the default is determined by the variables used in each solution.
+  #
+  # @param vars [Array<Symbol, RDF::Query::Variable>]
+  # @return [Array<Symbol>]
+  # @since 0.3.0
   def variable_names=(vars); end
+
+  # the given `variables`.
+  #
+  #   @param  [Array<Symbol, #to_sym>] variables
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
+  # @see RDF::Query::Solution#variable?
+  # @see RDF::Query#execute
+  # @since 0.3.0
   def variables?(*args); end
 end
 
 # Extensions for `RDF::Query::Variable`.
+#
+# @since 0.3.0
 class RDF::Query::Variable
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
-  include ::RDF::Term
 
+  # @param name [Symbol, #to_sym] the variable name
+  # @param value [RDF::Term] an optional variable value
+  # @param distinguished [Boolean] (true) Also interpreted by leading '?' or '$' in name. If non-distinguished, '??' or '$$'.
+  # @param existential [Boolean] (true) Also interpreted by leading '$' in name
+  # @return [Variable] a new instance of Variable
   def initialize(name = T.unsafe(nil), value = T.unsafe(nil), distinguished: T.unsafe(nil), existential: T.unsafe(nil)); end
 
+  # Returns `true` if this variable is equivalent to a given `other`
+  # variable. Or, to another Term if bound, or to any other Term
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def ==(other); end
+
+  # Compares this variable with the given value.
+  #
+  # @param other [RDF::Term]
+  # @return [Boolean]
   def ===(other); end
+
+  # Rebinds this variable to the given `value`.
+  #
+  # @overload bind
+  # @overload bind
   def bind(value); end
+
+  # Rebinds this variable to the given `value`.
+  #
+  # @overload bind
+  # @overload bind
   def bind!(value); end
+
+  # Returns this variable's bindings (if any) as a `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Term}]
   def bindings; end
+
+  # Returns `true` if this variable is bound.
+  #
+  # @return [Boolean]
   def bound?; end
+
+  # Sets if variable is distinguished or non-distinguished.
+  # By default, variables are distinguished
+  #
+  # @return [Boolean]
   def distinguished=(value); end
+
+  # Returns `true` if this variable is distinguished.
+  #
+  # @return [Boolean]
   def distinguished?; end
+
+  # Returns `true` if this variable is equivalent to a given `other`
+  # variable. Or, to another Term if bound, or to any other Term
+  #
+  # @param other [Object]
+  # @return [Boolean] `true` or `false`
+  # @since 0.3.0
   def eql?(other); end
 
   # Returns the value of this variable in the given `bindings`.
@@ -531,23 +1441,83 @@ class RDF::Query::Variable
   #   options passed from query
   # @raise [TypeError] if the variable is not bound
   # @return [RDF::Term] the value of this variable
+  # @since 0.3.0
   def evaluate(bindings, **options); end
 
+  # Sets if variable is existential or univeresal.
+  # By default, variables are universal
+  #
+  # @return [Boolean]
   def existential=(value); end
+
+  # Returns `true` if this variable is existential.
+  #
+  # @return [Boolean]
   def existential?; end
+
+  # Returns a hash code for this variable.
+  #
+  # @return [Integer]
+  # @since 0.3.0
   def hash; end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def name; end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def name=(_arg0); end
+
+  # Returns `true` if this variable has a name.
+  #
+  # @return [Boolean]
   def named?; end
 
   # Return self
   #
   # @return [RDF::Query::Variable] a copy of `self`
   # @see SPARQL::Algebra::Expression#optimize
+  # @since 0.3.0
   def optimize(**options); end
 
+  # Returns a string representation of this variable.
+  #
+  # Distinguished variables are indicated with a single `?`.
+  #
+  # Non-distinguished variables are indicated with a double `??`
+  #
+  # Existential variables are indicated using a single `$`, or with `$$` if also non-distinguished
+  #
+  # @example
+  #   v = Variable.new("a")
+  #   v.to_s => '?a'
+  #   v.distinguished = false
+  #   v.to_s => '??a'
+  # @return [String]
   def to_base; end
+
+  # Returns this variable as `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def to_h; end
+
+  # Returns a string representation of this variable.
+  #
+  # Distinguished variables are indicated with a single `?`.
+  #
+  # Non-distinguished variables are indicated with a double `??`
+  #
+  # Existential variables are indicated using a single `$`, or with `$$` if also non-distinguished
+  #
+  # @example
+  #   v = Variable.new("a")
+  #   v.to_s => '?a'
+  #   v.distinguished = false
+  #   v.to_s => '??a'
+  # @return [String]
   def to_s; end
 
   # Returns a partial SPARQL grammar for this term.
@@ -555,24 +1525,61 @@ class RDF::Query::Variable
   # The Non-distinguished form (`??xxx`) is not part of the grammar, so replace with a blank-node
   #
   # @return [String]
+  # @since 0.3.0
   def to_sparql(**options); end
 
   def to_sxp(**options); end
+
+  # The variable's name.
+  #
+  # @return [Symbol]
   def to_sym; end
+
+  # Unbinds this variable, discarding any currently bound value.
+  #
+  # @return [RDF::Term] the previous value, if any.
   def unbind; end
+
+  # Unbinds this variable, discarding any currently bound value.
+  #
+  # @return [RDF::Term] the previous value, if any.
   def unbind!; end
+
+  # Returns `true` if this variable is unbound.
+  #
+  # @return [Boolean]
   def unbound?; end
+
+  # The variable's value.
+  #
+  # @return [RDF::Term]
   def value; end
+
+  # The variable's value.
+  #
+  # @return [RDF::Term]
   def value=(_arg0); end
+
+  # Returns term if var is the same as this variable.
+  #
+  # @param var [Symbol]
+  # @param term [RDF::Term]
+  # @return [RDF::Term]
   def var_values(var, term); end
+
+  # @overload variable?
+  # @overload variable?
+  # @since 0.1.7
   def variable?(*args); end
+
+  # Returns this variable as `Hash`.
+  #
+  # @return [Hash{Symbol => RDF::Query::Variable}]
   def variables; end
 end
 
 # Extensions for `RDF::Queryable`
 module RDF::Queryable
-  include ::Enumerable
-
   # Concise Bounded Description
   #
   # Given a particular node (the starting node) in a particular RDF graph (the source graph), a subgraph of
@@ -601,12 +1608,74 @@ module RDF::Queryable
   # @yieldreturn [void] ignored
   def concise_bounded_description(*terms, **options, &block); end
 
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator<RDF::Statement, RDF::Query::Pattern>]
+  # @see Object#enum_for
   def enum_for(method = T.unsafe(nil), *args); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns that statement if found.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first
+  # @overload first
+  # @return [RDF::Statement]
+  # @since 0.1.9
   def first(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern` and
+  # returns the first found object literal.
+  #
+  # Returns `nil` if no statements match `pattern` or if none of the found
+  # statements have a literal as their object term.
+  #
+  # @overload first_literal
+  # @overload first_literal
+  # @return [RDF::Literal]
+  # @since 0.1.9
   def first_literal(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's object term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_object
+  # @overload first_object
+  # @since 0.1.9
   def first_object(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's predicate term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_predicate
+  # @overload first_predicate
+  # @since 0.1.9
   def first_predicate(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for an RDF statement matching the given `pattern` and
+  # returns the statement's subject term.
+  #
+  # Returns `nil` if no statements match `pattern`.
+  #
+  # @overload first_subject
+  # @overload first_subject
+  # @since 0.1.9
   def first_subject(pattern = T.unsafe(nil)); end
+
+  # Queries `self` for RDF statements matching the given `pattern` and
+  # returns the value of the first found object literal.
+  #
+  # Returns `nil` if no statements match `pattern` or if none of the found
+  # statements have a literal as their object term.
+  #
+  # @overload first_value
+  # @overload first_value
+  # @since 0.1.9
   def first_value(pattern = T.unsafe(nil)); end
 
   # Queries `self` for RDF statements matching the given `pattern`.
@@ -629,7 +1698,36 @@ module RDF::Queryable
   # @yieldreturn [void] ignored
   def query(pattern, **options, &block); end
 
+  # Queries `self` for RDF statements matching the given `pattern`.
+  #
+  # This method delegates to the protected {RDF::Queryable#query_pattern} method for the actual lower-level query pattern matching implementation.
+  #
+  # @example Querying for statements having a given predicate
+  #   queryable.query([nil, RDF::Vocab::DOAP.developer, nil])
+  #   queryable.query({predicate: RDF::Vocab::DOAP.developer}) do |statement|
+  #   puts statement.inspect
+  #   end
+  # @example Querying for solutions from a BGP
+  #   query = RDF::Query.new {pattern [:s, :p, :o]}
+  #   queryable.query(query) do |solution|
+  #   puts solution.inspect
+  #   end
+  # @note Since 2.0, this may return an Enumerable or an Enumerator in addition to Solutions
+  # @param pattern [RDF::Query, RDF::Statement, Array(RDF::Term), Hash]
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options passed to {#query_pattern} or {#query_execute}
+  # @raise [TypeError]
+  # @return [Enumerator<RDF::Statement>, RDF::Enumerable, Query::Solutions] Returns an enumerable of statements (may be an enumerator) or query solutions, if passed an {RDF::Query}
+  # @see RDF::Queryable#query_pattern
+  # @yield [statement] each matching statement
+  # @yieldparam statement [RDF::Statement, RDF::Query::Solution] Statement or Solution
+  # @yieldreturn [void] ignored
   def query_without_sparql(pattern, **options, &block); end
+
+  # @param method [Symbol, #to_sym]
+  # @private
+  # @return [Enumerator<RDF::Statement, RDF::Query::Pattern>]
+  # @see Object#enum_for
   def to_enum(method = T.unsafe(nil), *args); end
 
   # Returns a partial SPARQL grammar for this term.
@@ -640,54 +1738,246 @@ module RDF::Queryable
 
   protected
 
+  # Queries `self` using the given basic graph pattern (BGP) query,
+  # yielding each matched solution to the given block.
+  #
+  # Since RDF.rb 0.3.0, repository implementations can override this
+  # method in order to provide for storage-specific optimized graph
+  # pattern query execution.
+  #
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options passed to `query.execute`
+  # @param query [RDF::Query] the query to execute
+  # @return [void] ignored
+  # @see RDF::Query#execute
+  # @see RDF::Queryable#query
+  # @since 0.3.0
+  # @yield [solution]
+  # @yieldparam solution [RDF::Query::Solution]
+  # @yieldreturn [void] ignored
   def query_execute(query, **options, &block); end
+
+  # Queries `self` for RDF statements matching the given `pattern`,
+  # yielding each matched statement to the given block.
+  #
+  # Since RDF.rb 0.2.0, repository implementations should override this
+  # method in order to provide for storage-specific optimized triple
+  # pattern matching.
+  #
+  # ## RDFStar (RDF*)
+  #
+  # Statements may have embedded statements as either a subject or object, recursively.
+  #
+  # Patterns may also have embedded patterns as either a subject or object, recursively.
+  #
+  # When matching, match an embedded pattern against embedded statements, recursively. (see {RDF::Query::Pattern#eql?})
+  #
+  # @param options [Hash{Symbol => Object}] ({})
+  #   Any other options
+  # @param pattern [RDF::Query::Pattern] the query pattern to match
+  # @return [void] ignored
+  # @see RDF::Query::Pattern#execute
+  # @see RDF::Queryable#query
+  # @since 0.2.0
+  # @yield [statement]
+  # @yieldparam statement [RDF::Statement]
+  # @yieldreturn [void] ignored
   def query_pattern(pattern, **options, &block); end
 end
 
+# An RDF statement.
+#
+# @example Creating an RDF statement
+#   s = RDF::URI.new("https://rubygems.org/gems/rdf")
+#   p = RDF::Vocab::DC.creator
+#   o = RDF::URI.new("http://ar.to/#self")
+#   RDF::Statement(s, p, o)
+# @example Creating an RDF statement with a graph_name
+#   uri = RDF::URI("http://example/")
+#   RDF::Statement(s, p, o, graph_name: uri)
+# @example Creating an RDF statement from a `Hash`
+#   RDF::Statement({
+#   subject:   RDF::URI.new("https://rubygems.org/gems/rdf"),
+#   predicate: RDF::Vocab::DC.creator,
+#   object:    RDF::URI.new("http://ar.to/#self"),
+#   })
+# @example Creating an RDF statement with interned nodes
+#   RDF::Statement(:s, p, :o)
+# @example Creating an RDF statement with a string
+#   RDF::Statement(s, p, "o")
 class RDF::Statement
   include ::RDF::Value
   include ::Comparable
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
   include ::RDF::Term
-  include ::RDF::Resource
 
+  # @overload initialize
+  # @overload initialize
+  # @return [Statement] a new instance of Statement
   def initialize(subject = T.unsafe(nil), predicate = T.unsafe(nil), object = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Checks statement equality as a triple.
+  #
+  # @param other [Object]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def ==(other); end
+
+  # Checks statement equality with patterns.
+  #
+  # Uses `#eql?` to compare each of `#subject`, `#predicate`, `#object`, and
+  # `#graph_name` to those of `other`. Any statement part which is not
+  # present in `self` is ignored.
+  #
+  # @example
+  #   statement = RDF::Statement.new(RDF::URI('s'), RDF::URI('p'), RDF::URI('o'))
+  #   pattern   = RDF::Statement.new(RDF::URI('s'), RDF::URI('p'), RDF::Query::Variable.new)
+  #
+  #   # true
+  #   statement === statement
+  #   pattern   === statement
+  #   RDF::Statement.new(nil, nil, nil) === statement
+  #
+  #   # false
+  #   statement === pattern
+  #   statement === RDF::Statement.new(nil, nil, nil)
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#eql?
+  # @see RDF::Node#eql?
+  # @see RDF::Literal#eql?
+  # @see RDF::Query::Variable#eql?
   def ===(other); end
+
+  # @param index [Integer]
+  # @return [RDF::Term]
   def [](index); end
+
+  # @param index [Integer]
+  # @param value [RDF::Term]
+  # @return [RDF::Term]
   def []=(index, value); end
+
+  # @return [Boolean]
   def asserted?; end
+
+  # Returns a version of the statement with each position in canonical form
+  #
+  # @return [RDF::Statement] `self` or nil if statement cannot be canonicalized
+  # @since 1.0.8
   def canonicalize; end
+
+  # Canonicalizes each unfrozen term in the statement
+  #
+  # @raise [ArgumentError] if any element cannot be canonicalized.
+  # @return [RDF::Statement] `self`
+  # @since 1.0.8
   def canonicalize!; end
+
+  # Determines if the statement is complete, vs. invalid. A complete statement is one in which none of `subject`, `predicate`, or `object`, are nil.
+  #
+  # @return [Boolean]
+  # @since 3.0
   def complete?; end
+
+  # Returns `true` if any element of the statement is, itself, a statement.
+  #
+  # @return [Boolean]
   def embedded?; end
+
+  # Checks statement equality as a quad.
+  #
+  # @param other [Statement]
+  # @return [Boolean]
+  # @see RDF::URI#==
+  # @see RDF::Node#==
+  # @see RDF::Literal#==
+  # @see RDF::Query::Variable#==
   def eql?(other); end
 
   # @return [Boolean]
   def executable?; end
 
+  # @overload graph?
+  # @overload graph?
   def graph?(*args); end
+
+  # @return [RDF::Resource]
   def graph_name; end
+
+  # @return [RDF::Resource]
   def graph_name=(_arg0); end
+
+  # Returns `true` if any resource of this statement is a blank node
+  # or has an embedded statement including a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def has_blank_nodes?; end
+
+  # @overload graph?
+  # @overload graph?
   def has_graph?(*args); end
+
+  # @overload graph?
+  # @overload graph?
   def has_name?(*args); end
+
+  # @return [Boolean]
   def has_object?; end
+
+  # @return [Boolean]
   def has_predicate?; end
+
+  # @return [Boolean]
   def has_subject?; end
+
+  # Generates a Integer hash value as a quad.
   def hash; end
+
+  # @return [Object]
   def id; end
+
+  # @return [Object]
   def id=(_arg0); end
+
+  # Determines if the statement is incomplete, vs. invalid. An incomplete statement is one in which any of `subject`, `predicate`, or `object`, are nil.
+  #
+  # @return [Boolean]
+  # @since 3.0
   def incomplete?; end
+
+  # @return [Boolean]
   def inferred?; end
+
+  # @private
   def initialize!; end
+
+  # @return [Boolean]
   def invalid?; end
+
+  # @overload graph?
+  # @overload graph?
   def name?(*args); end
+
+  # Returns `true` if any resource of this statement is a blank node
+  # or has an embedded statement including a blank node.
+  #
+  # @return [Boolean]
+  # @since 2.0
   def node?; end
+
+  # @return [RDF::Term]
   def object; end
+
+  # @return [RDF::Term]
   def object=(_arg0); end
+
+  # @return [Boolean]
   def object?; end
 
   # A duplicate of this Statement.
@@ -696,21 +1986,71 @@ class RDF::Statement
   # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
 
+  # @return [Hash{Symbol => Object}]
   def options; end
+
+  # @return [Hash{Symbol => Object}]
   def options=(_arg0); end
+
+  # @return [RDF::URI]
   def predicate; end
+
+  # @return [RDF::URI]
   def predicate=(_arg0); end
+
+  # @return [Boolean]
   def predicate?; end
+
+  # @return [Boolean]
   def quoted?; end
+
+  # Returns a graph containing this statement in reified form.
+  #
+  # @param subject [RDF::Term] (nil)
+  #   Subject of reification.
+  # @param id [RDF::Term] (nil)
+  #   Node identifier, when subject is anonymous
+  # @param graph_name [RDF::Term] (nil)
+  #   Note, in RDF 1.1, a graph name MUST be an {Resource}.
+  # @return [RDF::Graph]
+  # @see http://www.w3.org/TR/rdf-primer/#reification
   def reified(subject: T.unsafe(nil), id: T.unsafe(nil), graph_name: T.unsafe(nil)); end
+
+  # @overload statement?
+  # @overload statement?
   def statement?(*args); end
+
+  # @return [RDF::Resource]
   def subject; end
+
+  # @return [RDF::Resource]
   def subject=(_arg0); end
+
+  # @return [Boolean]
   def subject?; end
+
+  # Returns an array of all the non-nil non-statement terms.
+  #
+  # @return [Array(RDF::Term)]
   def terms; end
+
+  # @return [Array(RDF::Term)]
   def to_a; end
+
+  # Returns the terms of this statement as a `Hash`.
+  #
+  # @param subject_key [Symbol]
+  # @param predicate_key [Symbol]
+  # @param object_key [Symbol]
+  # @return [Hash{Symbol => RDF::Term}]
   def to_h(subject_key = T.unsafe(nil), predicate_key = T.unsafe(nil), object_key = T.unsafe(nil), graph_key = T.unsafe(nil)); end
+
+  # @return [Array(RDF::Term)]
   def to_quad; end
+
+  # Returns a string representation of this statement.
+  #
+  # @return [String]
   def to_s; end
 
   # Returns a partial SPARQL grammar for this term.
@@ -730,29 +2070,78 @@ class RDF::Statement
   # @return [Array]
   def to_sxp_bin; end
 
+  # @return [Array(RDF::Term)]
   def to_triple; end
+
+  # @return [Boolean]
   def valid?; end
+
+  # URI, Node or Literal.
+  #
+  #   @return [Boolean]
+  #
+  # @overload variable?
+  # @overload variable?
   def variable?(*args); end
 
   class << self
+    # @private
+    # @since 0.2.2
     def from(statement, graph_name: T.unsafe(nil), **options); end
   end
 end
 
 # Extensions for `RDF::Term`.
 module RDF::Term
-  include ::RDF::Value
-  include ::Comparable
   include ::RDF::Util::Logger
   include ::SPARQL::Algebra::Expression
 
+  # Compares `self` to `other` for sorting purposes.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @since 0.3.0
   def <=>(other); end
+
+  # Compares `self` to `other` to implement RDFterm-equal.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+  # @since 0.3.0
   def ==(other); end
 
   # @return [Boolean]
   def aggregate?; end
 
+  # Term compatibility according to SPARQL
+  #
+  # @return [Boolean]
+  # @see http://www.w3.org/TR/sparql11-query/#func-arg-compatibility
+  # @since 2.0
   def compatible?(other); end
+
+  # Determins if `self` is the same term as `other`.
+  #
+  # Subclasses should override this to provide a more meaningful
+  # implementation than the default which simply performs a string
+  # comparison based on `#to_s`.
+  #
+  # @abstract
+  # @param other [Object]
+  # @return [Integer] `-1`, `0`, or `1`
+  # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
+  # @since 0.3.0
   def eql?(other); end
 
   # @param bindings [RDF::Query::Solution] a query solution containing zero or more variable bindings
@@ -772,8 +2161,21 @@ module RDF::Term
   # @see SPARQL::Algebra::Expression#optimize
   def optimize(**options); end
 
+  # @overload term?
+  # @overload term?
+  # @since 0.3.0
   def term?(*args); end
+
+  # Returns an array including just itself.
+  #
+  # @return [Array<RDF::Value>]
+  # @since 0.3.0
   def terms; end
+
+  # Returns the base representation of this term.
+  #
+  # @return [Sring]
+  # @since 0.3.0
   def to_base; end
 
   # Returns a partial SPARQL grammar for this term.
@@ -781,6 +2183,10 @@ module RDF::Term
   # @return [String]
   def to_sparql(**options); end
 
+  # Returns itself.
+  #
+  # @return [RDF::Value]
+  # @since 0.3.0
   def to_term; end
 
   # Return the variables contained within this operator
@@ -790,6 +2196,12 @@ module RDF::Term
 
   protected
 
+  # Escape a term using escapes. This should be implemented as appropriate for the given type of term.
+  #
+  # @param string [String]
+  # @raise [NotImplementedError]
+  # @return [String]
+  # @since 0.3.0
   def escape(string); end
 end
 
@@ -8790,11 +10202,6 @@ SPARQL::VERSION::VERSION_FILE = T.let(T.unsafe(nil), String)
 
 # Extensions for Ruby's `TrueClass` class.
 class TrueClass
-  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
-  include ::MessagePack::CoreExt
-  include ::FriendlyId::UnfriendlyUtils
-  include ::SafeType::BooleanMixin
-
   # Returns the SXP representation of this object.
   #
   # @return [String]

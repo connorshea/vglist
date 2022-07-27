@@ -13,9 +13,6 @@ FileList = Rake::FileList
 # This a FileUtils extension that defines several additional commands to be
 # added to the FileUtils utility functions.
 module FileUtils
-  include ::FileUtils::StreamUtils_
-  extend ::FileUtils::StreamUtils_
-
   # Run a Ruby interpreter with the given arguments.
   #
   # Example:
@@ -74,9 +71,6 @@ FileUtils::LN_SUPPORTED = T.let(T.unsafe(nil), Array)
 FileUtils::RUBY = T.let(T.unsafe(nil), String)
 
 class Module
-  include ::ActiveSupport::Dependencies::ModuleConstMissing
-  include ::Module::Concerning
-
   # Check for an existing method in the current class before extending.  If
   # the method already exists, then a warning is printed and the extension is
   # not added.  Otherwise the block is yielded and any definitions in the
@@ -150,7 +144,6 @@ end
 # Rake main application object.  When invoking +rake+ from the
 # command line, a Rake::Application object is created and run.
 class Rake::Application
-  include ::Sentry::Rake::Application
   include ::Rake::TaskManager
   include ::Rake::TraceOutput
 
@@ -1360,8 +1353,6 @@ end
 # Tasks are not usually created directly using the new method, but rather
 # use the +file+ and +task+ convenience methods.
 class Rake::Task
-  include ::Sentry::Rake::Task
-
   # Create a task named +task_name+ with no actions or prerequisites. Use
   # +enhance+ to add actions and prerequisites.
   #
@@ -1874,9 +1865,6 @@ RakeFileUtils = Rake::FileUtilsExt
 
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  include ::MessagePack::CoreExt
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   def ext(newext = T.unsafe(nil)); end
   def pathmap(spec = T.unsafe(nil), &block); end

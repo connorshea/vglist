@@ -6,7 +6,6 @@
 
 # Namespace for all core RSpec code.
 module RSpec
-  extend ::RSpec::Support::Warnings
   extend ::RSpec::Core::Warnings
 
   class << self

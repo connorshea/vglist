@@ -7516,6 +7516,10 @@ class Aws::Xml::Parser::UnknownMemberFrame < ::Aws::Xml::Parser::Frame
   def result; end
 end
 
+class Net::HTTPGenericRequest
+  include ::Seahorse::Client::NetHttp::Patches::PatchDefaultContentType
+end
+
 module Seahorse; end
 module Seahorse::Client; end
 
