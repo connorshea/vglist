@@ -28,6 +28,9 @@ Layout/ArgumentAlignment:
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: false
 
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
+
 Layout/LineLength:
   Enabled: false
 
@@ -398,7 +401,7 @@ Style/SoleNestedConditional:
 Security/Open:
   Enabled: false
 
-Gemspec/DateAssignment:
+Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
 
 Layout/LineEndStringConcatenationIndentation:
