@@ -8,13 +8,6 @@ namespace :sorbet do
     end
   end
 
-  desc "Suggest 'typed' comments for each file in the repository."
-  task suggest: :environment do
-    Bundler.with_unbundled_env do
-      system('bundle exec srb rbi suggest-typed')
-    end
-  end
-
   # Credit to https://github.com/jaredbeck/sorbet-progress for a lot of this.
   desc "Prints stats for Sorbet's progress in the repository."
   task stats: :environment do
