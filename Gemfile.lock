@@ -381,7 +381,7 @@ GEM
     simplecov_json_formatter (0.1.4)
     sorbet (0.5.10219)
       sorbet-static (= 0.5.10219)
-    sorbet-coerce (0.6.0)
+    sorbet-coerce (0.7.0)
       polyfill (~> 1.8)
       safe_type (~> 1.1, >= 1.1.1)
       sorbet-runtime (>= 0.4.4704)
