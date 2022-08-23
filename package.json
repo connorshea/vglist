@@ -12,7 +12,7 @@
     "babel-preset-typescript-vue": "^1.1.1",
     "bulma": "https://github.com/connorshea/bulma#css-variables-with-fallback",
     "graphiql": "1.11.5",
-    "graphql": "^16.5.0",
+    "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
