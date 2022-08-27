@@ -73,7 +73,7 @@ RSpec.describe User, type: :model do
 
     it 'has an optional avatar' do
       expect(user).not_to validate_attached_of(:avatar)
-      expect(user).to validate_content_type_of(:avatar).allowing('image/png', 'image/jpg', 'image/jpeg')
+      expect(user).to validate_content_type_of(:avatar).allowing('image/png', 'image/jpeg')
       expect(user).to validate_size_of(:avatar).less_than(3.megabytes)
     end
   end

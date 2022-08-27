@@ -112,7 +112,7 @@ class Game < ApplicationRecord
 
   validates :cover,
     attached: false,
-    content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    content_type: ['image/png', 'image/jpeg'],
     size: { less_than: 4.megabytes }
 
   validates :avg_rating,

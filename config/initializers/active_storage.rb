@@ -5,9 +5,9 @@
 #
 # The default for this value includes various other content types as well, but
 # we don't use any of them.
-Rails.application.config.active_storage.variable_content_types = ['image/png', 'image/jpg', 'image/jpeg']
+Rails.application.config.active_storage.variable_content_types = ['image/png', 'image/jpeg']
 
 # An array of content types in which variants can be processed without being
 # converted to the fallback PNG format. This is set here explicitly to prevent
 # the usage of gifs or any other formats from future Rails versions.
-Rails.application.config.active_storage.web_image_content_types = ['image/png', 'image/jpg', 'image/jpeg']
+Rails.application.config.active_storage.web_image_content_types = ['image/png', 'image/jpeg']
