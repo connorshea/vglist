@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2022.08.27
 ### Changed
 - Upgrade Ruby on Rails to Rails 7.0. ([#2837])
+- Upgrade GraphiQL IDE (for writing queries for the vglist GraphQL API) to 2.0. ([#2840])
 
 ### Fixed
 - Finally fixed a long-standing issue with the Doorkeeper gem that's used for OAuth applications, which prevented us from upgrading the Doorkeeper gem. This should unblock a lot of work on the new frontend. ([#2834])
@@ -938,3 +939,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#2716]: https://github.com/connorshea/vglist/pull/2716
 [#2834]: https://github.com/connorshea/vglist/pull/2834
 [#2837]: https://github.com/connorshea/vglist/pull/2837
+[#2840]: https://github.com/connorshea/vglist/pull/2840
