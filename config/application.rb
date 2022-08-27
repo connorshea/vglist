@@ -21,8 +21,8 @@ Bundler.require(*Rails.groups)
 
 module VideoGameList
   class Application < Rails::Application
-    # Initialize configuration defaults for Rails 6.0.
-    config.load_defaults 6.0
+    # Initialize configuration defaults for Rails 6.1.
+    config.load_defaults 6.1
 
     # Use structure.sql because we have SQL views, and the schema.rb doesn't support those.
     config.active_record.schema_format = :sql
