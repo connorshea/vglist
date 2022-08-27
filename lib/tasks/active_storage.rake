@@ -6,7 +6,7 @@ namespace 'active_storage:vglist:clean' do
     # they're associated with an attachment somehow.
     # Ideally this should never happen, but somehow it occasionally does. Need
     # to investigate this more.
-    blobs = ActiveStorage::Blob.joins(:attachments).where.not(content_type: ['image/png', 'image/jpeg', 'image/jpg'])
+    blobs = ActiveStorage::Blob.joins(:attachments).where.not(content_type: ['image/png', 'image/jpeg'])
 
     puts "Found #{blobs.count} ActiveStorage::Blobs with a bad content type."
 

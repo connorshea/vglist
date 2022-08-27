@@ -147,7 +147,7 @@ class User < ApplicationRecord
 
   validates :avatar,
     attached: false,
-    content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    content_type: ['image/png', 'image/jpeg'],
     size: { less_than: 3.megabytes },
     aspect_ratio: :square
 
