@@ -1658,6 +1658,9 @@ class Puma::Launcher
   # Begin a phased restart if supported
   def phased_restart; end
 
+  # Begin a refork if supported
+  def refork; end
+
   # Begin async restart of the server
   def restart; end
 
@@ -1744,13 +1747,11 @@ class Puma::MiniSSL::Context
   # Returns the value of attribute ca.
   def ca; end
 
-  # @raise [ArgumentError]
   def ca=(ca); end
 
   # Returns the value of attribute cert.
   def cert; end
 
-  # @raise [ArgumentError]
   def cert=(cert); end
 
   # Returns the value of attribute cert_pem.
@@ -1761,10 +1762,12 @@ class Puma::MiniSSL::Context
 
   def check; end
 
+  # @raise [ArgumentError]
+  def check_file(file, desc); end
+
   # non-jruby Context properties
   def key; end
 
-  # @raise [ArgumentError]
   def key=(key); end
 
   # Returns the value of attribute key_pem.
@@ -1945,6 +1948,12 @@ Puma::MiniSSL::VERIFY_PEER = T.let(T.unsafe(nil), Integer)
 # Used as the value for rack.input when the request has no body.
 class Puma::NullIO
   def close; end
+
+  # This is used as singleton class, so can't have state.
+  #
+  # @return [Boolean]
+  def closed?; end
+
   def each; end
 
   # @return [Boolean]
@@ -2406,6 +2415,9 @@ class Puma::Server
   # @deprecated v6.0.0
   def leak_stack_on_error=(_arg0); end
 
+  # to help with backports
+  def log_writer; end
+
   # A fallback rack response if +@app+ raises as exception.
   def lowlevel_error(e, env, status = T.unsafe(nil)); end
 
@@ -2755,6 +2767,8 @@ end
 module Puma::Util
   private
 
+  def escape(s, encoding = T.unsafe(nil)); end
+
   # @version 5.0.0
   def nakayoshi_gc(events); end
 
@@ -2775,6 +2789,8 @@ module Puma::Util
   def unescape(s, encoding = T.unsafe(nil)); end
 
   class << self
+    def escape(s, encoding = T.unsafe(nil)); end
+
     # @version 5.0.0
     def nakayoshi_gc(events); end
 

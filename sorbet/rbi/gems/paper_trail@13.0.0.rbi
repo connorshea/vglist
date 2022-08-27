@@ -391,8 +391,8 @@ module PaperTrail::Serializers::YAML
   extend ::PaperTrail::Serializers::YAML
 
   # `recordable_object` `object` will be a plain `Hash`. However, due to
-  # recent [memory optimizations](https://git.io/fjeYv), when coming from
-  # `recordable_object_changes`, it will be a `HashWithIndifferentAccess`.
+  # recent [memory optimizations](https://github.com/paper-trail-gem/paper_trail/pull/1189),
+  # when coming from `recordable_object_changes`, it will be a `HashWithIndifferentAccess`.
   #
   # @param object [Hash | HashWithIndifferentAccess] - Coming from
   def dump(object); end
@@ -402,6 +402,13 @@ module PaperTrail::Serializers::YAML
   # Returns a SQL LIKE condition to be used to match the given field and
   # value in the serialized object.
   def where_object_condition(arel_field, field, value); end
+
+  private
+
+  # `use_yaml_unsafe_load` was added in 7.0.3.1, will be removed in 7.1.0?
+  #
+  # @return [Boolean]
+  def use_safe_load?; end
 end
 
 # The application's database column type is not supported.

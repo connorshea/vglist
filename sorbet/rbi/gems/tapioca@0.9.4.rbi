@@ -180,59 +180,6 @@ module T::Private::Methods
 end
 
 T::Private::Methods::ARG_NOT_PROVIDED = T.let(T.unsafe(nil), Object)
-
-class T::Private::Methods::Declaration < ::Struct
-  def bind; end
-  def bind=(_); end
-  def checked; end
-  def checked=(_); end
-  def finalized; end
-  def finalized=(_); end
-  def mod; end
-  def mod=(_); end
-  def mode; end
-  def mode=(_); end
-  def on_failure; end
-  def on_failure=(_); end
-  def override_allow_incompatible; end
-  def override_allow_incompatible=(_); end
-  def params; end
-  def params=(_); end
-  def raw; end
-  def raw=(_); end
-  def returns; end
-  def returns=(_); end
-  def type_parameters; end
-  def type_parameters=(_); end
-
-  class << self
-    def [](*_arg0); end
-    def inspect; end
-    def members; end
-    def new(*_arg0); end
-  end
-end
-
-class T::Private::Methods::DeclarationBlock < ::Struct
-  def blk; end
-  def blk=(_); end
-  def final; end
-  def final=(_); end
-  def loc; end
-  def loc=(_); end
-  def mod; end
-  def mod=(_); end
-  def raw; end
-  def raw=(_); end
-
-  class << self
-    def [](*_arg0); end
-    def inspect; end
-    def members; end
-    def new(*_arg0); end
-  end
-end
-
 T::Private::Methods::PROC_TYPE = T.let(T.unsafe(nil), Object)
 
 module T::Private::Methods::ProcBindPatch
@@ -279,6 +226,12 @@ end
 
 module Tapioca
   class << self
+    sig { void }
+    def disable_traces; end
+
+    sig { params(trace_name: ::Symbol, block: T.proc.params(arg0: ::TracePoint).void).void }
+    def register_trace(trace_name, &block); end
+
     sig do
       type_parameters(:Result)
         .params(
@@ -419,7 +372,7 @@ class Tapioca::Commands::CheckShims < ::Tapioca::Commands::Command
   def execute; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Tapioca::Commands::Command
   include ::Thor::Base
   include ::Thor::Invocation
@@ -732,6 +685,9 @@ module Tapioca::ConfigHelper
   sig { params(msg: ::String).returns(::Tapioca::ConfigHelper::ConfigError) }
   def build_error(msg); end
 
+  sig { params(config_file: ::String, errors: T::Array[::Tapioca::ConfigHelper::ConfigError]).returns(::String) }
+  def build_error_message(config_file, errors); end
+
   sig do
     params(
       options: ::Thor::CoreExt::HashWithIndifferentAccess
@@ -748,9 +704,6 @@ module Tapioca::ConfigHelper
     ).returns(::Thor::CoreExt::HashWithIndifferentAccess)
   end
   def merge_options(*options); end
-
-  sig { params(config_file: ::String, errors: T::Array[::Tapioca::ConfigHelper::ConfigError]).void }
-  def print_errors(config_file, errors); end
 
   sig { params(config_file: ::String, config: T::Hash[T.untyped, T.untyped]).void }
   def validate_config!(config_file, config); end
@@ -795,7 +748,7 @@ Tapioca::DEFAULT_SHIM_DIR = T.let(T.unsafe(nil), String)
 Tapioca::DEFAULT_TODO_FILE = T.let(T.unsafe(nil), String)
 module Tapioca::Dsl; end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Tapioca::Dsl::Compiler
   extend T::Generic
   include ::Tapioca::SorbetHelper
@@ -982,7 +935,7 @@ class Tapioca::Gem::ConstantFound < ::Tapioca::Gem::Event
   def symbol; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Tapioca::Gem::Event
   abstract!
 
@@ -1000,7 +953,7 @@ end
 class Tapioca::Gem::ForeignScopeNodeAdded < ::Tapioca::Gem::ScopeNodeAdded; end
 module Tapioca::Gem::Listeners; end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Tapioca::Gem::Listeners::Base
   abstract!
 
@@ -1305,7 +1258,7 @@ class Tapioca::Gem::MethodNodeAdded < ::Tapioca::Gem::NodeAdded
   def signature; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Tapioca::Gem::NodeAdded < ::Tapioca::Gem::Event
   abstract!
 
@@ -1634,6 +1587,9 @@ module Tapioca::RBIFilesHelper
   sig { params(nodes: T::Array[::RBI::Node]).returns(T::Array[T.any(::RBI::Attr, ::RBI::Method)]) }
   def extract_methods_and_attrs(nodes); end
 
+  sig { params(nodes: T::Array[::RBI::Node]).returns(T::Array[T.any(::RBI::Mixin, ::RBI::RequiresAncestor)]) }
+  def extract_mixins(nodes); end
+
   sig do
     params(
       nodes: T::Array[T.any(::RBI::Attr, ::RBI::Method)]
@@ -1859,6 +1815,11 @@ end
 
 class Tapioca::Runtime::Loader
   include ::Tapioca::GemHelper
+  include ::Thor::Base
+  include ::Thor::Invocation
+  include ::Thor::Shell
+  extend ::Thor::Base::ClassMethods
+  extend ::Thor::Invocation::ClassMethods
 
   sig do
     params(
@@ -1902,14 +1863,11 @@ module Tapioca::Runtime::Reflection
   sig { params(object: ::BasicObject, other: ::BasicObject).returns(T::Boolean) }
   def are_equal?(object, other); end
 
+  sig { params(singleton_class: ::Module).returns(T.nilable(::Module)) }
+  def attached_class_of(singleton_class); end
+
   sig { params(object: ::BasicObject).returns(::Class) }
   def class_of(object); end
-
-  sig { params(constant: ::Module).returns(T.nilable(::BasicObject)) }
-  def constant_from_singleton_class(constant); end
-
-  sig { params(constant: ::Module).returns(T.nilable(::String)) }
-  def constant_name_from_singleton_class(constant); end
 
   sig { params(symbol: ::String, inherit: T::Boolean, namespace: ::Module).returns(::BasicObject) }
   def constantize(symbol, inherit: T.unsafe(nil), namespace: T.unsafe(nil)); end
@@ -2032,15 +1990,6 @@ module Tapioca::Runtime::Trackers::ConstantDefinition
     def files_for(klass); end
 
     def locations_for(klass); end
-  end
-end
-
-class Tapioca::Runtime::Trackers::ConstantDefinition::ConstantLocation < ::T::Struct
-  const :lineno, ::Integer
-  const :path, ::String
-
-  class << self
-    def inherited(s); end
   end
 end
 

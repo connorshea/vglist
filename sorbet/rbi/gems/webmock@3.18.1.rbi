@@ -8,22 +8,6 @@ module Net::WebMockHTTPResponse
   def read_body(dest = T.unsafe(nil), &block); end
 end
 
-class Net::WebMockNetBufferedIO < ::Net::BufferedIO
-  # @return [WebMockNetBufferedIO] a new instance of WebMockNetBufferedIO
-  def initialize(io, *args, **kwargs); end
-
-  # https://github.com/ruby/ruby/blob/7d02441f0d6e5c9d0a73a024519eba4f69e36dce/lib/net/protocol.rb#L208
-  # Modified version of method from ruby, so that nil is always passed into orig_read_nonblock to avoid timeout
-  def rbuf_fill; end
-end
-
-# patch for StringIO behavior in Ruby 2.2.3
-# https://github.com/bblimke/webmock/issues/558
-class PatchedStringIO < ::StringIO
-  def orig_read_nonblock(*_arg0); end
-  def read_nonblock(size, *args, **kwargs); end
-end
-
 class StubSocket
   # @return [StubSocket] a new instance of StubSocket
   def initialize(*args); end
@@ -63,7 +47,11 @@ class StubSocket
 end
 
 class StubSocket::StubIO
+  def cipher; end
+  def peer_cert; end
+  def peeraddr; end
   def setsockopt(*args); end
+  def ssl_version; end
 end
 
 module WebMock
@@ -98,6 +86,9 @@ module WebMock
 
     # @return [Boolean]
     def net_connect_explicit_allowed?(allowed, uri = T.unsafe(nil)); end
+
+    # @return [Boolean]
+    def net_http_connect_on_start?(uri); end
 
     def print_executed_requests; end
 
@@ -200,6 +191,9 @@ class WebMock::BodyPattern
   # @return [Boolean]
   def empty_string?(string); end
 
+  # @return [Boolean]
+  def matching_body_array?(query_parameters, pattern, content_type); end
+
   # Compare two hashes for equality
   #
   # For two hashes to match they must have the same length and all
@@ -223,6 +217,7 @@ class WebMock::BodyPattern
   #   hash, false if not.
   def matching_body_hashes?(query_parameters, pattern, content_type); end
 
+  def matching_values(actual, expected, content_type); end
   def normalize_hash(hash); end
 
   # @return [Boolean]
@@ -388,7 +383,6 @@ class WebMock::HttpLibAdapters::NetHttpAdapter < ::WebMock::HttpLibAdapter
   end
 end
 
-WebMock::HttpLibAdapters::NetHttpAdapter::OriginalNetBufferedIO = Net::BufferedIO
 WebMock::HttpLibAdapters::NetHttpAdapter::OriginalNetHTTP = Net::HTTP
 module WebMock::Matchers; end
 
@@ -445,10 +439,9 @@ end
 module WebMock::NetHTTPUtility
   class << self
     def check_right_http_connection; end
-    def get_uri(net_http, path); end
+    def get_uri(net_http, path = T.unsafe(nil)); end
     def puts_warning_for_right_http_if_needed; end
     def request_signature_from_request(net_http, request, body = T.unsafe(nil)); end
-    def validate_headers(headers); end
   end
 end
 
@@ -705,6 +698,10 @@ class WebMock::RequestStub
 
   def and_raise(*exceptions); end
   def and_return(*response_hashes, &block); end
+
+  # @raise [ArgumentError]
+  def and_return_json(*response_hashes); end
+
   def and_timeout; end
 
   # @return [Boolean]
@@ -727,6 +724,10 @@ class WebMock::RequestStub
   def to_rack(app, options = T.unsafe(nil)); end
   def to_raise(*exceptions); end
   def to_return(*response_hashes, &block); end
+
+  # @raise [ArgumentError]
+  def to_return_json(*response_hashes); end
+
   def to_s; end
   def to_timeout; end
   def with(params = T.unsafe(nil), &block); end
@@ -760,7 +761,7 @@ class WebMock::Response
   private
 
   def assert_valid_body!; end
-  def read_raw_response(raw_response); end
+  def read_raw_response(io); end
   def stringify_body!; end
 end
 

@@ -171,8 +171,6 @@ class Spoom::Cli::Main < ::Thor
   def tc(*args); end
 
   class << self
-    # Utils
-    #
     # @return [Boolean]
     def exit_on_failure?; end
   end
@@ -185,7 +183,7 @@ class Spoom::Cli::Run < ::Thor
   def colorize_message(message); end
   def format_error(error, format); end
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
-  def tc(*arg); end
+  def tc(*paths_to_select); end
 end
 
 Spoom::Cli::Run::DEFAULT_FORMAT = T.let(T.unsafe(nil), String)
@@ -222,6 +220,134 @@ end
 module Spoom::Colorize
   sig { params(string: ::String, color: ::Spoom::Color).returns(::String) }
   def set_color(string, *color); end
+end
+
+# An abstraction to a Ruby project context
+#
+# A context maps to a directory in the file system.
+# It is used to manipulate files and run commands in the context of this directory.
+class Spoom::Context
+  # Create a new context about `absolute_path`
+  #
+  # The directory will not be created if it doesn't exist.
+  # Call `#make!` to create it.
+  sig { params(absolute_path: ::String).void }
+  def initialize(absolute_path); end
+
+  # The absolute path to the directory this context is about
+  sig { returns(::String) }
+  def absolute_path; end
+
+  # Returns the absolute path to `relative_path` in the context's directory
+  sig { params(relative_path: ::String).returns(::String) }
+  def absolute_path_to(relative_path); end
+
+  # Run a command with `bundle` in this context directory
+  sig { params(command: ::String, version: T.nilable(::String)).returns(::Spoom::ExecResult) }
+  def bundle(command, version: T.unsafe(nil)); end
+
+  # Run a command `bundle exec` in this context directory
+  sig { params(command: ::String, version: T.nilable(::String)).returns(::Spoom::ExecResult) }
+  def bundle_exec(command, version: T.unsafe(nil)); end
+
+  # Run `bundle install` in this context directory
+  sig { params(version: T.nilable(::String)).returns(::Spoom::ExecResult) }
+  def bundle_install!(version: T.unsafe(nil)); end
+
+  # Delete this context and its content
+  #
+  # Warning: it will `rm -rf` the context directory on the file system.
+  sig { void }
+  def destroy!; end
+
+  # Run a command in this context directory
+  sig { params(command: ::String, capture_err: T::Boolean).returns(::Spoom::ExecResult) }
+  def exec(command, capture_err: T.unsafe(nil)); end
+
+  # Does `relative_path` point to an existing file in this context directory?
+  sig { params(relative_path: ::String).returns(T::Boolean) }
+  def file?(relative_path); end
+
+  # Run a command prefixed by `git` in this context directory
+  sig { params(command: ::String).returns(::Spoom::ExecResult) }
+  def git(command); end
+
+  # Run `git checkout` in this context directory
+  sig { params(ref: ::String).returns(::Spoom::ExecResult) }
+  def git_checkout!(ref: T.unsafe(nil)); end
+
+  # Get the current git branch in this context directory
+  sig { returns(T.nilable(::String)) }
+  def git_current_branch; end
+
+  # Run `git init` in this context directory
+  sig { params(branch: ::String).void }
+  def git_init!(branch: T.unsafe(nil)); end
+
+  # List all files in this context matching `pattern`
+  sig { params(pattern: ::String).returns(T::Array[::String]) }
+  def glob(pattern = T.unsafe(nil)); end
+
+  # List all files at the top level of this context directory
+  sig { returns(T::Array[::String]) }
+  def list; end
+
+  # Create the context directory at `absolute_path`
+  sig { void }
+  def mkdir!; end
+
+  # Move the file or directory from `from_relative_path` to `to_relative_path`
+  sig { params(from_relative_path: ::String, to_relative_path: ::String).void }
+  def move!(from_relative_path, to_relative_path); end
+
+  # Return the contents of the file at `relative_path` in this context directory
+  #
+  # Will raise if the file doesn't exist.
+  sig { params(relative_path: ::String).returns(::String) }
+  def read(relative_path); end
+
+  # Read the strictness sigil from the file at `relative_path` (returns `nil` if no sigil)
+  sig { params(relative_path: ::String).returns(T.nilable(::String)) }
+  def read_file_strictness(relative_path); end
+
+  # Read the `contents` of the Gemfile in this context directory
+  sig { returns(T.nilable(::String)) }
+  def read_gemfile; end
+
+  # Read the contents of `sorbet/config` in this context directory
+  sig { returns(::String) }
+  def read_sorbet_config; end
+
+  # Remove the path at `relative_path` (recursive + force) in this context directory
+  sig { params(relative_path: ::String).void }
+  def remove!(relative_path); end
+
+  # Run `bundle exec srb` in this context directory
+  sig { params(command: ::String).returns(::Spoom::ExecResult) }
+  def srb(command); end
+
+  # Write `contents` in the file at `relative_path` in this context directory
+  #
+  # Append to the file if `append` is true.
+  sig { params(relative_path: ::String, contents: ::String, append: T::Boolean).void }
+  def write!(relative_path, contents = T.unsafe(nil), append: T.unsafe(nil)); end
+
+  # Set the `contents` of the Gemfile in this context directory
+  sig { params(contents: ::String, append: T::Boolean).void }
+  def write_gemfile!(contents, append: T.unsafe(nil)); end
+
+  # Set the `contents` of `sorbet/config` in this context directory
+  sig { params(contents: ::String, append: T::Boolean).void }
+  def write_sorbet_config!(contents, append: T.unsafe(nil)); end
+
+  class << self
+    # Create a new context in the system's temporary directory
+    #
+    # `name` is used as prefix to the temporary directory name.
+    # The directory will be created if it doesn't exist.
+    sig { params(name: T.nilable(::String)).returns(T.attached_class) }
+    def mktmp!(name = T.unsafe(nil)); end
+  end
 end
 
 module Spoom::Coverage
@@ -267,7 +393,7 @@ end
 
 Spoom::Coverage::Cards::Card::TEMPLATE = T.let(T.unsafe(nil), String)
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::Cards::Erb < ::Spoom::Coverage::Cards::Card
   abstract!
 
@@ -359,7 +485,7 @@ module Spoom::Coverage::D3
   end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Base
   abstract!
 
@@ -433,7 +559,7 @@ class Spoom::Coverage::D3::ColorPalette < ::T::Struct
   end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Pie < ::Spoom::Coverage::D3::Base
   abstract!
 
@@ -476,7 +602,7 @@ class Spoom::Coverage::D3::Pie::Sigs < ::Spoom::Coverage::D3::Pie
   def tooltip; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Timeline < ::Spoom::Coverage::D3::Base
   abstract!
 
@@ -572,7 +698,7 @@ class Spoom::Coverage::D3::Timeline::Sigs < ::Spoom::Coverage::D3::Timeline::Sta
   def tooltip; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Timeline::Stacked < ::Spoom::Coverage::D3::Timeline
   abstract!
 
@@ -599,7 +725,7 @@ class Spoom::Coverage::D3::Timeline::Versions < ::Spoom::Coverage::D3::Timeline
   def tooltip; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::Page < ::Spoom::Coverage::Template
   abstract!
 
@@ -720,7 +846,7 @@ class Spoom::Coverage::SnapshotPrinter < ::Spoom::Printer
   def print_map(hash, total); end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::Template
   abstract!
 
@@ -745,6 +871,9 @@ class Spoom::ExecResult < ::T::Struct
   const :exit_code, ::Integer
   const :out, ::String
   const :status, T::Boolean
+
+  sig { returns(::String) }
+  def to_s; end
 
   class << self
     def inherited(s); end
@@ -1186,9 +1315,6 @@ class Spoom::LSP::ResponseError < ::Spoom::LSP::Error
   sig { returns(T::Hash[T.untyped, T.untyped]) }
   def data; end
 
-  sig { returns(::String) }
-  def message; end
-
   class << self
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::ResponseError) }
     def from_json(json); end
@@ -1252,7 +1378,7 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   def seen=(_arg0); end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Printer
   include ::Spoom::Colorize
 
@@ -1464,6 +1590,10 @@ class Spoom::Sorbet::Errors::Error
 
   sig { returns(T.nilable(::String)) }
   def file; end
+
+  # Other files associated with the error
+  sig { returns(T::Set[::String]) }
+  def files_from_error_sections; end
 
   sig { returns(T.nilable(::Integer)) }
   def line; end

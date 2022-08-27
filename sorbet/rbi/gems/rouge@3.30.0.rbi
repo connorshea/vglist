@@ -1575,6 +1575,28 @@ class Rouge::Lexers::IgorPro < ::Rouge::RegexLexer
   end
 end
 
+class Rouge::Lexers::Isabelle < ::Rouge::RegexLexer
+  class << self
+    def keyword_abandon_proof; end
+    def keyword_diag; end
+    def keyword_minor; end
+    def keyword_proof_asm; end
+    def keyword_proof_asm_goal; end
+    def keyword_proof_block; end
+    def keyword_proof_chain; end
+    def keyword_proof_decl; end
+    def keyword_proof_goal; end
+    def keyword_proof_script; end
+    def keyword_qed; end
+    def keyword_section; end
+    def keyword_subsection; end
+    def keyword_theory_decl; end
+    def keyword_theory_goal; end
+    def keyword_theory_script; end
+    def keyword_thy; end
+  end
+end
+
 class Rouge::Lexers::J < ::Rouge::RegexLexer
   class << self
     def control_words; end
@@ -1864,6 +1886,27 @@ class Rouge::Lexers::Matlab < ::Rouge::RegexLexer
   end
 end
 
+class Rouge::Lexers::Meson < ::Rouge::RegexLexer
+  def current_string; end
+
+  class << self
+    def builtin_functions; end
+    def builtin_variables; end
+    def keywords; end
+  end
+end
+
+class Rouge::Lexers::Meson::StringRegister < ::Array
+  # @return [Boolean]
+  def delim?(delim); end
+
+  def register(type: T.unsafe(nil), delim: T.unsafe(nil)); end
+  def remove; end
+
+  # @return [Boolean]
+  def type?(type); end
+end
+
 class Rouge::Lexers::MiniZinc < ::Rouge::RegexLexer
   class << self
     def builtins; end
@@ -1904,6 +1947,17 @@ class Rouge::Lexers::NesAsm < ::Rouge::RegexLexer
 end
 
 class Rouge::Lexers::Nginx < ::Rouge::RegexLexer; end
+
+class Rouge::Lexers::Nial < ::Rouge::RegexLexer
+  class << self
+    def consts; end
+    def funcs; end
+    def keywords; end
+    def operators; end
+    def punctuations; end
+    def transformers; end
+  end
+end
 
 class Rouge::Lexers::Nim < ::Rouge::RegexLexer
   class << self

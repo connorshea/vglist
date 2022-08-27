@@ -143,7 +143,7 @@ module Doorkeeper::AccessTokenMixin
 
   # Access Token type: Bearer.
   #
-  # @see https://tools.ietf.org/html/rfc6750 The OAuth 2.0 Authorization Framework: Bearer Token Usage
+  # @see https://datatracker.ietf.org/doc/html/rfc6750 The OAuth 2.0 Authorization Framework: Bearer Token Usage
   def token_type; end
 
   # @return [Boolean]
@@ -916,11 +916,6 @@ module Doorkeeper::Helpers::Controller
   def x_www_form_urlencoded?; end
 end
 
-module Doorkeeper::IPAddrLoopback
-  # @return [Boolean]
-  def loopback?; end
-end
-
 # Defines a MissingConfiguration error for a missing Doorkeeper configuration
 class Doorkeeper::MissingConfiguration < ::StandardError
   # @return [MissingConfiguration] a new instance of MissingConfiguration
@@ -1688,13 +1683,16 @@ class Doorkeeper::OAuth::PasswordAccessTokenRequest < ::Doorkeeper::OAuth::BaseR
   include ::Doorkeeper::OAuth::Helpers
 
   # @return [PasswordAccessTokenRequest] a new instance of PasswordAccessTokenRequest
-  def initialize(server, client, resource_owner, parameters = T.unsafe(nil)); end
+  def initialize(server, client, credentials, resource_owner, parameters = T.unsafe(nil)); end
 
   # Returns the value of attribute access_token.
   def access_token; end
 
   # Returns the value of attribute client.
   def client; end
+
+  # Returns the value of attribute credentials.
+  def credentials; end
 
   # Returns the value of attribute parameters.
   def parameters; end
@@ -1719,7 +1717,7 @@ class Doorkeeper::OAuth::PasswordAccessTokenRequest < ::Doorkeeper::OAuth::BaseR
   #
   #    o  authenticate the client if client authentication is included,
   #
-  #   @see https://tools.ietf.org/html/rfc6749#section-4.3
+  #   @see https://datatracker.ietf.org/doc/html/rfc6749#section-4.3
   def validate_client; end
 
   def validate_client_supports_grant_flow; end
@@ -1840,7 +1838,7 @@ class Doorkeeper::OAuth::RefreshTokenRequest < ::Doorkeeper::OAuth::BaseRequest
 
   def validate_client; end
 
-  # @see https://tools.ietf.org/html/draft-ietf-oauth-v2-22#section-1.5
+  # @see https://datatracker.ietf.org/doc/html/rfc6749#section-1.5
   def validate_client_match; end
 
   def validate_scope; end
@@ -1907,7 +1905,7 @@ end
 
 # RFC7662 OAuth 2.0 Token Introspection
 #
-# @see https://tools.ietf.org/html/rfc7662
+# @see https://datatracker.ietf.org/doc/html/rfc7662
 class Doorkeeper::OAuth::TokenIntrospection
   # @return [TokenIntrospection] a new instance of TokenIntrospection
   def initialize(server, token); end
@@ -1991,7 +1989,7 @@ class Doorkeeper::OAuth::TokenIntrospection
   # Provides context (controller) and token for generating developer-specific
   # response.
   #
-  # @see https://tools.ietf.org/html/rfc7662#section-2.2
+  # @see https://datatracker.ietf.org/doc/html/rfc7662#section-2.2
   def customize_response(response); end
 
   # Returns the value of attribute error.
@@ -2006,7 +2004,7 @@ class Doorkeeper::OAuth::TokenIntrospection
   # authorization server SHOULD NOT include any additional information
   # about an inactive token, including why the token is inactive.
   #
-  # @see https://tools.ietf.org/html/rfc7662 2.2. Introspection Response
+  # @see https://datatracker.ietf.org/doc/html/rfc7662 2.2. Introspection Response
   def failure_response; end
 
   # Returns the value of attribute invalid_request_reason.
@@ -2465,7 +2463,6 @@ module Doorkeeper::VERSION; end
 Doorkeeper::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
 Doorkeeper::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-Doorkeeper::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # Full version number
 Doorkeeper::VERSION::STRING = T.let(T.unsafe(nil), String)

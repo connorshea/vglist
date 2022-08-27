@@ -103,6 +103,11 @@ module Bootsnap::CompileCache::JSON
     #
     # @param value the value to set the attribute supported_options to.
     def supported_options=(_arg0); end
+
+    private
+
+    # @return [Boolean]
+    def supports_freeze?; end
   end
 end
 
@@ -153,7 +158,6 @@ module Bootsnap::CompileCache::YAML
     def patch; end
     def precompile(path); end
     def strict_load(payload); end
-    def strict_visitor; end
 
     # Psych coerce strings to `Encoding.default_internal` but Message Pack only support
     # UTF-8, US-ASCII and BINARY. So if Encoding.default_internal is set to anything else
@@ -170,6 +174,10 @@ module Bootsnap::CompileCache::YAML
     # @param value the value to set the attribute supported_options to.
     def supported_options=(_arg0); end
   end
+end
+
+class Bootsnap::CompileCache::YAML::NoTagsVisitor < ::Psych::Visitors::ToRuby
+  def visit(target); end
 end
 
 module Bootsnap::CompileCache::YAML::Psych3
@@ -239,6 +247,9 @@ class Bootsnap::InvalidConfiguration < ::StandardError; end
 
 module Bootsnap::LoadPathCache
   class << self
+    # Returns the value of attribute enabled.
+    def enabled?; end
+
     # Returns the value of attribute load_path_cache.
     def load_path_cache; end
 
@@ -249,6 +260,8 @@ module Bootsnap::LoadPathCache
 
     # @return [Boolean]
     def supported?; end
+
+    def unload!; end
   end
 end
 
@@ -260,7 +273,7 @@ class Bootsnap::LoadPathCache::Cache
 
   # Try to resolve this feature to an absolute path without traversing the
   # loadpath.
-  def find(feature, try_extensions: T.unsafe(nil)); end
+  def find(feature); end
 
   # What is the path item that contains the dir as child?
   # e.g. given "/a/b/c/d" exists, and the path is ["/a/b"], load_dir("c/d")
@@ -280,7 +293,7 @@ class Bootsnap::LoadPathCache::Cache
   def maybe_append_extension(feature); end
   def now; end
   def push_paths_locked(*paths); end
-  def search_index(feature, try_extensions: T.unsafe(nil)); end
+  def search_index(feature); end
 
   # @return [Boolean]
   def stale?; end
@@ -298,7 +311,8 @@ Bootsnap::LoadPathCache::Cache::BUILTIN_FEATURES = T.let(T.unsafe(nil), Hash)
 
 module Bootsnap::LoadPathCache::ChangeObserver
   class << self
-    def register(observer, arr); end
+    def register(arr, observer); end
+    def unregister(arr); end
   end
 end
 
@@ -543,12 +557,7 @@ end
 module Kernel
   private
 
-  def load(path, wrap = T.unsafe(nil)); end
   def zeitwerk_original_require(path); end
-
-  class << self
-    def load(path, wrap = T.unsafe(nil)); end
-  end
 end
 
 module Psych

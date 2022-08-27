@@ -81,6 +81,9 @@ module RuboCop::Cop::EnforceSuperclass
   end
 end
 
+# @deprecated IgnoredMethods class has been replaced with AllowedMethods.
+RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
+
 # @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
@@ -1268,6 +1271,7 @@ RuboCop::Cop::Rails::DefaultScope::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array
 #   # good
 #   delegate :bar, to: :foo, prefix: true
 class RuboCop::Cop::Rails::Delegate < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::VisibilityHelp
   extend ::RuboCop::Cop::AutoCorrector
 
   def delegate?(param0 = T.unsafe(nil)); end
@@ -1285,9 +1289,8 @@ class RuboCop::Cop::Rails::Delegate < ::RuboCop::Cop::Base
   def method_name_matches?(method_name, body); end
 
   def prefixed_method_name(body); end
-  def private_or_protected_before(line); end
   def private_or_protected_delegation(node); end
-  def private_or_protected_inline(line); end
+  def private_or_protected_inline(node); end
   def register_offense(node); end
 
   # @return [Boolean]
@@ -1816,16 +1819,22 @@ class RuboCop::Cop::Rails::ExpandedDateRange < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
   extend ::RuboCop::Cop::TargetRailsVersion
 
-  def expanded_date_range(param0 = T.unsafe(nil)); end
   def on_irange(node); end
 
   private
 
   # @return [Boolean]
-  def same_receiver?(begin_node, end_node); end
+  def allow?(begin_node, end_node); end
 
   # @return [Boolean]
-  def use_mapped_methods?(beginning_method, end_method); end
+  def any_arguments?(begin_node, end_node); end
+
+  def preferred_method(begin_node); end
+  def receiver_source(node); end
+  def register_offense(node, preferred_method); end
+
+  # @return [Boolean]
+  def same_argument?(begin_node, end_node); end
 end
 
 RuboCop::Cop::Rails::ExpandedDateRange::MAPPED_DATE_RANGE_METHODS = T.let(T.unsafe(nil), Hash)
@@ -5501,6 +5510,101 @@ RuboCop::Cop::Rails::WhereNot::NOT_IN_ANONYMOUS_RE = T.let(T.unsafe(nil), Regexp
 RuboCop::Cop::Rails::WhereNot::NOT_IN_NAMED_RE = T.let(T.unsafe(nil), Regexp)
 
 RuboCop::Cop::Rails::WhereNot::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+module RuboCop::Cop::Style; end
+
+# Checks for redundant uses of `self`.
+#
+# The usage of `self` is only needed when:
+#
+# * Sending a message to same object with zero arguments in
+#   presence of a method name clash with an argument or a local
+#   variable.
+#
+# * Calling an attribute writer to prevent a local variable assignment.
+#
+# Note, with using explicit self you can only send messages with public or
+# protected scope, you cannot send private messages this way.
+#
+# Note we allow uses of `self` with operators because it would be awkward
+# otherwise.
+#
+# @example
+#
+#   # bad
+#   def foo(bar)
+#   self.baz
+#   end
+#
+#   # good
+#   def foo(bar)
+#   self.bar  # Resolves name clash with the argument.
+#   end
+#
+#   def foo
+#   bar = 1
+#   self.bar  # Resolves name clash with the local variable.
+#   end
+#
+#   def foo
+#   %w[x y z].select do |bar|
+#   self.bar == bar  # Resolves name clash with argument of the block.
+#   end
+#   end
+class RuboCop::Cop::Style::RedundantSelf < ::RuboCop::Cop::Base
+  # @return [RedundantSelf] a new instance of RedundantSelf
+  def initialize(config = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Assignment of self.x
+  def on_and_asgn(node); end
+
+  def on_args(node); end
+  def on_block(node); end
+  def on_blockarg(node); end
+
+  # Using self.x to distinguish from local variable x
+  def on_def(node); end
+
+  # Using self.x to distinguish from local variable x
+  def on_defs(node); end
+
+  def on_if(node); end
+  def on_in_pattern(node); end
+  def on_lvasgn(node); end
+  def on_masgn(node); end
+  def on_numblock(node); end
+  def on_op_asgn(node); end
+
+  # Assignment of self.x
+  def on_or_asgn(node); end
+
+  def on_send(node); end
+  def on_until(node); end
+  def on_while(node); end
+
+  private
+
+  def add_lhs_to_local_variables_scopes(rhs, lhs); end
+  def add_masgn_lhs_variables(rhs, lhs); end
+  def add_match_var_scopes(in_pattern_node); end
+  def add_scope(node, local_variables = T.unsafe(nil)); end
+  def allow_self(node); end
+
+  # @return [Boolean]
+  def allowed_send_node?(node); end
+
+  def on_argument(node); end
+
+  # @return [Boolean]
+  def regular_method_call?(node); end
+
+  class << self
+    def autocorrect_incompatible_with; end
+  end
+end
+
+RuboCop::Cop::Style::RedundantSelf::KERNEL_METHODS = T.let(T.unsafe(nil), Array)
+RuboCop::Cop::Style::RedundantSelf::KEYWORDS = T.let(T.unsafe(nil), Array)
+RuboCop::Cop::Style::RedundantSelf::MSG = T.let(T.unsafe(nil), String)
 
 # Common functionality for checking target rails version.
 module RuboCop::Cop::TargetRailsVersion
