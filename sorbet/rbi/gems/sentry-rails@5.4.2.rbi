@@ -14,6 +14,7 @@ module Sentry
     def capture_exception(exception, **options, &block); end
     def capture_message(message, **options, &block); end
     def clone_hub_to_current_thread; end
+    def close; end
     def configuration; end
     def configure_scope(&block); end
     def csp_report_uri; end
@@ -47,6 +48,7 @@ module Sentry
     def use_relative_model_naming?; end
     def utc_now; end
     def with_child_span(**attributes, &block); end
+    def with_exception_captured(**options, &block); end
     def with_scope(&block); end
     def with_session_tracking(&block); end
   end
@@ -192,7 +194,7 @@ class Sentry::Rails::CaptureExceptions < ::Sentry::Rack::CaptureExceptions
 
   private
 
-  def capture_exception(exception); end
+  def capture_exception(exception, env); end
   def collect_exception(env); end
   def start_transaction(env, scope); end
   def transaction_op; end

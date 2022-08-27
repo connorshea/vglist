@@ -5,7 +5,18 @@
 # Please instead update this file by running `bin/tapioca gem tzinfo`.
 
 # The top level module for TZInfo.
-module TZInfo; end
+module TZInfo
+  class << self
+    # Instructs the current {DataSource} to load all timezone and country data
+    # into memory (initializing the {DataSource} first if not previously
+    # accessed or set).
+    #
+    # This may be desirable in production environments to improve copy-on-write
+    # performance and to avoid flushing the constant cache every time a new
+    # timezone or country is loaded from {DataSources::RubyDataSource}.
+    def eager_load!; end
+  end
+end
 
 # Defines transitions that occur on the zero-based nth day of the year.
 #
@@ -433,6 +444,13 @@ class TZInfo::DataSource
   # @return [Array<String>] a frozen `Array` of all the available time zone
   #   identifiers for data time zones.
   def data_timezone_identifiers; end
+
+  # Loads all timezone and country data into memory.
+  #
+  # This may be desirable in production environments to improve copy-on-write
+  # performance and to avoid flushing the constant cache every time a new
+  # timezone or country is loaded from {DataSources::RubyDataSource}.
+  def eager_load!; end
 
   # @param code [String] an ISO 3166-1 alpha-2 country code.
   # @raise [InvalidCountryCode] if the country could not be found or the code
@@ -1443,6 +1461,19 @@ TZInfo::DataSources::ZoneinfoDataSource::DEFAULT_ALTERNATE_ISO3166_TAB_SEARCH_PA
 
 # The default value of {ZoneinfoDataSource.search_path}.
 TZInfo::DataSources::ZoneinfoDataSource::DEFAULT_SEARCH_PATH = T.let(T.unsafe(nil), Array)
+
+# Files and directories in the top level zoneinfo directory that will be
+# excluded from the list of available time zones:
+#
+#   - +VERSION is included on Mac OS X.
+#   - leapseconds is a list of leap seconds.
+#   - localtime is the current local timezone (may be a link).
+#   - posix, posixrules and right are directories containing other
+#     versions of the zoneinfo files.
+#   - SECURITY is included in the Arch Linux tzdata package.
+#   - src is a directory containing the tzdata source included on Solaris.
+#   - timeconfig is a symlink included on Slackware.
+TZInfo::DataSources::ZoneinfoDataSource::EXCLUDED_FILENAMES = T.let(T.unsafe(nil), Array)
 
 # A {ZoneinfoDirectoryNotFound} exception is raised if no valid zoneinfo
 # directory could be found when checking the paths listed in
@@ -2824,10 +2855,11 @@ class TZInfo::TimeWithOffset < ::Time
 end
 
 # A time represented as an `Integer` number of seconds since 1970-01-01
-# 00:00:00 UTC (ignoring leap seconds), the fraction through the second
-# (sub_second as a `Rational`) and an optional UTC offset. Like Ruby's `Time`
-# class, {Timestamp} can distinguish between a local time with a zero offset
-# and a time specified explicitly as UTC.
+# 00:00:00 UTC (ignoring leap seconds and using the proleptic Gregorian
+# calendar), the fraction through the second (sub_second as a `Rational`) and
+# an optional UTC offset. Like Ruby's `Time` class, {Timestamp} can
+# distinguish between a local time with a zero offset and a time specified
+# explicitly as UTC.
 class TZInfo::Timestamp
   include ::Comparable
 
@@ -2903,17 +2935,17 @@ class TZInfo::Timestamp
   #   0 and less than 1.
   def sub_second; end
 
-  # Converts this {Timestamp} to a `DateTime`.
+  # Converts this {Timestamp} to a Gregorian `DateTime`.
   #
-  # @return [DateTime] a DateTime representation of this {Timestamp}. If the
-  #   UTC offset of this {Timestamp} is not specified, a UTC `DateTime` will
-  #   be returned.
+  # @return [DateTime] a Gregorian `DateTime` representation of this
+  #   {Timestamp}. If the UTC offset of this {Timestamp} is not specified, a
+  #   UTC `DateTime` will be returned.
   def to_datetime; end
 
   # Converts this {Timestamp} to an `Integer` number of seconds since
   # 1970-01-01 00:00:00 UTC (ignoring leap seconds).
   #
-  # @return [Integer] an Integer representation of this {Timestamp} (the
+  # @return [Integer] an `Integer` representation of this {Timestamp} (the
   #   number of seconds since 1970-01-01 00:00:00 UTC ignoring leap seconds).
   def to_i; end
 
@@ -2991,8 +3023,8 @@ class TZInfo::Timestamp
   def value_and_sub_second_to_s(offset = T.unsafe(nil)); end
 
   class << self
-    # Returns a new {Timestamp} representing the (Gregorian calendar) date and
-    # time specified by the supplied parameters.
+    # Returns a new {Timestamp} representing the (proleptic Gregorian
+    # calendar) date and time specified by the supplied parameters.
     #
     # If `utc_offset` is `nil`, `:utc` or 0, the date and time parameters will
     # be interpreted as representing a UTC date and time. Otherwise the date
@@ -3025,7 +3057,7 @@ class TZInfo::Timestamp
     # @raise [RangeError] if `minute` is not between 0 and 59.
     # @raise [RangeError] if `second` is not between 0 and 59.
     # @return [Timestamp] a new {Timestamp} representing the specified
-    #   (Gregorian calendar) date and time.
+    #   (proleptic Gregorian calendar) date and time.
     def create(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
 
     # When used without a block, returns a {Timestamp} representation of a
@@ -3034,7 +3066,8 @@ class TZInfo::Timestamp
     # When called with a block, the {Timestamp} representation of `value` is
     # passed to the block. The block must then return a {Timestamp}, which
     # will be converted back to the type of the initial value. If the initial
-    # value was a {Timestamp}, the block result will just be returned.
+    # value was a {Timestamp}, the block result will be returned. If the
+    # initial value was a `DateTime`, a Gregorian `DateTime` will be returned.
     #
     # The UTC offset of `value` can either be preserved (the {Timestamp}
     # representation will have the same UTC offset as `value`), ignored (the

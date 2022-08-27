@@ -6,51 +6,13 @@
 
 module Aws
   class << self
-    # @return [Hash] Returns a hash of default configuration options shared
-    #   by all constructed clients.
     def config; end
-
-    # @param config [Hash]
     def config=(config); end
-
-    # @api private
     def eager_autoload!(*args); end
-
-    # Close any long-lived connections maintained by the SDK's internal
-    # connection pool.
-    #
-    # Applications that rely heavily on the `fork()` system call on POSIX systems
-    # should call this method in the child process directly after fork to ensure
-    # there are no race conditions between the parent
-    # process and its children
-    # for the pooled TCP connections.
-    #
-    # Child processes that make multi-threaded calls to the SDK should block on
-    # this call before beginning work.
-    #
-    # @return [nil]
     def empty_connection_pools!; end
-
-    # @see (Aws::Partitions.partition)
     def partition(partition_name); end
-
-    # @see (Aws::Partitions.partitions)
     def partitions; end
-
-    # @api private
     def shared_config; end
-
-    # The SDK ships with a ca certificate bundle to use when verifying SSL
-    # peer certificates. By default, this cert bundle is *NOT* used. The
-    # SDK will rely on the default cert available to OpenSSL. This ensures
-    # the cert provided by your OS is used.
-    #
-    # For cases where the default cert is unavailable, e.g. Windows, you
-    # can call this method.
-    #
-    #     Aws.use_bundled_cert!
-    #
-    # @return [String] Returns the path to the bundled cert.
     def use_bundled_cert!; end
   end
 end

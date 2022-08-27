@@ -261,7 +261,10 @@ end
 # * `parse` Boolean value to determine if input files should automatically be parsed into `repository`.
 # * `help` used for the CLI help output.
 # * `lambda` code run to execute command.
-# * `filter` Option values that must match for command to be used
+# * `filter` value is a Hash whose keys are matched against selected command options. All specified `key/value` pairs are compared against the equivalent key in the current invocation.
+#            If an Array, option value (as a string) must match any value of the array (as a string)
+#            If a Proc, it is passed the option value and must return `true`.
+#            Otherwise, the option value (as a string) must equal the  `value` (as a string).
 # * `control` Used to indicate how (if) command is displayed
 # * `repository` Use this repository, if set
 # * `options` an optional array of `RDF::CLI::Option` describing command-specific options.
@@ -2834,6 +2837,7 @@ RDF::Literal::Boolean::TRUES = T.let(T.unsafe(nil), Array)
 # A date literal.
 #
 # @see http://www.w3.org/TR/xmlschema11-2/#date
+# @see https://www.w3.org/TR/xmlschema11-2/#rf-lexicalMappings-datetime
 # @since 0.2.1
 class RDF::Literal::Date < ::RDF::Literal::Temporal
   # Internally, a `Date` is represented using a native `::DateTime` object at midnight. If initialized from a `::Date`, there is no timezone component, If initialized from a `::DateTime`, the timezone is taken from that native object, otherwise, a timezone (or no timezone) is taken from the string representation having a matching `zzzzzz` component.
@@ -2872,6 +2876,7 @@ RDF::Literal::Date::GRAMMAR = T.let(T.unsafe(nil), Regexp)
 # A date/time literal.
 #
 # @see http://www.w3.org/TR/xmlschema11-2/#dateTime
+# @see https://www.w3.org/TR/xmlschema11-2/#rf-lexicalMappings-datetime
 # @since 0.2.1
 class RDF::Literal::DateTime < ::RDF::Literal::Temporal
   # Internally, a `DateTime` is represented using a native `::DateTime`. If initialized from a `::Date`, there is no timezone component, If initialized from a `::DateTime`, the timezone is taken from that native object, otherwise, a timezone (or no timezone) is taken from the string representation having a matching `zzzzzz` component.
@@ -3734,6 +3739,30 @@ class RDF::Literal::Temporal < ::RDF::Literal
   def year; end
 end
 
+# @since 3.1
+RDF::Literal::Temporal::DAYFRAG = T.let(T.unsafe(nil), Regexp)
+
+# @since 3.1
+RDF::Literal::Temporal::EODFRAG = T.let(T.unsafe(nil), Regexp)
+
+# @since 3.1
+RDF::Literal::Temporal::HOURFRAG = T.let(T.unsafe(nil), Regexp)
+
+# @since 3.1
+RDF::Literal::Temporal::MINUTEFRAG = T.let(T.unsafe(nil), Regexp)
+
+# @since 3.1
+RDF::Literal::Temporal::MONTHFRAG = T.let(T.unsafe(nil), Regexp)
+
+# @since 3.1
+RDF::Literal::Temporal::SECONDFRAG = T.let(T.unsafe(nil), Regexp)
+
+# @since 3.1
+RDF::Literal::Temporal::TZFRAG = T.let(T.unsafe(nil), Regexp)
+
+# @since 3.1
+RDF::Literal::Temporal::YEARFRAG = T.let(T.unsafe(nil), Regexp)
+
 # Matches either -10:00 or -P1H0M forms
 #
 # @since 3.1
@@ -3746,6 +3775,7 @@ RDF::Literal::Temporal::ZONE_GRAMMAR = T.let(T.unsafe(nil), Regexp)
 # following time zone indicator.
 #
 # @see http://www.w3.org/TR/xmlschema11-2/#time
+# @see https://www.w3.org/TR/xmlschema11-2/#rf-lexicalMappings-datetime
 # @since 0.2.1
 class RDF::Literal::Time < ::RDF::Literal::Temporal
   # Internally, a `DateTime` is represented using a native `::DateTime`. If initialized from a `::DateTime`, the timezone is taken from that native object, otherwise, a timezone (or no timezone) is taken from the string representation having a matching `zzzzzz` component.

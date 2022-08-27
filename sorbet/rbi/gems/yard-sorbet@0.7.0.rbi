@@ -166,7 +166,7 @@ end
 # Helper methods for working with `YARD` AST Nodes
 module YARDSorbet::NodeUtils
   class << self
-    # Traverese AST nodes in breadth-first order
+    # Traverse AST nodes in breadth-first order
     #
     # @note This will skip over some node types.
     # @yield [YARD::Parser::Ruby::AstNode]
@@ -197,11 +197,11 @@ end
 # Command node types that can have type signatures
 YARDSorbet::NodeUtils::ATTRIBUTE_METHODS = T.let(T.unsafe(nil), Array)
 
-# Node types that can have type signatures
-YARDSorbet::NodeUtils::SIGABLE_NODE = T.type_alias { T.any(::YARD::Parser::Ruby::MethodCallNode, ::YARD::Parser::Ruby::MethodDefinitionNode) }
-
 # Skip these method contents during BFS node traversal, they can have their own nested types via `T.Proc`
 YARDSorbet::NodeUtils::SKIP_METHOD_CONTENTS = T.let(T.unsafe(nil), Array)
+
+# Node types that can have type signatures
+YARDSorbet::NodeUtils::SigableNode = T.type_alias { T.any(::YARD::Parser::Ruby::MethodCallNode, ::YARD::Parser::Ruby::MethodDefinitionNode) }
 
 # Translate `sig` type syntax to `YARD` type syntax.
 module YARDSorbet::SigToYARD
@@ -218,16 +218,16 @@ module YARDSorbet::SigToYARD
     sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
     def convert_aref(node); end
 
-    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
+    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns([::String]) }
     def convert_array(node); end
 
     sig { params(node: ::YARD::Parser::Ruby::MethodCallNode).returns(T::Array[::String]) }
     def convert_call(node); end
 
-    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
+    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns([::String]) }
     def convert_collection(node); end
 
-    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
+    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns([::String]) }
     def convert_hash(node); end
 
     sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
@@ -239,16 +239,18 @@ module YARDSorbet::SigToYARD
     sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
     def convert_node_type(node); end
 
-    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
-    def convert_ref(node); end
+    sig { params(node_source: ::String).returns([::String]) }
+    def convert_ref(node_source); end
 
     sig { params(node: ::YARD::Parser::Ruby::MethodCallNode).returns(T::Array[::String]) }
     def convert_t_method(node); end
 
-    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns(T::Array[::String]) }
+    sig { params(node: ::YARD::Parser::Ruby::AstNode).returns([::String]) }
     def convert_unknown(node); end
   end
 end
+
+YARDSorbet::SigToYARD::REF_TYPES = T.let(T.unsafe(nil), Hash)
 
 # Used to store the details of a `T::Struct` `prop` definition
 class YARDSorbet::TStructProp < ::T::Struct

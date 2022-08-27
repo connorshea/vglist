@@ -105,7 +105,9 @@ class Dotenv::Parser
   def expand_newlines(value); end
   def parse_line(line); end
   def parse_value(value); end
+  def perform_substitutions(value, maybe_quote); end
   def unescape_characters(value); end
+  def unescape_value(value, maybe_quote); end
 
   # @return [Boolean]
   def variable_not_set?(line); end

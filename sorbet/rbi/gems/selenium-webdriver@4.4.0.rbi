@@ -420,6 +420,9 @@ class Selenium::WebDriver::Chrome::Options < ::Selenium::WebDriver::Options
   # @return [Boolean]
   def camelize?(key); end
 
+  # @raise [Error::InvalidArgumentError]
+  def check_w3c(w3c); end
+
   def enable_logging(browser_options); end
   def encode_extension(path); end
   def process_browser_options(browser_options); end
@@ -478,6 +481,43 @@ Selenium::WebDriver::Chrome::Service::DEFAULT_PORT = T.let(T.unsafe(nil), Intege
 Selenium::WebDriver::Chrome::Service::EXECUTABLE = T.let(T.unsafe(nil), String)
 Selenium::WebDriver::Chrome::Service::MISSING_TEXT = T.let(T.unsafe(nil), String)
 Selenium::WebDriver::Chrome::Service::SHUTDOWN_SUPPORTED = T.let(T.unsafe(nil), TrueClass)
+
+class Selenium::WebDriver::Credential
+  # @return [Credential] a new instance of Credential
+  def initialize(id:, resident_credential:, rp_id:, private_key:, user_handle: T.unsafe(nil), sign_count: T.unsafe(nil)); end
+
+  # @api private
+  def as_json(*_arg0); end
+
+  # Returns the value of attribute id.
+  def id; end
+
+  # Returns the value of attribute private_key.
+  def private_key; end
+
+  # Returns the value of attribute resident_credential.
+  def resident_credential; end
+
+  # Returns the value of attribute resident_credential.
+  def resident_credential?; end
+
+  # Returns the value of attribute rp_id.
+  def rp_id; end
+
+  # Returns the value of attribute sign_count.
+  def sign_count; end
+
+  # Returns the value of attribute user_handle.
+  def user_handle; end
+
+  class << self
+    def decode(base64); end
+    def encode(byte_array); end
+    def from_json(opts); end
+    def non_resident(**opts); end
+    def resident(**opts); end
+  end
+end
 
 class Selenium::WebDriver::DevTools
   # @return [DevTools] a new instance of DevTools
@@ -594,6 +634,102 @@ class Selenium::WebDriver::DevTools::MutationEvent
   # @param value the value to set the attribute old_value to.
   def old_value=(_arg0); end
 end
+
+# Wraps the network request/response interception, providing
+# thread-safety guarantees and handling special cases such as browser
+# canceling requests midst interception.
+#
+# You should not be using this class directly, use Driver#intercept instead.
+#
+# @api private
+class Selenium::WebDriver::DevTools::NetworkInterceptor
+  # @api private
+  # @return [NetworkInterceptor] a new instance of NetworkInterceptor
+  def initialize(devtools); end
+
+  # @api private
+  def intercept(&block); end
+
+  private
+
+  # @api private
+  # @return [Boolean]
+  def cancelled?(network_id); end
+
+  # Ensure usage of cancelled_requests is thread-safe via synchronization!
+  #
+  # @api private
+  def cancelled_requests; end
+
+  # @api private
+  def continue_request(id); end
+
+  # @api private
+  def continue_response(id); end
+
+  # @api private
+  def devtools; end
+
+  # @api private
+  def devtools=(_arg0); end
+
+  # @api private
+  def fetch_response_body(id); end
+
+  # @api private
+  def intercept_request(id, params, &block); end
+
+  # @api private
+  # @yield [mutable]
+  def intercept_response(id, params); end
+
+  # @api private
+  def lock; end
+
+  # @api private
+  def lock=(_arg0); end
+
+  # @api private
+  def mutate_request(request); end
+
+  # @api private
+  def mutate_response(response); end
+
+  # We should be thread-safe to use the hash without synchronization
+  # because its keys are interception job identifiers and they should be
+  # unique within a devtools session.
+  #
+  # @api private
+  def pending_response_requests; end
+
+  # @api private
+  def request_paused(data, &block); end
+
+  # The presence of any of these fields indicate we're at the response stage.
+  #
+  # @api private
+  # @return [Boolean]
+  # @see https://chromedevtools.github.io/devtools-protocol/tot/Fetch/#event-requestPaused
+  def response?(params); end
+
+  # @api private
+  def track_cancelled_request(data); end
+
+  # @api private
+  def with_cancellable_request(network_id); end
+end
+
+# CDP fails to get body on certain responses (301) and raises:
+# "Can only get response body on requests captured after headers received."
+#
+# @api private
+Selenium::WebDriver::DevTools::NetworkInterceptor::CANNOT_GET_BODY_ON_REDIRECT_ERROR_CODE = T.let(T.unsafe(nil), String)
+
+# CDP fails to operate with intercepted requests.
+# Typical reason is browser cancelling intercepted requests/responses.
+#
+# @api private
+Selenium::WebDriver::DevTools::NetworkInterceptor::INVALID_INTERCEPTION_ID_ERROR_CODE = T.let(T.unsafe(nil), String)
 
 class Selenium::WebDriver::DevTools::PinnedScript
   # @return [PinnedScript] a new instance of PinnedScript
@@ -790,6 +926,10 @@ class Selenium::WebDriver::Driver
   # @return [ActionBuilder]
   # @see ActionBuilder
   def action(**opts); end
+
+  # @return [VirtualAuthenticator]
+  # @see VirtualAuthenticator
+  def add_virtual_authenticator(options); end
 
   # driver.all(class: 'bar') #=> [#<WebDriver::Element:0x1011c3b88, ...]
   def all(*args); end
@@ -1181,16 +1321,6 @@ module Selenium::WebDriver::DriverExtensions::HasNetworkInterception
   # @yieldparam request [DevTools::Request]
   # @yieldparam continue [Proc] block which proceeds with the request and optionally yields response
   def intercept(&block); end
-
-  private
-
-  def fetch_response_body(id); end
-  def intercept_request(id, params, &block); end
-
-  # @yield [mutable]
-  def intercept_response(id, params); end
-
-  def pending_response_requests; end
 end
 
 module Selenium::WebDriver::DriverExtensions::HasPermissions
@@ -3159,9 +3289,8 @@ module Selenium::WebDriver::PointerActions
   # @return [ActionBuilder] A self reference.
   def move_by(right_by, down_by, device: T.unsafe(nil), duration: T.unsafe(nil), **opts); end
 
-  # Moves the pointer to the middle of the given element.
-  # its location is calculated using getBoundingClientRect.
-  # Then the pointer is moved to optional offset coordinates from the element.
+  # Moves the pointer to the in-view center point of the given element.
+  # Then the pointer is moved to optional offset coordinates.
   #
   # The element is not scrolled into view.
   # MoveTargetOutOfBoundsError will be raised if element with offset is outside the viewport
@@ -3177,10 +3306,10 @@ module Selenium::WebDriver::PointerActions
   #   el = driver.find_element(id: "some_id")
   #   driver.action.move_to(el, 100, 100).perform
   # @param element [Selenium::WebDriver::Element] to move to.
-  # @param right_by [Integer] Optional offset from the top-left corner. A negative value means
-  #   coordinates to the left of the element.
-  # @param down_by [Integer] Optional offset from the top-left corner. A negative value means
-  #   coordinates above the element.
+  # @param right_by [Integer] Optional offset from the in-view center of the
+  #   element. A negative value means coordinates to the left of the center.
+  # @param down_by [Integer] Optional offset from the in-view center of the
+  #   element. A negative value means coordinates to the top of the center.
   # @param device [Symbol || String] optional name of the PointerInput device to move.
   # @return [ActionBuilder] A self reference.
   def move_to(element, right_by = T.unsafe(nil), down_by = T.unsafe(nil), device: T.unsafe(nil), duration: T.unsafe(nil), **opts); end
@@ -3415,6 +3544,11 @@ class Selenium::WebDriver::Remote::Bridge
   def active_element; end
 
   def add_cookie(cookie); end
+  def add_credential(credential, id); end
+
+  # virtual-authenticator
+  def add_virtual_authenticator(options); end
+
   def alert=(keys); end
   def alert_text; end
   def browser; end
@@ -3435,6 +3569,7 @@ class Selenium::WebDriver::Remote::Bridge
   # @raise [Error::WebDriverError]
   def create_session(capabilities); end
 
+  def credentials(authenticator_id); end
   def delete_all_cookies; end
   def delete_cookie(name); end
   def dismiss_alert; end
@@ -3532,8 +3667,11 @@ class Selenium::WebDriver::Remote::Bridge
   def quit; end
   def refresh; end
   def release_actions; end
+  def remove_all_credentials(authenticator_id); end
+  def remove_credential(credential_id, authenticator_id); end
   def remove_local_storage_item(key); end
   def remove_session_storage_item(key); end
+  def remove_virtual_authenticator(id); end
   def reposition_window(x, y); end
 
   # @raise [Error::WebDriverError]
@@ -3569,6 +3707,7 @@ class Selenium::WebDriver::Remote::Bridge
   def title; end
   def upload(local_file); end
   def url; end
+  def user_verified(verified, authenticator_id); end
   def window_handle; end
 
   # window handling
@@ -4537,6 +4676,99 @@ end
 
 Selenium::WebDriver::VERSION = T.let(T.unsafe(nil), String)
 
+class Selenium::WebDriver::VirtualAuthenticator
+  # api private
+  # Use `Driver#add_virtual_authenticator`
+  #
+  # @return [VirtualAuthenticator] a new instance of VirtualAuthenticator
+  def initialize(bridge, authenticator_id, options); end
+
+  def add_credential(credential); end
+  def credentials; end
+
+  # Returns the value of attribute options.
+  def options; end
+
+  def remove!; end
+  def remove_all_credentials; end
+  def remove_credential(credential_id); end
+  def user_verified=(verified); end
+
+  # @return [Boolean]
+  def valid?; end
+end
+
+class Selenium::WebDriver::VirtualAuthenticatorOptions
+  # @return [VirtualAuthenticatorOptions] a new instance of VirtualAuthenticatorOptions
+  def initialize(protocol: T.unsafe(nil), transport: T.unsafe(nil), resident_key: T.unsafe(nil), user_verification: T.unsafe(nil), user_consenting: T.unsafe(nil), user_verified: T.unsafe(nil)); end
+
+  # @api private
+  def as_json(*_arg0); end
+
+  # Returns the value of attribute protocol.
+  def protocol; end
+
+  # Sets the attribute protocol
+  #
+  # @param value the value to set the attribute protocol to.
+  def protocol=(_arg0); end
+
+  # Returns the value of attribute resident_key.
+  def resident_key; end
+
+  # Sets the attribute resident_key
+  #
+  # @param value the value to set the attribute resident_key to.
+  def resident_key=(_arg0); end
+
+  # Returns the value of attribute resident_key.
+  def resident_key?; end
+
+  # Returns the value of attribute transport.
+  def transport; end
+
+  # Sets the attribute transport
+  #
+  # @param value the value to set the attribute transport to.
+  def transport=(_arg0); end
+
+  # Returns the value of attribute user_consenting.
+  def user_consenting; end
+
+  # Sets the attribute user_consenting
+  #
+  # @param value the value to set the attribute user_consenting to.
+  def user_consenting=(_arg0); end
+
+  # Returns the value of attribute user_consenting.
+  def user_consenting?; end
+
+  # Returns the value of attribute user_verification.
+  def user_verification; end
+
+  # Sets the attribute user_verification
+  #
+  # @param value the value to set the attribute user_verification to.
+  def user_verification=(_arg0); end
+
+  # Returns the value of attribute user_verification.
+  def user_verification?; end
+
+  # Returns the value of attribute user_verified.
+  def user_verified; end
+
+  # Sets the attribute user_verified
+  #
+  # @param value the value to set the attribute user_verified to.
+  def user_verified=(_arg0); end
+
+  # Returns the value of attribute user_verified.
+  def user_verified?; end
+end
+
+Selenium::WebDriver::VirtualAuthenticatorOptions::PROTOCOL = T.let(T.unsafe(nil), Hash)
+Selenium::WebDriver::VirtualAuthenticatorOptions::TRANSPORT = T.let(T.unsafe(nil), Hash)
+
 class Selenium::WebDriver::Wait
   # Create a new Wait instance
   #
@@ -4575,6 +4807,12 @@ class Selenium::WebDriver::WebSocketConnection
   def attach_socket_listener; end
   def callback_thread(params); end
   def incoming_frame; end
+
+  # We should be thread-safe to use the hash without synchronization
+  # because its keys are WebSocket message identifiers and they should be
+  # unique within a devtools session.
+  def messages; end
+
   def next_id; end
   def process_frame(frame); end
   def process_handshake; end
@@ -4583,6 +4821,7 @@ class Selenium::WebDriver::WebSocketConnection
   def ws; end
 end
 
+Selenium::WebDriver::WebSocketConnection::MAX_LOG_MESSAGE_SIZE = T.let(T.unsafe(nil), Integer)
 Selenium::WebDriver::WebSocketConnection::RESPONSE_WAIT_INTERVAL = T.let(T.unsafe(nil), Float)
 Selenium::WebDriver::WebSocketConnection::RESPONSE_WAIT_TIMEOUT = T.let(T.unsafe(nil), Integer)
 

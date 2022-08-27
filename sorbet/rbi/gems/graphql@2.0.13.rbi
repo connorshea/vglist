@@ -4012,8 +4012,8 @@ class GraphQL::Query
   # @return [Boolean] if false, static validation is skipped (execution behavior for invalid queries is undefined)
   def validate; end
 
-  # @return [Boolean] if false, static validation is skipped (execution behavior for invalid queries is undefined)
-  def validate=(_arg0); end
+  # @param new_validate [Boolean] if false, static validation is skipped. This can't be reasssigned after validation.
+  def validate=(new_validate); end
 
   def validation_errors(*args, &block); end
   def validation_pipeline; end
@@ -4336,6 +4336,10 @@ class GraphQL::Query::ValidationPipeline
   def analyzers; end
 
   # @api private
+  # @return [Boolean]
+  def has_validated?; end
+
+  # @api private
   def max_complexity; end
 
   # @api private
@@ -4366,7 +4370,7 @@ end
 
 class GraphQL::Query::VariableValidationError < ::GraphQL::ExecutionError
   # @return [VariableValidationError] a new instance of VariableValidationError
-  def initialize(variable_ast, type, value, validation_result); end
+  def initialize(variable_ast, type, value, validation_result, msg: T.unsafe(nil)); end
 
   def to_h; end
 
@@ -4413,6 +4417,7 @@ class GraphQL::Query::Variables
 
   private
 
+  def add_max_errors_reached_message; end
   def deep_stringify(val); end
 end
 
@@ -4949,8 +4954,9 @@ class GraphQL::Schema::Argument
   # @api private
   def coerce_into_values(parent_object, values, context, argument_values); end
 
+  # @param default_value [Object] The value to use when the client doesn't provide one
   # @return [Object] the value used when the client doesn't provide a value for this argument
-  def default_value; end
+  def default_value(new_default_value = T.unsafe(nil)); end
 
   # @return [Boolean] True if this argument has a default value
   def default_value?; end
@@ -4990,8 +4996,9 @@ class GraphQL::Schema::Argument
   # @return [GraphQL::Schema::Field, Class] The field or input object this argument belongs to
   def owner; end
 
-  # @return [Symbol] A method to call to transform this value before sending it to field resolution method
-  def prepare; end
+  # @param new_prepare [Method, Proc]
+  # @return [Symbol] A method or proc to call to transform this value before sending it to field resolution method
+  def prepare(new_prepare = T.unsafe(nil)); end
 
   # Apply the {prepare} configuration to `value`, using methods from `obj`.
   # Used by the runtime.
@@ -5419,7 +5426,7 @@ class GraphQL::Schema::Enum < ::GraphQL::Schema::Member
     def inherited(child_class); end
 
     def kind; end
-    def validate_non_null_input(value_name, ctx); end
+    def validate_non_null_input(value_name, ctx, max_errors: T.unsafe(nil)); end
 
     # Define a value for this enum
     #
@@ -5959,7 +5966,7 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
     def coerce_result(value, ctx); end
 
     def kind; end
-    def validate_non_null_input(input, ctx); end
+    def validate_non_null_input(input, ctx, max_errors: T.unsafe(nil)); end
   end
 end
 
@@ -6117,10 +6124,11 @@ class GraphQL::Schema::List < ::GraphQL::Schema::Wrapper
   def list?; end
 
   def to_type_signature; end
-  def validate_non_null_input(value, ctx); end
+  def validate_non_null_input(value, ctx, max_errors: T.unsafe(nil)); end
 
   private
 
+  def add_max_errros_reached_message(result); end
   def ensure_array(value); end
 end
 
@@ -6593,7 +6601,7 @@ module GraphQL::Schema::Member::ValidatesInput
   # @return [Boolean]
   def valid_isolated_input?(v); end
 
-  def validate_input(val, ctx); end
+  def validate_input(val, ctx, max_errors: T.unsafe(nil)); end
 end
 
 # This base class accepts configuration for a mutation root field,
@@ -6695,7 +6703,7 @@ class GraphQL::Schema::NonNull < ::GraphQL::Schema::Wrapper
   def non_null?; end
 
   def to_type_signature; end
-  def validate_input(value, ctx); end
+  def validate_input(value, ctx, max_errors: T.unsafe(nil)); end
 end
 
 # @api private
@@ -7116,7 +7124,7 @@ class GraphQL::Schema::Scalar < ::GraphQL::Schema::Member
 
     def kind; end
     def specified_by_url(new_url = T.unsafe(nil)); end
-    def validate_non_null_input(value, ctx); end
+    def validate_non_null_input(value, ctx, max_errors: T.unsafe(nil)); end
   end
 end
 
@@ -8118,6 +8126,9 @@ class GraphQL::StaticValidation::Error
   # Returns the value of attribute message.
   def message; end
 
+  # Returns the value of attribute nodes.
+  def nodes; end
+
   # Returns the value of attribute path.
   def path; end
 
@@ -8132,9 +8143,6 @@ class GraphQL::StaticValidation::Error
   private
 
   def locations; end
-
-  # Returns the value of attribute nodes.
-  def nodes; end
 end
 
 # Convenience for validators

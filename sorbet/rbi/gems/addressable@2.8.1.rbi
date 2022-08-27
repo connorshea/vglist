@@ -1118,6 +1118,11 @@ class Addressable::URI
 
   protected
 
+  # Converts the string to be UTF-8 if it is not already UTF-8
+  #
+  # @api private
+  def force_utf8_encoding_if_needed(str); end
+
   # Resets composite values for the entire URI
   #
   # @api private
@@ -1444,6 +1449,12 @@ end
 
 # Container for the character classes specified in
 # <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>.
+#
+# Note: Concatenated and interpolated `String`s are not affected by the
+#       `frozen_string_literal` directive and must be frozen explicitly.
+#
+#       Interpolated `String`s *were* frozen this way before Ruby 3.0:
+#       https://bugs.ruby-lang.org/issues/17104
 module Addressable::URI::CharacterClasses; end
 
 Addressable::URI::CharacterClasses::ALPHA = T.let(T.unsafe(nil), String)
