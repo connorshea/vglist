@@ -31,6 +31,9 @@ class ActiveStorage::Attachment < ActiveStorage::Record
   extend ActiveStorage::Attachment::QueryMethodsReturningRelation
   RelationType = T.type_alias { T.any(ActiveStorage::Attachment::ActiveRecord_Relation, ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy, ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
 
+  sig { params(args: T.untyped).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def self.with_all_variant_records(*args); end
+
   sig { params(args: T.untyped).returns(T.untyped) }
   def autosave_associated_records_for_record(*args); end
 
@@ -126,6 +129,83 @@ class ActiveStorage::Attachment < ActiveStorage::Record
 
   sig { returns(Integer) }
   def self.default_per_page; end
+end
+
+class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
+  include ActiveStorage::Attachment::ActiveRelation_WhereNot
+  include ActiveStorage::Attachment::CustomFinderMethods
+  include ActiveStorage::Attachment::QueryMethodsReturningRelation
+  Elem = type_member {{fixed: ActiveStorage::Attachment}}
+
+  sig { params(args: T.untyped).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def with_all_variant_records(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
+end
+
+class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include ActiveStorage::Attachment::ActiveRelation_WhereNot
+  include ActiveStorage::Attachment::CustomFinderMethods
+  include ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
+  Elem = type_member {{fixed: ActiveStorage::Attachment}}
+
+  sig { params(args: T.untyped).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def with_all_variant_records(*args); end
+
+  sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
+end
+
+class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include ActiveStorage::Attachment::CustomFinderMethods
+  include ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
+  Elem = type_member {{fixed: ActiveStorage::Attachment}}
+
+  sig { params(args: T.untyped).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def with_all_variant_records(*args); end
+
+  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
+  def <<(*records); end
+
+  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
+  def append(*records); end
+
+  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
+  def push(*records); end
+
+  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
+  def concat(*records); end
+
+  sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def page(num = nil); end
+
+  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def per(num, max_per_page = nil); end
+
+  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def padding(num); end
+
+  sig { returns(T::Boolean) }
+  def last_page?; end
 end
 
 module ActiveStorage::Attachment::QueryMethodsReturningRelation
@@ -230,6 +310,9 @@ module ActiveStorage::Attachment::QueryMethodsReturningRelation
 
   sig { params(args: Symbol).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def where_missing(*args); end
+
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
+  def in_order_of(column, values); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
   def extending(*args, &block); end
@@ -350,6 +433,9 @@ module ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
   sig { params(args: Symbol).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
   def where_missing(*args); end
 
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
+  def in_order_of(column, values); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
@@ -364,44 +450,6 @@ module ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
     ).returns(ActiveRecord::Batches::BatchEnumerator)
   end
   def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, &block); end
-end
-
-class ActiveStorage::Attachment::ActiveRecord_Relation < ActiveRecord::Relation
-  include ActiveStorage::Attachment::ActiveRelation_WhereNot
-  include ActiveStorage::Attachment::CustomFinderMethods
-  include ActiveStorage::Attachment::QueryMethodsReturningRelation
-  Elem = type_member {{fixed: ActiveStorage::Attachment}}
-
-  sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_Relation) }
-  def padding(num); end
-
-  sig { returns(T::Boolean) }
-  def last_page?; end
-end
-
-class ActiveStorage::Attachment::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include ActiveStorage::Attachment::ActiveRelation_WhereNot
-  include ActiveStorage::Attachment::CustomFinderMethods
-  include ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
-  Elem = type_member {{fixed: ActiveStorage::Attachment}}
-
-  sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-
-  sig { returns(T::Boolean) }
-  def last_page?; end
 end
 
 module ActiveStorage::Attachment::GeneratedAttributeMethods
@@ -769,34 +817,4 @@ module ActiveStorage::Attachment::GeneratedAssociationMethods
 
   sig { params(ids: T.untyped).returns(T.untyped) }
   def blob_ids=(ids); end
-end
-
-class ActiveStorage::Attachment::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include ActiveStorage::Attachment::CustomFinderMethods
-  include ActiveStorage::Attachment::QueryMethodsReturningAssociationRelation
-  Elem = type_member {{fixed: ActiveStorage::Attachment}}
-
-  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
-  def <<(*records); end
-
-  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
-  def append(*records); end
-
-  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
-  def push(*records); end
-
-  sig { params(records: T.any(ActiveStorage::Attachment, T::Array[ActiveStorage::Attachment])).returns(T.self_type) }
-  def concat(*records); end
-
-  sig { params(num: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
-  def page(num = nil); end
-
-  sig { params(num: Integer, max_per_page: T.nilable(Integer)).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
-  def per(num, max_per_page = nil); end
-
-  sig { params(num: Integer).returns(ActiveStorage::Attachment::ActiveRecord_AssociationRelation) }
-  def padding(num); end
-
-  sig { returns(T::Boolean) }
-  def last_page?; end
 end
