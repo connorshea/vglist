@@ -157,6 +157,9 @@ module ActiveRecord::SchemaMigration::QueryMethodsReturningRelation
   sig { params(args: Symbol).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def where_missing(*args); end
 
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
+  def in_order_of(column, values); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::SchemaMigration::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -275,6 +278,9 @@ module ActiveRecord::SchemaMigration::QueryMethodsReturningAssociationRelation
 
   sig { params(args: Symbol).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def where_missing(*args); end
+
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
+  def in_order_of(column, values); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveRecord::SchemaMigration::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end

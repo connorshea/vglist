@@ -563,6 +563,9 @@ module ActiveStorage::Blob::QueryMethodsReturningRelation
   sig { params(args: Symbol).returns(ActiveStorage::Blob::ActiveRecord_Relation) }
   def where_missing(*args); end
 
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(ActiveStorage::Blob::ActiveRecord_Relation) }
+  def in_order_of(column, values); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Blob::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -682,6 +685,9 @@ module ActiveStorage::Blob::QueryMethodsReturningAssociationRelation
   sig { params(args: Symbol).returns(ActiveStorage::Blob::ActiveRecord_AssociationRelation) }
   def where_missing(*args); end
 
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(ActiveStorage::Blob::ActiveRecord_AssociationRelation) }
+  def in_order_of(column, values); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(ActiveStorage::Blob::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end
 
@@ -708,10 +714,10 @@ module ActiveStorage::Blob::GeneratedAttributeMethods
   sig { returns(T::Boolean) }
   def byte_size?; end
 
-  sig { returns(String) }
+  sig { returns(T.nilable(String)) }
   def checksum; end
 
-  sig { params(value: T.any(String, Symbol)).void }
+  sig { params(value: T.nilable(T.any(String, Symbol))).void }
   def checksum=(value); end
 
   sig { returns(T::Boolean) }

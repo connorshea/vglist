@@ -231,6 +231,9 @@ module GamePlatform::QueryMethodsReturningRelation
   sig { params(args: Symbol).returns(GamePlatform::ActiveRecord_Relation) }
   def where_missing(*args); end
 
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(GamePlatform::ActiveRecord_Relation) }
+  def in_order_of(column, values); end
+
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_Relation) }
   def extending(*args, &block); end
 
@@ -349,6 +352,9 @@ module GamePlatform::QueryMethodsReturningAssociationRelation
 
   sig { params(args: Symbol).returns(GamePlatform::ActiveRecord_AssociationRelation) }
   def where_missing(*args); end
+
+  sig { params(column: Symbol, values: T::Array[T.untyped]).returns(GamePlatform::ActiveRecord_AssociationRelation) }
+  def in_order_of(column, values); end
 
   sig { params(args: T.untyped, block: T.nilable(T.proc.void)).returns(GamePlatform::ActiveRecord_AssociationRelation) }
   def extending(*args, &block); end

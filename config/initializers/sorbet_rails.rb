@@ -1,8 +1,8 @@
 # typed: strict
 
-require Rails.root.join('lib/cursed_rbi_plugin')
-require Rails.root.join('lib/pg_search_custom_plugin')
-require Rails.root.join('lib/friendly_id_custom_plugin')
+require Rails.root.join('lib/cursed_rbi_plugin').to_s
+require Rails.root.join('lib/pg_search_custom_plugin').to_s
+require Rails.root.join('lib/friendly_id_custom_plugin').to_s
 
 SorbetRails::ModelRbiFormatter.register_plugin(CursedRbiPlugin)
 SorbetRails::ModelRbiFormatter.register_plugin(PgSearchCustomPlugin)
