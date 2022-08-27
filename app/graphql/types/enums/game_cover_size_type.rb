@@ -1,7 +1,7 @@
 # typed: strict
 module Types::Enums
   class GameCoverSizeType < Types::BaseEnum
-    description <<~DESCRIPTION
+    description <<~DESCRIPTION.squish
       The size of the game cover. Game covers are downsized to fit
       within the specified dimensions while retaining the original aspect
       ratio. Will only resize the image if it\'s larger than the specified
