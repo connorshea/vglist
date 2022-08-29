@@ -1517,10 +1517,10 @@
   resolved "https://registry.yarnpkg.com/@types/turbolinks/-/turbolinks-5.2.0.tgz#cdfd3691143ea2f452113c2a06bd12d9a88b25d6"
   integrity sha512-xEgHb25lj23EaUlsU3Y4KlFH7elhlYINGSnqyn/8zmcMnenY4Idyjk/x9kw1kOoOToY3de9fD8NSwRzNc6f5nw==
 
-"@types/vue-select@^3.16.1":
-  version "3.16.1"
-  resolved "https://registry.yarnpkg.com/@types/vue-select/-/vue-select-3.16.1.tgz#3466c3384ef74846cfc509b4a3a3c02aa6cb2feb"
-  integrity sha512-8gh1Lti+I20hTs4m8oZtSs8s9ghA6E9pmvxw0VtYkZm5HEhG2+YorpXrxqfu+Wb+pijxjyTcV8d0HK+FqdNxLQ==
+"@types/vue-select@^3.16.2":
+  version "3.16.2"
+  resolved "https://registry.yarnpkg.com/@types/vue-select/-/vue-select-3.16.2.tgz#dbff98ffd9122657c818867b423caf44ec6db516"
+  integrity sha512-KkmQiNI7Cei2YV3wn7O2fmM6PpfuM9ybYFMDqq2AvIZNZ2BRHMMV70yaa1EKBRvqu5qY5ekel5WzcRRfNu56PQ==
   dependencies:
     vue "^2.0.0"
 
