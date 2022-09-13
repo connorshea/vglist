@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@babel/preset-typescript": "^7.18.6",
-    "@rails/activestorage": "^7.0.0",
+    "@rails/activestorage": "^7.0.4",
     "@rails/ujs": "^7.0.4",
     "@rails/webpacker": "5.4.3",
     "@sentry/browser": "5.29.0",
