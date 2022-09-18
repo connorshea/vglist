@@ -16,6 +16,8 @@ module Tapioca
       sig { override.void }
       def decorate
         root.create_path(constant) do |klass|
+          klass.create_extend('FriendlyId::Base')
+
           common_relation_methods_module = klass.create_module('CommonRelationMethods')
           common_relation_methods_module.create_method(
             'friendly',

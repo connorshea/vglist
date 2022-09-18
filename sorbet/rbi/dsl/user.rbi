@@ -5,6 +5,7 @@
 # Please instead update this file by running `bin/tapioca dsl User`.
 
 class User
+  extend FriendlyId::Base
   include GeneratedAssociationMethods
   include GeneratedAttributeMethods
   include EnumMethodsModule
