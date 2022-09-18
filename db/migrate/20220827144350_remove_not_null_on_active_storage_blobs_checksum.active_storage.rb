@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 # This migration comes from active_storage (originally 20211119233751)
 class RemoveNotNullOnActiveStorageBlobsChecksum < ActiveRecord::Migration[6.0]

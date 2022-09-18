@@ -1,4 +1,0 @@
----
-gem:
-  exclude:
-  - 'faker'

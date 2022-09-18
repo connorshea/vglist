@@ -22,7 +22,7 @@ module Resolvers
           by_year: T.nilable(Integer),
           by_genre: T.nilable(String),
           by_engine: T.nilable(String)
-        ).returns(Game::RelationType)
+        ).returns(T.untyped)
       end
       def resolve(
         sort_by: nil,

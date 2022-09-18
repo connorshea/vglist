@@ -172,7 +172,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     authorize @game
 
-    @game.cover&.purge
+    @game.cover.purge
 
     respond_to do |format|
       format.html { redirect_to @game, success: "Cover successfully removed from #{@game.name}." }

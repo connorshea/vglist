@@ -14,7 +14,7 @@ class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
 
     game_purchases = GamePurchase.where(user_id: user.id)
 
-    raise GraphQL::ExecutionError, "User could not have their library reset." unless game_purchases.destroy_all
+    game_purchases.destroy_all
 
     {
       deleted: true

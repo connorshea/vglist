@@ -2,10 +2,10 @@
 class GamePolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(T.any(Game::ActiveRecord_Relation, Game))) }
+  sig { returns(T.untyped) }
   attr_reader :game
 
-  sig { params(user: T.nilable(User), game: T.nilable(T.any(Game::ActiveRecord_Relation, Game))).void }
+  sig { params(user: T.nilable(User), game: T.untyped).void }
   def initialize(user, game)
     @user = user
     @game = game

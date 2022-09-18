@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Views
   # A view for performantly grouping unmatched games together based on

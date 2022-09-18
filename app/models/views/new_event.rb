@@ -39,7 +39,7 @@ module Views
 
     sig { returns(T.nilable(NewEventSubclasses)) }
     def subclass
-      Views::NewEvent.find_event_subclass_by_id(T.must(id))
+      Views::NewEvent.find_event_subclass_by_id(id)
     end
 
     sig { returns(T.nilable(Eventables)) }

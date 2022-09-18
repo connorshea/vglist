@@ -6,7 +6,7 @@ module Resolvers
 
       description "List all stores."
 
-      sig { returns(Store::RelationType) }
+      sig { returns(T.untyped) }
       def resolve
         Store.all
       end

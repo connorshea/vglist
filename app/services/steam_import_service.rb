@@ -68,7 +68,7 @@ class SteamImportService
         GameStruct.new(
           hours_played: (game_info['playtime_forever'].to_f / 60).round(1),
           game_id: matching_app_and_game_ids_hash[game_info['appid']],
-          user_id: user.id,
+          user_id: T.must(user.id),
           created_at: create_time,
           updated_at: create_time
         )
@@ -133,18 +133,18 @@ class SteamImportService
   class Result < T::Struct
     extend T::Sig
 
-    const :created, GamePurchase::RelationType
-    const :updated, GamePurchase::RelationType
+    const :created, T.untyped
+    const :updated, T.untyped
     const :unmatched, T::Array[Unmatched]
 
     # Returns the games for all the newly created game purchases.
-    sig { returns(Game::RelationType) }
+    sig { returns(T.untyped) }
     def added_games
       Game.joins(:game_purchases).merge(created)
     end
 
     # Returns the games for all the updated game purchases.
-    sig { returns(Game::RelationType) }
+    sig { returns(T.untyped) }
     def updated_games
       Game.joins(:game_purchases).merge(updated)
     end
