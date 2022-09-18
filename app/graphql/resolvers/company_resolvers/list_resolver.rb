@@ -6,7 +6,7 @@ module Resolvers
 
       description "List all companies."
 
-      sig { returns(Company::RelationType) }
+      sig { returns(T.untyped) }
       def resolve
         Company.all
       end

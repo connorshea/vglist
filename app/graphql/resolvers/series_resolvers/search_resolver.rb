@@ -8,7 +8,7 @@ module Resolvers
 
       argument :query, String, required: true, description: "Name to search by."
 
-      sig { params(query: String).returns(Series::RelationType) }
+      sig { params(query: String).returns(T.untyped) }
       def resolve(query:)
         Series.search(query)
       end

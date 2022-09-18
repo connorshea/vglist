@@ -8,7 +8,7 @@ module Resolvers
 
       argument :query, String, required: true, description: "Username to search by."
 
-      sig { params(query: String).returns(User::RelationType) }
+      sig { params(query: String).returns(T.untyped) }
       def resolve(query:)
         User.search(query)
       end

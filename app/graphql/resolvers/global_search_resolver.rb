@@ -17,9 +17,6 @@ module Resolvers
       validates length: { minimum: 1 }
     end
 
-    # Technically this should return `PgSearch::Document::RelationType`, but
-    # SorbetRails doesn't seem to know about PgSearch::Document, so no types
-    # for it exist.
     sig { params(query: String, searchable_types: T::Array[String]).returns(T.untyped) }
     def resolve(query:, searchable_types: %w[Game Series Company Platform Engine Genre User])
       PgSearch.multisearch(query)

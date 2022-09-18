@@ -7,7 +7,7 @@ module Resolvers
 
     argument :feed_type, Types::Enums::ActivityFeedType, required: false
 
-    sig { params(feed_type: String).returns(T.nilable(Views::NewEvent::RelationType)) }
+    sig { params(feed_type: String).returns(T.nilable(T.untyped)) }
     def resolve(feed_type: 'following')
       case feed_type
       when 'global'

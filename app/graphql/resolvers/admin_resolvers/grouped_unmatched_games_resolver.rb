@@ -5,7 +5,7 @@ module Resolvers::AdminResolvers
 
     description "List all unmatched game entries."
 
-    sig { returns(T.nilable(Views::GroupedUnmatchedGame::RelationType)) }
+    sig { returns(T.untyped) }
     def resolve
       Views::GroupedUnmatchedGame.all
     end
