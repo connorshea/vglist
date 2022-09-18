@@ -8,4 +8,7 @@ module GamesHelper
   include Kernel
   include ActionView::Helpers
   include Devise::Controllers::Helpers
+  include InlineSvg::ActionView::Helpers
+  include Doorkeeper::Rails::Helpers
+  include Webpacker::Helper
 end

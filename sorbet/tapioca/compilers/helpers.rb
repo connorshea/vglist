@@ -40,6 +40,9 @@ module Tapioca
 
           # Custom includes:
           klass.create_include('Devise::Controllers::Helpers')
+          klass.create_include('InlineSvg::ActionView::Helpers')
+          klass.create_include('Doorkeeper::Rails::Helpers')
+          klass.create_include('Webpacker::Helper')
         end
       end
     end
