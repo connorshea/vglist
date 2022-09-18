@@ -43,3 +43,6 @@ require "sparql"
 require "sparql/client"
 require "webdrivers"
 require "webmock/rspec"
+
+# Custom:
+require "paper_trail/frameworks/active_record"
