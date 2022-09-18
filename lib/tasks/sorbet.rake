@@ -69,18 +69,11 @@ namespace :sorbet do
   end
 
   namespace :update do
-    desc "Update Sorbet and Sorbet Rails RBIs."
+    desc "Update Sorbet and Tapioca RBIs."
     task all: :environment do
       Bundler.with_unbundled_env do
         system('bundle exec tapioca annotations')
-        # We don't want to include the RBI files for these gems since they're not useful.
-        # puts 'Removing unwanted gem definitions from sorbet-typed...'
-        # ['rspec-core', 'rake', 'rubocop', 'doorkeeper'].each do |gem|
-        #   FileUtils.remove_dir(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}")) if Dir.exist?(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}"))
-        # end
         system('bundle exec tapioca gem --no-loc')
-        # Generate Sorbet Rails RBIs.
-        system('bundle exec rake rails_rbi:all')
         system('bundle exec tapioca todo')
         system('bundle exec spoom bump')
       end

@@ -39,14 +39,6 @@ module PgSearch::Model
   mixes_in_class_methods(ClassMethods)
 end
 
-# Make Sorbet understand that SorbetRails::ModelPlugins::Base extends T::Sig.
-# Otherwise it won't let us use sigs in the plugin class.
-module SorbetRails::ModelPlugins
-  class Base < ::Parlour::Plugin
-    extend T::Sig
-  end
-end
-
 # Add modules from Devise to User.
 class User
   include ::Devise::Models::Authenticatable
