@@ -675,6 +675,13 @@ class GraphQL::Dataloader::Source
   # @return [Object] The result from {#fetch} for `keys`. If `keys` haven't been loaded yet, the Fiber will yield until they're loaded.
   def load_all(keys); end
 
+  # Add these key-value pairs to this source's cache
+  # (future loads will use these merged values).
+  #
+  # @param results [Hash<Object => Object>] key-value pairs to cache in this source
+  # @return [void]
+  def merge(results); end
+
   # @return [Boolean] True if this source has any pending requests for data.
   def pending?; end
 
@@ -803,23 +810,14 @@ class GraphQL::Execution::Errors
   end
 end
 
-module GraphQL::Execution::Instrumentation
+class GraphQL::Execution::Interpreter
   class << self
-    # This function implements the instrumentation policy:
-    #
-    # - Instrumenters are a stack; the first `before_query` will have the last `after_query`
-    # - If a `before_` hook returned without an error, its corresponding `after_` hook will run.
-    # - If the `before_` hook did _not_ run, the `after_` hook will not be called.
-    #
-    # When errors are raised from `after_` hooks:
-    #   - Subsequent `after_` hooks _are_ called
-    #   - The first raised error is captured; later errors are ignored
-    #   - If an error was capture, it's re-raised after all hooks are finished
-    #
-    # Partial runs of instrumentation are possible:
-    # - If a `before_multiplex` hook raises an error, no `before_query` hooks will run
-    # - If a `before_query` hook raises an error, subsequent `before_query` hooks will not run (on any query)
-    def apply_instrumenters(multiplex); end
+    # @param schema [GraphQL::Schema]
+    # @param queries [Array<GraphQL::Query, Hash>]
+    # @param context [Hash]
+    # @param max_complexity [Integer, nil]
+    # @return [Array<Hash>] One result per query
+    def run_all(schema, query_options, context: T.unsafe(nil), max_complexity: T.unsafe(nil)); end
 
     private
 
@@ -833,25 +831,6 @@ module GraphQL::Execution::Instrumentation
     # Then yield if no errors.
     # `call_hooks` takes care of appropriate cleanup.
     def each_query_call_hooks(instrumenters, queries, i = T.unsafe(nil)); end
-  end
-end
-
-class GraphQL::Execution::Interpreter
-  # Run the eager part of `query`
-  #
-  # @return [Interpreter::Runtime]
-  def evaluate(query); end
-
-  # Run the lazy part of `query` or `multiplex`.
-  #
-  # @return [void]
-  def sync_lazies(query: T.unsafe(nil), multiplex: T.unsafe(nil)); end
-
-  class << self
-    def begin_multiplex(multiplex); end
-    def begin_query(query, multiplex); end
-    def finish_multiplex(_results, multiplex); end
-    def finish_query(query, _multiplex); end
   end
 end
 
@@ -1418,6 +1397,7 @@ class GraphQL::Execution::Lookahead
   # Like {#selects?}, but can be used for chaining.
   # It returns a null object (check with {#selected?})
   #
+  # @param field_name [String, Symbol]
   # @return [GraphQL::Execution::Lookahead]
   def selection(field_name, selected_type: T.unsafe(nil), arguments: T.unsafe(nil)); end
 
@@ -1459,13 +1439,9 @@ class GraphQL::Execution::Lookahead
 
   # If a selection on `node` matches `field_name` (which is backed by `field_defn`)
   # and matches the `arguments:` constraints, then add that node to `matches`
-  def find_selected_nodes(node, field_name, field_defn, arguments:, matches:); end
+  def find_selected_nodes(node, field_defn, arguments:, matches:); end
 
   def find_selections(subselections_by_type, selections_on_type, selected_type, ast_selections, arguments); end
-  def normalize_keyword(keyword); end
-
-  # If it's a symbol, stringify and camelize it
-  def normalize_name(name); end
 
   # @return [Boolean]
   def skipped_by_directive?(ast_selection); end
@@ -1535,34 +1511,7 @@ class GraphQL::Execution::Multiplex
 
   # @api private
   def schema; end
-
-  class << self
-    # @api private
-    # @param query [GraphQL::Query]
-    def begin_query(results, idx, query, multiplex); end
-
-    # @api private
-    # @param schema [GraphQL::Schema]
-    # @param queries [Array<GraphQL::Query, Hash>]
-    # @param context [Hash]
-    # @param max_complexity [Integer, nil]
-    # @return [Array<Hash>] One result per query
-    def run_all(schema, query_options, context: T.unsafe(nil), max_complexity: T.unsafe(nil)); end
-
-    private
-
-    # @api private
-    # @param data_result [Hash] The result for the "data" key, if any
-    # @param query [GraphQL::Query] The query which was run
-    # @return [Hash] final result of this query, including all values and errors
-    def finish_query(data_result, query, multiplex); end
-  end
 end
-
-# Used internally to signal that the query shouldn't be executed
-#
-# @api private
-GraphQL::Execution::Multiplex::NO_OPERATION = T.let(T.unsafe(nil), Hash)
 
 # Just a singleton for implementing {Query::Context#skip}
 #
@@ -1696,7 +1645,7 @@ end
 
 module GraphQL::Introspection
   class << self
-    def query(include_deprecated_args: T.unsafe(nil), include_schema_description: T.unsafe(nil), include_is_repeatable: T.unsafe(nil), include_specified_by_url: T.unsafe(nil)); end
+    def query(include_deprecated_args: T.unsafe(nil), include_schema_description: T.unsafe(nil), include_is_repeatable: T.unsafe(nil), include_specified_by_url: T.unsafe(nil), include_is_one_of: T.unsafe(nil)); end
   end
 end
 
@@ -1768,6 +1717,7 @@ class GraphQL::Introspection::TypeType < ::GraphQL::Introspection::BaseObject
   def fields(include_deprecated:); end
   def input_fields(include_deprecated:); end
   def interfaces; end
+  def is_one_of; end
   def kind; end
   def of_type; end
   def possible_types; end
@@ -5357,6 +5307,7 @@ GraphQL::Schema::Directive::LOCATIONS = T.let(T.unsafe(nil), Array)
 GraphQL::Schema::Directive::LOCATION_DESCRIPTIONS = T.let(T.unsafe(nil), Hash)
 GraphQL::Schema::Directive::MUTATION = T.let(T.unsafe(nil), Symbol)
 GraphQL::Schema::Directive::OBJECT = T.let(T.unsafe(nil), Symbol)
+class GraphQL::Schema::Directive::OneOf < ::GraphQL::Schema::Directive; end
 GraphQL::Schema::Directive::QUERY = T.let(T.unsafe(nil), Symbol)
 GraphQL::Schema::Directive::SCALAR = T.let(T.unsafe(nil), Symbol)
 GraphQL::Schema::Directive::SCHEMA = T.let(T.unsafe(nil), Symbol)
@@ -5966,6 +5917,11 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
     def coerce_result(value, ctx); end
 
     def kind; end
+    def one_of; end
+
+    # @return [Boolean]
+    def one_of?; end
+
     def validate_non_null_input(input, ctx, max_errors: T.unsafe(nil)); end
   end
 end
@@ -6087,6 +6043,10 @@ class GraphQL::Schema::LateBoundType
 
   # @api Private
   def name; end
+
+  # @api Private
+  # @return [Boolean]
+  def non_null?; end
 
   # @api Private
   def to_list_type; end
@@ -8533,6 +8493,7 @@ end
 
 class GraphQL::StaticValidation::InterpreterVisitor < ::GraphQL::StaticValidation::BaseVisitor
   include ::GraphQL::StaticValidation::DefinitionDependencies
+  include ::GraphQL::StaticValidation::OneOfInputObjectsAreValid
   include ::GraphQL::StaticValidation::InputObjectNamesAreUnique
   include ::GraphQL::StaticValidation::SubscriptionRootExists
   include ::GraphQL::StaticValidation::QueryRootExists
@@ -8637,6 +8598,27 @@ class GraphQL::StaticValidation::NoDefinitionsArePresentError < ::GraphQL::Stati
   def initialize(message, path: T.unsafe(nil), nodes: T.unsafe(nil)); end
 
   def code; end
+
+  # A hash representation of this Message
+  def to_h; end
+end
+
+module GraphQL::StaticValidation::OneOfInputObjectsAreValid
+  def on_input_object(node, parent); end
+
+  private
+
+  def validate_one_of_input_object(ast_node, context, parent_type); end
+end
+
+class GraphQL::StaticValidation::OneOfInputObjectsAreValidError < ::GraphQL::StaticValidation::Error
+  # @return [OneOfInputObjectsAreValidError] a new instance of OneOfInputObjectsAreValidError
+  def initialize(message, path:, nodes:, input_object_type:); end
+
+  def code; end
+
+  # Returns the value of attribute input_object_type.
+  def input_object_type; end
 
   # A hash representation of this Message
   def to_h; end

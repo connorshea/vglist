@@ -457,7 +457,6 @@ class Tapioca::Commands::Dsl < ::Tapioca::Commands::Command
       only: T::Array[::String],
       exclude: T::Array[::String],
       file_header: T::Boolean,
-      compiler_path: ::String,
       tapioca_path: ::String,
       should_verify: T::Boolean,
       quiet: T::Boolean,
@@ -468,15 +467,15 @@ class Tapioca::Commands::Dsl < ::Tapioca::Commands::Command
       rbi_formatter: ::Tapioca::RBIFormatter
     ).void
   end
-  def initialize(requested_constants:, outpath:, only:, exclude:, file_header:, compiler_path:, tapioca_path:, should_verify: T.unsafe(nil), quiet: T.unsafe(nil), verbose: T.unsafe(nil), number_of_workers: T.unsafe(nil), auto_strictness: T.unsafe(nil), gem_dir: T.unsafe(nil), rbi_formatter: T.unsafe(nil)); end
+  def initialize(requested_constants:, outpath:, only:, exclude:, file_header:, tapioca_path:, should_verify: T.unsafe(nil), quiet: T.unsafe(nil), verbose: T.unsafe(nil), number_of_workers: T.unsafe(nil), auto_strictness: T.unsafe(nil), gem_dir: T.unsafe(nil), rbi_formatter: T.unsafe(nil)); end
 
   sig { override.void }
   def execute; end
 
-  private
-
   sig { void }
-  def abort_if_pending_migrations!; end
+  def list_compilers; end
+
+  private
 
   sig { params(cause: ::Symbol, files: T::Array[::String]).returns(::String) }
   def build_error_for_files(cause, files); end
@@ -497,6 +496,9 @@ class Tapioca::Commands::Dsl < ::Tapioca::Commands::Command
   sig { params(compiler_names: T::Array[::String]).returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
   def constantize_compilers(compiler_names); end
 
+  sig { returns(::Tapioca::Dsl::Pipeline) }
+  def create_pipeline; end
+
   sig { params(constant_name: ::String).returns(::Pathname) }
   def dsl_rbi_filename(constant_name); end
 
@@ -505,18 +507,6 @@ class Tapioca::Commands::Dsl < ::Tapioca::Commands::Command
 
   sig { params(constant: ::String).returns(::String) }
   def generate_command_for(constant); end
-
-  sig { params(eager_load: T::Boolean).void }
-  def load_application(eager_load:); end
-
-  sig { void }
-  def load_dsl_compilers; end
-
-  sig { void }
-  def load_dsl_extensions; end
-
-  sig { returns(::Tapioca::Runtime::Loader) }
-  def loader; end
 
   sig { params(dir: ::Pathname).void }
   def perform_dsl_verification(dir); end
@@ -581,9 +571,6 @@ class Tapioca::Commands::Gem < ::Tapioca::Commands::Command
   sig { params(cause: ::Symbol, files: T::Array[::String]).returns(::String) }
   def build_error_for_files(cause, files); end
 
-  sig { returns(::Tapioca::Gemfile) }
-  def bundle; end
-
   sig { params(gem: ::Tapioca::Gemfile::GemSpec).void }
   def compile_gem_rbi(gem); end
 
@@ -599,9 +586,6 @@ class Tapioca::Commands::Gem < ::Tapioca::Commands::Command
   sig { returns(T::Hash[::String, ::String]) }
   def expected_rbis; end
 
-  sig { params(file: ::String, error: ::LoadError).void }
-  def explain_failed_require(file, error); end
-
   sig { params(gem_name: ::String).returns(T::Boolean) }
   def gem_rbi_exists?(gem_name); end
 
@@ -610,9 +594,6 @@ class Tapioca::Commands::Gem < ::Tapioca::Commands::Command
 
   sig { params(gem_names: T::Array[::String]).returns(T::Array[::Tapioca::Gemfile::GemSpec]) }
   def gems_to_generate(gem_names); end
-
-  sig { returns(::Tapioca::Runtime::Loader) }
-  def loader; end
 
   sig { params(gem: ::Tapioca::Gemfile::GemSpec, file: ::RBI::File).void }
   def merge_with_exported_rbi(gem, file); end
@@ -634,9 +615,6 @@ class Tapioca::Commands::Gem < ::Tapioca::Commands::Command
 
   sig { params(diff: T::Hash[::String, ::Symbol], command: ::Symbol).void }
   def report_diff_and_exit_if_out_of_date(diff, command); end
-
-  sig { void }
-  def require_gem_file; end
 end
 
 class Tapioca::Commands::Require < ::Tapioca::Commands::Command
@@ -782,9 +760,6 @@ class Tapioca::Dsl::Compiler
 
   private
 
-  sig { params(type: ::String).returns(::String) }
-  def as_nilable_type(type); end
-
   sig { params(method_def: T.any(::Method, ::UnboundMethod)).returns(T::Array[::RBI::TypedParam]) }
   def compile_method_parameters_to_rbi(method_def); end
 
@@ -820,7 +795,6 @@ class Tapioca::Dsl::Compiler
 end
 
 module Tapioca::Dsl::Compilers; end
-Tapioca::Dsl::Compilers::DIRECTORY = T.let(T.unsafe(nil), String)
 
 # DSL compilers are either built-in to Tapioca and live under the
 # `Tapioca::Dsl::Compilers` namespace (i.e. this namespace), and
@@ -842,13 +816,16 @@ class Tapioca::Dsl::Pipeline
   end
   def initialize(requested_constants:, requested_compilers: T.unsafe(nil), excluded_compilers: T.unsafe(nil), error_handler: T.unsafe(nil), number_of_workers: T.unsafe(nil)); end
 
+  sig { returns(T::Enumerable[T.class_of(Tapioca::Dsl::Compiler)]) }
+  def active_compilers; end
+
   sig { params(error: ::String).void }
   def add_error(error); end
 
   sig { params(compiler_name: ::String).returns(T::Boolean) }
   def compiler_enabled?(compiler_name); end
 
-  sig { returns(T::Enumerable[T.class_of(Tapioca::Dsl::Compiler)]) }
+  sig { returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
   def compilers; end
 
   sig { returns(T.proc.params(error: ::String).void) }
@@ -879,7 +856,7 @@ class Tapioca::Dsl::Pipeline
       excluded_compilers: T::Array[T.class_of(Tapioca::Dsl::Compiler)]
     ).returns(T::Enumerable[T.class_of(Tapioca::Dsl::Compiler)])
   end
-  def gather_compilers(requested_compilers, excluded_compilers); end
+  def gather_active_compilers(requested_compilers, excluded_compilers); end
 
   sig { params(requested_constants: T::Array[::Module]).returns(T::Set[::Module]) }
   def gather_constants(requested_constants); end
@@ -1485,6 +1462,9 @@ class Tapioca::Gemfile::GemSpec
   sig { params(spec: T.any(::Bundler::StubSpecification, ::Gem::Specification)).void }
   def initialize(spec); end
 
+  sig { params(other: ::BasicObject).returns(T::Boolean) }
+  def ==(other); end
+
   sig { params(path: ::String).returns(T::Boolean) }
   def contains_path?(path); end
 
@@ -1515,6 +1495,9 @@ class Tapioca::Gemfile::GemSpec
   sig { returns(::String) }
   def rbi_file_name; end
 
+  sig { params(file: ::Pathname).returns(::Pathname) }
+  def relative_path_for(file); end
+
   # @return [String]
   def version; end
 
@@ -1540,10 +1523,129 @@ class Tapioca::Gemfile::GemSpec
 
   sig { returns(::String) }
   def version_string; end
+
+  class << self
+    sig { returns(T::Hash[::String, ::Tapioca::Gemfile::GemSpec]) }
+    def spec_lookup_by_file_path; end
+  end
 end
 
 Tapioca::Gemfile::GemSpec::IGNORED_GEMS = T.let(T.unsafe(nil), Array)
 Tapioca::Gemfile::Spec = T.type_alias { T.any(::Bundler::StubSpecification, ::Gem::Specification) }
+module Tapioca::Loaders; end
+
+class Tapioca::Loaders::Dsl < ::Tapioca::Loaders::Loader
+  sig { params(tapioca_path: ::String, eager_load: T::Boolean).void }
+  def initialize(tapioca_path:, eager_load: T.unsafe(nil)); end
+
+  sig { override.void }
+  def load; end
+
+  protected
+
+  sig { void }
+  def abort_if_pending_migrations!; end
+
+  sig { void }
+  def load_application; end
+
+  sig { void }
+  def load_dsl_compilers; end
+
+  sig { void }
+  def load_dsl_extensions; end
+
+  class << self
+    sig { params(tapioca_path: ::String, eager_load: T::Boolean).void }
+    def load_application(tapioca_path:, eager_load: T.unsafe(nil)); end
+  end
+end
+
+class Tapioca::Loaders::Gem < ::Tapioca::Loaders::Loader
+  sig do
+    params(
+      bundle: ::Tapioca::Gemfile,
+      prerequire: T.nilable(::String),
+      postrequire: ::String,
+      default_command: ::String
+    ).void
+  end
+  def initialize(bundle:, prerequire:, postrequire:, default_command:); end
+
+  sig { override.void }
+  def load; end
+
+  protected
+
+  sig { params(file: ::String, error: ::LoadError).void }
+  def explain_failed_require(file, error); end
+
+  sig { void }
+  def require_gem_file; end
+
+  class << self
+    sig do
+      params(
+        bundle: ::Tapioca::Gemfile,
+        prerequire: T.nilable(::String),
+        postrequire: ::String,
+        default_command: ::String
+      ).void
+    end
+    def load_application(bundle:, prerequire:, postrequire:, default_command:); end
+  end
+end
+
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
+class Tapioca::Loaders::Loader
+  include ::Thor::Base
+  include ::Thor::Invocation
+  include ::Thor::Shell
+  include ::Tapioca::CliHelper
+  include ::Tapioca::GemHelper
+  extend ::Thor::Base::ClassMethods
+  extend ::Thor::Invocation::ClassMethods
+
+  abstract!
+
+  def initialize(*args, &blk); end
+
+  # @abstract
+  sig { abstract.void }
+  def load; end
+
+  private
+
+  sig { void }
+  def eager_load_rails_app; end
+
+  sig do
+    params(
+      gemfile: ::Tapioca::Gemfile,
+      initialize_file: T.nilable(::String),
+      require_file: T.nilable(::String)
+    ).void
+  end
+  def load_bundle(gemfile, initialize_file, require_file); end
+
+  sig { params(environment_load: T::Boolean, eager_load: T::Boolean).void }
+  def load_rails_application(environment_load: T.unsafe(nil), eager_load: T.unsafe(nil)); end
+
+  sig { void }
+  def load_rails_engines; end
+
+  sig { returns(T::Array[T.untyped]) }
+  def rails_engines; end
+
+  sig { params(file: T.nilable(::String)).void }
+  def require_helper(file); end
+
+  sig { params(path: ::String).void }
+  def safe_require(path); end
+
+  sig { void }
+  def silence_deprecations; end
+end
 
 module Tapioca::RBIFilesHelper
   requires_ancestor { Tapioca::SorbetHelper }
@@ -1631,6 +1733,9 @@ module Tapioca::RBIHelper
   include ::Tapioca::SorbetHelper
   extend ::Tapioca::SorbetHelper
   extend ::Tapioca::RBIHelper
+
+  sig { params(type: ::String).returns(::String) }
+  def as_nilable_type(type); end
 
   sig { params(name: ::String, type: ::String).returns(::RBI::TypedParam) }
   def create_block_param(name, type:); end
@@ -1811,47 +1916,6 @@ module Tapioca::Runtime::GenericTypeRegistry
     sig { params(constant: ::Module).returns(T::Array[::Tapioca::TypeVariableModule]) }
     def lookup_or_initialize_type_variables(constant); end
   end
-end
-
-class Tapioca::Runtime::Loader
-  include ::Tapioca::GemHelper
-  include ::Thor::Base
-  include ::Thor::Invocation
-  include ::Thor::Shell
-  extend ::Thor::Base::ClassMethods
-  extend ::Thor::Invocation::ClassMethods
-
-  sig do
-    params(
-      gemfile: ::Tapioca::Gemfile,
-      initialize_file: T.nilable(::String),
-      require_file: T.nilable(::String)
-    ).void
-  end
-  def load_bundle(gemfile, initialize_file, require_file); end
-
-  sig { params(environment_load: T::Boolean, eager_load: T::Boolean).void }
-  def load_rails_application(environment_load: T.unsafe(nil), eager_load: T.unsafe(nil)); end
-
-  private
-
-  sig { void }
-  def eager_load_rails_app; end
-
-  sig { void }
-  def load_rails_engines; end
-
-  sig { returns(T::Array[T.untyped]) }
-  def rails_engines; end
-
-  sig { params(file: T.nilable(::String)).void }
-  def require_helper(file); end
-
-  sig { params(path: ::String).void }
-  def safe_require(path); end
-
-  sig { void }
-  def silence_deprecations; end
 end
 
 module Tapioca::Runtime::Reflection
@@ -2125,6 +2189,7 @@ class Tapioca::Static::SymbolTableParser
   end
 end
 
+Tapioca::Static::SymbolTableParser::SKIP_PARSE_KINDS = T.let(T.unsafe(nil), Array)
 Tapioca::TAPIOCA_CONFIG_FILE = T.let(T.unsafe(nil), String)
 Tapioca::TAPIOCA_DIR = T.let(T.unsafe(nil), String)
 
@@ -2192,3 +2257,35 @@ class Tapioca::TypeVariableModule::Type < ::T::Enum
 end
 
 Tapioca::VERSION = T.let(T.unsafe(nil), String)
+
+class URI::Source < ::URI::File
+  sig { params(v: T.nilable(::String)).returns(T::Boolean) }
+  def check_host(v); end
+
+  def gem_name; end
+
+  sig { returns(T.nilable(::String)) }
+  def gem_version; end
+
+  def line_number; end
+
+  sig { params(v: T.nilable(::String)).void }
+  def set_path(v); end
+
+  sig { returns(::String) }
+  def to_s; end
+
+  class << self
+    sig do
+      params(
+        gem_name: ::String,
+        gem_version: T.nilable(::String),
+        path: ::String,
+        line_number: T.nilable(::String)
+      ).returns(::URI::Source)
+    end
+    def build(gem_name:, gem_version:, path:, line_number:); end
+  end
+end
+
+URI::Source::COMPONENT = T.let(T.unsafe(nil), Array)

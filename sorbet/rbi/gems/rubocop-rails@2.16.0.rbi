@@ -63,10 +63,7 @@ end
 
 # Common functionality for enforcing a specific superclass.
 module RuboCop::Cop::EnforceSuperclass
-  # @api private
   def on_class(node); end
-
-  # @api private
   def on_send(node); end
 
   private
@@ -74,17 +71,12 @@ module RuboCop::Cop::EnforceSuperclass
   def register_offense(offense_node); end
 
   class << self
-    # @api private
-    # @private
     # @private
     def included(base); end
   end
 end
 
-# @deprecated IgnoredMethods class has been replaced with AllowedMethods.
 RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
-
-# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # Common functionality for Rails/IndexBy and Rails/IndexWith
@@ -232,6 +224,51 @@ module RuboCop::Cop::MigrationsHelper
 end
 
 module RuboCop::Cop::Rails; end
+
+# Using `flash` assignment before `render` in Rails controllers will persist the message for too long.
+# Check https://guides.rubyonrails.org/action_controller_overview.html#flash-now
+#
+# @example
+#
+#   # bad
+#   class HomeController < ApplicationController
+#   def create
+#   flash[:alert] = "msg"
+#   render :index
+#   end
+#   end
+#
+#   # good
+#   class HomeController < ApplicationController
+#   def create
+#   flash.now[:alert] = "msg"
+#   render :index
+#   end
+#   end
+class RuboCop::Cop::Rails::ActionControllerFlashBeforeRender < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def action_controller?(param0); end
+  def flash_assignment?(param0); end
+  def on_send(flash_node); end
+  def render?(param0); end
+
+  private
+
+  def find_ancestor(node, type:); end
+
+  # @return [Boolean]
+  def followed_by_render?(flash_node); end
+
+  # @return [Boolean]
+  def inherit_action_controller_base?(node); end
+
+  # @return [Boolean]
+  def instance_method_or_block?(node); end
+end
+
+RuboCop::Cop::Rails::ActionControllerFlashBeforeRender::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::ActionControllerFlashBeforeRender::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Using `ActionController::TestCase`` is discouraged and should be replaced by
 # `ActionDispatch::IntegrationTest``. Controller tests are too close to the
@@ -430,6 +467,26 @@ end
 RuboCop::Cop::Rails::ActiveSupportAliases::ALIASES = T.let(T.unsafe(nil), Hash)
 RuboCop::Cop::Rails::ActiveSupportAliases::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ActiveSupportAliases::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Checks for Rails framework classes that are patched directly instead of using Active Support load hooks. Direct
+# patching forcibly loads the framework referenced, using hooks defers loading until it's actually needed.
+#
+# @example
+#
+#   # bad
+#   ActiveRecord::Base.include(MyClass)
+#
+#   # good
+#   ActiveSupport.on_load(:active_record) { include MyClass }
+class RuboCop::Cop::Rails::ActiveSupportOnLoad < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def on_send(node); end
+end
+
+RuboCop::Cop::Rails::ActiveSupportOnLoad::LOAD_HOOKS = T.let(T.unsafe(nil), Hash)
+RuboCop::Cop::Rails::ActiveSupportOnLoad::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::ActiveSupportOnLoad::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Checks for migrations using `add_column` that have an `index`
 # key. `add_column` does not accept `index`, but also does not raise an
@@ -1347,7 +1404,7 @@ class RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods < ::RuboCop::Cop::
   extend ::RuboCop::Cop::AutoCorrector
 
   def any_manipulation?(param0 = T.unsafe(nil)); end
-  def errors_keys?(param0 = T.unsafe(nil)); end
+  def errors_deprecated?(param0 = T.unsafe(nil)); end
   def messages_details_assignment?(param0 = T.unsafe(nil)); end
   def messages_details_manipulation?(param0 = T.unsafe(nil)); end
   def on_send(node); end
@@ -1366,9 +1423,13 @@ class RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods < ::RuboCop::Cop::
   def offense_range(node, receiver); end
   def receiver_matcher(node); end
   def replacement(node, receiver); end
+
+  # @return [Boolean]
+  def skip_autocorrect?(node); end
 end
 
-RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::AUTOCORECTABLE_METHODS = T.let(T.unsafe(nil), Array)
+RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::AUTOCORRECTABLE_METHODS = T.let(T.unsafe(nil), Array)
+RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::INCOMPATIBLE_METHODS = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::MANIPULATIVE_METHODS = T.let(T.unsafe(nil), Set)
 RuboCop::Cop::Rails::DeprecatedActiveModelErrorsMethods::MSG = T.let(T.unsafe(nil), String)
 
@@ -1971,11 +2032,16 @@ RuboCop::Cop::Rails::FindById::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 #
 #   # good
 #   User.all.find_each
-# @example IgnoredMethods: ['order']
+# @example AllowedMethods: ['order']
+#   # good
+#   User.order(:foo).each
+# @example AllowedPattern: [/order/]
 #   # good
 #   User.order(:foo).each
 class RuboCop::Cop::Rails::FindEach < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ActiveRecordHelper
+  include ::RuboCop::Cop::AllowedMethods
+  include ::RuboCop::Cop::AllowedPattern
   extend ::RuboCop::Cop::AutoCorrector
 
   def on_send(node); end
@@ -1995,6 +2061,42 @@ end
 RuboCop::Cop::Rails::FindEach::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::FindEach::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Rails::FindEach::SCOPE_METHODS = T.let(T.unsafe(nil), Array)
+
+# Identifies usages of `travel_to` with an argument of the current time and
+# change them to use `freeze_time` instead.
+#
+# @example
+#   # bad
+#   travel_to(Time.now)
+#   travel_to(Time.new)
+#   travel_to(DateTime.now)
+#   travel_to(Time.current)
+#   travel_to(Time.zone.now)
+#   travel_to(Time.now.in_time_zone)
+#   travel_to(Time.current.to_time)
+#
+#   # good
+#   freeze_time
+class RuboCop::Cop::Rails::FreezeTime < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def on_send(node); end
+  def time_now?(param0 = T.unsafe(nil)); end
+  def zoned_time_now?(param0 = T.unsafe(nil)); end
+
+  private
+
+  # @return [Boolean]
+  def current_time?(node, method_name); end
+
+  # @return [Boolean]
+  def current_time_with_convert?(node, method_name); end
+end
+
+RuboCop::Cop::Rails::FreezeTime::CONV_METHODS = T.let(T.unsafe(nil), Array)
+RuboCop::Cop::Rails::FreezeTime::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::FreezeTime::NOW_METHODS = T.let(T.unsafe(nil), Array)
+RuboCop::Cop::Rails::FreezeTime::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Checks for the use of the has_and_belongs_to_many macro.
 #
@@ -3780,12 +3882,15 @@ class RuboCop::Cop::Rails::RedundantReceiverInWithOptions < ::RuboCop::Cop::Base
   def all_block_nodes_in(param0); end
   def all_send_nodes_in(param0); end
   def on_block(node); end
-  def with_options?(param0 = T.unsafe(nil)); end
+  def on_numblock(node); end
 
   private
 
-  def autocorrect(corrector, node); end
+  def autocorrect(corrector, send_node, node); end
   def block_argument_range(node); end
+
+  # @return [Boolean]
+  def redundant_receiver?(send_nodes, node); end
 
   # @return [Boolean]
   def same_value?(arg_node, recv_node); end
@@ -3851,6 +3956,9 @@ class RuboCop::Cop::Rails::ReflectionClassName < ::RuboCop::Cop::Base
 
   # @return [Boolean]
   def reflection_class_value?(class_value); end
+
+  # @return [Boolean]
+  def str_assigned?(reflection_class_name); end
 end
 
 RuboCop::Cop::Rails::ReflectionClassName::ALLOWED_REFLECTION_CLASS_TYPES = T.let(T.unsafe(nil), Array)
@@ -4236,6 +4344,7 @@ class RuboCop::Cop::Rails::ReversibleMigration < ::RuboCop::Cop::Base
   def drop_table_call(param0 = T.unsafe(nil)); end
   def irreversible_schema_statement_call(param0 = T.unsafe(nil)); end
   def on_block(node); end
+  def on_numblock(node); end
   def on_send(node); end
   def remove_column_call(param0 = T.unsafe(nil)); end
   def remove_columns_call(param0 = T.unsafe(nil)); end
@@ -4347,6 +4456,51 @@ end
 
 RuboCop::Cop::Rails::RootJoinChain::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::RootJoinChain::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
+
+# Use `Rails.root` IO methods instead of passing it to `File`.
+#
+# `Rails.root` is an instance of `Pathname`
+# so we can apply many IO methods directly.
+#
+# This cop works best when used together with
+# `Style/FileRead`, `Style/FileWrite` and `Rails/RootJoinChain`.
+#
+# @example
+#   # bad
+#   File.open(Rails.root.join('db', 'schema.rb'))
+#   File.open(Rails.root.join('db', 'schema.rb'), 'w')
+#   File.read(Rails.root.join('db', 'schema.rb'))
+#   File.binread(Rails.root.join('db', 'schema.rb'))
+#   File.write(Rails.root.join('db', 'schema.rb'), content)
+#   File.binwrite(Rails.root.join('db', 'schema.rb'), content)
+#
+#   # good
+#   Rails.root.join('db', 'schema.rb').open
+#   Rails.root.join('db', 'schema.rb').open('w')
+#   Rails.root.join('db', 'schema.rb').read
+#   Rails.root.join('db', 'schema.rb').binread
+#   Rails.root.join('db', 'schema.rb').write(content)
+#   Rails.root.join('db', 'schema.rb').binwrite(content)
+class RuboCop::Cop::Rails::RootPathnameMethods < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def on_send(node); end
+  def pathname_method(param0 = T.unsafe(nil)); end
+  def rails_root?(param0 = T.unsafe(nil)); end
+  def rails_root_pathname?(param0 = T.unsafe(nil)); end
+
+  private
+
+  # @yield [method, path, args, rails_root]
+  def evidence(node); end
+end
+
+RuboCop::Cop::Rails::RootPathnameMethods::DIR_METHODS = T.let(T.unsafe(nil), Set)
+RuboCop::Cop::Rails::RootPathnameMethods::FILE_METHODS = T.let(T.unsafe(nil), Set)
+RuboCop::Cop::Rails::RootPathnameMethods::FILE_TEST_METHODS = T.let(T.unsafe(nil), Set)
+RuboCop::Cop::Rails::RootPathnameMethods::FILE_UTILS_METHODS = T.let(T.unsafe(nil), Set)
+RuboCop::Cop::Rails::RootPathnameMethods::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::RootPathnameMethods::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 
 # Favor `Rails.public_path` over `Rails.root` with `'public'`
 #
@@ -5062,6 +5216,53 @@ end
 RuboCop::Cop::Rails::ToFormattedS::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::ToFormattedS::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Identifies passing any argument to `#to_s`.
+#
+# @example
+#
+#   # bad
+#   obj.to_s(:delimited)
+#
+#   # good
+#   obj.to_formatted_s(:delimited)
+class RuboCop::Cop::Rails::ToSWithArgument < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRailsVersion
+
+  def on_csend(node); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::Rails::ToSWithArgument::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::ToSWithArgument::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Identifies top-level `HashWithIndifferentAccess`.
+# This has been soft-deprecated since Rails 5.1.
+#
+# @example
+#   # bad
+#   HashWithIndifferentAccess.new(foo: 'bar')
+#
+#   # good
+#   ActiveSupport::HashWithIndifferentAccess.new(foo: 'bar')
+class RuboCop::Cop::Rails::TopLevelHashWithIndifferentAccess < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRailsVersion
+
+  # @param node [RuboCop::AST::ConstNode]
+  def on_const(node); end
+
+  # @param node [RuboCop::AST::ConstNode]
+  # @return [Boolean]
+  def top_level_hash_with_indifferent_access?(param0 = T.unsafe(nil)); end
+
+  private
+
+  def autocorrect(corrector, node); end
+end
+
+RuboCop::Cop::Rails::TopLevelHashWithIndifferentAccess::MSG = T.let(T.unsafe(nil), String)
+
 # Checks for the use of exit statements (namely `return`,
 # `break` and `throw`) in transactions. This is due to the eventual
 # unexpected behavior when using ActiveRecord >= 7, where transactions
@@ -5459,6 +5660,48 @@ end
 RuboCop::Cop::Rails::WhereExists::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Rails::WhereExists::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Use `where.missing(...)` to find missing relationship records.
+#
+# This cop is enabled in Rails 6.1 or higher.
+#
+# @example
+#   # bad
+#   Post.left_joins(:author).where(authors: { id: nil })
+#
+#   # good
+#   Post.where.missing(:author)
+class RuboCop::Cop::Rails::WhereMissing < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::RangeHelp
+  extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRailsVersion
+
+  def missing_relationship(param0); end
+  def on_send(node); end
+  def where_node_and_argument(param0); end
+
+  private
+
+  def message(node, where_argument); end
+
+  # @return [Boolean]
+  def multi_condition?(where_arg); end
+
+  def register_offense(node, where_node, where_argument, range); end
+  def remove_where_method(corrector, node, where_node); end
+  def replace_range(child); end
+  def replace_where_method(corrector, where_node); end
+  def root_receiver(node); end
+
+  # @return [Boolean]
+  def same_line?(left_joins_node, where_node); end
+
+  # @return [Boolean]
+  def same_relationship?(where, left_joins); end
+end
+
+RuboCop::Cop::Rails::WhereMissing::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Rails::WhereMissing::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Identifies places where manually constructed SQL
 # in `where` can be replaced with `where.not(...)`.
 #
@@ -5512,71 +5755,22 @@ RuboCop::Cop::Rails::WhereNot::NOT_IN_NAMED_RE = T.let(T.unsafe(nil), Regexp)
 RuboCop::Cop::Rails::WhereNot::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 module RuboCop::Cop::Style; end
 
-# Checks for redundant uses of `self`.
-#
-# The usage of `self` is only needed when:
-#
-# * Sending a message to same object with zero arguments in
-#   presence of a method name clash with an argument or a local
-#   variable.
-#
-# * Calling an attribute writer to prevent a local variable assignment.
-#
-# Note, with using explicit self you can only send messages with public or
-# protected scope, you cannot send private messages this way.
-#
-# Note we allow uses of `self` with operators because it would be awkward
-# otherwise.
-#
-# @example
-#
-#   # bad
-#   def foo(bar)
-#   self.baz
-#   end
-#
-#   # good
-#   def foo(bar)
-#   self.bar  # Resolves name clash with the argument.
-#   end
-#
-#   def foo
-#   bar = 1
-#   self.bar  # Resolves name clash with the local variable.
-#   end
-#
-#   def foo
-#   %w[x y z].select do |bar|
-#   self.bar == bar  # Resolves name clash with argument of the block.
-#   end
-#   end
 class RuboCop::Cop::Style::RedundantSelf < ::RuboCop::Cop::Base
-  # @return [RedundantSelf] a new instance of RedundantSelf
   def initialize(config = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # Assignment of self.x
   def on_and_asgn(node); end
-
   def on_args(node); end
   def on_block(node); end
   def on_blockarg(node); end
-
-  # Using self.x to distinguish from local variable x
   def on_def(node); end
-
-  # Using self.x to distinguish from local variable x
   def on_defs(node); end
-
   def on_if(node); end
   def on_in_pattern(node); end
   def on_lvasgn(node); end
   def on_masgn(node); end
   def on_numblock(node); end
   def on_op_asgn(node); end
-
-  # Assignment of self.x
   def on_or_asgn(node); end
-
   def on_send(node); end
   def on_until(node); end
   def on_while(node); end
@@ -5588,13 +5782,8 @@ class RuboCop::Cop::Style::RedundantSelf < ::RuboCop::Cop::Base
   def add_match_var_scopes(in_pattern_node); end
   def add_scope(node, local_variables = T.unsafe(nil)); end
   def allow_self(node); end
-
-  # @return [Boolean]
   def allowed_send_node?(node); end
-
   def on_argument(node); end
-
-  # @return [Boolean]
   def regular_method_call?(node); end
 
   class << self

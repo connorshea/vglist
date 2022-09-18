@@ -186,8 +186,6 @@ class ActiveJob::Base
     def rescue_handlers?; end
     def retry_jitter; end
     def retry_jitter=(value); end
-    def return_false_on_aborted_enqueue; end
-    def return_false_on_aborted_enqueue=(value); end
     def skip_after_callbacks_if_terminated(*args, &block); end
     def skip_after_callbacks_if_terminated=(*args, &block); end
   end
@@ -228,8 +226,6 @@ module ActiveJob::Callbacks
     def __callbacks; end
     def __callbacks=(value); end
     def __callbacks?; end
-    def return_false_on_aborted_enqueue; end
-    def return_false_on_aborted_enqueue=(value); end
   end
 
   module GeneratedInstanceMethods
@@ -1944,6 +1940,5 @@ end
 module ActiveJob::VERSION; end
 ActiveJob::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveJob::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::TINY = T.let(T.unsafe(nil), Integer)

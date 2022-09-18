@@ -1163,15 +1163,15 @@ end
 #
 # Note: To trigger remove callbacks, you must use +destroy+ / +destroy_all+ methods. For example:
 #
-#   * <tt>firm.clients.destroy(client)</tt>
-#   * <tt>firm.clients.destroy(*clients)</tt>
-#   * <tt>firm.clients.destroy_all</tt>
+# * <tt>firm.clients.destroy(client)</tt>
+# * <tt>firm.clients.destroy(*clients)</tt>
+# * <tt>firm.clients.destroy_all</tt>
 #
 # +delete+ / +delete_all+ methods like the following do *not* trigger remove callbacks:
 #
-#   * <tt>firm.clients.delete(client)</tt>
-#   * <tt>firm.clients.delete(*clients)</tt>
-#   * <tt>firm.clients.delete_all</tt>
+# * <tt>firm.clients.delete(client)</tt>
+# * <tt>firm.clients.delete(*clients)</tt>
+# * <tt>firm.clients.delete_all</tt>
 #
 # == Association extensions
 #
@@ -3322,6 +3322,7 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   def limit!(*_arg0, &_arg1); end
   def limit_value(*_arg0, &_arg1); end
   def limit_value=(arg); end
+  def load_async(*_arg0, &_arg1); end
   def load_target; end
 
   # Returns +true+ if the association has been loaded, otherwise +false+.
@@ -12679,7 +12680,7 @@ class ActiveRecord::Deadlocked < ::ActiveRecord::TransactionRollbackError; end
 #     end
 #   end
 #
-# Now you can list a bunch of entries, call +Entry#title+, and polymorphism will provide you with the answer.
+# Now you can list a bunch of entries, call <tt>Entry#title</tt>, and polymorphism will provide you with the answer.
 #
 # == Nested Attributes
 #
@@ -13695,7 +13696,7 @@ end
 # * An encrypted payload
 # * A list of unencrypted headers
 #
-# See +Encryptor#encrypt+
+# See Encryptor#encrypt
 class ActiveRecord::Encryption::Message
   # @return [Message] a new instance of Message
   def initialize(payload: T.unsafe(nil), headers: T.unsafe(nil)); end
@@ -13776,7 +13777,7 @@ end
 #
 #   message.headers.encrypted_data_key # instead of message.headers[:k]
 #
-# See +Properties#DEFAULT_PROPERTIES+, +Key+, +Message+
+# See +Properties::DEFAULT_PROPERTIES+, Key, Message
 class ActiveRecord::Encryption::Properties
   # @return [Properties] a new instance of Properties
   def initialize(initial_properties = T.unsafe(nil)); end
@@ -16177,7 +16178,7 @@ end
 #   config.active_record.database_resolver_context = MyResolver::MySession
 #
 # Note: If you are using `rails new my_app --minimal` you will need to call
-# `require "active_support/core_ext/integer/time"` to load the libaries
+# `require "active_support/core_ext/integer/time"` to load the libraries
 # for +Time+.
 class ActiveRecord::Middleware::DatabaseSelector
   # @return [DatabaseSelector] a new instance of DatabaseSelector
@@ -20288,12 +20289,26 @@ module ActiveRecord::QueryMethods
   # === no argument
   #
   # If no argument is passed, #where returns a new instance of WhereChain, that
-  # can be chained with #not to return a new relation that negates the where clause.
+  # can be chained with WhereChain#not, WhereChain#missing, or WhereChain#associated.
+  #
+  # Chaining with WhereChain#not:
   #
   #    User.where.not(name: "Jon")
   #    # SELECT * FROM users WHERE name != 'Jon'
   #
-  # See WhereChain for more details on #not.
+  # Chaining with WhereChain#associated:
+  #
+  #    Post.where.associated(:author)
+  #    # SELECT "posts".* FROM "posts"
+  #    # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  #    # WHERE "authors"."id" IS NOT NULL
+  #
+  # Chaining with WhereChain#missing:
+  #
+  #    Post.where.missing(:author)
+  #    # SELECT "posts".* FROM "posts"
+  #    # LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  #    # WHERE "authors"."id" IS NULL
   #
   # === blank condition
   #
@@ -20398,8 +20413,8 @@ ActiveRecord::QueryMethods::STRUCTURAL_VALUE_METHODS = T.let(T.unsafe(nil), Arra
 ActiveRecord::QueryMethods::VALID_DIRECTIONS = T.let(T.unsafe(nil), Set)
 ActiveRecord::QueryMethods::VALID_UNSCOPING_VALUES = T.let(T.unsafe(nil), Set)
 
-# WhereChain objects act as placeholder for queries in which #where does not have any parameter.
-# In this case, #where must be chained with #not to return a new relation.
+# WhereChain objects act as placeholder for queries in which +where+ does not have any parameter.
+# In this case, +where+ can be chained to return a new relation.
 class ActiveRecord::QueryMethods::WhereChain
   # @return [WhereChain] a new instance of WhereChain
   def initialize(scope); end
@@ -22994,7 +23009,7 @@ module ActiveRecord::SignedId
 
   # Returns a signed id that's generated using a preconfigured +ActiveSupport::MessageVerifier+ instance.
   # This signed id is tamper proof, so it's safe to send in an email or otherwise share with the outside world.
-  # It can further more be set to expire (the default is not to expire), and scoped down with a specific purpose.
+  # It can furthermore be set to expire (the default is not to expire), and scoped down with a specific purpose.
   # If the expiration date has been exceeded before +find_signed+ is called, the id won't find the designated
   # record. If a purpose is set, this too must match.
   #
@@ -23318,7 +23333,7 @@ class ActiveRecord::StatementTimeout < ::ActiveRecord::QueryAborted; end
 #   u.color = 'green'
 #   u.color_changed? # => true
 #   u.color_was # => 'black'
-#   u.color_change # => ['black', 'red']
+#   u.color_change # => ['black', 'green']
 #
 #   # Add additional accessors to an existing store through store_accessor
 #   class SuperUser < User
@@ -23383,6 +23398,10 @@ class ActiveRecord::Store::IndifferentCoder
 
   def dump(obj); end
   def load(yaml); end
+
+  private
+
+  def as_regular_hash(obj); end
 
   class << self
     def as_indifferent_hash(obj); end
@@ -24676,7 +24695,6 @@ end
 module ActiveRecord::VERSION; end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

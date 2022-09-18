@@ -59,17 +59,9 @@ class Net::HTTPResponse
   def end_reading_body_hacked; end
 end
 
-# The Rack main module, serving as a namespace for all core Rack
-# modules and classes.
-#
-# All modules meant for use in your application are <tt>autoload</tt>ed here,
-# so it should be enough just to <tt>require 'rack'</tt> in your code.
 module Rack
   class << self
-    # Return the Rack release as a dotted string.
     def release; end
-
-    # Return the Rack protocol version as a dotted string.
     def version; end
   end
 end
@@ -81,10 +73,7 @@ Rack::DELETE = T.let(T.unsafe(nil), String)
 Rack::ETAG = T.let(T.unsafe(nil), String)
 Rack::EXPIRES = T.let(T.unsafe(nil), String)
 Rack::File = Rack::Files
-
-# HTTP method verbs
 Rack::GET = T.let(T.unsafe(nil), String)
-
 Rack::HEAD = T.let(T.unsafe(nil), String)
 Rack::HTTPS = T.let(T.unsafe(nil), String)
 Rack::HTTP_COOKIE = T.let(T.unsafe(nil), String)
@@ -149,8 +138,30 @@ class Rack::HttpStreamingResponse
 
   # Net::HTTP
   def session; end
+
+  private
+
+  def close_connection; end
+
+  # Returns the value of attribute connection_closed.
+  def connection_closed; end
+
+  # Sets the attribute connection_closed
+  #
+  # @param value the value to set the attribute connection_closed to.
+  def connection_closed=(_arg0); end
+
+  # Returns the value of attribute host.
+  def host; end
+
+  # Returns the value of attribute port.
+  def port; end
+
+  # Returns the value of attribute request.
+  def request; end
 end
 
+Rack::HttpStreamingResponse::STATUSES_WITH_NO_ENTITY_BODY = T.let(T.unsafe(nil), Hash)
 Rack::LINK = T.let(T.unsafe(nil), String)
 Rack::MockSession = Rack::Test::Session
 Rack::OPTIONS = T.let(T.unsafe(nil), String)
@@ -189,6 +200,7 @@ class Rack::Proxy
   end
 end
 
+Rack::Proxy::HOP_BY_HOP_HEADERS = T.let(T.unsafe(nil), Hash)
 Rack::Proxy::VERSION = T.let(T.unsafe(nil), String)
 Rack::QUERY_STRING = T.let(T.unsafe(nil), String)
 Rack::RACK_ERRORS = T.let(T.unsafe(nil), String)
@@ -217,10 +229,7 @@ Rack::RACK_SESSION_UNPACKED_COOKIE_DATA = T.let(T.unsafe(nil), String)
 Rack::RACK_SHOWSTATUS_DETAIL = T.let(T.unsafe(nil), String)
 Rack::RACK_TEMPFILES = T.let(T.unsafe(nil), String)
 Rack::RACK_URL_SCHEME = T.let(T.unsafe(nil), String)
-
-# Rack environment variables
 Rack::RACK_VERSION = T.let(T.unsafe(nil), String)
-
 Rack::RELEASE = T.let(T.unsafe(nil), String)
 Rack::REQUEST_METHOD = T.let(T.unsafe(nil), String)
 Rack::REQUEST_PATH = T.let(T.unsafe(nil), String)
@@ -232,6 +241,4 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 Rack::TRACE = T.let(T.unsafe(nil), String)
 Rack::TRANSFER_ENCODING = T.let(T.unsafe(nil), String)
 Rack::UNLINK = T.let(T.unsafe(nil), String)
-
-# The Rack protocol version number implemented.
 Rack::VERSION = T.let(T.unsafe(nil), Array)

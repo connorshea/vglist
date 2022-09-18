@@ -86,6 +86,12 @@ module Loofah::HTML5; end
 module Loofah::HTML5::SafeList; end
 Loofah::HTML5::SafeList::ACCEPTABLE_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
+# https://www.w3.org/TR/css-color-3/#html4
+Loofah::HTML5::SafeList::ACCEPTABLE_CSS_COLORS = T.let(T.unsafe(nil), Set)
+
+# https://www.w3.org/TR/css-color-3/#svg-color
+Loofah::HTML5::SafeList::ACCEPTABLE_CSS_EXTENDED_COLORS = T.let(T.unsafe(nil), Set)
+
 # see https://www.quackit.com/css/functions/
 # omit `url` and `image` from that list
 Loofah::HTML5::SafeList::ACCEPTABLE_CSS_FUNCTIONS = T.let(T.unsafe(nil), Set)

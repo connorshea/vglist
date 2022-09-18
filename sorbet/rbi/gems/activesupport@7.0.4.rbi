@@ -638,7 +638,7 @@ ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
 # popular cache store for large production websites.
 #
 # Some implementations may not support all methods beyond the basic cache
-# methods of +fetch+, +write+, +read+, +exist?+, and +delete+.
+# methods of #fetch, #write, #read, #exist?, and #delete.
 #
 # ActiveSupport::Cache::Store can store any Ruby object that is supported by
 # its +coder+'s +dump+ and +load+ methods.
@@ -670,21 +670,25 @@ ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
 #
 #   cache.namespace = -> { @last_mod_time }  # Set the namespace to a variable
 #   @last_mod_time = Time.now  # Invalidate the entire cache by changing namespace
-#
-# Cached data larger than 1kB are compressed by default. To turn off
-# compression, pass <tt>compress: false</tt> to the initializer or to
-# individual +fetch+ or +write+ method calls. The 1kB compression
-# threshold is configurable with the <tt>:compress_threshold</tt> option,
-# specified in bytes.
 class ActiveSupport::Cache::Store
-  # Creates a new cache. The options will be passed to any write method calls
-  # except for <tt>:namespace</tt> which can be used to set the global
-  # namespace for the cache.
+  # Creates a new cache.
+  #
+  # ==== Options
+  #
+  # * +:namespace+ - Sets the namespace for the cache. This option is
+  #   especially useful if your application shares a cache with other
+  #   applications.
+  # * +:coder+ - Replaces the default cache entry serialization mechanism
+  #   with a custom one. The +coder+ must respond to +dump+ and +load+.
+  #   Using a custom coder disables automatic compression.
+  #
+  # Any other specified options are treated as default options for the
+  # relevant cache operations, such as #read, #write, and #fetch.
   #
   # @return [Store] a new instance of Store
   def initialize(options = T.unsafe(nil)); end
 
-  # Cleanups the cache by removing expired entries.
+  # Cleans up the cache by removing expired entries.
   #
   # Options are passed to the underlying cache implementation.
   #
@@ -756,111 +760,74 @@ class ActiveSupport::Cache::Store
   #   end
   #   cache.fetch('city')   # => "Duckburgh"
   #
-  # You may also specify additional options via the +options+ argument.
-  # Setting <tt>force: true</tt> forces a cache "miss," meaning we treat
-  # the cache value as missing even if it's present. Passing a block is
-  # required when +force+ is true so this always results in a cache write.
+  # ==== Options
   #
-  #   cache.write('today', 'Monday')
-  #   cache.fetch('today', force: true) { 'Tuesday' } # => 'Tuesday'
-  #   cache.fetch('today', force: true) # => ArgumentError
+  # Internally, +fetch+ calls #read_entry, and calls #write_entry on a cache
+  # miss. Thus, +fetch+ supports the same options as #read and #write.
+  # Additionally, +fetch+ supports the following options:
   #
-  # The +:force+ option is useful when you're calling some other method to
-  # ask whether you should force a cache write. Otherwise, it's clearer to
-  # just call <tt>Cache#write</tt>.
+  # * <tt>force: true</tt> - Forces a cache "miss," meaning we treat the
+  #   cache value as missing even if it's present. Passing a block is
+  #   required when +force+ is true so this always results in a cache write.
   #
-  # Setting <tt>skip_nil: true</tt> will not cache nil result:
+  #     cache.write('today', 'Monday')
+  #     cache.fetch('today', force: true) { 'Tuesday' } # => 'Tuesday'
+  #     cache.fetch('today', force: true) # => ArgumentError
   #
-  #   cache.fetch('foo') { nil }
-  #   cache.fetch('bar', skip_nil: true) { nil }
-  #   cache.exist?('foo') # => true
-  #   cache.exist?('bar') # => false
+  #   The +:force+ option is useful when you're calling some other method to
+  #   ask whether you should force a cache write. Otherwise, it's clearer to
+  #   just call +write+.
   #
+  # * <tt>skip_nil: true</tt> - Prevents caching a nil result:
   #
-  # Setting <tt>compress: false</tt> disables compression of the cache entry.
+  #     cache.fetch('foo') { nil }
+  #     cache.fetch('bar', skip_nil: true) { nil }
+  #     cache.exist?('foo') # => true
+  #     cache.exist?('bar') # => false
   #
-  # Setting <tt>:expires_in</tt> will set an expiration time on the cache.
-  # All caches support auto-expiring content after a specified number of
-  # seconds. This value can be specified as an option to the constructor
-  # (in which case all entries will be affected), or it can be supplied to
-  # the +fetch+ or +write+ method to affect just one entry.
-  # <tt>:expire_in</tt> and <tt>:expired_in</tt> are aliases for
-  # <tt>:expires_in</tt>.
+  # * +:race_condition_ttl+ - Specifies the number of seconds during which
+  #   an expired value can be reused while a new value is being generated.
+  #   This can be used to prevent race conditions when cache entries expire,
+  #   by preventing multiple processes from simultaneously regenerating the
+  #   same entry (also known as the dog pile effect).
   #
-  #   cache = ActiveSupport::Cache::MemoryStore.new(expires_in: 5.minutes)
-  #   cache.write(key, value, expires_in: 1.minute) # Set a lower value for one entry
+  #   When a process encounters a cache entry that has expired less than
+  #   +:race_condition_ttl+ seconds ago, it will bump the expiration time by
+  #   +:race_condition_ttl+ seconds before generating a new value. During
+  #   this extended time window, while the process generates a new value,
+  #   other processes will continue to use the old value. After the first
+  #   process writes the new value, other processes will then use it.
   #
-  # Setting <tt>:expires_at</tt> will set an absolute expiration time on the cache.
-  # All caches support auto-expiring content after a specified number of
-  # seconds. This value can only be supplied to the +fetch+ or +write+ method to
-  # affect just one entry.
+  #   If the first process errors out while generating a new value, another
+  #   process can try to generate a new value after the extended time window
+  #   has elapsed.
   #
-  #   cache = ActiveSupport::Cache::MemoryStore.new
-  #   cache.write(key, value, expires_at: Time.now.at_end_of_hour)
+  #     # Set all values to expire after one minute.
+  #     cache = ActiveSupport::Cache::MemoryStore.new(expires_in: 1.minute)
   #
-  # Setting <tt>:version</tt> verifies the cache stored under <tt>name</tt>
-  # is of the same version. nil is returned on mismatches despite contents.
-  # This feature is used to support recyclable cache keys.
+  #     cache.write('foo', 'original value')
+  #     val_1 = nil
+  #     val_2 = nil
+  #     sleep 60
   #
-  # Setting <tt>:race_condition_ttl</tt> is very useful in situations where
-  # a cache entry is used very frequently and is under heavy load. If a
-  # cache expires and due to heavy load several different processes will try
-  # to read data natively and then they all will try to write to cache. To
-  # avoid that case the first process to find an expired cache entry will
-  # bump the cache expiration time by the value set in <tt>:race_condition_ttl</tt>.
-  # Yes, this process is extending the time for a stale value by another few
-  # seconds. Because of extended life of the previous cache, other processes
-  # will continue to use slightly stale data for a just a bit longer. In the
-  # meantime that first process will go ahead and will write into cache the
-  # new value. After that all the processes will start getting the new value.
-  # The key is to keep <tt>:race_condition_ttl</tt> small.
-  #
-  # If the process regenerating the entry errors out, the entry will be
-  # regenerated after the specified number of seconds. Also note that the
-  # life of stale cache is extended only if it expired recently. Otherwise
-  # a new value is generated and <tt>:race_condition_ttl</tt> does not play
-  # any role.
-  #
-  #   # Set all values to expire after one minute.
-  #   cache = ActiveSupport::Cache::MemoryStore.new(expires_in: 1.minute)
-  #
-  #   cache.write('foo', 'original value')
-  #   val_1 = nil
-  #   val_2 = nil
-  #   sleep 60
-  #
-  #   Thread.new do
-  #     val_1 = cache.fetch('foo', race_condition_ttl: 10.seconds) do
-  #       sleep 1
-  #       'new value 1'
+  #     Thread.new do
+  #       val_1 = cache.fetch('foo', race_condition_ttl: 10.seconds) do
+  #         sleep 1
+  #         'new value 1'
+  #       end
   #     end
-  #   end
   #
-  #   Thread.new do
-  #     val_2 = cache.fetch('foo', race_condition_ttl: 10.seconds) do
-  #       'new value 2'
+  #     Thread.new do
+  #       val_2 = cache.fetch('foo', race_condition_ttl: 10.seconds) do
+  #         'new value 2'
+  #       end
   #     end
-  #   end
   #
-  #   cache.fetch('foo') # => "original value"
-  #   sleep 10 # First thread extended the life of cache by another 10 seconds
-  #   cache.fetch('foo') # => "new value 1"
-  #   val_1 # => "new value 1"
-  #   val_2 # => "original value"
-  #
-  # Other options will be handled by the specific cache store implementation.
-  # Internally, #fetch calls #read_entry, and calls #write_entry on a cache
-  # miss. +options+ will be passed to the #read and #write calls.
-  #
-  # For example, MemCacheStore's #write method supports the +:raw+
-  # option, which tells the memcached server to store all values as strings.
-  # We can use this option with #fetch too:
-  #
-  #   cache = ActiveSupport::Cache::MemCacheStore.new
-  #   cache.fetch("foo", force: true, raw: true) do
-  #     :bar
-  #   end
-  #   cache.fetch('foo') # => "bar"
+  #     cache.fetch('foo') # => "original value"
+  #     sleep 10 # First thread extended the life of cache by another 10 seconds
+  #     cache.fetch('foo') # => "new value 1"
+  #     val_1 # => "new value 1"
+  #     val_2 # => "original value"
   def fetch(name, options = T.unsafe(nil), &block); end
 
   # Fetches data from the cache, using the given keys. If there is data in
@@ -923,7 +890,13 @@ class ActiveSupport::Cache::Store
   # <tt>:version</tt> options, both of these conditions are applied before
   # the data is returned.
   #
-  # Options are passed to the underlying cache implementation.
+  # ==== Options
+  #
+  # * +:version+ - Specifies a version for the cache entry. If the cached
+  #   version does not match the requested version, the read will be treated
+  #   as a cache miss. This feature is used to support recyclable cache keys.
+  #
+  # Other options will be handled by the specific cache store implementation.
   def read(name, options = T.unsafe(nil)); end
 
   # Reads multiple values at once from the cache. Options can be passed
@@ -943,9 +916,39 @@ class ActiveSupport::Cache::Store
   # Returns the value of attribute silence.
   def silence?; end
 
-  # Writes the value to the cache, with the key.
+  # Writes the value to the cache with the key. The value must be supported
+  # by the +coder+'s +dump+ and +load+ methods.
   #
-  # Options are passed to the underlying cache implementation.
+  # By default, cache entries larger than 1kB are compressed. Compression
+  # allows more data to be stored in the same memory footprint, leading to
+  # fewer cache evictions and higher hit rates.
+  #
+  # ==== Options
+  #
+  # * <tt>compress: false</tt> - Disables compression of the cache entry.
+  #
+  # * +:compress_threshold+ - The compression threshold, specified in bytes.
+  #   \Cache entries larger than this threshold will be compressed. Defaults
+  #   to +1.kilobyte+.
+  #
+  # * +:expires_in+ - Sets a relative expiration time for the cache entry,
+  #   specified in seconds. +:expire_in+ and +:expired_in+ are aliases for
+  #   +:expires_in+.
+  #
+  #     cache = ActiveSupport::Cache::MemoryStore.new(expires_in: 5.minutes)
+  #     cache.write(key, value, expires_in: 1.minute) # Set a lower value for one entry
+  #
+  # * +:expires_at+ - Sets an absolute expiration time for the cache entry.
+  #
+  #     cache = ActiveSupport::Cache::MemoryStore.new
+  #     cache.write(key, value, expires_at: Time.now.at_end_of_hour)
+  #
+  # * +:version+ - Specifies a version for the cache entry. When reading
+  #   from the cache, if the cached version does not match the requested
+  #   version, the read will be treated as a cache miss. This feature is
+  #   used to support recyclable cache keys.
+  #
+  # Other options will be handled by the specific cache store implementation.
   def write(name, value, options = T.unsafe(nil)); end
 
   # Cache Storage API to write multiple values at once.
@@ -3273,6 +3276,10 @@ class ActiveSupport::EncryptedFile
   # Returns the value of attribute env_key.
   def env_key; end
 
+  # Returns the encryption key, first trying the environment variable
+  # specified by +env_key+, then trying the key file specified by +key_path+.
+  # If +raise_if_missing_key+ is true, raises MissingKeyError if the
+  # environment variable is not set and the key file does not exist.
   def key; end
 
   # Returns the value of attribute key_path.
@@ -3281,7 +3288,16 @@ class ActiveSupport::EncryptedFile
   # Returns the value of attribute raise_if_missing_key.
   def raise_if_missing_key; end
 
+  # Reads the file and returns the decrypted content.
+  #
+  # Raises:
+  # - MissingKeyError if the key is missing and +raise_if_missing_key+ is true.
+  # - MissingContentError if the encrypted file does not exist or otherwise
+  #   if the key is missing.
+  # - ActiveSupport::MessageEncryptor::InvalidMessage if the content cannot be
+  #   decrypted or verified.
   def read; end
+
   def write(contents); end
 
   private
@@ -4834,9 +4850,22 @@ end
 # run_load_hooks will then execute all the hooks that were registered
 # with the on_load method. In the case of the above example, it will
 # execute the block of code that is in the +initializer+.
+#
+# Registering a hook that has already run results in that hook executing
+# immediately. This allows hooks to be nested for code that relies on
+# multiple lazily loaded components:
+#
+#   initializer "action_text.renderer" do
+#     ActiveSupport.on_load(:action_controller_base) do
+#       ActiveSupport.on_load(:action_text_content) do
+#         self.default_renderer = Class.new(ActionController::Base).renderer
+#       end
+#     end
+#   end
 module ActiveSupport::LazyLoadHooks
   # Declares a block that will be executed when a Rails component is fully
-  # loaded.
+  # loaded. If the component has already loaded, the block is executed
+  # immediately.
   #
   # Options:
   #
@@ -5820,6 +5849,13 @@ module ActiveSupport::Notifications
   class << self
     def instrument(name, payload = T.unsafe(nil)); end
     def instrumenter; end
+
+    # Performs the same functionality as #subscribe, but the +start+ and
+    # +finish+ block arguments are in monotonic time instead of wall-clock
+    # time. Monotonic time will not jump forward or backward (due to NTP or
+    # Daylights Savings). Use +monotonic_subscribe+ when accuracy of time
+    # duration is important. For example, computing elapsed time between
+    # two events.
     def monotonic_subscribe(pattern = T.unsafe(nil), callback = T.unsafe(nil), &block); end
 
     # Returns the value of attribute notifier.
@@ -7220,20 +7256,20 @@ module ActiveSupport::Rescuable::ClassMethods
   # any.
   #
   #   class ApplicationController < ActionController::Base
-  #     rescue_from User::NotAuthorized, with: :deny_access # self defined exception
-  #     rescue_from ActiveRecord::RecordInvalid, with: :show_errors
+  #     rescue_from User::NotAuthorized, with: :deny_access
+  #     rescue_from ActiveRecord::RecordInvalid, with: :show_record_errors
   #
-  #     rescue_from 'MyAppError::Base' do |exception|
-  #       render xml: exception, status: 500
+  #     rescue_from "MyApp::BaseError" do |exception|
+  #       redirect_to root_url, alert: exception.message
   #     end
   #
   #     private
   #       def deny_access
-  #         ...
+  #         head :forbidden
   #       end
   #
-  #       def show_errors(exception)
-  #         exception.record.new_record? ? ...
+  #       def show_record_errors(exception)
+  #         redirect_back_or_to root_url, alert: exception.record.errors.full_messages.to_sentence
   #       end
   #   end
   #
@@ -7248,7 +7284,7 @@ module ActiveSupport::Rescuable::ClassMethods
   # Be sure to re-raise unhandled exceptions if this is what you expect.
   #
   #     begin
-  #       …
+  #       # ...
   #     rescue => exception
   #       rescue_with_handler(exception) || raise
   #     end
@@ -7541,7 +7577,6 @@ end
 # it easy to stamp log lines with subdomains, request ids, and anything else
 # to aid debugging of multi-user production applications.
 module ActiveSupport::TaggedLogging
-  def broadcast_to(other_logger); end
   def clear_tags!(*_arg0, &_arg1); end
   def flush; end
   def pop_tags(*_arg0, &_arg1); end
@@ -7618,6 +7653,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
 
   def file_fixture_path; end
   def file_fixture_path?; end
+  def inspect; end
   def method_name; end
 
   class << self
@@ -8447,9 +8483,8 @@ class ActiveSupport::TimeWithZone
   def +(other); end
 
   # Subtracts an interval of time and returns a new TimeWithZone object unless
-  # the other value +acts_like?+ time. Then it will return a Float of the difference
-  # between the two times that represents the difference between the current
-  # object's time and the +other+ time.
+  # the other value +acts_like?+ time. In which case, it will subtract the
+  # other time and return the difference in seconds as a Float.
   #
   #   Time.zone = 'Eastern Time (US & Canada)' # => 'Eastern Time (US & Canada)'
   #   now = Time.zone.now # => Mon, 03 Nov 2014 00:26:28.725182881 EST -05:00
@@ -9209,7 +9244,6 @@ end
 module ActiveSupport::VERSION; end
 ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

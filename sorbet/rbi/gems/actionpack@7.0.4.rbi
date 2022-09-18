@@ -604,7 +604,7 @@ module AbstractController::Helpers::ClassMethods
   # The last two assume that <tt>"foo".camelize</tt> returns "Foo".
   #
   # When strings or symbols are passed, the method finds the actual module
-  # object using +String#constantize+. Therefore, if the module has not been
+  # object using String#constantize. Therefore, if the module has not been
   # yet loaded, it has to be autoloadable, which is normally the case.
   #
   # Namespaces are supported. The following calls include +Foo::BarHelper+:
@@ -3824,8 +3824,7 @@ class ActionController::Parameters
   def empty?(*_arg0, &_arg1); end
   def encode_with(coder); end
 
-  # Returns true if another +Parameters+ object contains the same content and
-  # permitted flag.
+  # @return [Boolean]
   def eql?(other); end
 
   # Returns a new <tt>ActionController::Parameters</tt> instance that
@@ -4674,7 +4673,7 @@ module ActionController::Redirecting
   # * <tt>:allow_other_host</tt> - Allow or disallow redirection to the host that is different to the current host, defaults to true.
   #
   # All other options that can be passed to #redirect_to are accepted as
-  # options and the behavior is identical.
+  # options, and the behavior is identical.
   def redirect_back_or_to(fallback_location, allow_other_host: T.unsafe(nil), **options); end
 
   # Redirects the browser to the target specified in +options+. This parameter can be any one of:
@@ -6638,7 +6637,7 @@ ActionDispatch::ContentSecurityPolicy::Request::NONCE_GENERATOR = T.let(T.unsafe
 ActionDispatch::ContentSecurityPolicy::Request::POLICY = T.let(T.unsafe(nil), String)
 ActionDispatch::ContentSecurityPolicy::Request::POLICY_REPORT_ONLY = T.let(T.unsafe(nil), String)
 
-# Read and write data to cookies through ActionController#cookies.
+# Read and write data to cookies through ActionController::Base#cookies.
 #
 # When reading cookie data, the data is read from the HTTP request header, Cookie.
 # When writing cookie data, the data is sent out in the HTTP response header, Set-Cookie.
@@ -6724,8 +6723,7 @@ ActionDispatch::ContentSecurityPolicy::Request::POLICY_REPORT_ONLY = T.let(T.uns
 #   only HTTP. Defaults to +false+.
 # * <tt>:same_site</tt> - The value of the +SameSite+ cookie attribute, which
 #   determines how this cookie should be restricted in cross-site contexts.
-#   Possible values are +nil+, +:none+, +:lax+, and +:strict+. Defaults to
-#   +:lax+.
+#   Possible values are +:none+, +:lax+, and +:strict+. Defaults to +:lax+.
 class ActionDispatch::Cookies
   # @return [Cookies] a new instance of Cookies
   def initialize(app); end
@@ -10462,9 +10460,8 @@ end
 # Nevertheless, integration tests may want to inspect controller responses in
 # more detail, and that's when \Response can be useful for application
 # developers. Integration test methods such as
-# ActionDispatch::Integration::Session#get and
-# ActionDispatch::Integration::Session#post return objects of type
-# TestResponse (which are of course also of type \Response).
+# Integration::RequestHelpers#get and Integration::RequestHelpers#post return
+# objects of type TestResponse (which are of course also of type \Response).
 #
 # For example, the following demo integration test prints the body of the
 # controller response to the console:
@@ -13372,9 +13369,28 @@ class ActionDispatch::ServerTiming
   def initialize(app); end
 
   def call(env); end
+
+  class << self
+    def unsubscribe; end
+  end
 end
 
 ActionDispatch::ServerTiming::SERVER_TIMING_HEADER = T.let(T.unsafe(nil), String)
+
+class ActionDispatch::ServerTiming::Subscriber
+  include ::Singleton
+  extend ::Singleton::SingletonClassMethods
+
+  # @return [Subscriber] a new instance of Subscriber
+  def initialize; end
+
+  def call(event); end
+  def collect_events; end
+  def ensure_subscribed; end
+  def unsubscribe; end
+end
+
+ActionDispatch::ServerTiming::Subscriber::KEY = T.let(T.unsafe(nil), Symbol)
 module ActionDispatch::Session; end
 
 class ActionDispatch::Session::AbstractSecureStore < ::Rack::Session::Abstract::PersistedSecure
@@ -13442,14 +13458,14 @@ end
 # This cookie-based session store is the Rails default. It is
 # dramatically faster than the alternatives.
 #
-# Sessions typically contain at most a user_id and flash message; both fit
-# within the 4096 bytes cookie size limit. A CookieOverflow exception is raised if
+# Sessions typically contain at most a user ID and flash message; both fit
+# within the 4096 bytes cookie size limit. A +CookieOverflow+ exception is raised if
 # you attempt to store more than 4096 bytes of data.
 #
 # The cookie jar used for storage is automatically configured to be the
 # best possible option given your application's configuration.
 #
-# Your cookies will be encrypted using your apps secret_key_base. This
+# Your cookies will be encrypted using your application's +secret_key_base+. This
 # goes a step further than signed cookies in that encrypted cookies cannot
 # be altered or read by users. This is the default starting in Rails 4.
 #
@@ -13457,20 +13473,20 @@ end
 #
 #   Rails.application.config.session_store :cookie_store, key: '_your_app_session'
 #
-# In the development and test environments your application's secret key base is
+# In the development and test environments your application's +secret_key_base+ is
 # generated by Rails and stored in a temporary file in <tt>tmp/development_secret.txt</tt>.
 # In all other environments, it is stored encrypted in the
 # <tt>config/credentials.yml.enc</tt> file.
 #
-# If your application was not updated to Rails 5.2 defaults, the secret_key_base
+# If your application was not updated to Rails 5.2 defaults, the +secret_key_base+
 # will be found in the old <tt>config/secrets.yml</tt> file.
 #
-# Note that changing your secret_key_base will invalidate all existing session.
+# Note that changing your +secret_key_base+ will invalidate all existing session.
 # Additionally, you should take care to make sure you are not relying on the
 # ability to decode signed cookies generated by your app in external
 # applications or JavaScript before changing it.
 #
-# Because CookieStore extends Rack::Session::Abstract::Persisted, many of the
+# Because CookieStore extends +Rack::Session::Abstract::Persisted+, many of the
 # options described there can be used to customize the session cookie that
 # is generated. For example:
 #
@@ -13917,14 +13933,33 @@ end
 
 ActionDispatch::TestRequest::DEFAULT_ENV = T.let(T.unsafe(nil), Hash)
 
-# Integration test methods such as ActionDispatch::Integration::Session#get
-# and ActionDispatch::Integration::Session#post return objects of class
+# Integration test methods such as Integration::RequestHelpers#get
+# and Integration::RequestHelpers#post return objects of class
 # TestResponse, which represent the HTTP response results of the requested
 # controller actions.
 #
 # See Response for more information on controller response objects.
 class ActionDispatch::TestResponse < ::ActionDispatch::Response
+  # Returns a parsed body depending on the response MIME type. When a parser
+  # corresponding to the MIME type is not found, it returns the raw body.
+  #
+  # ==== Examples
+  #   get "/posts"
+  #   response.content_type      # => "text/html; charset=utf-8"
+  #   response.parsed_body.class # => String
+  #   response.parsed_body       # => "<!DOCTYPE html>\n<html>\n..."
+  #
+  #   get "/posts.json"
+  #   response.content_type      # => "application/json; charset=utf-8"
+  #   response.parsed_body.class # => Array
+  #   response.parsed_body       # => [{"id"=>42, "title"=>"Title"},...
+  #
+  #   get "/posts/42.json"
+  #   response.content_type      # => "application/json; charset=utf-8"
+  #   response.parsed_body.class # => Hash
+  #   response.parsed_body       # => {"id"=>42, "title"=>"Title"}
   def parsed_body; end
+
   def response_parser; end
 
   class << self
@@ -13945,7 +13980,6 @@ end
 module ActionPack::VERSION; end
 ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

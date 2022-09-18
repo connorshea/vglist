@@ -5,7 +5,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/edit/master/lib/doorkeeper/>=5/doorkeeper.rbi
 #
-# typed: ignore
+# typed: false
 
 module Doorkeeper
   class << self

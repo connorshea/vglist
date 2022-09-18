@@ -1489,6 +1489,7 @@ module RuboCop::Cop::AllowedMethods
   # @api public
   def allowed_methods; end
 
+  def cop_config_allowed_methods; end
   def cop_config_deprecated_values; end
 
   # @api public
@@ -1507,6 +1508,7 @@ module RuboCop::Cop::AllowedPattern
 
   def allowed_patterns; end
   def cop_config_deprecated_methods_values; end
+  def cop_config_patterns_values; end
 
   # @deprecated Use allowed_line? instead
   # @return [Boolean]
@@ -4176,6 +4178,9 @@ class RuboCop::Cop::HashTransformMethod::Captures < ::Struct
   # @return [Object] the newly set value
   def unchanged_body_expr=(_); end
 
+  # @return [Boolean]
+  def use_transformed_argname?; end
+
   class << self
     def [](*_arg0); end
     def inspect; end
@@ -4604,8 +4609,9 @@ RuboCop::Cop::Layout::BeginEndAlignment::MSG = T.let(T.unsafe(nil), String)
 #
 #   # good
 #
-#   variable = lambda do |i|
-#   i
+#   foo.bar
+#   .each do
+#   baz
 #   end
 # @example EnforcedStyleAlignWith: start_of_block
 #   # bad
@@ -10551,12 +10557,13 @@ class RuboCop::Cop::Layout::SpaceInsideBlockBraces < ::RuboCop::Cop::Base
   def adjacent_braces(left_brace, right_brace); end
 
   # @return [Boolean]
-  def aligned_braces?(left_brace, right_brace); end
+  def aligned_braces?(inner, right_brace, column); end
 
   def braces_with_contents_inside(node, inner); end
   def check_inside(node, left_brace, right_brace); end
   def check_left_brace(inner, left_brace, args_delimiter); end
-  def check_right_brace(inner, left_brace, right_brace, single_line); end
+  def check_right_brace(node, inner, left_brace, right_brace, single_line); end
+  def inner_last_space_count(inner); end
 
   # @return [Boolean]
   def multiline_block?(left_brace, right_brace); end
@@ -10570,7 +10577,7 @@ class RuboCop::Cop::Layout::SpaceInsideBlockBraces < ::RuboCop::Cop::Base
 
   def space(begin_pos, end_pos, msg); end
   def space_inside_left_brace(left_brace, args_delimiter); end
-  def space_inside_right_brace(right_brace); end
+  def space_inside_right_brace(inner, right_brace, column); end
   def style_for_empty_braces; end
 end
 
@@ -12344,7 +12351,7 @@ end
 
 RuboCop::Cop::Lint::DuplicateRegexpCharacterClassElement::MSG_REPEATED_ELEMENT = T.let(T.unsafe(nil), String)
 
-# Checks for duplicate `require`s and `require_relative`s.
+# Checks for duplicate ``require``s and ``require_relative``s.
 #
 # @example
 #   # bad
@@ -12685,12 +12692,25 @@ class RuboCop::Cop::Lint::EmptyConditionalBody < ::RuboCop::Cop::Base
 
   private
 
+  # @return [Boolean]
+  def all_branches_body_missing?(node); end
+
   def autocorrect(corrector, node); end
   def branch_range(node); end
   def correct_other_branches(corrector, node); end
   def deletion_range(range); end
+
+  # @return [Boolean]
+  def empty_else_branch?(node); end
+
+  # @return [Boolean]
+  def empty_if_branch?(node); end
+
   def remove_comments(corrector, node); end
   def remove_empty_branch(corrector, node); end
+
+  # @return [Boolean]
+  def require_other_branches_correction?(node); end
 end
 
 RuboCop::Cop::Lint::EmptyConditionalBody::MSG = T.let(T.unsafe(nil), String)
@@ -15803,7 +15823,7 @@ RuboCop::Cop::Lint::ShadowedArgument::MSG = T.let(T.unsafe(nil), String)
 # same `rescue` statement. In both cases, the more specific rescue is
 # unnecessary because it is covered by rescuing the less specific
 # exception. (ie. `rescue Exception, StandardError` has the same behavior
-# whether `StandardError` is included or not, because all `StandardError`s
+# whether `StandardError` is included or not, because all ``StandardError``s
 # are rescued by `rescue Exception`).
 #
 # @example
@@ -15921,6 +15941,8 @@ class RuboCop::Cop::Lint::ShadowingOuterLocalVariable < ::RuboCop::Cop::Base
 
   # @return [Boolean]
   def same_conditions_node_different_branch?(variable, outer_local_variable); end
+
+  def variable_node(variable); end
 
   class << self
     def joining_forces; end
@@ -16620,7 +16642,7 @@ RuboCop::Cop::Lint::UnreachableCode::MSG = T.let(T.unsafe(nil), String)
 # In rare cases where only one iteration (or at most one iteration) is intended behavior,
 # the code should be refactored to use `if` conditionals.
 #
-# NOTE: Block methods that are used with `Enumerable`s are considered to be loops.
+# NOTE: Block methods that are used with ``Enumerable``s are considered to be loops.
 #
 # `AllowedPatterns` can be used to match against the block receiver in order to allow
 # code that would otherwise be registered as an offense (eg. `times` used not in an
@@ -16980,8 +17002,8 @@ RuboCop::Cop::Lint::UriRegexp::URI_CONSTANTS = T.let(T.unsafe(nil), Array)
 #   # bad
 #   class Foo
 #   # The following is redundant (methods defined on the class'
-#   # singleton class are not affected by the public modifier)
-#   public
+#   # singleton class are not affected by the private modifier)
+#   private
 #
 #   def self.method3
 #   end
@@ -17242,7 +17264,7 @@ RuboCop::Cop::Lint::UselessMethodDefinition::MSG = T.let(T.unsafe(nil), String)
 # Looks for `ruby2_keywords` calls for methods that do not need it.
 #
 # `ruby2_keywords` should only be called on methods that accept an argument splat
-# (`*args`) but do not explicit keyword arguments (`k:` or `k: true`) or
+# (`\*args`) but do not explicit keyword arguments (`k:` or `k: true`) or
 # a keyword splat (`**kwargs`).
 #
 # @example
@@ -20871,6 +20893,8 @@ module RuboCop::Cop::Style; end
 #   end
 class RuboCop::Cop::Style::AccessModifierDeclarations < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
+  include ::RuboCop::Cop::RangeHelp
+  extend ::RuboCop::Cop::AutoCorrector
 
   def access_modifier_with_symbol?(param0 = T.unsafe(nil)); end
   def on_send(node); end
@@ -20886,16 +20910,25 @@ class RuboCop::Cop::Style::AccessModifierDeclarations < ::RuboCop::Cop::Base
   # @return [Boolean]
   def allow_modifiers_on_symbols?(node); end
 
+  def autocorrect(corrector, node); end
+  def find_argument_less_modifier_node(node); end
+  def find_corresponding_def_node(node); end
+
   # @return [Boolean]
   def group_style?; end
 
   # @return [Boolean]
   def inline_style?; end
 
+  def insert_def(corrector, node, source); end
+  def insert_inline_modifier(corrector, node, modifier_name); end
   def message(range); end
 
   # @return [Boolean]
   def offense?(node); end
+
+  def remove_node(corrector, node); end
+  def select_grouped_def_nodes(node); end
 end
 
 RuboCop::Cop::Style::AccessModifierDeclarations::GROUP_STYLE_MESSAGE = T.let(T.unsafe(nil), String)
@@ -21740,10 +21773,8 @@ class RuboCop::Cop::Style::CaseCorrector
   end
 end
 
-# Checks for uses of the case equality operator(===).
-#
-# If `AllowOnConstant` option is enabled, the cop will ignore violations when the receiver of
-# the case equality operator is a constant.
+# If `AllowOnSelfClass` option is enabled, the cop will ignore violations when the receiver of
+# the case equality operator is `self.class`. Note intermediate variables are not accepted.
 #
 # @example
 #   # bad
@@ -21760,18 +21791,29 @@ end
 # @example AllowOnConstant: true
 #   # good
 #   Array === something
+# @example AllowOnSelfClass: false (default)
+#   # bad
+#   self.class === something
+# @example AllowOnSelfClass: true
+#   # good
+#   self.class === something
 class RuboCop::Cop::Style::CaseEquality < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
 
   def case_equality?(param0 = T.unsafe(nil)); end
   def on_send(node); end
+  def self_class?(param0 = T.unsafe(nil)); end
 
   private
 
+  def begin_replacement(lhs, rhs); end
+  def const_replacement(lhs, rhs); end
+
   # @return [Boolean]
-  def const?(node); end
+  def offending_receiver?(node); end
 
   def replacement(lhs, rhs); end
+  def send_replacement(lhs, rhs); end
 end
 
 RuboCop::Cop::Style::CaseEquality::MSG = T.let(T.unsafe(nil), String)
@@ -23589,8 +23631,15 @@ RuboCop::Cop::Style::DoubleNegation::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Arr
 class RuboCop::Cop::Style::EachForSimpleLoop < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  def offending_each_range(param0 = T.unsafe(nil)); end
+  def each_range(param0 = T.unsafe(nil)); end
+  def each_range_with_zero_origin?(param0 = T.unsafe(nil)); end
+  def each_range_without_block_argument?(param0 = T.unsafe(nil)); end
   def on_block(node); end
+
+  private
+
+  # @return [Boolean]
+  def offending?(node); end
 end
 
 RuboCop::Cop::Style::EachForSimpleLoop::MSG = T.let(T.unsafe(nil), String)
@@ -29768,6 +29817,11 @@ class RuboCop::Cop::Style::PerlBackrefs < ::RuboCop::Cop::Base
 
   # @param node [RuboCop::AST::Node]
   # @private
+  # @return [String]
+  def constant_prefix(node); end
+
+  # @param node [RuboCop::AST::Node]
+  # @private
   # @return [Boolean]
   def derived_from_braceless_interpolation?(node); end
 
@@ -29790,6 +29844,11 @@ class RuboCop::Cop::Style::PerlBackrefs < ::RuboCop::Cop::Base
   # @private
   # @return [String, nil]
   def preferred_expression_to(node); end
+
+  # @param node [RuboCop::AST::Node]
+  # @private
+  # @return [String, nil]
+  def preferred_expression_to_node_with_constant_prefix(node); end
 end
 
 RuboCop::Cop::Style::PerlBackrefs::MESSAGE_FORMAT = T.let(T.unsafe(nil), String)
@@ -30733,6 +30792,7 @@ class RuboCop::Cop::Style::RedundantParentheses < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::Parentheses
   extend ::RuboCop::Cop::AutoCorrector
 
+  def allowed_pin_operator?(param0 = T.unsafe(nil)); end
   def arg_in_call_with_block?(param0 = T.unsafe(nil)); end
   def first_send_argument?(param0 = T.unsafe(nil)); end
   def first_super_argument?(param0 = T.unsafe(nil)); end

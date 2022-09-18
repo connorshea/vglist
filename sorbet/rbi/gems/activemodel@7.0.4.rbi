@@ -2522,7 +2522,9 @@ module ActiveModel::SecurePassword::ClassMethods
   #
   #   gem 'bcrypt', '~> 3.1.7'
   #
-  # Example using Active Record (which automatically includes ActiveModel::SecurePassword):
+  # ==== Examples
+  #
+  # ===== Using Active Record (which automatically includes ActiveModel::SecurePassword)
   #
   #   # Schema: User(name:string, password_digest:string, recovery_password_digest:string)
   #   class User < ActiveRecord::Base
@@ -2544,6 +2546,26 @@ module ActiveModel::SecurePassword::ClassMethods
   #   user.authenticate_recovery_password('42password')          # => user
   #   User.find_by(name: 'david')&.authenticate('notright')      # => false
   #   User.find_by(name: 'david')&.authenticate('mUc3m00RsqyRe') # => user
+  #
+  # ===== Conditionally requiring a password
+  #
+  #   class Account
+  #     include ActiveModel::SecurePassword
+  #
+  #     attr_accessor :is_guest, :password_digest
+  #
+  #     has_secure_password
+  #
+  #     def errors
+  #       super.tap { |errors| errors.delete(:password, :blank) if is_guest }
+  #     end
+  #   end
+  #
+  #   account = Account.new
+  #   account.valid? # => false, password required
+  #
+  #   account.is_guest = true
+  #   account.valid? # => true
   def has_secure_password(attribute = T.unsafe(nil), validations: T.unsafe(nil)); end
 end
 
@@ -3327,7 +3349,6 @@ end
 module ActiveModel::VERSION; end
 ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

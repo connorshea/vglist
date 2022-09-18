@@ -1155,11 +1155,13 @@ module ActiveStorage::SetCurrent
 end
 
 module ActiveStorage::Streaming
+  extend ::ActiveSupport::Concern
   include ::ActionController::Rendering
   include ::ActionController::DataStreaming
   include ::ActionController::Live
-  extend ::ActionController::Rendering::ClassMethods
-  extend ::ActionController::Live::ClassMethods
+
+  mixes_in_class_methods ::ActionController::Rendering::ClassMethods
+  mixes_in_class_methods ::ActionController::Live::ClassMethods
 
   private
 
@@ -1229,7 +1231,6 @@ class ActiveStorage::UnrepresentableError < ::ActiveStorage::Error; end
 module ActiveStorage::VERSION; end
 ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

@@ -8,123 +8,28 @@
 # in the `RSpec::Expectations` and `RSpec::Matchers` namespaces.
 module RSpec
   class << self
-    # Used to ensure examples get reloaded between multiple runs in the same
-    # process and ensures user configuration is persisted.
-    #
-    # Users must invoke this if they want to clear all examples but preserve
-    # current configuration when they use the runner multiple times within the
-    # same process.
     def clear_examples; end
-
-    # Returns the global [Configuration](RSpec/Core/Configuration) object. While
-    # you _can_ use this method to access the configuration, the more common
-    # convention is to use [RSpec.configure](RSpec#configure-class_method).
-    #
-    # @example
-    #   RSpec.configuration.drb_port = 1234
-    # @see RSpec.configure
-    # @see Core::Configuration
     def configuration; end
-
-    # Setters for shared global objects
-    #
-    # @api private
     def configuration=(_arg0); end
-
-    # Yields the global configuration to a block.
-    #
-    # @example
-    #   RSpec.configure do |config|
-    #   config.add_formatter 'documentation'
-    #   end
-    # @see Core::Configuration
-    # @yield [Configuration] global configuration
     def configure; end
-
-    # @private
     def const_missing(name); end
-
     def context(*args, &example_group_block); end
-
-    # The example being executed.
-    #
-    # The primary audience for this method is library authors who need access
-    # to the example currently being executed and also want to support all
-    # versions of RSpec 2 and 3.
-    #
-    # @example
-    #
-    #   RSpec.configure do |c|
-    #   # context.example is deprecated, but RSpec.current_example is not
-    #   # available until RSpec 3.0.
-    #   fetch_current_example = RSpec.respond_to?(:current_example) ?
-    #   proc { RSpec.current_example } : proc { |context| context.example }
-    #
-    #   c.before(:example) do
-    #   example = fetch_current_example.call(self)
-    #
-    #   # ...
-    #   end
-    #   end
     def current_example; end
-
-    # Set the current example being executed.
-    #
-    # @api private
     def current_example=(example); end
-
-    # Get the current RSpec execution scope
-    #
-    # Returns (in order of lifecycle):
-    #   * `:suite` as an initial value, this is outside of the test lifecycle.
-    #   * `:before_suite_hook` during `before(:suite)` hooks.
-    #   * `:before_context_hook` during `before(:context)` hooks.
-    #   * `:before_example_hook` during `before(:example)` hooks and `around(:example)` before `example.run`.
-    #   * `:example` within the example run.
-    #   * `:after_example_hook` during `after(:example)` hooks and `around(:example)` after `example.run`.
-    #   * `:after_context_hook` during `after(:context)` hooks.
-    #   * `:after_suite_hook` during `after(:suite)` hooks.
-    #   * `:suite` as a final value, again this is outside of the test lifecycle.
-    #
-    # Reminder, `:context` hooks have `:all` alias and `:example` hooks have `:each` alias.
-    #
-    # @return [Symbol]
     def current_scope; end
-
-    # Set the current scope rspec is executing in
-    #
-    # @api private
     def current_scope=(scope); end
-
     def describe(*args, &example_group_block); end
     def example_group(*args, &example_group_block); end
     def fcontext(*args, &example_group_block); end
     def fdescribe(*args, &example_group_block); end
     def feature(*args, &example_group_block); end
     def ffeature(*args, &example_group_block); end
-
-    # Used to ensure examples get reloaded and user configuration gets reset to
-    # defaults between multiple runs in the same process.
-    #
-    # Users must invoke this if they want to have the configuration reset when
-    # they use the runner multiple times within the same process. Users must deal
-    # themselves with re-configuration of RSpec before run.
     def reset; end
-
     def shared_context(name, *args, &block); end
     def shared_examples(name, *args, &block); end
     def shared_examples_for(name, *args, &block); end
-
-    # Internal container for global non-configuration data.
-    #
-    # @private
     def world; end
-
-    # Setters for shared global objects
-    #
-    # @api private
     def world=(_arg0); end
-
     def xcontext(*args, &example_group_block); end
     def xdescribe(*args, &example_group_block); end
     def xfeature(*args, &example_group_block); end
@@ -949,8 +854,6 @@ end
 module RSpec::Expectations::Version; end
 
 RSpec::Expectations::Version::STRING = T.let(T.unsafe(nil), String)
-
-# @private
 RSpec::MODULES_TO_AUTOLOAD = T.let(T.unsafe(nil), Hash)
 
 # RSpec::Matchers provides a number of useful matchers we use to define
@@ -973,7 +876,7 @@ RSpec::MODULES_TO_AUTOLOAD = T.let(T.unsafe(nil), Hash)
 #     expect([]).to be_empty     # => [].empty?() | passes
 #     expect([]).not_to be_empty # => [].empty?() | fails
 #
-# In addtion to prefixing the predicate matchers with "be_", you can also use "be_a_"
+# In addition to prefixing the predicate matchers with "be_", you can also use "be_a_"
 # and "be_an_", making your specs read much more naturally:
 #
 #     expect("a string").to be_an_instance_of(String) # =>"a string".instance_of?(String) # passes
@@ -1292,8 +1195,8 @@ module RSpec::Matchers
 
   # With no args, matches if any error is raised.
   # With a named error, matches only if that specific error is raised.
-  # With a named error and messsage specified as a String, matches only if both match.
-  # With a named error and messsage specified as a Regexp, matches only if both match.
+  # With a named error and message specified as a String, matches only if both match.
+  # With a named error and message specified as a Regexp, matches only if both match.
   # Pass an optional block to perform extra verifications on the exception matched
   #
   # @example
@@ -2395,8 +2298,8 @@ module RSpec::Matchers
 
   # With no args, matches if any error is raised.
   # With a named error, matches only if that specific error is raised.
-  # With a named error and messsage specified as a String, matches only if both match.
-  # With a named error and messsage specified as a Regexp, matches only if both match.
+  # With a named error and message specified as a String, matches only if both match.
+  # With a named error and message specified as a Regexp, matches only if both match.
   # Pass an optional block to perform extra verifications on the exception matched
   #
   # @example
@@ -2413,8 +2316,8 @@ module RSpec::Matchers
 
   # With no args, matches if any error is raised.
   # With a named error, matches only if that specific error is raised.
-  # With a named error and messsage specified as a String, matches only if both match.
-  # With a named error and messsage specified as a Regexp, matches only if both match.
+  # With a named error and message specified as a String, matches only if both match.
+  # With a named error and message specified as a Regexp, matches only if both match.
   # Pass an optional block to perform extra verifications on the exception matched
   #
   # @example
@@ -2431,8 +2334,8 @@ module RSpec::Matchers
 
   # With no args, matches if any error is raised.
   # With a named error, matches only if that specific error is raised.
-  # With a named error and messsage specified as a String, matches only if both match.
-  # With a named error and messsage specified as a Regexp, matches only if both match.
+  # With a named error and message specified as a String, matches only if both match.
+  # With a named error and message specified as a Regexp, matches only if both match.
   # Pass an optional block to perform extra verifications on the exception matched
   #
   # @example
@@ -3839,6 +3742,10 @@ class RSpec::Matchers::BuiltIn::ContainExactly < ::RSpec::Matchers::BuiltIn::Bas
   # @return [String]
   def failure_message_when_negated; end
 
+  # @api private
+  # @return [Boolean]
+  def matches?(actual); end
+
   private
 
   # @api private
@@ -4043,7 +3950,7 @@ class RSpec::Matchers::BuiltIn::ContainExactly::PairingsMaximizer::Solution < ::
   end
 end
 
-# Asbtract class to implement `once`, `at_least` and other
+# Abstract class to implement `once`, `at_least` and other
 # count constraints.
 #
 # @api private
@@ -5931,7 +5838,7 @@ module RSpec::Matchers::DSL::Macros
   #
   # By default the match block will swallow expectation errors (e.g.
   # caused by using an expectation such as `expect(1).to eq 2`), if you
-  # with to allow these to bubble up, pass in the option
+  # wish to allow these to bubble up, pass in the option
   # `:notify_expectation_failures => true`.
   #
   # @example
@@ -5972,7 +5879,7 @@ module RSpec::Matchers::DSL::Macros
   #
   # By default the match block will swallow expectation errors (e.g.
   # caused by using an expectation such as `expect(1).to eq 2`), if you
-  # with to allow these to bubble up, pass in the option
+  # wish to allow these to bubble up, pass in the option
   # `:notify_expectation_failures => true`.
   #
   # @param options [Hash] for defining the behavior of the match block.
@@ -6215,5 +6122,4 @@ class RSpec::Matchers::MatcherDelegator
   def respond_to_missing?(name, include_all = T.unsafe(nil)); end
 end
 
-# @private
 RSpec::SharedContext = RSpec::Core::SharedContext
