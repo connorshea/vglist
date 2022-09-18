@@ -788,6 +788,9 @@ class Genre
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def order(*args, &blk); end
 
+    sig { params(num: T.nilable(Integer)).returns(PrivateRelation) }
+    def page(num = nil); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def preload(*args, &blk); end
 

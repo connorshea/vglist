@@ -20,7 +20,7 @@ module Tapioca
           common_relation_methods_module.create_method(
             'friendly',
             parameters: [create_rest_param('args', type: 'T.untyped')],
-            return_type: "T.self_type"
+            return_type: 'T.self_type'
           )
         end
       end

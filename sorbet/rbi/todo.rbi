@@ -5,6 +5,8 @@
 # typed: false
 
 module ::MakeMakefile; end
+module ActiveStorage::Record::GeneratedRelationMethods::PrivateRelation; end
+module ApplicationRecord::GeneratedRelationMethods::PrivateRelation; end
 module DeleteInvalidEventsRecords::Event; end
 module MoveGamePurchaseEvents::Event; end
 module PaperTrail::Model; end

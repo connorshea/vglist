@@ -59,7 +59,7 @@ class GamePurchase < ApplicationRecord
   def game_purchase_create
     Events::GamePurchaseEvent.create!(
       eventable_id: id,
-      user_id: user.id,
+      user_id: T.must(user).id,
       event_category: :add_to_library
     )
 
@@ -74,7 +74,7 @@ class GamePurchase < ApplicationRecord
 
     Events::GamePurchaseEvent.create!(
       eventable_id: id,
-      user_id: user.id,
+      user_id: T.must(user).id,
       event_category: :change_completion_status,
       # We don't need the updated_at value
       differences: saved_changes.except!(:updated_at)
