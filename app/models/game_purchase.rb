@@ -91,6 +91,6 @@ class GamePurchase < ApplicationRecord
   sig { void }
   def update_average_rating
     average = GamePurchase.where(game_id: game_id).average(:rating)
-    average.nil? ? game.update(avg_rating: nil) : game.update(avg_rating: average.round(1))
+    average.nil? ? T.must(game).update(avg_rating: nil) : T.must(game).update(avg_rating: average.round(1))
   end
 end
