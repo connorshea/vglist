@@ -2,10 +2,10 @@
 class SeriesPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Series)) }
+  sig { returns(T.untyped) }
   attr_reader :series
 
-  sig { params(user: T.nilable(User), series: T.nilable(Series)).void }
+  sig { params(user: T.nilable(User), series: T.untyped).void }
   def initialize(user, series)
     @user = user
     @series = series

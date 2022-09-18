@@ -2,10 +2,10 @@
 class StorePolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Store)) }
+  sig { returns(T.untyped) }
   attr_reader :store
 
-  sig { params(user: T.nilable(User), store: T.nilable(Store)).void }
+  sig { params(user: T.nilable(User), store: T.untyped).void }
   def initialize(user, store)
     @user = user
     @store = store

@@ -2,10 +2,10 @@
 class CompanyPolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Company)) }
+  sig { returns(T.untyped) }
   attr_reader :company
 
-  sig { params(user: T.nilable(User), company: T.nilable(Company)).void }
+  sig { params(user: T.nilable(User), company: T.untyped).void }
   def initialize(user, company)
     @user = user
     @company = company

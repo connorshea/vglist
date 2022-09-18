@@ -2,10 +2,10 @@
 class GenrePolicy < ApplicationPolicy
   sig { returns(T.nilable(User)) }
   attr_reader :user
-  sig { returns(T.nilable(Genre)) }
+  sig { returns(T.untyped) }
   attr_reader :genre
 
-  sig { params(user: T.nilable(User), genre: T.nilable(Genre)).void }
+  sig { params(user: T.nilable(User), genre: T.untyped).void }
   def initialize(user, genre)
     @user = user
     @genre = genre
