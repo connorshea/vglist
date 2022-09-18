@@ -112,6 +112,9 @@ class User
     sig { returns(::User) }
     def fourth!; end
 
+    sig { params(args: T.untyped).returns(T.self_type) }
+    def friendly(*args); end
+
     sig { returns(Array) }
     def ids; end
 

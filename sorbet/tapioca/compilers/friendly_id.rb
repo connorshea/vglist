@@ -2,26 +2,25 @@
 
 module Tapioca
   module Compilers
-    class PgSearch < Tapioca::Dsl::Compiler
+    class FriendlyId < Tapioca::Dsl::Compiler
       extend T::Sig
 
       ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
       sig { override.returns(T::Enumerable[Module]) }
       def self.gather_constants
-        # Collect all the classes that include PgSearch
-        all_classes.select { |c| c < ::GlobalSearchable || c < ::Searchable }
+        # Collect all the classes that include FriendlyId
+        all_classes.select { |c| c.singleton_class.included_modules.include?(::FriendlyId) }
       end
 
       sig { override.void }
       def decorate
-        # Create a RBI definition for each class that includes Searchable or GlobalSearchable
         root.create_path(constant) do |klass|
-          klass.create_method(
-            'search',
+          common_relation_methods_module = klass.create_module('CommonRelationMethods')
+          common_relation_methods_module.create_method(
+            'friendly',
             parameters: [create_rest_param('args', type: 'T.untyped')],
-            return_type: 'T.untyped',
-            class_method: true
+            return_type: "T.self_type"
           )
         end
       end
