@@ -192,7 +192,7 @@ class Game < ApplicationRecord
   end
   def sized_cover(size)
     width, height = COVER_SIZES[size]
-    cover&.variant(
+    cover.variant(
       resize_to_limit: [width, height]
     )
   end

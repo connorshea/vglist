@@ -6,12 +6,7 @@
 
 module ::MakeMakefile; end
 module DeleteInvalidEventsRecords::Event; end
-module Events::FavoriteGameEvent::PrivateCollectionProxy; end
-module Events::GamePurchaseEvent::PrivateCollectionProxy; end
-module Events::RelationshipEvent::PrivateCollectionProxy; end
-module Events::UserEvent::PrivateCollectionProxy; end
 module MoveGamePurchaseEvents::Event; end
 module PaperTrail::Model; end
 module PaperTrail::VersionConcern; end
 module RenameGamePurchaseEventsToEvents::Event; end
-module Views::NewEvent::PrivateCollectionProxy; end
