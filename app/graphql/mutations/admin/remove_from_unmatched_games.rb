@@ -16,7 +16,7 @@ class Mutations::Admin::RemoveFromUnmatchedGames < Mutations::BaseMutation
 
     raise GraphQL::ExecutionError, 'No UnmatchedGame records could be found with this External Service ID and Name.' if unmatched_games.empty?
 
-    raise GraphQL::ExecutionError, 'Unable to destroy Unmatched Game record(s).' unless unmatched_games.destroy_all
+    unmatched_games.destroy_all
 
     {
       deleted: true
