@@ -201,17 +201,12 @@ class UsersController < ApplicationController
 
     @game_purchases = GamePurchase.where(user_id: @user.id)
 
+    @game_purchases.destroy_all
+
     respond_to do |format|
-      if @game_purchases.destroy_all
-        format.html do
-          flash[:success] = "Successfully reset game library."
-          redirect_to user_path(@user)
-        end
-      else
-        format.html do
-          flash[:error] = "Unable to delete all the games in your library."
-          redirect_to settings_account_path
-        end
+      format.html do
+        flash[:success] = "Successfully reset game library."
+        redirect_to user_path(@user)
       end
     end
   end
