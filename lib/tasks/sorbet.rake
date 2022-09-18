@@ -74,6 +74,7 @@ namespace :sorbet do
       Bundler.with_unbundled_env do
         system('bundle exec tapioca annotations')
         system('bundle exec tapioca gem --no-loc')
+        system('bundle exec tapioca dsl')
         system('bundle exec tapioca todo')
         system('bundle exec spoom bump')
       end

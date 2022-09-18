@@ -4,6 +4,11 @@
 # This file was pulled from a central RBI files repository.
 # Please run `bin/tapioca annotations` to update it.
 
+module ActiveSupport
+  sig { params(kind: Symbol, blk: T.proc.bind(T.untyped).void).void }
+  def self.on_load(kind, &blk); end
+end
+
 module ActiveSupport::Testing::Declarative
   sig { params(name: String, block: T.proc.bind(T.untyped).void).void }
   def test(name, &block); end

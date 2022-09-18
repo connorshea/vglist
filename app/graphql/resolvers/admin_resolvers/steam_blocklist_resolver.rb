@@ -5,7 +5,7 @@ module Resolvers::AdminResolvers
 
     description "List all steam blocklist entries. **Only available to admins.**"
 
-    sig { returns(T.nilable(SteamBlocklist::RelationType)) }
+    sig { returns(T.untyped) }
     def resolve
       SteamBlocklist.all
     end
