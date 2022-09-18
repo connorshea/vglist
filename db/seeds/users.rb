@@ -25,7 +25,7 @@ puts "Creating Users..."
   # Only attach an avatar for some of the users.
   next unless rand(0..2) > 1
 
-  user.avatar&.attach(
+  user.avatar.attach(
     io: avatar_fetcher,
     filename: "#{n}_faker_avatar.jpg"
   )

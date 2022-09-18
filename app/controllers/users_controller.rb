@@ -91,7 +91,7 @@ class UsersController < ApplicationController
     @user = User.friendly.find(params[:id])
     authorize @user
 
-    @user.avatar&.purge
+    @user.avatar.purge
 
     respond_to do |format|
       format.html { redirect_to @user, success: "Avatar successfully removed." }
