@@ -68,7 +68,7 @@ gem 'sorbet-runtime', '~> 0.5'
 gem 'graphql', '~> 2.0.14'
 
 # Doorkeeper for OAuth API tokens
-gem "doorkeeper", "~> 5.5.4"
+gem "doorkeeper", "~> 5.6.0"
 
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 1.1"
