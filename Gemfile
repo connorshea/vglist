@@ -115,7 +115,7 @@ group :development, :test do
   gem 'simplecov', '~> 0.21', require: false
 
   # Shoulda-matchers for writing better tests on models.
-  gem 'shoulda-matchers', '5.1.0'
+  gem 'shoulda-matchers', '5.2.0'
 
   # For generating fake seeding data.
   gem 'faker', '~> 2.23.0'
