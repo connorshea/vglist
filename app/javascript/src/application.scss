@@ -939,6 +939,7 @@ nav.navbar {
   .vs__dropdown-toggle {
     border: 1px solid var(--input-border-color);
     border-radius: var(--input-radius);
+    background-color: var(--input-background-color);
 
     &:hover {
       border: 1px solid var(--input-hover-border-color);

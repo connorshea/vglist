@@ -333,14 +333,14 @@ export default {
         ] = this.gamePurchase.completion_date;
       }
 
-      if (this.gamePurchase.platforms !== []) {
+      if (this.gamePurchase.platforms.length !== 0) {
         submittableData['game_purchase']['platform_ids'] = Array.from(
           this.gamePurchase.platforms,
           (platform: { id: String }) => platform.id
         );
       }
 
-      if (this.gamePurchase.stores !== []) {
+      if (this.gamePurchase.stores.length !== 0) {
         submittableData['game_purchase']['store_ids'] = Array.from(
           this.gamePurchase.stores,
           (store: { id: String }) => store.id
