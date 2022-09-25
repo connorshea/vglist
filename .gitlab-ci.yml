@@ -1,4 +1,4 @@
-image: "registry.gitlab.com/connorshea/vglist:latest"
+image: "registry.gitlab.com/vglist/vglist:latest"
 
 services:
   - postgres:14
