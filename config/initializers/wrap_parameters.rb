@@ -6,7 +6,7 @@
 
 # Enable parameter wrapping for JSON. You can disable this by setting :format to an empty array.
 ActiveSupport.on_load(:action_controller) do
-  T.bind(self, T.class_of(ActionController::Base))
+  T.bind(self, T.any(T.class_of(ActionController::Base), T.class_of(ActionController::API)))
 
   wrap_parameters format: [:json]
 end
