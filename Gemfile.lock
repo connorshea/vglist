@@ -46,7 +46,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_storage_validations (1.0.0)
+    active_storage_validations (1.0.2)
       activejob (>= 5.2.0)
       activemodel (>= 5.2.0)
       activestorage (>= 5.2.0)
@@ -474,7 +474,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  active_storage_validations (~> 1.0.0)
+  active_storage_validations (~> 1.0.2)
   addressable (~> 2.8.1)
   aws-sdk-s3 (~> 1.66)
   better_errors (~> 2.9)
