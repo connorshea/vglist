@@ -65,7 +65,7 @@ gem 'sentry-rails', '~> 5.5.0'
 gem 'sorbet-runtime', '~> 0.5'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
-gem 'graphql', '~> 2.0.14'
+gem 'graphql', '~> 2.0.15'
 
 # Doorkeeper for OAuth API tokens
 gem "doorkeeper", "~> 5.5.4"
