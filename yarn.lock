@@ -1119,10 +1119,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
-"@graphiql/react@^0.13.3":
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.13.3.tgz#b29138e8a32fe2e10cb37bd61b64f05cc04ebb4a"
-  integrity sha512-BIOaahIxVHGQjoVbECIiSzEtETZVMyhG83ysVpoFKCVj27KxDbh/Yk9w23L0aYQWuWEU7C02Kzl5gi+Zwx/K3A==
+"@graphiql/react@^0.13.7":
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.13.7.tgz#23c41d0326893c336942d80e1e6cfb32eb7eac3b"
+  integrity sha512-mI+6mXd9AJFDJy39VuZGxCiVLvmBe2XoNidbN3lXgTLe689RZKifPaUw41USitQOu20sASoYDfzJ8i98G4urow==
   dependencies:
     "@graphiql/toolkit" "^0.8.0"
     "@reach/combobox" "^0.17.0"
@@ -1132,7 +1132,7 @@
     "@reach/tooltip" "^0.17.0"
     "@reach/visually-hidden" "^0.17.0"
     codemirror "^5.65.3"
-    codemirror-graphql "^2.0.0"
+    codemirror-graphql "^2.0.2"
     copy-to-clipboard "^3.2.0"
     graphql-language-service "^5.1.0"
     markdown-it "^12.2.0"
@@ -2541,12 +2541,12 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
-codemirror-graphql@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-2.0.0.tgz#0705da4e179f0708b249d4460b231598cebaa696"
-  integrity sha512-4trIaV9LYo/yRMu3s5qf7ASrKQjcCGrVfqOwaFsdjjcG8koh93gCzZ+csMhe3n6A7lMLWEpPdFWBIepKGV7qQg==
+codemirror-graphql@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-2.0.2.tgz#df3cbcb53efc2ad63f170888f25647659376f319"
+  integrity sha512-9c1cItR+8lG7thmTnDDQ3zI8YesNKiFCp2BnLFkYWCtdhSSuCUHebU/Vurew6ayyUl8MBCldNx3Ev66QAWM5Kw==
   dependencies:
-    graphql-language-service "^5.1.0"
+    graphql-language-service "5.0.6"
 
 codemirror@^5.65.3:
   version "5.65.6"
@@ -3985,16 +3985,24 @@ graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphiql@2.0.9:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.0.9.tgz#00c8c1a37c069d53ade143d4265ef6e164f68bb4"
-  integrity sha512-vPRmcYMi/BUdZ9Y2evW7BtxakfmvPV3k0CF2BZK/U9Qg0lJbYtVErz8DR/vgWy/fRBuKpg2Le7dGretFt9FM+w==
+graphiql@2.0.13:
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.0.13.tgz#2734382a66e77a8a9232540a1a1da5bbe3e9e8bb"
+  integrity sha512-hfqcd40aO2V44Z/rey6lGXYnEsbwseeokeeZGQbFfSImciGtyP0SS8MyE5s5yno6z/M0ymJccpaNaUlC6imSwA==
   dependencies:
-    "@graphiql/react" "^0.13.3"
+    "@graphiql/react" "^0.13.7"
     "@graphiql/toolkit" "^0.8.0"
     entities "^2.0.0"
     graphql-language-service "^5.1.0"
     markdown-it "^12.2.0"
+
+graphql-language-service@5.0.6:
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-5.0.6.tgz#7fd1e6479e5c3074b070c760fa961d9ad1ed7c72"
+  integrity sha512-FjE23aTy45Lr5metxCv3ZgSKEZOzN7ERR+OFC1isV5mHxI0Ob8XxayLTYjQKrs8b3kOpvgTYmSmu6AyXOzYslg==
+  dependencies:
+    nullthrows "^1.0.0"
+    vscode-languageserver-types "^3.15.1"
 
 graphql-language-service@^5.1.0:
   version "5.1.0"
@@ -8090,7 +8098,7 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vscode-languageserver-types@^3.17.1:
+vscode-languageserver-types@^3.15.1, vscode-languageserver-types@^3.17.1:
   version "3.17.2"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.17.2.tgz#b2c2e7de405ad3d73a883e91989b850170ffc4f2"
   integrity sha512-zHhCWatviizPIq9B7Vh9uvrH6x3sK8itC84HkamnBWoDFJtzBf7SWlpLCZUit72b3os45h6RWQNC9xHRDF8dRA==
