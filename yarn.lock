@@ -1119,10 +1119,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
-"@graphiql/react@^0.13.7":
-  version "0.13.7"
-  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.13.7.tgz#23c41d0326893c336942d80e1e6cfb32eb7eac3b"
-  integrity sha512-mI+6mXd9AJFDJy39VuZGxCiVLvmBe2XoNidbN3lXgTLe689RZKifPaUw41USitQOu20sASoYDfzJ8i98G4urow==
+"@graphiql/react@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.14.0.tgz#a3beb5bf2967d5085f306c8fcb953a1a95b4e41b"
+  integrity sha512-BBkbl35akar4/+4P6ggZ99jSmU0D1qV70A2OegkuJ4t/knAis/R713faOs9xKyjkUj8hv6+KcAqBOp48LnP6lA==
   dependencies:
     "@graphiql/toolkit" "^0.8.0"
     "@reach/combobox" "^0.17.0"
@@ -3985,12 +3985,12 @@ graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphiql@2.0.13:
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.0.13.tgz#2734382a66e77a8a9232540a1a1da5bbe3e9e8bb"
-  integrity sha512-hfqcd40aO2V44Z/rey6lGXYnEsbwseeokeeZGQbFfSImciGtyP0SS8MyE5s5yno6z/M0ymJccpaNaUlC6imSwA==
+graphiql@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.1.0.tgz#2c67dd5121e120e30fc4e37ce2b776b7a12d2a76"
+  integrity sha512-b58o/o7y5x/C4WzH7YTeSWbINE6tcfzZN4TxgvoSZxhE9X6MulXXbXLRiGEl5+FuajIN0LxaoleHTJUHb9H2wg==
   dependencies:
-    "@graphiql/react" "^0.13.7"
+    "@graphiql/react" "^0.14.0"
     "@graphiql/toolkit" "^0.8.0"
     entities "^2.0.0"
     graphql-language-service "^5.1.0"
