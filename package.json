@@ -33,7 +33,7 @@
     "@types/vue-select": "^3.16.2",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
     "graphql-schema-linter": "^3.0.1",
-    "prettier": "2.7.1",
+    "prettier": "2.8.0",
     "webpack-dev-server": "^3.11"
   },
   "scripts": {
