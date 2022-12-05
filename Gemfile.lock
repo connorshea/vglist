@@ -420,7 +420,7 @@ GEM
       thor (>= 1.2.0)
       yard-sorbet
     thor (1.2.1)
-    timeout (0.3.0)
+    timeout (0.3.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
