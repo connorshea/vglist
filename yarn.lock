@@ -8174,10 +8174,10 @@ vue-resize@^1.0.1:
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-vue-select@^3.20.0:
-  version "3.20.0"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.20.0.tgz#a3c4eb046654f9991ce5240e3a0679daa9e992d3"
-  integrity sha512-Qau4BzpgAC+/9jM5oTlOrfA81ONdtTFH6PqeSDKvIB56f1F6EbIR8qAotpUxrIiNVppyPFjvVDkyriMfHjWBQA==
+vue-select@^3.20.2:
+  version "3.20.2"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.20.2.tgz#eaa15012b032c154d4fb51ac82ebeda2beeae54b"
+  integrity sha512-ZSzIDzyYsWZULGUxVp1h6u3yi9IZQBWX8r6kSudUI/I5J1HQKpBjRntvkrg6pr87xmm16kdChvHCDN+W84vTKw==
 
 vue-style-loader@^4.1.0:
   version "4.1.2"
