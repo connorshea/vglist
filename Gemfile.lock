@@ -262,7 +262,7 @@ GEM
       activesupport (>= 3.0.0)
     pundit-matchers (1.8.4)
       rspec-rails (>= 3.0.0)
-    racc (1.6.1)
+    racc (1.6.2)
     rack (2.2.4)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
