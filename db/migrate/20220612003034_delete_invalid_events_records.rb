@@ -11,7 +11,7 @@ class DeleteInvalidEventsRecords < ActiveRecord::Migration[6.1]
         WHERE eventable_type = 'GamePurchase'
         AND game_purchases.id IS NULL;
       SQL
-    ).to_a.map { |hash| hash['id'] }
+    ).to_a.pluck('id')
 
     return if invalid_event_ids.empty?
 

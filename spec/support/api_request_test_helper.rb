@@ -28,7 +28,7 @@ module ApiRequestTestHelper
   # @param result [VglistApiRequestResponse]
   # @return [Hash]
   def api_result_errors(result)
-    return result.to_h['errors'].map { |item| item['message'] }
+    return result.to_h['errors'].pluck('message')
   end
 end
 
