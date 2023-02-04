@@ -8,7 +8,7 @@ module Resolvers
 
       argument :query, String, required: true, description: "Name to search by."
 
-      sig { params(query: String).returns(Game::RelationType) }
+      sig { params(query: String).returns(T.untyped) }
       def resolve(query:)
         Game.search(query)
       end

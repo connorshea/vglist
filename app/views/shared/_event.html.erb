@@ -15,7 +15,7 @@
           <span class="has-text-muted" title="<%= event.created_at %>">
             <%= "#{distance_of_time_in_words(event.created_at, Time.now)} ago" %>
           </span>
-          <% if policy(event).destroy? %>
+          <% if EventPolicy.new(current_user, event.subclass).destroy? %>
             <%= link_to event_path(event.id),
               data: { confirm: "Are you sure you want to delete this event?" },
               method: :delete, class: 'ml-5' do %>

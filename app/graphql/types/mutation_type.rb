@@ -14,10 +14,15 @@ module Types
     # User mutations
     field :follow_user, mutation: Mutations::Users::FollowUser
     field :unfollow_user, mutation: Mutations::Users::UnfollowUser
+    field :import_steam_library, mutation: Mutations::Users::ImportSteamLibrary
+    field :connect_steam, mutation: Mutations::Users::ConnectSteam
+    field :disconnect_steam, mutation: Mutations::Users::DisconnectSteam
     field :ban_user, mutation: Mutations::Users::BanUser
     field :unban_user, mutation: Mutations::Users::UnbanUser
     field :update_user_role, mutation: Mutations::Users::UpdateUserRole
     field :remove_user_avatar, mutation: Mutations::Users::RemoveUserAvatar
+    field :reset_user_library, mutation: Mutations::Users::ResetUserLibrary
+    field :delete_user, mutation: Mutations::Users::DeleteUser
 
     # GamePurchase mutations
     field :add_game_to_library, mutation: Mutations::GamePurchases::AddGameToLibrary
@@ -62,6 +67,7 @@ module Types
     field :remove_from_steam_blocklist, mutation: Mutations::Admin::RemoveFromSteamBlocklist
     field :add_to_wikidata_blocklist, mutation: Mutations::Admin::AddToWikidataBlocklist
     field :remove_from_wikidata_blocklist, mutation: Mutations::Admin::RemoveFromWikidataBlocklist
+    field :remove_from_unmatched_games, mutation: Mutations::Admin::RemoveFromUnmatchedGames
     field :merge_games, mutation: Mutations::Admin::MergeGames
   end
 end

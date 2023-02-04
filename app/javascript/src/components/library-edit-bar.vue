@@ -88,7 +88,7 @@ export default {
         delete this.updateData['rating'];
       }
 
-      if (this.updateData['stores'] === []) {
+      if (this.updateData['stores'].length !== 0) {
         delete this.updateData['stores'];
       }
 
@@ -101,7 +101,7 @@ export default {
         updateData['completion_status'] = updateData['completion_status']['value'];
       }
 
-      if (updateData['stores'] !== []) {
+      if (updateData['stores'].length !== 0) {
         updateData['store_ids'] = updateData['stores'].map(store => store.id);
         delete updateData['stores'];
       }

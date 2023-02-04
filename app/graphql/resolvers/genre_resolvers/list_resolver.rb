@@ -6,7 +6,7 @@ module Resolvers
 
       description "List all genres."
 
-      sig { returns(Genre::RelationType) }
+      sig { returns(T.untyped) }
       def resolve
         Genre.all
       end

@@ -8,9 +8,9 @@ class Mutations::Admin::RemoveFromWikidataBlocklist < Mutations::BaseMutation
 
   sig { params(wikidata_blocklist_entry_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(wikidata_blocklist_entry_id:)
-    wikidata_blocklist_entry = WikidataBlocklist.find_by(id: wikidata_blocklist_entry_id)
+    wikidata_blocklist_entry = WikidataBlocklist.find(wikidata_blocklist_entry_id)
 
-    raise GraphQL::ExecutionError, wikidata_blocklist_entry&.errors&.full_messages&.join(", ") unless wikidata_blocklist_entry&.destroy
+    raise GraphQL::ExecutionError, wikidata_blocklist_entry.errors.full_messages.join(", ") unless wikidata_blocklist_entry.destroy
 
     {
       deleted: true

@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 class MoveSteamAppIdsToSeparateModel < ActiveRecord::Migration[6.0]
   def up
     # Find all games with Steam AppIDs and move them to the steam_app_ids table.

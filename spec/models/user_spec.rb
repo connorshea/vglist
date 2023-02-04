@@ -73,7 +73,7 @@ RSpec.describe User, type: :model do
 
     it 'has an optional avatar' do
       expect(user).not_to validate_attached_of(:avatar)
-      expect(user).to validate_content_type_of(:avatar).allowing('image/png', 'image/jpg', 'image/jpeg')
+      expect(user).to validate_content_type_of(:avatar).rejecting([]).allowing('image/png', 'image/jpeg')
       expect(user).to validate_size_of(:avatar).less_than(3.megabytes)
     end
   end
@@ -93,7 +93,13 @@ RSpec.describe User, type: :model do
     it { should have_many(:games).through(:game_purchases) }
     it { should have_many(:favorite_games).dependent(:destroy) }
     it { should have_many(:favorited_games).through(:favorite_games) }
-    it { should have_many(:events).dependent(:destroy) }
+
+    it { should have_many(:new_events) }
+    it { should have_many(:game_purchase_events).dependent(:destroy) }
+    it { should have_many(:relationship_events).dependent(:destroy) }
+    it { should have_many(:user_events).dependent(:destroy) }
+    it { should have_many(:favorite_game_events).dependent(:destroy) }
+
     it { should have_many(:wikidata_blocklists).dependent(:nullify) }
     it { should have_many(:steam_blocklists).dependent(:nullify) }
     it { should have_one(:external_account).dependent(:destroy) }

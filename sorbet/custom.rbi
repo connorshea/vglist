@@ -1,5 +1,5 @@
 # typed: strong
-# Custom, artisanal RBIs for stuff sorbet and sorbet-rails aren't able to understand yet.
+# Custom, artisanal RBIs for stuff sorbet and tapioca aren't able to understand yet.
 
 class Devise::RegistrationsController < DeviseController; end
 class Devise::ConfirmationsController < DeviseController; end
@@ -20,11 +20,9 @@ class ActionController::Base
   include ::Devise::Controllers::Helpers
 end
 
+# This monkeypatch is done in config/initializers/params_monkey_patch.rb.
 class ActionController::Parameters
-  # This is a disgusting hack to make `params.require` less verbose for its
-  # most common case. I am not proud of what I have done.
-  sig { params(key: Symbol).returns(ActionController::Parameters) }
-  def typed_require(key); end
+  include ParamsMonkeyPatch
 end
 
 # Include ActiveStorage::Attached::Model to get the has_one_attached class method.
@@ -37,14 +35,6 @@ module PgSearch::Model
   extend T::Helpers
 
   mixes_in_class_methods(ClassMethods)
-end
-
-# Make Sorbet understand that SorbetRails::ModelPlugins::Base extends T::Sig.
-# Otherwise it won't let us use sigs in the plugin class.
-module SorbetRails::ModelPlugins
-  class Base < ::Parlour::Plugin
-    extend T::Sig
-  end
 end
 
 # Add modules from Devise to User.

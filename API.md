@@ -57,7 +57,7 @@ vglist's GraphQL endpoint is available at `https://vglist.co/graphql` (queries m
 
 ## 'Scraping' the vglist Database
 
-If you just want to scrape the database to create something yourself, it'd be much easier (and much nicer for me) if you'd instead just get the data from [Wikidata](https://www.wikidata.org), which is where the vast majority (>95%) of vglist's data originally came from. The Wikidata import scripts I built for vglist are all open source and are available in [the vglist GitHub repository](https://github.com/connorshea/vglist/tree/main/lib/tasks/import). Game covers were mostly retrieved from the kind folks at [PCGamingWiki](https://www.pcgamingwiki.com) and [MobyGames](https://www.mobygames.com/).
+If you just want to scrape the database to create something yourself, it'd be much easier (and much nicer for me) if you'd instead just get the data from [Wikidata](https://www.wikidata.org), which is where the vast majority (>99%) of vglist's data originally comes from. The Wikidata import scripts I built for vglist are all open source and are available in [the vglist GitHub repository](https://github.com/connorshea/vglist/tree/main/lib/tasks/import). Game covers were mostly retrieved from the kind folks at [PCGamingWiki](https://www.pcgamingwiki.com), [MobyGames](https://www.mobygames.com), and [IGDB](https://www.igdb.com).
 
 ## Authentication
 
@@ -184,6 +184,23 @@ query {
   }
 }
 ```
+
+By default, pages in the GraphQL API return sets of 30 items. You can increase or decrease the number of returned items by passing a `first` argument. The maximum number of records that can be requested per page is 100. If you try to go any higher than that, it'll clamp it back down to 100. You can use `first` and `after` in the same query.
+
+```graphql
+query {
+  # This will return the first 100 records, instead of just the first 30.
+  games(first: 100) {
+    nodes {
+      id
+      name
+    }
+    totalCount
+  }
+}
+```
+
+Please be thoughtful about your API usage, and don't request the maximum number of records per page unless it's necessary. If your use-case works fine with 30 records at a time, just use 30 records.
 
 ## Mutations
 

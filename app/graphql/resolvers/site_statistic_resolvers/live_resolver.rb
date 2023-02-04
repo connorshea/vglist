@@ -2,16 +2,13 @@
 module Resolvers
   module SiteStatisticResolvers
     class LiveResolver < Resolvers::BaseResolver
-      type Types::SiteStatisticType, null: false
+      type Types::LiveSiteStatisticType, null: false
 
       description "Current statistics for all records on the site, for use on the admin dashboard. **Only available to admins.**"
 
       sig { returns(T::Hash[Symbol, Integer]) }
       def resolve
         {
-          id: nil,
-          timestamp: nil,
-
           users: User.count,
           games: Game.count,
           platforms: Platform.count,
@@ -20,12 +17,13 @@ module Resolvers
           companies: Company.count,
           genres: Genre.count,
           stores: Store.count,
-          events: Event.count,
+          events: Views::NewEvent.count,
           game_purchases: GamePurchase.count,
           relationships: Relationship.count,
           games_with_covers: Game.joins(:cover_attachment).count,
           games_with_release_dates: Game.where.not(release_date: nil).count,
           banned_users: User.where(banned: true).count,
+          unmatched_games: UnmatchedGame.count,
 
           mobygames_ids: Game.where.not(mobygames_id: nil).count,
           pcgamingwiki_ids: Game.where.not(pcgamingwiki_id: nil).count,

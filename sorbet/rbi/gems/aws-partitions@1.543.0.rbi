@@ -19,78 +19,354 @@ end
 
 Aws::CORE_GEM_VERSION = T.let(T.unsafe(nil), String)
 
+# A {Partition} is a group of AWS {Region} and {Service} objects. You
+# can use a partition to determine what services are available in a region,
+# or what regions a service is available in.
+#
+# ## Partitions
+#
+# **AWS accounts are scoped to a single partition**. You can get a partition
+# by name. Valid partition names include:
+#
+# * `"aws"` - Public AWS partition
+# * `"aws-cn"` - AWS China
+# * `"aws-us-gov"` - AWS GovCloud
+#
+# To get a partition by name:
+#
+#     aws = Aws::Partitions.partition('aws')
+#
+# You can also enumerate all partitions:
+#
+#     Aws::Partitions.each do |partition|
+#       puts partition.name
+#     end
+#
+# ## Regions
+#
+# A {Partition} is divided up into one or more regions. For example, the
+# "aws" partition contains, "us-east-1", "us-west-1", etc. You can get
+# a region by name. Calling {Partition#region} will return an instance
+# of {Region}.
+#
+#     region = Aws::Partitions.partition('aws').region('us-west-2')
+#     region.name
+#     #=> "us-west-2"
+#
+# You can also enumerate all regions within a partition:
+#
+#     Aws::Partitions.partition('aws').regions.each do |region|
+#       puts region.name
+#     end
+#
+# Each {Region} object has a name, description and a list of services
+# available to that region:
+#
+#     us_west_2 = Aws::Partitions.partition('aws').region('us-west-2')
+#
+#     us_west_2.name #=> "us-west-2"
+#     us_west_2.description #=> "US West (Oregon)"
+#     us_west_2.partition_name "aws"
+#     us_west_2.services #=> #<Set: {"APIGateway", "AutoScaling", ... }
+#
+# To know if a service is available within a region, you can call `#include?`
+# on the set of service names:
+#
+#     region.services.include?('DynamoDB') #=> true/false
+#
+# The service name should be the service's module name as used by
+# the AWS SDK for Ruby. To find the complete list of supported
+# service names, see {Partition#services}.
+#
+# Its also possible to enumerate every service for every region in
+# every partition.
+#
+#     Aws::Partitions.partitions.each do |partition|
+#       partition.regions.each do |region|
+#         region.services.each do |service_name|
+#           puts "#{partition.name} -> #{region.name} -> #{service_name}"
+#         end
+#       end
+#     end
+#
+# ## Services
+#
+# A {Partition} has a list of services available. You can get a
+# single {Service} by name:
+#
+#     Aws::Partitions.partition('aws').service('DynamoDB')
+#
+# You can also enumerate all services in a partition:
+#
+#     Aws::Partitions.partition('aws').services.each do |service|
+#       puts service.name
+#     end
+#
+# Each {Service} object has a name, and information about regions
+# that service is available in.
+#
+#     service.name #=> "DynamoDB"
+#     service.partition_name #=> "aws"
+#     service.regions #=> #<Set: {"us-east-1", "us-west-1", ... }
+#
+# Some services have multiple regions, and others have a single partition
+# wide region. For example, {Aws::IAM} has a single region in the "aws"
+# partition. The {Service#regionalized?} method indicates when this is
+# the case.
+#
+#     iam = Aws::Partitions.partition('aws').service('IAM')
+#
+#     iam.regionalized? #=> false
+#     service.partition_region #=> "aws-global"
+#
+# Its also possible to enumerate every region for every service in
+# every partition.
+#
+#     Aws::Partitions.partitions.each do |partition|
+#       partition.services.each do |service|
+#         service.regions.each do |region_name|
+#           puts "#{partition.name} -> #{region_name} -> #{service.name}"
+#         end
+#       end
+#     end
+#
+# ## Service Names
+#
+# {Service} names are those used by the the AWS SDK for Ruby. They
+# correspond to the service's module.
 module Aws::Partitions
   extend ::Enumerable
 
   class << self
+    # @api private For internal use only.
+    # @param new_partitions [Hash]
     def add(new_partitions); end
+
+    # @api private For internal use only.
     def clear; end
+
+    # @api private
+    # @return [PartitionList]
     def default_partition_list; end
+
+    # @api private
+    # @return [Hash]
     def defaults; end
+
+    # @return [Enumerable<Partition>]
     def each(&block); end
+
+    # Return the partition with the given name. A partition describes
+    # the services and regions available in that partition.
+    #
+    #     aws = Aws::Partitions.partition('aws')
+    #
+    #     puts "Regions available in the aws partition:\n"
+    #     aws.regions.each do |region|
+    #       puts region.name
+    #     end
+    #
+    #     puts "Services available in the aws partition:\n"
+    #     aws.services.each do |services|
+    #       puts services.name
+    #     end
+    #
+    # @param name [String] The name of the partition to return.
+    #   Valid names include "aws", "aws-cn", and "aws-us-gov".
+    # @raise [ArgumentError] Raises an `ArgumentError` if a partition is
+    #   not found with the given name. The error message contains a list
+    #   of valid partition names.
+    # @return [Partition]
     def partition(name); end
+
+    # Returns an array with every partitions. A partition describes
+    # the services and regions available in that partition.
+    #
+    #     Aws::Partitions.partitions.each do |partition|
+    #
+    #       puts "Regions available in #{partition.name}:\n"
+    #       partition.regions.each do |region|
+    #         puts region.name
+    #       end
+    #
+    #       puts "Services available in #{partition.name}:\n"
+    #       partition.services.each do |service|
+    #         puts service.name
+    #       end
+    #     end
+    #
+    # @return [Enumerable<Partition>] Returns an enumerable of all
+    #   known partitions.
     def partitions; end
+
+    # @api private For internal use only.
+    # @return [Hash<String,String>] Returns a map of service module names
+    #   to their id as used in the endpoints.json document.
     def service_ids; end
   end
 end
 
+# @api private
 class Aws::Partitions::EndpointProvider
+  # Intentionally marked private. The format of the endpoint rules
+  # is an implementation detail.
+  #
+  # @api private
+  # @return [EndpointProvider] a new instance of EndpointProvider
   def initialize(rules); end
 
+  # @api private Use the static class methods instead.
+  # @option variants
+  # @option variants
+  # @param region [String] The region used to fetch the partition.
+  # @param service [String] Used only if dualstack is true. Used to find a
+  #   DNS suffix for a specific service.
+  # @param variants [Hash] Endpoint variants such as 'fips' or 'dualstack'
   def dns_suffix_for(region, service, variants); end
+
+  # @api private Use the static class methods instead.
+  # @option variants
+  # @option variants
+  # @param region [String] The region for the client.
+  # @param service [String] The endpoint prefix for the service, e.g.
+  #   "monitoring" for cloudwatch.
+  # @param sts_regional_endpoints [String] [STS only] Whether to use
+  #   `legacy` (global endpoint for legacy regions) or `regional` mode for
+  #   using regional endpoint for supported regions except 'aws-global'
+  # @param variants [Hash] Endpoint variants such as 'fips' or 'dualstack'
   def resolve(region, service, sts_regional_endpoints, variants); end
+
+  # @api private Use the static class methods instead.
   def signing_region(region, service, sts_regional_endpoints); end
+
+  # @api private Use the static class methods instead.
   def signing_service(region, service); end
 
   private
 
+  # returns a callable that takes a region
+  # and returns true if the service is global
+  #
+  # @api private
   def build_is_global_fn(sts_regional_endpoints = T.unsafe(nil)); end
+
+  # @api private
+  # @return [Boolean]
   def configured_variants?(variants); end
+
+  # @api private
   def credential_scope(region, service, is_global_fn); end
+
+  # @api private
   def default_partition; end
+
+  # @api private
   def endpoint_for(region, service, is_global_fn, variants); end
+
+  # @api private
   def endpoint_no_variants_for(region, service, is_global_fn); end
+
+  # @api private
   def endpoint_with_variants_for(region, service, variants); end
+
+  # @api private
   def fetch_variant(cfg, tags); end
+
+  # @api private
   def get_partition(region_or_partition); end
+
+  # @api private
   def partition_containing_region(region); end
+
+  # @api private
   def partition_matching_name(partition_name); end
+
+  # @api private
   def partition_matching_region(region); end
+
+  # @api private
   def resolve_variant(region, service, config_variants); end
+
+  # @api private
   def validate_variant!(config_variants, resolved_variant); end
+
+  # @api private
   def warn_deprecation(service, region); end
 
   class << self
+    # @api private
     def dns_suffix_for(region, service = T.unsafe(nil), variants = T.unsafe(nil)); end
+
+    # @api private
     def resolve(region, service, sts_endpoint = T.unsafe(nil), variants = T.unsafe(nil)); end
+
+    # @api private
     def signing_region(region, service, sts_regional_endpoints = T.unsafe(nil)); end
+
+    # @api private
     def signing_service(region, service); end
 
     private
 
+    # @api private
     def default_provider; end
   end
 end
 
+# When sts_regional_endpoint is set to `legacy`, the endpoint
+# pattern stays global for the following regions:
+#
+# @api private
 Aws::Partitions::EndpointProvider::STS_LEGACY_REGIONS = T.let(T.unsafe(nil), Array)
 
 class Aws::Partitions::Partition
+  # @api private
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Partition] a new instance of Partition
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [String] The partition name, e.g. "aws", "aws-cn", "aws-us-gov".
   def name; end
+
+  # @param region_name [String] The name of the region, e.g. "us-east-1".
+  # @raise [ArgumentError] Raises `ArgumentError` for unknown region name.
+  # @return [Region]
   def region(region_name); end
+
+  # @param region_name [String] The name of the region, e.g. "us-east-1".
+  # @return [Boolean] true if the region is in the partition.
   def region?(region_name); end
+
+  # @return [Array<Region>]
   def regions; end
+
+  # @param service_name [String] The service module name.
+  # @raise [ArgumentError] Raises `ArgumentError` for unknown service name.
+  # @return [Service]
   def service(service_name); end
+
+  # @param service_name [String] The service module name.
+  # @return [Boolean] true if the service is in the partition.
   def service?(service_name); end
+
+  # @return [Array<Service>]
   def services; end
 
   class << self
+    # @api private
     def build(partition); end
 
     private
 
+    # @param partition [Hash]
+    # @return [Hash<String,Region>]
     def build_regions(partition); end
+
+    # @param partition [Hash]
+    # @return [Hash<String,Service>]
     def build_services(partition); end
   end
 end
@@ -98,49 +374,117 @@ end
 class Aws::Partitions::PartitionList
   include ::Enumerable
 
+  # @return [PartitionList] a new instance of PartitionList
   def initialize; end
 
+  # @api private
+  # @param partition [Partition]
   def add_partition(partition); end
+
+  # Removed all partitions.
+  #
+  # @api private
   def clear; end
+
+  # @return [Enumerator<Partition>]
   def each(&block); end
+
+  # @param partition_name [String]
+  # @return [Partition]
   def partition(partition_name); end
+
+  # @return [Array<Partition>]
   def partitions; end
 
   class << self
+    # @api private
     def build(partitions); end
   end
 end
 
 class Aws::Partitions::Region
+  # @api private
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Region] a new instance of Region
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [String] A short description of this region.
   def description; end
+
+  # @return [String] The name of this region, e.g. "us-east-1".
   def name; end
+
+  # @return [String] The partition this region exists in, e.g. "aws",
+  #   "aws-cn", "aws-us-gov".
   def partition_name; end
+
+  # @return [Set<String>] The list of services available in this region.
+  #   Service names are the module names as used by the AWS SDK
+  #   for Ruby.
   def services; end
 
   class << self
+    # @api private
     def build(region_name, region, partition); end
 
     private
 
     def region_services(region_name, partition); end
+
+    # @return [Boolean]
     def service_in_region?(svc, region_name); end
   end
 end
 
 class Aws::Partitions::Service
+  # @api private
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  # @return [Service] a new instance of Service
   def initialize(options = T.unsafe(nil)); end
 
+  # @return [Set<String>] The Dualstack compatible regions this service is
+  #   available in. Regions are scoped to the partition.
   def dualstack_regions; end
+
+  # @return [Set<String>] The FIPS compatible regions this service is
+  #   available in. Regions are scoped to the partition.
   def fips_regions; end
+
+  # @return [String] The name of this service. The name is the module
+  #   name as used by the AWS SDK for Ruby.
   def name; end
+
+  # @return [String] The partition name, e.g "aws", "aws-cn", "aws-us-gov".
   def partition_name; end
+
+  # @return [String, nil] The global patition endpoint for this service.
+  #   May be `nil`.
   def partition_region; end
+
+  # Returns `false` if the service operates with a single global
+  # endpoint for the current partition, returns `true` if the service
+  # is available in multiple regions.
+  #
+  # Some services have both a partition endpoint and regional endpoints.
+  #
+  # @return [Boolean]
   def regionalized?; end
+
+  # @return [Set<String>] The regions this service is available in.
+  #   Regions are scoped to the partition.
   def regions; end
 
   class << self
+    # @api private
     def build(service_name, service, partition); end
 
     private

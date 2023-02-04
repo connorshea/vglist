@@ -15,7 +15,7 @@ class AdminController < ApplicationController
       companies: Company.count,
       genres: Genre.count,
       stores: Store.count,
-      events: Event.count,
+      events: Views::NewEvent.count,
       game_purchases: GamePurchase.count,
       relationships: Relationship.count,
       games_with_covers: Game.joins(:cover_attachment).count,

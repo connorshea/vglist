@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - Ruby 3.0
-- Postgres 12.x
+- Postgres 14.x
 - Node.js 14.x
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
@@ -13,11 +13,11 @@
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 2.3.3, `gem install bundler:2.3.3`
+1. To get Bundler 2.4.1, `gem install bundler:2.4.1`
 1. `bundle install`
 1. `yarn install`
 1. `bundle exec rails db:setup`
-   - This is the equivalent of running `bundle exec rails db:create && bundle exec rails db:schema:load && bundle exec rails db:seed`, so it will create the databases, seed them with fake data, and create a user with the email `admin@example.com` and the password `password`.
+   - This is the equivalent of running `bundle exec rails db:create && bundle exec rails db:structure:load && bundle exec rails db:seed`, so it will create the databases, seed them with fake data, and create a user with the email `admin@example.com` and the password `password`.
    - If you would like more control, run only `bundle exec rails db:create` and `bundle exec rails db:schema:load`.
    - If you run into an error about the database password being wrong, the application will try to use `'password'` by default, but you can set the password for your database user via the `VGLIST_DATABASE_PASSWORD` environment variable.
 1. `bundle exec rails server` to start the server.
@@ -79,9 +79,9 @@ Rake tasks are Ruby code for performing tasks. For vglist, most of these are for
 To update the Docker container used by GitLab CI:
 
 - Log into the GitLab CI Docker registry with `docker login registry.gitlab.com` (you'll need to use a Personal Access Token as your password).
-- Build the container with `docker build --platform=linux/amd64 -f Dockerfile -t registry.gitlab.com/connorshea/vglist .`
+- Build the container with `docker build --platform=linux/amd64 -f Dockerfile -t registry.gitlab.com/vglist/vglist .`
   - You may want to add `--no-cache` to fully rebuild the container from scratch.
-- Then use `docker push registry.gitlab.com/connorshea/vglist` to push the container to the GitLab Container Registry.
+- Then use `docker push registry.gitlab.com/vglist/vglist` to push the container to the GitLab Container Registry.
 
 ## Design Document
 

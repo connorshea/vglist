@@ -73,6 +73,7 @@ RSpec.configure do |config|
 
   config.include FeatureTestHelper, type: :feature
   config.include ApiRequestTestHelper, type: :request
+  config.include EnvHelper, type: :request
 
   # Prints JavaScript errors to the console if there are any.
   if ENV['RSPEC_FEATURE_DEBUG']

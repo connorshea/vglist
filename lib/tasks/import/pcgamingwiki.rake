@@ -98,7 +98,11 @@ namespace :import do
 
     games.each do |game|
       progress_bar.log "#{game[:name].ljust(40)} | Adding cover..."
-      api_url = "https://www.pcgamingwiki.com/w/api.php?action=cargoquery&format=json&tables=Infobox_game&fields=Infobox_game.Cover_URL&where=Infobox_game._pageName%3D\"#{game[:pcgamingwiki_id].gsub('"', '%22')}\""
+
+      # Cargo doesn't use underscores in page names, so they have to be replaced
+      # by a URL-encoded space character.
+      url_encoded_pcgw_id = game[:pcgamingwiki_id].gsub('"', '%22').gsub('_', '%20')
+      api_url = "https://www.pcgamingwiki.com/w/api.php?action=cargoquery&format=json&tables=Infobox_game&fields=Infobox_game.Cover_URL&where=Infobox_game._pageName%3D\"#{url_encoded_pcgw_id}\""
 
       unless api_url.ascii_only?
         progress_bar.log "#{game[:name].ljust(40)} | URL cannot contain non-ASCII characters: #{api_url}."
@@ -133,7 +137,10 @@ namespace :import do
         next
       end
 
-      cover_url = json.dig('title', 'Cover URL')
+      # For some cursed reason, Cargo will return an empty array when no data
+      # is found, so we need to handle that...
+      cover_url = json['title']
+      cover_url = cover_url.is_a?(Array) ? nil : cover_url['Cover URL']
 
       if cover_url.nil?
         progress_bar.log "#{game[:name].ljust(40)} | Not finding any covers, skipping."

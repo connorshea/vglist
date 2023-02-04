@@ -174,11 +174,11 @@ RSpec.describe "Users API", type: :request do
           id: private_user.id.to_s,
           username: private_user.username,
           bio: nil,
-          gamePurchases: nil,
-          activity: nil,
-          followers: nil,
-          following: nil,
-          favoritedGames: nil
+          gamePurchases: { nodes: [] },
+          activity: { nodes: [] },
+          followers: { nodes: [] },
+          following: { nodes: [] },
+          favoritedGames: { nodes: [] }
         }
       )
     end
@@ -222,7 +222,7 @@ RSpec.describe "Users API", type: :request do
           activity: {
             nodes: [
               {
-                id: user.events.first.id,
+                id: user.new_events.first.id,
                 eventable: {
                   id: user.id.to_s,
                   __typename: "User"

@@ -4,13 +4,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '>= 3.0.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.4'
+gem 'rails', '~> 7.0.4'
 
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.3'
+gem 'pg', '~> 1.4'
 
 # Use Puma as the app server
-gem 'puma', '~> 5.6'
+gem 'puma', '~> 6.0'
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 5.4.0'
@@ -31,7 +31,7 @@ gem 'kaminari', '~> 1.2'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use Pundit for access control.
-gem 'pundit', '~> 2.2'
+gem 'pundit', '~> 2.3'
 
 # Postgres Search
 gem 'pg_search', '~> 2.3'
@@ -40,16 +40,16 @@ gem 'pg_search', '~> 2.3'
 gem 'image_processing', '~> 1.12'
 
 # Validations for ActiveStorage.
-gem 'active_storage_validations', '~> 0.9.7'
+gem 'active_storage_validations', '~> 1.0.3'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
-gem 'friendly_id', '~> 5.4.2'
+gem 'friendly_id', '~> 5.5.0'
 
 # Use SPARQL for querying Wikidata in imports.
-gem 'sparql', '~> 3.2.1', require: false
+gem 'sparql', '~> 3.2.5', require: false
 
 # Use Addressable for use with the Wikidata API.
-gem 'addressable', '~> 2.8.0', require: false
+gem 'addressable', '~> 2.8.1', require: false
 
 # Use the AWS SDK S3 gem for DigitalOcean Spaces - which are S3-compatible.
 gem 'aws-sdk-s3', '~> 1.66', require: false
@@ -58,18 +58,17 @@ gem 'aws-sdk-s3', '~> 1.66', require: false
 gem 'ruby-progressbar', '~> 1.11', require: false
 
 # Use Sentry for error tracking in production.
-gem 'sentry-ruby', '~> 5.2.1'
-gem 'sentry-rails', '~> 5.2.1'
+gem 'sentry-ruby', '~> 5.7.0'
+gem 'sentry-rails', '~> 5.7.0'
 
 # Sorbet runtime typechecker and Sorbet Rails.
 gem 'sorbet-runtime', '~> 0.5'
-gem "sorbet-rails", '~> 0.7'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
-gem 'graphql', '~> 2.0.5'
+gem 'graphql', '~> 2.0.16'
 
 # Doorkeeper for OAuth API tokens
-gem "doorkeeper", "5.5.0.rc2"
+gem "doorkeeper", "~> 5.5.4"
 
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 1.1"
@@ -85,7 +84,7 @@ gem 'invisible_captcha', '~> 2.0.0'
 gem 'parallel', '~> 1.22', require: false
 
 # For tracking changes to records.
-gem 'paper_trail', '~> 12.3'
+gem 'paper_trail', '~> 14.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -96,36 +95,36 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
-  gem 'rubocop', '~> 1.27', require: false
+  gem 'rubocop', '~> 1.44', require: false
 
   # rubocop extensions
-  gem 'rubocop-performance', '~> 1.13', require: false
-  gem 'rubocop-rspec', '~> 2.9', require: false
-  gem 'rubocop-rails', '~> 2.14', require: false
+  gem 'rubocop-performance', '~> 1.15', require: false
+  gem 'rubocop-rspec', '~> 2.18', require: false
+  gem 'rubocop-rails', '~> 2.16', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 2.0'
 
   # Rspec-rails for testing.
-  gem 'rspec-rails', '~> 5.1'
+  gem 'rspec-rails', '~> 6.0'
 
   # Factory Bot for creating factories.
   gem 'factory_bot_rails', '~> 6.2'
 
   # Code coverage
-  gem 'simplecov', '~> 0.21', require: false
+  gem 'simplecov', '~> 0.22', require: false
 
   # Shoulda-matchers for writing better tests on models.
-  gem 'shoulda-matchers', '5.1.0'
+  gem 'shoulda-matchers', '5.3.0'
 
   # For generating fake seeding data.
-  gem 'faker', '~> 2.19.0'
+  gem 'faker', '~> 3.1.0'
 
   # For better display of rspec test suite progress
   gem 'fuubar', '~> 2.5.1'
 
   # Pundit matchers for simplifying policy testing.
-  gem 'pundit-matchers', '~> 1.7.0'
+  gem 'pundit-matchers', '~> 1.8.4'
 
   # Sorbet typechecker
   gem 'sorbet', '~> 0.5'
@@ -135,9 +134,6 @@ group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '~> 4.2.0'
   gem 'listen', '~> 3.7'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring', '~> 2.1'
-  gem 'spring-watcher-listen', '~> 2.0.0'
   # Better error pages.
   gem 'better_errors', '~> 2.9'
   # For more useful BetterError error pages.
@@ -146,20 +142,22 @@ group :development do
   gem 'launchy', '~> 2.5'
   # Improve the formatting of GraphQL requests in the logs.
   # https://github.com/jetruby/graphql-rails_logger
-  gem 'graphql-rails_logger', '~> 1.2.3'
+  gem 'graphql-rails_logger', '~> 1.2.4'
   # Enable dotenv for local environment variables.
-  gem 'dotenv-rails', '~> 2.7'
+  gem 'dotenv-rails', '~> 2.8'
   # Tapioca for generating Sorbet RBI files.
   # Use a fork to fix this issue: https://github.com/Shopify/tapioca/issues/208
-  gem 'tapioca', '~> 0.7.1'
+  gem 'tapioca', '~> 0.10.5'
 end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '~> 3.36'
-  gem 'selenium-webdriver', '~> 4.1'
+  gem 'capybara', '~> 3.38'
+  gem 'selenium-webdriver', '~> 4.8'
   # Easy installation and use of WebDriver clients for various browsers.
-  gem 'webdrivers', '~> 5.0'
+  gem 'webdrivers', '~> 5.2'
+  # Mock network requests and prevent outgoing requests from occuring in the test suite.
+  gem 'webmock', '~> 3.18'
 end
 
 # # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

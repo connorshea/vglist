@@ -6,9 +6,9 @@ module Resolvers
 
       description "List all statistics. **Only available to admins.**"
 
-      argument :sort_direction, Types::SortDirectionType, required: false, description: "Direction to sort the returned list. Defaults to descending.", default_value: 'desc'
+      argument :sort_direction, Types::Enums::SortDirectionType, required: false, description: "Direction to sort the returned list. Defaults to descending.", default_value: 'desc'
 
-      sig { params(sort_direction: String).returns(Statistic::RelationType) }
+      sig { params(sort_direction: String).returns(T.untyped) }
       def resolve(sort_direction:)
         Statistic.all.order(created_at: sort_direction)
       end

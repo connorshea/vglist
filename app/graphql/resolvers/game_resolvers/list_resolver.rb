@@ -6,7 +6,7 @@ module Resolvers
 
       description "List all games."
 
-      argument :sort_by, Types::GameSortType, required: false, description: "The order to sort the games in, if any."
+      argument :sort_by, Types::Enums::GameSortType, required: false, description: "The order to sort the games in, if any."
       argument :on_platform, ID, required: false, description: "Filter games by the ID of the platform they're on."
       argument :by_year, Integer,
         required: false,
@@ -22,7 +22,7 @@ module Resolvers
           by_year: T.nilable(Integer),
           by_genre: T.nilable(String),
           by_engine: T.nilable(String)
-        ).returns(Game::RelationType)
+        ).returns(T.untyped)
       end
       def resolve(
         sort_by: nil,

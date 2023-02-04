@@ -8,13 +8,6 @@ namespace :sorbet do
     end
   end
 
-  desc "Suggest 'typed' comments for each file in the repository."
-  task suggest: :environment do
-    Bundler.with_unbundled_env do
-      system('bundle exec srb rbi suggest-typed')
-    end
-  end
-
   # Credit to https://github.com/jaredbeck/sorbet-progress for a lot of this.
   desc "Prints stats for Sorbet's progress in the repository."
   task stats: :environment do
@@ -76,20 +69,14 @@ namespace :sorbet do
   end
 
   namespace :update do
-    desc "Update Sorbet and Sorbet Rails RBIs."
+    desc "Update Sorbet and Tapioca RBIs."
     task all: :environment do
       Bundler.with_unbundled_env do
-        system('SRB_SORBET_TYPED_REPO="https://github.com/sorbet/sorbet-typed.git" SRB_SORBET_TYPED_REVISION="origin/master" bundle exec srb rbi sorbet-typed')
-        # We don't want to include the RBI files for these gems since they're not useful.
-        puts 'Removing unwanted gem definitions from sorbet-typed...'
-        ['rspec-core', 'rake', 'rubocop'].each do |gem|
-          FileUtils.remove_dir(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}")) if Dir.exist?(Rails.root.join("sorbet/rbi/sorbet-typed/lib/#{gem}"))
-        end
-        system('bundle exec tapioca gem')
-        # Generate Sorbet Rails RBIs.
-        system('bundle exec rake rails_rbi:all')
+        system('bundle exec tapioca annotations')
+        system('bundle exec tapioca gem --no-loc')
+        system('bundle exec tapioca dsl')
         system('bundle exec tapioca todo')
-        system('bundle exec srb rbi suggest-typed')
+        system('bundle exec spoom bump')
       end
     end
   end

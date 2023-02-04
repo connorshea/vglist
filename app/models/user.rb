@@ -40,10 +40,16 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_relationships, source: :follower
 
   # Users have activity feed events.
-  has_many :events, dependent: :destroy
+  # New events
+  has_many :new_events, class_name: 'Views::NewEvent'
+  has_many :game_purchase_events, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
+  has_many :relationship_events, class_name: 'Events::RelationshipEvent', dependent: :destroy
+  has_many :user_events, class_name: 'Events::UserEvent', dependent: :destroy
+  has_many :favorite_game_events, class_name: 'Events::FavoriteGameEvent', dependent: :destroy
 
   # Users have an event for their creation.
-  has_many :events, as: :eventable, dependent: :destroy
+  # New events
+  has_many :user_events, foreign_key: :eventable_id, inverse_of: :eventable, class_name: 'Events::UserEvent', dependent: :destroy
 
   # Users create wikidata and steam blocklist entries.
   # We want to keep the entry even if the user that created it is deleted.
@@ -141,7 +147,7 @@ class User < ApplicationRecord
 
   validates :avatar,
     attached: false,
-    content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    content_type: ['image/png', 'image/jpeg'],
     size: { less_than: 3.megabytes },
     aspect_ratio: :square
 
@@ -199,7 +205,7 @@ class User < ApplicationRecord
   end
   def sized_avatar(size)
     width, height = AVATAR_SIZES[size]
-    avatar&.variant(
+    avatar.variant(
       resize_to_fill: [width, height],
       gravity: 'Center',
       crop: "#{width}x#{height}+0+0"
@@ -224,8 +230,7 @@ class User < ApplicationRecord
 
   sig { void }
   def on_user_creation
-    Event.create!(
-      eventable_type: 'User',
+    Events::UserEvent.create!(
       eventable_id: id,
       user_id: id,
       event_category: :new_user

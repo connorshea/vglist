@@ -18,7 +18,7 @@ module ApplicationHelper
   def user_avatar(user, size:, css_class_name: 'user-avatar', **options)
     width, height = User::AVATAR_SIZES[size]
 
-    if user.avatar&.attached? && user.avatar&.variable?
+    if user.avatar.attached? && user.avatar.variable?
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
       # too wide or too tall.
@@ -28,7 +28,7 @@ module ApplicationHelper
         class: css_class_name,
         alt: "Avatar for #{user.username}.",
         **options
-    elsif user.avatar&.attached? && !user.avatar&.variable?
+    elsif user.avatar.attached? && !user.avatar.variable?
       image_tag user.avatar,
         width: "#{width}px",
         height: "#{height}px",
@@ -50,13 +50,13 @@ module ApplicationHelper
   def game_cover(game, size:, **options)
     width, height = Game::COVER_SIZES[size]
 
-    if game.cover&.attached? && game.cover&.variable?
+    if game.cover.attached? && game.cover.variable?
       image_tag T.must(game.sized_cover(size)),
         width: "#{width}px",
         height: "#{height}px",
         alt: "Cover for #{game.name}.",
         **options
-    elsif game.cover&.attached? && !game.cover&.variable?
+    elsif game.cover.attached? && !game.cover.variable?
       image_tag game.cover,
         width: "#{width}px",
         height: "#{height}px",

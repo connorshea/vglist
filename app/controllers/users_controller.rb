@@ -91,7 +91,7 @@ class UsersController < ApplicationController
     @user = User.friendly.find(params[:id])
     authorize @user
 
-    @user.avatar&.purge
+    @user.avatar.purge
 
     respond_to do |format|
       format.html { redirect_to @user, success: "Avatar successfully removed." }
@@ -201,17 +201,12 @@ class UsersController < ApplicationController
 
     @game_purchases = GamePurchase.where(user_id: @user.id)
 
+    @game_purchases.destroy_all
+
     respond_to do |format|
-      if @game_purchases.destroy_all
-        format.html do
-          flash[:success] = "Successfully reset game library."
-          redirect_to user_path(@user)
-        end
-      else
-        format.html do
-          flash[:error] = "Unable to delete all the games in your library."
-          redirect_to settings_account_path
-        end
+      format.html do
+        flash[:success] = "Successfully reset game library."
+        redirect_to user_path(@user)
       end
     end
   end
@@ -254,7 +249,7 @@ class UsersController < ApplicationController
     end
 
     # Sum of total hours played, represented as days.
-    @stats[:total_days_played] = (total_time_played / 24).to_f.round(2)
+    @stats[:total_days_played] = @user.hide_days_played? ? nil : (total_time_played / 24).to_f.round(2)
 
     @stats[:games_count] = game_purchases.count
 
@@ -285,11 +280,10 @@ class UsersController < ApplicationController
     # Redirect if the user's page is private.
     redirect_to user_path(@user) unless policy(@user).activity?
 
-    @events = Event.recently_created
-                   .joins(:user)
-                   .where(user_id: @user.id)
-                   .includes(eventable: [:game])
-                   .page helpers.page_param
+    @events = Views::NewEvent.recently_created
+                             .joins(:user)
+                             .where(user_id: @user.id)
+                             .page helpers.page_param
   end
 
   def favorites
@@ -382,7 +376,8 @@ class UsersController < ApplicationController
     params.typed_require(:user).permit(
       :bio,
       :avatar,
-      :privacy
+      :privacy,
+      :hide_days_played
     )
   end
 end

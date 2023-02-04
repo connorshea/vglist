@@ -26,6 +26,14 @@ require 'pundit/rspec'
 require 'pundit/matchers'
 require 'capybara/rspec'
 require 'active_storage_validations/matchers'
+require 'webmock/rspec'
+
+WebMock.disable_net_connect!(
+  allow_localhost: true,
+  # We have to allow this URL because the webdrivers gem pulls the
+  # ChromeDriver down for our feature tests.
+  allow: 'https://chromedriver.storage.googleapis.com'
+)
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

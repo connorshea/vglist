@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2022.08.27
+### Changed
+- Upgrade Ruby on Rails to Rails 7.0. ([#2837])
+- Upgrade GraphiQL IDE (for writing queries for the vglist GraphQL API) to 2.0. ([#2840])
+
+### Fixed
+- Finally fixed a long-standing issue with the Doorkeeper gem that's used for OAuth applications, which prevented us from upgrading the Doorkeeper gem. This should unblock a lot of work on the new frontend. ([#2834])
+
+## v2022.05.30
+### Added
+- Add a query and mutation for UnmatchedGames to the GraphQL API. ([#2716])
+
+## v2022.05.22
+### Added
+- Add GraphQL mutations for connecting and disconnecting a Steam account. ([#2698])
+
+## v2022.05.18
+### Added
+- Add GraphQL mutations for importing a user's Steam library, deleting a user, and resetting a user's library. ([#2692], [#2693])
+
+## v2022.05.16
+### Added
+- Add a User setting that allows users to hide the "Days Played" value on their user profile. ([#2687])
+
+## v2022.04.17
+### Added
+- Add UnmatchedGames for tracking Steam imports that fail to match a game in the database. ([#2633])
+
 ## v2021.12.28
 ### Changed
 - Upgrade to Ruby 3.0. ([#2420])
@@ -903,3 +931,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#1976]: https://github.com/connorshea/vglist/pull/1976
 [#2171]: https://github.com/connorshea/vglist/pull/2171
 [#2420]: https://github.com/connorshea/vglist/pull/2420
+[#2633]: https://github.com/connorshea/vglist/pull/2633
+[#2687]: https://github.com/connorshea/vglist/pull/2687
+[#2692]: https://github.com/connorshea/vglist/pull/2692
+[#2693]: https://github.com/connorshea/vglist/pull/2693
+[#2698]: https://github.com/connorshea/vglist/pull/2698
+[#2716]: https://github.com/connorshea/vglist/pull/2716
+[#2834]: https://github.com/connorshea/vglist/pull/2834
+[#2837]: https://github.com/connorshea/vglist/pull/2837
+[#2840]: https://github.com/connorshea/vglist/pull/2840

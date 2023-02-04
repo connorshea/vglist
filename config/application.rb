@@ -13,7 +13,6 @@ require "action_mailer/railtie"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
-# require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -22,8 +21,11 @@ Bundler.require(*Rails.groups)
 
 module VideoGameList
   class Application < Rails::Application
-    # Initialize configuration defaults for Rails 6.0.
-    config.load_defaults 6.0
+    # Initialize configuration defaults for Rails 6.1.
+    config.load_defaults 6.1
+
+    # Use structure.sql because we have SQL views, and the schema.rb doesn't support those.
+    config.active_record.schema_format = :sql
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -31,6 +33,9 @@ module VideoGameList
     # the framework and any gems in your application.
 
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
+
+    # Use mini magick explicitly since we haven't upgraded to vips.
+    config.active_storage.variant_processor = :mini_magick
 
     # Allow cross-origin requests to GraphQL, ActiveStorage blobs, and OAuth
     # auth routes.

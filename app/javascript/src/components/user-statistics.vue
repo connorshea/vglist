@@ -26,10 +26,9 @@
           <p class="heading">Average Rating</p>
         </div>
       </div>
-      <div class="level-item has-text-centered">
+      <div v-if="daysPlayedIsPositive" class="level-item has-text-centered">
         <div>
-          <p v-if="daysPlayedIsPositive" class="title">{{ statistics.total_days_played }}</p>
-          <p v-else class="title has-text-muted">N/A</p>
+          <p class="title">{{ statistics.total_days_played }}</p>
           <p class="heading">Days Played</p>
         </div>
       </div>
@@ -109,7 +108,7 @@ export default {
     },
     daysPlayedIsPositive: function() {
       if (this.statistics) {
-        return this.statistics.total_days_played > 0;
+        return this.statistics.total_days_played !== null && this.statistics.total_days_played > 0;
       } else {
         return false;
       }

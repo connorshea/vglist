@@ -259,6 +259,8 @@ nav.navbar {
   max-height: 400px;
   height: auto;
   overflow: scroll;
+  // Don't display a horizontal scrollbar.
+  overflow-x: hidden;
 }
 
 // Customization for bulma dropdowns.
@@ -521,6 +523,7 @@ nav.navbar {
 .modal-card {
   max-height: calc(100vh - 120px);
   overflow: scroll;
+  overflow-x: hidden;
 
   // When the modal card title is too long, make sure it
   // gets a trailing ellipsis instead of causing horizontal scrolling.
@@ -936,6 +939,7 @@ nav.navbar {
   .vs__dropdown-toggle {
     border: 1px solid var(--input-border-color);
     border-radius: var(--input-radius);
+    background-color: var(--input-background-color);
 
     &:hover {
       border: 1px solid var(--input-hover-border-color);
