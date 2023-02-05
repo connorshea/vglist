@@ -100,7 +100,7 @@ group :development, :test do
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.15', require: false
   gem 'rubocop-rspec', '~> 2.18', require: false
-  gem 'rubocop-rails', '~> 2.16', require: false
+  gem 'rubocop-rails', '~> 2.17', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 2.0'
@@ -118,7 +118,7 @@ group :development, :test do
   gem 'shoulda-matchers', '5.3.0'
 
   # For generating fake seeding data.
-  gem 'faker', '~> 3.1.0'
+  gem 'faker', '~> 3.1.1'
 
   # For better display of rspec test suite progress
   gem 'fuubar', '~> 2.5.1'
@@ -133,7 +133,7 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '~> 4.2.0'
-  gem 'listen', '~> 3.7'
+  gem 'listen', '~> 3.8'
   # Better error pages.
   gem 'better_errors', '~> 2.9'
   # For more useful BetterError error pages.

@@ -93,8 +93,8 @@ class SteamImportService
         end
       end
     end
-    created_purchases = GamePurchase.where(id: created.map { |e| e['id'] })
-    updated_purchases = GamePurchase.where(id: updated.map { |e| e['id'] })
+    created_purchases = GamePurchase.where(id: created.pluck('id'))
+    updated_purchases = GamePurchase.where(id: updated.pluck('id'))
 
     unmatched = missing_ids.to_a.filter_map do |id|
       game = games.find { |g| g['appid'] == id }

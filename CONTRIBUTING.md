@@ -6,7 +6,7 @@
 
 - Ruby 3.0
 - Postgres 14.x
-- Node.js 14.x
+- Node.js 16.x
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
 
