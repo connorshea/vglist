@@ -29,7 +29,7 @@ development:
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user that initialized the database.
-  # username: postgres
+  username: postgres
   
   # The password associated with the postgres role (username).
   password: <%= ENV['VGLIST_DATABASE_PASSWORD'] || 'password' %>
@@ -58,9 +58,10 @@ development:
 test:
   <<: *default
   database: vglist_test
-  # username: postgres
+  username: postgres
   
-  # password: <%= ENV['VGLIST_DATABASE_PASSWORD'] || 'password' %>
+  host: <%= ENV['VGLIST_DATABASE_HOST'] || 'localhost' %>
+  password: <%= ENV['VGLIST_DATABASE_PASSWORD'] || 'password' %>
   
 
 # As with config/secrets.yml, you never want to store sensitive information,
