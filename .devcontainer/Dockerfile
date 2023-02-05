@@ -3,8 +3,6 @@ ARG VARIANT=3.1-bullseye
 
 FROM mcr.microsoft.com/vscode/devcontainers/ruby:0-${VARIANT}
 
-RUN gem install rails webdrivers 
-
 #vglist dependencies
 RUN gem install bundler:2.4.1
 RUN apt update
