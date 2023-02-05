@@ -5,20 +5,12 @@ ARG USER_UID=1002
 
 FROM mcr.microsoft.com/vscode/devcontainers/ruby:0-${VARIANT}
 
-RUN useradd -ou 0 -g 0 postgres \
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo postgres ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/postgres \
-    && chmod 0440 /etc/sudoers.d/postgres
-
-COPY .pgpass /vscode/.pgpass
-
 RUN gem install rails webdrivers 
 
 #vglist dependencies
 RUN gem install bundler:2.3.3
 RUN apt update
-RUN apt install -y imagemagick
+RUN apt-get install -y imagemagick && apt-get install -y postgresql-client
 
 # Default value to allow debug server to serve content over GitHub Codespace's port forwarding service
 # The value is a comma-separated list of allowed domains 
