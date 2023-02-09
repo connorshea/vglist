@@ -113,10 +113,11 @@ namespace :import do
       )
 
       igdb_response.map! do |igdb_game|
-        # Cover URLs returned from the API look like this by default:
+        # Cover URLs returned from the API look like this (usually):
         # "//images.igdb.com/igdb/image/upload/t_thumb/co2lc8.jpg"
         # So we change it to have a protocol and use the 1080p size.
-        igdb_game['cover']['url'] = "https:#{igdb_game['cover']['url'].gsub('t_thumb', 't_1080p')}"
+        includes_protocol = igdb_game['cover']['url'].start_with?('https:')
+        igdb_game['cover']['url'] = "#{includes_protocol ? '' : 'https:'}#{igdb_game['cover']['url'].gsub('t_thumb', 't_1080p')}"
         igdb_game
       end
 
