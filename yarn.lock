@@ -1148,12 +1148,12 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
-"@graphiql/react@^0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.17.0.tgz#bdfc3047d7de3dcaea90966e89f5396c4e0e56fb"
-  integrity sha512-mn8FfucLJzFLQQ5OoJ9U1Dvnva1smOxBL89D2TSM2B6mmDyQIRhFXmjzUTPdsqwpauFiqkDaQZiqX7T/ZPrg/w==
+"@graphiql/react@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.17.1.tgz#14078bf82fb35c0cd9d12c12ce170b3a889719c9"
+  integrity sha512-p99Vnl3aoQsh/T651pkGiS0wqvn7y65Bv4Q32l990T2IIgEDqeqJxgwRp3F48Ol9dWzk6KzxNkZYqe5IVHEmoA==
   dependencies:
-    "@graphiql/toolkit" "^0.8.2"
+    "@graphiql/toolkit" "^0.8.3"
     "@reach/combobox" "^0.17.0"
     "@reach/dialog" "^0.17.0"
     "@reach/listbox" "^0.17.0"
@@ -1162,16 +1162,16 @@
     "@reach/visually-hidden" "^0.17.0"
     clsx "^1.2.1"
     codemirror "^5.65.3"
-    codemirror-graphql "^2.0.4"
+    codemirror-graphql "^2.0.5"
     copy-to-clipboard "^3.2.0"
-    graphql-language-service "^5.1.2"
+    graphql-language-service "^5.1.3"
     markdown-it "^12.2.0"
     set-value "^4.1.0"
 
-"@graphiql/toolkit@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@graphiql/toolkit/-/toolkit-0.8.2.tgz#ad7de51d0dbc7ba917ba2eb55a848c9c6857ad55"
-  integrity sha512-FGtXBYTzcPuwfpaC+0BGeriLD6kwTdcF5xugGvjutk5J93Dgy2vw+SkBdbi1QGzz/jooETi1kEtFeDuWTzIG7Q==
+"@graphiql/toolkit@^0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@graphiql/toolkit/-/toolkit-0.8.3.tgz#62ffb6efc0202a94fe0fc38dd39c31f89d1d15c9"
+  integrity sha512-B5WfZlBes/tMmM7TeTTD/F2E1kbtQD6PYmyX76qWrIt1Sx3+lQoCe8NzHbBvNII77F5sr737RASmkhQ1fcdFWQ==
   dependencies:
     "@n1ru4l/push-pull-async-iterable-iterator" "^3.1.0"
     meros "^1.1.4"
@@ -2591,12 +2591,12 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
-codemirror-graphql@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-2.0.4.tgz#2062056846f26d4b95af20cb37d633b6f1052c00"
-  integrity sha512-u68lfUJv4hESfIZLJUGSWU2+txNrfoT29EEMxNksDBPXjnF41Ivpp/r8rxJBXigNcDOBmjMfKfs1J4L0Jggwrg==
+codemirror-graphql@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-2.0.5.tgz#bcda4d47b125a5ba437f7f3b2d914fdbe324275a"
+  integrity sha512-erpJV/hOQe4ScOBNhV+rJAAcsCGyC913VkTp3fbGHh/aZQBshpwxgew4+43+EDl855Gw+df36/+maun+Nj8tKw==
   dependencies:
-    graphql-language-service "5.1.2"
+    graphql-language-service "5.1.3"
 
 codemirror@^5.65.3:
   version "5.65.6"
@@ -4050,21 +4050,20 @@ graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphiql@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.4.0.tgz#ffbe3967faf9c8e4220891b3567d05320d77de5a"
-  integrity sha512-lJ6OYDQkhAMZePrz8g6r9vMVmxa4SY9eEzzyJxsgE+jA+6PFKds2e8/tDAaCYfX0HNv84nc7W/th1vsHIdgYiA==
+graphiql@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.4.1.tgz#e690b4f78d2330e0d6c54c3d895ac0711c9633f4"
+  integrity sha512-PLTY2KI+FwU6548Bsrip2ptne/t2QzNdARHZwXl/KGJ+KVfSpXjjfryJQBHXiEq4plQnG4orw7dJpm8KfM5iig==
   dependencies:
-    "@graphiql/react" "^0.17.0"
-    "@graphiql/toolkit" "^0.8.2"
-    entities "^2.0.0"
-    graphql-language-service "^5.1.2"
+    "@graphiql/react" "^0.17.1"
+    "@graphiql/toolkit" "^0.8.3"
+    graphql-language-service "^5.1.3"
     markdown-it "^12.2.0"
 
-graphql-language-service@5.1.2, graphql-language-service@^5.1.2:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-5.1.2.tgz#f76dbe5f6c9bd8266bad26d64eb8e309c147a801"
-  integrity sha512-oeuztbvd7fwKWZ/GCp0voqgctdIL4BDjTkd/phz1jEyH+pfj6inJWKKIkUJPW5ebWHx+mFsZ00wdE6tiCvW2fA==
+graphql-language-service@5.1.3, graphql-language-service@^5.1.3:
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-5.1.3.tgz#6e2333dca9d739b5c6e545c9758e9f3c70a11324"
+  integrity sha512-01KZLExoF53i8a2Jhgt+nVGsm9O2+jmDdwms4THSxCY+gU9FukF6X4pPLO2Gk7qZ6CVcInM8+IQx/ph4AOTOLA==
   dependencies:
     nullthrows "^1.0.0"
     vscode-languageserver-types "^3.17.1"
