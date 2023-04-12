@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/ruby:0-${VARIANT}
 #vglist dependencies
 RUN gem install bundler:2.4.1
 RUN apt update
-RUN apt-get install -y imagemagick && apt-get install -y postgresql-client
+RUN apt-get install -y imagemagick && apt-get install -y postgresql-client && apt-get install -y watchman
 
 # Default value to allow debug server to serve content over GitHub Codespace's port forwarding service
 # The value is a comma-separated list of allowed domains 
