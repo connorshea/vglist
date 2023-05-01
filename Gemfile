@@ -135,7 +135,7 @@ group :development do
   gem 'web-console', '~> 4.2.0'
   gem 'listen', '~> 3.8'
   # Better error pages.
-  gem 'better_errors', '~> 2.9'
+  gem 'better_errors', '~> 2.10'
   # For more useful BetterError error pages.
   gem 'binding_of_caller', '~> 1.0'
   # Open screenshots when they're taken with capybara.
