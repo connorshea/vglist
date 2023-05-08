@@ -365,7 +365,7 @@ GEM
       ffi (~> 1.12)
     rubyzip (2.3.2)
     scanf (1.0.0)
-    selenium-webdriver (4.9.0)
+    selenium-webdriver (4.9.1)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
