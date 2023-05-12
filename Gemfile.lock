@@ -426,7 +426,7 @@ GEM
       spoom (~> 1.1.0, >= 1.1.11)
       thor (>= 1.2.0)
       yard-sorbet
-    thor (1.2.1)
+    thor (1.2.2)
     timeout (0.3.2)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
