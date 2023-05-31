@@ -10,7 +10,7 @@ gem 'rails', '~> 7.0.5'
 gem 'pg', '~> 1.5'
 
 # Use Puma as the app server
-gem 'puma', '~> 6.2'
+gem 'puma', '~> 6.3'
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 5.4.0'
