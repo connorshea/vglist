@@ -95,7 +95,7 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
-  gem 'rubocop', '~> 1.51', require: false
+  gem 'rubocop', '~> 1.52', require: false
 
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.18', require: false
