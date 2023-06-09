@@ -242,8 +242,9 @@ GEM
       activerecord (>= 6.0)
       request_store (~> 1.4)
     parallel (1.23.0)
-    parser (3.2.2.1)
+    parser (3.2.2.3)
       ast (~> 2.4.1)
+      racc
     pg (1.5.3)
     pg_search (2.3.6)
       activerecord (>= 5.2)
