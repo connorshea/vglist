@@ -1173,27 +1173,26 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
-"@graphiql/react@^0.17.6":
-  version "0.17.6"
-  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.17.6.tgz#54e3745f74ccf5cd69540aecc9dbcd15a7e28c1c"
-  integrity sha512-3k1paSRbRwVNxr2U80xnRhkws8tSErWlETJvEQBmqRcWbt0+WmwFJorkLnG1n3Wj0Ho6k4a2BAiTfJ6F4SPrLg==
+"@graphiql/react@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.15.0.tgz#b10fc40c5a85e7b5b845907d57bfd8be92753037"
+  integrity sha512-kJqkdf6d4Cck05Wt5yCDZXWfs7HZgcpuoWq/v8nOa698qVaNMM3qdG4CpRsZEexku0DSSJzWWuanxd5x+sRcFg==
   dependencies:
-    "@graphiql/toolkit" "^0.8.4"
+    "@graphiql/toolkit" "^0.8.0"
     "@reach/combobox" "^0.17.0"
     "@reach/dialog" "^0.17.0"
     "@reach/listbox" "^0.17.0"
     "@reach/menu-button" "^0.17.0"
     "@reach/tooltip" "^0.17.0"
     "@reach/visually-hidden" "^0.17.0"
-    clsx "^1.2.1"
     codemirror "^5.65.3"
-    codemirror-graphql "^2.0.8"
+    codemirror-graphql "^2.0.2"
     copy-to-clipboard "^3.2.0"
-    graphql-language-service "^5.1.6"
+    graphql-language-service "^5.1.0"
     markdown-it "^12.2.0"
     set-value "^4.1.0"
 
-"@graphiql/toolkit@^0.8.4":
+"@graphiql/toolkit@^0.8.0":
   version "0.8.4"
   resolved "https://registry.yarnpkg.com/@graphiql/toolkit/-/toolkit-0.8.4.tgz#8b697d140a3e96a6702428cbb8da4e8eb29162b3"
   integrity sha512-cFUGqh3Dau+SD3Vq9EFlZrhzYfaHKyOJveFtaCR+U5Cn/S68p7oy+vQBIdwtO6J2J58FncnwBbVRfr+IvVfZqQ==
@@ -2576,11 +2575,6 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
-clsx@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
-  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
-
 co-from-stream@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/co-from-stream/-/co-from-stream-0.0.0.tgz#1a5cd8ced77263946094fa39f2499a63297bcaf9"
@@ -2616,7 +2610,7 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
-codemirror-graphql@^2.0.8:
+codemirror-graphql@^2.0.2:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-2.0.8.tgz#0d63cc6a5c5792081041e319078cfc2969dd97ef"
   integrity sha512-EU+pXsSKZJAFVdF8j5hbB5gqXsDDjsBiJoohQq09yhsr69pzaI8ZrXjmpuR4CMyf9jgqcz5KK7rsTmxDHmeJPQ==
@@ -4075,17 +4069,18 @@ graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphiql@2.4.7:
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.4.7.tgz#77eae9e8b31628bad363384c5b382de9fad1ff86"
-  integrity sha512-Fm3fVI65EPyXy+PdbeQUyODTwl2NhpZ47msGnGwpDvdEzYdgF7pPrxL96xCfF31KIauS4+ceEJ+ZwEe5iLWiQw==
+graphiql@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-2.2.0.tgz#406b9b28bca130ae9ece892826c1d60958c1ac13"
+  integrity sha512-w1ujpCKMlkwkoUjeg0HpRiBBTm1WHAjHNkFv1TbMu6trjzz63mQ48GLZlmyQY1yhwmc+diCcvmmAt+AyvKLWWA==
   dependencies:
-    "@graphiql/react" "^0.17.6"
-    "@graphiql/toolkit" "^0.8.4"
-    graphql-language-service "^5.1.6"
+    "@graphiql/react" "^0.15.0"
+    "@graphiql/toolkit" "^0.8.0"
+    entities "^2.0.0"
+    graphql-language-service "^5.1.0"
     markdown-it "^12.2.0"
 
-graphql-language-service@5.1.6, graphql-language-service@^5.1.6:
+graphql-language-service@5.1.6, graphql-language-service@^5.1.0:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-5.1.6.tgz#0d6d2b2bb09cf0d02c82fd97628dfdc63ce7936b"
   integrity sha512-sl9HTlE/sBoFvZ2SPGnApwpp/a4ahl1d49SOxGm2OIYOslFv00MK7AYms9Yx91omOwAp74is10S7Cjamh5TRQw==
