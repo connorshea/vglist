@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Games::CreateGame < Mutations::BaseMutation
-  description "Create a new game. **Only available when using a first-party OAuth Application.**"
+  description "Create a new game. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :name, String, required: true, description: 'The name of the game.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the game item in Wikidata.'

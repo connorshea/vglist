@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Games::UpdateGame < Mutations::BaseMutation
-  description "Update an existing game. **Only available when using a first-party OAuth Application.**"
+  description "Update an existing game. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :game_id, ID, required: true, description: 'The ID of the game record.'
   argument :name, String, required: false, description: 'The name of the game.'
