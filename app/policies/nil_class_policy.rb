@@ -30,7 +30,7 @@ class NilClassPolicy < ApplicationPolicy
     false
   end
 
-  def respond_to_missing?(_method)
+  def respond_to_missing?(_method, _value)
     true
   end
 end
