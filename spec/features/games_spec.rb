@@ -5,6 +5,7 @@ RSpec.describe "Games", type: :feature do
   describe "games index" do
     let!(:game) { create(:game) }
     let(:user) { create(:confirmed_user) }
+    let(:moderator) { create(:confirmed_moderator) }
 
     it "with no user" do
       visit(games_path)
@@ -14,6 +15,14 @@ RSpec.describe "Games", type: :feature do
 
     it "with user" do
       sign_in(user)
+
+      visit(games_path)
+      expect(page).to have_link(href: game_path(game))
+      expect(page).to have_no_link(href: new_game_path)
+    end
+
+    it "with moderator" do
+      sign_in(moderator)
 
       visit(games_path)
       expect(page).to have_link(href: game_path(game))
@@ -32,13 +41,12 @@ RSpec.describe "Games", type: :feature do
       expect(page).to have_no_link(href: edit_game_path(game))
     end
 
-    it "with user" do
+    it "with normal user" do
       sign_in(user)
 
       visit(game_path(game))
       expect(page).to have_content(game.name)
-      find('#actions-dropdown').click
-      expect(page).to have_link(href: edit_game_path(game))
+      expect(page).to have_no_link(href: edit_game_path(game))
     end
 
     it "with moderator" do
@@ -52,7 +60,7 @@ RSpec.describe "Games", type: :feature do
   end
 
   describe "new game page", js: true do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
 
     it "accepts valid game data" do
       sign_in(user)
@@ -69,7 +77,7 @@ RSpec.describe "Games", type: :feature do
 
   describe "edit game page", js: true do
     let!(:game) { create(:game) }
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
 
     it "accepts valid game data" do
       sign_in(user)
@@ -87,7 +95,7 @@ RSpec.describe "Games", type: :feature do
   describe "edit game page has content in multi-select", js: true do
     let(:company) { create(:company, name: 'Gearbox') }
     let(:game) { create(:game_with_everything, publishers: [company]) }
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
 
     it "displays the correct publisher" do
       sign_in(user)

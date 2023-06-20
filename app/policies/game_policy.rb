@@ -21,14 +21,14 @@ class GamePolicy < ApplicationPolicy
     true
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def create?
-    user.present?
+    user&.moderator? || user&.admin?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def update?
-    user.present?
+    user&.moderator? || user&.admin?
   end
 
   sig { returns(T.nilable(T::Boolean)) }

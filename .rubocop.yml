@@ -516,6 +516,9 @@ RSpec/IdenticalEqualityAssertion:
 RSpec/Rails/AvoidSetupHook:
   Enabled: true
 
+RSpec/NestedGroups:
+  Enabled: false
+
 Performance/BlockGivenWithExplicitBlock:
   Enabled: true
 

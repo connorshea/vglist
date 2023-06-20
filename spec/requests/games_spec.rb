@@ -72,7 +72,7 @@ RSpec.describe "Games", type: :request do
   end
 
   describe "POST games_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let(:game_attributes) { attributes_for(:game) }
 
     it "creates a new game" do
@@ -92,7 +92,7 @@ RSpec.describe "Games", type: :request do
   end
 
   describe "PUT game_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let!(:game) { create(:game) }
     let(:game_attributes) { attributes_for(:game) }
 

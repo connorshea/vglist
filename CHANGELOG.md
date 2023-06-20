@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2023.06.19
+- Fix GraphiQL failing to load.
+- Disallow normal users from creating and editing game records. ([#3251])
+
 ## v2022.08.27
 ### Changed
 - Upgrade Ruby on Rails to Rails 7.0. ([#2837])
@@ -940,3 +944,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#2834]: https://github.com/connorshea/vglist/pull/2834
 [#2837]: https://github.com/connorshea/vglist/pull/2837
 [#2840]: https://github.com/connorshea/vglist/pull/2840
+[#3251]: https://github.com/connorshea/vglist/pull/3251
