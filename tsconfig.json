@@ -15,7 +15,7 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "jsx": "react",
-    "importsNotUsedAsValues": "preserve"
+    "verbatimModuleSyntax": true
   },
   "exclude": [
     "**/*.spec.ts",
