@@ -21,7 +21,7 @@ RSpec.describe "Games", type: :feature do
       expect(page).to have_no_link(href: new_game_path)
     end
 
-    it "with user" do
+    it "with moderator" do
       sign_in(moderator)
 
       visit(games_path)
