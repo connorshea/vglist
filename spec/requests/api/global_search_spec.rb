@@ -9,7 +9,7 @@ RSpec.describe "Global Search API", type: :request do
 
     context 'with games' do
       let(:game1) { create(:game, name: 'Half-Life') }
-      let(:game2) { create(:game_with_cover, name: 'Super Mario Galaxy', developers: [create(:company, name: 'Nintendo')], release_date: 1.day.ago) }
+      let(:game2) { create(:game_with_cover, name: 'Super Mario Galaxy', developers: create_list(:company, 1, name: 'Nintendo'), release_date: 1.day.ago) }
       let(:games) { create_list(:game, 10, name: 'Portal') }
 
       it "returns basic data" do
