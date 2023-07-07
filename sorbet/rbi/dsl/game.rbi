@@ -75,6 +75,30 @@ class Game
     sig { params(args: T.untyped).returns(::Game) }
     def find_by!(*args); end
 
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: ::Game).void)
+      ).returns(T.nilable(T::Enumerator[::Game]))
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: T::Array[::Game]).void)
+      ).returns(T.nilable(T::Enumerator[T::Enumerator[::Game]]))
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
     def find_or_create_by(attributes, &block); end
 
@@ -83,6 +107,12 @@ class Game
 
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Game).void)).returns(::Game) }
     def find_or_initialize_by(attributes, &block); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(T.nilable(::Game)) }
+    def find_signed(signed_id, purpose: nil); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::Game) }
+    def find_signed!(signed_id, purpose: nil); end
 
     sig { params(arg: T.untyped, args: T.untyped).returns(::Game) }
     def find_sole_by(arg, *args); end
@@ -107,6 +137,19 @@ class Game
 
     sig { returns(Array) }
     def ids; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T.untyped,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: PrivateRelation).void)
+      ).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator))
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
@@ -241,6 +284,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def developer_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :developers, through: :game_developers`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Company::PrivateCollectionProxy) }
     def developers; end
 
@@ -253,6 +298,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def engine_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :engines, through: :game_engines`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Engine::PrivateCollectionProxy) }
     def engines; end
 
@@ -271,12 +318,16 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def favoriter_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :favoriters, through: :favorites`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::User::PrivateCollectionProxy) }
     def favoriters; end
 
     sig { params(value: T::Enumerable[::User]).void }
     def favoriters=(value); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :favorites`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::FavoriteGame::PrivateCollectionProxy) }
     def favorites; end
 
@@ -289,6 +340,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_developer_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :game_developers`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GameDeveloper::PrivateCollectionProxy) }
     def game_developers; end
 
@@ -301,6 +354,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_engine_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :game_engines`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GameEngine::PrivateCollectionProxy) }
     def game_engines; end
 
@@ -313,6 +368,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_genre_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :game_genres`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GameGenre::PrivateCollectionProxy) }
     def game_genres; end
 
@@ -325,6 +382,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_platform_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :game_platforms`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GamePlatform::PrivateCollectionProxy) }
     def game_platforms; end
 
@@ -337,6 +396,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_publisher_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :game_publishers`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GamePublisher::PrivateCollectionProxy) }
     def game_publishers; end
 
@@ -349,6 +410,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_purchase_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :game_purchases`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GamePurchase::PrivateCollectionProxy) }
     def game_purchases; end
 
@@ -361,6 +424,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def genre_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :genres, through: :game_genres`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Genre::PrivateCollectionProxy) }
     def genres; end
 
@@ -379,6 +444,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def platform_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :platforms, through: :game_platforms`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Platform::PrivateCollectionProxy) }
     def platforms; end
 
@@ -391,6 +458,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def publisher_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :publishers, through: :game_publishers`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Company::PrivateCollectionProxy) }
     def publishers; end
 
@@ -403,6 +472,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def purchaser_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :purchasers, through: :game_purchases`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::User::PrivateCollectionProxy) }
     def purchasers; end
 
@@ -433,6 +504,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def steam_app_id_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :steam_app_ids`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::SteamAppId::PrivateCollectionProxy) }
     def steam_app_ids; end
 
@@ -448,6 +521,8 @@ class Game
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def version_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Game` class because it declared `has_many :versions`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Versions::GameVersion::PrivateCollectionProxy) }
     def versions; end
 

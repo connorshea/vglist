@@ -9,6 +9,7 @@ class ActiveStorage::Blob
   include GeneratedAttributeMethods
   extend CommonRelationMethods
   extend GeneratedRelationMethods
+  include GeneratedSecureTokenMethods
 
   sig { returns(ActiveStorage::Attached::One) }
   def preview_image; end
@@ -101,6 +102,30 @@ class ActiveStorage::Blob
 
     sig do
       params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)
+      ).returns(T.nilable(T::Enumerator[::ActiveStorage::Blob]))
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: T::Array[::ActiveStorage::Blob]).void)
+      ).returns(T.nilable(T::Enumerator[T::Enumerator[::ActiveStorage::Blob]]))
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
         attributes: T.untyped,
         block: T.nilable(T.proc.params(object: ::ActiveStorage::Blob).void)
       ).returns(::ActiveStorage::Blob)
@@ -122,6 +147,12 @@ class ActiveStorage::Blob
       ).returns(::ActiveStorage::Blob)
     end
     def find_or_initialize_by(attributes, &block); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(T.nilable(::ActiveStorage::Blob)) }
+    def find_signed(signed_id, purpose: nil); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::ActiveStorage::Blob) }
+    def find_signed!(signed_id, purpose: nil); end
 
     sig { params(arg: T.untyped, args: T.untyped).returns(::ActiveStorage::Blob) }
     def find_sole_by(arg, *args); end
@@ -146,6 +177,19 @@ class ActiveStorage::Blob
 
     sig { returns(Array) }
     def ids; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T.untyped,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: PrivateRelation).void)
+      ).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator))
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
@@ -249,6 +293,8 @@ class ActiveStorage::Blob
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def attachment_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `ActiveStorage::Blob` class because it declared `has_many :attachments`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::ActiveStorage::Attachment::PrivateCollectionProxy) }
     def attachments; end
 
@@ -297,6 +343,8 @@ class ActiveStorage::Blob
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def variant_record_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `ActiveStorage::Blob` class because it declared `has_many :variant_records`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::ActiveStorage::VariantRecord::PrivateCollectionProxy) }
     def variant_records; end
 
@@ -1140,6 +1188,11 @@ class ActiveStorage::Blob
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end
+  end
+
+  module GeneratedSecureTokenMethods
+    sig { returns(T::Boolean) }
+    def regenerate_key; end
   end
 
   class PrivateAssociationRelation < ::ActiveRecord::AssociationRelation

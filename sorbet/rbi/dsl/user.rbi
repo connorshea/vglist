@@ -83,6 +83,30 @@ class User
     sig { params(args: T.untyped).returns(::User) }
     def find_by!(*args); end
 
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: ::User).void)
+      ).returns(T.nilable(T::Enumerator[::User]))
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: T::Array[::User]).void)
+      ).returns(T.nilable(T::Enumerator[T::Enumerator[::User]]))
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
     def find_or_create_by(attributes, &block); end
 
@@ -91,6 +115,12 @@ class User
 
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::User).void)).returns(::User) }
     def find_or_initialize_by(attributes, &block); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(T.nilable(::User)) }
+    def find_signed(signed_id, purpose: nil); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::User) }
+    def find_signed!(signed_id, purpose: nil); end
 
     sig { params(arg: T.untyped, args: T.untyped).returns(::User) }
     def find_sole_by(arg, *args); end
@@ -118,6 +148,19 @@ class User
 
     sig { returns(Array) }
     def ids; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T.untyped,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: PrivateRelation).void)
+      ).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator))
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
@@ -236,6 +279,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def access_grant_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :access_grants`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Doorkeeper::AccessGrant::PrivateCollectionProxy) }
     def access_grants; end
 
@@ -248,6 +293,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def access_token_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :access_tokens`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Doorkeeper::AccessToken::PrivateCollectionProxy) }
     def access_tokens; end
 
@@ -260,6 +307,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def active_relationship_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :active_relationships`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Relationship::PrivateCollectionProxy) }
     def active_relationships; end
 
@@ -326,6 +375,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def favorite_game_event_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :favorite_game_events`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Events::FavoriteGameEvent::PrivateCollectionProxy) }
     def favorite_game_events; end
 
@@ -338,6 +389,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def favorite_game_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :favorite_games`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::FavoriteGame::PrivateCollectionProxy) }
     def favorite_games; end
 
@@ -350,6 +403,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def favorited_game_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :favorited_games, through: :favorite_games`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Game::PrivateCollectionProxy) }
     def favorited_games; end
 
@@ -362,12 +417,16 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def follower_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :followers, through: :passive_relationships`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::User::PrivateCollectionProxy) }
     def followers; end
 
     sig { params(value: T::Enumerable[::User]).void }
     def followers=(value); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :following, through: :active_relationships`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::User::PrivateCollectionProxy) }
     def following; end
 
@@ -392,6 +451,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_purchase_event_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :game_purchase_events`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Events::GamePurchaseEvent::PrivateCollectionProxy) }
     def game_purchase_events; end
 
@@ -404,12 +465,16 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_purchase_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :game_purchases`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GamePurchase::PrivateCollectionProxy) }
     def game_purchases; end
 
     sig { params(value: T::Enumerable[::GamePurchase]).void }
     def game_purchases=(value); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :games, through: :game_purchases`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Game::PrivateCollectionProxy) }
     def games; end
 
@@ -422,6 +487,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def new_event_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :new_events`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Views::NewEvent::PrivateCollectionProxy) }
     def new_events; end
 
@@ -434,6 +501,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def oauth_application_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :oauth_applications`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Doorkeeper::Application::PrivateCollectionProxy) }
     def oauth_applications; end
 
@@ -446,6 +515,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def passive_relationship_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :passive_relationships`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Relationship::PrivateCollectionProxy) }
     def passive_relationships; end
 
@@ -464,6 +535,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def relationship_event_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :relationship_events`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Events::RelationshipEvent::PrivateCollectionProxy) }
     def relationship_events; end
 
@@ -488,6 +561,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def steam_blocklist_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :steam_blocklists`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::SteamBlocklist::PrivateCollectionProxy) }
     def steam_blocklists; end
 
@@ -500,6 +575,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def user_event_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :user_events`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Events::UserEvent::PrivateCollectionProxy) }
     def user_events; end
 
@@ -512,6 +589,8 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def wikidata_blocklist_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :wikidata_blocklists`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::WikidataBlocklist::PrivateCollectionProxy) }
     def wikidata_blocklists; end
 

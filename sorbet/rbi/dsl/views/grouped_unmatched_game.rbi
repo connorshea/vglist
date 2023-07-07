@@ -94,6 +94,30 @@ class Views::GroupedUnmatchedGame
 
     sig do
       params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: ::Views::GroupedUnmatchedGame).void)
+      ).returns(T.nilable(T::Enumerator[::Views::GroupedUnmatchedGame]))
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: T::Array[::Views::GroupedUnmatchedGame]).void)
+      ).returns(T.nilable(T::Enumerator[T::Enumerator[::Views::GroupedUnmatchedGame]]))
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
         attributes: T.untyped,
         block: T.nilable(T.proc.params(object: ::Views::GroupedUnmatchedGame).void)
       ).returns(::Views::GroupedUnmatchedGame)
@@ -115,6 +139,12 @@ class Views::GroupedUnmatchedGame
       ).returns(::Views::GroupedUnmatchedGame)
     end
     def find_or_initialize_by(attributes, &block); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(T.nilable(::Views::GroupedUnmatchedGame)) }
+    def find_signed(signed_id, purpose: nil); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::Views::GroupedUnmatchedGame) }
+    def find_signed!(signed_id, purpose: nil); end
 
     sig { params(arg: T.untyped, args: T.untyped).returns(::Views::GroupedUnmatchedGame) }
     def find_sole_by(arg, *args); end
@@ -139,6 +169,19 @@ class Views::GroupedUnmatchedGame
 
     sig { returns(Array) }
     def ids; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T.untyped,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: PrivateRelation).void)
+      ).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator))
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
@@ -551,16 +594,16 @@ class Views::GroupedUnmatchedGame
     sig { void }
     def external_service_name_will_change!; end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(T::Array[::String])) }
     def names; end
 
-    sig { params(value: T.untyped).returns(T.untyped) }
+    sig { params(value: T.nilable(T::Array[::String])).returns(T.nilable(T::Array[::String])) }
     def names=(value); end
 
     sig { returns(T::Boolean) }
     def names?; end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(T::Array[::String])) }
     def names_before_last_save; end
 
     sig { returns(T.untyped) }
@@ -569,28 +612,28 @@ class Views::GroupedUnmatchedGame
     sig { returns(T::Boolean) }
     def names_came_from_user?; end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([T.nilable(T::Array[::String]), T.nilable(T::Array[::String])])) }
     def names_change; end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([T.nilable(T::Array[::String]), T.nilable(T::Array[::String])])) }
     def names_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
     def names_changed?; end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(T::Array[::String])) }
     def names_in_database; end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([T.nilable(T::Array[::String]), T.nilable(T::Array[::String])])) }
     def names_previous_change; end
 
     sig { returns(T::Boolean) }
     def names_previously_changed?; end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(T::Array[::String])) }
     def names_previously_was; end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(T::Array[::String])) }
     def names_was; end
 
     sig { void }
@@ -626,7 +669,7 @@ class Views::GroupedUnmatchedGame
     sig { returns(T::Boolean) }
     def saved_change_to_external_service_name?; end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([T.nilable(T::Array[::String]), T.nilable(T::Array[::String])])) }
     def saved_change_to_names; end
 
     sig { returns(T::Boolean) }

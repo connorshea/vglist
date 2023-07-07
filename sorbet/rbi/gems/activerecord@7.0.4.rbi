@@ -9379,7 +9379,7 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
   end
 end
 
-ActiveRecord::ConnectionAdapters::PoolConfig::INSTANCES = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
+ActiveRecord::ConnectionAdapters::PoolConfig::INSTANCES = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
 
 class ActiveRecord::ConnectionAdapters::PoolManager
   # @return [PoolManager] a new instance of PoolManager
