@@ -69,6 +69,30 @@ class Store
     sig { params(args: T.untyped).returns(::Store) }
     def find_by!(*args); end
 
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: ::Store).void)
+      ).returns(T.nilable(T::Enumerator[::Store]))
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: T::Array[::Store]).void)
+      ).returns(T.nilable(T::Enumerator[T::Enumerator[::Store]]))
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Store).void)).returns(::Store) }
     def find_or_create_by(attributes, &block); end
 
@@ -77,6 +101,12 @@ class Store
 
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Store).void)).returns(::Store) }
     def find_or_initialize_by(attributes, &block); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(T.nilable(::Store)) }
+    def find_signed(signed_id, purpose: nil); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::Store) }
+    def find_signed!(signed_id, purpose: nil); end
 
     sig { params(arg: T.untyped, args: T.untyped).returns(::Store) }
     def find_sole_by(arg, *args); end
@@ -101,6 +131,19 @@ class Store
 
     sig { returns(Array) }
     def ids; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T.untyped,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: PrivateRelation).void)
+      ).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator))
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
@@ -193,12 +236,16 @@ class Store
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_purchase_store_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Store` class because it declared `has_many :game_purchase_stores`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GamePurchaseStore::PrivateCollectionProxy) }
     def game_purchase_stores; end
 
     sig { params(value: T::Enumerable[::GamePurchaseStore]).void }
     def game_purchase_stores=(value); end
 
+    # This method is created by ActiveRecord on the `Store` class because it declared `has_many :game_purchases, through: :game_purchase_stores`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::GamePurchase::PrivateCollectionProxy) }
     def game_purchases; end
 

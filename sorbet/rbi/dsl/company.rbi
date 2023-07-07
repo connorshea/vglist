@@ -69,6 +69,30 @@ class Company
     sig { params(args: T.untyped).returns(::Company) }
     def find_by!(*args); end
 
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: ::Company).void)
+      ).returns(T.nilable(T::Enumerator[::Company]))
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: T::Array[::Company]).void)
+      ).returns(T.nilable(T::Enumerator[T::Enumerator[::Company]]))
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Company).void)).returns(::Company) }
     def find_or_create_by(attributes, &block); end
 
@@ -77,6 +101,12 @@ class Company
 
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Company).void)).returns(::Company) }
     def find_or_initialize_by(attributes, &block); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(T.nilable(::Company)) }
+    def find_signed(signed_id, purpose: nil); end
+
+    sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::Company) }
+    def find_signed!(signed_id, purpose: nil); end
 
     sig { params(arg: T.untyped, args: T.untyped).returns(::Company) }
     def find_sole_by(arg, *args); end
@@ -101,6 +131,19 @@ class Company
 
     sig { returns(Array) }
     def ids; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T.untyped,
+        error_on_ignore: T.untyped,
+        order: Symbol,
+        block: T.nilable(T.proc.params(object: PrivateRelation).void)
+      ).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator))
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
@@ -196,6 +239,8 @@ class Company
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def developed_game_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Company` class because it declared `has_many :developed_games, through: :game_developers`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Game::PrivateCollectionProxy) }
     def developed_games; end
 
@@ -208,6 +253,8 @@ class Company
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_developer_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Company` class because it declared `has_many :game_developers`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GameDeveloper::PrivateCollectionProxy) }
     def game_developers; end
 
@@ -220,6 +267,8 @@ class Company
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def game_publisher_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Company` class because it declared `has_many :game_publishers`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::GamePublisher::PrivateCollectionProxy) }
     def game_publishers; end
 
@@ -238,6 +287,8 @@ class Company
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def published_game_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Company` class because it declared `has_many :published_games, through: :game_publishers`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
     sig { returns(::Game::PrivateCollectionProxy) }
     def published_games; end
 
@@ -253,6 +304,8 @@ class Company
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def version_ids=(ids); end
 
+    # This method is created by ActiveRecord on the `Company` class because it declared `has_many :versions`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
     sig { returns(::Versions::CompanyVersion::PrivateCollectionProxy) }
     def versions; end
 
