@@ -70,13 +70,13 @@ module VideoGameList
 
     config.to_prepare do
       # Only Applications list
-      T.unsafe(Doorkeeper::ApplicationsController).layout "application"
+      Doorkeeper::ApplicationsController.layout "application"
 
       # Only Authorization endpoint
-      T.unsafe(Doorkeeper::AuthorizationsController).layout "application"
+      Doorkeeper::AuthorizationsController.layout "application"
 
       # Only Authorized Applications
-      T.unsafe(Doorkeeper::AuthorizedApplicationsController).layout "application"
+      Doorkeeper::AuthorizedApplicationsController.layout "application"
     end
 
     # Add spec to the directories that 'rails notes' checks.

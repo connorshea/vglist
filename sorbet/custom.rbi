@@ -48,10 +48,6 @@ class User
   include ::Devise::Models::Trackable
 end
 
-class Doorkeeper::ApplicationsController < ApplicationController; end
-class Doorkeeper::AuthorizedApplicationsController < ApplicationController; end
-class Doorkeeper::AuthorizationsController < ApplicationController; end
-
 # Include PaperTrail so the has_paper_trail method can be used in the
 # ActiveModel models. This happens implicitly, but we have to tell Sorbet
 # here for it to understand.
