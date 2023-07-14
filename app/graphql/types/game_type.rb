@@ -12,7 +12,7 @@ module Types
     field :rating_count, Integer, null: false, description: "The number of ratings across all game purchases associated to this game."
     field :wikidata_id, Integer, null: true, description: "Identifier for Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier for PCGamingWiki."
-    field :mobygames_id, String, null: true, description: "Identifier for the MobyGames database."
+    field :mobygames_id, Integer, null: true, description: "Identifier for the MobyGames database."
     field :giantbomb_id, String, null: true, description: "Identifier for Giant Bomb."
     field :epic_games_store_id, String, null: true, description: "Identifier for the Epic Games Store."
     field :gog_id, String, null: true, description: "Identifier for GOG.com."

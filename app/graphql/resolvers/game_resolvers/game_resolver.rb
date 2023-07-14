@@ -10,7 +10,7 @@ module Resolvers
       argument :wikidata_id, Integer, required: false, description: "Find a game by its Wikidata ID."
       argument :giantbomb_id, String, required: false, description: "Find a game by its GiantBomb ID, e.g. `'3030-23708'`."
       argument :igdb_id, String, required: false, description: "Find a game by its IGDB ID."
-      argument :mobygames_id, String, required: false, description: "Find a game by its MobyGames ID."
+      argument :mobygames_id, Integer, required: false, description: "Find a game by its MobyGames ID."
       argument :pcgamingwiki_id, String, required: false, description: "Find a game by its PCGamingWiki ID."
       argument :steam_app_id, Integer, required: false, description: "Find a game by its Steam App ID."
       argument :epic_games_store_id, String, required: false, description: "Find a game by its Epic Games Store ID."

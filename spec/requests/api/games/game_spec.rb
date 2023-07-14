@@ -175,7 +175,7 @@ RSpec.describe "Game query API", type: :request do
 
     it "returns basic data for game when searching by mobygames_id" do
       query_string = <<-GRAPHQL
-        query($mobygamesId: String!) {
+        query($mobygamesId: Int!) {
           game(mobygamesId: $mobygamesId) {
             id
             name

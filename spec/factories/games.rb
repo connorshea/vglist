@@ -46,7 +46,7 @@ FactoryBot.define do
     end
 
     trait :mobygames_id do
-      mobygames_id { Faker::Lorem.words(number: 3).join('-') }
+      mobygames_id { Faker::Number.number(digits: 6) }
     end
 
     trait :giantbomb_id do
