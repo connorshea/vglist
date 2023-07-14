@@ -97,7 +97,7 @@ namespace 'import:wikidata' do
         # Remove the 'game/' prefix from the GOG.com IDs.
         gog_id = wikidata_json['P2725']&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', '')
         igdb_id = wikidata_json['P5794']&.first&.dig('mainsnak', 'datavalue', 'value')
-        mobygames_id = wikidata_json['P1933']&.first&.dig('mainsnak', 'datavalue', 'value')
+        mobygames_id = wikidata_json['P11688']&.first&.dig('mainsnak', 'datavalue', 'value')
         giantbomb_id = wikidata_json['P5247']&.first&.dig('mainsnak', 'datavalue', 'value')
 
         release_dates = wikidata_json['P577']&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }

@@ -238,7 +238,7 @@ export default {
       required: false
     },
     mobygamesId: {
-      type: String,
+      type: Number,
       required: false
     },
     giantbombId: {

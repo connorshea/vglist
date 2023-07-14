@@ -770,13 +770,13 @@ CREATE TABLE public.games (
     series_id bigint,
     wikidata_id bigint,
     pcgamingwiki_id text,
-    mobygames_id text,
     release_date date,
     giantbomb_id text,
     epic_games_store_id text,
     gog_id text,
     avg_rating double precision,
-    igdb_id text
+    igdb_id text,
+    mobygames_id bigint
 );
 
 
@@ -3206,6 +3206,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220612160618'),
 ('20220612160627'),
 ('20220612192154'),
-('20220827144350');
+('20220827144350'),
+('20230714020617'),
+('20230714020627');
 
 

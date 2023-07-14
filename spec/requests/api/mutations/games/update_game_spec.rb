@@ -52,7 +52,7 @@ RSpec.describe "UpdateGame Mutation API", type: :request do
             $steamAppIds: [Int!],
             $gogId: String,
             $epicGamesStoreId: String,
-            $mobygamesId: String,
+            $mobygamesId: Int,
             $giantbombId: String,
             $pcgamingwikiId: String,
             $wikidataId: ID,
@@ -144,7 +144,7 @@ RSpec.describe "UpdateGame Mutation API", type: :request do
           gog_id: 'portal_2',
           epic_games_store_id: 'foo',
           giantbomb_id: '3030-1539',
-          mobygames_id: 'bar',
+          mobygames_id: 123,
           pcgamingwiki_id: 'baz',
           wikidata_id: 123_456_789,
           igdb_id: 'portal-2'
@@ -198,7 +198,7 @@ RSpec.describe "UpdateGame Mutation API", type: :request do
             gogId: 'portal_2',
             epicGamesStoreId: 'foo',
             giantbombId: '3030-1539',
-            mobygamesId: 'bar',
+            mobygamesId: 123,
             pcgamingwikiId: 'baz',
             wikidataId: 123_456_789,
             igdbId: 'portal-2'

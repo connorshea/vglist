@@ -191,7 +191,7 @@ namespace :import do
     sparql = <<-SPARQL
       SELECT ?item ?mobygamesId WHERE {
         ?item wdt:P31 wd:Q7889; # Instances of video games
-              wdt:P1933 ?mobygamesId. # Items with a MobyGames ID.
+              wdt:P11688 ?mobygamesId. # Items with a MobyGames ID.
       }
     SPARQL
 

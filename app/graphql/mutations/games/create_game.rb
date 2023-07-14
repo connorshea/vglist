@@ -12,7 +12,7 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   argument :genre_ids, [ID], required: false, description: 'The ID(s) of the game\'s genres.'
   argument :engine_ids, [ID], required: false, description: 'The ID(s) of the game\'s engines.'
   argument :pcgamingwiki_id, String, required: false, description: 'The ID of the game on PCGamingWiki.'
-  argument :mobygames_id, String, required: false, description: 'The ID of the game on MobyGames.'
+  argument :mobygames_id, Integer, required: false, description: 'The ID of the game on MobyGames.'
   argument :giantbomb_id, String, required: false, description: 'The ID of the game on the GiantBomb Wiki.'
   argument :epic_games_store_id, String, required: false, description: 'The ID of the game on the Epic Games Store.'
   argument :gog_id, String, required: false, description: 'The ID of the game on GOG.com.'
@@ -35,7 +35,7 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
       genre_ids: T::Array[T.any(String, Integer)],
       engine_ids: T::Array[T.any(String, Integer)],
       pcgamingwiki_id: T.nilable(String),
-      mobygames_id: T.nilable(String),
+      mobygames_id: T.nilable(Integer),
       giantbomb_id: T.nilable(String),
       epic_games_store_id: T.nilable(String),
       gog_id: T.nilable(String),
