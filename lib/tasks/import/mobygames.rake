@@ -51,7 +51,6 @@ namespace :import do
       progress_bar.log "Adding MobyGames ID '#{game[:mobygames_id]}' to #{game_record.name}." if ENV['DEBUG']
 
       begin
-        debugger
         Game.find(game_record.id).update!(mobygames_id: game[:mobygames_id].to_s.to_i)
       rescue ActiveRecord::RecordInvalid => e
         progress_bar.log "Invalid: #{game_record.name.ljust(30)} | #{e}"
