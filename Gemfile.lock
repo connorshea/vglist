@@ -139,7 +139,7 @@ GEM
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
-    ebnf (2.3.4)
+    ebnf (2.3.5)
       htmlentities (~> 4.3)
       rdf (~> 3.2)
       scanf (~> 1.0)
