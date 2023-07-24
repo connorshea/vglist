@@ -46,7 +46,7 @@ gem 'active_storage_validations', '~> 1.0.4'
 gem 'friendly_id', '~> 5.5.0'
 
 # Use SPARQL for querying Wikidata in imports.
-gem 'sparql', '~> 3.2.5', require: false
+gem 'sparql', '~> 3.2.6', require: false
 
 # Use Addressable for use with the Wikidata API.
 gem 'addressable', '~> 2.8.4', require: false
