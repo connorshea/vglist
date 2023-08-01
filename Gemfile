@@ -155,7 +155,7 @@ group :test do
   gem 'capybara', '~> 3.39'
   gem 'selenium-webdriver', '~> 4.10'
   # Easy installation and use of WebDriver clients for various browsers.
-  gem 'webdrivers', '~> 5.2'
+  gem 'webdrivers', '~> 5.3'
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
   gem 'webmock', '~> 3.18'
 end
