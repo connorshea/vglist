@@ -157,7 +157,7 @@ group :test do
   # Easy installation and use of WebDriver clients for various browsers.
   gem 'webdrivers', '~> 5.3'
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
-  gem 'webmock', '~> 3.18'
+  gem 'webmock', '~> 3.19'
 end
 
 # # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
