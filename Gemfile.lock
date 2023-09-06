@@ -161,7 +161,7 @@ GEM
     fuubar (2.5.1)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
-    globalid (1.2.0)
+    globalid (1.2.1)
       activesupport (>= 6.1)
     graphql (2.1.0)
     graphql-rails_logger (1.2.4)
