@@ -1213,10 +1213,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@rails/activestorage@^7.0.8":
-  version "7.0.8"
-  resolved "https://registry.yarnpkg.com/@rails/activestorage/-/activestorage-7.0.8.tgz#7ea8a656b5621e0dc57f51e3ad2f06c3af30d3ea"
-  integrity sha512-CxPyCxTV0HIaZP8qqH11tkESNl8TrQsIAesAgeOXDOl0BkaN6nC0/Mq2/0ngezBu9CZbFzfHtP2g6Yl8BWkV8g==
+"@rails/activestorage@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@rails/activestorage/-/activestorage-7.1.0.tgz#6aeea30720f98ea25f790596862ac89251bcc05d"
+  integrity sha512-TYc3AkBaXgBlavODTHPgyaOMqt0MRkFlPCa7BiQJJyND17GYS7pP0lT0bgcDQgpuKMvsCdVxQaRwl6tzL5AW0g==
   dependencies:
     spark-md5 "^3.0.1"
 
