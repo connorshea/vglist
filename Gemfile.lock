@@ -253,7 +253,7 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     prettier_print (1.2.1)
-    prism (0.15.1)
+    prism (0.16.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
