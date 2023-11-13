@@ -1624,10 +1624,10 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.5.tgz#75a2a8e7d8ab4b230414505d92335d1dcb53a6df"
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
 
-"@types/turbolinks@^5.2.1":
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/@types/turbolinks/-/turbolinks-5.2.1.tgz#b0cd2092a19057bbe69da5b3eb6e05f96e4f70e2"
-  integrity sha512-29//bPWfKNw4rjYpMfMvK4QT/jjZYdJ82OeIREwIYViI3ojU6lh4q+MGGnPzT56aXX6I6ZPABkr6StJpGLcfKQ==
+"@types/turbolinks@^5.2.2":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@types/turbolinks/-/turbolinks-5.2.2.tgz#8f9f1d4bfb5e53ea599f79c393779ca8b92cf6e0"
+  integrity sha512-FaCObYvhT7GtQ9a1SLW/DyYb7qxC2tBc5QJx7/xnBED0uBngfJHsIJ4mGT6u5dRTy+VAi0QvzdK7EUEQAeOdfw==
 
 "@types/vue-select@^3.16.6":
   version "3.16.6"
