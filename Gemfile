@@ -106,7 +106,7 @@ group :development, :test do
   gem 'database_cleaner', '~> 2.0'
 
   # Rspec-rails for testing.
-  gem 'rspec-rails', '~> 6.0'
+  gem 'rspec-rails', '~> 6.1'
 
   # Factory Bot for creating factories.
   gem 'factory_bot_rails', '~> 6.2'
