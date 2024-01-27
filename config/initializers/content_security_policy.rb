@@ -15,12 +15,12 @@ Rails.application.config.content_security_policy do |policy|
   # Require unsafe_inline for Vue DevTools in development.
   # https://github.com/vuejs/vue-devtools/issues/616
   if Rails.env.development?
-    policy.script_src :self, :https, :unsafe_eval, :unsafe_inline
+    policy.script_src :self, :https, :unsafe_eval, :unsafe_inline, :report_sample
   else
-    policy.script_src :self, :https, :unsafe_eval
+    policy.script_src :self, :https, :unsafe_eval,  :report_sample
   end
   # Allow unsafe_inline because vue-select uses inline styles I guess?
-  policy.style_src :self, :https, :unsafe_inline
+  policy.style_src :self, :https, :unsafe_inline,  :report_sample
 
   # Allow Webpacker to connect in development
   if Rails.env.development?
