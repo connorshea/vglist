@@ -33,7 +33,7 @@
     "@types/vue-select": "^3.16.6",
     "graphql-schema-linter": "^3.0.1",
     "prettier": "3.2.4",
-    "webpack-dev-server": "^3.11"
+    "webpack-dev-server": "^5.0"
   },
   "scripts": {
     "prettier": "prettier --write './app/javascript/**/*.{js,vue,scss}'"
