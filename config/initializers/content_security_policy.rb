@@ -17,7 +17,7 @@ Rails.application.config.content_security_policy do |policy|
   if Rails.env.development?
     policy.script_src :self, :https, :unsafe_eval, :unsafe_inline, :report_sample
   else
-    policy.script_src :self, :https, :unsafe_eval,  :report_sample
+    policy.script_src :self, :https, :unsafe_eval, :report_sample
   end
   # Allow unsafe_inline because vue-select uses inline styles I guess?
   policy.style_src :self, :https, :unsafe_inline, :report_sample
