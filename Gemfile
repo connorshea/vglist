@@ -144,7 +144,7 @@ group :development do
   # https://github.com/jetruby/graphql-rails_logger
   gem 'graphql-rails_logger', '~> 1.2.4'
   # Enable dotenv for local environment variables.
-  gem 'dotenv-rails', '~> 2.8'
+  gem 'dotenv-rails', '~> 3.1'
   # Tapioca for generating Sorbet RBI files.
   # Use a fork to fix this issue: https://github.com/Shopify/tapioca/issues/208
   gem 'tapioca', '~> 0.12.0'
