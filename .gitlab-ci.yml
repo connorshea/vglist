@@ -30,7 +30,8 @@ before_script:
   - node -v
   - gem install bundler:$BUNDLER_VERSION
   - echo -e "section_start:`date +%s`:bundle_install[collapsed=true]\r\e[0Kbundle install"
-  - bundle install -j $(nproc) && cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/bigdecimal-3.1.7/mkmf.log
+  - bundle install -j $(nproc)
+  - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/bigdecimal-3.1.7/mkmf.log
   - echo -e "section_end:`date +%s`:bundle_install\r\e[0K"
   - echo -e "section_start:`date +%s`:yarn_install[collapsed=true]\r\e[0Kyarn install"
   - yarn install --frozen-lockfile
@@ -49,6 +50,7 @@ before_script:
     - gem install bundler:$BUNDLER_VERSION
     - echo -e "section_start:`date +%s`:bundle_install[collapsed=true]\r\e[0Kbundle install"
     - bundle install -j $(nproc)
+    - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/bigdecimal-3.1.7/mkmf.log
     - echo -e "section_end:`date +%s`:bundle_install\r\e[0K"
     - echo -e "section_start:`date +%s`:yarn_install[collapsed=true]\r\e[0Kyarn install"
     - yarn install --frozen-lockfile
