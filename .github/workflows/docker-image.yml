@@ -1,0 +1,21 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+    - run: |
+        docker build --no-cache --platform=linux/amd64 -f Dockerfile -t registry.gitlab.com/vglist/vglist .
+        docker login registry.gitlab.com -p ${{ secrets.GITLAB_PAT }}
+        docker push registry.gitlab.com/vglist/vglist
