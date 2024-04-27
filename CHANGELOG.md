@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2024.04.26
+- Upgrade to Ruby 3.3. ([#3651], [#3652])
+
 ## v2023.07.13
 - Migrate MobyGames IDs from the old slug format to the new numeric identifiers. ([#3286])
 
@@ -949,3 +952,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#2840]: https://github.com/connorshea/vglist/pull/2840
 [#3251]: https://github.com/connorshea/vglist/pull/3251
 [#3286]: https://github.com/connorshea/vglist/pull/3286
+[#3651]: https://github.com/connorshea/vglist/pull/3651
+[#3652]: https://github.com/connorshea/vglist/pull/3652
