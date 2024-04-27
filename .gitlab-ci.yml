@@ -33,6 +33,7 @@ before_script:
   - bundle install -j $(nproc) && echo 'foo'
   - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/bigdecimal-3.1.7/mkmf.log
   - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/pg-1.5.6/gem_make.out
+  - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/pg-1.5.6/mkmf.log
   - echo -e "section_end:`date +%s`:bundle_install\r\e[0K"
   - echo -e "section_start:`date +%s`:yarn_install[collapsed=true]\r\e[0Kyarn install"
   - yarn install --frozen-lockfile
@@ -53,6 +54,7 @@ before_script:
     - bundle install -j $(nproc) && echo 'foo'
     - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/bigdecimal-3.1.7/mkmf.log
     - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/pg-1.5.6/gem_make.out
+    - cat /builds/vglist/vglist/vendor/bundle/ruby/3.2.0/extensions/x86_64-linux/3.2.0/pg-1.5.6/mkmf.log
     - echo -e "section_end:`date +%s`:bundle_install\r\e[0K"
     - echo -e "section_start:`date +%s`:yarn_install[collapsed=true]\r\e[0Kyarn install"
     - yarn install --frozen-lockfile
