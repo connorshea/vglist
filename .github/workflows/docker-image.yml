@@ -15,7 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-    - run: |
-        docker build --no-cache --platform=linux/amd64 -f Dockerfile -t registry.gitlab.com/vglist/vglist .
-        docker login registry.gitlab.com -p ${{ secrets.GITLAB_PAT }}
-        docker push registry.gitlab.com/vglist/vglist
+      run: docker build --no-cache --platform=linux/amd64 -f Dockerfile -t registry.gitlab.com/vglist/vglist .
+
+    - name: Docker Login
+      run: docker login registry.gitlab.com -p ${{ secrets.GITLAB_PAT }}
+        
+    - name: Push Image
+      run: docker push registry.gitlab.com/vglist/vglist
