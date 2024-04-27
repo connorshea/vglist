@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 
 # DO NOT EDIT MANUALLY
 # This file was pulled from a central RBI files repository.
@@ -13,11 +13,21 @@ class ActiveRecord::Migration
   # @shim: Methods on migration are delegated to `SchemaStatements` using `method_missing`
   include ActiveRecord::ConnectionAdapters::SchemaStatements
 
-  # @shim: Methods on migration are delegated to `DatabaseaStatements` using `method_missing`
+  # @shim: Methods on migration are delegated to `DatabaseStatements` using `method_missing`
   include ActiveRecord::ConnectionAdapters::DatabaseStatements
 end
 
 class ActiveRecord::Base
+  sig { returns(FalseClass) }
+  def blank?; end
+
+  # @shim: since `present?` is always true, `presence` always returns `self`
+  sig { returns(T.self_type) }
+  def presence; end
+
+  sig { returns(TrueClass) }
+  def present?; end
+
   sig { params(args: T.untyped, options: T.untyped, block: T.nilable(T.proc.bind(T.attached_class).params(record: T.attached_class).void)).void }
   def self.after_initialize(*args, **options, &block); end
 
@@ -74,4 +84,9 @@ class ActiveRecord::Base
 
   sig { params(args: T.untyped, options: T.untyped, block: T.nilable(T.proc.bind(T.attached_class).params(record: T.attached_class).void)).void }
   def self.after_rollback(*args, **options, &block); end
+end
+
+class ActiveRecord::Relation
+  sig { returns(T::Boolean) }
+  def blank?; end
 end
