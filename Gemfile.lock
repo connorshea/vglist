@@ -398,7 +398,7 @@ GEM
     sentry-ruby (5.17.3)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    shoulda-matchers (6.1.0)
+    shoulda-matchers (6.2.0)
       activesupport (>= 5.2.0)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -545,7 +545,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.10)
   sentry-rails (~> 5.17.3)
   sentry-ruby (~> 5.17.3)
-  shoulda-matchers (= 6.1.0)
+  shoulda-matchers (= 6.2.0)
   simplecov (~> 0.22)
   sorbet (~> 0.5)
   sorbet-runtime (~> 0.5)
