@@ -90,6 +90,18 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_method(name, parameters: T.unsafe(nil), return_type: T.unsafe(nil), class_method: T.unsafe(nil), visibility: T.unsafe(nil), comments: T.unsafe(nil)); end
 
+  sig do
+    params(
+      name: ::String,
+      sigs: T::Array[::RBI::Sig],
+      parameters: T::Array[::RBI::Param],
+      class_method: T::Boolean,
+      visibility: ::RBI::Visibility,
+      comments: T::Array[::RBI::Comment]
+    ).void
+  end
+  def create_method_with_sigs(name, sigs:, parameters: T.unsafe(nil), class_method: T.unsafe(nil), visibility: T.unsafe(nil), comments: T.unsafe(nil)); end
+
   sig { params(name: ::String).void }
   def create_mixes_in_class_methods(name); end
 
@@ -98,6 +110,9 @@ class RBI::Tree < ::RBI::NodeWithComments
 
   sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).returns(::RBI::Scope) }
   def create_path(constant, &block); end
+
+  sig { params(parameters: T::Hash[T.any(::String, ::Symbol), ::String], return_type: ::String).returns(::RBI::Sig) }
+  def create_sig(parameters:, return_type: T.unsafe(nil)); end
 
   sig do
     params(
