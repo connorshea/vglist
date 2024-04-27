@@ -18,9 +18,6 @@ require 'simplecov'
 SimpleCov.start :rails do
   add_group "Policies", "app/policies"
   add_group "GraphQL", "app/graphql"
-
-  # No need to include this in the coverage tracking.
-  add_filter "lib/cursed_rbi_plugin.rb"
 end
 require 'pundit/rspec'
 require 'pundit/matchers'
@@ -32,7 +29,7 @@ WebMock.disable_net_connect!(
   allow_localhost: true,
   # We have to allow this URL because the webdrivers gem pulls the
   # ChromeDriver down for our feature tests.
-  allow: 'https://chromedriver.storage.googleapis.com'
+  allow: ['https://googlechromelabs.github.io', 'https://storage.googleapis.com']
 )
 
 RSpec.configure do |config|
