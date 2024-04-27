@@ -1,4 +1,4 @@
-# typed: strong
+# typed: true
 
 # DO NOT EDIT MANUALLY
 # This file was pulled from a central RBI files repository.
@@ -6,15 +6,13 @@
 
 module GraphQL
   class << self
-    sig { params(graphql_string: String, trace: T.untyped).returns(GraphQL::Language::Nodes::Document) }
-    def parse(graphql_string, trace: T.unsafe(nil)); end
+    sig { params(graphql_string: String, trace: T.untyped, filename: T.untyped).returns(GraphQL::Language::Nodes::Document) }
+    def parse(graphql_string, trace: T.unsafe(nil), filename: T.unsafe(nil)); end
   end
 end
 
 class GraphQL::Backtrace
-  Elem = type_member {
-  { fixed: T.untyped }
-}
+  Elem = type_member {{fixed: T.untyped}}
 end
 
 class GraphQL::Schema
@@ -40,7 +38,7 @@ class GraphQL::Schema::Resolver
 end
 
 module GraphQL::Schema::Member::HasFields
-  sig { params(args: T.untyped, kwargs: T.untyped, block: T.nilable(T.proc.bind(GraphQL::Schema::Field).void)).returns(T.untyped) }
+  sig { params(args: T.untyped, kwargs: T.untyped, block: T.nilable(T.proc.params(field: GraphQL::Schema::Field).bind(GraphQL::Schema::Field).void)).returns(T.untyped) }
   def field(*args, **kwargs, &block); end
 end
 

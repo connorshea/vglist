@@ -13,10 +13,11 @@ class ActiveRecord::DestroyAssociationAsyncJob
         association_class: T.untyped,
         association_ids: T.untyped,
         association_primary_key_column: T.untyped,
-        ensuring_owner_was_method: T.untyped
+        ensuring_owner_was_method: T.untyped,
+        block: T.nilable(T.proc.params(job: ActiveRecord::DestroyAssociationAsyncJob).void)
       ).returns(T.any(ActiveRecord::DestroyAssociationAsyncJob, FalseClass))
     end
-    def perform_later(owner_model_name: T.unsafe(nil), owner_id: T.unsafe(nil), association_class: T.unsafe(nil), association_ids: T.unsafe(nil), association_primary_key_column: T.unsafe(nil), ensuring_owner_was_method: T.unsafe(nil)); end
+    def perform_later(owner_model_name: T.unsafe(nil), owner_id: T.unsafe(nil), association_class: T.unsafe(nil), association_ids: T.unsafe(nil), association_primary_key_column: T.unsafe(nil), ensuring_owner_was_method: T.unsafe(nil), &block); end
 
     sig do
       params(
