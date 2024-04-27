@@ -1,7 +1,6 @@
 # Dockerfile for running the application in a CI environment.
-FROM ruby:3.2.4-slim-bullseye
+FROM ruby:3.2.4
 
-RUN apt-get update -qqy && apt-get install -qqyy gnupg curl
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
