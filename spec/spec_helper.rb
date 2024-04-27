@@ -29,7 +29,7 @@ WebMock.disable_net_connect!(
   allow_localhost: true,
   # We have to allow this URL because the webdrivers gem pulls the
   # ChromeDriver down for our feature tests.
-  allow: ['https://googlechromelabs.github.io', 'https://storage.googleapis.com']
+  allow: ['https://googlechromelabs.github.io', 'https://storage.googleapis.com', 'chromedriver.storage.googleapis.com']
 )
 
 RSpec.configure do |config|
