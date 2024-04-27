@@ -1,5 +1,5 @@
 # Dockerfile for running the application in a CI environment.
-FROM ruby:3.2.4-slim
+FROM ruby:3.2.4-slim-bullseye
 
 RUN apt-get update -qqy && apt-get install -qqyy gnupg curl
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
