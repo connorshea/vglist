@@ -14,7 +14,7 @@
     "graphiql": "2.2.0",
     "graphql": "^16.8.1",
     "lodash": "^4.17.21",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "resolve-url-loader": "^5.0.0",
     "turbolinks": "^5.2.0",
