@@ -228,7 +228,7 @@ GEM
     msgpack (1.7.2)
     net-http-persistent (4.0.2)
       connection_pool (~> 2.2)
-    net-imap (0.4.10)
+    net-imap (0.4.11)
       date
       net-protocol
     net-pop (0.1.2)
