@@ -113,6 +113,12 @@ module Prism
     #
     # @return [Boolean]
     def parse_success?(*_arg0); end
+
+    # Mirror the Prism.profile API by using the serialization API.
+    def profile(*_arg0); end
+
+    # Mirror the Prism.profile_file API by using the serialization API.
+    def profile_file(*_arg0); end
   end
 end
 
@@ -1465,11 +1471,11 @@ class Prism::BeginNode < ::Prism::Node
   sig { override.returns(String) }
   def inspect; end
 
+  def newline!(lines); end
+
   # attr_reader rescue_clause: RescueNode?
   sig { returns(T.nilable(Prism::RescueNode)) }
   def rescue_clause; end
-
-  def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   sig { returns(T.nilable(Prism::StatementsNode)) }
@@ -4699,6 +4705,10 @@ class Prism::Compiler < ::Prism::Visitor
   def visit_interpolated_x_string_node(node); end
 
   # Visit the child nodes of the given node.
+  # Compile a ItLocalVariableReadNode node
+  def visit_it_local_variable_read_node(node); end
+
+  # Visit the child nodes of the given node.
   # Compile a ItParametersNode node
   def visit_it_parameters_node(node); end
 
@@ -6702,6 +6712,9 @@ module Prism::DSL
   # Create a new InterpolatedXStringNode node
   def InterpolatedXStringNode(opening_loc, parts, closing_loc, source = T.unsafe(nil), location = T.unsafe(nil)); end
 
+  # Create a new ItLocalVariableReadNode node
+  def ItLocalVariableReadNode(source = T.unsafe(nil), location = T.unsafe(nil)); end
+
   # Create a new ItParametersNode node
   def ItParametersNode(source = T.unsafe(nil), location = T.unsafe(nil)); end
 
@@ -6808,7 +6821,7 @@ module Prism::DSL
   def RangeNode(flags, left, right, operator_loc, source = T.unsafe(nil), location = T.unsafe(nil)); end
 
   # Create a new RationalNode node
-  def RationalNode(numeric, source = T.unsafe(nil), location = T.unsafe(nil)); end
+  def RationalNode(flags, numerator, denominator, source = T.unsafe(nil), location = T.unsafe(nil)); end
 
   # Create a new RedoNode node
   def RedoNode(source = T.unsafe(nil), location = T.unsafe(nil)); end
@@ -6893,109 +6906,6 @@ module Prism::DSL
 
   # Create a new YieldNode node
   def YieldNode(keyword_loc, lparen_loc, arguments, rparen_loc, source = T.unsafe(nil), location = T.unsafe(nil)); end
-end
-
-# This module is used for testing and debugging and is not meant to be used by
-# consumers of this library.
-module Prism::Debug
-  class << self
-    # :call-seq:
-    #   Debug::cruby_locals(source) -> Array
-    #
-    # For the given source, compiles with CRuby and returns a list of all of the
-    # sets of local variables that were encountered.
-    def cruby_locals(source); end
-
-    def format_errors(_arg0, _arg1); end
-    def inspect_node(_arg0); end
-    def integer_parse(_arg0); end
-    def memsize(_arg0); end
-    def named_captures(_arg0); end
-
-    # :call-seq:
-    #   Debug::newlines(source) -> Array
-    #
-    # For the given source string, return the byte offsets of every newline in
-    # the source.
-    def newlines(source); end
-
-    # :call-seq:
-    #   Debug::prism_locals(source) -> Array
-    #
-    # For the given source, parses with prism and returns a list of all of the
-    # sets of local variables that were encountered.
-    def prism_locals(source); end
-
-    def profile_file(_arg0); end
-    def static_inspect(*_arg0); end
-  end
-end
-
-# Used to hold the place of a local that will be in the local table but
-# cannot be accessed directly from the source code. For example, the
-# iteration variable in a for loop or the positional parameter on a method
-# definition that is destructured.
-Prism::Debug::AnonymousLocal = T.let(T.unsafe(nil), Object)
-
-# A wrapping around prism's internal encoding data structures. This is used
-# for reflection and debugging purposes.
-class Prism::Debug::Encoding
-  # Initialize a new encoding with the given name and whether or not it is
-  # a multibyte encoding.
-  #
-  # @return [Encoding] a new instance of Encoding
-  def initialize(name, multibyte); end
-
-  # Returns true if the first character in the source string is a valid
-  # alphanumeric character for the encoding.
-  #
-  # @return [Boolean]
-  def alnum?(source); end
-
-  # Returns true if the first character in the source string is a valid
-  # alphabetic character for the encoding.
-  #
-  # @return [Boolean]
-  def alpha?(source); end
-
-  # Whether or not the encoding is a multibyte encoding.
-  #
-  # @return [Boolean]
-  def multibyte?; end
-
-  # The name of the encoding, that can be passed to Encoding.find.
-  def name; end
-
-  # Returns true if the first character in the source string is a valid
-  # uppercase character for the encoding.
-  #
-  # @return [Boolean]
-  def upper?(source); end
-
-  # Returns the number of bytes of the first character in the source string,
-  # if it is valid for the encoding. Otherwise, returns 0.
-  def width(source); end
-
-  class << self
-    def _alnum?(_arg0, _arg1); end
-    def _alpha?(_arg0, _arg1); end
-    def _upper?(_arg0, _arg1); end
-    def _width(_arg0, _arg1); end
-    def all; end
-  end
-end
-
-# A wrapper around a RubyVM::InstructionSequence that provides a more
-# convenient interface for accessing parts of the iseq.
-class Prism::Debug::ISeq
-  # @return [ISeq] a new instance of ISeq
-  def initialize(parts); end
-
-  def each_child; end
-  def instructions; end
-  def local_table; end
-  def parts; end
-  def type; end
 end
 
 # Represents a method definition.
@@ -7898,6 +7808,10 @@ class Prism::Dispatcher < ::Prism::Visitor
   # walking the tree.
   def visit_interpolated_x_string_node(node); end
 
+  # Dispatch enter and leave events for ItLocalVariableReadNode nodes and continue
+  # walking the tree.
+  def visit_it_local_variable_read_node(node); end
+
   # Dispatch enter and leave events for ItParametersNode nodes and continue
   # walking the tree.
   def visit_it_parameters_node(node); end
@@ -8419,6 +8333,9 @@ class Prism::Dispatcher::DispatchOnce < ::Prism::Visitor
   # Dispatch enter and leave events for InterpolatedXStringNode nodes.
   def visit_interpolated_x_string_node(node); end
 
+  # Dispatch enter and leave events for ItLocalVariableReadNode nodes.
+  def visit_it_local_variable_read_node(node); end
+
   # Dispatch enter and leave events for ItParametersNode nodes.
   def visit_it_parameters_node(node); end
 
@@ -8883,6 +8800,9 @@ class Prism::DotVisitor < ::Prism::Visitor
 
   # Visit a InterpolatedXStringNode node.
   def visit_interpolated_x_string_node(node); end
+
+  # Visit a ItLocalVariableReadNode node.
+  def visit_it_local_variable_read_node(node); end
 
   # Visit a ItParametersNode node.
   def visit_it_parameters_node(node); end
@@ -10126,7 +10046,10 @@ class Prism::ForNode < ::Prism::Node
   sig { override.returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
-  # attr_reader collection: Prism::node
+  # The collection to iterate over.
+  #
+  #     for i in a end
+  #              ^
   sig { returns(Prism::Node) }
   def collection; end
 
@@ -10166,7 +10089,10 @@ class Prism::ForNode < ::Prism::Node
   sig { returns(T.nilable(String)) }
   def do_keyword; end
 
-  # attr_reader do_keyword_loc: Location?
+  # The location of the `do` keyword, if present.
+  #
+  #     for i in a do end
+  #                ^^
   sig { returns(T.nilable(Prism::Location)) }
   def do_keyword_loc; end
 
@@ -10174,7 +10100,10 @@ class Prism::ForNode < ::Prism::Node
   sig { returns(String) }
   def end_keyword; end
 
-  # attr_reader end_keyword_loc: Location
+  # The location of the `end` keyword.
+  #
+  #     for i in a end
+  #                ^^^
   sig { returns(Prism::Location) }
   def end_keyword_loc; end
 
@@ -10185,7 +10114,10 @@ class Prism::ForNode < ::Prism::Node
   sig { returns(String) }
   def for_keyword; end
 
-  # attr_reader for_keyword_loc: Location
+  # The location of the `for` keyword.
+  #
+  #     for i in a end
+  #     ^^^
   sig { returns(Prism::Location) }
   def for_keyword_loc; end
 
@@ -10193,11 +10125,17 @@ class Prism::ForNode < ::Prism::Node
   sig { returns(String) }
   def in_keyword; end
 
-  # attr_reader in_keyword_loc: Location
+  # The location of the `in` keyword.
+  #
+  #     for i in a end
+  #           ^^
   sig { returns(Prism::Location) }
   def in_keyword_loc; end
 
-  # attr_reader index: Prism::node
+  # The index expression for `for` loops.
+  #
+  #     for i in a end
+  #         ^
   sig { returns(Prism::Node) }
   def index; end
 
@@ -10205,7 +10143,12 @@ class Prism::ForNode < ::Prism::Node
   sig { override.returns(String) }
   def inspect; end
 
-  # attr_reader statements: StatementsNode?
+  # Represents the body of statements to execute for each iteration of the loop.
+  #
+  #     for i in a
+  #       foo(i)
+  #       ^^^^^^
+  #     end
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -11529,6 +11472,8 @@ class Prism::IfNode < ::Prism::Node
   sig { override.returns(String) }
   def inspect; end
 
+  def newline!(lines); end
+
   # The node for the condition the `IfNode` is testing.
   #
   #     if foo
@@ -11543,8 +11488,6 @@ class Prism::IfNode < ::Prism::Node
   #     ^^^
   sig { returns(Prism::Node) }
   def predicate; end
-
-  def set_newline_flag(newline_marked); end
 
   # Represents the body of statements that will be executed when the predicate is evaluated as truthy. Will be `nil` when no body is provided.
   #
@@ -13018,6 +12961,9 @@ class Prism::InspectVisitor < ::Prism::Visitor
   # Inspect a InterpolatedXStringNode node.
   def visit_interpolated_x_string_node(node); end
 
+  # Inspect a ItLocalVariableReadNode node.
+  def visit_it_local_variable_read_node(node); end
+
   # Inspect a ItParametersNode node.
   def visit_it_parameters_node(node); end
 
@@ -14153,6 +14099,8 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   sig { returns(T::Boolean) }
   def multi_line?; end
 
+  def newline!(lines); end
+
   # def once?: () -> bool
   #
   # @return [Boolean]
@@ -14173,8 +14121,6 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   # attr_reader parts: Array[StringNode | EmbeddedStatementsNode | EmbeddedVariableNode]
   sig { returns(T::Array[T.any(Prism::StringNode, Prism::EmbeddedStatementsNode, Prism::EmbeddedVariableNode)]) }
   def parts; end
-
-  def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -14348,6 +14294,8 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   sig { returns(T::Boolean) }
   def multi_line?; end
 
+  def newline!(lines); end
+
   # def once?: () -> bool
   #
   # @return [Boolean]
@@ -14368,8 +14316,6 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   # attr_reader parts: Array[StringNode | EmbeddedStatementsNode | EmbeddedVariableNode]
   sig { returns(T::Array[T.any(Prism::StringNode, Prism::EmbeddedStatementsNode, Prism::EmbeddedVariableNode)]) }
   def parts; end
-
-  def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -14510,6 +14456,8 @@ class Prism::InterpolatedStringNode < ::Prism::Node
   sig { returns(T::Boolean) }
   def mutable?; end
 
+  def newline!(lines); end
+
   # def opening: () -> String?
   sig { returns(T.nilable(String)) }
   def opening; end
@@ -14523,8 +14471,6 @@ class Prism::InterpolatedStringNode < ::Prism::Node
     returns(T::Array[T.any(Prism::StringNode, Prism::EmbeddedStatementsNode, Prism::EmbeddedVariableNode, Prism::InterpolatedStringNode)])
   end
   def parts; end
-
-  def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -14640,6 +14586,8 @@ class Prism::InterpolatedSymbolNode < ::Prism::Node
   sig { override.returns(String) }
   def inspect; end
 
+  def newline!(lines); end
+
   # def opening: () -> String?
   sig { returns(T.nilable(String)) }
   def opening; end
@@ -14651,8 +14599,6 @@ class Prism::InterpolatedSymbolNode < ::Prism::Node
   # attr_reader parts: Array[StringNode | EmbeddedStatementsNode | EmbeddedVariableNode]
   sig { returns(T::Array[T.any(Prism::StringNode, Prism::EmbeddedStatementsNode, Prism::EmbeddedVariableNode)]) }
   def parts; end
-
-  def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -14761,6 +14707,8 @@ class Prism::InterpolatedXStringNode < ::Prism::Node
   sig { override.returns(String) }
   def inspect; end
 
+  def newline!(lines); end
+
   # def opening: () -> String
   sig { returns(String) }
   def opening; end
@@ -14773,7 +14721,84 @@ class Prism::InterpolatedXStringNode < ::Prism::Node
   sig { returns(T::Array[T.any(Prism::StringNode, Prism::EmbeddedStatementsNode, Prism::EmbeddedVariableNode)]) }
   def parts; end
 
-  def set_newline_flag(newline_marked); end
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  sig { override.returns(Symbol) }
+  def type; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    def type; end
+  end
+end
+
+# Represents reading from the implicit `it` local variable.
+#
+#     -> { it }
+#          ^^
+class Prism::ItLocalVariableReadNode < ::Prism::Node
+  # def initialize: (Location location) -> void
+  #
+  # @return [ItLocalVariableReadNode] a new instance of ItLocalVariableReadNode
+  sig { params(source: Prism::Source, location: Prism::Location).void }
+  def initialize(source, location); end
+
+  # Implements case-equality for the node. This is effectively == but without
+  # comparing the value of locations. Locations are checked only for presence.
+  def ===(other); end
+
+  # def accept: (Visitor visitor) -> void
+  sig { override.params(visitor: Prism::Visitor).returns(T.untyped) }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  sig { override.returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  sig { override.returns(T::Array[T.any(Prism::Node, Prism::Location)]) }
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  sig { override.returns(T::Array[Prism::Node]) }
+  def compact_child_nodes; end
+
+  # def copy: (?location: Location) -> ItLocalVariableReadNode
+  sig { params(location: Prism::Location).returns(Prism::ItLocalVariableReadNode) }
+  def copy(location: T.unsafe(nil)); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  sig { override.returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (Array[Symbol] keys) -> { location: Location }
+  sig { params(keys: T.nilable(T::Array[Symbol])).returns(T::Hash[Symbol, T.untyped]) }
+  def deconstruct_keys(keys); end
+
+  sig { override.returns(T::Array[Prism::Reflection::Field]) }
+  def fields; end
+
+  # def inspect -> String
+  sig { override.returns(String) }
+  def inspect; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -15915,10 +15940,6 @@ class Prism::LocalVariableReadNode < ::Prism::Node
   # Note that this can also be an underscore followed by a number for the default block parameters.
   #
   #     _1     # name `:_1`
-  #
-  # Finally, for the default `it` block parameter, the name is `0it`. This is to distinguish it from an `it` local variable that is explicitly declared.
-  #
-  #     it     # name `:0it`
   sig { returns(Symbol) }
   def name; end
 
@@ -17658,6 +17679,9 @@ class Prism::MutationCompiler < ::Prism::Compiler
   # Copy a InterpolatedXStringNode node
   def visit_interpolated_x_string_node(node); end
 
+  # Copy a ItLocalVariableReadNode node
+  def visit_it_local_variable_read_node(node); end
+
   # Copy a ItParametersNode node
   def visit_it_parameters_node(node); end
 
@@ -18200,6 +18224,8 @@ class Prism::Node
   sig { returns(Prism::Location) }
   def location; end
 
+  def newline!(lines); end
+
   # @return [Boolean]
   def newline?; end
 
@@ -18213,8 +18239,6 @@ class Prism::Node
   # RubyVM::AbstractSyntaxTree to make it easier to migrate.
   sig { returns(T::Array[String]) }
   def script_lines; end
-
-  def set_newline_flag(newline_marked); end
 
   # Slice the location of the node from the source.
   sig { returns(String) }
@@ -19165,6 +19189,8 @@ class Prism::ParenthesesNode < ::Prism::Node
   sig { override.returns(String) }
   def inspect; end
 
+  def newline!(lines); end
+
   # def opening: () -> String
   sig { returns(String) }
   def opening; end
@@ -19172,8 +19198,6 @@ class Prism::ParenthesesNode < ::Prism::Node
   # attr_reader opening_loc: Location
   sig { returns(Prism::Location) }
   def opening_loc; end
-
-  def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -19290,7 +19314,8 @@ class Prism::ParseResult < ::Prism::Result
   sig { params(keys: T.nilable(T::Array[Symbol])).returns(T::Hash[Symbol, T.untyped]) }
   def deconstruct_keys(keys); end
 
-  # Walk the tree and mark nodes that are on a new line.
+  # Walk the tree and mark nodes that are on a new line, loosely emulating
+  # the behavior of CRuby's `:line` tracepoint event.
   def mark_newlines!; end
 
   # The syntax tree that was parsed from the source code.
@@ -19380,11 +19405,16 @@ end
 # Note that the logic in this file should be kept in sync with the Java
 # MarkNewlinesVisitor, since that visitor is responsible for marking the
 # newlines for JRuby/TruffleRuby.
+#
+# This file is autoloaded only when `mark_newlines!` is called, so the
+# re-opening of the various nodes in this file will only be performed in
+# that case. We do that to avoid storing the extra `@newline` instance
+# variable on every node if we don't need it.
 class Prism::ParseResult::Newlines < ::Prism::Visitor
   # Create a new Newlines visitor with the given newline offsets.
   #
   # @return [Newlines] a new instance of Newlines
-  def initialize(newline_marked); end
+  def initialize(lines); end
 
   # Permit block/lambda nodes to mark newlines within themselves.
   def visit_block_node(node); end
@@ -20279,11 +20309,19 @@ end
 #     1.0r
 #     ^^^^
 class Prism::RationalNode < ::Prism::Node
-  # def initialize: (Prism::node numeric, Location location) -> void
+  # def initialize: (Integer flags, Integer numerator, Integer denominator, Location location) -> void
   #
   # @return [RationalNode] a new instance of RationalNode
-  sig { params(source: Prism::Source, numeric: Prism::Node, location: Prism::Location).void }
-  def initialize(source, numeric, location); end
+  sig do
+    params(
+      source: Prism::Source,
+      flags: Integer,
+      numerator: Integer,
+      denominator: Integer,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(source, flags, numerator, denominator, location); end
 
   # Implements case-equality for the node. This is effectively == but without
   # comparing the value of locations. Locations are checked only for presence.
@@ -20292,6 +20330,12 @@ class Prism::RationalNode < ::Prism::Node
   # def accept: (Visitor visitor) -> void
   sig { override.params(visitor: Prism::Visitor).returns(T.untyped) }
   def accept(visitor); end
+
+  # def binary?: () -> bool
+  #
+  # @return [Boolean]
+  sig { returns(T::Boolean) }
+  def binary?; end
 
   # def child_nodes: () -> Array[nil | Node]
   sig { override.returns(T::Array[T.nilable(Prism::Node)]) }
@@ -20305,29 +20349,66 @@ class Prism::RationalNode < ::Prism::Node
   sig { override.returns(T::Array[Prism::Node]) }
   def compact_child_nodes; end
 
-  # def copy: (?numeric: Prism::node, ?location: Location) -> RationalNode
-  sig { params(numeric: Prism::Node, location: Prism::Location).returns(Prism::RationalNode) }
-  def copy(numeric: T.unsafe(nil), location: T.unsafe(nil)); end
+  # def copy: (?flags: Integer, ?numerator: Integer, ?denominator: Integer, ?location: Location) -> RationalNode
+  sig do
+    params(
+      flags: Integer,
+      numerator: Integer,
+      denominator: Integer,
+      location: Prism::Location
+    ).returns(Prism::RationalNode)
+  end
+  def copy(flags: T.unsafe(nil), numerator: T.unsafe(nil), denominator: T.unsafe(nil), location: T.unsafe(nil)); end
+
+  # def decimal?: () -> bool
+  #
+  # @return [Boolean]
+  sig { returns(T::Boolean) }
+  def decimal?; end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   sig { override.returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
-  # def deconstruct_keys: (Array[Symbol] keys) -> { numeric: Prism::node, location: Location }
+  # def deconstruct_keys: (Array[Symbol] keys) -> { flags: Integer, numerator: Integer, denominator: Integer, location: Location }
   sig { params(keys: T.nilable(T::Array[Symbol])).returns(T::Hash[Symbol, T.untyped]) }
   def deconstruct_keys(keys); end
 
+  # The denominator of the rational number.
+  #
+  #     1.5r # denominator 2
+  sig { returns(Integer) }
+  def denominator; end
+
   sig { override.returns(T::Array[Prism::Reflection::Field]) }
   def fields; end
+
+  # def hexadecimal?: () -> bool
+  #
+  # @return [Boolean]
+  sig { returns(T::Boolean) }
+  def hexadecimal?; end
 
   # def inspect -> String
   sig { override.returns(String) }
   def inspect; end
 
-  # attr_reader numeric: Prism::node
-  sig { returns(Prism::Node) }
+  # The numerator of the rational number.
+  #
+  #     1.5r # numerator 3
+  sig { returns(Integer) }
+  def numerator; end
+
+  # Returns the value of the node as an IntegerNode or a FloatNode. This
+  # method is deprecated in favor of #value or #numerator/#denominator.
   def numeric; end
+
+  # def octal?: () -> bool
+  #
+  # @return [Boolean]
+  sig { returns(T::Boolean) }
+  def octal?; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -20349,6 +20430,12 @@ class Prism::RationalNode < ::Prism::Node
   # Returns the value of the node as a Ruby Rational.
   sig { returns(Rational) }
   def value; end
+
+  protected
+
+  # protected attr_reader flags: Integer
+  sig { returns(Integer) }
+  def flags; end
 
   class << self
     # Similar to #type, this method returns a symbol that you can use for
@@ -21066,11 +21153,11 @@ class Prism::RescueModifierNode < ::Prism::Node
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
+  def newline!(lines); end
+
   # attr_reader rescue_expression: Prism::node
   sig { returns(Prism::Node) }
   def rescue_expression; end
-
-  def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -23661,6 +23748,10 @@ class Prism::Translation::Parser::Compiler < ::Prism::Compiler
   def visit_interpolated_x_string_node(node); end
 
   # -> { it }
+  #      ^^
+  def visit_it_local_variable_read_node(node); end
+
+  # -> { it }
   # ^^^^^^^^^
   def visit_it_parameters_node(node); end
 
@@ -23947,6 +24038,10 @@ class Prism::Translation::Parser::Compiler < ::Prism::Compiler
 
   private
 
+  # The parser gem automatically converts \r\n to \n, meaning our offsets
+  # need to be adjusted to always subtract 1 from the length.
+  def chomped_bytesize(line); end
+
   # Initialize a new compiler with the given option overrides, used to
   # visit a subtree with the given options.
   def copy_compiler(forwarding: T.unsafe(nil), in_destructure: T.unsafe(nil), in_pattern: T.unsafe(nil)); end
@@ -23956,9 +24051,8 @@ class Prism::Translation::Parser::Compiler < ::Prism::Compiler
   # we build this lookup table.
   def find_forwarding(node); end
 
-  # Because we have mutated the AST to allow for newlines in the middle of
-  # a rational, we need to manually handle the value here.
-  def imaginary_value(node); end
+  # Returns the set of targets for a MultiTargetNode or a MultiWriteNode.
+  def multi_target_elements(node); end
 
   # Negate the value of a numeric node. This is a special case where you
   # have a negative sign on one line and then a number on the next line.
@@ -23973,10 +24067,6 @@ class Prism::Translation::Parser::Compiler < ::Prism::Compiler
   #
   # @return [Boolean]
   def procarg0?(parameters); end
-
-  # Because we have mutated the AST to allow for newlines in the middle of
-  # a rational, we need to manually handle the value here.
-  def rational_value(node); end
 
   # Constructs a new source range from the given start and end offsets.
   def srange(location); end
@@ -24526,6 +24616,10 @@ class Prism::Translation::Ripper < ::Prism::Compiler
   # `foo #{bar}`
   # ^^^^^^^^^^^^
   def visit_interpolated_x_string_node(node); end
+
+  # -> { it }
+  #      ^^
+  def visit_it_local_variable_read_node(node); end
 
   # -> { it }
   # ^^^^^^^^^
@@ -25461,6 +25555,766 @@ class Prism::Translation::Ripper::SexpBuilderPP < ::Prism::Translation::Ripper::
   def on_xstring_new; end
 end
 
+# This module is the entry-point for converting a prism syntax tree into the
+# seattlerb/ruby_parser gem's syntax tree.
+class Prism::Translation::RubyParser
+  # Parse the given source and translate it into the seattlerb/ruby_parser
+  # gem's Sexp format.
+  def parse(source, filepath = T.unsafe(nil)); end
+
+  # Parse the given file and translate it into the seattlerb/ruby_parser
+  # gem's Sexp format.
+  def parse_file(filepath); end
+
+  private
+
+  # Translate the given parse result and filepath into the
+  # seattlerb/ruby_parser gem's Sexp format.
+  def translate(result, filepath); end
+
+  class << self
+    # Parse the given source and translate it into the seattlerb/ruby_parser
+    # gem's Sexp format.
+    def parse(source, filepath = T.unsafe(nil)); end
+
+    # Parse the given file and translate it into the seattlerb/ruby_parser
+    # gem's Sexp format.
+    def parse_file(filepath); end
+  end
+end
+
+# A prism visitor that builds Sexp objects.
+class Prism::Translation::RubyParser::Compiler < ::Prism::Compiler
+  # Initialize a new compiler with the given file name.
+  #
+  # @return [Compiler] a new instance of Compiler
+  def initialize(file, in_def: T.unsafe(nil), in_pattern: T.unsafe(nil)); end
+
+  # This is the name of the file that we are compiling. We set it on every
+  # Sexp object that is generated, and also use it to compile __FILE__
+  # nodes.
+  def file; end
+
+  # Class variables will change their type based on if they are inside of
+  # a method definition or not, so we need to track that state.
+  def in_def; end
+
+  # Some nodes will change their representation if they are inside of a
+  # pattern, so we need to track that state.
+  def in_pattern; end
+
+  # alias $foo $bar
+  # ^^^^^^^^^^^^^^^
+  def visit_alias_global_variable_node(node); end
+
+  # alias foo bar
+  # ^^^^^^^^^^^^^
+  def visit_alias_method_node(node); end
+
+  # foo => bar | baz
+  #        ^^^^^^^^^
+  def visit_alternation_pattern_node(node); end
+
+  # a and b
+  # ^^^^^^^
+  def visit_and_node(node); end
+
+  # foo(bar)
+  #     ^^^
+  def visit_arguments_node(node); end
+
+  # []
+  # ^^
+  def visit_array_node(node); end
+
+  # foo => [bar]
+  #        ^^^^^
+  def visit_array_pattern_node(node); end
+
+  # { a: 1 }
+  #   ^^^^
+  def visit_assoc_node(node); end
+
+  # def foo(**); bar(**); end
+  #                  ^^
+  #
+  # { **foo }
+  #   ^^^^^
+  def visit_assoc_splat_node(node); end
+
+  # $+
+  # ^^
+  def visit_back_reference_read_node(node); end
+
+  # begin end
+  # ^^^^^^^^^
+  def visit_begin_node(node); end
+
+  # foo(&bar)
+  #     ^^^^
+  def visit_block_argument_node(node); end
+
+  # foo { |; bar| }
+  #          ^^^
+  def visit_block_local_variable_node(node); end
+
+  # A block on a keyword or method call.
+  def visit_block_node(node); end
+
+  # def foo(&bar); end
+  #         ^^^^
+  def visit_block_parameter_node(node); end
+
+  # A block's parameters.
+  def visit_block_parameters_node(node); end
+
+  # break
+  # ^^^^^
+  #
+  # break foo
+  # ^^^^^^^^^
+  def visit_break_node(node); end
+
+  # foo.bar &&= baz
+  # ^^^^^^^^^^^^^^^
+  def visit_call_and_write_node(node); end
+
+  # foo
+  # ^^^
+  #
+  # foo.bar
+  # ^^^^^^^
+  #
+  # foo.bar() {}
+  # ^^^^^^^^^^^^
+  def visit_call_node(node); end
+
+  # foo.bar += baz
+  # ^^^^^^^^^^^^^^^
+  def visit_call_operator_write_node(node); end
+
+  # foo.bar ||= baz
+  # ^^^^^^^^^^^^^^^
+  def visit_call_or_write_node(node); end
+
+  # foo.bar, = 1
+  # ^^^^^^^
+  def visit_call_target_node(node); end
+
+  # foo => bar => baz
+  #        ^^^^^^^^^^
+  def visit_capture_pattern_node(node); end
+
+  # case foo; in bar; end
+  # ^^^^^^^^^^^^^^^^^^^^^
+  def visit_case_match_node(node); end
+
+  # case foo; when bar; end
+  # ^^^^^^^^^^^^^^^^^^^^^^^
+  def visit_case_node(node); end
+
+  # class Foo; end
+  # ^^^^^^^^^^^^^^
+  def visit_class_node(node); end
+
+  # @@foo &&= bar
+  # ^^^^^^^^^^^^^
+  def visit_class_variable_and_write_node(node); end
+
+  # @@foo += bar
+  # ^^^^^^^^^^^^
+  def visit_class_variable_operator_write_node(node); end
+
+  # @@foo ||= bar
+  # ^^^^^^^^^^^^^
+  def visit_class_variable_or_write_node(node); end
+
+  # @@foo
+  # ^^^^^
+  def visit_class_variable_read_node(node); end
+
+  # @@foo, = bar
+  # ^^^^^
+  def visit_class_variable_target_node(node); end
+
+  # @@foo = 1
+  # ^^^^^^^^^
+  #
+  # @@foo, @@bar = 1
+  # ^^^^^  ^^^^^
+  def visit_class_variable_write_node(node); end
+
+  # Foo &&= bar
+  # ^^^^^^^^^^^^
+  def visit_constant_and_write_node(node); end
+
+  # Foo += bar
+  # ^^^^^^^^^^^
+  def visit_constant_operator_write_node(node); end
+
+  # Foo ||= bar
+  # ^^^^^^^^^^^^
+  def visit_constant_or_write_node(node); end
+
+  # Foo::Bar &&= baz
+  # ^^^^^^^^^^^^^^^^
+  def visit_constant_path_and_write_node(node); end
+
+  # Foo::Bar
+  # ^^^^^^^^
+  def visit_constant_path_node(node); end
+
+  # Foo::Bar += baz
+  # ^^^^^^^^^^^^^^^
+  def visit_constant_path_operator_write_node(node); end
+
+  # Foo::Bar ||= baz
+  # ^^^^^^^^^^^^^^^^
+  def visit_constant_path_or_write_node(node); end
+
+  # Foo::Bar, = baz
+  # ^^^^^^^^
+  def visit_constant_path_target_node(node); end
+
+  # Foo::Bar = 1
+  # ^^^^^^^^^^^^
+  #
+  # Foo::Foo, Bar::Bar = 1
+  # ^^^^^^^^  ^^^^^^^^
+  def visit_constant_path_write_node(node); end
+
+  # Foo
+  # ^^^
+  def visit_constant_read_node(node); end
+
+  # Foo, = bar
+  # ^^^
+  def visit_constant_target_node(node); end
+
+  # Foo = 1
+  # ^^^^^^^
+  #
+  # Foo, Bar = 1
+  # ^^^  ^^^
+  def visit_constant_write_node(node); end
+
+  # def foo; end
+  # ^^^^^^^^^^^^
+  #
+  # def self.foo; end
+  # ^^^^^^^^^^^^^^^^^
+  def visit_def_node(node); end
+
+  # defined? a
+  # ^^^^^^^^^^
+  #
+  # defined?(a)
+  # ^^^^^^^^^^^
+  def visit_defined_node(node); end
+
+  # if foo then bar else baz end
+  #                 ^^^^^^^^^^^^
+  def visit_else_node(node); end
+
+  # "foo #{bar}"
+  #      ^^^^^^
+  def visit_embedded_statements_node(node); end
+
+  # "foo #@bar"
+  #      ^^^^^
+  def visit_embedded_variable_node(node); end
+
+  # begin; foo; ensure; bar; end
+  #             ^^^^^^^^^^^^
+  def visit_ensure_node(node); end
+
+  # false
+  # ^^^^^
+  def visit_false_node(node); end
+
+  # foo => [*, bar, *]
+  #        ^^^^^^^^^^^
+  def visit_find_pattern_node(node); end
+
+  # if foo .. bar; end
+  #    ^^^^^^^^^^
+  def visit_flip_flop_node(node); end
+
+  # 1.0
+  # ^^^
+  def visit_float_node(node); end
+
+  # for foo in bar do end
+  # ^^^^^^^^^^^^^^^^^^^^^
+  def visit_for_node(node); end
+
+  # def foo(...); bar(...); end
+  #                   ^^^
+  def visit_forwarding_arguments_node(node); end
+
+  # def foo(...); end
+  #         ^^^
+  def visit_forwarding_parameter_node(node); end
+
+  # super
+  # ^^^^^
+  #
+  # super {}
+  # ^^^^^^^^
+  def visit_forwarding_super_node(node); end
+
+  # $foo &&= bar
+  # ^^^^^^^^^^^^
+  def visit_global_variable_and_write_node(node); end
+
+  # $foo += bar
+  # ^^^^^^^^^^^
+  def visit_global_variable_operator_write_node(node); end
+
+  # $foo ||= bar
+  # ^^^^^^^^^^^^
+  def visit_global_variable_or_write_node(node); end
+
+  # $foo
+  # ^^^^
+  def visit_global_variable_read_node(node); end
+
+  # $foo, = bar
+  # ^^^^
+  def visit_global_variable_target_node(node); end
+
+  # $foo = 1
+  # ^^^^^^^^
+  #
+  # $foo, $bar = 1
+  # ^^^^  ^^^^
+  def visit_global_variable_write_node(node); end
+
+  # {}
+  # ^^
+  def visit_hash_node(node); end
+
+  # foo => {}
+  #        ^^
+  def visit_hash_pattern_node(node); end
+
+  # if foo then bar end
+  # ^^^^^^^^^^^^^^^^^^^
+  #
+  # bar if foo
+  # ^^^^^^^^^^
+  #
+  # foo ? bar : baz
+  # ^^^^^^^^^^^^^^^
+  def visit_if_node(node); end
+
+  # 1i
+  def visit_imaginary_node(node); end
+
+  # { foo: }
+  #   ^^^^
+  def visit_implicit_node(node); end
+
+  # foo { |bar,| }
+  #           ^
+  def visit_implicit_rest_node(node); end
+
+  # case foo; in bar; end
+  # ^^^^^^^^^^^^^^^^^^^^^
+  def visit_in_node(node); end
+
+  # foo[bar] &&= baz
+  # ^^^^^^^^^^^^^^^^
+  def visit_index_and_write_node(node); end
+
+  # foo[bar] += baz
+  # ^^^^^^^^^^^^^^^
+  def visit_index_operator_write_node(node); end
+
+  # foo[bar] ||= baz
+  # ^^^^^^^^^^^^^^^^
+  def visit_index_or_write_node(node); end
+
+  # foo[bar], = 1
+  # ^^^^^^^^
+  def visit_index_target_node(node); end
+
+  # ^^^^^^^^^^^^
+  def visit_instance_variable_and_write_node(node); end
+
+  # ^^^^^^^^^^^
+  def visit_instance_variable_operator_write_node(node); end
+
+  # ^^^^^^^^^^^^
+  def visit_instance_variable_or_write_node(node); end
+
+  # ^^^^
+  def visit_instance_variable_read_node(node); end
+
+  # @foo, = bar
+  # ^^^^
+  def visit_instance_variable_target_node(node); end
+
+  # ^^^^^^^^
+  #
+  # @foo, @bar = 1
+  # ^^^^  ^^^^
+  def visit_instance_variable_write_node(node); end
+
+  # 1
+  # ^
+  def visit_integer_node(node); end
+
+  # if /foo #{bar}/ then end
+  #    ^^^^^^^^^^^^
+  def visit_interpolated_match_last_line_node(node); end
+
+  # /foo #{bar}/
+  # ^^^^^^^^^^^^
+  def visit_interpolated_regular_expression_node(node); end
+
+  # "foo #{bar}"
+  # ^^^^^^^^^^^^
+  def visit_interpolated_string_node(node); end
+
+  # :"foo #{bar}"
+  # ^^^^^^^^^^^^^
+  def visit_interpolated_symbol_node(node); end
+
+  # `foo #{bar}`
+  # ^^^^^^^^^^^^
+  def visit_interpolated_x_string_node(node); end
+
+  # -> { it }
+  #      ^^
+  def visit_it_local_variable_read_node(node); end
+
+  # foo(bar: baz)
+  #     ^^^^^^^^
+  def visit_keyword_hash_node(node); end
+
+  # def foo(**bar); end
+  #         ^^^^^
+  #
+  # def foo(**); end
+  #         ^^
+  def visit_keyword_rest_parameter_node(node); end
+
+  # -> {}
+  def visit_lambda_node(node); end
+
+  # foo &&= bar
+  # ^^^^^^^^^^^
+  def visit_local_variable_and_write_node(node); end
+
+  # foo += bar
+  # ^^^^^^^^^^
+  def visit_local_variable_operator_write_node(node); end
+
+  # foo ||= bar
+  # ^^^^^^^^^^^
+  def visit_local_variable_or_write_node(node); end
+
+  # foo
+  # ^^^
+  def visit_local_variable_read_node(node); end
+
+  # foo, = bar
+  # ^^^
+  def visit_local_variable_target_node(node); end
+
+  # foo = 1
+  # ^^^^^^^
+  #
+  # foo, bar = 1
+  # ^^^  ^^^
+  def visit_local_variable_write_node(node); end
+
+  # if /foo/ then end
+  #    ^^^^^
+  def visit_match_last_line_node(node); end
+
+  # foo in bar
+  # ^^^^^^^^^^
+  def visit_match_predicate_node(node); end
+
+  # foo => bar
+  # ^^^^^^^^^^
+  def visit_match_required_node(node); end
+
+  # /(?<foo>foo)/ =~ bar
+  # ^^^^^^^^^^^^^^^^^^^^
+  def visit_match_write_node(node); end
+
+  # A node that is missing from the syntax tree. This is only used in the
+  # case of a syntax error. The parser gem doesn't have such a concept, so
+  # we invent our own here.
+  def visit_missing_node(node); end
+
+  # module Foo; end
+  # ^^^^^^^^^^^^^^^
+  def visit_module_node(node); end
+
+  # foo, bar = baz
+  # ^^^^^^^^
+  def visit_multi_target_node(node); end
+
+  # foo, bar = baz
+  # ^^^^^^^^^^^^^^
+  def visit_multi_write_node(node); end
+
+  # next
+  # ^^^^
+  #
+  # next foo
+  # ^^^^^^^^
+  def visit_next_node(node); end
+
+  # nil
+  # ^^^
+  def visit_nil_node(node); end
+
+  # def foo(**nil); end
+  #         ^^^^^
+  def visit_no_keywords_parameter_node(node); end
+
+  # -> { _1 + _2 }
+  # ^^^^^^^^^^^^^^
+  def visit_numbered_parameters_node(node); end
+
+  # $1
+  # ^^
+  def visit_numbered_reference_read_node(node); end
+
+  # def foo(bar: baz); end
+  #         ^^^^^^^^
+  def visit_optional_keyword_parameter_node(node); end
+
+  # def foo(bar = 1); end
+  #         ^^^^^^^
+  def visit_optional_parameter_node(node); end
+
+  # a or b
+  # ^^^^^^
+  def visit_or_node(node); end
+
+  # def foo(bar, *baz); end
+  #         ^^^^^^^^^
+  def visit_parameters_node(node); end
+
+  # ()
+  # ^^
+  #
+  # (1)
+  # ^^^
+  def visit_parentheses_node(node); end
+
+  # foo => ^(bar)
+  #        ^^^^^^
+  def visit_pinned_expression_node(node); end
+
+  # foo = 1 and bar => ^foo
+  #                    ^^^^
+  def visit_pinned_variable_node(node); end
+
+  # END {}
+  def visit_post_execution_node(node); end
+
+  # BEGIN {}
+  def visit_pre_execution_node(node); end
+
+  # The top-level program node.
+  def visit_program_node(node); end
+
+  # 0..5
+  # ^^^^
+  def visit_range_node(node); end
+
+  # 1r
+  # ^^
+  def visit_rational_node(node); end
+
+  # redo
+  # ^^^^
+  def visit_redo_node(node); end
+
+  # /foo/
+  # ^^^^^
+  def visit_regular_expression_node(node); end
+
+  # def foo(bar:); end
+  #         ^^^^
+  def visit_required_keyword_parameter_node(node); end
+
+  # def foo(bar); end
+  #         ^^^
+  def visit_required_parameter_node(node); end
+
+  # foo rescue bar
+  # ^^^^^^^^^^^^^^
+  def visit_rescue_modifier_node(node); end
+
+  # begin; rescue; end
+  #        ^^^^^^^
+  def visit_rescue_node(node); end
+
+  # def foo(*bar); end
+  #         ^^^^
+  #
+  # def foo(*); end
+  #         ^
+  def visit_rest_parameter_node(node); end
+
+  # retry
+  # ^^^^^
+  def visit_retry_node(node); end
+
+  # return
+  # ^^^^^^
+  #
+  # return 1
+  # ^^^^^^^^
+  def visit_return_node(node); end
+
+  # self
+  # ^^^^
+  def visit_self_node(node); end
+
+  # A shareable constant.
+  def visit_shareable_constant_node(node); end
+
+  # class << self; end
+  # ^^^^^^^^^^^^^^^^^^
+  def visit_singleton_class_node(node); end
+
+  # __ENCODING__
+  # ^^^^^^^^^^^^
+  def visit_source_encoding_node(node); end
+
+  # __FILE__
+  # ^^^^^^^^
+  def visit_source_file_node(node); end
+
+  # __LINE__
+  # ^^^^^^^^
+  def visit_source_line_node(node); end
+
+  # foo(*bar)
+  #     ^^^^
+  #
+  # def foo((bar, *baz)); end
+  #               ^^^^
+  #
+  # def foo(*); bar(*); end
+  #                 ^
+  def visit_splat_node(node); end
+
+  # A list of statements.
+  def visit_statements_node(node); end
+
+  # "foo"
+  # ^^^^^
+  def visit_string_node(node); end
+
+  # super(foo)
+  # ^^^^^^^^^^
+  def visit_super_node(node); end
+
+  # :foo
+  # ^^^^
+  def visit_symbol_node(node); end
+
+  # true
+  # ^^^^
+  def visit_true_node(node); end
+
+  # undef foo
+  # ^^^^^^^^^
+  def visit_undef_node(node); end
+
+  # unless foo; bar end
+  # ^^^^^^^^^^^^^^^^^^^
+  #
+  # bar unless foo
+  # ^^^^^^^^^^^^^^
+  def visit_unless_node(node); end
+
+  # until foo; bar end
+  # ^^^^^^^^^^^^^^^^^
+  #
+  # bar until foo
+  # ^^^^^^^^^^^^^
+  def visit_until_node(node); end
+
+  # case foo; when bar; end
+  #           ^^^^^^^^^^^^^
+  def visit_when_node(node); end
+
+  # while foo; bar end
+  # ^^^^^^^^^^^^^^^^^^
+  #
+  # bar while foo
+  # ^^^^^^^^^^^^^
+  def visit_while_node(node); end
+
+  # `foo`
+  # ^^^^^
+  def visit_x_string_node(node); end
+
+  # yield
+  # ^^^^^
+  #
+  # yield 1
+  # ^^^^^^^
+  def visit_yield_node(node); end
+
+  private
+
+  # If a class variable is written within a method definition, it has a
+  # different type than everywhere else.
+  def class_variable_write_type; end
+
+  # Create a new compiler with the given options.
+  def copy_compiler(in_def: T.unsafe(nil), in_pattern: T.unsafe(nil)); end
+
+  # Call nodes with operators following them will either be op_asgn or
+  # op_asgn2 nodes. That is determined by their call operator and their
+  # right-hand side.
+  #
+  # @return [Boolean]
+  def op_asgn?(node); end
+
+  # Call nodes with operators following them can use &. as an operator,
+  # which changes their type by prefixing "safe_".
+  def op_asgn_type(node, type); end
+
+  # Create a new Sexp object from the given prism node and arguments.
+  def s(node, *arguments); end
+
+  # Visit a block node, which will modify the AST by wrapping the given
+  # visited node in an iter node.
+  def visit_block(node, sexp, block); end
+
+  # def foo((bar, baz)); end
+  #         ^^^^^^^^^^
+  def visit_destructured_parameter(node); end
+
+  # Visit the interpolated content of the string-like node.
+  def visit_interpolated_parts(parts); end
+
+  # Pattern constants get wrapped in another layer of :const.
+  def visit_pattern_constant(node); end
+
+  # If the bounds of a range node are empty parentheses, then they do not
+  # get replaced by their usual s(:nil), but instead are s(:begin).
+  def visit_range_bounds_node(node); end
+
+  # Visit the value of a write, which will be on the right-hand side of
+  # a write operator. Because implicit arrays can have splats, those could
+  # potentially be wrapped in an svalue node.
+  def visit_write_value(node); end
+end
+
 # Represents the use of the literal `true` keyword.
 #
 #     true
@@ -25751,6 +26605,8 @@ class Prism::UnlessNode < ::Prism::Node
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
+  def newline!(lines); end
+
   # The condition to be evaluated for the unless expression. It can be any [non-void expression](https://github.com/ruby/prism/blob/main/docs/parsing_rules.md#non-void-expression).
   #
   #     unless cond then bar end
@@ -25760,8 +26616,6 @@ class Prism::UnlessNode < ::Prism::Node
   #                ^^^^
   sig { returns(Prism::Node) }
   def predicate; end
-
-  def set_newline_flag(newline_marked); end
 
   # The body of statements that will executed if the unless condition is
   # falsey. Will be `nil` if no body is provided.
@@ -25776,7 +26630,9 @@ class Prism::UnlessNode < ::Prism::Node
   def then_keyword; end
 
   # The location of the `then` keyword, if present.
-  # unless cond then bar end ^^^^
+  #
+  #     unless cond then bar end
+  #                 ^^^^
   sig { returns(T.nilable(Prism::Location)) }
   def then_keyword_loc; end
 
@@ -25903,11 +26759,11 @@ class Prism::UntilNode < ::Prism::Node
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
+  def newline!(lines); end
+
   # attr_reader predicate: Prism::node
   sig { returns(Prism::Node) }
   def predicate; end
-
-  def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   sig { returns(T.nilable(Prism::StatementsNode)) }
@@ -26316,6 +27172,10 @@ class Prism::Visitor < ::Prism::BasicVisitor
   # Visit a InterpolatedXStringNode node
   sig { params(node: Prism::InterpolatedXStringNode).void }
   def visit_interpolated_x_string_node(node); end
+
+  # Visit a ItLocalVariableReadNode node
+  sig { params(node: Prism::ItLocalVariableReadNode).void }
+  def visit_it_local_variable_read_node(node); end
 
   # Visit a ItParametersNode node
   sig { params(node: Prism::ItParametersNode).void }
@@ -26787,11 +27647,11 @@ class Prism::WhileNode < ::Prism::Node
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
+  def newline!(lines); end
+
   # attr_reader predicate: Prism::node
   sig { returns(Prism::Node) }
   def predicate; end
-
-  def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   sig { returns(T.nilable(Prism::StatementsNode)) }
