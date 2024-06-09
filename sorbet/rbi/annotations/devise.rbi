@@ -143,3 +143,26 @@ class Devise::UnlocksController < DeviseController
   sig { params(resource: T.untyped).returns(String) }
   def after_unlock_path_for(resource); end
 end
+
+# @shim: Devise controllers are loaded by rails
+class Devise::OmniauthCallbacksController < DeviseController
+  # GET|POST /resource/auth/provider
+  sig { returns(T.untyped) }
+  def passthru; end
+
+  # GET|POST /resource/auth/provider/callback
+  sig { returns(T.untyped) }
+  def failure; end
+
+  sig { returns(String) }
+  def failed_strategy; end
+
+  sig { returns(String) }
+  def failure_message; end
+
+  sig { params(scope: String).returns(String) }
+  def after_omniauth_failure_path_for(scope); end
+
+  sig { returns(String) }
+  def translation_scope; end
+end

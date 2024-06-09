@@ -6,8 +6,8 @@
 
 module GraphQL
   class << self
-    sig { params(graphql_string: String, trace: T.untyped, filename: T.untyped).returns(GraphQL::Language::Nodes::Document) }
-    def parse(graphql_string, trace: T.unsafe(nil), filename: T.unsafe(nil)); end
+    sig { params(graphql_string: String, trace: T.untyped, filename: T.untyped, max_tokens: T.untyped).returns(GraphQL::Language::Nodes::Document) }
+    def parse(graphql_string, trace: T.unsafe(nil), filename: T.unsafe(nil), max_tokens: T.unsafe(nil)); end
   end
 end
 
