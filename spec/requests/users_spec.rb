@@ -456,7 +456,7 @@ RSpec.describe "Users", type: :request do
         delete reset_game_library_user_path(user_with_game_purchase.id)
       end.to change(GamePurchase, :count).by(-1)
 
-      expect(GamePurchase.find_by(user_id: user_with_game_purchase.id)).to be(nil)
+      expect(GamePurchase.find_by(user_id: user_with_game_purchase.id)).to be_nil
     end
 
     it "removes game purchases from the current user even if they don't have any game purchases" do

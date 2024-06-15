@@ -2,6 +2,7 @@ require:
   - rubocop-rspec
   - rubocop-performance
   - rubocop-rails
+  - rubocop-rspec_rails
 
 AllCops:
   TargetRubyVersion: 3.0
@@ -198,6 +199,18 @@ RSpec/EmptyLineAfterExample:
   Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/BeEq:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/SortMetadata:
+  Enabled: false
+
+RSpec/MetadataStyle:
   Enabled: false
 
 ###################### Extras ##############################
@@ -513,7 +526,7 @@ Style/SwapValues:
 RSpec/IdenticalEqualityAssertion:
   Enabled: true
 
-RSpec/Rails/AvoidSetupHook:
+RSpecRails/AvoidSetupHook:
   Enabled: true
 
 RSpec/NestedGroups:
