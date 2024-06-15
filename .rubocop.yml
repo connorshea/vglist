@@ -7,7 +7,7 @@ require:
   - rubocop-capybara
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.3
   Exclude:
     - "bin/*"
     - "db/schema.rb"
@@ -480,8 +480,9 @@ Lint/UnmodifiedReduceAccumulator:
 Naming/InclusiveLanguage:
   Enabled: true
 
+# I don't like this rule.
 Style/ArgumentsForwarding:
-  Enabled: true
+  Enabled: false
 
 Style/CollectionCompact:
   Enabled: true
@@ -578,3 +579,7 @@ Rails/UnusedIgnoredColumns:
 
 Rails/WhereEquals:
   Enabled: true
+
+# I don't like this rule.
+Style/HashSyntax:
+ Enabled: false

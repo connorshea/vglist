@@ -1,5 +1,4 @@
 # typed: strict
-require 'set'
 require 'net/http'
 
 class SteamImportService
