@@ -26,7 +26,7 @@ class Game < ApplicationRecord
 
   has_many :favorites,
     class_name: 'FavoriteGame',
-    inverse_of: :user,
+    inverse_of: :game,
     dependent: :destroy
 
   has_many :favoriters,
