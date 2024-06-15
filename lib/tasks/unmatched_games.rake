@@ -13,14 +13,14 @@ namespace :vglist do
       UnmatchedGame.where(
         external_service_name: 'Steam',
         external_service_id: SteamBlocklist.pluck(:steam_app_id)
-      ).each(&:destroy!)
+      ).find_each(&:destroy!)
 
       # Destroy all the UnmatchedGame records where the game is already
       # represented by a SteamAppId for a game.
       UnmatchedGame.where(
         external_service_name: 'Steam',
         external_service_id: SteamAppId.pluck(:app_id)
-      ).each(&:destroy!)
+      ).find_each(&:destroy!)
 
       puts "Unmatched Games cleaned. #{before_count - UnmatchedGame.count} records removed. #{UnmatchedGame.count} records remaining."
     end
