@@ -460,7 +460,7 @@ GEM
       prism (>= 0.19.0)
       sorbet-static-and-runtime (>= 0.5.10187)
       thor (>= 0.19.2)
-    stringio (3.1.0)
+    stringio (3.1.1)
     strscan (3.1.0)
     sxp (2.0.0)
       matrix (~> 0.4)
