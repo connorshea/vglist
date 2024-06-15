@@ -42,7 +42,7 @@ RSpec.describe Relationship, type: :model do
 
     it 'Follower should not be deleted when Relationship is deleted' do
       relationship
-      expect { relationship.destroy }.to change(User, :count).by(0)
+      expect { relationship.destroy }.not_to change(User, :count)
     end
 
     it 'Follower should not be deleted when Followed is deleted' do

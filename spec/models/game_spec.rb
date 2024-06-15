@@ -422,7 +422,7 @@ RSpec.describe Game, type: :model do
 
     it 'Series should not be deleted when game is deleted' do
       game_with_series
-      expect { game_with_series.destroy }.to change(Series, :count).by(0)
+      expect { game_with_series.destroy }.not_to change(Series, :count)
     end
   end
 end

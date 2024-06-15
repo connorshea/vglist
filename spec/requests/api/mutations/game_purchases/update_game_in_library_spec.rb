@@ -52,7 +52,7 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
       expect do
         response = api_request(query_string, variables: { id: game_purchase_for_other_user.id }, token: access_token)
         expect(response.to_h['errors'].first['message']).to eq("You aren't allowed to update this game purchase.")
-      end.to change(GamePurchase, :count).by(0)
+      end.not_to change(GamePurchase, :count)
     end
   end
 

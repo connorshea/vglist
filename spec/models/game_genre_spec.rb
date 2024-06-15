@@ -28,12 +28,12 @@ RSpec.describe GameGenre, type: :model do
 
     it 'Game should not be deleted when GameGenre is deleted' do
       game_genre
-      expect { game_genre.destroy }.to change(Game, :count).by(0)
+      expect { game_genre.destroy }.not_to change(Game, :count)
     end
 
     it 'Genre should not be deleted when GameGenre is deleted' do
       game_genre
-      expect { game_genre.destroy }.to change(Genre, :count).by(0)
+      expect { game_genre.destroy }.not_to change(Genre, :count)
     end
   end
 end

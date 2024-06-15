@@ -49,7 +49,7 @@ RSpec.describe Company, type: :model do
 
     it 'Game should not be deleted when developer is deleted' do
       game_with_developer
-      expect { company.destroy }.to change(Game, :count).by(0)
+      expect { company.destroy }.not_to change(Game, :count)
     end
 
     it 'GamePublisher should be deleted when company is deleted' do
@@ -59,7 +59,7 @@ RSpec.describe Company, type: :model do
 
     it 'Game should not be deleted when publisher is deleted' do
       game_with_publisher
-      expect { company.destroy }.to change(Game, :count).by(0)
+      expect { company.destroy }.not_to change(Game, :count)
     end
   end
 end

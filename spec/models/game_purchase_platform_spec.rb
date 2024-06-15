@@ -28,12 +28,12 @@ RSpec.describe GamePurchasePlatform, type: :model do
 
     it 'GamePurchase should not be deleted when game purchase platform is deleted' do
       game_purchase_platform
-      expect { game_purchase_platform.destroy }.to change(GamePurchase, :count).by(0)
+      expect { game_purchase_platform.destroy }.not_to change(GamePurchase, :count)
     end
 
     it 'Platform should not be deleted when game purchase platform is deleted' do
       game_purchase_platform
-      expect { game_purchase_platform.destroy }.to change(Platform, :count).by(0)
+      expect { game_purchase_platform.destroy }.not_to change(Platform, :count)
     end
   end
 end

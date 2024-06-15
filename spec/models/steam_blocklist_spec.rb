@@ -30,7 +30,7 @@ RSpec.describe SteamBlocklist, type: :model do
 
     it 'Blocklist entry shouldn\'t be deleted when user is deleted' do
       steam_blocklist
-      expect { admin.destroy }.to change(SteamBlocklist, :count).by(0)
+      expect { admin.destroy }.not_to change(SteamBlocklist, :count)
     end
   end
 end

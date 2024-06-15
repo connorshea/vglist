@@ -208,7 +208,7 @@ RSpec.describe "Settings", type: :request do
       application
       expect do
         delete oauth_application_path(application)
-      end.to change(Doorkeeper::Application, :count).by(0)
+      end.not_to change(Doorkeeper::Application, :count)
     end
   end
 

@@ -52,7 +52,7 @@ RSpec.describe GameMergeService, type: :service do
     end
 
     it 'does not delete the game when merging into itself' do
-      expect { GameMergeService.new(game_a, game_a).merge! }.to change(Game, :count).by(0)
+      expect { GameMergeService.new(game_a, game_a).merge! }.not_to change(Game, :count)
     end
   end
 end

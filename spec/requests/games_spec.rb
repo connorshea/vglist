@@ -121,7 +121,7 @@ RSpec.describe "Games", type: :request do
       sign_in(user)
       expect do
         delete game_path(id: game.id)
-      end.to change(Game, :count).by(0)
+      end.not_to change(Game, :count)
     end
 
     it "deletes the game" do
@@ -254,7 +254,7 @@ RSpec.describe "Games", type: :request do
       sign_in(user)
       expect do
         post favorite_game_path(game.id, format: :json)
-      end.to change(user.favorite_games, :count).by(0)
+      end.not_to change(user.favorite_games, :count)
     end
   end
 
@@ -275,7 +275,7 @@ RSpec.describe "Games", type: :request do
       sign_in(user)
       expect do
         delete unfavorite_game_path(game.id, format: :json)
-      end.to change(user.favorite_games, :count).by(0)
+      end.not_to change(user.favorite_games, :count)
     end
   end
 
