@@ -8,7 +8,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'rspec/rails'
 require 'capybara/rails'
 require 'selenium/webdriver'
-require 'webdrivers'
 require 'paper_trail/frameworks/rspec'
 # Add additional requires below this line. Rails is not loaded until this point!
 

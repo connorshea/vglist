@@ -41,7 +41,6 @@ require "set"
 require "simplecov"
 require "sparql"
 require "sparql/client"
-require "webdrivers"
 require "webmock/rspec"
 
 # Custom:
