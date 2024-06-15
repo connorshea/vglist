@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2024.06.15
+- Upgrade to Rails 7.1. ([#3697])
+
 ## v2024.04.26
 - Upgrade to Ruby 3.3. ([#3651], [#3652])
 
@@ -954,3 +957,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#3286]: https://github.com/connorshea/vglist/pull/3286
 [#3651]: https://github.com/connorshea/vglist/pull/3651
 [#3652]: https://github.com/connorshea/vglist/pull/3652
+[#3697]: https://github.com/connorshea/vglist/pull/3697
