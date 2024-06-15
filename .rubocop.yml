@@ -2,9 +2,12 @@ require:
   - rubocop-rspec
   - rubocop-performance
   - rubocop-rails
+  - rubocop-rspec_rails
+  - rubocop-factory_bot
+  - rubocop-capybara
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.3
   Exclude:
     - "bin/*"
     - "db/schema.rb"
@@ -198,6 +201,18 @@ RSpec/EmptyLineAfterExample:
   Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/BeEq:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/SortMetadata:
+  Enabled: false
+
+RSpec/MetadataStyle:
   Enabled: false
 
 ###################### Extras ##############################
@@ -465,8 +480,9 @@ Lint/UnmodifiedReduceAccumulator:
 Naming/InclusiveLanguage:
   Enabled: true
 
+# I don't like this rule.
 Style/ArgumentsForwarding:
-  Enabled: true
+  Enabled: false
 
 Style/CollectionCompact:
   Enabled: true
@@ -513,7 +529,7 @@ Style/SwapValues:
 RSpec/IdenticalEqualityAssertion:
   Enabled: true
 
-RSpec/Rails/AvoidSetupHook:
+RSpecRails/AvoidSetupHook:
   Enabled: true
 
 RSpec/NestedGroups:
@@ -563,3 +579,7 @@ Rails/UnusedIgnoredColumns:
 
 Rails/WhereEquals:
   Enabled: true
+
+# I don't like this rule.
+Style/HashSyntax:
+ Enabled: false

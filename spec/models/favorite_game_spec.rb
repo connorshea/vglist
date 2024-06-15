@@ -35,12 +35,12 @@ RSpec.describe FavoriteGame, type: :model do
 
     it 'Game should not be deleted when favorite is deleted' do
       favorite_game
-      expect { favorite_game.destroy }.to change(Game, :count).by(0)
+      expect { favorite_game.destroy }.not_to change(Game, :count)
     end
 
     it 'User should not be deleted when favorite is deleted' do
       favorite_game
-      expect { favorite_game.destroy }.to change(User, :count).by(0)
+      expect { favorite_game.destroy }.not_to change(User, :count)
     end
   end
 

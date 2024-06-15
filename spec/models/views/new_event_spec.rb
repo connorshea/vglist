@@ -1,7 +1,6 @@
 # typed: false
 require 'rails_helper'
 
-# rubocop:disable RSpec/FilePath
 RSpec.describe Views::NewEvent, type: :model do
   subject(:event) { create(:event) }
 
@@ -39,17 +38,17 @@ RSpec.describe Views::NewEvent, type: :model do
 
     it 'GamePurchase should not be deleted when Event is deleted' do
       game_purchase_event
-      expect { game_purchase_event.destroy }.to change(GamePurchase, :count).by(0)
+      expect { game_purchase_event.destroy }.not_to change(GamePurchase, :count)
     end
 
     it 'User should not be deleted when Event is deleted' do
       game_purchase_event
-      expect { game_purchase_event.destroy }.to change(User, :count).by(0)
+      expect { game_purchase_event.destroy }.not_to change(User, :count)
     end
 
     it 'Game should not be deleted when Event is deleted' do
       game_purchase_event
-      expect { game_purchase_event.destroy }.to change(Game, :count).by(0)
+      expect { game_purchase_event.destroy }.not_to change(Game, :count)
     end
 
     it 'Event should be deleted when GamePurchase is deleted' do
@@ -76,17 +75,17 @@ RSpec.describe Views::NewEvent, type: :model do
 
     it 'FavoriteGame should not be deleted when Event is deleted' do
       favorite_game_event
-      expect { favorite_game_event.destroy }.to change(FavoriteGame, :count).by(0)
+      expect { favorite_game_event.destroy }.not_to change(FavoriteGame, :count)
     end
 
     it 'User should not be deleted when Event is deleted' do
       favorite_game_event
-      expect { favorite_game_event.destroy }.to change(User, :count).by(0)
+      expect { favorite_game_event.destroy }.not_to change(User, :count)
     end
 
     it 'Game should not be deleted when Event is deleted' do
       favorite_game_event
-      expect { favorite_game_event.destroy }.to change(Game, :count).by(0)
+      expect { favorite_game_event.destroy }.not_to change(Game, :count)
     end
 
     it 'Event should be deleted when FavoriteGame is deleted' do
@@ -134,4 +133,3 @@ RSpec.describe Views::NewEvent, type: :model do
     end
   end
 end
-# rubocop:enable RSpec/FilePath

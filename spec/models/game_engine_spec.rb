@@ -28,12 +28,12 @@ RSpec.describe GameEngine, type: :model do
 
     it 'Game should not be deleted when GameEngine is deleted' do
       game_engine
-      expect { game_engine.destroy }.to change(Game, :count).by(0)
+      expect { game_engine.destroy }.not_to change(Game, :count)
     end
 
     it 'Engine should not be deleted when GameEngine is deleted' do
       game_engine
-      expect { game_engine.destroy }.to change(Engine, :count).by(0)
+      expect { game_engine.destroy }.not_to change(Engine, :count)
     end
   end
 end

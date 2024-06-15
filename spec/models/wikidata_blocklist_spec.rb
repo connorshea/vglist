@@ -30,7 +30,7 @@ RSpec.describe WikidataBlocklist, type: :model do
 
     it 'Blocklist entry shouldn\'t be deleted when user is deleted' do
       wikidata_blocklist
-      expect { admin.destroy }.to change(WikidataBlocklist, :count).by(0)
+      expect { admin.destroy }.not_to change(WikidataBlocklist, :count)
     end
   end
 end

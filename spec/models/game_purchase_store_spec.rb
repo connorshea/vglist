@@ -28,12 +28,12 @@ RSpec.describe GamePurchaseStore, type: :model do
 
     it 'GamePurchase should not be deleted when game purchase store is deleted' do
       game_purchase_store
-      expect { game_purchase_store.destroy }.to change(GamePurchase, :count).by(0)
+      expect { game_purchase_store.destroy }.not_to change(GamePurchase, :count)
     end
 
     it 'Store should not be deleted when game purchase store is deleted' do
       game_purchase_store
-      expect { game_purchase_store.destroy }.to change(Store, :count).by(0)
+      expect { game_purchase_store.destroy }.not_to change(Store, :count)
     end
   end
 end

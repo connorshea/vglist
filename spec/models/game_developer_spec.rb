@@ -24,12 +24,12 @@ RSpec.describe GameDeveloper, type: :model do
 
     it 'Game should not be deleted when GameDeveloper is deleted' do
       game_developer
-      expect { game_developer.destroy }.to change(Game, :count).by(0)
+      expect { game_developer.destroy }.not_to change(Game, :count)
     end
 
     it 'Company should not be deleted when GameDeveloper is deleted' do
       game_developer
-      expect { game_developer.destroy }.to change(Company, :count).by(0)
+      expect { game_developer.destroy }.not_to change(Company, :count)
     end
   end
 end

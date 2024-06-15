@@ -40,7 +40,7 @@ RSpec.describe ExternalAccount, type: :model do
 
     it 'User should not be deleted when external account is deleted' do
       user_with_external_account
-      expect { external_account.destroy }.to change(User, :count).by(0)
+      expect { external_account.destroy }.not_to change(User, :count)
     end
   end
 end

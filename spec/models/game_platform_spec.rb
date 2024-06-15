@@ -28,12 +28,12 @@ RSpec.describe GamePlatform, type: :model do
 
     it 'Game should not be deleted when GamePlatform is deleted' do
       game_platform
-      expect { game_platform.destroy }.to change(Game, :count).by(0)
+      expect { game_platform.destroy }.not_to change(Game, :count)
     end
 
     it 'Platform should not be deleted when GamePlatform is deleted' do
       game_platform
-      expect { game_platform.destroy }.to change(Platform, :count).by(0)
+      expect { game_platform.destroy }.not_to change(Platform, :count)
     end
   end
 end

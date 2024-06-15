@@ -75,17 +75,17 @@ RSpec.describe GamePurchase, type: :model do
 
     it 'User should not be deleted when game purchase is deleted' do
       game_purchase
-      expect { game_purchase.destroy }.to change(User, :count).by(0)
+      expect { game_purchase.destroy }.not_to change(User, :count)
     end
 
     it 'Game should not be deleted when game purchase is deleted' do
       game_purchase
-      expect { game_purchase.destroy }.to change(Game, :count).by(0)
+      expect { game_purchase.destroy }.not_to change(Game, :count)
     end
 
     it 'Platform should not be deleted when game purchase is deleted' do
       game_purchase_with_platform
-      expect { game_purchase_with_platform.destroy }.to change(Platform, :count).by(0)
+      expect { game_purchase_with_platform.destroy }.not_to change(Platform, :count)
     end
 
     it 'GamePurchasePlatform should be deleted when game purchase is deleted' do
