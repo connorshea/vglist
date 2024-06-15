@@ -3569,6 +3569,7 @@ end
 # objects and provides consumption of text
 class REXML::Source
   include ::REXML::Encoding
+  include ::REXML::Source::Private
 
   # Constructor
   # value, overriding all encoding detection
@@ -3612,6 +3613,9 @@ class REXML::Source
   def detect_encoding; end
   def encoding_updated; end
 end
+
+module REXML::Source::Private; end
+REXML::Source::Private::PRE_DEFINED_TERM_PATTERNS = T.let(T.unsafe(nil), Hash)
 
 # Represents text nodes in an XML document
 class REXML::Text < ::REXML::Child
