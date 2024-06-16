@@ -216,7 +216,7 @@ namespace :import do
     Rails.logger.level = 2 if Rails.env.production?
 
     games_to_update = []
-    rows.map do |row|
+    rows.each do |row|
       row = row.to_h
       game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
       next unless games.include?(game_wikidata_id)

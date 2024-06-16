@@ -84,6 +84,9 @@ namespace 'import:wikidata' do
           next if wikidata_json[property].nil?
 
           wikidata_json[property].each do |snak|
+            # For "unknown values" this may return nil, and we don't want to deal with that, so we don't.
+            next if snak.dig('mainsnak', 'datavalue', 'value', 'numeric-id').nil?
+
             game_hash[name] << snak.dig('mainsnak', 'datavalue', 'value', 'numeric-id')
           end
 
