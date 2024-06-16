@@ -1,4 +1,5 @@
 # typed: ignore
+# frozen_string_literal: true
 # rubocop:disable Rails/TimeZone
 namespace 'import:wikidata' do
   require 'sparql/client'

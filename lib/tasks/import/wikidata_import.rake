@@ -1,4 +1,5 @@
 # typed: ignore
+# frozen_string_literal: true
 namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'

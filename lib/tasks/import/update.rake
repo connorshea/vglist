@@ -1,4 +1,5 @@
 # typed: ignore
+# frozen_string_literal: true
 namespace :import do
   require 'net/http'
   require 'sparql/client'
@@ -44,11 +45,10 @@ namespace :import do
       # Get all games with no series that have Wikidata IDs.
       games_with_no_series = Game.where(series_id: nil).where.not(wikidata_id: nil).pluck(:wikidata_id)
 
-      rows = get_rows(games_with_series_query)
+      rows = get_rows(games_with_series_query).map(&:to_h)
 
       games_to_update = []
-      rows.map do |row|
-        row = row.to_h
+      rows.each do |row|
         game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
         next unless games_with_no_series.include?(game_wikidata_id)
 
@@ -206,7 +206,7 @@ namespace :import do
     games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id)
 
     # This has to use send because methods in Rake tasks are private by default.
-    rows = get_rows(send("games_with_#{property_name.pluralize}_query"))
+    rows = get_rows(send("games_with_#{property_name.pluralize}_query")).map(&:to_h)
 
     # Set whodunnit to 'system' for any audited changes made by this Rake task.
     PaperTrail.request.whodunnit = 'system'
@@ -217,7 +217,6 @@ namespace :import do
 
     games_to_update = []
     rows.each do |row|
-      row = row.to_h
       game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
       next unless games.include?(game_wikidata_id)
 
