@@ -16,7 +16,7 @@ class Series < ApplicationRecord
 
   validates :wikidata_id,
     uniqueness: true,
-    allow_blank: true,
+    presence: true,
     numericality: {
       only_integer: true,
       greater_than: 0

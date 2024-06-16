@@ -49,6 +49,7 @@ RSpec.describe "Companies", type: :feature do
       visit(new_company_path)
       within('#new_company') do
         fill_in('company[name]', with: 'Half-Life')
+        fill_in('company[wikidata_id]', with: 'Q123')
       end
       click_button 'Submit'
 
