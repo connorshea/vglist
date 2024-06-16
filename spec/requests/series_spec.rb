@@ -25,7 +25,7 @@ RSpec.describe "Series", type: :request do
   end
 
   describe "GET new_series_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
 
     it "returns http success" do
       sign_in(user)
@@ -35,7 +35,7 @@ RSpec.describe "Series", type: :request do
   end
 
   describe "GET edit_series_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let(:series) { create(:series) }
     let(:series_with_everything) { create(:series_with_everything) }
 
@@ -53,7 +53,7 @@ RSpec.describe "Series", type: :request do
   end
 
   describe "POST series_index_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let(:series_attributes) { attributes_for(:series) }
 
     it "creates a new series" do
@@ -73,7 +73,7 @@ RSpec.describe "Series", type: :request do
   end
 
   describe "PUT series_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let!(:series) { create(:series) }
     let(:series_attributes) { attributes_for(:series) }
 

@@ -21,14 +21,14 @@ class CompanyPolicy < ApplicationPolicy
     true
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def create?
-    user.present?
+    user_is_moderator_or_admin?
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def update?
-    user.present?
+    user_is_moderator_or_admin?
   end
 
   sig { returns(T.nilable(T::Boolean)) }

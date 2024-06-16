@@ -3,7 +3,7 @@
 
 <h1 class="title">Companies</h1>
 
-<% if user_signed_in? %>
+<% if policy(@companies).create? %>
   <p><%= link_to("Create a new company", new_company_path, class: 'button is-fullwidth-mobile mb-10') %></p>
 <% end %>
 

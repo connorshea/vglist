@@ -8,15 +8,15 @@ RSpec.describe SeriesPolicy, type: :policy do
     let(:user) { create(:user) }
     let(:series) { create(:series) }
 
-    it 'permits everything but deletion' do
+    it "let's a normal user list, show, and search series'" do
       expect(series_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :search]
+        [:index, :show, :search]
       )
     end
 
-    it "doesn't allow deleting a series" do
+    it "doesn't let a normal user create, update, or destroy series'" do
       expect(series_policy).to forbid_actions(
-        [:destroy]
+        [:create, :new, :edit, :update, :destroy]
       )
     end
   end

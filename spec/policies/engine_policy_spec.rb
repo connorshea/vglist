@@ -8,15 +8,15 @@ RSpec.describe EnginePolicy, type: :policy do
     let(:user) { create(:user) }
     let(:engine) { create(:engine) }
 
-    it 'permits everything but deletion' do
+    it "let's a normal user list, show, and search engines" do
       expect(engine_policy).to permit_actions(
-        [:index, :show, :create, :new, :edit, :update, :search]
+        [:index, :show, :search]
       )
     end
 
-    it "doesn't allow deleting an engine" do
+    it "doesn't let a normal user create, update, or destroy engines" do
       expect(engine_policy).to forbid_actions(
-        [:destroy]
+        [:create, :new, :edit, :update, :destroy]
       )
     end
   end
