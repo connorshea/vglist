@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Companies::CreateCompany < Mutations::BaseMutation
-  description "Create a new game company. **Only available when using a first-party OAuth Application.**"
+  description "Create a new game company. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :name, String, required: true, description: 'The name of the company.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the company item in Wikidata.'

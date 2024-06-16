@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Engines::CreateEngine < Mutations::BaseMutation
-  description "Create a new game engine. **Only available when using a first-party OAuth Application.**"
+  description "Create a new game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :name, String, required: true, description: 'The name of the engine.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the engine item in Wikidata.'

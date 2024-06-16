@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Series::UpdateSeries < Mutations::BaseMutation
-  description "Update an existing game series. **Only available when using a first-party OAuth Application.**"
+  description "Update an existing game series. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :series_id, ID, required: true, description: 'The ID of the series record.'
   argument :name, String, required: false, description: 'The name of the series.'
