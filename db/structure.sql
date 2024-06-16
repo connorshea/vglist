@@ -175,7 +175,7 @@ CREATE TABLE public.companies (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint
+    wikidata_id bigint NOT NULL
 );
 
 
@@ -279,7 +279,7 @@ CREATE TABLE public.engines (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint
+    wikidata_id bigint NOT NULL
 );
 
 
@@ -844,7 +844,7 @@ CREATE TABLE public.genres (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint
+    wikidata_id bigint NOT NULL
 );
 
 
@@ -1167,7 +1167,7 @@ CREATE TABLE public.platforms (
     name text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint
+    wikidata_id bigint NOT NULL
 );
 
 
@@ -1240,7 +1240,7 @@ CREATE TABLE public.series (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint
+    wikidata_id bigint NOT NULL
 );
 
 
@@ -3084,6 +3084,7 @@ ALTER TABLE ONLY public.oauth_access_tokens
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240616170248'),
 ('20240615183529'),
 ('20240615182736'),
 ('20240615182019'),
