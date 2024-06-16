@@ -67,6 +67,7 @@ RSpec.describe "Genres", type: :feature do
       visit(new_genre_path)
       within('#new_genre') do
         fill_in('genre[name]', with: 'FPS')
+        fill_in('genre[wikidata_id]', with: 'Q123')
       end
       click_button 'Submit'
 

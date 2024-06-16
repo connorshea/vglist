@@ -4,17 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2024.06.16
+### Changed
+- Require Wikidata IDs for genres, platforms, series, engines, and companies. ([#3734])
+- Disallow editing and creation of series, engines, and companies for normal users. This should primarily be done by editing Wikidata itself, rather than vglist. ([#3734])
+
 ## v2024.06.15
+### Changed
 - Upgrade to Rails 7.1. ([#3697])
 
 ## v2024.04.26
+### Changed
 - Upgrade to Ruby 3.3. ([#3651], [#3652])
 
 ## v2023.07.13
+### Changed
 - Migrate MobyGames IDs from the old slug format to the new numeric identifiers. ([#3286])
 
 ## v2023.06.19
+### Fixed
 - Fix GraphiQL failing to load.
+
+### Changed
 - Disallow normal users from creating and editing game records. ([#3251])
 
 ## v2022.08.27
@@ -958,3 +969,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#3651]: https://github.com/connorshea/vglist/pull/3651
 [#3652]: https://github.com/connorshea/vglist/pull/3652
 [#3697]: https://github.com/connorshea/vglist/pull/3697
+[#3734]: https://github.com/connorshea/vglist/pull/3734

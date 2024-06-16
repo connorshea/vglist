@@ -67,6 +67,7 @@ RSpec.describe "Platforms", type: :feature do
       visit(new_platform_path)
       within('#new_platform') do
         fill_in('platform[name]', with: 'Nintendo Switch')
+        fill_in('platform[wikidata_id]', with: 'Q123')
       end
       click_button 'Submit'
 

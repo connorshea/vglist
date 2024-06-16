@@ -5,6 +5,7 @@ RSpec.describe "Companies", type: :feature do
   describe "companies index" do
     let!(:company) { create(:company) }
     let(:user) { create(:confirmed_user) }
+    let(:moderator) { create(:confirmed_moderator) }
 
     it "with no user" do
       visit(companies_path)
@@ -17,6 +18,14 @@ RSpec.describe "Companies", type: :feature do
 
       visit(companies_path)
       expect(page).to have_link(href: company_path(company))
+      expect(page).to have_no_link(href: new_company_path)
+    end
+
+    it "with moderator" do
+      sign_in(moderator)
+
+      visit(companies_path)
+      expect(page).to have_link(href: company_path(company))
       expect(page).to have_link(href: new_company_path)
     end
   end
@@ -24,6 +33,7 @@ RSpec.describe "Companies", type: :feature do
   describe "company page" do
     let!(:company) { create(:company) }
     let(:user) { create(:confirmed_user) }
+    let(:moderator) { create(:confirmed_moderator) }
 
     it "with no user" do
       visit(company_path(company))
@@ -36,12 +46,20 @@ RSpec.describe "Companies", type: :feature do
 
       visit(company_path(company))
       expect(page).to have_content(company.name)
+      expect(page).to have_no_link(href: edit_company_path(company))
+    end
+
+    it "with moderator" do
+      sign_in(moderator)
+
+      visit(company_path(company))
+      expect(page).to have_content(company.name)
       expect(page).to have_link(href: edit_company_path(company))
     end
   end
 
   describe "new company page", js: true do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
 
     it "accepts valid company data" do
       sign_in(user)
@@ -49,6 +67,7 @@ RSpec.describe "Companies", type: :feature do
       visit(new_company_path)
       within('#new_company') do
         fill_in('company[name]', with: 'Half-Life')
+        fill_in('company[wikidata_id]', with: 'Q123')
       end
       click_button 'Submit'
 
@@ -58,7 +77,7 @@ RSpec.describe "Companies", type: :feature do
 
   describe "edit company page", js: true do
     let!(:company) { create(:company) }
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
 
     it "accepts valid company data" do
       sign_in(user)

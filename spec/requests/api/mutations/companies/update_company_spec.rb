@@ -19,7 +19,7 @@ RSpec.describe "UpdateCompany Mutation API", type: :request do
       GRAPHQL
     end
 
-    [:user, :moderator, :admin].each do |role|
+    [:moderator, :admin].each do |role|
       context "when the current user is a(n) #{role}" do
         let(:user) { create("confirmed_#{role}".to_sym) }
 
@@ -42,6 +42,17 @@ RSpec.describe "UpdateCompany Mutation API", type: :request do
           expect(company.reload.name).to eq('Nintendo')
           expect(company.reload.wikidata_id).to eq(123)
         end
+      end
+    end
+
+    context 'when the current user is a normal member' do
+      let(:user) { create(:confirmed_user) }
+
+      it "does not update the company" do
+        expect do
+          result = api_request(query_string, variables: { company_id: company.id, name: 'Electronic Arts', wikidata_id: 123 }, token: access_token)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to update this company.")
+        end.not_to change(company.reload, :name).from('Valve Corporation')
       end
     end
   end

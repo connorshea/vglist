@@ -25,7 +25,7 @@ RSpec.describe "Engines", type: :request do
   end
 
   describe "GET new_engine_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
 
     it "returns http success" do
       sign_in(user)
@@ -36,7 +36,7 @@ RSpec.describe "Engines", type: :request do
   end
 
   describe "GET edit_engine_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let(:engine) { create(:engine) }
 
     it "returns http success" do
@@ -48,7 +48,7 @@ RSpec.describe "Engines", type: :request do
   end
 
   describe "POST engines_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let(:engine_attributes) { attributes_for(:engine) }
 
     it "creates a new engine" do
@@ -68,7 +68,7 @@ RSpec.describe "Engines", type: :request do
   end
 
   describe "PUT engine_path" do
-    let(:user) { create(:confirmed_user) }
+    let(:user) { create(:confirmed_moderator) }
     let!(:engine) { create(:engine) }
     let(:engine_attributes) { attributes_for(:engine) }
 

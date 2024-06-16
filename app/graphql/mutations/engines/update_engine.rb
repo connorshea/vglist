@@ -1,6 +1,6 @@
 # typed: true
 class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
-  description "Update an existing game engine. **Only available when using a first-party OAuth Application.**"
+  description "Update an existing game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
 
   argument :engine_id, ID, required: true, description: 'The ID of the engine record.'
   argument :name, String, required: false, description: 'The name of the engine.'

@@ -19,7 +19,7 @@ RSpec.describe "UpdateSeries Mutation API", type: :request do
       GRAPHQL
     end
 
-    [:user, :moderator, :admin].each do |role|
+    [:moderator, :admin].each do |role|
       context "when the current user is a(n) #{role}" do
         let(:user) { create("confirmed_#{role}".to_sym) }
 
@@ -42,6 +42,17 @@ RSpec.describe "UpdateSeries Mutation API", type: :request do
           expect(series.reload.name).to eq('Portal')
           expect(series.reload.wikidata_id).to eq(123)
         end
+      end
+    end
+
+    context 'when the current user is a normal member' do
+      let(:user) { create(:confirmed_user) }
+
+      it "does not update the series" do
+        expect do
+          result = api_request(query_string, variables: { series_id: series.id, name: 'Portal', wikidata_id: 123 }, token: access_token)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to update this series.")
+        end.not_to change(series.reload, :name).from('Half-Life')
       end
     end
   end
