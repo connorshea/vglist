@@ -9,30 +9,25 @@ updates:
   target-branch: main
   assignees:
   - connorshea
-  allow:
-  - dependency-type: all
   ignore:
   - dependency-name: aws-partitions
-    versions:
-    - ">= 0"
+    versions: [">= 0"]
   - dependency-name: aws-sdk-core
-    versions:
-    - ">= 0"
+    versions: [">= 0"]
   - dependency-name: aws-sdk-kms
-    versions:
-    - ">= 0"
+    versions: [">= 0"]
   - dependency-name: aws-sdk-s3
-    versions:
-    - ">= 0"
+    versions: [">= 0"]
   - dependency-name: sorbet
-    versions:
-    - ">= 0"
+    versions: [">= 0"]
   - dependency-name: sorbet-runtime
-    versions:
-    - ">= 0"
+    versions: [">= 0"]
+  - dependency-name: sorbet-static
+    versions: [">= 0"]
+  - dependency-name: sorbet-static-and-runtime
+    versions: [">= 0"]
   - dependency-name: webpacker
-    versions:
-    - ">= 0"
+    versions: [">= 0"]
 - package-ecosystem: docker
   directory: "/"
   schedule:
