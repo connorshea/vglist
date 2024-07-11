@@ -149,7 +149,7 @@ group :development do
   # Enable dotenv for local environment variables.
   gem 'dotenv-rails', '~> 3.1'
   # Tapioca for generating Sorbet RBI files.
-  gem 'tapioca', '~> 0.15.0'
+  gem 'tapioca', '~> 0.15.1'
 end
 
 group :test do
