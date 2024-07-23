@@ -58,8 +58,8 @@ gem 'aws-sdk-s3', '~> 1.66', require: false
 gem 'ruby-progressbar', '~> 1.13', require: false
 
 # Use Sentry for error tracking in production.
-gem 'sentry-ruby', '~> 5.17.3'
-gem 'sentry-rails', '~> 5.17.3'
+gem 'sentry-ruby', '~> 5.18.1'
+gem 'sentry-rails', '~> 5.18.1'
 
 # Sorbet runtime typechecker and Sorbet Rails.
 gem 'sorbet-runtime', '~> 0.5'
@@ -149,7 +149,7 @@ group :development do
   # Enable dotenv for local environment variables.
   gem 'dotenv-rails', '~> 3.1'
   # Tapioca for generating Sorbet RBI files.
-  gem 'tapioca', '~> 0.15.0'
+  gem 'tapioca', '~> 0.15.1'
 end
 
 group :test do
