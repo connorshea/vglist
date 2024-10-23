@@ -121,7 +121,7 @@ group :development, :test do
   gem 'shoulda-matchers', '6.4.0'
 
   # For generating fake seeding data.
-  gem 'faker', '~> 3.4.2'
+  gem 'faker', '~> 3.5.1'
 
   # For better display of rspec test suite progress
   gem 'fuubar', '~> 2.5.1'
