@@ -179,7 +179,7 @@ GEM
       ruby-progressbar (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    graphql (2.3.18)
+    graphql (2.3.19)
       base64
       fiber-storage
     graphql-rails_logger (1.2.4)
@@ -540,7 +540,7 @@ DEPENDENCIES
   faker (~> 3.5.1)
   friendly_id (~> 5.5.1)
   fuubar (~> 2.5.1)
-  graphql (~> 2.3.18)
+  graphql (~> 2.3.19)
   graphql-rails_logger (~> 1.2.4)
   image_processing (~> 1.13)
   inline_svg (~> 1.10)
