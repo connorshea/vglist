@@ -40,7 +40,7 @@ gem 'pg_search', '~> 2.3'
 gem 'image_processing', '~> 1.13'
 
 # Validations for ActiveStorage.
-gem 'active_storage_validations', '~> 1.3.0'
+gem 'active_storage_validations', '~> 1.3.2'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
 gem 'friendly_id', '~> 5.5.1'
