@@ -145,7 +145,7 @@ group :development do
   gem 'launchy', '~> 3.0'
   # Improve the formatting of GraphQL requests in the logs.
   # https://github.com/jetruby/graphql-rails_logger
-  gem 'graphql-rails_logger', '~> 1.2.4'
+  gem 'graphql-rails_logger', '~> 1.2.5'
   # Enable dotenv for local environment variables.
   gem 'dotenv-rails', '~> 3.1'
   # Tapioca for generating Sorbet RBI files.
