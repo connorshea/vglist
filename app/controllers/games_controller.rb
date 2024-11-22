@@ -22,7 +22,7 @@ class GamesController < ApplicationController
       # Call the scope dynamically.
       @games = @games.public_send(order_by_sym)
     else
-      @games = @games.order(:id)
+      @games = @games.order(:name)
     end
 
     @games = @games.with_attached_cover
