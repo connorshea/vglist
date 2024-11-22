@@ -3,7 +3,7 @@ class PlatformsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @platforms = Platform.order(:id).page helpers.page_param
+    @platforms = Platform.order(:name).page helpers.page_param
     skip_policy_scope
   end
 

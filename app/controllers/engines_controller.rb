@@ -3,7 +3,7 @@ class EnginesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
   def index
-    @engines = Engine.order(:id).page helpers.page_param
+    @engines = Engine.order(:name).page helpers.page_param
     skip_policy_scope
   end
 

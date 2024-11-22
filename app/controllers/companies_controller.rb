@@ -3,7 +3,7 @@ class CompaniesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
   def index
-    @companies = Company.order(:id).page(helpers.page_param)
+    @companies = Company.order(:name).page(helpers.page_param)
     skip_policy_scope
     respond_to do |format|
       format.html

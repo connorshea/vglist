@@ -1,7 +1,7 @@
 # typed: true
 class GenresController < ApplicationController
   def index
-    @genres = Genre.order(:id).page helpers.page_param
+    @genres = Genre.order(:name).page helpers.page_param
     skip_policy_scope
     respond_to do |format|
       format.html

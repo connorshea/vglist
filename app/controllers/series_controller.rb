@@ -3,7 +3,7 @@ class SeriesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @series = Series.order(:id).page helpers.page_param
+    @series = Series.order(:name).page helpers.page_param
     skip_policy_scope
   end
 

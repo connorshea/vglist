@@ -3,7 +3,7 @@ class StoresController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @stores = Store.order(:id).page helpers.page_param
+    @stores = Store.order(:name).page helpers.page_param
     skip_policy_scope
   end
 
