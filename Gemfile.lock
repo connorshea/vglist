@@ -416,7 +416,7 @@ GEM
       logger
     rubyzip (2.3.2)
     scanf (1.0.0)
-    selenium-webdriver (4.26.0)
+    selenium-webdriver (4.27.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -570,7 +570,7 @@ DEPENDENCIES
   rubocop-rspec (~> 3.2)
   rubocop-rspec_rails (~> 2.30)
   ruby-progressbar (~> 1.13)
-  selenium-webdriver (~> 4.26)
+  selenium-webdriver (~> 4.27)
   sentry-rails (~> 5.17.3)
   sentry-ruby (~> 5.17.3)
   shoulda-matchers (= 6.4.0)
