@@ -278,7 +278,7 @@ GEM
       activerecord (>= 6.1)
       activesupport (>= 6.1)
     prism (1.2.0)
-    pry (0.15.0)
+    pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
     pry-rails (0.3.11)
