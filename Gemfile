@@ -127,7 +127,7 @@ group :development, :test do
   gem 'fuubar', '~> 2.5.1'
 
   # Pundit matchers for simplifying policy testing.
-  gem 'pundit-matchers', '~> 3.1.2'
+  gem 'pundit-matchers', '~> 4.0.0'
 
   # Sorbet typechecker
   gem 'sorbet', '~> 0.5'
