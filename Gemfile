@@ -37,7 +37,7 @@ gem 'pundit', '~> 2.4'
 gem 'pg_search', '~> 2.3'
 
 # Image transformation
-gem 'image_processing', '~> 1.13'
+gem 'image_processing', '~> 1.14'
 
 # Validations for ActiveStorage.
 gem 'active_storage_validations', '~> 1.3.4'
