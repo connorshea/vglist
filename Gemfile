@@ -157,7 +157,7 @@ group :test do
   gem 'capybara', '~> 3.40'
   gem 'selenium-webdriver', '~> 4.27'
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
-  gem 'webmock', '~> 3.24'
+  gem 'webmock', '~> 3.25'
 end
 
 # # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
