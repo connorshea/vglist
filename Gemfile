@@ -142,7 +142,7 @@ group :development do
   # For more useful BetterError error pages.
   gem 'binding_of_caller', '~> 1.0'
   # Open screenshots when they're taken with capybara.
-  gem 'launchy', '~> 3.0'
+  gem 'launchy', '~> 3.1'
   # Improve the formatting of GraphQL requests in the logs.
   # https://github.com/jetruby/graphql-rails_logger
   gem 'graphql-rails_logger', '~> 1.2.5'
