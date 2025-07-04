@@ -11,17 +11,14 @@ class Oauth::AuthorizationPolicy < ApplicationPolicy
     @application = application
   end
 
-  sig { returns(T::Boolean) }
   def new?
     user_is_logged_in
   end
 
-  sig { returns(T::Boolean) }
   def create?
     user_is_logged_in
   end
 
-  sig { returns(T::Boolean) }
   def destroy?
     user_is_logged_in
   end

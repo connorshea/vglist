@@ -11,7 +11,6 @@ class EventPolicy < ApplicationPolicy
     @event = event
   end
 
-  sig { returns(T.nilable(T::Boolean)) }
   def destroy?
     user && event&.user_id == user&.id
   end

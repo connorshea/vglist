@@ -10,12 +10,10 @@ class Admin::UnmatchedGamesPolicy < ApplicationPolicy
     @user = user
   end
 
-  sig { returns(T::Boolean) }
   def index?
     user&.admin? || false
   end
 
-  sig { returns(T::Boolean) }
   def destroy?
     user&.admin? || false
   end

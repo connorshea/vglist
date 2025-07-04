@@ -11,19 +11,16 @@ class RelationshipPolicy < ApplicationPolicy
     @followed = followed
   end
 
-  sig { returns(T::Boolean) }
   def create?
     follower_is_not_followed? && !follower.nil? && followed.public_account?
   end
 
-  sig { returns(T::Boolean) }
   def destroy?
     follower_is_not_followed? && !follower.nil? && followed.public_account?
   end
 
   protected
 
-  sig { returns(T::Boolean) }
   def follower_is_not_followed?
     follower&.id != followed.id
   end
