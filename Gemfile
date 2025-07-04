@@ -68,7 +68,7 @@ gem 'graphql', '~> 2.5.10'
 gem "doorkeeper", "~> 5.8.2"
 
 # Rack::Cors for handling CORS in API requests.
-gem "rack-cors", "~> 2.0"
+gem "rack-cors", "~> 3.0"
 
 # Render SVGs inline using Webpacker.
 gem 'inline_svg', '~> 1.10'
