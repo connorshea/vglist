@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::DeleteEvent < Mutations::BaseMutation
   description "Delete an event from the Activity Feed. You must be the owner of the event to delete it."
 
@@ -6,7 +5,6 @@ class Mutations::DeleteEvent < Mutations::BaseMutation
 
   field :deleted, Boolean, null: false, description: "Whether the event was deleted successfully or not."
 
-  sig { params(event_id: String).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(event_id:)
     event = Views::NewEvent.find_event_subclass_by_id(event_id)
 
@@ -17,7 +15,6 @@ class Mutations::DeleteEvent < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     event = Views::NewEvent.find_event_subclass_by_id(object[:event_id])
 

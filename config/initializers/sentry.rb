@@ -1,4 +1,3 @@
-# typed: strict
 Sentry.init do |config|
   config.dsn = ENV['SENTRY_DSN_RAILS']
   # Only run in production.

@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
   description "Add game to Steam blocklist and remove the Steam App ID from any existing games that have it. **Only available to admins using a first-party OAuth Application.**"
 
@@ -7,7 +6,6 @@ class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
 
   field :steam_blocklist_entry, Types::SteamBlocklistEntryType, null: true, description: "The Steam Blocklist entry that was created."
 
-  sig { params(name: String, steam_app_id: Integer).returns(T::Hash[Symbol, SteamBlocklist]) }
   def resolve(name:, steam_app_id:)
     # Find the existing SteamAppId record if it exists, and destroy it.
     steam_app_id_record = SteamAppId.find_by(app_id: steam_app_id)
@@ -22,7 +20,6 @@ class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T.nilable(T::Boolean)) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

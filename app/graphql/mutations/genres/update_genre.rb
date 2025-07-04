@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
   description "Update an existing game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -9,7 +8,6 @@ class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
   field :genre, Types::GenreType, null: false, description: "The genre that was updated."
 
   # Use **args so we don't replace existing fields that aren't provided with `nil`.
-  sig { params(genre_id: T.any(String, Integer), args: T.untyped).returns(T::Hash[Symbol, Genre]) }
   def resolve(genre_id:, **args)
     genre = Genre.find(genre_id)
 
@@ -20,7 +18,6 @@ class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

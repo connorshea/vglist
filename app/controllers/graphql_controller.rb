@@ -1,14 +1,11 @@
-# typed: false
 class GraphqlController < ApplicationController
   # If the user hasn't provided any token, return a specific error message.
   before_action :handle_user_not_logged_in, if: -> {
-    T.bind(self, GraphqlController)
     !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email')
   }
 
   # Authenticate with Doorkeeper if there's no X-User-Email header.
   before_action :authorize_doorkeeper_user, if: -> {
-    T.bind(self, GraphqlController)
     !request.headers.key?('X-User-Email') && user_using_oauth?
   }
 
@@ -101,7 +98,6 @@ class GraphqlController < ApplicationController
   #
   # TODO: Implement this as `doorkeeper_token.application.first_party?` once
   #       we can add that to the Application class.
-  sig { returns(T::Boolean) }
   def first_party?
     return false if doorkeeper_token.nil? || doorkeeper_token.application_id.nil?
 
@@ -112,7 +108,6 @@ class GraphqlController < ApplicationController
     true
   end
 
-  sig { returns(T.nilable(User)) }
   def api_user
     User.find_by(email: request.headers['X-User-Email'])
   end

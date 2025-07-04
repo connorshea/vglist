@@ -1,4 +1,3 @@
-# typed: true
 class ActivityController < ApplicationController
   before_action :authenticate_user!, except: :global
 
@@ -12,9 +11,9 @@ class ActivityController < ApplicationController
   end
 
   def following
-    user_ids = T.must(current_user&.following).map { |u| u.id }
+    user_ids = current_user&.following&.map { |u| u.id }
     # Include the user's own activity in the feed.
-    user_ids << T.must(current_user).id
+    user_ids << current_user.id
     @events = Views::NewEvent.recently_created
                              .joins(:user)
                              .where(user_id: user_ids)

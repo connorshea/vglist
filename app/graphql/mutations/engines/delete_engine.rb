@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Engines::DeleteEngine < Mutations::BaseMutation
   description "Delete a game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -6,7 +5,6 @@ class Mutations::Engines::DeleteEngine < Mutations::BaseMutation
 
   field :deleted, Boolean, null: true, description: "Whether the engine was successfully deleted."
 
-  sig { params(engine_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(engine_id:)
     engine = Engine.find(engine_id)
 
@@ -17,7 +15,6 @@ class Mutations::Engines::DeleteEngine < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

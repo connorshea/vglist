@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class LiveSiteStatisticType < Types::BaseObject
     description <<~MARKDOWN

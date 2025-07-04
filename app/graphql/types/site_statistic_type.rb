@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class SiteStatisticType < Types::BaseObject
     description <<~MARKDOWN

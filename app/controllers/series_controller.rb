@@ -1,4 +1,3 @@
-# typed: true
 class SeriesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
@@ -78,9 +77,8 @@ class SeriesController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def series_params
-    params.typed_require(:series).permit(
+    params.require(:series).permit(
       :name,
       :wikidata_id
     )

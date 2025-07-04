@@ -1,4 +1,3 @@
-# typed: strict
 module Types::Enums
   class GameSortType < Types::BaseEnum
     description "Options for sorting games."

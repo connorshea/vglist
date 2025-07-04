@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module StoreResolvers
     class SearchResolver < Resolvers::BaseResolver
@@ -8,7 +7,6 @@ module Resolvers
 
       argument :query, String, required: true, description: "Name to search by."
 
-      sig { params(query: String).returns(T.untyped) }
       def resolve(query:)
         Store.search(query)
       end

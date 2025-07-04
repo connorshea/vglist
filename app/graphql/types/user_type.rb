@@ -1,4 +1,3 @@
-# typed: true
 module Types
   class UserType < Types::BaseObject
     description "User accounts on vglist"
@@ -27,7 +26,6 @@ module Types
     field :is_followed, Boolean, null: true, resolver_method: :followed?, description: "Whether the current user is following this user. `null` if there is no logged-in user or the current user is querying on themselves."
     field :hide_days_played, Boolean, null: false, description: "Whether to hide the 'Days Played' value on the this user's profile."
 
-    sig { returns(T.untyped) }
     def activity
       return [] unless user_visible?
 
@@ -38,9 +36,8 @@ module Types
 
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
-    sig { params(size: Symbol).returns(T.nilable(String)) }
     def avatar_url(size:)
-      avatar = T.cast(@object, User).sized_avatar(size)
+      avatar = @object.sized_avatar(size)
       return if avatar.nil?
 
       Rails.application.routes.url_helpers.rails_representation_url(avatar)
@@ -48,7 +45,6 @@ module Types
 
     # Extremely cursed metaprogramming that protects private users from having
     # their details exposed if the UserPolicy wants to prevent it.
-    sig { params(field_name: Symbol, fallback: T.untyped).returns(T.untyped) }
     def handler(field_name, fallback = nil)
       return @object.public_send(field_name) if user_visible?
 
@@ -66,12 +62,10 @@ module Types
       favorited_games: []
     }.each_pair do |meth_name, fallback|
       define_method(meth_name) do
-        # Sorbet is dumb and doesn't realize the handler method exists, I guess.
-        T.unsafe(self).handler(meth_name, fallback)
+        handler(meth_name, fallback)
       end
     end
 
-    sig { returns(T.nilable(T::Boolean)) }
     def followed?
       return nil if @context[:current_user].nil? || @context[:current_user].id == @object.id
 
@@ -80,7 +74,6 @@ module Types
 
     private
 
-    sig { returns(T::Boolean) }
     def user_visible?
       # Short-circuit if the user has a public account, to prevent instantiating
       # a UserPolicy and all that.

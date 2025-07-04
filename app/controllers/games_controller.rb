@@ -1,4 +1,3 @@
-# typed: true
 class GamesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -8,7 +7,7 @@ class GamesController < ApplicationController
     @games = @games.on_platform(params[:platform_filter]) if params[:platform_filter]
     @games = @games.by_year(params[:by_year]) if params[:by_year]
 
-    order_by_sym = T.cast(params[:order_by], T.nilable(String))&.to_sym
+    order_by_sym = params[:order_by]&.to_sym
     if !order_by_sym.nil? && [
       :newest,
       :oldest,
@@ -45,7 +44,7 @@ class GamesController < ApplicationController
     @game_purchase = current_user&.game_purchases&.find_by(game_id: @game.id) if current_user
 
     unless @game.series_id.nil?
-      series = T.must(@game.series)
+      series = @game.series
       @games_in_series = series.games
                                .where.not(id: @game.id)
                                .order(Arel.sql('RANDOM()'))
@@ -257,9 +256,8 @@ class GamesController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def game_params
-    params.typed_require(:game).permit(
+    params.require(:game).permit(
       :name,
       :cover,
       :wikidata_id,
@@ -285,9 +283,8 @@ class GamesController < ApplicationController
     )
   end
 
-  sig { returns(ActionController::Parameters) }
   def game_purchase_params
-    params.typed_require(:game_purchase).permit(
+    params.require(:game_purchase).permit(
       :user_id,
       :game_id
     )

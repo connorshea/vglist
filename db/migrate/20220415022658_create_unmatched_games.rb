@@ -1,4 +1,3 @@
-# typed: true
 class CreateUnmatchedGames < ActiveRecord::Migration[6.1]
   def change
     create_table :unmatched_games, comment: 'Games imported from a third party service, such as Steam, that we weren\'t able to match to a game in vglist.' do |t|
@@ -20,7 +19,6 @@ class CreateUnmatchedGames < ActiveRecord::Migration[6.1]
       t.index [:external_service_id, :external_service_name], name: 'index_unmatched_games_on_service_id_and_name'
     end
 
-    # Sorbet doesn't know about this method yet, so abuse T.unsafe.
-    T.unsafe(self).add_check_constraint :unmatched_games, "external_service_name IN ('Steam')", name: 'validate_external_service_name'
+    add_check_constraint :unmatched_games, "external_service_name IN ('Steam')", name: 'validate_external_service_name'
   end
 end

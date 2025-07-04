@@ -1,4 +1,3 @@
-# typed: true
 class AddConstraintsToEvents < ActiveRecord::Migration[6.1]
   # Event categories and corresponding eventable types:
   # add_to_library: 0 => GamePurchase

@@ -1,4 +1,3 @@
-# typed: true
 class AddAvgRatingToGame < ActiveRecord::Migration[6.0]
   def change
     add_column :games, :avg_rating, :float, scale: 1

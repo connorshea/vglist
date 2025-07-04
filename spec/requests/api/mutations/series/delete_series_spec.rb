@@ -1,4 +1,3 @@
-# typed: false
 require 'rails_helper'
 
 RSpec.describe "DeleteSeries Mutation API", type: :request do

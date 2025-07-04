@@ -1,4 +1,3 @@
-# typed: strict
 module Types::Enums
   class GameCoverSizeType < Types::BaseEnum
     description <<~DESCRIPTION.squish

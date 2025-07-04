@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Genres::CreateGenre < Mutations::BaseMutation
   description "Create a new game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -7,7 +6,6 @@ class Mutations::Genres::CreateGenre < Mutations::BaseMutation
 
   field :genre, Types::GenreType, null: true, description: "The genre that was created."
 
-  sig { params(name: String, wikidata_id: T.any(String, Integer)).returns(T::Hash[Symbol, Genre]) }
   def resolve(name:, wikidata_id:)
     genre = Genre.new(name: name, wikidata_id: wikidata_id)
 
@@ -18,7 +16,6 @@ class Mutations::Genres::CreateGenre < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

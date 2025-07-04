@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Series::UpdateSeries < Mutations::BaseMutation
   description "Update an existing game series. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -9,7 +8,6 @@ class Mutations::Series::UpdateSeries < Mutations::BaseMutation
   field :series, Types::SeriesType, null: false, description: "The series that was updated."
 
   # Use **args so we don't replace existing fields that aren't provided with `nil`.
-  sig { params(series_id: T.any(String, Integer), args: T.untyped).returns(T::Hash[Symbol, Series]) }
   def resolve(series_id:, **args)
     series = Series.find(series_id)
 
@@ -20,7 +18,6 @@ class Mutations::Series::UpdateSeries < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

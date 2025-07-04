@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Stores::CreateStore < Mutations::BaseMutation
   description "Create a new game store. **Only available when using a first-party OAuth Application.**"
 
@@ -6,7 +5,6 @@ class Mutations::Stores::CreateStore < Mutations::BaseMutation
 
   field :store, Types::StoreType, null: true, description: "The store that was created."
 
-  sig { params(name: String).returns(T::Hash[Symbol, Store]) }
   def resolve(name:)
     store = Store.new(name: name)
 
@@ -17,7 +15,6 @@ class Mutations::Stores::CreateStore < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

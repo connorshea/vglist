@@ -1,4 +1,3 @@
-# typed: false
 require 'rails_helper'
 
 RSpec.describe "UpdatePlatform Mutation API", type: :request do

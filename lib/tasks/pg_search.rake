@@ -1,4 +1,3 @@
-# typed: false
 namespace "pg_search" do
   desc "Rebuild all pg_search indices."
   task 'multisearch:rebuild:all': :environment do

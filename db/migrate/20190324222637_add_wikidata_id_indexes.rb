@@ -1,4 +1,3 @@
-# typed: true
 class AddWikidataIdIndexes < ActiveRecord::Migration[5.2]
   def change
     add_index :companies, :wikidata_id, unique: true

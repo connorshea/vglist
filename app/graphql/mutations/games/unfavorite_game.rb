@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Games::UnfavoriteGame < Mutations::BaseMutation
   description "Remove a game from the current user's favorites."
 
@@ -6,7 +5,6 @@ class Mutations::Games::UnfavoriteGame < Mutations::BaseMutation
 
   field :game, Types::GameType, null: true, description: "The game being unfavorited."
 
-  sig { params(game_id: T.any(String, Integer)).returns(T::Hash[Symbol, Game]) }
   def resolve(game_id:)
     game = Game.find(game_id)
 

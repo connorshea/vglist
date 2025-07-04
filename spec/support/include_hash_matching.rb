@@ -1,4 +1,3 @@
-# typed: false
 require 'rspec/expectations'
 
 # Based on this StackOverflow question:

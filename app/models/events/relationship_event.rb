@@ -1,4 +1,3 @@
-# typed: strict
 module Events
   class RelationshipEvent < ApplicationRecord
     self.table_name = 'events_relationship_events'

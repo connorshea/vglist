@@ -1,4 +1,3 @@
-# typed: false
 class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   before_action :authenticate_user!
   # Doorkeeper tries to require that the user be an admin in order to create
@@ -34,10 +33,9 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
     authorize @application, policy_class: Oauth::ApplicationPolicy
     @application = Doorkeeper::Application.new(application_params)
     @application.owner = current_user if Doorkeeper.configuration.confirm_application_owner?
-    # Sorbet thinks there's no `save` method here.
-    if T.unsafe(@application).save
+    if @application.save
       flash[:notice] = I18n.t(:notice, scope: [:doorkeeper, :flash, :applications, :create])
-      flash[:application_secret] = T.unsafe(@application).plaintext_secret
+      flash[:application_secret] = @application.plaintext_secret
       redirect_to oauth_application_url(@application)
     else
       render :new
@@ -66,7 +64,7 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   end
 
   def application_params
-    params.typed_require(:doorkeeper_application).permit(
+    params.require(:doorkeeper_application).permit(
       :name,
       :redirect_uri,
       :scopes,

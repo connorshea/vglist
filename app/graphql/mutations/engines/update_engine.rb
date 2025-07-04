@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
   description "Update an existing game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -9,7 +8,6 @@ class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
   field :engine, Types::EngineType, null: false, description: "The engine that was updated."
 
   # Use **args so we don't replace existing fields that aren't provided with `nil`.
-  sig { params(engine_id: T.any(String, Integer), args: T.untyped).returns(T::Hash[Symbol, Engine]) }
   def resolve(engine_id:, **args)
     engine = Engine.find(engine_id)
 
@@ -20,7 +18,6 @@ class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

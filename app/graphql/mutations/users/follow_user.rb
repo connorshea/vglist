@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::FollowUser < Mutations::BaseMutation
   description "Follow a user."
 
@@ -6,7 +5,6 @@ class Mutations::Users::FollowUser < Mutations::BaseMutation
 
   field :user, Types::UserType, null: true, description: "The user being followed."
 
-  sig { params(user_id: T.any(String, Integer)).returns(T::Hash[Symbol, User]) }
   def resolve(user_id:)
     user = User.find(user_id)
 

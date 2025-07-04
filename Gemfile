@@ -61,9 +61,6 @@ gem 'ruby-progressbar', '~> 1.13', require: false
 gem 'sentry-ruby', '~> 5.17.3'
 gem 'sentry-rails', '~> 5.17.3'
 
-# Sorbet runtime typechecker and Sorbet Rails.
-gem 'sorbet-runtime', '~> 0.5'
-
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 2.5.10'
 
@@ -128,9 +125,6 @@ group :development, :test do
 
   # Pundit matchers for simplifying policy testing.
   gem 'pundit-matchers', '~> 4.0.0'
-
-  # Sorbet typechecker
-  gem 'sorbet', '~> 0.5'
 end
 
 group :development do
@@ -148,8 +142,6 @@ group :development do
   gem 'graphql-rails_logger', '~> 1.2.5'
   # Enable dotenv for local environment variables.
   gem 'dotenv-rails', '~> 3.1'
-  # Tapioca for generating Sorbet RBI files.
-  gem 'tapioca', '~> 0.16.11'
 end
 
 group :test do

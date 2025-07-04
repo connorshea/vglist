@@ -1,4 +1,3 @@
-# typed: strict
 class Company < ApplicationRecord
   include GlobalSearchable
   include Searchable

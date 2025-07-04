@@ -1,4 +1,3 @@
-# typed: false
 module Types
   module SearchResultInterface
     include Types::BaseInterface

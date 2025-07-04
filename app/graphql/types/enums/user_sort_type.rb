@@ -1,4 +1,3 @@
-# typed: strict
 module Types::Enums
   class UserSortType < Types::BaseEnum
     description "Options for sorting users."

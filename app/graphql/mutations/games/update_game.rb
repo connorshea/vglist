@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Games::UpdateGame < Mutations::BaseMutation
   description "Update an existing game. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -25,18 +24,6 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
   field :game, Types::GameType, null: false, description: "The game that was updated."
 
   # Use `**args` so we don't replace existing fields that aren't provided with `nil`.
-  sig do
-    params(
-      game_id: T.any(String, Integer),
-      platform_ids: T.nilable(T::Array[T.any(String, Integer)]),
-      developer_ids: T.nilable(T::Array[T.any(String, Integer)]),
-      publisher_ids: T.nilable(T::Array[T.any(String, Integer)]),
-      genre_ids: T.nilable(T::Array[T.any(String, Integer)]),
-      engine_ids: T.nilable(T::Array[T.any(String, Integer)]),
-      steam_app_ids: T.nilable(T::Array[Integer]),
-      args: T.untyped
-    ).returns(T::Hash[Symbol, Game])
-  end
   def resolve(
     game_id:,
     platform_ids: nil,
@@ -83,7 +70,6 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

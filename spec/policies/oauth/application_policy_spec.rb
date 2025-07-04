@@ -1,4 +1,3 @@
-# typed: false
 require 'rails_helper'
 
 RSpec.describe Oauth::ApplicationPolicy, type: :policy do

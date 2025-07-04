@@ -1,4 +1,3 @@
-# typed: false
 require 'rails_helper'
 
 RSpec.describe "ResetUserLibrary Mutation API", type: :request do

@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
   description "Update a game in the current user's library."
 
@@ -15,14 +14,6 @@ class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
 
   field :game_purchase, Types::GamePurchaseType, null: true, description: "The game purchase being updated in the user's library."
 
-  sig do
-    params(
-      game_purchase_id: T.any(String, Integer),
-      platforms: T::Array[T.any(String, Integer)],
-      stores: T::Array[T.any(String, Integer)],
-      attributes: T.untyped
-    ).returns(T::Hash[Symbol, GamePurchase])
-  end
   def resolve(
     game_purchase_id:,
     platforms: [],
@@ -44,7 +35,6 @@ class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
   end
 
   # Only allow the user to update their own game purchases.
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     game_purchase = GamePurchase.find(object[:game_purchase_id])
 

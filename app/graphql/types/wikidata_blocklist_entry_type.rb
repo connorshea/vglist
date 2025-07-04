@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class WikidataBlocklistEntryType < Types::BaseObject
     description <<~MARKDOWN

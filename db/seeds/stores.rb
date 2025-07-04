@@ -1,4 +1,3 @@
-# typed: strict
 puts "Creating Stores..."
 
 # Create 10 Stores.

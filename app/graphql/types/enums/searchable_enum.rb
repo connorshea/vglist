@@ -1,4 +1,3 @@
-# typed: strict
 module Types::Enums
   class SearchableEnum < Types::BaseEnum
     description "The types of records that can be returned as a `SearchResult`."

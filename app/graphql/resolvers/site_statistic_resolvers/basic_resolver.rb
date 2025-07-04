@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module SiteStatisticResolvers
     class BasicResolver < Resolvers::BaseResolver
@@ -10,7 +9,6 @@ module Resolvers
         values.
       MARKDOWN
 
-      sig { returns(T::Hash[Symbol, Integer]) }
       def resolve
         Rails.cache.fetch("home_page_counts_#{ENV['GIT_COMMIT_SHA']}", expires_in: 30.minutes) do
           {

@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
   description "Reset a user's game library. This will remove the user's entire game library from the database. **Only available to users resetting their own libraries using a first-party OAuth Application.**"
 
@@ -6,7 +5,6 @@ class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
 
   field :deleted, Boolean, null: false, description: "Whether the user's library was reset successfully or not."
 
-  sig { params(user_id: String).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(user_id:)
     user = User.find_by(id: user_id)
 
@@ -21,7 +19,6 @@ class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

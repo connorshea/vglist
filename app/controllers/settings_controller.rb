@@ -1,4 +1,3 @@
-# typed: true
 class SettingsController < ApplicationController
   before_action :authenticate_user!
 
@@ -34,7 +33,7 @@ class SettingsController < ApplicationController
 
   # Send a JSON file so the user can download their library as JSON.
   def export_as_json
-    @user = T.must(current_user)
+    @user = current_user
     authorize @user, policy_class: SettingsPolicy
 
     @games = GamePurchase.where(user_id: @user.id).includes(:game, :platforms, :stores)
@@ -55,7 +54,7 @@ class SettingsController < ApplicationController
 
   # TODO: Make this require logging in again?
   def api_token
-    @user = T.must(current_user)
+    @user = current_user
 
     authorize @user, policy_class: SettingsPolicy
 

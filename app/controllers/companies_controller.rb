@@ -1,4 +1,3 @@
-# typed: true
 class CompaniesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
 
@@ -83,9 +82,8 @@ class CompaniesController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def company_params
-    params.typed_require(:company).permit(
+    params.require(:company).permit(
       :name,
       :wikidata_id
     )

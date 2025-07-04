@@ -1,4 +1,3 @@
-# typed: false
 # Generate the GraphQL schema, copy it to vglist-frontend, and generate the
 # TypeScript type signatures.
 namespace :graphql do

@@ -1,4 +1,3 @@
-# typed: true
 class StoresController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
@@ -90,9 +89,8 @@ class StoresController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def store_params
-    params.typed_require(:store).permit(
+    params.require(:store).permit(
       :name
     )
   end

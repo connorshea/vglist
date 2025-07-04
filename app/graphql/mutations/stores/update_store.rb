@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Stores::UpdateStore < Mutations::BaseMutation
   description "Update an existing game store. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -8,7 +7,6 @@ class Mutations::Stores::UpdateStore < Mutations::BaseMutation
   field :store, Types::StoreType, null: false, description: "The store that was updated."
 
   # Use **args so we don't replace existing fields that aren't provided with `nil`.
-  sig { params(store_id: T.any(String, Integer), args: T.untyped).returns(T::Hash[Symbol, Store]) }
   def resolve(store_id:, **args)
     store = Store.find(store_id)
 
@@ -19,7 +17,6 @@ class Mutations::Stores::UpdateStore < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

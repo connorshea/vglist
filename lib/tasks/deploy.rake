@@ -1,4 +1,3 @@
-# typed: false
 namespace :deploy do
   desc "Deploys the latest code from the main branch into production"
   task production: :environment do

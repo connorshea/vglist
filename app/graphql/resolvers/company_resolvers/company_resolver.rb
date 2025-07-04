@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module CompanyResolvers
     class CompanyResolver < Resolvers::BaseResolver
@@ -8,7 +7,6 @@ module Resolvers
 
       argument :id, ID, required: true
 
-      sig { params(id: T.any(String, Integer)).returns(Company) }
       def resolve(id:)
         Company.find(id)
       end

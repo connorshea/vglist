@@ -1,4 +1,3 @@
-# typed: strict
 class User < ApplicationRecord
   extend FriendlyId
   include PgSearch::Model
@@ -80,14 +79,11 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   # Only use one of the pre-set sizes for these images.
-  AVATAR_SIZES = T.let(
-    {
-      small: [80, 80],
-      medium: [150, 150],
-      large: [300, 300]
-    },
-    T::Hash[Symbol, [Integer, Integer]]
-  )
+  AVATAR_SIZES = {
+    small: [80, 80],
+    medium: [150, 150],
+    large: [300, 300]
+  }.freeze
 
   friendly_id :username, use: [:slugged, :finders]
 
@@ -154,34 +150,29 @@ class User < ApplicationRecord
   global_searchable :username
   searchable :username
 
-  sig { returns(T.nilable(String)) }
   def api_token
     return nil if encrypted_api_token.nil?
 
-    EncryptionService.decrypt(T.must(encrypted_api_token))
+    EncryptionService.decrypt(encrypted_api_token)
   end
 
-  sig { params(value: String).void }
   def api_token=(value)
     self.encrypted_api_token = EncryptionService.encrypt(value)
   end
 
   # Make sure the user isn't banned when logging in with Devise.
-  sig { returns(T.nilable(T::Boolean)) }
   def active_for_authentication?
     super && !banned?
   end
 
   # If the user is determined to be inactive by `active_for_authentication?`,
   # this is the name of the message that will be returned.
-  sig { returns(Symbol) }
   def inactive_message
     banned? ? :account_banned : super
   end
 
   # Verify that the token passed into the application matches the user's
   # actual token.
-  sig { params(token: T.nilable(String)).returns(T::Boolean) }
   def verify_api_token!(token)
     # Return false if the user attempts to pass a nil token. This prevents
     # other users from hijacking an account if the account doesn't have
@@ -193,16 +184,6 @@ class User < ApplicationRecord
 
   # Generate an avatar variant with a specific size, size must be a Symbol
   # matching one of the keys in `User::AVATAR_SIZES`.
-  sig do
-    params(size: Symbol).returns(
-      T.nilable(
-        T.any(
-          ActiveStorage::Variant,
-          ActiveStorage::VariantWithRecord
-        )
-      )
-    )
-  end
   def sized_avatar(size)
     width, height = AVATAR_SIZES[size]
     avatar.variant(
@@ -215,20 +196,18 @@ class User < ApplicationRecord
   private
 
   # Usernames that are reserved so they cannot be used.
-  RESERVED_USERNAMES = T.let(%w[
+  RESERVED_USERNAMES = %w[
     mod moderator admin administrator
     new edit index session login logout
     sign_out sign_up sign_in search
     system username
-  ].freeze, T::Array[String])
+  ].freeze
 
   # Validate that the username isn't reserved for use by the system.
-  sig { void }
   def username_not_reserved
     errors.add(:username, "is reserved by the system") if RESERVED_USERNAMES.include?(username.downcase)
   end
 
-  sig { void }
   def on_user_creation
     Events::UserEvent.create!(
       eventable_id: id,

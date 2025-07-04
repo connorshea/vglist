@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module PlatformResolvers
     class ListResolver < Resolvers::BaseResolver
@@ -6,7 +5,6 @@ module Resolvers
 
       description "List all platforms."
 
-      sig { returns(T.untyped) }
       def resolve
         Platform.all
       end

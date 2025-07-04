@@ -1,4 +1,3 @@
-# typed: true
 class GenresController < ApplicationController
   def index
     @genres = Genre.order(:name).page helpers.page_param
@@ -74,9 +73,8 @@ class GenresController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def genre_params
-    params.typed_require(:genre).permit(
+    params.require(:genre).permit(
       :name,
       :wikidata_id
     )

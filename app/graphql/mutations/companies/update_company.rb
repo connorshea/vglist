@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
   description "Update an existing game company. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -9,7 +8,6 @@ class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
   field :company, Types::CompanyType, null: false, description: "The company that was updated."
 
   # Use **args so we don't replace existing fields that aren't provided with `nil`.
-  sig { params(company_id: T.any(String, Integer), args: T.untyped).returns(T::Hash[Symbol, Company]) }
   def resolve(company_id:, **args)
     company = Company.find(company_id)
 
@@ -20,7 +18,6 @@ class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

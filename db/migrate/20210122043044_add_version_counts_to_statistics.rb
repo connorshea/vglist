@@ -1,4 +1,3 @@
-# typed: true
 class AddVersionCountsToStatistics < ActiveRecord::Migration[6.1]
   def change
     add_column :statistics, :company_versions, :bigint, null: true

@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   module SearchResults
     class GenreSearchResultType < Types::BaseObject

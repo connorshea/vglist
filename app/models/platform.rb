@@ -1,4 +1,3 @@
-# typed: strict
 class Platform < ApplicationRecord
   include GlobalSearchable
   include Searchable

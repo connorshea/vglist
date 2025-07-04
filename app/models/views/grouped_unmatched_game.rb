@@ -1,5 +1,3 @@
-# typed: true
-
 module Views
   # A view for performantly grouping unmatched games together based on
   # their external service IDs. This allows us to expose the expected data
@@ -15,7 +13,7 @@ module Views
     # common name, we can just pick the first one in the list for
     # simplicity/performance.
     def name
-      T.must(names).first
+      names.first
     end
   end
 end

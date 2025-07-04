@@ -1,4 +1,3 @@
-# typed: true
 class UsersController < ApplicationController
   def index
     # Hide banned users from users that aren't moderators or admins.
@@ -8,7 +7,7 @@ class UsersController < ApplicationController
       @users = User.all
     end
 
-    order_by_sym = T.cast(params[:order_by], T.nilable(String))&.to_sym
+    order_by_sym = params[:order_by]&.to_sym
     if !order_by_sym.nil? && [
       :most_games,
       :most_followers
@@ -103,7 +102,7 @@ class UsersController < ApplicationController
     @user = User.friendly.find(params[:id])
     authorize @user
     # Coerce the value to a boolean.
-    @update_hours = T.cast(params[:update_hours], T.nilable(String)) == 'true'
+    @update_hours = params[:update_hours] == 'true'
 
     @result = SteamImportService.new(user: @user, update_hours: @update_hours).call
 
@@ -371,9 +370,8 @@ class UsersController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def user_params
-    params.typed_require(:user).permit(
+    params.require(:user).permit(
       :bio,
       :avatar,
       :privacy,

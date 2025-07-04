@@ -1,22 +1,14 @@
-# typed: strict
-
 # A service for merging two games together.
 class GameMergeService
-  extend T::Sig
-
-  sig { returns(Game) }
   attr_accessor :game_a
-  sig { returns(Game) }
   attr_accessor :game_b
 
-  sig { params(game_a: Game, game_b: Game).void }
   def initialize(game_a, game_b)
     @game_a = game_a
     @game_b = game_b
   end
 
   # Merge the two games together.
-  sig { returns(T::Boolean) }
   def merge!
     # Cannot merge a game into itself, return early.
     return false if @game_a.id == @game_b.id
@@ -38,7 +30,6 @@ class GameMergeService
 
   private
 
-  sig { void }
   def handle_purchases
     game_a_purchasers = @game_a.game_purchases.pluck(:user_id)
     game_b_purchasers = @game_b.game_purchases.pluck(:user_id)
@@ -52,7 +43,6 @@ class GameMergeService
     @game_b.game_purchases.update_all(game_id: @game_a.id) # rubocop:disable Rails/SkipsModelValidations
   end
 
-  sig { void }
   def handle_favorites
     game_a_favoriters = @game_a.favorites.pluck(:user_id)
     game_b_favoriters = @game_b.favorites.pluck(:user_id)

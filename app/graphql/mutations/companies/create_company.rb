@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Companies::CreateCompany < Mutations::BaseMutation
   description "Create a new game company. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -7,7 +6,6 @@ class Mutations::Companies::CreateCompany < Mutations::BaseMutation
 
   field :company, Types::CompanyType, null: true, description: "The company that was created."
 
-  sig { params(name: String, wikidata_id: T.any(String, Integer)).returns(T::Hash[Symbol, Company]) }
   def resolve(name:, wikidata_id:)
     company = Company.new(name: name, wikidata_id: wikidata_id)
 
@@ -18,7 +16,6 @@ class Mutations::Companies::CreateCompany < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

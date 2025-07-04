@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class BasicSiteStatisticType < Types::BaseObject
     description "Basic site statistics."

@@ -1,4 +1,3 @@
-# typed: strict
 class Series < ApplicationRecord
   include GlobalSearchable
   include Searchable

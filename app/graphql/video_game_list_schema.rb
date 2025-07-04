@@ -1,7 +1,4 @@
-# typed: strict
 class VideoGameListSchema < GraphQL::Schema
-  extend T::Sig
-
   mutation(Types::MutationType)
   query(Types::QueryType)
 

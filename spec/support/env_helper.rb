@@ -1,4 +1,3 @@
-# typed: false
 # Helper to enable mocking ENV variables in tests.
 #
 # Based on https://stackoverflow.com/questions/9611276/what-is-the-best-way-to-write-specs-for-code-that-depends-on-environment-variabl

@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Games::CreateGame < Mutations::BaseMutation
   description "Create a new game. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -23,26 +22,6 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
 
   field :game, Types::GameType, null: true, description: "The game that was created."
 
-  sig do
-    params(
-      name: String,
-      wikidata_id: T.nilable(T.any(String, Integer)),
-      release_date: T.nilable(Date),
-      series_id: T.nilable(T.any(String, Integer)),
-      platform_ids: T::Array[T.any(String, Integer)],
-      developer_ids: T::Array[T.any(String, Integer)],
-      publisher_ids: T::Array[T.any(String, Integer)],
-      genre_ids: T::Array[T.any(String, Integer)],
-      engine_ids: T::Array[T.any(String, Integer)],
-      pcgamingwiki_id: T.nilable(String),
-      mobygames_id: T.nilable(Integer),
-      giantbomb_id: T.nilable(String),
-      epic_games_store_id: T.nilable(String),
-      gog_id: T.nilable(String),
-      igdb_id: T.nilable(String),
-      steam_app_ids: T::Array[Integer]
-    ).returns(T::Hash[Symbol, Game])
-  end
   def resolve(
     name:,
     wikidata_id: nil,
@@ -87,7 +66,6 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

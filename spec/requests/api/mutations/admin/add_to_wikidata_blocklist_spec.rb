@@ -1,4 +1,3 @@
-# typed: false
 require 'rails_helper'
 
 RSpec.describe "Add to Wikidata Blocklist Mutation API", type: :request do

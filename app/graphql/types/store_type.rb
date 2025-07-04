@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class StoreType < Types::BaseObject
     description "Stores where video games are sold, e.g. Steam or the Epic Games Store"

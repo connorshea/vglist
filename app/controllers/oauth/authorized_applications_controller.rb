@@ -1,4 +1,3 @@
-# typed: false
 class Oauth::AuthorizedApplicationsController < Doorkeeper::AuthorizedApplicationsController
   before_action :authenticate_resource_owner!
 

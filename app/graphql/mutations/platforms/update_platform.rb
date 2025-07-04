@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Platforms::UpdatePlatform < Mutations::BaseMutation
   description "Update an existing game platform. **Only available to moderators and admins using a first-party OAuth Application.**"
 
@@ -9,7 +8,6 @@ class Mutations::Platforms::UpdatePlatform < Mutations::BaseMutation
   field :platform, Types::PlatformType, null: false, description: "The platform that was updated."
 
   # Use **args so we don't replace existing fields that aren't provided with `nil`.
-  sig { params(platform_id: T.any(String, Integer), args: T.untyped).returns(T::Hash[Symbol, Platform]) }
   def resolve(platform_id:, **args)
     platform = Platform.find(platform_id)
 
@@ -20,7 +18,6 @@ class Mutations::Platforms::UpdatePlatform < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

@@ -1,4 +1,3 @@
-# typed: false
 class MoveGamePurchaseEvents < ActiveRecord::Migration[6.1]
   def up
     # rubocop:disable Rails/SkipsModelValidations

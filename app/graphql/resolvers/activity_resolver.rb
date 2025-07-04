@@ -1,4 +1,3 @@
-# typed: true
 module Resolvers
   class ActivityResolver < Resolvers::BaseResolver
     type Types::EventType.connection_type, null: true
@@ -7,7 +6,6 @@ module Resolvers
 
     argument :feed_type, Types::Enums::ActivityFeedType, required: false
 
-    sig { params(feed_type: String).returns(T.untyped) }
     def resolve(feed_type: 'following')
       case feed_type
       when 'global'

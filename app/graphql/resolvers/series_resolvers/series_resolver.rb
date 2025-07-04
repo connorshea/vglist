@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module SeriesResolvers
     class SeriesResolver < Resolvers::BaseResolver
@@ -8,7 +7,6 @@ module Resolvers
 
       argument :id, ID, required: true
 
-      sig { params(id: T.any(String, Integer)).returns(Series) }
       def resolve(id:)
         Series.find(id)
       end

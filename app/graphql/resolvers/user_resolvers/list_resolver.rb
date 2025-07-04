@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module UserResolvers
     class ListResolver < Resolvers::BaseResolver
@@ -8,7 +7,6 @@ module Resolvers
 
       argument :sort_by, Types::Enums::UserSortType, required: false, description: "The order to sort the users in, if any."
 
-      sig { params(sort_by: T.nilable(String)).returns(T.untyped) }
       def resolve(sort_by: nil)
         # Exclude banned users from the results.
         users = User.all.where(banned: false)

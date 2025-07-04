@@ -1,4 +1,3 @@
-# typed: false
 class DeleteInvalidEventsRecords < ActiveRecord::Migration[6.1]
   # Delete invalid events that are invalid due to the corresponding GamePurchase
   # not existing anymore. This is the only a problem for GamePurchase-related

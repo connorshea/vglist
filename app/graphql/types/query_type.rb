@@ -1,8 +1,5 @@
-# typed: strict
 module Types
   class QueryType < Types::BaseObject
-    extend T::Sig
-
     description "Queries are GraphQL requests that can be used to request data from vglist's database."
 
     field :game, resolver: Resolvers::GameResolvers::GameResolver

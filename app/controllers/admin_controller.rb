@@ -1,4 +1,3 @@
-# typed: true
 class AdminController < ApplicationController
   before_action :authenticate_user!
 
@@ -127,9 +126,8 @@ class AdminController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def steam_blocklist_params
-    params.typed_require(:steam_blocklist).permit(
+    params.require(:steam_blocklist).permit(
       :name,
       :steam_app_id
     )

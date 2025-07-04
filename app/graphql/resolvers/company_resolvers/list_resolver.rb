@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module CompanyResolvers
     class ListResolver < Resolvers::BaseResolver
@@ -6,7 +5,6 @@ module Resolvers
 
       description "List all companies."
 
-      sig { returns(T.untyped) }
       def resolve
         Company.all
       end

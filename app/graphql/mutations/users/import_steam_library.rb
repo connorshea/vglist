@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
   description "Import's the Steam library of the user. **Only available to users importing their own Steam library when using a first-party OAuth application.**"
 
@@ -12,7 +11,6 @@ class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
   field :unmatched_count, Integer, null: false, description: "The number of games where a match couldn't be found in the database."
   field :updated_games_count, Integer, null: false, description: "The number of games in the user's library that were updated."
 
-  sig { params(user_id: T.any(String, Integer), update_hours: T::Boolean).returns(T::Hash[Symbol, T.untyped]) }
   def resolve(user_id:, update_hours: false)
     user = User.find(user_id)
 
@@ -34,7 +32,6 @@ class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
     raise GraphQL::ExecutionError, "Steam API Request failed."
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

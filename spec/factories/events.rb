@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :game_purchase_library_event, class: 'Events::GamePurchaseEvent', aliases: [:event] do
     user

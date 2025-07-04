@@ -1,4 +1,3 @@
-# typed: true
 class NilClassPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve

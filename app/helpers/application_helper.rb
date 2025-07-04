@@ -1,8 +1,4 @@
-# typed: strict
 module ApplicationHelper
-  extend T::Sig
-
-  sig { params(level: T.any(String, Symbol)).returns(String) }
   def flash_class(level)
     case level.to_sym
     when :notice then "is-info"
@@ -14,7 +10,6 @@ module ApplicationHelper
   end
 
   # A helper for displaying user avatars.
-  sig { params(user: User, size: Symbol, css_class_name: String, options: T.untyped).returns(T.untyped) }
   def user_avatar(user, size:, css_class_name: 'user-avatar', **options)
     width, height = User::AVATAR_SIZES[size]
 
@@ -22,7 +17,7 @@ module ApplicationHelper
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
       # too wide or too tall.
-      image_tag T.must(user.sized_avatar(size)),
+      image_tag user.sized_avatar(size),
         height: "#{height}px",
         width: "#{width}px",
         class: css_class_name,
@@ -46,12 +41,11 @@ module ApplicationHelper
   end
 
   # A helper for displaying game covers.
-  sig { params(game: Game, size: Symbol, options: T.untyped).returns(T.untyped) }
   def game_cover(game, size:, **options)
     width, height = Game::COVER_SIZES[size]
 
     if game.cover.attached? && game.cover.variable?
-      image_tag T.must(game.sized_cover(size)),
+      image_tag game.sized_cover(size),
         width: "#{width}px",
         height: "#{height}px",
         alt: "Cover for #{game.name}.",
@@ -72,13 +66,11 @@ module ApplicationHelper
   end
 
   # rubocop:disable Style/StringConcatenation
-  sig { params(title: String).returns(String) }
   def meta_title(title)
     return (title + " | " if title.present?).to_s + "vglist"
   end
   # rubocop:enable Style/StringConcatenation
 
-  sig { params(description: String).returns(String) }
   def meta_description(description)
     return description.presence || "vglist helps you track your entire video game library across every store and platform."
   end
@@ -94,20 +86,18 @@ module ApplicationHelper
   #
   #   summarize(['PlayStation 2', 'Xbox 360', 'Wii U', 'Windows'], limit: 1)
   #     => "PlayStation 2 and 3 more"
-  sig { params(array: T::Array[String], limit: Integer).returns(T.nilable(String)) }
   def summarize(array, limit: 3)
     raise ArgumentError, 'Limit must be a positive integer' unless limit.positive?
 
     return "#{array.first} and #{array.length - limit} more" if limit == 1 && array.length > 1
-    return "#{T.must(array[0...limit]).join(', ')}, and #{array.length - limit} more" if array.length > limit
+    return "#{(array[0...limit]).join(', ')}, and #{array.length - limit} more" if array.length > limit
     return array.join(', ') if array.length <= limit
   end
 
   # This returns the `:page` parameter for Kaminari, it's a convenience method
   # for helping Sorbet understand the parameter.
-  sig { params(param: Symbol).returns(T.nilable(Integer)) }
   def page_param(param: :page)
-    return T.cast(params[param].to_i, T.nilable(Integer))
+    return params[param].to_i
   end
 
   # Embeds an SVG icon.
@@ -122,18 +112,6 @@ module ApplicationHelper
   # @param [Hash] options A hash of options to pass inline_svg_pack_tag.
   #
   # @return [any] An inline svg pack tag.
-  sig do
-    params(
-      icon: String,
-      height: Integer,
-      width: T.nilable(Integer),
-      fill: T.nilable(T.any(String, Symbol)),
-      css_class: T.nilable(String),
-      aria: T::Boolean,
-      title: String,
-      options: T::Hash[Symbol, T.untyped]
-    ).returns(T.untyped)
-  end
   def svg_icon(icon, height: 20, width: nil, fill: nil, css_class: nil, aria: true, title: "Icon", options: {})
     options[:aria] = aria
     options[:aria_hidden] = true unless aria
@@ -149,7 +127,6 @@ module ApplicationHelper
   # Return titles and paths for each item that should be displayed in the
   # navbar. A `nil` value means that the item can either be ignored or
   # should be a divider.
-  sig { returns(T::Array[T::Hash[Symbol, T.nilable(String)]]) }
   def navbar_items
     items = []
 

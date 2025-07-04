@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Admin::RemoveFromWikidataBlocklist < Mutations::BaseMutation
   description "Remove game from Wikidata blocklist. **Only available to admins using a first-party OAuth Application.**"
 
@@ -6,7 +5,6 @@ class Mutations::Admin::RemoveFromWikidataBlocklist < Mutations::BaseMutation
 
   field :deleted, Boolean, null: false, description: "Whether the blocklist entry was deleted."
 
-  sig { params(wikidata_blocklist_entry_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(wikidata_blocklist_entry_id:)
     wikidata_blocklist_entry = WikidataBlocklist.find(wikidata_blocklist_entry_id)
 
@@ -17,7 +15,6 @@ class Mutations::Admin::RemoveFromWikidataBlocklist < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

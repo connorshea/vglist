@@ -1,4 +1,3 @@
-# typed: true
 # Move the events records from the `events` table to the new separate tables
 # per-eventable type.
 class MoveFavoriteGameEvents < ActiveRecord::Migration[6.1]
