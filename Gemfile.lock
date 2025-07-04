@@ -446,7 +446,7 @@ GEM
     sentry-ruby (5.17.3)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    shoulda-matchers (6.4.0)
+    shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -565,7 +565,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.34)
   sentry-rails (~> 5.17.3)
   sentry-ruby (~> 5.17.3)
-  shoulda-matchers (= 6.4.0)
+  shoulda-matchers (= 6.5.0)
   simplecov (~> 0.22)
   sparql (~> 3.3.2)
   turbolinks (~> 5)
