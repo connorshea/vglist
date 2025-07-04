@@ -13,4 +13,3 @@ yarn-debug.log
 .yarn-integrity
 .DS_Store
 prod.env
-sorbet/rbi/hidden-definitions/errors.txt
