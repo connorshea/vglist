@@ -13,7 +13,6 @@ AllCops:
     - "db/schema.rb"
     - "node_modules/**/*"
     - "vendor/bundle/**/*"
-    - "sorbet/**/*"
     - "storage/**/*"
     - "tmp/**/*"
     - ".git/**/*"

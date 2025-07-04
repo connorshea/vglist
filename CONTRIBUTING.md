@@ -42,7 +42,6 @@ This is a list of libraries used for various functionality across the app. It's 
   - [ActiveRecord](https://guides.rubyonrails.org/active_record_basics.html): Used for SQL queries, migrations, and maintaining the database structure.
   - [ActiveStorage](https://guides.rubyonrails.org/active_storage_overview.html): Used for image storage.
   - [Webpacker](https://github.com/rails/webpacker): JavaScript / SCSS bundler, essentially [Webpack](https://webpack.js.org) with Rails integration.
-- [Sorbet](https://sorbet.org): Gradual static typing for Ruby.
 - [Postgres](https://www.postgresql.org/): Database engine that the application uses.
 - [PgSearch](https://github.com/Casecommons/pg_search): Powers search for games, companies, series', etc.
 - [Devise](https://github.com/heartcombo/devise): Authentication framework, for logging in and other user authentication things.
@@ -71,7 +70,6 @@ Rake tasks are Ruby code for performing tasks. For vglist, most of these are for
 - Deployment
   - `rake deploy:production` - Deploys the website in production mode, for use on the production server.
 - Development
-  - `rake sorbet:update:all` - Updates all the Sorbet type signatures based on current code.
   - `rake db:seed` - Creates fake data, mostly for development.
 
 ## GitLab CI
