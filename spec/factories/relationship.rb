@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :relationship do
     association :follower, factory: :user

@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Games::RemoveGameCover < Mutations::BaseMutation
   description "Remove the cover from a game. **Only available to moderators and admins using a first-party OAuth Application.**"
 

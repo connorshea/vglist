@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Engines::CreateEngine < Mutations::BaseMutation
   description "Create a new game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
 

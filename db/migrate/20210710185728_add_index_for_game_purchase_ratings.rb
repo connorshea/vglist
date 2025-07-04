@@ -1,4 +1,3 @@
-# typed: true
 class AddIndexForGamePurchaseRatings < ActiveRecord::Migration[6.1]
   def change
     add_index :game_purchases,

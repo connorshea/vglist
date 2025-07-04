@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module SiteStatisticResolvers
     class BasicResolver < Resolvers::BaseResolver

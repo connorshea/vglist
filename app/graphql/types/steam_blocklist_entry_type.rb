@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   class SteamBlocklistEntryType < Types::BaseObject
     description <<~MARKDOWN

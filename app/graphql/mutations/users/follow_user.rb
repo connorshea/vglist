@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::FollowUser < Mutations::BaseMutation
   description "Follow a user."
 

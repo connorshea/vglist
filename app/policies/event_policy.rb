@@ -1,4 +1,3 @@
-# typed: strict
 class EventPolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :event

@@ -1,4 +1,3 @@
-# typed: strict
 class RelationshipPolicy < ApplicationPolicy
   attr_reader :follower
   attr_reader :followed

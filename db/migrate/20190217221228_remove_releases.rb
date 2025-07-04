@@ -1,4 +1,3 @@
-# typed: true
 class RemoveReleases < ActiveRecord::Migration[5.2]
   def up
     drop_table :release_purchases

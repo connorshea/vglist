@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module StoreResolvers
     class StoreResolver < Resolvers::BaseResolver

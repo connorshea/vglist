@@ -1,4 +1,3 @@
-# typed: true
 class AdminPolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :nilable

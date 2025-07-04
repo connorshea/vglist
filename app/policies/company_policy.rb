@@ -1,4 +1,3 @@
-# typed: strict
 class CompanyPolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :company

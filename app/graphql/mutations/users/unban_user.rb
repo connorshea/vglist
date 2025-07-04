@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::UnbanUser < Mutations::BaseMutation
   description "Unban a user. **Only available to moderators and admins using a first-party OAuth Application.**"
 

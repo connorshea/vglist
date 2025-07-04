@@ -1,4 +1,3 @@
-# typed: true
 class Admin::UnmatchedGamesController < ApplicationController
   before_action :authenticate_user!
 

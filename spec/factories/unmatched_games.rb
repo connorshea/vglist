@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :unmatched_game do
     association :user

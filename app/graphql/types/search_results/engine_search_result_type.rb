@@ -1,4 +1,3 @@
-# typed: strict
 module Types
   module SearchResults
     class EngineSearchResultType < Types::BaseObject

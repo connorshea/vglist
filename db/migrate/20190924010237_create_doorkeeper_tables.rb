@@ -1,4 +1,3 @@
-# typed: true
 class CreateDoorkeeperTables < ActiveRecord::Migration[6.0]
   def change
     create_table :oauth_applications do |t|

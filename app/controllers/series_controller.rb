@@ -1,4 +1,3 @@
-# typed: true
 class SeriesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 

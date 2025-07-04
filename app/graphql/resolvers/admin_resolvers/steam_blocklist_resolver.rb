@@ -1,4 +1,3 @@
-# typed: true
 module Resolvers::AdminResolvers
   class SteamBlocklistResolver < Resolvers::BaseResolver
     type Types::SteamBlocklistEntryType.connection_type, null: true

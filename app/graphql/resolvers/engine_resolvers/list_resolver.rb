@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module EngineResolvers
     class ListResolver < Resolvers::BaseResolver

@@ -1,4 +1,3 @@
-# typed: strict
 class EnginePolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :engine

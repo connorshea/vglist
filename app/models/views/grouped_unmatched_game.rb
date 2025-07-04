@@ -1,5 +1,3 @@
-# typed: true
-
 module Views
   # A view for performantly grouping unmatched games together based on
   # their external service IDs. This allows us to expose the expected data

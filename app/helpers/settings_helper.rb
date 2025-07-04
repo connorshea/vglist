@@ -1,4 +1,3 @@
-# typed: true
 module SettingsHelper
   # These three helpers are used by devise's account forms.
   def resource_name

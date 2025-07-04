@@ -1,4 +1,3 @@
-# typed: true
 class CreateUnmatchedGames < ActiveRecord::Migration[6.1]
   def change
     create_table :unmatched_games, comment: 'Games imported from a third party service, such as Steam, that we weren\'t able to match to a game in vglist.' do |t|

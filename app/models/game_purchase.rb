@@ -1,4 +1,3 @@
-# typed: strict
 class GamePurchase < ApplicationRecord
   after_create :game_purchase_create
   after_update :game_purchase_update

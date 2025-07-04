@@ -1,4 +1,3 @@
-# typed: false
 # rubocop:disable Rails/PluckInWhere
 namespace :vglist do
   namespace :unmatched_games do

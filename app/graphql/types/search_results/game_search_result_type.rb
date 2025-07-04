@@ -1,4 +1,3 @@
-# typed: true
 module Types
   module SearchResults
     class GameSearchResultType < Types::BaseObject

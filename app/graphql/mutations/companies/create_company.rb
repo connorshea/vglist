@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Companies::CreateCompany < Mutations::BaseMutation
   description "Create a new game company. **Only available to moderators and admins using a first-party OAuth Application.**"
 

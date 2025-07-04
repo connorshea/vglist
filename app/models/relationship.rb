@@ -1,4 +1,3 @@
-# typed: strict
 class Relationship < ApplicationRecord
   after_create :create_follow_event
 

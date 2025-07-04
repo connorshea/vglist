@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
   description "Update an existing game company. **Only available to moderators and admins using a first-party OAuth Application.**"
 

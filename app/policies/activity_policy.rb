@@ -1,4 +1,3 @@
-# typed: strong
 class ActivityPolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :event

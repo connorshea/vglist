@@ -1,4 +1,3 @@
-# typed: strict
 class SteamBlocklist < ApplicationRecord
   belongs_to :user, optional: true
 

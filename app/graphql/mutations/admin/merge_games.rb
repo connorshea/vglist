@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Admin::MergeGames < Mutations::BaseMutation
   description "Merge one game into another. Re-associates all favorites and game purchases (if possible). **Only available to admins using a first-party OAuth Application.**"
 

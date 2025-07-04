@@ -1,4 +1,3 @@
-# typed: true
 class Oauth::AuthorizationPolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :application

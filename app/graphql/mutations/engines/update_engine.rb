@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
   description "Update an existing game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
 

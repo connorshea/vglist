@@ -1,5 +1,3 @@
-# typed: strict
-
 # If we're in development mode, configure the GraphQL RailsLogger gem.
 if Rails.env.development?
   GraphQL::RailsLogger.configure do |config|

@@ -1,4 +1,3 @@
-# typed: false
 module ApiRequestTestHelper
   # @param query_string [String]
   # @param variables [Hash]

@@ -1,4 +1,3 @@
-# typed: strict
 puts "Creating admin..."
 
 # Create an account for admin usage.

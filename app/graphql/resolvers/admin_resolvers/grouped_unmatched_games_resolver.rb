@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers::AdminResolvers
   class GroupedUnmatchedGamesResolver < Resolvers::BaseResolver
     type Types::GroupedUnmatchedGameType.connection_type, null: true

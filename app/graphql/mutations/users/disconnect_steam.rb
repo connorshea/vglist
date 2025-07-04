@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::DisconnectSteam < Mutations::BaseMutation
   description "Disconnect a user's Steam account. **Only available to users disconnecting their own Steam account when using a first-party OAuth application.**"
 

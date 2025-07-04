@@ -1,4 +1,3 @@
-# typed: true
 module Resolvers
   module SiteStatisticResolvers
     class ListResolver < Resolvers::BaseResolver

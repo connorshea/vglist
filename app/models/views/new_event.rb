@@ -1,5 +1,3 @@
-# typed: strict
-
 module Views
   # A view for aggregating data from the various events tables.
   class NewEvent < ApplicationRecord

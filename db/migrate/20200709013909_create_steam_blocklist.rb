@@ -1,4 +1,3 @@
-# typed: true
 class CreateSteamBlocklist < ActiveRecord::Migration[6.0]
   def change
     create_table :steam_blocklist do |t|

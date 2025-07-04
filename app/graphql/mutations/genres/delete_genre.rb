@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Genres::DeleteGenre < Mutations::BaseMutation
   description "Delete a game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
 

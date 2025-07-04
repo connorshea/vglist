@@ -1,4 +1,3 @@
-# typed: strict
 class PlatformPolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :platform

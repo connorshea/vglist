@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Platforms::DeletePlatform < Mutations::BaseMutation
   description "Delete a game platform. **Only available to moderators and admins using a first-party OAuth Application.**"
 

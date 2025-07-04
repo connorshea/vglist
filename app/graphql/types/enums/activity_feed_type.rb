@@ -1,4 +1,3 @@
-# typed: strict
 module Types::Enums
   class ActivityFeedType < Types::BaseEnum
     description "Options for filtering events in the activity feed."

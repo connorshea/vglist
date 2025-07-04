@@ -1,4 +1,3 @@
-# typed: true
 # This migration comes from active_storage (originally 20170806125915)
 # Auto-generated migration.
 # rubocop:disable all

@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :steam_app_id do
     game

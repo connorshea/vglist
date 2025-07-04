@@ -1,4 +1,3 @@
-# typed: strict
 class GamePurchasePolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :game_purchase

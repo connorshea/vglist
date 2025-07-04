@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::DeleteUser < Mutations::BaseMutation
   description "Delete a user. **Only available to users deleting their own accounts using a first-party OAuth Application.**"
 

@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Engines::DeleteEngine < Mutations::BaseMutation
   description "Delete a game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
 

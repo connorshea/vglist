@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
   description "Update an existing game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
 

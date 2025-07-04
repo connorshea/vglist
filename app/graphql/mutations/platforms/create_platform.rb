@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Platforms::CreatePlatform < Mutations::BaseMutation
   description "Create a new game platform. **Only available to moderators and admins using a first-party OAuth Application.**"
 

@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :engine do
     name { "Source Engine" }

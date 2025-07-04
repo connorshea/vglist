@@ -1,4 +1,3 @@
-# typed: false
 namespace 'active_storage:vglist:clean' do
   desc "Remove any attachments where the blob has a content type other than PNG or JPG."
   task bad_content_types: :environment do

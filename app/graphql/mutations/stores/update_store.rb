@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Stores::UpdateStore < Mutations::BaseMutation
   description "Update an existing game store. **Only available to moderators and admins using a first-party OAuth Application.**"
 

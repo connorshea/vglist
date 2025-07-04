@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
   description "Add game to Steam blocklist and remove the Steam App ID from any existing games that have it. **Only available to admins using a first-party OAuth Application.**"
 

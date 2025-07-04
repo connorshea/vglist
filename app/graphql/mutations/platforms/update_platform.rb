@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Platforms::UpdatePlatform < Mutations::BaseMutation
   description "Update an existing game platform. **Only available to moderators and admins using a first-party OAuth Application.**"
 

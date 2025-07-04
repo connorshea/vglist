@@ -1,4 +1,3 @@
-# typed: true
 class CreateNewEventsView < ActiveRecord::Migration[6.1]
   def up
     execute <<~SQL.squish

@@ -1,4 +1,3 @@
-# typed: false
 FactoryBot.define do
   factory :application, class: 'Doorkeeper::Application' do
     name { Faker::Lorem.words(number: 3).join(' ') }

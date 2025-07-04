@@ -1,4 +1,3 @@
-# typed: strict
 class UserPolicy < ApplicationPolicy
   attr_reader :current_user, :user
 

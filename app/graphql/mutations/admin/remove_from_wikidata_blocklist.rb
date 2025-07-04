@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Admin::RemoveFromWikidataBlocklist < Mutations::BaseMutation
   description "Remove game from Wikidata blocklist. **Only available to admins using a first-party OAuth Application.**"
 

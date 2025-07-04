@@ -1,4 +1,3 @@
-# typed: true
 class DropMobyGamesIdColumn < ActiveRecord::Migration[7.0]
   def change
     remove_index :games, :mobygames_id, unique: true

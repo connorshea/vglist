@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Users::RemoveUserAvatar < Mutations::BaseMutation
   description "Remove the avatar from a user. **Only available when using a first-party OAuth application.**"
 

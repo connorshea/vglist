@@ -1,4 +1,3 @@
-# typed: true
 class UsersController < ApplicationController
   def index
     # Hide banned users from users that aren't moderators or admins.

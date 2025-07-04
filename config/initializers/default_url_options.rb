@@ -1,4 +1,3 @@
-# typed: true
 # Define the overall Rails default URL options based on action_mailer's
 # default URL options, which are set in the environment/*.rb files.
 #

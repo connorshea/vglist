@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   module CompanyResolvers
     class CompanyResolver < Resolvers::BaseResolver

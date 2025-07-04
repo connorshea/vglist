@@ -1,4 +1,3 @@
-# typed: true
 class MoveUserEvents < ActiveRecord::Migration[6.1]
   def up
     # rubocop:disable Rails/SkipsModelValidations

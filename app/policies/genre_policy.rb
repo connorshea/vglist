@@ -1,4 +1,3 @@
-# typed: strict
 class GenrePolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :genre

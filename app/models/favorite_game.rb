@@ -1,4 +1,3 @@
-# typed: strict
 class FavoriteGame < ApplicationRecord
   after_create :favorite_game_create_event
 

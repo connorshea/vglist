@@ -1,4 +1,3 @@
-# typed: false
 class GraphqlController < ApplicationController
   # If the user hasn't provided any token, return a specific error message.
   before_action :handle_user_not_logged_in, if: -> {

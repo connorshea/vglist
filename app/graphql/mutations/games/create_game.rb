@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::Games::CreateGame < Mutations::BaseMutation
   description "Create a new game. **Only available to moderators and admins using a first-party OAuth Application.**"
 

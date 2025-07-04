@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::DeleteEvent < Mutations::BaseMutation
   description "Delete an event from the Activity Feed. You must be the owner of the event to delete it."
 

@@ -1,4 +1,3 @@
-# typed: true
 module Types
   class GameType < Types::BaseObject
     description "Video games"

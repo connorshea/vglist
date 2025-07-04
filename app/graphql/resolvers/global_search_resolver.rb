@@ -1,4 +1,3 @@
-# typed: strict
 module Resolvers
   class GlobalSearchResolver < Resolvers::BaseResolver
     type Types::SearchResultUnion.connection_type, null: false
