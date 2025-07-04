@@ -100,7 +100,7 @@ GEM
       aws-sigv4 (~> 1.4)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    base64 (0.2.0)
+    base64 (0.3.0)
     bcp47_spec (0.2.1)
     bcrypt (3.1.20)
     benchmark (0.4.0)
@@ -312,7 +312,7 @@ GEM
       rack (>= 2.0.0)
     rack-proxy (0.7.7)
       rack
-    rack-session (2.1.0)
+    rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     rack-test (2.2.0)
