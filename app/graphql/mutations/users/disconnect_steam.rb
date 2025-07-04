@@ -6,7 +6,6 @@ class Mutations::Users::DisconnectSteam < Mutations::BaseMutation
 
   field :disconnected, Boolean, null: false, description: "Whether the account was disconnected successfully."
 
-  sig { params(user_id: T.any(String, Integer)).returns(T::Hash[Symbol, T.untyped]) }
   def resolve(user_id:)
     user = User.find(user_id)
 
@@ -21,7 +20,6 @@ class Mutations::Users::DisconnectSteam < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

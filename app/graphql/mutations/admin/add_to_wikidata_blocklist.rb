@@ -7,7 +7,6 @@ class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
 
   field :wikidata_blocklist_entry, Types::WikidataBlocklistEntryType, null: true, description: "The Wikidata Blocklist entry that was created."
 
-  sig { params(name: String, wikidata_id: Integer).returns(T::Hash[Symbol, WikidataBlocklist]) }
   def resolve(name:, wikidata_id:)
     # Find the existing game with this Wikidata ID and remove it from the
     # record, if it exists.
@@ -23,7 +22,6 @@ class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T.nilable(T::Boolean)) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

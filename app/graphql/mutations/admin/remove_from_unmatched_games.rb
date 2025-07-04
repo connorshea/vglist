@@ -7,7 +7,6 @@ class Mutations::Admin::RemoveFromUnmatchedGames < Mutations::BaseMutation
 
   field :deleted, Boolean, null: false, description: "Whether the UnmatchedGame entries were deleted."
 
-  sig { params(external_service_id: T.any(String, Integer), external_service_name: String).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(external_service_id:, external_service_name:)
     unmatched_games = UnmatchedGame.where(
       external_service_id: external_service_id,
@@ -23,7 +22,6 @@ class Mutations::Admin::RemoveFromUnmatchedGames < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

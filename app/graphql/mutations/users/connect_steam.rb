@@ -7,7 +7,6 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
 
   field :connected, Boolean, null: false, description: "Whether the account was connected successfully."
 
-  sig { params(user_id: T.any(String, Integer), steam_username: String).returns(T::Hash[Symbol, T.untyped]) }
   def resolve(user_id:, steam_username:)
     user = User.find(user_id)
 
@@ -37,7 +36,6 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

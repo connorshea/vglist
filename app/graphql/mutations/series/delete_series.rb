@@ -6,7 +6,6 @@ class Mutations::Series::DeleteSeries < Mutations::BaseMutation
 
   field :deleted, Boolean, null: true, description: "Whether the series was successfully deleted."
 
-  sig { params(series_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(series_id:)
     series = Series.find(series_id)
 
@@ -17,7 +16,6 @@ class Mutations::Series::DeleteSeries < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

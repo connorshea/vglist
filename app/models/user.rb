@@ -80,14 +80,11 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   # Only use one of the pre-set sizes for these images.
-  AVATAR_SIZES = T.let(
-    {
-      small: [80, 80],
-      medium: [150, 150],
-      large: [300, 300]
-    },
-    T::Hash[Symbol, [Integer, Integer]]
-  )
+  AVATAR_SIZES = {
+    small: [80, 80],
+    medium: [150, 150],
+    large: [300, 300]
+  }.freeze
 
   friendly_id :username, use: [:slugged, :finders]
 

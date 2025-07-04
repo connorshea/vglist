@@ -6,7 +6,6 @@ class Mutations::Games::RemoveGameCover < Mutations::BaseMutation
 
   field :game, Types::GameType, null: false, description: "The game thats cover was removed."
 
-  sig { params(game_id: String).returns(T::Hash[Symbol, Game]) }
   def resolve(game_id:)
     game = Game.find_by(id: game_id)
 
@@ -19,7 +18,6 @@ class Mutations::Games::RemoveGameCover < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

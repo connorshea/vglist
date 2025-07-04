@@ -7,7 +7,6 @@ class Mutations::Users::UpdateUserRole < Mutations::BaseMutation
 
   field :user, Types::UserType, null: true, description: "The user that has been updated."
 
-  sig { params(user_id: T.any(String, Integer), role: String).returns(T::Hash[Symbol, User]) }
   def resolve(user_id:, role:)
     user = User.find(user_id)
 
@@ -22,7 +21,6 @@ class Mutations::Users::UpdateUserRole < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

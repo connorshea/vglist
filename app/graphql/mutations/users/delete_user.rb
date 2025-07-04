@@ -6,7 +6,6 @@ class Mutations::Users::DeleteUser < Mutations::BaseMutation
 
   field :deleted, Boolean, null: false, description: "Whether the user was deleted successfully or not."
 
-  sig { params(user_id: String).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(user_id:)
     user = User.find_by(id: user_id)
 
@@ -17,7 +16,6 @@ class Mutations::Users::DeleteUser < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

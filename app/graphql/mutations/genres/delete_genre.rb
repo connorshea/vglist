@@ -6,7 +6,6 @@ class Mutations::Genres::DeleteGenre < Mutations::BaseMutation
 
   field :deleted, Boolean, null: true, description: "Whether the genre was successfully deleted."
 
-  sig { params(genre_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(genre_id:)
     genre = Genre.find(genre_id)
 
@@ -17,7 +16,6 @@ class Mutations::Genres::DeleteGenre < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

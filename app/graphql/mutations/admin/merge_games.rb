@@ -7,7 +7,6 @@ class Mutations::Admin::MergeGames < Mutations::BaseMutation
 
   field :game, Types::GameType, null: false, description: "The resulting game that was kept after merging the two."
 
-  sig { params(game_to_keep_id: String, game_to_merge_id: String).returns(T::Hash[Symbol, Game]) }
   def resolve(game_to_keep_id:, game_to_merge_id:)
     game_to_keep = Game.find_by(id: game_to_keep_id)
     game_to_merge = Game.find_by(id: game_to_merge_id)
@@ -23,7 +22,6 @@ class Mutations::Admin::MergeGames < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

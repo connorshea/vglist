@@ -7,7 +7,6 @@ class Mutations::Companies::CreateCompany < Mutations::BaseMutation
 
   field :company, Types::CompanyType, null: true, description: "The company that was created."
 
-  sig { params(name: String, wikidata_id: T.any(String, Integer)).returns(T::Hash[Symbol, Company]) }
   def resolve(name:, wikidata_id:)
     company = Company.new(name: name, wikidata_id: wikidata_id)
 

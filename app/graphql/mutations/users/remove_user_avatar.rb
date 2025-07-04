@@ -6,7 +6,6 @@ class Mutations::Users::RemoveUserAvatar < Mutations::BaseMutation
 
   field :user, Types::UserType, null: false, description: "The user thats avatar was removed."
 
-  sig { params(user_id: String).returns(T::Hash[Symbol, User]) }
   def resolve(user_id:)
     user = User.find_by(id: user_id)
 
@@ -19,7 +18,6 @@ class Mutations::Users::RemoveUserAvatar < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

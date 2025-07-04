@@ -6,7 +6,6 @@ module Resolvers
 
       description "Current statistics for all records on the site, for use on the admin dashboard. **Only available to admins.**"
 
-      sig { returns(T::Hash[Symbol, Integer]) }
       def resolve
         {
           users: User.count,
@@ -43,7 +42,6 @@ module Resolvers
         }
       end
 
-      sig { returns(T::Boolean) }
       def authorized?
         raise GraphQL::ExecutionError, "Viewing site statistics is only available to admins." unless AdminPolicy.new(@context[:current_user], nil).statistics?
 

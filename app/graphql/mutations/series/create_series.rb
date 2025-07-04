@@ -7,7 +7,6 @@ class Mutations::Series::CreateSeries < Mutations::BaseMutation
 
   field :series, Types::SeriesType, null: true, description: "The series that was created."
 
-  sig { params(name: String, wikidata_id: T.any(String, Integer)).returns(T::Hash[Symbol, Series]) }
   def resolve(name:, wikidata_id:)
     series = Series.new(name: name, wikidata_id: wikidata_id)
 
@@ -18,7 +17,6 @@ class Mutations::Series::CreateSeries < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

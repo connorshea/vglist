@@ -7,7 +7,6 @@ class Mutations::Engines::CreateEngine < Mutations::BaseMutation
 
   field :engine, Types::EngineType, null: true, description: "The engine that was created."
 
-  sig { params(name: String, wikidata_id: T.any(String, Integer)).returns(T::Hash[Symbol, Engine]) }
   def resolve(name:, wikidata_id:)
     engine = Engine.new(name: name, wikidata_id: wikidata_id)
 
@@ -18,7 +17,6 @@ class Mutations::Engines::CreateEngine < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

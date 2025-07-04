@@ -1,4 +1,3 @@
-# typed: strict
 class Game < ApplicationRecord
   include GlobalSearchable
   include Searchable
@@ -44,14 +43,11 @@ class Game < ApplicationRecord
                   }
 
   # Only use one of the pre-set sizes for these images.
-  COVER_SIZES = T.let(
-    {
-      small: [200, 300],
-      medium: [300, 500],
-      large: [500, 800]
-    },
-    T::Hash[Symbol, [Integer, Integer]]
-  )
+  COVER_SIZES = {
+    small: [200, 300],
+    medium: [300, 500],
+    large: [500, 800]
+  }.freeze
 
   scope :newest, -> { order("created_at desc") }
   scope :oldest, -> { order("created_at asc") }
@@ -181,16 +177,6 @@ class Game < ApplicationRecord
 
   # Generate a cover variant with a specific size, size must be a Symbol
   # matching one of the keys in `Game::COVER_SIZES`.
-  sig do
-    params(size: Symbol).returns(
-      T.nilable(
-        T.any(
-          ActiveStorage::Variant,
-          ActiveStorage::VariantWithRecord
-        )
-      )
-    )
-  end
   def sized_cover(size)
     width, height = COVER_SIZES[size]
     cover.variant(
@@ -201,7 +187,6 @@ class Game < ApplicationRecord
   protected
 
   # Prevent the game from using a Wikidata ID which has been blocklisted.
-  sig { void }
   def wikidata_id_not_blocklisted
     return unless wikidata_id.present? && WikidataBlocklist.pluck(:wikidata_id).include?(wikidata_id)
 

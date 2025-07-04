@@ -1,4 +1,3 @@
-# typed: true
 class Mutations::GamePurchases::AddGameToLibrary < Mutations::BaseMutation
   description "Add a game to the current user's library."
 
@@ -15,20 +14,6 @@ class Mutations::GamePurchases::AddGameToLibrary < Mutations::BaseMutation
 
   field :game_purchase, Types::GamePurchaseType, null: true, description: "The game purchase that's been added to the user's library."
 
-  sig do
-    params(
-      game_id: T.any(String, Integer),
-      completion_status: T.untyped,
-      rating: T.nilable(Integer),
-      hours_played: T.nilable(Float),
-      replay_count: Integer,
-      comments: String,
-      start_date: T.nilable(Date),
-      completion_date: T.nilable(Date),
-      platforms: T::Array[T.any(String, Integer)],
-      stores: T::Array[T.any(String, Integer)]
-    ).returns(T::Hash[Symbol, GamePurchase])
-  end
   def resolve(
     game_id:,
     completion_status: nil,
@@ -65,7 +50,6 @@ class Mutations::GamePurchases::AddGameToLibrary < Mutations::BaseMutation
   end
 
   # Check that the user is authorized to add the game to their library.
-  sig { params(_object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(_object)
     raise GraphQL::ExecutionError, "You aren't allowed to add this game to your library." unless GamePurchasePolicy.new(@context[:current_user], nil).create?
 

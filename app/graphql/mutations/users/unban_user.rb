@@ -6,7 +6,6 @@ class Mutations::Users::UnbanUser < Mutations::BaseMutation
 
   field :user, Types::UserType, null: true, description: "The user that has been unbanned."
 
-  sig { params(user_id: T.any(String, Integer)).returns(T::Hash[Symbol, User]) }
   def resolve(user_id:)
     user = User.find(user_id)
 
@@ -21,7 +20,6 @@ class Mutations::Users::UnbanUser < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

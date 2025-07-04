@@ -6,7 +6,6 @@ class Mutations::Games::DeleteGame < Mutations::BaseMutation
 
   field :deleted, Boolean, null: true, description: "Whether the game was successfully deleted."
 
-  sig { params(game_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(game_id:)
     game = Game.find(game_id)
 
@@ -17,7 +16,6 @@ class Mutations::Games::DeleteGame < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

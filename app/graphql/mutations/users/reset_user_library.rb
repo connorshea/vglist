@@ -6,7 +6,6 @@ class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
 
   field :deleted, Boolean, null: false, description: "Whether the user's library was reset successfully or not."
 
-  sig { params(user_id: String).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(user_id:)
     user = User.find_by(id: user_id)
 
@@ -21,7 +20,6 @@ class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     require_permissions!(:first_party)
 

@@ -6,7 +6,6 @@ class Mutations::Stores::DeleteStore < Mutations::BaseMutation
 
   field :deleted, Boolean, null: true, description: "Whether the store was successfully deleted."
 
-  sig { params(store_id: T.any(String, Integer)).returns(T::Hash[Symbol, T::Boolean]) }
   def resolve(store_id:)
     store = Store.find(store_id)
 
@@ -17,7 +16,6 @@ class Mutations::Stores::DeleteStore < Mutations::BaseMutation
     }
   end
 
-  sig { params(object: T.untyped).returns(T::Boolean) }
   def authorized?(object)
     require_permissions!(:first_party)
 

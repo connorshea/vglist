@@ -68,11 +68,6 @@ cacher:
       - node_modules
     policy: pull-push
 
-sorbet:tc:
-  before_script: *no_db_necessary
-  script:
-    - bundle exec srb tc .
-
 typescript:tsc:
   before_script: *no_db_necessary
   script:
