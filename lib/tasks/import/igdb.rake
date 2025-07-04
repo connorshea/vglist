@@ -164,7 +164,7 @@ namespace :import do
       end
 
       # Incredibly stupid way to get the file extension from the IGDB cover URL.
-      file_ext = (cover_blob.base_uri.to_s.split(%r{[/.]})[-1]).to_s
+      file_ext = cover_blob.base_uri.to_s.split(%r{[/.]})[-1].to_s
       # Copy the image data to a file with ActiveStorage.
       # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
       game.cover.attach(io: cover_blob, filename: "#{game.id}_from_igdb.#{file_ext}")

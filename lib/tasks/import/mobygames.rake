@@ -170,7 +170,7 @@ namespace :import do
       end
 
       # Attach the cover and get the filename from the last fragment of the URL.
-      game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
+      game.cover.attach(io: cover_blob, filename: cover_blob.base_uri.to_s.split('/')[-1].to_s)
       attached_covers_count += 1
       progress_bar.log "Added cover for #{game[:name]}."
       progress_bar.increment

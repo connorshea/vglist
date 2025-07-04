@@ -92,15 +92,15 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
-  gem 'rubocop', '~> 1.69', require: false
+  gem 'rubocop', '~> 1.77', require: false
 
   # rubocop extensions
-  gem 'rubocop-performance', '~> 1.23', require: false
-  gem 'rubocop-rspec', '~> 3.3', require: false
-  gem 'rubocop-rspec_rails', '~> 2.30', require: false
+  gem 'rubocop-performance', '~> 1.25.0', require: false
+  gem 'rubocop-rspec', '~> 3.6.0', require: false
+  gem 'rubocop-rspec_rails', '~> 2.31', require: false
   gem 'rubocop-capybara', '~> 2.21', require: false
-  gem 'rubocop-factory_bot', '~> 2.26', require: false
-  gem 'rubocop-rails', '~> 2.27', require: false
+  gem 'rubocop-factory_bot', '~> 2.27', require: false
+  gem 'rubocop-rails', '~> 2.32', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 2.1'

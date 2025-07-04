@@ -168,7 +168,7 @@ namespace :import do
       end
 
       # Copy the image data to a file with ActiveStorage.
-      game.cover.attach(io: cover_blob, filename: (cover_blob.base_uri.to_s.split('/')[-1]).to_s)
+      game.cover.attach(io: cover_blob, filename: cover_blob.base_uri.to_s.split('/')[-1].to_s)
 
       # If the cover has any errors, they'll show up on the `Game` record.
       # Check for any errors and print them if they exist.
