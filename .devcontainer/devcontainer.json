@@ -13,7 +13,6 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"rebornix.Ruby",
-		"sorbet.sorbet-vscode-extension"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

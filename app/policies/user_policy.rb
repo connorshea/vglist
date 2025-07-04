@@ -1,9 +1,7 @@
 # typed: strict
 class UserPolicy < ApplicationPolicy
-  sig { returns(T.nilable(User)) }
   attr_reader :current_user, :user
 
-  sig { params(current_user: T.nilable(User), user: T.nilable(User)).void }
   def initialize(current_user, user)
     @current_user = current_user
     @user = user

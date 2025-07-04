@@ -53,9 +53,5 @@ sbin/
 /schema.json
 /schema.graphql
 
-# Ignore spoom-related files for tracking type coverage.
-/spoom_data
-/spoom_report.html
-
 /vendor/*
 .env
