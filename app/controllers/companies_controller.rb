@@ -84,7 +84,7 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.typed_require(:company).permit(
+    params.require(:company).permit(
       :name,
       :wikidata_id
     )

@@ -65,7 +65,7 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   end
 
   def application_params
-    params.typed_require(:doorkeeper_application).permit(
+    params.require(:doorkeeper_application).permit(
       :name,
       :redirect_uri,
       :scopes,

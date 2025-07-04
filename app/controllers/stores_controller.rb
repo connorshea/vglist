@@ -91,7 +91,7 @@ class StoresController < ApplicationController
   private
 
   def store_params
-    params.typed_require(:store).permit(
+    params.require(:store).permit(
       :name
     )
   end

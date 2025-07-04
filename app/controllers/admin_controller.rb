@@ -127,7 +127,7 @@ class AdminController < ApplicationController
   private
 
   def steam_blocklist_params
-    params.typed_require(:steam_blocklist).permit(
+    params.require(:steam_blocklist).permit(
       :name,
       :steam_app_id
     )
