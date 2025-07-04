@@ -5,12 +5,10 @@ module Resolvers::AdminResolvers
 
     description "List all Wikidata blocklist entries. **Only available to admins.**"
 
-    sig { returns(T.untyped) }
     def resolve
       WikidataBlocklist.all
     end
 
-    sig { returns(T::Boolean) }
     def authorized?
       raise GraphQL::ExecutionError, "Viewing the Wikidata Blocklist is only available to admins." unless AdminPolicy.new(@context[:current_user], nil).wikidata_blocklist?
 

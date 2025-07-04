@@ -1,8 +1,6 @@
 # typed: true
 module Types
   class GameType < Types::BaseObject
-    extend T::Sig
-
     description "Video games"
 
     field :id, ID, null: false, description: "ID of the game."
@@ -40,42 +38,36 @@ module Types
     field :game_purchase_id, ID, null: true, description: 'The ID of the GamePurchase record if the game is in the current user\'s library, or `null` otherwise.'
 
     # Get the number of purchases for the game where rating is not nil.
-    sig { returns(Integer) }
     def rating_count
       @object.game_purchases.where.not(rating: nil).count
     end
 
     # Get the Steam App ID values as an array.
-    sig { returns(T::Array[Integer]) }
     def steam_app_ids
       @object.steam_app_ids.map(&:app_id)
     end
 
     # TODO: This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
-    sig { params(size: Symbol).returns(T.nilable(String)) }
     def cover_url(size:)
-      cover = T.cast(@object, Game).sized_cover(size)
+      cover = @object.sized_cover(size)
       return if cover.nil?
 
       Rails.application.routes.url_helpers.rails_representation_url(cover)
     end
 
-    sig { returns(T.nilable(T::Boolean)) }
     def favorited?
       return nil if @context[:current_user].nil?
 
       @context[:current_user].favorite_games.find_by(game_id: @object.id).present?
     end
 
-    sig { returns(T.nilable(T::Boolean)) }
     def in_library?
       return nil if @context[:current_user].nil?
 
       @context[:current_user].game_purchases.find_by(game_id: @object.id).present?
     end
 
-    sig { returns(T.nilable(Integer)) }
     def game_purchase_id
       return nil if @context[:current_user].nil?
 

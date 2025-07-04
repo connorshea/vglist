@@ -6,7 +6,6 @@ module Resolvers
 
       description "List all game engines."
 
-      sig { returns(T.untyped) }
       def resolve
         Engine.all
       end

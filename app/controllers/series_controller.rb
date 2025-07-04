@@ -78,7 +78,6 @@ class SeriesController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def series_params
     params.typed_require(:series).permit(
       :name,

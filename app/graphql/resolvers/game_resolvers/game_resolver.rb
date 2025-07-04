@@ -32,7 +32,6 @@ module Resolvers
         message: 'Cannot provide more than one argument to game at a time.'
       }
 
-      sig { params(kwargs: T.untyped).returns(T.nilable(Game)) }
       def resolve(**kwargs)
         if kwargs.key?(:steam_app_id)
           SteamAppId.find_by(app_id: kwargs[:steam_app_id])&.game

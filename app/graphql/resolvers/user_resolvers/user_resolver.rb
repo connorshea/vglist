@@ -16,15 +16,6 @@ module Resolvers
         message: 'Cannot provide more than one argument to user at a time.'
       }
 
-      sig do
-        params(
-          id: T.nilable(T.any(String, Integer)),
-          username: T.nilable(String),
-          slug: T.nilable(String)
-        ).returns(
-          T.nilable(User)
-        )
-      end
       def resolve(id: nil, username: nil, slug: nil)
         if !id.nil?
           User.find_by(id: id)

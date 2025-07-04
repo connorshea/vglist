@@ -17,7 +17,6 @@ class Mutations::Companies::CreateCompany < Mutations::BaseMutation
     }
   end
 
-  sig { params(_object: T.untyped).returns(T::Boolean) }
   def authorized?(_object)
     require_permissions!(:first_party)
 

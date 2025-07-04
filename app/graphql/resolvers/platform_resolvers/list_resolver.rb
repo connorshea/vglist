@@ -6,7 +6,6 @@ module Resolvers
 
       description "List all platforms."
 
-      sig { returns(T.untyped) }
       def resolve
         Platform.all
       end

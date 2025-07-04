@@ -7,7 +7,6 @@ module Resolvers
 
     argument :id, ID, required: true
 
-    sig { params(id: T.any(String, Integer)).returns(GamePurchase) }
     def resolve(id:)
       GamePurchase.find(id)
     end

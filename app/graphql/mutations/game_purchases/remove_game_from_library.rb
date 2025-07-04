@@ -7,7 +7,6 @@ class Mutations::GamePurchases::RemoveGameFromLibrary < Mutations::BaseMutation
 
   field :game, Types::GameType, null: true, description: "The game being removed from the user's library."
 
-  sig { params(game_id: T.nilable(T.any(String, Integer)), game_purchase_id: T.nilable(T.any(String, Integer))).returns(T::Hash[Symbol, Game]) }
   def resolve(game_id: nil, game_purchase_id: nil)
     raise GraphQL::ExecutionError, "Field 'game' is missing a required argument: 'gameId' or 'gamePurchaseId'" if game_id.nil? && game_purchase_id.nil?
 
@@ -31,7 +30,6 @@ class Mutations::GamePurchases::RemoveGameFromLibrary < Mutations::BaseMutation
   end
 
   # Only allow the user to delete their own game purchases.
-  sig { params(object: T::Hash[T.untyped, T.untyped]).returns(T.nilable(T::Boolean)) }
   def authorized?(object)
     game_id = object[:game_id]
     game_purchase_id = object[:game_purchase_id]

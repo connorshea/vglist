@@ -74,7 +74,6 @@ class GenresController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def genre_params
     params.typed_require(:genre).permit(
       :name,

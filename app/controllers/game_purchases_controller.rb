@@ -86,7 +86,6 @@ class GamePurchasesController < ApplicationController
 
   private
 
-  sig { returns(ActionController::Parameters) }
   def game_purchase_params
     params.typed_require(:game_purchase).permit(
       :user_id,
@@ -104,7 +103,7 @@ class GamePurchasesController < ApplicationController
   end
 
   # Only specific game purchase attributes can be modified in bulk.
-  sig { returns(ActionController::Parameters) }
+
   def bulk_game_purchase_params
     params.permit(
       :rating,

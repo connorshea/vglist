@@ -15,15 +15,6 @@ module Resolvers
       argument :by_genre, ID, required: false, description: "Filter games by the ID of the genre they're in."
       argument :by_engine, ID, required: false, description: "Filter games by the ID of the engine they use."
 
-      sig do
-        params(
-          sort_by: T.nilable(String),
-          on_platform: T.nilable(String),
-          by_year: T.nilable(Integer),
-          by_genre: T.nilable(String),
-          by_engine: T.nilable(String)
-        ).returns(T.untyped)
-      end
       def resolve(
         sort_by: nil,
         on_platform: nil,
