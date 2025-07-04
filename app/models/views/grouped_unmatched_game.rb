@@ -15,7 +15,7 @@ module Views
     # common name, we can just pick the first one in the list for
     # simplicity/performance.
     def name
-      T.must(names).first
+      names.first
     end
   end
 end

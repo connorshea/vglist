@@ -45,7 +45,7 @@ module ApplicationHelper
     width, height = Game::COVER_SIZES[size]
 
     if game.cover.attached? && game.cover.variable?
-      image_tag T.must(game.sized_cover(size)),
+      image_tag game.sized_cover(size),
         width: "#{width}px",
         height: "#{height}px",
         alt: "Cover for #{game.name}.",

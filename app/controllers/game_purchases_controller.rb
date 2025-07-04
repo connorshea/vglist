@@ -49,10 +49,10 @@ class GamePurchasesController < ApplicationController
     skip_authorization
 
     # Separate the ids and the actual parameters we want to submit.
-    submittable_ids = T.cast(bulk_game_purchase_params[:ids], T::Array[Integer])
+    submittable_ids = bulk_game_purchase_params[:ids]
     # Separate the store ids because we don't want to override them, we want
     # to add to the existing stores a game is owned on.
-    store_ids = T.cast(bulk_game_purchase_params[:store_ids] || [], T::Array[Integer])
+    store_ids = bulk_game_purchase_params[:store_ids] || []
     # Exclude the ids and store ids from 'actual params', and then filter any
     # nil values to make sure we don't nullify the completion status or rating
     # when just trying to update stores.
@@ -65,7 +65,7 @@ class GamePurchasesController < ApplicationController
       # #product to create an array of pairs and then trasform them into
       # an array of hashes. We want them to look like this:
       # `[{ store_id: 1, game_purchase_id: 11 }]`.
-      store_game_purchases_map = store_ids.product(T.cast(bulk_game_purchase_params[:ids], T::Array[Integer])).map { |pair| { store_id: pair[0], game_purchase_id: pair[1] } }
+      store_game_purchases_map = store_ids.product(bulk_game_purchase_params[:ids]).map { |pair| { store_id: pair[0], game_purchase_id: pair[1] } }
       # This looks so dumb because it needs to be in a format like:
       #   update([1, 2, 3], [{ rating: 5 }, { rating: 5 }, { rating: 5 }])
       # so we create an array of x params where all the params are the same.

@@ -38,7 +38,7 @@ module Types
     # This causes an N+2 query, figure out a better way to do this.
     # https://github.com/rmosolgo/graphql-ruby/issues/1777
     def avatar_url(size:)
-      avatar = T.cast(@object, User).sized_avatar(size)
+      avatar = @object.sized_avatar(size)
       return if avatar.nil?
 
       Rails.application.routes.url_helpers.rails_representation_url(avatar)

@@ -154,7 +154,7 @@ class User < ApplicationRecord
   def api_token
     return nil if encrypted_api_token.nil?
 
-    EncryptionService.decrypt(T.must(encrypted_api_token))
+    EncryptionService.decrypt(encrypted_api_token)
   end
 
   def api_token=(value)

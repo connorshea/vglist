@@ -55,18 +55,16 @@ class GamePurchase < ApplicationRecord
 
   private
 
-  sig { void }
   def game_purchase_create
     Events::GamePurchaseEvent.create!(
       eventable_id: id,
-      user_id: T.must(user).id,
+      user_id: user.id,
       event_category: :add_to_library
     )
 
     update_average_rating
   end
 
-  sig { void }
   def game_purchase_update
     update_average_rating
 
@@ -74,23 +72,21 @@ class GamePurchase < ApplicationRecord
 
     Events::GamePurchaseEvent.create!(
       eventable_id: id,
-      user_id: T.must(user).id,
+      user_id: user.id,
       event_category: :change_completion_status,
       # We don't need the updated_at value
       differences: saved_changes.except!(:updated_at)
     )
   end
 
-  sig { void }
   def game_purchase_destroy
     update_average_rating
   end
 
   # If there aren't any game purchases for a given game, it'll return nil so
   # avg_rating should be set to nil.
-  sig { void }
   def update_average_rating
     average = GamePurchase.where(game_id: game_id).average(:rating)
-    average.nil? ? T.must(game).update(avg_rating: nil) : T.must(game).update(avg_rating: average.round(1))
+    average.nil? ? game.update(avg_rating: nil) : game.update(avg_rating: average.round(1))
   end
 end

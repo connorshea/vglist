@@ -13,11 +13,10 @@ class FavoriteGame < ApplicationRecord
 
   private
 
-  sig { void }
   def favorite_game_create_event
     Events::FavoriteGameEvent.create!(
       eventable_id: id,
-      user_id: T.must(user).id,
+      user_id: user.id,
       event_category: :favorite_game
     )
   end

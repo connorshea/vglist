@@ -20,13 +20,12 @@ class Relationship < ApplicationRecord
 
   private
 
-  sig { void }
   def user_cannot_follow_self
     errors.add(:follower_id, "can't follow themselves") if follower_id == followed_id
   end
 
   # Create an event when following a user.
-  sig { void }
+
   def create_follow_event
     Events::RelationshipEvent.create!(
       eventable_id: id,

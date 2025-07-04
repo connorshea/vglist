@@ -8,7 +8,6 @@ module Resolvers
 
       argument :id, ID, required: true
 
-      sig { params(id: T.any(String, Integer)).returns(Engine) }
       def resolve(id:)
         Engine.find(id)
       end

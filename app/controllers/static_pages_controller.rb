@@ -22,7 +22,6 @@ class StaticPagesController < ApplicationController
 
   private
 
-  sig { returns(T.nilable(String)) }
   def resolve_layout
     case action_name.to_sym
     when :about

@@ -13,7 +13,6 @@ module Types
 
       # This causes an N+2 query, figure out a better way to do this.
       # https://github.com/rmosolgo/graphql-ruby/issues/1777
-      sig { params(size: Symbol).returns(T.nilable(String)) }
       def avatar_url(size:)
         avatar = User.find(@object.searchable_id).sized_avatar(size)
         return if avatar.nil?
@@ -21,7 +20,6 @@ module Types
         Rails.application.routes.url_helpers.rails_representation_url(avatar)
       end
 
-      sig { returns(String) }
       def slug
         User.find(@object.searchable_id).slug
       end

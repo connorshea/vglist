@@ -6,7 +6,6 @@ module Resolvers
 
       description "Get the currently authenticated user."
 
-      sig { returns(T.nilable(User)) }
       def resolve
         context[:current_user]
       end

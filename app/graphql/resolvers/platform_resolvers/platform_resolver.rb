@@ -8,7 +8,6 @@ module Resolvers
 
       argument :id, ID, required: true
 
-      sig { params(id: T.any(String, Integer)).returns(Platform) }
       def resolve(id:)
         Platform.find(id)
       end
