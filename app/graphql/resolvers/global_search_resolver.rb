@@ -17,7 +17,6 @@ module Resolvers
       validates length: { minimum: 1 }
     end
 
-    sig { params(query: String, searchable_types: T::Array[String]).returns(T.untyped) }
     def resolve(query:, searchable_types: %w[Game Series Company Platform Engine Genre User])
       PgSearch.multisearch(query)
               .where(searchable_type: searchable_types)

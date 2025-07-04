@@ -6,7 +6,6 @@ module Resolvers
 
       description "List all stores."
 
-      sig { returns(T.untyped) }
       def resolve
         Store.all
       end

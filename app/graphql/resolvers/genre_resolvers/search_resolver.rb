@@ -8,7 +8,6 @@ module Resolvers
 
       argument :query, String, required: true, description: "Name to search by."
 
-      sig { params(query: String).returns(T.untyped) }
       def resolve(query:)
         Genre.search(query)
       end
