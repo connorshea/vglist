@@ -63,8 +63,7 @@ module Types
       favorited_games: []
     }.each_pair do |meth_name, fallback|
       define_method(meth_name) do
-        # Sorbet is dumb and doesn't realize the handler method exists, I guess.
-        T.unsafe(self).handler(meth_name, fallback)
+        handler(meth_name, fallback)
       end
     end
 

@@ -6,7 +6,7 @@ def cover_fetcher
     File.open('./spec/factories/images/crysis.jpg')
   else
     # TODO: Make the dimensions more random.
-    T.unsafe(URI.parse(Faker::Image.unsplash(width: 560, height: 800))).open
+    URI.parse(Faker::Image.unsplash(width: 560, height: 800)).open
   end
 end
 

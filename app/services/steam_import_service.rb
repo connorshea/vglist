@@ -103,24 +103,11 @@ class SteamImportService
     )
   end
 
-  class GameStruct < T::Struct
-    const :hours_played, Float
-    const :game_id, Integer
-    const :user_id, Integer
-    const :created_at, ActiveSupport::TimeWithZone
-    const :updated_at, ActiveSupport::TimeWithZone
-  end
+  GameStruct = Struct.new(:hours_played, :game_id, :user_id, :created_at, :updated_at)
 
-  class Unmatched < T::Struct
-    const :name, String
-    const :steam_id, Integer
-  end
+  Unmatched = Struct.new(:name, :steam_id)
 
-  class Result < T::Struct
-    const :created, T.untyped
-    const :updated, T.untyped
-    const :unmatched, T::Array[Unmatched]
-
+  Result = Struct.new(:created, :updated, :unmatched) do
     # Returns the games for all the newly created game purchases.
     def added_games
       Game.joins(:game_purchases).merge(created)

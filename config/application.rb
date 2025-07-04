@@ -1,4 +1,3 @@
-# typed: strict
 require_relative 'boot'
 
 require "rails"
@@ -40,14 +39,14 @@ module VideoGameList
     # Allow cross-origin requests to GraphQL, ActiveStorage blobs, and OAuth
     # auth routes.
     config.middleware.insert_before 0, Rack::Cors do
-      T.unsafe(self).allow do
-        T.unsafe(self).origins '*'
+      allow do
+        origins '*'
         # Add CORS exception for GraphQL requests.
-        T.unsafe(self).resource '/graphql', headers: :any, methods: [:post, :options]
+        resource '/graphql', headers: :any, methods: [:post, :options]
         # Add CORS exception for ActiveStorage blobs.
-        T.unsafe(self).resource '/rails/active_storage/*', headers: :any, methods: :get
+        resource '/rails/active_storage/*', headers: :any, methods: :get
         # Add CORS exception for OAuth authentication.
-        T.unsafe(self).resource '/settings/oauth/token', headers: :any, methods: :post
+        resource '/settings/oauth/token', headers: :any, methods: :post
       end
     end
 

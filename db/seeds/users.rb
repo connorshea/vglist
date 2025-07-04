@@ -5,7 +5,7 @@ def avatar_fetcher
   if ENV['CI']
     File.open('./spec/factories/images/avatar.jpg')
   else
-    T.unsafe(URI.parse(Faker::Image.unsplash(width: 400, height: 400))).open
+    URI.parse(Faker::Image.unsplash(width: 400, height: 400)).open
   end
 end
 

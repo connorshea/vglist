@@ -34,10 +34,9 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
     authorize @application, policy_class: Oauth::ApplicationPolicy
     @application = Doorkeeper::Application.new(application_params)
     @application.owner = current_user if Doorkeeper.configuration.confirm_application_owner?
-    # Sorbet thinks there's no `save` method here.
-    if T.unsafe(@application).save
+    if @application.save
       flash[:notice] = I18n.t(:notice, scope: [:doorkeeper, :flash, :applications, :create])
-      flash[:application_secret] = T.unsafe(@application).plaintext_secret
+      flash[:application_secret] = @application.plaintext_secret
       redirect_to oauth_application_url(@application)
     else
       render :new
