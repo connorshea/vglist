@@ -68,7 +68,7 @@ class SteamImportService
       game_structs.each do |game_struct|
         game_purchase = GamePurchase.find_by(game_id: game_struct.game_id, user_id: game_struct.user_id)
         if game_purchase.nil?
-          created << GamePurchase.create(game_struct.serialize)
+          created << GamePurchase.create(**game_struct.to_h)
         # If we're intending to update the hours played value, update it!
         elsif @update_hours
           # Skip if there's no change in the hours played.
