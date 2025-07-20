@@ -43,7 +43,8 @@ RSpec.describe SteamImportService, type: :service do
   end
 
   describe "importing games from Steam" do
-    let!(:game_a) { create(:game, :steam_app_id, app_id: 10) } # rubocop:disable RSpec/LetSetup
+    let!(:game_a) { create(:game) }
+    let!(:steam_app_id) { create(:steam_app_id, app_id: 10, game: game_a) } # rubocop:disable RSpec/LetSetup
     let(:user) { create(:user, :external_account) }
 
     it 'works with update_hours false' do
