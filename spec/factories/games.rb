@@ -1,5 +1,9 @@
 FactoryBot.define do
   factory :game do
+    transient do
+      app_id { Faker::Number.unique.number(digits: 6) }
+    end
+
     name { "Half-Life 2" }
 
     trait :cover do
@@ -37,7 +41,7 @@ FactoryBot.define do
     end
 
     trait :steam_app_id do
-      after(:create) { |game| create(:steam_app_id, game: game) }
+      after(:create) { |game, evaluator| create(:steam_app_id, game: game, app_id: evaluator.app_id) }
     end
 
     trait :pcgamingwiki_id do
