@@ -20,7 +20,7 @@ class GamePurchasesController < ApplicationController
       if @game_purchase.save
         format.json { render json: @game_purchase, status: :created, location: @game_purchase }
       else
-        format.json { render json: @game_purchase.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @game_purchase.errors.full_messages, status: :unprocessable_content }
       end
     end
   end
@@ -33,7 +33,7 @@ class GamePurchasesController < ApplicationController
       if @game_purchase.update(game_purchase_params)
         format.json { render json: @game_purchase, status: :ok, location: @game_purchase }
       else
-        format.json { render json: @game_purchase.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @game_purchase.errors.full_messages, status: :unprocessable_content }
       end
     end
   end

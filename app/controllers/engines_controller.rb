@@ -39,7 +39,7 @@ class EnginesController < ApplicationController
           flash.now[:error] = "Unable to create engine."
           render :new
         end
-        format.json { render json: @engine.errors, status: :unprocessable_entity }
+        format.json { render json: @engine.errors, status: :unprocessable_content }
       end
     end
   end
@@ -57,7 +57,7 @@ class EnginesController < ApplicationController
           flash.now[:error] = "Unable to update engine."
           render :edit
         end
-        format.json { render json: @engine.errors, status: :unprocessable_entity }
+        format.json { render json: @engine.errors, status: :unprocessable_content }
       end
     end
   end
