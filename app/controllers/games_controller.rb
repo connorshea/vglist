@@ -82,7 +82,7 @@ class GamesController < ApplicationController
           flash.now[:error] = "Unable to create game."
           render :new
         end
-        format.json { render json: @game.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @game.errors.full_messages, status: :unprocessable_content }
       end
     end
   end
@@ -100,7 +100,7 @@ class GamesController < ApplicationController
           flash.now[:error] = "Unable to update game."
           render :edit
         end
-        format.json { render json: @game.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @game.errors.full_messages, status: :unprocessable_content }
       end
     end
   end
@@ -142,7 +142,7 @@ class GamesController < ApplicationController
           flash[:error] = "Unable to add game to your library."
           redirect_to game_url(@game)
         end
-        format.json { render json: @game_purchase.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @game_purchase.errors.full_messages, status: :unprocessable_content }
       end
     end
   end
@@ -162,7 +162,7 @@ class GamesController < ApplicationController
           flash[:error] = "Unable to remove game from your library."
           redirect_to game_url(@game)
         end
-        format.json { render json: "Unable to remove game from your library.", status: :unprocessable_entity }
+        format.json { render json: "Unable to remove game from your library.", status: :unprocessable_content }
       end
     end
   end
@@ -249,7 +249,7 @@ class GamesController < ApplicationController
       if GameMergeService.new(@game_a, @game_b).merge!
         format.json { redirect_to game_path(@game_a), success: "#{@game_b.name} successfully merged into #{@game_a.name}." }
       else
-        format.json { render json: { errors: ["#{@game_b.name} couldn't be merged into #{@game_a.name} due to an error."] }, status: :unprocessable_entity }
+        format.json { render json: { errors: ["#{@game_b.name} couldn't be merged into #{@game_a.name} due to an error."] }, status: :unprocessable_content }
       end
     end
   end

@@ -44,7 +44,7 @@ class UsersController < ApplicationController
           flash[:error] = "Unable to update user."
           redirect_to settings_path
         end
-        format.json { render json: @user.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @user.errors.full_messages, status: :unprocessable_content }
       end
     end
   end

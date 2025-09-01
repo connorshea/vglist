@@ -39,7 +39,7 @@ class StoresController < ApplicationController
           flash.now[:error] = "Unable to create store."
           render :new
         end
-        format.json { render json: @store.errors, status: :unprocessable_entity }
+        format.json { render json: @store.errors, status: :unprocessable_content }
       end
     end
   end
@@ -57,7 +57,7 @@ class StoresController < ApplicationController
           flash.now[:error] = "Unable to update store."
           render :edit
         end
-        format.json { render json: @store.errors, status: :unprocessable_entity }
+        format.json { render json: @store.errors, status: :unprocessable_content }
       end
     end
   end

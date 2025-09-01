@@ -321,7 +321,7 @@ RSpec.describe "Games", type: :request do
     it "fails when attempting to merge a game with itself" do
       sign_in(admin)
       post merge_game_path(game_a.id, game_b_id: game_a.id, format: :json)
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end
