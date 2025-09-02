@@ -7,7 +7,7 @@ plugins:
   - rubocop-capybara
 
 AllCops:
-  TargetRubyVersion: 3.3
+  TargetRubyVersion: 3.4
   Exclude:
     - "bin/*"
     - "db/schema.rb"
