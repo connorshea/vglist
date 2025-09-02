@@ -344,14 +344,17 @@ namespace 'import:wikidata' do
     progress_bar.finish unless progress_bar.finished?
   end
 
-  # The SPARQL query for getting all video games with English labels on Wikidata.
+  # The SPARQL query for getting all video games with English or mul labels on Wikidata.
   def games_query
     <<-SPARQL
       SELECT ?item WHERE {
         VALUES ?videoGameTypes { wd:Q7889 wd:Q21125433 }.
         ?item wdt:P31 ?videoGameTypes; # Instances of 'video games' or 'free or open source video games'.
-              rdfs:label ?label filter(lang(?label) = "en"). # with a label
+              rdfs:label ?label .
+          FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
       }
+      GROUP BY ?item
+      HAVING (COUNT(?label) > 0)
     SPARQL
   end
 
@@ -363,10 +366,11 @@ namespace 'import:wikidata' do
         VALUES ?videoGameTypes { wd:Q7889 wd:Q21125433 }.
         ?item wdt:P31 ?videoGameTypes; # items that are video games
               p:P577 ?releaseDateStatement; # items with a publication date.
-              rdfs:label ?label filter(lang(?label) = "en"). # with a label
+              rdfs:label ?label .
+        FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
         ?releaseDateStatement a wikibase:BestRank; # ... of best rank (instead of wdt:P577)
             psv:P577 / wikibase:timePrecision 11 . # Precision is "day" (encoded as integer 11)
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
       }
     SPARQL
   end
