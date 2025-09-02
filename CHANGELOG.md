@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2025.09.01
+### Changed
+- Upgrade Ruby from 3.3.1 to 3.4.5. ([#4124, #4132])
+- Upgrade Postgres from 14.x to 17.x. ([#4130])
+- Upgrade Bundler to 2.7.1. ([#4127])
+
 ## v2024.06.16
 ### Changed
 - Require Wikidata IDs for genres, platforms, series, engines, and companies. ([#3734])
@@ -970,3 +976,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#3652]: https://github.com/connorshea/vglist/pull/3652
 [#3697]: https://github.com/connorshea/vglist/pull/3697
 [#3734]: https://github.com/connorshea/vglist/pull/3734
+[#4124]: https://github.com/connorshea/vglist/pull/4124
+[#4127]: https://github.com/connorshea/vglist/pull/4127
+[#4130]: https://github.com/connorshea/vglist/pull/4130
+[#4132]: https://github.com/connorshea/vglist/pull/4132
