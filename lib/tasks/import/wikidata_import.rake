@@ -295,10 +295,10 @@ namespace 'import:wikidata' do
       start_from = index * 48
       wikidata_labels = WikidataHelper.get_labels(
         ids: wikidata_ids[start_from..start_from + 48],
-        languages: 'en'
+        languages: ['en', 'mul']
       )
       wikidata_labels.each do |id, wikidata_label|
-        name = wikidata_label.dig('labels', 'en', 'value')
+        name = wikidata_label.dig('labels', 'en', 'value') || wikidata_label.dig('labels', 'mul', 'value')
         # Skip items with no labels or no English label.
         wikidata_item = { wikidata_id: id, name: name } unless name.nil?
         items << wikidata_item if wikidata_item

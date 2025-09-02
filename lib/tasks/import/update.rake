@@ -122,7 +122,7 @@ namespace :import do
       {
         ?item wdt:P31 wd:Q7889; # instance of video game
               wdt:P179 ?series. # in a series
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
       }
     SPARQL
 
@@ -182,7 +182,7 @@ namespace :import do
         include %i
         ?item wdt:#{property} ?p1.
         bind(strafter(str(?p1), "http://www.wikidata.org/entity/") as ?prop)
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
       } GROUP BY ?item ?itemLabel
     SPARQL
 
