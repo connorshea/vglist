@@ -2,37 +2,6 @@
 
 ## Getting set up
 
-We provide multiple ways to set up the development environment for your convenience.
-
-### Option 1: Docker Compose (Recommended for quick setup)
-
-The fastest way to get started:
-
-```bash
-# Clone the repository
-git clone https://github.com/connorshea/vglist.git
-cd vglist
-
-# Run the automated setup script
-./bin/setup-dev
-```
-
-This will automatically start all required services including PostgreSQL and the Rails app.
-
-### Option 2: VS Code Dev Containers
-
-If you use VS Code, you can use the preconfigured development container:
-
-1. Install the "Dev Containers" extension in VS Code
-2. Open the project in VS Code
-3. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
-4. Type "Dev Containers: Reopen in Container"
-5. Wait for the container to build and set up
-
-### Option 3: Manual Setup
-
-For a traditional local development setup:
-
 ### Prerequisites
 
 - Ruby 3.4
