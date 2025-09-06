@@ -1,3 +1,7 @@
+# Docker Compose configuration for vglist development environment
+# Use 'docker compose' (V2) commands, not 'docker-compose' (V1)
+# Example: docker compose up -d --build
+
 services:
   db:
     image: postgres:17

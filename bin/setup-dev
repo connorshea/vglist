@@ -8,25 +8,26 @@ set -e
 echo "🚀 Setting up vglist development environment..."
 
 # Check if Docker and Docker Compose are available
-if command -v docker &> /dev/null && command -v docker-compose &> /dev/null; then
+# Note: Use 'docker compose' (V2) instead of 'docker-compose' (V1)
+if command -v docker &> /dev/null && docker compose version &> /dev/null; then
     echo "📦 Using Docker Compose for development setup..."
     
     # Build and start services
-    docker-compose up -d --build
+    docker compose up -d --build
     
     echo "⏳ Waiting for services to be ready..."
     sleep 10
     
     # Run database setup
-    docker-compose exec web bundle exec rails db:setup
+    docker compose exec web bundle exec rails db:setup
     
     echo "✅ Development environment is ready!"
     echo "🌐 Rails app: http://localhost:3000"
     echo "📦 Webpack dev server: http://localhost:3035"
     echo ""
-    echo "💡 Use 'docker-compose logs -f' to view logs"
-    echo "💡 Use 'docker-compose exec web bash' to access the Rails container"
-    echo "💡 Use 'docker-compose down' to stop all services"
+    echo "💡 Use 'docker compose logs -f' to view logs"
+    echo "💡 Use 'docker compose exec web bash' to access the Rails container"
+    echo "💡 Use 'docker compose down' to stop all services"
     
 else
     echo "🔧 Setting up development environment locally..."
