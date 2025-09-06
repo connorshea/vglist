@@ -17,7 +17,7 @@ cd vglist
 ./bin/setup-dev
 ```
 
-This will automatically start all required services including PostgreSQL, Redis, and the Rails app.
+This will automatically start all required services including PostgreSQL and the Rails app.
 
 ### Option 2: VS Code Dev Containers
 
@@ -64,8 +64,6 @@ Optional environment variables for miscellaneous functionality:
 - `MOBYGAMES_API_KEY`: If you want to use the MobyGames cover import Rake task, you'll need to get [a MobyGames API key](https://www.mobygames.com/info/api#toc-authorization).
 - `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`: If you want to use the IGDB cover import Rake task, you'll need to [create an OAuth app for the Twitch API](https://dev.twitch.tv/docs/authentication).
   - The "OAuth Redirect URL" for the OAuth app can just be set to `http://localhost`, the redirect URL isn't used.
-
-For complete details on all development environment options, see [docs/development.md](docs/development.md).
 
 ## Libraries
 

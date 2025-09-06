@@ -13,9 +13,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "rebornix.ruby",
-        "wingrunr21.vscode-ruby",
-        "bradlc.vscode-tailwindcss",
+        "shopify.ruby-lsp",
         "octref.vetur",
         "ms-vscode.vscode-typescript-next",
         "esbenp.prettier-vscode",
@@ -26,22 +24,16 @@
         "christian-kohler.path-intellisense"
       ],
       "settings": {
-        "ruby.lint": {
-          "rubocop": {
-            "useBundler": true
-          }
-        },
-        "ruby.format": "rubocop",
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true,
         "[ruby]": {
-          "editor.defaultFormatter": "wingrunr21.vscode-ruby"
+          "editor.defaultFormatter": "shopify.ruby-lsp"
         }
       }
     }
   },
 
-  "forwardPorts": [3000, 3035, 5432, 6379],
+  "forwardPorts": [3000, 3035, 5432],
   "portsAttributes": {
     "3000": {
       "label": "Rails App",
@@ -53,10 +45,6 @@
     },
     "5432": {
       "label": "PostgreSQL",
-      "onAutoForward": "silent"
-    },
-    "6379": {
-      "label": "Redis",
       "onAutoForward": "silent"
     }
   },

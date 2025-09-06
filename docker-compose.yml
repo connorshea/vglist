@@ -7,7 +7,6 @@ services:
       POSTGRES_DB: vglist_development
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     healthcheck:
@@ -15,13 +14,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
 
   web:
     build:
@@ -36,13 +28,10 @@ services:
     environment:
       - DATABASE_URL=postgresql://vglist:password@db:5432/vglist_development
       - VGLIST_DATABASE_PASSWORD=password
-      - REDIS_URL=redis://redis:6379/0
       - RAILS_ENV=development
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
     stdin_open: true
     tty: true
     command: bash -c "bundle install && yarn install && bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
@@ -65,6 +54,5 @@ services:
 
 volumes:
   postgres_data:
-  redis_data:
   bundle_cache:
   node_modules:
