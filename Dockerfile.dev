@@ -1,0 +1,45 @@
+# Development Dockerfile
+FROM ruby:3.4.5
+
+# Install system dependencies
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    nodejs \
+    npm \
+    imagemagick \
+    postgresql-client \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 16.x
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs
+
+# Install Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg > /dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get install -y yarn
+
+# Set working directory
+WORKDIR /app
+
+# Install bundler
+RUN gem install bundler:2.7.1
+
+# Copy dependency files
+COPY Gemfile Gemfile.lock package.json yarn.lock ./
+
+# Install Ruby and JavaScript dependencies
+RUN bundle install
+RUN yarn install
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Default command
+CMD ["rails", "server", "-b", "0.0.0.0"]

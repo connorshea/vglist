@@ -2,6 +2,37 @@
 
 ## Getting set up
 
+We provide multiple ways to set up the development environment for your convenience.
+
+### Option 1: Docker Compose (Recommended for quick setup)
+
+The fastest way to get started:
+
+```bash
+# Clone the repository
+git clone https://github.com/connorshea/vglist.git
+cd vglist
+
+# Run the automated setup script
+./bin/setup-dev
+```
+
+This will automatically start all required services including PostgreSQL, Redis, and the Rails app.
+
+### Option 2: VS Code Dev Containers
+
+If you use VS Code, you can use the preconfigured development container:
+
+1. Install the "Dev Containers" extension in VS Code
+2. Open the project in VS Code
+3. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
+4. Type "Dev Containers: Reopen in Container"
+5. Wait for the container to build and set up
+
+### Option 3: Manual Setup
+
+For a traditional local development setup:
+
 ### Prerequisites
 
 - Ruby 3.4
@@ -33,6 +64,8 @@ Optional environment variables for miscellaneous functionality:
 - `MOBYGAMES_API_KEY`: If you want to use the MobyGames cover import Rake task, you'll need to get [a MobyGames API key](https://www.mobygames.com/info/api#toc-authorization).
 - `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`: If you want to use the IGDB cover import Rake task, you'll need to [create an OAuth app for the Twitch API](https://dev.twitch.tv/docs/authentication).
   - The "OAuth Redirect URL" for the OAuth app can just be set to `http://localhost`, the redirect URL isn't used.
+
+For complete details on all development environment options, see [docs/development.md](docs/development.md).
 
 ## Libraries
 

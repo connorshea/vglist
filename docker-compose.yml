@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: vglist
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vglist_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vglist"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://vglist:password@db:5432/vglist_development
+      - VGLIST_DATABASE_PASSWORD=password
+      - REDIS_URL=redis://redis:6379/0
+      - RAILS_ENV=development
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    stdin_open: true
+    tty: true
+    command: bash -c "bundle install && yarn install && bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
+
+  webpack:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3035:3035"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    command: bin/webpack-dev-server
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  redis_data:
+  bundle_cache:
+  node_modules:
