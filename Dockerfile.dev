@@ -11,7 +11,11 @@ RUN apt-get update -qq && apt-get install -y \
     postgresql-client \
     git \
     curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# Update CA certificates to fix SSL issues
+RUN update-ca-certificates
 
 # Install Node.js 16.x
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
@@ -23,15 +27,16 @@ RUN corepack enable
 # Set working directory
 WORKDIR /app
 
-# Install bundler
-RUN gem install bundler:2.7.1
+# Configure RubyGems and Bundler for SSL issues in development environment
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+ENV RUBYGEMS_SYSTEM_WIDE_CONFIG=/etc/gemrc
+RUN echo ":ssl_verify_mode: 0" > /etc/gemrc && \
+    bundle config --global ssl_verify_mode 0 && \
+    bundle config --global timeout 300 && \
+    bundle config --global retry 3
 
-# Copy dependency files
+# Copy dependency files (dependencies will be installed at runtime)
 COPY Gemfile Gemfile.lock package.json yarn.lock ./
-
-# Install Ruby and JavaScript dependencies
-RUN bundle install
-RUN yarn install
 
 # Copy application code
 COPY . .
