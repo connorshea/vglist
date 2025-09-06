@@ -21,8 +21,10 @@ RUN update-ca-certificates
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
-# Enable Corepack for Yarn (comes with Node.js 16+)
-RUN corepack enable
+# Install Yarn using npm with SSL configuration
+RUN npm config set strict-ssl false && \
+    npm install -g yarn && \
+    npm config delete strict-ssl
 
 # Set working directory
 WORKDIR /app
