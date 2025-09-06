@@ -27,12 +27,9 @@ RUN corepack enable
 # Set working directory
 WORKDIR /app
 
-# Configure RubyGems and Bundler for SSL issues in development environment
+# Configure RubyGems and Bundler for development environment
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-ENV RUBYGEMS_SYSTEM_WIDE_CONFIG=/etc/gemrc
-RUN echo ":ssl_verify_mode: 0" > /etc/gemrc && \
-    bundle config --global ssl_verify_mode 0 && \
-    bundle config --global timeout 300 && \
+RUN bundle config --global timeout 300 && \
     bundle config --global retry 3
 
 # Copy dependency files (dependencies will be installed at runtime)
