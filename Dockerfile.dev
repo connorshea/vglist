@@ -17,10 +17,8 @@ RUN apt-get update -qq && apt-get install -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
-# Install Yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg > /dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update && apt-get install -y yarn
+# Enable Corepack for Yarn (comes with Node.js 16+)
+RUN corepack enable
 
 # Set working directory
 WORKDIR /app
