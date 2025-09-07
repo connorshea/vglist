@@ -2,18 +2,29 @@ name: Copilot Setup Steps
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
 
 jobs:
-  setup:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
     runs-on: ubuntu-latest
-    
+
+    permissions:
+      # If you want to clone the repository as part of your setup steps, for example to install dependencies, you'll need the `contents: read` permission. If you don't clone the repository in your setup steps, Copilot will do this for you automatically after the steps complete.
+      contents: read
+
     services:
       postgres:
         image: postgres:17
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: vglist_test
+          POSTGRES_DB: vglist_development
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -23,59 +34,35 @@ jobs:
           - 5432:5432
 
     env:
-      RAILS_ENV: test
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/vglist_test
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/vglist_development
       BUNDLER_VERSION: '2.7.1'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4.5'
-          bundler: '2.7.1'
           bundler-cache: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5.0.0
         with:
           node-version: '16'
           cache: 'yarn'
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y \
-            build-essential \
-            libpq-dev \
-            imagemagick \
-            postgresql-client
-
-      - name: Install Ruby dependencies
-        run: |
-          gem install bundler:$BUNDLER_VERSION
-          bundle install --jobs $(nproc)
-
-      - name: Install Node.js dependencies
-        run: |
-          yarn install --frozen-lockfile
+      - name: Install Yarn dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Setup database
         run: |
-          bundle exec rails db:create
-          bundle exec rails db:schema:load
+          bundle exec rails db:setup
 
-      - name: Precompile assets
+      - name: Validate setup
         run: |
-          bundle exec rails assets:precompile
-
-      - name: Cache setup completion
-        uses: actions/cache@v4
-        with:
-          path: |
-            vendor/bundle
-            node_modules
-            tmp/cache
-          key: copilot-setup-${{ github.sha }}
+          echo "Testing database connectivity..."
+          bundle exec rails runner \
+            "puts 'Database connection: OK'; \
+            puts 'User count: ' + User.count.to_s"
