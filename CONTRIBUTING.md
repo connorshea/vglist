@@ -22,6 +22,7 @@
    - If you run into an error about the database password being wrong, the application will try to use `'password'` by default, but you can set the password for your database user via the `VGLIST_DATABASE_PASSWORD` environment variable.
 1. `bundle exec rails server` to start the server.
 1. Visit <http://localhost:3000> in your browser and you should see the base application.
+<!-- TODO: UPDATE THIS!!! -->
 1. In a separate terminal window, run `bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.
    - You don't _have_ to do this for the site to work, but things will take a lot longer to load as Webpack has to compile stuff from within the same process as Rails.
 
@@ -41,6 +42,7 @@ This is a list of libraries used for various functionality across the app. It's 
 - [Ruby on Rails](https://rubyonrails.org): Web application framework.
   - [ActiveRecord](https://guides.rubyonrails.org/active_record_basics.html): Used for SQL queries, migrations, and maintaining the database structure.
   - [ActiveStorage](https://guides.rubyonrails.org/active_storage_overview.html): Used for image storage.
+  <!-- TODO: UPDATE THIS -->
   - [Webpacker](https://github.com/rails/webpacker): JavaScript / SCSS bundler, essentially [Webpack](https://webpack.js.org) with Rails integration.
 - [Postgres](https://www.postgresql.org/): Database engine that the application uses.
 - [PgSearch](https://github.com/Casecommons/pg_search): Powers search for games, companies, series', etc.

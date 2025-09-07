@@ -73,7 +73,7 @@ gem "doorkeeper", "~> 5.8.2"
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 3.0"
 
-# Render SVGs inline using Webpacker.
+# Render SVGs inline using the asset pipeline.
 gem 'inline_svg', '~> 1.10'
 
 # Honeypot for spambots that doesn't require the user to actually do any

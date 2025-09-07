@@ -109,7 +109,7 @@ module ApplicationHelper
   # @param [String] css_class CSS class names for the `svg` element, will always include `svg-icon`
   # @param [Boolean] aria Whether to include ARIA information for accessibility purposes. If `false`, aria-hidden is set.
   # @param [String] title The ARIA title for the element.
-  # @param [Hash] options A hash of options to pass inline_svg_pack_tag.
+  # @param [Hash] options A hash of options to pass inline_svg_tag.
   #
   # @return [any] An inline svg pack tag.
   def svg_icon(icon, height: 20, width: nil, fill: nil, css_class: nil, aria: true, title: "Icon", options: {})
