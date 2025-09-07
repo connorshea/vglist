@@ -31,7 +31,7 @@ module ApplicationHelper
         alt: "Avatar for #{user.username}.",
         **options
     else
-      image_pack_tag 'media/images/default-avatar.png',
+      image_tag 'default-avatar.png',
         height: "#{height}px",
         width: "#{width}px",
         class: css_class_name,
@@ -57,7 +57,7 @@ module ApplicationHelper
         alt: "Cover for #{game.name}.",
         **options
     else
-      image_pack_tag 'media/images/no-cover.png',
+      image_tag 'no-cover.png',
         width: "#{width}px",
         height: "#{height}px",
         alt: "Placeholder cover for #{game.name}.",

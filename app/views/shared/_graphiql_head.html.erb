@@ -19,7 +19,7 @@
   <meta property="og:description" content="<%= meta_description(yield(:description)) %>">
   <meta property="og:url" content="<%= request.original_url %>">
   <% if yield(:opengraph_image).blank? %>
-    <meta property="og:image" content="<%= asset_pack_url('media/images/vglist-opengraph-image.png')%>">
+    <meta property="og:image" content="<%= asset_url('vglist-opengraph-image.png')%>">
   <% else %>
     <meta property="og:image" content="<%= yield(:opengraph_image) %>">
   <% end %>
@@ -27,8 +27,9 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
+  <%# TODO: Figure out how to make this shit work %>
   <script src="<%= asset_pack_path 'media/umd/react.production.min.js' %>"></script>
   <script src="<%= asset_pack_path 'media/umd/react-dom.production.min.js' %>"></script>
 
-  <%= stylesheet_pack_tag 'graphiql', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'graphiql', media: 'all', 'data-turbolinks-track': 'reload' %>
 </head>
