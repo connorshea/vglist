@@ -8,12 +8,15 @@
     "@sentry/integrations": "^5.29.0",
     "@types/node": "^16.0.0",
     "bulma": "https://github.com/connorshea/bulma#css-variables-with-fallback",
+    "css-loader": "^7.1.2",
     "graphiql": "2.2.0",
     "graphql": "^16.11.0",
     "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^2.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.92.1",
+    "sass-loader": "^16.0.5",
     "turbolinks": "^5.2.0",
     "typescript": "^5.9.2",
     "v-tooltip": "2.1.3",
@@ -22,7 +25,8 @@
     "vue-loader": "^15.10",
     "vue-select": "^3.20.2",
     "vue-template-compiler": "^2.6.14",
-    "webpack": "^5.101.3"
+    "webpack": "^5.101.3",
+    "webpack-remove-empty-scripts": "^1.1.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.151",
