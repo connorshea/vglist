@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :index]
+  before_action :authenticate_user!, except: [:show, :index, :activity]
 
   def index
     @games = Game.all
@@ -54,6 +54,31 @@ class GamesController < ApplicationController
 
     @publishers = @game.publishers
     @developers = @game.developers
+  end
+
+  def activity
+    @game = Game.find(params[:id])
+    skip_authorization
+    
+    @game_purchase = current_user&.game_purchases&.find_by(game_id: @game.id) if current_user
+    
+    # Get events related to this specific game
+    # This includes GamePurchaseEvents and FavoriteGameEvents for this game
+    game_purchase_event_ids = Events::GamePurchaseEvent.joins(:eventable)
+                                                       .where(game_purchases: { game_id: @game.id })
+                                                       .pluck(:id)
+    
+    favorite_game_event_ids = Events::FavoriteGameEvent.joins(:eventable)
+                                                       .where(favorite_games: { game_id: @game.id })
+                                                       .pluck(:id)
+    
+    all_event_ids = game_purchase_event_ids + favorite_game_event_ids
+    
+    @events = Views::NewEvent.where(id: all_event_ids)
+                             .recently_created
+                             .joins(:user)
+                             .where(users: { privacy: :public_account })
+                             .page(helpers.page_param)
   end
 
   def new

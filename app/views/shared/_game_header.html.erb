@@ -1,0 +1,21 @@
+<div class="hero-area">
+  <div class="hero-image game-cover">
+    <%= game_cover(game, size: :large) %>
+  </div>
+
+  <div class="text-block">
+    <h1 class="title"><%= game.name %></h1>
+    <%= render 'games/infobox', game: game %>
+  </div>
+</div>
+
+<div class="tabs">
+  <ul>
+    <li class="<%= 'is-active' if current_page?(game_path(game)) %>">
+      <%= link_to 'Overview', game_path(game) %>
+    </li>
+    <li class="<%= 'is-active' if current_page?(activity_game_path(game)) %>">
+      <%= link_to 'Activity', activity_game_path(game) %>
+    </li>
+  </ul>
+</div>

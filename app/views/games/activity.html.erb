@@ -1,5 +1,5 @@
-<% content_for :title, @game.name %>
-<% content_for :description, "#{@game.name} on vglist" %>
+<% content_for :title, "#{@game.name} - Activity" %>
+<% content_for :description, "Activity for #{@game.name} on vglist" %>
 <% if @game.cover.attached? %>
   <% content_for :opengraph_image, rails_blob_url(@game.cover) %>
 <% end %>
@@ -97,79 +97,26 @@
 
     <div class="tabs">
       <ul>
-        <li class="is-active">
+        <li>
           <%= link_to 'Overview', game_path(@game) %>
         </li>
-        <li>
+        <li class="is-active">
           <%= link_to 'Activity', activity_game_path(@game) %>
         </li>
       </ul>
     </div>
 
-    <% if @owners_count.positive? %>
-      <h3 class="title is-5 mb-5 mt-15">Owners (<%= @owners_count %>)</h3>
-      <ul class='avatar-image-grid mt-10'>
-        <% @owners.each do |owner| %>
-          <li class='avatar-image-grid-item'>
-            <%= link_to(user_path(owner), class: 'image') do %>
-              <%= user_avatar(owner, size: :small, title: owner.username) %>
-            <% end %>
-          </li>
+    <% if @events.any? %>
+      <% @events.each do |event| %>
+        <% if handleable_event?(event) %>
+          <%= render 'shared/event', event: event %>
         <% end %>
-        <% unless @owners_count == @owners.count %>
-          <li class='avatar-image-grid-item avatar-image-grid-item-overflow'>
-            <p class="has-text-weight-semibold">
-              <%= "+#{@owners_count - @owners.count}" %>
-            </p>
-          </li>
-        <% end %>
-      </ul>
+      <% end %>
+
+      <%= paginate @events %>
     <% else %>
-      <h3 class="title is-5 mb-5 mt-15">Owners</h3>
-      <p class="has-text-muted">No one has this game in their library yet.</p>
-    <% end %>
-
-    <% if @favoriters_count.positive? %>
-      <h3 class="title is-5 mb-5 mt-15">Favorites (<%= @favoriters_count %>)</h3>
-      <ul class='avatar-image-grid mt-10'>
-        <% @favoriters.each do |favoriter| %>
-          <li class='avatar-image-grid-item'>
-            <%= link_to(user_path(favoriter), class: 'image') do %>
-              <%= user_avatar(favoriter, size: :small, title: favoriter.username) %>
-            <% end %>
-          </li>
-        <% end %>
-        <% unless @favoriters_count == @favoriters.count %>
-          <li class='avatar-image-grid-item avatar-image-grid-item-overflow'>
-            <p class="has-text-weight-semibold">
-              <%= "+#{@favoriters_count - @favoriters.count}" %>
-            </p>
-          </li>
-        <% end %>
-      </ul>
-    <% else %>
-      <h3 class="title is-5 mb-5 mt-15">Favorites</h3>
-      <p class="has-text-muted">No one has favorited this game yet.</p>
-    <% end %>
-
-    <% if @games_in_series && @games_in_series.count.positive? %>
-      <div class="card more-from-this-series-card mt-15">
-        <div class="card-content">
-          <h3 class="title is-5 mb-15">
-            <%= link_to 'More from this series', series_path(@game.series) %>
-          </h3>
-
-          <div class="games">
-            <% @games_in_series.each do |game| %>
-              <%= link_to(game_path(game.id)) do %>
-                <figure class="game-cover">
-                  <%= game_cover(game, size: :medium) %>
-                  <p><%= game.name %></p>
-                </figure>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
+      <div class="box">
+        <p class="has-text-muted">No activity found for this game yet.</p>
       </div>
     <% end %>
   </div>
