@@ -12,8 +12,11 @@ gem 'pg', '~> 1.6'
 # Use Puma as the app server
 gem 'puma', '~> 7.0'
 
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 5.4.0'
+# Asset pipeline
+gem 'propshaft', '~> 1.2'
+
+# Use jsbundling-rails to bundle JavaScript using webpack
+gem 'jsbundling-rails', '~> 1.3'
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'

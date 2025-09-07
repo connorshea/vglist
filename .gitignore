@@ -55,3 +55,6 @@ sbin/
 
 /vendor/*
 .env
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
