@@ -15,7 +15,6 @@
     max-height: 375px;
     filter: brightness(var(--home-section-background-brightness));
     display: block;
-    // background: no-repeat center center / cover url('../../../assets/images/home-background.jpg') #333;
     background: no-repeat center center / cover var(--home-section-background-color);
   }
 
