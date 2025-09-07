@@ -37,7 +37,7 @@
     "webpack-cli": "^6.0.1"
   },
   "scripts": {
-    "prettier": "prettier --write './app/javascript/**/*.{js,vue,scss}'",
+    "prettier": "prettier --write './app/javascript/**/*.{js,ts,vue,scss}'",
     "build": "webpack --config webpack.config.js"
   },
   "browserslist": "> 0.5%"

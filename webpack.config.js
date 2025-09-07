@@ -12,9 +12,10 @@ module.exports = {
   devtool: "source-map",
   entry: {
     application: [
-      "./app/javascript/application.js",
+      "./app/javascript/application.ts",
       "./app/assets/stylesheets/application.scss",
-    ]
+    ],
+    graphiql: "./app/javascript/graphiql.js",
   },
   output: {
     filename: "[name].js",
@@ -28,7 +29,6 @@ module.exports = {
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
-    // make sure to include the plugin!
     new VueLoaderPlugin()
   ],
   module: {
@@ -50,6 +50,6 @@ module.exports = {
   },
   resolve: {
     // Add additional file types
-    extensions: ['.js', '.jsx', '.scss', '.css'],
+    extensions: ['.ts', '.vue', '.js', '.jsx', '.scss', '.css'],
   },
 }

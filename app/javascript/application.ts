@@ -8,7 +8,7 @@ import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import * as ActiveStorage from '@rails/activestorage';
 import '../src/application.scss';
-import TurbolinksAdapter from '../src/turbolinks-adapter';
+import TurbolinksAdapter from './src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
 import VTooltip from 'v-tooltip';
 import 'core-js/stable';
@@ -16,10 +16,10 @@ import 'regenerator-runtime/runtime';
 import * as Sentry from '@sentry/browser';
 import { Vue as VueIntegration } from '@sentry/integrations';
 import _ from "lodash";
-import '../src/vue-loader';
-import '../src/toggleable-buttons';
-import '../src/bulma';
-import '../src/settings';
+import './src/vue-loader';
+import './src/toggleable-buttons';
+import './src/bulma';
+import './src/settings';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
