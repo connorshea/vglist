@@ -24,6 +24,8 @@ module.exports = {
     path: path.resolve(__dirname, "app/assets/builds"),
   },
   plugins: [
+    new RemoveEmptyScriptsPlugin(),
+    new MiniCssExtractPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
@@ -32,6 +34,10 @@ module.exports = {
   ],
   module: {
     rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -42,5 +48,9 @@ module.exports = {
         }
       }
     ]
+  },
+  resolve: {
+    // Add additional file types
+    extensions: ['.js', '.jsx', '.scss', '.css'],
   },
 }

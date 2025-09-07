@@ -121,7 +121,7 @@ module ApplicationHelper
     options[:style] = "fill: #{fill};" unless fill.nil?
     options[:class] = "svg-icon "
     options[:class] += css_class unless css_class.nil?
-    return inline_svg_pack_tag("media/icons/#{icon}.svg", options)
+    return inline_svg_tag("#{icon}.svg", options)
   end
 
   # Return titles and paths for each item that should be displayed in the
