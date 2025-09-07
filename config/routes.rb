@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     post :favorite, on: :member
     delete :unfavorite, on: :member
     get :favorited, on: :member
+    get :activity, on: :member
     # Path like `/games/:id/merge/:game_b_id`
     post :merge, on: :member, path: 'merge/:game_b_id'
 

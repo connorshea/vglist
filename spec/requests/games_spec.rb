@@ -70,6 +70,25 @@ RSpec.describe "Games", type: :request do
     end
   end
 
+  describe "GET activity_game_path" do
+    let(:game) { create(:game) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, game: game, user: user) }
+    let(:favorite_game) { create(:favorite_game, game: game, user: user) }
+
+    it "returns http success" do
+      get activity_game_path(id: game.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http success when there are events for the game" do
+      game_purchase
+      favorite_game
+      get activity_game_path(id: game.id)
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST games_path" do
     let(:user) { create(:confirmed_moderator) }
     let(:game_attributes) { attributes_for(:game) }
