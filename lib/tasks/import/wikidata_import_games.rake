@@ -352,6 +352,7 @@ namespace 'import:wikidata' do
         ?item wdt:P31 ?videoGameTypes; # Instances of 'video games' or 'free or open source video games'.
               rdfs:label ?label .
           FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
+          FILTER(!CONTAINS(LCASE(?label), "playtest")) # exclude games with "Playtest" in the name
       }
       GROUP BY ?item
       HAVING (COUNT(?label) > 0)
@@ -368,6 +369,7 @@ namespace 'import:wikidata' do
               p:P577 ?releaseDateStatement; # items with a publication date.
               rdfs:label ?label .
         FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
+        FILTER(!CONTAINS(LCASE(?label), "playtest")) # exclude games with "Playtest" in the name
         ?releaseDateStatement a wikibase:BestRank; # ... of best rank (instead of wdt:P577)
             psv:P577 / wikibase:timePrecision 11 . # Precision is "day" (encoded as integer 11)
         SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
