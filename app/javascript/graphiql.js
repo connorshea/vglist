@@ -6,5 +6,5 @@
 import 'graphiql/graphiql.min.css';
 import 'graphiql/graphiql.min.js';
 
-require.context('react/umd/', true);
-require.context('react-dom/umd/', true);
+// require.context('react/umd/', true);
+// require.context('react-dom/umd/', true);

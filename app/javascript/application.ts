@@ -7,7 +7,7 @@
 import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import * as ActiveStorage from '@rails/activestorage';
-import '../src/application.scss';
+import '../assets/stylesheets/application.scss';
 import TurbolinksAdapter from './src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
 import VTooltip from 'v-tooltip';
