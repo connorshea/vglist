@@ -1,7 +1,6 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -925,11 +924,11 @@ COMMENT ON COLUMN public.unmatched_games.name IS 'The name of the game that was 
 
 CREATE VIEW public.grouped_unmatched_games AS
  SELECT count(*) AS count,
-    external_service_id,
-    external_service_name,
-    array_agg(name) AS names
+    unmatched_games.external_service_id,
+    unmatched_games.external_service_name,
+    array_agg(unmatched_games.name) AS names
    FROM public.unmatched_games
-  GROUP BY external_service_id, external_service_name
+  GROUP BY unmatched_games.external_service_id, unmatched_games.external_service_name
   ORDER BY (count(*)) DESC;
 
 
