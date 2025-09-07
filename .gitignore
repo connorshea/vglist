@@ -55,6 +55,3 @@ sbin/
 
 /vendor/*
 .env
-# Docker development environment
-.env.local
-docker-compose.override.yml
