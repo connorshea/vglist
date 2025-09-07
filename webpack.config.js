@@ -34,10 +34,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.s[ac]ss$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
@@ -45,11 +41,23 @@ module.exports = {
             preserveWhitespace: false
           }
         }
+      },
+      {
+        test: /(\.min)?\.s?[ac]ss$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+      },
+      {
+        test: /\.([cm]?ts|tsx)$/,
+        loader: "ts-loader",
+        options: {
+          transpileOnly: true,
+          appendTsSuffixTo: [/\.vue$/],
+        },
       }
     ]
   },
   resolve: {
     // Add additional file types
-    extensions: ['.ts', '.vue', '.js', '.jsx', '.scss', '.css'],
+    extensions: ['.ts', '.vue', '.js', '.jsx', '.scss', '.css', '.min.css'],
   },
 }

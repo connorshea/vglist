@@ -17,6 +17,7 @@
     "react-dom": "^18.2.0",
     "sass": "^1.92.1",
     "sass-loader": "^16.0.5",
+    "ts-loader": "^9.5.4",
     "turbolinks": "^5.2.0",
     "typescript": "^5.9.2",
     "v-tooltip": "2.1.3",
