@@ -21,13 +21,6 @@ import '../src/toggleable-buttons';
 import '../src/bulma';
 import '../src/settings';
 
-// Load the icons and images directories so they can be discovered and
-// compiled by webpacker.
-// @ts-ignore
-require.context('../icons', true);
-// @ts-ignore
-require.context('../images', true);
-
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: process.env.SENTRY_DSN_JS,
