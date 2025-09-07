@@ -1,0 +1,81 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vglist_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/vglist_test
+      BUNDLER_VERSION: '2.7.1'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.5'
+          bundler: '2.7.1'
+          bundler-cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+          cache: 'yarn'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            build-essential \
+            libpq-dev \
+            imagemagick \
+            postgresql-client
+
+      - name: Install Ruby dependencies
+        run: |
+          gem install bundler:$BUNDLER_VERSION
+          bundle install --jobs $(nproc)
+
+      - name: Install Node.js dependencies
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Setup database
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
+      - name: Precompile assets
+        run: |
+          bundle exec rails assets:precompile
+
+      - name: Cache setup completion
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor/bundle
+            node_modules
+            tmp/cache
+          key: copilot-setup-${{ github.sha }}
