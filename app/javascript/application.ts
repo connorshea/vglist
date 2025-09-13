@@ -19,15 +19,16 @@ import './src/toggleable-buttons';
 import './src/bulma';
 import './src/settings';
 
-if (process.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN_JS,
-    integrations: [
-      new VueIntegration({ Vue, attachProps: true })
-    ],
-    environment: process.env.NODE_ENV
-  });
-}
+// TODO: Re-enable this once I figure out how to get env vars working again.
+// if (process.env.NODE_ENV === 'production') {
+//   Sentry.init({
+//     dsn: process.env.SENTRY_DSN_JS,
+//     integrations: [
+//       new VueIntegration({ Vue, attachProps: true })
+//     ],
+//     environment: process.env.NODE_ENV
+//   });
+// }
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VTooltip);

@@ -30,11 +30,13 @@
     "webpack-remove-empty-scripts": "^1.1.1"
   },
   "devDependencies": {
+    "@swc/core": "^1.13.5",
     "@types/lodash": "^4.14.151",
     "@types/turbolinks": "^5.2.2",
     "@types/vue-select": "^3.16.6",
     "graphql-schema-linter": "^3.0.1",
     "prettier": "3.6.2",
+    "swc-loader": "^0.2.6",
     "webpack-cli": "^6.0.1"
   },
   "scripts": {

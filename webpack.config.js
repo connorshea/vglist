@@ -1,4 +1,4 @@
-const path    = require("path")
+const path = require("path")
 const { VueLoaderPlugin } = require('vue-loader')
 const webpack = require("webpack")
 
@@ -48,11 +48,24 @@ module.exports = {
       },
       {
         test: /\.([cm]?ts|tsx)$/,
-        loader: "ts-loader",
-        options: {
-          transpileOnly: true,
-          appendTsSuffixTo: [/\.vue$/],
-        },
+        use: [
+          {
+            loader: "swc-loader",
+            options: {
+              jsc: {
+                parser: {
+                  syntax: "typescript",
+                  tsx: true,
+                  decorators: true
+                },
+                transform: {
+                  decoratorMetadata: true,
+                }
+              }
+            },
+          },
+          path.resolve('./custom-loader'),
+        ],
       }
     ]
   },
