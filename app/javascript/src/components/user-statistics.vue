@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import Rails from '@rails/ujs';
-import * as _ from 'lodash';
+import startCase from 'lodash/startCase';
 
 export default {
   name: 'user-statistics',
@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     startCase(val) {
-      return _.startCase(val);
+      return startCase(val);
     },
     getStatistics() {
       fetch(`/users/${this.userId}/statistics.json`)

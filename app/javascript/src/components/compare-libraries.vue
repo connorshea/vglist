@@ -42,7 +42,7 @@
 import Rails from '@rails/ujs';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
-import * as _ from 'lodash';
+import concat from 'lodash/concat';
 
 export default {
   name: 'compare-libraries',
@@ -179,7 +179,7 @@ export default {
       if (this.user1Library === null && this.user2Library === null) {
         return [];
       }
-      let metaLibrary = _.concat(this.user1Library, this.user2Library);
+      let metaLibrary = concat(this.user1Library, this.user2Library);
       let betterMetaLibrary = [];
 
       metaLibrary.forEach(gamePurchase => {

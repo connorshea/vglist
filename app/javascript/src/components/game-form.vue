@@ -144,7 +144,7 @@ import DateField from './fields/date-field.vue';
 import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
-import * as _ from 'lodash';
+import difference from 'lodash/difference';
 
 export default {
   name: 'game-form',
@@ -402,7 +402,7 @@ export default {
       );
 
       let steamAppIds = [];
-      let difference = _.difference(
+      let appIdDifference = difference(
         this.$props.steamAppIds,
         this.game.steamAppIds
       );
@@ -415,7 +415,7 @@ export default {
           steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
         }
       });
-      difference.forEach((appId: any) => {
+      appIdDifference.forEach((appId: any) => {
         steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
       });
 
