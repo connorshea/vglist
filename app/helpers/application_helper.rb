@@ -31,7 +31,7 @@ module ApplicationHelper
         alt: "Avatar for #{user.username}.",
         **options
     else
-      image_pack_tag 'media/images/default-avatar.png',
+      image_tag 'default-avatar.png',
         height: "#{height}px",
         width: "#{width}px",
         class: css_class_name,
@@ -57,7 +57,7 @@ module ApplicationHelper
         alt: "Cover for #{game.name}.",
         **options
     else
-      image_pack_tag 'media/images/no-cover.png',
+      image_tag 'no-cover.png',
         width: "#{width}px",
         height: "#{height}px",
         alt: "Placeholder cover for #{game.name}.",
@@ -109,7 +109,7 @@ module ApplicationHelper
   # @param [String] css_class CSS class names for the `svg` element, will always include `svg-icon`
   # @param [Boolean] aria Whether to include ARIA information for accessibility purposes. If `false`, aria-hidden is set.
   # @param [String] title The ARIA title for the element.
-  # @param [Hash] options A hash of options to pass inline_svg_pack_tag.
+  # @param [Hash] options A hash of options to pass inline_svg_tag.
   #
   # @return [any] An inline svg pack tag.
   def svg_icon(icon, height: 20, width: nil, fill: nil, css_class: nil, aria: true, title: "Icon", options: {})
@@ -121,7 +121,7 @@ module ApplicationHelper
     options[:style] = "fill: #{fill};" unless fill.nil?
     options[:class] = "svg-icon "
     options[:class] += css_class unless css_class.nil?
-    return inline_svg_pack_tag("media/icons/#{icon}.svg", options)
+    return inline_svg_tag("#{icon}.svg", options)
   end
 
   # Return titles and paths for each item that should be displayed in the

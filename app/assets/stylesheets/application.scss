@@ -1,8 +1,8 @@
-@import './stylesheets/bulma-variables.scss';
+@import './bulma-variables.scss';
 @import '~bulma/bulma.sass';
-@import './stylesheets/padding-and-margins.scss';
-@import './stylesheets/utilities.scss';
-@import './stylesheets/home.scss';
+@import './padding-and-margins.scss';
+@import './utilities.scss';
+@import './home.scss';
 
 :root {
   color-scheme: light dark;

@@ -21,7 +21,7 @@
   <meta property="og:description" content="<%= meta_description(yield(:description)) %>">
   <meta property="og:url" content="<%= request.original_url %>">
   <% if yield(:opengraph_image).blank? %>
-    <meta property="og:image" content="<%= asset_pack_url('media/images/vglist-opengraph-image.png')%>">
+    <meta property="og:image" content="<%= asset_url('vglist-opengraph-image.png')%>">
   <% else %>
     <meta property="og:image" content="<%= yield(:opengraph_image) %>">
   <% end %>
@@ -29,8 +29,8 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <%= javascript_pack_tag 'application', nonce: true, 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'application', nonce: true, media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', nonce: true, 'data-turbolinks-track': 'reload', defer: true %>
 
   <% if Rails.env.production? %>
     <!-- Cloudflare Web Analytics -->

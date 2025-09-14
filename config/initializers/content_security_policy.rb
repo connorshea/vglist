@@ -9,24 +9,19 @@ Rails.application.config.content_security_policy do |policy|
   policy.font_src :self, :https, :data
   policy.img_src :self, :https, :data
   policy.object_src :none
+
   # TODO: Disable unsafe_eval in production.
   # Maybe with this? https://github.com/rails/webpacker/issues/1520#issuecomment-399112369
   # Require unsafe_inline for Vue DevTools in development.
   # https://github.com/vuejs/vue-devtools/issues/616
-  if Rails.env.development?
-    policy.script_src :self, :https, :unsafe_eval, :unsafe_inline, :report_sample
-  else
-    policy.script_src :self, :https, :unsafe_eval, :report_sample
-  end
+  policy.script_src :self, :https, :unsafe_eval, :report_sample
+
   # Allow unsafe_inline because vue-select uses inline styles I guess?
   policy.style_src :self, :https, :unsafe_inline, :report_sample
 
-  # Allow Webpacker to connect in development
-  if Rails.env.development?
-    policy.connect_src :self, :https, 'http://localhost:3035', 'ws://localhost:3035'
   # Allow Cloudflare Web Analytics in production, and allow loading and
   # uploading images from DigitalOcean.
-  elsif Rails.env.production?
+  if Rails.env.production?
     policy.connect_src :self,
                        'https://cloudflareinsights.com',
                        'https://static.cloudflareinsights.com',
@@ -41,6 +36,8 @@ end
 # If you are using UJS then enable automatic nonce generation
 Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
 
+# We do not currently use this with style-src because v-tooltip doesn't work
+# properly with it. May want to move to a different library in the future.
 Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
 
 # Report CSP violations to a specified URI

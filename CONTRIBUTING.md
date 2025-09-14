@@ -6,7 +6,7 @@
 
 - Ruby 3.4
 - Postgres 17.x
-- Node.js 16.x
+- Node.js 18.x
 - Yarn 1.x
 - ImageMagick (for images, like avatars or game covers)
 
@@ -20,10 +20,8 @@
    - This is the equivalent of running `bundle exec rails db:create && bundle exec rails db:structure:load && bundle exec rails db:seed`, so it will create the databases, seed them with fake data, and create a user with the email `admin@example.com` and the password `password`.
    - If you would like more control, run only `bundle exec rails db:create` and `bundle exec rails db:schema:load`.
    - If you run into an error about the database password being wrong, the application will try to use `'password'` by default, but you can set the password for your database user via the `VGLIST_DATABASE_PASSWORD` environment variable.
-1. `bundle exec rails server` to start the server.
+1. Run `./bin/dev` to start the server and webpack.
 1. Visit <http://localhost:3000> in your browser and you should see the base application.
-1. In a separate terminal window, run `bin/webpack-dev-server` alongside the Rails server to have a webpack-dev-server instance.
-   - You don't _have_ to do this for the site to work, but things will take a lot longer to load as Webpack has to compile stuff from within the same process as Rails.
 
 #### Extras
 
@@ -41,7 +39,7 @@ This is a list of libraries used for various functionality across the app. It's 
 - [Ruby on Rails](https://rubyonrails.org): Web application framework.
   - [ActiveRecord](https://guides.rubyonrails.org/active_record_basics.html): Used for SQL queries, migrations, and maintaining the database structure.
   - [ActiveStorage](https://guides.rubyonrails.org/active_storage_overview.html): Used for image storage.
-  - [Webpacker](https://github.com/rails/webpacker): JavaScript / SCSS bundler, essentially [Webpack](https://webpack.js.org) with Rails integration.
+  - [Propshaft](github.com/rails/propshaft) and [jsbundling-rails](https://github.com/rails/jsbundling-rails): JavaScript / SCSS bundler, generally uses [Webpack](https://webpack.js.org) for JavaScript/TypeScript code.
 - [Postgres](https://www.postgresql.org/): Database engine that the application uses.
 - [PgSearch](https://github.com/Casecommons/pg_search): Powers search for games, companies, series', etc.
 - [Devise](https://github.com/heartcombo/devise): Authentication framework, for logging in and other user authentication things.
@@ -51,7 +49,7 @@ This is a list of libraries used for various functionality across the app. It's 
 - [FactoryBot](https://github.com/thoughtbot/factory_bot): Factories for seeding the database and writing tests.
 - [GraphQL](https://graphql.org) via [graphql-ruby](https://graphql-ruby.org): GraphQL is a query language that is used for the vglist API.
 - [TypeScript](https://www.typescriptlang.org): Dialect of JavaScript with static types, most of the JavaScript in the application is written in TypeScript.
-- [Vue.js](https://vuejs.org): JavaScript framework for dynamic webpages, used for various complex pages and elements, e.g. the search bar, library table, etc.
+- [Vue.js 2.x](https://vuejs.org): JavaScript framework for dynamic webpages, used for various complex pages and elements, e.g. the search bar, library table, etc.
 - [Font Awesome](https://fontawesome.com): Icons used in the application mostly come from Font Awesome.
 - [Bulma](https://bulma.io/): CSS Framework used for styling the application.
 

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2025.09.13
+### Changed
+- Upgrade asset pipeline from Webpacker, which is deprecated, to Propshaft and jsbundling-rails. ([#4149])
+- Upgrade GraphiQL from v1 to v5, and use it via a CDN. ([#4149])
+- Upgrade Node.js from v16 to v18. ([#4149])
+
 ## v2025.09.01
 ### Changed
 - Upgrade Ruby from 3.3.1 to 3.4.5. ([#4124, #4132])
@@ -980,3 +986,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#4127]: https://github.com/connorshea/vglist/pull/4127
 [#4130]: https://github.com/connorshea/vglist/pull/4130
 [#4132]: https://github.com/connorshea/vglist/pull/4132
+[#4149]: https://github.com/connorshea/vglist/pull/4149

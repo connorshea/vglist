@@ -18,8 +18,6 @@ updates:
     versions: [">= 0"]
   - dependency-name: aws-sdk-s3
     versions: [">= 0"]
-  - dependency-name: webpacker
-    versions: [">= 0"]
 - package-ecosystem: docker
   directory: "/"
   schedule:
@@ -39,16 +37,10 @@ updates:
   assignees:
   - connorshea
   ignore:
-  - dependency-name: "@rails/webpacker"
-    versions: [">= 0"]
   - dependency-name: "@types/lodash"
     versions: [">= 0"]
   - dependency-name: "@types/node"
     versions: [">= 0"]
-  - dependency-name: webpack
-    versions: ["~> 5.0"]
-  - dependency-name: webpack-dev-server
-    versions: ["~> 4.0"]
   - dependency-name: "@sentry/browser"
     versions: [">= 0"]
   - dependency-name: "@sentry/integrations"
