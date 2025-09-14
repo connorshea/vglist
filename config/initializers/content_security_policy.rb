@@ -36,6 +36,8 @@ end
 # If you are using UJS then enable automatic nonce generation
 Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
 
+# We do not currently use this with style-src because v-tooltip doesn't work
+# properly with it. May want to move to a different library in the future.
 Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
 
 # Report CSP violations to a specified URI
