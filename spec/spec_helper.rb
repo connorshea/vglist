@@ -23,6 +23,7 @@ require 'pundit/matchers'
 require 'capybara/rspec'
 require 'active_storage_validations/matchers'
 require 'webmock/rspec'
+require 'rspec/retry'
 
 WebMock.disable_net_connect!(
   allow_localhost: true,
@@ -111,4 +112,16 @@ RSpec.configure do |config|
 
   # Add ActiveStorageValidations matchers to Rspec tests.
   config.include ActiveStorageValidations::Matchers, type: :model
+
+  # Don't retry by default.
+  config.default_retry_count = 0
+  # show retry status in spec process
+  config.verbose_retry = true
+  # show exception that triggers a retry if verbose_retry is set to true
+  config.display_try_failure_messages = true
+
+  # Only run the retry logic on feature specs.
+  config.around :each, :feature do |ex|
+    ex.run_with_retry retry: 3
+  end
 end
