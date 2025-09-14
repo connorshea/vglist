@@ -14,8 +14,7 @@ module.exports = {
     application: [
       "./app/javascript/application.ts",
       "./app/assets/stylesheets/application.scss",
-    ],
-    graphiql: "./app/javascript/graphiql.js",
+    ]
   },
   output: {
     filename: "[name].js",

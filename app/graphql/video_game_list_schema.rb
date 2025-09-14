@@ -6,7 +6,7 @@ class VideoGameListSchema < GraphQL::Schema
   # max_complexity is disabled for now to allow the GraphiQL documentation
   # panel to work. max_depth is set to 13 as that's what's requires for
   # introspection to work, which is what's used for the documentation panel.
-  max_depth 13
+  max_depth 15
   # max_complexity 50
 
   default_max_page_size 100

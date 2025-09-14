@@ -5,7 +5,7 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
 Rails.application.config.content_security_policy do |policy|
-  policy.default_src :self, :https
+  policy.default_src :self, :https, 'https://esm.sh'
   policy.font_src :self, :https, :data
   policy.img_src :self, :https, :data
   policy.object_src :none
@@ -14,12 +14,14 @@ Rails.application.config.content_security_policy do |policy|
   # Require unsafe_inline for Vue DevTools in development.
   # https://github.com/vuejs/vue-devtools/issues/616
   if Rails.env.development?
-    policy.script_src :self, :https, :unsafe_eval, :unsafe_inline, :report_sample
+    policy.script_src :self, :https, :unsafe_eval, :unsafe_inline, :report_sample, 'https://esm.sh', :data
   else
-    policy.script_src :self, :https, :unsafe_eval, :report_sample
+    policy.script_src :self, :https, :unsafe_eval, :report_sample, 'https://esm.sh'
   end
   # Allow unsafe_inline because vue-select uses inline styles I guess?
-  policy.style_src :self, :https, :unsafe_inline, :report_sample
+  policy.style_src :self, :https, :unsafe_inline, :report_sample, :unsafe_hashes, 'https://esm.sh'
+
+  policy.worker_src :self, :https, :blob
 
   # Allow Cloudflare Web Analytics in production, and allow loading and
   # uploading images from DigitalOcean.
@@ -36,9 +38,9 @@ Rails.application.config.content_security_policy do |policy|
 end
 
 # If you are using UJS then enable automatic nonce generation
-Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
+# Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
 
-Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
+# Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
 
 # Report CSP violations to a specified URI
 # For further information see the following documentation:
