@@ -9,6 +9,7 @@
     "@swc/core": "^1.13.5",
     "@types/node": "^18.0.0",
     "bulma": "https://github.com/connorshea/bulma#css-variables-with-fallback",
+    "compression-webpack-plugin": "^11.1.0",
     "css-loader": "^7.1.2",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.9.4",
