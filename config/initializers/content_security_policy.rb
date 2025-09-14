@@ -5,7 +5,7 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
 Rails.application.config.content_security_policy do |policy|
-  policy.default_src :self, :https, 'https://esm.sh'
+  policy.default_src :self, :https
   policy.font_src :self, :https, :data
   policy.img_src :self, :https, :data
   policy.object_src :none
@@ -14,15 +14,10 @@ Rails.application.config.content_security_policy do |policy|
   # Maybe with this? https://github.com/rails/webpacker/issues/1520#issuecomment-399112369
   # Require unsafe_inline for Vue DevTools in development.
   # https://github.com/vuejs/vue-devtools/issues/616
-  if Rails.env.development?
-    policy.script_src :self, :https, :unsafe_eval, :report_sample, 'https://esm.sh', :data
-  else
-    policy.script_src :self, :https, :unsafe_eval, :report_sample, 'https://esm.sh'
-  end
-  # Allow unsafe_inline because vue-select uses inline styles I guess?
-  policy.style_src :self, :https, :unsafe_inline, :report_sample, :unsafe_hashes, 'https://esm.sh'
+  policy.script_src :self, :https, :unsafe_eval, :report_sample
 
-  policy.worker_src :self, :https, :blob
+  # Allow unsafe_inline because vue-select uses inline styles I guess?
+  policy.style_src :self, :https, :unsafe_inline, :report_sample
 
   # Allow Cloudflare Web Analytics in production, and allow loading and
   # uploading images from DigitalOcean.
