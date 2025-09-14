@@ -55,7 +55,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5.0.0
         with:
-          node-version: '16'
+          node-version: '18'
           cache: 'yarn'
 
       - name: Install Yarn dependencies
