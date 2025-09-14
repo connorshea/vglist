@@ -6,7 +6,7 @@
     "@rails/ujs": "^7.1.502",
     "@sentry/browser": "5.29.0",
     "@sentry/integrations": "^5.29.0",
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.0",
     "bulma": "https://github.com/connorshea/bulma#css-variables-with-fallback",
     "css-loader": "^7.1.2",
     "lodash": "^4.17.21",
