@@ -3,7 +3,7 @@ class StaticPagesController < ApplicationController
 
   # We only need to allow this worker-src stuff on the GraphiQL
   # page, no need for it to be a site-wide CSP config.
-  content_security_policy do |policy|
+  content_security_policy(only: :graphiql) do |policy|
     policy.worker_src :self, :https, :blob
   end
 
