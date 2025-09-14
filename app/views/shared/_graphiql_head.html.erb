@@ -29,7 +29,7 @@
 
   <link rel="stylesheet" href="https://esm.sh/graphiql@5.2.0/dist/style.css" integrity="sha384-f6GHLfCwoa4MFYUMd3rieGOsIVAte/evKbJhMigNdzUf52U9bV2JQBMQLke0ua+2" crossorigin="anonymous">
 
-  <script type="importmap">
+  <script type="importmap" nonce="<%= content_security_policy_nonce %>">
     {
       "imports": {
         "react": "https://esm.sh/react@19.1.0",
@@ -74,6 +74,7 @@
         'X-User-Token': "<%= @token %>"
       }
     });
+
     const plugins = [HISTORY_PLUGIN];
 
     function App() {
@@ -81,10 +82,7 @@
         fetcher,
         plugins,
         defaultEditorToolsVisibility: true,
-        initialHeaders: `{
-          "X-User-Email": "<%= @email %>",
-          "X-User-Token": "<%= @token %>"
-        }`
+        initialHeaders: `{\n  "X-User-Email": "<%= @email %>",\n  "X-User-Token": "<%= @token %>"\n}`
       });
     }
 

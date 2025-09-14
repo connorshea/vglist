@@ -9,12 +9,13 @@ Rails.application.config.content_security_policy do |policy|
   policy.font_src :self, :https, :data
   policy.img_src :self, :https, :data
   policy.object_src :none
+
   # TODO: Disable unsafe_eval in production.
   # Maybe with this? https://github.com/rails/webpacker/issues/1520#issuecomment-399112369
   # Require unsafe_inline for Vue DevTools in development.
   # https://github.com/vuejs/vue-devtools/issues/616
   if Rails.env.development?
-    policy.script_src :self, :https, :unsafe_eval, :unsafe_inline, :report_sample, 'https://esm.sh', :data
+    policy.script_src :self, :https, :unsafe_eval, :report_sample, 'https://esm.sh', :data
   else
     policy.script_src :self, :https, :unsafe_eval, :report_sample, 'https://esm.sh'
   end
@@ -38,9 +39,9 @@ Rails.application.config.content_security_policy do |policy|
 end
 
 # If you are using UJS then enable automatic nonce generation
-# Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
+Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
 
-# Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
+Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
 
 # Report CSP violations to a specified URI
 # For further information see the following documentation:
