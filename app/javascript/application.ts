@@ -11,8 +11,7 @@ import '../assets/stylesheets/application.scss';
 import TurbolinksAdapter from './src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
 import VTooltip from 'v-tooltip';
-import * as Sentry from '@sentry/browser';
-import { Vue as VueIntegration } from '@sentry/integrations';
+import * as Sentry from "@sentry/vue";
 import _ from "lodash";
 import './src/vue-loader';
 import './src/toggleable-buttons';
@@ -21,10 +20,9 @@ import './src/settings';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
+    Vue,
     dsn: process.env.SENTRY_DSN_JS,
-    integrations: [
-      new VueIntegration({ Vue, attachProps: true })
-    ],
+    integrations: [],
     environment: process.env.NODE_ENV
   });
 }
