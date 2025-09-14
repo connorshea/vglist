@@ -1,11 +1,13 @@
-const path = require("path")
-const { VueLoaderPlugin } = require('vue-loader')
-const webpack = require("webpack")
+const path = require("path");
+const { VueLoaderPlugin } = require('vue-loader');
+const webpack = require("webpack");
 
 // Extracts CSS into .css file
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // Removes exported JavaScript files from CSS-only entries
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+// Compress assets.
+const CompressionPlugin = require("compression-webpack-plugin");
 
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
 
@@ -37,7 +39,10 @@ module.exports = {
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new CompressionPlugin({
+      test: [/\.js(\?.*)?$/i, /(\.min)?\.s?[ac]ss$/i],
+    })
   ],
   module: {
     rules: [
