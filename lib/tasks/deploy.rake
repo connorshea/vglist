@@ -36,8 +36,7 @@ namespace :deploy do
       puts "Migrating database..."
       system('bundle exec rails db:migrate')
 
-      # TODO: Update this to something else?
-      # Compile CSS and JavaScript with Webpacker.
+      # Compile assets with Propshaft.
       puts
       puts "Precompiling assets..."
       system('bundle exec rails assets:precompile')
