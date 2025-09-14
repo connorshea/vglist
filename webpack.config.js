@@ -24,6 +24,9 @@ module.exports = {
     chunkFormat: "module",
     path: path.resolve(__dirname, "app/assets/builds"),
   },
+  optimization: {
+    moduleIds: 'deterministic',
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
