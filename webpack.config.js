@@ -56,6 +56,7 @@ module.exports = {
       },
       {
         test: /\.([cm]?ts|tsx)$/,
+        exclude: /(node_modules)/,
         use: [
           {
             loader: "swc-loader",

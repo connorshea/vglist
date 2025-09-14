@@ -113,8 +113,6 @@ RSpec.configure do |config|
   # Add ActiveStorageValidations matchers to Rspec tests.
   config.include ActiveStorageValidations::Matchers, type: :model
 
-  # Don't retry by default.
-  config.default_retry_count = 0
   # show retry status in spec process
   config.verbose_retry = true
   # show exception that triggers a retry if verbose_retry is set to true
