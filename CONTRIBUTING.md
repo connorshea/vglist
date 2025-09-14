@@ -39,7 +39,6 @@ This is a list of libraries used for various functionality across the app. It's 
 - [Ruby on Rails](https://rubyonrails.org): Web application framework.
   - [ActiveRecord](https://guides.rubyonrails.org/active_record_basics.html): Used for SQL queries, migrations, and maintaining the database structure.
   - [ActiveStorage](https://guides.rubyonrails.org/active_storage_overview.html): Used for image storage.
-  <!-- TODO: UPDATE THIS -->
   - [Propshaft](github.com/rails/propshaft) and [jsbundling-rails](https://github.com/rails/jsbundling-rails): JavaScript / SCSS bundler, generally uses [Webpack](https://webpack.js.org) for JavaScript/TypeScript code.
 - [Postgres](https://www.postgresql.org/): Database engine that the application uses.
 - [PgSearch](https://github.com/Casecommons/pg_search): Powers search for games, companies, series', etc.
