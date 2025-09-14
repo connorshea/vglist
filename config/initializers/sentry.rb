@@ -10,4 +10,12 @@ Sentry.init do |config|
   config.enable_logs = true
   # Patch Ruby logger to forward logs
   config.enabled_patches = [:logger]
+
+  config.rails.structured_logging.enabled = true
+
+  config.rails.structured_logging.subscribers = {
+    active_record: Sentry::Rails::LogSubscribers::ActiveRecordSubscriber,
+    action_controller: Sentry::Rails::LogSubscribers::ActionControllerSubscriber,
+    action_mailer: Sentry::Rails::LogSubscribers::ActionMailerSubscriber
+  }
 end
