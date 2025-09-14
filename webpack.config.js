@@ -7,9 +7,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // Removes exported JavaScript files from CSS-only entries
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
+const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
+
 module.exports = {
-  mode: "production",
-  devtool: "source-map",
+  mode: mode,
+  devtool: mode === 'development' ? false : "source-map",
   entry: {
     application: [
       "./app/javascript/application.ts",
@@ -23,6 +25,10 @@ module.exports = {
     path: path.resolve(__dirname, "app/assets/builds"),
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.SENTRY_DSN_JS': JSON.stringify(process.env.SENTRY_DSN_JS),
+    }),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
@@ -58,7 +64,7 @@ module.exports = {
                   decorators: true
                 },
                 transform: {
-                  decoratorMetadata: true,
+                  decoratorMetadata: true
                 }
               }
             },
