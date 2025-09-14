@@ -153,4 +153,6 @@ group :test do
   gem 'selenium-webdriver', '~> 4.35'
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
   gem 'webmock', '~> 3.25'
+  # Retry failed tests to reduce flakiness.
+  gem 'rspec-retry', '~> 0.6.2'
 end
