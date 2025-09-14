@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import Turbolinks from 'turbolinks';
-import * as _ from 'lodash';
+import debounce from 'lodash/debounce';
 
 export default {
   props: {
@@ -110,7 +110,7 @@ export default {
   methods: {
     // Debounce the search for 400ms before showing results, to prevent
     // searching from sending a ton of requests.
-    onSearch: _.debounce(function(e) {
+    onSearch: debounce(function(e) {
       if (this.query.length > 1) {
         fetch(`${this.searchUrl}?query=${this.query}`)
           .then(response => {

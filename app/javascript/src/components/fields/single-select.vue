@@ -19,7 +19,8 @@
 <script lang="ts">
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
-import * as _ from 'lodash';
+import debounce from 'lodash/debounce';
+import snakeCase from 'lodash/snakeCase';
 
 export default {
   name: 'single-select',
@@ -76,7 +77,7 @@ export default {
      * @param {search}  String   Current search text
      * @param {loading} Function Toggle loading class
      */
-    onSearch: _.debounce(function(search, loading) {
+    onSearch: debounce(function(search, loading) {
       loading(true);
       let searchUrl = new URL(this.searchPath);
       searchUrl.searchParams.append('query', search);
@@ -101,7 +102,7 @@ export default {
   },
   computed: {
     inputId() {
-      return _.snakeCase(this.label);
+      return snakeCase(this.label);
     }
   }
 };

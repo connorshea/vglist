@@ -18,7 +18,7 @@
 <script lang="ts">
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
-import * as _ from 'lodash';
+import snakeCase from 'lodash/snakeCase';
 
 export default {
   name: 'static-single-select',
@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     inputId() {
-      return _.snakeCase(this.label);
+      return snakeCase(this.label);
     }
   }
 };

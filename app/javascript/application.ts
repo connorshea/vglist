@@ -12,7 +12,6 @@ import TurbolinksAdapter from './src/turbolinks-adapter';
 import Vue from 'vue/dist/vue.esm';
 import VTooltip from 'v-tooltip';
 import * as Sentry from "@sentry/vue";
-import _ from "lodash";
 import './src/vue-loader';
 import './src/toggleable-buttons';
 import './src/bulma';

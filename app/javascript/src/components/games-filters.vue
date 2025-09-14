@@ -23,7 +23,8 @@ import SingleSelect from './fields/single-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
-import * as _ from 'lodash';
+import reverse from 'lodash/reverse';
+import range from 'lodash/range';
 
 export default {
   name: 'games-filters',
@@ -87,7 +88,7 @@ export default {
       let currentYear = new Date().getFullYear();
       // Create an array from 1950 to the current year + 2.
       // (it's +3 because the range ends before the end number)
-      return _.reverse(_.range(1950, currentYear + 3));
+      return reverse(range(1950, currentYear + 3));
     }
   }
 };
