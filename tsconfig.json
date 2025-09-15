@@ -14,7 +14,6 @@
     "target": "esNext",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "jsx": "react",
     "verbatimModuleSyntax": true
   },
   "exclude": [
@@ -26,5 +25,9 @@
   "compileOnSave": false,
   "typeAcquisition": {
     "enable": true
+  },
+  "vueCompilerOptions": {
+    "target": 2.7,
+    "extensions": [".vue"],
   }
 }
