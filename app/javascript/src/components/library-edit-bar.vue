@@ -57,6 +57,7 @@ export default {
       required: true
     }
   },
+  emits: ['closeEditBar'],
   data: function() {
     return {
       updateData: {
@@ -77,7 +78,7 @@ export default {
     };
   },
   methods: {
-    updateGames(): void {
+    updateGames(this: any): void {
       // Clear the array first.
       this.updateData['ids'] = [];
       this.gamePurchases.forEach(gamePurchase => {

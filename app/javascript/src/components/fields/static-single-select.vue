@@ -54,6 +54,7 @@ export default {
       default: false
     }
   },
+  emits: ['input'],
   computed: {
     inputId() {
       return snakeCase(this.label);

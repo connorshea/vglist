@@ -135,6 +135,7 @@ export default {
       });
     }
   },
+  emits: ['edit', 'delete', 'addGame', 'loaded', 'openEditBar', 'selectedGamePurchasesChanged'],
   data: function() {
     return {
       columns: [

@@ -46,6 +46,7 @@ export default {
       required: false
     }
   },
+  emits: ['input'],
   data: function() {
     return {
       options: [],

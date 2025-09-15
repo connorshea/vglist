@@ -40,6 +40,7 @@ export default {
       default: "name"
     }
   },
+  emit: ['input'],
   data: function() {
     return {
       options: []

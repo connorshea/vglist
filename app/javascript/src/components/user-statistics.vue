@@ -36,18 +36,19 @@
     <hr v-if="completionRateExists">
     <div v-if="completionRateExists" class="has-text-centered has-text-weight-bold mb-5">Completion</div>
     <div v-if="completionRateExists" class="percentage-bar">
+      <!-- Use popover here -->
       <div
         v-for="(v, k, i) in statistics.completion_statuses"
         :key="k"
         :class="['percentage-bar-portion', `color-${i + 1}`]"
         :style="{ 'max-width': ((v / completionStatusesCount) * 100) + '%' }"
-        v-tooltip="{ content: `${startCase(k)} (${v})` }"
       ></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+// v-tooltip="{ content: `${startCase(k)} (${v})` }" 
 import Rails from '@rails/ujs';
 import startCase from 'lodash/startCase';
 

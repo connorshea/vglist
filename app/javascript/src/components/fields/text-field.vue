@@ -43,6 +43,7 @@ export default {
       default: false
     }
   },
+  emits: ['input'],
   data() {
     return {
       dataValue: this.value

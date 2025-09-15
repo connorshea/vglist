@@ -65,6 +65,7 @@ export default {
       required: false
     }
   },
+  emits: ['input'],
   data() {
     return {
       dataValue: this.value
