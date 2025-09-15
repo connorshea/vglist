@@ -19,7 +19,6 @@
 </template>
 
 <script lang="ts">
-
 import SingleSelect from './fields/single-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from '@rails/ujs';

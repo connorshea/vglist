@@ -27,7 +27,7 @@ import snakeCase from 'lodash/snakeCase';
 export default defineComponent({
   name: 'multi-select',
   components: {
-    vSelect: vSelect
+    vSelect
   },
   props: {
     label: {
