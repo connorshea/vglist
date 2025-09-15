@@ -51,8 +51,9 @@
 // v-tooltip="{ content: `${startCase(k)} (${v})` }" 
 import Rails from '@rails/ujs';
 import startCase from 'lodash/startCase';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'user-statistics',
   props: {
     userId: {
@@ -91,6 +92,8 @@ export default {
         return values.reduce((accumulator: number, currentValue: number) => {
           return accumulator + currentValue;
         });
+      } else {
+        return null;
       }
     },
     averageRatingExists: function() {
@@ -122,5 +125,5 @@ export default {
       }
     }
   }
-};
+});
 </script>

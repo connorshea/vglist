@@ -16,11 +16,12 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import snakeCase from 'lodash/snakeCase';
 
-export default {
+export default defineComponent({
   name: 'static-single-select',
   components: {
     vSelect
@@ -60,5 +61,5 @@ export default {
       return snakeCase(this.label);
     }
   }
-};
+});
 </script>

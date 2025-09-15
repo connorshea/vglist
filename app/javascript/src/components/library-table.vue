@@ -91,11 +91,12 @@
 
 <script lang="ts">
 import Rails from '@rails/ujs';
+import { defineComponent } from 'vue';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
 import VglistUtils from '../utils';
 
-export default {
+export default defineComponent({
   name: 'library-table',
   components: {
     VueGoodTable
@@ -373,5 +374,5 @@ export default {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? "nocturnal" : "default";
     }
   }
-};
+});
 </script>

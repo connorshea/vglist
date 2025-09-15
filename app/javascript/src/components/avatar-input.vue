@@ -48,8 +48,9 @@ import FileSelect from './fields/file-select.vue';
 import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'avatar-input',
   components: {
     FileSelect
@@ -149,5 +150,5 @@ export default {
       Turbolinks.visit(`${window.location.origin}/settings`);
     }
   }
-};
+});
 </script>

@@ -14,7 +14,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   name: 'text-area',
   props: {
     formClass: {
@@ -48,5 +50,5 @@ export default {
       return `${this.formClass}_${this.attribute}`;
     }
   }
-};
+});
 </script>

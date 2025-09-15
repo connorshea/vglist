@@ -43,8 +43,9 @@ import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import MultiSelect from './fields/multi-select.vue';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'library-edit-bar',
   components: {
     NumberField,
@@ -154,5 +155,5 @@ export default {
       });
     }
   }
-};
+});
 </script>

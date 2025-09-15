@@ -40,8 +40,9 @@
 import SingleSelect from './fields/single-select.vue';
 import VglistUtils from '../utils';
 import Turbolinks from 'turbolinks';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'merge-games-modal',
   components: {
     SingleSelect
@@ -106,5 +107,5 @@ export default {
       return item;
     }
   }
-};
+});
 </script>

@@ -17,7 +17,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   name: 'date-field',
   props: {
     formClass: {
@@ -56,5 +58,5 @@ export default {
       return `${this.formClass}_${this.attribute}`;
     }
   }
-};
+});
 </script>

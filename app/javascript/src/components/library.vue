@@ -40,8 +40,9 @@
 import LibraryTable from './library-table.vue';
 import GameModal from './game-modal.vue';
 import LibraryEditBar from './library-edit-bar.vue';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   components: {
     LibraryTable,
     GameModal,
@@ -81,7 +82,7 @@ export default {
     this.loadGames();
   },
   methods: {
-    loadGames() {
+    loadGames(): void {
       fetch(this.gamePurchasesUrl, {
         headers: {
           'Content-Type': 'application/json'
@@ -173,5 +174,5 @@ export default {
       return currentGameExists ? 'update' : 'create';
     }
   }
-};
+});
 </script>

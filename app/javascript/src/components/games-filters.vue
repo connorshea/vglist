@@ -19,14 +19,16 @@
 </template>
 
 <script lang="ts">
+
 import SingleSelect from './fields/single-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import reverse from 'lodash/reverse';
 import range from 'lodash/range';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'games-filters',
   components: {
     SingleSelect,
@@ -91,5 +93,5 @@ export default {
       return reverse(range(1950, currentYear + 3));
     }
   }
-};
+});
 </script>

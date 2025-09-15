@@ -19,8 +19,9 @@
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import snakeCase from 'lodash/snakeCase';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'multi-select-generic',
   components: {
     vSelect
@@ -56,5 +57,5 @@ export default {
       return snakeCase(this.label);
     }
   }
-};
+});
 </script>
