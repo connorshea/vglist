@@ -18,7 +18,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     value: File,
     label: {
@@ -49,5 +51,5 @@ export default {
       this.$emit('input', file);
     }
   }
-};
+});
 </script>

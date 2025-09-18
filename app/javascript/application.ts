@@ -9,8 +9,7 @@ import Turbolinks from 'turbolinks';
 import * as ActiveStorage from '@rails/activestorage';
 import '../assets/stylesheets/application.scss';
 import TurbolinksAdapter from './src/turbolinks-adapter';
-import Vue from 'vue/dist/vue.esm';
-import VTooltip from 'v-tooltip';
+import Vue from 'vue';
 import * as Sentry from "@sentry/vue";
 import './src/vue-loader';
 import './src/toggleable-buttons';
@@ -27,8 +26,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(TurbolinksAdapter);
-Vue.use(VTooltip);
-VTooltip.enabled = window.innerWidth > 768;
 
 Rails.start();
 Turbolinks.start();

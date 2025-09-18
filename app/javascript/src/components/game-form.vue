@@ -145,8 +145,9 @@ import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
 import difference from 'lodash/difference';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'game-form',
   components: {
     TextArea,
@@ -478,5 +479,5 @@ export default {
         });
     }
   }
-};
+});
 </script>

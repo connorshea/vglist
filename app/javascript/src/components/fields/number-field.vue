@@ -20,7 +20,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   name: 'number-field',
   props: {
     formClass: {
@@ -65,6 +67,7 @@ export default {
       required: false
     }
   },
+  emits: ['input'],
   data() {
     return {
       dataValue: this.value
@@ -78,5 +81,5 @@ export default {
       return `${this.formClass}_${this.attribute}`;
     }
   }
-};
+});
 </script>

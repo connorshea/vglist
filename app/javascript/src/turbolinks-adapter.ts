@@ -1,11 +1,14 @@
-function handleVueDestructionOn(turbolinksEvent, vue) {
+import type Vue from "vue/types";
+import type { VueConstructor } from "vue/types";
+
+function handleVueDestructionOn(turbolinksEvent, vue: Vue) {
   document.addEventListener(turbolinksEvent, function teardown() {
     vue.$destroy();
     document.removeEventListener(turbolinksEvent, teardown);
   });
 }
 
-function plugin(Vue, options) {
+function plugin(Vue: VueConstructor, options) {
   // Install a global mixin
   Vue.mixin({
     beforeMount: function() {

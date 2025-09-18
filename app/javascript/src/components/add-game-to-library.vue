@@ -42,8 +42,9 @@
 import GameModal from './game-modal.vue';
 import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'add-game-to-library',
   components: {
     GameModal
@@ -165,5 +166,5 @@ export default {
         });
     }
   }
-};
+});
 </script>

@@ -122,8 +122,9 @@ import SingleSelect from './fields/single-select.vue';
 import MultiSelect from './fields/multi-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import VglistUtils from '../utils';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'game-modal',
   components: {
     TextField,
@@ -410,5 +411,5 @@ export default {
       });
     }
   }
-};
+});
 </script>
