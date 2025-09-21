@@ -46,7 +46,7 @@ const config = {
             preserveWhitespace: false,
             compilerOptions: {
               compatConfig: {
-                MODE: 2
+                MODE: 3
               }
             }
           }

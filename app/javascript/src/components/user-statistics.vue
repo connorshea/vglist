@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import Rails from '@rails/ujs';
-import startCase from 'lodash/startCase';
+import { startCase } from 'lodash';
 import { defineComponent } from 'vue';
 
 type Statistics = {
@@ -92,14 +92,14 @@ export default defineComponent({
       required: true
     }
   },
-  data: function(): { statistics: Statistics | null; isLoading: boolean } {
+  data(): { statistics: Statistics | null; isLoading: boolean } {
     return {
       statistics: null,
       isLoading: true
     };
   },
   methods: {
-    startCase(val) {
+    startCase(val: string): string {
       return startCase(val);
     },
     getStatistics() {
