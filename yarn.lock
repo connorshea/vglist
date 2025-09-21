@@ -356,10 +356,10 @@
   resolved "https://registry.yarnpkg.com/@types/turbolinks/-/turbolinks-5.2.2.tgz#8f9f1d4bfb5e53ea599f79c393779ca8b92cf6e0"
   integrity sha512-FaCObYvhT7GtQ9a1SLW/DyYb7qxC2tBc5QJx7/xnBED0uBngfJHsIJ4mGT6u5dRTy+VAi0QvzdK7EUEQAeOdfw==
 
-"@types/vue-select@^3.16.6":
-  version "3.16.6"
-  resolved "https://registry.yarnpkg.com/@types/vue-select/-/vue-select-3.16.6.tgz#401dafdecb64cfcaeab6fac5285e952b3e4523e6"
-  integrity sha512-QghIaF+495ohEJ+0msg+kIr/OXsJNmxcsJR4aaL//9uhg2JxfHLYNHrOn4l5qLC8gGcrPTy/ROQUWfQEkx0tgg==
+"@types/vue-select@^3.16.8":
+  version "3.16.8"
+  resolved "https://registry.yarnpkg.com/@types/vue-select/-/vue-select-3.16.8.tgz#12810f89d529723005ad0ae673fed1b191a30b9d"
+  integrity sha512-ZBovlBrWf/wnPqCmMw24ryIC7ghQLfIBmkl1qssqBGONdx7yOmi/GLwtPxll/6UwXWGNWMeokleOgVAZPis+Ag==
   dependencies:
     vue "^2.0.0"
 
@@ -1947,10 +1947,10 @@ vue-loader@^15.10:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-select@^3.20.2:
-  version "3.20.2"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.20.2.tgz#eaa15012b032c154d4fb51ac82ebeda2beeae54b"
-  integrity sha512-ZSzIDzyYsWZULGUxVp1h6u3yi9IZQBWX8r6kSudUI/I5J1HQKpBjRntvkrg6pr87xmm16kdChvHCDN+W84vTKw==
+vue-select@^3.20.4:
+  version "3.20.4"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.20.4.tgz#cf1fee2e0dfad3b692b23895acf959b9971770de"
+  integrity sha512-pXIsDUnBR1075qHNEM7mKgX7YnHI3MfCO+7VmXSA1Hywplpqi52jOa0j6EHWQU6MnaW/mBZPuaQtgp3yvks2Kw==
 
 vue-style-loader@^4.1.0:
   version "4.1.2"
@@ -1965,12 +1965,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.0.0:
-  version "2.6.14"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
-  integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
-
-vue@^2.7.16:
+vue@^2.0.0, vue@^2.7.16:
   version "2.7.16"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.7.16.tgz#98c60de9def99c0e3da8dae59b304ead43b967c9"
   integrity sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==
