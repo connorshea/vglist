@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2025.09.20
+### Changed
+- Upgrade Vue.js from v2.6 to v2.7. ([#4158])
+- Upgrade Node.js from v18 to v20. ([#TODO])
+
 ## v2025.09.13
 ### Changed
 - Upgrade asset pipeline from Webpacker, which is deprecated, to Propshaft and jsbundling-rails. ([#4149])
@@ -987,3 +992,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#4130]: https://github.com/connorshea/vglist/pull/4130
 [#4132]: https://github.com/connorshea/vglist/pull/4132
 [#4149]: https://github.com/connorshea/vglist/pull/4149
+[#4158]: https://github.com/connorshea/vglist/pull/4158
