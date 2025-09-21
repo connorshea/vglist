@@ -29,14 +29,11 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.SENTRY_DSN_JS': JSON.stringify(process.env.SENTRY_DSN_JS),
     }),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1
-    }),
     new VueLoaderPlugin()
   ],
   module: {
