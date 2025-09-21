@@ -67,6 +67,23 @@ import Rails from '@rails/ujs';
 import startCase from 'lodash/startCase';
 import { defineComponent } from 'vue';
 
+type Statistics = {
+  games_count: number;
+  average_rating: number | null;
+  percent_completed: number | null;
+  total_days_played: number | null;
+  completion_statuses: {
+    unplayed: number;
+    in_progress: number;
+    dropped: number;
+    completed: number;
+    fully_completed: number;
+    not_applicable: number;
+    paused: number;
+    unknown: number;
+  } | null;
+};
+
 export default defineComponent({
   name: 'user-statistics',
   props: {
@@ -75,7 +92,7 @@ export default defineComponent({
       required: true
     }
   },
-  data: function() {
+  data: function(): { statistics: Statistics | null; isLoading: boolean } {
     return {
       statistics: null,
       isLoading: true
@@ -127,9 +144,9 @@ export default defineComponent({
     this.getStatistics();
   },
   computed: {
-    completionStatusesCount: function() {
+    completionStatusesCount: function(): number | null {
       if (this.statistics) {
-        let values = Object.values(this.statistics.completion_statuses);
+        let values = Object.values((this.statistics as Statistics).completion_statuses);
         return values.reduce((accumulator: number, currentValue: number) => {
           return accumulator + currentValue;
         });
