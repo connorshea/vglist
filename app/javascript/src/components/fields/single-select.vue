@@ -76,7 +76,7 @@ export default defineComponent({
   },
   methods: {
     /*
-     * @param {search}  String   Current search text
+     * @param {search} String Current search text
      * @param {loading} Function Toggle loading class
      */
     onSearch: debounce(function(search, loading) {

@@ -694,10 +694,16 @@ nav.navbar {
   }
 }
 
-// Tooltip styling for v-tooltip.
+// Tooltip styling for our tooltip built using the Popover API.
 .tooltip {
-  display: block !important;
-  z-index: 10000;
+  padding: 0;
+  position: fixed;
+  margin: 0;
+  border: 0;
+  justify-self: anchor-center;
+  align-self: anchor-center;
+  position-anchor: --popover-anchor; // This anchor name is referenced in the JavaScript code.
+  overflow: visible; // allow the arrow to be visible outside the tooltip box.
 
   .tooltip-inner {
     background: rgba(#333, 0.9);
@@ -713,11 +719,11 @@ nav.navbar {
     position: absolute;
     margin: 5px;
     border-color: rgba(#333, 0.9);
-    z-index: 1;
   }
 
-  &[x-placement^='top'] {
+  &[data-tooltip-placement^='top'] {
     margin-bottom: 5px;
+    bottom: anchor(top);
 
     .tooltip-arrow {
       border-width: 5px 5px 0 5px;
@@ -731,8 +737,9 @@ nav.navbar {
     }
   }
 
-  &[x-placement^='bottom'] {
+  &[data-tooltip-placement^='bottom'] {
     margin-top: 5px;
+    top: anchor(bottom);
 
     .tooltip-arrow {
       border-width: 0 5px 5px 5px;
@@ -746,8 +753,9 @@ nav.navbar {
     }
   }
 
-  &[x-placement^='right'] {
+  &[data-tooltip-placement^='right'] {
     margin-left: 5px;
+    right: anchor(right);
 
     .tooltip-arrow {
       border-width: 5px 5px 5px 0;
@@ -761,8 +769,9 @@ nav.navbar {
     }
   }
 
-  &[x-placement^='left'] {
+  &[data-tooltip-placement^='left'] {
     margin-right: 5px;
+    left: anchor(left);
 
     .tooltip-arrow {
       border-width: 5px 0 5px 5px;
@@ -774,18 +783,6 @@ nav.navbar {
       margin-left: 0;
       margin-right: 0;
     }
-  }
-
-  &[aria-hidden='true'] {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.25s, visibility 0.25s;
-  }
-
-  &[aria-hidden='false'] {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 0.25s;
   }
 }
 

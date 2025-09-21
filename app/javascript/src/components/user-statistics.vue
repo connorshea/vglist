@@ -36,19 +36,32 @@
     <hr v-if="completionRateExists">
     <div v-if="completionRateExists" class="has-text-centered has-text-weight-bold mb-5">Completion</div>
     <div v-if="completionRateExists" class="percentage-bar">
-      <!-- Use popover here -->
       <div
         v-for="(v, k, i) in statistics.completion_statuses"
         :key="k"
+        :id="`completion-status-${i}`"
         :class="['percentage-bar-portion', `color-${i + 1}`]"
         :style="{ 'max-width': ((v / completionStatusesCount) * 100) + '%' }"
-      ></div>
+        @mouseenter="showPopover(i)"
+        @mouseleave="hidePopover(i)"
+      >
+        <div
+          :id="`popover-${i}`"
+          class="tooltip"
+          popover
+          data-tooltip-placement="top"
+        >
+          <div class="tooltip-arrow"></div>
+          <div class="tooltip-inner">
+            {{ startCase(k) }} ({{ v }})
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-// v-tooltip="{ content: `${startCase(k)} (${v})` }" 
 import Rails from '@rails/ujs';
 import startCase from 'lodash/startCase';
 import { defineComponent } from 'vue';
@@ -80,6 +93,33 @@ export default defineComponent({
           this.statistics = statistics;
           this.isLoading = false;
         });
+    },
+    showPopover(i: number) {
+      // Do not display the popovers if the browser doesn't support anchoring.
+      // TODO: Remove this check when Firefox fully supports CSS Anchoring.
+      if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+        return;
+      }
+      const pop = document.getElementById(`popover-${i}`);
+      const status = document.getElementById(`completion-status-${i}`);
+      if (pop && status) {
+        // @ts-ignore Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
+        status.style.anchorName = `--popover-anchor`;
+        pop.showPopover && pop.showPopover();
+      }
+    },
+    hidePopover(i: number) {
+      // Do not display the popovers if the browser doesn't support anchoring.
+      if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+        return;
+      }
+      const pop = document.getElementById(`popover-${i}`);
+      const status = document.getElementById(`completion-status-${i}`);
+      if (pop && status) {
+        // @ts-ignore Ditto
+        status.style.anchorName = 'none';
+        pop.hidePopover && pop.hidePopover();
+      }
     }
   },
   beforeMount: function() {
