@@ -1,5 +1,4 @@
-import type Vue from "vue/types";
-import type { VueConstructor } from "vue/types";
+import type Vue from "vue";
 
 function handleVueDestructionOn(turbolinksEvent, vue: Vue) {
   document.addEventListener(turbolinksEvent, function teardown() {
@@ -8,7 +7,7 @@ function handleVueDestructionOn(turbolinksEvent, vue: Vue) {
   });
 }
 
-function plugin(Vue: VueConstructor, options) {
+function plugin(Vue, options) {
   // Install a global mixin
   Vue.mixin({
     beforeMount: function() {
@@ -18,16 +17,8 @@ function plugin(Vue: VueConstructor, options) {
         var destroyEvent =
           this.$options.turbolinksDestroyEvent || 'turbolinks:before-render';
         handleVueDestructionOn(destroyEvent, this);
-        this.$originalEl = this.$el.outerHTML;
       }
     },
-
-    destroyed: function() {
-      // We only need to revert the html for the root component
-      if (this == this.$root && this.$el) {
-        this.$el.outerHTML = this.$originalEl;
-      }
-    }
   });
 }
 

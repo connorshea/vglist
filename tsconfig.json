@@ -7,16 +7,15 @@
     "module": "esNext",
     "moduleResolution": "bundler",
     "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*", "app/javascript/*"]
-    },
     "sourceMap": true,
     "target": "esNext",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "jsx": "preserve",
-    "esModuleInterop": true
+    "jsxImportSource": "vue",
+    "esModuleInterop": true,
+    "noImplicitThis": true,
   },
   "exclude": [
     "**/*.spec.ts",
