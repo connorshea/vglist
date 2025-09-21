@@ -44,6 +44,7 @@
         :style="{ 'max-width': ((v / completionStatusesCount) * 100) + '%' }"
         @mouseenter="showPopover(i)"
         @mouseleave="hidePopover(i)"
+        aria-label="{{ startCase(k) }}: {{ v }}"
       >
         <div
           :id="`popover-${i}`"
