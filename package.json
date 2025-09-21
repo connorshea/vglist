@@ -19,7 +19,7 @@
     "vue": "^2.7.16",
     "vue-good-table": "^2.21.11",
     "vue-loader": "^15.10",
-    "vue-select": "^3.20.2",
+    "vue-select": "^3.20.4",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1",
     "webpack-remove-empty-scripts": "^1.1.1"
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.151",
     "@types/turbolinks": "^5.2.2",
-    "@types/vue-select": "^3.16.6",
+    "@types/vue-select": "^3.16.8",
     "graphql": "^16.11.0",
     "graphql-schema-linter": "^3.0.1",
     "prettier": "3.6.2"
