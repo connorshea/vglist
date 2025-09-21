@@ -106,7 +106,7 @@ export default defineComponent({
       if (pop && status) {
         // @ts-ignore Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
         status.style.anchorName = `--popover-anchor`;
-        pop.showPopover && pop.showPopover();
+        pop.showPopover?.();
       }
     },
     hidePopover(i: number) {
@@ -119,7 +119,7 @@ export default defineComponent({
       if (pop && status) {
         // @ts-ignore Ditto
         status.style.anchorName = 'none';
-        pop.hidePopover && pop.hidePopover();
+        pop.hidePopover?.();
       }
     }
   },
