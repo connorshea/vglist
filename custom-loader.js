@@ -1,4 +1,4 @@
-module.exports = function (content, sourceMap, _meta) {
+export default function (content, sourceMap, _meta) {
     if (sourceMap && this.resourcePath && this.resourcePath.endsWith(".vue")) {
         this.resourcePath += ".ts"
     }
