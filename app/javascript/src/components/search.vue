@@ -1,6 +1,6 @@
 <template>
   <div class="navbar-item has-dropdown field mt-10" v-bind:class="{ 'is-active': dropdownActive }">
-    <p class="control">
+    <div class="control">
       <div class="field mb-0">
         <p class="control has-icons-left">
           <input
@@ -16,7 +16,7 @@
           <span class="icon is-small is-left" v-html="this.searchIcon"></span>
         </p>
       </div>
-    </p>
+    </div>
 
     <div v-if="dropdownActive" class="navbar-search-dropdown navbar-dropdown">
       <p class="navbar-item" v-if="!hasSearchResults">No results.</p>
