@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## v2025.09.20
 ### Changed
 - Upgrade Vue.js from v2.6 to v2.7. ([#4158])
-- Upgrade Node.js from v18 to v20. ([#TODO])
+- Upgrade Node.js from v18 to v20. ([#4164])
 
 ## v2025.09.13
 ### Changed
@@ -993,3 +993,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#4132]: https://github.com/connorshea/vglist/pull/4132
 [#4149]: https://github.com/connorshea/vglist/pull/4149
 [#4158]: https://github.com/connorshea/vglist/pull/4158
+[#4164]: https://github.com/connorshea/vglist/pull/4164
