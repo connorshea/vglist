@@ -1,15 +1,15 @@
-const path = require("path");
-const { VueLoaderPlugin } = require('vue-loader');
-const webpack = require("webpack");
+import { resolve } from 'path';
+import { VueLoaderPlugin } from 'vue-loader';
+import webpack from "webpack";
 
 // Extracts CSS into .css file
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 // Removes exported JavaScript files from CSS-only entries
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
 
-module.exports = {
+const config = {
   mode: mode,
   devtool: mode === 'development' ? false : "source-map",
   entry: {
@@ -22,7 +22,7 @@ module.exports = {
     filename: "[name].js",
     sourceMapFilename: "[file].map",
     chunkFormat: "module",
-    path: path.resolve(__dirname, "app/assets/builds"),
+    path: resolve(import.meta.dirname, "app/assets/builds"),
   },
   optimization: {
     moduleIds: 'deterministic',
@@ -70,7 +70,7 @@ module.exports = {
               }
             },
           },
-          path.resolve('./custom-loader'),
+          resolve('./custom-loader'),
         ],
       }
     ]
@@ -80,3 +80,5 @@ module.exports = {
     extensions: ['.ts', '.vue', '.js', '.jsx', '.scss', '.css', '.min.css'],
   },
 }
+
+export default config;

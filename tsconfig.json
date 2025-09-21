@@ -5,7 +5,7 @@
     "experimentalDecorators": true,
     "lib": ["esnext", "dom"],
     "module": "esNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*", "app/javascript/*"]
@@ -15,7 +15,8 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "esModuleInterop": true
   },
   "exclude": [
     "**/*.spec.ts",
