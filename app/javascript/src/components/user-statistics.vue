@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import Rails from '@rails/ujs';
-import { startCase } from 'lodash';
+import { startCase } from 'lodash-es';
 import { defineComponent } from 'vue';
 
 type Statistics = {

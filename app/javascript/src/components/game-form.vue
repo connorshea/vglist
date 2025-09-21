@@ -144,7 +144,7 @@ import DateField from './fields/date-field.vue';
 import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
-import difference from 'lodash/difference';
+import { difference } from 'lodash-es';
 import { defineComponent } from 'vue';
 
 export default defineComponent({

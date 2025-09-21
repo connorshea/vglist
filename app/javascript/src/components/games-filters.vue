@@ -23,8 +23,7 @@ import SingleSelect from './fields/single-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
-import reverse from 'lodash/reverse';
-import range from 'lodash/range';
+import { range, reverse } from 'lodash-es';
 import { defineComponent } from 'vue';
 
 export default defineComponent({

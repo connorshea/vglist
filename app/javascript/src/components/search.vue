@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import Turbolinks from 'turbolinks';
-import debounce from 'lodash/debounce';
+import { debounce } from 'lodash-es';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -112,7 +112,7 @@ export default defineComponent({
   methods: {
     // Debounce the search for 400ms before showing results, to prevent
     // searching from sending a ton of requests.
-    onSearch: debounce(function(e) {
+    onSearch: debounce(function(e: Event) {
       if (this.query.length > 1) {
         fetch(`${this.searchUrl}?query=${this.query}`)
           .then(response => {

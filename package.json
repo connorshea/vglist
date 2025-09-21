@@ -10,7 +10,7 @@
     "@vue/compat": "^3.5.0",
     "bulma": "https://github.com/connorshea/bulma#css-variables-with-fallback",
     "css-loader": "^7.1.2",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "mini-css-extract-plugin": "^2.9.4",
     "sass": "^1.93.0",
     "sass-loader": "^16.0.5",
@@ -26,7 +26,7 @@
     "webpack-remove-empty-scripts": "^1.1.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.20",
+    "@types/lodash-es": "^4.17.12",
     "@types/turbolinks": "^5.2.2",
     "@types/vue-select": "^3.16.8",
     "graphql": "^16.11.0",
