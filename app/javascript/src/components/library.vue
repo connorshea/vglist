@@ -7,7 +7,7 @@
       @closeEditBar="closeEditBar"
     ></library-edit-bar>
 
-    <library-table
+    <!-- <library-table
       ref="library-table-component"
       :rows="games"
       :isEditable="isEditable"
@@ -21,7 +21,7 @@
       @openEditBar="activateEditBar"
       @selectedGamePurchasesChanged="selectedGamePurchasesChanged"
       @deactivateEditBar="deactivateEditBar"
-    ></library-table>
+    ></library-table> -->
 
     <game-modal
       v-if="isModalActive"
@@ -37,14 +37,14 @@
 </template>
 
 <script lang="ts">
-import LibraryTable from './library-table.vue';
+// import LibraryTable from './library-table.vue';
 import GameModal from './game-modal.vue';
 import LibraryEditBar from './library-edit-bar.vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   components: {
-    LibraryTable,
+    // LibraryTable,
     GameModal,
     LibraryEditBar
   },

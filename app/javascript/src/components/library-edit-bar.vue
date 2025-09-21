@@ -44,6 +44,8 @@ import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import MultiSelect from './fields/multi-select.vue';
 import { defineComponent } from 'vue';
+import type { PropType } from 'vue'
+import type { GamePurchase } from '../api-types';
 
 export default defineComponent({
   name: 'library-edit-bar',
@@ -54,7 +56,7 @@ export default defineComponent({
   },
   props: {
     gamePurchases: {
-      type: Array,
+      type: Array as PropType<GamePurchase[]>,
       required: true
     }
   },
@@ -79,7 +81,7 @@ export default defineComponent({
     };
   },
   methods: {
-    updateGames(this: any): void {
+    updateGames(): void {
       // Clear the array first.
       this.updateData['ids'] = [];
       this.gamePurchases.forEach(gamePurchase => {
@@ -149,7 +151,7 @@ export default defineComponent({
 
       return returnBool;
     },
-    formattedCompletionStatuses(): any {
+    formattedCompletionStatuses(): { label: string; value: string }[] {
       return Object.entries(this.completionStatuses).map(status => {
         return { label: status[1], value: status[0] };
       });

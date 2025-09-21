@@ -204,7 +204,7 @@ export default defineComponent({
     gameModalState: {
       type: String,
       required: true,
-      validator: val => ['create', 'update', 'createWithGame'].includes(val)
+      validator: (val: string) => ['create', 'update', 'createWithGame'].includes(val)
     }
   },
   data() {
@@ -217,7 +217,7 @@ export default defineComponent({
         userId: this.$props.userId,
         completion_status: this.$props.completion_status,
         start_date: this.$props.start_date,
-        hours_played: parseFloat(this.$props.hours_played),
+        hours_played: parseFloat(String(this.$props.hours_played)),
         replay_count: this.$props.replay_count,
         completion_date: this.$props.completion_date,
         platforms: this.$props.platforms,
