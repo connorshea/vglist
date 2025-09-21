@@ -22,8 +22,9 @@
 import MergeGamesModal from './merge-games-modal.vue';
 import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'merge-games-button',
   components: {
     MergeGamesModal
@@ -62,5 +63,5 @@ export default {
       Turbolinks.visit(window.location.href);
     }
   }
-};
+});
 </script>

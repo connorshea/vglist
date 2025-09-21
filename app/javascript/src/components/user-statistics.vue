@@ -39,10 +39,25 @@
       <div
         v-for="(v, k, i) in statistics.completion_statuses"
         :key="k"
+        :id="`completion-status-${i}`"
         :class="['percentage-bar-portion', `color-${i + 1}`]"
         :style="{ 'max-width': ((v / completionStatusesCount) * 100) + '%' }"
-        v-tooltip="{ content: `${startCase(k)} (${v})` }"
-      ></div>
+        @mouseenter="showPopover(i)"
+        @mouseleave="hidePopover(i)"
+        :aria-label="`${startCase(k)}: ${v}`"
+      >
+        <div
+          :id="`popover-${i}`"
+          class="tooltip"
+          popover
+          data-tooltip-placement="top"
+        >
+          <div class="tooltip-arrow"></div>
+          <div class="tooltip-inner">
+            {{ startCase(k) }} ({{ v }})
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -50,8 +65,9 @@
 <script lang="ts">
 import Rails from '@rails/ujs';
 import startCase from 'lodash/startCase';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'user-statistics',
   props: {
     userId: {
@@ -78,6 +94,33 @@ export default {
           this.statistics = statistics;
           this.isLoading = false;
         });
+    },
+    showPopover(i: number) {
+      // Do not display the popovers if the browser doesn't support anchoring.
+      // TODO: Remove this check when Firefox fully supports CSS Anchoring.
+      if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+        return;
+      }
+      const pop = document.getElementById(`popover-${i}`);
+      const status = document.getElementById(`completion-status-${i}`);
+      if (pop && status) {
+        // @ts-ignore Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
+        status.style.anchorName = `--popover-anchor`;
+        pop.showPopover?.();
+      }
+    },
+    hidePopover(i: number) {
+      // Do not display the popovers if the browser doesn't support anchoring.
+      if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+        return;
+      }
+      const pop = document.getElementById(`popover-${i}`);
+      const status = document.getElementById(`completion-status-${i}`);
+      if (pop && status) {
+        // @ts-ignore Ditto
+        status.style.anchorName = 'none';
+        pop.hidePopover?.();
+      }
     }
   },
   beforeMount: function() {
@@ -90,6 +133,8 @@ export default {
         return values.reduce((accumulator: number, currentValue: number) => {
           return accumulator + currentValue;
         });
+      } else {
+        return null;
       }
     },
     averageRatingExists: function() {
@@ -121,5 +166,5 @@ export default {
       }
     }
   }
-};
+});
 </script>

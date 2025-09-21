@@ -17,12 +17,13 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import debounce from 'lodash/debounce';
 import snakeCase from 'lodash/snakeCase';
 
-export default {
+export default defineComponent({
   name: 'single-select',
   components: {
     vSelect
@@ -66,6 +67,7 @@ export default {
       required: false
     }
   },
+  emits: ['input'],
   data: function() {
     return {
       options: [],
@@ -74,7 +76,7 @@ export default {
   },
   methods: {
     /*
-     * @param {search}  String   Current search text
+     * @param {search} String Current search text
      * @param {loading} Function Toggle loading class
      */
     onSearch: debounce(function(search, loading) {
@@ -105,5 +107,5 @@ export default {
       return snakeCase(this.label);
     }
   }
-};
+});
 </script>

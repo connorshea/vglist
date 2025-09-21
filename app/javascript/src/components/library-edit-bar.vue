@@ -43,8 +43,9 @@ import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import MultiSelect from './fields/multi-select.vue';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'library-edit-bar',
   components: {
     NumberField,
@@ -57,6 +58,7 @@ export default {
       required: true
     }
   },
+  emits: ['closeEditBar'],
   data: function() {
     return {
       updateData: {
@@ -77,7 +79,7 @@ export default {
     };
   },
   methods: {
-    updateGames(): void {
+    updateGames(this: any): void {
       // Clear the array first.
       this.updateData['ids'] = [];
       this.gamePurchases.forEach(gamePurchase => {
@@ -153,5 +155,5 @@ export default {
       });
     }
   }
-};
+});
 </script>

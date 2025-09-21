@@ -19,9 +19,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import VglistUtils from '../utils';
 
-export default {
+export default defineComponent({
   name: 'game-card-dropdown',
   props: {
     gameId: {
@@ -96,5 +97,5 @@ export default {
       });
     }
   }
-};
+});
 </script>

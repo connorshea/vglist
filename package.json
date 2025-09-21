@@ -16,12 +16,10 @@
     "swc-loader": "^0.2.6",
     "turbolinks": "^5.2.0",
     "typescript": "^5.9.2",
-    "v-tooltip": "2.1.3",
-    "vue": "^2.6.14",
+    "vue": "^2.7.16",
     "vue-good-table": "^2.21.11",
     "vue-loader": "^15.10",
     "vue-select": "^3.20.2",
-    "vue-template-compiler": "^2.6.14",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1",
     "webpack-remove-empty-scripts": "^1.1.1"

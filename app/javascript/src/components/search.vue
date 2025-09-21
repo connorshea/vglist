@@ -70,8 +70,10 @@
 <script lang="ts">
 import Turbolinks from 'turbolinks';
 import debounce from 'lodash/debounce';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
+  name: 'search',
   props: {
     searchIcon: {
       type: String,
@@ -218,5 +220,5 @@ export default {
       return Object.values(this.searchResults).flat();
     }
   }
-};
+});
 </script>

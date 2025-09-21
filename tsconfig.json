@@ -8,14 +8,14 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-        "*": ["node_modules/*", "app/javascript/*"]
+      "*": ["node_modules/*", "app/javascript/*"]
     },
     "sourceMap": true,
     "target": "esNext",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "jsx": "react",
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "jsx": "preserve"
   },
   "exclude": [
     "**/*.spec.ts",
@@ -26,5 +26,9 @@
   "compileOnSave": false,
   "typeAcquisition": {
     "enable": true
+  },
+  "vueCompilerOptions": {
+    "target": 2.7,
+    "extensions": [".vue"]
   }
 }
