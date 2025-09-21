@@ -1,5 +1,6 @@
 import type Vue from "vue";
 
+// Taken from here: https://github.com/jeffreyguenther/vue-turbolinks/issues/31#issuecomment-583403317 
 function handleVueDestructionOn(turbolinksEvent, vue: Vue) {
   document.addEventListener(turbolinksEvent, function teardown() {
     vue.$destroy();
