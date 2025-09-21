@@ -1,25 +1,24 @@
-import Vue from 'vue';
+import { createApp, h } from 'vue';
 
 (async function() {
-  let callback = () => {
-    let elem$ = document.querySelectorAll('[data-vue-component]');
-    let elems = Array.prototype.slice.call(elem$);
+  const callback = () => {
+    const elems = Array.from(document.querySelectorAll('[data-vue-component]'));
     elems.forEach(async elem => {
-      let compName = elem.dataset.vueComponent;
-      let comp$ = await import(`./components/${compName}.vue`);
-      let comp = comp$.default;
-      let props = null;
-      if (elem.dataset.vueProps) {
-        props = JSON.parse(elem.dataset.vueProps);
+      const el = elem as HTMLElement;
+      const compName = el.dataset.vueComponent;
+      const comp$ = await import(`./components/${compName}.vue`);
+      const comp = comp$.default;
+      let props = {};
+      if (el.dataset.vueProps) {
+        props = JSON.parse(el.dataset.vueProps);
       }
-      // console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
-      let v = new Vue({
-        el: elem,
-        render: h =>
-          h(comp, {
-            props: props
-          })
+      // console.log(`Loaded Vue \"${compName}\", rendering...`, { comp, props });
+      const app = createApp({
+        render() {
+          return h(comp, props);
+        }
       });
+      app.mount(el);
     });
   };
   document.addEventListener('turbolinks:load', callback);

@@ -43,7 +43,12 @@ const config = {
         loader: 'vue-loader',
         options: {
           compilerOptions: {
-            preserveWhitespace: false
+            preserveWhitespace: false,
+            compilerOptions: {
+              compatConfig: {
+                MODE: 2
+              }
+            }
           }
         }
       },
@@ -78,6 +83,9 @@ const config = {
   resolve: {
     // Add additional file types
     extensions: ['.ts', '.vue', '.js', '.jsx', '.scss', '.css', '.min.css'],
+    alias: {
+      vue: '@vue/compat'
+    },
   },
 }
 

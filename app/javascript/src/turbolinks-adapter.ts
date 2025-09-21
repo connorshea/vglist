@@ -7,7 +7,7 @@ function handleVueDestructionOn(turbolinksEvent, vue: Vue) {
     document.removeEventListener(turbolinksEvent, teardown);
   });
 }
-
+// TODO: Get rid of all of this probably.
 function plugin(Vue: VueConstructor, options) {
   // Install a global mixin
   Vue.mixin({
