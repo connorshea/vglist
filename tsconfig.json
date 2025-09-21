@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "jsx": "preserve",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitThis": true,
   },
   "exclude": [
     "**/*.spec.ts",
