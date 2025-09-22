@@ -42,7 +42,7 @@
 import Rails from '@rails/ujs';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
-import concat from 'lodash/concat';
+import { concat } from 'lodash-es';
 import { defineComponent } from 'vue';
 
 export default defineComponent({

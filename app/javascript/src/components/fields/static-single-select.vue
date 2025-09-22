@@ -19,7 +19,7 @@
 import { defineComponent } from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
-import snakeCase from 'lodash/snakeCase';
+import { snakeCase } from 'lodash-es';
 
 export default defineComponent({
   name: 'static-single-select',
