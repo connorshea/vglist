@@ -62,8 +62,7 @@ const initBulma = () => {
 
   // Close dropdowns if ESC pressed
   document.addEventListener('keydown', function(event) {
-    var e = event;
-    if (e.code === 'Escape') {
+    if (event.code === 'Escape') {
       closeDropdowns();
     }
   });
