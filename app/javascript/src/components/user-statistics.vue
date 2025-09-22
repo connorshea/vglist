@@ -62,109 +62,98 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Rails from '@rails/ujs';
 import { startCase } from 'lodash-es';
-import { defineComponent } from 'vue';
+import { computed, onBeforeMount, ref } from 'vue';
 
-export default defineComponent({
-  name: 'user-statistics',
-  props: {
-    userId: {
-      type: String,
-      required: true
-    }
-  },
-  data: function() {
-    return {
-      statistics: null,
-      isLoading: true
-    };
-  },
-  methods: {
-    startCase(val) {
-      return startCase(val);
-    },
-    getStatistics() {
-      fetch(`/users/${this.userId}/statistics.json`)
-        .then(response => {
-          return response.json();
-        })
-        .then(statistics => {
-          this.statistics = statistics;
-          this.isLoading = false;
-        });
-    },
-    showPopover(i: number) {
-      // Do not display the popovers if the browser doesn't support anchoring.
-      // TODO: Remove this check when Firefox fully supports CSS Anchoring.
-      if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
-        return;
-      }
-      const pop = document.getElementById(`popover-${i}`);
-      const status = document.getElementById(`completion-status-${i}`);
-      if (pop && status) {
-        // @ts-ignore Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
-        status.style.anchorName = `--popover-anchor`;
-        pop.showPopover?.();
-      }
-    },
-    hidePopover(i: number) {
-      // Do not display the popovers if the browser doesn't support anchoring.
-      if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
-        return;
-      }
-      const pop = document.getElementById(`popover-${i}`);
-      const status = document.getElementById(`completion-status-${i}`);
-      if (pop && status) {
-        // @ts-ignore Ditto
-        status.style.anchorName = 'none';
-        pop.hidePopover?.();
-      }
-    }
-  },
-  beforeMount: function() {
-    this.getStatistics();
-  },
-  computed: {
-    completionStatusesCount: function() {
-      if (this.statistics) {
-        let values = Object.values(this.statistics.completion_statuses);
-        return values.reduce((accumulator: number, currentValue: number) => {
-          return accumulator + currentValue;
-        });
-      } else {
-        return null;
-      }
-    },
-    averageRatingExists: function() {
-      if (this.statistics) {
-        return this.statistics.average_rating !== null;
-      } else {
-        return false;
-      }
-    },
-    completionRateExists: function() {
-      if (this.statistics) {
-        return this.statistics.completion_statuses !== null;
-      } else {
-        return false;
-      }
-    },
-    daysPlayedIsPositive: function() {
-      if (this.statistics) {
-        return this.statistics.total_days_played !== null && this.statistics.total_days_played > 0;
-      } else {
-        return false;
-      }
-    },
-    gamesCountIsPositive: function() {
-      if (this.statistics) {
-        return this.statistics.games_count > 0;
-      } else {
-        return false;
-      }
-    }
+type Statistics = {
+  games_count: number;
+  average_rating: number | null;
+  percent_completed: number | null;
+  total_days_played: number | null;
+  completion_statuses: {
+    unplayed: number;
+    in_progress: number;
+    dropped: number;
+    completed: number;
+    fully_completed: number;
+    not_applicable: number;
+    paused: number;
+    unknown: number;
+  } | null;
+};
+
+const props = defineProps<{ userId: string }>();
+const statistics = ref<Statistics | null>(null);
+const isLoading = ref(true);
+
+const getStatistics = () => {
+  fetch(`/users/${props.userId}/statistics.json`)
+    .then(response => {
+      return response.json();
+    })
+    .then(stats => {
+      statistics.value = stats;
+      isLoading.value = false;
+    });
+};
+
+const showPopover = (i: number) => {
+  // Do not display the popovers if the browser doesn't support anchoring.
+  // TODO: Remove this check when Firefox fully supports CSS Anchoring.
+  if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+    return;
+  }
+  const pop = document.getElementById(`popover-${i}`);
+  const status = document.getElementById(`completion-status-${i}`);
+  if (pop && status) {
+    // @ts-ignore Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
+    status.style.anchorName = `--popover-anchor`;
+    pop.showPopover?.();
+  }
+}
+
+const hidePopover = (i: number) => {
+  // Do not display the popovers if the browser doesn't support anchoring.
+  if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+    return;
+  }
+  const pop = document.getElementById(`popover-${i}`);
+  const status = document.getElementById(`completion-status-${i}`);
+  if (pop && status) {
+    // @ts-ignore Ditto
+    status.style.anchorName = 'none';
+    pop.hidePopover?.();
+  }
+}
+
+const completionStatusesCount = computed(() => {
+  if (statistics.value) {
+    const values = Object.values(statistics.value.completion_statuses);
+    return values.reduce((accumulator: number, currentValue: number) => {
+      return accumulator + currentValue;
+    });
+  } else {
+    return null;
   }
 });
+
+const averageRatingExists = computed(() => {
+  return statistics.value?.average_rating !== null;
+});
+
+const completionRateExists = computed(() => {
+  return statistics.value?.completion_statuses !== null;
+});
+
+const daysPlayedIsPositive = computed(() => {
+  return statistics.value?.total_days_played > 0 || false;
+});
+
+const gamesCountIsPositive = computed(() => {
+  return statistics.value?.games_count > 0 || false;
+});
+
+onBeforeMount(() => getStatistics());
 </script>
