@@ -1,4 +1,4 @@
-let toggleDropdown = function(event) {
+const toggleDropdown = function(this: HTMLElement, event: MouseEvent) {
   // If the dropdown has the 'js-no-close-on-click' class,
   // it shouldn't be toggled when active.
   if (
@@ -11,37 +11,33 @@ let toggleDropdown = function(event) {
 }
 
 // Make bulma's hamburger menu functional with some simple JavaScript.
-let initBulma = () => {
+const initBulma = () => {
   // Get all "navbar-burger" elements
-  const $navbarBurgers = Array.prototype.slice.call(
-    document.querySelectorAll('.navbar-burger'),
-    0
-  );
+  const navbarBurgers = Array.from(document.querySelectorAll('.navbar-burger'));
 
   // Check if there are any navbar burgers
-  if ($navbarBurgers.length > 0) {
+  if (navbarBurgers.length > 0) {
     // Add a click event on each of them
-    $navbarBurgers.forEach(el => {
+    navbarBurgers.forEach((el: HTMLElement) => {
       el.addEventListener('click', () => {
         // Get the target from the "data-target" attribute
-        const target = el.dataset.target;
-        const $target = document.getElementById(target);
+        const target = document.getElementById(el.dataset.target);
 
         // Toggle the "is-active" class on both the "navbar-burger" and the
         // "navbar-menu", and toggle the aria-expanded attribute.
         el.setAttribute('aria-expanded', (el.getAttribute('aria-expanded') === 'false').toString());
         el.classList.toggle('is-active');
-        $target.classList.toggle('is-active');
+        target.classList.toggle('is-active');
       });
     });
   }
 
   // Dropdowns
-  let $dropdowns = getAll('.dropdown:not(.is-hoverable):not(.dropdown-dynamic)');
+  const dropdowns = getAll('.dropdown:not(.is-hoverable):not(.dropdown-dynamic)');
 
-  if ($dropdowns.length > 0) {
-    $dropdowns.forEach(function($el) {
-      $el.addEventListener('click', toggleDropdown);
+  if (dropdowns.length > 0) {
+    dropdowns.forEach(function(el) {
+      el.addEventListener('click', toggleDropdown);
     });
 
     // Close the dropdown if the user clicks outside the dropdown.
@@ -59,33 +55,31 @@ let initBulma = () => {
   }
 
   function closeDropdowns() {
-    $dropdowns.forEach(function($el) {
-      $el.classList.remove('is-active');
+    dropdowns.forEach(function(el) {
+      el.classList.remove('is-active');
     });
   }
 
   // Close dropdowns if ESC pressed
   document.addEventListener('keydown', function(event) {
-    var e = event;
-    if (e.code === 'Escape') {
+    if (event.code === 'Escape') {
       closeDropdowns();
     }
   });
 
   // Functions
-  function getAll(selector) {
-    return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
+  function getAll(selector: string) {
+    return Array.from(document.querySelectorAll(selector));
   }
 
   // Close notifications when the delete button is clicked within a notification.
-  let closeNotificationButtons = Array.prototype.slice.call(
-    document.querySelectorAll('.notification > .delete'),
-    0
+  const closeNotificationButtons = Array.from(
+    document.querySelectorAll('.notification > .delete')
   );
 
   closeNotificationButtons.forEach(el => {
-    el.addEventListener('click', event => {
-      let notification = event.target.closest('.notification');
+    el.addEventListener('click', (event: MouseEvent) => {
+      let notification = (event.target as HTMLElement).closest('.notification');
       notification.parentNode.removeChild(notification);
     });
   });
