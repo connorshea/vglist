@@ -12,8 +12,6 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
     "esModuleInterop": true,
     "noImplicitThis": true,
   },

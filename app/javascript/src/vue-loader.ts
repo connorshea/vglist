@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { h } from 'vue';
 
 (async function() {
   const callback = () => {
@@ -13,9 +13,9 @@ import Vue from 'vue';
         props = JSON.parse(el.dataset.vueProps);
       }
       // console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
-      const v = new Vue({
+      new Vue({
         el: elem,
-        render: h =>
+        render: () =>
           h(comp, {
             props: props
           })

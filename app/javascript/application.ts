@@ -8,7 +8,6 @@ import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import * as ActiveStorage from '@rails/activestorage';
 import '../assets/stylesheets/application.scss';
-import TurbolinksAdapter from './src/turbolinks-adapter';
 import Vue from 'vue';
 import * as Sentry from "@sentry/vue";
 import './src/vue-loader';
@@ -24,8 +23,6 @@ if (process.env.NODE_ENV === 'production') {
     environment: process.env.NODE_ENV
   });
 }
-
-Vue.use(TurbolinksAdapter);
 
 Rails.start();
 Turbolinks.start();
