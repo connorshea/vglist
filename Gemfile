@@ -13,7 +13,7 @@ gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.0'
 
 # Asset pipeline
-gem 'propshaft', '~> 1.2'
+gem 'propshaft', '~> 1.3'
 
 # Use jsbundling-rails to bundle JavaScript using webpack
 gem 'jsbundling-rails', '~> 1.3'
