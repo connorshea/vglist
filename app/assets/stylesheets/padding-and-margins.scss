@@ -1,3 +1,5 @@
+@use 'sass:string';
+@use 'bulma/sass/utilities/mixins';
 /*
 * This .scss loop will create "margin helpers" and "padding helpers" for use in your web projects.
 * It will generate several classes such as:
@@ -49,18 +51,18 @@ $sides: (top, bottom, left, right); // Leave this variable alone
 // Make mobile-specific margin and padding classes.
 @each $space in $spaceamounts {
   @each $side in $sides {
-    @include touch {
-      .m#{str-slice($side, 0, 1)}-#{$space}-mobile {
+    @include mixins.touch {
+      .m#{string.slice($side, 0, 1)}-#{$space}-mobile {
         margin-#{$side}: #{$space}px !important;
       }
 
-      .p#{str-slice($side, 0, 1)}-#{$space}-mobile {
+      .p#{string.slice($side, 0, 1)}-#{$space}-mobile {
         padding-#{$side}: #{$space}px !important;
       }
     }
   }
 
-  @include touch {
+  @include mixins.touch {
     .m-#{$space}-mobile {
       margin: #{$space}px !important;
     }

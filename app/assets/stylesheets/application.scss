@@ -1,8 +1,11 @@
-@import './bulma-variables.scss';
-@import '~bulma/bulma.sass';
-@import './padding-and-margins.scss';
-@import './utilities.scss';
-@import './home.scss';
+@use 'sass:color';
+@use 'bulma-variables';
+@use 'bulma/bulma.scss';
+@use 'bulma/sass/utilities/mixins';
+@use 'bulma/sass/utilities/initial-variables' as iv;
+@use 'padding-and-margins';
+@use 'utilities';
+@use 'home';
 
 :root {
   color-scheme: light dark;
@@ -24,7 +27,7 @@
   --scheme-secondary: #eeeded;
   --input-placeholder-color: #333;
 
-  --dropdown-icon-fill: $dropdown-content-arrow;
+  --dropdown-icon-fill: #585858;
 
   --text-muted: var(--grey, #7a7a7a);
 
@@ -190,7 +193,7 @@ nav.navbar {
   }
 
   // Show underlines on-hover on desktop.
-  @include from($desktop) {
+  @include mixins.from(iv.$desktop) {
     // Don't apply the borders to items with dropdowns or fields (the search bar).
     .navbar-item:not(.has-dropdown),
     .navbar-item:not(.field) {
@@ -283,7 +286,7 @@ nav.navbar {
   }
 
   &.is-fullwidth-mobile {
-    @include touch {
+    @include mixins.touch {
       display: flex;
       width: 100%;
     }
@@ -309,7 +312,7 @@ nav.navbar {
   }
 
   &.is-fullwidth-mobile {
-    @include touch {
+    @include mixins.touch {
       display: flex;
       width: 100%;
       margin-right: 0;
@@ -323,7 +326,7 @@ nav.navbar {
     }
 
     &.is-fullwidth-mobile {
-      @include touch {
+      @include mixins.touch {
         display: flex;
         width: 100%;
       }
@@ -337,7 +340,7 @@ nav.navbar {
   }
 
   &.is-fullwidth-mobile {
-    @include touch {
+    @include mixins.touch {
       width: 100%;
     }
   }
@@ -363,7 +366,7 @@ nav.navbar {
   display: flex;
   flex-flow: column wrap;
 
-  @include from($desktop) {
+  @include mixins.from(iv.$desktop) {
     flex-flow: row nowrap;
 
     .text-block {
@@ -372,7 +375,7 @@ nav.navbar {
     }
   }
 
-  @include touch {
+  @include mixins.touch {
     .text-block {
       text-align: center;
     }
@@ -387,7 +390,7 @@ nav.navbar {
       object-fit: contain;
       object-position: top left;
       
-      @include touch {
+      @include mixins.touch {
         object-position: top center;
         max-height: 300px;
       }
@@ -401,7 +404,7 @@ nav.navbar {
       }
     }
 
-    @include touch {
+    @include mixins.touch {
       margin: auto;
     }
   }
@@ -413,7 +416,7 @@ nav.navbar {
   grid-gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
-  @include from($tablet) {
+  @include mixins.from(iv.$tablet) {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
 }
@@ -562,7 +565,7 @@ nav.navbar {
     break-inside: avoid;
   }
 
-  @include touch {
+  @include mixins.touch {
     column-count: 1;
   }
 }
@@ -575,14 +578,14 @@ nav.navbar {
 }
 
 .button.is-fullwidth-mobile {
-  @include touch {
+  @include mixins.touch {
     display: flex;
     width: 100%;
   }
 }
 
 .is-fullwidth-mobile {
-  @include touch {
+  @include mixins.touch {
     width: 100%;
   }
 }
@@ -616,7 +619,7 @@ nav.navbar {
     max-width: 140px;
     min-width: 140px;
 
-    @include touch {
+    @include mixins.touch {
       width: 100%;
       max-width: 100%;
       min-width: 100%;
@@ -641,7 +644,7 @@ nav.navbar {
 }
 
 // Hide pagination except Previous/Next on mobile.
-@include touch {
+@include mixins.touch {
   .pagination-list {
     display: none;
   }
@@ -855,7 +858,7 @@ nav.navbar {
 .sign-in-container {
   max-width: 500px;
 
-  @include touch {
+  @include mixins.touch {
     box-shadow: none;
   }
 }
@@ -899,7 +902,7 @@ nav.navbar {
     background-color: rgba(255, 255, 255, 1);
 
     + span.icon {
-      fill: darken($grey-light, 30%);
+      fill: color.adjust(iv.$grey-light, $lightness: -30%);
     }
 
     &::placeholder {
@@ -1019,7 +1022,7 @@ nav.navbar {
   grid-gap: 5px;
   grid-template-columns: repeat(auto-fill, 64px);
 
-  @include touch {
+  @include mixins.touch {
     // Display rows of three on mobile.
     grid-template-columns: 1fr 1fr 1fr;
   }
