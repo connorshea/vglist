@@ -92,6 +92,8 @@ nav.navbar {
   a.navbar-item,
   .navbar-link {
     --bulma-navbar-item-background-a: 0;
+    // Limit the gap so the avatar in the navbar is not so far from the username.
+    gap: 0.25rem;
 
     &:focus,
     &:focus-within,
