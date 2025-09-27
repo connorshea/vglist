@@ -1,8 +1,8 @@
-// Fix Bulma's usage of css variables causing postcss to spam warnings.
-// https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
 @forward 'bulma/sass/utilities' with (
   // Change the primary color to something less ugly.
   $primary: hsl(204, 86%, 53%),
+  // Fix Bulma's usage of css variables causing postcss to spam warnings.
+  // https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
   $variable-columns: false,
   $control-height: 2.25em,
   $control-padding-vertical: calc(0.375em - 1px),
