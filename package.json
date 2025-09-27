@@ -37,6 +37,6 @@
     "build": "webpack --config webpack.config.js"
   },
   "browserslist": [
-    "baseline widely available"
+    "baseline newly available"
   ]
 }
