@@ -49,7 +49,17 @@ const config = {
       },
       {
         test: /(\.min)?\.s?[ac]ss$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              api: 'modern-compiler',
+              implementation: 'sass-embedded'
+            }
+          }
+        ],
       },
       {
         test: /\.([cm]?ts|tsx)$/,
