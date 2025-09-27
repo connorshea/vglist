@@ -25,6 +25,7 @@
   --bulma-text: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-text-l));
 
   --bulma-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+
   --home-page-subtitle-text: #fff;
   --home-section-background-color: var(--vglist-theme);
   --home-section-background-brightness: 85%;
@@ -44,16 +45,22 @@
   .tabs {
     --bulma-tabs-border-bottom-color: var(--bulma-border-hover);
   }
+
+  .control, .input, .textarea, .select {
+    --bulma-input-background-l-delta: 6%;
+    --bulma-input-border-l-delta: -20%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bulma-scheme-main: hsl(217, 28%, 24%);
     --bulma-scheme-h: 217;
     --bulma-scheme-s: 28%;
     --bulma-scheme-main-l: 24%;
     --bulma-scheme-main-bis-l: 27%;
     --bulma-scheme-main-ter-l: 30%;
+
+    --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
     --bulma-background-l: 20%;
     --bulma-text-l: 100%;
 
@@ -73,6 +80,11 @@
 
     .box {
       --bulma-box-background-color: var(--bulma-scheme-main-ter);
+    }
+
+    .control, .input, .textarea, .select {
+      --bulma-input-background-l-delta: 6%;
+      --bulma-input-border-l-delta: 20%;
     }
   }
 }
@@ -154,10 +166,6 @@ nav.navbar {
     overflow: clip;
     object-fit: cover;
   }
-}
-
-.v-select {
-  display: block;
 }
 
 .navbar-search-dropdown {
@@ -469,7 +477,7 @@ nav.navbar {
 
 // Make input placeholder text darker by default.
 .input::placeholder {
-  // color: var(--bulma-input-placeholder-color);
+  color: var(--bulma-input-placeholder-color);
   opacity: 0.5;
 }
 
@@ -753,13 +761,13 @@ nav.navbar {
 
 // Custom vue-select styles to match Bulma.
 .v-select {
-  background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
+  display: block;
 
   .vs__search {
     color: hsl(var(--bulma-input-h), var(--bulma-input-s), var(--bulma-input-color-l));
 
-    &:focus {
-      color: hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
+    &::placeholder {
+      color: var(--bulma-input-placeholder-color);
     }
   }
 
@@ -769,14 +777,14 @@ nav.navbar {
   }
 
   .vs__dropdown-toggle {
-    border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
+    border: 1px solid var(--bulma-input-border-color);
     border-radius: var(--bulma-input-radius);
     background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
 
     &:hover {
-      border: 1px solid hsl(var(--bulma-input-hover-h), var(--bulma-input-hover-s), var(--bulma-input-hover-l));
+      --bulma-input-border-l-delta: var(--bulma-input-hover-border-l-delta);
     }
-
+    
     &:focus,
     &.vs--open {
       border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
