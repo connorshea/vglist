@@ -317,6 +317,9 @@ nav.navbar {
   grid-gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
+  // Avoid "double dipping" on the margin, so remove the block spacing given we have a grid here.
+  --bulma-block-spacing: 0;
+
   @include mixins.from(bv.$tablet) {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
