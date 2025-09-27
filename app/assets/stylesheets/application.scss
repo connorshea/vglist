@@ -1,8 +1,6 @@
-@use 'sass:color';
-@use 'bulma-variables';
-@use 'bulma/bulma.scss';
+@use 'bulma-variables' as bv;
 @use 'bulma/sass/utilities/mixins';
-@use 'bulma/sass/utilities/initial-variables' as iv;
+@use 'sass:color';
 @use 'padding-and-margins';
 @use 'utilities';
 @use 'home';
@@ -22,7 +20,6 @@
   --navbar-dropdown-item-color: #333;
   --navbar-item-background-hover: var(--scheme-secondary);
   --library-edit-bar-border: #dcdfe6;
-  --input-radius: 4px;
   --scheme-alt: #fff;
   --scheme-secondary: #eeeded;
   --input-placeholder-color: #333;
@@ -193,7 +190,7 @@ nav.navbar {
   }
 
   // Show underlines on-hover on desktop.
-  @include mixins.from(iv.$desktop) {
+  @include mixins.from(bv.$desktop) {
     // Don't apply the borders to items with dropdowns or fields (the search bar).
     .navbar-item:not(.has-dropdown),
     .navbar-item:not(.field) {
@@ -366,7 +363,7 @@ nav.navbar {
   display: flex;
   flex-flow: column wrap;
 
-  @include mixins.from(iv.$desktop) {
+  @include mixins.from(bv.$desktop) {
     flex-flow: row nowrap;
 
     .text-block {
@@ -416,7 +413,7 @@ nav.navbar {
   grid-gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
-  @include mixins.from(iv.$tablet) {
+  @include mixins.from(bv.$tablet) {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
 }
@@ -902,7 +899,7 @@ nav.navbar {
     background-color: rgba(255, 255, 255, 1);
 
     + span.icon {
-      fill: color.adjust(iv.$grey-light, $lightness: -30%);
+      fill: color.adjust(bv.$grey-light, $lightness: -30%);
     }
 
     &::placeholder {
@@ -919,15 +916,15 @@ nav.navbar {
   border: 0px;
 }
 
-// Custom vue-select styles.
+// Custom vue-select styles to match Bulma.
 .v-select {
-  background-color: var(--input-background-color);
+  background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
 
   .vs__search {
-    color: var(--input-color);
+    color: hsl(var(--bulma-input-h), var(--bulma-input-s), var(--bulma-input-color-l));
 
     &:focus {
-      color: var(--input-focus-color);
+      color: hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
     }
   }
 
@@ -937,17 +934,17 @@ nav.navbar {
   }
 
   .vs__dropdown-toggle {
-    border: 1px solid var(--input-border-color);
-    border-radius: var(--input-radius);
-    background-color: var(--input-background-color);
+    border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
+    border-radius: var(--bulma-input-radius);
+    background-color: var(--bulma-input-background-color);
 
     &:hover {
-      border: 1px solid var(--input-hover-border-color);
+      border: 1px solid var(--bulma-input-hover-border-color);
     }
 
     &:focus,
     &.vs--open {
-      border: 1px solid var(--input-focus-border-color);
+      border: 1px solid var(--bulma-input-focus-border-color);
     }
   }
 
@@ -997,14 +994,6 @@ nav.navbar {
 // a card.
 .has-text-muted {
   color: var(--text-muted);
-}
-
-.box {
-  --box-radius: var(--radius);
-}
-
-.card {
-  --card-radius: var(--radius);
 }
 
 // FIXME: A temporary hack until the vue-good-table dark theme styling is
