@@ -1,0 +1,91 @@
+// Tooltip styling for our tooltip built using the Popover API.
+.tooltip {
+  padding: 0;
+  position: fixed;
+  margin: 0;
+  border: 0;
+  justify-self: anchor-center;
+  align-self: anchor-center;
+  position-anchor: --popover-anchor; // This anchor name is referenced in the JavaScript code.
+  overflow: visible; // allow the arrow to be visible outside the tooltip box.
+
+  .tooltip-inner {
+    background: rgba(#333, 0.9);
+    color: white;
+    border-radius: 4px;
+    padding: 5px 10px 4px;
+  }
+
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color: rgba(#333, 0.9);
+  }
+
+  &[data-tooltip-placement^='top'] {
+    margin-bottom: 5px;
+    bottom: anchor(top);
+
+    .tooltip-arrow {
+      border-width: 5px 5px 0 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      bottom: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[data-tooltip-placement^='bottom'] {
+    margin-top: 5px;
+    top: anchor(bottom);
+
+    .tooltip-arrow {
+      border-width: 0 5px 5px 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-top-color: transparent !important;
+      top: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[data-tooltip-placement^='right'] {
+    margin-left: 5px;
+    right: anchor(right);
+
+    .tooltip-arrow {
+      border-width: 5px 5px 5px 0;
+      border-left-color: transparent !important;
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+      left: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[data-tooltip-placement^='left'] {
+    margin-right: 5px;
+    left: anchor(left);
+
+    .tooltip-arrow {
+      border-width: 5px 0 5px 5px;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      right: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
