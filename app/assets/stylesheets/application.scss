@@ -14,15 +14,14 @@
   --home-section-background-brightness: 85%;
 
   --vglist-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  --custom-card-drop-shadow-color: #000;
-  --custom-card-drop-shadow-color-rgb: 10, 10, 10;
   --dropdown-link-no-highlight: #000;
   --navbar-dropdown-item-color: #333;
+  --navbar-item-background: transparent;
   --navbar-item-background-hover: var(--scheme-secondary);
   --library-edit-bar-border: #dcdfe6;
   --scheme-alt: #fff;
   --scheme-secondary: #eeeded;
-  --input-placeholder-color: #333;
+  --bulma-input-placeholder-color: #333;
 
   --dropdown-icon-fill: #585858;
 
@@ -38,32 +37,45 @@
 
     --text: var(--white);
     --text-strong: var(--text);
+
     --scheme-main: #2c394f;
+    --scheme-main-h: 218;
+    --scheme-main-s: 28%;
+    --scheme-main-l: 24%;
+
+    --bulma-scheme-main: var(--scheme-main);
+    --bulma-scheme-main-h: var(--scheme-main-h);
+    --bulma-scheme-main-s: var(--scheme-main-s);
+    --bulma-scheme-main-l: var(--scheme-main-l);
+
     --scheme-alt: #324057;
+    --scheme-alt-h: 217;
+    --scheme-alt-s: 27%;
+    --scheme-alt-l: 27%;
+
     --scheme-secondary: #445168;
     --scheme-invert-rgb: 255, 255, 255;
 
-    --card-background-color: var(--scheme-alt);
+    --bulma-card-background-color: var(--scheme-alt);
     --dropdown-link-no-highlight: var(--white);
     --home-section-background-color: var(--scheme-main);
     --home-section-background-brightness: 75%;
     --navbar-dropdown-item-color: var(--white);
-    --navbar-item-background-hover: var(--scheme-secondary);
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
     --library-edit-bar-border: #435169;
-    --input-color: var(--white);
-    --input-disabled-color: rgba(255, 255, 255, 0.5);
-    --input-border-color: transparent;
-    --input-placeholder-color: var(--white);
-    --input-hover-border-color: transparent;
-    --input-focus-border-color: #dbdbdb;
-    --input-disabled-border-color: transparent;
-    --input-background-color: #445168;
-    --input-disabled-background-color: #445168;
-    --code-background: var(--scheme-secondary);
-    --code: var(--white);
-    --link: #209ad9;
-    --link-hover: var(--white);
+    --bulma-input-color: var(--white);
+    --bulma-input-disabled-color: rgba(255, 255, 255, 0.5);
+    --bulma-input-border-color: transparent;
+    --bulma-input-placeholder-color: var(--white);
+    --bulma-input-hover-border-color: transparent;
+    --bulma-input-focus-border-color: #dbdbdb;
+    --bulma-input-disabled-border-color: transparent;
+    --bulma-input-background-color: #445168;
+    --bulma-input-disabled-background-color: #445168;
+    --bulma-code-background: var(--scheme-secondary);
+    --bulma-code: var(--white);
+    --bulma-link: #209ad9;
+    --bulma-link-hover: var(--white);
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
@@ -71,45 +83,49 @@
     --dropdown-icon-fill: var(--vglist-default-fill);
 
     // This is used in flash messages and a few other places.
-    --background: var(--scheme-secondary);
+    --bulma-background: var(--scheme-secondary);
   }
 
   .navbar {
-    --navbar-shadow-color: rgba(10.2, 10.2, 10.2, 0.1);
-    --navbar-dropdown-item-hover-background-color: #5178bc;
+    --bulma-navbar-shadow-color: rgba(10.2, 10.2, 10.2, 0.1);
+    --bulma-navbar-dropdown-item-hover-background-color: #5178bc;
   }
 
   .navbar-dropdown {
-    --navbar-dropdown-background-color: var(--scheme-alt);
+    --bulma-navbar-dropdown-background-color: var(--scheme-alt);
+    --bulma-navbar-item-background-l-delta: 0%;
+    --bulma-navbar-item-hover-background-l-delta: 0%;
   }
 
   .navbar-divider {
-    --navbar-divider-background-color: #afafaf;
+    --bulma-navbar-divider-h: 0;
+    --bulma-navbar-divider-s: 0%;
+    --bulma-navbar-divider-background-l: 50%;
   }
 
   .table {
-    --table-color: var(--white);
-    --table-head-cell-color: var(--table-color);
-    --table-foot-cell-color: var(--table-color);
-    --table-striped-row-even-background-color: var(--table-body-background-color);
+    --bulma-table-color: var(--white);
+    --bulma-table-head-cell-color: var(--table-color);
+    --bulma-table-foot-cell-color: var(--table-color);
+    --bulma-table-striped-row-even-background-color: var(--table-body-background-color);
   }
 
   .box {
-    --box-background-color: var(--scheme-alt);
-    --box-shadow: var(--vglist-shadow);
+    --bulma-box-background-color: var(--scheme-alt);
+    --bulma-box-shadow: var(--vglist-shadow);
   }
 
   .card {
-    --card-background-color: var(--scheme-alt);
-    --card-shadow: var(--vglist-shadow);
+    --bulma-card-background-color: var(--scheme-alt);
+    --bulma-card-shadow: var(--vglist-shadow);
   }
 
   .title {
-    --title-color: var(--white);
+    --bulma-title-color: var(--white);
   }
 
   .content {
-    --content-heading-color: var(--white);
+    --bulma-content-heading-color: var(--white);
   }
 
   body {
@@ -125,32 +141,32 @@
   }
 
   .button {
-    --button-background-color: var(--scheme-alt);
-    --button-color: var(--white);
-    --button-hover-color: var(--white);
-    --button-active-color: var(--white);
-    --button-focus-color: var(--white);
-    --button-active-border-color: var(--white);
-    --button-focus-border-color: var(--white);
-    --button-border-color: rgba(var(--white-rgb), 0.25);
+    --bulma-button-background-color: var(--scheme-alt);
+    --bulma-button-color: var(--white);
+    --bulma-button-hover-color: var(--white);
+    --bulma-button-active-color: var(--white);
+    --bulma-button-focus-color: var(--white);
+    --bulma-button-active-border-color: var(--white);
+    --bulma-button-focus-border-color: var(--white);
+    --bulma-button-border-color: rgba(var(--white-rgb), 0.25);
 
     box-shadow: var(--vglist-shadow);
   }
 
   .tabs {
-    --tabs-link-hover-border-bottom-color: var(--white);
-    --tabs-link-hover-color: var(--white);
+    --bulma-tabs-link-hover-border-bottom-color: var(--white);
+    --bulma-tabs-link-hover-color: var(--white);
+    --bulma-border: var(--white);
   }
 
   .menu {
-    --menu-item-hover-background-color: var(--scheme-secondary);
-    --menu-item-hover-color: var(--white);
-    --menu-label-color: var(--white);
+    --bulma-menu-item-background-l-delta: 0%;
+    --bulma-menu-label-color: var(--white);
   }
 
   .modal {
-    --modal-card-head-background-color: var(--scheme-main);
-    --modal-card-title-color: var(--white);
+    --bulma-modal-card-head-background-color: var(--scheme-main);
+    --bulma-modal-card-title-color: var(--white);
   }
 
   .delete::before,
@@ -161,13 +177,13 @@
   }
 
   .modal-background {
-    --modal-background-background-color: rgba(10.2, 10.2, 10.2, 0.86);
+    --bulma-modal-background-background-color: rgba(10.2, 10.2, 10.2, 0.86);
   }
 
   .dropdown {
-    --dropdown-content-background-color: var(--scheme-alt);
-    --dropdown-item-hover-background-color: var(--scheme-secondary);
-    --dropdown-item-hover-color: var(--white);
+    --bulma-dropdown-content-background-color: var(--scheme-alt);
+    --bulma-dropdown-item-hover-background-color: var(--scheme-secondary);
+    --bulma-dropdown-item-hover-color: var(--white);
   }
 }
 
@@ -197,8 +213,10 @@ nav.navbar {
       // This prevents the navbar items from moving up and down when hovered.
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;
+      --bulma-navbar-item-background-a: 0;
 
       &:hover, &:focus {
+        --bulma-navbar-item-background-a: 0.05;
         border-bottom: 2px solid rgba(255, 255, 255, 0.8);
       }
     }
@@ -210,6 +228,7 @@ nav.navbar {
         transition: color 0ms;
         border-bottom: 0;
         color: var(--navbar-dropdown-item-color);
+        background-color: var(--navbar-item-background);
 
         &:hover, &:focus {
           border-bottom: 0;
@@ -419,11 +438,9 @@ nav.navbar {
 }
 
 .custom-card {
-  --card-radius: var(--radius);
-
-  background-color: var(--card-background-color, #fff);
+  background-color: var(--bulma-card-background-color, #fff);
   box-shadow: var(--vglist-shadow);
-  border-radius: var(--card-radius);
+  border-radius: var(--bulma-card-radius);
   color: hsl(0, 0%, 21%);
   width: auto;
   position: relative;
@@ -545,7 +562,7 @@ nav.navbar {
 
 // Make input placeholder text darker by default.
 .input::placeholder {
-  color: var(--input-placeholder-color);
+  color: var(--bulma-input-placeholder-color);
   opacity: 0.5;
 }
 
@@ -808,7 +825,7 @@ nav.navbar {
 // Turn the button red and add a shaking animation when there's an error.
 .js-submit-button-error {
   background-color: #ff3860 !important;
-  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
 }
@@ -877,7 +894,7 @@ nav.navbar {
 
 // Styling for the navbar search field, mostly the icon.
 .navbar-search-input {
-  --input-color: #fff;
+  --bulma-input-color: #fff;
 
   background-color: rgba(255, 255, 255, 0.25);
   border: 0;
@@ -894,7 +911,7 @@ nav.navbar {
   }
 
   &:focus {
-    --input-color: #000;
+    --bulma-input-color: #000;
 
     background-color: rgba(255, 255, 255, 1);
 
@@ -936,15 +953,15 @@ nav.navbar {
   .vs__dropdown-toggle {
     border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
     border-radius: var(--bulma-input-radius);
-    background-color: var(--bulma-input-background-color);
+    background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
 
     &:hover {
-      border: 1px solid var(--bulma-input-hover-border-color);
+      border: 1px solid hsl(var(--bulma-input-hover-h), var(--bulma-input-hover-s), var(--bulma-input-hover-l));
     }
 
     &:focus,
     &.vs--open {
-      border: 1px solid var(--bulma-input-focus-border-color);
+      border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
     }
   }
 
@@ -976,8 +993,8 @@ nav.navbar {
   }
 
   &.vs--disabled {
-    background-color: var(--input-disabled-background-color);
-    border-color: var(--input-disabled-border-color);
+    background-color: var(--bulma-input-disabled-background-color);
+    border-color: var(--bulma-input-disabled-border-color);
   }
 
   &.vs--disabled .vs__clear,
@@ -985,7 +1002,7 @@ nav.navbar {
   &.vs--disabled .vs__open-indicator,
   &.vs--disabled .vs__search,
   &.vs--disabled .vs__selected {
-    color: var(--input-disabled-color);
+    color: var(--bulma-input-disabled-color);
     background-color: transparent;
   }
 }
