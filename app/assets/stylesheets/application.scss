@@ -9,192 +9,75 @@
 :root {
   color-scheme: light dark;
 
-  --vglist-theme: #5856d6;
+  --vglist-theme: #5957d6;
+
+  --bulma-scheme-main: hsl(0, 0%, 100%);
+  --bulma-scheme-h: 0;
+  --bulma-scheme-s: 0%;
+  --bulma-scheme-main-l: 100%;
+  --bulma-scheme-main-bis-l: 98%;
+  --bulma-scheme-main-ter-l: 96%;
+  --bulma-background-l: 98%;
+  --bulma-text-l: 29%;
+
+  --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+  --bulma-background: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-background-l));
+  --bulma-text: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-text-l));
+
+  --bulma-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   --home-page-subtitle-text: #fff;
   --home-section-background-color: var(--vglist-theme);
   --home-section-background-brightness: 85%;
 
   --vglist-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  --dropdown-link-no-highlight: #000;
-  --navbar-dropdown-item-color: #333;
-  --navbar-item-background: transparent;
-  --navbar-item-background-hover: var(--scheme-secondary);
+
   --library-edit-bar-border: #dcdfe6;
-  --scheme-alt: #fff;
-  --scheme-secondary: #eeeded;
-  --bulma-input-placeholder-color: #333;
 
-  --dropdown-icon-fill: #585858;
+  .button {
+    --bulma-button-background-l-delta: 5%;
+  }
 
-  --text-muted: var(--grey, #7a7a7a);
+  .card {
+    --bulma-card-background-color: var(--bulma-scheme-main);
+  }
 
-  --vglist-default-fill: #585858;
+  .tabs {
+    --bulma-tabs-border-bottom-color: var(--bulma-border-hover);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --white: #fff;
-    --white-rgb: 255, 255, 255;
+    --bulma-scheme-main: hsl(217, 28%, 24%);
+    --bulma-scheme-h: 217;
+    --bulma-scheme-s: 28%;
+    --bulma-scheme-main-l: 24%;
+    --bulma-scheme-main-bis-l: 27%;
+    --bulma-scheme-main-ter-l: 30%;
+    --bulma-background-l: 20%;
+    --bulma-text-l: 100%;
 
-    --text: var(--white);
-    --text-strong: var(--text);
+    --bulma-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
 
-    --scheme-main: #2c394f;
-    --scheme-main-h: 218;
-    --scheme-main-s: 28%;
-    --scheme-main-l: 24%;
-
-    --bulma-scheme-main: var(--scheme-main);
-    --bulma-scheme-main-h: var(--scheme-main-h);
-    --bulma-scheme-main-s: var(--scheme-main-s);
-    --bulma-scheme-main-l: var(--scheme-main-l);
-
-    --scheme-alt: #324057;
-    --scheme-alt-h: 217;
-    --scheme-alt-s: 27%;
-    --scheme-alt-l: 27%;
-
-    --scheme-secondary: #445168;
-    --scheme-invert-rgb: 255, 255, 255;
-
-    --bulma-card-background-color: var(--scheme-alt);
-    --dropdown-link-no-highlight: var(--white);
-    --home-section-background-color: var(--scheme-main);
+    --home-section-background-color: var(--bulma-scheme-main);
     --home-section-background-brightness: 75%;
-    --navbar-dropdown-item-color: var(--white);
+
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
     --library-edit-bar-border: #435169;
-    --bulma-input-color: var(--white);
-    --bulma-input-disabled-color: rgba(255, 255, 255, 0.5);
-    --bulma-input-border-color: transparent;
-    --bulma-input-placeholder-color: var(--white);
-    --bulma-input-hover-border-color: transparent;
-    --bulma-input-focus-border-color: #dbdbdb;
-    --bulma-input-disabled-border-color: transparent;
-    --bulma-input-background-color: #445168;
-    --bulma-input-disabled-background-color: #445168;
-    --bulma-code-background: var(--scheme-secondary);
-    --bulma-code: var(--white);
-    --bulma-link: #209ad9;
-    --bulma-link-hover: var(--white);
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
-    --vglist-default-fill: var(--white);
-    --dropdown-icon-fill: var(--vglist-default-fill);
+    .card {
+      --bulma-card-background-color: var(--bulma-scheme-main-ter);
+    }
 
-    // This is used in flash messages and a few other places.
-    --bulma-background: var(--scheme-secondary);
+    .box {
+      --bulma-box-background-color: var(--bulma-scheme-main-ter);
+    }
   }
-
-  .navbar {
-    --bulma-navbar-shadow-color: rgba(10.2, 10.2, 10.2, 0.1);
-    --bulma-navbar-dropdown-item-hover-background-color: #5178bc;
-  }
-
-  .navbar-dropdown {
-    --bulma-navbar-dropdown-background-color: var(--scheme-alt);
-    --bulma-navbar-item-background-l-delta: 0%;
-    --bulma-navbar-item-hover-background-l-delta: 0%;
-  }
-
-  .navbar-divider {
-    --bulma-navbar-divider-h: 0;
-    --bulma-navbar-divider-s: 0%;
-    --bulma-navbar-divider-background-l: 50%;
-  }
-
-  .table {
-    --bulma-table-color: var(--white);
-    --bulma-table-head-cell-color: var(--table-color);
-    --bulma-table-foot-cell-color: var(--table-color);
-    --bulma-table-striped-row-even-background-color: var(--table-body-background-color);
-  }
-
-  .box {
-    --bulma-box-background-color: var(--scheme-alt);
-    --bulma-box-shadow: var(--vglist-shadow);
-  }
-
-  .card {
-    --bulma-card-background-color: var(--scheme-alt);
-    --bulma-card-shadow: var(--vglist-shadow);
-  }
-
-  .title {
-    --bulma-title-color: var(--white);
-  }
-
-  .content {
-    --bulma-content-heading-color: var(--white);
-  }
-
-  body {
-    color: var(--text);
-  }
-
-  .label {
-    --label-color: var(--white);
-  }
-
-  .notification {
-    --notification-background-color: var(--scheme-alt);
-  }
-
-  .button {
-    --bulma-button-background-color: var(--scheme-alt);
-    --bulma-button-color: var(--white);
-    --bulma-button-hover-color: var(--white);
-    --bulma-button-active-color: var(--white);
-    --bulma-button-focus-color: var(--white);
-    --bulma-button-active-border-color: var(--white);
-    --bulma-button-focus-border-color: var(--white);
-    --bulma-button-border-color: rgba(var(--white-rgb), 0.25);
-
-    box-shadow: var(--vglist-shadow);
-  }
-
-  .tabs {
-    --bulma-tabs-link-hover-border-bottom-color: var(--white);
-    --bulma-tabs-link-hover-color: var(--white);
-    --bulma-border: var(--white);
-  }
-
-  .menu {
-    --bulma-menu-item-background-l-delta: 0%;
-    --bulma-menu-label-color: var(--white);
-  }
-
-  .modal {
-    --bulma-modal-card-head-background-color: var(--scheme-main);
-    --bulma-modal-card-title-color: var(--white);
-  }
-
-  .delete::before,
-  .modal-close::before,
-  .delete::after,
-  .modal-close::after {
-    background-color: var(--white);
-  }
-
-  .modal-background {
-    --bulma-modal-background-background-color: rgba(10.2, 10.2, 10.2, 0.86);
-  }
-
-  .dropdown {
-    --bulma-dropdown-content-background-color: var(--scheme-alt);
-    --bulma-dropdown-item-hover-background-color: var(--scheme-secondary);
-    --bulma-dropdown-item-hover-color: var(--white);
-  }
-}
-
-html {
-  background-color: var(--scheme-main, #fff);
 }
 
 nav.navbar {
-  --navbar-menu-background-color: var(--vglist-theme);
-
   background: var(--vglist-theme);
   // Subtle box-shadow for nav bar.
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
@@ -206,6 +89,17 @@ nav.navbar {
     color: #fff;
   }
 
+  a.navbar-item,
+  .navbar-link {
+    --bulma-navbar-item-background-a: 0;
+
+    &:focus,
+    &:focus-within,
+    &:hover {
+      // Do not add background on hover of "More" or user dropdown in navbar.
+      --bulma-navbar-item-background-a: 0;
+    }
+  }
   // Show underlines on-hover on desktop.
   @include mixins.from(bv.$desktop) {
     // Don't apply the borders to items with dropdowns or fields (the search bar).
@@ -228,21 +122,10 @@ nav.navbar {
         transition: background-color 200ms;
         transition: color 0ms;
         border-bottom: 0;
-        color: var(--navbar-dropdown-item-color);
-        background-color: var(--navbar-item-background);
 
         &:hover, &:focus {
           border-bottom: 0;
         }
-      }
-
-      a.navbar-item:hover {
-        background-color: var(--navbar-item-background-hover);
-      }
-
-      a.navbar-item.is-active {
-        background-color: #5178bc;
-        color: #fff;
       }
     }
   }
@@ -288,7 +171,7 @@ nav.navbar {
 // Don't apply these styles to vue-select dropdowns.
 .dropdown:not(.v-select) {
   button > .icon {
-    fill: var(--dropdown-icon-fill);
+    fill: var(--bulma-text);
     z-index: 4;
     transition: transform 150ms;
     margin-top: 2px;
@@ -296,7 +179,7 @@ nav.navbar {
 
   &.is-active {
     button > .icon {
-      fill: var(--dropdown-icon-fill);
+      fill: var(--bulma-text);
       transform: rotate(-180deg);
       margin-top: 0;
     }
@@ -310,6 +193,7 @@ nav.navbar {
   }
 
   .dropdown-item.no-link-highlight a {
+    // TODO: Fix?
     color: var(--dropdown-link-no-highlight);
   }
 }
@@ -439,13 +323,22 @@ nav.navbar {
 }
 
 .custom-card {
-  background-color: var(--bulma-card-background-color, #fff);
+  background-color: var(--bulma-card-background-color);
   box-shadow: var(--vglist-shadow);
   border-radius: var(--bulma-card-radius);
-  color: hsl(0, 0%, 21%);
   width: auto;
   position: relative;
   overflow: hidden;
+
+  .button {
+    // No change in background for light mode.
+    --bulma-button-background-l-delta: 0;
+
+    @media (prefers-color-scheme: dark) {
+      // Match the difference between default and -ter.
+      --bulma-button-background-l-delta: 6%;
+    }
+  }
 
   &.game-card {
     height: 200px;
@@ -563,7 +456,7 @@ nav.navbar {
 
 // Make input placeholder text darker by default.
 .input::placeholder {
-  color: var(--bulma-input-placeholder-color);
+  // color: var(--bulma-input-placeholder-color);
   opacity: 0.5;
 }
 
@@ -716,6 +609,7 @@ nav.navbar {
   position: sticky;
   top: 0;
   width: 100%;
+  // TODO: change to match the current color scheme.
   background-color: var(--scheme-main, #fff);
   border: 1px solid var(--library-edit-bar-border);
   margin-bottom: 5px;
@@ -802,6 +696,8 @@ nav.navbar {
 }
 
 // Styling for the navbar search field, mostly the icon.
+// The navbar always uses the vglist theme color, so the search
+// should stay the same regardless of color scheme.
 .navbar-search-input {
   --bulma-input-color: #fff;
 
@@ -843,78 +739,78 @@ nav.navbar {
 }
 
 // Custom vue-select styles to match Bulma.
-.v-select {
-  background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
+// .v-select {
+//   background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
 
-  .vs__search {
-    color: hsl(var(--bulma-input-h), var(--bulma-input-s), var(--bulma-input-color-l));
+//   .vs__search {
+//     color: hsl(var(--bulma-input-h), var(--bulma-input-s), var(--bulma-input-color-l));
 
-    &:focus {
-      color: hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
-    }
-  }
+//     &:focus {
+//       color: hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
+//     }
+//   }
 
-  .vs__dropdown-menu {
-    background-color: var(--scheme-alt);
-    color: var(--text);
-  }
+//   .vs__dropdown-menu {
+//     background-color: var(--scheme-alt);
+//     color: var(--text);
+//   }
 
-  .vs__dropdown-toggle {
-    border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
-    border-radius: var(--bulma-input-radius);
-    background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
+//   .vs__dropdown-toggle {
+//     border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
+//     border-radius: var(--bulma-input-radius);
+//     background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
 
-    &:hover {
-      border: 1px solid hsl(var(--bulma-input-hover-h), var(--bulma-input-hover-s), var(--bulma-input-hover-l));
-    }
+//     &:hover {
+//       border: 1px solid hsl(var(--bulma-input-hover-h), var(--bulma-input-hover-s), var(--bulma-input-hover-l));
+//     }
 
-    &:focus,
-    &.vs--open {
-      border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
-    }
-  }
+//     &:focus,
+//     &.vs--open {
+//       border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
+//     }
+//   }
 
-  .vs__selected {
-    color: var(--text);
-  }
+//   .vs__selected {
+//     color: var(--text);
+//   }
 
-  &:not(.vs--single) .vs__selected-options .vs__selected {
-    color: var(--text);
-    background-color: var(--scheme-alt);
-  }
+//   &:not(.vs--single) .vs__selected-options .vs__selected {
+//     color: var(--text);
+//     background-color: var(--scheme-alt);
+//   }
 
-  .vs__dropdown-option {
-    color: var(--text);
+//   .vs__dropdown-option {
+//     color: var(--text);
 
-    // When highlighted, it should have white text since it always has a blue
-    // background.
-    &.vs__dropdown-option--highlight {
-      color: var(--white);
-    }
-  }
+//     // When highlighted, it should have white text since it always has a blue
+//     // background.
+//     &.vs__dropdown-option--highlight {
+//       color: var(--white);
+//     }
+//   }
 
-  // Set the fill of the icons in v-select inputs.
-  .vs__open-indicator,
-  .vs__clear,
-  .vs__spinner,
-  .vs__deselect {
-    fill: var(--vglist-default-fill);
-  }
+//   // Set the fill of the icons in v-select inputs.
+//   .vs__open-indicator,
+//   .vs__clear,
+//   .vs__spinner,
+//   .vs__deselect {
+//     fill: var(--vglist-default-fill);
+//   }
 
-  &.vs--disabled {
-    background-color: var(--bulma-input-disabled-background-color);
-    border-color: var(--bulma-input-disabled-border-color);
-  }
+//   &.vs--disabled {
+//     background-color: var(--bulma-input-disabled-background-color);
+//     border-color: var(--bulma-input-disabled-border-color);
+//   }
 
-  &.vs--disabled .vs__clear,
-  &.vs--disabled .vs__dropdown-toggle,
-  &.vs--disabled .vs__open-indicator,
-  &.vs--disabled .vs__search,
-  &.vs--disabled .vs__selected {
-    color: var(--bulma-input-disabled-color);
-    background-color: transparent;
-  }
-}
+//   &.vs--disabled .vs__clear,
+//   &.vs--disabled .vs__dropdown-toggle,
+//   &.vs--disabled .vs__open-indicator,
+//   &.vs--disabled .vs__search,
+//   &.vs--disabled .vs__selected {
+//     color: var(--bulma-input-disabled-color);
+//     background-color: transparent;
+//   }
+// }
 
 // For text that should have a more muted color, e.g. extra information in
 // a card.
@@ -949,7 +845,7 @@ nav.navbar {
       background-color: var(--scheme-alt);
       width: 100%;
       height: 100%;
-      border: 1px solid var(--border);
+      border: 1px solid var(--bulma-border);
 
       // No borders if the user has dark theme.
       @media (prefers-color-scheme: dark) {
