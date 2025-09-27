@@ -1,6 +1,4 @@
 @forward 'bulma/sass/utilities' with (
-  // Change the primary color to something less ugly.
-  $primary: hsl(204, 86%, 53%),
   // Fix Bulma's usage of css variables causing postcss to spam warnings.
   // https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
   $variable-columns: false,
@@ -15,29 +13,27 @@
 );
 
 @forward 'bulma/sass/components' with (
-  // Remove hover background color from navbar items.
-  // $navbar-item-hover-background-l-delta: 0,
-
   $navbar-item-color: #fff,
-  // $navbar-item-hover-color: #fff,
-  // $navbar-burger-hover-color: #fff,
+  // Ensure the text is white.
+  $navbar-item-color-l: 100,
   $navbar-burger-color: #fff,
   $navbar-background-color: transparent,
-  $navbar-dropdown-background-color: #fff,
-  $navbar-dropdown-border-color: rgba(0, 0, 0, 0.25),
-  $navbar-dropdown-border-style: solid,
-  $navbar-dropdown-border-width: 1px,
 
+  // Ensure the arrow in the navbar dropdown is white.
   $navbar-dropdown-arrow: #fff,
 
   $navbar-divider-height: 1px,
-  // $navbar-divider-background-color: hsl(0, 0%, 83%),
+
+  $navbar-dropdown-boxed-shadow: 'rgba(10, 10, 10, 0.1) 0px 8px 8px 0px',
 
   // Revert to the old, better shadow style from Bulma pre-0.8.0.
   $panel-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
   // $shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
   $card-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
   $dropdown-content-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
+
+  // Reduce the radius a bit from 0.75rem.
+  $card-radius: 0.5rem,
 );
 
 @forward 'bulma/sass/form' with (
