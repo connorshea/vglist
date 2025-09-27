@@ -4,7 +4,8 @@
       <%= game_cover(game, size: :medium) %>
     </figure>
     <div class="card-content">
-      <p class="title is-4 mr-10"><%= game.name %></p>
+      <%# mr-20 to avoid the dropdown button overlaying on top of the text. %>
+      <p class="title is-4 mr-20"><%= game.name %></p>
       <p class="subtitle is-6"><%= summarize(game.platforms.pluck(:name)) %></p>
       <p class="subtitle is-6"><%= summarize(game.developers.pluck(:name), limit: 2) %></p>
     </div>
