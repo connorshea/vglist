@@ -88,6 +88,13 @@
       --bulma-input-background-l-delta: 6%;
       --bulma-input-border-l-delta: 20%;
     }
+
+    // Override the menu list items in dark mode to match the background color of the menu box container.
+    .menu-list a, .menu-list button, .menu-list .menu-item {
+      --bulma-menu-item-h: var(--bulma-scheme-h);
+      --bulma-menu-item-s: var(--bulma-scheme-s);
+      --bulma-menu-item-background-l: var(--bulma-scheme-main-ter-l);
+    }
   }
 }
 
