@@ -1,6 +1,8 @@
 {
   "name": "vglist",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@rails/activestorage": "~7.1.3",
     "@rails/ujs": "~7.1.502",
