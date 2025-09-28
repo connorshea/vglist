@@ -204,7 +204,7 @@ export default defineComponent({
     gameModalState: {
       type: String,
       required: true,
-      validator: val => ['create', 'update', 'createWithGame'].includes(val)
+      validator: (val: string) => ['create', 'update', 'createWithGame'].includes(val)
     }
   },
   data() {
@@ -363,7 +363,7 @@ export default defineComponent({
         submittableData['game_purchase']['replay_count'] = 0;
       }
 
-      let method;
+      let method: 'POST' | 'PUT' | undefined;
       if (
         this.gameModalState === 'create' ||
         this.gameModalState === 'createWithGame'
