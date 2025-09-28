@@ -808,7 +808,7 @@ nav.navbar {
     // When highlighted, it should have white text since it always has a blue
     // background.
     &.vs__dropdown-option--highlight {
-      color: var(--white);
+      color: #fff;
     }
   }
 
