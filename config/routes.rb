@@ -124,6 +124,9 @@ Rails.application.routes.draw do
   # Implement the .well-known/change-password URL.
   get '.well-known/change-password', to: redirect('/settings/account')
 
+  # This endpoint is hit by Chrome DevTools automatically, so this shuts it up.
+  get "/.well-known/appspecific/com.chrome.devtools.json" => proc { [404, {}, [""]] }
+
   get '/about', to: 'static_pages#about'
 
   # For exposing the OpenSearch XML definition
