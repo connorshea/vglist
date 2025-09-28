@@ -5,6 +5,10 @@
   $control-height: 2.25em,
   $control-padding-vertical: calc(0.375em - 1px),
   $control-padding-horizontal: calc(0.625em - 1px),
+
+  $link: hsl(217.1, 70.8%, 52.9%),
+  $primary: hsl(204, 86%, 53%),
+  $danger: hsl(347.8, 85.8%, 58.4%),
 );
 
 @forward 'bulma/sass/elements' with (

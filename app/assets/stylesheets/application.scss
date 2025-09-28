@@ -36,6 +36,8 @@
 
   .button {
     --bulma-button-background-l-delta: 5%;
+    // Force the text to be white on primary buttons.
+    --bulma-primary-invert-l: var(--bulma-primary-100-l);
   }
 
   .card {
