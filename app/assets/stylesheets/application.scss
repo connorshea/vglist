@@ -52,6 +52,11 @@
     --bulma-input-background-l-delta: 6%;
     --bulma-input-border-l-delta: -20%;
   }
+
+  // Differentiate the modal header from the main modal body.
+  .modal {
+    --bulma-modal-card-head-background-color: var(--bulma-scheme-main-bis);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
