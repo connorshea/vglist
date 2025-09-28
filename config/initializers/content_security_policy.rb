@@ -19,9 +19,12 @@ Rails.application.config.content_security_policy do |policy|
   # Allow unsafe_inline because vue-select uses inline styles I guess?
   policy.style_src :self, :https, :unsafe_inline, :report_sample
 
+  # Allow webpack connections in development.
+  if Rails.env.development?
+    policy.connect_src :self, :https, 'webpack://*'
   # Allow Cloudflare Web Analytics in production, and allow loading and
   # uploading images from DigitalOcean.
-  if Rails.env.production?
+  elsif Rails.env.production?
     policy.connect_src :self,
                        'https://cloudflareinsights.com',
                        'https://static.cloudflareinsights.com',
