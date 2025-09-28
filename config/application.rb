@@ -20,7 +20,7 @@ Bundler.require(*Rails.groups)
 
 module VideoGameList
   class Application < Rails::Application
-    # Initialize configuration defaults for Rails 7.0.
+    # Initialize configuration defaults for Rails 7.1.
     config.load_defaults 7.1
 
     # Rails 7.0 changes the digest class for the key generators to `OpenSSL::Digest::SHA256`.
