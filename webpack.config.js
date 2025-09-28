@@ -9,6 +9,9 @@ import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
 
+/**
+ * @type {import('webpack').Configuration}
+ */
 const config = {
   mode: mode,
   devtool: mode === 'development' ? false : "source-map",
@@ -34,6 +37,9 @@ const config = {
     }),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
+    }),
     new VueLoaderPlugin()
   ],
   module: {
@@ -49,7 +55,17 @@ const config = {
       },
       {
         test: /(\.min)?\.s?[ac]ss$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              api: 'modern-compiler',
+              implementation: 'sass-embedded'
+            }
+          }
+        ],
       },
       {
         test: /\.([cm]?ts|tsx)$/,

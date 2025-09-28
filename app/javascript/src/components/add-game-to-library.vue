@@ -11,7 +11,7 @@
     <button
       v-if="gamePurchaseExists"
       @click="removeGameFromLibrary()"
-      class="button is-fullwidth is-danger mr-5 mr-0-mobile"
+      class="button is-fullwidth is-danger mr-5 mr-0-mobile mt-10"
     >
       <span class="icon" v-html="this.removeIcon"></span>
       <span>Remove from library</span>

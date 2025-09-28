@@ -1,3 +1,7 @@
+@use 'sass:color';
+@use 'sass:list';
+@use 'bulma-variables' as bv;
+
 /**
  * This creates fill classes for use on SVG icons, from Bulma's SCSS colors
  * variable.
@@ -5,8 +9,8 @@
  * .has-fill-danger: Bulma's danger color.
  * .has-fill-danger-hoverable: Bulma's danger color, which darkens on hover.
  */
-@each $name, $pair in $colors {
-  $color: nth($pair, 1);
+@each $name, $pair in bv.$colors {
+  $color: list.nth($pair, 1);
 
   .has-fill-#{$name} {
     fill: $color !important;
@@ -17,19 +21,19 @@
 
     &:hover,
     &:focus {
-      fill: darken($color, 15%) !important;
+      fill: color.adjust($color, $lightness: -15%) !important;
     }
   }
 }
 
 $extra-colors: (
-  "dark-grey": $grey-dark,
-  "grey": $grey,
-  "light-grey": $grey-light,
+  "dark-grey": bv.$grey-dark,
+  "grey": bv.$grey,
+  "light-grey": bv.$grey-light,
 );
 
 @each $name, $pair in $extra-colors {
-  $color: nth($pair, 1);
+  $color: list.nth($pair, 1);
 
   .has-fill-#{$name} {
     fill: $color !important;
@@ -40,11 +44,11 @@ $extra-colors: (
 
     &:hover,
     &:focus {
-      fill: darken($color, 15%) !important;
+      fill: color.adjust($color, $lightness: -15%) !important;
     }
   }
 }
 
 .has-fill-text-color {
-  fill: var(--text);
+  fill: var(--bulma-text);
 }

@@ -1,183 +1,109 @@
-@import './bulma-variables.scss';
-@import '~bulma/bulma.sass';
-@import './padding-and-margins.scss';
-@import './utilities.scss';
-@import './home.scss';
+@use 'bulma-variables' as bv;
+@use 'bulma/sass/utilities/mixins';
+@use 'sass:color';
+@use 'padding-and-margins';
+@use 'utilities';
+@use 'home';
+@use 'tooltip';
 
 :root {
   color-scheme: light dark;
 
-  --vglist-theme: #5856d6;
+  --vglist-theme: #5957d6;
+
+  --bulma-scheme-main: hsl(0, 0%, 100%);
+  --bulma-scheme-h: 0;
+  --bulma-scheme-s: 0%;
+  --bulma-scheme-main-l: 100%;
+  --bulma-scheme-main-bis-l: 98%;
+  --bulma-scheme-main-ter-l: 96%;
+  --bulma-background-l: 98%;
+  --bulma-text-l: 29%;
+
+  --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+  --bulma-background: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-background-l));
+  --bulma-text: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-text-l));
+
+  --bulma-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+
   --home-page-subtitle-text: #fff;
   --home-section-background-color: var(--vglist-theme);
   --home-section-background-brightness: 85%;
 
   --vglist-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  --custom-card-drop-shadow-color: #000;
-  --custom-card-drop-shadow-color-rgb: 10, 10, 10;
-  --dropdown-link-no-highlight: #000;
-  --navbar-dropdown-item-color: #333;
-  --navbar-item-background-hover: var(--scheme-secondary);
+
   --library-edit-bar-border: #dcdfe6;
-  --input-radius: 4px;
-  --scheme-alt: #fff;
-  --scheme-secondary: #eeeded;
-  --input-placeholder-color: #333;
 
-  --dropdown-icon-fill: $dropdown-content-arrow;
+  .button {
+    --bulma-button-background-l-delta: 5%;
+    // Force the text to be white on primary buttons.
+    --bulma-primary-invert-l: var(--bulma-primary-100-l);
+  }
 
-  --text-muted: var(--grey, #7a7a7a);
+  .card {
+    --bulma-card-background-color: var(--bulma-scheme-main);
+  }
 
-  --vglist-default-fill: #585858;
+  .tabs {
+    --bulma-tabs-border-bottom-color: var(--bulma-border-hover);
+  }
+
+  .control, .input, .textarea, .select {
+    --bulma-input-background-l-delta: 6%;
+    --bulma-input-border-l-delta: -20%;
+  }
+
+  // Differentiate the modal header from the main modal body.
+  .modal {
+    --bulma-modal-card-head-background-color: var(--bulma-scheme-main-bis);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --white: #fff;
-    --white-rgb: 255, 255, 255;
+    --bulma-scheme-h: 217;
+    --bulma-scheme-s: 28%;
+    --bulma-scheme-main-l: 24%;
+    --bulma-scheme-main-bis-l: 27%;
+    --bulma-scheme-main-ter-l: 30%;
 
-    --text: var(--white);
-    --text-strong: var(--text);
-    --scheme-main: #2c394f;
-    --scheme-alt: #324057;
-    --scheme-secondary: #445168;
-    --scheme-invert-rgb: 255, 255, 255;
+    --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+    --bulma-background-l: 20%;
+    --bulma-text-l: 100%;
 
-    --card-background-color: var(--scheme-alt);
-    --dropdown-link-no-highlight: var(--white);
-    --home-section-background-color: var(--scheme-main);
+    --bulma-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
+
+    --home-section-background-color: var(--bulma-scheme-main);
     --home-section-background-brightness: 75%;
-    --navbar-dropdown-item-color: var(--white);
-    --navbar-item-background-hover: var(--scheme-secondary);
+
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
     --library-edit-bar-border: #435169;
-    --input-color: var(--white);
-    --input-disabled-color: rgba(255, 255, 255, 0.5);
-    --input-border-color: transparent;
-    --input-placeholder-color: var(--white);
-    --input-hover-border-color: transparent;
-    --input-focus-border-color: #dbdbdb;
-    --input-disabled-border-color: transparent;
-    --input-background-color: #445168;
-    --input-disabled-background-color: #445168;
-    --code-background: var(--scheme-secondary);
-    --code: var(--white);
-    --link: #209ad9;
-    --link-hover: var(--white);
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
-    --vglist-default-fill: var(--white);
-    --dropdown-icon-fill: var(--vglist-default-fill);
+    .card {
+      --bulma-card-background-color: var(--bulma-scheme-main-ter);
+    }
 
-    // This is used in flash messages and a few other places.
-    --background: var(--scheme-secondary);
+    .box {
+      --bulma-box-background-color: var(--bulma-scheme-main-ter);
+    }
+
+    .control, .input, .textarea, .select {
+      --bulma-input-background-l-delta: 6%;
+      --bulma-input-border-l-delta: 20%;
+    }
+
+    // Override the menu list items in dark mode to match the background color of the menu box container.
+    .menu-list a, .menu-list button, .menu-list .menu-item {
+      --bulma-menu-item-h: var(--bulma-scheme-h);
+      --bulma-menu-item-s: var(--bulma-scheme-s);
+      --bulma-menu-item-background-l: var(--bulma-scheme-main-ter-l);
+    }
   }
-
-  .navbar {
-    --navbar-shadow-color: rgba(10.2, 10.2, 10.2, 0.1);
-    --navbar-dropdown-item-hover-background-color: #5178bc;
-  }
-
-  .navbar-dropdown {
-    --navbar-dropdown-background-color: var(--scheme-alt);
-  }
-
-  .navbar-divider {
-    --navbar-divider-background-color: #afafaf;
-  }
-
-  .table {
-    --table-color: var(--white);
-    --table-head-cell-color: var(--table-color);
-    --table-foot-cell-color: var(--table-color);
-    --table-striped-row-even-background-color: var(--table-body-background-color);
-  }
-
-  .box {
-    --box-background-color: var(--scheme-alt);
-    --box-shadow: var(--vglist-shadow);
-  }
-
-  .card {
-    --card-background-color: var(--scheme-alt);
-    --card-shadow: var(--vglist-shadow);
-  }
-
-  .title {
-    --title-color: var(--white);
-  }
-
-  .content {
-    --content-heading-color: var(--white);
-  }
-
-  body {
-    color: var(--text);
-  }
-
-  .label {
-    --label-color: var(--white);
-  }
-
-  .notification {
-    --notification-background-color: var(--scheme-alt);
-  }
-
-  .button {
-    --button-background-color: var(--scheme-alt);
-    --button-color: var(--white);
-    --button-hover-color: var(--white);
-    --button-active-color: var(--white);
-    --button-focus-color: var(--white);
-    --button-active-border-color: var(--white);
-    --button-focus-border-color: var(--white);
-    --button-border-color: rgba(var(--white-rgb), 0.25);
-
-    box-shadow: var(--vglist-shadow);
-  }
-
-  .tabs {
-    --tabs-link-hover-border-bottom-color: var(--white);
-    --tabs-link-hover-color: var(--white);
-  }
-
-  .menu {
-    --menu-item-hover-background-color: var(--scheme-secondary);
-    --menu-item-hover-color: var(--white);
-    --menu-label-color: var(--white);
-  }
-
-  .modal {
-    --modal-card-head-background-color: var(--scheme-main);
-    --modal-card-title-color: var(--white);
-  }
-
-  .delete::before,
-  .modal-close::before,
-  .delete::after,
-  .modal-close::after {
-    background-color: var(--white);
-  }
-
-  .modal-background {
-    --modal-background-background-color: rgba(10.2, 10.2, 10.2, 0.86);
-  }
-
-  .dropdown {
-    --dropdown-content-background-color: var(--scheme-alt);
-    --dropdown-item-hover-background-color: var(--scheme-secondary);
-    --dropdown-item-hover-color: var(--white);
-  }
-}
-
-html {
-  background-color: var(--scheme-main, #fff);
 }
 
 nav.navbar {
-  --navbar-menu-background-color: var(--vglist-theme);
-
   background: var(--vglist-theme);
   // Subtle box-shadow for nav bar.
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
@@ -189,16 +115,31 @@ nav.navbar {
     color: #fff;
   }
 
+  a.navbar-item,
+  .navbar-link {
+    --bulma-navbar-item-background-a: 0;
+    // Limit the gap so the avatar in the navbar is not so far from the username.
+    gap: 0.25rem;
+
+    &:focus,
+    &:focus-within,
+    &:hover {
+      // Do not add background on hover of "More" or user dropdown in navbar.
+      --bulma-navbar-item-background-a: 0;
+    }
+  }
   // Show underlines on-hover on desktop.
-  @include from($desktop) {
+  @include mixins.from(bv.$desktop) {
     // Don't apply the borders to items with dropdowns or fields (the search bar).
     .navbar-item:not(.has-dropdown),
     .navbar-item:not(.field) {
       // This prevents the navbar items from moving up and down when hovered.
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;
+      --bulma-navbar-item-background-a: 0;
 
       &:hover, &:focus {
+        --bulma-navbar-item-background-a: 0.05;
         border-bottom: 2px solid rgba(255, 255, 255, 0.8);
       }
     }
@@ -209,20 +150,10 @@ nav.navbar {
         transition: background-color 200ms;
         transition: color 0ms;
         border-bottom: 0;
-        color: var(--navbar-dropdown-item-color);
 
         &:hover, &:focus {
           border-bottom: 0;
         }
-      }
-
-      a.navbar-item:hover {
-        background-color: var(--navbar-item-background-hover);
-      }
-
-      a.navbar-item.is-active {
-        background-color: #5178bc;
-        color: #fff;
       }
     }
   }
@@ -251,10 +182,6 @@ nav.navbar {
   }
 }
 
-.v-select {
-  display: block;
-}
-
 .navbar-search-dropdown {
   max-height: 400px;
   height: auto;
@@ -268,7 +195,7 @@ nav.navbar {
 // Don't apply these styles to vue-select dropdowns.
 .dropdown:not(.v-select) {
   button > .icon {
-    fill: var(--dropdown-icon-fill);
+    fill: var(--bulma-text);
     z-index: 4;
     transition: transform 150ms;
     margin-top: 2px;
@@ -276,20 +203,21 @@ nav.navbar {
 
   &.is-active {
     button > .icon {
-      fill: var(--dropdown-icon-fill);
+      fill: var(--bulma-text);
       transform: rotate(-180deg);
       margin-top: 0;
     }
   }
 
   &.is-fullwidth-mobile {
-    @include touch {
+    @include mixins.touch {
       display: flex;
       width: 100%;
     }
   }
 
   .dropdown-item.no-link-highlight a {
+    // TODO: Fix?
     color: var(--dropdown-link-no-highlight);
   }
 }
@@ -309,7 +237,7 @@ nav.navbar {
   }
 
   &.is-fullwidth-mobile {
-    @include touch {
+    @include mixins.touch {
       display: flex;
       width: 100%;
       margin-right: 0;
@@ -323,7 +251,7 @@ nav.navbar {
     }
 
     &.is-fullwidth-mobile {
-      @include touch {
+      @include mixins.touch {
         display: flex;
         width: 100%;
       }
@@ -337,7 +265,7 @@ nav.navbar {
   }
 
   &.is-fullwidth-mobile {
-    @include touch {
+    @include mixins.touch {
       width: 100%;
     }
   }
@@ -363,7 +291,7 @@ nav.navbar {
   display: flex;
   flex-flow: column wrap;
 
-  @include from($desktop) {
+  @include mixins.from(bv.$desktop) {
     flex-flow: row nowrap;
 
     .text-block {
@@ -372,7 +300,7 @@ nav.navbar {
     }
   }
 
-  @include touch {
+  @include mixins.touch {
     .text-block {
       text-align: center;
     }
@@ -387,7 +315,7 @@ nav.navbar {
       object-fit: contain;
       object-position: top left;
       
-      @include touch {
+      @include mixins.touch {
         object-position: top center;
         max-height: 300px;
       }
@@ -401,7 +329,7 @@ nav.navbar {
       }
     }
 
-    @include touch {
+    @include mixins.touch {
       margin: auto;
     }
   }
@@ -413,21 +341,39 @@ nav.navbar {
   grid-gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
-  @include from($tablet) {
+  // Avoid "double dipping" on the margin, so remove the block spacing given we have a grid here.
+  --bulma-block-spacing: 0;
+
+  @include mixins.from(bv.$tablet) {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
 }
 
 .custom-card {
-  --card-radius: var(--radius);
-
-  background-color: var(--card-background-color, #fff);
+  background-color: var(--bulma-card-background-color);
   box-shadow: var(--vglist-shadow);
-  border-radius: var(--card-radius);
-  color: hsl(0, 0%, 21%);
+  border-radius: var(--bulma-card-radius);
   width: auto;
   position: relative;
   overflow: hidden;
+
+  .button {
+    // No change in background for light mode.
+    --bulma-button-background-l-delta: 0;
+
+    &:hover {
+      --bulma-button-background-l-delta: -3%;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      // Match the difference between default and -ter.
+      --bulma-button-background-l-delta: 6%;
+
+      &:hover {
+        --bulma-button-background-l-delta: 9%;
+      }
+    }
+  }
 
   &.game-card {
     height: 200px;
@@ -545,7 +491,7 @@ nav.navbar {
 
 // Make input placeholder text darker by default.
 .input::placeholder {
-  color: var(--input-placeholder-color);
+  color: var(--bulma-input-placeholder-color);
   opacity: 0.5;
 }
 
@@ -562,7 +508,7 @@ nav.navbar {
     break-inside: avoid;
   }
 
-  @include touch {
+  @include mixins.touch {
     column-count: 1;
   }
 }
@@ -575,14 +521,14 @@ nav.navbar {
 }
 
 .button.is-fullwidth-mobile {
-  @include touch {
+  @include mixins.touch {
     display: flex;
     width: 100%;
   }
 }
 
 .is-fullwidth-mobile {
-  @include touch {
+  @include mixins.touch {
     width: 100%;
   }
 }
@@ -616,7 +562,7 @@ nav.navbar {
     max-width: 140px;
     min-width: 140px;
 
-    @include touch {
+    @include mixins.touch {
       width: 100%;
       max-width: 100%;
       min-width: 100%;
@@ -641,7 +587,7 @@ nav.navbar {
 }
 
 // Hide pagination except Previous/Next on mobile.
-@include touch {
+@include mixins.touch {
   .pagination-list {
     display: none;
   }
@@ -694,103 +640,12 @@ nav.navbar {
   }
 }
 
-// Tooltip styling for our tooltip built using the Popover API.
-.tooltip {
-  padding: 0;
-  position: fixed;
-  margin: 0;
-  border: 0;
-  justify-self: anchor-center;
-  align-self: anchor-center;
-  position-anchor: --popover-anchor; // This anchor name is referenced in the JavaScript code.
-  overflow: visible; // allow the arrow to be visible outside the tooltip box.
-
-  .tooltip-inner {
-    background: rgba(#333, 0.9);
-    color: white;
-    border-radius: 4px;
-    padding: 5px 10px 4px;
-  }
-
-  .tooltip-arrow {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    position: absolute;
-    margin: 5px;
-    border-color: rgba(#333, 0.9);
-  }
-
-  &[data-tooltip-placement^='top'] {
-    margin-bottom: 5px;
-    bottom: anchor(top);
-
-    .tooltip-arrow {
-      border-width: 5px 5px 0 5px;
-      border-left-color: transparent !important;
-      border-right-color: transparent !important;
-      border-bottom-color: transparent !important;
-      bottom: -5px;
-      left: calc(50% - 5px);
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-  }
-
-  &[data-tooltip-placement^='bottom'] {
-    margin-top: 5px;
-    top: anchor(bottom);
-
-    .tooltip-arrow {
-      border-width: 0 5px 5px 5px;
-      border-left-color: transparent !important;
-      border-right-color: transparent !important;
-      border-top-color: transparent !important;
-      top: -5px;
-      left: calc(50% - 5px);
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-  }
-
-  &[data-tooltip-placement^='right'] {
-    margin-left: 5px;
-    right: anchor(right);
-
-    .tooltip-arrow {
-      border-width: 5px 5px 5px 0;
-      border-left-color: transparent !important;
-      border-top-color: transparent !important;
-      border-bottom-color: transparent !important;
-      left: -5px;
-      top: calc(50% - 5px);
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-
-  &[data-tooltip-placement^='left'] {
-    margin-right: 5px;
-    left: anchor(left);
-
-    .tooltip-arrow {
-      border-width: 5px 0 5px 5px;
-      border-top-color: transparent !important;
-      border-right-color: transparent !important;
-      border-bottom-color: transparent !important;
-      right: -5px;
-      top: calc(50% - 5px);
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-}
-
 .library-edit-bar.level {
   position: sticky;
   top: 0;
   width: 100%;
-  background-color: var(--scheme-main, #fff);
+  // TODO: change to match the current color scheme.
+  background-color: var(--bulma-scheme-main, #fff);
   border: 1px solid var(--library-edit-bar-border);
   margin-bottom: 5px;
   // Modal overlay is 40, make sure to stay below it.
@@ -808,7 +663,7 @@ nav.navbar {
 // Turn the button red and add a shaking animation when there's an error.
 .js-submit-button-error {
   background-color: #ff3860 !important;
-  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
 }
@@ -855,7 +710,7 @@ nav.navbar {
 .sign-in-container {
   max-width: 500px;
 
-  @include touch {
+  @include mixins.touch {
     box-shadow: none;
   }
 }
@@ -876,8 +731,10 @@ nav.navbar {
 }
 
 // Styling for the navbar search field, mostly the icon.
+// The navbar always uses the vglist theme color, so the search
+// should stay the same regardless of color scheme.
 .navbar-search-input {
-  --input-color: #fff;
+  --bulma-input-color: #fff;
 
   background-color: rgba(255, 255, 255, 0.25);
   border: 0;
@@ -894,12 +751,12 @@ nav.navbar {
   }
 
   &:focus {
-    --input-color: #000;
+    --bulma-input-color: #000;
 
     background-color: rgba(255, 255, 255, 1);
 
     + span.icon {
-      fill: darken($grey-light, 30%);
+      fill: color.adjust(bv.$grey-light, $lightness: -30%);
     }
 
     &::placeholder {
@@ -916,54 +773,54 @@ nav.navbar {
   border: 0px;
 }
 
-// Custom vue-select styles.
+// Custom vue-select styles to match Bulma.
 .v-select {
-  background-color: var(--input-background-color);
+  display: block;
 
   .vs__search {
-    color: var(--input-color);
+    color: hsl(var(--bulma-input-h), var(--bulma-input-s), var(--bulma-input-color-l));
 
-    &:focus {
-      color: var(--input-focus-color);
+    &::placeholder {
+      color: var(--bulma-input-placeholder-color);
     }
   }
 
   .vs__dropdown-menu {
-    background-color: var(--scheme-alt);
-    color: var(--text);
+    background-color: var(--bulma-scheme-main-ter);
+    color: var(--bulma-text);
   }
 
   .vs__dropdown-toggle {
-    border: 1px solid var(--input-border-color);
-    border-radius: var(--input-radius);
-    background-color: var(--input-background-color);
+    border: 1px solid var(--bulma-input-border-color);
+    border-radius: var(--bulma-input-radius);
+    background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
 
     &:hover {
-      border: 1px solid var(--input-hover-border-color);
+      --bulma-input-border-l-delta: var(--bulma-input-hover-border-l-delta);
     }
-
+    
     &:focus,
     &.vs--open {
-      border: 1px solid var(--input-focus-border-color);
+      border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
     }
   }
 
   .vs__selected {
-    color: var(--text);
+    color: var(--bulma-text);
   }
 
   &:not(.vs--single) .vs__selected-options .vs__selected {
-    color: var(--text);
-    background-color: var(--scheme-alt);
+    color: var(--bulma-text);
+    background-color: var(--bulma-scheme-main-ter);
   }
 
   .vs__dropdown-option {
-    color: var(--text);
+    color: var(--bulma-text);
 
     // When highlighted, it should have white text since it always has a blue
     // background.
     &.vs__dropdown-option--highlight {
-      color: var(--white);
+      color: #fff;
     }
   }
 
@@ -972,12 +829,12 @@ nav.navbar {
   .vs__clear,
   .vs__spinner,
   .vs__deselect {
-    fill: var(--vglist-default-fill);
+    fill: var(--bulma-text);
   }
 
   &.vs--disabled {
-    background-color: var(--input-disabled-background-color);
-    border-color: var(--input-disabled-border-color);
+    background-color: var(--bulma-input-disabled-background-color);
+    border-color: var(--bulma-input-disabled-border-color);
   }
 
   &.vs--disabled .vs__clear,
@@ -985,7 +842,7 @@ nav.navbar {
   &.vs--disabled .vs__open-indicator,
   &.vs--disabled .vs__search,
   &.vs--disabled .vs__selected {
-    color: var(--input-disabled-color);
+    color: var(--bulma-input-disabled-color);
     background-color: transparent;
   }
 }
@@ -996,20 +853,12 @@ nav.navbar {
   color: var(--text-muted);
 }
 
-.box {
-  --box-radius: var(--radius);
-}
-
-.card {
-  --card-radius: var(--radius);
-}
-
 // FIXME: A temporary hack until the vue-good-table dark theme styling is
 // fixed. Without this, it'll try to use a light grey background for the
 // headers on the compare library page.
 .vgt-table th.vgt-row-header {
   @media (prefers-color-scheme: dark) {
-    background-color: var(--scheme-main) !important;
+    background-color: var(--bulma-scheme-main) !important;
   }
 }
 
@@ -1019,7 +868,7 @@ nav.navbar {
   grid-gap: 5px;
   grid-template-columns: repeat(auto-fill, 64px);
 
-  @include touch {
+  @include mixins.touch {
     // Display rows of three on mobile.
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -1028,10 +877,10 @@ nav.navbar {
     // Special styling for the "+123" element.
     &.avatar-image-grid-item-overflow {
       display: inline-grid; // this is necessary for centering the text to work.
-      background-color: var(--scheme-alt);
+      background-color: var(--bulma-scheme-main-ter);
       width: 100%;
       height: 100%;
-      border: 1px solid var(--border);
+      border: 1px solid var(--bulma-border);
 
       // No borders if the user has dark theme.
       @media (prefers-color-scheme: dark) {

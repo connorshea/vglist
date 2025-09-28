@@ -1,60 +1,74 @@
-// Change the primary color to something less ugly.
-$primary: hsl(204, 86%, 53%);
+@forward 'bulma/sass/utilities' with (
+  // Fix Bulma's usage of css variables causing postcss to spam warnings.
+  // https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
+  $variable-columns: false,
+  $control-height: 2.25em,
+  $control-padding-vertical: calc(0.375em - 1px),
+  $control-padding-horizontal: calc(0.625em - 1px),
 
-// Remove hover background color from navbar items.
-$navbar-item-hover-background-color: transparent;
-
-$navbar-item-color: #fff;
-$navbar-item-hover-color: #fff;
-$navbar-burger-hover-color: #fff;
-$navbar-burger-color: #fff;
-$navbar-background-color: transparent;
-$navbar-dropdown-background-color: #fff;
-$navbar-dropdown-item-active-color: #fff;
-$navbar-dropdown-item-active-background-color: #5178bc;
-$navbar-dropdown-item-hover-color: #fff;
-$navbar-dropdown-item-hover-background-color: #f9f9fa;
-$navbar-dropdown-border-top: 1px solid rgba(0, 0, 0, 0.25);
-$navbar-dropdown-arrow: #fff;
-$navbar-divider-height: 1px;
-$navbar-divider-background-color: hsl(0, 0%, 83%);
-
-// Dropdown stuff
-$dropdown-content-arrow: #585858;
-
-// Remove shadows from inputs.
-$input-shadow: none;
-$input-focus-box-shadow-size: 0;
-
-// Fix Bulma's usage of css variables causing postcss to spam warnings.
-// https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
-$variable-columns: false;
-
-$control-height: 2.25em;
-$control-padding-vertical: calc(0.375em - 1px);
-$control-padding-horizontal: calc(0.625em - 1px);
-$button-padding-vertical: calc(0.375em - 1px);
-$button-padding-horizontal: 0.75em;
-
-// Revert to the old, better shadow style from Bulma pre-0.8.0.
-$panel-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-$box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-$card-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-$dropdown-content-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-
-// Customize the spacing values for Bulma so the margin and padding classes get created with the right values.
-$spacing-values: (
-  "0": 0,
-  "5": 5px,
-  "10": 10px,
-  "15": 15px,
-  "20": 20px,
-  "25": 25px,
-  "30": 30px,
-  "35": 35px,
-  "40": 40px,
-  "45": 45px,
-  "50": 50px,
-  "75": 75px,
-  "100": 100px 
+  $link: hsl(217.1, 70.8%, 52.9%),
+  $primary: hsl(204, 86%, 53%),
+  $danger: hsl(347.8, 85.8%, 58.4%),
 );
+
+@forward 'bulma/sass/elements' with (
+  $button-padding-vertical: calc(0.375em - 1px),
+  $button-padding-horizontal: 0.75em
+);
+
+@forward 'bulma/sass/components' with (
+  $navbar-item-color: #fff,
+  // Ensure the text is white.
+  $navbar-item-color-l: 100,
+  $navbar-burger-color: #fff,
+  $navbar-background-color: transparent,
+
+  // Ensure the arrow in the navbar dropdown is white.
+  $navbar-dropdown-arrow: #fff,
+
+  $navbar-divider-height: 1px,
+
+  $navbar-dropdown-boxed-shadow: 'rgba(10, 10, 10, 0.1) 0px 8px 8px 0px',
+
+  // Revert to the old, better shadow style from Bulma pre-0.8.0.
+  $panel-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
+  // $shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
+  $card-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
+  $dropdown-content-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
+
+  // Reduce the radius a bit from 0.75rem.
+  $card-radius: 0.5rem,
+);
+
+@forward 'bulma/sass/form' with (
+  // Remove shadows from inputs.
+  $input-shadow: none,
+  $input-focus-shadow-size: 0,
+  $input-radius: 4px,
+);
+
+@forward 'bulma/sass/helpers' with (
+  // Customize the spacing values for Bulma so the margin and padding classes get created with the right values.
+  $spacing-values: (
+    "0": 0,
+    "5": 5px,
+    "10": 10px,
+    "15": 15px,
+    "20": 20px,
+    "25": 25px,
+    "30": 30px,
+    "35": 35px,
+    "40": 40px,
+    "45": 45px,
+    "50": 50px,
+    "75": 75px,
+    "100": 100px
+  )
+);
+
+@forward 'bulma/sass/base';
+@forward 'bulma/sass/grid';
+@forward 'bulma/sass/layout';
+
+// Import the themes so that all CSS variables have a value
+@forward 'bulma/sass/themes';
