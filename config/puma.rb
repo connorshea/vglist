@@ -45,16 +45,6 @@ if ENV.fetch("RAILS_ENV") == 'production'
   activate_control_app
 end
 
-before_worker_boot do
-  require "active_record"
-  begin
-    ActiveRecord::Base.connection.disconnect!
-  rescue StandardError
-    ActiveRecord::ConnectionNotEstablished
-  end
-  ActiveRecord::Base.establish_connection(YAML.load_file("#{app_dir}/config/database.yml")[rails_env])
-end
-
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
 # before forking the application. This takes advantage of Copy On Write
