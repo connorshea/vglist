@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@rails/activestorage": "~7.1.3",
+    "@rails/activestorage": "~8.0.300",
     "@rails/ujs": "~7.1.502",
     "@sentry/vue": "^10.12.0",
     "@swc/core": "^1.13.20",
