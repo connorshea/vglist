@@ -37,6 +37,9 @@ const config = {
     }),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
+    }),
     new VueLoaderPlugin()
   ],
   module: {

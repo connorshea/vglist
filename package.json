@@ -38,6 +38,6 @@
     "build": "webpack --config webpack.config.js"
   },
   "browserslist": [
-    ">= 0.5%"
+    "baseline widely available"
   ]
 }
