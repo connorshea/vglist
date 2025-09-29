@@ -12,7 +12,7 @@ module Views
 
     scope :recently_created, -> { order("created_at desc") }
 
-    enum event_category: {
+    enum :event_category, {
       add_to_library: 0,
       change_completion_status: 1,
       favorite_game: 2,

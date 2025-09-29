@@ -7,7 +7,7 @@ module Events
 
     validates :event_category, presence: true
 
-    enum event_category: {
+    enum :event_category, {
       favorite_game: 2
     }
   end

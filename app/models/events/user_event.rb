@@ -7,7 +7,7 @@ module Events
 
     validates :event_category, presence: true
 
-    enum event_category: {
+    enum :event_category, {
       new_user: 3
     }
   end
