@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - Prepare for the Rails 7.2 upgrade. ([#4182], [#4183], [#4184])
 - Upgrade Bulma from my custom fork of 0.9.0 to 1.0.4, updates dark mode stylings and colors. ([#4176])
+- Upgrade from Rails 7.1 to Rails 7.2. ([#4186])
 
 ## v2025.09.20
 ### Changed
@@ -1004,3 +1005,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#4182]: https://github.com/connorshea/vglist/pull/4182
 [#4183]: https://github.com/connorshea/vglist/pull/4183
 [#4184]: https://github.com/connorshea/vglist/pull/4184
+[#4186]: https://github.com/connorshea/vglist/pull/4186
