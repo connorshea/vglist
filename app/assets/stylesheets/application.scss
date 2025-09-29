@@ -540,6 +540,11 @@ nav.navbar {
     margin: 0;
     padding: 5px;
   }
+
+  // Fix alignment of close icon in notification.
+  &.notification {
+    flex-direction: row;
+  }
 }
 
 .more-from-this-series-card {
