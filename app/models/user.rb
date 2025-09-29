@@ -103,14 +103,10 @@ class User < ApplicationRecord
 
   # Users have roles that can be used to define what actions they're allowed
   # to perform. Default should be 'member'.
-  enum role: {
-    member: 0,
-    moderator: 1,
-    admin: 2
-  }
+  enum :role, { member: 0, moderator: 1, admin: 2 }
 
   # Account privacy
-  enum privacy: {
+  enum :privacy, {
     public_account: 0,
     private_account: 1
   }

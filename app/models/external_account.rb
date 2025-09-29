@@ -16,7 +16,7 @@ class ExternalAccount < ApplicationRecord
 
   validates :account_type, presence: true
 
-  enum account_type: {
+  enum :account_type, {
     steam: 0
   }
 end

@@ -13,7 +13,7 @@ class GamePurchase < ApplicationRecord
 
   has_many :game_purchase_events, foreign_key: :eventable_id, inverse_of: :eventable, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
 
-  enum completion_status: {
+  enum :completion_status, {
     unplayed: 0,
     in_progress: 1,
     dropped: 2,
