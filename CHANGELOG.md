@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2025.09.28
+### Changed
+- Prepare for the Rails 7.2 upgrade. ([#4182], [#4183], [#4184])
+- Upgrade Bulma from my custom fork of 0.9.0 to 1.0.4, updates dark mode stylings and colors. ([#4176])
+
 ## v2025.09.20
 ### Changed
 - Upgrade Vue.js from v2.6 to v2.7. ([#4158])
@@ -995,3 +1000,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#4158]: https://github.com/connorshea/vglist/pull/4158
 [#4164]: https://github.com/connorshea/vglist/pull/4164
 [#4165]: https://github.com/connorshea/vglist/pull/4165
+[#4176]: https://github.com/connorshea/vglist/pull/4176
+[#4182]: https://github.com/connorshea/vglist/pull/4182
+[#4183]: https://github.com/connorshea/vglist/pull/4183
+[#4184]: https://github.com/connorshea/vglist/pull/4184
