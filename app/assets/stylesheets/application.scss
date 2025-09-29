@@ -81,6 +81,9 @@
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
+    // Fixes light text on light background in dark mode.
+    --bulma-light-light-invert-l: 15%;
+
     .card {
       --bulma-card-background-color: var(--bulma-scheme-main-ter);
     }
