@@ -25,6 +25,11 @@ namespace 'import:wikidata' do
     blocklisted_wikidata_ids = WikidataBlocklist.pluck(:wikidata_id)
     blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
 
+    # Create a map of Wikidata IDs to vglist IDs for platforms, engines, and genres, to avoid tons of extra queries later.
+    vglist_engines = Engine.all.pluck(:wikidata_id, :id).to_h
+    vglist_platforms = Platform.all.pluck(:wikidata_id, :id).to_h
+    vglist_genres = Genre.all.pluck(:wikidata_id, :id).to_h
+
     # Filter to wikidata items that don't already exist in the database.
     # Also filter out blocklisted Wikidata items.
     rows = rows.reject do |row|
@@ -196,43 +201,34 @@ namespace 'import:wikidata' do
         end
 
         if keys.include?(:platforms)
+          platform_ids = vglist_platforms.values_at(*game_hash[:platforms].map(&:to_i)).compact
           progress_bar.log 'Adding platforms.' if ENV['DEBUG']
-          game_hash[:platforms].each do |platform_id|
-            platform = Platform.find_by(wikidata_id: platform_id)
-            progress_bar.log platform.inspect if ENV['DEBUG']
-            next if platform.nil?
-
+          platform_ids.each do |platform_id|
             GamePlatform.create!(
               game_id: game.id,
-              platform_id: platform.id
+              platform_id: platform_id
             )
           end
         end
 
         if keys.include?(:engines)
+          engine_ids = vglist_engines.values_at(*game_hash[:engines].map(&:to_i)).compact
           progress_bar.log 'Adding engines.' if ENV['DEBUG']
-          game_hash[:engines].each do |engine_id|
-            engine = Engine.find_by(wikidata_id: engine_id)
-            progress_bar.log engine.inspect if ENV['DEBUG']
-            next if engine.nil?
-
+          engine_ids.each do |engine_id|
             GameEngine.create!(
               game_id: game.id,
-              engine_id: engine.id
+              engine_id: engine_id
             )
           end
         end
 
         if keys.include?(:genres)
+          genre_ids = vglist_genres.values_at(*game_hash[:genres].map(&:to_i)).compact
           progress_bar.log 'Adding genres.' if ENV['DEBUG']
-          game_hash[:genres].each do |genre_id|
-            genre = Genre.find_by(wikidata_id: genre_id)
-            progress_bar.log genre.inspect if ENV['DEBUG']
-            next if genre.nil?
-
+          genre_ids.each do |genre_id|
             GameGenre.create!(
               game_id: game.id,
-              genre_id: genre.id
+              genre_id: genre_id
             )
           end
         end
