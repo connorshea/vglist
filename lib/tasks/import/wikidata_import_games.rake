@@ -244,7 +244,7 @@ namespace 'import:wikidata' do
           progress_bar.log series.inspect if ENV['DEBUG']
           next if series.nil?
 
-          Game.find(game.id).update!(series_id: series.id)
+          game.update!(series_id: series.id)
         end
       end
     end
