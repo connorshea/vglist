@@ -172,31 +172,35 @@ namespace 'import:wikidata' do
           end
         end
 
-        if keys.include?(:developers)
-          progress_bar.log 'Adding developers.' if ENV['DEBUG']
-          game_hash[:developers].each do |developer_id|
-            company = Company.find_by(wikidata_id: developer_id)
-            progress_bar.log company.inspect if ENV['DEBUG']
-            next if company.nil?
+        if keys.include?(:developers) || keys.include?(:publishers)
+          # In case one of them doesn't have values, we have a fallback to return an empty array.
+          company_wikidata_ids = (game_hash[:developers] || []) + (game_hash[:publishers] || [])
+          companies = Company.where(wikidata_id: company_wikidata_ids).pluck(:wikidata_id, :id).to_h
 
-            GameDeveloper.create!(
-              game_id: game.id,
-              company_id: company.id
-            )
+          if keys.include?(:developers)
+            progress_bar.log 'Adding developers.' if ENV['DEBUG']
+            game_hash[:developers].each do |developer_wikidata_id|
+              company_id = companies[developer_wikidata_id.to_i]
+              next if company_id.nil?
+
+              GameDeveloper.create!(
+                game_id: game.id,
+                company_id: company_id
+              )
+            end
           end
-        end
 
-        if keys.include?(:publishers)
-          progress_bar.log 'Adding publishers.' if ENV['DEBUG']
-          game_hash[:publishers].each do |publisher_id|
-            company = Company.find_by(wikidata_id: publisher_id)
-            progress_bar.log company.inspect if ENV['DEBUG']
-            next if company.nil?
+          if keys.include?(:publishers)
+            progress_bar.log 'Adding publishers.' if ENV['DEBUG']
+            game_hash[:publishers].each do |publisher_wikidata_id|
+              company_id = companies[publisher_wikidata_id.to_i]
+              next if company_id.nil?
 
-            GamePublisher.create!(
-              game_id: game.id,
-              company_id: company.id
-            )
+              GamePublisher.create!(
+                game_id: game.id,
+                company_id: company_id
+              )
+            end
           end
         end
 
