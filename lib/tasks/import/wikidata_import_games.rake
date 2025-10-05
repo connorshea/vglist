@@ -175,7 +175,7 @@ namespace 'import:wikidata' do
         if keys.include?(:developers) || keys.include?(:publishers)
           # In case one of them doesn't have values, we have a fallback to return an empty array.
           company_wikidata_ids = (game_hash[:developers] || []) + (game_hash[:publishers] || [])
-          companies = Company.where(wikidata_id: company_wikidata_ids).pluck(:wikidata_id, :id).to_h
+          companies = Company.where(wikidata_id: company_wikidata_ids.uniq.map(&:to_i)).pluck(:wikidata_id, :id).to_h
 
           if keys.include?(:developers)
             progress_bar.log 'Adding developers.' if ENV['DEBUG']
