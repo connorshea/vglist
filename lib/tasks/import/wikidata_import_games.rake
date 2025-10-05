@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 # rubocop:disable Rails/TimeZone
+LANGUAGE_CODES_FOR_LABELS = ['en', 'mul'].freeze
+
 namespace 'import:wikidata' do
   require 'sparql/client'
   require 'wikidata_helper'
@@ -63,10 +65,12 @@ namespace 'import:wikidata' do
 
         wikidata_label = WikidataHelper.get_labels(
           ids: wikidata_id,
-          languages: 'en'
+          languages: LANGUAGE_CODES_FOR_LABELS
         )
 
+        # Get either the English or 'mul' label for the game.
         label = wikidata_label.dig(wikidata_id, 'labels', 'en', 'value')
+        label ||= wikidata_label.dig(wikidata_id, 'labels', 'mul', 'value')
         if label.nil?
           progress_bar.log "No label. Skipping."
           next
