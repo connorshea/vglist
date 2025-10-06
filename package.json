@@ -18,7 +18,7 @@
     "sass-loader": "^16.0.5",
     "swc-loader": "^0.2.6",
     "turbolinks": "^5.2.0",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vue": "^2.7.16",
     "vue-good-table": "^2.21.11",
     "vue-loader": "^15.11",
