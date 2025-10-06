@@ -16,7 +16,7 @@ class SteamAppId < ApplicationRecord
 
   # Prevent the game from using a Steam App ID which has been blocklisted.
   def app_id_not_blocklisted
-    return unless SteamBlocklist.pluck(:steam_app_id).include?(app_id)
+    return unless SteamBlocklist.exists?(steam_app_id: app_id)
 
     errors.add(:app_id, "is blocklisted")
   end

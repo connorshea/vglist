@@ -170,17 +170,18 @@ class Game < ApplicationRecord
     # Allow up to 300 characters just in case there's some game with an incredibly long name.
     length: { maximum: 300 }
 
-  validate :wikidata_id_not_blocklisted
+  validate :wikidata_id_not_blocklisted, if: -> { wikidata_id.present? }
 
   global_searchable :name
   searchable :name, tsearch: { normalization: 2 }
 
   # Generate a cover variant with a specific size, size must be a Symbol
   # matching one of the keys in `Game::COVER_SIZES`.
+  # @param size [Symbol] One of :small, :medium, or :large.
+  # @return [ActiveStorage::Variant] The variant of the cover image.
   def sized_cover(size)
-    width, height = COVER_SIZES[size]
     cover.variant(
-      resize_to_limit: [width, height]
+      resize_to_limit: COVER_SIZES[size]
     )
   end
 
@@ -188,7 +189,7 @@ class Game < ApplicationRecord
 
   # Prevent the game from using a Wikidata ID which has been blocklisted.
   def wikidata_id_not_blocklisted
-    return unless wikidata_id.present? && WikidataBlocklist.pluck(:wikidata_id).include?(wikidata_id)
+    return unless WikidataBlocklist.exists?(wikidata_id: wikidata_id)
 
     errors.add(:wikidata_id, "is blocklisted")
   end
