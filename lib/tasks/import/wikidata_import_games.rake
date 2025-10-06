@@ -34,8 +34,8 @@ namespace 'import:wikidata' do
     # Also filter out blocklisted Wikidata items.
     rows = rows.reject do |row|
       url = row.to_h[:item].to_s
-      wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '')
-      existing_wikidata_ids.include?(wikidata_id.to_i) || blocklisted_wikidata_ids.include?(wikidata_id.to_i)
+      wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '').to_i
+      existing_wikidata_ids.include?(wikidata_id) || blocklisted_wikidata_ids.include?(wikidata_id)
     end
 
     properties = {
