@@ -316,7 +316,7 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     racc (1.8.1)
-    rack (3.1.16)
+    rack (3.1.17)
     rack-cors (3.0.0)
       logger
       rack (>= 3.0.14)
