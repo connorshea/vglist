@@ -10,7 +10,7 @@
         v-bind:name="textFieldName"
         v-bind:id="textFieldId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', ($event.target as HTMLInputElement).value)"
+        v-on:input="handleInput"
       />
     </div>
   </div>
@@ -37,6 +37,12 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['input']);
 
 const dataValue = ref(props.value);
+
+// Handle input events with proper typing
+function handleInput(event: Event) {
+  const target = event.target as HTMLInputElement;
+  emit('input', target.value);
+}
 
 watch(() => props.value, (newVal) => {
   dataValue.value = newVal;

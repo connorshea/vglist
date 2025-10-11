@@ -7,7 +7,7 @@
         v-bind:name="textAreaName"
         v-bind:id="textAreaId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', ($event.target as HTMLTextAreaElement).value)"
+        v-on:input="handleInput"
         :required="required"
       ></textarea>
     </div>
@@ -30,6 +30,12 @@ const props = defineProps<Props>();
 const emit = defineEmits(['input']);
 
 const dataValue = ref(props.value);
+
+// Handle input events with proper typing
+function handleInput(event: Event) {
+  const target = event.target as HTMLTextAreaElement;
+  emit('input', target.value);
+}
 
 watch(() => props.value, (newVal) => {
   dataValue.value = newVal;

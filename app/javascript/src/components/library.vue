@@ -19,7 +19,6 @@
       @addGame="activateModal({})"
       @openEditBar="activateEditBar"
       @selectedGamePurchasesChanged="selectedGamePurchasesChanged"
-      @deactivateEditBar="deactivateEditBar"
     ></library-table>
 
     <game-modal
