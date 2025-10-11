@@ -29,9 +29,6 @@
     "public"
   ],
   "compileOnSave": false,
-  "typeAcquisition": {
-    "enable": true
-  },
   "vueCompilerOptions": {
     "target": 2.7,
     "extensions": [".vue"],
