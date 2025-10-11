@@ -22,7 +22,6 @@
             :label="formData.game.label"
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
-            :max-height="'150px'"
             :disabled="true"
             @input="selectGame"
           ></single-select>
@@ -100,7 +99,6 @@
             :label="formData.game.label"
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
-            :max-height="'150px'"
             @input="selectGame"
           ></single-select>
         </div>
@@ -123,6 +121,22 @@ import MultiSelect from './fields/multi-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import VglistUtils from '../utils';
 import { defineComponent } from 'vue';
+
+interface GamePurchaseSubmittableData {
+  game_purchase: {
+    game_id: number;
+    user_id: number;
+    comments?: string;
+    rating?: number | string | null;
+    hours_played?: number | string | null;
+    replay_count?: number | string | null;
+    completion_status?: string | null;
+    start_date?: string | null;
+    completion_date?: string | null;
+    platform_ids?: Array<string | number>;
+    store_ids?: Array<string | number>;
+  };
+}
 
 export default defineComponent({
   name: 'game-modal',
@@ -279,7 +293,7 @@ export default defineComponent({
       this.$emit('close');
     },
     onSave() {
-      let submittableData = {
+      const submittableData: GamePurchaseSubmittableData = {
         game_purchase: {
           game_id: this.gamePurchase.game.id,
           user_id: this.gamePurchase.userId
@@ -287,23 +301,31 @@ export default defineComponent({
       };
 
       if (this.gamePurchase.comments) {
-        submittableData['game_purchase'][
-          'comments'
-        ] = this.gamePurchase.comments;
+        submittableData.game_purchase.comments = this.gamePurchase.comments;
       }
 
-      if (this.gamePurchase.rating !== '') {
-        submittableData['game_purchase']['rating'] = this.gamePurchase.rating;
+
+      if (
+        this.gamePurchase.rating !== '' &&
+        this.gamePurchase.rating !== null &&
+        typeof this.gamePurchase.rating !== 'undefined'
+      ) {
+        submittableData.game_purchase.rating = this.gamePurchase.rating;
       }
 
-      if (this.gamePurchase.hours_played !== '') {
-        submittableData['game_purchase'][
-          'hours_played'
-        ] = this.gamePurchase.hours_played;
+      if (
+        (typeof this.gamePurchase.hours_played === 'string' && this.gamePurchase.hours_played !== '') ||
+        (typeof this.gamePurchase.hours_played === 'number' && !isNaN(this.gamePurchase.hours_played))
+      ) {
+        submittableData.game_purchase.hours_played = this.gamePurchase.hours_played;
       }
 
-      if (this.gamePurchase.replay_count !== '') {
-        submittableData['game_purchase']['replay_count'] = this.gamePurchase.replay_count;
+      if (
+        this.gamePurchase.replay_count !== '' &&
+        this.gamePurchase.replay_count !== null &&
+        typeof this.gamePurchase.replay_count !== 'undefined'
+      ) {
+        submittableData.game_purchase.replay_count = this.gamePurchase.replay_count;
       }
 
       if (
@@ -311,59 +333,53 @@ export default defineComponent({
         this.gamePurchase.completion_status !== '' &&
         typeof this.gamePurchase.completion_status !== 'undefined'
       ) {
-        submittableData['game_purchase'][
-          'completion_status'
-        ] = this.gamePurchase.completion_status.value;
+        submittableData.game_purchase.completion_status = this.gamePurchase.completion_status.value;
       }
 
       if (
         this.gamePurchase.start_date !== '' &&
         this.gamePurchase.start_date !== null
       ) {
-        submittableData['game_purchase'][
-          'start_date'
-        ] = this.gamePurchase.start_date;
+        submittableData.game_purchase.start_date = this.gamePurchase.start_date;
       }
 
       if (
         this.gamePurchase.completion_date !== '' &&
         this.gamePurchase.completion_date !== null
       ) {
-        submittableData['game_purchase'][
-          'completion_date'
-        ] = this.gamePurchase.completion_date;
+        submittableData.game_purchase.completion_date = this.gamePurchase.completion_date;
       }
 
       if (this.gamePurchase.platforms.length !== 0) {
-        submittableData['game_purchase']['platform_ids'] = Array.from(
+        submittableData.game_purchase.platform_ids = Array.from(
           this.gamePurchase.platforms,
-          (platform: { id: String }) => platform.id
+          (platform: { id: string | number }) => platform.id
         );
       }
 
       if (this.gamePurchase.stores.length !== 0) {
-        submittableData['game_purchase']['store_ids'] = Array.from(
+        submittableData.game_purchase.store_ids = Array.from(
           this.gamePurchase.stores,
-          (store: { id: String }) => store.id
+          (store: { id: string | number }) => store.id
         );
       }
 
       // If any of these properties are undefined, set them to null.
-      ['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'].forEach((property) => {
+      (['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'] as Array<keyof GamePurchaseSubmittableData['game_purchase']>).forEach((property) => {
         // Set it to a blank string if the property is comments, and null otherwise.
         let value = property === 'comments' ? "" : null;
-
-        if (submittableData['game_purchase'][property] === undefined) {
-          submittableData['game_purchase'][property] = value;
+        if (typeof submittableData.game_purchase[property] === 'undefined') {
+          submittableData.game_purchase[property] = value;
         }
       });
 
       // Set replay_count to 0 if it's undefined.
-      if (submittableData['game_purchase']['replay_count'] === undefined) {
-        submittableData['game_purchase']['replay_count'] = 0;
+
+      if (typeof submittableData.game_purchase.replay_count === 'undefined') {
+        submittableData.game_purchase.replay_count = 0;
       }
 
-      let method: 'POST' | 'PUT' | undefined;
+      let method: 'POST' | 'PUT' = 'POST';
       if (
         this.gameModalState === 'create' ||
         this.gameModalState === 'createWithGame'
@@ -383,11 +399,13 @@ export default defineComponent({
         })
         .catch(errors => {
           this.errors = errors;
-          let submitButton = document.querySelector('.js-submit-button');
-          submitButton.classList.add('js-submit-button-error');
-          setTimeout(() => {
-            submitButton.classList.remove('js-submit-button-error');
-          }, 2000);
+          const submitButton = document.querySelector('.js-submit-button');
+          if (submitButton) {
+            submitButton.classList.add('js-submit-button-error');
+            setTimeout(() => {
+              submitButton.classList.remove('js-submit-button-error');
+            }, 2000);
+          }
         });
     },
     selectGame() {

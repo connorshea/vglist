@@ -8,6 +8,7 @@
         v-bind:id="textAreaId"
         v-bind:value="dataValue"
         v-on:input="$emit('input', $event.target?.value)"
+        :required="required"
       ></textarea>
     </div>
   </div>
@@ -22,6 +23,7 @@ interface Props {
   attribute: string;
   label: string;
   value: string;
+  required?: boolean;
 }
 
 const props = defineProps<Props>();
