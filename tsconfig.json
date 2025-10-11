@@ -31,7 +31,7 @@
   ],
   "compileOnSave": false,
   "vueCompilerOptions": {
-    "target": 3.3,
+    "target": 3.5,
     "extensions": [".vue"],
     "inferComponentDollarRefs": true,
     "strictTemplates": true
