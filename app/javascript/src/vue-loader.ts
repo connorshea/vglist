@@ -12,7 +12,7 @@ const initVue = function() {
     const compName = elem.dataset.vueComponent;
     const comp$ = await import(`./components/${compName}.vue`);
     const props = JSON.parse(elem.dataset.vueProps ?? '{}');
-    console.log(`Loaded Vue "${compName}", rendering...`, { comp: comp$, compdef: comp$.default, props });
+    // console.log(`Loaded Vue "${compName}", rendering...`, { comp: comp$, compdef: comp$.default, props });
     createApp(comp$.default, props).mount(elem);
   });
 }
