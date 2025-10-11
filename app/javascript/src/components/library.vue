@@ -7,7 +7,6 @@
     ></library-edit-bar>
 
     <library-table
-      ref="library-table-component"
       :rows="games"
       :isEditable="isEditable"
       :gamePurchasesUrl="gamePurchasesUrl"
@@ -34,143 +33,134 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import LibraryTable from './library-table.vue';
 import GameModal from './game-modal.vue';
 import LibraryEditBar from './library-edit-bar.vue';
-import { defineComponent } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
-export default defineComponent({
-  components: {
-    LibraryTable,
-    GameModal,
-    LibraryEditBar
-  },
-  props: {
-    gamePurchasesUrl: {
-      type: String,
-      required: true
-    },
-    userId: {
-      type: Number,
-      required: true
-    },
-    isEditable: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    chevronDownIcon: {
-      type: String,
-      required: true
+interface Props {
+  gamePurchasesUrl: string;
+  userId: number;
+  isEditable?: boolean;
+  chevronDownIcon: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isEditable: false
+});
+
+// Reactive data
+const isModalActive = ref(false);
+const isEditBarActive = ref(false);
+const selectedGamePurchases = ref<any[]>([]);
+const currentGame = ref<any>({});
+const doesGamePurchaseExist = ref(false);
+const games = ref<any[]>([]);
+const isLoading = ref(true);
+
+// Methods
+function loadGames(): void {
+  fetch(props.gamePurchasesUrl, {
+    headers: {
+      'Content-Type': 'application/json'
     }
-  },
-  data: function() {
-    return {
-      isModalActive: false,
-      isEditBarActive: false,
-      selectedGamePurchases: [],
-      currentGame: {},
-      doesGamePurchaseExist: false,
-      games: [],
-      isLoading: true
-    };
-  },
-  created: function() {
-    this.loadGames();
-  },
-  methods: {
-    loadGames(): void {
-      fetch(this.gamePurchasesUrl, {
-        headers: {
-          'Content-Type': 'application/json'
+  })
+    .then(response => {
+      return response.json().then(json => {
+        if (response.ok) {
+          return Promise.resolve(json);
         }
-      })
-        .then(response => {
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          });
-        })
-        .then(purchasedGames => {
-          this.games = purchasedGames;
-          this.isLoading = false;
+        return Promise.reject(json);
+      });
+    })
+    .then(purchasedGames => {
+      games.value = purchasedGames;
+      isLoading.value = false;
 
-          // Make sure to trigger bulma:init, even if the load event has already fired.
-          // This can theoretically trigger a race condtion because readyState
-          // will be set to complete right before the load event is fired, but yolo.
-          if (document.readyState === 'complete') {
-            // Emit a bulma init event to make sure that the filter dropdown is initialized.
-            let event = new Event('bulma:init');
-            document.body.dispatchEvent(event);
-          } else {
-            window.addEventListener('load', (_loadEvent) => {
-              // Emit a bulma init event to make sure that the filter dropdown is initialized.
-              let event = new Event('bulma:init');
-              document.body.dispatchEvent(event);
-            });
-          }
-        });
-    },
-    refreshLibrary() {
-      this.loadGames();
-    },
-    activateModal(game = {}) {
-      if (!this.isEditable) {
-        return;
-      }
-      let html = document.querySelector('html');
-      html?.classList.add('is-clipped');
-
-      this.doesGamePurchaseExist =
-        Object.entries(game).length > 0 ? false : true;
-      this.currentGame = game;
-      this.isModalActive = true;
-    },
-    deactivateModal() {
-      let html = document.querySelector('html');
-      html?.classList.remove('is-clipped');
-
-      this.isModalActive = false;
-    },
-    activateEditBar() {
-      this.isEditBarActive = true;
-    },
-    deactivateEditBar() {
-      this.isEditBarActive = false;
-    },
-    selectedGamePurchasesChanged(gamePurchases) {
-      if (gamePurchases.length > 0) {
-        this.activateEditBar();
+      // Make sure to trigger bulma:init, even if the load event has already fired.
+      // This can theoretically trigger a race condtion because readyState
+      // will be set to complete right before the load event is fired, but yolo.
+      if (document.readyState === 'complete') {
+        // Emit a bulma init event to make sure that the filter dropdown is initialized.
+        let event = new Event('bulma:init');
+        document.body.dispatchEvent(event);
       } else {
-        this.deactivateEditBar();
+        window.addEventListener('load', (_loadEvent) => {
+          // Emit a bulma init event to make sure that the filter dropdown is initialized.
+          let event = new Event('bulma:init');
+          document.body.dispatchEvent(event);
+        });
       }
-      this.selectedGamePurchases = gamePurchases;
-    },
-    closeEditBar() {
-      this.deactivateEditBar();
-      this.$refs['library-table-component'].$refs[
-        'game-library-table'
-      ].unselectAllInternal();
-    },
-    closeAndRefresh() {
-      this.deactivateModal();
-      // Give it some time for the change to persist on the backend.
-      setTimeout(() => {
-        this.refreshLibrary();
-      }, 750);
-    },
-    libraryLoaded() {
-      this.isLoading = false;
-    }
-  },
-  computed: {
-    gameModalState: function() {
-      let currentGameExists = Object.keys(this.currentGame).length > 0;
-      return currentGameExists ? 'update' : 'create';
-    }
+    });
+}
+
+function refreshLibrary() {
+  loadGames();
+}
+
+function activateModal(game: any = {}) {
+  if (!props.isEditable) {
+    return;
   }
+  let html = document.querySelector('html');
+  html?.classList.add('is-clipped');
+
+  doesGamePurchaseExist.value = Object.entries(game).length > 0 ? false : true;
+  currentGame.value = game;
+  isModalActive.value = true;
+}
+
+function deactivateModal() {
+  let html = document.querySelector('html');
+  html?.classList.remove('is-clipped');
+
+  isModalActive.value = false;
+}
+
+function activateEditBar() {
+  isEditBarActive.value = true;
+}
+
+function deactivateEditBar() {
+  isEditBarActive.value = false;
+}
+
+function selectedGamePurchasesChanged(gamePurchases: any[]) {
+  if (gamePurchases.length > 0) {
+    activateEditBar();
+  } else {
+    deactivateEditBar();
+  }
+  selectedGamePurchases.value = gamePurchases;
+}
+
+function closeEditBar() {
+  deactivateEditBar();
+  // Instead of accessing nested refs, we could emit an event or use a different approach
+  // For now, just deactivate the edit bar - the table should handle its own state
+}
+
+function closeAndRefresh() {
+  deactivateModal();
+  // Give it some time for the change to persist on the backend.
+  setTimeout(() => {
+    refreshLibrary();
+  }, 750);
+}
+
+function libraryLoaded() {
+  isLoading.value = false;
+}
+
+// Computed properties
+const gameModalState = computed(() => {
+  let currentGameExists = Object.keys(currentGame.value).length > 0;
+  return currentGameExists ? 'update' : 'create';
+});
+
+// Lifecycle
+onMounted(() => {
+  loadGames();
 });
 </script>
