@@ -67,16 +67,10 @@ const props = defineProps<Props>();
 
 const avatar = ref<File | undefined>(undefined);
 const avatarBlob = ref<string | undefined>(undefined);
-const existingAvatar = ref<string | undefined>(undefined);
+// If there's an avatar path prop, set the existingAvatar to it.
+const existingAvatar = ref<string | undefined>(props.avatarPath);
 const hasSelectedFile = ref(false);
 const errors = ref<string[]>([]);
-
-onMounted(() => {
-  // If there's an avatar path prop, set the existingAvatar to it.
-  if (props.avatarPath) {
-    existingAvatar.value = props.avatarPath;
-  }
-});
 
 function onChange(file: File) {
   uploadFile(file);
@@ -115,7 +109,7 @@ function onSubmit() {
     props.submitPath,
     'PUT',
     JSON.stringify(submittableData)
-  ).then(game => {
+  ).then(() => {
     Turbolinks.visit(`${window.location.origin}/settings`);
   }).catch(errorsResp => {
     errors.value = errorsResp;
@@ -129,11 +123,12 @@ function onSubmit() {
   });
 }
 
+// TODO: Add a confirmation dialog before deleting.
 function onDelete() {
   VglistUtils.authenticatedFetch(
     props.deletePath,
     'DELETE'
-  ).then(game => {
+  ).then(() => {
     Turbolinks.visit(`${window.location.origin}/settings`);
   }).catch(errorsResp => {
     errors.value = errorsResp;
