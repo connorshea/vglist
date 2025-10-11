@@ -7,48 +7,32 @@
         v-bind:name="textAreaName"
         v-bind:id="textAreaId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', $event.target.value)"
+        v-on:input="$emit('input', $event.target?.value)"
       ></textarea>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'text-area',
-  props: {
-    formClass: {
-      type: String,
-      required: true
-    },
-    attribute: {
-      type: String,
-      required: true
-    },
-    label: {
-      type: String,
-      required: true
-    },
-    value: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['input'],
-  data() {
-    return {
-      dataValue: this.value
-    };
-  },
-  computed: {
-    textAreaName: function() {
-      return `${this.formClass}[${this.attribute}]`;
-    },
-    textAreaId: function() {
-      return `${this.formClass}_${this.attribute}`;
-    }
-  }
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue';
+
+interface Props {
+  formClass: string;
+  attribute: string;
+  label: string;
+  value: string;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits(['input']);
+
+const dataValue = ref(props.value);
+
+watch(() => props.value, (newVal) => {
+  dataValue.value = newVal;
 });
+
+const textAreaName = computed(() => `${props.formClass}[${props.attribute}]`);
+const textAreaId = computed(() => `${props.formClass}_${props.attribute}`);
 </script>

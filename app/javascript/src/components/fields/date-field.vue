@@ -27,6 +27,8 @@ interface Props {
   required?: boolean;
 }
 
+// TODO: replace withDefaults after Vue 3.5 upgrade.
+// https://vuejs.org/guide/components/props.html#reactive-props-destructure
 const props = withDefaults(defineProps<Props>(), {
   required: false
 });
