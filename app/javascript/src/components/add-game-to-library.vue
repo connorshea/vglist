@@ -66,6 +66,7 @@ const gameModalState = computed(() => props.gamePurchaseExists ? 'update' : 'cre
 function activateModal(game: any = {}) {
   document.documentElement.classList.add('is-clipped');
 
+  // TODO: Cursed, do this better.
   if (Object.keys(mutableGamePurchase.value).length === 0) {
     mutableGamePurchase.value = { game: game };
   }
@@ -89,7 +90,7 @@ async function addGameToLibrary() {
   });
 
   if (!response.ok) {
-    // TODO: Handle error
+    // TODO: Handle error, need to render an error toast or something.
     return;
   }
 
@@ -131,6 +132,7 @@ function onSubmit() {
 // Lifecycle
 onMounted(() => {
   if (props.gamePurchaseId) {
+    // TODO: Make this use async/await, although I'm not 100% sure if that's allowed here.
     fetch(`/game_purchases/${props.gamePurchaseId}.json`, {
       headers: {
         'Content-Type': 'application/json'

@@ -39,7 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import Rails from '@rails/ujs';
 // @ts-expect-error - vue-good-table doesn't have TypeScript declarations
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
@@ -161,33 +160,6 @@ function loadRows() {
   rows.value = getGamePurchases();
 }
 
-function getGameRatingInLibrary(userNumber: number, gameId: number): number | string {
-  if (userNumber === 1 && user1Library.value) {
-    let gamePurchaseInLibrary = user1Library.value.filter(
-      gamePurchase => gamePurchase.game.id === gameId
-    );
-    if (
-      gamePurchaseInLibrary.length > 0 &&
-      gamePurchaseInLibrary[0] &&
-      gamePurchaseInLibrary[0].rating !== null
-    ) {
-      return gamePurchaseInLibrary[0].rating!;
-    }
-  } else if (userNumber === 2 && user2Library.value) {
-    let gamePurchaseInLibrary = user2Library.value.filter(
-      gamePurchase => gamePurchase.game.id === gameId
-    );
-    if (
-      gamePurchaseInLibrary.length > 0 &&
-      gamePurchaseInLibrary[0] &&
-      gamePurchaseInLibrary[0].rating !== null
-    ) {
-      return gamePurchaseInLibrary[0].rating!;
-    }
-  }
-  return '-';
-}
-
 function gameUrl(gameId: number): string {
   return `${window.location.origin}/games/${gameId}`;
 }
@@ -201,7 +173,7 @@ function getGamePurchases(): GroupedGameRow[] {
   if (user1Library.value === null && user2Library.value === null) {
     return [];
   }
-  
+
   const libraries = [user1Library.value, user2Library.value].filter(Boolean) as GamePurchase[][];
   let metaLibrary = concat(...libraries);
   let betterMetaLibrary: GameRow[] = [];
@@ -293,14 +265,6 @@ function groupGameRows(metaLibrary: GameRow[]): GroupedGameRow[] {
 }
 
 // Computed properties
-const user1Link = computed(() => {
-  return `/users/${props.user1.slug}`;
-});
-
-const user2Link = computed(() => {
-  return `/users/${props.user2.slug}`;
-});
-
 const theme = computed(() => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? "nocturnal" : "default";
 });
