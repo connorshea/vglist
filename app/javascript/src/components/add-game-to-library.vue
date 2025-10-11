@@ -74,7 +74,6 @@ function activateModal(game: any = {}) {
 
 function deactivateModal() {
   document.documentElement.classList.remove('is-clipped');
-
   isModalActive.value = false;
 }
 
@@ -90,7 +89,7 @@ async function addGameToLibrary() {
   });
 
   if (!response.ok) {
-    // Handle error
+    // TODO: Handle error
     return;
   }
 

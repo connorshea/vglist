@@ -41,7 +41,8 @@
     "prettier": "prettier --write './app/javascript/**/*.{js,ts,vue,scss}'",
     "build": "webpack --config webpack.config.js",
     "typecheck": "tsc --noEmit",
-    "typecheck:vue": "vue-tsc --noEmit"
+    "typecheck:vue": "vue-tsc --noEmit",
+    "typecheck:full": "yarn run typecheck && yarn run typecheck:vue"
   },
   "browserslist": [
     "baseline widely available"
