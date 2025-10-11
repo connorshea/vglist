@@ -178,14 +178,13 @@ function getGamePurchases(): GroupedGameRow[] {
   let metaLibrary = concat(...libraries);
   let betterMetaLibrary: GameRow[] = [];
 
+  // TODO: This is so cursed... do better.
   metaLibrary.forEach(gamePurchase => {
     let isFirstUser = gamePurchase.user_id === props.user1.id;
 
     // If the game isn't represented in the metaLibrary yet, append it to the existing array.
     if (
-      !betterMetaLibrary
-        .map(gp => gp.game.id)
-        .includes(gamePurchase.game.id)
+      !betterMetaLibrary.some(gp => gp.game.id === gamePurchase.game.id)
     ) {
       let gameRow: GameRow = {
         game: gamePurchase.game,
