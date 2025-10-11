@@ -10,8 +10,8 @@
         label="name"
         :placeholder="placeholder"
         @change="handleChange"
-        v-bind:value="value"
-        v-on:input="$emit('input', $event)"
+        v-bind:modelValue="modelValue"
+        v-on:update:modelValue="$emit('update:modelValue', $event)"
       />
     </div>
   </div>
@@ -26,14 +26,14 @@ import { debounce, snakeCase } from 'lodash-es';
 
 interface Props {
   label?: string;
-  value: any[];
+  modelValue: any[];
   searchPathIdentifier: string;
   placeholder?: string;
 }
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
 const options = ref<any[]>([]);
@@ -41,7 +41,7 @@ const searchPath = `${window.location.origin}/${props.searchPathIdentifier}/sear
 
 // Methods
 function handleChange(selectedItems: any[]) {
-  emit('input', selectedItems);
+  emit('update:modelValue', selectedItems);
 }
 
 /*

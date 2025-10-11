@@ -8,8 +8,8 @@
         label="label"
         :placeholder="placeholder"
         :inputId="inputId"
-        v-bind:value="value"
-        v-on:input="$emit('input', $event)"
+        v-bind:modelValue="modelValue"
+        v-on:update:modelValue="$emit('update:modelValue', $event)"
       ></v-select>
     </div>
   </div>
@@ -33,7 +33,7 @@ const props = defineProps({
     required: false,
     default: ''
   },
-  value: {
+  modelValue: {
     type: [Object, String],
     required: false
   },
@@ -53,7 +53,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 const inputId = computed(() => snakeCase(props.label));
 </script>

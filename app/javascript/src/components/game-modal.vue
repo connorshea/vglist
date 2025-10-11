@@ -23,7 +23,7 @@
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
             :disabled="true"
-            @input="selectGame"
+            @update:modelValue="selectGame"
           ></single-select>
 
           <static-single-select
@@ -99,7 +99,7 @@
             :label="formData.game.label"
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
-            @input="selectGame"
+            @update:modelValue="selectGame"
           ></single-select>
         </div>
       </section>

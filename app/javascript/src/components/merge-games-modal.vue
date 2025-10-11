@@ -22,7 +22,7 @@
             :label="'Game'"
             v-model="gameA"
             :search-path-identifier="'games'"
-            @input="selectGame"
+            @update:modelValue="selectGame"
             :customOptionFunc="customOptionLabel"
           ></single-select>
         </div>

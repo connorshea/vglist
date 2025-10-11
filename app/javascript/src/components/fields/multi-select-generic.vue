@@ -8,8 +8,8 @@
         :inputId="inputId"
         :label="vSelectLabel"
         @change="handleChange"
-        v-bind:value="value"
-        v-on:input="$emit('input', $event)"
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
       ></v-select>
     </div>
   </div>
@@ -24,7 +24,7 @@ import { snakeCase } from 'lodash-es';
 
 interface Props {
   label: string;
-  value: any[];
+  modelValue: any[];
   vSelectLabel?: string;
 }
 
@@ -32,14 +32,14 @@ const props = withDefaults(defineProps<Props>(), {
   vSelectLabel: "name"
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
 const options = ref<any[]>([]);
 
 // Methods
 function handleChange(selectedItems: any[]) {
-  emit('input', selectedItems);
+  emit('update:modelValue', selectedItems);
 }
 
 // Computed properties

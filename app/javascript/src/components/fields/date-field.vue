@@ -1,16 +1,16 @@
 <template>
   <div class="field">
-    <label class="label" v-bind:for="dateFieldId">{{ label }}</label>
+    <label class="label" :for="dateFieldId">{{ label }}</label>
     <div class="control">
       <input
         autocomplete="off"
         class="input"
         type="date"
         :required="required"
-        v-bind:name="dateFieldName"
-        v-bind:id="dateFieldId"
-        v-bind:value="dataValue"
-        v-on:input="handleInput"
+        :name="dateFieldName"
+        :id="dateFieldId"
+        :value="dataValue"
+        @input="handleInput"
       >
     </div>
   </div>
@@ -23,7 +23,7 @@ interface Props {
   formClass: string;
   attribute: string;
   label: string;
-  value?: string;
+  modelValue?: string;
   required?: boolean;
 }
 
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['input']);
 
-const dataValue = ref(props.value);
+const dataValue = ref(props.modelValue);
 
 // Handle input events with proper typing
 function handleInput(event: Event) {
@@ -43,7 +43,7 @@ function handleInput(event: Event) {
   emit('input', target.value);
 }
 
-watch(() => props.value, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
   dataValue.value = newVal;
 });
 
