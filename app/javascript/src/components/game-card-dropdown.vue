@@ -2,7 +2,7 @@
   <div class="dropdown dropdown-dynamic game-card-dropdown is-right" :class="{ 'is-active': isActive }">
     <div class="dropdown-trigger">
       <button class="button is-borderless is-shadowless" aria-haspopup="true" aria-controls="dropdown-menu" @click="onClick">
-        <span class="icon" v-html="this.chevronDownIcon"></span>
+        <span class="icon" v-html="chevronDownIcon"></span>
       </button>
     </div>
     <div class="dropdown-menu" id="dropdown-menu" role="menu">
@@ -18,84 +18,76 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import VglistUtils from '../utils';
 
-export default defineComponent({
-  name: 'game-card-dropdown',
-  props: {
-    gameId: {
-      type: Number,
-      required: true
-    },
-    chevronDownIcon: {
-      type: String,
-      required: true
-    }
-  },
-  data: function() {
-    return {
-      isActive: false,
-      favorited: false,
-      hasCheckedFavorited: false
-    };
-  },
-  methods: {
-    onClick(event) {
-      if (!this.hasCheckedFavorited) {
-        // Check whether the user has favorited the game before rendering the
-        // dropdown buttons.
-        VglistUtils.authenticatedFetch(
-          `/games/${this.gameId}/favorited.json`,
-          'GET'
-        ).then(parsedJson => {
-          if (parsedJson === true || parsedJson === false) {
-            this.favorited = parsedJson;
-          }
-          this.isActive = true;
-          this.closeDropdownOnClick();
-          this.hasCheckedFavorited = true;
-        });
-      } else {
-        this.isActive = true;
-        this.closeDropdownOnClick();
+interface Props {
+  gameId: number;
+  chevronDownIcon: string;
+}
+
+const props = defineProps<Props>();
+
+const isActive = ref(false);
+const favorited = ref(false);
+const hasCheckedFavorited = ref(false);
+
+function onClick(event: Event) {
+  if (!hasCheckedFavorited.value) {
+    // Check whether the user has favorited the game before rendering the
+    // dropdown buttons.
+    VglistUtils.authenticatedFetch(
+      `/games/${props.gameId}/favorited.json`,
+      'GET'
+    ).then(parsedJson => {
+      if (parsedJson === true || parsedJson === false) {
+        favorited.value = parsedJson;
       }
-    },
-    closeDropdownOnClick() {
-      // Close the dropdown if the user clicks outside the dropdown.
-      document.addEventListener('click', (event) => {
-        // If the user is clicking on something other than an element, return early.
-        if (event.target !instanceof Element && event.target !instanceof HTMLDocument) {
-          return;
-        }
-        // If the user clicks on the dropdown itself, don't close the dropdown.
-        if ((event.target as Element).closest('.dropdown-dynamic')) {
-          return;
-        }
-        this.isActive = false;
-      });
-    },
-    favoriteGame() {
-      VglistUtils.rawAuthenticatedFetch(
-        `/games/${this.gameId}/favorite.json`,
-        'POST'
-      ).then(response => {
-        if (response.ok) {
-          this.favorited = true;
-        }
-      });
-    },
-    unfavoriteGame() {
-      VglistUtils.rawAuthenticatedFetch(
-        `/games/${this.gameId}/unfavorite.json`,
-        'DELETE'
-      ).then(response => {
-        if (response.ok) {
-          this.favorited = false;
-        }
-      });
-    }
+      isActive.value = true;
+      closeDropdownOnClick();
+      hasCheckedFavorited.value = true;
+    });
+  } else {
+    isActive.value = true;
+    closeDropdownOnClick();
   }
-});
+}
+
+function closeDropdownOnClick() {
+  // Close the dropdown if the user clicks outside the dropdown.
+  document.addEventListener('click', (event) => {
+    // If the user is clicking on something other than an element, return early.
+    if (!(event.target instanceof Element) && !(event.target instanceof HTMLDocument)) {
+      return;
+    }
+    // If the user clicks on the dropdown itself, don't close the dropdown.
+    if ((event.target as Element).closest('.dropdown-dynamic')) {
+      return;
+    }
+    isActive.value = false;
+  });
+}
+
+function favoriteGame() {
+  VglistUtils.rawAuthenticatedFetch(
+    `/games/${props.gameId}/favorite.json`,
+    'POST'
+  ).then(response => {
+    if (response.ok) {
+      favorited.value = true;
+    }
+  });
+}
+
+function unfavoriteGame() {
+  VglistUtils.rawAuthenticatedFetch(
+    `/games/${props.gameId}/unfavorite.json`,
+    'DELETE'
+  ).then(response => {
+    if (response.ok) {
+      favorited.value = false;
+    }
+  });
+}
 </script>

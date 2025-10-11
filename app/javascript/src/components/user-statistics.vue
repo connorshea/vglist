@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="gamesCountIsPositive && !isLoading"
+    v-if="gamesCountIsPositive && !isLoading && statistics"
     class="card stats-card is-two-thirds column m-auto mt-10"
     :style="{ 'min-height': '200px' }"
   >
@@ -41,7 +41,7 @@
         :key="k"
         :id="`completion-status-${i}`"
         :class="['percentage-bar-portion', `color-${i + 1}`]"
-        :style="{ 'max-width': ((v / completionStatusesCount) * 100) + '%' }"
+        :style="{ 'max-width': (completionStatusesCount ? ((v / completionStatusesCount) * 100) : 0) + '%' }"
         @mouseenter="showPopover(i)"
         @mouseleave="hidePopover(i)"
         :aria-label="`${startCase(k)}: ${v}`"
@@ -49,7 +49,7 @@
         <div
           :id="`popover-${i}`"
           class="tooltip"
-          popover
+          popover="auto"
           data-tooltip-placement="top"
         >
           <div class="tooltip-arrow"></div>
@@ -108,7 +108,7 @@ const showPopover = (i: number) => {
   const pop = document.getElementById(`popover-${i}`);
   const status = document.getElementById(`completion-status-${i}`);
   if (pop && status) {
-    // @ts-ignore Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
+    // @ts-expect-error Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
     status.style.anchorName = `--popover-anchor`;
     pop.showPopover?.();
   }
@@ -122,7 +122,7 @@ const hidePopover = (i: number) => {
   const pop = document.getElementById(`popover-${i}`);
   const status = document.getElementById(`completion-status-${i}`);
   if (pop && status) {
-    // @ts-ignore Ditto
+    // @ts-expect-error Ditto
     status.style.anchorName = 'none';
     pop.hidePopover?.();
   }
@@ -130,7 +130,7 @@ const hidePopover = (i: number) => {
 
 const completionStatusesCount = computed(() => {
   if (statistics.value) {
-    const values = Object.values(statistics.value.completion_statuses);
+    const values = Object.values(statistics.value.completion_statuses ?? {});
     return values.reduce((accumulator: number, currentValue: number) => {
       return accumulator + currentValue;
     });
@@ -148,11 +148,11 @@ const completionRateExists = computed(() => {
 });
 
 const daysPlayedIsPositive = computed(() => {
-  return statistics.value?.total_days_played > 0 || false;
+  return (statistics.value?.total_days_played ?? 0) > 0;
 });
 
 const gamesCountIsPositive = computed(() => {
-  return statistics.value?.games_count > 0 || false;
+  return (statistics.value?.games_count ?? 0) > 0;
 });
 
 onBeforeMount(() => getStatistics());

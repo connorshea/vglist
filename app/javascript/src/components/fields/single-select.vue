@@ -16,95 +16,64 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { debounce, snakeCase } from 'lodash-es';
 
-export default defineComponent({
-  name: 'single-select',
-  components: {
-    vSelect
-  },
-  props: {
-    label: {
-      type: String,
-      required: false
-    },
-    value: {
-      type: Object,
-      required: false
-    },
-    disabled: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    searchPathIdentifier: {
-      type: String,
-      required: true
-    },
-    grandparentClass: {
-      type: String,
-      required: false,
-      default: 'field'
-    },
-    parentClass: {
-      type: String,
-      required: false,
-      default: 'control'
-    },
-    placeholder: {
-      type: String,
-      required: false
-    },
-    // Can be used to rename labels in the component dropdown or make other
-    // modifications to options.
-    customOptionFunc: {
-      type: Function,
-      required: false
+interface Props {
+  label?: string;
+  value?: any;
+  disabled?: boolean;
+  searchPathIdentifier: string;
+  grandparentClass?: string;
+  parentClass?: string;
+  placeholder?: string;
+  customOptionFunc?: (item: any) => any;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
+  grandparentClass: 'field',
+  parentClass: 'control'
+});
+
+const emit = defineEmits(['input']);
+
+// Reactive data
+const options = ref<any[]>([]);
+const searchPath = `${window.location.origin}/${props.searchPathIdentifier}/search.json`;
+
+/*
+ * @param {search} String Current search text
+ * @param {loading} Function Toggle loading class
+ */
+const onSearch = debounce((search: string, loading: (state: boolean) => void) => {
+  loading(true);
+  let searchUrl = new URL(searchPath);
+  searchUrl.searchParams.append('query', search);
+  // TODO: Add error handling.
+  fetch(searchUrl.toString(), {
+    headers: {
+      'Content-Type': 'application/json'
     }
-  },
-  emits: ['input'],
-  data: function() {
-    return {
-      options: [],
-      searchPath: `${window.location.origin}/${this.searchPathIdentifier}/search.json`
-    };
-  },
-  methods: {
-    /*
-     * @param {search} String Current search text
-     * @param {loading} Function Toggle loading class
-     */
-    onSearch: debounce(function(search, loading) {
-      loading(true);
-      let searchUrl = new URL(this.searchPath);
-      searchUrl.searchParams.append('query', search);
-      // TODO: Add error handling.
-      fetch(searchUrl.toString(), {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          return response.json();
-        })
-        .then(items => {
-          // Apply the customOptionFunc if it exists.
-          if (this.customOptionFunc) {
-            items = items.map(this.customOptionFunc);
-          }
-          this.options = items;
-          loading(false);
-        });
-    }, 250)
-  },
-  computed: {
-    inputId() {
-      return snakeCase(this.label);
-    }
-  }
+  })
+    .then(response => {
+      return response.json();
+    })
+    .then(items => {
+      // Apply the customOptionFunc if it exists.
+      if (props.customOptionFunc) {
+        items = items.map(props.customOptionFunc);
+      }
+      options.value = items;
+      loading(false);
+    });
+}, 250);
+
+// Computed properties
+const inputId = computed(() => {
+  return snakeCase(props.label);
 });
 </script>

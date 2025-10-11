@@ -5,13 +5,11 @@
     "moduleResolution": "bundler",
     "sourceMap": true,
     "target": "esnext",
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "verbatimModuleSyntax": true,
     "strict": true,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
     // TS 6 defaults:
-    "types": ["node"],
+    "types": [],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "noUncheckedIndexedAccess": true,
@@ -19,6 +17,11 @@
     "noUncheckedSideEffectImports": true,
     "alwaysStrict": true
   },
+  "include": [
+    "app/javascript/src/**/*.ts",
+    "app/javascript/src/**/*.d.ts",
+    "app/javascript/src/**/*.vue"
+  ],
   "exclude": [
     "**/*.spec.ts",
     "node_modules",
@@ -26,9 +29,6 @@
     "public"
   ],
   "compileOnSave": false,
-  "typeAcquisition": {
-    "enable": true
-  },
   "vueCompilerOptions": {
     "target": 2.7,
     "extensions": [".vue"],

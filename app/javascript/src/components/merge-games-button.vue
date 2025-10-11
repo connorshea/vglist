@@ -1,9 +1,8 @@
 <template>
   <div>
     <a
-      v-on:click="activateModal"
-      class="dropdown-item has-text-danger js-merge-games-button"
-      data-game-id="gameId">
+      @click="activateModal"
+      class="dropdown-item has-text-danger js-merge-games-button">
       Merge
     </a>
 
@@ -11,57 +10,40 @@
       v-if="isModalActive"
       :isActive="isModalActive"
       :game="game"
-      v-on:close="deactivateModal"
-      v-on:closeAndRefresh="closeAndRefresh"
-      v-on:create="onSubmit"
+      @close="deactivateModal"
+      @save="onSubmit"
     ></merge-games-modal>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue';
 import MergeGamesModal from './merge-games-modal.vue';
-import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'merge-games-button',
-  components: {
-    MergeGamesModal
-  },
-  props: {
-    game: {
-      type: Object,
-      required: true,
-      default: function() {
-        return {};
-      }
-    }
-  },
-  data: function() {
-    return {
-      isModalActive: false
-    };
-  },
-  methods: {
-    activateModal(game = {}) {
-      let html = document.querySelector('html');
-      html.classList.add('is-clipped');
+interface Props {
+  game: Record<string, any>;
+}
 
-      this.isModalActive = true;
-    },
-    deactivateModal() {
-      let html = document.querySelector('html');
-      html.classList.remove('is-clipped');
-
-      this.isModalActive = false;
-    },
-    closeAndRefresh() {
-      this.deactivateModal();
-    },
-    onSubmit() {
-      Turbolinks.visit(window.location.href);
-    }
-  }
+const props = withDefaults(defineProps<Props>(), {
+  game: () => ({})
 });
+
+const isModalActive = ref(false);
+
+function activateModal() {
+  const html = document.querySelector('html');
+  html!.classList.add('is-clipped');
+  isModalActive.value = true;
+}
+
+function deactivateModal() {
+  const html = document.querySelector('html');
+  html!.classList.remove('is-clipped');
+  isModalActive.value = false;
+}
+
+function onSubmit() {
+  Turbolinks.visit(window.location.href);
+}
 </script>

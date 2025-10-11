@@ -43,12 +43,12 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import FileSelect from './fields/file-select.vue';
 import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
-import { defineComponent } from 'vue';
 
 type UserPayload = {
   user: {
@@ -56,105 +56,92 @@ type UserPayload = {
   }
 };
 
-export default defineComponent({
-  name: 'avatar-input',
-  components: {
-    FileSelect
-  },
-  props: {
-    railsDirectUploadsPath: {
-      type: String,
-      required: true
-    },
-    submitPath: {
-      type: String,
-      required: true
-    },
-    deletePath: {
-      type: String,
-      required: true
-    },
-    avatarPath: {
-      type: String,
-      required: false
-    }
-  },
-  data: function() {
-    return {
-      avatar: null,
-      avatarBlob: null,
-      existingAvatar: null,
-      hasSelectedFile: false,
-      errors: []
-    };
-  },
-  created: function() {
-    // If there's an avatar path prop, set the existingAvatar to it.
-    if (this.avatarPath) {
-      this.existingAvatar = this.avatarPath;
-    }
-  },
-  methods: {
-    onChange(file) {
-      this.uploadFile(file);
-      this.hasSelectedFile = true;
-    },
-    uploadFile(file) {
-      this.existingAvatar = null;
-      const url = this.railsDirectUploadsPath;
-      const upload = new DirectUpload(file, url, {
-        directUploadWillStoreFileWithXHR: (xhr) => {
-          // Use this workaround to make sure that Direct Upload-ed images are
-          // uploaded with the correct header. Otherwise they will end up being
-          // private files.
-          xhr.setRequestHeader('x-amz-acl', 'public-read');
-        }
-      });
+interface Props {
+  railsDirectUploadsPath: string;
+  submitPath: string;
+  deletePath: string;
+  avatarPath?: string;
+}
 
-      upload.create((error, blob) => {
-        if (error) {
-          // TODO: Handle this error.
-          console.log(error);
-        } else {
-          this.avatarBlob = blob.signed_id;
-        }
-      });
-    },
-    onSubmit() {
-      let submittableData: UserPayload = { user: {} };
-      if (this.avatarBlob) {
-        submittableData.user.avatar = this.avatarBlob;
-      }
+const props = defineProps<Props>();
 
-      VglistUtils.authenticatedFetch(
-        this.submitPath,
-        'PUT',
-        JSON.stringify(submittableData)
-      ).then(game => {
-        Turbolinks.visit(`${window.location.origin}/settings`);
-      }).catch(errors => {
-        this.errors = errors;
-        let submitButton = document.querySelector('.js-submit-button');
-        submitButton?.classList.add('js-submit-button-error');
-        setTimeout(() => {
-          submitButton?.classList.remove('js-submit-button-error');
-        }, 2000);
-      });
-    },
-    onDelete() {
-      VglistUtils.authenticatedFetch(
-        this.deletePath,
-        'DELETE'
-      ).then(game => {
-        Turbolinks.visit(`${window.location.origin}/settings`);
-      }).catch(errors => {
-        this.errors = errors;
-      });
-    },
-    // Reload the page on cancel.
-    onCancel() {
-      Turbolinks.visit(`${window.location.origin}/settings`);
-    }
+const avatar = ref<File | undefined>(undefined);
+const avatarBlob = ref<string | undefined>(undefined);
+const existingAvatar = ref<string | undefined>(undefined);
+const hasSelectedFile = ref(false);
+const errors = ref<string[]>([]);
+
+onMounted(() => {
+  // If there's an avatar path prop, set the existingAvatar to it.
+  if (props.avatarPath) {
+    existingAvatar.value = props.avatarPath;
   }
 });
+
+function onChange(file: File) {
+  uploadFile(file);
+  hasSelectedFile.value = true;
+}
+
+function uploadFile(file: File) {
+  existingAvatar.value = undefined;
+  const url = props.railsDirectUploadsPath;
+  const upload = new DirectUpload(file, url, {
+    directUploadWillStoreFileWithXHR: (xhr) => {
+      // Use this workaround to make sure that Direct Upload-ed images are
+      // uploaded with the correct header. Otherwise they will end up being
+      // private files.
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
+    }
+  });
+
+  upload.create((error, blob) => {
+    if (error) {
+      // TODO: Handle this error.
+      console.log(error);
+    } else if (blob) {
+      avatarBlob.value = blob.signed_id;
+    }
+  });
+}
+
+function onSubmit() {
+  const submittableData: UserPayload = { user: {} };
+  if (avatarBlob.value) {
+    submittableData.user.avatar = avatarBlob.value;
+  }
+
+  VglistUtils.authenticatedFetch(
+    props.submitPath,
+    'PUT',
+    JSON.stringify(submittableData)
+  ).then(game => {
+    Turbolinks.visit(`${window.location.origin}/settings`);
+  }).catch(errorsResp => {
+    errors.value = errorsResp;
+    const submitButton = document.querySelector('.js-submit-button');
+    if (submitButton) {
+      submitButton.classList.add('js-submit-button-error');
+      setTimeout(() => {
+        submitButton.classList.remove('js-submit-button-error');
+      }, 2000);
+    }
+  });
+}
+
+function onDelete() {
+  VglistUtils.authenticatedFetch(
+    props.deletePath,
+    'DELETE'
+  ).then(game => {
+    Turbolinks.visit(`${window.location.origin}/settings`);
+  }).catch(errorsResp => {
+    errors.value = errorsResp;
+  });
+}
+
+// Reload the page on cancel.
+function onCancel() {
+  Turbolinks.visit(`${window.location.origin}/settings`);
+}
 </script>

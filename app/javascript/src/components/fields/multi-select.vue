@@ -9,81 +9,65 @@
         :inputId="inputId"
         label="name"
         :placeholder="placeholder"
-        @change="onChange"
+        @change="handleChange"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
-      ></v-select>
+      />
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { debounce, snakeCase } from 'lodash-es';
 
-export default defineComponent({
-  name: 'multi-select',
-  components: {
-    vSelect
-  },
-  props: {
-    label: {
-      type: String,
-      required: false
-    },
-    value: {
-      type: Array,
-      required: true
-    },
-    searchPathIdentifier: {
-      type: String,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      required: false
+interface Props {
+  label?: string;
+  value: any[];
+  searchPathIdentifier: string;
+  placeholder?: string;
+}
+
+const props = defineProps<Props>();
+
+const emit = defineEmits(['input']);
+
+// Reactive data
+const options = ref<any[]>([]);
+const searchPath = `${window.location.origin}/${props.searchPathIdentifier}/search.json`;
+
+// Methods
+function handleChange(selectedItems: any[]) {
+  emit('input', selectedItems);
+}
+
+/*
+ * @param {search}  String   Current search text
+ * @param {loading} Function Toggle loading class
+ */
+const onSearch = debounce((search: string, loading: (state: boolean) => void) => {
+  loading(true);
+  let searchUrl = new URL(searchPath);
+  searchUrl.searchParams.append('query', search);
+  // TODO: Add error handling.
+  fetch(searchUrl.toString(), {
+    headers: {
+      'Content-Type': 'application/json'
     }
-  },
-  emits: ['input'],
-  data: function() {
-    return {
-      options: [],
-      searchPath: `${window.location.origin}/${this.searchPathIdentifier}/search.json`
-    };
-  },
-  methods: {
-    /*
-     * @param {search}  String   Current search text
-     * @param {loading} Function Toggle loading class
-     */
-    onSearch: debounce(function(search, loading) {
-      loading(true);
-      let searchUrl = new URL(this.searchPath);
-      searchUrl.searchParams.append('query', search);
-      // TODO: Add error handling.
-      fetch(searchUrl.toString(), {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          return response.json();
-        })
-        .then(items => {
-          this.options = items;
-          loading(false);
-        });
-    }, 250),
-    onChange(selectedItems) {
-      this.$emit('input', selectedItems);
-    }
-  },
-  computed: {
-    inputId() {
-      return snakeCase(this.label);
-    }
-  }
+  })
+    .then(response => {
+      return response.json();
+    })
+    .then(items => {
+      options.value = items;
+      loading(false);
+    });
+}, 250);
+
+// Computed properties
+const inputId = computed(() => {
+  return snakeCase(props.label);
 });
 </script>

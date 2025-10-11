@@ -18,78 +18,63 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
 import SingleSelect from './fields/single-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
-import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import { range, reverse } from 'lodash-es';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'games-filters',
-  components: {
-    SingleSelect,
-    StaticSingleSelect
-  },
-  data: function() {
-    return {
-      platform: null,
-      year: null
-    };
-  },
-  methods: {
-    // Change the set platform on input, or remove it if it's deleted.
-    onPlatformInput(platform) {
-      let currentUrl = new URL(window.location.href);
-      let currentUrlParams = currentUrl.searchParams;
-      if (platform) {
-        currentUrlParams.set('platform_filter', platform.id);
-        Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
-      } else {
-        currentUrlParams.delete('platform_filter');
-        Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
-      }
-    },
-    onYearInput(year) {
-      let currentUrl = new URL(window.location.href);
-      let currentUrlParams = currentUrl.searchParams;
-      if (year) {
-        currentUrlParams.set('by_year', year);
-        Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
-      } else {
-        currentUrlParams.delete('by_year');
-        Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
-      }
-    }
-  },
-  // On creation, get the name of the platform if the platform
-  // filter is set.
-  created: function() {
-    let currentUrl = new URL(window.location.href);
-    let currentUrlParams = currentUrl.searchParams;
-    let platformId = currentUrlParams.get('platform_filter');
-    if (platformId) {
-      fetch(`/platforms/${platformId}.json`)
-        .then(response => {
-          return response.json();
-        })
-        .then(platform => {
-          this.platform = platform;
-        });
-    }
-    let byYear = currentUrlParams.get('by_year');
-    if (byYear) {
-      this.year = byYear;
-    }
-  },
-  computed: {
-    yearOptions() {
-      let currentYear = new Date().getFullYear();
-      // Create an array from 1950 to the current year + 2.
-      // (it's +3 because the range ends before the end number)
-      return reverse(range(1950, currentYear + 3));
-    }
+const platform = ref<{ id: string } | undefined>(undefined);
+const year = ref<string | undefined>(undefined);
+
+function onPlatformInput(newPlatform: { id: string } | undefined) {
+  const currentUrl = new URL(window.location.href);
+  const currentUrlParams = currentUrl.searchParams;
+  if (newPlatform) {
+    currentUrlParams.set('platform_filter', newPlatform.id);
+    Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
+  } else {
+    currentUrlParams.delete('platform_filter');
+    Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
   }
+}
+
+function onYearInput(newYear: string | undefined) {
+  const currentUrl = new URL(window.location.href);
+  const currentUrlParams = currentUrl.searchParams;
+  if (newYear) {
+    currentUrlParams.set('by_year', newYear);
+    Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
+  } else {
+    currentUrlParams.delete('by_year');
+    Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
+  }
+}
+
+onMounted(() => {
+  const currentUrl = new URL(window.location.href);
+  const currentUrlParams = currentUrl.searchParams;
+  const platformId = currentUrlParams.get('platform_filter');
+
+  if (platformId) {
+    fetch(`/platforms/${platformId}.json`)
+      .then(response => response.json())
+      .then(data => {
+        platform.value = data;
+      });
+  }
+
+  const byYear = currentUrlParams.get('by_year');
+  if (byYear) {
+    year.value = byYear;
+  }
+});
+
+const yearOptions = computed(() => {
+  const currentYear = new Date().getFullYear();
+  // Create an array from 1950 to the current year + 2.
+  // (it's +3 because the range ends before the end number)
+  return reverse(range(1950, currentYear + 3));
 });
 </script>

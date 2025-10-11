@@ -4,8 +4,6 @@ import webpack from "webpack";
 
 // Extracts CSS into .css file
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-// Removes exported JavaScript files from CSS-only entries
-import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
 
@@ -35,7 +33,6 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.SENTRY_DSN_JS': JSON.stringify(process.env.SENTRY_DSN_JS),
     }),
-    new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
@@ -68,7 +65,7 @@ const config = {
         ],
       },
       {
-        test: /\.([cm]?ts|tsx)$/,
+        test: /\.([cm]?ts)$/,
         exclude: /(node_modules)/,
         use: [
           {
@@ -77,11 +74,7 @@ const config = {
               jsc: {
                 parser: {
                   syntax: "typescript",
-                  tsx: true,
-                  decorators: true
-                },
-                transform: {
-                  decoratorMetadata: true
+                  tsx: false
                 }
               }
             },
@@ -93,7 +86,7 @@ const config = {
   },
   resolve: {
     // Add additional file types
-    extensions: ['.ts', '.vue', '.js', '.jsx', '.scss', '.css', '.min.css'],
+    extensions: ['.ts', '.vue', '.js', '.scss', '.css', '.min.css'],
   },
 }
 

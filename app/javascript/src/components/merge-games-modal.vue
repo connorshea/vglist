@@ -22,90 +22,83 @@
             :label="'Game'"
             v-model="gameA"
             :search-path-identifier="'games'"
-            :max-height="'150px'"
             @input="selectGame"
             :customOptionFunc="customOptionLabel"
           ></single-select>
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button @click="onSave" class="button is-primary js-submit-button" :disabled="!this.gameSelected">Submit</button>
+        <button @click="onSave" class="button is-primary js-submit-button" :disabled="!gameSelected">Submit</button>
         <button @click="onClose" class="button">Cancel</button>
       </footer>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue';
 import SingleSelect from './fields/single-select.vue';
 import VglistUtils from '../utils';
 import Turbolinks from 'turbolinks';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'merge-games-modal',
-  components: {
-    SingleSelect
-  },
-  props: {
-    game: {
-      type: Object,
-      required: true,
-      default: function() {
-        return {};
-      }
-    },
-    isActive: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: ['close'],
-  data() {
-    return {
-      errors: [],
-      gameSelected: false,
-      gameA: null
-    };
-  },
-  methods: {
-    onClose() {
-      this.$emit('close');
-    },
-    onSave() {
-      let gameAId = this.gameA.id;
-      let gameBId = this.game.id;
-      let mergePath = `/games/${gameAId}/merge/${gameBId}.json`;
-      VglistUtils.rawAuthenticatedFetch(
-        mergePath,
-        'POST'
-      ).then(response => {
-        // HTTP 301 response
-        if (response.redirected) {
-          Turbolinks.clearCache();
-          Turbolinks.visit(response.url);
-        // If it's not a redirect, check it for errors and display them.
-        } else {
-          response.json().then(json => {
-            this.errors = json.errors
-          });
-          let submitButton = document.querySelector('.js-submit-button');
-          submitButton.classList.add('js-submit-button-error');
-          setTimeout(() => {
-            submitButton.classList.remove('js-submit-button-error');
-          }, 2000);
-        }
-      });
-    },
-    selectGame() {
-      this.gameSelected = true;
-    },
-    // Include the vglist ID in the dropdown to help distinguish between games
-    // that have the same name.
-    customOptionLabel(item) {
-      item.name = `${item.name} (${item.id})`;
-      return item;
-    }
-  }
+interface Props {
+  game: Record<string, any>;
+  isActive: boolean;
+}
+
+// TODO: replace withDefaults after Vue 3.5 upgrade.
+// https://vuejs.org/guide/components/props.html#reactive-props-destructure
+const props = withDefaults(defineProps<Props>(), {
+  game: () => ({})
 });
+
+const emit = defineEmits(['close', 'save']);
+
+const errors = ref<string[]>([]);
+const gameSelected = ref(false);
+const gameA = ref<Record<string, any> | undefined>(undefined);
+
+function onClose() {
+  emit('close');
+}
+
+function onSave() {
+  const gameAId = gameA.value?.id;
+  const gameBId = props.game.id;
+  const mergePath = `/games/${gameAId}/merge/${gameBId}.json`;
+  
+  VglistUtils.rawAuthenticatedFetch(
+    mergePath,
+    'POST'
+  ).then(response => {
+    // HTTP 301 response
+    if (response.redirected) {
+      Turbolinks.clearCache();
+      Turbolinks.visit(response.url);
+    // If it's not a redirect, check it for errors and display them.
+    } else {
+      response.json().then(json => {
+        errors.value = json.errors;
+      });
+      const submitButton = document.querySelector('.js-submit-button');
+      if (submitButton) {
+        submitButton.classList.add('js-submit-button-error');
+        setTimeout(() => {
+          submitButton.classList.remove('js-submit-button-error');
+        }, 2000);
+      }
+    }
+  });
+}
+
+function selectGame() {
+  gameSelected.value = true;
+}
+
+// Include the vglist ID in the dropdown to help distinguish between games
+// that have the same name.
+function customOptionLabel(item: Record<string, any>) {
+  item.name = `${item.name} (${item.id})`;
+  return item;
+}
 </script>

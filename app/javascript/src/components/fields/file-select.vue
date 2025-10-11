@@ -17,39 +17,36 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 
-export default defineComponent({
-  props: {
-    value: File,
-    label: {
-      type: String,
-      required: false
-    },
-    fileClass: {
-      type: String,
-      required: false,
-      default: 'game-cover'
-    }
-  },
-  data() {
-    return {
-      image: null
-    };
-  },
-  methods: {
-    handleFileChange(e) {
-      let file = e.target.files[0];
-      var reader = new FileReader();
-      reader.onloadend = () => {
-        this.image = reader.result;
-      };
-      reader.readAsDataURL(file);
+interface Props {
+  value?: File;
+  label?: string;
+  fileClass?: string;
+}
 
-      // Whenever the file changes, emit the 'input' event with the file data.
-      this.$emit('input', file);
-    }
-  }
+const props = withDefaults(defineProps<Props>(), {
+  fileClass: 'game-cover'
 });
+
+const emit = defineEmits(['input']);
+
+const image = ref<string | null>(null);
+
+const handleFileChange = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      image.value = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+
+    // Whenever the file changes, emit the 'input' event with the file data.
+    emit('input', file);
+  }
+};
 </script>
