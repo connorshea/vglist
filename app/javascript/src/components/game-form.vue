@@ -73,8 +73,6 @@
     ></number-field>
 
     <multi-select-generic
-      :form-class="formData.class"
-      :attribute="formData.steamAppIds.attribute"
       :label="formData.steamAppIds.label"
       :v-select-label="'app_id'"
       v-model="game.steamAppIds"
@@ -132,7 +130,8 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue';
 import TextArea from './fields/text-area.vue';
 import TextField from './fields/text-field.vue';
 import SingleSelect from './fields/single-select.vue';
@@ -145,339 +144,254 @@ import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
 import { difference } from 'lodash-es';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'game-form',
-  components: {
-    TextArea,
-    TextField,
-    NumberField,
-    SingleSelect,
-    MultiSelect,
-    MultiSelectGeneric,
-    FileSelect,
-    DateField
-  },
-  props: {
-    name: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    releaseDate: {
-      type: Date,
-      required: false
-    },
-    genres: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    engines: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    developers: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    publishers: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    platforms: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    series: {
-      type: Object,
-      required: false,
-      default: function() {
-        return { name: '' };
-      }
-    },
-    steamAppIds: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    epicGamesStoreId: {
-      type: String,
-      required: false
-    },
-    gogId: {
-      type: String,
-      required: false
-    },
-    igdbId: {
-      type: String,
-      required: false
-    },
-    wikidataId: {
-      type: Number,
-      required: false
-    },
-    pcgamingwikiId: {
-      type: String,
-      required: false
-    },
-    mobygamesId: {
-      type: Number,
-      required: false
-    },
-    giantbombId: {
-      type: String,
-      required: false
-    },
-    submitPath: {
-      type: String,
-      required: true
-    },
-    railsDirectUploadsPath: {
-      type: String,
-      required: true
-    },
-    successPath: {
-      type: String,
-      required: false
-    },
-    cancelPath: {
-      type: String,
-      required: true
-    },
-    create: {
-      type: Boolean,
-      required: true
-    }
-  },
-  data() {
-    return {
-      errors: [],
-      game: {
-        name: this.$props.name,
-        releaseDate: this.$props.releaseDate,
-        genres: this.$props.genres,
-        engines: this.$props.engines,
-        developers: this.$props.developers,
-        publishers: this.$props.publishers,
-        platforms: this.$props.platforms,
-        series: this.$props.series,
-        steamAppIds: this.$props.steamAppIds,
-        epicGamesStoreId: this.$props.epicGamesStoreId,
-        gogId: this.$props.gogId,
-        igdbId: this.$props.igdbId,
-        wikidataId: this.$props.wikidataId,
-        pcgamingwikiId: this.$props.pcgamingwikiId,
-        mobygamesId: this.$props.mobygamesId,
-        giantbombId: this.$props.giantbombId,
-        cover: this.$props.cover,
-        coverBlob: this.$props.coverBlob
-      },
-      formData: {
-        class: 'game',
-        cover: {
-          label: 'Cover'
-        },
-        name: {
-          label: 'Game title',
-          attribute: 'name'
-        },
-        releaseDate: {
-          label: 'Release Date',
-          attribute: 'release_date'
-        },
-        genres: {
-          label: 'Genres'
-        },
-        engines: {
-          label: 'Engines'
-        },
-        developers: {
-          label: 'Developers'
-        },
-        publishers: {
-          label: 'Publishers'
-        },
-        platforms: {
-          label: 'Platforms'
-        },
-        series: {
-          label: 'Series'
-        },
-        steamAppIds: {
-          label: 'Steam Application IDs',
-          attribute: 'steam_app_ids'
-        },
-        epicGamesStoreId: {
-          label: 'Epic Games Store ID',
-          attribute: 'epic_games_store_id'
-        },
-        gogId: {
-          label: 'GOG.com ID',
-          attribute: 'gog_id'
-        },
-        igdbId: {
-          label: 'IGDB ID',
-          attribute: 'igdb_id'
-        },
-        wikidataId: {
-          label: 'Wikidata ID',
-          attribute: 'wikidata_id'
-        },
-        pcgamingwikiId: {
-          label: 'PCGamingWiki ID',
-          attribute: 'pcgamingwiki_id'
-        },
-        mobygamesId: {
-          label: 'MobyGames ID',
-          attribute: 'mobygames_id'
-        },
-        giantbombId: {
-          label: 'Giant Bomb ID',
-          attribute: 'giantbomb_id'
-        }
-      }
-    };
-  },
-  methods: {
-    onChange(file) {
-      this.uploadFile(file);
-    },
-    uploadFile(file) {
-      const url = this.railsDirectUploadsPath;
-      const upload = new DirectUpload(file, url, {
-        directUploadWillStoreFileWithXHR: (xhr) => {
-          // Use this workaround to make sure that Direct Upload-ed images are
-          // uploaded with the correct header. Otherwise they will end up being
-          // private files.
-          xhr.setRequestHeader('x-amz-acl', 'public-read');
-        }
-      });
+interface Props {
+  name?: string;
+  releaseDate?: Date;
+  genres?: Array<any>;
+  engines?: Array<any>;
+  developers?: Array<any>;
+  publishers?: Array<any>;
+  platforms?: Array<any>;
+  series?: Record<string, any>;
+  steamAppIds?: Array<any>;
+  epicGamesStoreId?: string;
+  gogId?: string;
+  igdbId?: string;
+  wikidataId?: number;
+  pcgamingwikiId?: string;
+  mobygamesId?: number;
+  giantbombId?: string;
+  submitPath: string;
+  railsDirectUploadsPath: string;
+  successPath?: string;
+  cancelPath: string;
+  create: boolean;
+  cover?: any;
+  coverBlob?: string;
+}
 
-      upload.create((error, blob) => {
-        if (error) {
-          // TODO: Handle this error.
-          console.log(error);
-        } else {
-          this.game.coverBlob = blob.signed_id;
-        }
-      });
-    },
-    onSubmit() {
-      let genreIds = Array.from(
-        this.game.genres,
-        (genre: { id: String }) => genre.id
-      );
-      let engineIds = Array.from(
-        this.game.engines,
-        (engine: { id: String }) => engine.id
-      );
-      let developerIds = Array.from(
-        this.game.developers,
-        (developer: { id: String }) => developer.id
-      );
-      let publisherIds = Array.from(
-        this.game.publishers,
-        (publisher: { id: String }) => publisher.id
-      );
-      let platformIds = Array.from(
-        this.game.platforms,
-        (platform: { id: String }) => platform.id
-      );
-
-      let steamAppIds = [];
-      let appIdDifference = difference(
-        this.$props.steamAppIds,
-        this.game.steamAppIds
-      );
-      // These can be either the steamAppId itself or the full record with ID and everything.
-      // If its just been added to the select, it's an integer.
-      this.game.steamAppIds.forEach((steamAppIdRecordOrInteger) => {
-        if (steamAppIdRecordOrInteger.id !== undefined) {
-          steamAppIds.push({ id: steamAppIdRecordOrInteger.id, app_id: steamAppIdRecordOrInteger.app_id });
-        } else {
-          steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
-        }
-      });
-      appIdDifference.forEach((appId: any) => {
-        steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
-      });
-
-      let submittableData = {
-        game: {
-          name: this.game.name,
-          release_date: this.game.releaseDate,
-          genre_ids: genreIds,
-          engine_ids: engineIds,
-          developer_ids: developerIds,
-          publisher_ids: publisherIds,
-          platform_ids: platformIds,
-          steam_app_ids_attributes: steamAppIds,
-          epic_games_store_id: this.game.epicGamesStoreId,
-          gog_id: this.game.gogId,
-          igdb_id: this.game.igdbId,
-          wikidata_id: this.game.wikidataId,
-          pcgamingwiki_id: this.game.pcgamingwikiId,
-          mobygames_id: this.game.mobygamesId,
-          giantbomb_id: this.game.giantbombId
-        }
-      };
-
-      // If the attribute's value is an empty string, replace it with null so
-      // it's nullified when sent to the backend.
-      ['epic_games_store_id', 'gog_id', 'igdb_id', 'wikidata_id', 'pcgamingwiki_id', 'mobygames_id', 'giantbomb_id'].forEach(attr => {
-        if (submittableData['game'][attr] === '') {
-          submittableData['game'][attr] = null;
-        }
-      });
-
-      if (this.game.series) {
-        submittableData['game']['series_id'] = this.game.series.id;
-      } else {
-        submittableData['game']['series_id'] = null;
-      }
-
-      if (this.game.coverBlob) {
-        submittableData['game']['cover'] = this.game.coverBlob;
-      }
-
-      VglistUtils.authenticatedFetch(
-        this.submitPath,
-        this.create ? 'POST' : 'PUT',
-        JSON.stringify(submittableData)
-      ).then(game => {
-          if (this.create) {
-            Turbolinks.visit(`${window.location.origin}/games/${game.id}`);
-          } else {
-            Turbolinks.visit(this.successPath);
-          }
-        })
-        .catch(errors => {
-          this.errors = errors;
-          let submitButton = document.querySelector('.js-submit-button');
-          submitButton.classList.add('js-submit-button-error');
-          setTimeout(() => {
-            submitButton.classList.remove('js-submit-button-error');
-          }, 2000);
-        });
-    }
-  }
+const props = withDefaults(defineProps<Props>(), {
+  name: '',
+  genres: () => [],
+  engines: () => [],
+  developers: () => [],
+  publishers: () => [],
+  platforms: () => [],
+  series: () => ({ name: '' }),
+  steamAppIds: () => []
 });
+
+const errors = ref<string[]>([]);
+
+const game = ref({
+  name: props.name,
+  releaseDate: props.releaseDate ? props.releaseDate.toString() : undefined,
+  genres: props.genres,
+  engines: props.engines,
+  developers: props.developers,
+  publishers: props.publishers,
+  platforms: props.platforms,
+  series: props.series,
+  steamAppIds: props.steamAppIds,
+  epicGamesStoreId: props.epicGamesStoreId,
+  gogId: props.gogId,
+  igdbId: props.igdbId,
+  wikidataId: props.wikidataId?.toString(),
+  pcgamingwikiId: props.pcgamingwikiId,
+  mobygamesId: props.mobygamesId?.toString(),
+  giantbombId: props.giantbombId,
+  cover: props.cover,
+  coverBlob: props.coverBlob
+});
+
+const formData = {
+  class: 'game',
+  cover: {
+    label: 'Cover'
+  },
+  name: {
+    label: 'Game title',
+    attribute: 'name'
+  },
+  releaseDate: {
+    label: 'Release Date',
+    attribute: 'release_date'
+  },
+  genres: {
+    label: 'Genres'
+  },
+  engines: {
+    label: 'Engines'
+  },
+  developers: {
+    label: 'Developers'
+  },
+  publishers: {
+    label: 'Publishers'
+  },
+  platforms: {
+    label: 'Platforms'
+  },
+  series: {
+    label: 'Series'
+  },
+  steamAppIds: {
+    label: 'Steam Application IDs',
+  },
+  epicGamesStoreId: {
+    label: 'Epic Games Store ID',
+    attribute: 'epic_games_store_id'
+  },
+  gogId: {
+    label: 'GOG.com ID',
+    attribute: 'gog_id'
+  },
+  igdbId: {
+    label: 'IGDB ID',
+    attribute: 'igdb_id'
+  },
+  wikidataId: {
+    label: 'Wikidata ID',
+    attribute: 'wikidata_id'
+  },
+  pcgamingwikiId: {
+    label: 'PCGamingWiki ID',
+    attribute: 'pcgamingwiki_id'
+  },
+  mobygamesId: {
+    label: 'MobyGames ID',
+    attribute: 'mobygames_id'
+  },
+  giantbombId: {
+    label: 'Giant Bomb ID',
+    attribute: 'giantbomb_id'
+  }
+};
+
+function onChange(file: File) {
+  uploadFile(file);
+}
+
+function uploadFile(file: File) {
+  const url = props.railsDirectUploadsPath;
+  const upload = new DirectUpload(file, url, {
+    directUploadWillStoreFileWithXHR: (xhr) => {
+      // Use this workaround to make sure that Direct Upload-ed images are
+      // uploaded with the correct header. Otherwise they will end up being
+      // private files.
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
+    }
+  });
+
+  upload.create((error, blob) => {
+    if (error) {
+      // TODO: Handle this error.
+      console.log(error);
+    } else if (blob) {
+      game.value.coverBlob = blob.signed_id;
+    }
+  });
+}
+
+function onSubmit() {
+  const genreIds = Array.from(
+    game.value.genres,
+    (genre: { id: string }) => genre.id
+  );
+  const engineIds = Array.from(
+    game.value.engines,
+    (engine: { id: string }) => engine.id
+  );
+  const developerIds = Array.from(
+    game.value.developers,
+    (developer: { id: string }) => developer.id
+  );
+  const publisherIds = Array.from(
+    game.value.publishers,
+    (publisher: { id: string }) => publisher.id
+  );
+  const platformIds = Array.from(
+    game.value.platforms,
+    (platform: { id: string }) => platform.id
+  );
+
+  const steamAppIds: any[] = [];
+  const appIdDifference = difference(
+    props.steamAppIds,
+    game.value.steamAppIds
+  );
+  // These can be either the steamAppId itself or the full record with ID and everything.
+  // If its just been added to the select, it's an integer.
+  game.value.steamAppIds.forEach((steamAppIdRecordOrInteger: any) => {
+    if (steamAppIdRecordOrInteger.id !== undefined) {
+      steamAppIds.push({ id: steamAppIdRecordOrInteger.id, app_id: steamAppIdRecordOrInteger.app_id });
+    } else {
+      steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
+    }
+  });
+  appIdDifference.forEach((appId: any) => {
+    steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
+  });
+
+  const submittableData: any = {
+    game: {
+      name: game.value.name,
+      release_date: game.value.releaseDate,
+      genre_ids: genreIds,
+      engine_ids: engineIds,
+      developer_ids: developerIds,
+      publisher_ids: publisherIds,
+      platform_ids: platformIds,
+      steam_app_ids_attributes: steamAppIds,
+      epic_games_store_id: game.value.epicGamesStoreId,
+      gog_id: game.value.gogId,
+      igdb_id: game.value.igdbId,
+      wikidata_id: game.value.wikidataId,
+      pcgamingwiki_id: game.value.pcgamingwikiId,
+      mobygames_id: game.value.mobygamesId,
+      giantbomb_id: game.value.giantbombId
+    }
+  };
+
+  // If the attribute's value is an empty string, replace it with null so
+  // it's nullified when sent to the backend.
+  ['epic_games_store_id', 'gog_id', 'igdb_id', 'wikidata_id', 'pcgamingwiki_id', 'mobygames_id', 'giantbomb_id'].forEach(attr => {
+    if (submittableData.game[attr] === '') {
+      submittableData.game[attr] = null;
+    }
+  });
+
+  if (game.value.series) {
+    submittableData.game.series_id = game.value.series.id;
+  } else {
+    submittableData.game.series_id = null;
+  }
+
+  if (game.value.coverBlob) {
+    submittableData.game.cover = game.value.coverBlob;
+  }
+
+  VglistUtils.authenticatedFetch(
+    props.submitPath,
+    props.create ? 'POST' : 'PUT',
+    JSON.stringify(submittableData)
+  ).then((gameResponse: any) => {
+      if (props.create) {
+        Turbolinks.visit(`${window.location.origin}/games/${gameResponse.id}`);
+      } else {
+        Turbolinks.visit(props.successPath || '/');
+      }
+    })
+    .catch(errorsResp => {
+      errors.value = errorsResp;
+      const submitButton = document.querySelector('.js-submit-button');
+      if (submitButton) {
+        submitButton.classList.add('js-submit-button-error');
+        setTimeout(() => {
+          submitButton.classList.remove('js-submit-button-error');
+        }, 2000);
+      }
+    });
+}
 </script>

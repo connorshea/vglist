@@ -17,9 +17,9 @@
 );
 
 @forward 'bulma/sass/components' with (
-  $navbar-item-color: #fff,
   // Ensure the text is white.
-  $navbar-item-color-l: 100,
+  $navbar-item-color-l: 100%,
+  $navbar-item-color: hsl(0, 0%, 100%),
   $navbar-burger-color: #fff,
   $navbar-background-color: transparent,
 

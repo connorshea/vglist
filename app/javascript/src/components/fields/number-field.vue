@@ -13,73 +13,54 @@
         v-bind:name="numberFieldName"
         v-bind:id="numberFieldId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', $event.target.value)"
+        v-on:input="handleInput"
+        :style="{ width: width ?? '100%' }"
       />
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'number-field',
-  props: {
-    formClass: {
-      type: String,
-      required: true
-    },
-    fieldClass: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    attribute: {
-      type: String,
-      required: true
-    },
-    label: {
-      type: String,
-      required: false
-    },
-    placeholder: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    value: {
-      type: [Number, String],
-      required: false,
-      default: ''
-    },
-    required: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    min: {
-      type: Number,
-      required: false,
-      default: 0
-    },
-    max: {
-      type: Number,
-      required: false
-    }
-  },
-  emits: ['input'],
-  data() {
-    return {
-      dataValue: this.value
-    };
-  },
-  computed: {
-    numberFieldName: function() {
-      return `${this.formClass}[${this.attribute}]`;
-    },
-    numberFieldId: function() {
-      return `${this.formClass}_${this.attribute}`;
-    }
-  }
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue';
+
+interface Props {
+  formClass: string;
+  fieldClass?: string;
+  attribute: string;
+  label?: string;
+  placeholder?: string;
+  value?: number | string;
+  required?: boolean;
+  min?: number;
+  max?: number;
+  width?: string;
+}
+
+// TODO: replace withDefaults after Vue 3.5 upgrade.
+// https://vuejs.org/guide/components/props.html#reactive-props-destructure
+const props = withDefaults(defineProps<Props>(), {
+  fieldClass: '',
+  placeholder: '',
+  value: '',
+  required: false,
+  min: 0
 });
+
+const emit = defineEmits(['input']);
+
+const dataValue = ref(props.value);
+
+// Handle input events with proper typing
+function handleInput(event: Event) {
+  const target = event.target as HTMLInputElement;
+  emit('input', target.value);
+}
+
+watch(() => props.value, (newVal) => {
+  dataValue.value = newVal;
+});
+
+const numberFieldName = computed(() => `${props.formClass}[${props.attribute}]`);
+const numberFieldId = computed(() => `${props.formClass}_${props.attribute}`);
 </script>

@@ -27,7 +27,7 @@ export default class VglistUtils {
    * @return {Promise<Response>} A promise that resolves to the response.
    */
   static async rawAuthenticatedFetch(route: string, method: string, body: string|null = null): Promise<Response> {
-    let requestBody : RequestInit = {
+    let requestBody: RequestInit = {
       method: method,
       headers: {
         'Content-Type': 'application/json',

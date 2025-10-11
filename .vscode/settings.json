@@ -1,9 +1,3 @@
 {
-  "ruby.lint": {
-    "rubocop": {
-      "useBundler": true // enable rubocop via bundler
-    }
-  },
-  "ruby.format": "rubocop",
-  "typescript.experimental.useTsgo": false
+  "files.insertFinalNewline": true
 }

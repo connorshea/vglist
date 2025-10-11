@@ -24,8 +24,7 @@
     "vue-loader": "^15.11",
     "vue-select": "^3.20.4",
     "webpack": "^5.102.1",
-    "webpack-cli": "^6.0.1",
-    "webpack-remove-empty-scripts": "^1.1.1"
+    "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -35,11 +34,15 @@
     "@types/vue-select": "^3.16.8",
     "graphql": "^16.11.0",
     "graphql-schema-linter": "^3.0.1",
-    "prettier": "3.6.2"
+    "prettier": "3.6.2",
+    "vue-tsc": "~3.0.9"
   },
   "scripts": {
     "prettier": "prettier --write './app/javascript/**/*.{js,ts,vue,scss}'",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "typecheck": "tsc --noEmit",
+    "typecheck:vue": "vue-tsc --noEmit",
+    "typecheck:full": "yarn run typecheck && yarn run typecheck:vue"
   },
   "browserslist": [
     "baseline widely available"

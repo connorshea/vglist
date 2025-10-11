@@ -9,24 +9,20 @@
         :placeholder="'Rating (out of 100)'"
         :required="false"
         :max="100"
+        :width="'200px'"
         v-model="updateData.rating"
       ></number-field>
       <static-single-select
         :placeholder="'Completion Status'"
         :grandparent-class="'field mb-0 mr-5'"
         v-model="updateData.completion_status"
-        :options="formattedCompletionStatuses"
+        :options="FORMATTED_COMPLETION_STATUSES"
       ></static-single-select>
-      <multi-select
-        :placeholder="'Stores'"
-        v-model="updateData.stores"
-        :search-path-identifier="'stores'"
-      ></multi-select>
     </div>
     <div class="level-right">
       <button
         class="button is-fullwidth-mobile mr-5 mr-0-mobile"
-        @click="$emit('closeEditBar')"
+        @click="closeEditBar"
       >Cancel</button>
       <button
         class="button is-fullwidth-mobile is-primary mr-5 mr-0-mobile"
@@ -37,123 +33,100 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import VglistUtils from '../utils';
 import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
-import MultiSelect from './fields/multi-select.vue';
-import { defineComponent } from 'vue';
+import { computed, reactive } from 'vue';
 
-export default defineComponent({
-  name: 'library-edit-bar',
-  components: {
-    NumberField,
-    StaticSingleSelect,
-    MultiSelect
-  },
-  props: {
-    gamePurchases: {
-      type: Array,
-      required: true
-    }
-  },
-  emits: ['closeEditBar'],
-  data: function() {
-    return {
-      updateData: {
-        ids: [],
-        completion_status: null,
-        rating: null,
-        stores: []
-      },
-      completionStatuses: {
-        unplayed: 'Unplayed',
-        in_progress: 'In Progress',
-        paused: 'Paused',
-        dropped: 'Dropped',
-        completed: 'Completed',
-        fully_completed: '100% Completed',
-        not_applicable: 'N/A'
-      }
-    };
-  },
-  methods: {
-    updateGames(this: any): void {
-      // Clear the array first.
-      this.updateData['ids'] = [];
-      this.gamePurchases.forEach(gamePurchase => {
-        this.updateData['ids'].push(gamePurchase.id);
-      });
+interface Props {
+  gamePurchases: any[];
+}
 
-      if (this.updateData['rating'] === null) {
-        delete this.updateData['rating'];
-      }
+const props = defineProps<Props>();
 
-      if (this.updateData['stores'].length !== 0) {
-        delete this.updateData['stores'];
-      }
+const emit = defineEmits(['closeEditBar']);
 
-      // Clone the object before we mess with the values.
-      // This prevents the values in the edit bar from changing when these
-      // values are changed.
-      let updateData = this.updateData;
-
-      if (updateData['completion_status'] !== null) {
-        updateData['completion_status'] = updateData['completion_status']['value'];
-      }
-
-      if (updateData['stores'].length !== 0) {
-        updateData['store_ids'] = updateData['stores'].map(store => store.id);
-        delete updateData['stores'];
-      }
-
-      VglistUtils.rawAuthenticatedFetch(
-        '/game_purchases/bulk_update.json',
-        'POST',
-        JSON.stringify(updateData)
-      ).then(response => {
-        if (response.ok) {
-          // Redirects to self.
-          Turbolinks.visit(window.location.href);
-        } else {
-          console.log('Add error handling, doofus.');
-        }
-      });
-    }
-  },
-  computed: {
-    selectedGamesString(): string {
-      let gpLength = this.gamePurchases.length;
-      return `${gpLength} game${gpLength > 1 ? 's' : ''} selected`;
-    },
-    updateButtonActive(): boolean {
-      if (Object.keys(this.updateData).length === 1) {
-        return false;
-      }
-
-      let returnBool = false;
-
-      // Check if rating, completion status, or stores have values.
-      // If they do, return true. Otherwise, return false.
-      ['rating', 'completion_status', 'stores'].forEach(attribute => {
-        if (
-          typeof this.updateData[attribute] !== 'undefined' &&
-          this.updateData[attribute] !== '' &&
-          this.updateData[attribute] !== null &&
-          this.updateData[attribute].length !== 0
-        ) {
-          returnBool = true;
-        }
-      });
-
-      return returnBool;
-    },
-    formattedCompletionStatuses(): any {
-      return Object.entries(this.completionStatuses).map(status => {
-        return { label: status[1], value: status[0] };
-      });
-    }
-  }
+// Reactive data
+const updateData = reactive({
+  ids: [] as number[],
+  completion_status: null as any,
+  rating: undefined as number | string | undefined,
 });
+
+// Methods
+function closeEditBar() {
+  emit('closeEditBar');
+}
+
+function updateGames(): void {
+  // Reset the array to the currently-selected gamePurchases.
+  updateData.ids = props.gamePurchases.map(gp => gp.id);
+
+  if (updateData.rating === undefined || updateData.rating === null) {
+    delete (updateData as any).rating;
+  }
+
+  // Clone the object before we mess with the values.
+  // This prevents the values in the edit bar from changing when these
+  // values are changed.
+  let updateDataCopy = { ...updateData };
+
+  if (updateDataCopy.completion_status !== null) {
+    (updateDataCopy as any).completion_status = updateDataCopy.completion_status.value;
+  }
+
+  VglistUtils.rawAuthenticatedFetch(
+    '/game_purchases/bulk_update.json',
+    'POST',
+    JSON.stringify(updateDataCopy)
+  ).then(response => {
+    if (response.ok) {
+      // Redirects to self.
+      Turbolinks.visit(window.location.href);
+    } else {
+      console.log('Add error handling, doofus.');
+    }
+  });
+}
+
+// Computed properties
+const selectedGamesString = computed((): string => {
+  let gpLength = props.gamePurchases.length;
+  return `${gpLength} game${gpLength > 1 ? 's' : ''} selected`;
+});
+
+const updateButtonActive = computed((): boolean => {
+  if (Object.keys(updateData).length === 1) {
+    return false;
+  }
+
+  let returnBool = false;
+
+  // Check if rating or completion status have values.
+  // If they do, return true. Otherwise, return false.
+  (['rating', 'completion_status'] as const).forEach(attribute => {
+    const value = updateData[attribute];
+    if (
+      value !== undefined &&
+      value !== '' &&
+      value !== null
+    ) {
+      returnBool = true;
+    }
+  });
+
+  return returnBool;
+});
+
+const FORMATTED_COMPLETION_STATUSES = [
+  { label: 'Unplayed', value: 'unplayed' },
+  { label: 'In Progress', value: 'in_progress' },
+  { label: 'Paused', value: 'paused' },
+  { label: 'Dropped', value: 'dropped' },
+  { label: 'Completed', value: 'completed' },
+  { label: '100% Completed', value: 'fully_completed' },
+  { label: 'N/A', value: 'not_applicable' },
+];
 </script>

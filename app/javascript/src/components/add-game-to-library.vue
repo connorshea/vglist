@@ -5,7 +5,7 @@
       @click="editGameInLibrary()"
       class="button is-fullwidth is-primary mr-5 mr-0-mobile"
     >
-      <span class="icon" v-html="this.pencilIcon"></span>
+      <span class="icon" v-html="pencilIcon"></span>
       <span>Edit game in library</span>
     </button>
     <button
@@ -13,7 +13,7 @@
       @click="removeGameFromLibrary()"
       class="button is-fullwidth is-danger mr-5 mr-0-mobile mt-10"
     >
-      <span class="icon" v-html="this.removeIcon"></span>
+      <span class="icon" v-html="removeIcon"></span>
       <span>Remove from library</span>
     </button>
     <button
@@ -21,7 +21,7 @@
       @click="addGameToLibrary()"
       class="button is-fullwidth is-primary mr-5 mr-0-mobile"
     >
-      <span class="icon" v-html="this.plusIcon"></span>
+      <span class="icon" v-html="plusIcon"></span>
       <span>Add to library</span>
     </button>
 
@@ -31,140 +31,124 @@
       :gameModalState="gameModalState"
       :userId="userId"
       v-bind="mutableGamePurchase"
-      v-on:close="deactivateModal"
-      v-on:closeAndRefresh="closeAndRefresh"
-      v-on:create="onSubmit"
-    ></game-modal>
+      @close="deactivateModal"
+      @closeAndRefresh="closeAndRefresh"
+      @create="onSubmit"
+    />
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import GameModal from './game-modal.vue';
 import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
-import { defineComponent } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
-export default defineComponent({
-  name: 'add-game-to-library',
-  components: {
-    GameModal
-  },
-  props: {
-    userId: {
-      type: Number,
-      required: true
-    },
-    gameId: {
-      type: Number,
-      required: true
-    },
-    gamePurchaseExists: {
-      type: Boolean,
-      required: true
-    },
-    gamePurchaseId: {
-      type: Number,
-      required: false
-    },
-    pencilIcon: {
-      type: String,
-      required: true
-    },
-    plusIcon: {
-      type: String,
-      required: true
-    },
-    removeIcon: {
-      type: String,
-      required: true
+interface Props {
+  userId: number;
+  gameId: number;
+  gamePurchaseExists: boolean;
+  gamePurchaseId?: number;
+  pencilIcon: string;
+  plusIcon: string;
+  removeIcon: string;
+}
+
+const props = defineProps<Props>();
+
+// Reactive data
+const mutableGamePurchase = ref<any>({});
+const isModalActive = ref(false);
+const gameModalState = computed(() => props.gamePurchaseExists ? 'update' : 'createWithGame');
+
+// Methods
+// TODO: Add a proper type here?
+function activateModal(game: any = {}) {
+  document.documentElement.classList.add('is-clipped');
+
+  // TODO: Cursed, do this better.
+  if (Object.keys(mutableGamePurchase.value).length === 0) {
+    mutableGamePurchase.value = { game: game };
+  }
+  isModalActive.value = true;
+}
+
+function deactivateModal() {
+  document.documentElement.classList.remove('is-clipped');
+  isModalActive.value = false;
+}
+
+function closeAndRefresh() {
+  deactivateModal();
+}
+
+async function addGameToLibrary() {
+  const response = await fetch(`/games/${props.gameId}.json`, {
+    headers: {
+      'Content-Type': 'application/json'
     }
-  },
-  data: function() {
-    return {
-      mutableGamePurchase: {},
-      isModalActive: false,
-      gameModalState: this.gamePurchaseExists ? 'update' : 'createWithGame'
-    };
-  },
-  methods: {
-    activateModal(game = {}) {
-      let html = document.querySelector('html');
-      html.classList.add('is-clipped');
+  });
 
-      if (Object.keys(this.mutableGamePurchase).length === 0) {
-        this.mutableGamePurchase = { game: game };
+  if (!response.ok) {
+    // TODO: Handle error, need to render an error toast or something.
+    return;
+  }
+
+  const game = await response.json();
+  activateModal(game);
+}
+
+function editGameInLibrary() {
+  // TODO: why does this work...
+  activateModal();
+}
+
+async function removeGameFromLibrary() {
+  let removeGameFromLibraryPath = `/games/${props.gameId}/remove_game_from_library`;
+
+  const headers: HeadersInit = {
+    Accept: 'application/json',
+    'X-CSRF-Token': Rails.csrfToken()!
+  };
+
+  const response = await fetch(removeGameFromLibraryPath, {
+    method: 'DELETE',
+    headers,
+    credentials: 'same-origin'
+  });
+
+  if (response.ok) {
+    Turbolinks.visit(window.location.href);
+  } else {
+    // Handle error
+    console.error('Failed to remove game from library');
+  }
+}
+
+function onSubmit() {
+  Turbolinks.visit(window.location.href);
+}
+
+// Lifecycle
+onMounted(() => {
+  if (props.gamePurchaseId) {
+    // TODO: Make this use async/await, although I'm not 100% sure if that's allowed here.
+    fetch(`/game_purchases/${props.gamePurchaseId}.json`, {
+      headers: {
+        'Content-Type': 'application/json'
       }
-      this.isModalActive = true;
-    },
-    deactivateModal() {
-      let html = document.querySelector('html');
-      html.classList.remove('is-clipped');
-
-      this.isModalActive = false;
-    },
-    closeAndRefresh() {
-      this.deactivateModal();
-    },
-    addGameToLibrary() {
-      fetch(`/games/${this.gameId}.json`, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          });
-        })
-        .then(game => {
-          this.activateModal(game);
+    })
+      .then(response => {
+        return response.json().then(json => {
+          if (response.ok) {
+            return Promise.resolve(json);
+          }
+          return Promise.reject(json);
         });
-    },
-    editGameInLibrary() {
-      this.activateModal();
-    },
-    removeGameFromLibrary() {
-      let removeGameFromLibraryPath = `/games/${this.gameId}/remove_game_from_library`;
-
-      fetch(removeGameFromLibraryPath, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-Token': Rails.csrfToken(),
-          Accept: 'application/json'
-        },
-        credentials: 'same-origin'
-      }).then(response => {
-        if (response.ok) {
-          Turbolinks.visit(window.location.href);
-        }
+      })
+      .then(gamePurchase => {
+        mutableGamePurchase.value = gamePurchase;
       });
-    },
-    onSubmit() {
-      Turbolinks.visit(window.location.href);
-    }
-  },
-  created: function() {
-    if (this.gamePurchaseId) {
-      fetch(`/game_purchases/${this.gamePurchaseId}.json`, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          return response.json().then(json => {
-            if (response.ok) {
-              return Promise.resolve(json);
-            }
-            return Promise.reject(json);
-          });
-        })
-        .then(gamePurchase => {
-          this.mutableGamePurchase = gamePurchase;
-        });
-    }
   }
 });
 </script>
