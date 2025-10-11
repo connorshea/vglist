@@ -37,7 +37,7 @@ export default defineComponent({
       default: ''
     },
     value: {
-      type: Object,
+      type: [Object, String],
       required: false
     },
     options: {
