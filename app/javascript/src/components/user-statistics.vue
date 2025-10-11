@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="gamesCountIsPositive && !isLoading"
+    v-if="gamesCountIsPositive && !isLoading && statistics"
     class="card stats-card is-two-thirds column m-auto mt-10"
     :style="{ 'min-height': '200px' }"
   >
@@ -130,7 +130,7 @@ const hidePopover = (i: number) => {
 
 const completionStatusesCount = computed(() => {
   if (statistics.value) {
-    const values = Object.values(statistics.value.completion_statuses);
+    const values = Object.values(statistics.value.completion_statuses ?? {});
     return values.reduce((accumulator: number, currentValue: number) => {
       return accumulator + currentValue;
     });
