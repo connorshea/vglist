@@ -77,11 +77,7 @@ const config = {
               jsc: {
                 parser: {
                   syntax: "typescript",
-                  tsx: true,
-                  decorators: true
-                },
-                transform: {
-                  decoratorMetadata: true
+                  tsx: true
                 }
               }
             },
