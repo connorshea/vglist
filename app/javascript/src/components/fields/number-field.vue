@@ -14,6 +14,7 @@
         v-bind:id="numberFieldId"
         v-bind:value="dataValue"
         v-on:input="handleInput"
+        :style="{ width: width ?? '100%' }"
       />
     </div>
   </div>
@@ -33,6 +34,7 @@ interface Props {
   required?: boolean;
   min?: number;
   max?: number;
+  width?: string;
 }
 
 // TODO: replace withDefaults after Vue 3.5 upgrade.

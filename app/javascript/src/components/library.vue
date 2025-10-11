@@ -16,7 +16,6 @@
       @edit="activateModal"
       @delete="refreshLibrary"
       @addGame="activateModal({})"
-      @openEditBar="activateEditBar"
       @selectedGamePurchasesChanged="selectedGamePurchasesChanged"
     ></library-table>
 
@@ -105,6 +104,7 @@ function activateModal(game: any = {}) {
   }
   document.documentElement.classList.add('is-clipped');
 
+  // TODO: Probably replace this with a check for null/undefined?
   doesGamePurchaseExist.value = Object.entries(game).length > 0 ? false : true;
   currentGame.value = game;
   isModalActive.value = true;
@@ -125,18 +125,13 @@ function deactivateEditBar() {
 }
 
 function selectedGamePurchasesChanged(gamePurchases: any[]) {
-  if (gamePurchases.length > 0) {
-    activateEditBar();
-  } else {
-    deactivateEditBar();
-  }
+  gamePurchases.length > 0 ? activateEditBar() : deactivateEditBar();
   selectedGamePurchases.value = gamePurchases;
 }
 
 function closeEditBar() {
-  deactivateEditBar();
-  // Instead of accessing nested refs, we could emit an event or use a different approach
-  // For now, just deactivate the edit bar - the table should handle its own state
+  // This will clear the selected games and deactivate the edit bar.
+  selectedGamePurchasesChanged([]);
 }
 
 function closeAndRefresh() {

@@ -95,7 +95,6 @@ import { ref, computed, onMounted } from 'vue';
 // @ts-expect-error - vue-good-table doesn't have TypeScript declarations
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css';
-import VglistUtils from '../utils';
 
 interface Props {
   gamePurchasesUrl: string;
@@ -108,7 +107,7 @@ interface Props {
 interface Column {
   label: string;
   field: string;
-  type: string;
+  type: 'text' | 'number' | 'decimal' | 'date';
   hideable?: boolean;
   index: number;
   hidden?: boolean;
@@ -122,35 +121,41 @@ interface Column {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['edit', 'delete', 'addGame', 'loaded', 'openEditBar', 'selectedGamePurchasesChanged']);
+const emit = defineEmits(['edit', 'delete', 'addGame', 'loaded', 'selectedGamePurchasesChanged']);
 
 // Reactive data
 const games = ref<any[]>([]);
 
 // Methods
-function formatHoursPlayed(value: any): string {
-  if (value === null || parseFloat(value) === 0) {
+
+/**
+ * Formats the hours played from a string representation of a float.
+ *
+ * This assumes the float has only one digit after the decimal point.
+ * It will break if that changes.
+ * 
+ * @param value The string representation of the float to format.
+ * @returns The formatted hours played string, e.g. '3h', '1h30m', or '5m'. Will return empty
+ *   string for some cases, or if given an invalid value.
+ */
+function formatHoursPlayed(value: string | null): string {
+  // If the value is null, 0, or in the format of '123.1', return an empty string.
+  if (value === null || parseFloat(value) === 0 || !/^\d+\.\d$/.test(value)) {
     return '';
   }
 
   // Split the float between the whole number and the decimals.
-  let splitValue = value.split('.');
-  let formattedValue = '';
-  let hours = parseInt(splitValue[0]);
-  // This assumes the float has only one digit after the decimal point.
-  // It will break if that changes.
-  let minutes = Math.floor((splitValue[1] / 10) * 60);
+  const [hours, numMinutes] = value.split('.').map(s => parseInt(s)) as [number, number];
+  const minutes = Math.floor((numMinutes / 10) * 60);
 
   // Render 1h if there are 0 minutes, 1m if there are 0 hours, or 1h1m if there are both.
   if (minutes === 0) {
-    formattedValue = `${hours}h`;
+    return `${hours}h`;
   } else if (hours === 0) {
-    formattedValue = `${minutes}m`;
+    return `${minutes}m`;
   } else {
-    formattedValue = `${hours}h${minutes}m`;
+    return `${hours}h${minutes}m`;
   }
-
-  return formattedValue;
 }
 
 // x - row1 value for column
@@ -255,18 +260,9 @@ const columns = ref<Column[]>([
   }
 ]);
 
-const completionStatuses = ref([
-  'unplayed',
-  'in_progress',
-  'dropped',
-  'completed',
-  'fully_completed',
-  'not_applicable',
-  'paused'
-]);
-
-const sortDirection = ref(localStorage.getItem('vglist:librarySortDirection') || 'desc');
-const sortColumn = ref(localStorage.getItem('vglist:librarySortColumn') || 'rating');
+type SortDirection = 'asc' | 'desc';
+const sortDirection = ref<SortDirection>((localStorage.getItem('vglist:librarySortDirection') as SortDirection | null) ?? 'desc');
+const sortColumn = ref(localStorage.getItem('vglist:librarySortColumn') ?? 'rating');
 
 // Computed
 const theme = computed(() => {
@@ -280,15 +276,11 @@ function onEdit(row: any) {
 
 function onDelete(row: any) {
   if (window.confirm(`Remove ${row.game.name} from your library?`)) {
-    // Post a delete request to the game purchase endpoint to delete the game.
-    const csrfToken = Rails.csrfToken();
+    // Post a delete request to the game purchase endpoint to delete the game from the library.
     const headers: HeadersInit = {
-      Accept: 'application/json'
+      Accept: 'application/json',
+      'X-CSRF-Token': Rails.csrfToken()!
     };
-    
-    if (csrfToken) {
-      headers['X-CSRF-Token'] = csrfToken;
-    }
 
     fetch(row.url, {
       method: 'DELETE',
@@ -296,8 +288,7 @@ function onDelete(row: any) {
       credentials: 'same-origin'
     }).then(response => {
       if (response.ok) {
-        // Emit a delete event to force the parent library component to
-        // refresh.
+        // Emit a delete event to force the parent library component torefresh.
         emit('delete');
       }
     });
@@ -328,11 +319,7 @@ function addGame() {
   emit('addGame');
 }
 
-function openEditBar() {
-  emit('openEditBar');
-}
-
-function toggleColumn(index: number, event: Event) {
+function toggleColumn(index: number, _event: Event) {
   const column = columns.value[index];
   if (column) {
     // Set hidden to the inverse of whatever it currently is.
@@ -340,7 +327,7 @@ function toggleColumn(index: number, event: Event) {
     
     const columnVisibility: Record<string, boolean> = {};
     // Filter this down to only columns that can be toggled.
-    columns.value.filter(column => typeof column.hideable === 'undefined').forEach(column => {
+    columns.value.filter(column => column.hideable === undefined).forEach(column => {
       columnVisibility[column.field] = !column.hidden;
     });
     localStorage.setItem('vglist:libraryColumns', JSON.stringify(columnVisibility));
@@ -394,11 +381,15 @@ onMounted(() => {
   }
 
   const sortColumnData = localStorage.getItem('vglist:librarySortColumn');
-  const sortDirectionData = localStorage.getItem('vglist:librarySortDirection');
-  
+  const sortDirectionData = localStorage.getItem('vglist:librarySortDirection') as SortDirection | null;
+
   if (sortDirectionData !== null || sortColumnData !== null) {
-    if (sortColumnData) sortColumn.value = sortColumnData;
-    if (sortDirectionData) sortDirection.value = sortDirectionData;
+    if (sortColumnData) {
+      sortColumn.value = sortColumnData;
+    }
+    if (sortDirectionData) {
+      sortDirection.value = sortDirectionData;
+    }
   }
 
   // Initialize the component

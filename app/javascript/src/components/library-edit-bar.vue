@@ -9,13 +9,14 @@
         :placeholder="'Rating (out of 100)'"
         :required="false"
         :max="100"
+        :width="'200px'"
         v-model="updateData.rating"
       ></number-field>
       <static-single-select
         :placeholder="'Completion Status'"
         :grandparent-class="'field mb-0 mr-5'"
         v-model="updateData.completion_status"
-        :options="formattedCompletionStatuses"
+        :options="FORMATTED_COMPLETION_STATUSES"
       ></static-single-select>
     </div>
     <div class="level-right">
@@ -37,8 +38,7 @@ import VglistUtils from '../utils';
 import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
-import MultiSelect from './fields/multi-select.vue';
-import { ref, computed, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 
 interface Props {
   gamePurchases: any[];
@@ -55,27 +55,14 @@ const updateData = reactive({
   rating: undefined as number | string | undefined,
 });
 
-const completionStatuses = ref({
-  unplayed: 'Unplayed',
-  in_progress: 'In Progress',
-  paused: 'Paused',
-  dropped: 'Dropped',
-  completed: 'Completed',
-  fully_completed: '100% Completed',
-  not_applicable: 'N/A'
-});
-
 // Methods
 function closeEditBar() {
   emit('closeEditBar');
 }
 
 function updateGames(): void {
-  // Clear the array first.
-  updateData.ids = [];
-  props.gamePurchases.forEach(gamePurchase => {
-    updateData.ids.push(gamePurchase.id);
-  });
+  // Reset the array to the currently-selected gamePurchases.
+  updateData.ids = props.gamePurchases.map(gp => gp.id);
 
   if (updateData.rating === undefined || updateData.rating === null) {
     delete (updateData as any).rating;
@@ -122,10 +109,9 @@ const updateButtonActive = computed((): boolean => {
   (['rating', 'completion_status'] as const).forEach(attribute => {
     const value = updateData[attribute];
     if (
-      typeof value !== 'undefined' &&
+      value !== undefined &&
       value !== '' &&
-      value !== null &&
-      (Array.isArray(value) ? value.length !== 0 : true)
+      value !== null
     ) {
       returnBool = true;
     }
@@ -134,9 +120,13 @@ const updateButtonActive = computed((): boolean => {
   return returnBool;
 });
 
-const formattedCompletionStatuses = computed(() => {
-  return Object.entries(completionStatuses.value).map(status => {
-    return { label: status[1], value: status[0] };
-  });
-});
+const FORMATTED_COMPLETION_STATUSES = [
+  { label: 'Unplayed', value: 'unplayed' },
+  { label: 'In Progress', value: 'in_progress' },
+  { label: 'Paused', value: 'paused' },
+  { label: 'Dropped', value: 'dropped' },
+  { label: 'Completed', value: 'completed' },
+  { label: '100% Completed', value: 'fully_completed' },
+  { label: 'N/A', value: 'not_applicable' },
+];
 </script>
