@@ -1,4 +1,4 @@
-import Vue, { h } from 'vue';
+import { createApp, h } from 'vue';
 
 /**
  * This file is responsible for loading Vue components whenever we change pages
@@ -18,12 +18,8 @@ import Vue, { h } from 'vue';
       if (el.dataset.vueProps) {
         props = JSON.parse(el.dataset.vueProps);
       }
-      // console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
-      // TODO: Make this use createApp() when we upgrade to Vue 3
-      new Vue({
-        el: elem,
-        render: () => h(comp, { props: props })
-      });
+      console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
+      createApp({ render: () => h(comp, { props: props }) }).mount(el);
     });
   };
   document.addEventListener('turbolinks:load', callback);
