@@ -28,9 +28,9 @@
       :gameModalState="gameModalState"
       :userId="userId"
       v-bind="currentGame"
-      v-on:close="deactivateModal"
-      v-on:closeAndRefresh="closeAndRefresh"
-      v-on:create="refreshLibrary"
+      @close="deactivateModal"
+      @closeAndRefresh="closeAndRefresh"
+      @create="refreshLibrary"
     ></game-modal>
   </div>
 </template>
