@@ -19,6 +19,11 @@
     "noUncheckedSideEffectImports": true,
     "alwaysStrict": true
   },
+  "include": [
+    "app/javascript/src/**/*.ts",
+    "app/javascript/src/**/*.d.ts",
+    "app/javascript/src/**/*.vue"
+  ],
   "exclude": [
     "**/*.spec.ts",
     "node_modules",
