@@ -62,9 +62,9 @@ const isModalActive = ref(false);
 const gameModalState = computed(() => props.gamePurchaseExists ? 'update' : 'createWithGame');
 
 // Methods
+// TODO: Add a proper type here?
 function activateModal(game: any = {}) {
-  let html = document.querySelector('html');
-  html!.classList.add('is-clipped');
+  document.documentElement.classList.add('is-clipped');
 
   if (Object.keys(mutableGamePurchase.value).length === 0) {
     mutableGamePurchase.value = { game: game };
@@ -73,8 +73,7 @@ function activateModal(game: any = {}) {
 }
 
 function deactivateModal() {
-  let html = document.querySelector('html');
-  html!.classList.remove('is-clipped');
+  document.documentElement.classList.remove('is-clipped');
 
   isModalActive.value = false;
 }
@@ -83,30 +82,28 @@ function closeAndRefresh() {
   deactivateModal();
 }
 
-function addGameToLibrary() {
-  fetch(`/games/${props.gameId}.json`, {
+async function addGameToLibrary() {
+  const response = await fetch(`/games/${props.gameId}.json`, {
     headers: {
       'Content-Type': 'application/json'
     }
-  })
-    .then(response => {
-      return response.json().then(json => {
-        if (response.ok) {
-          return Promise.resolve(json);
-        }
-        return Promise.reject(json);
-      });
-    })
-    .then(game => {
-      activateModal(game);
-    });
+  });
+
+  if (!response.ok) {
+    // Handle error
+    return;
+  }
+
+  const game = await response.json();
+  activateModal(game);
 }
 
 function editGameInLibrary() {
+  // TODO: why does this work...
   activateModal();
 }
 
-function removeGameFromLibrary() {
+async function removeGameFromLibrary() {
   let removeGameFromLibraryPath = `/games/${props.gameId}/remove_game_from_library`;
 
   const headers: HeadersInit = {
@@ -114,16 +111,18 @@ function removeGameFromLibrary() {
     'X-CSRF-Token': Rails.csrfToken()!
   };
 
-
-  fetch(removeGameFromLibraryPath, {
+  const response = await fetch(removeGameFromLibraryPath, {
     method: 'DELETE',
     headers,
     credentials: 'same-origin'
-  }).then(response => {
-    if (response.ok) {
-      Turbolinks.visit(window.location.href);
-    }
   });
+
+  if (response.ok) {
+    Turbolinks.visit(window.location.href);
+  } else {
+    // Handle error
+    console.error('Failed to remove game from library');
+  }
 }
 
 function onSubmit() {

@@ -273,11 +273,7 @@ function onSave() {
     submittableData.game_purchase.comments = gp.comments;
   }
 
-  if (
-    gp.rating !== '' &&
-    gp.rating !== null &&
-    typeof gp.rating !== 'undefined'
-  ) {
+  if (gp.rating) {
     submittableData.game_purchase.rating = gp.rating;
   }
 
@@ -337,7 +333,7 @@ function onSave() {
     }
   });
 
-  if (typeof submittableData.game_purchase.replay_count === 'undefined') {
+  if (submittableData.game_purchase.replay_count === undefined) {
     submittableData.game_purchase.replay_count = 0;
   }
 

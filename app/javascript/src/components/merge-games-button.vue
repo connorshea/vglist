@@ -32,14 +32,12 @@ const props = withDefaults(defineProps<Props>(), {
 const isModalActive = ref(false);
 
 function activateModal() {
-  const html = document.querySelector('html');
-  html!.classList.add('is-clipped');
+  document.documentElement.classList.add('is-clipped');
   isModalActive.value = true;
 }
 
 function deactivateModal() {
-  const html = document.querySelector('html');
-  html!.classList.remove('is-clipped');
+  document.documentElement.classList.remove('is-clipped');
   isModalActive.value = false;
 }
 

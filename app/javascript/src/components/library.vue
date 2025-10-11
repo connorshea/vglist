@@ -103,8 +103,7 @@ function activateModal(game: any = {}) {
   if (!props.isEditable) {
     return;
   }
-  let html = document.querySelector('html');
-  html?.classList.add('is-clipped');
+  document.documentElement.classList.add('is-clipped');
 
   doesGamePurchaseExist.value = Object.entries(game).length > 0 ? false : true;
   currentGame.value = game;
@@ -112,8 +111,7 @@ function activateModal(game: any = {}) {
 }
 
 function deactivateModal() {
-  let html = document.querySelector('html');
-  html?.classList.remove('is-clipped');
+  document.documentElement.classList.remove('is-clipped');
 
   isModalActive.value = false;
 }
