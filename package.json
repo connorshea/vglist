@@ -19,10 +19,10 @@
     "swc-loader": "^0.2.6",
     "turbolinks": "^5.2.0",
     "typescript": "^5.9.3",
-    "vue": "^2.7.16",
-    "vue-good-table": "^2.21.11",
-    "vue-loader": "^15.11",
-    "vue-select": "^3.20.4",
+    "vue": "~3.1.0",
+    "@vue/compat": "~3.1.0",
+    "vue-loader": "^16.0.0",
+    "vue-select": "^4.0.0-beta.6",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1"
   },
@@ -31,10 +31,10 @@
     "@types/rails__activestorage": "^8.0.1",
     "@types/rails__ujs": "^6.0.4",
     "@types/turbolinks": "^5.2.2",
-    "@types/vue-select": "^3.16.8",
     "graphql": "^16.11.0",
     "graphql-schema-linter": "^3.0.1",
     "prettier": "3.6.2",
+    "@vue/compiler-sfc": "^3.1.0",
     "vue-tsc": "~3.0.9"
   },
   "scripts": {
