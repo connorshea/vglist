@@ -15,51 +15,44 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+
+<script setup lang="ts">
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { snakeCase } from 'lodash-es';
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: 'static-single-select',
-  components: {
-    vSelect
+const props = defineProps({
+  label: {
+    type: String,
+    required: false
   },
-  props: {
-    label: {
-      type: String,
-      required: false
-    },
-    placeholder: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    value: {
-      type: [Object, String],
-      required: false
-    },
-    options: {
-      type: Array,
-      required: true
-    },
-    grandparentClass: {
-      type: String,
-      required: false,
-      default: 'field'
-    },
-    disabled: {
-      type: Boolean,
-      required: false,
-      default: false
-    }
+  placeholder: {
+    type: String,
+    required: false,
+    default: ''
   },
-  emits: ['input'],
-  computed: {
-    inputId() {
-      return snakeCase(this.label);
-    }
+  value: {
+    type: [Object, String],
+    required: false
+  },
+  options: {
+    type: Array,
+    required: true
+  },
+  grandparentClass: {
+    type: String,
+    required: false,
+    default: 'field'
+  },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 });
+
+const emit = defineEmits(['input']);
+
+const inputId = computed(() => snakeCase(props.label));
 </script>
