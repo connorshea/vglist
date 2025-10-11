@@ -24,8 +24,7 @@
     "vue-loader": "^15.11",
     "vue-select": "^3.20.4",
     "webpack": "^5.102.1",
-    "webpack-cli": "^6.0.1",
-    "webpack-remove-empty-scripts": "^1.1.1"
+    "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",

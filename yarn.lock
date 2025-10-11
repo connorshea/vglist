@@ -677,11 +677,6 @@ ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-ansis@4.0.0-node10:
-  version "4.0.0-node10"
-  resolved "https://registry.yarnpkg.com/ansis/-/ansis-4.0.0-node10.tgz#bbddd48b549d3fe2a4caa5ba33602ef240b492aa"
-  integrity sha512-BRrU0Bo1X9dFGw6KgGz6hWrqQuOlVEDOzkb0QSLZY9sXHqA7pNj7yHPVJRz7y/rj4EOJ3d/D5uxH+ee9leYgsg==
-
 argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
@@ -2057,13 +2052,6 @@ webpack-merge@^6.0.1:
     clone-deep "^4.0.1"
     flat "^5.0.2"
     wildcard "^2.0.1"
-
-webpack-remove-empty-scripts@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/webpack-remove-empty-scripts/-/webpack-remove-empty-scripts-1.1.1.tgz#bd0fb0371f4fd6a87751986fae2a34e9d775f45c"
-  integrity sha512-FqmIy7joxXd0/7jz8UjzMXOKc6B7LR+ynfgaaaH72xUT917h3A94ERxOLvGM8a8XdGIvUsdTLIUt8aBQM2Pdqg==
-  dependencies:
-    ansis "4.0.0-node10"
 
 webpack-sources@^3.3.3:
   version "3.3.3"
