@@ -157,6 +157,17 @@ nav.navbar {
         &:hover, &:focus {
           border-bottom: 0;
         }
+
+        &:hover, &:focus, &.is-active {
+          // On focus (e.g. via arrow key navigation), use dark text in light mode, light text in dark mode.
+          --bulma-navbar-item-color: hsl(0, 0%, var(--bulma-text-l));
+          --bulma-navbar-item-background-a: 0.10;
+
+          @media (prefers-color-scheme: dark) {
+            // Need more of a difference in dark mode for it to be visible.
+            --bulma-navbar-item-background-a: 0.25;
+          }
+        }
       }
     }
   }
@@ -743,6 +754,7 @@ nav.navbar {
 // should stay the same regardless of color scheme.
 .navbar-search-input {
   --bulma-input-color: #fff;
+  --bulma-input-color-l: 90%;
 
   background-color: rgba(255, 255, 255, 0.25);
   border: 0;
@@ -750,6 +762,7 @@ nav.navbar {
   transition: background-color 250ms, color 250ms;
 
   &::placeholder {
+    // Force it to be while when not-focused so it's visible on the light-purple background.
     color: #fff;
   }
 
@@ -759,7 +772,7 @@ nav.navbar {
   }
 
   &:focus {
-    --bulma-input-color: #000;
+    --bulma-input-color-l: 10%;
 
     background-color: rgba(255, 255, 255, 1);
 
@@ -767,8 +780,9 @@ nav.navbar {
       fill: color.adjust(bv.$grey-light, $lightness: -30%);
     }
 
+    // Make the input field text dark when focused because the background color is white in both schemes.
     &::placeholder {
-      color: #333;
+      color: hsl(var(--bulma-text-h), var(--bulma-text-s), 10%);
     }
   }
 }
