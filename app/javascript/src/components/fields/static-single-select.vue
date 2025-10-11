@@ -8,8 +8,8 @@
         label="label"
         :placeholder="placeholder"
         :inputId="inputId"
-        v-bind:modelValue="modelValue"
-        v-on:update:modelValue="$emit('update:modelValue', $event)"
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
       ></v-select>
     </div>
   </div>
@@ -21,36 +21,26 @@
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { snakeCase } from 'lodash-es';
-import { computed } from 'vue';
+import { computed, withDefaults } from 'vue';
 
-const props = defineProps({
-  label: {
-    type: String,
-    required: false
-  },
-  placeholder: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  modelValue: {
-    type: [Object, String],
-    required: false
-  },
-  options: {
-    type: Array,
-    required: true
-  },
-  grandparentClass: {
-    type: String,
-    required: false,
-    default: 'field'
-  },
-  disabled: {
-    type: Boolean,
-    required: false,
-    default: false
-  }
+interface SelectOption {
+  label: string;
+  value: unknown;
+}
+
+interface Props {
+  label?: string;
+  placeholder?: string;
+  modelValue?: object | string;
+  options: number[] | SelectOption[];
+  grandparentClass?: string;
+  disabled?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  placeholder: '',
+  grandparentClass: 'field',
+  disabled: false
 });
 
 const emit = defineEmits(['update:modelValue']);

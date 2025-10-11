@@ -10,8 +10,8 @@
         label="name"
         :placeholder="placeholder"
         @change="handleChange"
-        v-bind:modelValue="modelValue"
-        v-on:update:modelValue="$emit('update:modelValue', $event)"
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
       />
     </div>
   </div>
