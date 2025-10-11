@@ -68,7 +68,7 @@ const config = {
         ],
       },
       {
-        test: /\.([cm]?ts|tsx)$/,
+        test: /\.([cm]?ts)$/,
         exclude: /(node_modules)/,
         use: [
           {
@@ -89,7 +89,7 @@ const config = {
   },
   resolve: {
     // Add additional file types
-    extensions: ['.ts', '.vue', '.js', '.jsx', '.scss', '.css', '.min.css'],
+    extensions: ['.ts', '.vue', '.js', '.scss', '.css', '.min.css'],
   },
 }
 
