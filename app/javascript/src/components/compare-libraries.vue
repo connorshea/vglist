@@ -222,28 +222,24 @@ function getGamePurchases(): GroupedGameRow[] {
  *   - Games only owned by user2
  */
 function groupGameRows(metaLibrary: GameRow[]): GroupedGameRow[] {
-  let groupedMetaLibrary: GroupedGameRow[] = [];
+  const sharedRows: GameRow[] = [];
+  const user1Rows: GameRow[] = [];
+  const user2Rows: GameRow[] = [];
 
-  let sharedRows = metaLibrary.filter(gameRow => {
-    return (
-      gameRow.userOneRating !== undefined &&
-      gameRow.userTwoRating !== undefined
-    );
-  });
-  let user1Rows = metaLibrary.filter(gameRow => {
-    return (
-      gameRow.userOneRating !== undefined &&
-      gameRow.userTwoRating === undefined
-    );
-  });
-  let user2Rows = metaLibrary.filter(gameRow => {
-    return (
-      gameRow.userOneRating === undefined &&
-      gameRow.userTwoRating !== undefined
-    );
-  });
+  for (const gameRow of metaLibrary) {
+    const ownedByUser1 = gameRow.userOneRating !== undefined;
+    const ownedByUser2 = gameRow.userTwoRating !== undefined;
 
-  groupedMetaLibrary.push(
+    if (ownedByUser1 && ownedByUser2) {
+      sharedRows.push(gameRow);
+    } else if (ownedByUser1) {
+      user1Rows.push(gameRow);
+    } else if (ownedByUser2) {
+      user2Rows.push(gameRow);
+    }
+  }
+
+  return [
     {
       label: 'Shared',
       mode: 'span',
@@ -259,9 +255,7 @@ function groupGameRows(metaLibrary: GameRow[]): GroupedGameRow[] {
       mode: 'span',
       children: user2Rows
     }
-  );
-
-  return groupedMetaLibrary;
+  ];
 }
 
 // Computed properties
