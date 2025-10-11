@@ -10,53 +10,35 @@
         v-bind:name="dateFieldName"
         v-bind:id="dateFieldId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', $event.target.value)"
+        v-on:input="$emit('input', $event.target?.value)"
       >
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue';
 
-export default defineComponent({
-  name: 'date-field',
-  props: {
-    formClass: {
-      type: String,
-      required: true
-    },
-    attribute: {
-      type: String,
-      required: true
-    },
-    label: {
-      type: String,
-      required: true
-    },
-    value: {
-      type: String,
-      required: false
-    },
-    required: {
-      type: Boolean,
-      required: false,
-      default: false
-    }
-  },
-  emits: ['input'],
-  data() {
-    return {
-      dataValue: this.value
-    };
-  },
-  computed: {
-    dateFieldName: function() {
-      return `${this.formClass}[${this.attribute}]`;
-    },
-    dateFieldId: function() {
-      return `${this.formClass}_${this.attribute}`;
-    }
-  }
+interface Props {
+  formClass: string;
+  attribute: string;
+  label: string;
+  value?: string;
+  required?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  required: false
 });
+
+const emit = defineEmits(['input']);
+
+const dataValue = ref(props.value);
+
+watch(() => props.value, (newVal) => {
+  dataValue.value = newVal;
+});
+
+const dateFieldName = computed(() => `${props.formClass}[${props.attribute}]`);
+const dateFieldId = computed(() => `${props.formClass}_${props.attribute}`);
 </script>
